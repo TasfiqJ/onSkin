@@ -129,7 +129,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism:
       'Stacking several exfoliating acids in one session raises the chance of over-exfoliation and a stressed barrier.',
     resolutionType: 'lower_frequency',
-    resolutionCopy: 'Avoid using more than one acid in the same session.',
+    resolutionCopy: 'Use just one acid per session — let the others have their own night.',
     appliesWhen: null,
     sourceCitation: 'dermatology consensus',
     ruleVersion: 1, reviewedBy: null,

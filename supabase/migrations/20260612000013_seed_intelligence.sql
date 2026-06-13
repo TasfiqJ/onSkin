@@ -56,7 +56,7 @@ values
 
   ('00000000-0000-4000-8000-000000000008', 'aha', 'bha', 'irritation', 'moderate', 'C', 'plausible',
    'Stacking several exfoliating acids in one session raises the chance of over-exfoliation and a stressed barrier.',
-   'lower_frequency', 'Avoid using more than one acid in the same session.', null,
+   'lower_frequency', 'Use just one acid per session — let the others have their own night.', null,
    'dermatology consensus', 1, null, true),
 
   ('00000000-0000-4000-8000-000000000009', 'vitamin_c', 'sunscreen', 'synergy', 'none', 'C', 'plausible',

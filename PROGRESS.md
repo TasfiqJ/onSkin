@@ -153,6 +153,15 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - Scan screen = honest placeholder (barcode/OBF = next slice).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (33).
 
+### Slice 11 — Claim-safety regression guard (docs/02 §7.7/§9) ✅ (2026-06-13)
+- Test guard asserting no drug/disease verbs (treats/cures/heals/diagnose/
+  stimulates collagen/repairs DNA) and no alarm words (danger/harmful/warning/
+  avoid/!) in any rule's `mechanism`/`resolutionCopy`, plus invariants
+  (all `reviewed_by` null, unique ids, safety rules `avoid_refer`+pregnancy-gated,
+  no safety rule labelled `established`). Survives every future rule edit.
+- The guard caught one non-compliant string (rule 8 "Avoid using…") → rewritten
+  calm/resolution-first in both `rules.ts` and the SQL seed. **63 tests pass.**
+
 ## In progress / remaining docs/02 work
 
 - **PM auto-resolution live screen (§7.4)** — scheduler logic + `pmResolution` are
