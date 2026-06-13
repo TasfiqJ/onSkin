@@ -5,7 +5,7 @@
  *   supabase gen types typescript --project-id <ref> > packages/types/src/database.types.ts
  *
  * Until then this is hand-authored to exactly match `supabase/migrations/`
- * (0001–0011) so the client is fully typed during development. Keep in sync with
+ * (0001–0016) so the client is fully typed during development. Keep in sync with
  * the migrations.
  */
 
@@ -311,6 +311,15 @@ export type Database = {
           expiry_date: DateStr | null;
           expiry_computed: DateStr | null;
           status: string;
+          // Smart Shelf extensions (migration 0016, docs/04 §2).
+          is_opened: boolean;
+          finished_at: DateStr | null;
+          nickname: string | null;
+          notes: string | null;
+          thumbnail_path: string | null;
+          pao_source: string | null;
+          expiry_source: string | null;
+          added_via: string | null;
           created_at: Timestamptz;
           updated_at: Timestamptz;
         };
@@ -326,10 +335,40 @@ export type Database = {
           expiry_date?: DateStr | null;
           // expiry_computed is GENERATED — never inserted.
           status?: string;
+          is_opened?: boolean;
+          finished_at?: DateStr | null;
+          nickname?: string | null;
+          notes?: string | null;
+          thumbnail_path?: string | null;
+          pao_source?: string | null;
+          expiry_source?: string | null;
+          added_via?: string | null;
           created_at?: Timestamptz;
           updated_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['user_products']['Insert']>;
+        Relationships: [];
+      };
+      shelf_scans: {
+        Row: {
+          id: string;
+          user_id: string;
+          barcode: string | null;
+          matched_product_id: string | null;
+          result: string;
+          contributed_back: boolean;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          barcode?: string | null;
+          matched_product_id?: string | null;
+          result: string;
+          contributed_back?: boolean;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['shelf_scans']['Insert']>;
         Relationships: [];
       };
       routines: {

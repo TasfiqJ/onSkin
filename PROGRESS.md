@@ -216,24 +216,68 @@ B-SUPABASE (data surfaces render the exact design but are empty until then),
 full drag-and-drop (handles + nudge built; needs react-native-draggable-flatlist),
 and routine persistence (server `build_routine`, docs/03 §11).
 
-## Remaining docs/02 work
+### Slice 18 — Doc 4 Smart Shelf + new design (docs/04, "OnSkin Smart Shelf") ✅ (2026-06-13)
+- **Schema** (migration 0016): additive `user_products` columns (`is_opened`,
+  `finished_at`, `nickname`, `notes`, `thumbnail_path`, `pao_source`,
+  `expiry_source`, `added_via`) + the owner-RLS `shelf_scans` intake/contribute-back
+  log + the `(user_id, status, expiry_computed)` Expiring index. `created_at`/
+  `updated_at` already existed (0005) — not re-added. `Database` type + `@onskin/
+  types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
+  back UPDATE policy); no RLS weakened.
+- **Local-first store** (D-029): `features/shelf/store.ts` (AsyncStorage) is the
+  v1 source of truth (offline-first, docs/04 §8), with a guarded `user_products`
+  Supabase mirror (B-SUPABASE). `useShelf` moved to `features/shelf/`; `usePlan` +
+  the conflict-detail sheet now read the **real** cabinet.
+- **Five-state badge taxonomy** (docs/04 §5.3): `pao.ts` extended with `paired` +
+  the eye/SPF firmer "Replace for safety" (never red); new `ExpiryBadge` component
+  with the exact design colours; new `SegmentChip` (ink-fill filter) + `Sheet`
+  (dimmed bottom-sheet) primitives.
+- **Intake funnel** (docs/04 §4, design screens 01–04): the no-match fork
+  (dark sheet → OCR/manual + contribute-back), OCR-confirm (parses a sample INCI
+  through the real tag dictionary; flags a low-confidence token, dashed), the
+  always-works manual form, and the **opened-date linchpin** sheet (Just opened /
+  Pick a date / Not opened yet + editable, source-labelled PAO). Live camera/OBF/
+  OCR capture stubbed (B-CATALOG-SEED).
+- **Shelf list** (screen 05) rebuilt to the design (count, All/Actives/Expiring,
+  calm banner, cards, centered FAB, empty state); **product-detail hub** (06:
+  freshness w/ provenance + inline opened-date & printed best-before edits, actives,
+  conflicts/pairings, where-it's-used, lifecycle actions); **archive/lifecycle**
+  (08, repurchase history); **replenishment** sheet (09: honest PAO trigger,
+  opt-in, affiliate inert behind **B-PRIVACY**).
+- **PAO defaults launch-gated** (D-032): `pao.ts` mirrors `shippableRules` —
+  unreviewed numbers degrade to honest "PAO est." in production until
+  **B-DERM-REVIEW** sign-off.
+- **Adversarially reviewed by 4 agents** (RLS/SQL · spec fidelity · design fidelity
+  · claim-safety/privacy, each with a verification pass) → **0 blocking/high**;
+  fixed the lower-severity items (PAO gate, printed-expiry capture, badge border
+  scope, OCR dashed flag, monochrome bin glyph, label consistency, B-PRIVACY
+  marker). D-026…D-033; new blockers **B-PRIVACY**, **B-SHELF-CONTRIB**.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (87).
 
-- **PM auto-resolution live screen (§7.4)** — scheduler logic + `pmResolution` are
-  built + tested, but rendering the live night-strip + "next acid night" needs a
-  **cycle setup (anchor + template)** established by the routine builder
-  (Document 3, not present). Deferred to Doc 3; not inventing the cycle schema.
-- **Barcode scan + manual add + OBF lookup (§7.5)** — needs camera + the live OBF
-  API + catalog seed (B-CATALOG-SEED).
-- Blocked data/clinical: **B-DERM-REVIEW** (launch gate), **B-CATALOG-SEED**.
+## Remaining shelf/intelligence work (blocked sub-parts)
+
+- **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
+  fallback + confirm UIs are built; the on-device camera, the live OBF v2 API
+  (one call/scan), and ML Kit text recognition need **B-CATALOG-SEED** + the
+  native camera (shared with the photo slice).
+- **OBF contribute-back pipeline (docs/04 §4.6)** — schema + no-match UI built;
+  the queued authenticated POST job needs **B-SHELF-CONTRIB** (OBF write creds).
+- **Replenishment affiliate (docs/04 §6)** — sheet built opt-in + inert; live
+  "see similar"/affiliate routing is gated by **B-PRIVACY** (data-sharing consent)
+  + **B-SHOPMY** + **B-CATALOG-SEED**.
+- **PM auto-resolution live screen (docs/02 §7.4)** — built + tested + wired into
+  Today PM via the cycle anchor (Slice 16).
+- Blocked data/clinical: **B-DERM-REVIEW** (launch gate; now also gates the PAO
+  category defaults), **B-CATALOG-SEED**.
 
 ## Next (per docs/00 build order)
-1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)
-2. 🚫 Ingredient/product DB + conflict engine — needs Document 2 (schema sketched only)
-3. 🚫 AM/PM routine builder — needs Document 3 (tables exist)
-4. 🚫 Smart shelf (PAO/expiry) — needs Document 4
-5. 🚫 Actives / skin-cycling scheduler — needs Document 5
+1. ✅ scaffold → Auth + data model + RLS (Slices 0–6)
+2. ✅ Ingredient/product DB + conflict engine — Doc 2 (Slices 7–11)
+3. ✅ AM/PM routine builder — Doc 3 (Slices 12–17)
+4. ✅ Smart shelf (PAO/expiry) — Doc 4 (Slice 18); blocked sub-parts above
+5. 🚫 Actives / skin-cycling scheduler — needs Document 5 (scheduler core built in Slice 9)
 6. 🚫 Guided photo capture + comparison — needs Document 6
-7. 🚫 Reminders / streaks / widgets — needs Document 7
+7. 🚫 Reminders / streaks / widgets — needs Document 7 (replenishment + streak nudges land here)
 8. 🟡 Subscriptions / paywall — design-spec paywall buildable; RC config blocked (Document 8)
 9–12. 🚫 recommendations / creator stacks / community / AI — need their docs
 

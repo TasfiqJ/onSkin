@@ -74,8 +74,17 @@ export type RoutinePhase = 'am' | 'pm' | 'either';
 export type RampClass = 'retinoid' | 'aha' | 'bha' | 'other_active';
 export type ToleranceState = 'building' | 'steady' | 'paused_irritation';
 
-// --- Shelf (docs/01 §3 `user_products`) --------------------------------------
+// --- Shelf (docs/01 §3 `user_products`, docs/04 Smart Shelf) ------------------
 export type ProductStatus = 'active' | 'finished' | 'discarded';
+/** Where the PAO value came from — recorded so the UI can be honest about
+ *  estimates (docs/04 §3 sourcing waterfall). */
+export type PaoSource = 'label' | 'catalog' | 'category_default' | 'unknown';
+/** Where the surfaced expiry came from (docs/04 §3). */
+export type ExpirySource = 'printed' | 'pao_computed' | 'estimated' | 'unknown';
+/** Which intake path created a shelf row (docs/04 §4, funnel analytics §9). */
+export type AddedVia = 'barcode' | 'search' | 'ocr' | 'manual' | 'onboarding';
+/** A barcode-scan outcome logged to `shelf_scans` (docs/04 §2/§4.6). */
+export type ShelfScanResult = 'matched' | 'no_match' | 'ambiguous' | 'offline_queued';
 
 // --- Entitlements (docs/01 §3 `entitlements`) --------------------------------
 export type EntitlementTier = 'pro' | 'pro_plus';

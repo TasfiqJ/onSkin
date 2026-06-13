@@ -166,3 +166,71 @@ Format: `D-NNN — date — decision — rationale`.
   streak-backfire literature): weekly adherence + month heat-map, grace-day
   "Streak protected", recovery nights count, no shame copy. (Implemented in the
   Progress screen, Slice 14+.)
+
+## Smart Shelf (docs/04, Slice 18)
+
+- **D-026 — 2026-06-13 — Product thumbnails are on-device by default**
+  (docs/04 §7 / §2; the doc's suggested "D-024"). `user_products.thumbnail_path`
+  is a LOCAL device path; cloud upload only on the same explicit opt-in that
+  governs progress photos (docs/01 §3). The shelf is health-inference data, so
+  this matches the photo-privacy posture. UI placeholders are striped greige.
+
+- **D-027 — 2026-06-13 — Provenance recorded on every shelf row**
+  (docs/04 §3 / §2; the doc's suggested "D-023"). `pao_source`
+  ('label'|'catalog'|'category_default'|'unknown') and `expiry_source`
+  ('printed'|'pao_computed'|'estimated'|'unknown') so the UI is honest about
+  estimates and **never fabricates a precise date**. The PAO sourcing waterfall
+  (label/catalog → category default → honest unknown) lives in `pao.ts`
+  (`resolvePaoMonths`) + `shelf/expiry.ts` (`surfacedExpiry`); printed expiry
+  wins for sunscreen via the `least()` semantics already in the generated column.
+
+- **D-028 — 2026-06-13 — `shelf_scans` gets an owner-only UPDATE policy.**
+  docs/04 §2's SQL snippet shows only SELECT + INSERT, but the prose (§4.6) has
+  the contribute-back job flip `contributed_back → true` — an UPDATE. Added an
+  owner-scoped UPDATE policy (same `(select auth.uid()) = user_id` pattern); no
+  DELETE policy (account-deletion cascade handles removal; no user-facing delete).
+  Does not weaken any existing RLS.
+
+- **D-029 — 2026-06-13 — Local-first shelf store (AsyncStorage) is the v1 source
+  of truth**, with a best-effort Supabase mirror. docs/04 §8 mandates the shelf
+  works offline (view + manual-add + queued lookups in a bathroom with no
+  signal); single-user last-write-wins is safe. `features/shelf/store.ts` holds
+  the cabinet; intake also fires a guarded `user_products` insert (B-SUPABASE) so
+  it reconciles via the persisted mutation queue (D-007) once the project exists.
+  This unifies the data source: `usePlan` + the conflict-detail sheet now read the
+  real shelf via `useShelf` (moved to `features/shelf/`).
+
+- **D-030 — 2026-06-13 — Simplified opened-date + PAO pickers for v1.** The
+  opened-date "Pick a date" uses relative quick-picks (2 wks / 1 / 3 / 6 mo ago)
+  and PAO edits via common-value chips (3/6/9/12/18/24 mo), avoiding a native
+  date-picker dependency. The design's own Next-steps lists "inline opened-date /
+  PAO edit pickers" as a follow-on, so a full calendar picker is a known later
+  refinement, not a gap.
+
+- **D-031 — 2026-06-13 — Badge precedence + the calm safety treatment**
+  (docs/04 §5.3). `expiryBadge` is date-driven: expired > countdown > (paired |
+  date) > unknown. "paired" overrides ONLY the calm future-date slot (never an
+  urgent countdown/expired), so a resolved interaction is surfaced as "handled"
+  without hiding a real expiry. The eye/SPF firmer case reuses the amber
+  countdown tint with "Replace for safety" — visible but **never red**; a
+  safety-critical *countdown* stays a normal calm countdown.
+
+- **D-032 — 2026-06-13 — PAO category defaults are launch-gated like the conflict
+  matrix** (review finding). `pao.ts` now carries the same `*** BLOCKED:
+  B-DERM-REVIEW` banner as `rules.ts` plus `PAO_DEFAULTS_REVIEWED = false` and a
+  `reviewedCategoryPao()` accessor that mirrors `shippableRules`: the unreviewed
+  numbers are used in development (so the shelf is demoable) but **withheld in
+  production** until cosmetic-chemist sign-off, where intake falls back to the
+  honest "PAO est." state rather than a fabricated number. The pure
+  `resolvePaoMonths` resolver stays ungated (tested directly). A test asserts the
+  flag is false (parity with the claim-safety `reviewedBy` guard).
+
+- **D-033 — 2026-06-13 — Printed best-before is a catalog/scan datum, with an
+  inline manual fallback on the detail hub** (review finding, docs/04 §3/§5.6).
+  The design's "Mineral SPF 50 · printed expiry" is a *scanned/catalog* product
+  (OBF carries expiry data, B-CATALOG-SEED), so the manual-add form deliberately
+  stays clean (matching the mock) and uses PAO. To keep the §3 "printed expiry
+  wins for sunscreen" / `least()` rule reachable through the always-available
+  path, the product-detail freshness block exposes an inline editable
+  "Best before" (future quick-picks → `expiry_source = 'printed'`), which §5.6
+  already mandates as editable. The `computeExpiry` least() logic is unit-tested.

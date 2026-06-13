@@ -14,10 +14,13 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–11** — full foundation (auth, data
-model + RLS, design system, onboarding, app shell + Today, privacy controls) and
-the **Document 2 ingredient-intelligence layer** (catalog/conflict schema, engine,
-skin-cycling scheduler, PAO, Shelf + conflict-detail UI; 63 tests). See PROGRESS.md.
+Self-contained TODO. Built so far: **Slices 0–18** — full foundation (auth, data
+model + RLS, design system, onboarding, app shell + Today, privacy controls), the
+**Document 2 ingredient-intelligence layer** (catalog/conflict schema, engine,
+skin-cycling scheduler, PAO), the **Document 3 routine builder** (deterministic
+generation + all builder screens), and the **Document 4 Smart Shelf** (intake
+funnel, opened-date linchpin, five-state badges, detail hub, archive,
+replenishment; 86 tests). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -34,17 +37,19 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 3** (routine
-builder) — it consumes the already-built engine + scheduler, unblocks the PM
-auto-resolution screen, and makes the Today loop live. Also **B-CATALOG-SEED**
-(CosIng/OBF data import) lights up real shelf data + scan match rates.
+documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 5**
+(actives/skin-cycling) extends the already-built scheduler, and **Document 7**
+(reminders/widgets) lights up the replenishment + streak notifications. Also
+**B-CATALOG-SEED** (CosIng/OBF data import) lights up real shelf data, scan match
+rates, and the **B-SHELF-CONTRIB** contribute-back loop.
 
 **Snapshot of current statuses** — Accounts: B-SUPABASE/REVENUECAT/APPLE/GOOGLE/
 POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal/clinical: B-QUIZ-COPY/
-PRIVACY-COPY 🔴, **B-DERM-REVIEW 🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴 ·
-Verify: APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴,
-RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡 · Docs:
-MISSING-DOCS 🔴 (Docs 3–15), EVERY-N-DAYS 🔴.
+PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing consent + DPIA), **B-DERM-REVIEW
+🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴, **B-SHELF-CONTRIB 🔴** · Verify:
+APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴,
+RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡, B-ROUTINE-PERSIST
+🟡 · Docs: MISSING-DOCS 🔴 (Docs 5–15), EVERY-N-DAYS 🔴.
 
 ---
 
@@ -209,7 +214,7 @@ remaining build-order items need their detailed doc:
 | --- | --- | --- |
 | 2 · Ingredient/product DB + conflict engine | Doc 2 ✅ received | **BUILT** (Slices 7–11): schema, engine, scheduler, PAO, Shelf + conflict-detail UI, 63 tests. Blocked sub-parts: data import (B-CATALOG-SEED), clinical sign-off (B-DERM-REVIEW), server detect fn (B-SERVER-DETECT) |
 | 3 · AM/PM routine builder | Doc 3 ✅ received | **BUILT** (Slices 12–17): sequencing_rules + active_ramp schema, deterministic generation engine, all builder screens (plan-built, reorder, ramp, Today AM/PM, Progress/calm-streak, tolerance, override sheet, adaptation, widgets), 77 tests. Blocked sub-parts: routine persistence (B-ROUTINE-PERSIST), full drag-DnD (B-DRAG-DND), clinical sign-off (B-DERM-REVIEW) |
-| 4 · Smart shelf (PAO/expiry) | Doc 4 | shelf list/badges/conflict surfaces BUILT (docs/02 §7); barcode scan + manual add still need this doc + B-CATALOG-SEED |
+| 4 · Smart shelf (PAO/expiry) | Doc 4 ✅ received | **BUILT** (Slice 18): additive `user_products` columns + `shelf_scans` schema, local-first store, the full intake funnel (no-match fork / OCR-confirm / manual / **opened-date linchpin**), the five-state badge taxonomy (incl. the eye/SPF firmer exception), the product-detail management hub, archive/lifecycle, and the opt-in replenishment sheet (design's 9 screens). Blocked sub-parts: live barcode/OBF scan + OCR capture (**B-CATALOG-SEED** + camera), the contribute-back pipeline (**B-SHELF-CONTRIB**), the data-sharing consent + affiliate for replenishment (**B-PRIVACY**), server persistence (**B-SUPABASE** / B-ROUTINE-PERSIST), PAO defaults sign-off (**B-DERM-REVIEW**) |
 | 5 · Actives / skin-cycling scheduler | Doc 5 | scheduler BUILT + tested + wired into Today PM via the cycle anchor (docs/02 §5, docs/03 §5); a dedicated doc could extend cadence rules |
 | 6 · Guided photo capture + comparison | Doc 6 | `photos` table + design-spec screen; capture spec blocked |
 | 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + computed streak + a widgets/Live-Activity **preview** built (docs/03 §9.9); native WidgetKit/ActivityKit + reminder scheduling need this doc |
@@ -253,6 +258,30 @@ The edit/reorder screen (design 02) has drag handles + the non-blocking "Fix the
 order" nudge (the doc's actual point) functional, but true drag-and-drop needs
 `react-native-draggable-flatlist` (reanimated/gesture-handler are present). Small
 follow-on.
+
+### B-PRIVACY — data-sharing consent + DPIA for the shelf/replenishment 🔴 open
+docs/04 §6/§7 introduce the key new privacy obligation: **replenishment affiliate
+links (ShopMy etc.) may only fire behind the separate, distinct MHMDA
+data-sharing consent** (docs/01 §4, consent type `data_sharing`). The
+replenishment sheet (`app/shelf/replenish.tsx`) is built **opt-in and inert** —
+"See similar options" shows a calm note and shares nothing; no affiliate SDK is
+wired, and ATT priming must precede any attribution SDK (docs/01 §8). To go live:
+counsel must supply the data-sharing consent copy (overlaps **B-PRIVACY-COPY**),
+the consent must be wired as the gate, and ShopMy provisioned (**B-SHOPMY**).
+Also for counsel (docs/04 §7): whether the shelf's product mix is additional
+special-category inference to disclose in the GDPR Art. 35 **DPIA**. This is
+effectively a launch gate for the replenishment commerce line.
+
+### B-SHELF-CONTRIB — Open Beauty Facts contribute-back pipeline 🔴 open
+docs/04 §4.6 / §9: any product added that wasn't in OBF (no-match scans, OCR-built,
+manual-with-barcode) must, after light validation, be **contributed back** to OBF
+via the authenticated POST endpoint (ODbL obligation), marking
+`shelf_scans.contributed_back = true`. The schema (`shelf_scans` + the owner UPDATE
+policy, D-028) and the no-match UI ("we'll add it back for everyone") are built,
+but the actual queued, offline-tolerant POST job (an Edge Function or client task)
+needs **OBF write credentials** + the live OBF API (shares **B-CATALOG-SEED**'s
+network/account needs). It must send **product** data only (barcode/label/INCI),
+never the personal shelf/profile.
 
 ### B-EVERY-N-DAYS — `every_n_days` step frequency has no interval column 🔴 open
 docs/01 §3 lists `every_n_days` as a valid `routine_steps.frequency` value but

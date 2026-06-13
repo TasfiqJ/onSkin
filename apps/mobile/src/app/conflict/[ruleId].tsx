@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { Button, Card, Text } from '@/components/ui';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { evidenceChip, pairTitle, severityLabel } from '@/features/intelligence/presentation';
-import { useShelf } from '@/features/intelligence/useShelf';
+import { useShelf } from '@/features/shelf/useShelf';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 

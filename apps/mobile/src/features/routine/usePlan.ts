@@ -1,6 +1,6 @@
 import type { EngineProfile } from '@/features/intelligence/engine';
-import { useShelf } from '@/features/intelligence/useShelf';
 import { STARTER_RULES } from '@/features/intelligence/rules';
+import { useShelf } from '@/features/shelf/useShelf';
 
 import { generatePlan, type GeneratedPlan, type RoutineProduct } from './generate';
 
