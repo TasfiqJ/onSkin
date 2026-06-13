@@ -222,6 +222,29 @@ export const RECOMMENDATION_EVENTS = [
 ] as const;
 export type RecommendationEvent = (typeof RECOMMENDATION_EVENTS)[number];
 
+// --- Creator stacks + commerce (docs/10) -------------------------------------
+/** The affiliate rail a "where to buy" link resolves through. Rail-agnostic by
+ *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on OnSkin's
+ *  own recommendations under a house account, swap rails without re-architecting. */
+export type AffiliateSource = 'shopmy' | 'skimlinks' | 'direct' | 'none';
+/** Who curated a shoppable stack. Expert/derm curation is the differentiator;
+ *  anonymous influencer stacks are a trust liability (docs/10 §3). */
+export type CuratorKind = 'editorial' | 'derm' | 'creator';
+/** A polled ShopMy Order-Report row's lifecycle (docs/10 §5; pending → locked after
+ *  the 30–120-day return window, or returned). */
+export type OrderStatus = 'pending' | 'locked' | 'returned';
+/** PostHog commerce events (docs/10 §10) — metadata only; NEVER tune ranking by
+ *  these (church and state). */
+export const COMMERCE_EVENTS = [
+  'where_to_buy_shown',
+  'where_to_buy_clicked',
+  'commerce_consent_granted',
+  'commerce_consent_declined',
+  'transparency_viewed',
+  'stack_viewed',
+] as const;
+export type CommerceEvent = (typeof COMMERCE_EVENTS)[number];
+
 // --- Ingredient intelligence layer (docs/02) ---------------------------------
 /** Non-alarmist by mandate (docs/02 §4): every rule carries an evidence grade +
  *  a resolution, never a bare "never use." */

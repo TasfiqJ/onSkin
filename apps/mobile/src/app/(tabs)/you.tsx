@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Alert, ScrollView, Switch, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
@@ -62,6 +63,13 @@ export default function YouScreen() {
 
   async function setConsent(type: 'marketing' | 'data_sharing', granted: boolean) {
     qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({ ...(prev ?? {}), [type]: granted }));
+    // data_sharing IS the MHMDA third-party-sharing consent that gates "where to buy"
+    // — keep the local-first commerce flag in sync so revoking here re-locks paid links
+    // even before the backend exists (review fix, docs/10 §6 / D-061).
+    if (type === 'data_sharing') {
+      await setCommerceConsentLocal(granted);
+      await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+    }
     try {
       await recordConsent({
         type,
@@ -185,6 +193,7 @@ export default function YouScreen() {
             [
               ['Recommendations', '/recommendations'],
               ['Recommendation preferences', '/recommendations/preferences'],
+              ['Shoppable routines', '/commerce/stacks'],
             ] as const
           ).map(([label, href]) => (
             <Row key={href} label={label}>
@@ -198,6 +207,34 @@ export default function YouScreen() {
               </Text>
             </Row>
           ))}
+        </Card>
+
+        <Card className="mt-4">
+          <Text variant="label" tone="muted" className="mb-1">
+            WHERE TO BUY
+          </Text>
+          <Row
+            label="How we stay honest"
+            hint="Why recommendations and money stay separate — and every paid link is disclosed.">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/commerce/transparency')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
+          </Row>
+          <Row label="Share data with partners (where-to-buy)" hint="Off by default. A separate, revocable MHMDA choice — decline and we won’t show paid links.">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/commerce/consent')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
+          </Row>
         </Card>
 
         <Card className="mt-4">

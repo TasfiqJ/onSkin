@@ -476,6 +476,60 @@ and routine persistence (server `build_routine`, docs/03 §11).
   must never enter the merit relevance funnel — docs/09 §12). D-054…D-057.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (587).
 
+### Slice 24 — Doc 10 Creator Stacks + ShopMy (the commerce layer) + new design ✅ (2026-06-13)
+- **Validated first** (cited deep-research, 25 claims confirmed / 0 refuted, primary
+  sources): affiliate is a **six-figure supplement, not a seven-figure pillar** (Yuka:
+  97.3% of $7.37M from subscriptions, zero affiliate) — the seven-figure business stays
+  a *subscription* business. The research also surfaced a **blocking unknown** (ShopMy's
+  documented APIs don't confirm a brand can mint links on its **own** recommendations
+  under a house account; link creation is creator-OAuth-only, the Brand Partners API is
+  reporting-only/poll-only, **no webhooks**) → the build is **rail-agnostic** and the
+  live rail is **stubbed/inert**. Full validation + every-detail spec:
+  [docs/10-creator-stacks-build-spec.md](docs/10-creator-stacks-build-spec.md).
+- **Church-and-state schema** (migration 0022): the commerce domain (`affiliate_links`,
+  `creator_stacks`, `creator_stack_items`, `commerce_click_events`, `order_attributions`)
+  walled off **downstream** of the docs/09 ranking engine — **no commission/rate column
+  is client-readable**; commission lives ONLY in `order_attributions`, which is
+  **service-role only** (RLS enabled, zero client policies — the row-level wall);
+  `commerce_click_events` is owner-RLS + content-free; the catalog tables are
+  world-readable-to-authenticated / service-role-write (the D-016 pattern). The ranking
+  modules import **nothing** from `features/commerce`. `Database` type + `@onskin/types`
+  (`AffiliateSource`/`CuratorKind`/`OrderStatus`/`COMMERCE_EVENTS`) extended; no RLS weakened.
+- **Pure, tested modules** (`features/commerce/`): `attribution.ts` (the **opaque-token
+  trust guard** — `buildOutboundUrl` takes no profile, a health denylist + fixtures
+  assert **no skin data ever reaches a retailer**, Doc 10's analogue of the docs/09
+  "no commercial input" guard), `links.ts` (**rail-agnostic** `source`-tagged resolution
+  + honest empty state, dev-only demo), `stacks.ts` (expert/derm stacks, **B-DERM-REVIEW
+  launch gate** `STACKS_REVIEWED` + `shippableStacks()`), `consentLogic.ts` (the pure,
+  tested **ledger-authoritative-then-local** consent precedence), `copy.ts` + the
+  **FTC/claim-safety guard** ("paid link" not "affiliate link", disclosure unavoidable,
+  no dark patterns, concerns-not-conditions), `consent.ts`/`store.ts` (local-first
+  MHMDA consent + click token, the D-029 pattern). **83 new fixtures.**
+- **4 design surfaces** + wiring: the quiet **consent-gated "where to buy"** beneath the
+  rationale (`WhereToBuy.tsx`, in the Doc-9 rec card — replacing its inert link; FTC
+  "Paid link" chip + the disclosure **visible with the links**, bold-inked independence
+  clause, "add it to your shelf instead"), the expert/derm **shoppable Stack**
+  (`app/commerce/stack/[slug].tsx` + `stacks.tsx`), the dark **transparency page**
+  (`app/commerce/transparency.tsx` — the Wirecutter-grade church-and-state explainer),
+  and the **MHMDA consent gate** (`app/commerce/consent.tsx` — separate/distinct/opt-in/
+  revocable, **strict default: no consent ⇒ no paid links**). You-tab gains a **WHERE TO
+  BUY** card. A geometric `LockGlyph` replaces colour emoji (no-svg convention).
+- **Order-Report poll** Edge Function **stub** (`supabase/functions/order-report-poll/`)
+  documenting the poll contract (`record_updated_at` incremental key, 500/page, idempotent
+  upsert into `order_attributions`, pg_cron daily) — **inert** behind B-SHOPMY.
+- **Honest, inert money path**: physical-goods links take no IAP cut (Apple 3.1.3(e),
+  verified); tapping records a content-free click + shows an honest stub; the live ShopMy
+  rail + real catalogue/retailers/prices are **B-SHOPMY** + **B-CATALOG-SEED**.
+- **Adversarially reviewed by a 4-dimension workflow** (RLS/SQL · spec · design ·
+  FTC/MHMDA/claim-safety/church-and-state, **16 agents, each finding verified**) → **0
+  blocking**; **1 high fixed**: revoking the You-tab "Share data with partners" toggle now
+  re-locks paid links (the ledger is authoritative-when-present + the toggle mirrors the
+  local flag + a pure tested precedence) — the MHMDA revocation contract is honoured.
+  Lows fixed: the Order-Report poll stub added, the disclosure independence clause
+  bold-inked, the colour-emoji shield/lock replaced with a geometric monochrome glyph.
+  D-058…D-062.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (670).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -507,7 +561,8 @@ and routine persistence (server `build_routine`, docs/03 §11).
 7. ✅ Reminders / streaks / widgets — Doc 7 (Slice 21): tiered local-first notifications + frequency caps + quiet hours, the calm forgiving streak, soft-ask + settings hub + timing + welcome-back + widget/Live-Activity previews; native widgets/delivery deferred to **B-WIDGETS** / **B-NOTIF-VERIFY**
 8. ✅ Subscriptions / paywall — Doc 8 (Slice 22): reverse-trial conversion model, honest paywall + lifecycle screens, local-first entitlement gating; native IAP deferred to **B-REVENUECAT**, store/ARL review to **B-LEGAL**
 9. ✅ Personalized recommendations — Doc 9 (Slice 23): the independent, needs-based "church and state" advisor — the six honest triggers + an honest "you're set", the merit-only six-input FIT score (no commercial input), type-first + restrained, the what/why/how explainability, the "For you" hub + card + preferences + in-routine gap prompt; goal-active rec types launch-gated under **B-DERM-REVIEW**, the commerce/affiliate path deferred + inert (doc #10 / **B-PRIVACY** / **B-CATALOG-SEED**)
-10–12. 🚫 creator stacks / community / AI — need their docs (Doc 10 also **B-SHOPMY**)
+10. ✅ Creator stacks + ShopMy — Doc 10 (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own independent recommendations — church-and-state schema (commission service-role-only, never client-readable, never in ranking), opaque-token attribution (no skin data to retailers), FTC "paid link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the transparency page; validated as a **six-figure supplement** (not 7-figure). The live ShopMy rail is **rail-agnostic + stubbed/inert** — the house-account model is unconfirmed (**B-SHOPMY**), real catalogue/prices (**B-CATALOG-SEED**), final consent copy/DPIA (**B-PRIVACY**), stacks sign-off (**B-DERM-REVIEW**)
+11–12. 🚫 community / AI — need their docs
 
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15

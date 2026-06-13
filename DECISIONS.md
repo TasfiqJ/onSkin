@@ -509,3 +509,62 @@ Format: `D-NNN — date — decision — rationale`.
   recomputes live and is never the source of truth (docs/09 §5/§12). Replacement
   reuses the existing replenishment sheet (docs/04); "Add to shelf" routes to the
   manual-add flow until the catalog lands (B-CATALOG-SEED).
+
+## Creator stacks + commerce (docs/10, Slice 24)
+
+> Validated by a cited deep-research pass (25 claims confirmed, 0 refuted): affiliate
+> is a SIX-figure supplement, not a seven-figure pillar (Yuka: 97.3% of $7.37M from
+> subscriptions, zero affiliate); the seven-figure business stays a subscription
+> business. The build is framed and scoped accordingly.
+
+- **D-058 — 2026-06-13 — Church-and-state at the schema + code level (docs/10 §9).**
+  The commerce domain (migration 0022: `affiliate_links`, `creator_stacks`,
+  `creator_stack_items`, `commerce_click_events`, `order_attributions`) is walled off
+  DOWNSTREAM of the docs/09 ranking engine: it joins to a product only by
+  `product_type`/`catalog_product_id`, after ranking, and **no commission/rate field is
+  client-readable** — commission lives ONLY in `order_attributions`, which is
+  **service-role only** (RLS enabled, zero client policies, the row-level wall). The
+  ranking modules (`features/recommendations/*`) import **nothing** from
+  `features/commerce`. The doc's "physically separate Postgres schemas" is satisfied for
+  v1 by module-boundary + column-separation + RLS (one Supabase service role; all tables
+  in `public`, consistent with the prior 21 migrations); a true separate `commerce`
+  schema is a deferred infra hardening — the load-bearing guarantee is delivered now.
+
+- **D-059 — 2026-06-13 — Rail-agnostic resolution (the B-SHOPMY hedge).** The research
+  surfaced a BLOCKING unknown: ShopMy's documented APIs do **not** confirm a brand can
+  mint affiliate links on its **own** first-party recommendations under a house account
+  (link creation is creator-OAuth-only; the Brand Partners API is reporting-only,
+  poll-based, **no webhooks**). So `links.ts` resolves behind a `source` discriminator
+  (`shopmy`|`skimlinks`|`direct`|`none`) — if the house-account model is unworkable we
+  swap rails without re-architecting. The live rail is **stubbed/inert** (B-SHOPMY): v1
+  returns a dev-only demo set and an honest empty state in production; tapping records a
+  click + shows an honest stub. The Order-Report poll (pg_cron → Edge Function, keyed on
+  `record_updated_at`) is schema-only here.
+
+- **D-060 — 2026-06-13 — Opaque-token attribution; no health-adjacent data ever reaches
+  a retailer (docs/10 §5).** `attribution.ts` (pure, tested) builds the outbound URL
+  with **only** an opaque token — `buildOutboundUrl(url, token)` takes no profile
+  argument, so skin data cannot be attached even by mistake; a health-term denylist +
+  fixtures assert the URL and the persisted click payload carry no concern/goal/skin/
+  pregnancy/photo/profile attribute. This is Doc 10's analogue of the docs/09 "FIT score
+  has no commercial input" guard. Deep-link straight out (no in-app webview) — keeps
+  OnSkin out of the transaction and reduces data-handling liability.
+
+- **D-061 — 2026-06-13 — MHMDA-strict consent gate (docs/10 §6).** The "where to buy"
+  affordance is gated behind a **separate, distinct, opt-in, revocable** consent
+  (reusing the `data_sharing` consent type — the only third-party-sharing consent in the
+  docs/01 enum — recorded with commerce-specific copy + version into the immutable
+  ledger). **Stricter than the mock:** no consent ⇒ **no paid links are shown at all**
+  (the mock implied "links still work with zero tracking"; we adopt the safer MHMDA
+  reading). The local flag is the v1 source of truth (offline-safe); the You-tab
+  "Share data with partners" toggle revokes it (re-locks the affordance). Final consent
+  copy + DPIA: B-PRIVACY / B-PRIVACY-COPY.
+
+- **D-062 — 2026-06-13 — FTC-correct disclosure + launch-gated expert/derm stacks.** The
+  disclosure uses **"paid link"** (FTC-adequate) and never "affiliate link"/
+  "commissionable link" (FTC-inadequate), is rendered **visible WITH the links** (16 CFR
+  255 "unavoidable", never collapsed), and states independence — enforced by a
+  `claimsafety.test.ts` guard with positive controls. The expert/derm-reviewed shoppable
+  **stacks** are medical-adjacent → launch-gated under **B-DERM-REVIEW**
+  (`STACKS_REVIEWED = false` + `shippableStacks()`, mirroring `shippableRules()`); they
+  are ordered by the routine sequence, never by commission.

@@ -1,8 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { WhereToBuy } from '@/features/commerce/WhereToBuy';
 import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { dismissRecommendation } from '@/features/recommendations/store';
@@ -41,6 +42,10 @@ function Body({ rec }: { rec: Recommendation }) {
     router.back();
   };
 
+  // Where-to-buy is for real catalog types (gap / goal / better-fit / completion) —
+  // the shelf-anchored replacement & conflict triggers route elsewhere (docs/10 §3).
+  const showWhereToBuy = rec.trigger !== 'replacement' && rec.trigger !== 'conflict';
+
   const accept = () => {
     haptics.success();
     track('recommendation_accepted', { trigger: rec.trigger, type: rec.productType });
@@ -51,19 +56,6 @@ function Body({ rec }: { rec: Recommendation }) {
     // No catalog yet (B-CATALOG-SEED) → the honest path is the manual-add flow, so
     // the user adds their own product of this type. Church-and-state intact.
     router.push('/shelf/manual');
-  };
-
-  // The disclosed-commerce link is INERT here (doc #10 / B-PRIVACY): it states the
-  // disclosure honestly and explains links arrive with the catalog, behind the
-  // separate data-sharing consent — it shares nothing. We deliberately fire NO
-  // analytics here: a commerce-intent tap must never enter the merit accept/dismiss
-  // relevance funnel (docs/09 §12 — instrument for trust, never toward commission).
-  const whereToFind = () => {
-    Alert.alert(
-      'Where to find it',
-      'Shopping links arrive with the product catalog, and they’re shared only after you turn on data-sharing in Settings. It never affects what we recommend.',
-      [{ text: 'OK' }],
-    );
   };
 
   return (
@@ -115,19 +107,9 @@ function Body({ rec }: { rec: Recommendation }) {
           {rec.how.caveat ? <HowRow k={REC_COPY.howKeys.caveat} value={rec.how.caveat} accent="#8A6A55" /> : null}
         </View>
 
-        {/* disclosed commerce — inert (doc #10 / B-PRIVACY) */}
-        <View
-          className="mt-4 flex-row items-center justify-between pt-3"
-          style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}>
-          <Text className="max-w-[210px] text-[11px]" tone="muted" style={{ lineHeight: 15 }}>
-            {REC_COPY.card.disclosure}
-          </Text>
-          <Pressable accessibilityRole="button" onPress={whereToFind} hitSlop={6}>
-            <Text className="font-sans-semibold text-[12.5px]" style={{ color: colors.clay }}>
-              {REC_COPY.card.whereToFind} →
-            </Text>
-          </Pressable>
-        </View>
+        {/* Where to buy (docs/10 §3) — a quiet, consent-gated, FTC-disclosed affordance
+            BENEATH the rationale; church-and-state walled, opaque-token attribution. */}
+        {showWhereToBuy ? <WhereToBuy productType={rec.productType} /> : null}
       </View>
 
       {/* actions */}

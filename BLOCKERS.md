@@ -14,7 +14,7 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–23** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–24** — full foundation (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
 **Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
 the **Document 4 Smart Shelf**, the **Document 5 actives & skin-cycling scheduler**,
@@ -27,7 +27,11 @@ paywall** (the reverse-trial conversion model, honest paywall + lifecycle screen
 local-first entitlement gating), and the **Document 9 personalized recommendations**
 (the independent "church and state" advisor — the six honest triggers + an honest
 "you're set", the merit-only FIT score, type-first + restrained, the what/why/how
-explainability; **587 tests**). See PROGRESS.md.
+explainability), and the **Document 10 creator stacks + commerce** (the walled-off
+"where to buy" layer — church-and-state schema, opaque-token attribution, FTC "paid
+link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the
+transparency page; validated as a six-figure supplement, the live rail stubbed pending
+B-SHOPMY; **670 tests**). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -44,8 +48,8 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next in build order: **Document 10** (creator
-stacks + ShopMy — also **B-SHOPMY**). Also: a **custom dev build** unlocks the deferred native work —
+documents — see **B-MISSING-DOCS**. Next in build order: **Document 11** (community
+layer). Also: a **custom dev build** unlocks the deferred native work —
 **B-REVENUECAT** (the `react-native-purchases` SDK + offerings → real prices/purchase),
 **B-CAMERA** (vision-camera + ML-Kit guided capture), **B-WIDGETS**
 (WidgetKit/Glance/ActivityKit), and **B-NOTIF-VERIFY** (on-device notification
@@ -122,8 +126,37 @@ wired yet beyond the documented env vars.
 `EXPO_PUBLIC_TURNSTILE_SITE_KEY` + the secret configured in Supabase Auth.
 Strongly recommended for anonymous sign-in + signup (docs/01 §5).
 
-### B-SHOPMY — ShopMy affiliate OAuth 🔴 open
-Creator-stacks slice (future doc). OAuth client id/secret needed. Not yet built.
+### B-SHOPMY — ShopMy affiliate rail + the house-account question 🔴 open (commerce launch gate)
+**Updated (Slice 24, docs/10).** The Doc 10 commerce layer is BUILT around this: the
+4 surfaces, the church-and-state schema, the opaque-token attribution, the FTC
+disclosure, the MHMDA consent gate, the expert/derm stacks, and the transparency page
+all ship; the live affiliate **rail is stubbed/inert** behind this blocker. A **cited
+deep-research pass (2026-06-13)** surfaced the central unknown that must be answered by
+ShopMy partnerships (partners@shopmyshelf.us) **before any real link is minted**:
+- **The house-account question (BLOCKING):** ShopMy's documented APIs do **not** confirm
+  a brand/app can create affiliate links on its **own** first-party recommendations under
+  a house account. **Link creation lives only in the creator-side OAuth Developer API**,
+  scoped *"on behalf of authenticated ShopMy users"* (individual creators must grant
+  per-user `write_links`); the **Brand Partners API is reporting-only** (the poll-based
+  `Fetch Order Report`, **no webhooks**, 200 req/day). If ShopMy can't run house-side,
+  the OAuth-on-behalf-of-creator model forces the creator-marketplace shape the product
+  explicitly rejects. **The build is rail-agnostic** (`features/commerce/links.ts` carries
+  a `source` discriminator: `shopmy`|`skimlinks`|`direct`|`none`) so a fallback rail
+  (Skimlinks/Sovrn aggregator, or direct retailer programs) can be swapped in without
+  re-architecting. (Avoid Amazon Associates in-app — its operating agreement restricts
+  mobile-app use.)
+- **API access is GATED** to approved partners (the Brand Partners API needs the brand
+  domain registered + a brand API key; the OAuth console is behind a login). OnSkin must
+  be onboarded/approved before any integration. Provide `SHOPMY_BRAND_API_KEY` (the
+  `order-report-poll` Edge Function stub consumes it) + the OAuth client id/secret if the
+  creator rail is ever used.
+- **Re-verify the gated schemas** at build time: the exact `Create Link` / `Fetch URL
+  Rate` / `Search Catalog` / `Fetch Order Report` response shapes (partly undocumented).
+- **No webhooks** → the daily `pg_cron → order-report-poll` Edge Function is mandatory
+  (built as an inert stub; keyed on `record_updated_at`, idempotent upsert into the
+  service-role-only `order_attributions`).
+The economics are validated as a **six-figure supplement** (not a 7-figure pillar) — see
+docs/10-creator-stacks-build-spec.md.
 
 ---
 
@@ -159,7 +192,10 @@ conflict matrix: `RECS_REVIEWED = false` + `shippableRecTypes()`
 (`apps/mobile/src/features/recommendations/catalog.ts`) withhold them in production
 until a board-certified dermatologist signs off; structural routine-completeness
 types (a cleanser, a moisturiser, an SPF) ship, and the pregnancy hard-exclusion is
-enforced regardless. **Also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
+enforced regardless. **Also covers the docs/10 expert/derm shoppable stacks** (Slice 24,
+`STACKS_REVIEWED = false` + `shippableStacks()`): a published stack asserts a routine, so
+it stays dev-only until a dermatologist signs off (`creator_stacks.reviewed_by`).
+**Also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
 `sequencing_rules` (application order), the `active_ramp` cadence numbers, and the
 skin-cycling personalisation. docs/04 §3: the **PAO category defaults** (gated in
 production via `PAO_DEFAULTS_REVIEWED`, D-032). docs/05 §8: the **scheduler's
@@ -208,7 +244,11 @@ Commission relaunch); seed Open Beauty Facts from the **daily dumps** via DuckDB
 Settings/About + share-alike + **contribute-back** newly-added products); hand-
 curate the top ~2,000 products with concentration bands; populate
 `ingredient_tags`. Until then the engine uses the client-side starter tag
-dictionary for the common active families.
+dictionary for the common active families. **Also gates the Doc 10 commerce layer
+(Slice 24):** the real retailers / prices / `affiliate_links` rows that the "where to
+buy" affordance + the shoppable stacks resolve — until seeded (+ the rail approved,
+B-SHOPMY), where-to-buy shows a dev-only demo set and an honest empty state in
+production.
 
 ### B-SERVER-DETECT — server-authoritative detect_conflicts() 🟡 deferred
 docs/02 §10 specifies a `SECURITY DEFINER` `detect_conflicts(uid)` PL/pgSQL twin
@@ -275,7 +315,7 @@ remaining build-order items need their detailed doc:
 | 7 · Reminders / streaks / widgets | Doc 7 ✅ received | **BUILT** (Slice 21): `notification_preferences` extensions + `streak_freezes` + content-free `notification_log` (migration 0019, owner-RLS); the pure tested calm forgiving streak (auto-freezes, earn-back, weekly adherence + heat-map, non-decreasing best — 11 fixtures) + the tiered notification policy (caps + quiet hours — 13 fixtures) + a notification claim-safety guard; local-first notification-prefs store + the `expo-notifications` DAILY-trigger delivery layer (frequency-cap engine); the soft-ask, the tiered settings hub, timing/quiet-hours/discretion, welcome-back, and the widgets/interactive-checkoff/Live-Activity previews. Blocked sub-parts: native widgets + interactive check-off + Live Activity (**B-WIDGETS**), on-device delivery + Android-14 verification (**B-NOTIF-VERIFY**), win-back push + lock-screen copy DPIA (**B-PRIVACY**), server `recompute_streak` twin + APNs/FCM (**B-SUPABASE** / B-SERVER-DETECT) |
 | 8 · Subscriptions / paywall | Doc 8 ✅ received | **BUILT** (Slice 22): the reverse-trial conversion model (two honest paths), entitlements extensions (migration 0020: period_type/store/will_renew/attribution), the pure tested plan catalog + entitlement-state derivation + a paywall claim-safety guard (91 tests), the local-first entitlement cache + `useEntitlement`/`ProGate`/`withProGate` gating (offline-safe, gates on `is_active` regardless of source), the app-granted reverse trial, and all 9 surfaces (onboarding offer, reverse-trial banner, re-offer, contextual upsell, success, manage subscription, graceful downgrade, honest win-back) + the event-type-correct webhook (never revokes on CANCELLATION). Gating wired on the photo timeline / scheduler / widgets. Blocked sub-parts: the native `react-native-purchases` SDK + localized offering prices + purchase/restore + the server reverse-trial grant (**B-REVENUECAT**), store/ARL/external-link/final-policy legal review (**B-LEGAL** / **B-PRIVACY-COPY**), server entitlement mirror (**B-SUPABASE**) |
 | 9 · Personalized recommendations | Doc 9 ✅ received | **BUILT** (Slice 23): the `recommendation_preferences` + `recommendations` schema (owner-RLS, **no commercial column**), the pure tested engine (the six honest triggers + an honest "you're set", the merit-only six-input FIT score, the B-DERM-REVIEW launch gate on goal actives), the centralised claim-safe copy + guard, and the 5 surfaces (For-you hub, what/why/how card, "you're set", preferences, in-routine gap prompt) + Today/You wiring. Blocked sub-parts: the commerce/affiliate path (**doc 10** / **B-PRIVACY** data-sharing consent / **B-SHOPMY**) is deferred + inert, specific-product recommendations are catalog-thin → type-first until **B-CATALOG-SEED**, clinical sign-off of the goal-active rec types (**B-DERM-REVIEW**), server persistence (**B-SUPABASE**) |
-| 10 · Creator stacks + ShopMy | Doc 10 | blocked (also B-SHOPMY) |
+| 10 · Creator stacks + ShopMy | Doc 10 ✅ received | **BUILT** (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own recommendations — church-and-state schema (migration 0022: commission service-role-only in `order_attributions`, never client-readable / never in ranking), the opaque-token attribution (no skin data to retailers, tested), the FTC "paid link" disclosure + guard, the MHMDA consent gate, the rail-agnostic resolution, the expert/derm shoppable stacks (B-DERM-REVIEW-gated), the transparency page, and the Order-Report poll Edge Function stub. Validated as a six-figure supplement. Blocked sub-parts: the live ShopMy rail + the **house-account question** (**B-SHOPMY**), real catalogue/retailers/prices (**B-CATALOG-SEED**), final MHMDA consent copy + DPIA + FTC final wording (**B-PRIVACY** / **B-PRIVACY-COPY**), stacks clinical sign-off (**B-DERM-REVIEW**), Google Play 2026 physical-goods/external-link confirmation (**B-LEGAL**) |
 | 11 · Community layer | Doc 11 | blocked |
 | 12 · AI trend analysis | Doc 12 | blocked (intentionally last) |
 
@@ -328,9 +368,22 @@ Also for counsel (docs/04 §7): whether the shelf's product mix is additional
 special-category inference to disclose in the GDPR Art. 35 **DPIA**. This is
 effectively a launch gate for the replenishment commerce line.
 
-**Now also covers the recommendation commerce link (docs/09 §10, Slice 23).** The
-"For you" recommendation card's disclosed "Where to find it" link and the detail
-screen's affiliate path are built **inert** — they state the disclosure honestly
+**Now also covers the docs/10 commerce layer (Slices 23–24).** Slice 24 built the
+actual **MHMDA consent gate** (`app/commerce/consent.tsx`): a separate, distinct,
+opt-in, revocable consent (reusing the `data_sharing` ledger type with commerce copy +
+version) that gates the "where to buy" affordance — **strict default: no consent ⇒ no
+paid links shown at all**. The cited deep-research pass (2026-06-13) confirmed inferred
+skincare-concern data is **regulated consumer health data** under MHMDA, that sharing it
+to an affiliate needs this separate consent, and that the **private right of action is
+live** (Maxwell v. Amazon, Feb 2025) — so counsel must supply the **final consent copy**
+(overlaps B-PRIVACY-COPY), confirm the **FTC "paid link" wording**, and complete a
+**DPIA** covering the commerce data flow before the rail goes live. Counsel should also
+decide whether commerce-sharing needs its **own** distinct consent sub-type vs. the
+unified `data_sharing` (the docs/01 enum currently has one sharing consent). The opaque
+click token carries **no** health-adjacent attribute regardless of consent (tested).
+The earlier (Slice 23) recommendation "Where to find it" link is superseded by this gate.
+Original Slice-23 note: the "For you" card's affiliate path was built **inert** — it
+states the disclosure honestly
 ("we may earn a commission — it never affects what we recommend"), share nothing, and
 fire no analytics. Going live requires the **same** separate MHMDA/GDPR data-sharing
 consent as replenishment (the engine itself shares nothing; church-and-state keeps

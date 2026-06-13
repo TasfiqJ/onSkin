@@ -740,6 +740,142 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['recommendations']['Insert']>;
         Relationships: [];
       };
+      // docs/10 — the commerce domain, walled off downstream of ranking (D-058). No
+      // commission/rate column is client-readable; order_attributions is service-role only.
+      affiliate_links: {
+        Row: {
+          id: string;
+          product_type: string;
+          catalog_product_id: string | null;
+          retailer: string;
+          label: string;
+          url: string;
+          price_cents: number | null;
+          currency: string | null;
+          source: string;
+          is_paid: boolean;
+          is_active: boolean;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          product_type: string;
+          catalog_product_id?: string | null;
+          retailer: string;
+          label: string;
+          url: string;
+          price_cents?: number | null;
+          currency?: string | null;
+          source?: string;
+          is_paid?: boolean;
+          is_active?: boolean;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['affiliate_links']['Insert']>;
+        Relationships: [];
+      };
+      creator_stacks: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          subtitle: string | null;
+          curator: string;
+          curator_kind: string;
+          reviewed_by: string | null;
+          is_active: boolean;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          subtitle?: string | null;
+          curator: string;
+          curator_kind?: string;
+          reviewed_by?: string | null;
+          is_active?: boolean;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['creator_stacks']['Insert']>;
+        Relationships: [];
+      };
+      creator_stack_items: {
+        Row: {
+          id: string;
+          stack_id: string;
+          position: number;
+          product_type: string;
+          catalog_product_id: string | null;
+          role_label: string;
+          note: string | null;
+        };
+        Insert: {
+          id?: string;
+          stack_id: string;
+          position: number;
+          product_type: string;
+          catalog_product_id?: string | null;
+          role_label: string;
+          note?: string | null;
+        };
+        Update: Partial<Database['public']['Tables']['creator_stack_items']['Insert']>;
+        Relationships: [];
+      };
+      commerce_click_events: {
+        Row: {
+          id: string;
+          user_id: string;
+          click_token: string;
+          product_type: string | null;
+          affiliate_link_id: string | null;
+          source: string;
+          consented: boolean;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          click_token: string;
+          product_type?: string | null;
+          affiliate_link_id?: string | null;
+          source?: string;
+          consented?: boolean;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['commerce_click_events']['Insert']>;
+        Relationships: [];
+      };
+      // Service-role only (no client policies) — commission/order data, the row-level
+      // church-and-state wall (docs/10 §9).
+      order_attributions: {
+        Row: {
+          id: string;
+          external_order_id: string;
+          click_token: string | null;
+          order_amount_cents: number | null;
+          commission_cents: number | null;
+          currency: string | null;
+          status: string;
+          transaction_date: Timestamptz | null;
+          record_updated_at: Timestamptz | null;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          external_order_id: string;
+          click_token?: string | null;
+          order_amount_cents?: number | null;
+          commission_cents?: number | null;
+          currency?: string | null;
+          status?: string;
+          transaction_date?: Timestamptz | null;
+          record_updated_at?: Timestamptz | null;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['order_attributions']['Insert']>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
