@@ -1,29 +1,53 @@
+import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { supabase } from '@/lib/supabase/client';
 
 // 01 · Welcome — the anonymous session starts silently here (docs/01 §1/§2).
+// Also acts as the entry gate: a returning user who already finished onboarding
+// (a completed skin_profile exists) is sent straight to Today.
 export default function WelcomeScreen() {
-  const { ensureAnonymousSession } = useAuth();
+  const { ensureAnonymousSession, session, initializing } = useAuth();
   const [busy, setBusy] = useState(false);
+
+  // Onboarding-completion check as a query (no setState-in-effect).
+  const onboarded = useQuery({
+    queryKey: ['onboarded', session?.user.id],
+    enabled: !!session && !initializing,
+    retry: 0,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('skin_profiles')
+        .select('id', { count: 'exact', head: true })
+        .not('completed_at', 'is', null);
+      return (count ?? 0) > 0;
+    },
+  });
+
+  useEffect(() => {
+    if (onboarded.data === true) router.replace('/today');
+  }, [onboarded.data]);
 
   async function begin() {
     setBusy(true);
     track('onboarding_started');
     try {
-      // Silent guest session. BLOCKED: B-SUPABASE/B-TURNSTILE — non-fatal so the
-      // flow is navigable before the backend is configured.
       await ensureAnonymousSession();
     } catch {
-      // Continue regardless; data persistence is best-effort until configured.
+      // non-fatal before backend is configured
     }
     setBusy(false);
     router.push('/onboarding/goals');
   }
+
+  // Stay on splash while deciding; render nothing while redirecting an onboarded user.
+  const deciding = initializing || (!!session && onboarded.isLoading);
+  if (deciding || onboarded.data === true) return null;
 
   return (
     <Screen>

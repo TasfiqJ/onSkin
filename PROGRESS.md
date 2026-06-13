@@ -83,9 +83,24 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   Supabase/RevenueCat are configured. RevenueCat purchase stubbed (B-REVENUECAT).
 - **Gates:** typecheck ✅ · lint ✅.
 
+### Slice 5 — App shell + Today activation loop ✅ (2026-06-12)
+- 4-tab bottom navigation (Today/Progress/Shelf/You) with the design-spec clay-dot
+  active indicator.
+- **Today** screen (design spec p.8/9): AM light / PM dark, time-aware greeting,
+  streak chip, routine card with tappable **check-off** wired to
+  `routine_completions` (the activation metric, docs/01 §7) via an optimistic
+  TanStack mutation + streak read from `profiles`. Honest empty state where a
+  routine doesn't exist yet (routine builder = Document 3, blocked).
+- Progress + Shelf tabs: design-spec-faithful placeholders citing their blocked
+  docs (6, and 2/4). You tab: account status + sign out (full privacy controls
+  next slice).
+- Welcome now gates: an onboarded returning user (completed skin_profile) is sent
+  straight to `/today` (modeled as a query — no setState-in-effect).
+- **Gates:** typecheck ✅ · lint ✅.
+
 ## In progress
 
-### Slice 5 — Today screen + routine check-off (activation) — next
+### Slice 6 — You / privacy & account controls (docs/01 §4/§5) — next
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)
