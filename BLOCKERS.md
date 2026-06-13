@@ -7,7 +7,36 @@ specify. The code is built _around_ each one and reads from `.env` placeholders
 marked in code with `// BLOCKED: <id>`.
 
 **Status key:** 🔴 open (needs you, nothing safe to stub) · 🟡 stubbed (code
-built + wired to a placeholder; drop in the real value and it works) · ✅ cleared.
+built + wired to a placeholder; drop in the real value and it works) · 🟢
+de-risked · ✅ cleared.
+
+---
+
+## How to clear these in one pass (the founder's TODO)
+
+Captured from the Slices 0–6 handoff report so this file stands alone.
+
+**1. To make the app actually run end-to-end**
+- **B-SUPABASE** first: create the project, provide the URL + publishable +
+  secret keys, then `supabase db push` (applies every migration) and
+  `supabase gen types typescript … > packages/types/src/database.types.ts`.
+  On a Mac, `expo start` / EAS build for iOS.
+- Then add each account key as a single `.env` value when ready: **B-APPLE**,
+  **B-GOOGLE**, **B-REVENUECAT**, **B-POSTHOG**, **B-SENTRY**, **B-TURNSTILE**.
+
+**2. To unblock legal content** (you + counsel): **B-QUIZ-COPY**,
+**B-PRIVACY-COPY**, **B-CONFLICT-RULES**.
+
+**3. To unblock the rest of the build order**: provide the missing feature
+documents — see **B-MISSING-DOCS**. Highest leverage: **Document 2**
+(ingredient/conflict engine) and **Document 3** (routine builder), which feed the
+Today loop, shelf, and conflict screens.
+
+**Snapshot of current statuses** — Accounts: B-SUPABASE/REVENUECAT/APPLE/GOOGLE/
+POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal: B-QUIZ-COPY/PRIVACY-COPY/
+CONFLICT-RULES 🔴 · Verify: APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢,
+RC 🟡, PASSKEYS 🔴, RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Docs: MISSING-DOCS 🔴,
+EVERY-N-DAYS 🔴.
 
 ---
 
