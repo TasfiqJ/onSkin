@@ -98,9 +98,26 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   straight to `/today` (modeled as a query — no setState-in-effect).
 - **Gates:** typecheck ✅ · lint ✅.
 
-## In progress
+### Slice 6 — You / privacy & account controls ✅ (2026-06-12)
+- **Biometric app-lock** (expo-local-authentication, docs/01 §5): opt-in Face ID
+  to open the app; `AppLockProvider` locks on cold start + return-from-background;
+  fully functional standalone (no backend needed).
+- **Account deletion** (Apple 5.1.1(v)): confirm dialog → `account-deletion` Edge
+  Function → sign out → welcome.
+- **Data export** (GDPR Art. 20): `data-export` Edge Function → cache file → OS
+  share sheet (`expo-file-system/legacy` + `expo-sharing`).
+- **Consent center**: marketing + data-sharing opt-in toggles (separate from
+  collection per MHMDA), writing the immutable ledger; notification toggles
+  (`notification_preferences`).
+- All backend writes guarded/optimistic; functional before config.
+- **Gates:** typecheck ✅ · lint ✅.
 
-### Slice 6 — You / privacy & account controls (docs/01 §4/§5) — next
+## Stopping point
+
+Slices 0–6 cover everything Documents 00/01 + the design spec authorize. The
+remaining build-order items (2–12) need their feature documents (see
+BLOCKERS B-MISSING-DOCS) and the account/legal/verify items. Handing back for a
+clearing pass.
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)

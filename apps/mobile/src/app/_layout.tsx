@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
+import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { queryClient } from '@/lib/query/queryClient';
 import { fontMap } from '@/theme/fonts';
@@ -29,8 +30,10 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{ headerShown: false }} />
+            <AppLockProvider>
+              <StatusBar style="dark" />
+              <Stack screenOptions={{ headerShown: false }} />
+            </AppLockProvider>
           </AuthProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
