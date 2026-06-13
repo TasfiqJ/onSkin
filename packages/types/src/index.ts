@@ -62,11 +62,56 @@ export type ProductStatus = 'active' | 'finished' | 'discarded';
 // --- Entitlements (docs/01 §3 `entitlements`) --------------------------------
 export type EntitlementTier = 'pro' | 'pro_plus';
 
-// --- Conflict engine (docs/00 §2 sketch — full data is BLOCKED B-CONFLICT) ---
-/** Non-alarmist by mandate (docs/00 §3 caveat): every rule carries an evidence
- *  grade + a resolution, never a bare "never use." */
-export type ConflictSeverity = 'low' | 'moderate' | 'high';
-export type EvidenceGrade = 'strong' | 'moderate' | 'limited' | 'contested';
+// --- Ingredient intelligence layer (docs/02) ---------------------------------
+/** Non-alarmist by mandate (docs/02 §4): every rule carries an evidence grade +
+ *  a resolution, never a bare "never use." */
+export type ConflictSeverity = 'none' | 'mild' | 'moderate' | 'high';
+
+/** The five interaction classes + the `myth` reassurance label (docs/02 §4.1). */
+export type InteractionType = 'irritation' | 'stability' | 'efficacy' | 'synergy' | 'safety' | 'myth';
+
+/** Internal SORT-anchored grade (Ebell et al., AFP 2004) — docs/02 §4.3. */
+export type EvidenceGrade = 'A' | 'B' | 'C';
+/** Consumer-facing evidence label mapped on top of the grade (docs/02 §4.3). */
+export type EvidenceLabel = 'established' | 'plausible' | 'contested' | 'refuted';
+
+/** Resolution verbs (docs/02 §4.5). */
+export type ResolutionType =
+  | 'separate_am_pm'
+  | 'alternate_nights'
+  | 'buffer'
+  | 'lower_frequency'
+  | 'no_change'
+  | 'reassure'
+  | 'avoid_refer';
+
+/** Functional families the conflict engine matches on (docs/02 §2.4/§4.4).
+ *  `pregnancy` is a profile-derived pseudo-tag injected for safety rules. */
+export const FUNCTIONAL_TAGS = [
+  'retinoid',
+  'aha',
+  'bha',
+  'benzoyl_peroxide',
+  'vitamin_c',
+  'niacinamide',
+  'copper_peptide',
+  'hydroquinone',
+  'sunscreen',
+  'physical_spf',
+  'chemical_spf',
+  'humectant',
+  'ceramide',
+  'barrier',
+  'pregnancy',
+] as const;
+export type FunctionalTag = (typeof FUNCTIONAL_TAGS)[number];
+
+/** Sub-flags that exempt/modulate a rule (docs/02 §2.4/§4.2). */
+export type IngredientSubflag = 'adapalene' | 'tretinoin' | 'encapsulated' | 'l_ascorbic_acid';
+
+export type CatalogSource = 'cosing' | 'open_beauty_facts' | 'curated' | 'user_contributed';
+
+export type RoutineConflictStatus = 'suggested' | 'accepted' | 'overridden' | 'dismissed';
 
 // --- Onboarding analytics taxonomy (docs/01 §7) ------------------------------
 export const ONBOARDING_EVENTS = [

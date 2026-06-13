@@ -100,3 +100,43 @@ Format: `D-NNN — date — decision — rationale`.
   `BEFORE UPDATE` trigger blocks all updates (even service-role) so consent
   history can't be rewritten; revocation is a new row. DELETE is left open so the
   account-deletion FK cascade still works.
+
+## Ingredient intelligence layer (docs/02, Slices 7–8)
+
+- **D-016 — 2026-06-13 — Catalog/rule tables world-readable to authenticated
+  (incl. anonymous), service-role write only** (docs/02 §3). Product intake
+  happens during the pre-account quiz, so anon (who hold the `authenticated`
+  role) must read the catalog; `conflict_rules` exposes only `is_active` rows.
+  The Slice-1 docs/00 §2 catalog *sketch* (migration 0003) was rewritten to the
+  docs/02 §3 schema — it was a never-applied placeholder, so editing forward is
+  clean (no deployed DB; B-SUPABASE).
+
+- **D-017 — 2026-06-13 — Conflict rules match on FUNCTIONAL TAGS, not INCI ids**
+  (docs/02 §2.4/§4). It's the acid-ness / retinoid-ness that interacts. A
+  client-side starter tag dictionary (`features/intelligence/tags.ts`) covers the
+  active families so manual/OCR/curated products tag without the full CosIng seed.
+
+- **D-018 — 2026-06-13 — `routine_conflicts` is a per-user, owner-RLS, recomputed
+  cache** the tested client engine upserts (docs/02 §3). Insert/update prove
+  ownership of referenced products via `owns_user_product()` (RLS-review finding,
+  D-014 pattern). rule_id may reference a now-inactive rule by design (audit;
+  `rule_version` records which version produced the row).
+
+- **D-019 — 2026-06-13 — `conflict_rules.evidence_grade` is nullable; NULL = the
+  doc's "—" for refuted myths** (docs/02 §4.3). The consumer `evidence_label`
+  ('refuted') drives presentation; a debunked myth isn't recorded as a real SORT
+  grade. (RLS/fidelity-review finding.)
+
+- **D-020 — 2026-06-13 — One TESTED detection implementation (client TS), with a
+  per-rule fixture suite (vitest).** docs/02 §10 mandates fixture tests for this
+  liability surface. The bundled ruleset (`rules.ts`) mirrors the DB seed by
+  FIXED rule id; the engine prefers cached-DB rules at runtime (docs/02 §10) and
+  falls back to the bundle offline. The doc's server-authoritative
+  `detect_conflicts()` PL/pgSQL twin is deferred (B-SERVER-DETECT) — a single
+  tested impl is safer than an untestable SQL twin that could diverge.
+
+- **D-021 — 2026-06-13 — Evidence labels stay honest, not inflated** (review
+  finding): the 3 pregnancy `safety` rules are `contested` (caution, not
+  demonstrated harm — docs/02 §4.8), with conservatism carried by `high`
+  severity + `avoid_refer`, not by the evidence label. `bha × pregnancy` is
+  dose-gated (`requiresHighDose`) so it doesn't false-alarm on low-dose BHA.

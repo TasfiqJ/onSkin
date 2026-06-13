@@ -111,12 +111,38 @@ Privacy Policy, Terms of Service, and the exact consent statements for
 `data_sharing`. A GDPR Art. 35 **DPIA** is advised given large-scale health-data
 processing.
 
-### B-CONFLICT-RULES — Ingredient conflict matrix 🔴 open
-The conflict engine + schema (`conflict_rules`: severity, evidence_grade,
-resolution, citation) are built, but the **30–60 curated ingredient pairs** are
-contested dermatology content (docs/00 §3, caveat: evidence is genuinely
-contested). Needs derm/literature curation + each rule carrying an evidence
-grade and a non-alarmist resolution. Belongs to the (missing) Document 2.
+### B-DERM-REVIEW — Clinical sign-off of the conflict matrix 🔴 open (LAUNCH GATE)
+docs/02 §9 makes this **mandatory, not optional** — it gates launch of the whole
+intelligence layer. The ~14 starter rules (migration `…0013_seed_intelligence.sql`
++ `apps/mobile/src/features/intelligence/rules.ts`) are authored from docs/02
+§4.4/§4.8 but every row has `reviewed_by = NULL`. Before ANY rule (especially the
+`safety`/pregnancy rows) is shown to real users, a **board-certified
+dermatologist + a cosmetic chemist/pharmacist** must review every rule's
+type/severity/grade/mechanism/resolution/citation and the PAO category defaults,
+and populate `reviewed_by`. **Production exposure note (RLS review):** the seed
+ships `is_active = true` for dev/demo; before any client-facing deploy, either
+flip unreviewed rows to `is_active = false` or withhold the seed until
+`reviewed_by` is set. Expand toward the doc's ~40 pairs only via versioned,
+reviewed events. *(Supersedes the old B-CONFLICT-RULES — the matrix now exists;
+what's blocked is the clinical sign-off + expansion.)*
+
+### B-CATALOG-SEED — CosIng + Open Beauty Facts data import 🔴 open
+The catalog schema + ingestion design exist, but the actual data isn't imported
+(needs network + the live DB, neither available at build time). docs/02 §2:
+verify CosIng's current bulk-download route (it's been inconsistent since the
+Commission relaunch); seed Open Beauty Facts from the **daily dumps** via DuckDB
+(NOT the API — API is one call per real scan); honor ODbL (attribution in
+Settings/About + share-alike + **contribute-back** newly-added products); hand-
+curate the top ~2,000 products with concentration bands; populate
+`ingredient_tags`. Until then the engine uses the client-side starter tag
+dictionary for the common active families.
+
+### B-SERVER-DETECT — server-authoritative detect_conflicts() 🟡 deferred
+docs/02 §10 specifies a `SECURITY DEFINER` `detect_conflicts(uid)` PL/pgSQL twin
+of the client detector. Deferred (DECISIONS D-020): the tested TS engine + the
+owner-RLS `routine_conflicts` cache cover v1 without a security gap; add the SQL
+twin once there's a live DB to test it against, to avoid an untested
+divergent implementation on a liability surface.
 
 ---
 

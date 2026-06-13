@@ -48,38 +48,72 @@ export type Database = {
         Row: {
           id: string;
           inci_name: string;
+          display_name: string | null;
           cas_number: string | null;
-          functions: string[];
+          ec_number: string | null;
+          cosing_ref: string | null;
+          annex_status: string | null;
+          annex_conditions: string | null;
           source: string;
-          created_at: Timestamptz;
+          imported_at: Timestamptz;
         };
         Insert: {
           id?: string;
           inci_name: string;
+          display_name?: string | null;
           cas_number?: string | null;
-          functions?: string[];
+          ec_number?: string | null;
+          cosing_ref?: string | null;
+          annex_status?: string | null;
+          annex_conditions?: string | null;
           source?: string;
-          created_at?: Timestamptz;
+          imported_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['ingredients']['Insert']>;
+        Relationships: [];
+      };
+      ingredient_synonyms: {
+        Row: { id: string; ingredient_id: string; synonym: string };
+        Insert: { id?: string; ingredient_id: string; synonym: string };
+        Update: Partial<Database['public']['Tables']['ingredient_synonyms']['Insert']>;
+        Relationships: [];
+      };
+      ingredient_tags: {
+        Row: { ingredient_id: string; tag: string; subflag: string | null };
+        Insert: { ingredient_id: string; tag: string; subflag?: string | null };
+        Update: Partial<Database['public']['Tables']['ingredient_tags']['Insert']>;
+        Relationships: [];
+      };
+      ingredient_pao_defaults: {
+        Row: { category: string; default_pao_months: number; rationale: string | null };
+        Insert: { category: string; default_pao_months: number; rationale?: string | null };
+        Update: Partial<Database['public']['Tables']['ingredient_pao_defaults']['Insert']>;
         Relationships: [];
       };
       products: {
         Row: {
           id: string;
+          barcode: string | null;
           name: string;
           brand: string | null;
-          barcode: string | null;
+          category: string | null;
+          default_pao_months: number | null;
+          is_curated: boolean;
           source: string;
-          created_at: Timestamptz;
+          source_ref: string | null;
+          imported_at: Timestamptz;
         };
         Insert: {
           id?: string;
+          barcode?: string | null;
           name: string;
           brand?: string | null;
-          barcode?: string | null;
+          category?: string | null;
+          default_pao_months?: number | null;
+          is_curated?: boolean;
           source?: string;
-          created_at?: Timestamptz;
+          source_ref?: string | null;
+          imported_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['products']['Insert']>;
         Relationships: [];
@@ -103,25 +137,69 @@ export type Database = {
       conflict_rules: {
         Row: {
           id: string;
-          ingredient_a: string;
-          ingredient_b: string;
-          severity: string;
-          evidence_grade: string;
-          resolution: string;
-          citation: string | null;
-          created_at: Timestamptz;
+          tag_a: string;
+          tag_b: string;
+          interaction_type: string;
+          base_severity: string;
+          evidence_grade: string | null;
+          evidence_label: string;
+          mechanism: string;
+          resolution_type: string;
+          resolution_copy: string;
+          applies_when: Json | null;
+          source_citation: string;
+          rule_version: number;
+          reviewed_by: string | null;
+          is_active: boolean;
         };
         Insert: {
           id?: string;
-          ingredient_a: string;
-          ingredient_b: string;
-          severity: string;
-          evidence_grade: string;
-          resolution: string;
-          citation?: string | null;
-          created_at?: Timestamptz;
+          tag_a: string;
+          tag_b: string;
+          interaction_type: string;
+          base_severity: string;
+          evidence_grade?: string | null;
+          evidence_label: string;
+          mechanism: string;
+          resolution_type: string;
+          resolution_copy: string;
+          applies_when?: Json | null;
+          source_citation: string;
+          rule_version?: number;
+          reviewed_by?: string | null;
+          is_active?: boolean;
         };
         Update: Partial<Database['public']['Tables']['conflict_rules']['Insert']>;
+        Relationships: [];
+      };
+      routine_conflicts: {
+        Row: {
+          id: string;
+          user_id: string;
+          rule_id: string;
+          product_a_id: string | null;
+          product_b_id: string | null;
+          computed_severity: string;
+          status: string;
+          user_choice: string | null;
+          rule_version: number | null;
+          created_at: Timestamptz;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          rule_id: string;
+          product_a_id?: string | null;
+          product_b_id?: string | null;
+          computed_severity: string;
+          status?: string;
+          user_choice?: string | null;
+          rule_version?: number | null;
+          created_at?: Timestamptz;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['routine_conflicts']['Insert']>;
         Relationships: [];
       };
       skin_profiles: {
