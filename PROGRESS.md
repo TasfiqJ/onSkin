@@ -30,7 +30,8 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   (48h backfill cap + computed/cached streaks), photos (+private Storage bucket,
   anon cloud-backup blocked), entitlements + subscriptions_events, immutable
   consents ledger, notification_preferences. Catalog tables (ingredients/products/
-  conflict_rules) from the docs/00 §2 sketch (data BLOCKED: B-CONFLICT-RULES).
+  conflict_rules) from the docs/00 §2 sketch (later rewritten to the docs/02 §3
+  schema in Slice 7; data BLOCKED: B-CATALOG-SEED + B-DERM-REVIEW).
 - RLS on every table: `(select auth.uid())`, `TO authenticated`, `WITH CHECK`,
   indexed policy columns, security-definer helpers, all definer fns REVOKE'd.
 - **Adversarially reviewed by 4 independent agents** (RLS-bypass / SQL-executability
@@ -135,6 +136,14 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   (Moderate / contested / alternate_nights), niacinamide×vitC reassurance,
   BP×retinoid + adapalene exemption, pregnancy safety + BHA dose-gate, synergy.
   `npm test` is now real (the doc mandates per-rule fixtures, §10).
+- **Gates:** typecheck ✅ · lint ✅ · test ✅.
+
+### Slice 9 — Skin-cycling scheduler (docs/02 §5) ✅ (2026-06-13)
+- Pure TS: cycle templates (classic 4-night / gentle / advanced) personalised by
+  sensitivity + barrier-repair goal (null when no actives); date-only (local-day)
+  night/slot computation; next-acid-night projection; PM auto-resolution logic
+  (skip the acid on a retinoid night, name the next acid night).
+- **13 vitest fixtures** (incl. the spec's NIGHT 2 OF 4). 25 tests at this point.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅.
 
 ### Slice 10 — PAO intelligence + Shelf & conflict-detail surfaces ✅ (2026-06-13)

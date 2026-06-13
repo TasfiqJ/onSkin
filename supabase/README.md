@@ -8,7 +8,7 @@ Source of truth: **docs/01 §3 (data model + RLS)** and **§4 (consent)**.
 | --- | --- |
 | `…0001_extensions_and_helpers` | pgcrypto, `set_updated_at()` |
 | `…0002_profiles` | `profiles` + defensive `handle_new_user()` signup trigger |
-| `…0003_catalog` | `ingredients`, `products`, `product_ingredients`, `conflict_rules` (read-only reference; data BLOCKED: B-CONFLICT-RULES) |
+| `…0003_catalog` | docs/02 §3 catalog: `ingredients` (+synonyms/tags), `products`, `product_ingredients`, tag-based `conflict_rules`, `ingredient_pao_defaults` (read-only reference; data BLOCKED: B-CATALOG-SEED + B-DERM-REVIEW) |
 | `…0004_skin_profiles` | quiz results (health-inference data) |
 | `…0005_user_products` | the shelf, with generated `expiry_computed` (PAO/expiry) |
 | `…0006_routines` | `routines`, `routine_steps`, `owns_routine()` helper |
@@ -17,6 +17,8 @@ Source of truth: **docs/01 §3 (data model + RLS)** and **§4 (consent)**.
 | `…0009_entitlements` | RevenueCat mirror + raw `subscriptions_events` log |
 | `…0010_consents` | MHMDA/GDPR **immutable** consent ledger |
 | `…0011_notification_preferences` | reminder prefs |
+| `…0012_routine_conflicts` | per-user conflict cache (owner RLS + `owns_user_product()`) |
+| `…0013_seed_intelligence` | starter conflict matrix + PAO defaults (all `reviewed_by` NULL — B-DERM-REVIEW) |
 
 ### RLS invariants (enforced everywhere)
 - RLS enabled on every `public` table.

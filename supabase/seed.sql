@@ -1,12 +1,14 @@
 -- Supabase seed data (applied after migrations on `supabase db reset`).
 --
--- The ingredient/product catalog and the conflict-rules matrix are intentionally
--- NOT seeded here:
---   BLOCKED: B-CONFLICT-RULES — the 30–60 curated ingredient pairs are contested
---     dermatology content (each rule needs an evidence grade + non-alarmist
---     resolution + citation), and belong to the (missing) Document 2.
---   Seeding sources carry license obligations: CosIng ("informative purpose, no
---     legal value") and Open Beauty Facts (ODbL — attribution + share-alike).
+-- The STARTER conflict matrix + PAO category defaults are seeded by migration
+-- `…0013_seed_intelligence.sql` (so they deploy with `db push`), all
+-- reviewed_by = NULL until clinical sign-off (BLOCKED: B-DERM-REVIEW, launch gate).
 --
--- Leave empty until that content + the ingredient pipeline (build-order item 2)
--- are specified.
+-- The ingredient/product CATALOG (CosIng ingredients + Open Beauty Facts products
+-- + ingredient_tags) is intentionally NOT seeded yet:
+--   BLOCKED: B-CATALOG-SEED — needs the verified CosIng bulk-download route and the
+--     Open Beauty Facts daily dumps (via DuckDB; the live API is one call/scan).
+--   License obligations: CosIng ("informative purpose, no legal value") and
+--     Open Beauty Facts (ODbL — attribution + share-alike + contribute-back).
+--
+-- Leave empty until the catalog import pipeline runs (docs/02 §2).

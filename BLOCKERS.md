@@ -14,7 +14,10 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Captured from the Slices 0–6 handoff report so this file stands alone.
+Self-contained TODO. Built so far: **Slices 0–11** — full foundation (auth, data
+model + RLS, design system, onboarding, app shell + Today, privacy controls) and
+the **Document 2 ingredient-intelligence layer** (catalog/conflict schema, engine,
+skin-cycling scheduler, PAO, Shelf + conflict-detail UI; 63 tests). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -24,19 +27,22 @@ Captured from the Slices 0–6 handoff report so this file stands alone.
 - Then add each account key as a single `.env` value when ready: **B-APPLE**,
   **B-GOOGLE**, **B-REVENUECAT**, **B-POSTHOG**, **B-SENTRY**, **B-TURNSTILE**.
 
-**2. To unblock legal content** (you + counsel): **B-QUIZ-COPY**,
-**B-PRIVACY-COPY**, **B-CONFLICT-RULES**.
+**2. To unblock legal/clinical content** (you + counsel + a dermatologist):
+**B-QUIZ-COPY**, **B-PRIVACY-COPY**, and **B-DERM-REVIEW** (LAUNCH GATE — clinical
+sign-off of the conflict matrix before any rule reaches users).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Highest leverage: **Document 2**
-(ingredient/conflict engine) and **Document 3** (routine builder), which feed the
-Today loop, shelf, and conflict screens.
+documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 3** (routine
+builder) — it consumes the already-built engine + scheduler, unblocks the PM
+auto-resolution screen, and makes the Today loop live. Also **B-CATALOG-SEED**
+(CosIng/OBF data import) lights up real shelf data + scan match rates.
 
 **Snapshot of current statuses** — Accounts: B-SUPABASE/REVENUECAT/APPLE/GOOGLE/
-POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal: B-QUIZ-COPY/PRIVACY-COPY/
-CONFLICT-RULES 🔴 · Verify: APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢,
-RC 🟡, PASSKEYS 🔴, RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Docs: MISSING-DOCS 🔴,
-EVERY-N-DAYS 🔴.
+POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal/clinical: B-QUIZ-COPY/
+PRIVACY-COPY 🔴, **B-DERM-REVIEW 🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴 ·
+Verify: APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴,
+RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡 · Docs:
+MISSING-DOCS 🔴 (Docs 3–15), EVERY-N-DAYS 🔴.
 
 ---
 
@@ -185,18 +191,18 @@ placeholder animation; swap in the chosen Rive/Lottie asset later.
 
 ## D. Missing source-of-truth documents
 
-### B-MISSING-DOCS — Documents 2–15 not present in /docs 🔴 open
-Only `docs/00-architecture.md` + `docs/01-auth-onboarding.md` (+ design-spec.pdf)
-exist. Per CLAUDE.md's hard rule ("if it isn't specified, STOP and ask — do not
-invent product behavior, schema, or copy"), everything the build order lists
-beyond auth/onboarding needs its detailed doc before full implementation:
+### B-MISSING-DOCS — Documents 3–15 not present in /docs 🔴 open
+Received so far: `docs/00-architecture.md`, `docs/01-auth-onboarding.md`,
+`docs/02-ingredient-intelligence.md` (+ design-spec.pdf). Per CLAUDE.md's hard
+rule ("if it isn't specified, STOP and ask — do not invent product behavior,
+schema, or copy"), the remaining build-order items need their detailed doc:
 
 | Build-order item | Needs document | Status |
 | --- | --- | --- |
-| 2 · Ingredient/product DB + conflict engine | Doc 2 | schema sketched from docs/00 §2 only; data + detailed spec blocked |
-| 3 · AM/PM routine builder | Doc 3 | tables exist (docs/01 §3); builder UX blocked |
-| 4 · Smart shelf (PAO/expiry) | Doc 4 | table + design-spec screen only; rules blocked |
-| 5 · Actives / skin-cycling scheduler | Doc 5 | `cycling_night` column only; scheduling logic blocked |
+| 2 · Ingredient/product DB + conflict engine | Doc 2 ✅ received | **BUILT** (Slices 7–11): schema, engine, scheduler, PAO, Shelf + conflict-detail UI, 63 tests. Blocked sub-parts: data import (B-CATALOG-SEED), clinical sign-off (B-DERM-REVIEW), server detect fn (B-SERVER-DETECT) |
+| 3 · AM/PM routine builder | Doc 3 | tables exist (docs/01 §3) + engine/scheduler ready to consume; builder UX + cycle-setup schema blocked. **Unblocks the PM auto-resolution screen (docs/02 §7.4).** |
+| 4 · Smart shelf (PAO/expiry) | Doc 4 | shelf list/badges/conflict surfaces BUILT (docs/02 §7); barcode scan + manual add still need this doc + B-CATALOG-SEED |
+| 5 · Actives / skin-cycling scheduler | Doc 5 | scheduler logic BUILT + tested (docs/02 §5); live wiring needs the Doc-3 cycle setup |
 | 6 · Guided photo capture + comparison | Doc 6 | `photos` table + design-spec screen; capture spec blocked |
 | 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + streak fn; widget spec blocked |
 | 8 · Subscriptions / paywall | Doc 8 | design-spec paywall + `entitlements`; RC config blocked |
@@ -205,7 +211,7 @@ beyond auth/onboarding needs its detailed doc before full implementation:
 | 11 · Community layer | Doc 11 | blocked |
 | 12 · AI trend analysis | Doc 12 | blocked (intentionally last) |
 
-I build the slices Documents 00/01 + the design spec fully authorize, scaffold
+I build the slices the received docs + the design spec fully authorize, scaffold
 the UI/schema the design spec clearly shows, and stop short of inventing
 unspecified behavior/copy/schema for the rest.
 
