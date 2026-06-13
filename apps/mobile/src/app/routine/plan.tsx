@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { setCycleAnchor } from '@/features/routine/cycleAnchor';
 import { usePlan } from '@/features/routine/usePlan';
 import { colors } from '@/theme/tokens';
 
@@ -115,7 +116,14 @@ export default function PlanScreen() {
       </View>
 
       <View className="pb-2">
-        <Button label="Start today" variant="accent" onPress={() => router.replace('/today')} />
+        <Button
+          label="Start today"
+          variant="accent"
+          onPress={() => {
+            void setCycleAnchor(); // anchor the skin cycle to today
+            router.replace('/today');
+          }}
+        />
       </View>
     </Screen>
   );
