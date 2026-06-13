@@ -74,6 +74,14 @@ export type RoutinePhase = 'am' | 'pm' | 'either';
 export type RampClass = 'retinoid' | 'aha' | 'bha' | 'other_active';
 export type ToleranceState = 'building' | 'steady' | 'paused_irritation';
 
+// --- Actives & skin-cycling scheduler (docs/05) ------------------------------
+/** The stored cycle's variant (docs/05 §3 `cycles.variant`). */
+export type CycleVariant = 'gentle' | 'classic' | 'advanced' | 'custom';
+/** The DB per-night slot enum (docs/05 §3 `cycle_nights.slot`). */
+export type CycleSlotDb = 'exfoliation' | 'retinoid' | 'recovery' | 'other_active';
+/** Why the scheduler eased off / paused (drives recovery copy, docs/05 §7). */
+export type DisruptionReason = 'procedure' | 'irritation' | 'travel' | 'break';
+
 // --- Shelf (docs/01 §3 `user_products`, docs/04 Smart Shelf) ------------------
 export type ProductStatus = 'active' | 'finished' | 'discarded';
 /** Where the PAO value came from — recorded so the UI can be honest about

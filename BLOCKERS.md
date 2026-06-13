@@ -14,13 +14,14 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–18** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–19** — full foundation (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
-**Document 2 ingredient-intelligence layer** (catalog/conflict schema, engine,
-skin-cycling scheduler, PAO), the **Document 3 routine builder** (deterministic
-generation + all builder screens), and the **Document 4 Smart Shelf** (intake
-funnel, opened-date linchpin, five-state badges, detail hub, archive,
-replenishment; 86 tests). See PROGRESS.md.
+**Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
+the **Document 4 Smart Shelf** (intake funnel, opened-date linchpin, five-state
+badges, detail hub, archive, replenishment), and the **Document 5 actives &
+skin-cycling scheduler** (stored cycle + projection, multi-active orchestration,
+week view, "why tonight?", settings, disruption/recovery; 102 tests). See
+PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -37,9 +38,10 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 5**
-(actives/skin-cycling) extends the already-built scheduler, and **Document 7**
-(reminders/widgets) lights up the replenishment + streak notifications. Also
+documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 7**
+(reminders/widgets) — it delivers the scheduler's reminders (tonight's active,
+recovery nights, next acid night), the replenishment alerts (Doc 4), and the streak
+nudges; **Document 6** (guided photo capture) is the other unbuilt core. Also
 **B-CATALOG-SEED** (CosIng/OBF data import) lights up real shelf data, scan match
 rates, and the **B-SHELF-CONTRIB** contribute-back loop.
 
@@ -49,7 +51,7 @@ PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing consent + DPIA), **B-DERM-RE
 🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴, **B-SHELF-CONTRIB 🔴** · Verify:
 APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴,
 RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡, B-ROUTINE-PERSIST
-🟡 · Docs: MISSING-DOCS 🔴 (Docs 5–15), EVERY-N-DAYS 🔴.
+🟡, B-DRAG-DND 🟡 · Docs: MISSING-DOCS 🔴 (Docs 6–15), EVERY-N-DAYS 🔴.
 
 ---
 
@@ -125,10 +127,14 @@ Privacy Policy, Terms of Service, and the exact consent statements for
 processing.
 
 ### B-DERM-REVIEW — Clinical sign-off of the rules 🔴 open (LAUNCH GATE)
-**Now also covers docs/03 rules** (per docs/03 §11): the `sequencing_rules`
-(application order — low-risk but medical-adjacent), the `active_ramp` cadence
-numbers (start frequency + step-up timing), and the skin-cycling personalisation
-are grade-C / medical-adjacent and need the same board-certified dermatologist +
+**Now also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
+`sequencing_rules` (application order), the `active_ramp` cadence numbers, and the
+skin-cycling personalisation. docs/04 §3: the **PAO category defaults** (gated in
+production via `PAO_DEFAULTS_REVIEWED`, D-032). docs/05 §8: the **scheduler's
+orchestration rules** — the class **frequency caps**, the **retinoid×exfoliant
+same-night prohibition** (harm-relevant; enforced by construction regardless), the
+**recovery/de-escalation protocol** (~7–10 days), and the pregnancy suppression —
+all grade-C / medical-adjacent and need the same board-certified dermatologist +
 cosmetic-chemist sign-off as the conflict matrix before launch. Original entry:
 docs/02 §9 makes this **mandatory, not optional** — it gates launch of the whole
 intelligence layer. The ~14 starter rules (migration `…0013_seed_intelligence.sql`
@@ -215,7 +221,7 @@ remaining build-order items need their detailed doc:
 | 2 · Ingredient/product DB + conflict engine | Doc 2 ✅ received | **BUILT** (Slices 7–11): schema, engine, scheduler, PAO, Shelf + conflict-detail UI, 63 tests. Blocked sub-parts: data import (B-CATALOG-SEED), clinical sign-off (B-DERM-REVIEW), server detect fn (B-SERVER-DETECT) |
 | 3 · AM/PM routine builder | Doc 3 ✅ received | **BUILT** (Slices 12–17): sequencing_rules + active_ramp schema, deterministic generation engine, all builder screens (plan-built, reorder, ramp, Today AM/PM, Progress/calm-streak, tolerance, override sheet, adaptation, widgets), 77 tests. Blocked sub-parts: routine persistence (B-ROUTINE-PERSIST), full drag-DnD (B-DRAG-DND), clinical sign-off (B-DERM-REVIEW) |
 | 4 · Smart shelf (PAO/expiry) | Doc 4 ✅ received | **BUILT** (Slice 18): additive `user_products` columns + `shelf_scans` schema, local-first store, the full intake funnel (no-match fork / OCR-confirm / manual / **opened-date linchpin**), the five-state badge taxonomy (incl. the eye/SPF firmer exception), the product-detail management hub, archive/lifecycle, and the opt-in replenishment sheet (design's 9 screens). Blocked sub-parts: live barcode/OBF scan + OCR capture (**B-CATALOG-SEED** + camera), the contribute-back pipeline (**B-SHELF-CONTRIB**), the data-sharing consent + affiliate for replenishment (**B-PRIVACY**), server persistence (**B-SUPABASE** / B-ROUTINE-PERSIST), PAO defaults sign-off (**B-DERM-REVIEW**) |
-| 5 · Actives / skin-cycling scheduler | Doc 5 | scheduler BUILT + tested + wired into Today PM via the cycle anchor (docs/02 §5, docs/03 §5); a dedicated doc could extend cadence rules |
+| 5 · Actives / skin-cycling scheduler | Doc 5 ✅ received | **BUILT** (Slice 19): the stored/versioned `cycles` + `cycle_nights` schema + the pure local-day projection, **multi-active orchestration** (one potent active/night, retinoid×exfoliant never same night, class frequency caps, recovery nights, pregnancy suppression, phased introduction — 15 fixtures), the local-first cycle store, and all the management/disruption surfaces (week overview, "why tonight?", cycle settings, pause/skip/travel/procedure hub, post-procedure + auto-de-escalation recovery mode, phased-intro). Blocked sub-parts: server `orchestrate()`/`schedule_for()` (**B-SERVER-DETECT** / B-ROUTINE-PERSIST), drag-to-reassign nights (**B-DRAG-DND**), reminder *delivery* (Doc 7), clinical sign-off of the frequency/separation/recovery rules (**B-DERM-REVIEW**) |
 | 6 · Guided photo capture + comparison | Doc 6 | `photos` table + design-spec screen; capture spec blocked |
 | 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + computed streak + a widgets/Live-Activity **preview** built (docs/03 §9.9); native WidgetKit/ActivityKit + reminder scheduling need this doc |
 | 8 · Subscriptions / paywall | Doc 8 | design-spec paywall + `entitlements`; RC config blocked |
@@ -254,10 +260,11 @@ locally (AsyncStorage); persist it per-user once the routine is written server-s
 Needs B-SUPABASE.
 
 ### B-DRAG-DND — full drag-and-drop reorder 🟡 stubbed
-The edit/reorder screen (design 02) has drag handles + the non-blocking "Fix the
-order" nudge (the doc's actual point) functional, but true drag-and-drop needs
-`react-native-draggable-flatlist` (reanimated/gesture-handler are present). Small
-follow-on.
+The routine edit/reorder screen (design 02) **and** the docs/05 cycle-settings
+"assign actives to nights" surface have drag handles + the non-blocking rule nudge
+(the doc's actual point — guidance not gates) functional, but true drag-and-drop
+needs `react-native-draggable-flatlist` (reanimated/gesture-handler are present).
+Small follow-on.
 
 ### B-PRIVACY — data-sharing consent + DPIA for the shelf/replenishment 🔴 open
 docs/04 §6/§7 introduce the key new privacy obligation: **replenishment affiliate

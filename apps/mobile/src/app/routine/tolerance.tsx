@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
+import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
@@ -18,6 +19,18 @@ const OPTIONS = [
 
 export default function ToleranceScreen() {
   const [selected, setSelected] = useState<string | null>(null);
+  const m = useCycleMutations();
+
+  // Each answer states what the app does (docs/03 §4 / docs/05 §7). "Irritated"
+  // triggers auto de-escalation: pause actives, start a barrier-recovery window.
+  const onSave = async () => {
+    if (selected === 'irritated') {
+      await m.beginRecovery(7, 'irritation');
+      router.replace('/cycle/recovery');
+      return;
+    }
+    router.back();
+  };
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.45)' }}>
@@ -61,7 +74,7 @@ export default function ToleranceScreen() {
           ))}
         </View>
 
-        <Button className="mt-6" label="Save" disabled={!selected} onPress={() => router.back()} />
+        <Button className="mt-6" label="Save" disabled={!selected} onPress={onSave} />
       </View>
     </View>
   );

@@ -1,5 +1,6 @@
 import type { EngineProfile } from '@/features/intelligence/engine';
 import { STARTER_RULES } from '@/features/intelligence/rules';
+import { useProfileBits } from '@/features/scheduler/profile';
 import { useShelf } from '@/features/shelf/useShelf';
 
 import { generatePlan, type GeneratedPlan, type RoutineProduct } from './generate';
@@ -26,7 +27,8 @@ export type PlanResult = { plan: GeneratedPlan; isExample: boolean };
 
 export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
   const shelf = useShelf();
-  if (shelf.isLoading) return { data: undefined, isLoading: true };
+  const profile = useProfileBits();
+  if (shelf.isLoading || profile.isLoading) return { data: undefined, isLoading: true };
 
   const items = shelf.data?.items ?? [];
   if (items.length > 0) {
@@ -35,9 +37,12 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
       name: i.engineProduct.name,
       tags: i.engineProduct.tags,
     }));
-    // Profile sensitivity is already baked into the shelf conflicts; re-derive a
-    // minimal profile here (sensitive default keeps the gentle/ramp conservative).
-    return { data: { plan: generatePlan(products, MAYA_PROFILE, STARTER_RULES), isExample: false }, isLoading: false };
+    // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
+    // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
+    const real: EngineProfile & { goals: string[] } = profile.data
+      ? { sensitivity: profile.data.sensitivity, pregnancy: profile.data.pregnancy, goals: profile.data.goals }
+      : MAYA_PROFILE;
+    return { data: { plan: generatePlan(products, real, STARTER_RULES), isExample: false }, isLoading: false };
   }
   return { data: { plan: generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, STARTER_RULES), isExample: true }, isLoading: false };
 }

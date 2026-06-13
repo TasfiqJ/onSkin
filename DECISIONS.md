@@ -234,3 +234,47 @@ Format: `D-NNN — date — decision — rationale`.
   path, the product-detail freshness block exposes an inline editable
   "Best before" (future quick-picks → `expiry_source = 'printed'`), which §5.6
   already mandates as editable. The `computeExpiry` least() logic is unit-tested.
+
+## Actives & skin-cycling scheduler (docs/05, Slice 19)
+
+- **D-034 — 2026-06-13 — The cycle is a stored, versioned data object with a pure,
+  local-day-aware projection** (docs/05 §3; the doc's suggested "D-025"). New
+  `cycles` + `cycle_nights` schema (migration 0017, owner-only RLS via the
+  `owns_cycle()` definer helper, mirroring `owns_routine`). v1 keeps the live cycle
+  in a local-first AsyncStorage store (`features/scheduler/cycleStore.ts`, the
+  D-029 pattern) with the schema as the forward-compatible server target
+  (B-SUPABASE); server-authoritative `orchestrate()`/`schedule_for()` are deferred
+  (B-SERVER-DETECT/B-ROUTINE-PERSIST). The projection (`projection.ts`) is the pure
+  `night_index = ((today − anchor) mod L + L) mod L` → tonight / week-ahead /
+  next-of-slot, safe for dates before the anchor.
+
+- **D-035 — 2026-06-13 — Multi-active orchestration enforces the cardinal rules by
+  construction** (docs/05 §4; the doc's suggested "D-026"). `orchestrate.ts` places
+  **one potent active per night** (so a **retinoid and an exfoliant can never share
+  a night** — the harm-relevant FIRM rule, asserted in fixtures), respects class
+  **frequency caps** personalised by sensitivity (`classes.ts` table), inserts
+  **recovery nights** between pushes, keeps **vitamin C in the AM** off the cycle,
+  **suppresses retinoids in pregnancy** (→ the docs/02 safety note), and **stages
+  new actives one at a time** (phased introduction). Deterministic + explainable
+  (the "why tonight?" trace), not AI. The numbers are **B-DERM-REVIEW** starting
+  positions; the FIRM separation is enforced regardless.
+
+- **D-036 — 2026-06-13 — Resume re-anchors "where you left off"; disruptions never
+  break the streak** (docs/05 §3/§7; the doc's suggested "D-027"). `resumeCycle`
+  advances `anchor_date` by the paused duration so the sequence continues (you were
+  on a recovery night, you still are), rather than snapping to today's modular
+  position; a single **skip** does not re-anchor. Pause/travel/procedure/irritation
+  are all *managed* (a recovery window or a pause), never punished — consistent with
+  the calm streak (docs/03 §6). Auto de-escalation is conservative (pause + recovery,
+  never escalate) and non-diagnostic.
+
+- **D-037 — 2026-06-13 — The new engine is layered ALONGSIDE the Slice-9
+  `scheduler.ts`, and the Today wiring is additive.** The Doc-2/3 PM rendering +
+  templates (`scheduler.ts`, used by `today.tsx`/`generate.ts`) are kept; Doc 5's
+  richer orchestration lives in `features/scheduler/`. Today gains a tappable
+  cycling strip → the week overview and a recovery/pause banner, without rewiring
+  the shipped PM checklist. The cycle settings' drag-to-reassign shows handles + the
+  rule nudge (the doc's point — guidance not gates) with true drag deferred to
+  **B-DRAG-DND**. The DB `cycle_nights.slot` enum uses the doc's nouns
+  (`exfoliation`/`recovery`); the local engine uses verbs (`exfoliate`/`recover`) —
+  a trivial mapping at the (deferred) server-sync boundary.

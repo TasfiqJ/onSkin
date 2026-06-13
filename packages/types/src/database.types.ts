@@ -371,6 +371,48 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['shelf_scans']['Insert']>;
         Relationships: [];
       };
+      cycles: {
+        Row: {
+          id: string;
+          user_id: string;
+          variant: string;
+          length_nights: number;
+          anchor_date: DateStr;
+          is_active: boolean;
+          paused_from: DateStr | null;
+          created_at: Timestamptz;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          variant?: string;
+          length_nights?: number;
+          anchor_date: DateStr;
+          is_active?: boolean;
+          paused_from?: DateStr | null;
+          created_at?: Timestamptz;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['cycles']['Insert']>;
+        Relationships: [];
+      };
+      cycle_nights: {
+        Row: {
+          cycle_id: string;
+          night_index: number;
+          slot: string;
+          user_product_id: string | null;
+        };
+        Insert: {
+          cycle_id: string;
+          night_index: number;
+          slot: string;
+          user_product_id?: string | null;
+        };
+        Update: Partial<Database['public']['Tables']['cycle_nights']['Insert']>;
+        Relationships: [];
+      };
       routines: {
         Row: {
           id: string;
@@ -567,6 +609,10 @@ export type Database = {
     Functions: {
       owns_routine: {
         Args: { p_routine_id: string };
+        Returns: boolean;
+      };
+      owns_cycle: {
+        Args: { p_cycle_id: string };
         Returns: boolean;
       };
       recompute_streak: {

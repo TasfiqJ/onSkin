@@ -254,6 +254,37 @@ and routine persistence (server `build_routine`, docs/03 §11).
   marker). D-026…D-033; new blockers **B-PRIVACY**, **B-SHELF-CONTRIB**.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (87).
 
+### Slice 19 — Doc 5 Actives & Skin-Cycling Scheduler + new design ✅ (2026-06-13)
+- **Schema** (migration 0017): the stored/versioned `cycles` + `cycle_nights` (the
+  part `cycling_night` alone never captured) with owner-only RLS via a new
+  `owns_cycle()` definer helper (mirrors `owns_routine`). `Database` type + domain
+  types extended; no RLS weakened.
+- **Engine** (`features/scheduler/`, pure + tested): `classes.ts` (active class +
+  frequency caps + AM/PM placement, **launch-gated** via `CAPS_REVIEWED`),
+  `orchestrate.ts` (**multi-active orchestration** — one potent active/night, the
+  **retinoid×exfoliant never-same-night** rule enforced by construction, caps,
+  recovery nights, vitamin-C-in-AM, pregnancy suppression with a note that survives
+  even when no cycle forms, phased introduction), `projection.ts` (the pure
+  local-day projection → tonight / week-ahead / next-acid), `cycleStore.ts`
+  (local-first config: variant/anchor/pause/recovery/skips; resume re-anchors
+  where-left-off), `profile.ts` (shared profile reader), `useCycle.ts`.
+  **17 fixtures** assert the FIRM invariants.
+- **7 surfaces** (`app/cycle/`): week overview (dark), "why tonight?" trace,
+  cycle settings (variant + assignment + firm-rule nudge), disruption hub
+  (skip/pause/travel/procedure), post-procedure recovery, auto-de-escalation
+  recovery mode, phased-introduction.
+- **Wiring**: Today PM strip + AM teaser now driven by the orchestrated,
+  profile-aware cycle (so pregnancy suppression / recovery / skip are never
+  contradicted by a hardcoded surface); recovery/pause/skip banners on Today PM;
+  the weekly tolerance "irritated" answer triggers auto-de-escalation;
+  `usePlan` now reads the real skin profile (not a hardcoded `pregnancy:false`).
+- **Adversarially reviewed by 4 agents** (RLS/SQL · spec · design · claim-safety,
+  each verified) → **0 blocking, 4 high** — all fixed: skip made functional, the
+  pregnancy safety note made un-droppable, the frequency caps launch-gated
+  (`CAPS_REVIEWED`), and Today rewired off the hardcoded retinoid teaser/template
+  onto the profile-aware engine. D-034…D-037.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (104).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -265,19 +296,24 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Replenishment affiliate (docs/04 §6)** — sheet built opt-in + inert; live
   "see similar"/affiliate routing is gated by **B-PRIVACY** (data-sharing consent)
   + **B-SHOPMY** + **B-CATALOG-SEED**.
-- **PM auto-resolution live screen (docs/02 §7.4)** — built + tested + wired into
-  Today PM via the cycle anchor (Slice 16).
+- **PM auto-resolution live screen (docs/02 §7.4)** — built + tested + now driven
+  by the Doc-5 orchestrated cycle (Slice 19).
+- **Server-authoritative scheduler** (`orchestrate()`/`schedule_for()`, docs/05 §10)
+  — deferred with **B-SERVER-DETECT**/B-ROUTINE-PERSIST; the tested client engine +
+  local-first store cover v1.
+- **Drag-to-reassign cycle nights** (docs/05 §6.2) — handles + rule nudge built;
+  true drag is **B-DRAG-DND**.
 - Blocked data/clinical: **B-DERM-REVIEW** (launch gate; now also gates the PAO
-  category defaults), **B-CATALOG-SEED**.
+  category defaults + the scheduler frequency/recovery rules), **B-CATALOG-SEED**.
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → Auth + data model + RLS (Slices 0–6)
 2. ✅ Ingredient/product DB + conflict engine — Doc 2 (Slices 7–11)
 3. ✅ AM/PM routine builder — Doc 3 (Slices 12–17)
 4. ✅ Smart shelf (PAO/expiry) — Doc 4 (Slice 18); blocked sub-parts above
-5. 🚫 Actives / skin-cycling scheduler — needs Document 5 (scheduler core built in Slice 9)
+5. ✅ Actives / skin-cycling scheduler — Doc 5 (Slice 19): stored cycle + projection, multi-active orchestration, management/disruption surfaces
 6. 🚫 Guided photo capture + comparison — needs Document 6
-7. 🚫 Reminders / streaks / widgets — needs Document 7 (replenishment + streak nudges land here)
+7. 🚫 Reminders / streaks / widgets — needs Document 7 (delivers the scheduler's reminders + replenishment + streak nudges)
 8. 🟡 Subscriptions / paywall — design-spec paywall buildable; RC config blocked (Document 8)
 9–12. 🚫 recommendations / creator stacks / community / AI — need their docs
 
