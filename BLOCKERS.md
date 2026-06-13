@@ -14,7 +14,7 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–25** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–26 — ALL 12 build-order docs** (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
 **Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
 the **Document 4 Smart Shelf**, the **Document 5 actives & skin-cycling scheduler**,
@@ -31,10 +31,13 @@ explainability), and the **Document 10 creator stacks + commerce** (the walled-o
 "where to buy" layer — church-and-state schema, opaque-token attribution, FTC "paid
 link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the
 transparency page; validated as a six-figure supplement, the live rail stubbed pending
-B-SHOPMY), and the **Document 11 community layer** (the expert-anchored, anonymous,
-claim-safe "Skin Notes" myth-vs-evidence trust layer — photo-free + anon-locked-out +
-consent-scoped; Phase 1 live, peer posting deferred; validated as a retention multiplier,
-not a 7-figure pillar; **767 tests**). See PROGRESS.md.
+B-SHOPMY), the **Document 11 community layer** (the expert-anchored, anonymous, claim-safe
+"Skin Notes" myth-vs-evidence trust layer — photo-free + anon-locked-out + consent-scoped;
+Phase 1 live, peer posting deferred), and the **Document 12 AI trend analysis** (the
+population skin score **killed**; the no-AI-score refusal preserved + marketed; the narrow
+on-device, within-person, **no-number** "Changes in your own photos" opt-in built —
+off-by-default, tone-adjusted fairness floor, classical CV not an LLM, never "AI"; engine
+deferred to B-AI-ONDEVICE; **817 tests**). **All 12 docs built.** See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -50,9 +53,9 @@ sign-off of the conflict matrix before any rule reaches users). See
 **[docs/legal-readiness.md](docs/legal-readiness.md)** for the full legal map +
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
-**3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next in build order: **Document 12** (AI trend
-analysis — intentionally last). Also: a **custom dev build** unlocks the deferred native work —
+**3. To unblock the rest of the build order**: **all 12 build-order documents are now
+BUILT (Slices 0–26).** There is no next doc — everything remaining is a founder blocker
+below. A **custom dev build** unlocks the deferred native work —
 **B-REVENUECAT** (the `react-native-purchases` SDK + offerings → real prices/purchase),
 **B-CAMERA** (vision-camera + ML-Kit guided capture), **B-WIDGETS**
 (WidgetKit/Glance/ActivityKit), and **B-NOTIF-VERIFY** (on-device notification
@@ -325,7 +328,7 @@ remaining build-order items need their detailed doc:
 | 9 · Personalized recommendations | Doc 9 ✅ received | **BUILT** (Slice 23): the `recommendation_preferences` + `recommendations` schema (owner-RLS, **no commercial column**), the pure tested engine (the six honest triggers + an honest "you're set", the merit-only six-input FIT score, the B-DERM-REVIEW launch gate on goal actives), the centralised claim-safe copy + guard, and the 5 surfaces (For-you hub, what/why/how card, "you're set", preferences, in-routine gap prompt) + Today/You wiring. Blocked sub-parts: the commerce/affiliate path (**doc 10** / **B-PRIVACY** data-sharing consent / **B-SHOPMY**) is deferred + inert, specific-product recommendations are catalog-thin → type-first until **B-CATALOG-SEED**, clinical sign-off of the goal-active rec types (**B-DERM-REVIEW**), server persistence (**B-SUPABASE**) |
 | 10 · Creator stacks + ShopMy | Doc 10 ✅ received | **BUILT** (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own recommendations — church-and-state schema (migration 0022: commission service-role-only in `order_attributions`, never client-readable / never in ranking), the opaque-token attribution (no skin data to retailers, tested), the FTC "paid link" disclosure + guard, the MHMDA consent gate, the rail-agnostic resolution, the expert/derm shoppable stacks (B-DERM-REVIEW-gated), the transparency page, and the Order-Report poll Edge Function stub. Validated as a six-figure supplement. Blocked sub-parts: the live ShopMy rail + the **house-account question** (**B-SHOPMY**), real catalogue/retailers/prices (**B-CATALOG-SEED**), final MHMDA consent copy + DPIA + FTC final wording (**B-PRIVACY** / **B-PRIVACY-COPY**), stacks clinical sign-off (**B-DERM-REVIEW**), Google Play 2026 physical-goods/external-link confirmation (**B-LEGAL**) |
 | 11 · Community layer | Doc 11 ✅ received | **BUILT** (Slice 25): the expert-anchored, anonymous, claim-safe "Skin Notes" myth-vs-evidence trust layer — NOT an open feed. Migration 0023 (7 tables, **photo-free**, anon-locked-out, consent-scoped; the `consents` enum +`community_participation`); the B-DERM-REVIEW-gated expert corpus (`NOTES_REVIEWED`/`shippableNotes()`); the claim-safety pre-moderation flag; the 5 surfaces (hub, card, in-context, Ask, people-like-you). Validated as a retention **multiplier, not a 7-figure pillar**. Phase 1 (expert read-mostly) is live; the peer Ask + people-like-you are deferred previews. Blocked sub-parts: the moderation/legal store floor + peer posting (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**), expert clinical sign-off (**B-DERM-REVIEW**), the consent copy + DPIA extension (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**) |
-| 12 · AI trend analysis | Doc 12 | blocked (intentionally last) |
+| 12 · AI trend analysis | Doc 12 ✅ received | **BUILT** (Slice 26): the population skin score **killed outright** (no score/grade/image column or copy, by construction); the shipped no-AI-score **refusal preserved + marketed**; the only-defensible exception built — on-device, within-person, descriptive, **no-number** "Changes in your own photos" (migration 0024: `photo_trend` + the default-OFF `photo_trend_insights` consent; the tone-adjusted MDC floor higher for darker Monk tones; redness-never-the-metric; the claim-safety guard extended to trend strings; classical CV not an LLM, never marketed as "AI"). Validated as **not a 7-figure pillar**. Blocked sub-parts: the real on-device CV engine + MDC calibration (**B-AI-ONDEVICE**), the fairness validation cohort + parity gate (**B-AI-FAIRNESS**), the FDA/FTC/EU counsel sign-off + DPIA (**B-AI-LEGAL** / **B-PRIVACY**), server mirror (**B-SUPABASE**) |
 
 I build the slices the received docs + the design spec fully authorize, scaffold
 the UI/schema the design spec clearly shows, and stop short of inventing
@@ -523,3 +526,49 @@ dermatologist + cosmetic chemist to author/review a **substantial** corpus and p
 `community_notes.reviewed_by` (the `NOTES_REVIEWED` / B-DERM-REVIEW gate withholds
 unreviewed notes in production). Treat expert recruitment/retention as a first-class
 recurring cost line, not a hand-wave.
+
+### B-AI-FAIRNESS — the skin-tone fairness validation gate 🔴 open (launch gate, mirrors B-DERM-REVIEW)
+docs/12 §7 (Slice 26). Before ANY public accuracy / "works for everyone" claim for the
+on-device trend feature, a **Monk-stratified validation cohort** must demonstrate
+**parity within a pre-declared band on a ≥25–30% dark-skin (Monk 7–10-heavy) sample** — a
+bar the entire vendor field has failed (the research confirmed a persistent AUROC
+0.82-vs-0.89 gap into Dec 2025, p<0.01, and that smartphone capture degrades AI). Built to
+that standard: the **MDC floor is tone-adjusted equal-or-higher for darker Monk tones**
+(`features/trend/trend.ts`, tested), **redness is never the trend metric** (erythema is
+optically masked as melanin rises — physics, not a tunable), and **no accuracy claim** is
+made. The genuine tension: you **cannot self-validate fairness on truly local-only photos
+you never collect** — validation needs a **separately recruited, consented internal
+cohort** (materially expensive). If that bar can't be met, the feature stays
+descriptive-only with no claim, or doesn't ship. Needs a **named fairness owner + a
+PCCP-style re-validation gate before any model update** (no silent dark-skin degradation).
+Never train on Google's MST-E dataset (Google forbids it — research-confirmed).
+
+### B-AI-LEGAL — FDA / FTC / EU counsel sign-off of the trend copy + DPIA 🔴 open
+docs/12 §9 (Slice 26). The copy is the regulated surface; counsel must clear it before any
+launch: (1) **FDA SaMD** — confirm the appearance/wellness framing stays out of device
+territory (the Jan 6, 2026 General Wellness guidance protects ONLY strict appearance
+framing — nothing for a score, severity grade, or accuracy claim); disease/severity/
+detection language is the trigger. (2) **FTC AI-washing / superiority** — "AI X% accurate",
+"dermatologist-grade", "more objective than your eyes" are the active fact pattern
+(Workado's "98%" was ~53%, final order Aug 2025); the build uses none, and is honestly
+classical CV ("your phone comparing your own photos"), not marketed as "AI" (research
+confirmed the AI-label trust tax). (3) **MHMDA / GDPR Art. 9** — the on-device-derived
+insight is itself a health inference: confirm the separate `photo_trend_insights` consent,
+the cloud-backup exclusion, and deletion-on-revocation satisfy the law, and **confirm the
+"never leaves your device / never trains AI" claim stays literally true** (it is, in code).
+(4) **EU MDR + EU AI Act** Art. 50 transparency / biometric-categorization for a face-
+inference feature even without a medical claim (asserted-not-analyzed — counsel must
+confirm). Extends **B-PRIVACY / B-PRIVACY-COPY**.
+
+### B-AI-ONDEVICE — the on-device CV engine + MDC calibration + device verification 🟡 stubbed
+docs/12 §6/§13 (Slice 26). The real within-person change engine — **image registration +
+SSIM/structural + colour/intensity delta** on the user's own guided series — needs a
+**custom dev build** (shares B-CAMERA's need; the registered-pair delta is the one input
+the pure classifier doesn't have yet) and an **internal validation spike** (the
+classical-CV approach is sound but extrapolated from registration/radiology literature,
+**not yet skin-validated** — "runs on phone" ≠ "works on phone"). The **MDC noise floor
+must be calibrated per-device/per-user** from real measurement error. A Phase-2 tiny
+on-device Core ML / LiteRT model (only if Phase 1 retains AND B-AI-FAIRNESS passes) would
+sharpen change detection — still local, still no score, **disclosed as on-device ML**.
+**Never a general multimodal LLM as the engine.** v1 (`features/trend/`) ships the tested
+classification + tone-adjusted floor with the delta stubbed.

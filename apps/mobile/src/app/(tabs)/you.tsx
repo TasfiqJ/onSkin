@@ -295,6 +295,16 @@ export default function YouScreen() {
               ›
             </Text>
           </Row>
+          <Row label="Changes in your own photos" hint="Optional · on-device · off by default · no score, ever.">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/trend/optin')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
+          </Row>
           <Text variant="bodySm" tone="muted" className="mt-1">
             Withdraw health-data consent from the privacy policy screen — your data is then deleted.
           </Text>

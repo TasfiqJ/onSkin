@@ -24,6 +24,10 @@ export const CONSENT_TYPES = [
   // docs/11 §8 / D-066: a NEW, separate, unbundled consent for posting health-adjacent
   // info to the community (MHMDA / GDPR Art. 9) — never reused from photo/data_sharing.
   'community_participation',
+  // docs/12 §8 / D-072: a NEW, separate, DEFAULT-OFF consent for the on-device
+  // within-person photo trend insight (still a health inference; distinct from
+  // photo_capture / photo_cloud_backup). Installed base is re-consented, never enrolled.
+  'photo_trend_insights',
 ] as const;
 export type ConsentType = (typeof CONSENT_TYPES)[number];
 
@@ -247,6 +251,21 @@ export const COMMERCE_EVENTS = [
   'stack_viewed',
 ] as const;
 export type CommerceEvent = (typeof COMMERCE_EVENTS)[number];
+
+// --- AI trend analysis / "Changes in your own photos" (docs/12) --------------
+/** The on-device within-person change state (docs/12 §6/§10). NEVER a score/grade —
+ *  "consistent / no detectable change" is a CELEBRATED first-class output, never failure. */
+export type TrendChangeState = 'consistent' | 'change_observed' | 'inconclusive_lighting' | 'insufficient_data';
+/** PostHog trend events (docs/12 §13) — metadata only, never an image or skin value;
+ *  instrument for OPT-IN / RETENTION, never toward a score or "improvement". */
+export const TREND_EVENTS = [
+  'trend_insights_opted_in',
+  'trend_shown', // carries change_state, NEVER a value
+  'trend_inconclusive_lighting',
+  'trend_consistency_celebrated',
+  'trend_consent_revoked',
+] as const;
+export type TrendEvent = (typeof TREND_EVENTS)[number];
 
 // --- Community layer / "Skin Notes" (docs/11) --------------------------------
 /** Expert-seeded note kinds (docs/11 §7). NOT peer UGC. */

@@ -635,3 +635,73 @@ Format: `D-NNN — date — decision — rationale`.
   reason not to ship peer-post + peer-read at once. The kill switch is **observable
   tripwires** (brand/claim-safety incident, MHMDA/consent gap, moderation-cost ceiling,
   ~24h SLA breach), not a likely-unfireable A/B churn holdout.
+
+## AI trend analysis / "Changes in your own photos" (docs/12, Slice 26 — the LAST build item)
+
+> docs/12 pre-specifies "D-046…D-050"; those numbers were long taken. Recorded here as
+> D-068…D-072. Validated by a cited deep-research pass: AI trend analysis is NOT a
+> seven-figure pillar; the population skin score is a trust destroyer; the highest-value
+> move is to KEEP REFUSING AI scores and MARKET THE REFUSAL (the same trust engine behind
+> Yuka's $7.37M, zero AI face analysis). The verdict rests on four HIGH-confidence grounds
+> (trust-promise reversal, unfixable fairness physics, the regulatory claim-surface, the
+> absence of any independent validation) — the economics are explicitly non-load-bearing.
+
+- **D-068 — 2026-06-13 — The population "skin score" / "skin age" is KILLED OUTRIGHT
+  (docs/12 §4, the doc's "D-046").** AI trend analysis is not a pillar; it ranks below
+  the photo timeline (docs/06), the recommendation engine (docs/09), and the paywall
+  (docs/08). **No score / grade / percentage / "skin age" column exists in the schema or
+  copy, by construction** (`photo_trend` holds only abstract deltas + a change-state +
+  a copy key). The shipped no-AI-score refusal (docs/06, the `/progress/about` screen) is
+  **preserved and treated as the asset** (Phase 0: market the refusal); the feature is
+  **deferred** until an independent, peer-reviewed, Monk-stratified consumer-selfie
+  benchmark exists (none does).
+
+- **D-069 — 2026-06-13 — On-device ONLY; cloud is not a phase (docs/12 §5/§8, the doc's
+  "D-047").** Every shipped promise stays literally true — "photos never leave your
+  device / never train AI" is binary and survives only on-device. The engine is
+  **classical computer vision** (image registration + SSIM/colour delta on the user's
+  own series), honestly "your phone comparing your own photos", **never a general
+  multimodal LLM** and **never marketed as "AI"**. The real CV engine + the MDC
+  calibration + device-performance verification are **B-AI-ONDEVICE** (shares B-CAMERA's
+  custom-dev-build need); v1 ships the pure, tested **classification + tone-adjusted MDC
+  floor** with the registered-pair delta stubbed (a conservative value → the calm
+  "consistent" common output renders).
+
+- **D-070 — 2026-06-13 — Within-person CHANGE, never a population score; a hard MDC noise
+  floor; "consistent" celebrated (docs/12 §6, the doc's "D-048").** The output is a
+  within-person change-STATE (`consistent` | `change_observed` | `inconclusive_lighting`
+  | `insufficient_data`) — surfaced **only** above a Minimal-Detectable-Change floor, and
+  **"consistent / no detectable change" is a celebrated first-class output (adherence
+  win)**, never a flat line to feel bad about; "lighting varied too much" is shown
+  honestly. The copy is descriptive, non-evaluative, non-diagnostic, enforced by
+  extending `claimsafety.test.ts` to trend strings (the forbidden list: any number/score/
+  skin-age/grade/%/rating, disease-detection → FDA SaMD, "dermatologist-grade"/superiority
+  → FTC, "improved/worse" verdict, structure/function, "AI" marketing — with a
+  negation-exemption for the disclosure strings that quote banned terms to refuse them).
+
+- **D-071 — 2026-06-13 — Fairness is a LAUNCH GATE (docs/12 §7, the doc's "D-049",
+  B-AI-FAIRNESS).** The Monk Skin Tone scale (read from `skin_profiles.monk_tone`), never
+  Fitzpatrick; the per-user **MDC floor is set EQUAL-OR-HIGHER for darker Monk tones**
+  (`toneAdjustmentFactor` is monotonic non-decreasing — a darker-skinned user needs a
+  larger delta to register a change, so they are never handed a falsely confident trend;
+  a unit test asserts the same delta reads "change" on light skin and "consistent" on
+  dark); **redness/erythema is never the trend metric** (optically masked as melanin
+  rises — physics, not a tunable); and **no public accuracy / "works for everyone" claim
+  ships until a ≥25–30% dark-skin, Monk 7–10-heavy cohort shows parity** — a launch gate
+  the whole field has failed. The "Fairness check" surface states this calmly (the
+  internal blocker is B-AI-FAIRNESS; not surfaced as a code in the UI).
+
+- **D-072 — 2026-06-13 — A separate, explicit, DEFAULT-OFF `photo_trend_insights` consent
+  (docs/12 §8, the doc's "D-050").** The consents enum gains an 8th type
+  `photo_trend_insights`, distinct from `photo_capture` / `photo_cloud_backup`. The
+  on-device-derived insight is **still a health inference** (MHMDA / GDPR Art. 9), so it
+  is **excluded from cloud backup** and **deleted on revocation** (`deleteTrendState`),
+  local-first + ledger-authoritative-then-local so a withdrawal re-locks. **Never
+  default-on**: the installed base who onboarded under the "no AI grades" refusal are
+  **re-consented**, never silently enrolled — the refusal screen is preserved and merely
+  gains an optional opt-in link. The "don't call it AI" tension is resolved honestly
+  (classical CV described plainly; any future on-device ML would be disclosed). New
+  blockers: **B-AI-FAIRNESS** (launch gate), **B-AI-LEGAL** (FDA SaMD / EU MDR + AI Act /
+  FTC AI-washing counsel sign-off of the copy + the DPIA extension), **B-AI-ONDEVICE**
+  (the on-device CV/Core ML engine + MDC calibration + device verification); the consent
+  copy + DPIA also extend **B-PRIVACY / B-PRIVACY-COPY**.

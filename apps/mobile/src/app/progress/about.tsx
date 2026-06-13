@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { NO_SCORE_COPY } from '@/features/photos/copy';
+import { TREND_COPY } from '@/features/trend/copy';
 import { colors } from '@/theme/tokens';
 
 // The honest, differentiating no-AI-score stance (docs/06 §8, design screen 07),
@@ -53,6 +54,19 @@ export default function AboutNoScoreScreen() {
         <Text variant="label" tone="muted" className="mt-10 text-center" style={{ lineHeight: 18 }}>
           {NO_SCORE_COPY.footer}
         </Text>
+
+        {/* docs/12 — the optional, on-device, off-by-default opt-in. The refusal above
+            is preserved as the default; this never overrides it. */}
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/trend/optin')}
+          className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
+          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          <Text variant="bodySm" className="flex-1 pr-3 font-sans-medium text-[12.5px]" style={{ color: colors.inkSoft, lineHeight: 18 }}>
+            {TREND_COPY.refusalLink}
+          </Text>
+          <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
+        </Pressable>
       </ScrollView>
     </Screen>
   );

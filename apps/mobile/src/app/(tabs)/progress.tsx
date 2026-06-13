@@ -11,6 +11,7 @@ import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
+import { TrendInsight } from '@/features/trend/TrendInsight';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
@@ -393,6 +394,13 @@ function PhotoProgressTab() {
             <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
               {PHOTO_COPY.tagline}
             </Text>
+
+            {/* "Changes in your own photos" (docs/12) — renders ONLY when opted in
+                (off by default); on-device, within-person, descriptive, no number. */}
+            <View className="mt-4">
+              <TrendInsight />
+            </View>
+
             <View className="mt-4 flex-row items-center gap-2.5">
               <ModeTab label="Compare" active={mode === 'compare'} onPress={() => setMode('compare')} />
               <ModeTab label="Timeline" active={mode === 'timeline'} onPress={() => setMode('timeline')} />

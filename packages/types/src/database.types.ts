@@ -972,6 +972,38 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['community_blocks']['Insert']>;
         Relationships: [];
       };
+      // docs/12 — on-device within-person trend state. NO score/grade/image column
+      // (D-068/D-070); the source image stays local_only (docs/06).
+      photo_trend: {
+        Row: {
+          id: string;
+          user_id: string;
+          series: string;
+          capture_session_id: string | null;
+          delta_metric: number | null;
+          mdc_threshold: number | null;
+          change_state: string;
+          narrative_key: string | null;
+          monk_tone_band: number | null;
+          computed_local_date: string;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          series: string;
+          capture_session_id?: string | null;
+          delta_metric?: number | null;
+          mdc_threshold?: number | null;
+          change_state: string;
+          narrative_key?: string | null;
+          monk_tone_band?: number | null;
+          computed_local_date: string;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['photo_trend']['Insert']>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {

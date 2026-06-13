@@ -576,6 +576,56 @@ and routine persistence (server `build_routine`, docs/03 §11).
   is now defined before the policy. 16 other findings refuted. D-063…D-067.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (767).
 
+### Slice 26 — Doc 12 AI Trend Analysis ("Changes in your own photos") + new design ✅ (2026-06-13) — the LAST build item
+- **Validated first** (cited deep-research, 25 claims → 20 confirmed, primary sources):
+  AI trend analysis is **NOT a seven-figure pillar** and the population skin score is a
+  trust destroyer. Confirmed: the skin-tone fairness gap is **persistent into Dec 2025**
+  (AUROC 0.82 darker vs 0.89 lighter, p<0.01); smartphone capture degrades AI (~0.90 →
+  0.81); **Monk > Fitzpatrick** (Nature npj 2025 + Google, who *forbid* training on
+  MST-E); the **"AI" label is a measured trust tax** (only 5% of US adults trust AI "a
+  lot"; healthcare net −23); Yuka is a subscription barcode-scanner with **zero AI face
+  analysis**; even the flagship score app (Skin360) is "a sales/recommendation engine."
+  Net: **kill the population score; keep refusing AI scores and market the refusal**
+  (Phase 0); build only the narrow on-device exception, deferred.
+- **The population score is KILLED** (D-068): no score/grade/percentage/"skin age" column
+  or copy exists anywhere, by construction. The shipped no-AI-score refusal (docs/06,
+  `/progress/about`) is **preserved as the asset** and merely gains an optional opt-in link.
+- **Schema** (migration 0024): `photo_trend` (on-device-derived abstract deltas + a
+  change-state + a copy key — **no score/image/faceprint column**), owner-RLS; the
+  `consents` enum gains an 8th type **`photo_trend_insights`** (separate, default-OFF).
+  `Database` type + `@onskin/types` (`TrendChangeState`/`TREND_EVENTS`) extended; no RLS
+  weakened.
+- **Pure, tested engine** (`features/trend/`): `trend.ts` (the change-state classifier +
+  the **tone-adjusted MDC noise floor** — provably **equal-or-higher for darker Monk
+  tones**, a test asserts the same delta reads "change" on light skin but "consistent" on
+  dark), `copy.ts` (descriptive, claim-safe narratives + the off-by-default opt-in +
+  fairness copy), the **claim-safety guard extended to trend strings** (D-070 — no
+  number/score/grade/%/disease-detection/superiority/"improved-worse"/structure-function/
+  "AI", with a negation-exemption + positive controls), `consent.ts`/`store.ts` (the
+  separate consent + deletion-on-revocation). **50 new fixtures.** The real on-device CV
+  engine (registration + SSIM/colour delta) is **stubbed behind B-AI-ONDEVICE**; the
+  classification + fairness floor are the real logic.
+- **5 design surfaces** + wiring: the **preserved refusal** + the opt-in link
+  (`/progress/about`); the off-by-default **opt-in** (`app/trend/optin.tsx` — disclosure
+  bullets, separate consent, the toggle OFF); the calm **output line** (`TrendInsight`,
+  on the Progress tab — "Consistent · adherence win", descriptive, no number); the honest
+  **inconclusive states** (lighting / insufficient data); and the **Monk-tone fairness
+  floor** (`app/trend/fairness.tsx` — the band, higher-threshold-for-darker-tones,
+  redness-not-the-metric, the gate). You-tab + the refusal screen link in.
+- **On-device only; cloud is not a phase** (D-069): classical CV honestly framed ("your
+  phone comparing your own photos"), never a general LLM, never marketed as "AI". The
+  separate `photo_trend_insights` consent is default-OFF + revocable-with-deletion;
+  installed base re-consented, never silently enrolled (D-072).
+- **Review note:** the 4-dimension adversarial review + the deep-research synthesis hit a
+  session/rate limit mid-run (the review's 4 agents were cut off → could not complete; the
+  research returned 20 confirmed claims but its synthesis step failed). A **targeted manual
+  verification** of the highest-risk items passed: migration 0024 re-adds the consent
+  constraint with **all 8 types** (incl. `community_participation`, so it can't break);
+  **no score/grade/image column** exists in `photo_trend`; the fairness monotonicity +
+  claim-safety + classification are covered by the 50 passing tests. The full multi-agent
+  review can be re-run after the limit resets. D-068…D-072.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (817).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -609,7 +659,10 @@ and routine persistence (server `build_routine`, docs/03 §11).
 9. ✅ Personalized recommendations — Doc 9 (Slice 23): the independent, needs-based "church and state" advisor — the six honest triggers + an honest "you're set", the merit-only six-input FIT score (no commercial input), type-first + restrained, the what/why/how explainability, the "For you" hub + card + preferences + in-routine gap prompt; goal-active rec types launch-gated under **B-DERM-REVIEW**, the commerce/affiliate path deferred + inert (doc #10 / **B-PRIVACY** / **B-CATALOG-SEED**)
 10. ✅ Creator stacks + ShopMy — Doc 10 (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own independent recommendations — church-and-state schema (commission service-role-only, never client-readable, never in ranking), opaque-token attribution (no skin data to retailers), FTC "paid link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the transparency page; validated as a **six-figure supplement** (not 7-figure). The live ShopMy rail is **rail-agnostic + stubbed/inert** — the house-account model is unconfirmed (**B-SHOPMY**), real catalogue/prices (**B-CATALOG-SEED**), final consent copy/DPIA (**B-PRIVACY**), stacks sign-off (**B-DERM-REVIEW**)
 11. ✅ Community layer — Doc 11 (Slice 25): the expert-anchored, anonymous, claim-safe "Skin Notes" myth-vs-evidence trust layer — NOT an open feed. Photo-free + anon-locked-out + consent-scoped schema; the B-DERM-REVIEW-gated expert corpus; the claim-safety pre-moderation flag; the 5 surfaces (hub, card, in-context, Ask, people-like-you). Validated as a retention **multiplier, not a 7-figure pillar**. Phase 1 live; peer posting deferred behind the moderation/legal floor (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**), clinical sign-off (**B-DERM-REVIEW**), consent copy/DPIA (**B-PRIVACY**)
-12. 🚫 AI trend analysis — needs its doc (intentionally last)
+12. ✅ AI trend analysis — Doc 12 (Slice 26, intentionally last): the population skin score **killed outright**; the shipped no-AI-score **refusal preserved + marketed** (Phase 0); the only-defensible narrow exception built — on-device, within-person, descriptive, **no-number** "Changes in your own photos" (off by default, separate `photo_trend_insights` consent, tone-adjusted MDC floor, redness-never-the-metric, classical CV not an LLM, never marketed as "AI"). Validated as **not a 7-figure pillar**. The real on-device CV engine + fairness cohort + legal sign-off deferred (**B-AI-ONDEVICE** / **B-AI-FAIRNESS** / **B-AI-LEGAL**)
+
+**🎉 All 12 build-order documents are now BUILT (Slices 0–26).** Every remaining item is a
+founder blocker (accounts/keys/legal/clinical/native dev build/catalog seed) — see BLOCKERS.md.
 
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
