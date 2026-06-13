@@ -119,7 +119,12 @@ Privacy Policy, Terms of Service, and the exact consent statements for
 `data_sharing`. A GDPR Art. 35 **DPIA** is advised given large-scale health-data
 processing.
 
-### B-DERM-REVIEW — Clinical sign-off of the conflict matrix 🔴 open (LAUNCH GATE)
+### B-DERM-REVIEW — Clinical sign-off of the rules 🔴 open (LAUNCH GATE)
+**Now also covers docs/03 rules** (per docs/03 §11): the `sequencing_rules`
+(application order — low-risk but medical-adjacent), the `active_ramp` cadence
+numbers (start frequency + step-up timing), and the skin-cycling personalisation
+are grade-C / medical-adjacent and need the same board-certified dermatologist +
+cosmetic-chemist sign-off as the conflict matrix before launch. Original entry:
 docs/02 §9 makes this **mandatory, not optional** — it gates launch of the whole
 intelligence layer. The ~14 starter rules (migration `…0013_seed_intelligence.sql`
 + `apps/mobile/src/features/intelligence/rules.ts`) are authored from docs/02
@@ -234,6 +239,19 @@ accounts (needs B-APPLE + B-GOOGLE). If it orphans data, switch to the
 The `@react-native-google-signin/google-signin` Expo config plugin needs the
 reversed iOS client id (`iosUrlScheme`) in `app.json` to build on iOS. Add it
 once the iOS OAuth client exists.
+
+### B-ROUTINE-PERSIST — server routine generation + per-user cycle anchor 🟡 deferred
+docs/03 §11 specs a server-authoritative `build_routine(uid)` / `recompute_routine`
+(`SECURITY DEFINER`, like docs/02's detect fn). Deferred with B-SERVER-DETECT: the
+tested client `generatePlan` covers v1. The skin-cycle anchor is currently stored
+locally (AsyncStorage); persist it per-user once the routine is written server-side.
+Needs B-SUPABASE.
+
+### B-DRAG-DND — full drag-and-drop reorder 🟡 stubbed
+The edit/reorder screen (design 02) has drag handles + the non-blocking "Fix the
+order" nudge (the doc's actual point) functional, but true drag-and-drop needs
+`react-native-draggable-flatlist` (reanimated/gesture-handler are present). Small
+follow-on.
 
 ### B-EVERY-N-DAYS — `every_n_days` step frequency has no interval column 🔴 open
 docs/01 §3 lists `every_n_days` as a valid `routine_steps.frequency` value but
