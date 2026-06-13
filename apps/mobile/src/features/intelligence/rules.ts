@@ -196,3 +196,13 @@ export const STARTER_RULES: ConflictRule[] = [
     ruleVersion: 1, reviewedBy: null,
   },
 ];
+
+/**
+ * Rules safe to surface to real users. B-DERM-REVIEW launch gate: in production
+ * builds only rules with a recorded clinical sign-off (`reviewedBy`) are shown;
+ * in development the full starter set is used so the layer is buildable/demoable.
+ */
+export function shippableRules(rules: ConflictRule[] = STARTER_RULES): ConflictRule[] {
+  const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
+  return isDev ? rules : rules.filter((r) => r.reviewedBy != null);
+}

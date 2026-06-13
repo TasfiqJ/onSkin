@@ -12,3 +12,5 @@ export { Chip } from './Chip';
 export type { ChipProps } from './Chip';
 export { Screen } from './Screen';
 export type { ScreenProps } from './Screen';
+export { ConflictBanner } from './ConflictBanner';
+export type { ConflictBannerProps } from './ConflictBanner';

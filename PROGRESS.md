@@ -137,12 +137,31 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   `npm test` is now real (the doc mandates per-rule fixtures, §10).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅.
 
-## In progress
+### Slice 10 — PAO intelligence + Shelf & conflict-detail surfaces ✅ (2026-06-13)
+- PAO/expiry helper (docs/02 §6): label → category default → honest "unknown"
+  (never fabricated), `computeExpiry`, badge taxonomy (date/countdown/expired/
+  unknown). 8 vitest fixtures (33 total).
+- `useShelf` hook: loads products + skin profile, tags via the client dictionary,
+  runs the **launch-gated** engine (`shippableRules` — only `reviewed_by` rules
+  surface in prod), computes PAO badges, derives the calm banner + reassurances.
+- Shelf screen (design spec p11–12): title+count, All/Actives/Expiring filters,
+  calm `ConflictBanner` (clay, never red), reassurance card, product cards with
+  PAO badges, empty state, "Scan a barcode" FAB.
+- Conflict-detail screen (spec p13, the trust set-piece): severity + evidence
+  chips, claim-safe mechanism, "OUR SUGGESTION", affected products, source +
+  honesty note, "Keep" / "Use together anyway" (records to `routine_conflicts`).
+- Scan screen = honest placeholder (barcode/OBF = next slice).
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (33).
 
-### Slice 9 — skin-cycling scheduler (docs/02 §5) — next
-Then PAO/shelf UI (§6/§7.1), conflict detail + PM auto-resolution (§7.3/§7.4),
-barcode scan (§7.5). Remaining docs/02 work is UI + the blocked data/clinical
-items (B-DERM-REVIEW, B-CATALOG-SEED).
+## In progress / remaining docs/02 work
+
+- **PM auto-resolution live screen (§7.4)** — scheduler logic + `pmResolution` are
+  built + tested, but rendering the live night-strip + "next acid night" needs a
+  **cycle setup (anchor + template)** established by the routine builder
+  (Document 3, not present). Deferred to Doc 3; not inventing the cycle schema.
+- **Barcode scan + manual add + OBF lookup (§7.5)** — needs camera + the live OBF
+  API + catalog seed (B-CATALOG-SEED).
+- Blocked data/clinical: **B-DERM-REVIEW** (launch gate), **B-CATALOG-SEED**.
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)
