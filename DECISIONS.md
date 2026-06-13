@@ -278,3 +278,73 @@ Format: `D-NNN — date — decision — rationale`.
   **B-DRAG-DND**. The DB `cycle_nights.slot` enum uses the doc's nouns
   (`exfoliation`/`recovery`); the local engine uses verbs (`exfoliate`/`recover`) —
   a trivial mapping at the (deferred) server-sync boundary.
+
+## Guided photo capture & progress (docs/06, Slice 20)
+
+> Note: docs/06 §6 *suggests* "D-028/029/030" for the photo privacy / flagged-not-
+> blocked / no-AI-score decisions, but those numbers were already taken by the Smart
+> Shelf slice. They are recorded here as D-039/D-040/D-042 with the mapping noted.
+
+- **D-038 — 2026-06-13 — The Progress tab IS the photo timeline (docs/06); the calm
+  streak relocated to `/routine/streak`.** docs/06 explicitly and repeatedly defines
+  the Progress tab as the guided-photo feature ("It is the Progress tab"), and the
+  new "OnSkin Photo Progress" design confirms it (Compare/Timeline). The calm
+  adherence streak (docs/03 §6, briefly the Progress tab in Slice 14) was **moved**,
+  not removed — it now lives in the routine stack (`app/routine/streak.tsx`) and is
+  reachable from **Today's streak pill** (now tappable) and the **You** tab's "Streak
+  & adherence" link. This preserves docs/03 while honouring docs/06, and keeps photos
+  deliberately **decoupled from the daily streak** (docs/06 §5). Reversible.
+
+- **D-039 — 2026-06-13 — Local-first photo store; image bytes never leave the device;
+  no faceprint** (docs/06 §6/§7; the doc's suggested "D-028"). Photo **metadata** is
+  AsyncStorage (`features/photos/store.ts`, the D-029 pattern); image **bytes** live
+  on-device at `local_uri`. The best-effort Supabase mirror (B-SUPABASE) sends
+  **metadata only** and **always** `local_only = true` / `storage_path = null` — image
+  data and `local_uri` are never mirrored. **No faceprint/biometric template is ever
+  computed or stored**; the additive `head_roll/yaw/pitch` columns are coarse pose QA,
+  not an identification template (avoids BIPA's trigger). Migration 0018 is purely
+  additive; owner-only RLS (0008) is unchanged, plus a hardened `owns_photo()` definer
+  + restrictive policies so a shot's `reference_photo_id` must be owned (the D-014
+  pattern).
+
+- **D-040 — 2026-06-13 — No real camera in v1; the capture pipeline is B-CAMERA** (the
+  doc's suggested "D-029" — quality flagged, never blocked). `react-native-vision-
+  camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
+  on-device luminance/white-balance, auto-capture, client-side image encryption, and
+  the Wi-Fi/charging cloud-upload job all need a **custom dev build** and on-device
+  performance tuning (docs/00 §4 spike, docs/06 §10). The guided-capture / review /
+  detail screens are rendered **design-faithfully** and the shutter performs a
+  **simulated** capture (with a quiet "preview · live in device build" note) so the
+  full intake → review → timeline → compare flow is exercisable end-to-end now. The
+  pure `quality.ts` (readiness gate, coaching, lighting state, review verdict) is
+  tested and ready to consume real on-device signals. **Quality is FLAGGED, never
+  BLOCKED** — `isCaptureReady` only arms the auto-shutter; the user always controls
+  capture and Save always works.
+
+- **D-041 — 2026-06-13 — Compare is a real Reanimated/gesture before/after wipe**
+  over flat-tone placeholders (no `react-native-svg`/gradient lib in the project),
+  with the **side-by-side** toggle as the accessible-preferred mode (docs/06 §4).
+  **No numbers, no "improvement %"** (the doc's suggested "D-030"). Real on-device
+  images render via `expo-image` once capture lands; until then the striped/flat
+  placeholders match the design's own "user-photo placeholder" note.
+
+- **D-042 — 2026-06-13 — Claim-safety guard extended to photo copy** (docs/06 §8/§9,
+  the Slice-11 pattern; the doc's suggested "D-030" made testable). All user-facing
+  photo strings live in `features/photos/copy.ts` so `claimsafety.test.ts` scans them
+  for drug/disease verbs, alarm words, AND affirmative score/grade/skin-age/% claims.
+  The deliberate **no-AI-score REFUSAL** copy (`NO_SCORE_COPY`) is **exempt from the
+  score check** (it names "score/grade/skin age" precisely to reject them) but still
+  held to the drug-claim + alarm-word bar — and a positive test asserts the stance is
+  actually stated.
+
+- **D-043 — 2026-06-13 — The weekly photo reminder is an opt-in preference only;
+  delivery is Document 7** (docs/06 §5). This slice ships the local-first preference
+  (`features/photos/reminders.ts`), the calm copy, and the You-tab toggle; the actual
+  scheduling — at a consistent time of day, timed with the docs/05 scheduler — is
+  Doc 7's reminder system, not invented here. A missed week never breaks anything.
+
+- **D-044 — 2026-06-13 — Photo capture/review/detail use the design's near-black
+  `#16130F` backdrop**, distinct from the `night` token (`#1B1813`), to match the
+  "OnSkin Photo Progress" `.dc.html` exactly (it uses a darker capture palette so the
+  face is the brightest thing on screen). Logged so the divergence from the night
+  token is intentional, not drift.

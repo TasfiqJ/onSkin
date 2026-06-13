@@ -31,8 +31,9 @@ export const colors = {
   severityModerate: '#A5694B',
   severityHigh: '#8A4A33',
   amber: '#B07A3C',
-  // Hairline borders (RN has no inset box-shadow).
+  // Hairline borders (RN has no inset box-shadow). Mirrors tailwind hairline.*.
   hairline: 'rgba(32,27,21,0.08)',
+  hairlineStrong: 'rgba(32,27,21,0.12)',
   hairlineDark: 'rgba(244,239,231,0.08)',
 } as const;
 

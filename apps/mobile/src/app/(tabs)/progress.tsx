@@ -1,121 +1,414 @@
-import { ScrollView, View } from 'react-native';
+import { Image } from 'expo-image';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Alert, Modal, Pressable, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, Screen, Text } from '@/components/ui';
-import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
+import { CompareSlider } from '@/features/photos/CompareSlider';
+import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
+import { parseLocalDate } from '@/features/photos/timeline';
+import { usePhotos } from '@/features/photos/usePhotos';
+import { useAppLock } from '@/lib/applock/AppLockProvider';
+import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// Progress — the calm, forgiving streak (design screen 06, docs/03 §6/§9.5).
-// White-hat: weekly adherence + a month heat-map + a grace-day "Streak protected"
-// reassurance. No all-or-nothing counter, no shame copy. (Photo timeline = Doc 6.)
+// Progress tab — the guided photo timeline (docs/06; design screens 03/04/05/08).
+// REPLACES the calm streak that briefly lived here (Slice 14) — docs/06 defines the
+// Progress tab as the photo feature; the streak moved to /routine/streak (still
+// reachable from Today + You). Local-only, no scores, app-locked, your own eyes.
 
-// Heat intensities: empty → done (docs/03 §6 legend less→more).
-const HEAT = ['#EFEAE1', '#EDE5D8', '#E0C3AC', colors.clay] as const;
+const BG = '#16130F';
+const SAGE = '#9DB18A';
+function short(ymd: string): string {
+  return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
 
-function weekDaySquare(state: DayState): { bg: string; dot?: string; ring?: boolean; labelClay?: boolean } {
-  switch (state) {
-    case 'done':
-      return { bg: colors.clay };
-    case 'missed':
-      return { bg: '#EDE5D8', dot: '#D6C9B5' };
-    case 'today':
-      return { bg: colors.greige, ring: true, labelClay: true };
-    default:
-      return { bg: colors.greige };
+// ── Mode switch ──────────────────────────────────────────────────────────────
+function ModeTab({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
+      onPress={onPress}
+      className="rounded-pill px-[18px] py-2.5"
+      style={{ backgroundColor: active ? colors.ink : colors.paperRaised, borderWidth: active ? 0 : 1, borderColor: colors.hairlineStrong }}>
+      <Text variant="bodySm" className="font-sans-semibold" style={{ color: active ? colors.paper : colors.muted }}>
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+// ── Empty / first-run (design screen 03) ─────────────────────────────────────
+function FirstRun() {
+  return (
+    <View className="flex-1 justify-center pb-6">
+      <Card className="mb-5">
+        <Text variant="titleSm" style={{ fontSize: 26, lineHeight: 30 }}>
+          {PHOTO_COPY.firstRun.title}
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
+          {PHOTO_COPY.firstRun.body}
+        </Text>
+        {/* honest 8–12 week expectation bar */}
+        <View className="mt-5 flex-row">
+          <View className="h-1.5 flex-1 rounded-l-[3px]" style={{ backgroundColor: colors.greigeDeep }} />
+          <View className="h-1.5 flex-1" style={{ backgroundColor: colors.clayBright }} />
+          <View className="h-1.5 flex-1 rounded-r-[3px]" style={{ backgroundColor: colors.clay }} />
+        </View>
+        <View className="mt-1.5 flex-row justify-between">
+          {['week 1', 'week 6', 'week 12'].map((w) => (
+            <Text key={w} variant="label" tone="muted" style={{ fontSize: 10 }}>
+              {w}
+            </Text>
+          ))}
+        </View>
+      </Card>
+      <View className="mb-7 flex-row items-center gap-2.5 px-1">
+        <View className="h-3.5 w-3.5 rounded-full border-2" style={{ borderColor: colors.sage }} />
+        <Text variant="bodySm" tone="muted">
+          {PHOTO_COPY.firstRun.reassure}
+        </Text>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push('/progress/capture')}
+        className="h-14 items-center justify-center rounded-pill"
+        style={{ backgroundColor: colors.ink }}>
+        <Text variant="body" className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
+          {PHOTO_COPY.firstRun.cta}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+// ── Compare-pair picker (docs/06 §4: "tap a date to change") ─────────────────
+type PhotoLite = NonNullable<ReturnType<typeof usePhotos>['data']>['series'][number];
+function PairPicker({
+  which,
+  photos,
+  selectedId,
+  onSelect,
+  onClose,
+}: {
+  which: 'before' | 'after' | null;
+  photos: PhotoLite[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  onClose: () => void;
+}) {
+  return (
+    <Modal visible={which !== null} transparent animationType="slide" onRequestClose={onClose}>
+      <Pressable className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }} onPress={onClose}>
+        <Pressable className="rounded-t-sheet bg-paper px-6 pb-10 pt-4" onPress={() => {}}>
+          <View className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
+          <Text variant="titleSm" className="mb-1">
+            Choose the {which === 'before' ? 'first' : 'second'} photo
+          </Text>
+          <Text variant="bodySm" tone="muted" className="mb-4">
+            Any two captures — you decide what to compare.
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
+            {photos
+              .slice()
+              .reverse()
+              .map((p) => {
+                const sel = p.id === selectedId;
+                return (
+                  <Pressable
+                    key={p.id}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: sel }}
+                    onPress={() => onSelect(p.id)}
+                    style={{ width: 92, aspectRatio: 3 / 4 }}
+                    className="overflow-hidden rounded-[12px]"
+                  >
+                    {p.localUri ? (
+                      <Image source={{ uri: p.localUri }} style={{ flex: 1 }} contentFit="cover" />
+                    ) : (
+                      <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+                    )}
+                    <View
+                      className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
+                      style={{ borderWidth: sel ? 2.5 : 0, borderColor: colors.clay }}
+                    />
+                    <View className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5" style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}>
+                      <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
+                        {short(p.takenLocalDate)}
+                      </Text>
+                    </View>
+                  </Pressable>
+                );
+              })}
+          </ScrollView>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+}
+
+// ── Compare (design screen 04) ───────────────────────────────────────────────
+function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>['data']> }) {
+  const [sideBySide, setSideBySide] = useState(false);
+  const [picking, setPicking] = useState<'before' | 'after' | null>(null);
+  const [pick, setPick] = useState<{ beforeId?: string; afterId?: string }>({});
+  const dflt = data.comparePair;
+
+  if (!dflt) {
+    // Sparse: exactly one photo — invite a second rather than an empty slider.
+    return (
+      <Card className="mt-2">
+        <View className="mb-3 h-44 items-center justify-center rounded-card" style={{ backgroundColor: colors.greige }}>
+          <Text variant="label" tone="muted">
+            your first photo
+          </Text>
+        </View>
+        <Text variant="body" className="font-sans-medium">
+          {PHOTO_COPY.sparse}
+        </Text>
+      </Card>
+    );
   }
+
+  // Resolve the active pair: a user pick (docs/06 §4 "any two captures") or the
+  // default earliest-vs-latest.
+  const before = (pick.beforeId && data.series.find((p) => p.id === pick.beforeId)) || dflt.before;
+  const after = (pick.afterId && data.series.find((p) => p.id === pick.afterId)) || dflt.after;
+
+  function choose(id: string) {
+    setPick((prev) => (picking === 'before' ? { ...prev, beforeId: id } : { ...prev, afterId: id }));
+    setPicking(null);
+  }
+
+  return (
+    <View className="mt-2">
+      <View className="mb-3 flex-row items-center justify-between">
+        <View style={{ flex: 1 }} />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: sideBySide }}
+          onPress={() => setSideBySide((v) => !v)}
+          className="rounded-pill px-3.5 py-2"
+          style={{ backgroundColor: sideBySide ? colors.ink : colors.paperRaised, borderWidth: sideBySide ? 0 : 1, borderColor: colors.hairlineStrong }}>
+          <Text variant="label" style={{ color: sideBySide ? colors.paper : colors.muted }}>
+            {PHOTO_COPY.sideBySide}
+          </Text>
+        </Pressable>
+      </View>
+      <CompareSlider
+        before={{ uri: before.localUri, date: short(before.takenLocalDate), tone: '#E7E0D5' }}
+        after={{ uri: after.localUri, date: short(after.takenLocalDate), tone: '#DACFBE' }}
+        sideBySide={sideBySide}
+        onPickBefore={() => setPicking('before')}
+        onPickAfter={() => setPicking('after')}
+      />
+      <View className="mt-4 flex-row items-center gap-2.5">
+        <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+        <Text variant="bodySm" tone="muted" className="flex-1" style={{ lineHeight: 18 }}>
+          {PHOTO_COPY.compareNote}
+        </Text>
+      </View>
+      <PairPicker
+        which={picking}
+        photos={data.series}
+        selectedId={picking === 'before' ? before.id : picking === 'after' ? after.id : null}
+        onSelect={choose}
+        onClose={() => setPicking(null)}
+      />
+    </View>
+  );
+}
+
+// ── Timeline (design screen 05) ──────────────────────────────────────────────
+function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>['data']> }) {
+  const topMilestone = data.milestones[data.milestones.length - 1];
+  return (
+    <View className="mt-2">
+      {/* quiet time-lapse affordance (design screen 05; the frames come with B-CAMERA) */}
+      <View className="mb-3 flex-row justify-end">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Play a quiet time-lapse of your series"
+          onPress={() =>
+            Alert.alert('Quiet time-lapse', 'A gentle time-lapse flips through your series — it arrives with on-device capture.')
+          }
+          className="flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"
+          style={{ backgroundColor: colors.paperRaised, borderWidth: 1, borderColor: colors.hairlineStrong }}>
+          <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
+          <Text variant="label" tone="muted">
+            Play
+          </Text>
+        </Pressable>
+      </View>
+      {data.monthGroups.map((group, gi) => (
+        <View key={group.key} className="mb-5">
+          <Text variant="label" tone="muted" className="mb-2.5" style={{ letterSpacing: 1 }}>
+            {group.label.toUpperCase()}
+          </Text>
+          <View className="flex-row flex-wrap" style={{ gap: 8 }}>
+            {group.photos.map((p) => (
+              <Pressable
+                key={p.id}
+                accessibilityRole="button"
+                accessibilityLabel={`Photo ${short(p.takenLocalDate)}`}
+                onPress={() => router.push(`/progress/${p.id}`)}
+                style={{ width: '31.6%', aspectRatio: 3 / 4 }}
+                className="overflow-hidden rounded-[12px]"
+              >
+                <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+                <View className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5" style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}>
+                  <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
+                    {short(p.takenLocalDate)}
+                  </Text>
+                </View>
+                {p.isReference ? (
+                  <View className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: SAGE }} />
+                ) : null}
+              </Pressable>
+            ))}
+          </View>
+          {/* a calm milestone marker after the first group (docs/06 §4) */}
+          {gi === 0 && topMilestone && topMilestone.milestone !== 'first' ? (
+            <View className="mt-4 flex-row items-center gap-3 rounded-card p-3.5" style={{ backgroundColor: colors.clayTint }}>
+              <View className="h-[30px] w-[30px] items-center justify-center rounded-full" style={{ backgroundColor: colors.paperRaised }}>
+                <View className="h-[11px] w-[11px] rounded-full" style={{ backgroundColor: colors.clay }} />
+              </View>
+              <Text variant="bodySm" className="flex-1" style={{ color: colors.clayDeep }}>
+                {MILESTONE_COPY[topMilestone.milestone]}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+// ── Biometric gallery lock (design screen 08) ────────────────────────────────
+function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
+  const insets = useSafeAreaInsets();
+  const authenticate = () => {
+    void LocalAuthentication.authenticateAsync({ promptMessage: 'Unlock your photo timeline' }).then((r) => {
+      if (r.success) onUnlock();
+    });
+  };
+  useEffect(() => {
+    authenticate(); // auto-prompt when the gate appears
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // Full-bleed #16130F incl. the safe-area bands (design screen 08) — no night sliver.
+  return (
+    <View className="flex-1" style={{ backgroundColor: BG, paddingTop: insets.top, paddingBottom: insets.bottom }}>
+      <View className="flex-1 items-center justify-center px-7">
+        <View className="mb-6 h-[78px] w-[78px] items-center justify-center rounded-[24px]" style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}>
+          <Text style={{ color: SAGE, fontSize: 30 }}>🔒</Text>
+        </View>
+        <Text variant="title" style={{ color: colors.cream, fontSize: 30, lineHeight: 33, textAlign: 'center' }}>
+          {PHOTO_COPY.lock.title}
+        </Text>
+        <Text variant="bodySm" className="mt-2.5 text-center" style={{ color: 'rgba(244,239,231,0.6)', maxWidth: 280, lineHeight: 21 }}>
+          {PHOTO_COPY.lock.body}
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={authenticate}
+          className="mt-7 flex-row items-center gap-2.5 rounded-pill px-8 py-4"
+          style={{ backgroundColor: colors.cream }}>
+          <Text style={{ color: BG, fontSize: 15 }}>⊡</Text>
+          <Text className="font-sans-semibold" style={{ color: BG, fontSize: 16 }}>
+            {PHOTO_COPY.lock.unlock}
+          </Text>
+        </Pressable>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push('/(tabs)/you')}
+        className="mb-10 flex-row items-center gap-3.5 rounded-[18px] p-4"
+        style={{ backgroundColor: 'rgba(244,239,231,0.07)', marginHorizontal: 4 }}>
+        <View className="flex-1">
+          <Text className="font-sans-bold" style={{ color: colors.cream, fontSize: 14 }}>
+            {PHOTO_COPY.lock.cloudTitle}
+          </Text>
+          <Text style={{ color: 'rgba(244,239,231,0.5)', fontSize: 12, lineHeight: 17, fontFamily: 'HankenGrotesk_400Regular' }}>
+            {PHOTO_COPY.lock.cloudOff}
+          </Text>
+        </View>
+        <Text style={{ color: 'rgba(244,239,231,0.5)', fontSize: 18 }}>›</Text>
+      </Pressable>
+    </View>
+  );
 }
 
 export default function ProgressScreen() {
-  const { data } = useProgress();
-  const week = data?.week ?? [];
-  const heat = data?.heat ?? [];
+  const { enabled: lockEnabled } = useAppLock();
+  const { data } = usePhotos('front');
+  const [unlocked, setUnlocked] = useState(false);
+  const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
+
+  useEffect(() => {
+    track(mode === 'compare' ? 'comparison_viewed' : 'timeline_viewed');
+  }, [mode]);
+
+  const count = data?.count ?? 0;
+
+  // Gallery is gated by the opt-in biometric app-lock (docs/06 §7), but only once
+  // there are photos to protect.
+  if (lockEnabled && !unlocked && count > 0) {
+    return <GalleryLock onUnlock={() => setUnlocked(true)} />;
+  }
 
   return (
     <Screen edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-        <Text variant="title" className="mt-2">
-          Progress
-        </Text>
-        <Text variant="bodySm" tone="muted" className="mt-1">
-          Showing up beats being perfect.
-        </Text>
+        <View className="flex-row items-start justify-between">
+          <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
+            {PHOTO_COPY.tabTitle}
+          </Text>
+          {count > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Take a progress photo"
+              onPress={() => router.push('/progress/capture')}
+              className="mt-3 flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"
+              style={{ backgroundColor: colors.clay }}>
+              <Text style={{ color: colors.paper, fontSize: 14 }}>＋</Text>
+              <Text variant="label" style={{ color: colors.paper }}>
+                Photo
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
 
-        {/* This week */}
-        <Card className="mt-5">
-          <View className="mb-4 flex-row items-center justify-between">
-            <Text variant="body" className="font-sans-bold">
-              This week
+        {count === 0 ? (
+          <FirstRun />
+        ) : (
+          <>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {data?.metadata.text}
             </Text>
-            <Text variant="label" tone="clay" className="font-mono-medium">
-              {data?.weeklyDone ?? 0} of 7 nights
+            <Text variant="bodySm" tone="muted" italic className="mt-2" style={{ lineHeight: 19 }}>
+              {PHOTO_COPY.tagline}
             </Text>
-          </View>
-          <View className="flex-row gap-1.5">
-            {week.map((d, i) => {
-              const s = weekDaySquare(d.state);
-              return (
-                <View key={i} className="flex-1 items-center">
-                  <View
-                    className="aspect-square w-full items-center justify-center rounded-[9px]"
-                    style={{ backgroundColor: s.bg, borderWidth: s.ring ? 1.5 : 0, borderColor: colors.hairline }}>
-                    {s.dot ? <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.dot }} /> : null}
-                  </View>
-                  <Text
-                    variant="label"
-                    className="mt-1.5 font-mono text-[10px]"
-                    style={{ color: s.labelClay ? colors.clay : colors.muted }}>
-                    {d.label}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-        </Card>
+            <View className="mt-4 flex-row items-center gap-2.5">
+              <ModeTab label="Compare" active={mode === 'compare'} onPress={() => setMode('compare')} />
+              <ModeTab label="Timeline" active={mode === 'timeline'} onPress={() => setMode('timeline')} />
+              <View style={{ flex: 1 }} />
+              <Pressable
+                accessibilityRole="link"
+                accessibilityLabel="Why no AI score"
+                onPress={() => router.push('/progress/about')}>
+                <Text variant="label" tone="clay">
+                  No scores ⓘ
+                </Text>
+              </Pressable>
+            </View>
 
-        {/* Grace-day reassurance — only after a forgiven miss. */}
-        {data?.graceUsed ? (
-          <View className="mt-3.5 flex-row items-center gap-3.5 rounded-card bg-sage-tint p-4">
-            <View className="h-10 w-10 items-center justify-center rounded-full bg-paper-raised">
-              <View className="h-4 w-4 rounded-[5px] border-2" style={{ borderColor: colors.sage }} />
-            </View>
-            <View className="flex-1">
-              <Text variant="body" className="font-sans-bold" style={{ color: colors.sageDeep }}>
-                Streak protected
-              </Text>
-              <Text variant="bodySm" className="mt-0.5" style={{ color: colors.sageEyebrow }}>
-                You missed a day — that&apos;s fine. We used a grace day, your {data.streak} days stand.
-              </Text>
-            </View>
-          </View>
-        ) : null}
-
-        {/* Month heat-map */}
-        <Card className="mt-3.5">
-          <View className="mb-3.5 flex-row items-center justify-between">
-            <Text variant="body" className="font-sans-bold">
-              {data?.monthLabel ?? ''}
-            </Text>
-            <View className="flex-row items-center gap-1.5">
-              <Text variant="label" tone="muted" className="font-mono text-[10px]">
-                less
-              </Text>
-              {[HEAT[1], HEAT[2], HEAT[3]].map((c, i) => (
-                <View key={i} className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: c }} />
-              ))}
-              <Text variant="label" tone="muted" className="font-mono text-[10px]">
-                more
-              </Text>
-            </View>
-          </View>
-          <View className="flex-row flex-wrap gap-1.5">
-            {heat.map((cell: HeatCell, i) => (
-              <View
-                key={i}
-                className="aspect-square rounded-[5px]"
-                style={{ width: '12.4%', backgroundColor: HEAT[cell.intensity] }}
-              />
-            ))}
-          </View>
-        </Card>
+            {mode === 'compare' ? <CompareView data={data!} /> : <TimelineView data={data!} />}
+          </>
+        )}
       </ScrollView>
     </Screen>
   );

@@ -94,6 +94,36 @@ export type AddedVia = 'barcode' | 'search' | 'ocr' | 'manual' | 'onboarding';
 /** A barcode-scan outcome logged to `shelf_scans` (docs/04 §2/§4.6). */
 export type ShelfScanResult = 'matched' | 'no_match' | 'ambiguous' | 'offline_queued';
 
+// --- Guided photo progress (docs/06) -----------------------------------------
+/** A capture series: each angle/zone is its own series with its own reference +
+ *  ghost so the SERIES stays internally consistent (docs/06 §3). 'front' default. */
+export const PHOTO_SERIES = ['front', 'left', 'right', 'cheek_l', 'cheek_r', 'forehead'] as const;
+export type PhotoSeries = (typeof PHOTO_SERIES)[number];
+/** Time-of-day consistency hint — shots are most comparable at the same hour
+ *  (docs/06 §3 skin-prep variables). */
+export type TimeOfDay = 'morning' | 'evening';
+/** On-device lighting check states (docs/06 §3) — calm guidance, never alarm. */
+export type LightingState = 'good' | 'too_dark' | 'too_warm' | 'uneven';
+/** A per-shot quality verdict surfaced at review — flagged, NEVER blocked
+ *  (docs/06 §3, the doc's D-029). The user always controls capture. */
+export type PhotoQualityFlag = 'matched' | 'darker' | 'misaligned' | 'low';
+/** Calm timeline milestones — gentle markers, NOT gamified points (docs/06 §4).
+ *  `one_cycle` (~12 weeks / 84 days) is the full-results-window marker; a distinct
+ *  per-user cycle-length milestone is a future refinement once cycle length is
+ *  plumbed through (today the pure helper has no per-user length). */
+export type PhotoMilestone = 'first' | 'four_weeks' | 'one_cycle';
+/** PostHog photo events — METADATA ONLY, never image data (docs/06 §10). */
+export const PHOTO_EVENTS = [
+  'photo_captured',
+  'first_photo_captured',
+  'comparison_viewed',
+  'timeline_viewed',
+  'capture_reminder_tapped',
+  'cloud_backup_opted_in',
+  'reference_reset',
+] as const;
+export type PhotoEvent = (typeof PHOTO_EVENTS)[number];
+
 // --- Entitlements (docs/01 §3 `entitlements`) --------------------------------
 export type EntitlementTier = 'pro' | 'pro_plus';
 

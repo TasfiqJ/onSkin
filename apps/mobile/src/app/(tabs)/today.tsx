@@ -126,12 +126,16 @@ export default function TodayScreen() {
               {dateLabel.toUpperCase()}
             </Text>
             {progress && progress.streak > 0 ? (
-              <View className="flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-3.5 py-1.5">
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="View your streak and adherence"
+                onPress={() => router.push('/routine/streak')}
+                className="flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-3.5 py-1.5">
                 <View className="h-1.5 w-1.5 rounded-full bg-clay" />
                 <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
                   {progress.streak} days
                 </Text>
-              </View>
+              </Pressable>
             ) : null}
           </View>
 

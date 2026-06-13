@@ -485,6 +485,8 @@ export type Database = {
         Relationships: [];
       };
       photos: {
+        // Guided photo-progress (docs/06 §6). Image bytes live on-device
+        // (local_uri) unless cloud-opted; head_* are coarse pose QA, NOT a faceprint.
         Row: {
           id: string;
           user_id: string;
@@ -494,6 +496,17 @@ export type Database = {
           alignment_score: number | null;
           local_only: boolean;
           face_region_redacted: boolean;
+          reference_photo_id: string | null;
+          series: string;
+          capture_session_id: string | null;
+          head_roll: number | null;
+          head_yaw: number | null;
+          head_pitch: number | null;
+          taken_local_date: string;
+          time_of_day: string | null;
+          notes: string | null;
+          local_uri: string | null;
+          is_encrypted: boolean;
           created_at: Timestamptz;
         };
         Insert: {
@@ -505,6 +518,17 @@ export type Database = {
           alignment_score?: number | null;
           local_only?: boolean;
           face_region_redacted?: boolean;
+          reference_photo_id?: string | null;
+          series?: string;
+          capture_session_id?: string | null;
+          head_roll?: number | null;
+          head_yaw?: number | null;
+          head_pitch?: number | null;
+          taken_local_date?: string;
+          time_of_day?: string | null;
+          notes?: string | null;
+          local_uri?: string | null;
+          is_encrypted?: boolean;
           created_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['photos']['Insert']>;

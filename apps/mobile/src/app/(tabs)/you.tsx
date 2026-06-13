@@ -5,7 +5,10 @@ import { Alert, ScrollView, Switch, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
+import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
+import { getPhotoReminderEnabled, setPhotoReminderEnabled } from '@/features/photos/reminders';
 import { deleteAccount, exportData } from '@/features/settings/actions';
+import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
@@ -48,6 +51,8 @@ export default function YouScreen() {
   const [busy, setBusy] = useState(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
+  const cloudBackup = useQuery({ queryKey: ['photo_cloud_backup'], queryFn: getCloudBackupEnabled, retry: 0 });
+  const photoReminder = useQuery({ queryKey: ['photo_reminder'], queryFn: getPhotoReminderEnabled, retry: 0 });
   const notif = useQuery({
     queryKey: ['notif_prefs'],
     retry: 0,
@@ -87,6 +92,25 @@ export default function YouScreen() {
         else payload.replenishment_alerts = value;
         await supabase.from('notification_preferences').upsert(payload);
       }
+    } catch {
+      /* best-effort */
+    }
+  }
+
+  async function setCloud(enabled: boolean) {
+    qc.setQueryData(['photo_cloud_backup'], enabled);
+    if (enabled) track('cloud_backup_opted_in');
+    try {
+      await setCloudBackupEnabled(enabled);
+    } catch {
+      /* best-effort */
+    }
+  }
+
+  async function setPhotoReminder(enabled: boolean) {
+    qc.setQueryData(['photo_reminder'], enabled);
+    try {
+      await setPhotoReminderEnabled(enabled);
     } catch {
       /* best-effort */
     }
@@ -150,6 +174,7 @@ export default function YouScreen() {
               ['Your plan', '/routine/plan'],
               ['Edit the order', '/routine/reorder'],
               ['Retinoid ramp', '/routine/ramp'],
+              ['Streak & adherence', '/routine/streak'],
               ['This week’s check-in', '/routine/tolerance'],
               ['Recent changes', '/routine/adaptation'],
               ['Widgets & Live Activity', '/routine/widgets'],
@@ -172,7 +197,7 @@ export default function YouScreen() {
           <Text variant="label" tone="muted" className="mb-1">
             SECURITY
           </Text>
-          <Row label="Face ID app lock" hint="Require unlock to open the app and your photos.">
+          <Row label="Face ID app lock" hint="Require unlock to open the app and your photo timeline.">
             <Toggle
               value={lockEnabled}
               onChange={(v) =>
@@ -181,6 +206,11 @@ export default function YouScreen() {
                 )
               }
             />
+          </Row>
+          <Row
+            label="Encrypted cloud backup"
+            hint="Off by default — a separate choice. Photos stay on this phone until you turn it on.">
+            <Toggle value={cloudBackup.data ?? false} onChange={(v) => void setCloud(v)} />
           </Row>
         </Card>
 
@@ -197,6 +227,9 @@ export default function YouScreen() {
               onChange={(v) => void setNotif('replenishment_alerts', v)}
             />
           </Row>
+          <Row label="Weekly photo reminder" hint="A calm, same-time nudge. A missed week never breaks anything.">
+            <Toggle value={photoReminder.data ?? true} onChange={(v) => void setPhotoReminder(v)} />
+          </Row>
         </Card>
 
         <Card className="mt-4">
@@ -208,6 +241,16 @@ export default function YouScreen() {
           </Row>
           <Row label="Share data with partners" hint="Separate from collection (MHMDA). Off by default.">
             <Toggle value={consents.data?.data_sharing ?? false} onChange={(v) => void setConsent('data_sharing', v)} />
+          </Row>
+          <Row label="Photos & the no-AI-score promise">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/progress/about')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
           </Row>
           <Text variant="bodySm" tone="muted" className="mt-1">
             Withdraw health-data consent from the privacy policy screen — your data is then deleted.

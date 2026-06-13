@@ -25,3 +25,37 @@ export const ACCOUNT_CONSENT = {
     '[PLACEHOLDER — pending legal review B-PRIVACY-COPY] Acceptance of the Terms of ' +
     'Service and Privacy Policy.',
 } as const;
+
+/**
+ * Photo CAPTURE consent — requested at first camera use (docs/01 §4, docs/06 §7).
+ * Skin photos are Art. 9 / MHMDA health-inference data → explicit, unbundled, and
+ * SEPARATE from cloud backup. Placeholder copy; B-PRIVACY-COPY owns final wording.
+ */
+export const PHOTO_CAPTURE_CONSENT = {
+  version: CONSENT_COPY_VERSION,
+  what: '[Placeholder] Photos you take in guided capture.',
+  why: '[Placeholder] Only to build your private on-device progress timeline.',
+  never: '[Placeholder] Uploaded, shared, or used to train AI. They stay on this phone.',
+  footnote: '[Placeholder] No faceprint is ever stored. Withdraw anytime in Settings.',
+  fullText:
+    '[PLACEHOLDER — pending legal review B-PRIVACY-COPY] Photo CAPTURE consent. Covers ' +
+    'on-device capture and on-device storage only; cloud backup is requested separately. ' +
+    'No biometric faceprint/template is computed or stored.',
+} as const;
+
+/**
+ * Photo CLOUD-BACKUP consent — a DISTINCT, off-by-default opt-in (docs/01 §4,
+ * docs/06 §7): uploading special-category images off-device is higher-risk, so it
+ * is never bundled with capture. Placeholder; B-PRIVACY / B-PRIVACY-COPY own final.
+ */
+export const PHOTO_CLOUD_BACKUP_CONSENT = {
+  version: CONSENT_COPY_VERSION,
+  what: '[Placeholder] An encrypted copy of your photos, backed up to your private cloud space.',
+  why: '[Placeholder] So a lost or replaced phone doesn’t mean losing your timeline.',
+  never: '[Placeholder] Shared, sold, or used to train AI. Encrypted, owner-only.',
+  footnote: '[Placeholder] Off by default — a separate choice from capture. Turn off anytime.',
+  fullText:
+    '[PLACEHOLDER — pending legal review B-PRIVACY / B-PRIVACY-COPY] Photo CLOUD-BACKUP ' +
+    'consent. Separate and distinct from capture consent; uploads encrypted images to a ' +
+    'private, owner-only bucket. Off until affirmatively enabled.',
+} as const;

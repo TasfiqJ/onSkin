@@ -14,14 +14,15 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–19** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–20** — full foundation (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
 **Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
 the **Document 4 Smart Shelf** (intake funnel, opened-date linchpin, five-state
-badges, detail hub, archive, replenishment), and the **Document 5 actives &
+badges, detail hub, archive, replenishment), the **Document 5 actives &
 skin-cycling scheduler** (stored cycle + projection, multi-active orchestration,
-week view, "why tonight?", settings, disruption/recovery; 102 tests). See
-PROGRESS.md.
+week view, "why tonight?", settings, disruption/recovery), and the **Document 6
+guided photo progress** (local-first capture/review/timeline/compare, no-AI-score,
+biometric gallery lock, unbundled photo consents; **193 tests**). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -40,18 +41,22 @@ cost estimates (regulatory posture, privacy law, the four required sign-offs).
 **3. To unblock the rest of the build order**: provide the missing feature
 documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 7**
 (reminders/widgets) — it delivers the scheduler's reminders (tonight's active,
-recovery nights, next acid night), the replenishment alerts (Doc 4), and the streak
-nudges; **Document 6** (guided photo capture) is the other unbuilt core. Also
-**B-CATALOG-SEED** (CosIng/OBF data import) lights up real shelf data, scan match
-rates, and the **B-SHELF-CONTRIB** contribute-back loop.
+recovery nights, next acid night), the replenishment alerts (Doc 4), the streak
+nudges, **and the photo-capture reminder delivery (Doc 6 ships the opt-in pref +
+copy; Doc 7 schedules it)**. Also **B-CAMERA** (a custom dev build with
+vision-camera + ML-Kit) turns the simulated guided capture into the real on-device
+pipeline, and **B-CATALOG-SEED** (CosIng/OBF data import) lights up real shelf
+data, scan match rates, and the **B-SHELF-CONTRIB** contribute-back loop.
 
 **Snapshot of current statuses** — Accounts: B-SUPABASE/REVENUECAT/APPLE/GOOGLE/
 POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal/clinical: B-QUIZ-COPY/
-PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing consent + DPIA), **B-DERM-REVIEW
-🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴, **B-SHELF-CONTRIB 🔴** · Verify:
-APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴,
-RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡, B-ROUTINE-PERSIST
-🟡, B-DRAG-DND 🟡 · Docs: MISSING-DOCS 🔴 (Docs 6–15), EVERY-N-DAYS 🔴.
+PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing + facial-image DPIA + photo
+marketing claim), **B-DERM-REVIEW 🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴,
+**B-SHELF-CONTRIB 🔴** · Native: **B-CAMERA 🔴** (on-device capture + face
+detection + encryption + cloud upload) · Verify: APPLE-TRIAL-TOGGLE ✅,
+SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴, RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 ·
+Deferred: B-SERVER-DETECT 🟡, B-ROUTINE-PERSIST 🟡, B-DRAG-DND 🟡 · Docs:
+MISSING-DOCS 🔴 (Docs 7–15), EVERY-N-DAYS 🔴.
 
 ---
 
@@ -124,7 +129,11 @@ must supply final: standalone **Consumer Health Data Privacy Policy** (MHMDA),
 Privacy Policy, Terms of Service, and the exact consent statements for
 `health_data_collection`, `photo_capture`, `photo_cloud_backup`, `marketing`,
 `data_sharing`. A GDPR Art. 35 **DPIA** is advised given large-scale health-data
-processing.
+processing. **Update (Slice 20):** the `photo_capture` consent screen (shown at
+first camera use) and the `photo_cloud_backup` opt-in (separate, off by default)
+are now **built with placeholder copy** (`features/onboarding/consentCopy.ts`) and
+wired to the immutable ledger via the version + SHA-256 hash mechanism — drop in
+the counsel-approved text and they ship.
 
 ### B-DERM-REVIEW — Clinical sign-off of the rules 🔴 open (LAUNCH GATE)
 **Now also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
@@ -222,7 +231,7 @@ remaining build-order items need their detailed doc:
 | 3 · AM/PM routine builder | Doc 3 ✅ received | **BUILT** (Slices 12–17): sequencing_rules + active_ramp schema, deterministic generation engine, all builder screens (plan-built, reorder, ramp, Today AM/PM, Progress/calm-streak, tolerance, override sheet, adaptation, widgets), 77 tests. Blocked sub-parts: routine persistence (B-ROUTINE-PERSIST), full drag-DnD (B-DRAG-DND), clinical sign-off (B-DERM-REVIEW) |
 | 4 · Smart shelf (PAO/expiry) | Doc 4 ✅ received | **BUILT** (Slice 18): additive `user_products` columns + `shelf_scans` schema, local-first store, the full intake funnel (no-match fork / OCR-confirm / manual / **opened-date linchpin**), the five-state badge taxonomy (incl. the eye/SPF firmer exception), the product-detail management hub, archive/lifecycle, and the opt-in replenishment sheet (design's 9 screens). Blocked sub-parts: live barcode/OBF scan + OCR capture (**B-CATALOG-SEED** + camera), the contribute-back pipeline (**B-SHELF-CONTRIB**), the data-sharing consent + affiliate for replenishment (**B-PRIVACY**), server persistence (**B-SUPABASE** / B-ROUTINE-PERSIST), PAO defaults sign-off (**B-DERM-REVIEW**) |
 | 5 · Actives / skin-cycling scheduler | Doc 5 ✅ received | **BUILT** (Slice 19): the stored/versioned `cycles` + `cycle_nights` schema + the pure local-day projection, **multi-active orchestration** (one potent active/night, retinoid×exfoliant never same night, class frequency caps, recovery nights, pregnancy suppression, phased introduction — 15 fixtures), the local-first cycle store, and all the management/disruption surfaces (week overview, "why tonight?", cycle settings, pause/skip/travel/procedure hub, post-procedure + auto-de-escalation recovery mode, phased-intro). Blocked sub-parts: server `orchestrate()`/`schedule_for()` (**B-SERVER-DETECT** / B-ROUTINE-PERSIST), drag-to-reassign nights (**B-DRAG-DND**), reminder *delivery* (Doc 7), clinical sign-off of the frequency/separation/recovery rules (**B-DERM-REVIEW**) |
-| 6 · Guided photo capture + comparison | Doc 6 | `photos` table + design-spec screen; capture spec blocked |
+| 6 · Guided photo capture + comparison | Doc 6 ✅ received | **BUILT** (Slice 20): additive `photos` columns (reference/series/pose-QA/local-day/local_uri/encrypted) + hardened `owns_photo()` (migration 0018), the local-first photo store (metadata-only mirror, `local_only` always true, no faceprint), the pure+tested capture-quality + timeline helpers (89 fixtures), the photo claim-safety guard, and all 9 design surfaces (guided capture, review&retake, first-run, **Compare** before/after slider + side-by-side, **Timeline** film strip + milestones, single-photo detail, no-AI-score, biometric gallery lock, calm reminder). The Progress tab is now the photo timeline; the calm streak moved to `/routine/streak`. Blocked sub-parts: the on-device camera + face detection + encryption + cloud-upload job (**B-CAMERA**), the DPIA + "never leaves your device" claim + photo consent copy (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**), reminder *delivery* (Doc 7) |
 | 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + computed streak + a widgets/Live-Activity **preview** built (docs/03 §9.9); native WidgetKit/ActivityKit + reminder scheduling need this doc |
 | 8 · Subscriptions / paywall | Doc 8 | design-spec paywall + `entitlements`; RC config blocked |
 | 9 · Personalized recommendations | Doc 9 | blocked |
@@ -279,6 +288,21 @@ Also for counsel (docs/04 §7): whether the shelf's product mix is additional
 special-category inference to disclose in the GDPR Art. 35 **DPIA**. This is
 effectively a launch gate for the replenishment commerce line.
 
+**Now also covers the photo feature (docs/06 §6/§7, Slice 20).** Facial progress
+photos are the most sensitive data the app holds. The on-device-first design
+deliberately minimises exposure — **`local_only` default, no faceprint stored
+(avoids BIPA's trigger), no image bytes leave the device** — but three items need
+counsel/DPIA sign-off before launch: (1) the **GDPR Art. 35 DPIA** must cover
+facial-image processing; (2) the **"your photos never leave your device and never
+train AI" marketing claim** must be confirmed literally true in implementation
+(it is, in code: the Supabase mirror is metadata-only with `local_only = true`,
+no upload job is wired, and cloud backup is a separate off-by-default consent);
+(3) the **`photo_capture` + `photo_cloud_backup` consent copy** (placeholder in
+`consentCopy.ts`, hashed into the ledger) needs final wording (overlaps
+**B-PRIVACY-COPY**). The encrypted **cloud-backup upload job** itself is built only
+as an off-by-default toggle + consent here; the queued Wi-Fi/charging upload is
+**B-CAMERA**.
+
 ### B-SHELF-CONTRIB — Open Beauty Facts contribute-back pipeline 🔴 open
 docs/04 §4.6 / §9: any product added that wasn't in OBF (no-match scans, OCR-built,
 manual-with-barcode) must, after light validation, be **contributed back** to OBF
@@ -289,6 +313,24 @@ but the actual queued, offline-tolerant POST job (an Edge Function or client tas
 needs **OBF write credentials** + the live OBF API (shares **B-CATALOG-SEED**'s
 network/account needs). It must send **product** data only (barcode/label/INCI),
 never the personal shelf/profile.
+
+### B-CAMERA — on-device guided-capture pipeline (camera + face detection) 🔴 open
+docs/06 §3/§10: the guided-capture hero needs a **custom dev build** (not Expo Go)
+with `react-native-vision-camera` + a **face-detection frame processor**
+(`react-native-vision-camera-face-detector`, ML Kit-backed; or a Swift Vision
+plugin on iOS) for real-time alignment/pose/quality, plus **on-device
+luminance/white-balance** from the frame buffer for the lighting check,
+**auto-capture** when tolerances are met, **client-side image encryption** of the
+saved file, and the **queued Wi-Fi/charging cloud-upload job** to the private
+bucket for opted-in backups. None is installed (Slice 20 ships the full designed
+capture/review UI with a **simulated** capture so the timeline flow works
+end-to-end; `quality.ts` tolerances are pure + tested and ready to consume real
+signals). **Must verify frame-processor performance on real devices** (docs/00 §4
+flags isolating the camera module if RN underperforms) and **tune the auto-capture
+tolerances** on-device. **No faceprint/template is ever stored** — detection is
+for framing only (docs/06 §7). Shares the native camera with the shelf
+barcode/OCR scan (B-CATALOG-SEED). The `NSCameraUsageDescription` Info.plist string
+is already in `app.json`.
 
 ### B-EVERY-N-DAYS — `every_n_days` step frequency has no interval column 🔴 open
 docs/01 §3 lists `every_n_days` as a valid `routine_steps.frequency` value but

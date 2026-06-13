@@ -285,6 +285,55 @@ and routine persistence (server `build_routine`, docs/03 §11).
   onto the profile-aware engine. D-034…D-037.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (104).
 
+### Slice 20 — Doc 6 Guided Photo Progress + new design ("OnSkin Photo Progress") ✅ (2026-06-13)
+- **Schema** (migration 0018): additive `photos` columns (`reference_photo_id`,
+  `series`, `capture_session_id`, coarse `head_roll/yaw/pitch` pose QA — **never a
+  faceprint**, `taken_local_date`, `time_of_day`, `notes`, `local_uri`,
+  `is_encrypted`) + `(user_id, series, taken_local_date)` index. Owner-only RLS
+  (0008) **unchanged**; added a hardened `owns_photo()` definer + restrictive
+  policies so a shot's `reference_photo_id` must be owner-owned (the D-014 pattern).
+  `Database` type + `@onskin/types` extended.
+- **Pure, tested helpers** (`features/photos/`): `quality.ts` (capture readiness
+  gate, calm coaching line, lighting state, review verdict — **flagged, never
+  blocked**, D-040) + `timeline.ts` (default compare pair + one-cycle interval,
+  month grouping, calm milestones, the "13 weeks · 26 photos · all on this phone"
+  line, per-series reference). **89 fixtures** (192 tests total).
+- **Local-first store** (`store.ts`, D-039): photo metadata in AsyncStorage, image
+  bytes on-device at `local_uri`; the Supabase mirror is **metadata-only** and
+  **always `local_only = true` / `storage_path = null`** — bytes/`local_uri` never
+  leave the device. **No faceprint ever stored.** Photo `consent.ts` records the
+  unbundled `photo_capture` + `photo_cloud_backup` consents to the immutable ledger.
+- **Claim-safety guard** (`photos/claimsafety.test.ts`, D-042): centralised
+  `copy.ts` scanned for score/grade/skin-age/%/drug/alarm terms; the no-AI-score
+  **refusal** copy is exempt from the score check (it negates those terms) but held
+  to the drug/alarm bar; a positive test asserts the stance is stated.
+- **9 design surfaces**: guided capture (dark; ghost/alignment/lighting/auto-ready
+  shutter/on-device microcopy + first-use consent gate), review & retake, first-run
+  honest-expectations (the Progress empty state), **Compare** (real Reanimated/
+  gesture before-after wipe + **tap-a-date pair picker** + side-by-side toggle, no
+  %), **Timeline** (month film strip + calm milestone + a quiet **Play** affordance),
+  single-photo detail (note/set-reference/share-with-redaction/delete), the
+  plain-spoken **no-AI-score** screen, the biometric **gallery lock** (Face ID over
+  the timeline + cloud-backup-off row), and the calm capture-reminder preference.
+- **Progress tab = the photo timeline** (D-038); the calm adherence **streak moved**
+  to `app/routine/streak.tsx`, reachable from Today's (now-tappable) streak pill +
+  the You tab. Photos stay decoupled from the daily streak (docs/06 §5).
+- **Live camera deferred to B-CAMERA** (vision-camera + ML-Kit face detection +
+  luminance check + auto-capture + client-side encryption + cloud-upload job): the
+  capture/review screens are design-faithful and perform a **simulated** capture so
+  intake → review → timeline → compare works end-to-end now.
+- **Adversarially reviewed by a 4-dimension workflow** (RLS/SQL · spec · design ·
+  claim-safety/privacy, **17 agents, each finding independently verified**) →
+  **0 blocking, 0 high**; RLS/SQL and claim-privacy found no leak or banned copy.
+  Fixed the confirmed medium/low items: added **`NSFaceIDUsageDescription`** +
+  the `expo-local-authentication` config plugin (the biometric lock — incl. the
+  Slice-6 app-lock — would have failed on iOS), made the **consent gate fail-closed**
+  during its async load, **wired the compare date-chips to a real pair picker** (the
+  "tap a date to change" affordance), added the Timeline **Play** pill + the
+  `cloud_backup_opted_in` event, fixed the **GalleryLock safe-area** (#16130F incl.
+  the inset bands), and removed dead `twelve_weeks`/`refAlignment` code. D-038…D-044.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (192).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -312,8 +361,8 @@ and routine persistence (server `build_routine`, docs/03 §11).
 3. ✅ AM/PM routine builder — Doc 3 (Slices 12–17)
 4. ✅ Smart shelf (PAO/expiry) — Doc 4 (Slice 18); blocked sub-parts above
 5. ✅ Actives / skin-cycling scheduler — Doc 5 (Slice 19): stored cycle + projection, multi-active orchestration, management/disruption surfaces
-6. 🚫 Guided photo capture + comparison — needs Document 6
-7. 🚫 Reminders / streaks / widgets — needs Document 7 (delivers the scheduler's reminders + replenishment + streak nudges)
+6. ✅ Guided photo capture + comparison — Doc 6 (Slice 20): local-first capture/review/timeline/compare, no-AI-score, biometric gallery lock, unbundled photo consents; on-device camera pipeline deferred to **B-CAMERA**
+7. 🚫 Reminders / streaks / widgets — needs Document 7 (delivers the scheduler's reminders + replenishment + streak nudges + the Doc-6 photo-capture reminder delivery)
 8. 🟡 Subscriptions / paywall — design-spec paywall buildable; RC config blocked (Document 8)
 9–12. 🚫 recommendations / creator stacks / community / AI — need their docs
 

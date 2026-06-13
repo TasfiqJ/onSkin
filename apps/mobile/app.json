@@ -11,7 +11,11 @@
     "ios": {
       "bundleIdentifier": "com.onskin.app",
       "supportsTablet": false,
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "infoPlist": {
+        "NSCameraUsageDescription": "OnSkin uses the camera for guided progress photos. Capture and face-detection happen on your device — no faceprint is stored and your photos never leave your phone unless you turn on encrypted cloud backup.",
+        "NSFaceIDUsageDescription": "OnSkin uses Face ID to keep your private photo timeline for your eyes only."
+      }
     },
     "android": {
       "package": "com.onskin.app",
@@ -42,7 +46,13 @@
       ],
       "expo-secure-store",
       "@react-native-google-signin/google-signin",
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "OnSkin uses Face ID to keep your private photo timeline for your eyes only."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
