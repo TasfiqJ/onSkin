@@ -39,7 +39,9 @@
             "backgroundColor": "#1C1815"
           }
         }
-      ]
+      ],
+      "expo-secure-store",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true,

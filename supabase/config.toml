@@ -1,0 +1,58 @@
+# Supabase local config. The CLI (`supabase init`) normally generates a much
+# larger file; this is a hand-authored minimal config documenting the settings
+# OnSkin's auth flow requires. Provider secrets live in the dashboard / env, not
+# here. BLOCKED: B-SUPABASE (project ref + keys).
+project_id = "onskin"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[storage]
+enabled = true
+# Skin photos: private bucket only (docs/01 §3 — public buckets bypass RLS on read).
+file_size_limit = "10MiB"
+
+[auth]
+enabled = true
+# Deep-link scheme for OAuth / OTP redirects (docs/01 §5).
+site_url = "onskin://"
+additional_redirect_urls = ["onskin://auth/callback"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+# Guest-first: anonymous sessions are the default entry (docs/01 §1).
+enable_anonymous_sign_ins = true
+# Required for anon->permanent identity linking (docs/01 §1).
+enable_manual_linking = true
+# Leaked-password protection (HaveIBeenPwned) — low cost, real value (docs/01 §5).
+enable_leaked_password_protection = true
+
+[auth.email]
+enable_signup = true
+# OTP codes over magic links for mobile reliability (docs/01 §1).
+enable_confirmations = false
+otp_length = 6
+otp_expiry = 3600
+
+# Social providers — enabled + configured with secrets in the dashboard.
+# BLOCKED: B-APPLE / B-GOOGLE.
+[auth.external.apple]
+enabled = true
+[auth.external.google]
+enabled = true
+
+# CAPTCHA for anon + signup abuse protection. BLOCKED: B-TURNSTILE.
+[auth.captcha]
+enabled = true
+provider = "turnstile"

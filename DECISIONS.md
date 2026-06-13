@@ -64,3 +64,39 @@ Format: `D-NNN — date — decision — rationale`.
 - **D-010 — 2026-06-12 — Supabase client flags:** `autoRefreshToken: true`,
   `persistSession: true`, `detectSessionInUrl: false` (docs/01 §5), with
   `AppState`-driven start/stop of auto-refresh.
+
+## Data model & RLS (Slice 1, hardened after an adversarial RLS review)
+
+- **D-011 — 2026-06-12 — `longest_streak` is a non-decreasing personal best.**
+  `recompute_streak` sets `current_streak` to the live value but uses
+  `greatest(longest_streak, computed)` so a user's all-time best never shrinks
+  if completions are later deleted. `current_streak` IS recomputed on both INSERT
+  and DELETE of completions so the live streak stays accurate. The doc calls
+  streaks "computed/authoritative, cached" — this keeps the live value
+  authoritative while treating longest as a badge.
+
+- **D-012 — 2026-06-12 — Completion validation window is timezone-tolerant
+  `[current_date − 2, current_date + 1]`.** `completed_date` is the user's LOCAL
+  day while the server's `current_date` is UTC, so the guard allows +1 day ahead
+  (users east of UTC) and ~48h of backfill behind. This is a deliberate v1
+  heuristic; precise per-user-timezone validation (using
+  `notification_preferences.timezone`) is a later refinement, not a founder
+  blocker.
+
+- **D-013 — 2026-06-12 — All `SECURITY DEFINER` functions hardened with
+  `REVOKE`.** Found by the RLS review: definer functions keep Postgres' default
+  `EXECUTE`-to-PUBLIC grant and are exposed as PostgREST RPCs, so any user could
+  call `recompute_streak('<victim>')` and write another user's profile row.
+  Fix: `revoke all ... from public, anon, authenticated` on every definer
+  function except `owns_routine` (kept executable by `authenticated` because RLS
+  policies invoke it). Triggers still fire (they run as the table owner).
+
+- **D-014 — 2026-06-12 — Completion INSERT proves routine/step ownership.**
+  `WITH CHECK` now also requires `owns_routine(routine_id)` (and step ownership)
+  so a user can't log completions against another user's routine — FKs only
+  check existence, not ownership.
+
+- **D-015 — 2026-06-12 — `consents` is immutable at the DB layer.** A
+  `BEFORE UPDATE` trigger blocks all updates (even service-role) so consent
+  history can't be rewritten; revocation is a new row. DELETE is left open so the
+  account-deletion FK cascade still works.

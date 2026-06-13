@@ -1,0 +1,12 @@
+-- Supabase seed data (applied after migrations on `supabase db reset`).
+--
+-- The ingredient/product catalog and the conflict-rules matrix are intentionally
+-- NOT seeded here:
+--   BLOCKED: B-CONFLICT-RULES — the 30–60 curated ingredient pairs are contested
+--     dermatology content (each rule needs an evidence grade + non-alarmist
+--     resolution + citation), and belong to the (missing) Document 2.
+--   Seeding sources carry license obligations: CosIng ("informative purpose, no
+--     legal value") and Open Beauty Facts (ODbL — attribution + share-alike).
+--
+-- Leave empty until that content + the ingredient pipeline (build-order item 2)
+-- are specified.

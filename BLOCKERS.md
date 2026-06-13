@@ -151,4 +151,10 @@ unspecified behavior/copy/schema for the rest.
 
 ## New blockers discovered during build
 
-_(appended as encountered)_
+### B-EVERY-N-DAYS — `every_n_days` step frequency has no interval column 🔴 open
+docs/01 §3 lists `every_n_days` as a valid `routine_steps.frequency` value but
+specifies **no column** to store the interval (e.g. "every 3 days"). Per
+CLAUDE.md (don't invent schema), the column was intentionally omitted from
+`routine_steps`. The routine-builder / skin-cycling docs (Documents 3 & 5,
+missing) should specify how the interval is represented; add the column then.
+Discovered during the Slice 1 RLS review.
