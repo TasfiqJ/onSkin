@@ -7,6 +7,7 @@ import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
+import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { currentRoutineType } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
@@ -165,6 +166,9 @@ export default function TodayScreen() {
               />
             ))}
           </View>
+
+          {/* For you — recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
+          <RecommendationsTeaser showGapPrompt />
 
           {/* Tonight teaser */}
           <Pressable

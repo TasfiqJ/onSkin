@@ -187,6 +187,41 @@ export const SUBSCRIPTION_EVENTS = [
 ] as const;
 export type SubscriptionEvent = (typeof SUBSCRIPTION_EVENTS)[number];
 
+// --- Personalized recommendations (docs/09) ----------------------------------
+/** The six honest, needs-based triggers (docs/09 §4). The engine recommends only
+ *  when one fires; an empty set is the honest seventh state — "you're set". */
+export const RECOMMENDATION_TRIGGERS = [
+  'gap',
+  'replacement',
+  'conflict',
+  'better_fit',
+  'goal',
+  'routine_completion',
+] as const;
+export type RecommendationTrigger = (typeof RECOMMENDATION_TRIGGERS)[number];
+/** Honest personalisation filters (docs/09 §8) — they constrain *what fits you*,
+ *  not *what sells*. They HARD-CONSTRAIN the candidate set (§5). */
+export const VALUES_FILTERS = [
+  'fragrance_free',
+  'vegan',
+  'cruelty_free',
+  'non_comedogenic',
+  'sustainable',
+] as const;
+export type ValuesFilter = (typeof VALUES_FILTERS)[number];
+export type BudgetBand = 'drugstore' | 'mid' | 'premium';
+/** PostHog recommendation events (docs/09 §12) — metadata only; tune RELEVANCE on
+ *  accept/dismiss + the "how"-expansion, NEVER toward commission. */
+export const RECOMMENDATION_EVENTS = [
+  'recommendation_shown',
+  'recommendation_expanded',
+  'recommendation_accepted',
+  'recommendation_dismissed',
+  'youre_set_shown',
+  'preference_set',
+] as const;
+export type RecommendationEvent = (typeof RECOMMENDATION_EVENTS)[number];
+
 // --- Ingredient intelligence layer (docs/02) ---------------------------------
 /** Non-alarmist by mandate (docs/02 §4): every rule carries an evidence grade +
  *  a resolution, never a bare "never use." */

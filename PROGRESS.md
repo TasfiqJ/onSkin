@@ -422,6 +422,60 @@ and routine persistence (server `build_routine`, docs/03 §11).
   corrected. D-049…D-053.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (346).
 
+### Slice 23 — Doc 9 Personalized Recommendations + new design ✅ (2026-06-13)
+- **The independent advisor**: the needs-based recommendation engine that turns the
+  profile (docs/01) + evidence-graded catalog (docs/02) + routine gaps (docs/03/05) +
+  shelf state (docs/04) into honest, type-first suggestions — **ranked by fit and
+  evidence, never by commission**. Consumes docs/01–05 outputs; walled off from the
+  (unbuilt) commerce layer (doc #10).
+- **Schema** (migration 0021): `recommendation_preferences` (values/budget/format
+  filters) + the `recommendations` cache — both **owner-only RLS** (the skin_profiles
+  posture), and **NO commission/affiliate/partnership column anywhere in the ranking
+  path** (church and state, D-054; a SQL comment records it). `Database` type +
+  `@onskin/types` (`RECOMMENDATION_TRIGGERS`/`VALUES_FILTERS`/`BudgetBand`/
+  `RECOMMENDATION_EVENTS`) extended; no RLS weakened.
+- **Pure, tested engine** (`features/recommendations/`): `catalog.ts` (the
+  recommendable type catalog + the **B-DERM-REVIEW launch gate** `RECS_REVIEWED` /
+  `shippableRecTypes` on medically-adjacent goal actives), `fit.ts` (the **six-input,
+  merit-only FIT score** — hard exclusions for pregnancy/would-add-a-conflict/refuted
+  first, then a weighted explainable score; **no commercial input**, a test asserts
+  exactly six merit inputs), `engine.ts` (`detectNeeds` + `recommend`: the **six
+  honest triggers** + the honest **"you're set"**, prioritised safety/gap >
+  replacement > conflict > better-fit > goal, type-first, restrained — one goal active
+  at a time, never pads, never re-recommends owned, pregnancy swaps to a safe
+  alternative), `copy.ts` (centralised claim-safe copy + builders), `preferences.ts` +
+  `store.ts` (local-first AsyncStorage prefs + dismissals, the D-029 pattern, guarded
+  Supabase mirror). **fit (11) + engine (14) + claim-safety (~30 scanned) fixtures.**
+- **Claim-safety guard** (`claimsafety.test.ts`, D-055): concerns-not-conditions, no
+  drug/disease/alarm/urgency/guilt (curly-apostrophe-aware), scanning the centralised
+  copy AND the **engine-produced** what/why/how over gap/goal/replacement/**conflict**/
+  **better-fit** fixtures + every conflict rule's `resolutionCopy` (which surfaces as a
+  recommendation's how-evidence). Positive controls assert the guard fails on
+  reintroduced violations.
+- **5 design surfaces** + wiring: the calm **"For you" hub** grouped by trigger with
+  what/why cards + evidence dot + "See how →" (`app/recommendations/index.tsx`), the
+  honest **"you're set"** empty state, the **what / why / how card**
+  (`[id].tsx` — type-first What + specific-product placeholder, Why, How-we-decided
+  rows, an honest caveat, the disclosed-but-**inert** commerce line, Add-to-shelf /
+  Not-for-me), the **preferences** screen (`preferences.tsx`), and the in-routine
+  **SPF gap prompt** + Today "For you" card (`RecommendationsTeaser`, on `today.tsx`).
+  Replacement **reuses** the existing replenishment sheet (docs/04). You-tab gains a
+  **FOR YOU** section.
+- **Church and state in code** (D-054): the ranking modules import **no** commerce
+  module (doc #10 isn't built); any affiliate link is downstream, **disclosed**
+  ("never affects what we recommend"), and **consent-gated** (B-PRIVACY) — the "Where
+  to find it" / "see similar" paths are inert and share nothing. **Not Pro-gated**
+  (D-057): the trusted advisor is core, gating it would invent a restriction the docs
+  don't specify.
+- **Adversarially reviewed by a 4-dimension workflow** (RLS/SQL · spec · design ·
+  claim-safety/privacy/church-and-state, **16 agents, each finding independently
+  verified**) → **0 blocking, 0 high**; RLS/SQL, spec, and design found no confirmed
+  defects. Fixed the 3 confirmed lows: the conflict + better-fit engine strings (incl.
+  `how.evidence = resolutionCopy`) are now claim-safety-scanned, and the inert "Where
+  to find it" tap no longer fires `recommendation_accepted` (a commerce-intent signal
+  must never enter the merit relevance funnel — docs/09 §12). D-054…D-057.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (587).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -452,7 +506,8 @@ and routine persistence (server `build_routine`, docs/03 §11).
 6. ✅ Guided photo capture + comparison — Doc 6 (Slice 20): local-first capture/review/timeline/compare, no-AI-score, biometric gallery lock, unbundled photo consents; on-device camera pipeline deferred to **B-CAMERA**
 7. ✅ Reminders / streaks / widgets — Doc 7 (Slice 21): tiered local-first notifications + frequency caps + quiet hours, the calm forgiving streak, soft-ask + settings hub + timing + welcome-back + widget/Live-Activity previews; native widgets/delivery deferred to **B-WIDGETS** / **B-NOTIF-VERIFY**
 8. ✅ Subscriptions / paywall — Doc 8 (Slice 22): reverse-trial conversion model, honest paywall + lifecycle screens, local-first entitlement gating; native IAP deferred to **B-REVENUECAT**, store/ARL review to **B-LEGAL**
-9–12. 🚫 recommendations / creator stacks / community / AI — need their docs
+9. ✅ Personalized recommendations — Doc 9 (Slice 23): the independent, needs-based "church and state" advisor — the six honest triggers + an honest "you're set", the merit-only six-input FIT score (no commercial input), type-first + restrained, the what/why/how explainability, the "For you" hub + card + preferences + in-routine gap prompt; goal-active rec types launch-gated under **B-DERM-REVIEW**, the commerce/affiliate path deferred + inert (doc #10 / **B-PRIVACY** / **B-CATALOG-SEED**)
+10–12. 🚫 creator stacks / community / AI — need their docs (Doc 10 also **B-SHOPMY**)
 
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15

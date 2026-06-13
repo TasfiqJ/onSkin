@@ -694,6 +694,52 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['notification_log']['Insert']>;
         Relationships: [];
       };
+      recommendation_preferences: {
+        Row: {
+          user_id: string;
+          values_filters: string[];
+          budget_band: string | null;
+          format_prefs: string[];
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          user_id: string;
+          values_filters?: string[];
+          budget_band?: string | null;
+          format_prefs?: string[];
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['recommendation_preferences']['Insert']>;
+        Relationships: [];
+      };
+      // docs/09 §9 — the recommendations cache. NO commercial column exists in the
+      // ranking path (church and state, D-054); commerce metadata lives in doc #10.
+      recommendations: {
+        Row: {
+          id: string;
+          user_id: string;
+          trigger: string;
+          product_type: string;
+          catalog_product_id: string | null;
+          fit_rationale: string;
+          evidence_grade: string | null;
+          status: string;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          trigger: string;
+          product_type: string;
+          catalog_product_id?: string | null;
+          fit_rationale: string;
+          evidence_grade?: string | null;
+          status?: string;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['recommendations']['Insert']>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {

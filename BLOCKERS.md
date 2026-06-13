@@ -14,7 +14,7 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–21** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–23** — full foundation (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
 **Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
 the **Document 4 Smart Shelf**, the **Document 5 actives & skin-cycling scheduler**,
@@ -24,7 +24,10 @@ reminders, streaks & widgets** (tiered local-first notifications + frequency cap
 quiet hours, the calm forgiving streak, the soft-ask + settings hub + timing +
 welcome-back + widget/Live-Activity previews), and the **Document 8 subscriptions &
 paywall** (the reverse-trial conversion model, honest paywall + lifecycle screens,
-local-first entitlement gating; **346 tests**). See PROGRESS.md.
+local-first entitlement gating), and the **Document 9 personalized recommendations**
+(the independent "church and state" advisor — the six honest triggers + an honest
+"you're set", the merit-only FIT score, type-first + restrained, the what/why/how
+explainability; **587 tests**). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -41,8 +44,8 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next in build order: **Document 9** (personalized
-recommendations). Also: a **custom dev build** unlocks the deferred native work —
+documents — see **B-MISSING-DOCS**. Next in build order: **Document 10** (creator
+stacks + ShopMy — also **B-SHOPMY**). Also: a **custom dev build** unlocks the deferred native work —
 **B-REVENUECAT** (the `react-native-purchases` SDK + offerings → real prices/purchase),
 **B-CAMERA** (vision-camera + ML-Kit guided capture), **B-WIDGETS**
 (WidgetKit/Glance/ActivityKit), and **B-NOTIF-VERIFY** (on-device notification
@@ -149,7 +152,14 @@ wired to the immutable ledger via the version + SHA-256 hash mechanism — drop 
 the counsel-approved text and they ship.
 
 ### B-DERM-REVIEW — Clinical sign-off of the rules 🔴 open (LAUNCH GATE)
-**Now also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
+**Now also covers docs/09 recommendations.** docs/09 §5: the **goal-active
+recommendation types** (which active for which goal — retinoid, AHA/BHA, vitamin C,
+azelaic, niacinamide) are medically-adjacent and launch-gated exactly like the
+conflict matrix: `RECS_REVIEWED = false` + `shippableRecTypes()`
+(`apps/mobile/src/features/recommendations/catalog.ts`) withhold them in production
+until a board-certified dermatologist signs off; structural routine-completeness
+types (a cleanser, a moisturiser, an SPF) ship, and the pregnancy hard-exclusion is
+enforced regardless. **Also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
 `sequencing_rules` (application order), the `active_ramp` cadence numbers, and the
 skin-cycling personalisation. docs/04 §3: the **PAO category defaults** (gated in
 production via `PAO_DEFAULTS_REVIEWED`, D-032). docs/05 §8: the **scheduler's
@@ -264,7 +274,7 @@ remaining build-order items need their detailed doc:
 | 6 · Guided photo capture + comparison | Doc 6 ✅ received | **BUILT** (Slice 20): additive `photos` columns (reference/series/pose-QA/local-day/local_uri/encrypted) + hardened `owns_photo()` (migration 0018), the local-first photo store (metadata-only mirror, `local_only` always true, no faceprint), the pure+tested capture-quality + timeline helpers (89 fixtures), the photo claim-safety guard, and all 9 design surfaces (guided capture, review&retake, first-run, **Compare** before/after slider + side-by-side, **Timeline** film strip + milestones, single-photo detail, no-AI-score, biometric gallery lock, calm reminder). The Progress tab is now the photo timeline; the calm streak moved to `/routine/streak`. Blocked sub-parts: the on-device camera + face detection + encryption + cloud-upload job (**B-CAMERA**), the DPIA + "never leaves your device" claim + photo consent copy (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**), reminder *delivery* (Doc 7) |
 | 7 · Reminders / streaks / widgets | Doc 7 ✅ received | **BUILT** (Slice 21): `notification_preferences` extensions + `streak_freezes` + content-free `notification_log` (migration 0019, owner-RLS); the pure tested calm forgiving streak (auto-freezes, earn-back, weekly adherence + heat-map, non-decreasing best — 11 fixtures) + the tiered notification policy (caps + quiet hours — 13 fixtures) + a notification claim-safety guard; local-first notification-prefs store + the `expo-notifications` DAILY-trigger delivery layer (frequency-cap engine); the soft-ask, the tiered settings hub, timing/quiet-hours/discretion, welcome-back, and the widgets/interactive-checkoff/Live-Activity previews. Blocked sub-parts: native widgets + interactive check-off + Live Activity (**B-WIDGETS**), on-device delivery + Android-14 verification (**B-NOTIF-VERIFY**), win-back push + lock-screen copy DPIA (**B-PRIVACY**), server `recompute_streak` twin + APNs/FCM (**B-SUPABASE** / B-SERVER-DETECT) |
 | 8 · Subscriptions / paywall | Doc 8 ✅ received | **BUILT** (Slice 22): the reverse-trial conversion model (two honest paths), entitlements extensions (migration 0020: period_type/store/will_renew/attribution), the pure tested plan catalog + entitlement-state derivation + a paywall claim-safety guard (91 tests), the local-first entitlement cache + `useEntitlement`/`ProGate`/`withProGate` gating (offline-safe, gates on `is_active` regardless of source), the app-granted reverse trial, and all 9 surfaces (onboarding offer, reverse-trial banner, re-offer, contextual upsell, success, manage subscription, graceful downgrade, honest win-back) + the event-type-correct webhook (never revokes on CANCELLATION). Gating wired on the photo timeline / scheduler / widgets. Blocked sub-parts: the native `react-native-purchases` SDK + localized offering prices + purchase/restore + the server reverse-trial grant (**B-REVENUECAT**), store/ARL/external-link/final-policy legal review (**B-LEGAL** / **B-PRIVACY-COPY**), server entitlement mirror (**B-SUPABASE**) |
-| 9 · Personalized recommendations | Doc 9 | blocked |
+| 9 · Personalized recommendations | Doc 9 ✅ received | **BUILT** (Slice 23): the `recommendation_preferences` + `recommendations` schema (owner-RLS, **no commercial column**), the pure tested engine (the six honest triggers + an honest "you're set", the merit-only six-input FIT score, the B-DERM-REVIEW launch gate on goal actives), the centralised claim-safe copy + guard, and the 5 surfaces (For-you hub, what/why/how card, "you're set", preferences, in-routine gap prompt) + Today/You wiring. Blocked sub-parts: the commerce/affiliate path (**doc 10** / **B-PRIVACY** data-sharing consent / **B-SHOPMY**) is deferred + inert, specific-product recommendations are catalog-thin → type-first until **B-CATALOG-SEED**, clinical sign-off of the goal-active rec types (**B-DERM-REVIEW**), server persistence (**B-SUPABASE**) |
 | 10 · Creator stacks + ShopMy | Doc 10 | blocked (also B-SHOPMY) |
 | 11 · Community layer | Doc 11 | blocked |
 | 12 · AI trend analysis | Doc 12 | blocked (intentionally last) |
@@ -317,6 +327,15 @@ the consent must be wired as the gate, and ShopMy provisioned (**B-SHOPMY**).
 Also for counsel (docs/04 §7): whether the shelf's product mix is additional
 special-category inference to disclose in the GDPR Art. 35 **DPIA**. This is
 effectively a launch gate for the replenishment commerce line.
+
+**Now also covers the recommendation commerce link (docs/09 §10, Slice 23).** The
+"For you" recommendation card's disclosed "Where to find it" link and the detail
+screen's affiliate path are built **inert** — they state the disclosure honestly
+("we may earn a commission — it never affects what we recommend"), share nothing, and
+fire no analytics. Going live requires the **same** separate MHMDA/GDPR data-sharing
+consent as replenishment (the engine itself shares nothing; church-and-state keeps
+the ranking independent so the disclosure is true) plus **B-SHOPMY** + the catalog
+(**B-CATALOG-SEED**) and FTC affiliate disclosure at the commerce layer (doc #10).
 
 **Now also covers the photo feature (docs/06 §6/§7, Slice 20).** Facial progress
 photos are the most sensitive data the app holds. The on-device-first design

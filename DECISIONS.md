@@ -456,3 +456,56 @@ Format: `D-NNN — date — decision — rationale`.
   `expires_at`) while setting `will_renew = false` — plus writes the new
   `store`/`period_type`/`will_renew`/`original_purchase_at` columns. Idempotent on
   `event.id`, reads `event.app_user_id`, 200-fast (the exact payload is B-VERIFY-RC).
+
+## Personalized recommendations (docs/09, Slice 23)
+
+> docs/09 §9 suggests "D-038/039/040" for the church-and-state / evidence-based /
+> restraint decisions; those numbers were taken by the Smart Shelf slice. Recorded
+> here as D-054…D-057 with the mapping noted.
+
+- **D-054 — 2026-06-13 — Church and state, enforced in code (docs/09 §3, the doc's
+  "D-038").** The recommendation engine is a pure, deterministic rules + evidence +
+  **FIT-scoring** function (`features/recommendations/{catalog,fit,engine}.ts`) over
+  the profile/shelf/routine/conflicts/preferences + a type catalog — **no
+  commission/affiliate/partnership field is an input anywhere**. `fitScore` takes no
+  commercial parameter (a test asserts the breakdown has exactly the six merit
+  inputs), the ranking modules import **no** commerce module (doc #10 is not built),
+  and migration 0021 has **no commercial column** in the ranking path (a SQL comment
+  records this). Any future affiliate link is attached downstream, disclosed
+  ("never affects what we recommend"), and consent-gated (B-PRIVACY) — the
+  "Where to find it" / replenish "see similar" paths are **inert** and share nothing.
+
+- **D-055 — 2026-06-13 — Profile- and evidence-based, not AI-scan-based, and
+  explainable (docs/09 §6, the doc's "D-039").** Recommendations derive from the
+  quiz profile + shelf + conflicts + preferences scored against the evidence-graded
+  type catalog — **not** a selfie scan (consistent with docs/06) and **not**
+  collaborative filtering. Every suggestion carries the mandatory **what / why /
+  how** triad + the docs/02 evidence grade + an honest caveat; all user-facing copy
+  is centralised (`copy.ts`) and scanned by `claimsafety.test.ts` (concerns not
+  conditions, no drug/disease/alarm/urgency/guilt, curly-apostrophe-aware), which
+  also scans the **engine-produced** why/how strings over fixtures.
+
+- **D-056 — 2026-06-13 — Restrained + needs-based, type-first, launch-gated (docs/09
+  §4/§5, the doc's "D-040").** The engine returns the **minimal** set of genuine
+  needs (the six triggers), prioritised safety/gap > replacement > conflict >
+  better-fit > goal, **one goal active at a time**, never padding, never
+  re-recommending an owned role, and recommends **nothing** ("you're set") when the
+  routine is complete/conflict-free/goal-appropriate. The medically-adjacent
+  **goal-active** rec types (retinoid/acids/vitamin C/azelaic/niacinamide) are
+  launch-gated under **B-DERM-REVIEW** exactly like the conflict matrix + PAO
+  defaults — `RECS_REVIEWED = false` + `shippableRecTypes()` withholds them in
+  production (structural routine-completeness types still ship); the pregnancy
+  hard-exclusion is enforced independently of the gate (→ a pregnancy-safe
+  alternative, e.g. vitamin C instead of a retinoid).
+
+- **D-057 — 2026-06-13 — The "For you" hub is NOT Pro-gated in v1; local-first
+  state.** The docs do not specify gating recommendations behind Pro, and doc 9's
+  thesis frames the independent advisor as the core trust feature — so gating it
+  would be *inventing a restriction*. The hub, the what/why/how card, and the
+  preferences surface are shown to all (revisit with doc-10 pricing if ever). The
+  preferences + dismissals are a **local-first** AsyncStorage store (the D-029
+  pattern) with a guarded owner-RLS `recommendation_preferences` mirror; the
+  `recommendations` cache table is **forward-compat only** — the pure engine
+  recomputes live and is never the source of truth (docs/09 §5/§12). Replacement
+  reuses the existing replenishment sheet (docs/04); "Add to shelf" routes to the
+  manual-add flow until the catalog lands (B-CATALOG-SEED).

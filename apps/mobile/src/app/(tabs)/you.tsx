@@ -179,6 +179,29 @@ export default function YouScreen() {
 
         <Card className="mt-4">
           <Text variant="label" tone="muted" className="mb-1">
+            FOR YOU
+          </Text>
+          {(
+            [
+              ['Recommendations', '/recommendations'],
+              ['Recommendation preferences', '/recommendations/preferences'],
+            ] as const
+          ).map(([label, href]) => (
+            <Row key={href} label={label}>
+              <Text
+                variant="body"
+                tone="muted"
+                onPress={() => router.push(href)}
+                accessibilityRole="button"
+                style={{ fontSize: 18 }}>
+                ›
+              </Text>
+            </Row>
+          ))}
+        </Card>
+
+        <Card className="mt-4">
+          <Text variant="label" tone="muted" className="mb-1">
             SECURITY
           </Text>
           <Row label="Face ID app lock" hint="Require unlock to open the app and your photo timeline.">
