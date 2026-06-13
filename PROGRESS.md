@@ -112,12 +112,37 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - All backend writes guarded/optimistic; functional before config.
 - **Gates:** typecheck ✅ · lint ✅.
 
-## Stopping point
+### Slice 7 — Intelligence catalog + conflict schema (docs/02 §3) ✅ (2026-06-13)
+- Rewrote the catalog (migration 0003) to the docs/02 §3 spec: `ingredients`
+  (+synonyms, +tags), `products` (category/PAO/curated + tsvector search),
+  `product_ingredients`, **tag-based** `conflict_rules`, `ingredient_pao_defaults`.
+- New per-user `routine_conflicts` cache (owner RLS + `owns_user_product()` check).
+- Seeded the ~14 starter rules (docs/02 §4.4/§4.8) + PAO category defaults — all
+  `reviewed_by = NULL` (BLOCKED: **B-DERM-REVIEW**, launch gate).
+- `@onskin/types` extended (InteractionType, EvidenceLabel/Grade, ResolutionType,
+  FunctionalTag, …) + Database type updated.
+- **Adversarially reviewed by 3 agents** (RLS / SQL+fidelity / claim-safety) →
+  fixed product-ownership RLS, nullable evidence_grade for refuted myths,
+  over-stated safety evidence labels, and BHA pregnancy dose-gating. D-016…D-021.
+- **Gates:** typecheck ✅ · lint ✅.
 
-Slices 0–6 cover everything Documents 00/01 + the design spec authorize. The
-remaining build-order items (2–12) need their feature documents (see
-BLOCKERS B-MISSING-DOCS) and the account/legal/verify items. Handing back for a
-clearing pass.
+### Slice 8 — Conflict / synergy engine + fixture tests (docs/02 §4) ✅ (2026-06-13)
+- Pure TS engine: tag dictionary, bundled starter ruleset (mirrors DB seed by
+  fixed id), tag-based both-orders detection, concentration+sensitivity severity
+  modulation, sub-flag exemptions, pregnancy pseudo-tag safety + dose-gating,
+  resistant co-use, reassurance/synergy surfacing, safety-first ranking.
+- **vitest fixture suite (12 tests, all passing)** incl. the Maya worked example
+  (Moderate / contested / alternate_nights), niacinamide×vitC reassurance,
+  BP×retinoid + adapalene exemption, pregnancy safety + BHA dose-gate, synergy.
+  `npm test` is now real (the doc mandates per-rule fixtures, §10).
+- **Gates:** typecheck ✅ · lint ✅ · test ✅.
+
+## In progress
+
+### Slice 9 — skin-cycling scheduler (docs/02 §5) — next
+Then PAO/shelf UI (§6/§7.1), conflict detail + PM auto-resolution (§7.3/§7.4),
+barcode scan (§7.5). Remaining docs/02 work is UI + the blocked data/clinical
+items (B-DERM-REVIEW, B-CATALOG-SEED).
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)
