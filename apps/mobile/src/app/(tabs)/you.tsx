@@ -193,6 +193,7 @@ export default function YouScreen() {
             [
               ['Recommendations', '/recommendations'],
               ['Recommendation preferences', '/recommendations/preferences'],
+              ['Skin Notes — myth vs evidence', '/community'],
               ['Shoppable routines', '/commerce/stacks'],
             ] as const
           ).map(([label, href]) => (

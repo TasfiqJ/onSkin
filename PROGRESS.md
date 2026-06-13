@@ -530,6 +530,52 @@ and routine persistence (server `build_routine`, docs/03 §11).
   D-058…D-062.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (670).
 
+### Slice 25 — Doc 11 Community Layer ("Skin Notes") + new design ✅ (2026-06-13)
+- **Validated first** (cited deep-research, 24 verified claims): community is a
+  retention/trust **multiplier, NOT a seven-figure pillar** and not required for one
+  (Yuka: 97.3% of $7.37M from subscriptions, zero community — `community/forum/feed = 0`
+  in its report). An **open UGC feed is value-destroying** for this moat (misinformation
+  survives even expert moderation ~21%; photo appearance-comparison correlates r=0.53
+  with stigmatisation in acne). The gaming-RCT's **negative contribution×consumption
+  interaction** independently supports the phasing. The compliance layer was NOT verified
+  this round → prudent-but-unconfirmed (**B-COMMUNITY-LEGAL**). Net: build the narrow
+  **expert-anchored "Skin Notes"** trust layer (Phase 1), defer peer posting.
+- **Schema** (migration 0023): the 7 community tables — **segregated, consent-scoped,
+  and PHOTO-FREE** (no image/storage_path column anywhere — photos can never enter
+  community, D-064). `community_notes` has a production gate (`SELECT` only where
+  `reviewed_by IS NOT NULL AND claim_safety_ok`); `community_questions` is owner-write/
+  moderated-read with **anonymous users locked out of posting** via a restrictive
+  `is_anonymous`-JWT policy + an `owns_consent()` definer requiring a current
+  `community_participation` grant; `order`/audit tables service-role-only; reports/blocks
+  (the Apple-1.2 floor) owner-only. The `consents` enum gains a 7th unbundled type
+  `community_participation`. `Database` type + `@onskin/types` extended; no RLS weakened.
+- **Pure, tested modules** (`features/community/`): `notes.ts` (the seeded expert "myth
+  vs evidence" corpus + the **B-DERM-REVIEW gate** `NOTES_REVIEWED`/`shippableNotes()` +
+  the docs/02 evidence-pill mapping + the rule→note bridge), `claimSafetyScan.ts` (the
+  pre-moderation **FLAG** — inflected drug/disease verbs, dosage, alarm), `anonHandle.ts`
+  (the calm random pseudonym), `copy.ts` + the **claim-safety guard** (concerns not
+  conditions, the "not medical advice" disclaimer, "library not a feed", the meta-string
+  exemption), `consent.ts`/`store.ts` (the separate `community_participation` consent +
+  16+ gate, local-first). **101 new fixtures.**
+- **5 design surfaces** + wiring: the **Skin Notes hub** (topic-structured, evidence
+  pills, "a library, not a feed"), the **myth-vs-evidence card** (claim/verdict/why/
+  source+credential/"not medical advice"/structured "This helped"), the **in-context**
+  "Read the evidence" affordance (wired into the conflict niacinamide×vitC reassurance),
+  the anonymous **Ask** composer (Phase-2 preview — random handle, live claim-safety
+  state, 16+ + consent gates, pre-moderation, posting **deferred**), and **"people like
+  you"** (Phase-2 preview, anonymised aggregate). You-tab gains a Skin Notes link.
+- **Phase 1 live; peer phases deferred** (D-067): the Ask + people-like-you are
+  design-faithful but inert (peer posting needs the moderation/legal store floor —
+  **B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**); the kill switch is
+  observable tripwires, not an unfireable A/B test.
+- **Adversarially reviewed by a 4-dimension workflow** (RLS/SQL · spec · design ·
+  claim-safety/MHMDA/moat, **21 agents, each finding verified**) → **1 blocking, 0 high**;
+  the blocking item **fixed**: the `community_questions` approved-read policy
+  forward-referenced `community_blocks` before that table was created (CREATE POLICY
+  resolves relations at creation time → the migration would abort) — `community_blocks`
+  is now defined before the policy. 16 other findings refuted. D-063…D-067.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (767).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -562,7 +608,8 @@ and routine persistence (server `build_routine`, docs/03 §11).
 8. ✅ Subscriptions / paywall — Doc 8 (Slice 22): reverse-trial conversion model, honest paywall + lifecycle screens, local-first entitlement gating; native IAP deferred to **B-REVENUECAT**, store/ARL review to **B-LEGAL**
 9. ✅ Personalized recommendations — Doc 9 (Slice 23): the independent, needs-based "church and state" advisor — the six honest triggers + an honest "you're set", the merit-only six-input FIT score (no commercial input), type-first + restrained, the what/why/how explainability, the "For you" hub + card + preferences + in-routine gap prompt; goal-active rec types launch-gated under **B-DERM-REVIEW**, the commerce/affiliate path deferred + inert (doc #10 / **B-PRIVACY** / **B-CATALOG-SEED**)
 10. ✅ Creator stacks + ShopMy — Doc 10 (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own independent recommendations — church-and-state schema (commission service-role-only, never client-readable, never in ranking), opaque-token attribution (no skin data to retailers), FTC "paid link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the transparency page; validated as a **six-figure supplement** (not 7-figure). The live ShopMy rail is **rail-agnostic + stubbed/inert** — the house-account model is unconfirmed (**B-SHOPMY**), real catalogue/prices (**B-CATALOG-SEED**), final consent copy/DPIA (**B-PRIVACY**), stacks sign-off (**B-DERM-REVIEW**)
-11–12. 🚫 community / AI — need their docs
+11. ✅ Community layer — Doc 11 (Slice 25): the expert-anchored, anonymous, claim-safe "Skin Notes" myth-vs-evidence trust layer — NOT an open feed. Photo-free + anon-locked-out + consent-scoped schema; the B-DERM-REVIEW-gated expert corpus; the claim-safety pre-moderation flag; the 5 surfaces (hub, card, in-context, Ask, people-like-you). Validated as a retention **multiplier, not a 7-figure pillar**. Phase 1 live; peer posting deferred behind the moderation/legal floor (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**), clinical sign-off (**B-DERM-REVIEW**), consent copy/DPIA (**B-PRIVACY**)
+12. 🚫 AI trend analysis — needs its doc (intentionally last)
 
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15

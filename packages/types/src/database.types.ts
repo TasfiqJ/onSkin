@@ -876,6 +876,102 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['order_attributions']['Insert']>;
         Relationships: [];
       };
+      // docs/11 — the community layer. PHOTO-FREE by design (D-064); no commission
+      // field (church and state, D-063); consent-scoped + anon-locked-out (D-066).
+      community_topics: {
+        Row: { id: string; slug: string; title: string; description: string | null; sort_order: number; is_active: boolean };
+        Insert: { id?: string; slug: string; title: string; description?: string | null; sort_order?: number; is_active?: boolean };
+        Update: Partial<Database['public']['Tables']['community_topics']['Insert']>;
+        Relationships: [];
+      };
+      community_notes: {
+        Row: {
+          id: string;
+          topic_id: string;
+          kind: string;
+          title: string;
+          body: string;
+          evidence_grade: string | null;
+          evidence_label: string | null;
+          provenance: string;
+          author_credential: string | null;
+          source_url: string | null;
+          claim_safety_ok: boolean;
+          reviewed_by: string | null;
+          created_at: Timestamptz;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          topic_id: string;
+          kind: string;
+          title: string;
+          body: string;
+          evidence_grade?: string | null;
+          evidence_label?: string | null;
+          provenance?: string;
+          author_credential?: string | null;
+          source_url?: string | null;
+          claim_safety_ok?: boolean;
+          reviewed_by?: string | null;
+          created_at?: Timestamptz;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['community_notes']['Insert']>;
+        Relationships: [];
+      };
+      community_questions: {
+        Row: {
+          id: string;
+          user_id: string;
+          topic_id: string;
+          body: string;
+          anon_handle: string;
+          moderation_state: string;
+          claim_safety_flag: boolean | null;
+          rejected_reason: string | null;
+          consent_grant_id: string;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          topic_id: string;
+          body: string;
+          anon_handle: string;
+          moderation_state?: string;
+          claim_safety_flag?: boolean | null;
+          rejected_reason?: string | null;
+          consent_grant_id: string;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['community_questions']['Insert']>;
+        Relationships: [];
+      };
+      community_reactions: {
+        Row: { id: string; user_id: string; note_id: string | null; reaction: string; created_at: Timestamptz };
+        Insert: { id?: string; user_id: string; note_id?: string | null; reaction: string; created_at?: Timestamptz };
+        Update: Partial<Database['public']['Tables']['community_reactions']['Insert']>;
+        Relationships: [];
+      };
+      community_moderation_events: {
+        Row: { id: string; question_id: string | null; action: string; reason: string | null; acted_at: Timestamptz };
+        Insert: { id?: string; question_id?: string | null; action: string; reason?: string | null; acted_at?: Timestamptz };
+        Update: Partial<Database['public']['Tables']['community_moderation_events']['Insert']>;
+        Relationships: [];
+      };
+      community_reports: {
+        Row: { id: string; reporter_id: string; question_id: string; reason: string; created_at: Timestamptz; resolved_at: Timestamptz | null };
+        Insert: { id?: string; reporter_id: string; question_id: string; reason: string; created_at?: Timestamptz; resolved_at?: Timestamptz | null };
+        Update: Partial<Database['public']['Tables']['community_reports']['Insert']>;
+        Relationships: [];
+      };
+      community_blocks: {
+        Row: { user_id: string; blocked_handle: string; created_at: Timestamptz };
+        Insert: { user_id: string; blocked_handle: string; created_at?: Timestamptz };
+        Update: Partial<Database['public']['Tables']['community_blocks']['Insert']>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -885,6 +981,10 @@ export type Database = {
       };
       owns_cycle: {
         Args: { p_cycle_id: string };
+        Returns: boolean;
+      };
+      owns_consent: {
+        Args: { p_consent_id: string };
         Returns: boolean;
       };
       recompute_streak: {

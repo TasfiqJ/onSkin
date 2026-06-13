@@ -568,3 +568,70 @@ Format: `D-NNN — date — decision — rationale`.
   **stacks** are medical-adjacent → launch-gated under **B-DERM-REVIEW**
   (`STACKS_REVIEWED = false` + `shippableStacks()`, mirroring `shippableRules()`); they
   are ordered by the routine sequence, never by commission.
+
+## Community layer / "Skin Notes" (docs/11, Slice 25)
+
+> docs/11 pre-specifies "D-041…D-045" for the multiplier/no-UGC/expert-anchored/consent/
+> phasing decisions; those numbers were long taken. Recorded here as D-063…D-067.
+> Validated by a cited deep-research pass (24 claims): community is a retention/trust
+> MULTIPLIER, not a seven-figure pillar and not required for one (Yuka: 97.3% of $7.37M
+> from subscriptions, zero community). The gaming-RCT's NEGATIVE contribution×consumption
+> interaction independently supports the phasing. The compliance layer was NOT verified
+> this round → treated as prudent-but-unconfirmed (B-COMMUNITY-LEGAL).
+
+- **D-063 — 2026-06-13 — Community is a retention/trust multiplier, not a revenue pillar;
+  net-new scope is the EXPERT-ANCHORED trust layer (docs/11 §1/§2, the doc's "D-041").**
+  The proven private retention mechanics (streak/heat-map, docs/03/07) are already
+  shipped, so Doc 11's net-new scope is "Skin Notes" — an expert-seeded "myth vs
+  evidence" trust layer that EXTENDS the recommendation engine — never an open social
+  feed. Church-and-state holds: the community module imports nothing from
+  `features/commerce`; any future community→recommendation signal is aggregated +
+  anonymised, never commission-biased.
+
+- **D-064 — 2026-06-13 — "No open UGC" by construction (docs/11 §5, the doc's "D-042").**
+  The forbidden patterns (open/algorithmic feed, follower graph, DMs, likes/leaderboards,
+  public before/after photo galleries, incentivised/suppressed reviews) are barred at the
+  ARCHITECTURE level: **the community schema (migration 0023) has NO image/photo/
+  storage_path column anywhere — photos can never enter community** (enforced at the table
+  layer; local-only stays local-only, docs/06/D-039); the only reaction is a structured
+  closed-vocabulary `helped`/`use_this`, never a like count, follower, or ranking. The
+  validation confirmed the harm this avoids (photo appearance-comparison correlates
+  r=0.53 with stigmatisation in people with acne).
+
+- **D-065 — 2026-06-13 — Anonymous-by-default, expert-seeded, human PRE-moderated, claim-
+  safe (docs/11 §4/§6, the doc's "D-043").** "Skin Notes" copies Flo's cage (anonymous to
+  peers, topic-structured, approve-before-publish) and tightens it. Expert notes
+  (`features/community/notes.ts`) reuse the docs/02 evidence vocab (refuted=sage, etc.),
+  are launch-gated under **B-DERM-REVIEW** (`NOTES_REVIEWED = false` + `shippableNotes()`,
+  mirroring `shippableRules()`; a note must ALSO pass the claim-safety guard
+  `claimSafetyOk` — the same belt-and-suspenders the `community_notes` RLS enforces:
+  `reviewed_by IS NOT NULL AND claim_safety_ok`). The shipped **claim-safety scan**
+  (`claimSafetyScan.ts`, tested, catches inflected drug/disease verbs + dosage + alarm)
+  is a FIRST-PASS FLAG only; human pre-moderation is authoritative, with a DSA-Art.17
+  appeal path. All community copy is centralised + claim-safety-guarded (concerns not
+  conditions, the mandatory "not medical advice" disclaimer).
+
+- **D-066 — 2026-06-13 — A new, separate, unbundled `community_participation` consent +
+  a hard 16+ gate + anon lockout (docs/11 §8, the doc's "D-044").** Posting health-
+  adjacent info to others is a new MHMDA/GDPR-Art.9 event; the consents enum gains a 7th
+  type `community_participation`, NEVER reused from the photo/`data_sharing` grants,
+  recorded with community copy+version into the immutable ledger and referenced by
+  `community_questions.consent_grant_id` (validated by the `owns_consent()` definer
+  helper). **Anonymous (`is_anonymous` JWT) users are LOCKED OUT of posting** via a
+  RESTRICTIVE RLS policy — closing the gap docs/01 §1 named. Posting is hard-gated to
+  16+. Local-first + ledger-authoritative-then-local (the Slice-24 precedence) so a
+  withdrawal re-locks; withdrawal deletes the user's questions (Edge Function, deferred).
+
+- **D-067 — 2026-06-13 — Phase 1 only is LIVE; peer phases are design-faithful previews,
+  deferred; observable kill switch (docs/11 §11, the doc's "D-045").** Phase 1 (expert
+  read-mostly Skin Notes hub + the myth-vs-evidence card + the in-context "Read the
+  evidence" affordance, wired into the conflict reassurance) ships live. The peer **Ask**
+  composer + **"people like you"** are built design-faithfully but **deferred** — the Ask
+  shows the gates + the honest pre-moderation/"asking opens soon" state and does not post,
+  because the moderation/legal store floor (filter/report/block/published-contact/~24h
+  SLA) must be staffed first (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** /
+  **B-EXPERT-NETWORK**). The full schema lands now for the architecture-level kill list.
+  The research-confirmed NEGATIVE peer-contribution×consumption interaction is a second
+  reason not to ship peer-post + peer-read at once. The kill switch is **observable
+  tripwires** (brand/claim-safety incident, MHMDA/consent gap, moderation-cost ceiling,
+  ~24h SLA breach), not a likely-unfireable A/B churn holdout.

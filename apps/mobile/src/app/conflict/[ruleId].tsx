@@ -2,6 +2,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
 import { Button, Card, Text } from '@/components/ui';
+import { InContextNote } from '@/features/community/InContextNote';
+import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { evidenceChip, pairTitle, severityLabel } from '@/features/intelligence/presentation';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -81,6 +83,9 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
   const r = conflict.rule;
   const isReassure = r.interactionType === 'myth' || r.interactionType === 'synergy';
   const isSafety = r.interactionType === 'safety';
+  // The community trust layer (docs/11 §9.2) reinforces a reassurance with the matching
+  // "myth vs evidence" Skin Note — exactly where the doubt lands (e.g. niacinamide × vit C).
+  const skinNoteId = noteForTags(r.tagA, r.tagB);
   const honest = r.evidenceGrade == null || r.evidenceLabel === 'contested' || r.evidenceLabel === 'plausible';
   const eyebrowColor = isReassure ? colors.sage : isSafety ? colors.clayDeep : colors.clay;
 
@@ -120,6 +125,12 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
           {r.sourceCitation}
           {honest ? ' · based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited.' : ''}
         </Text>
+      ) : null}
+
+      {skinNoteId ? (
+        <View className="mt-4">
+          <InContextNote noteId={skinNoteId} />
+        </View>
       ) : null}
 
       <View className="mt-6 gap-2">

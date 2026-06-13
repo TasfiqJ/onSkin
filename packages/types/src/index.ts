@@ -21,6 +21,9 @@ export const CONSENT_TYPES = [
   'photo_cloud_backup',
   'marketing',
   'data_sharing',
+  // docs/11 §8 / D-066: a NEW, separate, unbundled consent for posting health-adjacent
+  // info to the community (MHMDA / GDPR Art. 9) — never reused from photo/data_sharing.
+  'community_participation',
 ] as const;
 export type ConsentType = (typeof CONSENT_TYPES)[number];
 
@@ -244,6 +247,31 @@ export const COMMERCE_EVENTS = [
   'stack_viewed',
 ] as const;
 export type CommerceEvent = (typeof COMMERCE_EVENTS)[number];
+
+// --- Community layer / "Skin Notes" (docs/11) --------------------------------
+/** Expert-seeded note kinds (docs/11 §7). NOT peer UGC. */
+export type CommunityNoteKind = 'myth_vs_evidence' | 'expert_answer' | 'explainer';
+/** Who authored a note — expert/editorial only; never anonymous peers (docs/11 §4). */
+export type NoteProvenance = 'expert' | 'editorial';
+/** Peer question moderation lifecycle (docs/11 §6 — human PRE-moderation). */
+export type ModerationState = 'pending' | 'approved' | 'rejected';
+/** Structured reactions — a CLOSED vocabulary, never free text (docs/11 §5/§6 flywheel). */
+export type CommunityReaction = 'helped' | 'use_this';
+/** PostHog community events (docs/11 §12) — metadata only; NEVER instrument toward
+ *  engagement maximisation (the addictive-design pattern §5 forbids). */
+export const COMMUNITY_EVENTS = [
+  'skin_note_viewed',
+  'skin_note_evidence_expanded',
+  'community_consent_granted',
+  'question_submitted',
+  'question_approved',
+  'question_rejected',
+  'question_appealed',
+  'reaction_added',
+  'report_filed',
+  'block_added',
+] as const;
+export type CommunityEvent = (typeof COMMUNITY_EVENTS)[number];
 
 // --- Ingredient intelligence layer (docs/02) ---------------------------------
 /** Non-alarmist by mandate (docs/02 §4): every rule carries an evidence grade +

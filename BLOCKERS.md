@@ -14,7 +14,7 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–24** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–25** — full foundation (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
 **Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
 the **Document 4 Smart Shelf**, the **Document 5 actives & skin-cycling scheduler**,
@@ -31,7 +31,10 @@ explainability), and the **Document 10 creator stacks + commerce** (the walled-o
 "where to buy" layer — church-and-state schema, opaque-token attribution, FTC "paid
 link" disclosure, the MHMDA consent gate, expert/derm shoppable stacks + the
 transparency page; validated as a six-figure supplement, the live rail stubbed pending
-B-SHOPMY; **670 tests**). See PROGRESS.md.
+B-SHOPMY), and the **Document 11 community layer** (the expert-anchored, anonymous,
+claim-safe "Skin Notes" myth-vs-evidence trust layer — photo-free + anon-locked-out +
+consent-scoped; Phase 1 live, peer posting deferred; validated as a retention multiplier,
+not a 7-figure pillar; **767 tests**). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -48,8 +51,8 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next in build order: **Document 11** (community
-layer). Also: a **custom dev build** unlocks the deferred native work —
+documents — see **B-MISSING-DOCS**. Next in build order: **Document 12** (AI trend
+analysis — intentionally last). Also: a **custom dev build** unlocks the deferred native work —
 **B-REVENUECAT** (the `react-native-purchases` SDK + offerings → real prices/purchase),
 **B-CAMERA** (vision-camera + ML-Kit guided capture), **B-WIDGETS**
 (WidgetKit/Glance/ActivityKit), and **B-NOTIF-VERIFY** (on-device notification
@@ -195,6 +198,11 @@ types (a cleanser, a moisturiser, an SPF) ship, and the pregnancy hard-exclusion
 enforced regardless. **Also covers the docs/10 expert/derm shoppable stacks** (Slice 24,
 `STACKS_REVIEWED = false` + `shippableStacks()`): a published stack asserts a routine, so
 it stays dev-only until a dermatologist signs off (`creator_stacks.reviewed_by`).
+**Also covers the docs/11 expert "Skin Notes"** (Slice 25, `NOTES_REVIEWED = false` +
+`shippableNotes()`): a published "myth vs evidence" note asserts skincare guidance, so it
+stays dev-only until a dermatologist/cosmetic-chemist signs off
+(`community_notes.reviewed_by`; the RLS also requires `claim_safety_ok`). See
+**B-EXPERT-NETWORK** for the recruitment side.
 **Also covers docs/03 + docs/04 + docs/05 rules.** docs/03 §11: the
 `sequencing_rules` (application order), the `active_ramp` cadence numbers, and the
 skin-cycling personalisation. docs/04 §3: the **PAO category defaults** (gated in
@@ -316,7 +324,7 @@ remaining build-order items need their detailed doc:
 | 8 · Subscriptions / paywall | Doc 8 ✅ received | **BUILT** (Slice 22): the reverse-trial conversion model (two honest paths), entitlements extensions (migration 0020: period_type/store/will_renew/attribution), the pure tested plan catalog + entitlement-state derivation + a paywall claim-safety guard (91 tests), the local-first entitlement cache + `useEntitlement`/`ProGate`/`withProGate` gating (offline-safe, gates on `is_active` regardless of source), the app-granted reverse trial, and all 9 surfaces (onboarding offer, reverse-trial banner, re-offer, contextual upsell, success, manage subscription, graceful downgrade, honest win-back) + the event-type-correct webhook (never revokes on CANCELLATION). Gating wired on the photo timeline / scheduler / widgets. Blocked sub-parts: the native `react-native-purchases` SDK + localized offering prices + purchase/restore + the server reverse-trial grant (**B-REVENUECAT**), store/ARL/external-link/final-policy legal review (**B-LEGAL** / **B-PRIVACY-COPY**), server entitlement mirror (**B-SUPABASE**) |
 | 9 · Personalized recommendations | Doc 9 ✅ received | **BUILT** (Slice 23): the `recommendation_preferences` + `recommendations` schema (owner-RLS, **no commercial column**), the pure tested engine (the six honest triggers + an honest "you're set", the merit-only six-input FIT score, the B-DERM-REVIEW launch gate on goal actives), the centralised claim-safe copy + guard, and the 5 surfaces (For-you hub, what/why/how card, "you're set", preferences, in-routine gap prompt) + Today/You wiring. Blocked sub-parts: the commerce/affiliate path (**doc 10** / **B-PRIVACY** data-sharing consent / **B-SHOPMY**) is deferred + inert, specific-product recommendations are catalog-thin → type-first until **B-CATALOG-SEED**, clinical sign-off of the goal-active rec types (**B-DERM-REVIEW**), server persistence (**B-SUPABASE**) |
 | 10 · Creator stacks + ShopMy | Doc 10 ✅ received | **BUILT** (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own recommendations — church-and-state schema (migration 0022: commission service-role-only in `order_attributions`, never client-readable / never in ranking), the opaque-token attribution (no skin data to retailers, tested), the FTC "paid link" disclosure + guard, the MHMDA consent gate, the rail-agnostic resolution, the expert/derm shoppable stacks (B-DERM-REVIEW-gated), the transparency page, and the Order-Report poll Edge Function stub. Validated as a six-figure supplement. Blocked sub-parts: the live ShopMy rail + the **house-account question** (**B-SHOPMY**), real catalogue/retailers/prices (**B-CATALOG-SEED**), final MHMDA consent copy + DPIA + FTC final wording (**B-PRIVACY** / **B-PRIVACY-COPY**), stacks clinical sign-off (**B-DERM-REVIEW**), Google Play 2026 physical-goods/external-link confirmation (**B-LEGAL**) |
-| 11 · Community layer | Doc 11 | blocked |
+| 11 · Community layer | Doc 11 ✅ received | **BUILT** (Slice 25): the expert-anchored, anonymous, claim-safe "Skin Notes" myth-vs-evidence trust layer — NOT an open feed. Migration 0023 (7 tables, **photo-free**, anon-locked-out, consent-scoped; the `consents` enum +`community_participation`); the B-DERM-REVIEW-gated expert corpus (`NOTES_REVIEWED`/`shippableNotes()`); the claim-safety pre-moderation flag; the 5 surfaces (hub, card, in-context, Ask, people-like-you). Validated as a retention **multiplier, not a 7-figure pillar**. Phase 1 (expert read-mostly) is live; the peer Ask + people-like-you are deferred previews. Blocked sub-parts: the moderation/legal store floor + peer posting (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**), expert clinical sign-off (**B-DERM-REVIEW**), the consent copy + DPIA extension (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**) |
 | 12 · AI trend analysis | Doc 12 | blocked (intentionally last) |
 
 I build the slices the received docs + the design spec fully authorize, scaffold
@@ -475,3 +483,43 @@ CLAUDE.md (don't invent schema), the column was intentionally omitted from
 `routine_steps`. The routine-builder / skin-cycling docs (Documents 3 & 5,
 missing) should specify how the interval is represented; add the column then.
 Discovered during the Slice 1 RLS review.
+
+### B-COMMUNITY-MOD — human pre-moderation + the Apple/Google store floor 🔴 open (community launch gate)
+docs/11 §6/§8 (Slice 25). Before ANY peer posting goes live, the mandatory store floor
+must be staffed: a content filter, in-app **report** + user **block** (built —
+`community_reports`/`community_blocks`), **published contact**, a zero-tolerance EULA
+accepted before posting, and **human pre-moderation** (approve-before-publish) meeting
+the **~24h action SLA** Apple Guideline 1.2 expects (apps are rejected without these).
+This is **recurring paid opex** (claim-safe medical-claim moderation can't use volunteer
+labour), not a one-time build. The Phase-2 **Ask** composer is built design-faithfully
+but **inert** (`app/community/ask.tsx` shows the gates + pre-moderation and does not
+post); the moderation console, the consent-withdrawal-deletion Edge Function, and the
+queued review pipeline land with this. An under-resourced community is **worse than
+none** for a trust-first brand — so peer posting stays deferred until the desk exists.
+
+### B-COMMUNITY-LEGAL — UGC legal sign-off (Apple 1.2 / COPPA / MHMDA / DSA / FTC) 🔴 open
+docs/11 §8 (Slice 25). The deep-research pass (2026-06-13) verified the strategy but
+**did NOT verify the compliance layer** — treat the spec's legal facts as prudent but
+**unconfirmed** until counsel signs off, before any peer phase: (1) **Apple Guideline 1.2
+/ Google Play UGC** current control set + the ~24h SLA wording; (2) the **amended COPPA**
+biometric/faceprint rule (full compliance ~April 22, 2026) + whether a self-declared 16+
+gate suffices given the "Sephora kids" front (we store no faceprints, docs/06); (3)
+**MHMDA / GDPR Art. 9** — whether a skin-condition post is a new consumer-health-data
+collection/sharing event needing the separate `community_participation` consent (built
+to that standard regardless; private right of action is live); (4) **FTC Reviews Rule**
+(16 CFR 465, ~$51,744/violation) on OnSkin's own conduct (no incentivised/suppressed
+reviews); (5) **EU DSA Section 2** hosting duties (Art. 16 notice-and-action, Art. 17
+statement-of-reasons/appeal, Art. 18) + the micro-enterprise exemption + an EU
+representative; **UK Online Safety Act**; and the **EU AI Act** content-moderation
+obligations IF an automated classifier is ever used as more than a flag (today it is a
+flag only). English-first launch to bound multilingual moderation cost.
+
+### B-EXPERT-NETWORK — paid dermatologist / cosmetic-chemist expert network 🔴 open
+docs/11 §12 (Slice 25). Phase 1 lives or dies on **seeded content density + expert
+recruitment**, not a peer flywheel (a thinly-seeded library stalls like Clear did). The
+seeded "myth vs evidence" corpus (`features/community/notes.ts`, 6 starter entries, all
+`reviewedBy = null`) is a demo seed; before launch, recruit a paid board-certified
+dermatologist + cosmetic chemist to author/review a **substantial** corpus and populate
+`community_notes.reviewed_by` (the `NOTES_REVIEWED` / B-DERM-REVIEW gate withholds
+unreviewed notes in production). Treat expert recruitment/retention as a first-class
+recurring cost line, not a hand-wave.
