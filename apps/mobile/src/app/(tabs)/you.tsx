@@ -6,6 +6,7 @@ import { Alert, ScrollView, Switch, View } from 'react-native';
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
+import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { deleteAccount, exportData } from '@/features/settings/actions';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
@@ -50,6 +51,14 @@ export default function YouScreen() {
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
   const cloudBackup = useQuery({ queryKey: ['photo_cloud_backup'], queryFn: getCloudBackupEnabled, retry: 0 });
+  const { data: ent } = useEntitlement();
+  const planLabel = ent?.inReverseTrial
+    ? 'Exploring Pro'
+    : ent?.inTrial
+      ? 'Free trial · Pro'
+      : ent?.isPro
+        ? 'OnSkin Pro · active'
+        : 'Free plan';
 
   async function setConsent(type: 'marketing' | 'data_sharing', granted: boolean) {
     qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({ ...(prev ?? {}), [type]: granted }));
@@ -122,6 +131,22 @@ export default function YouScreen() {
           ) : (
             <Button className="mt-4" label="Sign out" variant="ghost" onPress={() => void signOut()} />
           )}
+        </Card>
+
+        <Card className="mt-4">
+          <Text variant="label" tone="muted" className="mb-1">
+            SUBSCRIPTION
+          </Text>
+          <Row label="Manage subscription" hint={planLabel}>
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/settings/subscription')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
+          </Row>
         </Card>
 
         <Card className="mt-4">

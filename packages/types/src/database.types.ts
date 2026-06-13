@@ -543,6 +543,13 @@ export type Database = {
           expires_at: Timestamptz | null;
           rc_event_id: string | null;
           updated_at: Timestamptz;
+          store: string | null;
+          period_type: string | null;
+          will_renew: boolean | null;
+          original_purchase_at: Timestamptz | null;
+          offering_id: string | null;
+          experiment_id: string | null;
+          acquisition_channel: string | null;
         };
         Insert: {
           user_id: string;
@@ -552,6 +559,13 @@ export type Database = {
           expires_at?: Timestamptz | null;
           rc_event_id?: string | null;
           updated_at?: Timestamptz;
+          store?: string | null;
+          period_type?: string | null;
+          will_renew?: boolean | null;
+          original_purchase_at?: Timestamptz | null;
+          offering_id?: string | null;
+          experiment_id?: string | null;
+          acquisition_channel?: string | null;
         };
         Update: Partial<Database['public']['Tables']['entitlements']['Insert']>;
         Relationships: [];

@@ -10,6 +10,7 @@ import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotos } from '@/features/photos/usePhotos';
+import { ProGate } from '@/features/subscription/ProGate';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
@@ -342,7 +343,7 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
   );
 }
 
-export default function ProgressScreen() {
+function PhotoProgressTab() {
   const { enabled: lockEnabled } = useAppLock();
   const { data } = usePhotos('front');
   const [unlocked, setUnlocked] = useState(false);
@@ -411,5 +412,16 @@ export default function ProgressScreen() {
         )}
       </ScrollView>
     </Screen>
+  );
+}
+
+// The Progress tab (photo timeline) is a Pro value prop (docs/08 §2.2) — gate it.
+// New users are in the reverse trial / carded trial, so it's unlocked after
+// onboarding; it locks to the contextual upsell only once Pro lapses.
+export default function ProgressScreen() {
+  return (
+    <ProGate feature="photo_timeline">
+      <PhotoProgressTab />
+    </ProGate>
   );
 }

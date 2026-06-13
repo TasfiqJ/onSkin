@@ -7,6 +7,7 @@ import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
+import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { currentRoutineType } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
@@ -121,6 +122,7 @@ export default function TodayScreen() {
     return (
       <Screen edges={['top']}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+          <ReverseTrialBanner />
           <View className="mt-1 flex-row items-start justify-between">
             <Text variant="label" tone="muted" className="font-mono mt-1">
               {dateLabel.toUpperCase()}
@@ -233,6 +235,7 @@ export default function TodayScreen() {
   return (
     <Screen tone="night" edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+        <ReverseTrialBanner tone="night" />
         <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
           {dateLabel.toUpperCase()} · 9:41 PM
         </Text>

@@ -1,99 +1,157 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { useEffect } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Card, Screen, Text } from '@/components/ui';
+import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { ComplianceRow } from '@/features/subscription/ComplianceRow';
+import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { monthlyEquivalent, PLANS } from '@/features/subscription/plans';
+import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
-import { useAuth } from '@/lib/auth/AuthProvider';
-import { PRO_ANNUAL, purchaseProAnnual } from '@/lib/iap/revenuecat';
+import { colors } from '@/theme/tokens';
 
-// 10 · Onboarding paywall (docs/01 §2, design spec p.7). Single annual offer with
-// a 14-day trial and a visible "Not now". NO trial toggle on iOS (Guideline
-// 3.1.2). Purchase is STUBBED (BLOCKED: B-REVENUECAT).
-const FEATURES = [
-  'Routine intelligence — order, timing, skin cycling',
-  'Ingredient conflict checks, with evidence grades',
-  'Private photo timeline — on-device only',
-  'Reminders, streaks & home-screen widgets',
-];
+// 10 · Onboarding offer — two honest paths (docs/08 §3.1, design 01). "Start free
+// trial" (the committed path → carded 14-day trial) AND a visible "Explore first"
+// (→ the app-granted 7-day reverse trial, no card). Annual pre-selected, the billed
+// amount most conspicuous, no trial toggle, Terms/Privacy/Restore present, trust
+// block below the plans (Apple 3.1.2). Purchase is STUBBED (B-REVENUECAT); the v1
+// trial/reverse-trial are granted via the local-first entitlement store.
+function ValueProp({ label }: { label: string }) {
+  return (
+    <View className="flex-row items-center gap-3">
+      <View className="h-8 w-8 items-center justify-center rounded-[9px]" style={{ backgroundColor: colors.clayTint }}>
+        <View className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: colors.clay }} />
+      </View>
+      <Text variant="bodySm" className="flex-1 font-sans-semibold" style={{ lineHeight: 18 }}>
+        {label}
+      </Text>
+    </View>
+  );
+}
 
 export default function PaywallScreen() {
-  const { goals } = useOnboarding();
-  const { user } = useAuth();
-  const [busy, setBusy] = useState(false);
-  const firstName =
-    (user?.user_metadata?.display_name as string | undefined)?.split(' ')[0] ??
-    (user?.user_metadata?.full_name as string | undefined)?.split(' ')[0] ??
-    null;
+  const { goals, quizAnswers, computeResult } = useOnboarding();
+  const { startTrial, startReverseTrial } = useEntitlementActions();
+  const annual = PLANS.annual;
 
   useEffect(() => {
     track('paywall_shown', { goals: goals.length });
   }, [goals.length]);
 
-  async function startTrial() {
-    setBusy(true);
-    const { purchased } = await purchaseProAnnual();
-    if (purchased) track('trial_started', { product: PRO_ANNUAL.productId });
-    setBusy(false);
-    router.replace('/routine/plan');
+  // Personalized headline from the quiz axes (sign convention per the reveal: axes
+  // >= 0.5 is the positive pole). Only when the quiz was actually taken.
+  let headline: string = PAYWALL_COPY.offer.headlineFallback;
+  if (Object.keys(quizAnswers).length > 0) {
+    const r = computeResult();
+    const descriptor = `${r.axes.oily_dry < 0.5 ? 'dry' : 'oily'}, ${r.axes.sensitive_resistant >= 0.5 ? 'sensitive' : 'resistant'} skin`;
+    headline = PAYWALL_COPY.offer.headlineFor(descriptor);
   }
 
   return (
-    <Screen>
-      <View className="flex-row justify-end pt-1">
-        <Pressable accessibilityRole="button" className="py-2" onPress={() => router.replace('/routine/plan')}>
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            Not now
-          </Text>
-        </Pressable>
-      </View>
-
-      <View className="flex-1">
-        <Text variant="title" className="mt-2">
-          {firstName ? `Your plan is ready, ${firstName}.` : 'Your plan is ready.'}
+    <Screen edges={['top']}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+        <Text variant="title" className="mt-2" style={{ fontSize: 30, lineHeight: 34 }}>
+          {headline}
         </Text>
-        <Text variant="body" tone="muted" className="mt-2">
-          Built around your skin{goals.length ? ` — ${goals.length} goal${goals.length > 1 ? 's' : ''}` : ''}.
+        <Text variant="bodySm" tone="muted" className="mt-1.5">
+          {PAYWALL_COPY.offer.subhead}
         </Text>
 
-        <Card className="mt-7">
-          {FEATURES.map((f) => (
-            <View key={f} className="mb-3 flex-row">
-              <View className="mr-3 mt-2 h-1.5 w-1.5 rounded-full bg-clay" />
-              <Text variant="body" className="flex-1">
-                {f}
-              </Text>
-            </View>
+        {/* four value props */}
+        <View className="mt-5 gap-2.5">
+          {PAYWALL_COPY.offer.valueProps.map((v) => (
+            <ValueProp key={v} label={v} />
           ))}
-        </Card>
+        </View>
 
-        <View className="mt-6 overflow-hidden rounded-card bg-ink p-5">
-          <View className="mb-2 self-start rounded-pill bg-clay px-3 py-1">
-            <Text variant="label" tone="inverse">
-              {PRO_ANNUAL.trialDays} DAYS FREE
+        {/* the offer — billed amount most conspicuous (Apple 3.1.2) */}
+        <View className="mt-5 rounded-card p-5" style={{ backgroundColor: colors.ink }}>
+          <View className="mb-2 self-start rounded-pill px-3 py-1" style={{ backgroundColor: colors.clay }}>
+            <Text variant="label" style={{ color: colors.paper, fontSize: 10.5 }}>
+              {PAYWALL_COPY.offer.annualBadge.toUpperCase()}
             </Text>
           </View>
           <View className="flex-row items-baseline justify-between">
-            <Text variant="titleSm" tone="inverse">
-              OnSkin Pro · Annual
-            </Text>
-            <Text variant="titleSm" tone="inverse" className="font-sans-bold">
-              {PRO_ANNUAL.priceLabel}
-            </Text>
+            <View>
+              <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
+                Start {annual.trialDays} days free, then
+              </Text>
+              <Text variant="title" style={{ color: colors.paper, fontSize: 34, lineHeight: 38 }}>
+                {annual.priceLabel}
+                <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
+                  /year
+                </Text>
+              </Text>
+            </View>
+            <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.55)', textAlign: 'right' }}>{`just\n${monthlyEquivalent(
+              annual.priceLabel,
+            )}/mo`}</Text>
           </View>
-          <Text variant="bodySm" tone="inverseMuted" className="mt-1">
-            {PRO_ANNUAL.perMonth}
+        </View>
+
+        {/* monthly secondary */}
+        <View
+          className="mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-[18px] py-3"
+          style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}>
+          <Text variant="bodySm" className="font-sans-semibold" tone="muted">
+            Monthly
+          </Text>
+          <Text variant="label" tone="muted" style={{ fontSize: 13 }}>
+            {PLANS.monthly.priceLabel}/mo
           </Text>
         </View>
-      </View>
 
-      <View className="pb-4">
-        <Button label={`Start ${PRO_ANNUAL.trialDays} days free`} variant="accent" onPress={startTrial} disabled={busy} />
-        <Text variant="bodySm" tone="muted" className="mt-3 text-center">
-          We&apos;ll remind you 2 days before the trial ends · Cancel anytime
+        {/* primary CTA */}
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => startTrial.mutate(undefined, { onSettled: () => router.replace('/paywall/success') })}
+          className="mt-5 h-[54px] items-center justify-center rounded-pill"
+          style={{ backgroundColor: colors.clay }}>
+          <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
+            {PAYWALL_COPY.offer.cta}
+          </Text>
+        </Pressable>
+        <Text variant="bodySm" tone="muted" className="mt-2.5 text-center">
+          {PAYWALL_COPY.offer.trialReassurance}
         </Text>
-      </View>
+
+        {/* the second honest path — the reverse trial */}
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => startReverseTrial.mutate(undefined, { onSettled: () => router.replace('/routine/plan') })}
+          className="mt-3 flex-row items-center gap-3 rounded-card p-3.5"
+          style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
+          <View className="h-[34px] w-[34px] items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(165,105,75,0.15)' }}>
+            <View className="h-3 w-3 rounded-full border-2" style={{ borderColor: colors.clay }} />
+          </View>
+          <View className="flex-1">
+            <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clayDeep }}>
+              {PAYWALL_COPY.offer.exploreTitle}
+            </Text>
+            <Text variant="label" style={{ color: colors.clay, fontSize: 11.5 }}>
+              {PAYWALL_COPY.offer.exploreBody}
+            </Text>
+          </View>
+          <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
+        </Pressable>
+
+        {/* compliance (Apple 3.1.2) */}
+        <ComplianceRow />
+
+        {/* auto-renew disclosure (plain, honest) */}
+        <Text variant="label" tone="muted" className="px-2 text-center" style={{ fontSize: 10.5, lineHeight: 15 }}>
+          {PAYWALL_COPY.offer.autoRenewDisclosure}
+        </Text>
+
+        {/* trust block — below the plans (Flo pattern) */}
+        <View className="mt-4 flex-row items-center justify-center gap-2 border-t pt-3.5" style={{ borderColor: colors.hairline }}>
+          <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clay }} />
+          <Text variant="label" tone="muted" className="text-center" style={{ fontSize: 11 }}>
+            {PAYWALL_COPY.offer.trustBlock}
+          </Text>
+        </View>
+      </ScrollView>
     </Screen>
   );
 }

@@ -22,7 +22,9 @@ the **Document 6 guided photo progress** (local-first capture/review/timeline/co
 no-AI-score, biometric gallery lock, unbundled photo consents), and the **Document 7
 reminders, streaks & widgets** (tiered local-first notifications + frequency caps +
 quiet hours, the calm forgiving streak, the soft-ask + settings hub + timing +
-welcome-back + widget/Live-Activity previews; **255 tests**). See PROGRESS.md.
+welcome-back + widget/Live-Activity previews), and the **Document 8 subscriptions &
+paywall** (the reverse-trial conversion model, honest paywall + lifecycle screens,
+local-first entitlement gating; **346 tests**). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -39,23 +41,25 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next in build order: **Document 8**
-(subscriptions / paywall) — the design-spec paywall is buildable; RevenueCat config
-is **B-REVENUECAT**. Also: a **custom dev build** unlocks the deferred native work —
+documents — see **B-MISSING-DOCS**. Next in build order: **Document 9** (personalized
+recommendations). Also: a **custom dev build** unlocks the deferred native work —
+**B-REVENUECAT** (the `react-native-purchases` SDK + offerings → real prices/purchase),
 **B-CAMERA** (vision-camera + ML-Kit guided capture), **B-WIDGETS**
 (WidgetKit/Glance/ActivityKit), and **B-NOTIF-VERIFY** (on-device notification
-delivery) all need it; and **B-CATALOG-SEED** (CosIng/OBF import) lights up real
-shelf data, scan match rates, and the **B-SHELF-CONTRIB** contribute-back loop.
+delivery) all need it; **B-LEGAL** is the store/auto-renewal-law review for launch; and
+**B-CATALOG-SEED** (CosIng/OBF import) lights up real shelf data, scan match rates, and
+the **B-SHELF-CONTRIB** contribute-back loop.
 
 **Snapshot of current statuses** — Accounts: B-SUPABASE/REVENUECAT/APPLE/GOOGLE/
 POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal/clinical: B-QUIZ-COPY/
 PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing + facial-image DPIA + photo marketing
-claim + win-back push/lock-screen copy), **B-DERM-REVIEW 🔴 (launch gate)** · Data:
+claim + win-back push/lock-screen copy), **B-LEGAL 🔴** (Apple 3.1.2 / ARL /
+external-link / final policy text), **B-DERM-REVIEW 🔴 (launch gate)** · Data:
 B-CATALOG-SEED 🔴, **B-SHELF-CONTRIB 🔴** · Native: **B-CAMERA 🔴** (capture pipeline),
 **B-WIDGETS 🔴** (WidgetKit/Glance/ActivityKit), **B-NOTIF-VERIFY 🟡** (on-device
 delivery + Android-14) · Verify: APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢,
 RC 🟡, PASSKEYS 🔴, RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡,
-B-ROUTINE-PERSIST 🟡, B-DRAG-DND 🟡 · Docs: MISSING-DOCS 🔴 (Docs 8–15), EVERY-N-DAYS 🔴.
+B-ROUTINE-PERSIST 🟡, B-DRAG-DND 🟡 · Docs: MISSING-DOCS 🔴 (Docs 9–15), EVERY-N-DAYS 🔴.
 
 ---
 
@@ -69,11 +73,21 @@ publishable key** (`EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) + the **secret key**
 anon/service_role keys are being deprecated end-of-2026 — use the new keys.
 
 ### B-REVENUECAT — RevenueCat 🟡 stubbed
-Provide `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `_ANDROID_KEY`, configure the
-`pro` / `pro_plus` entitlements + the `$39.99/yr` annual product, set the
-webhook → `revenuecat-webhook` Edge Function with `REVENUECAT_WEBHOOK_AUTH`.
-RC webhook payload shape + subscriber-deletion API to be confirmed against live
-docs (see B-VERIFY-RC).
+Provide `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `_ANDROID_KEY`, configure the **Offerings →
+Packages → Entitlements** (`pro`/`pro_plus`; the annual + monthly products; the price
+A/B as offerings — docs/08 §10), set the webhook → `revenuecat-webhook` Edge Function
+with `REVENUECAT_WEBHOOK_AUTH`. **Update (Slice 22):** the whole paywall + lifecycle +
+local-first entitlement gating + the app-granted reverse trial are BUILT; what's
+stubbed is the native SDK itself — install `react-native-purchases` in a **custom dev
+build**, bind it to the **Supabase user id as `appUserID`** (`configureRevenueCat`),
+fetch **localized prices from the offering** (the in-app prices are fallback labels —
+never the real billing amount), and wire `purchasePackage()` / `restorePurchases()` to
+the native StoreKit/Play sheet. The **server reverse-trial grant** (an Edge Function
+writing the `period_type='reverse_trial'` row service-role) is the forward path; v1
+grants it in the local cache. Full sandbox/TestFlight matrix (purchase, carded trial,
+reverse-trial grant + expiry, renewal, grace, restore, refund, upgrade/downgrade)
+before launch. RC webhook payload shape + subscriber-deletion API still to confirm
+(B-VERIFY-RC).
 
 ### B-APPLE — Apple Developer account 🟡 stubbed
 Register App ID `com.onskin.app`; enable Sign in with Apple; create the SIWA
@@ -158,6 +172,23 @@ flip unreviewed rows to `is_active = false` or withhold the seed until
 reviewed events. *(Supersedes the old B-CONFLICT-RULES — the matrix now exists;
 what's blocked is the clinical sign-off + expansion.)*
 
+### B-LEGAL — store-compliance + auto-renewal-law + external-link review 🔴 open
+docs/08 §7 / §8: before launch, counsel must confirm the fast-moving compliance
+surface the paywall is built to. (1) **Apple Guideline 3.1.2** (early-2026 enforcement):
+the paywall is designed to it — billed amount most conspicuous, Terms/Privacy/Restore
+present, no free-trial toggle, honest auto-renew disclosure — confirm current wording +
+the App Store Connect metadata (EULA link in the description, Privacy link). (2) **Final
+Terms of Use + Privacy Policy text** (the in-app links point to placeholder
+`onskin.app/terms|privacy` — overlaps **B-PRIVACY-COPY**). (3) **Auto-renewal laws**
+(CA CARL amended 2025-07-01, NY/CO/MA, federal ROSCA; the FTC click-to-cancel rule was
+vacated 2025-07 but may revive): IAP de-risks cancellation (one-tap OS), but any web
+checkout must independently comply — the win-back + 2-day-reminder copy meet the strict
+standard, confirm. (4) **External-link / web checkout** is post-*Epic* unsettled (Ninth
+Circuit remand, Apple seeking SCOTUS review mid-2026) — ship IAP; treat web checkout as
+a revisitable margin experiment, **not** a dependency. (5) **Account deletion** must
+call RevenueCat's **subscriber-deletion API** (extend the `account-deletion` Edge
+Function) and the app already tells the user store billing continues until they cancel.
+
 ### B-CATALOG-SEED — CosIng + Open Beauty Facts data import 🔴 open
 The catalog schema + ingestion design exist, but the actual data isn't imported
 (needs network + the live DB, neither available at build time). docs/02 §2:
@@ -232,7 +263,7 @@ remaining build-order items need their detailed doc:
 | 5 · Actives / skin-cycling scheduler | Doc 5 ✅ received | **BUILT** (Slice 19): the stored/versioned `cycles` + `cycle_nights` schema + the pure local-day projection, **multi-active orchestration** (one potent active/night, retinoid×exfoliant never same night, class frequency caps, recovery nights, pregnancy suppression, phased introduction — 15 fixtures), the local-first cycle store, and all the management/disruption surfaces (week overview, "why tonight?", cycle settings, pause/skip/travel/procedure hub, post-procedure + auto-de-escalation recovery mode, phased-intro). Blocked sub-parts: server `orchestrate()`/`schedule_for()` (**B-SERVER-DETECT** / B-ROUTINE-PERSIST), drag-to-reassign nights (**B-DRAG-DND**), reminder *delivery* (Doc 7), clinical sign-off of the frequency/separation/recovery rules (**B-DERM-REVIEW**) |
 | 6 · Guided photo capture + comparison | Doc 6 ✅ received | **BUILT** (Slice 20): additive `photos` columns (reference/series/pose-QA/local-day/local_uri/encrypted) + hardened `owns_photo()` (migration 0018), the local-first photo store (metadata-only mirror, `local_only` always true, no faceprint), the pure+tested capture-quality + timeline helpers (89 fixtures), the photo claim-safety guard, and all 9 design surfaces (guided capture, review&retake, first-run, **Compare** before/after slider + side-by-side, **Timeline** film strip + milestones, single-photo detail, no-AI-score, biometric gallery lock, calm reminder). The Progress tab is now the photo timeline; the calm streak moved to `/routine/streak`. Blocked sub-parts: the on-device camera + face detection + encryption + cloud-upload job (**B-CAMERA**), the DPIA + "never leaves your device" claim + photo consent copy (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**), reminder *delivery* (Doc 7) |
 | 7 · Reminders / streaks / widgets | Doc 7 ✅ received | **BUILT** (Slice 21): `notification_preferences` extensions + `streak_freezes` + content-free `notification_log` (migration 0019, owner-RLS); the pure tested calm forgiving streak (auto-freezes, earn-back, weekly adherence + heat-map, non-decreasing best — 11 fixtures) + the tiered notification policy (caps + quiet hours — 13 fixtures) + a notification claim-safety guard; local-first notification-prefs store + the `expo-notifications` DAILY-trigger delivery layer (frequency-cap engine); the soft-ask, the tiered settings hub, timing/quiet-hours/discretion, welcome-back, and the widgets/interactive-checkoff/Live-Activity previews. Blocked sub-parts: native widgets + interactive check-off + Live Activity (**B-WIDGETS**), on-device delivery + Android-14 verification (**B-NOTIF-VERIFY**), win-back push + lock-screen copy DPIA (**B-PRIVACY**), server `recompute_streak` twin + APNs/FCM (**B-SUPABASE** / B-SERVER-DETECT) |
-| 8 · Subscriptions / paywall | Doc 8 | design-spec paywall + `entitlements`; RC config blocked |
+| 8 · Subscriptions / paywall | Doc 8 ✅ received | **BUILT** (Slice 22): the reverse-trial conversion model (two honest paths), entitlements extensions (migration 0020: period_type/store/will_renew/attribution), the pure tested plan catalog + entitlement-state derivation + a paywall claim-safety guard (91 tests), the local-first entitlement cache + `useEntitlement`/`ProGate`/`withProGate` gating (offline-safe, gates on `is_active` regardless of source), the app-granted reverse trial, and all 9 surfaces (onboarding offer, reverse-trial banner, re-offer, contextual upsell, success, manage subscription, graceful downgrade, honest win-back) + the event-type-correct webhook (never revokes on CANCELLATION). Gating wired on the photo timeline / scheduler / widgets. Blocked sub-parts: the native `react-native-purchases` SDK + localized offering prices + purchase/restore + the server reverse-trial grant (**B-REVENUECAT**), store/ARL/external-link/final-policy legal review (**B-LEGAL** / **B-PRIVACY-COPY**), server entitlement mirror (**B-SUPABASE**) |
 | 9 · Personalized recommendations | Doc 9 | blocked |
 | 10 · Creator stacks + ShopMy | Doc 10 | blocked (also B-SHOPMY) |
 | 11 · Community layer | Doc 11 | blocked |

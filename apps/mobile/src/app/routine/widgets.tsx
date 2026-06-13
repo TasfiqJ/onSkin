@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
+import { withProGate } from '@/features/subscription/ProGate';
 import { colors } from '@/theme/tokens';
 
 // Widgets & Live Activity (docs/07 §5/§6, design screens 05/06/07). These are the
@@ -23,7 +24,7 @@ function Bars({ filled, total, on, off }: { filled: number; total: number; on: s
   );
 }
 
-export default function WidgetsScreen() {
+function WidgetsScreen() {
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
 
@@ -204,3 +205,6 @@ export default function WidgetsScreen() {
     </SafeAreaView>
   );
 }
+
+// Widgets & Live Activity are part of the reminders/widgets value prop (docs/08 §2.2).
+export default withProGate('reminders_widgets', WidgetsScreen);

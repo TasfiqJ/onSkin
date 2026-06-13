@@ -401,3 +401,58 @@ Format: `D-NNN — date — decision — rationale`.
   `notification_preferences.capture_reminders`; `features/photos/reminders.ts` now
   delegates to the notification store so there is a single source of truth. Times use
   a calm 30-minute picker (no native date-picker dependency, the D-030 convention).
+
+## Subscriptions, paywall & conversion model (docs/08, Slice 22)
+
+> docs/08 §8 suggests "D-034…D-037" for the model/IAP/honesty/GTM decisions; those
+> numbers were taken by the Slice-19 scheduler. Recorded here as D-049…D-053.
+
+- **D-049 — 2026-06-13 — The conversion model is a REVERSE TRIAL (default), A/B-tested
+  vs a hard paywall** (docs/08 §2.1, the doc's suggested "D-034"). The onboarding offer
+  shows two honest paths: "Start free trial" (the carded 14-day store trial → annual)
+  and a visible "Explore first" → an **app-granted ~7-day full-Pro reverse trial, no
+  card**, that drops to a generous free floor + re-presents the offer (loss aversion
+  earned by real use). **Annual default, premium price under test ($49.99 candidate vs
+  $39.99 baseline, configured remotely via offerings), monthly anchor, NO weekly plan.**
+  The model A/B + price test are judged on **blended LTV-per-install × reach** — analysis
+  only (no in-app code beyond the `offering_id`/`experiment_id`/`acquisition_channel`
+  attribution columns). The reverse trial is fully functional locally; the carded
+  trial/purchase are stubbed (B-REVENUECAT).
+
+- **D-050 — 2026-06-13 — Entitlement gating is local-first + offline-safe; the app
+  gates on `is_active` regardless of SOURCE** (docs/08 §4, the D-029 pattern). The
+  server `entitlements` row is SELECT owner-only (clients can never self-grant Pro —
+  RLS unchanged), so v1's source of truth is a local AsyncStorage cache
+  (`features/subscription/store.ts`), reconciled from the server row when present
+  (B-SUPABASE). Pure, tested `entitlement.ts` derives the `SubscriptionState`
+  (isPro / periodType / daysLeft / willRenew / expired + `priorPeriodType` so the UI
+  picks the reverse-trial re-offer vs the paid graceful-downgrade). A lapsed entitlement
+  **falls back to the free tier with data preserved — never deleted** (docs/08 §6).
+  `ProGate` / `withProGate` wrap a feature behind a calm contextual upsell.
+
+- **D-051 — 2026-06-13 — Honest-by-design paywall = Apple-3.1.2-compliant + ARL-compliant
+  + trust-maximising** (docs/08 §7/§9, the doc's suggested "D-036"). The billed amount
+  is the most conspicuous price; **Terms + Privacy + Restore are present and functional**
+  on the paywall + the contextual upsell (`ComplianceRow`); **no free-trial toggle**; the
+  auto-renew disclosure + the 2-day-before reminder promise + cancel-anytime are shown;
+  the reverse trial is no-card; cancellation is a **one-tap OS deep-link** (no maze); the
+  win-back is a respectful, easy-"no" offer. A `claimsafety.test.ts` guard blocks
+  reintroduced urgency / guilt / fake-scarcity / drug claims and asserts the honest
+  disclosures are present.
+
+- **D-052 — 2026-06-13 — Store IAP via RevenueCat is the universal default; prices are
+  never hardcoded as truth** (docs/08 §7/§12, the doc's suggested "D-035"). `plans.ts`
+  prices are clearly-labelled **fallback display values** — the real localized prices
+  come from the RevenueCat Offering at runtime (B-REVENUECAT). The RC SDK binds to the
+  **stable Supabase user id as `appUserID`** from first launch so identity carries
+  through account linking (`configureRevenueCat`, a no-op until the SDK lands). US
+  web/external checkout stays an optional, re-verify-at-build margin experiment, not a
+  dependency (B-LEGAL).
+
+- **D-053 — 2026-06-13 — The webhook never revokes on a CANCELLATION** (docs/08 §4).
+  `revenuecat-webhook` now grants on INITIAL_PURCHASE/RENEWAL/PRODUCT_CHANGE/
+  UNCANCELLATION/NON_RENEWING_PURCHASE, **revokes only on EXPIRATION/REFUND/PAUSE**, and
+  on **CANCELLATION/BILLING_ISSUE keeps `is_active` true** (access continues until
+  `expires_at`) while setting `will_renew = false` — plus writes the new
+  `store`/`period_type`/`will_renew`/`original_purchase_at` columns. Idempotent on
+  `event.id`, reads `event.app_user_id`, 200-fast (the exact payload is B-VERIFY-RC).

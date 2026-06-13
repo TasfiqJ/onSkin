@@ -157,6 +157,36 @@ export type EngagementEvent = (typeof ENGAGEMENT_EVENTS)[number];
 // --- Entitlements (docs/01 §3 `entitlements`) --------------------------------
 export type EntitlementTier = 'pro' | 'pro_plus';
 
+// --- Subscriptions, paywall & conversion (docs/08) ---------------------------
+/** What a user can access. 'free' = the generous floor; 'pro' = the four value
+ *  props; 'pro_plus' reserved for the Phase-2 AI tier (docs/08 §2.3). */
+export type SubscriptionTier = 'free' | 'pro' | 'pro_plus';
+/** How a `pro` entitlement was obtained (docs/08 §8 `period_type`). The reverse
+ *  trial is app-granted (no store txn, no auto-renew); 'trial' is the carded
+ *  14-day store trial; 'normal' is a paid subscription; 'intro' an intro offer. */
+export type PeriodType = 'reverse_trial' | 'trial' | 'intro' | 'normal';
+/** Where the entitlement came from (docs/08 §8 `store`). */
+export type EntitlementStore = 'app_store' | 'play_store' | 'web' | 'app_granted';
+/** The purchasable plans (docs/08 §2.3). No weekly plan by design. */
+export type PlanId = 'annual' | 'monthly';
+/** Pro-gated feature areas, used to frame the contextual upsell (docs/08 §3.2). */
+export type GatedFeature = 'photo_timeline' | 'scheduler' | 'conflict_checks' | 'reminders_widgets' | 'full_routine';
+/** PostHog subscription funnel events (docs/08 §10) — metadata only. */
+export const SUBSCRIPTION_EVENTS = [
+  'paywall_shown',
+  'paywall_dismissed',
+  'reverse_trial_started',
+  'reverse_trial_expired',
+  'trial_started',
+  'purchase_completed',
+  'contextual_paywall_shown',
+  'restore_tapped',
+  'manage_subscription_opened',
+  'winback_shown',
+  'winback_converted',
+] as const;
+export type SubscriptionEvent = (typeof SUBSCRIPTION_EVENTS)[number];
+
 // --- Ingredient intelligence layer (docs/02) ---------------------------------
 /** Non-alarmist by mandate (docs/02 §4): every rule carries an evidence grade +
  *  a resolution, never a bare "never use." */

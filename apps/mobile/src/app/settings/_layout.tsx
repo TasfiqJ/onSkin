@@ -7,6 +7,7 @@ export default function SettingsLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="notifications" />
       <Stack.Screen name="timing" />
+      <Stack.Screen name="subscription" />
     </Stack>
   );
 }

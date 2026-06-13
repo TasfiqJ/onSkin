@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
+import { withProGate } from '@/features/subscription/ProGate';
 import { slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { haptics } from '@/theme/haptics';
@@ -11,7 +12,7 @@ import { colors } from '@/theme/tokens';
 // Week / cycle overview (design screen 01, docs/05 §6.1). A calm dark surface
 // showing the stable AM block + the rotating PM cycle — only tonight is tinted,
 // with the "next acid night" line from the projection. No counts, no pressure.
-export default function WeekScreen() {
+function WeekScreen() {
   const { data } = useCycle();
 
   const cycle = data?.cycle ?? null;
@@ -185,3 +186,6 @@ function nightSub(slot: string, productName: string | null): string {
   if (slot === 'recover') return productName ? `${productName} · barrier support` : 'Barrier support';
   return productName ?? '';
 }
+
+// The full skin-cycling scheduler is a Pro value prop (docs/08 §2.2) — gated.
+export default withProGate('scheduler', WeekScreen);

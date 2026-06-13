@@ -372,6 +372,56 @@ and routine persistence (server `build_routine`, docs/03 §11).
   past), and an explicit `user_id` filter on the frequency-cap count. D-045…D-048.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (261).
 
+### Slice 22 — Doc 8 Subscriptions, Paywall & Reverse Trial + new design ✅ (2026-06-13)
+- **Conversion model**: the **reverse trial** (default, docs/08 §2.1) — the onboarding
+  offer's two honest paths ("Start free trial" → carded 14-day trial; "Explore first"
+  → an **app-granted 7-day full-Pro reverse trial, no card** → generous free floor +
+  loss-aversion re-offer). Annual default, monthly anchor, **no weekly**, premium price
+  under test ($49.99 vs $39.99, configured remotely). The model A/B + price test are
+  judged on blended LTV-per-install × reach (the `offering_id`/`experiment_id`/
+  `acquisition_channel` attribution columns are wired for it).
+- **Schema** (migration 0020): additive `entitlements` columns (`store`, `period_type`,
+  `will_renew`, `original_purchase_at`, `offering_id`, `experiment_id`,
+  `acquisition_channel`). RLS **unchanged** — SELECT owner-only, writes service-role
+  only (clients can never self-grant Pro). Database type + `@onskin/types` extended.
+- **Pure, tested cores** (`features/subscription/`): `plans.ts` (catalog + fallback
+  prices + the floored "$4.16/mo"), `entitlement.ts` (the gating brain —
+  `deriveState`: isPro / periodType / daysLeft / willRenew / expired + `priorPeriodType`
+  to pick the re-offer vs the paid downgrade), and a **paywall claim-safety guard**
+  (no urgency/guilt/fake-scarcity/drug claims; asserts the honest disclosures). **91
+  fixtures.**
+- **Entitlement gating** (docs/08 §4, D-050): local-first cache (the D-029 pattern, the
+  v1 source of truth; clients can't write the server row) + `useEntitlement` + a
+  generic `ProGate` / `withProGate`. Gates on `is_active` **regardless of source**,
+  offline-safe; wired on the **photo timeline, the scheduler (cycle week), and the
+  widgets** screens (remaining gates are mechanical applications of the same HOC).
+- **9 surfaces** (`app/paywall/` + onboarding + settings): the onboarding offer (4 value
+  props, $49.99/yr most conspicuous, monthly secondary, "Explore first" reverse-trial
+  row, Terms·Privacy·Restore, auto-renew disclosure, trust block below), the
+  reverse-trial banner (AM **and** PM-night), the loss-aversion re-offer, the contextual
+  upsell sheet, the purchase success, the manage-subscription screen (one-tap OS
+  cancel), the graceful downgrade (data preserved), and the honest 30%-off win-back. The
+  **reverse-trial expiry loop is wired end-to-end** (`lifecycle.ts` → a once-per-expiry
+  next-launch redirect to the re-offer / downgrade; the win-back is reachable from
+  manage).
+- **Honest-by-design** (D-051): billed amount most conspicuous, **Terms + Privacy +
+  Restore functional** on the paywall + upsell, **no trial toggle**, auto-renew
+  disclosure, one-tap OS cancel — Apple 3.1.2 + ARL + trust at once.
+- **Webhook** hardened (D-053): event-type-correct, **never revokes on CANCELLATION**
+  (access continues to `expires_at`), `will_renew` from the renewing types only, writes
+  the new columns; idempotent on `event.id`. Native StoreKit/Play purchase + localized
+  offering prices + restore are stubbed (**B-REVENUECAT**); `appUserID`-binds the
+  Supabase id.
+- **Adversarially reviewed by a 4-dimension workflow** (RLS/SQL · spec · design ·
+  honest-by-design, **18 agents, each finding verified**) → **0 blocking**; **1 high**
+  flagged by all four dimensions and **fixed**: the reverse-trial expiry → re-offer /
+  downgrade / win-back loop was built but unreachable — now wired via `lifecycle.ts` +
+  the manage win-back link. Lows fixed: webhook `will_renew` for NON_RENEWING/BILLING_
+  ISSUE, the manage "Terms & Privacy" row now opens the policy pages (not the store),
+  the reverse-trial banner now shows in PM too, and the claim-safety scope comment
+  corrected. D-049…D-053.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (346).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -401,7 +451,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 5. ✅ Actives / skin-cycling scheduler — Doc 5 (Slice 19): stored cycle + projection, multi-active orchestration, management/disruption surfaces
 6. ✅ Guided photo capture + comparison — Doc 6 (Slice 20): local-first capture/review/timeline/compare, no-AI-score, biometric gallery lock, unbundled photo consents; on-device camera pipeline deferred to **B-CAMERA**
 7. ✅ Reminders / streaks / widgets — Doc 7 (Slice 21): tiered local-first notifications + frequency caps + quiet hours, the calm forgiving streak, soft-ask + settings hub + timing + welcome-back + widget/Live-Activity previews; native widgets/delivery deferred to **B-WIDGETS** / **B-NOTIF-VERIFY**
-8. 🟡 Subscriptions / paywall — design-spec paywall buildable; RC config blocked (Document 8)
+8. ✅ Subscriptions / paywall — Doc 8 (Slice 22): reverse-trial conversion model, honest paywall + lifecycle screens, local-first entitlement gating; native IAP deferred to **B-REVENUECAT**, store/ARL review to **B-LEGAL**
 9–12. 🚫 recommendations / creator stacks / community / AI — need their docs
 
 ## Open questions for the founder
