@@ -1,26 +1,122 @@
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { Card, Screen, Text } from '@/components/ui';
+import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
+import { colors } from '@/theme/tokens';
 
-// Progress — guided photo capture + slider comparison + timeline (design spec
-// p.10/11). BLOCKED: needs Document 6 (guided photo capture). Photos are
-// local-only by default; no AI claims. Honest placeholder until that doc lands.
+// Progress — the calm, forgiving streak (design screen 06, docs/03 §6/§9.5).
+// White-hat: weekly adherence + a month heat-map + a grace-day "Streak protected"
+// reassurance. No all-or-nothing counter, no shame copy. (Photo timeline = Doc 6.)
+
+// Heat intensities: empty → done (docs/03 §6 legend less→more).
+const HEAT = ['#EFEAE1', '#EDE5D8', '#E0C3AC', colors.clay] as const;
+
+function weekDaySquare(state: DayState): { bg: string; dot?: string; ring?: boolean; labelClay?: boolean } {
+  switch (state) {
+    case 'done':
+      return { bg: colors.clay };
+    case 'missed':
+      return { bg: '#EDE5D8', dot: '#D6C9B5' };
+    case 'today':
+      return { bg: colors.greige, ring: true, labelClay: true };
+    default:
+      return { bg: colors.greige };
+  }
+}
+
 export default function ProgressScreen() {
+  const { data } = useProgress();
+  const week = data?.week ?? [];
+  const heat = data?.heat ?? [];
+
   return (
     <Screen edges={['top']}>
-      <Text variant="title" className="mt-2">
-        Progress
-      </Text>
-      <View className="flex-1 justify-center">
-        <Card>
-          <Text variant="titleSm">On-device photo timeline</Text>
-          <Text variant="bodySm" tone="muted" className="mt-2">
-            Guided capture (alignment + lighting checks, all on your device) and the slider
-            comparison are build-order #6. No scores, no AI grades — photos stay on this phone by
-            default.
-          </Text>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+        <Text variant="title" className="mt-2">
+          Progress
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-1">
+          Showing up beats being perfect.
+        </Text>
+
+        {/* This week */}
+        <Card className="mt-5">
+          <View className="mb-4 flex-row items-center justify-between">
+            <Text variant="body" className="font-sans-bold">
+              This week
+            </Text>
+            <Text variant="label" tone="clay" className="font-mono-medium">
+              {data?.weeklyDone ?? 0} of 7 nights
+            </Text>
+          </View>
+          <View className="flex-row gap-1.5">
+            {week.map((d, i) => {
+              const s = weekDaySquare(d.state);
+              return (
+                <View key={i} className="flex-1 items-center">
+                  <View
+                    className="aspect-square w-full items-center justify-center rounded-[9px]"
+                    style={{ backgroundColor: s.bg, borderWidth: s.ring ? 1.5 : 0, borderColor: colors.hairline }}>
+                    {s.dot ? <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.dot }} /> : null}
+                  </View>
+                  <Text
+                    variant="label"
+                    className="mt-1.5 font-mono text-[10px]"
+                    style={{ color: s.labelClay ? colors.clay : colors.muted }}>
+                    {d.label}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
         </Card>
-      </View>
+
+        {/* Grace-day reassurance — only after a forgiven miss. */}
+        {data?.graceUsed ? (
+          <View className="mt-3.5 flex-row items-center gap-3.5 rounded-card bg-sage-tint p-4">
+            <View className="h-10 w-10 items-center justify-center rounded-full bg-paper-raised">
+              <View className="h-4 w-4 rounded-[5px] border-2" style={{ borderColor: colors.sage }} />
+            </View>
+            <View className="flex-1">
+              <Text variant="body" className="font-sans-bold" style={{ color: colors.sageDeep }}>
+                Streak protected
+              </Text>
+              <Text variant="bodySm" className="mt-0.5" style={{ color: colors.sageEyebrow }}>
+                You missed a day — that&apos;s fine. We used a grace day, your {data.streak} days stand.
+              </Text>
+            </View>
+          </View>
+        ) : null}
+
+        {/* Month heat-map */}
+        <Card className="mt-3.5">
+          <View className="mb-3.5 flex-row items-center justify-between">
+            <Text variant="body" className="font-sans-bold">
+              {data?.monthLabel ?? ''}
+            </Text>
+            <View className="flex-row items-center gap-1.5">
+              <Text variant="label" tone="muted" className="font-mono text-[10px]">
+                less
+              </Text>
+              {[HEAT[1], HEAT[2], HEAT[3]].map((c, i) => (
+                <View key={i} className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: c }} />
+              ))}
+              <Text variant="label" tone="muted" className="font-mono text-[10px]">
+                more
+              </Text>
+            </View>
+          </View>
+          <View className="flex-row flex-wrap gap-1.5">
+            {heat.map((cell: HeatCell, i) => (
+              <View
+                key={i}
+                className="aspect-square rounded-[5px]"
+                style={{ width: '12.4%', backgroundColor: HEAT[cell.intensity] }}
+              />
+            ))}
+          </View>
+        </Card>
+      </ScrollView>
     </Screen>
   );
 }

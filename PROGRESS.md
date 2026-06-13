@@ -171,7 +171,38 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - The guard caught one non-compliant string (rule 8 "Avoid using…") → rewritten
   calm/resolution-first in both `rules.ts` and the SQL seed. **63 tests pass.**
 
-## In progress / remaining docs/02 work
+### Slice 12 — Routine-builder schema + generation engine (docs/03 §2–§5) ✅ (2026-06-13)
+- Migrations: `sequencing_rules` (catalog, ~10 starter rules) + `active_ramp`
+  (per-user, owner RLS). `@onskin/types` + Database type extended.
+- Pure TS engine: role classification (tags>name), canonical sequencing,
+  AM/PM allocation, retinoid ramp (offer-only step-up + de-escalation),
+  `generatePlan` pipeline consuming the docs/02 engine + scheduler.
+- 44 new fixtures incl. the **Maya worked example** (AM order, cycling nights,
+  gentle cycle, 2×/wk ramp, retinoid×glycolic moderate/alternate_nights). 77 tests.
+
+### Slice 13 — Exact design tokens from the Claude Design handoff ✅ (2026-06-13)
+- Fetched + extracted the `.dc.html` bundle; ran a 3-agent extraction of the exact
+  tokens + 13 per-screen specs. Aligned the palette to canonical hexes
+  (paper #FAF7F2, clay #A5694B + sage/green system + severity ramp + amber +
+  cream), added **IBM Plex Mono** (3-font system). Whole app re-themed via tokens.
+
+### Slice 14 — Calm Progress / streak screen (docs/03 §6/§9.5, design 06) ✅ (2026-06-13)
+- The flagship Doc-3 daily surface: weekly adherence ("N of 7 nights"), a month
+  **heat-map** (4-level intensity), and a grace-day **"Streak protected"** sage
+  card — no shame copy, recovery counts. Reads the append-only completions log +
+  cached streak. Replaces the Progress placeholder. typecheck + lint + test green.
+
+## In progress / remaining docs/03 work
+
+Built + tested: schema, generation engine, scheduler, exact tokens, Progress
+screen. **Remaining screens** (all fully specced in `docs/_design/_extracted_specs.md`,
+each a committed slice): plan-built "Start today", drag-reorder + nudge, retinoid
+ramp chart, Today AM/PM enhancements (cycling strip + auto-resolution banner —
+needs persisted cycle setup), override sheet, adaptation "what changed", weekly
+tolerance check-in, widgets/Live Activity. End-to-end demo also needs a manual-add
+shelf flow + B-SUPABASE (data surfaces are empty until then).
+
+## Remaining docs/02 work
 
 - **PM auto-resolution live screen (§7.4)** — scheduler logic + `pmResolution` are
   built + tested, but rendering the live night-strip + "next acid night" needs a
