@@ -56,6 +56,24 @@ export type StepFrequency = 'daily' | 'skin_cycling' | 'every_n_days';
 export type CyclingNight = 1 | 2 | 3 | 4;
 export type CompletionSource = 'live' | 'backfilled';
 
+// --- Routine builder (docs/03) -----------------------------------------------
+/** Product roles the sequencing engine orders (docs/03 §3). */
+export type SequencingRole =
+  | 'cleanser'
+  | 'toner'
+  | 'antioxidant'
+  | 'treatment'
+  | 'exfoliant'
+  | 'hydrating_serum'
+  | 'eye'
+  | 'moisturiser'
+  | 'oil'
+  | 'spf';
+export type RoutinePhase = 'am' | 'pm' | 'either';
+/** Retinoid/active ramp-up (docs/03 §4). */
+export type RampClass = 'retinoid' | 'aha' | 'bha' | 'other_active';
+export type ToleranceState = 'building' | 'steady' | 'paused_irritation';
+
 // --- Shelf (docs/01 §3 `user_products`) --------------------------------------
 export type ProductStatus = 'active' | 'finished' | 'discarded';
 

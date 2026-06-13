@@ -140,3 +140,29 @@ Format: `D-NNN — date — decision — rationale`.
   demonstrated harm — docs/02 §4.8), with conservatism carried by `high`
   severity + `avoid_refer`, not by the evidence label. `bha × pregnancy` is
   dose-gated (`requiresHighDose`) so it doesn't false-alarm on low-dose BHA.
+
+## Routine builder (docs/03, Slice 12+)
+
+- **D-022 — 2026-06-13 — Application order is versioned DATA, not hard-coded**
+  (docs/03 §3): `sequencing_rules` (catalog-style, world-readable) holds
+  role→priority/phase/eligibility; the engine sorts by it. Pure ordering is
+  low-risk cosmetic; the ramp/frequency/cycling on top are medical-adjacent and
+  fall under B-DERM-REVIEW. Roles classified by functional TAGS first, then name
+  keywords (a "glycolic toner" is an exfoliant, not a toner).
+
+- **D-023 — 2026-06-13 — Retinoid ramp is per-user recomputable state**
+  (`active_ramp`, docs/03 §4): "start low and slow" — sensitive start 2×/wk,
+  resistant 3×/wk; step-ups are **offer-only** (never silent, ~21-day gate);
+  auto **de-escalate** on self-reported irritation. Numbers are B-DERM-REVIEW
+  starting positions.
+
+- **D-024 — 2026-06-13 — Deterministic generator, not an AI router** (docs/03 §1):
+  the plan is generated from curated rules + profile + shelf (classify → allocate
+  → sequence → cycle/ramp → detect_conflicts → render), fully explainable and
+  testable (Maya worked example asserted). `generatePlan` takes an injectable
+  rule set (cached-DB rules at runtime; B-DERM-REVIEW gate via `shippableRules`).
+
+- **D-025 — 2026-06-13 — Calm, forgiving streak** (docs/03 §6, Lally 2010 +
+  streak-backfire literature): weekly adherence + month heat-map, grace-day
+  "Streak protected", recovery nights count, no shame copy. (Implemented in the
+  Progress screen, Slice 14+.)

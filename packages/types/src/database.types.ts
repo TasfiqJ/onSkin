@@ -90,6 +90,66 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['ingredient_pao_defaults']['Insert']>;
         Relationships: [];
       };
+      sequencing_rules: {
+        Row: {
+          id: string;
+          role: string;
+          base_priority: number;
+          am_eligible: boolean;
+          pm_eligible: boolean;
+          default_phase: string;
+          notes: string | null;
+          rule_version: number;
+          reviewed_by: string | null;
+          is_active: boolean;
+        };
+        Insert: {
+          id?: string;
+          role: string;
+          base_priority: number;
+          am_eligible?: boolean;
+          pm_eligible?: boolean;
+          default_phase?: string;
+          notes?: string | null;
+          rule_version?: number;
+          reviewed_by?: string | null;
+          is_active?: boolean;
+        };
+        Update: Partial<Database['public']['Tables']['sequencing_rules']['Insert']>;
+        Relationships: [];
+      };
+      active_ramp: {
+        Row: {
+          id: string;
+          user_id: string;
+          user_product_id: string;
+          ramp_class: string;
+          freq_per_week: number;
+          target_per_week: number;
+          started_at: DateStr;
+          last_step_up: DateStr | null;
+          next_review_at: DateStr | null;
+          tolerance_state: string;
+          created_at: Timestamptz;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          user_product_id: string;
+          ramp_class: string;
+          freq_per_week: number;
+          target_per_week: number;
+          started_at?: DateStr;
+          last_step_up?: DateStr | null;
+          next_review_at?: DateStr | null;
+          tolerance_state?: string;
+          created_at?: Timestamptz;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['active_ramp']['Insert']>;
+        Relationships: [];
+      };
       products: {
         Row: {
           id: string;

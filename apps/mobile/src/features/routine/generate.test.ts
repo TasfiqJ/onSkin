@@ -1,0 +1,125 @@
+import { describe, expect, it } from 'vitest';
+
+import type { EngineProfile } from '@/features/intelligence/engine';
+import { STARTER_RULES } from '@/features/intelligence/rules';
+import { tagsForIngredientList } from '@/features/intelligence/tags';
+
+import { generatePlan, type RoutineProduct } from './generate';
+import { applyTolerance, deEscalate, initRamp, shouldOfferStepUp } from './ramp';
+import { classifyRole } from './sequencing';
+
+function product(id: string, name: string, ingredients: string[] = []): RoutineProduct {
+  const { tags } = tagsForIngredientList(ingredients);
+  return { id, name, tags: [...tags] };
+}
+
+// Maya's shelf (docs/03 §2 worked example) + a cleanser (spec AM shows one).
+const maya: RoutineProduct[] = [
+  product('cleanser', 'Cream cleanser'),
+  product('vitc', 'Vitamin C serum', ['Ascorbic Acid']),
+  product('retinol', 'Retinol 0.3% Night Serum', ['Retinol']),
+  product('glycolic', 'Glycolic 7% Toner', ['Glycolic Acid']),
+  product('cera', 'Ceramide moisturizer', ['Ceramide NP']),
+  product('spf', 'Mineral SPF 50', ['Zinc Oxide']),
+];
+const mayaProfile: EngineProfile & { goals: string[] } = {
+  sensitivity: 'sensitive',
+  pregnancy: false,
+  goals: ['barrier_repair'],
+};
+
+describe('role classification (docs/03 §3) — tags win over name keywords', () => {
+  it('classifies actives by tag', () => {
+    expect(classifyRole(product('a', 'Retinol 0.3%', ['Retinol']))).toBe('treatment');
+    expect(classifyRole(product('b', 'Glycolic 7% Toner', ['Glycolic Acid']))).toBe('exfoliant'); // not "toner"
+    expect(classifyRole(product('c', 'Vitamin C serum', ['Ascorbic Acid']))).toBe('antioxidant');
+    expect(classifyRole(product('d', 'Mineral SPF 50', ['Zinc Oxide']))).toBe('spf');
+  });
+  it('falls back to name keywords for non-actives', () => {
+    expect(classifyRole(product('e', 'Cream cleanser'))).toBe('cleanser');
+    expect(classifyRole(product('f', 'Ceramide moisturizer', ['Ceramide NP']))).toBe('moisturiser');
+  });
+});
+
+describe('Maya plan generation (docs/03 §2 worked example)', () => {
+  const plan = generatePlan(maya, mayaProfile, STARTER_RULES);
+
+  it('AM is sequenced thin→thick: cleanser → vitamin C → moisturiser → SPF', () => {
+    expect(plan.am.map((s) => s.name)).toEqual([
+      'Cream cleanser',
+      'Vitamin C serum',
+      'Ceramide moisturizer',
+      'Mineral SPF 50',
+    ]);
+  });
+
+  it('retinoid and SPF are correctly phase-allocated', () => {
+    expect(plan.am.find((s) => s.role === 'treatment')).toBeUndefined(); // retinoid not in AM
+    expect(plan.am.find((s) => s.role === 'spf')).toBeDefined();
+    expect(plan.pm.find((s) => s.role === 'spf')).toBeUndefined(); // SPF not in PM
+  });
+
+  it('assigns cycling nights: exfoliant=1, retinoid=2', () => {
+    expect(plan.pm.find((s) => s.role === 'exfoliant')?.cyclingNight).toBe(1);
+    expect(plan.pm.find((s) => s.role === 'treatment')?.cyclingNight).toBe(2);
+  });
+
+  it('picks the gentle cycle for sensitive skin', () => {
+    expect(plan.cycle?.id).toBe('gentle_5');
+  });
+
+  it('initialises the retinoid ramp at 2 nights/week (the reveal default)', () => {
+    const retRamp = plan.ramp.find((r) => r.name.includes('Retinol'));
+    expect(retRamp?.state.freqPerWeek).toBe(2);
+    expect(retRamp?.state.targetPerWeek).toBe(3);
+  });
+
+  it('surfaces the retinoid × glycolic conflict (resolved alternate_nights)', () => {
+    const c = plan.conflicts.find(
+      (x) =>
+        (x.rule.tagA === 'retinoid' && x.rule.tagB === 'aha') ||
+        (x.rule.tagA === 'aha' && x.rule.tagB === 'retinoid'),
+    );
+    expect(c?.rule.resolutionType).toBe('alternate_nights');
+    expect(c?.computedSeverity).toBe('moderate'); // sensitive bumps mild→moderate
+  });
+
+  it('shows no gap notes (Maya owns cleanser, moisturiser, SPF)', () => {
+    expect(plan.gaps).toEqual([]);
+  });
+});
+
+describe('gap notes (docs/03 §2 — never fabricate a product)', () => {
+  it('notes a missing SPF', () => {
+    const plan = generatePlan([product('r', 'Retinol', ['Retinol'])], {
+      sensitivity: 'neutral',
+      pregnancy: false,
+      goals: [],
+    });
+    expect(plan.gaps.some((g) => g.toLowerCase().includes('spf'))).toBe(true);
+  });
+});
+
+describe('retinoid ramp (docs/03 §4)', () => {
+  it('starts gentler for sensitive than resistant', () => {
+    expect(initRamp('retinoid', 'sensitive').freqPerWeek).toBe(2);
+    expect(initRamp('retinoid', 'resistant').freqPerWeek).toBe(3);
+  });
+  it('offers a step-up only after ~21 days, below target, not irritated', () => {
+    const base = { startedAt: '2026-06-01', lastStepUp: null, freqPerWeek: 2, targetPerWeek: 3, toleranceState: 'building' as const };
+    expect(shouldOfferStepUp({ ...base, today: '2026-06-10' })).toBe(false); // too soon
+    expect(shouldOfferStepUp({ ...base, today: '2026-06-25' })).toBe(true); // 24 days
+    expect(shouldOfferStepUp({ ...base, today: '2026-06-25', toleranceState: 'paused_irritation' })).toBe(false);
+    expect(shouldOfferStepUp({ ...base, today: '2026-06-25', freqPerWeek: 3 })).toBe(false); // at target
+  });
+  it('de-escalates on irritation', () => {
+    const s = applyTolerance({ freqPerWeek: 3, targetPerWeek: 4, toleranceState: 'building' }, 'irritated');
+    expect(s.freqPerWeek).toBe(2);
+    expect(s.toleranceState).toBe('paused_irritation');
+  });
+  it('comfortable → steady; a bit dry → hold', () => {
+    expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'comfortable').toleranceState).toBe('steady');
+    expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'a_bit_dry').toleranceState).toBe('building');
+    void deEscalate; // referenced for coverage
+  });
+});
