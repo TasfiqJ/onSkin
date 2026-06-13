@@ -60,9 +60,32 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   (GDPR Art. 20 JSON). External provider calls stubbed (B-REVENUECAT/B-APPLE/B-POSTHOG).
 - **Gates:** typecheck ✅ · lint ✅. New blocker: B-VERIFY-AUTH-LINKING.
 
+### Slice 3 — Design system ✅ (2026-06-12)
+- Instrument Serif + Hanken Grotesk loaded; splash held until ready. JS tokens,
+  haptics. Primitives: Text/Button/Card/ProgressBar/OptionCard/Chip/Screen.
+- **Bundle validated:** `expo export --platform ios` succeeded (Metro resolved the
+  `@onskin/types` workspace import + NativeWind transform + fonts) → B-VERIFY-METRO
+  largely de-risked.
+
+### Slice 4 — Onboarding flow ✅ (2026-06-12)
+- Full guest-first sequence (docs/01 §2 + design spec): welcome (silent anon
+  session) → goals (multi-select ≤2) → unbundled health-data consent → quiz →
+  products (skip) → analyzing theater → reveal (DSPT + axis sliders) →
+  notification priming → account (SIWA/Google/email-OTP) → paywall (single annual
+  offer, no trial toggle) → temp home.
+- Quiz **engine** (real 4-axis scoring → DSPT + 0..1 slider positions) with
+  **placeholder questions** (BLOCKED: B-QUIZ-COPY). OnboardingContext accumulates
+  answers, persists skin_profiles at the reveal.
+- Consent recorded to the immutable ledger at the health-consent + account steps
+  (placeholder copy hashed; BLOCKED: B-PRIVACY-COPY).
+- docs/01 §7 funnel events instrumented via a `track()` shim (PostHog in slice 9).
+- All backend calls are best-effort/guarded so the flow is fully navigable before
+  Supabase/RevenueCat are configured. RevenueCat purchase stubbed (B-REVENUECAT).
+- **Gates:** typecheck ✅ · lint ✅.
+
 ## In progress
 
-### Slice 3 — Design system (tokens, fonts, primitives) — next
+### Slice 5 — Today screen + routine check-off (activation) — next
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)

@@ -97,10 +97,12 @@ _not_ building a trial toggle on iOS at all — single annual offer with a visib
 Using the new publishable/secret key env names from the start (legacy keys
 deprecated end-2026). No action beyond providing the new keys (B-SUPABASE).
 
-### B-VERIFY-METRO — Metro monorepo resolution 🟡 stubbed
-Monorepo `metro.config.js` follows Expo's documented pattern but can't be
-runtime-verified here (no Mac/simulator). Confirm `expo start` resolves
-workspace packages on the first real device build.
+### B-VERIFY-METRO — Metro monorepo resolution 🟢 largely de-risked
+Monorepo `metro.config.js` follows Expo's documented pattern. **`npx expo export
+--platform ios` succeeds** — Metro resolved the `@onskin/types` workspace import
+and bundled the full app (Babel + NativeWind transform + fonts all OK). Only the
+interactive `expo start` dev server on a real device remains unverified; the
+production bundle graph is proven.
 
 ### B-VERIFY-RC — RevenueCat webhook payload + subscriber-deletion API 🟡 stubbed
 `revenuecat-webhook` Edge Function reads `event.app_user_id` (not

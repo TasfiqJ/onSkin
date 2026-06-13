@@ -1,0 +1,86 @@
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { ScrollView, View } from 'react-native';
+
+import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
+import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { PLACEHOLDER_QUIZ } from '@/features/onboarding/quiz';
+import { track } from '@/lib/analytics/track';
+
+// 04 · Quiz — original 4-axis questions, data-driven from the engine. The content
+// is PLACEHOLDER (BLOCKED: B-QUIZ-COPY). The pregnancy/sensitivities screening
+// questions live at the end of the set, so this also covers docs/01 §2 step 5.
+export default function QuizScreen() {
+  const { quizAnswers, setAnswer } = useOnboarding();
+  const [index, setIndex] = useState(0);
+
+  const total = PLACEHOLDER_QUIZ.length;
+  const question = PLACEHOLDER_QUIZ[index]!;
+  const current = quizAnswers[question.id];
+  const isMulti = question.multiSelect === true;
+  const answered = isMulti ? Array.isArray(current) && current.length > 0 : typeof current === 'string';
+
+  function selectSingle(optionId: string) {
+    setAnswer(question.id, optionId);
+    track('quiz_question_answered', { question_id: question.id, axis: question.kind });
+  }
+  function toggleMulti(optionId: string) {
+    const prev = Array.isArray(current) ? current : [];
+    setAnswer(question.id, prev.includes(optionId) ? prev.filter((o) => o !== optionId) : [...prev, optionId]);
+  }
+
+  function next() {
+    if (index < total - 1) {
+      setIndex((i) => i + 1);
+      return;
+    }
+    track('quiz_completed');
+    router.push('/onboarding/products');
+  }
+
+  return (
+    <Screen>
+      <View className="pt-2">
+        <ProgressBar total={total} current={index + 1} />
+        <Text variant="label" tone="muted" className="mt-2">
+          {index + 1} / {total}
+        </Text>
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+        <Text variant="eyebrow" tone="clay" className="mt-7">
+          {question.eyebrow}
+        </Text>
+        <Text variant="title" className="mt-2">
+          {question.prompt}
+        </Text>
+        {isMulti ? (
+          <View className="mt-6 flex-row flex-wrap gap-2">
+            {question.options.map((o) => (
+              <Chip
+                key={o.id}
+                label={o.label}
+                selected={Array.isArray(current) && current.includes(o.id)}
+                onPress={() => toggleMulti(o.id)}
+              />
+            ))}
+          </View>
+        ) : (
+          <View className="mt-6 gap-3">
+            {question.options.map((o) => (
+              <OptionCard
+                key={o.id}
+                title={o.label}
+                subtitle={o.subtitle}
+                selected={current === o.id}
+                onPress={() => selectSingle(o.id)}
+              />
+            ))}
+          </View>
+        )}
+      </ScrollView>
+      <View className="pb-4">
+        <Button label={index < total - 1 ? 'Next' : 'See my profile'} disabled={!answered} onPress={next} />
+      </View>
+    </Screen>
+  );
+}
