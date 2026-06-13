@@ -28,7 +28,7 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.muted,
         tabBarStyle: {
           backgroundColor: colors.paper,
-          borderTopColor: colors.greigeLine,
+          borderTopColor: colors.hairline,
           borderTopWidth: 1,
         },
         tabBarLabelStyle: { fontFamily: 'HankenGrotesk_500Medium', fontSize: 12 },

@@ -51,6 +51,11 @@ Thumbs.db
 # Editor
 .idea/
 
-# Design-spec scratch artifacts (rendered locally, not source)
+# Design-spec scratch artifacts (rendered/extracted locally, not source)
 docs/_design-spec-extracted.txt
 docs/_spec_p*.png
+docs/_design2-extracted.txt
+docs/_design2_p*.png
+docs/_decompressed*
+docs/_design/
+docs/_raw_response.txt

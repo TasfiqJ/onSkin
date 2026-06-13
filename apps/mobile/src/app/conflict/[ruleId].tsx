@@ -13,7 +13,7 @@ import { supabase } from '@/lib/supabase/client';
 // that keep the user in control. Never blocks.
 function Chip({ label }: { label: string }) {
   return (
-    <View className="self-start rounded-pill border border-greige-line bg-paper-raised px-3 py-1">
+    <View className="self-start rounded-pill border border-hairline bg-paper-raised px-3 py-1">
       <Text variant="label" tone="ink">
         {label}
       </Text>

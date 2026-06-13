@@ -31,8 +31,8 @@ const TONE: Record<Tone, string> = {
   ink: 'text-ink',
   muted: 'text-muted',
   clay: 'text-clay',
-  inverse: 'text-paper',
-  inverseMuted: 'text-muted-dark',
+  inverse: 'text-cream',
+  inverseMuted: 'text-cream/60',
 };
 
 export type TextProps = RNTextProps & {

@@ -44,7 +44,7 @@ export default function AnalyzingScreen() {
             width: 120,
             height: 120,
             borderRadius: 60,
-            backgroundColor: colors.claySoft,
+            backgroundColor: colors.clayBright,
             transform: [{ scale }],
             opacity,
           }}

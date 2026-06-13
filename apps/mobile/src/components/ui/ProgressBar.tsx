@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { cn } from '@/lib/cn';
 
 // Stepped-segment progress (design spec: segments, not dots, for the multi-step
-// quiz). Filled = clay, remaining = greige (or night-line on dark screens).
+// quiz). Filled = clay, remaining = greige (or cream-alpha on dark screens).
 export type ProgressBarProps = {
   total: number;
   current: number; // number of completed/active segments
@@ -22,7 +22,7 @@ export function ProgressBar({ total, current, tone = 'light', className }: Progr
           key={i}
           className={cn(
             'h-1 flex-1 rounded-pill',
-            i < current ? 'bg-clay' : tone === 'night' ? 'bg-night-line' : 'bg-greige-deep',
+            i < current ? 'bg-clay' : tone === 'night' ? 'bg-cream/20' : 'bg-greige-deep',
           )}
         />
       ))}

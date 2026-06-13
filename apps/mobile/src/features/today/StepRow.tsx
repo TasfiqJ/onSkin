@@ -30,7 +30,7 @@ export function StepRow({ name, instruction, done, isNext, dark, onPress }: Step
       <View
         className={cn(
           'mt-0.5 h-6 w-6 items-center justify-center rounded-full border-2',
-          done ? 'border-clay bg-clay' : dark ? 'border-night-line' : 'border-greige-deep',
+          done ? 'border-clay bg-clay' : dark ? 'border-cream/20' : 'border-greige-deep',
         )}>
         {done ? <View className="h-2 w-2 rounded-full bg-paper" /> : null}
       </View>

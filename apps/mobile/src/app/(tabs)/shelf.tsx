@@ -86,7 +86,7 @@ export default function ShelfScreen() {
               <Pressable
                 key={item.id}
                 accessibilityRole="button"
-                className="flex-row items-center rounded-card border border-greige-line bg-paper-raised p-4">
+                className="flex-row items-center rounded-card border border-hairline bg-paper-raised p-4">
                 <View className="mr-3 h-12 w-12 rounded-xl bg-greige" />
                 <View className="flex-1">
                   <Text variant="body" className="font-sans-medium">

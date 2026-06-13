@@ -99,7 +99,7 @@ export default function AccountScreen() {
                 autoCapitalize="none"
                 keyboardType="email-address"
                 inputMode="email"
-                className="rounded-card border border-greige-line bg-paper-raised px-4 py-4 font-sans text-base text-ink"
+                className="rounded-card border border-hairline bg-paper-raised px-4 py-4 font-sans text-base text-ink"
               />
               <Button
                 className="mt-3"
@@ -124,7 +124,7 @@ export default function AccountScreen() {
               keyboardType="number-pad"
               inputMode="numeric"
               maxLength={6}
-              className="rounded-card border border-greige-line bg-paper-raised px-4 py-4 text-center font-mono text-2xl tracking-[8px] text-ink"
+              className="rounded-card border border-hairline bg-paper-raised px-4 py-4 text-center font-mono text-2xl tracking-[8px] text-ink"
             />
             <Button
               label="Verify"

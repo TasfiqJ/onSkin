@@ -1,23 +1,39 @@
-// JS access to the "paper · greige · clay · ink · night" palette (mirrors
-// tailwind.config.js) for contexts that can't use className: StatusBar, native
-// navigation, SVG, gradients, Skia. Keep in sync with the Tailwind theme.
+// JS access to the OnSkin palette (mirrors tailwind.config.js — EXACT values from
+// the Claude Design handoff) for contexts that can't use className: StatusBar,
+// native navigation, tab bar, SVG, gradients, Skia.
 export const colors = {
-  paper: '#F5F1EA',
-  paperRaised: '#FBF8F2',
-  greige: '#E7E1D5',
-  greigeDeep: '#D9D2C4',
-  greigeLine: '#E0D9CC',
-  clay: '#B0613F',
-  claySoft: '#C98A6A',
-  clayBright: '#D9A07E',
-  ink: '#221C18',
-  inkSoft: '#4A433C',
-  muted: '#8A8278',
-  mutedDark: '#A79E91',
-  night: '#1C1815',
-  nightSurface: '#272019',
-  nightElevated: '#2F2820',
-  nightLine: '#3A322A',
+  paper: '#FAF7F2',
+  paperRaised: '#FFFFFF',
+  canvas: '#E8E4DD',
+  greige: '#EFEAE1',
+  greigeChip: '#F1ECE3',
+  greigeDeep: '#E3D8C9',
+  clay: '#A5694B',
+  clayDeep: '#8A5239',
+  clayTint: '#F3E7DF',
+  clayBright: '#D9A183', // warm-clay accent on night surfaces
+  ink: '#201B15',
+  inkSoft: '#4A443B',
+  muted: '#8A8071',
+  mutedStrong: '#6F6759',
+  mutedLight: '#A39A8B',
+  night: '#1B1813',
+  nightSurface: '#27221B',
+  nightElevated: '#2A211C',
+  cream: '#F4EFE7',
+  sage: '#4F7A4A',
+  sageDeep: '#3F6A3A',
+  sageTint: '#E6ECE0',
+  sageBody: '#456040',
+  sageEyebrow: '#5C7A52',
+  severityNone: '#C9C1B2',
+  severityMild: '#D9A183',
+  severityModerate: '#A5694B',
+  severityHigh: '#8A4A33',
+  amber: '#B07A3C',
+  // Hairline borders (RN has no inset box-shadow).
+  hairline: 'rgba(32,27,21,0.08)',
+  hairlineDark: 'rgba(244,239,231,0.08)',
 } as const;
 
 export type ColorToken = keyof typeof colors;

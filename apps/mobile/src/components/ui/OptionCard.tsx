@@ -26,7 +26,7 @@ export function OptionCard({ title, subtitle, selected = false, onPress, classNa
       }}
       className={cn(
         'min-h-[64px] flex-row items-center justify-between rounded-card border px-5 py-4',
-        selected ? 'border-clay bg-clay/5' : 'border-greige-line bg-paper-raised',
+        selected ? 'border-clay bg-clay/5' : 'border-hairline bg-paper-raised',
         className,
       )}>
       <View className="flex-1 pr-3">
