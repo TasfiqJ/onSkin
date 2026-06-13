@@ -41,12 +41,17 @@ OAuth client IDs (iOS / Web) → `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` /
 
 ### B-POSTHOG — PostHog 🟡 stubbed
 `EXPO_PUBLIC_POSTHOG_KEY` + `_HOST`, plus `POSTHOG_PERSONAL_API_KEY` for
-server-side person-deletion on account delete. Wire RevenueCat → PostHog
-integration for subscription cohorts.
+server-side person-deletion on account delete. The docs/01 §7 funnel is already
+instrumented through a `track()`/`identify()` shim (`src/lib/analytics/track.ts`);
+the real `posthog-react-native` SDK (with bootstrapped flags + identify at the
+value moment) + the RevenueCat→PostHog integration are wired in the analytics
+slice (build-order, not yet reached). Env vars documented.
 
 ### B-SENTRY — Sentry 🟡 stubbed
 `EXPO_PUBLIC_SENTRY_DSN` + `SENTRY_AUTH_TOKEN`/`SENTRY_ORG`/`SENTRY_PROJECT`
-for source-map upload in CI.
+documented in `.env.example`. The `@sentry/react-native` SDK init + source-map
+upload are part of the observability slice (not yet reached); no Sentry code is
+wired yet beyond the documented env vars.
 
 ### B-TURNSTILE — Cloudflare Turnstile 🟡 stubbed
 `EXPO_PUBLIC_TURNSTILE_SITE_KEY` + the secret configured in Supabase Auth.
