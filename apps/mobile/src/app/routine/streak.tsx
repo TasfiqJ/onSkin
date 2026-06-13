@@ -18,6 +18,9 @@ function weekDaySquare(state: DayState): { bg: string; dot?: string; ring?: bool
   switch (state) {
     case 'done':
       return { bg: colors.clay };
+    case 'frozen':
+      // a missed day a grace freeze absorbed — soft sage, not a shameful gap
+      return { bg: colors.sageTint, dot: colors.sage };
     case 'missed':
       return { bg: '#EDE5D8', dot: '#D6C9B5' };
     case 'today':
@@ -86,9 +89,12 @@ export default function StreakScreen() {
           </View>
         </Card>
 
-        {/* Grace-day reassurance — only after a forgiven miss. */}
+        {/* Grace-day reassurance — only when a freeze is absorbing a recent miss. */}
         {data?.graceUsed ? (
-          <View className="mt-3.5 flex-row items-center gap-3.5 rounded-card bg-sage-tint p-4">
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/routine/welcome-back')}
+            className="mt-3.5 flex-row items-center gap-3.5 rounded-card bg-sage-tint p-4">
             <View className="h-10 w-10 items-center justify-center rounded-full bg-paper-raised">
               <View className="h-4 w-4 rounded-[5px] border-2" style={{ borderColor: colors.sage }} />
             </View>
@@ -97,10 +103,31 @@ export default function StreakScreen() {
                 Streak protected
               </Text>
               <Text variant="bodySm" className="mt-0.5" style={{ color: colors.sageEyebrow }}>
-                You missed a day — that&apos;s fine. We used a grace day, your {data.streak} days stand.
+                A grace day absorbed the gap — your {data.streak} days stand. No reset.
               </Text>
             </View>
-          </View>
+          </Pressable>
+        ) : null}
+
+        {/* Lapsed — a calm, no-shame earn-back invite. */}
+        {data?.lapsed ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/routine/welcome-back')}
+            className="mt-3.5 flex-row items-center gap-3.5 rounded-card p-4"
+            style={{ backgroundColor: colors.greige }}>
+            <View className="h-10 w-10 items-center justify-center rounded-full bg-paper-raised">
+              <View className="h-4 w-4 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+            </View>
+            <View className="flex-1">
+              <Text variant="body" className="font-sans-bold">
+                Welcome back
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-0.5">
+                It&apos;s been a few days — that&apos;s okay. Pick up tonight; consistency over time is what counts.
+              </Text>
+            </View>
+          </Pressable>
         ) : null}
 
         {/* Month heat-map */}

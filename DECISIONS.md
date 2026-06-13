@@ -348,3 +348,56 @@ Format: `D-NNN — date — decision — rationale`.
   "OnSkin Photo Progress" `.dc.html` exactly (it uses a darker capture palette so the
   face is the brightest thing on screen). Logged so the divergence from the night
   token is intentional, not drift.
+
+## Reminders, streaks & widgets (docs/07, Slice 21)
+
+> Note: docs/07 §7 suggests "D-031/032/033" for tiering / forgiving-streak /
+> interactive-checkoff; those numbers were taken by the Smart Shelf slice, so they
+> are recorded here as D-045/046/047 with the mapping noted.
+
+- **D-045 — 2026-06-13 — Notifications are tiered, local-first, frequency-capped,
+  and quiet-hours-aware** (docs/07 §3, the doc's suggested "D-031"). `policy.ts`
+  (pure, tested) maps each kind to one of utility / behavioural / promotional, caps
+  the non-utility tiers per week (behavioural 3, promotional 1; utility uncapped but
+  suppressed in quiet hours), and `withinQuietHours` handles overnight windows.
+  `store.ts` is the local-first source of truth (the D-029 pattern) with a guarded
+  `notification_preferences` mirror; `deliver.ts` schedules the AM/PM **utility**
+  reminders as repeating DAILY local notifications (`SchedulableTriggerInputTypes.DAILY`,
+  SDK 56) at the user's chosen times, skipping any time inside quiet hours, and
+  exposes `notifyBehavioural()` (the frequency-cap engine) for the shelf/scheduler to
+  raise their triggers. All delivery is **guarded to no-op off-device** — real OS
+  delivery + Android-14 exact-alarm acceptance is **B-NOTIF-VERIFY**. Push (APNs/FCM)
+  is reserved for the promotional tier only; nothing health-revealing is ever placed
+  in a push payload (§8).
+
+- **D-046 — 2026-06-13 — The streak is forgiving and framed as weekly adherence +
+  heat-map** (docs/07 §4, the doc's suggested "D-032"; implements the D-021/§6
+  philosophy). `features/streak/streak.ts` (pure, 11 fixtures): a "completion day"
+  counts (recovery nights are completions), up to `freezeWindow = 2` interior missed
+  days are absorbed by **auto-applied freezes (never purchased)** — only committed
+  when a further-back completion proves the miss was interior, so a clean run that
+  simply ended is never falsely "frozen"; beyond the window the streak resets to the
+  post-gap run. `bestStreak` is the non-decreasing personal best (D-011, linear).
+  `useProgress` was refactored to delegate to this module so Today + the streak
+  screen + welcome-back all share one tested core. No guilt copy, no manufactured
+  loss-aversion, no default leaderboards (the §4.6 anti-patterns are rejected). The
+  client computes the streak from `routine_completions` for v1 (B-SUPABASE); the
+  `streak_freezes` table is the forward-compat server-audit target.
+
+- **D-047 — 2026-06-13 — Widgets / interactive check-off / Live Activity are in-app
+  previews in v1; the native surfaces are B-WIDGETS** (the doc's suggested "D-033").
+  WidgetKit/Glance/ActivityKit + the iOS-17 interactive check-off all need a custom
+  dev build (`expo-apple-targets`/`expo-widgets`); `app/routine/widgets.tsx` renders
+  faithful **previews** of the widget gallery, the one-tap check-off, and the PM Live
+  Activity, and the **Live-Activity opt-in** (`live_activity_enabled`) is wired now.
+  The interactive check-off, when built, writes `routine_completions` through the
+  same idempotent path as the in-app check-off.
+
+- **D-048 — 2026-06-13 — Notification settings live in a dedicated `app/settings`
+  stack; the photo-reminder pref is unified into the notification store.** The You
+  tab now links to a tiered Notifications hub + a Timing/quiet-hours/discretion
+  screen (matching the design's two settings screens), replacing the old inline
+  toggles. The Slice-20 local photo-reminder flag is superseded by
+  `notification_preferences.capture_reminders`; `features/photos/reminders.ts` now
+  delegates to the notification store so there is a single source of truth. Times use
+  a calm 30-minute picker (no native date-picker dependency, the D-030 convention).

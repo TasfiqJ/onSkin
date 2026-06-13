@@ -124,6 +124,36 @@ export const PHOTO_EVENTS = [
 ] as const;
 export type PhotoEvent = (typeof PHOTO_EVENTS)[number];
 
+// --- Reminders / streaks / widgets (docs/07) ---------------------------------
+/** Every notification belongs to exactly one tier, each independently toggleable;
+ *  the non-utility tiers are frequency-capped (docs/07 §3.1, D-031). */
+export type NotificationTier = 'utility' | 'behavioural' | 'promotional';
+/** The notification kinds the delivery layer fires (docs/07 §3.3 / §7). */
+export const NOTIFICATION_KINDS = [
+  'am_reminder',
+  'pm_step',
+  'capture',
+  'replenishment',
+  'rampup',
+  'deescalation',
+  'winback',
+] as const;
+export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
+/** Glanceable widget kinds — 1–3 data points each (docs/07 §5.2). */
+export type WidgetKind = 'tonight' | 'progress' | 'streak' | 'cycle';
+/** PostHog reminders/streaks/widgets events — metadata only (docs/07 §9). */
+export const ENGAGEMENT_EVENTS = [
+  'notification_sent',
+  'notification_opened',
+  'reminder_time_set',
+  'streak_freeze_applied',
+  'streak_milestone_reached',
+  'widget_added',
+  'widget_checkoff_completed',
+  'live_activity_started',
+] as const;
+export type EngagementEvent = (typeof ENGAGEMENT_EVENTS)[number];
+
 // --- Entitlements (docs/01 §3 `entitlements`) --------------------------------
 export type EntitlementTier = 'pro' | 'pro_plus';
 

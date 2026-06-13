@@ -334,6 +334,44 @@ and routine persistence (server `build_routine`, docs/03 §11).
   the inset bands), and removed dead `twelve_weeks`/`refAlignment` code. D-038…D-044.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (192).
 
+### Slice 21 — Doc 7 Reminders, Streaks & Widgets + new design ✅ (2026-06-13)
+- **Schema** (migration 0019): `notification_preferences` tier/quiet-hours/discretion
+  extensions (`am/pm_reminder_enabled`, `capture_reminders`, `quiet_hours_*`,
+  `live_activity_enabled`, `promotional_opt_in`, `lockscreen_discreet`; **`updated_at`
+  already existed — not re-added**), the `streak_freezes` forgiveness ledger
+  (append-only, owner-RLS), and a **content-free** `notification_log` (tier/kind/ts
+  only). `Database` type + `@onskin/types` extended.
+- **Pure, tested cores**: `features/streak/streak.ts` — the calm forgiving streak
+  (a "completion day"; recovery nights count; **auto-freezes** absorb ≤2 *interior*
+  misses, committed only when a further-back completion proves the gap was interior,
+  so a clean ended run is never falsely "frozen"; earn-back; weekly adherence +
+  heat-map; non-decreasing best, D-011) — **11 fixtures**; `features/notifications/
+  policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-kind
+  `tierEnabled` opt-out gate — **16 fixtures**; plus a notification claim-safety
+  guard (guilt/urgency/drug/alarm, curly-apostrophe-aware). `useProgress` refactored
+  to delegate to the streak module (Today + streak + welcome-back share one core).
+- **Delivery** (`features/notifications/`): local-first prefs `store.ts` (guarded
+  mirror); `deliver.ts` schedules AM/PM **utility** reminders as repeating DAILY
+  local notifications (real SDK-56 API; channelId on the trigger; guarded off-device)
+  and `notifyBehavioural()` — the frequency-cap + opt-out + quiet-hours engine.
+- **7 surfaces**: the soft-ask (wired to the real OS permission prompt), the tiered
+  settings hub, timing/quiet-hours/lock-screen-discretion (calm 30-min picker), the
+  welcome-back earn-back, and the widget gallery / interactive-checkoff / Live-Activity
+  **previews** (+ the Live-Activity opt-in). Notification settings moved to an
+  `app/settings` stack; the You tab links to it; Today's streak pill + the streak
+  screen are freeze-aware.
+- **Native deferred**: home-screen widgets + interactive check-off + Live Activity
+  (**B-WIDGETS**); on-device delivery + Android-14 verification (**B-NOTIF-VERIFY**).
+- **Adversarially reviewed by a 4-dimension workflow** (RLS/SQL · spec · design ·
+  claim-safety/privacy, **13 agents, each finding verified**) → 0 blocking; **1 high**
+  flagged by all four dimensions and **fixed**: `notifyBehavioural` now honours the
+  per-kind opt-out toggles (the off-by-default promotional/winback consent gate),
+  via the pure `tierEnabled`. Also fixed: the Android `channelId` moved onto the
+  trigger (SDK-56 — so the calm 'routine' channel actually applies), the claim-safety
+  guard made curly-apostrophe-aware (a "Don't break your streak" can no longer slip
+  past), and an explicit `user_id` filter on the frequency-cap count. D-045…D-048.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (261).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -362,7 +400,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 4. ✅ Smart shelf (PAO/expiry) — Doc 4 (Slice 18); blocked sub-parts above
 5. ✅ Actives / skin-cycling scheduler — Doc 5 (Slice 19): stored cycle + projection, multi-active orchestration, management/disruption surfaces
 6. ✅ Guided photo capture + comparison — Doc 6 (Slice 20): local-first capture/review/timeline/compare, no-AI-score, biometric gallery lock, unbundled photo consents; on-device camera pipeline deferred to **B-CAMERA**
-7. 🚫 Reminders / streaks / widgets — needs Document 7 (delivers the scheduler's reminders + replenishment + streak nudges + the Doc-6 photo-capture reminder delivery)
+7. ✅ Reminders / streaks / widgets — Doc 7 (Slice 21): tiered local-first notifications + frequency caps + quiet hours, the calm forgiving streak, soft-ask + settings hub + timing + welcome-back + widget/Live-Activity previews; native widgets/delivery deferred to **B-WIDGETS** / **B-NOTIF-VERIFY**
 8. 🟡 Subscriptions / paywall — design-spec paywall buildable; RC config blocked (Document 8)
 9–12. 🚫 recommendations / creator stacks / community / AI — need their docs
 

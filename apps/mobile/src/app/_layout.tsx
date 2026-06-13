@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
+import { configureNotifications } from '@/features/notifications/deliver';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { queryClient } from '@/lib/query/queryClient';
@@ -22,6 +23,11 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded) void SplashScreen.hideAsync();
   }, [fontsLoaded]);
+
+  // Set the local-notification handler + Android channel once at startup (docs/07 §9).
+  useEffect(() => {
+    void configureNotifications();
+  }, []);
 
   if (!fontsLoaded) return null;
 

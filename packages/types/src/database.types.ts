@@ -613,6 +613,14 @@ export type Database = {
           replenishment_alerts: boolean;
           push_token: string | null;
           timezone: string | null;
+          am_reminder_enabled: boolean;
+          pm_reminder_enabled: boolean;
+          capture_reminders: boolean;
+          quiet_hours_start: TimeStr | null;
+          quiet_hours_end: TimeStr | null;
+          live_activity_enabled: boolean;
+          promotional_opt_in: boolean;
+          lockscreen_discreet: boolean;
           updated_at: Timestamptz;
         };
         Insert: {
@@ -623,9 +631,53 @@ export type Database = {
           replenishment_alerts?: boolean;
           push_token?: string | null;
           timezone?: string | null;
+          am_reminder_enabled?: boolean;
+          pm_reminder_enabled?: boolean;
+          capture_reminders?: boolean;
+          quiet_hours_start?: TimeStr | null;
+          quiet_hours_end?: TimeStr | null;
+          live_activity_enabled?: boolean;
+          promotional_opt_in?: boolean;
+          lockscreen_discreet?: boolean;
           updated_at?: Timestamptz;
         };
         Update: Partial<Database['public']['Tables']['notification_preferences']['Insert']>;
+        Relationships: [];
+      };
+      streak_freezes: {
+        Row: {
+          id: string;
+          user_id: string;
+          applied_for_date: string;
+          source: string;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          applied_for_date: string;
+          source?: string;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['streak_freezes']['Insert']>;
+        Relationships: [];
+      };
+      notification_log: {
+        Row: {
+          id: string;
+          user_id: string;
+          tier: string;
+          kind: string;
+          sent_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          tier: string;
+          kind: string;
+          sent_at?: Timestamptz;
+        };
+        Update: Partial<Database['public']['Tables']['notification_log']['Insert']>;
         Relationships: [];
       };
     };

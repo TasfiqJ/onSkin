@@ -6,13 +6,11 @@ import { Alert, ScrollView, Switch, View } from 'react-native';
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
-import { getPhotoReminderEnabled, setPhotoReminderEnabled } from '@/features/photos/reminders';
 import { deleteAccount, exportData } from '@/features/settings/actions';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
-import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
 function Row({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
@@ -52,19 +50,6 @@ export default function YouScreen() {
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
   const cloudBackup = useQuery({ queryKey: ['photo_cloud_backup'], queryFn: getCloudBackupEnabled, retry: 0 });
-  const photoReminder = useQuery({ queryKey: ['photo_reminder'], queryFn: getPhotoReminderEnabled, retry: 0 });
-  const notif = useQuery({
-    queryKey: ['notif_prefs'],
-    retry: 0,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('notification_preferences')
-        .select('streak_nudges, replenishment_alerts')
-        .limit(1)
-        .maybeSingle();
-      return data ?? { streak_nudges: true, replenishment_alerts: true };
-    },
-  });
 
   async function setConsent(type: 'marketing' | 'data_sharing', granted: boolean) {
     qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({ ...(prev ?? {}), [type]: granted }));
@@ -80,37 +65,11 @@ export default function YouScreen() {
     }
   }
 
-  async function setNotif(field: 'streak_nudges' | 'replenishment_alerts', value: boolean) {
-    qc.setQueryData(['notif_prefs'], (prev: Record<string, boolean> | undefined) => ({ ...(prev ?? {}), [field]: value }));
-    try {
-      const { data: u } = await supabase.auth.getUser();
-      if (u.user?.id) {
-        const payload: { user_id: string; streak_nudges?: boolean; replenishment_alerts?: boolean } = {
-          user_id: u.user.id,
-        };
-        if (field === 'streak_nudges') payload.streak_nudges = value;
-        else payload.replenishment_alerts = value;
-        await supabase.from('notification_preferences').upsert(payload);
-      }
-    } catch {
-      /* best-effort */
-    }
-  }
-
   async function setCloud(enabled: boolean) {
     qc.setQueryData(['photo_cloud_backup'], enabled);
     if (enabled) track('cloud_backup_opted_in');
     try {
       await setCloudBackupEnabled(enabled);
-    } catch {
-      /* best-effort */
-    }
-  }
-
-  async function setPhotoReminder(enabled: boolean) {
-    qc.setQueryData(['photo_reminder'], enabled);
-    try {
-      await setPhotoReminderEnabled(enabled);
     } catch {
       /* best-effort */
     }
@@ -216,19 +175,17 @@ export default function YouScreen() {
 
         <Card className="mt-4">
           <Text variant="label" tone="muted" className="mb-1">
-            NOTIFICATIONS
+            REMINDERS
           </Text>
-          <Row label="Routine reminders">
-            <Toggle value={notif.data?.streak_nudges ?? true} onChange={(v) => void setNotif('streak_nudges', v)} />
-          </Row>
-          <Row label="Replenishment alerts">
-            <Toggle
-              value={notif.data?.replenishment_alerts ?? true}
-              onChange={(v) => void setNotif('replenishment_alerts', v)}
-            />
-          </Row>
-          <Row label="Weekly photo reminder" hint="A calm, same-time nudge. A missed week never breaks anything.">
-            <Toggle value={photoReminder.data ?? true} onChange={(v) => void setPhotoReminder(v)} />
+          <Row label="Reminders & notifications" hint="Tiered, capped, at times you choose. Quiet hours & lock-screen discretion.">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/settings/notifications')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
           </Row>
         </Card>
 

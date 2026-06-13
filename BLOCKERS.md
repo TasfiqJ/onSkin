@@ -14,15 +14,15 @@ de-risked · ✅ cleared.
 
 ## How to clear these in one pass (the founder's TODO)
 
-Self-contained TODO. Built so far: **Slices 0–20** — full foundation (auth, data
+Self-contained TODO. Built so far: **Slices 0–21** — full foundation (auth, data
 model + RLS, design system, onboarding, app shell + Today, privacy controls), the
 **Document 2 ingredient-intelligence layer**, the **Document 3 routine builder**,
-the **Document 4 Smart Shelf** (intake funnel, opened-date linchpin, five-state
-badges, detail hub, archive, replenishment), the **Document 5 actives &
-skin-cycling scheduler** (stored cycle + projection, multi-active orchestration,
-week view, "why tonight?", settings, disruption/recovery), and the **Document 6
-guided photo progress** (local-first capture/review/timeline/compare, no-AI-score,
-biometric gallery lock, unbundled photo consents; **193 tests**). See PROGRESS.md.
+the **Document 4 Smart Shelf**, the **Document 5 actives & skin-cycling scheduler**,
+the **Document 6 guided photo progress** (local-first capture/review/timeline/compare,
+no-AI-score, biometric gallery lock, unbundled photo consents), and the **Document 7
+reminders, streaks & widgets** (tiered local-first notifications + frequency caps +
+quiet hours, the calm forgiving streak, the soft-ask + settings hub + timing +
+welcome-back + widget/Live-Activity previews; **255 tests**). See PROGRESS.md.
 
 **1. To make the app actually run end-to-end**
 - **B-SUPABASE** first: create the project, provide the URL + publishable +
@@ -39,24 +39,23 @@ sign-off of the conflict matrix before any rule reaches users). See
 cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
-documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 7**
-(reminders/widgets) — it delivers the scheduler's reminders (tonight's active,
-recovery nights, next acid night), the replenishment alerts (Doc 4), the streak
-nudges, **and the photo-capture reminder delivery (Doc 6 ships the opt-in pref +
-copy; Doc 7 schedules it)**. Also **B-CAMERA** (a custom dev build with
-vision-camera + ML-Kit) turns the simulated guided capture into the real on-device
-pipeline, and **B-CATALOG-SEED** (CosIng/OBF data import) lights up real shelf
-data, scan match rates, and the **B-SHELF-CONTRIB** contribute-back loop.
+documents — see **B-MISSING-DOCS**. Next in build order: **Document 8**
+(subscriptions / paywall) — the design-spec paywall is buildable; RevenueCat config
+is **B-REVENUECAT**. Also: a **custom dev build** unlocks the deferred native work —
+**B-CAMERA** (vision-camera + ML-Kit guided capture), **B-WIDGETS**
+(WidgetKit/Glance/ActivityKit), and **B-NOTIF-VERIFY** (on-device notification
+delivery) all need it; and **B-CATALOG-SEED** (CosIng/OBF import) lights up real
+shelf data, scan match rates, and the **B-SHELF-CONTRIB** contribute-back loop.
 
 **Snapshot of current statuses** — Accounts: B-SUPABASE/REVENUECAT/APPLE/GOOGLE/
 POSTHOG/SENTRY/TURNSTILE 🟡, B-SHOPMY 🔴 · Legal/clinical: B-QUIZ-COPY/
-PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing + facial-image DPIA + photo
-marketing claim), **B-DERM-REVIEW 🔴 (launch gate)** · Data: B-CATALOG-SEED 🔴,
-**B-SHELF-CONTRIB 🔴** · Native: **B-CAMERA 🔴** (on-device capture + face
-detection + encryption + cloud upload) · Verify: APPLE-TRIAL-TOGGLE ✅,
-SUPABASE-KEYS ✅, METRO 🟢, RC 🟡, PASSKEYS 🔴, RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 ·
-Deferred: B-SERVER-DETECT 🟡, B-ROUTINE-PERSIST 🟡, B-DRAG-DND 🟡 · Docs:
-MISSING-DOCS 🔴 (Docs 7–15), EVERY-N-DAYS 🔴.
+PRIVACY-COPY 🔴, **B-PRIVACY 🔴** (data-sharing + facial-image DPIA + photo marketing
+claim + win-back push/lock-screen copy), **B-DERM-REVIEW 🔴 (launch gate)** · Data:
+B-CATALOG-SEED 🔴, **B-SHELF-CONTRIB 🔴** · Native: **B-CAMERA 🔴** (capture pipeline),
+**B-WIDGETS 🔴** (WidgetKit/Glance/ActivityKit), **B-NOTIF-VERIFY 🟡** (on-device
+delivery + Android-14) · Verify: APPLE-TRIAL-TOGGLE ✅, SUPABASE-KEYS ✅, METRO 🟢,
+RC 🟡, PASSKEYS 🔴, RIVE-LOTTIE 🟡, AUTH-LINKING 🟡 · Deferred: B-SERVER-DETECT 🟡,
+B-ROUTINE-PERSIST 🟡, B-DRAG-DND 🟡 · Docs: MISSING-DOCS 🔴 (Docs 8–15), EVERY-N-DAYS 🔴.
 
 ---
 
@@ -232,7 +231,7 @@ remaining build-order items need their detailed doc:
 | 4 · Smart shelf (PAO/expiry) | Doc 4 ✅ received | **BUILT** (Slice 18): additive `user_products` columns + `shelf_scans` schema, local-first store, the full intake funnel (no-match fork / OCR-confirm / manual / **opened-date linchpin**), the five-state badge taxonomy (incl. the eye/SPF firmer exception), the product-detail management hub, archive/lifecycle, and the opt-in replenishment sheet (design's 9 screens). Blocked sub-parts: live barcode/OBF scan + OCR capture (**B-CATALOG-SEED** + camera), the contribute-back pipeline (**B-SHELF-CONTRIB**), the data-sharing consent + affiliate for replenishment (**B-PRIVACY**), server persistence (**B-SUPABASE** / B-ROUTINE-PERSIST), PAO defaults sign-off (**B-DERM-REVIEW**) |
 | 5 · Actives / skin-cycling scheduler | Doc 5 ✅ received | **BUILT** (Slice 19): the stored/versioned `cycles` + `cycle_nights` schema + the pure local-day projection, **multi-active orchestration** (one potent active/night, retinoid×exfoliant never same night, class frequency caps, recovery nights, pregnancy suppression, phased introduction — 15 fixtures), the local-first cycle store, and all the management/disruption surfaces (week overview, "why tonight?", cycle settings, pause/skip/travel/procedure hub, post-procedure + auto-de-escalation recovery mode, phased-intro). Blocked sub-parts: server `orchestrate()`/`schedule_for()` (**B-SERVER-DETECT** / B-ROUTINE-PERSIST), drag-to-reassign nights (**B-DRAG-DND**), reminder *delivery* (Doc 7), clinical sign-off of the frequency/separation/recovery rules (**B-DERM-REVIEW**) |
 | 6 · Guided photo capture + comparison | Doc 6 ✅ received | **BUILT** (Slice 20): additive `photos` columns (reference/series/pose-QA/local-day/local_uri/encrypted) + hardened `owns_photo()` (migration 0018), the local-first photo store (metadata-only mirror, `local_only` always true, no faceprint), the pure+tested capture-quality + timeline helpers (89 fixtures), the photo claim-safety guard, and all 9 design surfaces (guided capture, review&retake, first-run, **Compare** before/after slider + side-by-side, **Timeline** film strip + milestones, single-photo detail, no-AI-score, biometric gallery lock, calm reminder). The Progress tab is now the photo timeline; the calm streak moved to `/routine/streak`. Blocked sub-parts: the on-device camera + face detection + encryption + cloud-upload job (**B-CAMERA**), the DPIA + "never leaves your device" claim + photo consent copy (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**), reminder *delivery* (Doc 7) |
-| 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + computed streak + a widgets/Live-Activity **preview** built (docs/03 §9.9); native WidgetKit/ActivityKit + reminder scheduling need this doc |
+| 7 · Reminders / streaks / widgets | Doc 7 ✅ received | **BUILT** (Slice 21): `notification_preferences` extensions + `streak_freezes` + content-free `notification_log` (migration 0019, owner-RLS); the pure tested calm forgiving streak (auto-freezes, earn-back, weekly adherence + heat-map, non-decreasing best — 11 fixtures) + the tiered notification policy (caps + quiet hours — 13 fixtures) + a notification claim-safety guard; local-first notification-prefs store + the `expo-notifications` DAILY-trigger delivery layer (frequency-cap engine); the soft-ask, the tiered settings hub, timing/quiet-hours/discretion, welcome-back, and the widgets/interactive-checkoff/Live-Activity previews. Blocked sub-parts: native widgets + interactive check-off + Live Activity (**B-WIDGETS**), on-device delivery + Android-14 verification (**B-NOTIF-VERIFY**), win-back push + lock-screen copy DPIA (**B-PRIVACY**), server `recompute_streak` twin + APNs/FCM (**B-SUPABASE** / B-SERVER-DETECT) |
 | 8 · Subscriptions / paywall | Doc 8 | design-spec paywall + `entitlements`; RC config blocked |
 | 9 · Personalized recommendations | Doc 9 | blocked |
 | 10 · Creator stacks + ShopMy | Doc 10 | blocked (also B-SHOPMY) |
@@ -303,6 +302,16 @@ no upload job is wired, and cloud backup is a separate off-by-default consent);
 as an off-by-default toggle + consent here; the queued Wi-Fi/charging upload is
 **B-CAMERA**.
 
+**Also covers the engagement layer (docs/07 §8, Slice 21).** Notifications are
+health-adjacent: the design keeps lock-screen content **discreet by default**
+(generic copy, no product/condition names — `lockscreen_discreet`), and the
+utility/behavioural tiers are **local notifications** so content never leaves the
+device. Counsel/DPIA must sign off the **win-back push copy** (the only tier that
+uses APNs/FCM — it must carry only generic copy, **no health-revealing content in
+third-party push payloads**) and confirm the discreet-by-default posture. The
+content-free `notification_log` (tier/kind/timestamp only) and metadata-only
+analytics are built to that standard.
+
 ### B-SHELF-CONTRIB — Open Beauty Facts contribute-back pipeline 🔴 open
 docs/04 §4.6 / §9: any product added that wasn't in OBF (no-match scans, OCR-built,
 manual-with-barcode) must, after light validation, be **contributed back** to OBF
@@ -331,6 +340,30 @@ tolerances** on-device. **No faceprint/template is ever stored** — detection i
 for framing only (docs/06 §7). Shares the native camera with the shelf
 barcode/OCR scan (B-CATALOG-SEED). The `NSCameraUsageDescription` Info.plist string
 is already in `app.json`.
+
+### B-WIDGETS — native home-screen widgets + interactive check-off + Live Activity 🔴 open
+docs/07 §5/§6: the home-screen widgets (tonight/progress/streak/cycle), the **iOS-17
+interactive check-off from the widget** (and Android `RemoteViews`), and the PM
+**Live Activity** (ActivityKit, iOS 16.2+) / Android ongoing notification all need a
+**custom dev build** with `expo-apple-targets` / `expo-widgets` (WidgetKit is
+SwiftUI-only) + Glance on Android, App Groups + UserDefaults for data sharing, and
+sparing `WidgetCenter.reloadAllTimelines()`. None is installed. Slice 21 ships
+faithful **in-app previews** (`app/routine/widgets.tsx`) of all three + the
+Live-Activity **opt-in** toggle (`live_activity_enabled`); the interactive check-off,
+when built, writes `routine_completions` through the same idempotent path. Verify
+the iOS-17 fallback (tap-to-open) on older iOS at build time.
+
+### B-NOTIF-VERIFY — on-device notification delivery + Android-14 exact alarms 🟡 stubbed
+docs/07 §3.5/§9: the local-notification **scheduling** is built against the real
+`expo-notifications` SDK-56 API (`SchedulableTriggerInputTypes.DAILY`, the new
+`shouldShowBanner/List/PlaySound` handler, an Android `routine` channel) in
+`features/notifications/deliver.ts`, **guarded to no-op off-device**. Needs on-device
+verification: the single **iOS opt-in prompt**, **Android-14 inexact alarms** (we use
+`DEFAULT` importance + DAILY triggers and do **not** claim `USE_EXACT_ALARM`; if any
+exact-alarm API is ever added, guard with `canScheduleExactAlarms()` or it crashes),
+timezone correctness, and quiet-hours suppression. Also add the `expo-notifications`
+config plugin (icon/sound) at native-build time. No live device/Mac here (shares
+B-VERIFY-METRO's constraint).
 
 ### B-EVERY-N-DAYS — `every_n_days` step frequency has no interval column 🔴 open
 docs/01 §3 lists `every_n_days` as a valid `routine_steps.frequency` value but
