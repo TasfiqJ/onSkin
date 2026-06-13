@@ -29,7 +29,9 @@ skin-cycling scheduler, PAO, Shelf + conflict-detail UI; 63 tests). See PROGRESS
 
 **2. To unblock legal/clinical content** (you + counsel + a dermatologist):
 **B-QUIZ-COPY**, **B-PRIVACY-COPY**, and **B-DERM-REVIEW** (LAUNCH GATE — clinical
-sign-off of the conflict matrix before any rule reaches users).
+sign-off of the conflict matrix before any rule reaches users). See
+**[docs/legal-readiness.md](docs/legal-readiness.md)** for the full legal map +
+cost estimates (regulatory posture, privacy law, the four required sign-offs).
 
 **3. To unblock the rest of the build order**: provide the missing feature
 documents — see **B-MISSING-DOCS**. Next highest leverage: **Document 3** (routine
