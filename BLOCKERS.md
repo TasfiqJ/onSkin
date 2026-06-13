@@ -151,6 +151,20 @@ unspecified behavior/copy/schema for the rest.
 
 ## New blockers discovered during build
 
+### B-VERIFY-AUTH-LINKING — anon → social account linking 🟡 stubbed
+docs/01 §1 flags that `linkIdentity()` for OAuth in RN is broken ("Identity is
+already linked to another user") and that the reliable pattern is email-based
+automatic linking. `signInWithApple`/`signInWithGoogle` use `signInWithIdToken`;
+whether that LINKS to the existing anonymous user (preserving quiz/routine data)
+or creates a NEW user must be verified on a real device with real Apple/Google
+accounts (needs B-APPLE + B-GOOGLE). If it orphans data, switch to the
+`updateUser({ email })` → re-auth email-match pattern.
+
+### B-GOOGLE (addendum) — iOS URL scheme for the config plugin 🟡 stubbed
+The `@react-native-google-signin/google-signin` Expo config plugin needs the
+reversed iOS client id (`iosUrlScheme`) in `app.json` to build on iOS. Add it
+once the iOS OAuth client exists.
+
 ### B-EVERY-N-DAYS — `every_n_days` step frequency has no interval column 🔴 open
 docs/01 §3 lists `every_n_days` as a valid `routine_steps.frequency` value but
 specifies **no column** to store the interval (e.g. "every 3 days"). Per

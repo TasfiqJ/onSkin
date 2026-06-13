@@ -42,9 +42,27 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅. (Migrations not applied — no live DB; re-run
   Supabase Advisors on first `db push`.)
 
+### Slice 2 — Supabase client + auth foundation ✅ (2026-06-12)
+- `LargeSecureStore` AES-256 token storage (docs/01 §5): AES key in SecureStore,
+  encrypted session in AsyncStorage (dodges the ~2KB SecureStore limit).
+- Typed `supabase` client (`createClient<Database>`) with
+  `autoRefreshToken`/`persistSession`/`detectSessionInUrl:false` + URL polyfill.
+- `AuthProvider`: session state via `onAuthStateChange`, `AppState`-driven
+  start/stop auto-refresh; methods — `ensureAnonymousSession` (guest-first),
+  Apple (`signInWithIdToken`), Google (v16 `signIn` → idToken), email OTP
+  (`signInWithOtp`/`verifyOtp`). Verified all APIs against installed versions.
+- `recordConsent`/`getLatestConsents` writing the immutable ledger with a
+  SHA-256 hash of the exact text + version (final copy BLOCKED: B-PRIVACY-COPY).
+- TanStack Query client; providers wired into the root layout.
+- Edge Functions (Deno, service-role): `revenuecat-webhook` (idempotent on
+  event.id, reads event.app_user_id), `account-deletion` (Apple 5.1.1(v) order:
+  SIWA-revoke → delete user → purge Storage → RC/PostHog deletion), `data-export`
+  (GDPR Art. 20 JSON). External provider calls stubbed (B-REVENUECAT/B-APPLE/B-POSTHOG).
+- **Gates:** typecheck ✅ · lint ✅. New blocker: B-VERIFY-AUTH-LINKING.
+
 ## In progress
 
-### Slice 2 — Supabase client + auth foundation (docs/01 §1, §5) — next
+### Slice 3 — Design system (tokens, fonts, primitives) — next
 
 ## Next (per docs/00 build order)
 1. ✅ scaffold → **Slice 1: Auth + data model + RLS** (in progress)
