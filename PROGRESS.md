@@ -192,15 +192,29 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   card — no shame copy, recovery counts. Reads the append-only completions log +
   cached streak. Replaces the Progress placeholder. typecheck + lint + test green.
 
-## In progress / remaining docs/03 work
+### Slice 15 — Routine builder "Generate" screens (design 01–03) ✅ (2026-06-13)
+- `usePlan` (live `generatePlan` over the shelf; Maya example fallback). Plan-built
+  "Start today" (sequenced AM + cycling PM + ramp default + honest gap note),
+  drag-reorder edit with the non-blocking "Fix the order" nudge, retinoid ramp
+  chart + offer-only step-up.
 
-Built + tested: schema, generation engine, scheduler, exact tokens, Progress
-screen. **Remaining screens** (all fully specced in `docs/_design/_extracted_specs.md`,
-each a committed slice): plan-built "Start today", drag-reorder + nudge, retinoid
-ramp chart, Today AM/PM enhancements (cycling strip + auto-resolution banner —
-needs persisted cycle setup), override sheet, adaptation "what changed", weekly
-tolerance check-in, widgets/Live Activity. End-to-end demo also needs a manual-add
-shelf flow + B-SUPABASE (data surfaces are empty until then).
+### Slice 16 — Today AM/PM daily loop + tolerance (design 04/05/07) ✅ (2026-06-13)
+- Today rebuilt to exact design: AM (paper) streak pill + morning check-off +
+  Tonight teaser; PM (night) skin-cycling strip + evening check-off + the Doc-2
+  **auto-resolution banner** ("next acid night") computed from the scheduler +
+  a persisted cycle anchor. Optional non-diagnostic weekly tolerance check-in sheet.
+
+### Slice 17 — Routine builder "Living & in control" (design 08–10) ✅ (2026-06-13)
+- Conflict **override sheet** (bottom-sheet; adapts for standard / myth-reassure /
+  safety-defer; "Use together anyway" persists, "we won't re-nag"). Adaptation
+  "Here's what changed" recompute view. Widgets + Live Activity preview.
+- Paywall now hands off to the plan-built screen; You tab links the routine screens.
+
+**Document 3 design is visually complete** (all 10 builder screens + the 3 core
+screens re-themed). Remaining for live end-to-end: a manual-add shelf flow +
+B-SUPABASE (data surfaces render the exact design but are empty until then),
+full drag-and-drop (handles + nudge built; needs react-native-draggable-flatlist),
+and routine persistence (server `build_routine`, docs/03 §11).
 
 ## Remaining docs/02 work
 

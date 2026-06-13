@@ -36,13 +36,13 @@ export default function PaywallScreen() {
     const { purchased } = await purchaseProAnnual();
     if (purchased) track('trial_started', { product: PRO_ANNUAL.productId });
     setBusy(false);
-    router.replace('/today');
+    router.replace('/routine/plan');
   }
 
   return (
     <Screen>
       <View className="flex-row justify-end pt-1">
-        <Pressable accessibilityRole="button" className="py-2" onPress={() => router.replace('/today')}>
+        <Pressable accessibilityRole="button" className="py-2" onPress={() => router.replace('/routine/plan')}>
           <Text variant="body" tone="muted" className="font-sans-medium">
             Not now
           </Text>
