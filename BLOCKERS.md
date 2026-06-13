@@ -198,20 +198,21 @@ placeholder animation; swap in the chosen Rive/Lottie asset later.
 
 ## D. Missing source-of-truth documents
 
-### B-MISSING-DOCS — Documents 3–15 not present in /docs 🔴 open
+### B-MISSING-DOCS — Documents 4–15 not present in /docs 🔴 open
 Received so far: `docs/00-architecture.md`, `docs/01-auth-onboarding.md`,
-`docs/02-ingredient-intelligence.md` (+ design-spec.pdf). Per CLAUDE.md's hard
-rule ("if it isn't specified, STOP and ask — do not invent product behavior,
-schema, or copy"), the remaining build-order items need their detailed doc:
+`docs/02-ingredient-intelligence.md`, `docs/03-routine-builder.md` (+ the
+Claude Design handoff covering docs 1–3). Per CLAUDE.md's hard rule ("if it isn't
+specified, STOP and ask — do not invent product behavior, schema, or copy"), the
+remaining build-order items need their detailed doc:
 
 | Build-order item | Needs document | Status |
 | --- | --- | --- |
 | 2 · Ingredient/product DB + conflict engine | Doc 2 ✅ received | **BUILT** (Slices 7–11): schema, engine, scheduler, PAO, Shelf + conflict-detail UI, 63 tests. Blocked sub-parts: data import (B-CATALOG-SEED), clinical sign-off (B-DERM-REVIEW), server detect fn (B-SERVER-DETECT) |
-| 3 · AM/PM routine builder | Doc 3 | tables exist (docs/01 §3) + engine/scheduler ready to consume; builder UX + cycle-setup schema blocked. **Unblocks the PM auto-resolution screen (docs/02 §7.4).** |
+| 3 · AM/PM routine builder | Doc 3 ✅ received | **BUILT** (Slices 12–17): sequencing_rules + active_ramp schema, deterministic generation engine, all builder screens (plan-built, reorder, ramp, Today AM/PM, Progress/calm-streak, tolerance, override sheet, adaptation, widgets), 77 tests. Blocked sub-parts: routine persistence (B-ROUTINE-PERSIST), full drag-DnD (B-DRAG-DND), clinical sign-off (B-DERM-REVIEW) |
 | 4 · Smart shelf (PAO/expiry) | Doc 4 | shelf list/badges/conflict surfaces BUILT (docs/02 §7); barcode scan + manual add still need this doc + B-CATALOG-SEED |
-| 5 · Actives / skin-cycling scheduler | Doc 5 | scheduler logic BUILT + tested (docs/02 §5); live wiring needs the Doc-3 cycle setup |
+| 5 · Actives / skin-cycling scheduler | Doc 5 | scheduler BUILT + tested + wired into Today PM via the cycle anchor (docs/02 §5, docs/03 §5); a dedicated doc could extend cadence rules |
 | 6 · Guided photo capture + comparison | Doc 6 | `photos` table + design-spec screen; capture spec blocked |
-| 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + streak fn; widget spec blocked |
+| 7 · Reminders / streaks / widgets | Doc 7 | `notification_preferences` + computed streak + a widgets/Live-Activity **preview** built (docs/03 §9.9); native WidgetKit/ActivityKit + reminder scheduling need this doc |
 | 8 · Subscriptions / paywall | Doc 8 | design-spec paywall + `entitlements`; RC config blocked |
 | 9 · Personalized recommendations | Doc 9 | blocked |
 | 10 · Creator stacks + ShopMy | Doc 10 | blocked (also B-SHOPMY) |
