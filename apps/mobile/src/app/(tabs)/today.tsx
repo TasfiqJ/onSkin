@@ -15,7 +15,7 @@ import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// Today — the daily habit loop (design 04 AM light / 05 PM dark, docs/03 §6/§9).
+// Today. The daily habit loop (design 04 AM light / 05 PM dark, docs/03 §6/§9).
 // The check-off is the north-star activation metric. AM is paper, PM is night with
 // the skin-cycling strip + the Doc-2 auto-resolution banner ("next acid night").
 // Check-off is local/optimistic here; it binds to routine_completions once
@@ -25,8 +25,8 @@ const FALLBACK_SLOTS = ['Exfoliate', 'Retinoid', 'Recover', 'Recover'];
 
 function slotInstruction(slot: string): string {
   if (slot === 'retinoid') return 'Apply to dry skin · pea-sized · avoid the eye area.';
-  if (slot === 'exfoliate') return 'A thin layer — exfoliation night only.';
-  return 'Barrier support — keep it simple.';
+  if (slot === 'exfoliate') return 'A thin layer. Exfoliation night only.';
+  return 'Barrier support. Keep it simple.';
 }
 
 function CheckRow({
@@ -95,7 +95,7 @@ export default function TodayScreen() {
   const plan = planData?.plan;
 
   // The orchestrated, profile-aware cycle drives tonight everywhere (so pregnancy
-  // suppression etc. is never contradicted by a hardcoded surface — review fix).
+  // suppression etc. is never contradicted by a hardcoded surface. Review fix).
   const cycle = cycleData?.cycle ?? null;
   const cTonight = cycleData?.tonight ?? null;
   const skippedTonight = cycleData?.skippedTonight ?? false;
@@ -168,10 +168,10 @@ export default function TodayScreen() {
             ))}
           </View>
 
-          {/* For you — recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
+          {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           <RecommendationsTeaser showGapPrompt />
 
-          {/* Ask OnSkin — the deterministic, on-device advisor (docs/13 §9 moat taste) */}
+          {/* Ask OnSkin. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
           <AskTeaser />
 
           {/* Tonight teaser */}
@@ -199,15 +199,15 @@ export default function TodayScreen() {
               </Text>
               <Text className="text-[13px]" style={{ color: 'rgba(244,239,231,0.55)' }}>
                 {recoveryActive
-                  ? 'Barrier support — actives paused'
+                  ? 'Barrier support. Actives paused'
                   : skippedTonight
                     ? 'Your cycle picks up tomorrow'
                     : tonightSlot === 'retinoid'
-                      ? 'Retinoid night — keep it simple'
+                      ? 'Retinoid night. Keep it simple'
                       : tonightSlot === 'exfoliate'
                         ? 'Exfoliation night'
                         : tonightSlot === 'recover'
-                          ? 'Recovery night — barrier support'
+                          ? 'Recovery night. Barrier support'
                           : 'Your evening routine'}
               </Text>
             </View>
@@ -218,11 +218,11 @@ export default function TodayScreen() {
     );
   }
 
-  // ---- PM (dark) — driven by the orchestrated, profile-aware cycle ----
+  // ---- PM (dark). Driven by the orchestrated, profile-aware cycle ----
   const nightNumber = cTonight ? cTonight.index + 1 : 2;
   const nightTotal = cycle?.lengthNights ?? FALLBACK_SLOTS.length;
   // Tonight's cycled active comes from the engine (suppressed correctly for
-  // pregnancy etc.) — not from a hardcoded literal. Skipped/recovery nights drop it.
+  // pregnancy etc.). Not from a hardcoded literal. Skipped/recovery nights drop it.
   const cycledStep =
     !skippedTonight && !recoveryActive && cTonight?.night.productId
       ? {
@@ -251,7 +251,7 @@ export default function TodayScreen() {
           Good evening.
         </Text>
 
-        {/* Recovery / pause banner — the scheduler's disruption state (docs/05 §7) */}
+        {/* Recovery / pause banner. The scheduler's disruption state (docs/05 §7) */}
         {cycleData?.recovery.active ? (
           <Pressable
             accessibilityRole="button"
@@ -263,7 +263,7 @@ export default function TodayScreen() {
             }}>
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.sage }} />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
-              Recovery mode · day {cycleData.recovery.day} of {cycleData.recovery.days} — barrier support
+              Recovery mode · day {cycleData.recovery.day} of {cycleData.recovery.days}. Barrier support
               tonight.
             </Text>
             <Text style={{ color: 'rgba(244,239,231,0.4)' }}>›</Text>
@@ -279,7 +279,7 @@ export default function TodayScreen() {
             }}>
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
-              Your cycle is paused — resume whenever you&apos;re ready.
+              Your cycle is paused. Resume whenever you&apos;re ready.
             </Text>
             <Text style={{ color: 'rgba(244,239,231,0.4)' }}>›</Text>
           </Pressable>
@@ -287,12 +287,12 @@ export default function TodayScreen() {
           <View className="mt-6 flex-row items-center gap-3 rounded-card px-5 py-4" style={{ backgroundColor: colors.nightSurface }}>
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
-              You skipped tonight — nothing breaks, your cycle picks up tomorrow.
+              You skipped tonight. Nothing breaks, your cycle picks up tomorrow.
             </Text>
           </View>
         ) : null}
 
-        {/* Skin-cycling strip — taps through to the week overview (docs/05 §6.1) */}
+        {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="See your cycle week ahead"
@@ -350,12 +350,12 @@ export default function TodayScreen() {
           ))}
         </View>
 
-        {/* Auto-resolution banner — the Doc-2 resolution rendered (docs/03 §5) */}
+        {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (
           <View className="mt-4 flex-row items-center gap-3 rounded-2xl px-5 py-4" style={{ backgroundColor: 'rgba(217,161,131,0.10)' }}>
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.75)', lineHeight: 20 }}>
-              Your {suppressedAcidName.toLowerCase()} is on alternate nights — kept off your retinoid
+              Your {suppressedAcidName.toLowerCase()} is on alternate nights. Kept off your retinoid
               night to protect your barrier.{nextAcidISO ? ` Next acid night: ${friendlyWeekday(nextAcidISO)}.` : ''}
             </Text>
           </View>

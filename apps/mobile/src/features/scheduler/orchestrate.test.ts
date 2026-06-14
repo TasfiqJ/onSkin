@@ -19,7 +19,7 @@ function potentNights(cycle: Cycle) {
   return cycle.nights.filter((n) => n.slot === 'retinoid' || n.slot === 'exfoliate');
 }
 
-describe('orchestration — FIRM invariants (docs/05 §4)', () => {
+describe('orchestration. FIRM invariants (docs/05 §4)', () => {
   const cabinet = [
     active('r', 'Retinol 0.3%', ['retinoid']),
     active('g', 'Glycolic 7%', ['aha']),
@@ -28,7 +28,7 @@ describe('orchestration — FIRM invariants (docs/05 §4)', () => {
     active('n', 'Niacinamide 10%', ['niacinamide']),
   ];
 
-  it('one potent active per night — no night holds two potent actives', () => {
+  it('one potent active per night. No night holds two potent actives', () => {
     const { cycle } = run(cabinet);
     expect(cycle).not.toBeNull();
     for (const night of cycle!.nights) {
@@ -58,7 +58,7 @@ describe('orchestration — FIRM invariants (docs/05 §4)', () => {
   });
 });
 
-describe('orchestration — frequency caps + launch gate (docs/05 §4/§8)', () => {
+describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => {
   it('the cap table is the documented consensus, but the defaults are launch-gated', () => {
     expect(frequencyCap('aha', 'sensitive')).toBe(1);
     expect(frequencyCap('bha', 'resistant')).toBe(7);
@@ -86,8 +86,8 @@ describe('orchestration — frequency caps + launch gate (docs/05 §4/§8)', () 
   });
 });
 
-describe('orchestration — Maya (the spec example) + the complex cabinet', () => {
-  it('Maya: retinoid + glycolic, gentle — both appear, alternated, with recovery', () => {
+describe('orchestration. Maya (the spec example) + the complex cabinet', () => {
+  it('Maya: retinoid + glycolic, gentle. Both appear, alternated, with recovery', () => {
     const { cycle } = run(
       [active('r', 'Retinol 0.3%', ['retinoid']), active('g', 'Glycolic 7%', ['aha'])],
       { ...base, sensitivity: 'sensitive', goals: ['barrier_repair'] },
@@ -115,7 +115,7 @@ describe('orchestration — Maya (the spec example) + the complex cabinet', () =
   });
 });
 
-describe('orchestration — safety + fallback', () => {
+describe('orchestration. Safety + fallback', () => {
   it('pregnancy suppresses the retinoid and routes to the safety note', () => {
     const { cycle, notes } = run(
       [active('r', 'Retinol', ['retinoid']), active('g', 'Glycolic', ['aha'])],

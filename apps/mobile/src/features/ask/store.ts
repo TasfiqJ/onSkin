@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Local-first Ask state (docs/13 §7/§15, the D-029 pattern). Two pieces of state, both
-// offline-safe: (1) the ask_onskin consent flag — DEFAULT-OFF, the v1 source of truth
+// offline-safe: (1) the ask_onskin consent flag. DEFAULT-OFF, the v1 source of truth
 // with a guarded ledger mirror in consent.ts; (2) a per-period counter of GROUNDED
 // (cloud) turns used, to enforce the hard trial cap (gate.ts). The deterministic,
-// on-device advisor needs neither — it is always free and stores nothing. No question
+// on-device advisor needs neither. It is always free and stores nothing. No question
 // or answer text is ever written here (no transcript, docs/13 §10).
 
 const CONSENT_KEY = 'onskin.ask.consent.v1'; // default-OFF
@@ -30,7 +30,7 @@ function parseTurns(raw: string | null): TurnRecord | null {
     const v = JSON.parse(raw) as Partial<TurnRecord>;
     if (typeof v.period === 'string' && typeof v.count === 'number') return { period: v.period, count: v.count };
   } catch {
-    /* corrupt — treat as empty */
+    /* corrupt. Treat as empty */
   }
   return null;
 }
@@ -52,7 +52,7 @@ export async function recordGroundedTurn(period: string): Promise<void> {
     const count = rec && rec.period === period ? rec.count + 1 : 1;
     await AsyncStorage.setItem(TURNS_KEY, JSON.stringify({ period, count } satisfies TurnRecord));
   } catch {
-    /* best-effort — the cap is a cost guardrail, not a hard wall */
+    /* best-effort. The cap is a cost guardrail, not a hard wall */
   }
 }
 

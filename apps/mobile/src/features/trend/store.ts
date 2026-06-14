@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // safe), with a guarded ledger mirror in consent.ts. The on-device-derived trend state
 // lives in the same local, client-side-encrypted store as the photo bytes (docs/06);
 // it is EXCLUDED from any cloud backup and DELETED on revocation. The source image
-// never leaves the device — this flag gates behaviour, not storage location.
+// never leaves the device. This flag gates behaviour, not storage location.
 
 const CONSENT_KEY = 'onskin.trendInsights.v1';
 const STATE_KEY = 'onskin.trendState.v1'; // the derived narrative state (no image, no score)

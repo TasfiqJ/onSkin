@@ -5,12 +5,12 @@ import { Card, Screen, Text } from '@/components/ui';
 import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
 import { colors } from '@/theme/tokens';
 
-// Streak & adherence — the calm, forgiving streak (docs/03 §6/§9.5, D-025).
+// Streak & adherence. The calm, forgiving streak (docs/03 §6/§9.5, D-025).
 // Relocated here from the Progress tab in Slice 20: docs/06 makes the Progress tab
 // the photo timeline, so this routine-domain surface lives in the routine stack
 // and is reached from the You tab + Today's streak pill. No all-or-nothing counter,
 // no shame copy; a grace-day "Streak protected" reassurance. Photos are a slower,
-// separate cadence (docs/06 §5) — deliberately decoupled from this daily streak.
+// separate cadence (docs/06 §5). Deliberately decoupled from this daily streak.
 
 const HEAT = ['#EFEAE1', '#EDE5D8', '#E0C3AC', colors.clay] as const;
 
@@ -19,7 +19,7 @@ function weekDaySquare(state: DayState): { bg: string; dot?: string; ring?: bool
     case 'done':
       return { bg: colors.clay };
     case 'frozen':
-      // a missed day a grace freeze absorbed — soft sage, not a shameful gap
+      // a missed day a grace freeze absorbed. Soft sage, not a shameful gap
       return { bg: colors.sageTint, dot: colors.sage };
     case 'missed':
       return { bg: '#EDE5D8', dot: '#D6C9B5' };
@@ -89,7 +89,7 @@ export default function StreakScreen() {
           </View>
         </Card>
 
-        {/* Grace-day reassurance — only when a freeze is absorbing a recent miss. */}
+        {/* Grace-day reassurance. Only when a freeze is absorbing a recent miss. */}
         {data?.graceUsed ? (
           <Pressable
             accessibilityRole="button"
@@ -103,13 +103,13 @@ export default function StreakScreen() {
                 Streak protected
               </Text>
               <Text variant="bodySm" className="mt-0.5" style={{ color: colors.sageEyebrow }}>
-                A grace day absorbed the gap — your {data.streak} days stand. No reset.
+                A grace day absorbed the gap. Your {data.streak} days stand. No reset.
               </Text>
             </View>
           </Pressable>
         ) : null}
 
-        {/* Lapsed — a calm, no-shame earn-back invite. */}
+        {/* Lapsed. A calm, no-shame earn-back invite. */}
         {data?.lapsed ? (
           <Pressable
             accessibilityRole="button"
@@ -124,7 +124,7 @@ export default function StreakScreen() {
                 Welcome back
               </Text>
               <Text variant="bodySm" tone="muted" className="mt-0.5">
-                It&apos;s been a few days — that&apos;s okay. Pick up tonight; consistency over time is what counts.
+                It&apos;s been a few days. That&apos;s okay. Pick up tonight; consistency over time is what counts.
               </Text>
             </View>
           </Pressable>

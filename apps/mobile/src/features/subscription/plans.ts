@@ -7,8 +7,8 @@ import type { PlanId } from '@onskin/types';
  *
  * IMPORTANT: these price labels are FALLBACK display values only. At runtime the
  * real, **localized** prices come from the RevenueCat Offering (docs/08 §12
- * "render in the store's localized currency from the offering — never hardcoded")
- * — wired once the SDK + account exist (B-REVENUECAT). The premium price is itself
+ * "render in the store's localized currency from the offering. Never hardcoded")
+ *. Wired once the SDK + account exist (B-REVENUECAT). The premium price is itself
  * under A/B test ($49.99 candidate vs $39.99 baseline, docs/08 §10), configured
  * remotely via offerings, so nothing here is a committed price.
  */
@@ -47,7 +47,7 @@ export function monthlyEquivalent(annualLabel: string): string {
   return `$${perMonth.toFixed(2)}`;
 }
 
-/** "Start 14 days free, then $49.99/year" — the honest, billed-amount-conspicuous
+/** "Start 14 days free, then $49.99/year". The honest, billed-amount-conspicuous
  *  offer line (docs/08 §3.1; the price is the most prominent element in the UI). */
 export function offerLine(plan: Plan): string {
   return plan.trialDays > 0

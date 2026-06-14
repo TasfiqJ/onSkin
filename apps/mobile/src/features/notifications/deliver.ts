@@ -13,7 +13,7 @@ import { loadNotifPrefs, type NotifPrefs } from './store';
  * Local-first notification delivery (docs/07 §3.4/§9). The utility AM/PM reminders
  * are scheduled as repeating DAILY local notifications at the user's chosen times
  * (no server round-trip, content on-device, §3.6 discretion). Behavioural triggers
- * go through the frequency-cap engine before firing. Everything is guarded — on
+ * go through the frequency-cap engine before firing. Everything is guarded. On
  * Expo Go / emulators / unsupported devices it degrades to a no-op rather than
  * throwing (real on-device behaviour + Android-14 exact-alarm acceptance is
  * B-NOTIF-VERIFY). NO health-revealing content is placed in any push payload; these
@@ -38,11 +38,11 @@ export async function configureNotifications(): Promise<void> {
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync('routine', {
         name: 'Routine reminders',
-        importance: Notifications.AndroidImportance.DEFAULT, // not high — calm, no exact alarm
+        importance: Notifications.AndroidImportance.DEFAULT, // not high. Calm, no exact alarm
       });
     }
   } catch {
-    /* unsupported environment — no-op */
+    /* unsupported environment. No-op */
   }
 }
 
@@ -55,7 +55,7 @@ export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'und
   }
 }
 
-/** The OS prompt — fired only after the soft-ask "yes" (docs/07 §3.2). */
+/** The OS prompt. Fired only after the soft-ask "yes" (docs/07 §3.2). */
 export async function requestPermission(): Promise<boolean> {
   try {
     const { status } = await Notifications.requestPermissionsAsync();
@@ -87,7 +87,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
       await Notifications.scheduleNotificationAsync({
         content: copyFor(kind, p.lockscreenDiscreet),
         // channelId belongs on the trigger in expo-notifications (SDK 56), not on
-        // content — so the calm 'routine' channel is actually applied on Android.
+        // content. So the calm 'routine' channel is actually applied on Android.
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
           hour: Math.floor(mins / 60),
@@ -99,7 +99,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
     if (p.amEnabled) await schedule('am_reminder', p.amTime);
     if (p.pmEnabled) await schedule('pm_step', p.pmTime);
   } catch {
-    /* unsupported environment — no-op (B-NOTIF-VERIFY) */
+    /* unsupported environment. No-op (B-NOTIF-VERIFY) */
   }
 }
 
@@ -128,8 +128,8 @@ async function sentThisWeekForTier(userId: string, tier: string): Promise<number
  */
 export async function notifyBehavioural(kind: NotificationKind, nowHHMM: string): Promise<boolean> {
   const p = await loadNotifPrefs();
-  // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier —
-  // and especially the off-by-default promotional tier — never fires.
+  // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier , 
+  // and especially the off-by-default promotional tier. Never fires.
   if (!tierEnabled(kind, p)) return false;
   let sent = 0;
   let userId: string | undefined;
@@ -138,7 +138,7 @@ export async function notifyBehavioural(kind: NotificationKind, nowHHMM: string)
     userId = data.user?.id;
     if (userId) sent = await sentThisWeekForTier(userId, tierOf(kind));
   } catch {
-    /* offline — treat as 0 sent */
+    /* offline. Treat as 0 sent */
   }
   const decision = canSend({ kind, sentThisWeekForTier: sent, now: nowHHMM, quietStart: p.quietStart, quietEnd: p.quietEnd });
   if (!decision.allowed) return false;

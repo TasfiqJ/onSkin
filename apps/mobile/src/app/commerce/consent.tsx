@@ -9,7 +9,7 @@ import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// Surface 04 (docs/10 §6) — the MHMDA consent gate. A separate, distinct, opt-in
+// Surface 04 (docs/10 §6). The MHMDA consent gate. A separate, distinct, opt-in
 // consent before any commerce telemetry leaves the device. The deep-research pass
 // confirmed inferred skincare-concern data is regulated consumer health data with a
 // live private right of action, so this gate is non-negotiable. MHMDA-strict (D-061):

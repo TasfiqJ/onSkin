@@ -1,8 +1,8 @@
 // Pure calm, forgiving streak logic (docs/07 §4, implementing the D-021 philosophy
 // docs/03 §6 set). A "completion day" is any day the user did their scheduled
-// routine — and recovery nights count (they're completions like any other). The
+// routine. And recovery nights count (they're completions like any other). The
 // streak FORGIVES: up to `freezeWindow` missed days in the active run are absorbed
-// by auto-applied freezes (never purchased), beyond which it resets — because past
+// by auto-applied freezes (never purchased), beyond which it resets. Because past
 // that point the habit has lapsed and the streak must stay meaningful. `longest`
 // is a non-decreasing personal best (D-011). All deterministic + unit-tested; the
 // freeze logic is offline-safe and mirrors the server `recompute_streak` target.
@@ -37,7 +37,7 @@ export type StreakState = {
   current: number;
   freezeActive: boolean; // a recent miss is being absorbed by a freeze (streak safe)
   frozenDates: string[]; // the missed days the active run has absorbed
-  lapsed: boolean; // the run broke (more misses than the window) — earn-back applies
+  lapsed: boolean; // the run broke (more misses than the window). Earn-back applies
 };
 
 /**
@@ -54,7 +54,7 @@ export function streakState(
   let committedFreezes = 0;
   const frozen: string[] = [];
   // Freezes are only "committed" when a further-back completion proves the miss was
-  // INTERIOR to the run — trailing misses before the streak started are discarded,
+  // INTERIOR to the run. Trailing misses before the streak started are discarded,
   // so a clean run that simply ended is never reported as frozen.
   let pendingFreezes = 0;
   let pendingDates: string[] = [];
@@ -68,7 +68,7 @@ export function streakState(
       pendingDates = [];
       continue;
     }
-    if (day === today) continue; // today not done yet — neutral, don't break
+    if (day === today) continue; // today not done yet. Neutral, don't break
     pendingFreezes += 1;
     pendingDates.push(day);
     if (committedFreezes + pendingFreezes > freezeWindow) break; // gap exceeds forgiveness
@@ -81,7 +81,7 @@ export function streakState(
 
 /**
  * The best forgiving run over all history (the non-decreasing personal best, D-011
- * — callers take greatest(priorBest, this)). Linear over the completion log.
+ *. Callers take greatest(priorBest, this)). Linear over the completion log.
  */
 export function bestStreak(completed: Set<string>, freezeWindow = DEFAULT_FREEZE_WINDOW): number {
   const sorted = [...completed].sort();

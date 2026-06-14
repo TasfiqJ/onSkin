@@ -32,7 +32,7 @@ export function initRamp(rampClass: RampClass, sensitivity: SensitivityLevel): R
   return { freqPerWeek: 2, targetPerWeek: 3, toleranceState: 'building' };
 }
 
-/** Offer a step-up only on a positive signal — never silently escalate (docs/03 §4).
+/** Offer a step-up only on a positive signal. Never silently escalate (docs/03 §4).
  *  ~21 days steady at the current cadence, no reported irritation, below target. */
 export function shouldOfferStepUp(opts: {
   startedAt: string;
@@ -57,5 +57,5 @@ export function deEscalate(state: RampState): RampState {
 export function applyTolerance(state: RampState, answer: 'comfortable' | 'a_bit_dry' | 'irritated'): RampState {
   if (answer === 'irritated') return deEscalate(state);
   if (answer === 'comfortable') return { ...state, toleranceState: 'steady' };
-  return state; // "a bit dry" — hold the current cadence
+  return state; // "a bit dry". Hold the current cadence
 }

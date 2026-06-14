@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase/client';
 
 // The skin-profile bits the scheduler + plan generator need (sensitivity,
 // pregnancy, goals). Shared so the cycle, the routine plan, and Today all honour
-// the SAME profile — critical for safety (pregnancy → retinoid suppressed must be
+// the SAME profile. Critical for safety (pregnancy → retinoid suppressed must be
 // reflected everywhere, not just in one surface). Guarded for offline / no-DB.
 export type ProfileBits = { sensitivity: SensitivityLevel; pregnancy: boolean; goals: GoalId[] };
 

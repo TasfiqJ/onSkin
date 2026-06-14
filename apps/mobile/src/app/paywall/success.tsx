@@ -8,7 +8,7 @@ import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { colors } from '@/theme/tokens';
 
-// Purchase success (design 05, docs/08 §3.3) — a calm confirmation with honest
+// Purchase success (design 05, docs/08 §3.3). A calm confirmation with honest
 // renewal terms, routing straight into the value (Day-0 is decisive).
 function fmt(iso: string | null): string {
   const d = iso ? new Date(iso) : new Date(Date.now() + PLANS.annual.trialDays * 86_400_000);

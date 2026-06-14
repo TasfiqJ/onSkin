@@ -1,4 +1,4 @@
-// Product categories for manual intake (docs/04 §4.4) — the dropdown drives the
+// Product categories for manual intake (docs/04 §4.4). The dropdown drives the
 // default PAO via CATEGORY_PAO_DEFAULTS (docs/04 §3 waterfall step 2) and the
 // safety-critical / printed-expiry exceptions. Labels are the UI strings.
 
@@ -49,7 +49,7 @@ export function isSafetyCriticalCategory(category: string | null | undefined): b
   return !!category && SAFETY_CRITICAL.has(category as ProductCategory);
 }
 
-/** Sunscreen is an OTC drug carrying a regulated printed expiry — prefer it over
+/** Sunscreen is an OTC drug carrying a regulated printed expiry. Prefer it over
  *  a PAO estimate (docs/04 §3). */
 export function usesPrintedExpiry(category: string | null | undefined): boolean {
   return category === 'spf';

@@ -6,7 +6,7 @@ import { Button, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { track } from '@/lib/analytics/track';
 
-// 02 · Goals — large tappable cards, multi-select up to two (design spec p.3).
+// 02 · Goals. Large tappable cards, multi-select up to two (design spec p.3).
 export default function GoalsScreen() {
   const { goals, toggleGoal } = useOnboarding();
 
@@ -20,7 +20,7 @@ export default function GoalsScreen() {
           What brings you here?
         </Text>
         <Text variant="body" tone="muted" className="mt-2">
-          Choose up to two — this shapes your plan.
+          Choose up to two. This shapes your plan.
         </Text>
         <View className="mt-6 gap-3">
           {GOALS.map((g) => (

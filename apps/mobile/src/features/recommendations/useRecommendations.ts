@@ -11,8 +11,8 @@ import { DEFAULT_PREFERENCES } from './preferences';
 import { loadDismissed, loadPreferences } from './store';
 
 // The recommendation data layer (docs/09 §5/§12). Assembles the engine's inputs
-// from the user's REAL state — the live shelf + its conflicts (useShelf), the shared
-// skin profile (useProfileBits), and the local-first preferences/dismissals — then
+// from the user's REAL state. The live shelf + its conflicts (useShelf), the shared
+// skin profile (useProfileBits), and the local-first preferences/dismissals. Then
 // runs the pure, tested engine. Works offline / before the backend exists
 // (B-SUPABASE): every input is local-first. *** No commercial input anywhere. ***
 

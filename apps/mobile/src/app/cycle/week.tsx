@@ -10,7 +10,7 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Week / cycle overview (design screen 01, docs/05 §6.1). A calm dark surface
-// showing the stable AM block + the rotating PM cycle — only tonight is tinted,
+// showing the stable AM block + the rotating PM cycle. Only tonight is tinted,
 // with the "next acid night" line from the projection. No counts, no pressure.
 function WeekScreen() {
   const { data } = useCycle();
@@ -47,10 +47,10 @@ function WeekScreen() {
         </Text>
 
         {data?.paused ? (
-          <Banner text="Your cycle is paused — resume whenever you're ready." onPress={() => router.push('/cycle/disruption')} />
+          <Banner text="Your cycle is paused. Resume whenever you're ready." onPress={() => router.push('/cycle/disruption')} />
         ) : data?.recovery.active ? (
           <Banner
-            text={`Recovery mode · day ${data.recovery.day} of ${data.recovery.days} — barrier support only.`}
+            text={`Recovery mode · day ${data.recovery.day} of ${data.recovery.days}. Barrier support only.`}
             onPress={() => router.push('/cycle/recovery')}
           />
         ) : null}
@@ -187,5 +187,5 @@ function nightSub(slot: string, productName: string | null): string {
   return productName ?? '';
 }
 
-// The full skin-cycling scheduler is a Pro value prop (docs/08 §2.2) — gated.
+// The full skin-cycling scheduler is a Pro value prop (docs/08 §2.2). Gated.
 export default withProGate('scheduler', WeekScreen);

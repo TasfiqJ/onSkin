@@ -10,7 +10,7 @@ import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// Honest win-back (design 09, docs/08 §6) — value restated, a respectful 30%-off
+// Honest win-back (design 09, docs/08 §6). Value restated, a respectful 30%-off
 // offer, an easy "no". Sparse, ARL-clean, never pressuring. Dark surface.
 const BG = '#1B1813';
 

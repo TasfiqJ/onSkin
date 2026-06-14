@@ -3,11 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { STARTER_RULES } from './rules';
 
 // Claim-safety + calm-copy regression guard (docs/02 §7.7, §9). In-app rule copy
-// is a "claims surface" under the FD&C Act / FTC — it must stay COSMETIC and CALM.
+// is a "claims surface" under the FD&C Act / FTC. It must stay COSMETIC and CALM.
 // This guard survives every future rule edit; B-DERM-REVIEW/B-PRIVACY-COPY still
 // own final wording, but no edit may reintroduce a drug claim or alarm word.
 
-// Disease/drug-claim verbs (FD&C §201(g)/(i)) — never allowed in any rule copy.
+// Disease/drug-claim verbs (FD&C §201(g)/(i)). Never allowed in any rule copy.
 const DRUG_CLAIMS = [
   /\btreats?\b/i,
   /\bcures?\b/i,
@@ -18,7 +18,7 @@ const DRUG_CLAIMS = [
   /\bprevents?\s+(acne|breakouts|disease|wrinkles)\b/i,
 ];
 
-// Non-calm / alarmist words — banned in cosmetic-compatibility copy (§7.7:
+// Non-calm / alarmist words. Banned in cosmetic-compatibility copy (§7.7:
 // "no exclamation, no 'warning/danger/avoid'"). Safety copy defers calmly too.
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\bwarning\b/i, /\bavoid\b/i, /!/];
 
@@ -31,7 +31,7 @@ function offenders(text: string, patterns: RegExp[]): string[] {
 
 describe('claim-safety: no drug/disease verbs in rule copy (§9)', () => {
   for (const r of STARTER_RULES) {
-    it(`${r.tagA} × ${r.tagB} (${r.interactionType}) — mechanism + resolution are cosmetic`, () => {
+    it(`${r.tagA} × ${r.tagB} (${r.interactionType}). Mechanism + resolution are cosmetic`, () => {
       expect(offenders(r.mechanism, DRUG_CLAIMS)).toEqual([]);
       expect(offenders(r.resolutionCopy, DRUG_CLAIMS)).toEqual([]);
     });
@@ -40,7 +40,7 @@ describe('claim-safety: no drug/disease verbs in rule copy (§9)', () => {
 
 describe('calm copy: no alarmist words (§7.7)', () => {
   for (const r of STARTER_RULES) {
-    it(`${r.tagA} × ${r.tagB} — mechanism + resolution are calm`, () => {
+    it(`${r.tagA} × ${r.tagB}. Mechanism + resolution are calm`, () => {
       expect(offenders(r.mechanism, ALARM)).toEqual([]);
       expect(offenders(r.resolutionCopy, ALARM)).toEqual([]);
     });
@@ -64,7 +64,7 @@ describe('rule-set invariants', () => {
     }
   });
 
-  it('no safety rule overstates evidence as "established" (§4.8 — caution, not proven harm)', () => {
+  it('no safety rule overstates evidence as "established" (§4.8. Caution, not proven harm)', () => {
     for (const r of STARTER_RULES.filter((x) => x.interactionType === 'safety')) {
       expect(r.evidenceLabel).not.toBe('established');
     }

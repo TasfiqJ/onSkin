@@ -12,7 +12,7 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// Surface 02 (docs/10 §4) — a shoppable Stack. An expert/derm-reviewed routine, IN
+// Surface 02 (docs/10 §4). A shoppable Stack. An expert/derm-reviewed routine, IN
 // ORDER (the routine sequence, never the payout). Each item carries the FTC "Paid
 // link" wording; tapping is consent-gated and routes through the same opaque-token
 // attribution as the where-to-buy affordance. Curated on merit; commission never
@@ -37,7 +37,7 @@ export default function StackDetailScreen() {
     track('where_to_buy_clicked', { product_type: item.productType, source: 'stack' });
     const token = buildClickToken();
     await recordClick({ clickToken: token, productType: item.productType, source: 'none', consented: true });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED — resolve + open the real retailer link here
+    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Resolve + open the real retailer link here
     // (opaque token only). Until then, the honest stub.
     Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [{ text: 'OK' }]);
   };
@@ -115,7 +115,7 @@ export default function StackDetailScreen() {
             ))}
           </View>
 
-          {/* FTC disclosure — order set on merit, commission never changed the list */}
+          {/* FTC disclosure. Order set on merit, commission never changed the list */}
           <Text className="mt-3.5 text-[11px]" tone="muted" style={{ lineHeight: 16 }}>
             {COMMERCE_COPY.stack.disclosure}
           </Text>

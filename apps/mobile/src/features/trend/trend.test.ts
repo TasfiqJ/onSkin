@@ -10,7 +10,7 @@ import {
   type ClassifyInput,
 } from './trend';
 
-// The within-person trend engine (docs/12 §6/§7). It produces a CHANGE-STATE only —
+// The within-person trend engine (docs/12 §6/§7). It produces a CHANGE-STATE only , 
 // never a score, grade, or number. The fairness-adjusted noise floor (higher for darker
 // Monk tones) is the load-bearing safety property: a darker-skinned user is never handed
 // a falsely confident trend.
@@ -19,7 +19,7 @@ function input(over: Partial<ClassifyInput>): ClassifyInput {
   return { deltaMetric: 0.05, captureCount: 6, lightingConsistent: true, monkBand: 2, ...over };
 }
 
-describe('change-state classification (no number, ever — just which state to narrate)', () => {
+describe('change-state classification (no number, ever. Just which state to narrate)', () => {
   it('insufficient_data below the minimum capture count', () => {
     expect(classifyChange(input({ captureCount: MIN_CAPTURES - 1 })).changeState).toBe('insufficient_data');
   });
@@ -32,14 +32,14 @@ describe('change-state classification (no number, ever — just which state to n
   it('change_observed only above the tone-adjusted MDC floor', () => {
     expect(classifyChange(input({ deltaMetric: 0.4, monkBand: 2 })).changeState).toBe('change_observed');
   });
-  it('consistent below the floor — a celebrated adherence win, not failure', () => {
+  it('consistent below the floor. A celebrated adherence win, not failure', () => {
     const r = classifyChange(input({ deltaMetric: 0.05, monkBand: 2 }));
     expect(r.changeState).toBe('consistent');
     expect(isCelebratedState(r.changeState)).toBe(true);
   });
 });
 
-describe('fairness floor — darker Monk tones get an equal-or-HIGHER threshold (D-071)', () => {
+describe('fairness floor. Darker Monk tones get an equal-or-HIGHER threshold (D-071)', () => {
   it('the tone-adjustment factor is monotonic non-decreasing with darker tones', () => {
     const factors = [1, 3, 5, 7, 9, 10].map(toneAdjustmentFactor);
     for (let i = 1; i < factors.length; i++) expect(factors[i]!).toBeGreaterThanOrEqual(factors[i - 1]!);

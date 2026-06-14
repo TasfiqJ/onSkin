@@ -2,7 +2,7 @@ import type { EntitlementStore, PeriodType, SubscriptionTier } from '@onskin/typ
 
 /**
  * Pure entitlement-state derivation (docs/08 §4 "gate on the cached entitlement,
- * offline-safe"). The app gates on `is_active` regardless of SOURCE — a store
+ * offline-safe"). The app gates on `is_active` regardless of SOURCE. A store
  * purchase, a carded trial, or the app-granted reverse trial all produce `isPro`.
  * A lapsed entitlement falls back to the free tier with `expired` set so the
  * downgrade / win-back surfaces can frame it honestly (never data-deleting). All
@@ -24,7 +24,7 @@ export type SubscriptionState = {
   tier: SubscriptionTier;
   isPro: boolean;
   periodType: PeriodType | null;
-  /** The stored record's period_type even when lapsed — lets the UI pick the
+  /** The stored record's period_type even when lapsed. Lets the UI pick the
    *  reverse-trial re-offer (design 03) vs the paid graceful-downgrade (design 08). */
   priorPeriodType: PeriodType | null;
   expiresAt: string | null;
@@ -32,7 +32,7 @@ export type SubscriptionState = {
   willRenew: boolean | null;
   inReverseTrial: boolean;
   inTrial: boolean;
-  /** Had an entitlement that has lapsed — drives the graceful downgrade + win-back. */
+  /** Had an entitlement that has lapsed. Drives the graceful downgrade + win-back. */
   expired: boolean;
 };
 
@@ -84,7 +84,7 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
   return { ...free, expired: true };
 }
 
-/** Convenience for the gate sites (docs/08 §4 — gate at the UI). */
+/** Convenience for the gate sites (docs/08 §4. Gate at the UI). */
 export function isProState(s: SubscriptionState): boolean {
   return s.isPro;
 }

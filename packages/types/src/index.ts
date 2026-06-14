@@ -1,18 +1,18 @@
 /**
- * @onskin/types — shared domain types.
+ * @onskin/types. Shared domain types.
  *
  * These literal unions mirror the data model in docs/01 §3 (and the catalog
  * sketch in docs/00 §2). They are the single source of truth for both the
  * mobile client and the Supabase Edge Functions. The generated Supabase
  * `Database` type lives in `./database.types.ts` (regenerate with
- * `supabase gen types typescript` once the project exists — see BLOCKERS
+ * `supabase gen types typescript` once the project exists. See BLOCKERS
  * B-SUPABASE).
  */
 
 export type * from './database.types';
 
 // --- Consent (docs/01 §3 `consents`, §4 placement map) -----------------------
-/** Each consent is unbundled — collection is "separate and distinct" from
+/** Each consent is unbundled. Collection is "separate and distinct" from
  *  sharing under MHMDA, and health-data needs explicit GDPR Art. 9 consent. */
 export const CONSENT_TYPES = [
   'account',
@@ -22,7 +22,7 @@ export const CONSENT_TYPES = [
   'marketing',
   'data_sharing',
   // docs/11 §8 / D-066: a NEW, separate, unbundled consent for posting health-adjacent
-  // info to the community (MHMDA / GDPR Art. 9) — never reused from photo/data_sharing.
+  // info to the community (MHMDA / GDPR Art. 9). Never reused from photo/data_sharing.
   'community_participation',
   // docs/12 §8 / D-072: a NEW, separate, DEFAULT-OFF consent for the on-device
   // within-person photo trend insight (still a health inference; distinct from
@@ -64,7 +64,7 @@ export type GoalId = (typeof GOALS)[number]['id'];
 export type RoutineType = 'AM' | 'PM' | 'custom';
 export type StepFrequency = 'daily' | 'skin_cycling' | 'every_n_days';
 /** Skin-cycling night meanings per docs/01 §3: 1=exfoliation, 2=retinoid,
- *  3–4=recovery. */
+ *  3-4=recovery. */
 export type CyclingNight = 1 | 2 | 3 | 4;
 export type CompletionSource = 'live' | 'backfilled';
 
@@ -96,7 +96,7 @@ export type DisruptionReason = 'procedure' | 'irritation' | 'travel' | 'break';
 
 // --- Shelf (docs/01 §3 `user_products`, docs/04 Smart Shelf) ------------------
 export type ProductStatus = 'active' | 'finished' | 'discarded';
-/** Where the PAO value came from — recorded so the UI can be honest about
+/** Where the PAO value came from. Recorded so the UI can be honest about
  *  estimates (docs/04 §3 sourcing waterfall). */
 export type PaoSource = 'label' | 'catalog' | 'category_default' | 'unknown';
 /** Where the surfaced expiry came from (docs/04 §3). */
@@ -111,20 +111,20 @@ export type ShelfScanResult = 'matched' | 'no_match' | 'ambiguous' | 'offline_qu
  *  ghost so the SERIES stays internally consistent (docs/06 §3). 'front' default. */
 export const PHOTO_SERIES = ['front', 'left', 'right', 'cheek_l', 'cheek_r', 'forehead'] as const;
 export type PhotoSeries = (typeof PHOTO_SERIES)[number];
-/** Time-of-day consistency hint — shots are most comparable at the same hour
+/** Time-of-day consistency hint. Shots are most comparable at the same hour
  *  (docs/06 §3 skin-prep variables). */
 export type TimeOfDay = 'morning' | 'evening';
-/** On-device lighting check states (docs/06 §3) — calm guidance, never alarm. */
+/** On-device lighting check states (docs/06 §3). Calm guidance, never alarm. */
 export type LightingState = 'good' | 'too_dark' | 'too_warm' | 'uneven';
-/** A per-shot quality verdict surfaced at review — flagged, NEVER blocked
+/** A per-shot quality verdict surfaced at review. Flagged, NEVER blocked
  *  (docs/06 §3, the doc's D-029). The user always controls capture. */
 export type PhotoQualityFlag = 'matched' | 'darker' | 'misaligned' | 'low';
-/** Calm timeline milestones — gentle markers, NOT gamified points (docs/06 §4).
+/** Calm timeline milestones. Gentle markers, NOT gamified points (docs/06 §4).
  *  `one_cycle` (~12 weeks / 84 days) is the full-results-window marker; a distinct
  *  per-user cycle-length milestone is a future refinement once cycle length is
  *  plumbed through (today the pure helper has no per-user length). */
 export type PhotoMilestone = 'first' | 'four_weeks' | 'one_cycle';
-/** PostHog photo events — METADATA ONLY, never image data (docs/06 §10). */
+/** PostHog photo events. METADATA ONLY, never image data (docs/06 §10). */
 export const PHOTO_EVENTS = [
   'photo_captured',
   'first_photo_captured',
@@ -151,9 +151,9 @@ export const NOTIFICATION_KINDS = [
   'winback',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
-/** Glanceable widget kinds — 1–3 data points each (docs/07 §5.2). */
+/** Glanceable widget kinds. 1-3 data points each (docs/07 §5.2). */
 export type WidgetKind = 'tonight' | 'progress' | 'streak' | 'cycle';
-/** PostHog reminders/streaks/widgets events — metadata only (docs/07 §9). */
+/** PostHog reminders/streaks/widgets events. Metadata only (docs/07 §9). */
 export const ENGAGEMENT_EVENTS = [
   'notification_sent',
   'notification_opened',
@@ -191,7 +191,7 @@ export type GatedFeature =
   // docs/13 §15: the CLOUD-GROUNDED language layer is Pro-gated with a hard trial cap.
   // The deterministic, on-device, $0 advisor (the moat taste) stays free.
   | 'ask';
-/** PostHog subscription funnel events (docs/08 §10) — metadata only. */
+/** PostHog subscription funnel events (docs/08 §10). Metadata only. */
 export const SUBSCRIPTION_EVENTS = [
   'paywall_shown',
   'paywall_dismissed',
@@ -209,7 +209,7 @@ export type SubscriptionEvent = (typeof SUBSCRIPTION_EVENTS)[number];
 
 // --- Personalized recommendations (docs/09) ----------------------------------
 /** The six honest, needs-based triggers (docs/09 §4). The engine recommends only
- *  when one fires; an empty set is the honest seventh state — "you're set". */
+ *  when one fires; an empty set is the honest seventh state. "you're set". */
 export const RECOMMENDATION_TRIGGERS = [
   'gap',
   'replacement',
@@ -219,7 +219,7 @@ export const RECOMMENDATION_TRIGGERS = [
   'routine_completion',
 ] as const;
 export type RecommendationTrigger = (typeof RECOMMENDATION_TRIGGERS)[number];
-/** Honest personalisation filters (docs/09 §8) — they constrain *what fits you*,
+/** Honest personalisation filters (docs/09 §8). They constrain *what fits you*,
  *  not *what sells*. They HARD-CONSTRAIN the candidate set (§5). */
 export const VALUES_FILTERS = [
   'fragrance_free',
@@ -230,7 +230,7 @@ export const VALUES_FILTERS = [
 ] as const;
 export type ValuesFilter = (typeof VALUES_FILTERS)[number];
 export type BudgetBand = 'drugstore' | 'mid' | 'premium';
-/** PostHog recommendation events (docs/09 §12) — metadata only; tune RELEVANCE on
+/** PostHog recommendation events (docs/09 §12). Metadata only; tune RELEVANCE on
  *  accept/dismiss + the "how"-expansion, NEVER toward commission. */
 export const RECOMMENDATION_EVENTS = [
   'recommendation_shown',
@@ -251,9 +251,9 @@ export type AffiliateSource = 'shopmy' | 'skimlinks' | 'direct' | 'none';
  *  anonymous influencer stacks are a trust liability (docs/10 §3). */
 export type CuratorKind = 'editorial' | 'derm' | 'creator';
 /** A polled ShopMy Order-Report row's lifecycle (docs/10 §5; pending → locked after
- *  the 30–120-day return window, or returned). */
+ *  the 30-120-day return window, or returned). */
 export type OrderStatus = 'pending' | 'locked' | 'returned';
-/** PostHog commerce events (docs/10 §10) — metadata only; NEVER tune ranking by
+/** PostHog commerce events (docs/10 §10). Metadata only; NEVER tune ranking by
  *  these (church and state). */
 export const COMMERCE_EVENTS = [
   'where_to_buy_shown',
@@ -266,10 +266,10 @@ export const COMMERCE_EVENTS = [
 export type CommerceEvent = (typeof COMMERCE_EVENTS)[number];
 
 // --- AI trend analysis / "Changes in your own photos" (docs/12) --------------
-/** The on-device within-person change state (docs/12 §6/§10). NEVER a score/grade —
+/** The on-device within-person change state (docs/12 §6/§10). NEVER a score/grade , 
  *  "consistent / no detectable change" is a CELEBRATED first-class output, never failure. */
 export type TrendChangeState = 'consistent' | 'change_observed' | 'inconclusive_lighting' | 'insufficient_data';
-/** PostHog trend events (docs/12 §13) — metadata only, never an image or skin value;
+/** PostHog trend events (docs/12 §13). Metadata only, never an image or skin value;
  *  instrument for OPT-IN / RETENTION, never toward a score or "improvement". */
 export const TREND_EVENTS = [
   'trend_insights_opted_in',
@@ -283,24 +283,24 @@ export type TrendEvent = (typeof TREND_EVENTS)[number];
 // --- "Ask OnSkin" conversational advisor (docs/13) ---------------------------
 /** The deterministic intent router (docs/13 §4). The router runs FIRST, BEFORE any
  *  language model, so medical/dosing/diagnosis intent is caught at the door and
- *  escalated — never narrated. Deterministic intents are answered on-device at $0;
+ *  escalated. Never narrated. Deterministic intents are answered on-device at $0;
  *  grounded intents need the (Pro-gated, currently blocked) cloud layer. */
 export const ASK_INTENTS = [
-  'conflict_q', // "can I use X with Y" / "is there a conflict on my shelf" — detectConflicts()
-  'routine_q', // "what should I do tonight" — the generated plan
-  'replenish_q', // "what's running low" — the shelf PAO/expiry
-  'product_fit_q', // "is this product a fit for me" — the recommend()/fit engine
+  'conflict_q', // "can I use X with Y" / "is there a conflict on my shelf". DetectConflicts()
+  'routine_q', // "what should I do tonight". The generated plan
+  'replenish_q', // "what's running low". The shelf PAO/expiry
+  'product_fit_q', // "is this product a fit for me". The recommend()/fit engine
   'concern_q', // a cosmetic-concern question needing the curated corpus (grounded)
-  'medical', // diagnosis/dose/condition/severe — ESCALATE, never answer
-  'unsupported', // a product/topic outside the curated corpus — honest refusal
-  'out_of_scope', // off-topic — refuse calmly
+  'medical', // diagnosis/dose/condition/severe. ESCALATE, never answer
+  'unsupported', // a product/topic outside the curated corpus. Honest refusal
+  'out_of_scope', // off-topic. Refuse calmly
 ] as const;
 export type AskIntent = (typeof ASK_INTENTS)[number];
 
-/** How a turn was answered (docs/13 §4/§10) — the content-free audit dimension. */
+/** How a turn was answered (docs/13 §4/§10). The content-free audit dimension. */
 export type AskAnswerKind = 'deterministic' | 'grounded' | 'escalate' | 'refuse';
 
-/** PostHog Ask events (docs/13 §13) — metadata only, NEVER the question or answer
+/** PostHog Ask events (docs/13 §13). Metadata only, NEVER the question or answer
  *  text; instrument for TRUST / RETENTION / COST, never engagement maximisation. */
 export const ASK_EVENTS = [
   'ask_opened',
@@ -316,13 +316,13 @@ export type AskEvent = (typeof ASK_EVENTS)[number];
 // --- Community layer / "Skin Notes" (docs/11) --------------------------------
 /** Expert-seeded note kinds (docs/11 §7). NOT peer UGC. */
 export type CommunityNoteKind = 'myth_vs_evidence' | 'expert_answer' | 'explainer';
-/** Who authored a note — expert/editorial only; never anonymous peers (docs/11 §4). */
+/** Who authored a note. Expert/editorial only; never anonymous peers (docs/11 §4). */
 export type NoteProvenance = 'expert' | 'editorial';
-/** Peer question moderation lifecycle (docs/11 §6 — human PRE-moderation). */
+/** Peer question moderation lifecycle (docs/11 §6. Human PRE-moderation). */
 export type ModerationState = 'pending' | 'approved' | 'rejected';
-/** Structured reactions — a CLOSED vocabulary, never free text (docs/11 §5/§6 flywheel). */
+/** Structured reactions. A CLOSED vocabulary, never free text (docs/11 §5/§6 flywheel). */
 export type CommunityReaction = 'helped' | 'use_this';
-/** PostHog community events (docs/11 §12) — metadata only; NEVER instrument toward
+/** PostHog community events (docs/11 §12). Metadata only; NEVER instrument toward
  *  engagement maximisation (the addictive-design pattern §5 forbids). */
 export const COMMUNITY_EVENTS = [
   'skin_note_viewed',
@@ -346,7 +346,7 @@ export type ConflictSeverity = 'none' | 'mild' | 'moderate' | 'high';
 /** The five interaction classes + the `myth` reassurance label (docs/02 §4.1). */
 export type InteractionType = 'irritation' | 'stability' | 'efficacy' | 'synergy' | 'safety' | 'myth';
 
-/** Internal SORT-anchored grade (Ebell et al., AFP 2004) — docs/02 §4.3. */
+/** Internal SORT-anchored grade (Ebell et al., AFP 2004). Docs/02 §4.3. */
 export type EvidenceGrade = 'A' | 'B' | 'C';
 /** Consumer-facing evidence label mapped on top of the grade (docs/02 §4.3). */
 export type EvidenceLabel = 'established' | 'plausible' | 'contested' | 'refuted';

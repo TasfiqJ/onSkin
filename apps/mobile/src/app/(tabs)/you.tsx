@@ -64,7 +64,7 @@ export default function YouScreen() {
   async function setConsent(type: 'marketing' | 'data_sharing', granted: boolean) {
     qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({ ...(prev ?? {}), [type]: granted }));
     // data_sharing IS the MHMDA third-party-sharing consent that gates "where to buy"
-    // — keep the local-first commerce flag in sync so revoking here re-locks paid links
+    //. Keep the local-first commerce flag in sync so revoking here re-locks paid links
     // even before the backend exists (review fix, docs/10 §6 / D-061).
     if (type === 'data_sharing') {
       await setCommerceConsentLocal(granted);
@@ -75,7 +75,7 @@ export default function YouScreen() {
         type,
         granted,
         version: CONSENT_COPY_VERSION,
-        consentText: `[PLACEHOLDER ${type} consent — B-PRIVACY-COPY]`,
+        consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
       });
     } catch {
       /* best-effort until backend configured */
@@ -191,10 +191,10 @@ export default function YouScreen() {
           </Text>
           {(
             [
-              ['Ask OnSkin — your evidence-grounded advisor', '/ask'],
+              ['Ask OnSkin. Your evidence-grounded advisor', '/ask'],
               ['Recommendations', '/recommendations'],
               ['Recommendation preferences', '/recommendations/preferences'],
-              ['Skin Notes — myth vs evidence', '/community'],
+              ['Skin Notes. Myth vs evidence', '/community'],
               ['Shoppable routines', '/commerce/stacks'],
             ] as const
           ).map(([label, href]) => (
@@ -217,7 +217,7 @@ export default function YouScreen() {
           </Text>
           <Row
             label="How we stay honest"
-            hint="Why recommendations and money stay separate — and every paid link is disclosed.">
+            hint="Why recommendations and money stay separate. And every paid link is disclosed.">
             <Text
               variant="body"
               tone="muted"
@@ -227,7 +227,7 @@ export default function YouScreen() {
               ›
             </Text>
           </Row>
-          <Row label="Share data with partners (where-to-buy)" hint="Off by default. A separate, revocable MHMDA choice — decline and we won’t show paid links.">
+          <Row label="Share data with partners (where-to-buy)" hint="Off by default. A separate, revocable MHMDA choice. Decline and we won’t show paid links.">
             <Text
               variant="body"
               tone="muted"
@@ -255,7 +255,7 @@ export default function YouScreen() {
           </Row>
           <Row
             label="Encrypted cloud backup"
-            hint="Off by default — a separate choice. Photos stay on this phone until you turn it on.">
+            hint="Off by default. A separate choice. Photos stay on this phone until you turn it on.">
             <Toggle value={cloudBackup.data ?? false} onChange={(v) => void setCloud(v)} />
           </Row>
         </Card>
@@ -307,7 +307,7 @@ export default function YouScreen() {
             </Text>
           </Row>
           <Row
-            label="Ask OnSkin — private advisor"
+            label="Ask OnSkin. Private advisor"
             hint="Optional · the deeper cloud advisor · off by default. The on-device answers about your own shelf are always free.">
             <Text
               variant="body"
@@ -319,7 +319,7 @@ export default function YouScreen() {
             </Text>
           </Row>
           <Text variant="bodySm" tone="muted" className="mt-1">
-            Withdraw health-data consent from the privacy policy screen — your data is then deleted.
+            Withdraw health-data consent from the privacy policy screen. Your data is then deleted.
           </Text>
         </Card>
 

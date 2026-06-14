@@ -2,7 +2,7 @@ import type { ConflictSeverity, FunctionalTag, IngredientSubflag } from '@onskin
 
 import { STARTER_RULES, type ConflictRule } from './rules';
 
-// The conflict / synergy engine (docs/02 §4). Pure, deterministic, testable —
+// The conflict / synergy engine (docs/02 §4). Pure, deterministic, testable , 
 // the doc mandates a fixture test per rule for this liability surface (§10).
 // Tag-based, both-orders matching; concentration- and sensitivity-modulated
 // severity; sub-flag exemptions; safety via a profile-derived `pregnancy`
@@ -111,7 +111,7 @@ export function detectConflicts(
           if (rule.appliesWhen?.coUseIf === 'resistant' && profile.sensitivity === 'resistant') continue;
 
           // Dose-gated safety: high-dose salicylic × pregnancy only fires on a
-          // high-concentration product (docs/02 §4.8 — low-dose BHA is fine).
+          // high-concentration product (docs/02 §4.8. Low-dose BHA is fine).
           if (rule.appliesWhen?.requiresHighDose) {
             const real = a.id === '__pregnancy__' ? b : b.id === '__pregnancy__' ? a : null;
             if (!real || real.concentration !== 'high') continue;

@@ -134,7 +134,7 @@ export default function TimingScreen() {
             </View>
           </View>
           <Text variant="bodySm" tone="muted" className="mt-2">
-            Nothing fires inside this window — even your routine reminders wait until morning.
+            Nothing fires inside this window. Even your routine reminders wait until morning.
           </Text>
         </View>
 
@@ -173,7 +173,7 @@ export default function TimingScreen() {
               </View>
             </View>
             <Text variant="label" tone="muted" className="mt-2 text-center" style={{ fontSize: 11 }}>
-              {p.lockscreenDiscreet ? 'preview — kept generic on purpose' : 'preview — showing routine detail'}
+              {p.lockscreenDiscreet ? 'preview. Kept generic on purpose' : 'preview. Showing routine detail'}
             </Text>
           </View>
         </View>

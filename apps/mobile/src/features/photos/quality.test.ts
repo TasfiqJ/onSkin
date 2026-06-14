@@ -11,7 +11,7 @@ import {
   type CaptureSignals,
 } from './quality';
 
-// A perfectly-aligned, well-lit frame — the auto-shutter "ready" baseline.
+// A perfectly-aligned, well-lit frame. The auto-shutter "ready" baseline.
 const READY: CaptureSignals = {
   alignment: 0.95,
   roll: 1,
@@ -42,7 +42,7 @@ describe('lighting check (docs/06 §3)', () => {
   });
 });
 
-describe('capture readiness — the auto-shutter gate (docs/06 §3, D-029)', () => {
+describe('capture readiness. The auto-shutter gate (docs/06 §3, D-029)', () => {
   it('arms when pose + lighting are all within tolerance', () => {
     expect(poseAligned(READY)).toBe(true);
     expect(isCaptureReady(READY)).toBe(true);
@@ -59,12 +59,12 @@ describe('capture readiness — the auto-shutter gate (docs/06 §3, D-029)', () 
   });
 });
 
-describe('coaching line — one calm instruction at a time (the spec line)', () => {
+describe('coaching line. One calm instruction at a time (the spec line)', () => {
   it('asks to turn left when the head is turned right past tolerance', () => {
-    expect(coachingLine({ ...READY, yaw: 14 })).toBe('Turn slightly left — almost there');
+    expect(coachingLine({ ...READY, yaw: 14 })).toBe('Turn slightly left. Almost there');
   });
   it('asks to turn right for the opposite', () => {
-    expect(coachingLine({ ...READY, yaw: -14 })).toBe('Turn slightly right — almost there');
+    expect(coachingLine({ ...READY, yaw: -14 })).toBe('Turn slightly right. Almost there');
   });
   it('asks to lower the chin when pitched up', () => {
     expect(coachingLine({ ...READY, pitch: 16 })).toBe('Lower your chin');
@@ -77,14 +77,14 @@ describe('coaching line — one calm instruction at a time (the spec line)', () 
   });
   it('surfaces the biggest offender first when several are off', () => {
     // yaw is further over tolerance than pitch → turn instruction wins.
-    expect(coachingLine({ ...READY, yaw: 30, pitch: 12 })).toBe('Turn slightly left — almost there');
+    expect(coachingLine({ ...READY, yaw: 30, pitch: 12 })).toBe('Turn slightly left. Almost there');
   });
   it('says ready when everything is in tolerance', () => {
-    expect(coachingLine(READY)).toBe('Hold still — looking good');
+    expect(coachingLine(READY)).toBe('Hold still. Looking good');
   });
 });
 
-describe('review verdict — flagged, never blocked (docs/06 §3, D-029)', () => {
+describe('review verdict. Flagged, never blocked (docs/06 §3, D-029)', () => {
   it('matched when aligned + well-lit', () => {
     expect(reviewQuality({ alignment: 0.95, lighting: 0.85 }).flag).toBe('matched');
   });
@@ -97,7 +97,7 @@ describe('review verdict — flagged, never blocked (docs/06 §3, D-029)', () =>
     expect(r.aligned).toBe(false);
     expect(r.wellLit).toBe(true);
   });
-  it('low when both are off — still returns a verdict (save is never blocked)', () => {
+  it('low when both are off. Still returns a verdict (save is never blocked)', () => {
     expect(reviewQuality({ alignment: 0.3, lighting: 0.3 }).flag).toBe('low');
   });
 });

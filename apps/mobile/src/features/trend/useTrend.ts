@@ -8,9 +8,9 @@ import { isTrendInsightsConsented } from './consent';
 import { trendNarrative } from './copy';
 import { classifyChange, MIN_CAPTURES } from './trend';
 
-// The trend data layer (docs/12 §6). Assembles the engine's inputs — the user's own
+// The trend data layer (docs/12 §6). Assembles the engine's inputs. The user's own
 // guided-photo series (usePhotos), their Monk tone band (for the fairness-adjusted noise
-// floor), and the lighting QA — then runs the pure classifier. *** The real registered-
+// floor), and the lighting QA. Then runs the pure classifier. *** The real registered-
 // pair SSIM/colour delta comes from the on-device CV engine (B-AI-ONDEVICE); v1 uses a
 // conservative stub so the calm "consistent" output (the common, celebrated case)
 // renders, while the classification + the fairness floor are the real, tested logic. ***
@@ -46,7 +46,7 @@ export function useTrendInsight() {
   const insight = useMemo(() => {
     if (!consent.data) return null;
     const captureCount = photos.data?.count ?? 0;
-    // BLOCKED: B-AI-ONDEVICE — the real registered-pair delta is computed on-device.
+    // BLOCKED: B-AI-ONDEVICE. The real registered-pair delta is computed on-device.
     const deltaMetric = captureCount >= MIN_CAPTURES ? 0.05 : null;
     const { changeState, mdcThreshold } = classifyChange({
       deltaMetric,

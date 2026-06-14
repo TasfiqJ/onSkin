@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle } from '@/features/scheduler/useCycle';
 
-// Phased introduction (design screen 07, docs/05 §4) — don't start every active at
+// Phased introduction (design screen 07, docs/05 §4). Don't start every active at
 // once. A new active is staged in next, on its own night, so any reaction is
 // attributable (the dermatologist "one at a time" rule made into product
 // behaviour). Staging is automatic (orchestrate marks recently-added actives);
@@ -65,13 +65,13 @@ export default function PhasedIntroScreen() {
       </Text>
       <Text variant="body" tone="muted" className="mt-3">
         You added {newName}. We&apos;ll bring it in <Text variant="body" className="font-sans-semibold">next week</Text>,
-        once your routine settles — so if anything reacts, you&apos;ll know what caused it.
+        once your routine settles. So if anything reacts, you&apos;ll know what caused it.
       </Text>
 
       <View className="mt-6">
-        <Step state="done" title="This week — your current actives" sub="Settling in" />
-        <Step state="next" title={`Next week — add ${newName}`} sub="On its own night" />
-        <Step state="pending" title="Then — your full cycle" sub="Both, safely alternated" last />
+        <Step state="done" title="This week. Your current actives" sub="Settling in" />
+        <Step state="next" title={`Next week. Add ${newName}`} sub="On its own night" />
+        <Step state="pending" title="Then. Your full cycle" sub="Both, safely alternated" last />
       </View>
 
       <Button label="Sounds good" onPress={() => router.back()} />

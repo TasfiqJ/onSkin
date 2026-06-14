@@ -1,4 +1,4 @@
-// Anonymous handle generation (docs/11 §4) — a random, calm pseudonym ("quiet-fern-42")
+// Anonymous handle generation (docs/11 §4). A random, calm pseudonym ("quiet-fern-42")
 // assigned for posting. NEVER a real name, NEVER profiles.display_name, no social graph.
 // Pure + tested; the word lists are deliberately gentle/neutral (the "calm" register).
 
@@ -16,6 +16,6 @@ export function formatAnonHandle(adjective: string, noun: string, n: number): st
 export function buildAnonHandle(rand: () => number = Math.random): string {
   const adjective = ADJECTIVES[Math.floor(rand() * ADJECTIVES.length)]!;
   const noun = NOUNS[Math.floor(rand() * NOUNS.length)]!;
-  const n = 10 + Math.floor(rand() * 90); // 10–99
+  const n = 10 + Math.floor(rand() * 90); // 10-99
   return formatAnonHandle(adjective, noun, n);
 }

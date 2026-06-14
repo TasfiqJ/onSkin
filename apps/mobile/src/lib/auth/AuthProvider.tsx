@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async ensureAnonymousSession(captchaToken?: string) {
         const { data } = await supabase.auth.getSession();
         if (data.session) return;
-        // BLOCKED: B-TURNSTILE — captchaToken expected here once Turnstile is wired.
+        // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
         const { error } = await supabase.auth.signInAnonymously(
           captchaToken ? { options: { captchaToken } } : undefined,
         );

@@ -11,11 +11,11 @@ import { MANAGE_SUBSCRIPTION_URL_ANDROID, MANAGE_SUBSCRIPTION_URL_IOS } from '@/
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// Manage subscription (design 06, docs/08 §3.4) — plan/state, renewal date, one-tap
+// Manage subscription (design 06, docs/08 §3.4). Plan/state, renewal date, one-tap
 // OS cancel deep-link, Restore, Terms/Privacy. ARL-compliant: cancel as easy as
 // signup, no maze. Shows a calm free-state when not subscribed.
 function fmtDate(iso: string | null): string {
-  if (!iso) return '—';
+  if (!iso) return ', ';
   return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 

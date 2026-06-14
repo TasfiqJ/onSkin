@@ -6,14 +6,14 @@ import { COACHING, LIGHTING_LABEL } from './copy';
  * Pure guided-capture quality logic (docs/06 §3). The on-device face detector +
  * frame-buffer luminance feed these signals; this module turns them into the
  * coaching line, the lighting indicator, the "ready" gate (auto-capture when all
- * tolerances are met), and the calm review verdict. NO faceprint is involved —
+ * tolerances are met), and the calm review verdict. NO faceprint is involved , 
  * these are per-frame guidance signals, discarded after the shot (docs/06 §7).
  *
  * Quality is FLAGGED, never BLOCKED (docs/06 §3, the doc's D-029): `isCaptureReady`
  * only drives the auto-shutter affordance; the user can always capture manually.
  *
  * The tolerances are capture-UX starting positions and need on-device tuning
- * (docs/06 §10 caveat — B-CAMERA), NOT clinical sign-off.
+ * (docs/06 §10 caveat. B-CAMERA), NOT clinical sign-off.
  */
 
 export type CaptureSignals = {
@@ -58,7 +58,7 @@ export function lightingState(s: Pick<CaptureSignals, 'luminance' | 'warmth' | '
   return { state, label: LIGHTING_LABEL[state], fill };
 }
 
-/** Lighting is "ready" when it's good enough — calm guidance otherwise. */
+/** Lighting is "ready" when it's good enough. Calm guidance otherwise. */
 export function lightingReady(s: Pick<CaptureSignals, 'luminance' | 'warmth' | 'evenness'>): boolean {
   return lightingState(s).fill >= CAPTURE_TOLERANCE.lightingReady && lightingState(s).state === 'good';
 }
@@ -83,7 +83,7 @@ export function isCaptureReady(s: CaptureSignals): boolean {
 
 /**
  * The single most-relevant calm coaching line (docs/06 §3, the spec's "Turn
- * slightly left — almost there"). One instruction at a time; pose first, then
+ * slightly left. Almost there"). One instruction at a time; pose first, then
  * lighting, so the user isn't asked to fix five things at once.
  */
 export function coachingLine(s: CaptureSignals): string {
@@ -106,7 +106,7 @@ export function coachingLine(s: CaptureSignals): string {
   // Pose is fine; nudge lighting if needed, else "ready".
   if (!lightingReady(s)) {
     const ls = lightingState(s);
-    if (ls.state === 'too_dark') return 'A little more light — face a window';
+    if (ls.state === 'too_dark') return 'A little more light. Face a window';
     if (ls.state === 'too_warm') return 'Cooler, even light reads truer';
     if (ls.state === 'uneven') return 'Even out the light on your face';
   }
@@ -116,8 +116,8 @@ export function coachingLine(s: CaptureSignals): string {
 /**
  * Calm review verdict (docs/06 §3). Compares the captured shot to its reference so
  * the note is honest ("Nicely matched to last time" / "A little darker than
- * usual — retake?"). Returns the flag, the aligned/well-lit chip booleans, and
- * the note key — quality is surfaced, NEVER used to block the save.
+ * usual. Retake?"). Returns the flag, the aligned/well-lit chip booleans, and
+ * the note key. Quality is surfaced, NEVER used to block the save.
  */
 export function reviewQuality(input: {
   alignment: number;

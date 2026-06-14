@@ -5,7 +5,7 @@ import { loadEntitlement } from './store';
 /**
  * The reverse-trial / paid expiry → re-offer / graceful-downgrade trigger
  * (docs/08 §6/§13: "a next-launch check deactivates it at expiry and triggers the
- * re-offer"). Pure local logic on the local-first cache — offline-safe, no backend.
+ * re-offer"). Pure local logic on the local-first cache. Offline-safe, no backend.
  * Fires AT MOST ONCE per distinct expiry (keyed on the lapsed record's expiresAt),
  * so it presents the honest re-offer once and never nags; after that, gated taps
  * surface the contextual upsell instead (docs/08 §3.2).

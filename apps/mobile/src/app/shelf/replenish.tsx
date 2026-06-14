@@ -9,7 +9,7 @@ import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 
-// Replenishment (design screen 09, docs/04 §6) — an HONEST PAO-triggered prompt
+// Replenishment (design screen 09, docs/04 §6). An HONEST PAO-triggered prompt
 // (the product is genuinely running low/expiring), opt-in, claim-safe. "Re-add"
 // resets the clock; "see similar" + any affiliate link are gated behind the
 // separate MHMDA data-sharing consent (B-PRIVACY) and the catalog (B-CATALOG-SEED).
@@ -20,7 +20,7 @@ export default function ReplenishScreen() {
 
   const item = data?.items.find((i) => i.id === id);
 
-  // Surface the nudge once (analytics) — the in-app prompt, not a notification (§6).
+  // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
   useEffect(() => {
     if (item?.id) track('replenishment_nudge_shown', { product_id: item.id });
   }, [item?.id]);
@@ -43,7 +43,7 @@ export default function ReplenishScreen() {
   const safety = isSafetyCriticalCategory(item.category);
   const headline = safety ? `Your ${item.name} is nearly finished.` : `Time to top up ${item.name}.`;
   const body = safety
-    ? 'This is one to keep fresh — its protection can fade over time. Want to line up the next one?'
+    ? 'This is one to keep fresh. Its protection can fade over time. Want to line up the next one?'
     : 'You’re running low. Want to line up the next one so you don’t run out?';
 
   const reAdd = async () => {
@@ -55,7 +55,7 @@ export default function ReplenishScreen() {
   const seeSimilar = () => {
     haptics.select();
     track('replenishment_nudge_tapped', { product_id: item.id, action: 'see_similar' });
-    // BLOCKED: B-PRIVACY — when the catalog/affiliate path goes live, the actual
+    // BLOCKED: B-PRIVACY. When the catalog/affiliate path goes live, the actual
     // share MUST be gated on getLatestConsents()['data_sharing'] (route to the
     // consent screen if not granted). This informational Alert shares nothing.
     Alert.alert(

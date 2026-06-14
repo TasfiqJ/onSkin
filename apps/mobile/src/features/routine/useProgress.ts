@@ -16,7 +16,7 @@ import { supabase } from '@/lib/supabase/client';
 // month heat-map, and the freeze-aware streak. The streak/freeze logic lives in the
 // pure, tested `features/streak/streak.ts`; this hook just loads the completion log
 // and the cached personal best, then delegates. Resilient before the backend exists
-// (B-SUPABASE) — empty completions yield a calm zero state, not an error.
+// (B-SUPABASE). Empty completions yield a calm zero state, not an error.
 
 export type { WeekDay, HeatCell } from '@/features/streak/streak';
 export type DayState = WeekDay['state'];

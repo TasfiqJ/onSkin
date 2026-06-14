@@ -12,7 +12,7 @@ import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 
 // The opened-date linchpin (design screen 04, docs/04 §4.5). Every intake path
-// converges here — without an opened-date there is no PAO clock. Calm, skippable,
+// converges here. Without an opened-date there is no PAO clock. Calm, skippable,
 // with an explicit "not opened yet" state and an editable, source-labelled PAO.
 type Mode = 'just' | 'pick' | 'unopened';
 
@@ -163,7 +163,7 @@ export default function OpenedDateScreen() {
         ) : null}
         <OptionRow
           title="Not opened yet"
-          subtitle="No clock — we'll show shelf life"
+          subtitle="No clock. We'll show shelf life"
           selected={mode === 'unopened'}
           onPress={() => setMode('unopened')}
         />

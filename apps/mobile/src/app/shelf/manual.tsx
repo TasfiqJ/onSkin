@@ -9,7 +9,7 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
-// Add by hand (design screen 03, docs/04 §4.4) — the always-works floor under
+// Add by hand (design screen 03, docs/04 §4.4). The always-works floor under
 // every other path. Name, brand, category (drives the default PAO), optional
 // INCI (parsed for actives). Continues to the opened-date linchpin (§4.5).
 function FieldLabel({ children }: { children: string }) {
@@ -65,7 +65,7 @@ export default function ManualAddScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4" keyboardShouldPersistTaps="handled">
         <Text variant="bodySm" tone="muted" className="mb-5 mt-3">
-          The floor under every other path — this always works, even fully offline.
+          The floor under every other path. This always works, even fully offline.
         </Text>
 
         <View className="gap-3.5">
@@ -140,26 +140,26 @@ export default function ManualAddScreen() {
               style={{ textAlignVertical: 'top' }}
             />
             <Text variant="bodySm" tone="muted" className="mt-1.5">
-              Optional — we&apos;ll find the actives.
+              Optional. We&apos;ll find the actives.
             </Text>
           </View>
 
-          {/* PAO pre-fill note (honest, from the category default — editable next). */}
+          {/* PAO pre-fill note (honest, from the category default. Editable next). */}
           <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5">
             <View className="h-[7px] w-[7px] rounded-full bg-clay" />
             <Text variant="bodySm" tone="muted" className="flex-1">
               {paoFromCategory != null ? (
                 <>
-                  We&apos;ll pre-fill PAO from the category —{' '}
+                  We&apos;ll pre-fill PAO from the category , {' '}
                   <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
                     {categoryLabel(category)?.toLowerCase()} default ~{paoFromCategory} months.
                   </Text>{' '}
                   You can change it next.
                 </>
               ) : category ? (
-                <>You can set the PAO on the next step — straight from the label.</>
+                <>You can set the PAO on the next step. Straight from the label.</>
               ) : (
-                <>Pick a category and we&apos;ll estimate the PAO — you can change it next.</>
+                <>Pick a category and we&apos;ll estimate the PAO. You can change it next.</>
               )}
             </Text>
           </View>

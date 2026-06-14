@@ -6,7 +6,7 @@ import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
 
 // Lifecycle / archive (design screen 08, docs/04 §5.7). Finished + discarded
-// products live here — never deleted — so repurchase history and replenishment
+// products live here. Never deleted. So repurchase history and replenishment
 // just work. Calm, no celebration, no alarm.
 
 function weeksUsed(createdAt: string, finishedAt: string | null): number | null {
@@ -79,7 +79,7 @@ export default function ArchiveScreen() {
         </Text>
       </View>
       <Text variant="bodySm" tone="muted" className="mt-2">
-        Finished and discarded products live here — we keep the history so repurchases and
+        Finished and discarded products live here. We keep the history so repurchases and
         replenishment just work.
       </Text>
 

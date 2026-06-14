@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn';
 // Editorial-clinical type scale (design spec). `variant` sets family/size/leading;
 // `tone` sets colour (so dark "night" screens just pass tone="inverse"); `italic`
 // swaps to Instrument Serif italic for the clay accent words ("your", "quietly
-// resilient"). Layouts must reflow with Dynamic Type — no fixed text heights.
+// resilient"). Layouts must reflow with Dynamic Type. No fixed text heights.
 type Variant =
   | 'display' // big serif welcome headline
   | 'title' // serif screen header

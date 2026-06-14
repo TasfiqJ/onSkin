@@ -11,7 +11,7 @@ import { haptics } from '@/theme/haptics';
 // seed are blocked (B-CATALOG-SEED + native camera, shared with the photo slice).
 // This screen renders the on-device framing promise and routes to the always-
 // available fallbacks (OCR / manual) and, for an unknown barcode, the no-match
-// fork — so no path ever dead-ends.
+// fork. So no path ever dead-ends.
 export default function ScanScreen() {
   const { reset } = useIntake();
 
@@ -58,11 +58,11 @@ export default function ScanScreen() {
         </View>
       </View>
 
-      {/* Fallback sheet — the floor under the hero (docs/04 §4.2–§4.4). */}
+      {/* Fallback sheet. The floor under the hero (docs/04 §4.2-§4.4). */}
       <View className="rounded-t-sheet bg-night-surface px-7 pb-10 pt-6">
         <Text variant="bodySm" tone="inverseMuted" className="mb-4">
           Live barcode scanning arrives with the camera build. Until then, add a product another
-          way — these always work.
+          way. These always work.
         </Text>
         <View className="gap-2.5">
           <Pressable

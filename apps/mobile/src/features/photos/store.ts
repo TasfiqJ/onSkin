@@ -12,13 +12,13 @@ import type { PhotoMeta } from './timeline';
  * lives in AsyncStorage; the image BYTES live on-device at `localUri` in the app
  * sandbox, client-side encrypted, and NEVER leave the device while local_only is
  * true. A best-effort Supabase mirror writes METADATA ONLY (never image data,
- * docs/06 §10) so the row is ready once the backend exists (B-SUPABASE) — and it
+ * docs/06 §10) so the row is ready once the backend exists (B-SUPABASE). And it
  * always sets local_only = true / storage_path = null (cloud backup is a separate,
  * off-by-default consent, docs/06 §7). NO faceprint is ever stored; head_* are
  * coarse pose QA only (docs/06 §7).
  *
  * v1 has no native camera (B-CAMERA), so a saved capture has localUri = null and
- * renders as the design's striped placeholder — the timeline/compare flow is fully
+ * renders as the design's striped placeholder. The timeline/compare flow is fully
  * exercised end-to-end without real imagery (design Next-steps ①).
  */
 const KEY = 'onskin.photos.v1';
@@ -73,7 +73,7 @@ async function mirror(rec: PhotoRecord): Promise<void> {
     await supabase.from('photos').insert({
       id: rec.id,
       user_id: u.user.id,
-      // local-only ALWAYS here — cloud backup is a separate consented path.
+      // local-only ALWAYS here. Cloud backup is a separate consented path.
       local_only: true,
       storage_path: null,
       series: rec.series,
@@ -89,7 +89,7 @@ async function mirror(rec: PhotoRecord): Promise<void> {
       head_pitch: rec.headPitch,
       notes: rec.notes,
       is_encrypted: rec.isEncrypted,
-      // local_uri is intentionally NOT mirrored — it's a device path.
+      // local_uri is intentionally NOT mirrored. It's a device path.
     });
   } catch {
     /* best-effort until the backend is configured (B-SUPABASE) */
@@ -146,7 +146,7 @@ export async function removePhoto(id: string): Promise<void> {
   }
 }
 
-/** Make `id` the reference for its series (docs/06 §3 — re-set baseline). */
+/** Make `id` the reference for its series (docs/06 §3. Re-set baseline). */
 export async function setReference(id: string): Promise<void> {
   const items = await loadPhotos();
   const target = items.find((p) => p.id === id);

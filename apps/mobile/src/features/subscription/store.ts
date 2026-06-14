@@ -10,7 +10,7 @@ import { PLANS, REVERSE_TRIAL_DAYS } from './plans';
  * offline-safe", the D-029 pattern). The server `entitlements` row is the eventual
  * source of truth (written service-role by the RevenueCat webhook + the reverse-
  * trial grant Edge Function), but clients can only SELECT it (RLS) and there is no
- * live backend yet (B-SUPABASE) — so this AsyncStorage cache is the v1 authority,
+ * live backend yet (B-SUPABASE). So this AsyncStorage cache is the v1 authority,
  * reconciled from the server when present. The app-granted reverse trial is fully
  * functional locally; the carded trial/purchase are STUBBED until B-REVENUECAT.
  */
@@ -46,7 +46,7 @@ export async function grantReverseTrial(): Promise<StoredEntitlement> {
     store: 'app_granted',
     productId: null,
     expiresAt: plusDays(REVERSE_TRIAL_DAYS),
-    willRenew: false, // never auto-renews — no card, no store txn
+    willRenew: false, // never auto-renews. No card, no store txn
     grantedAt: nowISO(),
   };
   await persist(e);
@@ -94,7 +94,7 @@ export async function downgradeToFree(): Promise<void> {
 }
 
 /** Best-effort read of the server entitlements row (forward-compat; B-SUPABASE).
- *  Returns null when there is no backend or no row — the local cache then stands. */
+ *  Returns null when there is no backend or no row. The local cache then stands. */
 export async function fetchServerEntitlement(): Promise<StoredEntitlement | null> {
   try {
     const { data } = await supabase

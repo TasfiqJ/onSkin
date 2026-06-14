@@ -14,7 +14,7 @@ import { classifyRole, sequencePhase, type ClassifiableProduct, type SequencedSt
 
 // The deterministic generation pipeline (docs/03 §2): classify → allocate AM/PM →
 // sequence → assign frequency/cycling + init ramp → run detect_conflicts + apply
-// resolutions → plan. Pure + explainable — every step traces to a rule/profile.
+// resolutions → plan. Pure + explainable. Every step traces to a rule/profile.
 
 export type PlanStep = SequencedStep & {
   /** Exfoliant→night 1, retinoid→night 2 when the cycle is active (docs/02 §5). */
@@ -30,12 +30,12 @@ export type GeneratedPlan = {
   conflicts: DetectedConflict[];
 };
 
-// Roles whose absence is worth a calm, claim-safe gap note (docs/03 §2 — never
+// Roles whose absence is worth a calm, claim-safe gap note (docs/03 §2. Never
 // fabricate a product, just note what would round the routine out).
 const GAP_NOTES: Partial<Record<SequencingRole, string>> = {
   cleanser: 'A gentle cleanser would give your routine a clean base.',
   moisturiser: 'A moisturiser would help seal everything in.',
-  spf: 'A daily SPF would round this out — it’s the highest-impact morning step.',
+  spf: 'A daily SPF would round this out. It’s the highest-impact morning step.',
 };
 
 export type RoutineProduct = ClassifiableProduct & { rampEligible?: boolean };

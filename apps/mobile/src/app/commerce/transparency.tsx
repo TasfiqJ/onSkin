@@ -8,7 +8,7 @@ import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// Surface 03 (docs/10 §7) — the transparency page. A Wirecutter-grade explainer of the
+// Surface 03 (docs/10 §7). The transparency page. A Wirecutter-grade explainer of the
 // church-and-state separation: the single highest-leverage trust artifact. Dark
 // (#1B1813), calm, four numbered principles, the "sometimes we earn nothing" integrity
 // standard, and the privacy footer ("we never send anything about your skin").

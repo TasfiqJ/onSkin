@@ -7,7 +7,7 @@ import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import { track } from '@/lib/analytics/track';
 import { recordConsent } from '@/lib/consent/consent';
 
-// 03 · Health-data collection consent — dedicated + unbundled, BEFORE the quiz
+// 03 · Health-data collection consent. Dedicated + unbundled, BEFORE the quiz
 // (docs/01 §4: MHMDA "collection" + GDPR Art. 9 explicit). Collection only;
 // sharing is asked separately later. BLOCKED: B-PRIVACY-COPY (final wording).
 function Block({ label, body }: { label: string; body: string }) {
@@ -47,14 +47,14 @@ export default function HealthConsentScreen() {
     <Screen>
       <View className="flex-1">
         <Text variant="title" className="mt-10">
-          Before the quiz —{' '}
+          Before the quiz , {' '}
           <Text variant="title" italic tone="clay">
             your privacy.
           </Text>
         </Text>
         <Text variant="body" tone="muted" className="mt-3">
           Your answers describe your skin&apos;s health, so we ask plainly. This consent covers
-          collection only — we&apos;ll ask separately before anything is ever shared.
+          collection only. We&apos;ll ask separately before anything is ever shared.
         </Text>
         <Card className="mt-7">
           <Block label="WHAT" body={HEALTH_DATA_CONSENT.what} />
@@ -66,9 +66,9 @@ export default function HealthConsentScreen() {
         </Card>
       </View>
       <View className="pb-4">
-        <Button label="I agree — continue" onPress={agree} disabled={busy} />
+        <Button label="I agree. Continue" onPress={agree} disabled={busy} />
         <Pressable accessibilityRole="button" className="mt-3 items-center py-3">
-          {/* BLOCKED: B-PRIVACY-COPY — links to the Consumer Health Data Privacy Policy. */}
+          {/* BLOCKED: B-PRIVACY-COPY. Links to the Consumer Health Data Privacy Policy. */}
           <Text variant="body" tone="muted" className="font-sans-medium">
             Read the health data policy
           </Text>

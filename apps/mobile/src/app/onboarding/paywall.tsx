@@ -11,7 +11,7 @@ import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// 10 · Onboarding offer — two honest paths (docs/08 §3.1, design 01). "Start free
+// 10 · Onboarding offer. Two honest paths (docs/08 §3.1, design 01). "Start free
 // trial" (the committed path → carded 14-day trial) AND a visible "Explore first"
 // (→ the app-granted 7-day reverse trial, no card). Annual pre-selected, the billed
 // amount most conspicuous, no trial toggle, Terms/Privacy/Restore present, trust
@@ -65,7 +65,7 @@ export default function PaywallScreen() {
           ))}
         </View>
 
-        {/* the offer — billed amount most conspicuous (Apple 3.1.2) */}
+        {/* the offer. Billed amount most conspicuous (Apple 3.1.2) */}
         <View className="mt-5 rounded-card p-5" style={{ backgroundColor: colors.ink }}>
           <View className="mb-2 self-start rounded-pill px-3 py-1" style={{ backgroundColor: colors.clay }}>
             <Text variant="label" style={{ color: colors.paper, fontSize: 10.5 }}>
@@ -116,7 +116,7 @@ export default function PaywallScreen() {
           {PAYWALL_COPY.offer.trialReassurance}
         </Text>
 
-        {/* the second honest path — the reverse trial */}
+        {/* the second honest path. The reverse trial */}
         <Pressable
           accessibilityRole="button"
           onPress={() => startReverseTrial.mutate(undefined, { onSettled: () => router.replace('/routine/plan') })}
@@ -144,7 +144,7 @@ export default function PaywallScreen() {
           {PAYWALL_COPY.offer.autoRenewDisclosure}
         </Text>
 
-        {/* trust block — below the plans (Flo pattern) */}
+        {/* trust block. Below the plans (Flo pattern) */}
         <View className="mt-4 flex-row items-center justify-center gap-2 border-t pt-3.5" style={{ borderColor: colors.hairline }}>
           <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clay }} />
           <Text variant="label" tone="muted" className="text-center" style={{ fontSize: 11 }}>

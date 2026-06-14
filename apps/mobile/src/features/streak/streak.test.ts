@@ -6,7 +6,7 @@ function set(...days: string[]): Set<string> {
   return new Set(days);
 }
 
-describe('calm forgiving streak — current (docs/07 §4.1/§4.2)', () => {
+describe('calm forgiving streak. Current (docs/07 §4.1/§4.2)', () => {
   it('counts consecutive completion days', () => {
     const s = streakState(set('2026-06-13', '2026-06-12', '2026-06-11'), '2026-06-13');
     expect(s.current).toBe(3);
@@ -14,7 +14,7 @@ describe('calm forgiving streak — current (docs/07 §4.1/§4.2)', () => {
     expect(s.lapsed).toBe(false);
   });
 
-  it("today not-yet-done is neutral — it doesn't break the streak", () => {
+  it("today not-yet-done is neutral. It doesn't break the streak", () => {
     const s = streakState(set('2026-06-12', '2026-06-11', '2026-06-10'), '2026-06-13');
     expect(s.current).toBe(3);
     expect(s.freezeActive).toBe(false);
@@ -26,7 +26,7 @@ describe('calm forgiving streak — current (docs/07 §4.1/§4.2)', () => {
     expect(s.freezeActive).toBe(false);
   });
 
-  it('absorbs an interior missed day with an auto-freeze — streak safe', () => {
+  it('absorbs an interior missed day with an auto-freeze. Streak safe', () => {
     // missed 06-12, completed on both sides + a long tail
     const s = streakState(
       set('2026-06-13', '2026-06-11', '2026-06-10', '2026-06-09', '2026-06-08'),
@@ -58,7 +58,7 @@ describe('calm forgiving streak — current (docs/07 §4.1/§4.2)', () => {
   });
 });
 
-describe('longest streak — non-decreasing best (D-011)', () => {
+describe('longest streak. Non-decreasing best (D-011)', () => {
   it('finds the best forgiving run across history', () => {
     const completed = set(
       '2026-05-01', '2026-05-02', '2026-05-04', '2026-05-05', '2026-05-06', // 1 freeze (05-03) → run of 5

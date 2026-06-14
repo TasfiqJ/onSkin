@@ -1,11 +1,11 @@
 /**
  * Supabase `Database` type.
  *
- * BLOCKED: B-SUPABASE — once the project exists, REGENERATE from the live schema:
+ * BLOCKED: B-SUPABASE. Once the project exists, REGENERATE from the live schema:
  *   supabase gen types typescript --project-id <ref> > packages/types/src/database.types.ts
  *
  * Until then this is hand-authored to exactly match `supabase/migrations/`
- * (0001–0016) so the client is fully typed during development. Keep in sync with
+ * (0001-0016) so the client is fully typed during development. Keep in sync with
  * the migrations.
  */
 
@@ -333,7 +333,7 @@ export type Database = {
           opened_at?: DateStr | null;
           pao_months?: number | null;
           expiry_date?: DateStr | null;
-          // expiry_computed is GENERATED — never inserted.
+          // expiry_computed is GENERATED. Never inserted.
           status?: string;
           is_opened?: boolean;
           finished_at?: DateStr | null;
@@ -712,7 +712,7 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['recommendation_preferences']['Insert']>;
         Relationships: [];
       };
-      // docs/09 §9 — the recommendations cache. NO commercial column exists in the
+      // docs/09 §9. The recommendations cache. NO commercial column exists in the
       // ranking path (church and state, D-054); commerce metadata lives in doc #10.
       recommendations: {
         Row: {
@@ -740,7 +740,7 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['recommendations']['Insert']>;
         Relationships: [];
       };
-      // docs/10 — the commerce domain, walled off downstream of ranking (D-058). No
+      // docs/10. The commerce domain, walled off downstream of ranking (D-058). No
       // commission/rate column is client-readable; order_attributions is service-role only.
       affiliate_links: {
         Row: {
@@ -846,7 +846,7 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['commerce_click_events']['Insert']>;
         Relationships: [];
       };
-      // Service-role only (no client policies) — commission/order data, the row-level
+      // Service-role only (no client policies). Commission/order data, the row-level
       // church-and-state wall (docs/10 §9).
       order_attributions: {
         Row: {
@@ -876,7 +876,7 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['order_attributions']['Insert']>;
         Relationships: [];
       };
-      // docs/11 — the community layer. PHOTO-FREE by design (D-064); no commission
+      // docs/11. The community layer. PHOTO-FREE by design (D-064); no commission
       // field (church and state, D-063); consent-scoped + anon-locked-out (D-066).
       community_topics: {
         Row: { id: string; slug: string; title: string; description: string | null; sort_order: number; is_active: boolean };
@@ -972,7 +972,7 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['community_blocks']['Insert']>;
         Relationships: [];
       };
-      // docs/12 — on-device within-person trend state. NO score/grade/image column
+      // docs/12. On-device within-person trend state. NO score/grade/image column
       // (D-068/D-070); the source image stays local_only (docs/06).
       photo_trend: {
         Row: {

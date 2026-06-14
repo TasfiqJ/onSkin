@@ -12,7 +12,7 @@ import { formatPrice, outboundFor, type WhereToBuyOption } from './links';
 import { buildClickToken, recordClick } from './store';
 import { useCommerceConsent, useWhereToBuy } from './useCommerce';
 
-// Surface 01 (docs/10 §3) — the quiet "where to buy" affordance, rendered BENEATH the
+// Surface 01 (docs/10 §3). The quiet "where to buy" affordance, rendered BENEATH the
 // recommendation rationale (never a Buy Now CTA). Two states gated by the MHMDA
 // commerce consent: locked (a calm opt-in row) or the disclosed retailer options with
 // the FTC "Paid link" wording. *** The disclosure is always visible WITH the links
@@ -71,9 +71,9 @@ export function WhereToBuy({ productType }: { productType: string }) {
     track('where_to_buy_clicked', { product_type: productType, source: option.source });
     const token = buildClickToken();
     await recordClick({ clickToken: token, productType, source: option.source, consented: true });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED — when a real, approved rail + catalogue land,
+    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. When a real, approved rail + catalogue land,
     // replace this honest stub with: void Linking.openURL(outboundFor(option, token));
-    // (the opaque token only — attribution.ts guarantees no skin data leaves).
+    // (the opaque token only. Attribution.ts guarantees no skin data leaves).
     const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
     if (isDev && option.url.startsWith('https://example.com')) {
       Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [{ text: 'OK' }]);

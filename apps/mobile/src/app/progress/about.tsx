@@ -55,7 +55,7 @@ export default function AboutNoScoreScreen() {
           {NO_SCORE_COPY.footer}
         </Text>
 
-        {/* docs/12 — the optional, on-device, off-by-default opt-in. The refusal above
+        {/* docs/12. The optional, on-device, off-by-default opt-in. The refusal above
             is preserved as the default; this never overrides it. */}
         <Pressable
           accessibilityRole="button"

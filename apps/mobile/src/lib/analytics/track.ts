@@ -1,6 +1,6 @@
 import type { OnboardingEvent } from '@onskin/types';
 
-// BLOCKED: B-POSTHOG — real PostHog wiring (with bootstrapped flags + identify at
+// BLOCKED: B-POSTHOG. Real PostHog wiring (with bootstrapped flags + identify at
 // the value moment) lands in the analytics slice. This no-op shim lets screens
 // instrument the docs/01 §7 funnel taxonomy now without a hard dependency.
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {

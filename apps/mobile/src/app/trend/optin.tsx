@@ -9,7 +9,7 @@ import { useTrendConsent } from '@/features/trend/useTrend';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// 02 · The opt-in (docs/12 §5/§8, design 02) — OFF by default, a plain-language
+// 02 · The opt-in (docs/12 §5/§8, design 02). OFF by default, a plain-language
 // disclosure, a SEPARATE photo_trend_insights consent. The honest engine is classical
 // computer vision ("your phone comparing your own photos"), not marketed as AI. Never
 // default-on; the installed base is re-consented here, never silently enrolled.
@@ -76,7 +76,7 @@ export default function TrendOptInScreen() {
           </View>
         </View>
 
-        {/* the toggle — OFF by default */}
+        {/* the toggle. OFF by default */}
         <View
           className="mt-3.5 flex-row items-center justify-between rounded-2xl bg-paper-raised p-4"
           style={{ borderWidth: 1, borderColor: colors.hairline }}>

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { detectConflicts, isReassuring, type EngineProduct, type EngineProfile } from './engine';
 import { tagsForIngredientList } from './tags';
 
-// Fixture tests for the conflict engine — docs/02 §10: "every rule has a fixture
+// Fixture tests for the conflict engine. Docs/02 §10: "every rule has a fixture
 // test ... non-negotiable for a liability surface." These assert (tagged products
 // + profile) -> (interaction type, computed severity, resolution).
 
@@ -33,7 +33,7 @@ describe('the Maya worked example (docs/02 §4.2/§4.4/§7.3)', () => {
   });
 });
 
-describe('niacinamide × vitamin C — refuted myth, reassure not warn (§4.4 row 4 / §7.8)', () => {
+describe('niacinamide × vitamin C. Refuted myth, reassure not warn (§4.4 row 4 / §7.8)', () => {
   it('classifies as myth and is reassuring', () => {
     const products = [
       product('p1', 'Niacinamide 10%', ['Niacinamide']),
@@ -78,7 +78,7 @@ describe('safety: retinoid × pregnancy (§4.8)', () => {
     expect(c).toBeDefined();
     expect(c!.computedSeverity).toBe('high');
     expect(c!.rule.resolutionType).toBe('avoid_refer');
-    expect(c!.rule.evidenceLabel).toBe('contested'); // not "established" — caution, not demonstrated harm
+    expect(c!.rule.evidenceLabel).toBe('contested'); // not "established". Caution, not demonstrated harm
     expect(c!.productBId).toBeNull(); // pregnancy is a pseudo-tag, not a product
   });
 
@@ -139,7 +139,7 @@ describe('synergy (§4.1 #9/#11)', () => {
   });
 });
 
-describe('ranking (§4.6) — safety first', () => {
+describe('ranking (§4.6). Safety first', () => {
   it('orders safety above irritation', () => {
     const products = [
       product('p1', 'Retinol', ['Retinol']),

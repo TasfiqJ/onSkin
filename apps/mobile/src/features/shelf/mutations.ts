@@ -17,7 +17,7 @@ import {
 // (source of truth, D-029) and best-effort-mirrors to Supabase so it's ready to
 // sync once the project exists (B-SUPABASE). PostHog funnel events per docs/04 §9.
 
-/** Best-effort mirror to user_products — never throws into the UI (B-SUPABASE). */
+/** Best-effort mirror to user_products. Never throws into the UI (B-SUPABASE). */
 async function mirrorInsert(p: ShelfProduct): Promise<void> {
   try {
     const { data } = await supabase.auth.getUser();
@@ -37,7 +37,7 @@ async function mirrorInsert(p: ShelfProduct): Promise<void> {
       added_via: p.addedVia,
     });
   } catch {
-    /* offline / no DB — the local store already holds it (D-029) */
+    /* offline / no DB. The local store already holds it (D-029) */
   }
 }
 
@@ -90,7 +90,7 @@ export function useShelfMutations() {
       await invalidate();
     },
 
-    /** Replenish "re-add the same one" — archives the unit, resets the clock (§6). */
+    /** Replenish "re-add the same one". Archives the unit, resets the clock (§6). */
     async replace(id: string): Promise<ShelfProduct | null> {
       const fresh = await reAddProduct(id);
       track('replenishment_nudge_tapped', { product_id: id, action: 're_add' });

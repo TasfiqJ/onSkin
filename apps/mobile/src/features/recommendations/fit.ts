@@ -5,10 +5,10 @@ import type { SensitivityLevel } from '@/features/intelligence/engine';
 import type { RecType } from './catalog';
 import type { RecPreferences } from './preferences';
 
-// The FIT score (docs/09 §5/§6) — a weighted, explainable score over SIX inputs,
+// The FIT score (docs/09 §5/§6). A weighted, explainable score over SIX inputs,
 // every one about the user or the evidence. *** CHURCH AND STATE (D-054): there is
 // NO commercial input here. *** A product's commission, partnership, or
-// purchasability cannot enter this function — it is not a parameter, and the
+// purchasability cannot enter this function. It is not a parameter, and the
 // commerce layer (doc #10) only reads the ranked output. Hard exclusions (pregnancy,
 // would-add-a-conflict, an unmet hard preference) run first; nothing unsafe is ever
 // merely down-ranked. Deterministic + unit-tested.
@@ -19,7 +19,7 @@ export type FitContext = {
   preferences: RecPreferences;
   /** Functional tags that already appear on the shelf (for de-dup / complement). */
   ownedTags: Set<FunctionalTag>;
-  /** Tags that would ADD a conflict if introduced — a hard exclusion (§5). */
+  /** Tags that would ADD a conflict if introduced. A hard exclusion (§5). */
   conflictTags: Set<FunctionalTag>;
   trigger: RecommendationTrigger;
 };
@@ -114,7 +114,7 @@ export function fitScore(type: RecType, ctx: FitContext): FitResult {
   const typeIsFragranceFree = /fragrance-free/i.test(type.what) || type.sensitiveSafe;
   const preferenceMatch = wantsFragranceFree && typeIsFragranceFree ? 1.0 : 0.85;
 
-  // Catalog quality: type-first only until the curated catalog lands — a deliberate,
+  // Catalog quality: type-first only until the curated catalog lands. A deliberate,
   // honest down-weight (the engine degrades to type-first guidance, §5/§12).
   const catalogQuality = type.example ? 0.6 : 0.5;
 
@@ -137,7 +137,7 @@ export function fitScore(type: RecType, ctx: FitContext): FitResult {
   return { score, excludedReason: null, breakdown };
 }
 
-/** Calm, claim-safe fit descriptor — TEXT, never colour alone (§11). No hype. */
+/** Calm, claim-safe fit descriptor. TEXT, never colour alone (§11). No hype. */
 export function fitLabel(score: number | null): string {
   if (score == null) return 'Not a fit';
   if (score >= 0.8) return 'Strong fit';

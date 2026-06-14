@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase/client';
  * and before the backend exists (B-SUPABASE); a best-effort `notification_preferences`
  * mirror keeps the row ready to reconcile. Times are "HH:MM" (24h) locally and
  * mapped to the DB `time` columns on mirror. This is the single source of truth for
- * the AM/PM reminder schedule, the tier toggles, quiet hours, and discretion — it
+ * the AM/PM reminder schedule, the tier toggles, quiet hours, and discretion. It
  * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
  */
 const KEY = 'onskin.notifPrefs.v1';

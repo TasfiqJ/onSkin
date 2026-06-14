@@ -1,8 +1,8 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
 
-// Sign in with Apple — mandatory on iOS once Google is offered (docs/01 §1,
+// Sign in with Apple. Mandatory on iOS once Google is offered (docs/01 §1,
 // Apple Guideline 4.8). Returns the identity token for supabase signInWithIdToken.
-// BLOCKED: B-APPLE — needs the registered Service ID / capability to actually run.
+// BLOCKED: B-APPLE. Needs the registered Service ID / capability to actually run.
 export async function getAppleIdToken(): Promise<{ idToken: string; email: string | null } | null> {
   const credential = await AppleAuthentication.signInAsync({
     requestedScopes: [

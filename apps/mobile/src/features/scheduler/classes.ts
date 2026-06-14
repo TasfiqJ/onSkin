@@ -17,7 +17,7 @@ export type ActiveClass =
   | 'benzoyl_peroxide'
   | 'other';
 
-/** A product's scheduler class — the most potent tag wins (docs/05 §4). */
+/** A product's scheduler class. The most potent tag wins (docs/05 §4). */
 export function classifyActiveClass(tags: FunctionalTag[]): ActiveClass {
   const t = new Set(tags);
   if (t.has('retinoid')) return 'retinoid';
@@ -29,7 +29,7 @@ export function classifyActiveClass(tags: FunctionalTag[]): ActiveClass {
   return 'other';
 }
 
-/** The potent night-cycled actives — one per night, never colliding (docs/05 §4). */
+/** The potent night-cycled actives. One per night, never colliding (docs/05 §4). */
 export const POTENT_CLASSES: ActiveClass[] = ['aha', 'bha', 'retinoid'];
 export function isPotent(cls: ActiveClass): boolean {
   return POTENT_CLASSES.includes(cls);
@@ -43,7 +43,7 @@ export function defaultPhase(cls: ActiveClass): Phase {
     case 'vitamin_c':
       return 'am'; // morning antioxidant + SPF
     case 'benzoyl_peroxide':
-      return 'am'; // AM (kept off simple-retinol nights — docs/02 stability rule)
+      return 'am'; // AM (kept off simple-retinol nights. Docs/02 stability rule)
     case 'retinoid':
     case 'aha':
     case 'bha':
@@ -57,7 +57,7 @@ export function defaultPhase(cls: ActiveClass): Phase {
 type Caps = { sensitive: number; normal: number; resistant: number };
 
 // Conservative exfoliation/active frequency caps by skin type (docs/05 §4 table).
-// BHA tolerated more often than AHA; the retinoid cap is a ceiling — the ramp
+// BHA tolerated more often than AHA; the retinoid cap is a ceiling. The ramp
 // (docs/03 §4) governs the real number. B-DERM-REVIEW.
 const FREQUENCY_CAPS: Partial<Record<ActiveClass, Caps>> = {
   aha: { sensitive: 1, normal: 3, resistant: 4 },
@@ -74,7 +74,7 @@ export function frequencyCap(cls: ActiveClass, sensitivity: SensitivityLevel): n
   return caps.normal;
 }
 
-// *** BLOCKED: B-DERM-REVIEW — FREQUENCY_CAPS (and the orchestration recovery
+// *** BLOCKED: B-DERM-REVIEW. FREQUENCY_CAPS (and the orchestration recovery
 // *** densities) are UNREVIEWED grade-C consensus starting positions (docs/05 §8).
 // *** Mirrors pao.ts PAO_DEFAULTS_REVIEWED / rules.ts shippableRules: until a
 // *** board-certified dermatologist + cosmetic chemist sign off, PRODUCTION falls
@@ -85,7 +85,7 @@ export const CAPS_REVIEWED = false;
 /** The launch-gated cap used by the scheduler: the reviewed/dev numbers in
  *  development, the most conservative (sensitive) cap in production until
  *  B-DERM-REVIEW sign-off. The harm-relevant retinoid×exfoliant separation does
- *  NOT depend on this — it is enforced by construction regardless. */
+ *  NOT depend on this. It is enforced by construction regardless. */
 export function reviewedFrequencyCap(cls: ActiveClass, sensitivity: SensitivityLevel): number {
   const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
   if (isDev || CAPS_REVIEWED) return frequencyCap(cls, sensitivity);

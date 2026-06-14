@@ -48,7 +48,7 @@ export type ShelfData = {
   banner: DetectedConflict | null;
 };
 
-// Resolutions that *separate* two products in time — i.e. a conflict the engine
+// Resolutions that *separate* two products in time. I.e. a conflict the engine
 // has already handled, which earns the calm "paired" badge (docs/04 §5.3).
 const PAIRED_RESOLUTIONS = new Set<ResolutionType>([
   'alternate_nights',
@@ -112,7 +112,7 @@ export function useShelf() {
           };
         }
       } catch {
-        /* offline / no DB — neutral profile */
+        /* offline / no DB. Neutral profile */
       }
 
       const active = products.filter((p) => p.status === 'active');

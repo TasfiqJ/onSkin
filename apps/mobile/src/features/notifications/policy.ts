@@ -4,7 +4,7 @@ import type { NotificationKind, NotificationTier } from '@onskin/types';
  * Pure notification policy (docs/07 §3.1/§3.4, D-031): which tier a kind belongs
  * to, the per-tier weekly frequency caps that stop behavioural triggers stacking
  * into fatigue, and the quiet-hours window check. The utility tier is bounded by
- * the user's own schedule (no cap) but still suppressed inside quiet hours —
+ * the user's own schedule (no cap) but still suppressed inside quiet hours , 
  * "nothing fires" there (§3.4). Deterministic + unit-tested; consumed by the
  * delivery layer's frequency-cap engine (§9).
  */
@@ -54,7 +54,7 @@ export const TOGGLE_FOR: Record<NotificationKind, keyof TierToggles> = {
   winback: 'promotionalOptIn',
 };
 
-/** Whether the user has the kind's governing tier enabled — the consent/opt-out
+/** Whether the user has the kind's governing tier enabled. The consent/opt-out
  *  gate the delivery layer must honour before any send (docs/07 §3.1, D-031). */
 export function tierEnabled(kind: NotificationKind, toggles: TierToggles): boolean {
   return toggles[TOGGLE_FOR[kind]];

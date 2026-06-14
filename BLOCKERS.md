@@ -337,6 +337,33 @@ unspecified behavior/copy/schema for the rest.
 
 ---
 
+## Design-audit follow-ups (ENGINEERING — not founder-blocked, no account/key/sign-off needed)
+
+A 2026-06-14 fidelity audit of the implemented screens vs the design files found the
+build is **faithful + premium**; these are the polish gaps worth a dev pass (I can do
+these — they need no founder input):
+
+- **`(tabs)` nav frame missing on pushed Stack surfaces** (cycle/* and recommendations/*,
+  likely also commerce/community/ask). The design shows the persistent Today/Progress/
+  Shelf/You bar on these screens; routing them as Stack routes *outside* the `(tabs)`
+  group drops it. Highest-impact polish item (touches every deep surface). Fix: nest the
+  deep routes under `(tabs)` or render a shared bottom-nav frame.
+- **Disruption-hub icons** (`app/cycle/disruption.tsx`) use weak Unicode glyphs (`◴`/`◇`)
+  that render inconsistently across platform fonts; compose them from geometric Views
+  (the established no-SVG house pattern) so the tiles match the design's custom icons.
+- **"You're set" loading-gate race** (`features/recommendations/useRecommendations.ts`)
+  excludes `prefsQ.isLoading`, so the celebratory empty state can flash before
+  preferences/dismissals resolve. Include `prefsQ.isLoading` in the gate.
+- **Token inconsistency** in `RecommendationsTeaser.tsx`: the gap-prompt title uses
+  `colors.clayDeep` while its body uses a raw `#6F4A36`; add a `clayText` token (~#5C3A28)
+  and use it for both.
+- **Week "tonight" row** (`app/cycle/week.tsx`) shows the literal `'Now'` instead of the
+  weekday glyph the design uses; render `p.weekday` for the tonight row too.
+- Interactive cycle rule-nudge + drag-reassign are honestly deferred under **B-DRAG-DND**
+  (already tracked) — wire the reactive two-button nudge when drag lands.
+
+---
+
 ## New blockers discovered during build
 
 ### B-AI-ASSISTANT-VENDOR — the zero-retention cloud LLM for the grounded layer 🔴 blocked

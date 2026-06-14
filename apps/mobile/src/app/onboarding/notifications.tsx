@@ -10,8 +10,8 @@ import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
 // 08 · Notification soft-ask (docs/07 §3.2, design screen 01). A value-moment
-// pre-permission explainer; only "Yes" fires the single OS prompt (55–70% vs
-// 30–40% cold, docs/01 §8). On grant we enable the utility AM/PM reminders at the
+// pre-permission explainer; only "Yes" fires the single OS prompt (55-70% vs
+// 30-40% cold, docs/01 §8). On grant we enable the utility AM/PM reminders at the
 // default times and schedule them locally; the user tunes times/quiet hours later.
 function CheckRow({ label }: { label: string }) {
   return (

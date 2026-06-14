@@ -11,7 +11,7 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// 01 · The "For you" hub (docs/09 §7.1, design 01/03) — the user's current
+// 01 · The "For you" hub (docs/09 §7.1, design 01/03). The user's current
 // recommendations grouped by honest trigger, each a calm what/why card. Deliberately
 // NOT a storefront grid. When there's nothing to add, it shows the honest "you're
 // set" state proudly (design 03).

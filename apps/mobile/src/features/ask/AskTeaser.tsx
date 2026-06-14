@@ -7,7 +7,7 @@ import { colors } from '@/theme/tokens';
 
 import { ASK_COPY } from './copy';
 
-// A calm Today entry into Ask OnSkin (docs/13 §9 — the first-session moat taste). Routes
+// A calm Today entry into Ask OnSkin (docs/13 §9. The first-session moat taste). Routes
 // into the DETERMINISTIC, on-device, $0 advisor (the free moat taste); never "AI" hype.
 export function AskTeaser() {
   return (

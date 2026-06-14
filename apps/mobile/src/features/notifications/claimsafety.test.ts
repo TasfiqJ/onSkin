@@ -6,10 +6,10 @@ import { MILESTONE_COPY, REMINDER_COPY, SETTINGS_COPY, SOFT_ASK, WELCOME_BACK } 
 // Slice-11/20 pattern). Notifications are a claims surface AND a place dark patterns
 // creep in. This guard blocks: guilt/loss-aversion ("don't break", "you lost",
 // "streak!"), manufactured urgency ("hurry", "last chance", "now!"), drug/disease
-// claims, and alarm words — on every future copy edit.
+// claims, and alarm words. On every future copy edit.
 
 // NOTE: the apostrophe class is ['’] so it catches BOTH the straight ASCII quote
-// and the curly U+2019 the copy actually uses ("Don’t") — otherwise a reintroduced
+// and the curly U+2019 the copy actually uses ("Don’t"). Otherwise a reintroduced
 // "Don’t break your streak" would slip past the guard.
 const GUILT = [
   /don['’]?t\s+break/i,
@@ -62,7 +62,7 @@ describe('the guard actually catches reintroduced dark-pattern copy', () => {
     expect(offenders('You lost your 30-day streak', GUILT).length).toBeGreaterThan(0);
   });
   it('rejects manufactured urgency (curly apostrophe too)', () => {
-    expect(offenders('Hurry — last chance', URGENCY).length).toBeGreaterThan(0);
+    expect(offenders('Hurry. Last chance', URGENCY).length).toBeGreaterThan(0);
     expect(offenders('Don’t miss out', URGENCY).length).toBeGreaterThan(0);
   });
   it('rejects any exclamation mark as non-calm', () => {

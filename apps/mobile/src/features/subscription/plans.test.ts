@@ -17,7 +17,7 @@ describe('plan catalog (docs/08 §2.3)', () => {
   });
 });
 
-describe('price formatting (display only — real prices come from the offering)', () => {
+describe('price formatting (display only. Real prices come from the offering)', () => {
   it('parses a fallback label', () => {
     expect(priceAmount('$49.99')).toBe(49.99);
   });

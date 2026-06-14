@@ -18,7 +18,7 @@ function ent(over: Partial<StoredEntitlement>): StoredEntitlement {
   };
 }
 
-describe('entitlement state (docs/08 §4 — gate on is_active regardless of source)', () => {
+describe('entitlement state (docs/08 §4. Gate on is_active regardless of source)', () => {
   it('no record → free, not expired', () => {
     const s = deriveState(null, NOW);
     expect(s).toMatchObject({ tier: 'free', isPro: false, expired: false });

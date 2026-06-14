@@ -7,7 +7,7 @@ import { DEFAULT_PREFERENCES } from './preferences';
 
 // FIT-score fixtures (docs/09 §5/§6). The merit-only score: hard exclusions
 // (pregnancy / would-add-a-conflict / refuted) first, then a weighted, explainable
-// score over SIX inputs — and *** no commercial input *** (church and state, D-054).
+// score over SIX inputs. And *** no commercial input *** (church and state, D-054).
 
 function ctx(over: Partial<FitContext> = {}): FitContext {
   return {
@@ -25,7 +25,7 @@ const mineralSpf = recTypeByKey('mineral_spf')!;
 const retinoid = recTypeByKey('retinoid_serum')!;
 const vitaminC = recTypeByKey('vitamin_c_serum')!;
 
-describe('hard exclusions run first — nothing unsafe is merely down-ranked', () => {
+describe('hard exclusions run first. Nothing unsafe is merely down-ranked', () => {
   it('pregnancy hard-excludes a pregnancy-unsafe active (retinoid)', () => {
     const r = fitScore(retinoid, ctx({ pregnancy: true }));
     expect(r.score).toBeNull();
@@ -51,7 +51,7 @@ describe('hard exclusions run first — nothing unsafe is merely down-ranked', (
 });
 
 describe('the soft score is weighted, explainable, and merit-only', () => {
-  it('exposes exactly the SIX merit inputs — no seventh (commercial) input', () => {
+  it('exposes exactly the SIX merit inputs. No seventh (commercial) input', () => {
     const r = fitScore(mineralSpf, ctx());
     expect(Object.keys(r.breakdown).sort()).toEqual(
       ['catalogQuality', 'evidence', 'needPriority', 'preferenceMatch', 'profileMatch', 'simplicity'].sort(),

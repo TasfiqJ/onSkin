@@ -61,7 +61,7 @@ describe('the FTC-required disclosure wording is present (paid link + independen
     expect(d).toContain('paid link');
     expect(d).toContain('never affects what we recommend');
   });
-  it('the paid-link chip is "Paid link" — the FTC-adequate wording', () => {
+  it('the paid-link chip is "Paid link". The FTC-adequate wording', () => {
     expect(COMMERCE_COPY.whereToBuy.paidChip).toBe('Paid link');
     expect(COMMERCE_COPY.stack.paidChip).toBe('Paid link');
   });
@@ -79,7 +79,7 @@ describe('the FTC-required disclosure wording is present (paid link + independen
 
 describe('the guard catches reintroduced violations', () => {
   it('rejects the FTC-inadequate "affiliate link" wording and a "buy now" CTA', () => {
-    expect(offenders('Affiliate link — we earn a cut', FTC_INADEQUATE).length).toBeGreaterThan(0);
+    expect(offenders('Affiliate link. We earn a cut', FTC_INADEQUATE).length).toBeGreaterThan(0);
     expect(offenders('Buy now before it sells out', [...FTC_INADEQUATE, ...URGENCY]).length).toBeGreaterThan(0);
   });
   it('rejects a condition claim', () => {

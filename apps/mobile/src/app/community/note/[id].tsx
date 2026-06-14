@@ -9,10 +9,10 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// 02 · The myth-vs-evidence card (docs/11 §9, design 02) — the claim / verdict
+// 02 · The myth-vs-evidence card (docs/11 §9, design 02). The claim / verdict
 // (evidence pill) / why (claim-safe mechanism) / honest source + credential, and the
 // mandatory "not medical advice" footer. The only reaction is a structured "This
-// helped" (the docs/09 flywheel signal) — no like count, no author to follow.
+// helped" (the docs/09 flywheel signal). No like count, no author to follow.
 export default function NoteDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const note = id ? noteById(id) : undefined;
@@ -26,7 +26,7 @@ export default function NoteDetail() {
   const onShare = () => {
     if (!note) return;
     haptics.select();
-    void Share.share({ message: `${note.claim} — ${note.verdict}. ${note.why}` });
+    void Share.share({ message: `${note.claim}. ${note.verdict}. ${note.why}` });
   };
 
   return (
@@ -114,7 +114,7 @@ export default function NoteDetail() {
             </View>
           </View>
 
-          {/* the only reaction — a structured "This helped" (the docs/09 flywheel) */}
+          {/* the only reaction. A structured "This helped" (the docs/09 flywheel) */}
           <View className="mt-4 flex-row gap-3">
             <Pressable
               accessibilityRole="button"

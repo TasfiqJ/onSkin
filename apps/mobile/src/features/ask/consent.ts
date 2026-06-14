@@ -4,11 +4,11 @@ import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { ASK_COPY } from './copy';
 import { clearAskStore, getAskConsentLocal, setAskConsentLocal } from './store';
 
-// The ask_onskin consent (docs/13 §7, D-053) — a NEW, separate, explicit, revocable,
+// The ask_onskin consent (docs/13 §7, D-053). A NEW, separate, explicit, revocable,
 // DEFAULT-OFF consent for the CLOUD-grounded language layer. The user's question is a
 // health disclosure transmitted to the cloud (MHMDA / GDPR Art. 9 attaches to the
 // TRANSMISSION, not just storage), so this is never reused from any other consent and
-// never default-on. NOTE: the deterministic, on-device advisor needs NO consent — this
+// never default-on. NOTE: the deterministic, on-device advisor needs NO consent. This
 // gates only the cloud path. Ledger-authoritative-then-local (the Slice-24 precedence)
 // so a withdrawal re-locks even before the backend exists. Final copy: B-PRIVACY-COPY.
 
@@ -17,7 +17,7 @@ export async function isAskConsented(): Promise<boolean> {
     const consents = await getLatestConsents();
     if ('ask_onskin' in consents) return consents['ask_onskin'] === true;
   } catch {
-    /* offline / no DB — fall back to the local-first flag */
+    /* offline / no DB. Fall back to the local-first flag */
   }
   return getAskConsentLocal();
 }
@@ -30,7 +30,7 @@ export async function grantAskConsent(): Promise<void> {
       type: 'ask_onskin',
       granted: true,
       version: ASK_COPY.consentVersion,
-      consentText: `[PLACEHOLDER ask_onskin consent — B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
+      consentText: `[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
     });
   } catch {
     /* best-effort until backend configured */
@@ -48,7 +48,7 @@ export async function revokeAskConsent(): Promise<void> {
       type: 'ask_onskin',
       granted: false,
       version: ASK_COPY.consentVersion,
-      consentText: `[PLACEHOLDER ask_onskin withdrawal — B-PRIVACY-COPY]`,
+      consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
     });
   } catch {
     /* best-effort */

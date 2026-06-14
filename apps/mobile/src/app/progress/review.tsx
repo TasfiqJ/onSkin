@@ -12,7 +12,7 @@ import { track } from '@/lib/analytics/track';
 import type { TimeOfDay } from '@onskin/types';
 
 // Review & retake (docs/06 §2, design screen 02). Quality is FLAGGED, never blocked
-// (D-029) — the calm note compares to the series reference, and Save always works.
+// (D-029). The calm note compares to the series reference, and Save always works.
 
 const BG = '#16130F';
 const SAGE = '#9DB18A';

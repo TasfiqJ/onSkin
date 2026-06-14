@@ -10,14 +10,14 @@ import { haptics } from '@/theme/haptics';
 // Shelf list (design "OnSkin Smart Shelf" screen 05, docs/04 §5.1): title + count,
 // All/Actives/Expiring filters, the calm conflict banner, product cards with the
 // five-state badge taxonomy, and the "Scan a barcode" FAB. Light-mode, calm,
-// claim-safe — the cabinet that knows when to replace, never when to alarm.
+// claim-safe. The cabinet that knows when to replace, never when to alarm.
 type Filter = 'all' | 'actives' | 'expiring';
 const ACTIVE_TAGS = new Set(['retinoid', 'aha', 'bha', 'benzoyl_peroxide', 'vitamin_c']);
 
 const SUBHEAD: Record<Filter, string> = {
   all: 'Everything on your shelf, soonest to replace first.',
   actives: 'The potent ingredients in your routine.',
-  expiring: 'Soonest first — the honest reasons to replace something.',
+  expiring: 'Soonest first. The honest reasons to replace something.',
 };
 
 function StripedThumb({ size = 50, faded = false }: { size?: number; faded?: boolean }) {
@@ -32,7 +32,7 @@ function StripedThumb({ size = 50, faded = false }: { size?: number; faded?: boo
 
 function ProductCard({ item }: { item: ShelfItem }) {
   // Only the countdown card carries the faint accent border (design screen 05);
-  // expired/safety cards stay on the neutral hairline — the firmer badge already
+  // expired/safety cards stay on the neutral hairline. The firmer badge already
   // signals attention.
   const attention = item.badge.kind === 'countdown';
   return (
@@ -75,7 +75,7 @@ function EmptyShelf() {
         Let&apos;s build your cabinet.
       </Text>
       <Text variant="body" tone="muted" className="mt-2.5 max-w-[280px] text-center">
-        Add what you already use — scan a barcode, or add it by hand. We&apos;ll handle freshness and
+        Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and
         clashes.
       </Text>
       <View className="mt-8 w-full max-w-[300px] gap-3">

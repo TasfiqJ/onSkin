@@ -10,7 +10,7 @@ import { colors } from '@/theme/tokens';
 
 // Before/after comparison (docs/06 §4, design screen 04). A draggable vertical
 // divider wipes between the two photos; the side-by-side mode (the accessible
-// default, docs/06 §4) places them adjacent. NO numbers, no "improvement %" — just
+// default, docs/06 §4) places them adjacent. NO numbers, no "improvement %". Just
 // the two photos and their dates. Photos are striped/flat placeholders until real
 // capture lands (B-CAMERA); expo-image renders the on-device file once it exists.
 
@@ -160,7 +160,7 @@ export function CompareSlider({
             <Text style={{ color: colors.ink, fontSize: 13 }}>‹</Text>
             <Text style={{ color: colors.ink, fontSize: 13 }}>›</Text>
           </Animated.View>
-          {/* date chips — tap to pick which two captures to compare (docs/06 §4) */}
+          {/* date chips. Tap to pick which two captures to compare (docs/06 §4) */}
           <View className="absolute left-3.5 top-3.5">
             <DateChip date={before.date} onPress={onPickBefore} />
           </View>

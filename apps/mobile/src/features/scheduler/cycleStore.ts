@@ -7,11 +7,11 @@ import { localDateString } from '@/features/today/useToday';
 
 import { addDays } from './projection';
 
-// Local-first cycle config (docs/05 §3/§7) — variant override, anchor, pause, the
+// Local-first cycle config (docs/05 §3/§7). Variant override, anchor, pause, the
 // recovery window, and one-off skips. AsyncStorage is the v1 source of truth
 // (offline-first, D-029/D-034); the `cycles`/`cycle_nights` schema is the
 // forward-compatible server target (B-SUPABASE). The per-night SLOTS are derived
-// by orchestration (orchestrate.ts) over the shelf — this store holds only the
+// by orchestration (orchestrate.ts) over the shelf. This store holds only the
 // user's persistent choices on top.
 const KEY = 'onskin.cycle.v1';
 
@@ -62,7 +62,7 @@ export async function updateCycleConfig(patch: Partial<CycleConfig>): Promise<Cy
   return next;
 }
 
-/** Pause the cycle (vacation/illness/break/travel) — suspends without breaking. */
+/** Pause the cycle (vacation/illness/break/travel). Suspends without breaking. */
 export async function pauseCycle(reason: DisruptionReason): Promise<void> {
   await updateCycleConfig({ pausedFrom: localDateString(), pauseReason: reason });
 }
@@ -79,12 +79,12 @@ export async function resumeCycle(): Promise<void> {
   });
 }
 
-/** Start (or restart) the cycle today — re-anchors to night 0 today. */
+/** Start (or restart) the cycle today. Re-anchors to night 0 today. */
 export async function startCycleToday(): Promise<void> {
   await updateCycleConfig({ anchorISO: localDateString(), pausedFrom: null, pauseReason: null });
 }
 
-/** Skip a single night — the cycle continues, nothing resets (docs/05 §7). */
+/** Skip a single night. The cycle continues, nothing resets (docs/05 §7). */
 export async function skipTonight(): Promise<void> {
   const c = await loadCycleConfig();
   const today = localDateString();

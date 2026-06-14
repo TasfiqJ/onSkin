@@ -2,7 +2,7 @@ import type { PlanId } from '@onskin/types';
 
 import { PLANS } from '@/features/subscription/plans';
 
-// BLOCKED: B-REVENUECAT — real `react-native-purchases` wiring lands with a custom
+// BLOCKED: B-REVENUECAT. Real `react-native-purchases` wiring lands with a custom
 // dev build + the RevenueCat account (docs/08 §4/§13). The SDK is initialised with
 // the **Supabase user ID as appUserID** from first launch (anonymous), preserving
 // identity through account linking so the reverse-trial/purchase carries over

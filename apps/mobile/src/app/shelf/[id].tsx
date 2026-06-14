@@ -14,7 +14,7 @@ import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 
-// Product detail — the management hub (design screen 06, docs/04 §5.6). Freshness
+// Product detail. The management hub (design screen 06, docs/04 §5.6). Freshness
 // with provenance, the actives it contributes, the conflicts it's part of, where
 // it's used, and the full lifecycle actions. Claim-safe throughout.
 
@@ -33,7 +33,7 @@ const RECENT_OPENS: { label: string; monthsAgo: number }[] = [
   { label: '6 mo ago', monthsAgo: 6 },
 ];
 
-// Printed best-before is a FUTURE date (docs/04 §3 — wins for sunscreen). The
+// Printed best-before is a FUTURE date (docs/04 §3. Wins for sunscreen). The
 // primary source is the catalog/scan path (OBF, B-CATALOG-SEED); this inline edit
 // lets the user record it by hand on the freshness block (§5.6 "editable inline").
 const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
@@ -92,7 +92,7 @@ export default function ProductDetailScreen() {
     (c) => c.productAId === id || c.productBId === id,
   );
 
-  // Where it's used — from the live plan (skipped for the example fallback).
+  // Where it's used. From the live plan (skipped for the example fallback).
   let usage: { phase: string; night?: number } | null = null;
   if (plan.data && !plan.data.isExample) {
     const pm = plan.data.plan.pm.find((s) => s.productId === id);
@@ -282,7 +282,7 @@ export default function ProductDetailScreen() {
             onPress={() => m.setOpened(id, { openedAt: localDateString(), isOpened: true })}
             className="mt-2.5 items-center rounded-[14px] border border-hairline bg-paper-raised py-3">
             <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-              Mark as opened — start the freshness clock
+              Mark as opened. Start the freshness clock
             </Text>
           </Pressable>
         ) : null}
@@ -322,7 +322,7 @@ export default function ProductDetailScreen() {
                 <Text variant="bodySm" className="font-sans-semibold">
                   {otherName(c)}
                 </Text>
-                {' — '}
+                {'. '}
                 {bannerSubhead(c)} <Text variant="bodySm" className="font-sans-bold text-clay-deep">Review →</Text>
               </Text>
             </Pressable>
@@ -335,7 +335,7 @@ export default function ProductDetailScreen() {
             <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
             <Text variant="bodySm" tone="muted" className="flex-1">
               Used in your <Text variant="bodySm" className="font-sans-semibold">{usage.phase}</Text>
-              {usage.night ? ` — cycling night ${usage.night}.` : '.'}
+              {usage.night ? `. Cycling night ${usage.night}.` : '.'}
             </Text>
           </View>
         ) : null}
@@ -344,7 +344,7 @@ export default function ProductDetailScreen() {
       {/* Lifecycle actions */}
       {archived ? (
         <Button
-          label="Replace — add a fresh one"
+          label="Replace. Add a fresh one"
           onPress={async () => {
             await m.replace(id);
             router.replace('/shelf');

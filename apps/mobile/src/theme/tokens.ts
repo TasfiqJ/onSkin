@@ -1,4 +1,4 @@
-// JS access to the OnSkin palette (mirrors tailwind.config.js — EXACT values from
+// JS access to the OnSkin palette (mirrors tailwind.config.js. EXACT values from
 // the Claude Design handoff) for contexts that can't use className: StatusBar,
 // native navigation, tab bar, SVG, gradients, Skia.
 export const colors = {

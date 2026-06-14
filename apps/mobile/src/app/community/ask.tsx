@@ -13,14 +13,14 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// 04 · The anonymous ask (docs/11 §9.3, design 04) — Phase 2. A random handle, the auto
+// 04 · The anonymous ask (docs/11 §9.3, design 04). Phase 2. A random handle, the auto
 // claim-safety FLAG (a first pass, not the decision), the hard 16+ gate, and the
 // separate unbundled community_participation consent. Human pre-moderation is
 // authoritative; nothing reaches another user on the classifier alone.
 //
 // *** PEER POSTING IS DEFERRED (D-067, B-COMMUNITY-MOD / B-COMMUNITY-LEGAL /
 // *** B-EXPERT-NETWORK): the composer is built design-faithfully + fully gated, but
-// *** submission shows the honest "asking opens soon" state — the expert review desk
+// *** submission shows the honest "asking opens soon" state. The expert review desk
 // *** must be staffed to the ~24h store-floor SLA before peer questions go live.
 
 function GateRow({ label }: { label: string }) {
@@ -88,7 +88,7 @@ function Composer() {
   const submit = () => {
     haptics.select();
     track('question_submitted', { flagged: scan.flagged });
-    // Peer posting is deferred (B-COMMUNITY-MOD) — the honest pre-moderation reality.
+    // Peer posting is deferred (B-COMMUNITY-MOD). The honest pre-moderation reality.
     Alert.alert(COMMUNITY_COPY.ask.deferredTitle, COMMUNITY_COPY.ask.deferredBody, [{ text: 'OK' }]);
   };
 

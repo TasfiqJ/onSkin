@@ -19,7 +19,7 @@ export type TodayData = {
   streak: number;
 };
 
-/** Local calendar date as YYYY-MM-DD (the user's day — see DECISIONS D-012). */
+/** Local calendar date as YYYY-MM-DD (the user's day. See DECISIONS D-012). */
 export function localDateString(d = new Date()): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -123,7 +123,7 @@ export function useToggleStep() {
       });
       if (error) throw error;
     },
-    // Optimistic check-off (docs/01 §6) — bathroom check-offs feel instant.
+    // Optimistic check-off (docs/01 §6). Bathroom check-offs feel instant.
     onMutate: async ({ stepId }) => {
       await qc.cancelQueries({ queryKey: key });
       const prev = qc.getQueryData<TodayData>(key);

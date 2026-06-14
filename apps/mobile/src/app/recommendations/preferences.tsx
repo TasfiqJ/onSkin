@@ -11,7 +11,7 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// Preferences (docs/09 §8, §11) — the values / format / budget filters. Honest
+// Preferences (docs/09 §8, §11). The values / format / budget filters. Honest
 // personalisation: they constrain *what fits you*, never *what sells*, and they
 // hard-constrain the candidate set (fit.ts). A fragrance-averse user never sees a
 // fragranced recommendation.
@@ -48,7 +48,7 @@ export default function PreferencesScreen() {
     qc.setQueryData(['recPreferences'], next);
     track('preference_set');
     await savePreferences(next);
-    // The For-you hub reads prefs+dismissals together — refresh it too.
+    // The For-you hub reads prefs+dismissals together. Refresh it too.
     await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
   };
 

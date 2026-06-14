@@ -5,8 +5,8 @@ import { SKIN_NOTES } from './notes';
 
 // Claim-safety guard for community copy + the seeded expert notes (docs/11 §4/§9, the
 // Slice-11..24 pattern). Community is health-adjacent and trust-critical, so the
-// content must be claim-safe: recommend/explain for CONCERNS not CONDITIONS — no
-// drug/disease verbs or disease names, no alarm, no urgency/guilt — and it must carry
+// content must be claim-safe: recommend/explain for CONCERNS not CONDITIONS. No
+// drug/disease verbs or disease names, no alarm, no urgency/guilt. And it must carry
 // the mandatory "not medical advice" stance (Flo's posture). Curly-apostrophe-aware.
 
 const DRUG = [
@@ -19,7 +19,7 @@ const DRUG = [
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\btoxic\b/i, /!/];
 const URGENCY = [/\bdon['’]?t\s+miss\b/i, /\bhurry\b/i, /\blast\s+chance\b/i, /\bonly\s+\d+\s+left\b/i];
 
-// The one meta string that QUOTES "treats/cures" precisely to say it found none — it
+// The one meta string that QUOTES "treats/cures" precisely to say it found none. It
 // negates the terms (the Slice-20 NO_SCORE_COPY exemption pattern). It is exempt from
 // the DRUG scan but still held to the alarm/urgency bar.
 const META_SAFETY = COMMUNITY_COPY.ask.claimSafePassed;

@@ -28,14 +28,14 @@ function mk(id: string, date: string, extra: Partial<PhotoMeta> = {}): PhotoMeta
   };
 }
 
-describe('date helpers (local-day, tz-safe — D-012)', () => {
+describe('date helpers (local-day, tz-safe. D-012)', () => {
   it('counts whole days between local dates', () => {
     expect(daysBetween('2026-03-12', '2026-06-12')).toBe(92);
     expect(daysBetween('2026-06-12', '2026-06-12')).toBe(0);
   });
 });
 
-describe('metadata line (docs/06 §4 — "13 weeks · 26 photos · all on this phone")', () => {
+describe('metadata line (docs/06 §4. "13 weeks · 26 photos · all on this phone")', () => {
   it('reproduces the spec line for a 13-week, 26-photo timeline', () => {
     const photos: PhotoMeta[] = [mk('first', '2026-03-12')];
     for (let i = 1; i <= 24; i++) {
@@ -106,7 +106,7 @@ describe('month grouping (docs/06 §4 film strip)', () => {
   });
 });
 
-describe('calm milestones (docs/06 §4 — not gamified)', () => {
+describe('calm milestones (docs/06 §4. Not gamified)', () => {
   it('marks first, four_weeks (≥28d) and one_cycle (≥84d)', () => {
     const photos = [mk('a', '2026-03-12'), mk('b', '2026-04-12'), mk('c', '2026-06-12')];
     const ms = detectMilestones(photos);

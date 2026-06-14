@@ -2,7 +2,7 @@ import type { CommunityNoteKind, EvidenceLabel } from '@onskin/types';
 
 import { colors } from '@/theme/tokens';
 
-// The expert-seeded "myth vs evidence" corpus (docs/11 §4). NOT peer UGC — editorial,
+// The expert-seeded "myth vs evidence" corpus (docs/11 §4). NOT peer UGC. Editorial,
 // dermatologist/cosmetic-chemist-authored, claim-safe (cosmetic verbs only, "for the
 // appearance of…", never "treats/cures"), and evidence-graded with the docs/02 vocab.
 // The content primitive is an EXTENSION of the recommendation engine, not a new social
@@ -10,7 +10,7 @@ import { colors } from '@/theme/tokens';
 // Contested=clay-tint, Refuted=sage) and the sage "good news" treatment for debunked
 // myths.
 //
-// *** BLOCKED: B-DERM-REVIEW — reviewedBy is null on every note. In production only
+// *** BLOCKED: B-DERM-REVIEW. ReviewedBy is null on every note. In production only
 // *** clinically-reviewed AND claim-safe notes surface (NOTES_REVIEWED gate, mirroring
 // *** shippableRules / shippableRecTypes / shippableStacks). In dev the seeded corpus is
 // *** available so the layer is buildable/demoable. *** Expert recruitment + a
@@ -93,7 +93,7 @@ export const SKIN_NOTES: SkinNote[] = [
     title: 'Is a 10-step “glass skin” routine better?',
     summary: 'For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.',
     claim: '“A 10-step ‘glass skin’ routine is better for your skin.”',
-    why: 'For sensitive or reactive skin, more steps and more actives raise the chance of irritation. A short, considered routine — cleanse, treat, moisturise, protect — is usually kinder and just as effective.',
+    why: 'For sensitive or reactive skin, more steps and more actives raise the chance of irritation. A short, considered routine. Cleanse, treat, moisturise, protect. Is usually kinder and just as effective.',
     evidenceLabel: 'contested',
     evidenceGrade: 'C',
     verdict: 'Fewer is often smarter',
@@ -107,8 +107,8 @@ export const SKIN_NOTES: SkinNote[] = [
     topicSlug: 'sunscreen',
     kind: 'myth_vs_evidence',
     title: 'Do you have to wait between skincare steps?',
-    summary: 'Mostly no — layering onto slightly damp skin is fine for most routines.',
-    claim: '“You must wait 20–30 minutes between every skincare step.”',
+    summary: 'Mostly no. Layering onto slightly damp skin is fine for most routines.',
+    claim: '“You must wait 20-30 minutes between every skincare step.”',
     why: 'For most everyday routines, layering products onto slightly damp skin works well. Long waits between steps aren’t needed for them to do their job.',
     evidenceLabel: 'refuted',
     evidenceGrade: null,
@@ -123,9 +123,9 @@ export const SKIN_NOTES: SkinNote[] = [
     topicSlug: 'sunscreen',
     kind: 'myth_vs_evidence',
     title: 'Is homemade sunscreen as protective as store-bought?',
-    summary: 'No — homemade mixes can’t be measured for protection. Use a tested SPF.',
+    summary: 'No. Homemade mixes can’t be measured for protection. Use a tested SPF.',
     claim: '“Homemade sunscreen protects as well as a store-bought SPF.”',
-    why: 'A finished SPF is tested so its protection can be measured and relied on. A homemade mix can’t be, so the level of protection is unknown — a daily tested SPF is the dependable choice.',
+    why: 'A finished SPF is tested so its protection can be measured and relied on. A homemade mix can’t be, so the level of protection is unknown. A daily tested SPF is the dependable choice.',
     evidenceLabel: 'refuted',
     evidenceGrade: null,
     verdict: 'Use a tested SPF',
@@ -139,7 +139,7 @@ export const SKIN_NOTES: SkinNote[] = [
     topicSlug: 'sensitive-skin',
     kind: 'myth_vs_evidence',
     title: 'Is “natural” always gentler for sensitive skin?',
-    summary: 'Not necessarily — some plant extracts and essential oils are common irritants.',
+    summary: 'Not necessarily. Some plant extracts and essential oils are common irritants.',
     claim: '“Natural ingredients are always gentler.”',
     why: '“Natural” isn’t the same as “gentle”. Some botanical extracts and essential oils are among the more common triggers for sensitive skin, while many lab-made ingredients are very well tolerated.',
     evidenceLabel: 'contested',
@@ -156,7 +156,7 @@ export const SKIN_NOTES: SkinNote[] = [
  * Launch gate (B-DERM-REVIEW), mirroring shippableRules() / shippableRecTypes() /
  * shippableStacks(). In production only clinically-reviewed notes surface; in dev the
  * full seeded corpus is used so the layer is demoable. A note must ALSO pass the
- * claim-safety guard (claimSafetyOk) to ship — the same belt-and-suspenders the
+ * claim-safety guard (claimSafetyOk) to ship. The same belt-and-suspenders the
  * community_notes RLS enforces (reviewed_by IS NOT NULL AND claim_safety_ok).
  */
 export const NOTES_REVIEWED = false;
@@ -191,7 +191,7 @@ export function noteForTags(tagA: string, tagB: string, notes: SkinNote[] = SKIN
   return undefined;
 }
 
-/** The evidence-label pill (docs/02 vocab) — refuted=sage "good news", contested=clay,
+/** The evidence-label pill (docs/02 vocab). Refuted=sage "good news", contested=clay,
  *  plausible=greige, established=ink. TEXT label + colours (never colour alone, §11). */
 export function evidencePill(label: EvidenceLabel): { text: string; bg: string; fg: string } {
   switch (label) {

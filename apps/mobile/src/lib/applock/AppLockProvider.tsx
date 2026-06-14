@@ -6,7 +6,7 @@ import { colors } from '@/theme/tokens';
 
 import { getAppLockEnabled, setAppLockEnabledStored } from './store';
 
-// Biometric app-lock (docs/01 §5): opt-in Face ID/Touch ID to open the app —
+// Biometric app-lock (docs/01 §5): opt-in Face ID/Touch ID to open the app , 
 // a trust signal for an app holding progress photos. Locks on cold start and on
 // return from background when enabled.
 type AppLockContextValue = {
@@ -32,7 +32,7 @@ function LockOverlay({ onUnlock }: { onUnlock: () => void }) {
       }}>
       <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 40, color: colors.ink }}>OnSkin</Text>
       <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 15, color: colors.muted }}>
-        Locked — unlock to continue
+        Locked. Unlock to continue
       </Text>
       <Pressable
         accessibilityRole="button"

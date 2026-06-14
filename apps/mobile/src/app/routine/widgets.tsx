@@ -40,7 +40,7 @@ function WidgetsScreen() {
           </Text>
         </View>
         <Text variant="bodySm" tone="muted" className="mb-5 ml-9">
-          One to three things, readable in a glance. (Previews — the home-screen widgets arrive in the device build.)
+          One to three things, readable in a glance. (Previews. The home-screen widgets arrive in the device build.)
         </Text>
 
         {/* Widget gallery (design 05) */}
@@ -148,7 +148,7 @@ function WidgetsScreen() {
           </View>
         </View>
         <Text variant="bodySm" tone="muted" className="ml-1 mt-2.5">
-          Check it off right from the home screen — no need to open the app (iOS 17 / Android).
+          Check it off right from the home screen. No need to open the app (iOS 17 / Android).
         </Text>
 
         {/* Evening Live Activity (design 07) */}
@@ -177,7 +177,7 @@ function WidgetsScreen() {
             <View className="h-[22px] w-[22px] rounded-full" style={{ borderWidth: 2, borderColor: colors.clayBright }} />
             <View className="flex-1">
               <Text className="font-sans-semibold" style={{ fontSize: 14, color: colors.cream }}>
-                Up next — Retinol 0.3%
+                Up next. Retinol 0.3%
               </Text>
               <Text style={{ fontSize: 12, color: 'rgba(244,239,231,0.5)', fontFamily: 'HankenGrotesk_400Regular' }}>
                 Pea-sized · gentle around the eyes

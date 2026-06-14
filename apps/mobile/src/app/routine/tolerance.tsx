@@ -7,8 +7,8 @@ import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
-// 07 · Weekly tolerance check-in (design 07, docs/03 §4). The ONLY assessment —
-// optional, explicitly non-diagnostic — that tunes the ramp cadence. Each answer
+// 07 · Weekly tolerance check-in (design 07, docs/03 §4). The ONLY assessment , 
+// optional, explicitly non-diagnostic. That tunes the ramp cadence. Each answer
 // states exactly what the app will do (comfortable → offer step-up; dry → hold;
 // irritated → add recovery & ease off).
 const OPTIONS = [
@@ -49,7 +49,7 @@ export default function ToleranceScreen() {
           How did your skin feel this week?
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-2 text-[14px]">
-          It only tunes your pace — nothing here is a diagnosis. Optional, always.
+          It only tunes your pace. Nothing here is a diagnosis. Optional, always.
         </Text>
 
         <View className="mt-6 gap-2.5">

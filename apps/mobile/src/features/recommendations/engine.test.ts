@@ -8,11 +8,11 @@ import { RECS_REVIEWED, shippableRecTypes } from './catalog';
 import { recommend, type RecInput, type RecProfile, type RecShelfItem } from './engine';
 import { DEFAULT_PREFERENCES } from './preferences';
 
-// Engine fixtures (docs/09 §4/§5) — the six triggers + the honest "you're set",
+// Engine fixtures (docs/09 §4/§5). The six triggers + the honest "you're set",
 // restrained and type-first. The engine recommends only on a genuine, profile-
 // grounded need, prioritised safety/gap > replacement > conflict > better-fit > goal.
 
-// In dev the full catalog (incl. launch-gated goal actives) is available — mirror
+// In dev the full catalog (incl. launch-gated goal actives) is available. Mirror
 // that here so the behavioural fixtures exercise the goal trigger. A dedicated test
 // below asserts the production gate withholds them (B-DERM-REVIEW).
 beforeAll(() => {
@@ -47,7 +47,7 @@ const moisturiser = item({ id: 'p_moist', name: 'Ceramide cream', role: 'moistur
 const spf = item({ id: 'p_spf', name: 'Daily SPF 30', role: 'spf', tags: ['sunscreen'] });
 const niacinamide = item({ id: 'p_niac', name: 'Niacinamide 5%', role: 'hydrating_serum', tags: ['niacinamide'] });
 
-describe('gap-filling — a missing SPF is the highest-priority recommendation (§4.1)', () => {
+describe('gap-filling. A missing SPF is the highest-priority recommendation (§4.1)', () => {
   const res = recommend(
     input({ profile: { sensitivity: 'sensitive', pregnancy: false, goals: ['anti_aging'] }, shelf: [cleanser, moisturiser, niacinamide] }),
   );
@@ -62,7 +62,7 @@ describe('gap-filling — a missing SPF is the highest-priority recommendation (
     expect(res.youreSet).toBe(false);
   });
 
-  it('carries the what / why / how triad on every suggestion (§6 — explainability is mandatory)', () => {
+  it('carries the what / why / how triad on every suggestion (§6. Explainability is mandatory)', () => {
     const top = res.recommendations[0]!;
     expect(top.why.toLowerCase()).toContain('spf');
     expect(top.how.profile.length).toBeGreaterThan(0);
@@ -71,14 +71,14 @@ describe('gap-filling — a missing SPF is the highest-priority recommendation (
     expect(top.how.caveat).toBeTruthy(); // mineral SPF white-cast caveat (honest flaw)
   });
 
-  it('is restrained — it does not re-recommend what is already owned, nor pad the list', () => {
+  it('is restrained. It does not re-recommend what is already owned, nor pad the list', () => {
     const types = res.recommendations.map((r) => r.productType);
     expect(types).not.toContain('niacinamide_serum'); // already owned
     expect(res.recommendations.length).toBeLessThanOrEqual(2); // gap + one goal active, no padding
   });
 });
 
-describe('goal-driven — pregnancy swaps the active for a safe alternative (§8 hard exclusion)', () => {
+describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 hard exclusion)', () => {
   it('recommends vitamin C, never a retinoid, for an anti-aging goal in pregnancy', () => {
     const res = recommend(
       input({ profile: { sensitivity: 'neutral', pregnancy: true, goals: ['anti_aging'] }, shelf: [cleanser, moisturiser, spf] }),
@@ -109,7 +109,7 @@ describe('the honest "you\'re set" seventh state (§4)', () => {
   });
 });
 
-describe('conflict resolution — a non-conflicting alternative (§4.3)', () => {
+describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
   it('surfaces a de-conflicting option for an unresolved shelf clash', () => {
     const profile = { sensitivity: 'sensitive' as const, pregnancy: false, goals: [] as GoalId[] };
     const engineProducts: EngineProduct[] = [
@@ -137,7 +137,7 @@ describe('conflict resolution — a non-conflicting alternative (§4.3)', () => 
   });
 });
 
-describe('better-fit — a gentler alternative to a fragranced product (§4.4)', () => {
+describe('better-fit. A gentler alternative to a fragranced product (§4.4)', () => {
   it('offers a fragrance-free swap for sensitive skin, as an option (relatedProductId set)', () => {
     const fragranced = item({ id: 'p_fc', name: 'Rose cleanser', role: 'cleanser', fragranced: true });
     const res = recommend(
@@ -153,7 +153,7 @@ describe('better-fit — a gentler alternative to a fragranced product (§4.4)',
   });
 });
 
-describe('routine completion — a beginner gets a minimal starter routine (§4.6)', () => {
+describe('routine completion. A beginner gets a minimal starter routine (§4.6)', () => {
   it('recommends the three essentials, not a 10-step regimen', () => {
     const res = recommend(input({ profile: { sensitivity: 'neutral', pregnancy: false, goals: [] }, shelf: [] }));
     const roles = res.recommendations.map((r) => r.productType);
@@ -165,7 +165,7 @@ describe('routine completion — a beginner gets a minimal starter routine (§4.
   });
 });
 
-describe('replacement — only when genuinely depleted (§4.2)', () => {
+describe('replacement. Only when genuinely depleted (§4.2)', () => {
   it('surfaces an expiring product, anchored to the shelf item', () => {
     const expiring = item({ id: 'p_vc', name: 'Vitamin C serum', role: 'antioxidant', tags: ['vitamin_c'], expiring: true });
     const res = recommend(
@@ -207,7 +207,7 @@ describe('the launch gate withholds medically-adjacent goal actives in productio
   });
 });
 
-describe('church and state — no commercial field exists in the ranking output (D-054)', () => {
+describe('church and state. No commercial field exists in the ranking output (D-054)', () => {
   it('a recommendation carries only merit + explainability fields, never commerce', () => {
     const res = recommend(input({ profile: { sensitivity: 'sensitive', pregnancy: false, goals: ['anti_aging'] }, shelf: [cleanser, moisturiser, niacinamide] }));
     const rec = res.recommendations[0]!;

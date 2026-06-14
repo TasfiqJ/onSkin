@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { cn } from '@/lib/cn';
 
-// Bottom sheet over a dimmed backdrop — the opened-date linchpin (docs/04 §4.5),
+// Bottom sheet over a dimmed backdrop. The opened-date linchpin (docs/04 §4.5),
 // the no-match fork (§4.1, tone="night"), and the replenishment prompt (§6).
 // Tapping the backdrop dismisses. Present the route as a transparentModal so the
 // dim shows through.

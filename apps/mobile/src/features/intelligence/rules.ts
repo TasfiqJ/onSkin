@@ -13,7 +13,7 @@ import type {
 // rules or this offline fallback. At runtime the engine prefers rules fetched +
 // cached from the DB (docs/02 §10); this is the fallback before the first fetch.
 //
-// *** BLOCKED: B-DERM-REVIEW — reviewed_by is null on every rule. Nothing here
+// *** BLOCKED: B-DERM-REVIEW. Reviewed_by is null on every rule. Nothing here
 // *** ships to users until a board-certified dermatologist + cosmetic chemist
 // *** sign off (docs/02 §9). The matrix grows only via versioned reviewed events.
 export type ConflictRule = {
@@ -22,7 +22,7 @@ export type ConflictRule = {
   tagB: FunctionalTag;
   interactionType: InteractionType;
   baseSeverity: ConflictSeverity;
-  evidenceGrade: EvidenceGrade | null; // null = "—" (refuted myths, docs/02 §4.3)
+  evidenceGrade: EvidenceGrade | null; // null = ", " (refuted myths, docs/02 §4.3)
   evidenceLabel: EvidenceLabel;
   mechanism: string;
   resolutionType: ResolutionType;
@@ -46,7 +46,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism:
       'Both speed surface turnover; used together they can over-exfoliate and stress the barrier, especially on sensitive skin. The idea that they cancel each other out is not well supported.',
     resolutionType: 'alternate_nights',
-    resolutionCopy: 'Alternate nights — keep retinol and your acid on different evenings.',
+    resolutionCopy: 'Alternate nights. Keep retinol and your acid on different evenings.',
     appliesWhen: null,
     sourceCitation: "Paula's Choice; Westlake/London Derm; Glow Recipe (Dr. H. King)",
     ruleVersion: 1, reviewedBy: null,
@@ -58,7 +58,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism:
       'As with AHAs, combining can compound irritation; some dermatologists consider retinoid + BHA potentially complementary for oilier skin.',
     resolutionType: 'alternate_nights',
-    resolutionCopy: 'Alternate nights — though oilier, resistant skin may tolerate co-use.',
+    resolutionCopy: 'Alternate nights. Though oilier, resistant skin may tolerate co-use.',
     appliesWhen: { coUseIf: 'resistant' },
     sourceCitation: "Glow Recipe (Dr. King); Paula's Choice",
     ruleVersion: 1, reviewedBy: null,
@@ -82,7 +82,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism:
       'The flushing fear came from a 1960s study using niacin (not niacinamide) under heat. Niacinamide is stable and the two are routinely combined; they can even complement each other (brightening + barrier support).',
     resolutionType: 'reassure',
-    resolutionCopy: 'These work well together — no need to separate them.',
+    resolutionCopy: 'These work well together. No need to separate them.',
     appliesWhen: null,
     sourceCitation: 'Clinikally; dermatology consensus',
     ruleVersion: 1, reviewedBy: null,
@@ -129,7 +129,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism:
       'Stacking several exfoliating acids in one session raises the chance of over-exfoliation and a stressed barrier.',
     resolutionType: 'lower_frequency',
-    resolutionCopy: 'Use just one acid per session — let the others have their own night.',
+    resolutionCopy: 'Use just one acid per session. Let the others have their own night.',
     appliesWhen: null,
     sourceCitation: 'dermatology consensus',
     ruleVersion: 1, reviewedBy: null,
@@ -140,7 +140,7 @@ export const STARTER_RULES: ConflictRule[] = [
     evidenceGrade: 'C', evidenceLabel: 'plausible',
     mechanism: 'Antioxidant plus UV protection is a classic morning pairing.',
     resolutionType: 'no_change',
-    resolutionCopy: 'A great morning pair — vitamin C under your SPF.',
+    resolutionCopy: 'A great morning pair. Vitamin C under your SPF.',
     appliesWhen: null,
     sourceCitation: 'dermatology consensus',
     ruleVersion: 1, reviewedBy: null,
@@ -152,7 +152,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism:
       'Niacinamide supports the barrier and can temper the dryness some people get from a retinoid.',
     resolutionType: 'no_change',
-    resolutionCopy: 'These complement each other — niacinamide can ease retinoid dryness.',
+    resolutionCopy: 'These complement each other. Niacinamide can ease retinoid dryness.',
     appliesWhen: null,
     sourceCitation: 'dermatology consensus',
     ruleVersion: 1, reviewedBy: null,
@@ -165,7 +165,7 @@ export const STARTER_RULES: ConflictRule[] = [
       'Many dermatologists suggest pausing topical retinoids while pregnant or breastfeeding, out of caution.',
     resolutionType: 'avoid_refer',
     resolutionCopy:
-      "Many dermatologists suggest pausing retinoids while pregnant or breastfeeding. This is a conversation for you and your doctor — we've set it aside for now and can suggest a gentler alternative.",
+      "Many dermatologists suggest pausing retinoids while pregnant or breastfeeding. This is a conversation for you and your doctor. We've set it aside for now and can suggest a gentler alternative.",
     appliesWhen: { pregnancy: true },
     sourceCitation: 'AAD-aligned expert consensus; dermatology pregnancy/lactation reviews',
     ruleVersion: 1, reviewedBy: null,
@@ -178,7 +178,7 @@ export const STARTER_RULES: ConflictRule[] = [
       'High-dose salicylic acid is on common pregnancy-caution lists; low-dose cosmetic BHA is generally considered fine.',
     resolutionType: 'avoid_refer',
     resolutionCopy:
-      "High-strength salicylic acid is often paused in pregnancy. Please check with your doctor — we've set it aside for now.",
+      "High-strength salicylic acid is often paused in pregnancy. Please check with your doctor. We've set it aside for now.",
     appliesWhen: { pregnancy: true, requiresHighDose: true },
     sourceCitation: 'pregnancy-safe-skincare consensus',
     ruleVersion: 1, reviewedBy: null,
@@ -190,7 +190,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism: 'Cosmetic hydroquinone use is generally avoided during pregnancy and breastfeeding.',
     resolutionType: 'avoid_refer',
     resolutionCopy:
-      "Hydroquinone is usually paused in pregnancy and breastfeeding. Please check with your doctor — we've set it aside for now.",
+      "Hydroquinone is usually paused in pregnancy and breastfeeding. Please check with your doctor. We've set it aside for now.",
     appliesWhen: { pregnancy: true },
     sourceCitation: 'dermatology lactation reviews',
     ruleVersion: 1, reviewedBy: null,

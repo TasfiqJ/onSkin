@@ -1,6 +1,6 @@
 // Opaque-token attribution (docs/10 §5/§7). The trust guarantee, validated by the
 // MHMDA research: a "where to buy" hand-off shares ONLY an opaque correlation token
-// with the affiliate partner — NEVER a health-adjacent attribute (concern, goal,
+// with the affiliate partner. NEVER a health-adjacent attribute (concern, goal,
 // skin axis, pregnancy, photo, profile). This is Doc 10's analogue of the docs/09
 // "FIT score has no commercial input" guard: a structural, tested guarantee, not a
 // promise. Pure + unit-tested; token GENERATION (native crypto) lives in store.ts so
@@ -33,7 +33,7 @@ export const HEALTH_DENYLIST = [
 
 /**
  * Build the outbound retailer URL for a "where to buy" tap. Appends ONLY the opaque
- * click token — the signature accepts no profile/health argument, so health data
+ * click token. The signature accepts no profile/health argument, so health data
  * cannot be attached even by mistake (docs/10 §5). Deep-link straight out; no in-app
  * webview (keeps OnSkin out of the transaction + reduces data-handling liability).
  */
@@ -42,7 +42,7 @@ export function buildOutboundUrl(retailerUrl: string, clickToken: string): strin
   return `${retailerUrl}${sep}${ATTRIBUTION_PARAM}=${encodeURIComponent(clickToken)}`;
 }
 
-/** True if a URL contains any health-adjacent term — used to prove an outbound link
+/** True if a URL contains any health-adjacent term. Used to prove an outbound link
  *  never leaks skin data (the tested invariant). Case-insensitive. */
 export function urlLeaksHealthData(url: string, denylist: readonly string[] = HEALTH_DENYLIST): boolean {
   const lower = url.toLowerCase();
@@ -50,8 +50,8 @@ export function urlLeaksHealthData(url: string, denylist: readonly string[] = HE
 }
 
 /** Guard for the click-event payload that gets persisted/mirrored: it may carry only
- *  the opaque token, the product TYPE, the source, and the consent flag — never any
- *  health-adjacent key (docs/10 §9 — the table has no health column; this is the
+ *  the opaque token, the product TYPE, the source, and the consent flag. Never any
+ *  health-adjacent key (docs/10 §9. The table has no health column; this is the
  *  belt-and-suspenders at the app boundary). */
 export type ClickPayload = {
   clickToken: string;

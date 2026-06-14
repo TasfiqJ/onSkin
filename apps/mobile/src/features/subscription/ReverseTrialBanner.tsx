@@ -19,7 +19,7 @@ export function ReverseTrialBanner({ tone = 'light' }: { tone?: 'light' | 'night
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="You're exploring Pro — manage your plan"
+      accessibilityLabel="You're exploring Pro. Manage your plan"
       onPress={() => router.push('/settings/subscription')}
       className="mb-4 flex-row items-center gap-3 rounded-card p-4"
       style={{

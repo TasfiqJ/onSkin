@@ -9,7 +9,7 @@ import { classifyIntent } from './intent';
 
 // The pure, deterministic, TEMPLATE-BOUNDED answer engine (docs/13 §4, D-057). Every
 // substantive claim is filled from the deterministic engine output + already-claim-safe
-// copy — the model never free-generates a health claim. The `claim` field is the
+// copy. The model never free-generates a health claim. The `claim` field is the
 // guard-scanned substantive sentence; `note` is a DATA line (product/plan names, which
 // may carry a "7%") rendered separately and never scanned. Pure + unit-tested.
 
@@ -20,7 +20,7 @@ export type AskAnswer = {
   kind: AskAnswerKind;
   /** The mono status badge (e.g. "answered by your conflict engine · $0"). */
   badge: string | null;
-  /** The topic/pair title — built from TAG labels, so always %-free. */
+  /** The topic/pair title. Built from TAG labels, so always %-free. */
   headline: string | null;
   /** The substantive, claim-safe, template-bounded sentence (guard-scanned). */
   claim: string;
@@ -29,7 +29,7 @@ export type AskAnswer = {
   citation: AskCitation | null;
   severity: ConflictSeverity | null;
   severityText: string | null;
-  /** A non-claim DATA line (product/plan names — may contain "7%"; NOT guard-scanned). */
+  /** A non-claim DATA line (product/plan names. May contain "7%"; NOT guard-scanned). */
   note: string | null;
   recommendationNote: boolean;
   claimSafeNote: boolean;
@@ -56,7 +56,7 @@ export type AskContext = {
   youreSet: boolean;
   /** The user's first goal as a cosmetic-appearance phrase (e.g. "a more even-looking tone"). */
   goalConcernText: string | null;
-  /** From askGate — whether a cloud-grounded turn is permitted, and why not. */
+  /** From askGate. Whether a cloud-grounded turn is permitted, and why not. */
   groundedAllowed: boolean;
   groundedReason: 'free_locked' | 'cap_reached' | null;
 };
@@ -76,7 +76,7 @@ const BLANK = {
   footnote: null,
 } as const;
 
-/** A tag-based pair title — never a raw product name, so always %-free and guard-clean. */
+/** A tag-based pair title. Never a raw product name, so always %-free and guard-clean. */
 function pairHeadline(c: DetectedConflict): string {
   return `${tagLabel(c.rule.tagA)} × ${tagLabel(c.rule.tagB)}`;
 }
@@ -87,7 +87,7 @@ function shelfNote(c: DetectedConflict): string | null {
 }
 
 function escalate(intent: AskIntent): AskAnswer {
-  // VERBAL escalation only — no CTA. There is no in-app dermatologist finder yet, and a
+  // VERBAL escalation only. No CTA. There is no in-app dermatologist finder yet, and a
   // medical escalation must never route to a non-clinician surface (docs/13 §9).
   return {
     ...BLANK,
@@ -104,7 +104,7 @@ function refuse(intent: AskIntent, claim: string): AskAnswer {
 }
 
 function conflictAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
-  // SAFETY conflicts (e.g. a pregnancy contraindication) are NEVER "you're set" — they must
+  // SAFETY conflicts (e.g. a pregnancy contraindication) are NEVER "you're set". They must
   // route to a calm clinician-caution answer BEFORE the top/reassurance/noConflicts logic,
   // so a contraindication is never silently dropped and contradicted (docs/13 §4 escalate).
   const safety = ctx.conflicts.find((c) => c.rule.interactionType === 'safety');
@@ -221,7 +221,7 @@ function fitAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
 
 function concernAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
   // The genuinely corpus-grounded path. The cloud layer is gated (Pro) and currently
-  // blocked (B-AI-ASSISTANT-VENDOR), so degrade honestly — never free-generate.
+  // blocked (B-AI-ASSISTANT-VENDOR), so degrade honestly. Never free-generate.
   const claim = ctx.groundedReason === 'free_locked' ? ASK_COPY.refuse.groundedLocked : ASK_COPY.refuse.groundedSetup;
   return { ...BLANK, intent, kind: 'refuse', claim };
 }
@@ -247,7 +247,7 @@ export function answerQuestion(question: string, ctx: AskContext): AskAnswer {
     case 'out_of_scope':
       return refuse(intent, ASK_COPY.refuse.outOfScope);
   }
-  // Unreachable (the switch is exhaustive over AskIntent) — refuse-over-guess by default.
+  // Unreachable (the switch is exhaustive over AskIntent). Refuse-over-guess by default.
   return refuse('out_of_scope', ASK_COPY.refuse.outOfScope);
 }
 
@@ -259,7 +259,7 @@ export function answerPrompt(prompt: 'conflict' | 'tonight' | 'fit', ctx: AskCon
 }
 
 /** The refuse-over-guess fallback (docs/13 §4): used when the runtime guard flags an
- *  answer (a regression — template-bounded claims should never flag) or input is empty. */
+ *  answer (a regression. Template-bounded claims should never flag) or input is empty. */
 export function safetyRefusal(intent: AskIntent): AskAnswer {
   return refuse(intent, ASK_COPY.refuse.outOfScope);
 }

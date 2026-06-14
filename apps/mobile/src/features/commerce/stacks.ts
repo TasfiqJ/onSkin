@@ -3,12 +3,12 @@ import type { CuratorKind } from '@onskin/types';
 // Expert/derm-reviewed shoppable Stacks (docs/10 §4, Phase 2 concept; UI shipped now
 // with in-house curated content). The research is decisive: expert/derm-curated
 // content is more trusted than anonymous influencer content, and influencer stacks
-// are a trust liability — so OnSkin's stacks are EDITORIAL/derm-reviewed, never
+// are a trust liability. So OnSkin's stacks are EDITORIAL/derm-reviewed, never
 // anonymous. Ordered by the routine SEQUENCE (docs/03), never by commission (church
 // and state). Stack content is medical-adjacent → launch-gated under B-DERM-REVIEW,
 // exactly like the conflict matrix (rules.ts) and the rec types (catalog.ts).
 //
-// *** BLOCKED: B-DERM-REVIEW — reviewedBy is null on every stack. In production only
+// *** BLOCKED: B-DERM-REVIEW. ReviewedBy is null on every stack. In production only
 // *** reviewed stacks surface; in dev the demo stack is available so the surface is
 // *** buildable/demoable. Product items reuse the docs/09 type catalog (type-first;
 // *** specific products + retailers arrive with B-CATALOG-SEED).
@@ -19,7 +19,7 @@ export type StackItem = {
   productType: string;
   /** The product name shown in the stack (illustrative until B-CATALOG-SEED). */
   label: string;
-  /** "Cleanse · fragrance-free" — the role + a claim-safe note. */
+  /** "Cleanse · fragrance-free". The role + a claim-safe note. */
   roleLabel: string;
 };
 

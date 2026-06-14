@@ -52,7 +52,7 @@ describe('expiry badge taxonomy (docs/02 §7.6)', () => {
 });
 
 // New Smart Shelf badge states (docs/04 §5.3).
-describe('badge taxonomy — paired + the eye/SPF safety exception (docs/04 §5.3)', () => {
+describe('badge taxonomy. Paired + the eye/SPF safety exception (docs/04 §5.3)', () => {
   const today = '2026-06-13';
   it('a resolved pairing shows "paired" instead of a neutral future date', () => {
     const b = expiryBadge('2027-05-01', today, { paired: true });

@@ -11,7 +11,7 @@ import { REC_COPY } from './copy';
 import { useRecommendations } from './useRecommendations';
 
 // The recommendation surfaces ON Today (docs/09 §7.1/§7.2): a calm "For you" entry
-// card + the in-routine SPF gap prompt (design 04) — inline, dismissible, never
+// card + the in-routine SPF gap prompt (design 04). Inline, dismissible, never
 // modal-blocking, surfaced where the need arises. Both route into the hub.
 
 function ForYouCard({ count, youreSet }: { count: number; youreSet: boolean }) {

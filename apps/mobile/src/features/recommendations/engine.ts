@@ -15,7 +15,7 @@ import { GROUP_LABEL, goalShort, whyCopy } from './copy';
 import { fitLabel, fitScore, type FitContext, type FitResult } from './fit';
 import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 
-// The recommendation engine (docs/09 §5) — a deterministic, explainable rules +
+// The recommendation engine (docs/09 §5). A deterministic, explainable rules +
 // evidence + FIT-scoring function over the profile/shelf/conflicts/preferences +
 // type catalog. NOT collaborative filtering. Restrained by construction: it returns
 // the MINIMAL set of genuine needs, type-first, prioritised safety/gap > replacement
@@ -28,7 +28,7 @@ export type RecShelfItem = {
   role: SequencingRole;
   tags: FunctionalTag[];
   fragranced: boolean;
-  /** Genuinely depleted/expiring (countdown or expired badge) — the only replacement trigger. */
+  /** Genuinely depleted/expiring (countdown or expired badge). The only replacement trigger. */
   expiring: boolean;
   finished: boolean;
 };
@@ -45,7 +45,7 @@ export type RecInput = {
   /** Unresolved interactions from the docs/02 engine (already launch-gated). */
   conflicts: DetectedConflict[];
   preferences: RecPreferences;
-  /** Ids the user has dismissed ("not for me") — never re-surfaced. */
+  /** Ids the user has dismissed ("not for me"). Never re-surfaced. */
   dismissed?: Set<string>;
   rules?: ConflictRule[];
   recTypes?: RecType[];
@@ -60,7 +60,7 @@ export type RecHow = {
 };
 
 export type Recommendation = {
-  /** Stable across recomputes — the cache is not authoritative, so the detail
+  /** Stable across recomputes. The cache is not authoritative, so the detail
    *  screen re-derives by id (docs/09 §5/§12). */
   id: string;
   trigger: RecommendationTrigger;
@@ -72,7 +72,7 @@ export type Recommendation = {
   why: string;
   how: RecHow;
   evidenceLabel: EvidenceLabel | null;
-  /** Bottom-left card label — an evidence note (with a calm dot) or a provenance. */
+  /** Bottom-left card label. An evidence note (with a calm dot) or a provenance. */
   footLabel: string;
   footIsEvidence: boolean;
   caveat: string | null;
@@ -94,7 +94,7 @@ export type RecResult = {
 
 const ESSENTIALS: SequencingRole[] = ['spf', 'moisturiser', 'cleanser'];
 // Roles that count as a goal-driven ACTIVE (vs a structural essential). SPF /
-// moisturiser / cleanser are routine-completeness GAPS, not goal actives — even
+// moisturiser / cleanser are routine-completeness GAPS, not goal actives. Even
 // though SPF genuinely helps anti-aging/even-tone, the goal trigger introduces a
 // treatment, not a structural staple (docs/09 §4.5).
 const GOAL_ACTIVE_ROLES: SequencingRole[] = ['antioxidant', 'treatment', 'exfoliant', 'hydrating_serum'];
@@ -108,7 +108,7 @@ const PRIORITY: Record<RecommendationTrigger, number> = {
 };
 
 // Which owned tags/roles count a goal as already addressed (so we never push a
-// product onto a goal the routine already serves — restraint, §4/§5).
+// product onto a goal the routine already serves. Restraint, §4/§5).
 const GOAL_SERVED_BY: Record<GoalId, { tags: FunctionalTag[]; roles: SequencingRole[] }> = {
   anti_aging: { tags: ['retinoid', 'vitamin_c'], roles: [] },
   even_tone: { tags: ['vitamin_c', 'niacinamide'], roles: [] },
@@ -242,7 +242,7 @@ export function recommend(input: RecInput): RecResult {
   const hasNoEssentials = ESSENTIALS.every((r) => !ownedRoles.has(r));
   const isBeginner = hasNoEssentials && input.shelf.length <= 1;
 
-  // 1 + 6. Gap / routine-completion — the missing essentials (SPF prioritised).
+  // 1 + 6. Gap / routine-completion. The missing essentials (SPF prioritised).
   // A true beginner gets a calm "start simple" starter routine; an established
   // routine gets individual gap prompts.
   const gapTrigger: RecommendationTrigger = isBeginner ? 'routine_completion' : 'gap';
@@ -260,7 +260,7 @@ export function recommend(input: RecInput): RecResult {
     out.push(typeRec({ trigger: gapTrigger, type: best.type, fit: best.fit, why, gapLine, input }));
   }
 
-  // 2. Replacement — a genuinely depleted/expiring product (docs/04). Shelf-anchored;
+  // 2. Replacement. A genuinely depleted/expiring product (docs/04). Shelf-anchored;
   // the existing replenishment sheet handles repurchase-or-better-fit (reuse).
   for (const item of input.shelf) {
     if (!item.expiring && !item.finished) continue;
@@ -276,7 +276,7 @@ export function recommend(input: RecInput): RecResult {
       how: {
         profile: profileSummary(input.profile),
         gap: `${item.name} is genuinely running out`,
-        evidence: 'From your shelf — opened a while ago',
+        evidence: 'From your shelf. Opened a while ago',
         fit: 'Repurchase, or a better-fit alternative',
         caveat: null,
       },
@@ -292,7 +292,7 @@ export function recommend(input: RecInput): RecResult {
     });
   }
 
-  // 3. Conflict resolution — a non-conflicting alternative to a clashing product
+  // 3. Conflict resolution. A non-conflicting alternative to a clashing product
   // (docs/02). Surfaced as an OPTION; the conflict sheet holds the full detail.
   const topConflict = input.conflicts.find(
     (c) => !isReassuring(c) && c.rule.interactionType !== 'safety' && c.computedSeverity !== 'none',
@@ -326,7 +326,7 @@ export function recommend(input: RecInput): RecResult {
     });
   }
 
-  // 4. Better-fit — an owned fragranced product for sensitive skin (or a fragrance-
+  // 4. Better-fit. An owned fragranced product for sensitive skin (or a fragrance-
   // free preference): a gentler alternative, as an OPTION not a mandate.
   if (input.profile.sensitivity === 'sensitive' || input.preferences.values.includes('fragrance_free')) {
     const fragranced = input.shelf.find((p) => p.fragranced && (p.role === 'cleanser' || p.role === 'moisturiser'));
@@ -350,7 +350,7 @@ export function recommend(input: RecInput): RecResult {
     }
   }
 
-  // 5. Goal-driven — the first set goal nothing addresses yet, one active at a time
+  // 5. Goal-driven. The first set goal nothing addresses yet, one active at a time
   // (docs/09 §4). Pregnancy-unsafe actives are excluded by FIT (→ a safe alternative).
   for (const goal of input.profile.goals) {
     const served = GOAL_SERVED_BY[goal];

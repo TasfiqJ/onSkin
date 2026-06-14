@@ -5,9 +5,9 @@ import { Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { colors } from '@/theme/tokens';
 
-// 05 · "People like you" (docs/11 §9.4, design 05) — Phase 2+. Structured, anonymised
+// 05 · "People like you" (docs/11 §9.4, design 05). Phase 2+. Structured, anonymised
 // contributions normalised into the docs/09 "people like you" signal: better
-// recommendations → better retention. A quiet AGGREGATE card, never a social feed —
+// recommendations → better retention. A quiet AGGREGATE card, never a social feed , 
 // never a list of individuals, never a comparison ranking, never a photo. The aggregate
 // shown is an illustrative placeholder until peer density exists (B-COMMUNITY-MOD).
 export default function PeopleLikeYouScreen() {

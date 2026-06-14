@@ -20,7 +20,7 @@ export function addDays(iso: string, n: number): string {
   const dd = String(d.getDate()).padStart(2, '0');
   return `${y}-${mm}-${dd}`;
 }
-/** "Saturday" — friendly weekday for the schedule copy. */
+/** "Saturday". Friendly weekday for the schedule copy. */
 export function friendlyWeekday(iso: string): string {
   return parseLocalDate(iso).toLocaleDateString('en-US', { weekday: 'short' });
 }
@@ -49,7 +49,7 @@ export function weekAhead(cycle: Cycle, anchorISO: string, fromISO: string, days
   return out;
 }
 
-/** The next date AFTER `fromISO` whose slot matches — e.g. the next acid night (docs/05 §3). */
+/** The next date AFTER `fromISO` whose slot matches. E.g. the next acid night (docs/05 §3). */
 export function nextSlotDate(
   cycle: Cycle,
   anchorISO: string,

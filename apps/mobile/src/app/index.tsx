@@ -8,7 +8,7 @@ import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { supabase } from '@/lib/supabase/client';
 
-// 01 · Welcome — the anonymous session starts silently here (docs/01 §1/§2).
+// 01 · Welcome. The anonymous session starts silently here (docs/01 §1/§2).
 // Also acts as the entry gate: a returning user who already finished onboarding
 // (a completed skin_profile exists) is sent straight to Today.
 export default function WelcomeScreen() {
@@ -60,7 +60,7 @@ export default function WelcomeScreen() {
           skin.
         </Text>
         <Text variant="body" tone="muted" className="mt-4">
-          A routine that fits what&apos;s already on your shelf — and photos that never leave your
+          A routine that fits what&apos;s already on your shelf. And photos that never leave your
           phone.
         </Text>
       </View>

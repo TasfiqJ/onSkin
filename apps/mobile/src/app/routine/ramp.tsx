@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import { colors } from '@/theme/tokens';
 
-// 03 · Retinoid ramp — offer-only step-up (design screen 03, docs/03 §4). The app
+// 03 · Retinoid ramp. Offer-only step-up (design screen 03, docs/03 §4). The app
 // only ever OFFERS a step-up (never auto-escalates) and de-escalates on reported
 // irritation. The chart shows nights/week toward a target of 3.
 const BARS = [
@@ -30,7 +30,7 @@ export default function RampScreen() {
           <Text variant="bodySm" italic tone="muted">
             offer
           </Text>{' '}
-          a step-up — never increase it for you.
+          a step-up. Never increase it for you.
         </Text>
 
         {/* Ramp chart card */}

@@ -6,10 +6,10 @@ import { COACHING, LIGHTING_LABEL, MILESTONE_COPY, NO_SCORE_COPY, PHOTO_COPY, QU
 // the Slice-11 pattern). Progress photos are the app's most sensitive surface; the
 // stance is "no scores, no AI grades, your own eyes." This guard survives every
 // future copy edit. Final marketing/consent wording is owned by counsel
-// (B-PRIVACY / B-PRIVACY-COPY) — but no edit may reintroduce a score, grade, drug
+// (B-PRIVACY / B-PRIVACY-COPY). But no edit may reintroduce a score, grade, drug
 // claim, or alarm word.
 
-// Disease/drug-claim verbs (FD&C §201(g)/(i)) — never in any user-facing copy.
+// Disease/drug-claim verbs (FD&C §201(g)/(i)). Never in any user-facing copy.
 const DRUG_CLAIMS = [
   /\btreats?\b/i,
   /\bcures?\b/i,
@@ -23,7 +23,7 @@ const DRUG_CLAIMS = [
 // Non-calm / alarmist words (docs/02 §7.7: no "warning/danger/avoid", no "!").
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\bwarning\b/i, /\bavoid\b/i, /!/];
 
-// Affirmative SCORE/metric claims — the "false precision" docs/06 §8 bans. Targets
+// Affirmative SCORE/metric claims. The "false precision" docs/06 §8 bans. Targets
 // the PATTERN of asserting a number/grade about the skin, NOT the calm REFUSAL of
 // it ("no scores", "never scored"), so the everyday copy passes cleanly.
 const SCORE_CLAIMS = [
@@ -48,7 +48,7 @@ function offenders(text: string, patterns: RegExp[]): string[] {
   });
 }
 
-// Everyday instructional/marketing/reassurance copy — must be clean of ALL three.
+// Everyday instructional/marketing/reassurance copy. Must be clean of ALL three.
 const EVERYDAY = [
   ...collect(PHOTO_COPY),
   ...collect(COACHING),
@@ -69,7 +69,7 @@ describe('photo copy is claim-safe and calm (docs/06 §8/§9)', () => {
 
 describe('the no-AI-score stance (docs/06 §8)', () => {
   // The refusal copy deliberately NAMES score/grade/skin-age to reject them, so it
-  // is exempt from SCORE_CLAIMS — but it must still be calm and claim-free.
+  // is exempt from SCORE_CLAIMS. But it must still be calm and claim-free.
   for (const text of collect(NO_SCORE_COPY)) {
     it(`refusal copy stays calm + claim-free: "${text.slice(0, 48)}…"`, () => {
       expect(offenders(text, DRUG_CLAIMS)).toEqual([]);

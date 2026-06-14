@@ -15,7 +15,7 @@ import { addPhoto, loadPhotos, removePhoto, setReference, updatePhoto, type NewP
 
 // Reads the local-first photo store (docs/06 §6) and derives the Progress-tab
 // surfaces via the pure, tested timeline helpers. Resilient before the backend
-// exists (B-SUPABASE) — the store is on-device AsyncStorage.
+// exists (B-SUPABASE). The store is on-device AsyncStorage.
 
 const KEY = ['photos'] as const;
 

@@ -4,7 +4,7 @@ import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { TREND_COPY } from './copy';
 import { deleteTrendState, getTrendInsightsLocal, setTrendInsightsLocal } from './store';
 
-// The photo_trend_insights consent (docs/12 §8, D-072) — a NEW, separate, explicit,
+// The photo_trend_insights consent (docs/12 §8, D-072). A NEW, separate, explicit,
 // revocable, DEFAULT-OFF consent for the on-device within-person trend insight. The
 // derived insight is STILL a health inference (MHMDA / GDPR Art. 9), so it is excluded
 // from cloud backup and DELETED on revocation. NEVER reused from photo_capture /
@@ -17,7 +17,7 @@ export async function isTrendInsightsConsented(): Promise<boolean> {
     const consents = await getLatestConsents();
     if ('photo_trend_insights' in consents) return consents['photo_trend_insights'] === true;
   } catch {
-    /* offline / no DB — fall back to the local-first flag */
+    /* offline / no DB. Fall back to the local-first flag */
   }
   return getTrendInsightsLocal();
 }
@@ -30,7 +30,7 @@ export async function grantTrendInsightsConsent(): Promise<void> {
       type: 'photo_trend_insights',
       granted: true,
       version: TREND_COPY.consentVersion,
-      consentText: `[PLACEHOLDER photo_trend_insights consent — B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
+      consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
     });
   } catch {
     /* best-effort until backend configured */
@@ -46,7 +46,7 @@ export async function revokeTrendInsightsConsent(): Promise<void> {
       type: 'photo_trend_insights',
       granted: false,
       version: TREND_COPY.consentVersion,
-      consentText: `[PLACEHOLDER photo_trend_insights withdrawal — B-PRIVACY-COPY]`,
+      consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
     });
   } catch {
     /* best-effort */

@@ -8,9 +8,9 @@ import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { AXIS_LABELS } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
-// 07b · Reveal — the "aha" payoff (docs/01 §2/§8, design spec p.6). Shows the
+// 07b · Reveal. The "aha" payoff (docs/01 §2/§8, design spec p.6). Shows the
 // computed 4-axis profile as sliders. The poetic headline + routine prose on the
-// spec are final product/health copy (BLOCKED: B-QUIZ-COPY) — here we show the
+// spec are final product/health copy (BLOCKED: B-QUIZ-COPY). Here we show the
 // factual axis descriptor + a clearly-labelled placeholder recommendation.
 const AXIS_ORDER: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
 
@@ -70,7 +70,7 @@ export default function RevealScreen() {
 
         <Card tone="night" className="mt-4">
           <Text variant="bodySm" tone="inverseMuted">
-            [Placeholder recommendation — pending B-QUIZ-COPY] A gentle, barrier-first routine
+            [Placeholder recommendation. Pending B-QUIZ-COPY] A gentle, barrier-first routine
             tuned to your profile. Your full plan and conflict checks come next.
           </Text>
         </Card>

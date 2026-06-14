@@ -10,7 +10,7 @@ import { haptics } from '@/theme/haptics';
 
 // Cycle settings (design screen 03, docs/05 §6.2). Choose the variant, see the
 // per-night assignment, with a calm non-blocking rule explainer. Edits that
-// violate a rule get a gentle nudge — guidance, not gates (docs/05 §6.2) — except
+// violate a rule get a gentle nudge. Guidance, not gates (docs/05 §6.2). Except
 // the harm-relevant retinoid×exfoliant separation, which we hold firm.
 const VARIANTS: { id: CycleVariant; label: string; sub: string }[] = [
   { id: 'gentle', label: 'Gentle', sub: 'more recovery' },
@@ -93,7 +93,7 @@ export default function CycleSettingsScreen() {
                       {slotLabel(n.slot).toLowerCase()}
                     </Text>
                   </Text>
-                  {/* Drag handle — true drag-and-drop reorder is B-DRAG-DND (shared with the routine reorder). */}
+                  {/* Drag handle. True drag-and-drop reorder is B-DRAG-DND (shared with the routine reorder). */}
                   <View className="gap-[3px]">
                     <View className="h-[1.5px] w-3.5 bg-greige-deep" />
                     <View className="h-[1.5px] w-3.5 bg-greige-deep" />
@@ -108,14 +108,14 @@ export default function CycleSettingsScreen() {
               <View className="flex-row gap-3">
                 <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-clay" />
                 <Text variant="bodySm" tone="muted" className="flex-1">
-                  We keep acids and retinol on separate nights to protect your barrier — the one rule
+                  We keep acids and retinol on separate nights to protect your barrier. The one rule
                   we hold firm. Everything else is a recommendation you can change.
                 </Text>
               </View>
             </View>
 
             <Text variant="bodySm" tone="muted" className="mt-4">
-              Drag-to-reassign nights arrives with the reorder gesture — for now we keep your cabinet
+              Drag-to-reassign nights arrives with the reorder gesture. For now we keep your cabinet
               barrier-safe automatically.
             </Text>
           </>

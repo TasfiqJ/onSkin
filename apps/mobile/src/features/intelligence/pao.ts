@@ -1,9 +1,9 @@
-// PAO / expiry intelligence (docs/02 §6). PAO is EU/UK law only — US products
-// frequently lack it — so resolve label → category default → honest "unknown",
+// PAO / expiry intelligence (docs/02 §6). PAO is EU/UK law only. US products
+// frequently lack it. So resolve label → category default → honest "unknown",
 // NEVER a fabricated date. Pure + testable.
 
 /** Conservative category defaults (mirrors ingredient_pao_defaults seed, docs/02
- *  §6 + docs/04 §3 table). Every number is a B-DERM-REVIEW starting position —
+ *  §6 + docs/04 §3 table). Every number is a B-DERM-REVIEW starting position , 
  *  formulation/packaging shift the real value (airless pumps extend, jars
  *  shorten). 'spf' falls back here but a printed expiry should win (§3). */
 export const CATEGORY_PAO_DEFAULTS: Record<string, number> = {
@@ -14,8 +14,8 @@ export const CATEGORY_PAO_DEFAULTS: Record<string, number> = {
   eye_cream: 6,
   lash_brow: 4, // eye area
   benzoyl_peroxide: 6, // oxidiser; potency decay
-  spf: 12, // OTC drug — prefer the printed expiry; this is only the fallback
-  serum: 9, // water-based serum/toner 6–12
+  spf: 12, // OTC drug. Prefer the printed expiry; this is only the fallback
+  serum: 9, // water-based serum/toner 6-12
   toner: 9,
   moisturiser_tube: 12, // lower contamination than jars
   moisturiser_jar: 8, // finger-dipping contamination
@@ -23,7 +23,7 @@ export const CATEGORY_PAO_DEFAULTS: Record<string, number> = {
   cleanser: 12, // short contact, rinsed
 };
 
-// *** BLOCKED: B-DERM-REVIEW — the CATEGORY_PAO_DEFAULTS above are UNREVIEWED
+// *** BLOCKED: B-DERM-REVIEW. The CATEGORY_PAO_DEFAULTS above are UNREVIEWED
 // *** starting positions (docs/04 §3). Like the conflict matrix (rules.ts), they
 // *** are medical-adjacent and must be signed off by a cosmetic chemist before
 // *** being presented as authoritative to real users. Until sign-off, production
@@ -47,7 +47,7 @@ export function resolvePaoMonths(opts: {
 
 /** The category default, gated by the B-DERM-REVIEW launch gate (mirrors
  *  `shippableRules` in rules.ts): used in development so the shelf is demoable,
- *  withheld in production until cosmetic-chemist sign-off — where intake falls
+ *  withheld in production until cosmetic-chemist sign-off. Where intake falls
  *  back to the honest "estimated/unknown" state rather than a fabricated number. */
 export function reviewedCategoryPao(category: string | null | undefined): number | null {
   if (!category) return null;
@@ -97,14 +97,14 @@ export type ExpiryBadgeOpts = {
   thresholdDays?: number;
   /** Eye-area / sunscreen → expired copy is firmer (docs/04 §3 exceptions). */
   safetyCritical?: boolean;
-  /** A conflict on this product is already resolved by the engine/scheduler —
+  /** A conflict on this product is already resolved by the engine/scheduler , 
    *  shows "paired" instead of a neutral future date (docs/04 §5.3). */
   paired?: boolean;
 };
 
 /** The shelf badge for a product (docs/04 §5.3 badge taxonomy). Date-driven,
  *  with `paired` overriding only the calm future-date state and `safetyCritical`
- *  firming up an expired eye/SPF item — never an urgent countdown. */
+ *  firming up an expired eye/SPF item. Never an urgent countdown. */
 export function expiryBadge(
   expiryISO: string | null,
   todayISO: string,

@@ -3,12 +3,12 @@ import type { PregnancyStatus, SkinAxis } from '@onskin/types';
 /**
  * Skin-quiz ENGINE (production-ready) + PLACEHOLDER content.
  *
- * BLOCKED: B-QUIZ-COPY — the validated Baumann BSTI questionnaire is patented +
+ * BLOCKED: B-QUIZ-COPY. The validated Baumann BSTI questionnaire is patented +
  * copyrighted (docs/01 §2). The 4-axis CONCEPT (Oily/Dry, Sensitive/Resistant,
  * Pigmented/Non, Wrinkled/Tight) is implementable, but the actual questions +
  * scoring need original authoring and a mandatory patent/trademark attorney
  * review. Everything in PLACEHOLDER_QUIZ below is throwaway scaffolding to
- * exercise the engine — DO NOT SHIP. The scoring math is real and reusable.
+ * exercise the engine. DO NOT SHIP. The scoring math is real and reusable.
  */
 
 // Per axis: a positive option score leans toward the first pole letter.
@@ -27,7 +27,7 @@ export type QuizOption = {
   subtitle?: string;
   /** Axis contribution(s) in the range roughly -2..+2 (axis questions). */
   score?: QuizOptionScore;
-  /** Discrete value for phototype (1–6) / monk tone (1–10). */
+  /** Discrete value for phototype (1-6) / monk tone (1-10). */
   value?: number;
 };
 
@@ -42,7 +42,7 @@ export type QuizQuestion = {
 };
 
 // ---------------------------------------------------------------------------
-// PLACEHOLDER QUIZ — throwaway. Replace wholesale once B-QUIZ-COPY clears.
+// PLACEHOLDER QUIZ. Throwaway. Replace wholesale once B-QUIZ-COPY clears.
 // Wording is intentionally generic and labelled so it can never be mistaken for
 // final, attorney-reviewed copy.
 // ---------------------------------------------------------------------------
@@ -202,7 +202,7 @@ export type SkinProfileResult = {
 
 const AXES: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
 
-/** Pure scoring — sum signed axis contributions, derive poles + a 0..1 slider position. */
+/** Pure scoring. Sum signed axis contributions, derive poles + a 0..1 slider position. */
 export function scoreQuiz(answers: QuizAnswers, quiz: QuizQuestion[] = PLACEHOLDER_QUIZ): SkinProfileResult {
   const axisScores: Record<SkinAxis, number> = {
     oily_dry: 0,
@@ -246,7 +246,7 @@ export function scoreQuiz(answers: QuizAnswers, quiz: QuizQuestion[] = PLACEHOLD
       monkTone = chosen.value ?? null;
       continue;
     }
-    // axis question — accumulate score and track the max possible magnitude.
+    // axis question. Accumulate score and track the max possible magnitude.
     for (const axis of AXES) {
       const contribution = chosen.score?.[axis];
       if (contribution !== undefined) axisScores[axis] += contribution;

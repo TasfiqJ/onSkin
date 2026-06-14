@@ -4,11 +4,11 @@ import type { SensitivityLevel } from '@/features/intelligence/engine';
 
 import { classifyActiveClass, defaultPhase, isPotent, reviewedFrequencyCap, type ActiveClass } from './classes';
 
-// Multi-active orchestration (docs/05 §4) — the moat. Turns a cabinet of actives
+// Multi-active orchestration (docs/05 §4). The moat. Turns a cabinet of actives
 // into one barrier-safe weekly cycle: one potent active per night, retinoid and
 // exfoliant NEVER on the same night (enforced by construction), class frequency
 // caps, recovery nights between pushes, vitamin C kept in the AM off the cycle,
-// pregnancy → retinoid suppressed. Deterministic + pure + testable — not AI.
+// pregnancy → retinoid suppressed. Deterministic + pure + testable. Not AI.
 
 export type SchedulerSlot = 'exfoliate' | 'retinoid' | 'recover' | 'other_active';
 
@@ -26,7 +26,7 @@ export type Cycle = {
   variant: CycleVariant;
   lengthNights: number;
   nights: NightSlot[];
-  amDaily: AmItem[]; // vitamin C, niacinamide, BP — the stable morning block (SPF appended at render)
+  amDaily: AmItem[]; // vitamin C, niacinamide, BP. The stable morning block (SPF appended at render)
   notes: string[]; // phased-intro / suppression / fallback notes
 };
 
@@ -105,7 +105,7 @@ function recoveryNight(index: number): NightSlot {
 
 /**
  * Orchestrate the user's actives into a cycle. `cycle` is null when there are no
- * potent night-cycled actives (→ a simple daily AM/PM routine — docs/02 §5 /
+ * potent night-cycled actives (→ a simple daily AM/PM routine. Docs/02 §5 /
  * docs/05 caveats), but `notes` always carry any safety/phased messages.
  */
 export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfile): OrchestrationResult {
@@ -130,7 +130,7 @@ export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfil
   if (profile.pregnancy) {
     const hadRetinoid = potent.some((c) => c.cls === 'retinoid');
     potent = potent.filter((c) => c.cls !== 'retinoid');
-    if (hadRetinoid) notes.push('Retinoids are paused while pregnant or breastfeeding — worth a word with your doctor.');
+    if (hadRetinoid) notes.push('Retinoids are paused while pregnant or breastfeeding. Worth a word with your doctor.');
   }
 
   // Phased introduction: a brand-new active is staged in next, not switched on now.
@@ -144,7 +144,7 @@ export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfil
 
   const variant = profile.preferredVariant ?? pickVariant(profile);
 
-  // Each potent active gets min(ramp frequency, class cap) nights — the cap is
+  // Each potent active gets min(ramp frequency, class cap) nights. The cap is
   // launch-gated (B-DERM-REVIEW): conservative in production until sign-off.
   const withFreq = potent.map((active) => {
     const cap = reviewedFrequencyCap(active.cls, profile.sensitivity);

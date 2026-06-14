@@ -16,9 +16,9 @@ import { guardClaim } from './guard';
 import { getGroundedTurns } from './store';
 
 // The Ask data layer (docs/13). Assembles the deterministic AskContext from the user's
-// REAL state — the live shelf + its launch-gated conflicts (useShelf), tonight's plan
+// REAL state. The live shelf + its launch-gated conflicts (useShelf), tonight's plan
 // (usePlan), the top genuine recommendation (useRecommendations), the shared profile/goal
-// (useProfileBits) — and the grounded-turn gate (entitlement + the per-period counter).
+// (useProfileBits). And the grounded-turn gate (entitlement + the per-period counter).
 // Everything is local-first and offline-safe (B-SUPABASE); the deterministic advisor runs
 // fully on-device at $0. The orchestration runs every answer through the runtime claim-
 // safety guard and records CONTENT-FREE telemetry. *** No commercial input anywhere. ***
@@ -72,7 +72,7 @@ export function useAsk() {
         escalated: final.kind === 'escalate',
       });
       if (final.kind === 'escalate') track('ask_escalated_to_clinician', { intent: final.intent });
-      // The grounded (cloud) layer was gated — the Pro / trial-cap upsell funnel (docs/13 §15).
+      // The grounded (cloud) layer was gated. The Pro / trial-cap upsell funnel (docs/13 §15).
       if (final.kind === 'refuse' && final.intent === 'concern_q' && ctx.groundedReason) {
         track('ask_grounded_gated', { reason: ctx.groundedReason });
       }

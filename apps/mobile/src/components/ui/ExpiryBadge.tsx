@@ -6,7 +6,7 @@ import { colors } from '@/theme/tokens';
 import { Text } from './Text';
 
 // The five-state PAO/expiry badge (docs/04 §5.3) with the exact colours from the
-// OnSkin Smart Shelf design. Text always reads its meaning — colour is never the
+// OnSkin Smart Shelf design. Text always reads its meaning. Colour is never the
 // only signal (accessibility, §5.9). Never red.
 const AMBER_TINT = 'rgba(176,122,60,0.14)'; // countdown / firmer eye-SPF pill
 const EXPIRED_BG = '#EFE7E0'; // calm "Replace" pill

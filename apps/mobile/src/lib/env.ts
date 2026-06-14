@@ -1,6 +1,6 @@
 /**
  * Typed access to EXPO_PUBLIC_* env vars (inlined into the bundle at build time).
- * Real values come from `.env` — see `.env.example` and BLOCKERS.md. Missing
+ * Real values come from `.env`. See `.env.example` and BLOCKERS.md. Missing
  * values fall back to a clearly-marked placeholder + a dev warning so the app
  * boots and the wiring is visible, rather than crashing.
  */
@@ -10,7 +10,7 @@ const PLACEHOLDER = '__BLOCKED_PLACEHOLDER__';
 function readEnv(name: string, value: string | undefined, blockerId: string): string {
   if (value && value.length > 0) return value;
   if (__DEV__) {
-    console.warn(`[env] ${name} is not set — using placeholder. BLOCKED: ${blockerId}`);
+    console.warn(`[env] ${name} is not set. Using placeholder. BLOCKED: ${blockerId}`);
   }
   return PLACEHOLDER;
 }

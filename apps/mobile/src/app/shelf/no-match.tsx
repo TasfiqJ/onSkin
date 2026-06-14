@@ -5,7 +5,7 @@ import { Sheet, Text } from '@/components/ui';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { haptics } from '@/theme/haptics';
 
-// No-match fork (design screen 01, docs/04 §4.1) — a barcode that isn't in Open
+// No-match fork (design screen 01, docs/04 §4.1). A barcode that isn't in Open
 // Beauty Facts is never a dead end. Route to OCR or manual, and queue the unknown
 // product for contribute-back (ODbL, §4.6). Calm, dark sheet.
 export default function NoMatchScreen() {
@@ -35,7 +35,7 @@ export default function NoMatchScreen() {
         We don&apos;t have this one yet.
       </Text>
       <Text variant="body" tone="inverseMuted" className="mt-2">
-        That barcode isn&apos;t in the database. No problem — add it another way, and we&apos;ll add
+        That barcode isn&apos;t in the database. No problem. Add it another way, and we&apos;ll add
         it back for everyone.
       </Text>
 

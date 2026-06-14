@@ -6,7 +6,7 @@ import { TREND_COPY } from '@/features/trend/copy';
 import { useMonkBand } from '@/features/trend/useTrend';
 import { colors } from '@/theme/tokens';
 
-// 05 · The fairness floor (docs/12 §7, design 05) — Monk scale (never Fitzpatrick),
+// 05 · The fairness floor (docs/12 §7, design 05). Monk scale (never Fitzpatrick),
 // equal-or-higher noise thresholds for darker tones, texture/evenness not redness, and
 // no "works for everyone" claim until a Monk-stratified cohort shows parity. The Monk
 // swatch row is illustrative; the user's own band drives the fairness-adjusted floor.
@@ -14,7 +14,7 @@ const MONK_SWATCHES = ['#F4E3D2', '#E9CBAA', '#D2A77E', '#B07E52', '#8A5A36', '#
 
 export default function FairnessScreen() {
   const { data: monkBand } = useMonkBand();
-  // Map Monk 1–10 onto the 7-swatch illustrative row.
+  // Map Monk 1-10 onto the 7-swatch illustrative row.
   const activeIdx = monkBand == null ? -1 : Math.min(MONK_SWATCHES.length - 1, Math.floor(((monkBand - 1) / 9) * MONK_SWATCHES.length));
 
   return (

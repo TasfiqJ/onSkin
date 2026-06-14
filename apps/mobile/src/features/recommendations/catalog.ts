@@ -4,13 +4,13 @@ import type { EvidenceLabel, FunctionalTag, GoalId, SequencingRole } from '@onsk
 // it recommends a *type* ("a mineral SPF 30+"), optionally surfacing specific
 // products ranked by fit. Until the curated catalog lands (B-CATALOG-SEED) there
 // are no specific products, so the engine degrades gracefully to type-first
-// guidance — `example` is an ILLUSTRATIVE category note, never a catalog product.
+// guidance. `example` is an ILLUSTRATIVE category note, never a catalog product.
 //
 // CHURCH AND STATE (docs/09 §3, D-054): every field here is about the user/skin or
-// the evidence — there is NO commission / affiliate / brand-deal field. The FIT
+// the evidence. There is NO commission / affiliate / brand-deal field. The FIT
 // score (fit.ts) draws only from this and the profile, never from commerce.
 //
-// *** BLOCKED: B-DERM-REVIEW — the medically-adjacent entries (an active for a
+// *** BLOCKED: B-DERM-REVIEW. The medically-adjacent entries (an active for a
 // *** goal: retinoid, acids, vitamin C, azelaic, niacinamide) carry reviewedBy =
 // *** null and are launch-gated exactly like the conflict matrix (rules.ts) and the
 // *** PAO defaults (pao.ts). Structural routine-completeness types (a cleanser, a
@@ -21,12 +21,12 @@ export type RecType = {
   /** Stable type key (matches recommendations.product_type). */
   type: string;
   role: SequencingRole;
-  /** Functional tags the type carries — used for ownership detection + so the
+  /** Functional tags the type carries. Used for ownership detection + so the
    *  engine never recommends a type that would ADD a conflict to the shelf. */
   tags: FunctionalTag[];
   /** Type-first "What" label (docs/09 §6). */
   what: string;
-  /** Illustrative category example — NOT a catalog product (B-CATALOG-SEED). */
+  /** Illustrative category example. NOT a catalog product (B-CATALOG-SEED). */
   example: string | null;
   /** Goals this type can help with (claim-safe; concerns, not conditions). */
   goals: GoalId[];
@@ -57,7 +57,7 @@ const STRUCTURAL: RecType[] = [
     example: 'e.g. a zinc-based daily SPF 30',
     goals: ['anti_aging', 'even_tone', 'sensitivity'],
     evidenceLabel: 'established',
-    evidenceNote: 'Daily SPF — broad consensus',
+    evidenceNote: 'Daily SPF. Broad consensus',
     caveat: 'Mineral SPF can leave a slight white cast',
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -72,7 +72,7 @@ const STRUCTURAL: RecType[] = [
     example: 'e.g. a lightweight everyday SPF 30',
     goals: ['anti_aging', 'even_tone'],
     evidenceLabel: 'established',
-    evidenceNote: 'Daily SPF — broad consensus',
+    evidenceNote: 'Daily SPF. Broad consensus',
     caveat: null,
     sensitiveSafe: false,
     pregnancySafe: true,
@@ -87,7 +87,7 @@ const STRUCTURAL: RecType[] = [
     example: 'e.g. a fragrance-free ceramide cream',
     goals: ['hydration', 'barrier_repair', 'sensitivity'],
     evidenceLabel: 'established',
-    evidenceNote: 'Barrier support — well established',
+    evidenceNote: 'Barrier support. Well established',
     caveat: null,
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -102,7 +102,7 @@ const STRUCTURAL: RecType[] = [
     example: 'e.g. a non-stripping gel or cream cleanser',
     goals: ['sensitivity', 'barrier_repair'],
     evidenceLabel: 'established',
-    evidenceNote: 'A clean, non-stripping base — well established',
+    evidenceNote: 'A clean, non-stripping base. Well established',
     caveat: null,
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -117,7 +117,7 @@ const STRUCTURAL: RecType[] = [
     example: 'e.g. a fragrance-free gel cleanser',
     goals: ['sensitivity'],
     evidenceLabel: 'established',
-    evidenceNote: 'Fragrance-free suits reactive skin — well established',
+    evidenceNote: 'Fragrance-free suits reactive skin. Well established',
     caveat: null,
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -132,7 +132,7 @@ const STRUCTURAL: RecType[] = [
     example: 'e.g. a hyaluronic-acid or glycerin serum',
     goals: ['hydration'],
     evidenceLabel: 'plausible',
-    evidenceNote: 'Humectants draw in water — plausible for hydration',
+    evidenceNote: 'Humectants draw in water. Plausible for hydration',
     caveat: null,
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -151,7 +151,7 @@ const GOAL_ACTIVES: RecType[] = [
     example: 'e.g. a 5% niacinamide serum',
     goals: ['even_tone', 'clear_skin', 'sensitivity'],
     evidenceLabel: 'plausible',
-    evidenceNote: 'Niacinamide — plausible for tone & barrier',
+    evidenceNote: 'Niacinamide. Plausible for tone & barrier',
     caveat: null,
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -166,8 +166,8 @@ const GOAL_ACTIVES: RecType[] = [
     example: 'e.g. a stabilised morning vitamin C',
     goals: ['even_tone', 'anti_aging'],
     evidenceLabel: 'plausible',
-    evidenceNote: 'Vitamin C — plausible for the look of uneven tone',
-    caveat: 'Some pairings can destabilise it — best used in the morning',
+    evidenceNote: 'Vitamin C. Plausible for the look of uneven tone',
+    caveat: 'Some pairings can destabilise it. Best used in the morning',
     sensitiveSafe: true,
     pregnancySafe: true,
     medicalAdjacent: true,
@@ -181,7 +181,7 @@ const GOAL_ACTIVES: RecType[] = [
     example: 'e.g. a 10% azelaic acid',
     goals: ['even_tone', 'clear_skin'],
     evidenceLabel: 'plausible',
-    evidenceNote: 'Azelaic acid — plausible for tone, and pregnancy-friendly',
+    evidenceNote: 'Azelaic acid. Plausible for tone, and pregnancy-friendly',
     caveat: 'Can tingle at first',
     sensitiveSafe: true,
     pregnancySafe: true,
@@ -196,8 +196,8 @@ const GOAL_ACTIVES: RecType[] = [
     example: 'e.g. a low-strength retinol to start',
     goals: ['anti_aging', 'clear_skin'],
     evidenceLabel: 'plausible',
-    evidenceNote: 'Retinoids — among the better-studied actives for fine lines',
-    caveat: 'Introduce slowly — can cause initial dryness or flaking',
+    evidenceNote: 'Retinoids. Among the better-studied actives for fine lines',
+    caveat: 'Introduce slowly. Can cause initial dryness or flaking',
     sensitiveSafe: false,
     pregnancySafe: false, // HARD exclusion in pregnancy/breastfeeding (docs/02 safety)
     medicalAdjacent: true,
@@ -211,7 +211,7 @@ const GOAL_ACTIVES: RecType[] = [
     example: 'e.g. a 2% salicylic acid, a couple of nights a week',
     goals: ['clear_skin'],
     evidenceLabel: 'plausible',
-    evidenceNote: 'BHA — plausible for congestion-prone skin',
+    evidenceNote: 'BHA. Plausible for congestion-prone skin',
     caveat: 'Build up slowly to avoid over-exfoliating',
     sensitiveSafe: false,
     pregnancySafe: true, // low-dose cosmetic BHA generally fine; dose-gating lives in the conflict engine
@@ -227,7 +227,7 @@ export const REC_TYPES: RecType[] = [...STRUCTURAL, ...GOAL_ACTIVES];
  * In production, the medically-adjacent goal-active types are withheld until a
  * board-certified dermatologist signs off (reviewedBy set); the engine then
  * degrades to type-first STRUCTURAL guidance only. In dev the full set is used so
- * the layer is demoable. Structural routine-completeness types always ship — they
+ * the layer is demoable. Structural routine-completeness types always ship. They
  * are routine-completeness, not drug claims.
  */
 export const RECS_REVIEWED = false;

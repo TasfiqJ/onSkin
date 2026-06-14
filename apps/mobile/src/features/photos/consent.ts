@@ -4,11 +4,11 @@ import { PHOTO_CAPTURE_CONSENT, PHOTO_CLOUD_BACKUP_CONSENT } from '@/features/on
 import { recordConsent } from '@/lib/consent/consent';
 
 /**
- * Photo consents (docs/01 §4, docs/06 §7) — unbundled and local-first. Capture
+ * Photo consents (docs/01 §4, docs/06 §7). Unbundled and local-first. Capture
  * consent is requested at FIRST camera use; cloud backup is a SEPARATE, off-by-
  * default opt-in. Each grant/revoke writes the immutable ledger (best-effort until
  * B-SUPABASE) AND a local flag so the gates work offline. The image bytes stay on
- * device regardless — these flags gate behaviour, not storage location for v1
+ * device regardless. These flags gate behaviour, not storage location for v1
  * (the cloud upload job itself is B-CAMERA).
  */
 const CAPTURE_KEY = 'onskin.photos.captureConsent';

@@ -6,7 +6,7 @@ import { setCycleAnchor } from '@/features/routine/cycleAnchor';
 import { usePlan } from '@/features/routine/usePlan';
 import { colors } from '@/theme/tokens';
 
-// 01 · Plan built — "Start today" (design screen 01, docs/03 §2). The deterministic
+// 01 · Plan built. "Start today" (design screen 01, docs/03 §2). The deterministic
 // generator's output: sequenced AM, skin-cycling PM with the ramp default, and an
 // honest gap note (never fabricates a product). CTA begins the daily loop.
 
@@ -82,7 +82,7 @@ export default function PlanScreen() {
           ))}
         </View>
 
-        {/* Evening card (skin cycling) — dark */}
+        {/* Evening card (skin cycling). Dark */}
         <View className="mt-3 rounded-card p-5" style={{ backgroundColor: colors.night }}>
           <View className="mb-3 flex-row items-center gap-2.5">
             <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.nightSurface }}>
@@ -101,10 +101,10 @@ export default function PlanScreen() {
               accent
             />
           ) : null}
-          <EveningRow nightLabel="N3–4" name="Recover" suffix="ceramide only" accent={false} />
+          <EveningRow nightLabel="N3-4" name="Recover" suffix="ceramide only" accent={false} />
         </View>
 
-        {/* Honest gap note — only when a category is missing */}
+        {/* Honest gap note. Only when a category is missing */}
         {plan?.gaps.length ? (
           <View className="mt-3.5 flex-row gap-2.5 rounded-2xl bg-greige-chip px-4 py-3">
             <View className="mt-1.5 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.muted }} />

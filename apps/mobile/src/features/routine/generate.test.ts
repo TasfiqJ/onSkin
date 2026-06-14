@@ -28,7 +28,7 @@ const mayaProfile: EngineProfile & { goals: string[] } = {
   goals: ['barrier_repair'],
 };
 
-describe('role classification (docs/03 §3) — tags win over name keywords', () => {
+describe('role classification (docs/03 §3). Tags win over name keywords', () => {
   it('classifies actives by tag', () => {
     expect(classifyRole(product('a', 'Retinol 0.3%', ['Retinol']))).toBe('treatment');
     expect(classifyRole(product('b', 'Glycolic 7% Toner', ['Glycolic Acid']))).toBe('exfoliant'); // not "toner"
@@ -89,7 +89,7 @@ describe('Maya plan generation (docs/03 §2 worked example)', () => {
   });
 });
 
-describe('gap notes (docs/03 §2 — never fabricate a product)', () => {
+describe('gap notes (docs/03 §2. Never fabricate a product)', () => {
   it('notes a missing SPF', () => {
     const plan = generatePlan([product('r', 'Retinol', ['Retinol'])], {
       sensitivity: 'neutral',

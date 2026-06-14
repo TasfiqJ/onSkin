@@ -7,7 +7,7 @@ import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 
-// Disruption hub (design screen 04, docs/05 §6.4/§7) — breaks are managed, not
+// Disruption hub (design screen 04, docs/05 §6.4/§7). Breaks are managed, not
 // punished. Skip / pause / travel / procedure; resume re-anchors where you left
 // off. Nothing breaks the streak (docs/03 §6).
 function Option({
@@ -69,12 +69,12 @@ export default function DisruptionScreen() {
         Life happens.
       </Text>
       <Text variant="body" tone="muted" className="mt-2">
-        Take a break whenever you need — nothing breaks, and we&apos;ll pick up right where you left
+        Take a break whenever you need. Nothing breaks, and we&apos;ll pick up right where you left
         off.
       </Text>
 
       <View className="mt-6 gap-2.5">
-        <Option glyph="‖" title="Skip tonight" sub="Just this once — the cycle continues" onPress={() => act(m.skip)} />
+        <Option glyph="‖" title="Skip tonight" sub="Just this once. The cycle continues" onPress={() => act(m.skip)} />
         <Option glyph="◴" title="Pause my routine" sub="Vacation, illness, a break" onPress={() => pause('break')} />
         <Option glyph="→" title="Travel mode" sub="Trim to essentials while away" onPress={() => pause('travel')} />
         <Option

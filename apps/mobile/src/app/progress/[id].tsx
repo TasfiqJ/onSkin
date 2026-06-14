@@ -13,7 +13,7 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 
 // Single-photo detail (docs/06 §4, design screen 06). Date, quality, your note,
-// set-reference, share-with-redaction, delete — all on-device.
+// set-reference, share-with-redaction, delete. All on-device.
 
 const BG = '#16130F';
 const SAGE = '#9DB18A';

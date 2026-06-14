@@ -1,12 +1,12 @@
 import type { FunctionalTag, IngredientSubflag } from '@onskin/types';
 
 // Starter INCI → functional-tag dictionary (docs/02 §2.4). The AUTHORITATIVE
-// mapping lives in the DB (ingredient_tags, populated by the CosIng/OBF seed —
+// mapping lives in the DB (ingredient_tags, populated by the CosIng/OBF seed , 
 // BLOCKED: B-CATALOG-SEED). This client-side dictionary covers the ~handful of
 // active families that actually drive conflicts, so manual-entry / OCR / curated
 // products can be tagged and the engine works offline and pre-seed.
 //
-// The engine matches on TAGS, not specific molecules — it's the acid-ness and
+// The engine matches on TAGS, not specific molecules. It's the acid-ness and
 // retinoid-ness that interact, not the brand ingredient.
 type TagDef = { tag: FunctionalTag; subflag?: IngredientSubflag };
 

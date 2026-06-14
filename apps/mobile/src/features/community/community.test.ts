@@ -4,7 +4,7 @@ import { buildAnonHandle, formatAnonHandle, HANDLE_RE } from './anonHandle';
 import { scanClaimSafety } from './claimSafetyScan';
 import { evidencePill, noteById, notesByTopic, NOTES_REVIEWED, shippableNotes, SKIN_NOTES } from './notes';
 
-// Community-engine fixtures (docs/11) — the B-DERM-REVIEW launch gate on expert notes,
+// Community-engine fixtures (docs/11). The B-DERM-REVIEW launch gate on expert notes,
 // the claim-safety pre-moderation FLAG, and the anonymous handle. The strategic verdict
 // (community is a multiplier, not a 7-figure pillar) is settled by the spec; these
 // lock the architecture-level guarantees that keep it on-thesis.
@@ -53,7 +53,7 @@ describe('the hub groups notes by topic and uses the docs/02 evidence vocab', ()
 
 describe('the claim-safety scan FLAGS peer content (a first pass, not the decision)', () => {
   it('passes a calm, claim-safe question (the design example)', () => {
-    const r = scanClaimSafety('My retinol and glycolic are on alternate nights — is that enough recovery for sensitive skin?');
+    const r = scanClaimSafety('My retinol and glycolic are on alternate nights. Is that enough recovery for sensitive skin?');
     expect(r.flagged).toBe(false);
   });
   it('flags drug/disease claims, dosage, and alarm', () => {

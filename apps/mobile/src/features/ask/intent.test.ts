@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { classifyIntent } from './intent';
 
-// The deterministic intent router (docs/13 §4) — medical FIRST, then the on-device
+// The deterministic intent router (docs/13 §4). Medical FIRST, then the on-device
 // intents, then the corpus-grounded concern bucket, then out-of-scope. A false
 // "escalate" is safe; a false "answer" on a medical question is not.
 

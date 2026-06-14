@@ -9,7 +9,7 @@ import { colors } from '@/theme/tokens';
 import { COMMUNITY_COPY } from './copy';
 import { evidencePill, noteById } from './notes';
 
-// 03 · In-context "Read the evidence" (docs/11 §9.2, design 03) — a Skin Note attaches
+// 03 · In-context "Read the evidence" (docs/11 §9.2, design 03). A Skin Note attaches
 // to a routine step or a conflict resolution (docs/02/09). The library answers the doubt
 // exactly where it lands, never as a separate destination to visit. Renders nothing if
 // the note isn't shippable (B-DERM-REVIEW gate), so it never shows an unreviewed claim.

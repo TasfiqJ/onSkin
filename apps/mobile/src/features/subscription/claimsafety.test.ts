@@ -5,7 +5,7 @@ import { PAYWALL_COPY, UPSELL_COPY, UPSELL_DISMISS } from './copy';
 // Honest-by-design guard for the paywall + lifecycle copy (docs/08 §9, the
 // Slice-11/20/21 pattern). The subscription playbook is where dark patterns live;
 // this blocks manufactured urgency, guilt, fake scarcity, drug/disease claims, and
-// alarm/exclamation — and positively asserts the honest disclosures are present.
+// alarm/exclamation. And positively asserts the honest disclosures are present.
 
 // Apostrophe class is ['’] so both the straight ASCII quote and the curly U+2019
 // the copy uses are caught (the Slice-21 lesson).
@@ -66,7 +66,7 @@ describe('the required honest disclosures are present (Apple 3.1.2 / ARLs)', () 
 
 describe('the guard catches reintroduced dark patterns', () => {
   it('rejects manufactured urgency and guilt', () => {
-    expect(offenders('Don’t miss out — only 2 left!', URGENCY).length).toBeGreaterThan(0);
+    expect(offenders('Don’t miss out. Only 2 left!', URGENCY).length).toBeGreaterThan(0);
     expect(offenders('You’ll lose your streak', GUILT).length).toBeGreaterThan(0);
     expect(offenders('Limited time offer', URGENCY).length).toBeGreaterThan(0);
   });

@@ -7,7 +7,7 @@ import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { PLACEHOLDER_QUIZ } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
-// 04 · Quiz — original 4-axis questions, data-driven from the engine. The content
+// 04 · Quiz. Original 4-axis questions, data-driven from the engine. The content
 // is PLACEHOLDER (BLOCKED: B-QUIZ-COPY). The pregnancy/sensitivities screening
 // questions live at the end of the set, so this also covers docs/01 §2 step 5.
 export default function QuizScreen() {

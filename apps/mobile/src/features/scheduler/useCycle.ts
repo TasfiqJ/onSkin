@@ -33,7 +33,7 @@ export type CycleData = {
   nextAcidNight: string | null; // ISO
   recovery: { active: boolean; day: number; days: number; reason: DisruptionReason | null };
   paused: boolean;
-  /** True when the user skipped tonight (docs/05 §7) — the cycle still continues. */
+  /** True when the user skipped tonight (docs/05 §7). The cycle still continues. */
   skippedTonight: boolean;
   notes: string[];
 };

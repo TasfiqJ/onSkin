@@ -5,7 +5,7 @@ import { resolveCommerceConsent } from './consentLogic';
 import { formatPrice, outboundFor, resolveWhereToBuy, type AffiliateLinkRow } from './links';
 import { shippableStacks, STACKS_REVIEWED, stackBySlug, STARTER_STACKS } from './stacks';
 
-// Commerce engine fixtures (docs/10 §5/§4) — rail-agnostic resolution, the
+// Commerce engine fixtures (docs/10 §5/§4). Rail-agnostic resolution, the
 // church-and-state guarantee (no commission field anywhere a client can read or sort
 // on), and the B-DERM-REVIEW launch gate on the expert/derm stacks.
 
@@ -26,12 +26,12 @@ describe('rail-agnostic resolution (the B-SHOPMY hedge)', () => {
     expect(out[0]!.source).toBe('shopmy');
   });
 
-  it('returns [] for a type with no links — the honest empty state, never fabricated', () => {
+  it('returns [] for a type with no links. The honest empty state, never fabricated', () => {
     expect(resolveWhereToBuy('retinoid_serum', rows)).toEqual([]);
   });
 });
 
-describe('church and state — no commission/rate field exists in the client path (D-058)', () => {
+describe('church and state. No commission/rate field exists in the client path (D-058)', () => {
   it('a resolved where-to-buy option carries only disclosed merit/price fields, never commission', () => {
     const opt = resolveWhereToBuy('mineral_spf', rows)[0]!;
     const keys = Object.keys(opt).join(' ').toLowerCase();
@@ -58,7 +58,7 @@ describe('price formatting (illustrative until B-CATALOG-SEED)', () => {
   });
 });
 
-describe('MHMDA consent precedence — a revocation re-locks (review fix, D-061)', () => {
+describe('MHMDA consent precedence. A revocation re-locks (review fix, D-061)', () => {
   it('the ledger is authoritative when present: a revocation beats a stale local flag', () => {
     expect(resolveCommerceConsent(false, true)).toBe(false); // revoked in ledger, stale local=true → LOCKED
     expect(resolveCommerceConsent(true, false)).toBe(true); // granted in ledger

@@ -6,8 +6,8 @@ import { Screen, Text } from '@/components/ui';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
-// 02 · Sequencing — drag reorder + non-blocking nudge (design screen 02, docs/03 §7).
-// We sort thinnest-to-thickest by default but never lock it — "guidance, not a
+// 02 · Sequencing. Drag reorder + non-blocking nudge (design screen 02, docs/03 §7).
+// We sort thinnest-to-thickest by default but never lock it. "guidance, not a
 // gate." When a serum sits below moisturiser, a calm nudge offers to fix it.
 // NOTE: full drag-and-drop needs react-native-draggable-flatlist (a follow-on);
 // the handles + the non-blocking nudge (the doc's actual point) are functional.
@@ -50,7 +50,7 @@ export default function ReorderScreen() {
       </View>
 
       <Text variant="bodySm" tone="muted" className="mt-4 text-[13px]">
-        Drag to reorder. We sort thinnest-to-thickest so lighter actives absorb first — but
+        Drag to reorder. We sort thinnest-to-thickest so lighter actives absorb first. But
         it&apos;s your routine.
       </Text>
 

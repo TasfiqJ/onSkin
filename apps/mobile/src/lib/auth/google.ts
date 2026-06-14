@@ -4,7 +4,7 @@ import { env } from '../env';
 
 let configured = false;
 
-// BLOCKED: B-GOOGLE — iosClientId + webClientId from env. The webClientId is the
+// BLOCKED: B-GOOGLE. IosClientId + webClientId from env. The webClientId is the
 // serverClientId used by Android's Credential Manager. Misconfigured SHA-1 /
 // client-id is the notorious Android DEVELOPER_ERROR (docs/01 §1).
 export function configureGoogleSignIn(): void {

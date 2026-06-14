@@ -15,7 +15,7 @@ import { ASK_COPY, RESOLUTION_LEAD } from './copy';
 // than" → FTC AI-washing); a skin score/age/health/rating; alarm/urgency; and "AI" in
 // user-facing MARKETING. The output ANSWER claims pass the FULL guard; only the Art. 50
 // DISCLOSURE copy that names the AI honestly is exempt from the AI-marketing term-scan.
-// NOTE: only the substantive `claim` field is scanned — product/plan-name DATA (which may
+// NOTE: only the substantive `claim` field is scanned. Product/plan-name DATA (which may
 // carry a "7%") lives in separate fields and is not a claim (the §4 template-bounding).
 
 const DRUG_DISEASE = [/\b(treat|cure|heal|prevent)(s|d|ed|ing)?\b/i, /\bdiagnos\w*/i];
@@ -28,7 +28,7 @@ const ALARM = [/\b(danger\w*|harmful|toxic|poison\w*)\b/i, /!/];
 
 const ALWAYS = [DRUG_DISEASE, DISEASE_NOUN, SUPERIORITY, DOSAGE, SKIN_SCORE, ALARM];
 
-// The Art. 50 / SB 243 disclosure strings legitimately name the AI — exempt from the
+// The Art. 50 / SB 243 disclosure strings legitimately name the AI. Exempt from the
 // AI-marketing term-scan ONLY (the Slice-24 NO_SCORE_COPY exemption pattern).
 const AI_DISCLOSURE_EXEMPT = new Set<string>([ASK_COPY.home.disclosureFooter, ASK_COPY.firstRunDisclosure]);
 
@@ -78,11 +78,11 @@ const GENERATED_CLAIMS = [
   answerQuestion('qwerty asdf', CTX).claim,
 ];
 
-// Includes UPSELL_COPY.ask — the Ask paywall copy, "the regulated surface" (docs/13 §10 /
-// FTC AI-washing) — which the subscription guard does NOT scan for AI/disease/superiority.
+// Includes UPSELL_COPY.ask. The Ask paywall copy, "the regulated surface" (docs/13 §10 /
+// FTC AI-washing). Which the subscription guard does NOT scan for AI/disease/superiority.
 const STATIC = [...collect(ASK_COPY), ...Object.values(RESOLUTION_LEAD), ...collect(UPSELL_COPY.ask)];
 
-describe('every generated ANSWER claim passes the FULL guard — template-bounded, claim-safe', () => {
+describe('every generated ANSWER claim passes the FULL guard. Template-bounded, claim-safe', () => {
   for (const claim of GENERATED_CLAIMS) {
     it(`clean claim: "${claim.slice(0, 48)}…"`, () => {
       for (const pats of [...ALWAYS, AI_MARKETING]) {

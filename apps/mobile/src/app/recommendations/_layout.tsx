@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 
 // Personalized recommendations surfaces (docs/09 §7), presented over the tabs.
-// The "For you" hub, the what/why/how card, and the preferences screen — calm,
+// The "For you" hub, the what/why/how card, and the preferences screen. Calm,
 // contextual, never a storefront.
 export default function RecommendationsLayout() {
   return (

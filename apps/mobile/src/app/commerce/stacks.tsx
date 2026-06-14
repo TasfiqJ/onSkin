@@ -7,7 +7,7 @@ import { shippableStacks } from '@/features/commerce/stacks';
 import { colors } from '@/theme/tokens';
 
 // The shoppable-stacks list (docs/10 §4). Expert/derm-reviewed routines as shoppable
-// collections. Launch-gated (B-DERM-REVIEW) — in production only reviewed stacks show;
+// collections. Launch-gated (B-DERM-REVIEW). In production only reviewed stacks show;
 // the honest empty state otherwise.
 export default function StacksScreen() {
   const stacks = shippableStacks();
@@ -32,13 +32,13 @@ export default function StacksScreen() {
         Shoppable routines
       </Text>
       <Text variant="bodySm" tone="muted" className="mt-1.5">
-        Expert-reviewed routines, in order — {COMMERCE_COPY.stack.subtitle.toLowerCase()}
+        Expert-reviewed routines, in order. {COMMERCE_COPY.stack.subtitle.toLowerCase()}
       </Text>
 
       {stacks.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
           <Text variant="body" tone="muted" className="text-center">
-            Reviewed routines are on the way — we publish them only after a dermatologist signs off.
+            Reviewed routines are on the way. We publish them only after a dermatologist signs off.
           </Text>
         </View>
       ) : (

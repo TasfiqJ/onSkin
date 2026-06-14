@@ -6,7 +6,7 @@ import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { colors } from '@/theme/tokens';
 
-// Graceful downgrade after a PAID expiry (design 08, docs/08 §6) — never a
+// Graceful downgrade after a PAID expiry (design 08, docs/08 §6). Never a
 // data-deleting hard lock; data preserved, Pro re-offered calmly.
 export default function DowngradeScreen() {
   const { startTrial } = useEntitlementActions();

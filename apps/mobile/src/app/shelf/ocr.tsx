@@ -68,7 +68,7 @@ export default function OcrScreen() {
         </View>
 
         <Text variant="bodySm" tone="muted" className="mt-3">
-          We found these actives. Tap to fix anything — OCR isn&apos;t perfect, so check before
+          We found these actives. Tap to fix anything. OCR isn&apos;t perfect, so check before
           saving.
         </Text>
 
@@ -91,13 +91,13 @@ export default function OcrScreen() {
               </Text>
             </View>
           ))}
-          {/* A deliberately low-confidence OCR token — flagged (dashed), never silently kept. */}
+          {/* A deliberately low-confidence OCR token. Flagged (dashed), never silently kept. */}
           <View
             className="flex-row items-center gap-3 rounded-[14px] border border-dashed bg-greige-chip p-3.5"
             style={{ borderColor: 'rgba(32,27,21,0.18)' }}>
             <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
             <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
-              &quot;Tocophenol&quot; — not sure
+              &quot;Tocophenol&quot;. Not sure
             </Text>
             <Text variant="bodySm" tone="clay" className="font-sans-semibold">
               Fix
@@ -106,7 +106,7 @@ export default function OcrScreen() {
         </View>
       </ScrollView>
 
-      <Button label="Looks right — continue" onPress={onContinue} />
+      <Button label="Looks right. Continue" onPress={onContinue} />
     </Screen>
   );
 }

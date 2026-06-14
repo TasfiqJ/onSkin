@@ -8,7 +8,7 @@ import { answerPrompt, answerQuestion, pickFitRec, type AskContext } from './ans
 import { ASK_COPY } from './copy';
 
 // The pure, template-bounded answer engine (docs/13 §4, D-057). Substantive claims are
-// filled from the deterministic engine + claim-safe copy — never free-generated.
+// filled from the deterministic engine + claim-safe copy. Never free-generated.
 
 const PRODUCTS: EngineProduct[] = [
   { id: 'a', name: 'Retinol 0.3%', tags: ['retinoid'] },
@@ -16,7 +16,7 @@ const PRODUCTS: EngineProduct[] = [
 ];
 const PROFILE: EngineProfile = { sensitivity: 'sensitive', pregnancy: false };
 const CONFLICTS = detectConflicts(PRODUCTS, PROFILE, STARTER_RULES);
-// A pregnant user with a retinoid — the engine emits a HIGH-severity safety contraindication.
+// A pregnant user with a retinoid. The engine emits a HIGH-severity safety contraindication.
 const PREGNANT_CONFLICTS = detectConflicts(
   [{ id: 'r', name: 'Retinol', tags: ['retinoid'] }],
   { sensitivity: 'neutral', pregnancy: true },
@@ -46,7 +46,7 @@ describe('the conflict answer is deterministic and template-bounded from the eng
     expect(a.severity).not.toBeNull();
     expect(a.citation).not.toBeNull();
     expect(a.recommendationNote).toBe(true);
-    // The substantive sentence ends in the ENGINE's resolution subhead — not free text.
+    // The substantive sentence ends in the ENGINE's resolution subhead. Not free text.
     const top = CONFLICTS.find((c) => c.computedSeverity !== 'none');
     expect(top).toBeTruthy();
     expect(a.claim).toContain(bannerSubhead(top!));
@@ -57,7 +57,7 @@ describe('the conflict answer is deterministic and template-bounded from the eng
     const a = answerPrompt('conflict', { ...CTX, conflicts: [] });
     expect(a.claim).toBe(ASK_COPY.noConflicts);
   });
-  it('a safety contraindication (e.g. pregnancy) escalates — NEVER "you’re set"', () => {
+  it('a safety contraindication (e.g. pregnancy) escalates. NEVER "you’re set"', () => {
     expect(PREGNANT_CONFLICTS.some((c) => c.rule.interactionType === 'safety')).toBe(true);
     const a = answerPrompt('conflict', { ...CTX, conflicts: PREGNANT_CONFLICTS });
     expect(a.kind).toBe('escalate');
@@ -108,11 +108,11 @@ describe('the product-fit answer is deterministic, from the fit engine', () => {
 });
 
 describe('refuse-over-guess and escalation', () => {
-  it('medical questions escalate verbally — never answer, never a misrouted CTA', () => {
+  it('medical questions escalate verbally. Never answer, never a misrouted CTA', () => {
     const a = answerQuestion('what antibiotic should I take for this', CTX);
     expect(a.kind).toBe('escalate');
     expect(a.claim).toBe(ASK_COPY.escalate.body);
-    expect(a.cta).toBeNull(); // no in-app derm finder exists — verbal escalation only (docs/13 §9)
+    expect(a.cta).toBeNull(); // no in-app derm finder exists. Verbal escalation only (docs/13 §9)
     expect(a.footnote).toBe(ASK_COPY.escalate.footnote);
   });
   it('a grounded concern question refuses with the Pro-locked message for free users', () => {

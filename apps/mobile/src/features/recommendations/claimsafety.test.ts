@@ -21,7 +21,7 @@ import { DEFAULT_PREFERENCES } from './preferences';
 // Claim-safety guard for the recommendation copy (docs/09 §10, the Slice-11/20/21/22
 // pattern). Recommendations are health-adjacent and must stay claim-safe: recommend
 // for CONCERNS not CONDITIONS (no drug/disease verbs, no diagnosis), no alarm words,
-// and — because it must never feel like a storefront — NO manufactured urgency /
+// and. Because it must never feel like a storefront. NO manufactured urgency /
 // scarcity / guilt. It scans the centralised copy AND the strings the engine
 // actually produces over fixtures, so a non-compliant template can't slip through a
 // builder. Apostrophe class is ['’] so the curly U+2019 the copy uses is caught.
@@ -93,7 +93,7 @@ function shelfItem(over: Partial<RecShelfItem> & { id: string; role: RecShelfIte
 function engineStrings(): string[] {
   (globalThis as { __DEV__?: boolean }).__DEV__ = true;
   // A real conflict surfaces rule.resolutionCopy as the recommendation's how.evidence
-  // — so exercise the conflict trigger end-to-end, on top of the gap/goal/replacement
+  //. So exercise the conflict trigger end-to-end, on top of the gap/goal/replacement
   // and better-fit triggers, so EVERY engine-emitted string is scanned.
   const conflictShelf: EngineProduct[] = [
     { id: 'Retinol', name: 'Retinol 0.5%', tags: ['retinoid'] as FunctionalTag[] },
@@ -159,13 +159,13 @@ const ALL = [
   ...Object.values(FORMAT_LABEL),
   ...REC_TYPES.flatMap((t) => [t.what, t.evidenceNote, t.caveat ?? '', t.example ?? '']),
   // Any conflict rule's resolutionCopy can surface as a recommendation's how.evidence
-  // (engine.ts conflict trigger) — hold it to the recommendation claim-safety bar too.
+  // (engine.ts conflict trigger). Hold it to the recommendation claim-safety bar too.
   ...STARTER_RULES.map((r) => r.resolutionCopy),
   ...builderStrings,
   ...engineStrings(),
 ];
 
-describe('recommendation copy is claim-safe (docs/09 §10) — concerns not conditions', () => {
+describe('recommendation copy is claim-safe (docs/09 §10). Concerns not conditions', () => {
   for (const text of ALL) {
     if (!text) continue;
     it(`no condition/drug · alarm · urgency · guilt in: "${text.slice(0, 44)}…"`, () => {
@@ -181,7 +181,7 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
   it('the affiliate disclosure states independence ("never affects what we recommend")', () => {
     expect(REC_COPY.card.disclosure.toLowerCase()).toContain('never affects what we recommend');
   });
-  it('the engine can recommend NOTHING — the "you\'re set" copy exists and makes no sell', () => {
+  it('the engine can recommend NOTHING. The "you\'re set" copy exists and makes no sell', () => {
     expect(REC_COPY.youreSet.title.length).toBeGreaterThan(0);
     expect(offenders(REC_COPY.youreSet.body, [...URGENCY, ...GUILT])).toEqual([]);
   });
@@ -193,6 +193,6 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
 describe('the guard catches reintroduced violations', () => {
   it('rejects a condition claim and a storefront sell', () => {
     expect(offenders('Treats acne fast', CONDITION_OR_DRUG).length).toBeGreaterThan(0);
-    expect(offenders('Buy now — only 2 left!', [...GUILT, ...URGENCY, ...ALARM]).length).toBeGreaterThan(0);
+    expect(offenders('Buy now. Only 2 left!', [...GUILT, ...URGENCY, ...ALARM]).length).toBeGreaterThan(0);
   });
 });

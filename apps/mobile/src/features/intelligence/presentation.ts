@@ -35,7 +35,7 @@ const TAG_LABEL: Partial<Record<FunctionalTag, string>> = {
 };
 export const tagLabel = (t: FunctionalTag) => TAG_LABEL[t] ?? t;
 
-/** "Retinol × Glycolic 7%" — falls back to family labels when a product is absent. */
+/** "Retinol × Glycolic 7%". Falls back to family labels when a product is absent. */
 export function pairTitle(c: DetectedConflict): string {
   const a = c.productAName ?? tagLabel(c.rule.tagA);
   const b = c.productBName ?? tagLabel(c.rule.tagB);
@@ -48,8 +48,8 @@ const SUBHEAD: Record<ResolutionType, string> = {
   buffer: 'Leave a little time between them.',
   lower_frequency: 'Ease off the frequency a little.',
   no_change: 'These work well together.',
-  reassure: 'Good news — these are fine together.',
-  avoid_refer: "We've set this aside — worth a word with your doctor.",
+  reassure: 'Good news. These are fine together.',
+  avoid_refer: "We've set this aside. Worth a word with your doctor.",
 };
 export const bannerSubhead = (c: DetectedConflict) => SUBHEAD[c.rule.resolutionType];
 

@@ -11,7 +11,7 @@ import { haptics } from '@/theme/haptics';
 // facial, pause actives and simplify to barrier basics for a chosen window, then
 // resume. Claim-safe, never alarmist.
 const REST = [3, 5, 7];
-const BARRIER_BASICS = ['Gentle cleanser', 'Barrier moisturizer — ceramides', 'SPF every morning'];
+const BARRIER_BASICS = ['Gentle cleanser', 'Barrier moisturizer. Ceramides', 'SPF every morning'];
 
 export default function ProcedureScreen() {
   const m = useCycleMutations();
@@ -33,7 +33,7 @@ export default function ProcedureScreen() {
       </Text>
       <Text variant="body" tone="muted" className="mt-2">
         After a peel or facial, actives can be too much. We&apos;ll pause them and keep things simple
-        — then ease back in.
+       . Then ease back in.
       </Text>
 
       <Text variant="eyebrow" tone="clay" className="mb-2.5 mt-6">

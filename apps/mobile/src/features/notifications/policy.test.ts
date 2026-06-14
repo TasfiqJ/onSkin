@@ -61,7 +61,7 @@ describe('quiet hours (docs/07 §3.4)', () => {
   });
 });
 
-describe('canSend — frequency cap + quiet hours (docs/07 §3.4/§9)', () => {
+describe('canSend. Frequency cap + quiet hours (docs/07 §3.4/§9)', () => {
   const base = { now: '12:00', quietStart: '22:00', quietEnd: '07:00' } as const;
   it('allows a utility reminder regardless of weekly count', () => {
     expect(canSend({ kind: 'pm_step', sentThisWeekForTier: 99, ...base }).allowed).toBe(true);

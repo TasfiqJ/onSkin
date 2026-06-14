@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 // A monochrome padlock built from geometric Views (the no-react-native-svg
-// convention) — replaces full-colour emoji so the icon inherits the surrounding clay/
+// convention). Replaces full-colour emoji so the icon inherits the surrounding clay/
 // muted colour and reads as a calm line-icon (docs/10 design fidelity). Used wherever
 // the mock shows a privacy/lock line-icon (the where-to-buy locked row, the consent
 // gate, the transparency footer).

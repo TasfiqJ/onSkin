@@ -6,11 +6,11 @@ import { colors } from '@/theme/tokens';
 
 import { useEntitlementActions } from './useEntitlement';
 
-// Terms · Privacy · Restore — Apple Guideline 3.1.2 requires all three present and
+// Terms · Privacy · Restore. Apple Guideline 3.1.2 requires all three present and
 // FUNCTIONAL in the paywall binary (docs/08 §3.1/§7). Terms/Privacy open the policy
-// pages (placeholder URLs until counsel supplies final copy — B-PRIVACY-COPY);
+// pages (placeholder URLs until counsel supplies final copy. B-PRIVACY-COPY);
 // Restore re-syncs entitlements (docs/08 §3.3).
-// Placeholder policy pages — final text is B-PRIVACY-COPY / B-LEGAL; the LINKS are
+// Placeholder policy pages. Final text is B-PRIVACY-COPY / B-LEGAL; the LINKS are
 // functional (Apple 3.1.2 requires functional Terms/Privacy in the binary).
 export const TERMS_URL = 'https://onskin.app/terms';
 export const PRIVACY_URL = 'https://onskin.app/privacy';

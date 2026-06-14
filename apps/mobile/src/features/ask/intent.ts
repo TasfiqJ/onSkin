@@ -1,13 +1,13 @@
 import type { AskIntent } from '@onskin/types';
 
-// The deterministic intent router (docs/13 §4). It runs FIRST — BEFORE any language
-// model — so medical/dosing/diagnosis intent is caught at the door and ESCALATED, never
+// The deterministic intent router (docs/13 §4). It runs FIRST. BEFORE any language
+// model. So medical/dosing/diagnosis intent is caught at the door and ESCALATED, never
 // narrated (the input-side safety control). Pure + unit-tested. Order matters: medical
 // is checked first (safety), then the deterministic on-device intents, then the
 // corpus-grounded concern bucket, then out-of-scope. This is a router, not a classifier
-// of meaning — it errs toward escalate/refuse, never toward a confident wrong answer.
+// of meaning. It errs toward escalate/refuse, never toward a confident wrong answer.
 
-// Medical / severe / dosing / diagnosis — ALWAYS escalate, never answer. Deliberately
+// Medical / severe / dosing / diagnosis. ALWAYS escalate, never answer. Deliberately
 // broad: a false "escalate" is safe; a false "answer" on a medical question is not.
 const MEDICAL = [
   /\b(antibiotic|prescri\w*|accutane|isotretinoin|tretinoin|hydrocortisone|steroid|prednisone)\b/i,

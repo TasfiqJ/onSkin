@@ -10,7 +10,7 @@ import { useShelf } from '@/features/shelf/useShelf';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
-// Conflict override sheet (design 08, docs/02 §7.3 / docs/03 §7) — the trust
+// Conflict override sheet (design 08, docs/02 §7.3 / docs/03 §7). The trust
 // set-piece, as a bottom sheet. Adapts by interaction type: standard conflicts get
 // Keep / Use-together (override sticks, no re-nagging); myth/synergy reassure;
 // safety defers to a clinician. The user is never blocked.
@@ -84,7 +84,7 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
   const isReassure = r.interactionType === 'myth' || r.interactionType === 'synergy';
   const isSafety = r.interactionType === 'safety';
   // The community trust layer (docs/11 §9.2) reinforces a reassurance with the matching
-  // "myth vs evidence" Skin Note — exactly where the doubt lands (e.g. niacinamide × vit C).
+  // "myth vs evidence" Skin Note. Exactly where the doubt lands (e.g. niacinamide × vit C).
   const skinNoteId = noteForTags(r.tagA, r.tagB);
   const honest = r.evidenceGrade == null || r.evidenceLabel === 'contested' || r.evidenceLabel === 'plausible';
   const eyebrowColor = isReassure ? colors.sage : isSafety ? colors.clayDeep : colors.clay;
@@ -108,7 +108,7 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
 
       <Text variant="body" tone="muted" className="mt-3.5 text-[14.5px]">
         {r.mechanism}
-        {!isReassure && !isSafety ? ' This is a recommendation, not a rule — and whatever you choose, we won’t keep asking.' : ''}
+        {!isReassure && !isSafety ? ' This is a recommendation, not a rule. And whatever you choose, we won’t keep asking.' : ''}
       </Text>
 
       <Card className="mt-5">

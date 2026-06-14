@@ -69,7 +69,7 @@ export function nightForDate(template: CycleTemplate, anchorISO: string, dateISO
   return { index: offset + 1, slot: template.nights[offset]!, total };
 }
 
-/** The next date (after `fromISO`) whose slot matches `slot` — e.g. the next acid night. */
+/** The next date (after `fromISO`) whose slot matches `slot`. E.g. the next acid night. */
 export function nextNightWithSlot(
   template: CycleTemplate,
   anchorISO: string,
@@ -83,7 +83,7 @@ export function nextNightWithSlot(
   return null;
 }
 
-/** "Saturday" — friendly weekday for the PM banner. */
+/** "Saturday". Friendly weekday for the PM banner. */
 export function friendlyWeekday(iso: string): string {
   return parseLocalDate(iso).toLocaleDateString('en-US', { weekday: 'long' });
 }

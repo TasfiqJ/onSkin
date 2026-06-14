@@ -26,7 +26,7 @@ export async function setCommerceConsentLocal(granted: boolean): Promise<void> {
   await AsyncStorage.setItem(CONSENT_KEY, granted ? 'true' : 'false');
 }
 
-/** An opaque, random click token — carries no profile/concern/photo (docs/10 §5). */
+/** An opaque, random click token. Carries no profile/concern/photo (docs/10 §5). */
 export function buildClickToken(): string {
   return randomUUID().replace(/-/g, '');
 }

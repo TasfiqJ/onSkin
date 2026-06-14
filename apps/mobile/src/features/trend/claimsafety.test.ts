@@ -52,7 +52,7 @@ const STATES: TrendChangeState[] = ['consistent', 'change_observed', 'inconclusi
 const NARRATIVES = STATES.map((s) => trendNarrative(s, { n: 6, area: 'left cheek' }));
 const ALL = [...collect(TREND_COPY), ...NARRATIVES];
 
-describe('the OUTPUT narratives pass the FULL guard — descriptive, no score, no detection', () => {
+describe('the OUTPUT narratives pass the FULL guard. Descriptive, no score, no detection', () => {
   for (const text of NARRATIVES) {
     it(`clean output: "${text.slice(0, 46)}…"`, () => {
       for (const pats of [SCORE_NUMBER, DISEASE, SUPERIORITY, VERDICT, STRUCTURE, AI_MARKETING, ALARM]) {

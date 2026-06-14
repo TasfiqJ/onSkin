@@ -1,6 +1,6 @@
 import type { TrendChangeState } from '@onskin/types';
 
-// The within-person trend engine (docs/12 §6) — the noise floor + the change-state
+// The within-person trend engine (docs/12 §6). The noise floor + the change-state
 // classification. *** It produces NO score, grade, or number. *** It only decides
 // WHICH descriptive state to narrate. The actual `delta_metric` (image registration +
 // SSIM/structural + colour/intensity delta on the user's own series) comes from the
@@ -9,7 +9,7 @@ import type { TrendChangeState } from '@onskin/types';
 // the tested logic. A general multimodal LLM is NEVER the engine (docs/12 §6).
 
 /** Minimum captures in a series before any trend is offered (skin change is gradual,
- *  8–12 weeks; below this we honestly say "no clear change yet"). */
+ *  8-12 weeks; below this we honestly say "no clear change yet"). */
 export const MIN_CAPTURES = 4;
 
 /** A conservative base Minimal-Detectable-Change floor on the normalised delta metric
@@ -20,8 +20,8 @@ export const BASE_MDC = 0.12;
 /**
  * Fairness adjustment (docs/12 §7, D-071): the MDC floor is set EQUAL-OR-HIGHER for
  * darker Monk tones, so a darker-skinned user is never handed a falsely confident
- * trend (erythema/colour signal is optically less reliable as melanin rises — physics,
- * not a tunable). Monk bands 1–10; unknown tone → conservative (higher).
+ * trend (erythema/colour signal is optically less reliable as melanin rises. Physics,
+ * not a tunable). Monk bands 1-10; unknown tone → conservative (higher).
  */
 export function toneAdjustmentFactor(monkBand: number | null): number {
   if (monkBand == null) return 1.2; // unknown → conservative
@@ -42,7 +42,7 @@ export type ClassifyInput = {
   captureCount: number;
   /** Whether the docs/06 lighting QA judged the pair comparable. */
   lightingConsistent: boolean;
-  /** The user's Monk tone band (1–10), for the fairness-adjusted floor. */
+  /** The user's Monk tone band (1-10), for the fairness-adjusted floor. */
   monkBand: number | null;
 };
 
@@ -53,7 +53,7 @@ export type ClassifyResult = {
 };
 
 /**
- * Classify the within-person change state — the ONLY output. Order matters: not enough
+ * Classify the within-person change state. The ONLY output. Order matters: not enough
  * data → lighting un-comparable → (computable) below floor "consistent" vs above floor
  * "change_observed". The dominant failure mode is reporting NOISE as change, so the
  * floor is conservative and "consistent" is a celebrated, honest output (docs/12 §6).
@@ -67,7 +67,7 @@ export function classifyChange(input: ClassifyInput): ClassifyResult {
   return { changeState: 'consistent', mdcThreshold };
 }
 
-/** Is the change-state one that celebrates adherence (consistent) — for instrumentation. */
+/** Is the change-state one that celebrates adherence (consistent). For instrumentation. */
 export function isCelebratedState(state: TrendChangeState): boolean {
   return state === 'consistent';
 }

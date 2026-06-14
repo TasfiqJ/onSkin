@@ -3,7 +3,7 @@ import { computeExpiry } from '@/features/intelligence/pao';
 import type { ShelfProduct } from './store';
 
 // The surfaced expiry for a product (docs/04 §3): whichever is sooner of the
-// printed expiry and opened+PAO. Unopened items have no PAO clock — only a
+// printed expiry and opened+PAO. Unopened items have no PAO clock. Only a
 // printed shelf life, if any. Shared by the shelf list and the detail hub so the
 // "best used by" date never diverges.
 export function surfacedExpiry(

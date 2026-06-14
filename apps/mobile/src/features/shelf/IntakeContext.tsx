@@ -5,13 +5,13 @@ import type { ProductCategory } from './categories';
 
 // Transient draft shared across the intake funnel (docs/04 §4): manual / OCR /
 // no-match screens fill it, the opened-date linchpin (§4.5) finalises it into a
-// shelf row. In-memory only — nothing is persisted until "Add to shelf".
+// shelf row. In-memory only. Nothing is persisted until "Add to shelf".
 export type IntakeDraft = {
   name: string;
   brand: string | null;
   category: ProductCategory | null;
   barcode: string | null;
-  /** Parsed/typed INCI tokens — the engine tags off these + the name. */
+  /** Parsed/typed INCI tokens. The engine tags off these + the name. */
   ingredients: string[];
   addedVia: AddedVia;
   /** Resolved PAO (from the category default), editable at the opened-date step. */

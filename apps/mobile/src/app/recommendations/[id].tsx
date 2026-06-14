@@ -13,7 +13,7 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // 02 · The what / why / how card (docs/09 §6, design 02). Every recommendation
-// carries the trust triad — What (type-first) / Why (your reason) / How (the
+// carries the trust triad. What (type-first) / Why (your reason) / How (the
 // decision, with the evidence grade + an honest caveat). Never a bare product +
 // buy button. The "how" is what makes it trust, not a sell.
 
@@ -42,7 +42,7 @@ function Body({ rec }: { rec: Recommendation }) {
     router.back();
   };
 
-  // Where-to-buy is for real catalog types (gap / goal / better-fit / completion) —
+  // Where-to-buy is for real catalog types (gap / goal / better-fit / completion) , 
   // the shelf-anchored replacement & conflict triggers route elsewhere (docs/10 §3).
   const showWhereToBuy = rec.trigger !== 'replacement' && rec.trigger !== 'conflict';
 
@@ -107,7 +107,7 @@ function Body({ rec }: { rec: Recommendation }) {
           {rec.how.caveat ? <HowRow k={REC_COPY.howKeys.caveat} value={rec.how.caveat} accent="#8A6A55" /> : null}
         </View>
 
-        {/* Where to buy (docs/10 §3) — a quiet, consent-gated, FTC-disclosed affordance
+        {/* Where to buy (docs/10 §3). A quiet, consent-gated, FTC-disclosed affordance
             BENEATH the rationale; church-and-state walled, opaque-token attribution. */}
         {showWhereToBuy ? <WhereToBuy productType={rec.productType} /> : null}
       </View>
@@ -170,7 +170,7 @@ export default function RecommendationDetail() {
       ) : !rec ? (
         <View className="flex-1 items-center justify-center px-6">
           <Text variant="body" tone="muted" className="text-center">
-            This suggestion isn’t current anymore — your routine may have changed.
+            This suggestion isn’t current anymore. Your routine may have changed.
           </Text>
           <Pressable accessibilityRole="button" className="mt-4 py-2" onPress={() => router.back()}>
             <Text className="font-sans-semibold" tone="muted">

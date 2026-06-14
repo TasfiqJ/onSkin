@@ -4,7 +4,7 @@ import type { PhotoMilestone, PhotoSeries, TimeOfDay } from '@onskin/types';
  * Pure photo-timeline logic (docs/06 §4): which two photos to compare by default,
  * how to group the film strip by month, the calm milestone markers, the metadata
  * line ("13 weeks · 26 photos · all on this phone"), and per-series reference
- * resolution. No I/O, no scoring — just deterministic organisation of the user's
+ * resolution. No I/O, no scoring. Just deterministic organisation of the user's
  * own photos so they can judge with their own eyes. Fully unit-tested.
  */
 
@@ -53,7 +53,7 @@ export function referenceFor(photos: PhotoMeta[], series: PhotoSeries = 'front')
 /**
  * The default before/after pair to show in Compare (docs/06 §4): earliest vs
  * latest (the most legible "your own eyes" story). `intervalDays` lets the caller
- * ask for a one-cycle window instead — the before becomes the photo closest to
+ * ask for a one-cycle window instead. The before becomes the photo closest to
  * (latest − intervalDays). Returns null if a series has fewer than two photos.
  */
 export function defaultComparePair(
@@ -150,7 +150,7 @@ export function weeksSpanned(photos: PhotoMeta[], series?: PhotoSeries): number 
 
 /**
  * The metadata line under the title (docs/06 §4): "13 weeks · 26 photos · all on
- * this phone" — which doubles as a quiet privacy reassurance. Photo count is
+ * this phone". Which doubles as a quiet privacy reassurance. Photo count is
  * across ALL series; weeks spans the whole timeline.
  */
 export function metadataLine(photos: PhotoMeta[]): { weeks: number; count: number; text: string } {

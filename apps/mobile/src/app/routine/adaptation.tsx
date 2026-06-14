@@ -4,13 +4,13 @@ import { Pressable, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { colors } from '@/theme/tokens';
 
-// 09 · Adaptation — "Here's what changed" (design 09, docs/03 §7/§8). After a
+// 09 · Adaptation. "Here's what changed" (design 09, docs/03 §7/§8). After a
 // product is added, the deterministic pipeline re-runs and explains exactly what
-// changed and why — and that prior overrides were preserved. Everything is undoable.
+// changed and why. And that prior overrides were preserved. Everything is undoable.
 // (Shown with the design's worked example; binds to the live recompute diff.)
 type Change = { kind: 'added' | 'neutral' | 'kept'; title: string; body: string };
 const CHANGES: Change[] = [
-  { kind: 'added', title: 'Added to AM, after cleanser', body: 'Gentle enough for daily use — it slots before your moisturizer.' },
+  { kind: 'added', title: 'Added to AM, after cleanser', body: 'Gentle enough for daily use. It slots before your moisturizer.' },
   { kind: 'neutral', title: 'No new conflicts', body: 'Azelaic plays well with your retinol and vitamin C.' },
   { kind: 'kept', title: 'Your overrides kept', body: 'Retinol & glycolic stay on alternate nights, as you set.' },
 ];
@@ -64,7 +64,7 @@ export default function AdaptationScreen() {
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-2 text-[14px]">
           Adding <Text className="font-sans-bold text-ink">Azelaic Acid 10%</Text> rebuilt your plan.
-          Nothing&apos;s locked — undo anything.
+          Nothing&apos;s locked. Undo anything.
         </Text>
 
         <View className="mt-6 gap-3">

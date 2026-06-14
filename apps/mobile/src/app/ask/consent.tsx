@@ -8,7 +8,7 @@ import { ASK_COPY } from '@/features/ask/copy';
 import { colors } from '@/theme/tokens';
 
 // The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
-// for the CLOUD-grounded language layer — distinct, revocable, never default-on. The
+// for the CLOUD-grounded language layer. Distinct, revocable, never default-on. The
 // deterministic on-device advisor needs no consent; this gate is only for the deeper
 // cloud path (deferred, B-AI-ASSISTANT-VENDOR). Honest posture (the stress-tested §7):
 // a short, consented safety window, NOT "no transcript, ever".

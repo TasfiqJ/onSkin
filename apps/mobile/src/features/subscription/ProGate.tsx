@@ -15,7 +15,7 @@ import { useEntitlement, useEntitlementActions } from './useEntitlement';
 // Feature gate (docs/08 §3.2/§4). When the user is Pro (incl. the reverse trial /
 // carded trial), render the feature; otherwise render a calm, honest contextual
 // paywall framed around THIS feature, with the same compliance posture. Dismissible,
-// never nagging. The infra is generic — applying it to more surfaces is mechanical.
+// never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
   const { data } = useEntitlement();
   const { startTrial } = useEntitlementActions();

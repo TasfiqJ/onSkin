@@ -10,9 +10,9 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// "Ask OnSkin" — the conversational front-end to the on-device intelligence layer
+// "Ask OnSkin". The conversational front-end to the on-device intelligence layer
 // (docs/13). The DETERMINISTIC advisor (conflict / routine / fit answers about the user's
-// own shelf) runs here at $0 and needs no consent — it is the free moat taste. The deeper
+// own shelf) runs here at $0 and needs no consent. It is the free moat taste. The deeper
 // cloud-grounded layer is Pro-gated and deferred (B-AI-ASSISTANT-VENDOR). The language
 // model is the interface; the curated engine is the truth; substantive claims are
 // template-bounded, never free-generated. Calm, reactive, non-anthropomorphic: no persona,

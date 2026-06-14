@@ -46,7 +46,7 @@ function ConsentGate({ onGrant }: { onGrant: () => void }) {
         accessibilityRole="button"
         onPress={onGrant}
         style={{ height: 56, borderRadius: 999, backgroundColor: '#F4EFE7', alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>Take photos — on device only</Text>
+        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>Take photos. On device only</Text>
       </Pressable>
       <Pressable accessibilityRole="button" onPress={() => router.back()} style={{ marginTop: 12, alignItems: 'center' }}>
         <Text style={{ fontFamily: 'HankenGrotesk_500Medium', fontSize: 15, color: 'rgba(244,239,231,0.6)' }}>Not now</Text>
@@ -69,7 +69,7 @@ export default function CaptureScreen() {
     if (consented !== true) return;
     haptics.success();
     // Simulated quality (B-CAMERA supplies the real on-device scores). A captured
-    // frame is "ready" — alignment/lighting near the top of tolerance.
+    // frame is "ready". Alignment/lighting near the top of tolerance.
     const alignment = 0.93;
     const lighting = 0.84;
     router.replace({
@@ -98,7 +98,7 @@ export default function CaptureScreen() {
         <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(244,239,231,0.12)' }} />
       </View>
 
-      {/* face zone — ghost + alignment guide + coaching */}
+      {/* face zone. Ghost + alignment guide + coaching */}
       <View className="flex-1 items-center justify-center">
         {/* ghost of the previous photo */}
         <View
@@ -145,7 +145,7 @@ export default function CaptureScreen() {
         </View>
         <View className="flex-row items-center justify-between">
           <View style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: 'rgba(244,239,231,0.1)' }} />
-          {/* ready shutter — auto-fires when matched (here: tap to capture) */}
+          {/* ready shutter. Auto-fires when matched (here: tap to capture) */}
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Capture photo"

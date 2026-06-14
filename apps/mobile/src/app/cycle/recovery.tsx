@@ -4,8 +4,8 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 
-// Recovery mode (design screen 06, docs/05 §7) — auto de-escalation. Irritation or
-// a procedure → actives paused, barrier repair for ~7–10 days, ease back in. Calm,
+// Recovery mode (design screen 06, docs/05 §7). Auto de-escalation. Irritation or
+// a procedure → actives paused, barrier repair for ~7-10 days, ease back in. Calm,
 // framed as strengthening, never a setback. Non-diagnostic.
 export default function RecoveryScreen() {
   const { data } = useCycle();
@@ -22,7 +22,7 @@ export default function RecoveryScreen() {
         </View>
         <View className="flex-1 items-center justify-center">
           <Text variant="body" tone="muted">
-            No recovery in progress — your cycle is running normally.
+            No recovery in progress. Your cycle is running normally.
           </Text>
         </View>
       </Screen>
@@ -58,7 +58,7 @@ export default function RecoveryScreen() {
         </Text>
         <Text variant="body" tone="muted" className="mt-2">
           {fromIrritation
-            ? 'You told us your skin felt irritated, so we paused your actives and switched to barrier repair. This isn’t a setback — it’s how skin gets stronger.'
+            ? 'You told us your skin felt irritated, so we paused your actives and switched to barrier repair. This isn’t a setback. It’s how skin gets stronger.'
             : 'After your treatment, we paused your actives and switched to barrier repair. We’ll ease back in gently.'}
         </Text>
 
@@ -106,7 +106,7 @@ export default function RecoveryScreen() {
         <View className="mt-3.5 flex-row gap-3 rounded-2xl border border-hairline bg-paper-raised px-4 py-3.5">
           <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
           <Text variant="bodySm" tone="muted" className="flex-1">
-            Feeling better already? You can ease back in early — we&apos;ll start with one active.
+            Feeling better already? You can ease back in early. We&apos;ll start with one active.
           </Text>
         </View>
 

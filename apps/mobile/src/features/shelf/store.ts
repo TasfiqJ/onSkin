@@ -4,7 +4,7 @@ import { randomUUID } from 'expo-crypto';
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
 
 // Local-first shelf store (docs/04 §8: the shelf must work in a bathroom with no
-// signal — view, manual-add, and queued lookups all offline). AsyncStorage is the
+// signal. View, manual-add, and queued lookups all offline). AsyncStorage is the
 // source of truth for v1 (single-user, last-write-wins is safe, DECISIONS D-029);
 // intake also fires a best-effort Supabase mirror (B-SUPABASE) so it's ready to
 // reconcile via the persisted mutation queue (D-007) once the project exists.
@@ -16,7 +16,7 @@ export type ShelfProduct = {
   brand: string | null;
   category: string | null;
   barcode: string | null;
-  /** Free-text / parsed INCI tokens — the engine tags off these + the name. */
+  /** Free-text / parsed INCI tokens. The engine tags off these + the name. */
   ingredients: string[];
   openedAt: string | null; // ISO local date; null when unopened or unknown
   isOpened: boolean; // false = unopened, no PAO clock (docs/04 §4.5)

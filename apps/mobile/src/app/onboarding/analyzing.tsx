@@ -7,7 +7,7 @@ import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// 07a · Personalization theater — "Analyzing your skin profile…" (docs/01 §2/§8).
+// 07a · Personalization theater. "Analyzing your skin profile…" (docs/01 §2/§8).
 // Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
 // hero (BLOCKED: B-VERIFY-RIVE-LOTTIE). Persists the skin profile, then reveals.
 export default function AnalyzingScreen() {

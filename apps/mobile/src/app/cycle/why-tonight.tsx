@@ -5,7 +5,7 @@ import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { colors } from '@/theme/tokens';
 
-// "Why is this on tonight?" (design screen 02, docs/05 §6.3) — the reasoning
+// "Why is this on tonight?" (design screen 02, docs/05 §6.3). The reasoning
 // trace, calm and claim-safe, surfacing that every step is traceable to a rule,
 // the profile, or the user's own choice. The trust counterpart to the conflict
 // detail (docs/02 §7.3).
@@ -40,7 +40,7 @@ export default function WhyTonightScreen() {
     return (
       <Sheet tone="night">
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
-          No cycle is running yet — add an active to get started.
+          No cycle is running yet. Add an active to get started.
         </Text>
         <Button label="Got it" variant="inverse" onPress={() => router.back()} />
       </Sheet>
@@ -64,7 +64,7 @@ export default function WhyTonightScreen() {
 
       <View className="mt-4">
         <TraceRow tag="CYCLE">
-          {`You're on night ${tonight.index + 1} of your ${cycle.variant} cycle — the ${tonight.night.slot === 'recover' ? 'recovery' : tonight.night.slot} slot.`}
+          {`You're on night ${tonight.index + 1} of your ${cycle.variant} cycle. The ${tonight.night.slot === 'recover' ? 'recovery' : tonight.night.slot} slot.`}
         </TraceRow>
         {hasBothPotent ? (
           <TraceRow tag="APART">
@@ -72,18 +72,18 @@ export default function WhyTonightScreen() {
           </TraceRow>
         ) : null}
         {hasVitC ? (
-          <TraceRow tag="AM">Your vitamin C lives in your mornings — off the night cycle.</TraceRow>
+          <TraceRow tag="AM">Your vitamin C lives in your mornings. Off the night cycle.</TraceRow>
         ) : null}
         <TraceRow tag="PACE" last>
           {retinoidNightsPerCycle > 0
             ? `${retinoidNightsPerCycle} retinoid night${retinoidNightsPerCycle === 1 ? '' : 's'} per cycle while your skin builds tolerance.`
-            : 'Recovery nights focus on barrier support — ceramides and hydration.'}
+            : 'Recovery nights focus on barrier support. Ceramides and hydration.'}
         </TraceRow>
       </View>
 
       <View className="my-5 rounded-2xl px-4 py-3.5" style={{ backgroundColor: 'rgba(217,161,131,0.1)' }}>
         <Text className="text-[12.5px]" style={{ color: 'rgba(244,239,231,0.6)', lineHeight: 19 }}>
-          Every step here is traceable to a rule, your profile, or a choice you made — never a black
+          Every step here is traceable to a rule, your profile, or a choice you made. Never a black
           box.
         </Text>
       </View>

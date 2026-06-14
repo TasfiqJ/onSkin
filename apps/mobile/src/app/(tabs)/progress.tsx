@@ -16,8 +16,8 @@ import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
-// Progress tab — the guided photo timeline (docs/06; design screens 03/04/05/08).
-// REPLACES the calm streak that briefly lived here (Slice 14) — docs/06 defines the
+// Progress tab. The guided photo timeline (docs/06; design screens 03/04/05/08).
+// REPLACES the calm streak that briefly lived here (Slice 14). Docs/06 defines the
 // Progress tab as the photo feature; the streak moved to /routine/streak (still
 // reachable from Today + You). Local-only, no scores, app-locked, your own eyes.
 
@@ -54,7 +54,7 @@ function FirstRun() {
         <Text variant="bodySm" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
           {PHOTO_COPY.firstRun.body}
         </Text>
-        {/* honest 8–12 week expectation bar */}
+        {/* honest 8-12 week expectation bar */}
         <View className="mt-5 flex-row">
           <View className="h-1.5 flex-1 rounded-l-[3px]" style={{ backgroundColor: colors.greigeDeep }} />
           <View className="h-1.5 flex-1" style={{ backgroundColor: colors.clayBright }} />
@@ -111,7 +111,7 @@ function PairPicker({
             Choose the {which === 'before' ? 'first' : 'second'} photo
           </Text>
           <Text variant="bodySm" tone="muted" className="mb-4">
-            Any two captures — you decide what to compare.
+            Any two captures. You decide what to compare.
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
             {photos
@@ -160,7 +160,7 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
   const dflt = data.comparePair;
 
   if (!dflt) {
-    // Sparse: exactly one photo — invite a second rather than an empty slider.
+    // Sparse: exactly one photo. Invite a second rather than an empty slider.
     return (
       <Card className="mt-2">
         <View className="mb-3 h-44 items-center justify-center rounded-card" style={{ backgroundColor: colors.greige }}>
@@ -235,7 +235,7 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
           accessibilityRole="button"
           accessibilityLabel="Play a quiet time-lapse of your series"
           onPress={() =>
-            Alert.alert('Quiet time-lapse', 'A gentle time-lapse flips through your series — it arrives with on-device capture.')
+            Alert.alert('Quiet time-lapse', 'A gentle time-lapse flips through your series. It arrives with on-device capture.')
           }
           className="flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"
           style={{ backgroundColor: colors.paperRaised, borderWidth: 1, borderColor: colors.hairlineStrong }}>
@@ -301,7 +301,7 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
     authenticate(); // auto-prompt when the gate appears
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // Full-bleed #16130F incl. the safe-area bands (design screen 08) — no night sliver.
+  // Full-bleed #16130F incl. the safe-area bands (design screen 08). No night sliver.
   return (
     <View className="flex-1" style={{ backgroundColor: BG, paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <View className="flex-1 items-center justify-center px-7">
@@ -395,7 +395,7 @@ function PhotoProgressTab() {
               {PHOTO_COPY.tagline}
             </Text>
 
-            {/* "Changes in your own photos" (docs/12) — renders ONLY when opted in
+            {/* "Changes in your own photos" (docs/12). Renders ONLY when opted in
                 (off by default); on-device, within-person, descriptive, no number. */}
             <View className="mt-4">
               <TrendInsight />
@@ -423,7 +423,7 @@ function PhotoProgressTab() {
   );
 }
 
-// The Progress tab (photo timeline) is a Pro value prop (docs/08 §2.2) — gate it.
+// The Progress tab (photo timeline) is a Pro value prop (docs/08 §2.2). Gate it.
 // New users are in the reverse trial / carded trial, so it's unlocked after
 // onboarding; it locks to the contextual upsell only once Pro lapses.
 export default function ProgressScreen() {

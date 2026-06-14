@@ -6,7 +6,7 @@ import { buildOutboundUrl } from './attribution';
 // research surfaced a BLOCKING unknown: ShopMy's documented APIs do not confirm a
 // brand can mint affiliate links on its OWN first-party recommendations under a house
 // account (link creation is creator-OAuth-only; the Brand Partners API is reporting-
-// only, poll-based, no webhooks). So the boundary is SOURCE-TAGGED — swapping ShopMy
+// only, poll-based, no webhooks). So the boundary is SOURCE-TAGGED. Swapping ShopMy
 // ⇄ Skimlinks/Sovrn/direct is a localised change. Pure + testable; the live
 // resolution (ShopMy Search Catalog / Create Link, or a fallback rail) is stubbed
 // behind B-SHOPMY + B-CATALOG-SEED.
@@ -28,7 +28,7 @@ export type WhereToBuyOption = {
   id: string;
   retailer: string;
   label: string;
-  /** The retailer/pin base URL — the opaque attribution token is appended at tap. */
+  /** The retailer/pin base URL. The opaque attribution token is appended at tap. */
   url: string;
   priceCents: number | null;
   currency: string;
@@ -42,7 +42,7 @@ function toSource(s: string): AffiliateSource {
 
 /** Resolve the disclosed retailer options for a recommended product TYPE, from the
  *  affiliate_links catalog. Pure: the hook supplies the rows (DB in prod, a dev demo
- *  set otherwise). Returns [] when none — the surface then shows the honest empty
+ *  set otherwise). Returns [] when none. The surface then shows the honest empty
  *  state, never a fabricated retailer. NEVER sorted by commission (church and state):
  *  there is no rate field here to sort by. */
 export function resolveWhereToBuy(productType: string, rows: AffiliateLinkRow[]): WhereToBuyOption[] {
@@ -60,7 +60,7 @@ export function resolveWhereToBuy(productType: string, rows: AffiliateLinkRow[])
     }));
 }
 
-/** The final outbound URL for a tapped option — opaque token only (attribution.ts). */
+/** The final outbound URL for a tapped option. Opaque token only (attribution.ts). */
 export function outboundFor(option: WhereToBuyOption, clickToken: string): string {
   return buildOutboundUrl(option.url, clickToken);
 }

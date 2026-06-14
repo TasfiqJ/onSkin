@@ -11,7 +11,7 @@ import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 // before the backend exists, B-SUPABASE), with a best-effort `recommendation_
 // preferences` Supabase mirror that reconciles via the persisted mutation queue
 // (D-007) once the project is live. The `recommendations` cache table is NOT used
-// as a source of truth — the pure engine recomputes live (the doc: "never the
+// as a source of truth. The pure engine recomputes live (the doc: "never the
 // source of truth"). We persist only the user's PREFERENCES and which suggestions
 // they have DISMISSED ("not for me"), so a dismissed card doesn't reappear.
 
@@ -36,7 +36,7 @@ export async function loadPreferences(): Promise<RecPreferences> {
 
 export async function savePreferences(prefs: RecPreferences): Promise<void> {
   await AsyncStorage.setItem(PREF_KEY, JSON.stringify(prefs));
-  // Best-effort mirror (B-SUPABASE) — owner-RLS table; clients can only write their
+  // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
   // own row. Guarded so the store works fully before the backend is configured.
   try {
     const { data } = await supabase.auth.getUser();

@@ -9,7 +9,7 @@ import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// 01 · The "Skin Notes" hub (docs/11 §9.1, design 01) — topic-structured (NOT
+// 01 · The "Skin Notes" hub (docs/11 §9.1, design 01). Topic-structured (NOT
 // chronological), each entry a myth-vs-evidence card carrying the docs/02 evidence pill.
 // Deliberately a reference library: no likes, no authors to follow, no ranking by
 // popularity. Phase 1, live (expert-seeded, read-mostly).
@@ -76,7 +76,7 @@ export default function SkinNotesHub() {
       {groups.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
           <Text variant="body" tone="muted" className="text-center">
-            Expert Skin Notes are on the way — we publish them only after a dermatologist signs off.
+            Expert Skin Notes are on the way. We publish them only after a dermatologist signs off.
           </Text>
         </View>
       ) : (

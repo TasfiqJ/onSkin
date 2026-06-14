@@ -4,7 +4,7 @@ import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { COMMUNITY_COPY } from './copy';
 import { getCommunityConsentLocal, setAgeConfirmedLocal, setCommunityConsentLocal } from './store';
 
-// The community_participation consent (docs/11 §8, D-066) — a NEW, separate, unbundled
+// The community_participation consent (docs/11 §8, D-066). A NEW, separate, unbundled
 // MHMDA/GDPR-Art.9 consent for posting health-adjacent info to others, NEVER reused from
 // the photo or data_sharing grants. Recorded with community-specific copy + version into
 // the immutable ledger so it proves what was shown. Local-first (offline-safe);
@@ -16,7 +16,7 @@ export async function isCommunityConsented(): Promise<boolean> {
     const consents = await getLatestConsents();
     if ('community_participation' in consents) return consents['community_participation'] === true;
   } catch {
-    /* offline / no DB — fall back to the local-first flag */
+    /* offline / no DB. Fall back to the local-first flag */
   }
   return getCommunityConsentLocal();
 }
@@ -31,7 +31,7 @@ export async function grantCommunityConsent(): Promise<void> {
       type: 'community_participation',
       granted: true,
       version: COMMUNITY_COPY.consentVersion,
-      consentText: `[PLACEHOLDER community_participation consent — B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
+      consentText: `[PLACEHOLDER community_participation consent. B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
     });
   } catch {
     /* best-effort until backend configured */
@@ -45,7 +45,7 @@ export async function withdrawCommunityConsent(): Promise<void> {
       type: 'community_participation',
       granted: false,
       version: COMMUNITY_COPY.consentVersion,
-      consentText: `[PLACEHOLDER community_participation withdrawal — B-PRIVACY-COPY]`,
+      consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
     });
   } catch {
     /* best-effort */

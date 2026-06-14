@@ -1,6 +1,6 @@
 import type { FunctionalTag, RoutinePhase, SequencingRole } from '@onskin/types';
 
-// Application-order sequencing (docs/03 §3). Deterministic + explainable — NOT an
+// Application-order sequencing (docs/03 §3). Deterministic + explainable. NOT an
 // AI router. Thin→thick, low-pH-first, water-before-oil. The rules are DATA
 // (mirrors the sequencing_rules seed by role) so they stay reviewable.
 
@@ -16,14 +16,14 @@ export type SequencingRule = {
 // Mirrors supabase/migrations/...0014_sequencing_rules.sql.
 export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
   cleanser: { role: 'cleanser', basePriority: 10, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Start with a clean base.' },
-  toner: { role: 'toner', basePriority: 20, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Optional — a hydrating or balancing layer.' },
+  toner: { role: 'toner', basePriority: 20, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Optional. A hydrating or balancing layer.' },
   antioxidant: { role: 'antioxidant', basePriority: 30, amEligible: true, pmEligible: true, defaultPhase: 'am', notes: 'Vitamin C in the morning, under your SPF.' },
   hydrating_serum: { role: 'hydrating_serum', basePriority: 35, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'A lightweight hydrating layer.' },
   treatment: { role: 'treatment', basePriority: 40, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'Apply to dry skin · pea-sized · avoid the eye area.' },
   exfoliant: { role: 'exfoliant', basePriority: 45, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'On exfoliation nights only.' },
   eye: { role: 'eye', basePriority: 50, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'A gentle pat around the eye area.' },
   moisturiser: { role: 'moisturiser', basePriority: 60, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Seal everything in.' },
-  oil: { role: 'oil', basePriority: 70, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'Optional — a final nourishing layer at night.' },
+  oil: { role: 'oil', basePriority: 70, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'Optional. A final nourishing layer at night.' },
   spf: { role: 'spf', basePriority: 100, amEligible: true, pmEligible: false, defaultPhase: 'am', notes: 'Always the last morning step. Reapply through the day.' },
 };
 
@@ -47,7 +47,7 @@ const NAME_ROLES: { keyword: string; role: SequencingRole }[] = [
   { keyword: 'lotion', role: 'moisturiser' },
 ];
 
-/** Classify a product to a sequencing role — active TAGS win over generic name
+/** Classify a product to a sequencing role. Active TAGS win over generic name
  *  keywords (a "glycolic toner" is an exfoliant, not a plain toner). */
 export function classifyRole(product: ClassifiableProduct): SequencingRole {
   const tags = new Set(product.tags);
