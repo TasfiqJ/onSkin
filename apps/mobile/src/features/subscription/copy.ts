@@ -122,6 +122,12 @@ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> 
     title: 'Unlock your full routine.',
     body: 'The complete builder, sequencing and ramp — built around your skin. Part of OnSkin Pro.',
   },
+  // docs/13 §15: only the deeper, cloud-grounded advisor is gated — the on-device,
+  // evidence-grounded answers about your own shelf stay free. Honest, never "AI" hype.
+  ask: {
+    title: 'A deeper advisor, grounded in your shelf.',
+    body: 'Ask follow-ups in your own words and get fluent, evidence-grounded answers about your routine — private, and never a substitute for your dermatologist. Part of OnSkin Pro.',
+  },
 };
 
 export const UPSELL_DISMISS = 'Maybe later';

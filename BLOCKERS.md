@@ -329,6 +329,7 @@ remaining build-order items need their detailed doc:
 | 10 · Creator stacks + ShopMy | Doc 10 ✅ received | **BUILT** (Slice 24): the walled-off "where to buy" commerce layer on OnSkin's own recommendations — church-and-state schema (migration 0022: commission service-role-only in `order_attributions`, never client-readable / never in ranking), the opaque-token attribution (no skin data to retailers, tested), the FTC "paid link" disclosure + guard, the MHMDA consent gate, the rail-agnostic resolution, the expert/derm shoppable stacks (B-DERM-REVIEW-gated), the transparency page, and the Order-Report poll Edge Function stub. Validated as a six-figure supplement. Blocked sub-parts: the live ShopMy rail + the **house-account question** (**B-SHOPMY**), real catalogue/retailers/prices (**B-CATALOG-SEED**), final MHMDA consent copy + DPIA + FTC final wording (**B-PRIVACY** / **B-PRIVACY-COPY**), stacks clinical sign-off (**B-DERM-REVIEW**), Google Play 2026 physical-goods/external-link confirmation (**B-LEGAL**) |
 | 11 · Community layer | Doc 11 ✅ received | **BUILT** (Slice 25): the expert-anchored, anonymous, claim-safe "Skin Notes" myth-vs-evidence trust layer — NOT an open feed. Migration 0023 (7 tables, **photo-free**, anon-locked-out, consent-scoped; the `consents` enum +`community_participation`); the B-DERM-REVIEW-gated expert corpus (`NOTES_REVIEWED`/`shippableNotes()`); the claim-safety pre-moderation flag; the 5 surfaces (hub, card, in-context, Ask, people-like-you). Validated as a retention **multiplier, not a 7-figure pillar**. Phase 1 (expert read-mostly) is live; the peer Ask + people-like-you are deferred previews. Blocked sub-parts: the moderation/legal store floor + peer posting (**B-COMMUNITY-MOD** / **B-COMMUNITY-LEGAL** / **B-EXPERT-NETWORK**), expert clinical sign-off (**B-DERM-REVIEW**), the consent copy + DPIA extension (**B-PRIVACY** / **B-PRIVACY-COPY**), server persistence (**B-SUPABASE**) |
 | 12 · AI trend analysis | Doc 12 ✅ received | **BUILT** (Slice 26): the population skin score **killed outright** (no score/grade/image column or copy, by construction); the shipped no-AI-score **refusal preserved + marketed**; the only-defensible exception built — on-device, within-person, descriptive, **no-number** "Changes in your own photos" (migration 0024: `photo_trend` + the default-OFF `photo_trend_insights` consent; the tone-adjusted MDC floor higher for darker Monk tones; redness-never-the-metric; the claim-safety guard extended to trend strings; classical CV not an LLM, never marketed as "AI"). Validated as **not a 7-figure pillar**. Blocked sub-parts: the real on-device CV engine + MDC calibration (**B-AI-ONDEVICE**), the fairness validation cohort + parity gate (**B-AI-FAIRNESS**), the FDA/FTC/EU counsel sign-off + DPIA (**B-AI-LEGAL** / **B-PRIVACY**), server mirror (**B-SUPABASE**) |
+| 13 · "Ask OnSkin" assistant (founder-delegated, beyond the 12) | Doc 13 written + stress-tested | **BUILT — DETERMINISTIC v1** (Slice 27): the grounded, **template-bounded** conversational front-end to the on-device intelligence layer — NOT an open chatbot. Migration 0025 (`ask_onskin` consent #9; content-free `ask_sessions`/`ask_turn_audit` + version pointers + `narration_engine_mismatch`; the short consented `ask_safety_audit` window — owner-RLS, **no commission/score/photo column**); the deterministic intent router (medical-first → escalate), the engine-reuse answer builder (every substantive claim from `detectConflicts`/`recommend`/`generatePlan` + claim-safe copy), the **broadened runtime claim-safety guard**, refuse-over-guess + verbal clinician escalation, **safety conflicts always escalate (never "you're set")**; the 5 surfaces (home with shelf-grounded prompts, deterministic $0 answer with what/why/how + citations, fit, refuse+escalate, the default-OFF privacy gate) + Today/You entry. Validated as a seven-figure **contributor, not a king-maker** (narrow/structural moat). Adversarially reviewed (17 findings → fixed). **The whole CLOUD-grounded language layer is deferred + degrades honestly** — blocked sub-parts: the zero-retention/no-training cloud LLM vendor + Edge-Function cost/abuse caps (**B-AI-ASSISTANT-VENDOR**), the RAG grounding + layered-guard + red-team eval launch gate (**B-AI-ASSISTANT-SAFETY**), §230/FDA/FTC/EU-AI-Act/state-chatbot-law/minors-COPPA counsel sign-off + the Art. 9 transmission consent + DPIA (**B-AI-ASSISTANT-LEGAL**), the seeded derm-reviewed corpus (**B-CATALOG-SEED** / **B-DERM-REVIEW**), an in-app dermatologist finder (**B-DERM-REVIEW**), server persistence (**B-SUPABASE**), final consent copy (**B-PRIVACY-COPY**) |
 
 I build the slices the received docs + the design spec fully authorize, scaffold
 the UI/schema the design spec clearly shows, and stop short of inventing
@@ -337,6 +338,39 @@ unspecified behavior/copy/schema for the rest.
 ---
 
 ## New blockers discovered during build
+
+### B-AI-ASSISTANT-VENDOR — the zero-retention cloud LLM for the grounded layer 🔴 blocked
+docs/13 §5/§7 (Slice 27). The deterministic, on-device Ask advisor ships and works at $0;
+the deeper **cloud-grounded** language layer (fluent narration + broader corpus Q&A) needs
+a frontier model behind a Supabase Edge Function under a **contractually zero-retention,
+no-training, ephemeral DPA whose carve-outs are named and counsel-accepted** (ZDR is
+model-specific + abuse-retention/litigation-hold-riddled — docs/13 §7), behind a thin
+swappable vendor interface (no provider-proprietary features), with **server-side per-user
++ per-account + per-request abuse caps** at the Edge Function (the uncapped trial-abuse tail
+is the dominant cost risk). Until this lands, `concernAnswer` degrades honestly ("being set
+up" / Pro-locked) and never free-generates. Re-verify the model/price table at build time
+(the named models deprecate — docs/13 §8).
+
+### B-AI-ASSISTANT-SAFETY — the grounding + layered-guard + red-team eval launch gate 🔴 blocked
+docs/13 §4/§5/§6 (Slice 27). Before ANY cloud-grounded turn reaches a user: the RAG
+grounding + the **layered claim-safety pipeline** (input router + template-bounding + the
+broadened runtime guard + an LLM-judge backstop + a citation-faithfulness check + indirect-
+injection defence for OCR/product-names/volunteer corpus) + the **eval methodology** (a
+derm-signed golden set with stated thresholds — accuracy, faithfulness, a false-refusal
+ceiling — citation-correctness, per-language coverage if multilingual), necessary-not-
+sufficient, re-run on every model/prompt/corpus change (PCCP-style), blocking the migration
+on regression. A sampled re-scan of the safety-audit window is how a shipped breach is even
+detected. The shipped v1 runtime guard already matches the brand's full forbidden list.
+
+### B-AI-ASSISTANT-LEGAL — §230 / FDA / FTC / EU-AI-Act / state-chatbot / minors counsel 🔴 blocked
+docs/13 §9/§12 (Slice 27). The copy is the regulated surface. Counsel must clear: §230-
+won't-shield-hallucinated-output liability (grounding-over-generation reduces it), the FDA
+device line (no GenAI/LLM device cleared), FTC AI-washing + the 6(b) companion-chatbot
+inquiry, EU AI Act Art. 50 disclosure + Annex-III audit-log duties, **US state companion-
+chatbot laws** (CA SB 243's private right of action, NY) + state-AG enforcement + state
+health-data laws, **minors / COPPA / UK Children's Code** (an age-gate at docs/01), the
+Art. 9 **transmission** consent copy, and the DPIA. The verbatim disclosure/consent/refusal
+strings are placeholders until cleared (also **B-PRIVACY-COPY**).
 
 ### B-VERIFY-AUTH-LINKING — anon → social account linking 🟡 stubbed
 docs/01 §1 flags that `linkIdentity()` for OAuth in RN is broken ("Identity is

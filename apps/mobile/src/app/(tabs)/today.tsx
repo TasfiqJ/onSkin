@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { AskTeaser } from '@/features/ask/AskTeaser';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
@@ -169,6 +170,9 @@ export default function TodayScreen() {
 
           {/* For you — recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           <RecommendationsTeaser showGapPrompt />
+
+          {/* Ask OnSkin — the deterministic, on-device advisor (docs/13 §9 moat taste) */}
+          <AskTeaser />
 
           {/* Tonight teaser */}
           <Pressable

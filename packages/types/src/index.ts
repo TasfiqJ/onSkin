@@ -28,6 +28,11 @@ export const CONSENT_TYPES = [
   // within-person photo trend insight (still a health inference; distinct from
   // photo_capture / photo_cloud_backup). Installed base is re-consented, never enrolled.
   'photo_trend_insights',
+  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask OnSkin". The
+  // user's question is a health disclosure transmitted to a zero-retention cloud
+  // language layer (MHMDA / GDPR Art. 9 attaches to the TRANSMISSION). Distinct from
+  // every other consent; the deterministic on-device advisor needs no consent at all.
+  'ask_onskin',
 ] as const;
 export type ConsentType = (typeof CONSENT_TYPES)[number];
 
@@ -177,7 +182,15 @@ export type EntitlementStore = 'app_store' | 'play_store' | 'web' | 'app_granted
 /** The purchasable plans (docs/08 §2.3). No weekly plan by design. */
 export type PlanId = 'annual' | 'monthly';
 /** Pro-gated feature areas, used to frame the contextual upsell (docs/08 §3.2). */
-export type GatedFeature = 'photo_timeline' | 'scheduler' | 'conflict_checks' | 'reminders_widgets' | 'full_routine';
+export type GatedFeature =
+  | 'photo_timeline'
+  | 'scheduler'
+  | 'conflict_checks'
+  | 'reminders_widgets'
+  | 'full_routine'
+  // docs/13 §15: the CLOUD-GROUNDED language layer is Pro-gated with a hard trial cap.
+  // The deterministic, on-device, $0 advisor (the moat taste) stays free.
+  | 'ask';
 /** PostHog subscription funnel events (docs/08 §10) — metadata only. */
 export const SUBSCRIPTION_EVENTS = [
   'paywall_shown',
@@ -266,6 +279,39 @@ export const TREND_EVENTS = [
   'trend_consent_revoked',
 ] as const;
 export type TrendEvent = (typeof TREND_EVENTS)[number];
+
+// --- "Ask OnSkin" conversational advisor (docs/13) ---------------------------
+/** The deterministic intent router (docs/13 §4). The router runs FIRST, BEFORE any
+ *  language model, so medical/dosing/diagnosis intent is caught at the door and
+ *  escalated — never narrated. Deterministic intents are answered on-device at $0;
+ *  grounded intents need the (Pro-gated, currently blocked) cloud layer. */
+export const ASK_INTENTS = [
+  'conflict_q', // "can I use X with Y" / "is there a conflict on my shelf" — detectConflicts()
+  'routine_q', // "what should I do tonight" — the generated plan
+  'replenish_q', // "what's running low" — the shelf PAO/expiry
+  'product_fit_q', // "is this product a fit for me" — the recommend()/fit engine
+  'concern_q', // a cosmetic-concern question needing the curated corpus (grounded)
+  'medical', // diagnosis/dose/condition/severe — ESCALATE, never answer
+  'unsupported', // a product/topic outside the curated corpus — honest refusal
+  'out_of_scope', // off-topic — refuse calmly
+] as const;
+export type AskIntent = (typeof ASK_INTENTS)[number];
+
+/** How a turn was answered (docs/13 §4/§10) — the content-free audit dimension. */
+export type AskAnswerKind = 'deterministic' | 'grounded' | 'escalate' | 'refuse';
+
+/** PostHog Ask events (docs/13 §13) — metadata only, NEVER the question or answer
+ *  text; instrument for TRUST / RETENTION / COST, never engagement maximisation. */
+export const ASK_EVENTS = [
+  'ask_opened',
+  'ask_turn', // carries intent + answerKind + grounded?/refused?/escalated?, NEVER content
+  'ask_consent_granted',
+  'ask_consent_revoked',
+  'ask_escalated_to_clinician',
+  'ask_grounded_gated', // a grounded turn hit the Pro gate / trial cap
+  'ask_reported_problem', // the wrong-answer feedback loop (content-free)
+] as const;
+export type AskEvent = (typeof ASK_EVENTS)[number];
 
 // --- Community layer / "Skin Notes" (docs/11) --------------------------------
 /** Expert-seeded note kinds (docs/11 §7). NOT peer UGC. */

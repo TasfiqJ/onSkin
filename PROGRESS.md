@@ -626,6 +626,46 @@ and routine persistence (server `build_routine`, docs/03 §11).
   review can be re-run after the limit resets. D-068…D-072.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (817).
 
+### Slice 27 — Doc 13 "Ask OnSkin" assistant + new design ("OnSkin Ask Assistant") ✅ (2026-06-14) — founder-delegated, beyond the 12
+- **Stress-tested first** (a 13-agent adversarial fact-check + red-team + completeness pass
+  on the written doc): retired the falsified "non-copyable context moat" (ChatGPT free-tier
+  now persists context; independent shelf-aware competitors ship), corrected the misattributed
+  trust/cost stats, and forced the **template-bounded narration** architecture. Verdict: a
+  seven-figure **contributor, not a king-maker** — narrow/structural moat (deterministic
+  correctness + provable independence + privacy + owned context), deferred + Pro-gated.
+- **The deterministic, on-device advisor is the whole v1 and ships at $0** — the language
+  model is the interface, the curated engine is the truth, and **substantive health claims
+  are template-filled from the engine, never free-generated** (D-073). The cloud-grounded
+  layer is deferred (**B-AI-ASSISTANT-VENDOR**) and degrades honestly.
+- **Schema** (migration 0025): the `consents` enum gains a 9th type **`ask_onskin`**
+  (separate, default-OFF — the question is a health disclosure *transmitted* to the cloud,
+  Art. 9); **content-free** `ask_sessions`/`ask_turn_audit` (intent + verdicts + version
+  pointers + a `narration_engine_mismatch` counter, **no message text**); the short,
+  consented, encrypted `ask_safety_audit` window (resolving the "no transcript" vs
+  auditable/EU-AI-Act contradiction); owner-RLS; **no commission/score/photo column** in any
+  Ask path. `@onskin/types` (`ASK_INTENTS`/`ASK_EVENTS`, `GatedFeature += 'ask'`) extended.
+- **Pure, tested feature** (`features/ask/`): the medical-first **intent router**
+  (`intent.ts`), the engine-reuse, template-bounded **answer builder** (`answer.ts` —
+  reuses `detectConflicts`/`recommend`/`generatePlan` + claim-safe copy), the **broadened
+  runtime claim-safety guard** (`guard.ts` — the shipped scan + the full disease/superiority/
+  score/AI nets), the pure Pro-gate (`gate.ts`), the local-first consent + turn-counter
+  store, and the orchestration hook. **29 new tests** (claim-safety on all copy + generated
+  answers, intent routing, answer behaviour incl. the pregnancy-safety escalation, gate, the
+  fit-rec picker).
+- **5 design surfaces** + wiring: the **home** (shelf-grounded suggested prompts + pills +
+  intro + input bar + the honest AI-disclosure footer), the **deterministic $0 answer** (the
+  green ✓ badge + what/why/how + citation/severity chips + "recommendation, not a rule"), the
+  **fit** answer, the **refuse + verbal escalation**, and the **default-OFF privacy gate**
+  (`ask_onskin`). Surfaced free on Today (`AskTeaser`) + You. Calm, reactive, non-
+  anthropomorphic; ends clean; no re-engagement.
+- **Adversarially reviewed** (a 4-dimension review, each finding independently verified: 18
+  findings → 17 confirmed → fixed). Two HIGH safety fixes: **safety conflicts (e.g. a
+  pregnancy contraindication) now ESCALATE, never "you're set"** (D-077), and the medical
+  escalation is **verbal-only — no misrouted "find a derm" CTA** (D-077). One MEDIUM fix:
+  product-fit uses catalog-backed recs so a "7%" product name never false-trips the runtime
+  guard (D-078). Plus a11y, telemetry, and the broadened runtime guard.
+- **Gates:** typecheck ✅ · lint ✅ · test ✅ (932).
+
 ## Remaining shelf/intelligence work (blocked sub-parts)
 
 - **Live barcode scan + OBF lookup + OCR capture (docs/04 §4.1/§4.3)** — the
@@ -663,6 +703,10 @@ and routine persistence (server `build_routine`, docs/03 §11).
 
 **🎉 All 12 build-order documents are now BUILT (Slices 0–26).** Every remaining item is a
 founder blocker (accounts/keys/legal/clinical/native dev build/catalog seed) — see BLOCKERS.md.
+
+**Founder-delegated extensions (beyond the 12):**
+
+13. ✅ "Ask OnSkin" assistant — Doc 13 (Slice 27): the grounded, **template-bounded** conversational front-end to the on-device intelligence layer — NOT an open chatbot. The deterministic, on-device, $0 advisor (conflict/routine/fit answers about your own shelf, refuse-over-guess, verbal clinician escalation, **safety conflicts always escalate**) ships as v1; substantive claims are template-filled from `detectConflicts`/`recommend`/`generatePlan`, never free-generated. New `ask_onskin` default-OFF consent + content-free/safety-audit-only schema (migration 0025); the broadened runtime claim-safety guard; the 5 surfaces + Today/You entry. Stress-tested + adversarially reviewed. Validated as a seven-figure **contributor, not a king-maker** (narrow/structural moat). The whole **cloud-grounded language layer is deferred** (**B-AI-ASSISTANT-VENDOR** / **B-AI-ASSISTANT-SAFETY** / **B-AI-ASSISTANT-LEGAL**, + **B-CATALOG-SEED** / **B-DERM-REVIEW** for the corpus).
 
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15

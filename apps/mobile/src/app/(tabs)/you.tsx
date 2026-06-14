@@ -191,6 +191,7 @@ export default function YouScreen() {
           </Text>
           {(
             [
+              ['Ask OnSkin — your evidence-grounded advisor', '/ask'],
               ['Recommendations', '/recommendations'],
               ['Recommendation preferences', '/recommendations/preferences'],
               ['Skin Notes — myth vs evidence', '/community'],
@@ -300,6 +301,18 @@ export default function YouScreen() {
               variant="body"
               tone="muted"
               onPress={() => router.push('/trend/optin')}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
+          </Row>
+          <Row
+            label="Ask OnSkin — private advisor"
+            hint="Optional · the deeper cloud advisor · off by default. The on-device answers about your own shelf are always free.">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={() => router.push('/ask/consent')}
               accessibilityRole="button"
               style={{ fontSize: 18 }}>
               ›

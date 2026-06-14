@@ -705,3 +705,74 @@ Format: `D-NNN — date — decision — rationale`.
   FTC AI-washing counsel sign-off of the copy + the DPIA extension), **B-AI-ONDEVICE**
   (the on-device CV/Core ML engine + MDC calibration + device verification); the consent
   copy + DPIA also extend **B-PRIVACY / B-PRIVACY-COPY**.
+
+- **D-073 — 2026-06-14 — "Ask OnSkin" is the grounded, TEMPLATE-BOUNDED front-end to the
+  on-device intelligence layer, never an open chatbot (docs/13, the doc's "D-051/D-057").**
+  Slice 27 — the founder-delegated feature beyond the 12 build-order docs (chosen by
+  objective reasoning). The TRUTH SOURCE is the deterministic engine (`detectConflicts`
+  via `useShelf`, `generatePlan` via `usePlan`, `recommend` via `useRecommendations`) +
+  the curated corpus; the LLM is only a constrained narration layer, and **substantive
+  health claims are filled from the engine + already-claim-safe copy, never free-generated**
+  (`answer.ts` builds every `claim` from `bannerSubhead`/`RESOLUTION_LEAD`/`whyCopy`/
+  `fitLabel`). A deterministic **input router** (`classifyIntent`, medical-first) catches
+  dosing/diagnosis/severe intent BEFORE any model and **escalates**; **refuse-over-guess**
+  is the cardinal rule. The whole deterministic advisor runs **on-device at $0** and needs
+  no consent — the cloud-grounded path is deferred (B-AI-ASSISTANT-VENDOR) and degrades
+  honestly, never fakes a grounded answer. It is a seven-figure **contributor, not a
+  king-maker** (the moat is narrow/structural, per the stress-tested doc).
+
+- **D-074 — 2026-06-14 — The shipped claim-safety guard runs at RUNTIME, broadened to the
+  full Ask forbidden list (docs/13 §4/§5, "D-052").** Every rendered answer's substantive
+  `claim` passes `guardClaim` (`guard.ts`): the shipped `scanClaimSafety` (drug/disease
+  verb, dose, alarm) PLUS the same disease-noun / superiority-AI-washing / skin-score /
+  "AI"-marketing nets the build-time `claimsafety.test.ts` enforces — so the runtime net
+  matches the brand's full stated list, not a subset (review fix). It scans ONLY the
+  substantive sentence; product-name DATA (a "7%") is a separate, unscanned field. On a
+  flag → refuse-over-guess. The Art. 50 / SB 243 **AI-disclosure** copy names the AI
+  honestly (exempt from the AI-marketing scan, like the Slice-24 pattern); marketing leads
+  with independent/grounded/knows-your-shelf/private, never "AI".
+
+- **D-075 — 2026-06-14 — A separate, explicit, DEFAULT-OFF `ask_onskin` consent + a
+  content-free / safety-audit-only data model (docs/13 §7/§10, "D-053/D-058").** The
+  consents enum gains a 9th type `ask_onskin` (migration 0025), distinct from every other
+  consent — the user's question is a health disclosure transmitted to the cloud (MHMDA /
+  GDPR Art. 9 attaches to the TRANSMISSION). Default-off, revocable, ledger-authoritative-
+  then-local; **deletion-on-revocation clears the local turn counter** (`clearAskStore`).
+  `ask_sessions` / `ask_turn_audit` are **content-free** (intent + verdicts + version
+  pointers + a `narration_engine_mismatch` counter, never the question/answer); the ONLY
+  health-content store is `ask_safety_audit` — a **short, encrypted, access-logged,
+  consented safety-audit window** (resolving the "no transcript" vs auditable/appealable/
+  EU-AI-Act contradiction), excluded from training/backup/sale, auto-purged. Owner-only
+  RLS throughout. **No commission/affiliate/score/photo column exists in any Ask path**
+  (church-and-state, D-038; no-photo-analysis, doc 12).
+
+- **D-076 — 2026-06-14 — Pro-gating: the deterministic on-device advisor is FREE (the moat
+  taste); only the cloud-grounded layer is Pro-gated + trial-capped (docs/13 §15, "D-054").**
+  `GatedFeature` gains `ask` + `UPSELL_COPY.ask`. The pure `askGate` + the local-first
+  per-period grounded-turn counter (`onskin.ask.groundedTurns.v1`) enforce: free → grounded
+  is Pro; trial/reverse-trial → a hard cap then the paywall; fully paid → uncapped. The
+  authoritative cap is server-side at the Edge Function (deferred); the client counter is a
+  best-effort cost guardrail. The first-session moat taste (the deterministic conflict
+  answer) is surfaced free on Today (`AskTeaser`) and You.
+
+- **D-077 — 2026-06-14 — Safety conflicts ESCALATE, never "you're set"; medical escalation
+  is VERBAL-only (review fixes, docs/13 §4/§9).** `conflictAnswer` detects any
+  `interactionType === 'safety'` conflict (e.g. a pregnancy contraindication) BEFORE the
+  top/reassurance/no-conflicts logic and routes it to a calm clinician-caution answer — a
+  high-severity contraindication is never silently dropped and contradicted with "nothing
+  clashes." And because **no in-app dermatologist finder exists yet** (deferred,
+  B-DERM-REVIEW), the medical-escalation answer carries **no CTA** (verbal guidance only) —
+  a misrouted "find a derm" button on the highest-stakes control is worse than none.
+
+- **D-078 — 2026-06-14 — Product-fit answers use catalog-backed recommendations only, to
+  keep raw product names out of the scanned claim (review fix, docs/13 §4).** `pickFitRec`
+  selects the top `gap`/`routine_completion`/`better_fit`/`goal` recommendation (a clean
+  TYPE name) and skips the shelf-anchored `replacement`/`conflict` triggers whose `what`
+  embeds a raw product name (e.g. "Your Glycolic 7% Toner is running low") — whose "7%"
+  would false-trip the runtime dosage guard and silently refuse a valid fit answer. New
+  blockers: **B-AI-ASSISTANT-VENDOR** (the zero-retention/no-training cloud LLM + the
+  Edge-Function cost/abuse caps), **B-AI-ASSISTANT-SAFETY** (the grounding + layered guard +
+  red-team eval launch gate), **B-AI-ASSISTANT-LEGAL** (§230 / FDA / FTC / EU AI Act Art. 50
+  + state companion-chatbot laws + minors/COPPA + the Art. 9 transmission consent + DPIA);
+  depends on **B-CATALOG-SEED** + **B-DERM-REVIEW** (the corpus is the prerequisite), and the
+  consent copy extends **B-PRIVACY / B-PRIVACY-COPY**.
