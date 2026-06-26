@@ -793,6 +793,20 @@ Blocked (correct): live barcode/OBF scan + OCR (B-CATALOG-SEED + B-CAMERA), cont
 (B-SUPABASE), PAO defaults sign-off (B-DERM-REVIEW), PostHog scan funnel (B-POSTHOG).
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
 
+### docs/05 — actives / skin-cycling scheduler ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/05. Verdict: faithful and complete — **no unblocked gap**.
+Migration 0017 (`cycles` + `cycle_nights`, owner-RLS via `owns_cycle`) matches §3. The pure
+`projection.ts` implements the safe-modulo `night_index`, tonight/week-ahead, and `nextSlotDate`
+(next acid/retinoid night); `orchestrate.ts` is the multi-active core (one potent active/night and
+retinoid≠exfoliant **by construction**, launch-gated class frequency caps, variant-keyed recovery,
+pregnancy retinoid suppression whose note always travels, phased introduction, null cycle → simple
+daily AM/PM). Pause/resume **re-anchoring** ("resume where left off", D-027) is correct in
+`cycleStore.ts`. All §6/§7 surfaces have routes (week/settings/why-tonight/disruption/procedure/
+recovery/phased-intro); auto-de-escalation rides the docs/03 ramp `deEscalate`. Blocked (correct):
+server `orchestrate()`/`schedule_for()` (B-SERVER-DETECT/B-ROUTINE-PERSIST), drag-to-reassign nights
+(B-DRAG-DND), reminder delivery (doc 7), clinical sign-off of frequency/separation/recovery rules
+(B-DERM-REVIEW). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
