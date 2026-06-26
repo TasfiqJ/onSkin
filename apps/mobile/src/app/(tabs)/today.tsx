@@ -1,5 +1,5 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
@@ -10,16 +10,19 @@ import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
-import { currentRoutineType } from '@/features/today/useToday';
+import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
+import { currentRoutineType, localDateString } from '@/features/today/useToday';
+import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Today. The daily habit loop (design 04 AM light / 05 PM dark, docs/03 §6/§9).
-// The check-off is the north-star activation metric. AM is paper, PM is night with
-// the skin-cycling strip + the Doc-2 auto-resolution banner ("next acid night").
-// Check-off is local/optimistic here; it binds to routine_completions once
-// routines are persisted (B-SUPABASE).
+// The check-off is the north-star activation metric and the retention engine, so it
+// PERSISTS to the local-first completions store (completionsStore.ts) and feeds the
+// streak/heat-map via useProgress. The server routine_completions table is the
+// deferred sync target (B-ROUTINE-PERSIST / B-SUPABASE). AM is paper, PM is night
+// with the skin-cycling strip + the Doc-2 auto-resolution banner ("next acid night").
 // Fallback strip labels when no cycle is running yet (the classic rhythm).
 const FALLBACK_SLOTS = ['Exfoliate', 'Retinoid', 'Recover', 'Recover'];
 
@@ -91,7 +94,13 @@ export default function TodayScreen() {
   const { data: planData } = usePlan();
   const { data: progress } = useProgress();
   const { data: cycleData } = useCycle();
-  const [done, setDone] = useState<Set<string>>(new Set());
+  const qc = useQueryClient();
+  const today = localDateString();
+  const { data: doneData } = useQuery({
+    queryKey: ['completions', today],
+    queryFn: () => getCompletedSteps(today),
+  });
+  const done = doneData ?? new Set<string>();
   const plan = planData?.plan;
 
   // The orchestrated, profile-aware cycle drives tonight everywhere (so pregnancy
@@ -102,16 +111,17 @@ export default function TodayScreen() {
   const recoveryActive = cycleData?.recovery.active ?? false;
   const tonightSlot = cTonight?.night.slot ?? null;
 
-  const toggle = (id: string) =>
-    setDone((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  // Persist the check-off to the local-first store, fire the activation metric on the
+  // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
+  async function toggle(key: string) {
+    const { firstEver } = await toggleCompletion(key, today);
+    if (firstEver) track('first_checkoff_completed', { step: key });
+    await qc.invalidateQueries({ queryKey: ['completions', today] });
+    await qc.invalidateQueries({ queryKey: ['progress'] });
+  }
 
-  const rowState = (id: string, firstUndoneId: string | null): 'done' | 'next' | 'pending' =>
-    done.has(id) ? 'done' : id === firstUndoneId ? 'next' : 'pending';
+  const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
+    done.has(key) ? 'done' : key === firstUndoneKey ? 'next' : 'pending';
 
   const dateLabel = new Date()
     .toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -119,8 +129,8 @@ export default function TodayScreen() {
   // ---- AM ----
   if (!dark) {
     const steps = plan?.am ?? [];
-    const firstUndone = steps.find((s) => !done.has(s.productId))?.productId ?? null;
-    const doneCount = steps.filter((s) => done.has(s.productId)).length;
+    const firstUndone = steps.map((s) => stepKey('AM', s.productId)).find((k) => !done.has(k)) ?? null;
+    const doneCount = steps.filter((s) => done.has(stepKey('AM', s.productId))).length;
     return (
       <Screen edges={['top']}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
@@ -156,16 +166,19 @@ export default function TodayScreen() {
                 {doneCount} of {steps.length}
               </Text>
             </View>
-            {steps.map((s) => (
-              <CheckRow
-                key={s.productId}
-                name={s.name}
-                sub={s.instruction}
-                state={rowState(s.productId, firstUndone)}
-                dark={false}
-                onPress={() => toggle(s.productId)}
-              />
-            ))}
+            {steps.map((s) => {
+              const k = stepKey('AM', s.productId);
+              return (
+                <CheckRow
+                  key={k}
+                  name={s.name}
+                  sub={s.instruction}
+                  state={rowState(k, firstUndone)}
+                  dark={false}
+                  onPress={() => void toggle(k)}
+                />
+              );
+            })}
           </View>
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
@@ -234,8 +247,8 @@ export default function TodayScreen() {
       : null;
   const dailyPm = (plan?.pm ?? []).filter((s) => !s.cyclingNight);
   const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort((a, b) => a.order - b.order);
-  const firstUndonePm = pmSteps.find((s) => !done.has(s.productId))?.productId ?? null;
-  const donePm = pmSteps.filter((s) => done.has(s.productId)).length;
+  const firstUndonePm = pmSteps.map((s) => stepKey('PM', s.productId)).find((k) => !done.has(k)) ?? null;
+  const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
   const suppressedAcidName =
     tonightSlot === 'retinoid' && cycle ? (cycle.nights.find((n) => n.slot === 'exfoliate')?.productName ?? null) : null;
   const nextAcidISO = cycleData?.nextAcidNight ?? null;
@@ -338,16 +351,19 @@ export default function TodayScreen() {
               {donePm} of {pmSteps.length}
             </Text>
           </View>
-          {pmSteps.map((s) => (
-            <CheckRow
-              key={s.productId}
-              name={s.name}
-              sub={s.instruction}
-              state={rowState(s.productId, firstUndonePm)}
-              dark
-              onPress={() => toggle(s.productId)}
-            />
-          ))}
+          {pmSteps.map((s) => {
+            const k = stepKey('PM', s.productId);
+            return (
+              <CheckRow
+                key={k}
+                name={s.name}
+                sub={s.instruction}
+                state={rowState(k, firstUndonePm)}
+                dark
+                onPress={() => void toggle(k)}
+              />
+            );
+          })}
         </View>
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}

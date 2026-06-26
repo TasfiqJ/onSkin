@@ -8,6 +8,7 @@ import {
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
+import { deriveConcentration } from '@/features/intelligence/concentration';
 import { conflictKey, getOverriddenKeys } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
@@ -120,7 +121,12 @@ export function useShelf() {
 
       const engineProducts: EngineProduct[] = active.map((p) => {
         const { tags, subflags } = tagsForIngredientList([p.name, ...p.ingredients]);
-        return { id: p.id, name: p.name, tags: [...tags], subflags: [...subflags] };
+        const tagArr = [...tags];
+        // Coarse concentration band from the name/INCI percent (docs/02 §4.2) so the
+        // engine escalates high-dose severity and the high-dose pregnancy safety rule
+        // can fire. Was never populated before (review fix); B-CATALOG-SEED upgrades it.
+        const concentration = deriveConcentration([p.name, ...p.ingredients].join(' '), tagArr);
+        return { id: p.id, name: p.name, tags: tagArr, subflags: [...subflags], concentration };
       });
 
       const conflicts = detectConflicts(engineProducts, profile, shippableRules());
@@ -134,11 +140,14 @@ export function useShelf() {
           (c) => !isReassuring(c) && c.computedSeverity !== 'none' && !overridden.has(conflictKey(c)),
         ) ?? null;
 
-      // Products in an already-resolved (separated) interaction earn "paired".
+      // Products in an already-resolved (separated) interaction earn "paired" .
+      // A conflict the user chose to "use together anyway" is NOT paired/handled, so
+      // it is excluded here too (it would contradict their override, review fix).
       const pairedIds = new Set<string>();
       for (const c of conflicts) {
         if (c.rule.interactionType === 'safety' || isReassuring(c)) continue;
         if (!PAIRED_RESOLUTIONS.has(c.rule.resolutionType)) continue;
+        if (overridden.has(conflictKey(c))) continue;
         if (c.productAId) pairedIds.add(c.productAId);
         if (c.productBId) pairedIds.add(c.productBId);
       }
@@ -173,11 +182,25 @@ export function useShelf() {
       const archive = products.filter((p) => p.status !== 'active').map(toItem);
 
       // Default sort: soonest expiry first, unopened/unknown last (docs/04 §5.4).
-      items.sort((a, b) => sortWeight(a) - sortWeight(b));
+      // Bucket by badge urgency, then within a bucket order by the actual computed
+      // expiry date (soonest first; unknown dates last) so two dated products read
+      // chronologically rather than in insertion order (review fix).
+      items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
 
       return { items, archive, conflicts, reassurances, banner };
     },
   });
+}
+
+/** Chronological tiebreak within a sort bucket: soonest surfaced-expiry first, items
+ *  with no known date last. ISO date strings compare chronologically. */
+function cmpExpiry(a: ShelfItem, b: ShelfItem): number {
+  const ea = surfacedExpiry(a.product);
+  const eb = surfacedExpiry(b.product);
+  if (ea && eb) return ea < eb ? -1 : ea > eb ? 1 : 0;
+  if (ea) return -1;
+  if (eb) return 1;
+  return 0;
 }
 
 /** Lower = surfaced first (expired, then countdown, then dated, then unknown). */

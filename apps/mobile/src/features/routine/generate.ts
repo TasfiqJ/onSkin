@@ -38,7 +38,12 @@ const GAP_NOTES: Partial<Record<SequencingRole, string>> = {
   spf: 'A daily SPF would round this out. It’s the highest-impact morning step.',
 };
 
-export type RoutineProduct = ClassifiableProduct & { rampEligible?: boolean };
+export type RoutineProduct = ClassifiableProduct & {
+  rampEligible?: boolean;
+  /** Coarse concentration band (docs/02 §4.2) so the conflict engine escalates
+   *  high-dose severity and the dose-gated pregnancy safety rule can fire. */
+  concentration?: 'low' | 'high';
+};
 
 export function generatePlan(
   products: RoutineProduct[],
@@ -76,7 +81,12 @@ export function generatePlan(
     .map((role) => GAP_NOTES[role]!);
 
   // Conflicts: run the docs/02 engine (launch-gated rules) over the shelf.
-  const engineProducts: EngineProduct[] = products.map((p) => ({ id: p.id, name: p.name, tags: p.tags }));
+  const engineProducts: EngineProduct[] = products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    tags: p.tags,
+    concentration: p.concentration,
+  }));
   const conflicts = detectConflicts(engineProducts, profile, rules);
 
   return { am, pm, cycle, ramp, gaps, conflicts };

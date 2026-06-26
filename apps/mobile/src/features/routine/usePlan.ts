@@ -36,6 +36,7 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
       id: i.engineProduct.id,
       name: i.engineProduct.name,
       tags: i.engineProduct.tags,
+      concentration: i.engineProduct.concentration,
     }));
     // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
     // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
