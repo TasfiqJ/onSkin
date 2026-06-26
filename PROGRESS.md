@@ -835,6 +835,22 @@ claim-safe copy guard. Blocked (correct): native WidgetKit/Glance widgets + inte
 Activity (B-WIDGETS; previews built), on-device delivery + Android-14 exact-alarm verification
 (B-NOTIF-VERIFY), APNs/FCM push win-backs + PostHog (keys). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/08 — subscriptions / paywall (RevenueCat) ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/08. Verdict: faithful and complete — **no unblocked gap**.
+Migration 0020 matches §8 (additive `entitlements` columns store/period_type/will_renew/attribution;
+RLS unchanged, service-role writes incl. the app-granted reverse trial). The pure `entitlement.ts`
+`deriveState` **gates on `is_active` regardless of source** (store/carded-trial/reverse-trial all → isPro),
+distinguishes reverse-trial via `period_type`, and on lapse falls to free with an `expired` flag for
+honest never-data-deleting downgrade/win-back (priorPeriodType picks re-offer vs graceful-downgrade).
+The event-type-correct idempotent webhook (verified in docs/01), the 3.1.2-compliant onboarding paywall
+(no trial toggle, billed amount conspicuous, Terms/Privacy/Restore via `ComplianceRow`, trust block below),
+offline-safe `ProGate`/`useEntitlement`, the plan catalog, and all 9 surfaces (offer/reverse-trial banner/
+reoffer/upsell/success/manage/downgrade/winback) are present; claim-safety guard asserts the honest
+disclosures (91 tests). §11 go-to-market is acquisition strategy (the `acquisition_channel` field exists for
+LTV-by-channel), not app code. Blocked (correct): native RevenueCat SDK + purchase/restore + localized
+prices + server reverse-trial grant (B-REVENUECAT), store/ARL/external-link/final-policy legal review
+(B-LEGAL/B-PRIVACY-COPY), server entitlement mirror (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
