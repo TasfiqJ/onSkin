@@ -19,3 +19,4 @@ export type { ConflictBannerProps } from './ConflictBanner';
 export { ExpiryBadge } from './ExpiryBadge';
 export { Sheet } from './Sheet';
 export type { SheetProps } from './Sheet';
+export { StripedThumb } from './StripedThumb';

@@ -120,7 +120,7 @@ export default function OpenedDateScreen() {
       <View className="mb-4 h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
         <Text className="text-[18px] text-clay">◴</Text>
       </View>
-      <Text variant="title" className="text-[31px] leading-[34px]" accessibilityRole="header">
+      <Text variant="title" className="text-[33px] leading-[34px]" accessibilityRole="header">
         When did you open it?
       </Text>
       <Text variant="body" tone="muted" className="mt-2">

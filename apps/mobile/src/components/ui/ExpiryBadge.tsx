@@ -30,13 +30,17 @@ export function ExpiryBadge({ badge }: { badge: ExpiryBadgeData }) {
     borderRadius: s.pill ? 999 : 8,
     paddingHorizontal: s.pill ? 12 : 10,
     paddingVertical: 6,
-    maxWidth: 96,
+    maxWidth: badge.safety ? 72 : 96,
   };
+  // The firmer eye/SPF state ships its label as two lowercase lines ("replace /
+  // for safety", design screen 05). The newline reads as a pause, so give
+  // VoiceOver a clean single-line accessibilityLabel.
+  const a11yLabel = badge.label.replace(/\n/g, ' ');
   return (
-    <View style={container} accessible accessibilityLabel={badge.label}>
+    <View style={container} accessible accessibilityLabel={a11yLabel}>
       <Text
         className={s.mono ? 'font-mono' : 'font-sans-bold'}
-        style={{ color: s.fg, fontSize: 11, lineHeight: 14, textAlign: 'center' }}>
+        style={{ color: s.fg, fontSize: 11, lineHeight: badge.safety ? 13 : 14, textAlign: 'center' }}>
         {badge.label}
       </Text>
     </View>

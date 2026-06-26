@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
-import { ExpiryBadge, Sheet, Text } from '@/components/ui';
+import { ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -43,8 +43,9 @@ export default function ReplenishScreen() {
   const safety = isSafetyCriticalCategory(item.category);
   const headline = safety ? `Your ${item.name} is nearly finished.` : `Time to top up ${item.name}.`;
   const body = safety
-    ? 'This is one to keep fresh. Its protection can fade over time. Want to line up the next one?'
+    ? 'Sun protection is one to keep fresh. Its filters lose strength over time. Want to line up the next one?'
     : 'You’re running low. Want to line up the next one so you don’t run out?';
+  const similarSub = safety ? 'Same protection, claim-safe matches' : 'Same role, claim-safe matches';
 
   const reAdd = async () => {
     haptics.select();
@@ -68,18 +69,18 @@ export default function ReplenishScreen() {
   return (
     <Sheet>
       <View className="flex-row items-center gap-4">
-        <View className="h-[60px] w-[60px] rounded-2xl border border-hairline bg-greige" />
+        <StripedThumb size={60} radius={16} />
         <View className="flex-1">
           <View className="mb-1.5 self-start">
             <ExpiryBadge badge={item.badge} />
           </View>
-          <Text variant="titleSm" className="text-[22px] leading-[24px]">
+          <Text variant="titleSm" className="text-[23px] leading-[24px]">
             {item.name}
           </Text>
         </View>
       </View>
 
-      <Text variant="title" className="mt-4 text-[27px] leading-[30px]" accessibilityRole="header">
+      <Text variant="title" className="mt-4 text-[28px] leading-[33px]" accessibilityRole="header">
         {headline}
       </Text>
       <Text variant="body" tone="muted" className="mt-2">
@@ -115,7 +116,7 @@ export default function ReplenishScreen() {
               See similar options
             </Text>
             <Text variant="bodySm" tone="muted">
-              Same role, claim-safe matches
+              {similarSub}
             </Text>
           </View>
         </Pressable>

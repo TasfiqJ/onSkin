@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { ConflictBanner, ExpiryBadge, Screen, SegmentChip, Text } from '@/components/ui';
+import { ConflictBanner, ExpiryBadge, Screen, SegmentChip, StripedThumb, Text } from '@/components/ui';
 import { bannerSubhead, bannerTitle } from '@/features/intelligence/presentation';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
@@ -19,16 +19,6 @@ const SUBHEAD: Record<Filter, string> = {
   actives: 'The potent ingredients in your routine.',
   expiring: 'Soonest first. The honest reasons to replace something.',
 };
-
-function StripedThumb({ size = 50, faded = false }: { size?: number; faded?: boolean }) {
-  // On-device product imagery replaces this placeholder once it exists (docs/04 §7).
-  return (
-    <View
-      className="rounded-xl bg-greige"
-      style={{ width: size, height: size, opacity: faded ? 0.7 : 1 }}
-    />
-  );
-}
 
 function ProductCard({ item }: { item: ShelfItem }) {
   // Only the countdown card carries the faint accent border (design screen 05);
@@ -47,7 +37,7 @@ function ProductCard({ item }: { item: ShelfItem }) {
       className={`flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4 ${
         attention ? 'border border-amber/40' : 'border border-hairline'
       }`}>
-      <StripedThumb faded={item.badge.kind === 'expired'} />
+      <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
       <View className="flex-1">
         <Text variant="body" className="font-sans-semibold">
           {item.name}
@@ -67,9 +57,13 @@ function EmptyShelf() {
   return (
     <View className="flex-1 items-center justify-center px-2 pb-16">
       <View className="mb-7 flex-row items-end gap-2.5">
-        <View className="h-[60px] w-[46px] -rotate-6 rounded-[10px] bg-greige-deep" />
-        <View className="h-[68px] w-[46px] rounded-[10px] bg-greige-deep" />
-        <View className="h-[60px] w-[46px] rotate-6 rounded-[10px] bg-greige-deep" />
+        <View className="-rotate-6">
+          <StripedThumb light width={46} height={60} radius={10} />
+        </View>
+        <StripedThumb light width={46} height={68} radius={10} />
+        <View className="rotate-6">
+          <StripedThumb light width={46} height={60} radius={10} />
+        </View>
       </View>
       <Text variant="title" className="max-w-[280px] text-center text-[28px] leading-[32px]">
         Let&apos;s build your cabinet.

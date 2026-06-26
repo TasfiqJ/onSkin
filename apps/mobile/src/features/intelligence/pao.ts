@@ -116,7 +116,7 @@ export function expiryBadge(
   if (days < 0) {
     // Past best-by. Calm "Replace" by default; firmer for the eye/SPF cases.
     return safetyCritical
-      ? { kind: 'expired', label: 'Replace for safety', safety: true }
+      ? { kind: 'expired', label: 'replace\nfor safety', safety: true }
       : { kind: 'expired', label: 'Replace' };
   }
   if (days <= thresholdDays) {

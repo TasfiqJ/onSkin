@@ -4,6 +4,7 @@ import { Pressable, View } from 'react-native';
 import { Sheet, Text } from '@/components/ui';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { haptics } from '@/theme/haptics';
+import { colors } from '@/theme/tokens';
 
 // No-match fork (design screen 01, docs/04 §4.1). A barcode that isn't in Open
 // Beauty Facts is never a dead end. Route to OCR or manual, and queue the unknown
@@ -31,12 +32,12 @@ export default function NoMatchScreen() {
           ⌕
         </Text>
       </View>
-      <Text variant="title" tone="inverse" className="text-[28px] leading-[32px]" accessibilityRole="header">
+      <Text variant="title" tone="inverse" className="text-[30px] leading-[33px]" accessibilityRole="header">
         We don&apos;t have this one yet.
       </Text>
       <Text variant="body" tone="inverseMuted" className="mt-2">
-        That barcode isn&apos;t in the database. No problem. Add it another way, and we&apos;ll add
-        it back for everyone.
+        That barcode isn&apos;t in our database yet. No problem. Add it another way, and we&apos;ll
+        add it back for everyone.
       </Text>
 
       <View className="mt-6 gap-2.5">
@@ -77,7 +78,7 @@ export default function NoMatchScreen() {
       </View>
 
       <View className="mt-5 flex-row items-center justify-center gap-2">
-        <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: '#9DB18A' }} />
+        <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.sageMuted }} />
         <Text variant="label" tone="inverseMuted">
           new products are contributed back to Open Beauty Facts
         </Text>

@@ -15,7 +15,7 @@ module.exports = {
     extend: {
       colors: {
         // Light-mode page background + white card surface.
-        paper: { DEFAULT: '#FAF7F2', raised: '#FFFFFF' },
+        paper: { DEFAULT: '#FAF7F2', raised: '#FFFFFF', warm: '#F4F0E9' },
         // Warm greige neutrals.
         greige: { DEFAULT: '#EFEAE1', chip: '#F1ECE3', deep: '#E3D8C9' },
         // The single restrained clay accent + its family.
@@ -27,7 +27,7 @@ module.exports = {
         },
         // Warm near-black text + softer body greys.
         ink: { DEFAULT: '#201B15', soft: '#4A443B' },
-        muted: { DEFAULT: '#8A8071', strong: '#6F6759', light: '#A39A8B' },
+        muted: { DEFAULT: '#8A8071', strong: '#6F6759', light: '#A39A8B', faint: '#C0B7A6' },
         // Dark "night" surfaces.
         night: { DEFAULT: '#1B1813', surface: '#27221B', elevated: '#2A211C' },
         cream: '#F4EFE7', // primary text on night surfaces
@@ -38,6 +38,7 @@ module.exports = {
           tint: '#E6ECE0',
           body: '#456040',
           eyebrow: '#5C7A52',
+          muted: '#9DB18A',
         },
         // Severity ramp (docs/02 §4.2) + expiry amber.
         severity: { none: '#C9C1B2', mild: '#D9A183', moderate: '#A5694B', high: '#8A4A33' },

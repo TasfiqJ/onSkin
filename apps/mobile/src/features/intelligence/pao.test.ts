@@ -63,11 +63,14 @@ describe('badge taxonomy. Paired + the eye/SPF safety exception (docs/04 §5.3)'
     const b = expiryBadge('2026-07-04', today, { paired: true });
     expect(b.kind).toBe('countdown');
   });
-  it('expired eye/SPF item gets the firmer, non-red "Replace for safety"', () => {
+  it('expired eye/SPF item gets the firmer, non-red two-line "replace for safety"', () => {
     const b = expiryBadge('2026-05-01', today, { safetyCritical: true });
     expect(b.kind).toBe('expired');
     expect(b.safety).toBe(true);
-    expect(b.label).toBe('Replace for safety');
+    // Lowercase, two-line treatment (design Smart Shelf screen 05); the newline
+    // forces the badge to wrap "replace / for safety".
+    expect(b.label).toBe('replace\nfor safety');
+    expect(b.label.replace(/\n/g, ' ')).toBe('replace for safety');
     // It is still never alarmist ("danger"/"!").
     expect(b.label).not.toMatch(/danger|!|warning/i);
   });

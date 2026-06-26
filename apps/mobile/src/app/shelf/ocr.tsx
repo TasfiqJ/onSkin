@@ -15,7 +15,7 @@ import { haptics } from '@/theme/haptics';
 // confirm/correct surface is genuine, then hands the actives to the manual form
 // (name/brand from the user, actives from the parse).
 const SAMPLE_INCI =
-  'AQUA, GLYCERIN, NIACINAMIDE, CETEARYL ALCOHOL, CERAMIDE NP, RETINOL, SODIUM HYALURONATE, PANTHENOL, PHENOXYETHANOL';
+  'AQUA / WATER, GLYCERIN, NIACINAMIDE, CETEARYL ALCOHOL, CERAMIDE NP, RETINOL, TOCOPHEROL, SODIUM HYALURONATE, PANTHENOL, PHENOXYETHANOL';
 
 type Parsed = { token: string; tag: string };
 
@@ -60,11 +60,27 @@ export default function OcrScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
-        {/* Captured INCI image placeholder with highlight bands. */}
-        <View className="mt-4 h-[150px] overflow-hidden rounded-[18px] bg-night-surface p-4">
+        {/* Captured INCI image placeholder with the two amber OCR highlight bands. */}
+        <View className="mt-4 h-[150px] overflow-hidden rounded-[18px] bg-night-elevated p-4">
           <Text className="font-mono text-[9.5px] leading-[17px]" tone="inverseMuted">
             {SAMPLE_INCI} ...
           </Text>
+          <View
+            className="absolute left-[14px] right-[14px] top-[42px] h-[14px] rounded-[3px]"
+            style={{
+              backgroundColor: 'rgba(217,161,131,0.25)',
+              borderWidth: 1,
+              borderColor: 'rgba(217,161,131,0.5)',
+            }}
+          />
+          <View
+            className="absolute left-[14px] top-[80px] h-[14px] w-[120px] rounded-[3px]"
+            style={{
+              backgroundColor: 'rgba(217,161,131,0.25)',
+              borderWidth: 1,
+              borderColor: 'rgba(217,161,131,0.5)',
+            }}
+          />
         </View>
 
         <Text variant="bodySm" tone="muted" className="mt-3">
@@ -97,7 +113,7 @@ export default function OcrScreen() {
             style={{ borderColor: 'rgba(32,27,21,0.18)' }}>
             <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
             <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
-              &quot;Tocophenol&quot;. Not sure
+              &quot;TOCOPHENOL&quot;. Not sure
             </Text>
             <Text variant="bodySm" tone="clay" className="font-sans-semibold">
               Fix

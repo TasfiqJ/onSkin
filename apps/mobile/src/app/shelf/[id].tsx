@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Screen, StripedThumb, Text } from '@/components/ui';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { bannerSubhead, tagLabel } from '@/features/intelligence/presentation';
 import { expiryMonthLabel, surfacedExpiry } from '@/features/shelf/expiry';
@@ -13,6 +13,7 @@ import { usePlan } from '@/features/routine/usePlan';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
+import { colors } from '@/theme/tokens';
 
 // Product detail. The management hub (design screen 06, docs/04 §5.6). Freshness
 // with provenance, the actives it contributes, the conflicts it's part of, where
@@ -132,20 +133,28 @@ export default function ProductDetailScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2 pr-4">
-          <Text className="font-sans-semibold">‹ Back</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+          onPress={() => router.back()}
+          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised">
+          <Text className="text-[16px] text-ink">‹</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="More options"
+          onPress={confirmRemove}
+          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised">
+          <Text className="text-[14px] text-ink">⋯</Text>
         </Pressable>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
         {/* Header */}
         <View className="mt-2 flex-row items-center gap-4">
-          <View
-            className="h-[72px] w-[72px] rounded-[18px] border border-hairline bg-greige"
-            style={{ opacity: archived ? 0.7 : 1 }}
-          />
+          <StripedThumb size={72} radius={18} faded={archived} />
           <View className="flex-1">
-            <Text variant="titleSm" className="text-[24px] leading-[27px]">
+            <Text variant="titleSm" className="text-[25px] leading-[27px]">
               {p.name}
             </Text>
             {p.brand ? (
@@ -153,7 +162,7 @@ export default function ProductDetailScreen() {
                 {p.brand}
               </Text>
             ) : null}
-            <Text variant="label" tone="muted" className="mt-1">
+            <Text variant="label" className="mt-1" style={{ color: colors.mutedFaint }}>
               {provenance}
             </Text>
           </View>
@@ -172,7 +181,7 @@ export default function ProductDetailScreen() {
         ) : null}
 
         {/* Freshness block */}
-        <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-4">
+        <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px]">
           <View className="flex-row items-center justify-between border-b border-hairline py-3">
             <Text variant="bodySm" tone="muted">
               Opened

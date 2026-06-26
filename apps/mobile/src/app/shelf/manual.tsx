@@ -129,7 +129,14 @@ export default function ManualAddScreen() {
           ) : null}
 
           <View>
-            <FieldLabel>Ingredients · optional</FieldLabel>
+            <Text variant="label" tone="muted" className="mb-1.5 uppercase">
+              Ingredients
+              <Text
+                className="font-mono text-[10.5px]"
+                style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}>
+                {' · optional, we’ll find the actives'}
+              </Text>
+            </Text>
             <TextInput
               value={ingredients}
               onChangeText={setIngredients}
@@ -139,9 +146,6 @@ export default function ManualAddScreen() {
               className={cn(inputClass, 'min-h-[64px] py-3')}
               style={{ textAlignVertical: 'top' }}
             />
-            <Text variant="bodySm" tone="muted" className="mt-1.5">
-              Optional. We&apos;ll find the actives.
-            </Text>
           </View>
 
           {/* PAO pre-fill note (honest, from the category default. Editable next). */}
@@ -150,9 +154,9 @@ export default function ManualAddScreen() {
             <Text variant="bodySm" tone="muted" className="flex-1">
               {paoFromCategory != null ? (
                 <>
-                  We&apos;ll pre-fill PAO from the category , {' '}
+                  We&apos;ll pre-fill the PAO from your category.{' '}
                   <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-                    {categoryLabel(category)?.toLowerCase()} default ~{paoFromCategory} months.
+                    {categoryLabel(category)?.toLowerCase()} defaults to ~{paoFromCategory} months.
                   </Text>{' '}
                   You can change it next.
                 </>

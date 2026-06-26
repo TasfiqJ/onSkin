@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { Screen, StripedThumb, Text } from '@/components/ui';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
 
@@ -39,8 +39,8 @@ function ArchiveCard({ item }: { item: ShelfItem }) {
         haptics.select();
         router.push(`/shelf/${p.id}`);
       }}
-      className="flex-row items-center gap-3.5 rounded-[18px] bg-greige px-4 py-3.5">
-      <View className="h-12 w-12 rounded-[14px] bg-greige-deep" style={{ opacity: 0.7 }} />
+      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-warm px-4 py-3.5">
+      <StripedThumb light size={48} radius={14} faded />
       <View className="flex-1">
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">
           {p.name}
@@ -50,8 +50,8 @@ function ArchiveCard({ item }: { item: ShelfItem }) {
         </Text>
       </View>
       {p.status === 'finished' && p.repurchaseCount > 1 ? (
-        <View className="rounded-pill px-2.5 py-1.5" style={{ backgroundColor: '#E6ECE0' }}>
-          <Text className="font-sans-bold text-[11px]" style={{ color: '#4F7A4A' }}>
+        <View className="rounded-pill bg-sage-tint px-2.5 py-1.5">
+          <Text className="font-sans-bold text-[11px] text-sage">
             {p.repurchaseCount}× bought
           </Text>
         </View>
@@ -71,8 +71,12 @@ export default function ArchiveScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center gap-3">
-        <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2">
-          <Text className="font-sans-semibold">‹</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+          onPress={() => router.back()}
+          className="h-[30px] w-[30px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised">
+          <Text className="text-[14px] text-ink">‹</Text>
         </Pressable>
         <Text variant="title" className="text-[30px]">
           Archive

@@ -17,6 +17,8 @@ export const colors = {
   muted: '#8A8071',
   mutedStrong: '#6F6759',
   mutedLight: '#A39A8B',
+  mutedFaint: '#C0B7A6', // lighter provenance/suffix grey (Smart Shelf detail, manual, OCR ring)
+  paperWarm: '#F4F0E9', // warm archive-card surface (Smart Shelf archive)
   night: '#1B1813',
   nightSurface: '#27221B',
   nightElevated: '#2A211C',
@@ -26,6 +28,7 @@ export const colors = {
   sageTint: '#E6ECE0',
   sageBody: '#456040',
   sageEyebrow: '#5C7A52',
+  sageMuted: '#9DB18A', // contribute-back dot on the dark no-match sheet (Smart Shelf)
   severityNone: '#C9C1B2',
   severityMild: '#D9A183',
   severityModerate: '#A5694B',
