@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
 import { ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
+import { isCommerceConsented } from '@/features/commerce/consent';
+import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -53,17 +55,18 @@ export default function ReplenishScreen() {
     router.replace('/shelf');
   };
 
-  const seeSimilar = () => {
+  const seeSimilar = async () => {
     haptics.select();
     track('replenishment_nudge_tapped', { product_id: item.id, action: 'see_similar' });
-    // BLOCKED: B-PRIVACY. When the catalog/affiliate path goes live, the actual
-    // share MUST be gated on getLatestConsents()['data_sharing'] (route to the
-    // consent screen if not granted). This informational Alert shares nothing.
-    Alert.alert(
-      'Similar options',
-      'Claim-safe product matches arrive with the catalog, and shopping links are shared only after you turn on data-sharing in Settings.',
-      [{ text: 'OK' }],
-    );
+    // Route through the SAME commerce MHMDA gate the where-to-buy surface uses
+    // (docs/10 §3): no consent => open the consent sheet, never share silently.
+    // Consented => the honest empty state until the catalog lands (B-CATALOG-SEED).
+    const consented = await isCommerceConsented();
+    if (!consented) {
+      router.push('/commerce/consent');
+      return;
+    }
+    Alert.alert('Similar options', COMMERCE_COPY.whereToBuy.emptyState, [{ text: 'OK' }]);
   };
 
   return (
@@ -106,7 +109,7 @@ export default function ReplenishScreen() {
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={seeSimilar}
+          onPress={() => void seeSimilar()}
           className="flex-row items-center gap-3.5 rounded-[18px] border border-hairline bg-paper-raised p-4">
           <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-greige">
             <Text tone="muted">⌕</Text>

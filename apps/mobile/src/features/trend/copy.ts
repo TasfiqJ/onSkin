@@ -59,6 +59,8 @@ export const TREND_COPY = {
   },
   // The link from the preserved no-AI-score refusal screen into the opt-in.
   refusalLink: 'Prefer your phone to read your own progress? It’s optional, on-device, and off by default.',
+  // Shown instead once opted in, so the screen does not invite enabling what is on.
+  manageLink: 'Your phone is reading your own progress, on-device. Manage or turn it off.',
   // The consent-ledger body (placeholder copy. B-PRIVACY-COPY).
   consentLedgerBody:
     'On-device only · your own photos comparing your own photos · nothing uploaded, nothing trains anything · no score or grade · revocable, and your trend state is deleted when you turn it off.',

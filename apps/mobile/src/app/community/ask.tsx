@@ -6,7 +6,7 @@ import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import { buildAnonHandle } from '@/features/community/anonHandle';
 import { scanClaimSafety } from '@/features/community/claimSafetyScan';
-import { grantCommunityConsent } from '@/features/community/consent';
+import { confirmCommunityAge, grantCommunityConsent } from '@/features/community/consent';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { useCommunityGate } from '@/features/community/useCommunity';
 import { track } from '@/lib/analytics/track';
@@ -40,8 +40,13 @@ function GateRow({ label }: { label: string }) {
 
 function ConsentGate() {
   const qc = useQueryClient();
+  // The 16+ gate is a REAL control: the user must affirmatively tick it before the
+  // CTA enables (docs/11 §8). Age + consent are recorded together only on that tap.
+  const [ageChecked, setAgeChecked] = useState(false);
   const allow = async () => {
+    if (!ageChecked) return;
     haptics.success();
+    await confirmCommunityAge();
     await grantCommunityConsent();
     await qc.invalidateQueries({ queryKey: ['communityGate'] });
   };
@@ -56,16 +61,37 @@ function ConsentGate() {
       <View className="mt-5 gap-2">
         <GateRow label={COMMUNITY_COPY.consent.allow} />
         <GateRow label={COMMUNITY_COPY.consent.never} />
-        <GateRow label={COMMUNITY_COPY.consent.age} />
+        {/* Interactive 16+ affirmation. Must be ticked. Not a decorative checkmark. */}
+        <Pressable
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: ageChecked }}
+          onPress={() => setAgeChecked((v) => !v)}
+          className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+          style={{ borderWidth: 1, borderColor: ageChecked ? colors.clay : colors.hairline }}>
+          <View
+            className="h-[18px] w-[18px] items-center justify-center rounded-[5px]"
+            style={{
+              backgroundColor: ageChecked ? colors.clay : 'transparent',
+              borderWidth: ageChecked ? 0 : 1.5,
+              borderColor: colors.hairlineStrong,
+            }}>
+            {ageChecked ? <Text className="text-[10px]" style={{ color: colors.paper }}>✓</Text> : null}
+          </View>
+          <Text variant="bodySm" className="flex-1 text-[12.5px]" style={{ lineHeight: 17 }}>
+            {COMMUNITY_COPY.consent.age}
+          </Text>
+        </Pressable>
       </View>
       <Text variant="label" tone="muted" className="mt-4">
         {COMMUNITY_COPY.consent.note}
       </Text>
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ disabled: !ageChecked }}
+        disabled={!ageChecked}
         onPress={() => void allow()}
         className="mt-5 h-[54px] items-center justify-center rounded-pill"
-        style={{ backgroundColor: colors.clay }}>
+        style={{ backgroundColor: colors.clay, opacity: ageChecked ? 1 : 0.4 }}>
         <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
           {COMMUNITY_COPY.consent.cta}
         </Text>
@@ -198,7 +224,8 @@ export default function AskScreen() {
         </Text>
       </View>
 
-      {gate?.consented ? <Composer /> : <ConsentGate />}
+      {/* Composer requires BOTH the consent AND the affirmative 16+ gate (docs/11 §8). */}
+      {gate?.consented && gate?.ageConfirmed ? <Composer /> : <ConsentGate />}
     </Screen>
   );
 }

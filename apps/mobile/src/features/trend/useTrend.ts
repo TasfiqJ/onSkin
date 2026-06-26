@@ -45,8 +45,16 @@ export function useTrendInsight() {
 
   const insight = useMemo(() => {
     if (!consent.data) return null;
-    const captureCount = photos.data?.count ?? 0;
-    // BLOCKED: B-AI-ONDEVICE. The real registered-pair delta is computed on-device.
+    // Count the FRONT series the trend actually narrates, not the cross-series
+    // total (`count` = all angles). Using the total could tell a user their FRONT
+    // texture "looked consistent over your last N captures" with N counting
+    // left/right photos that have no front frame (docs/12 §6).
+    const captureCount = photos.data?.series.length ?? 0;
+    // BLOCKED: B-AI-ONDEVICE. The real registered-pair delta AND the lighting-QA
+    // consistency check are both computed by the on-device CV engine. Until then
+    // delta is a conservative stub and lighting is assumed consistent, so the
+    // honest `inconclusive_lighting` state is unreachable in v1 by design (not a
+    // dropped wire). It activates with the engine, alongside the real delta.
     const deltaMetric = captureCount >= MIN_CAPTURES ? 0.05 : null;
     const { changeState, mdcThreshold } = classifyChange({
       deltaMetric,

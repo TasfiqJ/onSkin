@@ -21,10 +21,11 @@ export async function isCommunityConsented(): Promise<boolean> {
   return getCommunityConsentLocal();
 }
 
-/** Grant the consent + confirm 16+ (the hard age gate, COPPA + "Sephora kids"). */
+/** Grant the community_participation consent. The 16+ age gate is a SEPARATE
+ *  affirmative action (confirmCommunityAge), never auto-set here, so the composer
+ *  can require both (docs/11 §8: the hard age gate is a real control, not copy). */
 export async function grantCommunityConsent(): Promise<void> {
   await setCommunityConsentLocal(true);
-  await setAgeConfirmedLocal(true);
   track('community_consent_granted');
   try {
     await recordConsent({
@@ -36,6 +37,12 @@ export async function grantCommunityConsent(): Promise<void> {
   } catch {
     /* best-effort until backend configured */
   }
+}
+
+/** Record the explicit 16+ affirmation (COPPA + the Apple/store age floor). Must
+ *  be an affirmative user action (a ticked box), never bundled into the consent. */
+export async function confirmCommunityAge(): Promise<void> {
+  await setAgeConfirmedLocal(true);
 }
 
 export async function withdrawCommunityConsent(): Promise<void> {

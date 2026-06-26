@@ -1,10 +1,12 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Pressable, ScrollView, Share, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
+import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionStore';
 import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -15,9 +17,20 @@ import { colors } from '@/theme/tokens';
 // helped" (the docs/09 flywheel signal). No like count, no author to follow.
 export default function NoteDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const qc = useQueryClient();
   const note = id ? noteById(id) : undefined;
-  const [helped, setHelped] = useState(false);
+  // Persisted "This helped" state (survives remount, unlike the prior useState).
+  const helpedQ = useQuery({ queryKey: ['noteHelped', id], queryFn: () => isNoteHelpful(id ?? ''), enabled: !!id });
+  const helped = helpedQ.data ?? false;
   const pill = note ? evidencePill(note.evidenceLabel) : null;
+
+  const toggleHelped = async () => {
+    if (!note) return;
+    haptics.select();
+    const next = await toggleNoteHelpful(note.id);
+    qc.setQueryData(['noteHelped', id], next);
+    if (next) track('reaction_added', { id: note.id, reaction: 'helped' });
+  };
 
   useEffect(() => {
     if (note) track('skin_note_viewed', { id: note.id, surface: 'detail' });
@@ -119,11 +132,7 @@ export default function NoteDetail() {
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ selected: helped }}
-              onPress={() => {
-                haptics.select();
-                setHelped((v) => !v);
-                if (!helped) track('reaction_added', { id: note.id, reaction: 'helped' });
-              }}
+              onPress={() => void toggleHelped()}
               className="h-12 flex-1 flex-row items-center justify-center gap-2 rounded-pill"
               style={{ borderWidth: 1.5, borderColor: helped ? colors.sage : 'rgba(79,122,74,0.4)', backgroundColor: helped ? colors.sageTint : 'transparent' }}>
               <Text style={{ color: colors.sage, fontSize: 14 }}>♥</Text>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Alert, ScrollView, Switch, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { isCommerceConsented } from '@/features/commerce/consent';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
@@ -52,6 +53,11 @@ export default function YouScreen() {
   const [busy, setBusy] = useState(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
+  // The RESOLVED commerce data-sharing consent (ledger-if-present, else the local
+  // flag). Both data-sharing surfaces read this so that offline (v1, no backend) a
+  // sheet-granted consent shows ON, instead of the toggle reading the empty ledger
+  // while the gate reads the local flag (docs/10 §6 cross-surface consistency).
+  const commerceConsent = useQuery({ queryKey: ['commerceConsent'], queryFn: isCommerceConsented, retry: 0 });
   const cloudBackup = useQuery({ queryKey: ['photo_cloud_backup'], queryFn: getCloudBackupEnabled, retry: 0 });
   const { data: ent } = useEntitlement();
   const planLabel = ent?.inReverseTrial
@@ -68,6 +74,7 @@ export default function YouScreen() {
     //. Keep the local-first commerce flag in sync so revoking here re-locks paid links
     // even before the backend exists (review fix, docs/10 §6 / D-061).
     if (type === 'data_sharing') {
+      qc.setQueryData<boolean>(['commerceConsent'], granted); // optimistic, both surfaces
       await setCommerceConsentLocal(granted);
       await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
     }
@@ -251,15 +258,8 @@ export default function YouScreen() {
               ›
             </Text>
           </Row>
-          <Row label="Share data with partners (where-to-buy)" hint="Off by default. A separate, revocable MHMDA choice. Decline and we won’t show paid links.">
-            <Text
-              variant="body"
-              tone="muted"
-              onPress={() => router.push('/commerce/consent')}
-              accessibilityRole="button"
-              style={{ fontSize: 18 }}>
-              ›
-            </Text>
+          <Row label="Share data with partners (where-to-buy)" hint="Off by default. A separate, revocable MHMDA choice. Turn off and we won’t show paid links.">
+            <Toggle value={commerceConsent.data ?? false} onChange={(v) => void setConsent('data_sharing', v)} />
           </Row>
         </Card>
 
@@ -308,7 +308,7 @@ export default function YouScreen() {
             <Toggle value={consents.data?.marketing ?? false} onChange={(v) => void setConsent('marketing', v)} />
           </Row>
           <Row label="Share data with partners" hint="Separate from collection (MHMDA). Off by default.">
-            <Toggle value={consents.data?.data_sharing ?? false} onChange={(v) => void setConsent('data_sharing', v)} />
+            <Toggle value={commerceConsent.data ?? false} onChange={(v) => void setConsent('data_sharing', v)} />
           </Row>
           <Row label="Photos & the no-AI-score promise">
             <Text

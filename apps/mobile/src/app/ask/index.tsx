@@ -228,10 +228,11 @@ function SuggestedPrompt({ label, onPress }: { label: string; onPress: () => voi
 }
 
 export default function AskScreen() {
-  const { ask, askSuggested } = useAsk();
+  const { ask, askSuggested, isLoading, hasShelf } = useAsk();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const idRef = useRef(0);
+  const ledRef = useRef(false);
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -247,6 +248,18 @@ export default function AskScreen() {
     setMessages((m) => [...m, { id: nextId(), role: 'user', text: question }, { id: nextId(), role: 'assistant', answer }]);
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
   };
+
+  // Proactive first answer (docs/13 §9/§14, "the conversion linchpin"): once the
+  // context is ready and the user has a shelf, the assistant LEADS with a free,
+  // deterministic answer about their own shelf rather than waiting for a good
+  // question. Fires once. Users with an empty shelf still see the suggested prompts.
+  useEffect(() => {
+    if (ledRef.current || isLoading || !hasShelf || messages.length > 0) return;
+    ledRef.current = true;
+    track('ask_proactive_lead_shown');
+    pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, hasShelf]);
 
   const onSend = () => {
     const q = input.trim();
@@ -301,6 +314,11 @@ export default function AskScreen() {
             {messages.map((m) =>
               m.role === 'user' ? <UserBubble key={m.id} text={m.text} /> : <AnswerCard key={m.id} answer={m.answer} />,
             )}
+            {/* Suggested prompts kept as a follow-up affordance after the lead. */}
+            <View className="mt-2 gap-2.5">
+              <SuggestedPrompt label={ASK_COPY.home.prompts.tonight} onPress={() => pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'))} />
+              <SuggestedPrompt label={ASK_COPY.home.prompts.fit} onPress={() => pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'))} />
+            </View>
           </View>
         )}
       </ScrollView>

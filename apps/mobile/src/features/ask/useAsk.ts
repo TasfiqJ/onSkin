@@ -66,11 +66,21 @@ export function useAsk() {
       const final = guard.ok ? answer : safetyRefusal(answer.intent);
       track('ask_turn', {
         intent: final.intent,
+        // `grounded` is intentionally always false pre-vendor: no code path returns
+        // kind 'grounded' yet (concern questions honestly refuse). It flips true when
+        // the cloud layer ships. Do not "fix" the telemetry by guessing.
         kind: final.kind,
         grounded: final.kind === 'grounded',
         refused: final.kind === 'refuse',
         escalated: final.kind === 'escalate',
       });
+      // DEAD WRITER until B-AI-ASSISTANT-VENDOR: when a real grounded (cloud) answer
+      // ships, it MUST call recordGroundedTurn(period) here and invalidate
+      // ['askGroundedTurns', period] so the hard per-period trial cap (gate.ts) can
+      // engage. The cap is dormant by design today (no grounded turn is produced),
+      // NOT a dropped wire. Note docs/13 §8 / D-060 also requires server-side
+      // enforcement at the Edge Function; this AsyncStorage counter is client-only.
+      // TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period) on a grounded answer.
       if (final.kind === 'escalate') track('ask_escalated_to_clinician', { intent: final.intent });
       // The grounded (cloud) layer was gated. The Pro / trial-cap upsell funnel (docs/13 §15).
       if (final.kind === 'refuse' && final.intent === 'concern_q' && ctx.groundedReason) {
@@ -98,6 +108,9 @@ export function useAsk() {
     ctx,
     ask,
     askSuggested,
+    // Whether the user has any products on their shelf, so the screen can lead
+    // proactively only when there is something real to answer about (docs/13 §14).
+    hasShelf: (shelf.data?.items.length ?? 0) > 0,
     isLoading: shelf.isLoading || plan.isLoading || recs.isLoading,
   };
 }
