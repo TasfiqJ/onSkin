@@ -19,7 +19,7 @@ function ChangeCard({ change }: { change: Change }) {
   const sage = change.kind === 'added';
   return (
     <View
-      className="flex-row gap-3.5 rounded-2xl p-4"
+      className="flex-row gap-3.5 rounded-[18px] p-4"
       style={
         sage
           ? { backgroundColor: colors.sageTint }

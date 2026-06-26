@@ -12,9 +12,10 @@ import { colors } from '@/theme/tokens';
 // states exactly what the app will do (comfortable → offer step-up; dry → hold;
 // irritated → add recovery & ease off).
 const OPTIONS = [
-  { id: 'comfortable', title: 'Comfortable', sub: 'We may offer a small step-up', swatch: colors.sageTint, dot: colors.sage },
-  { id: 'a_bit_dry', title: 'A bit dry', sub: "We'll hold your pace steady", swatch: colors.clayTint, dot: colors.clayBright },
-  { id: 'irritated', title: 'Irritated', sub: "We'll add recovery nights & ease off", swatch: 'rgba(176,122,60,0.14)', dot: colors.amber },
+  { id: 'comfortable', title: 'Comfortable', sub: 'We may offer a small step-up', swatch: colors.sageTint, dot: colors.sage, restingBorder: colors.hairline },
+  { id: 'a_bit_dry', title: 'A bit dry', sub: "We'll hold your pace steady", swatch: colors.clayTint, dot: colors.clayBright, restingBorder: colors.hairline },
+  // Irritated carries a pre-emphasised amber inset border at rest (design 07).
+  { id: 'irritated', title: 'Irritated', sub: "We'll add recovery nights & ease off", swatch: 'rgba(176,122,60,0.14)', dot: colors.amber, restingBorder: 'rgba(176,122,60,0.4)' },
 ] as const;
 
 export default function ToleranceScreen() {
@@ -58,8 +59,8 @@ export default function ToleranceScreen() {
               key={o.id}
               accessibilityRole="button"
               accessibilityState={{ selected: selected === o.id }}
-              className={cn('flex-row items-center gap-3.5 rounded-card bg-paper-raised p-4')}
-              style={{ borderWidth: selected === o.id ? 2 : 1, borderColor: selected === o.id ? colors.clay : colors.hairline }}
+              className={cn('flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4')}
+              style={{ borderWidth: selected === o.id ? 2 : 1, borderColor: selected === o.id ? colors.clay : o.restingBorder }}
               onPress={() => setSelected(o.id)}>
               <View className="h-[34px] w-[34px] items-center justify-center rounded-full" style={{ backgroundColor: o.swatch }}>
                 <View className="h-3 w-3 rounded-full" style={{ backgroundColor: o.dot }} />

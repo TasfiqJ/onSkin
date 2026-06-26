@@ -32,17 +32,42 @@ function slotInstruction(slot: string): string {
   return 'Barrier support. Keep it simple.';
 }
 
+// PM display sub overrides for the known retinoid-night roles (design 05). Display
+// only, the toggle key (stepKey) is unchanged. Falls back to the step's instruction.
+function pmDisplaySub(step: { role?: string; instruction?: string }): string | undefined {
+  if (step.role === 'cleanser') return 'Dry skin fully before the retinoid';
+  if (step.role === 'treatment') return 'Pea-sized · avoid eye area';
+  if (step.role === 'moisturiser') return 'Generous layer tonight';
+  return step.instruction;
+}
+
+// Geometric checkmark (two rotated bars). No react-native-svg, per house rule.
+function Check({ color = colors.paper }: { color?: string }) {
+  return (
+    <View style={{ width: 11, height: 9 }}>
+      <View
+        style={{ position: 'absolute', left: 0, top: 4, width: 5, height: 2, backgroundColor: color, borderRadius: 1, transform: [{ rotate: '45deg' }] }}
+      />
+      <View
+        style={{ position: 'absolute', left: 3, top: 2, width: 9, height: 2, backgroundColor: color, borderRadius: 1, transform: [{ rotate: '-50deg' }] }}
+      />
+    </View>
+  );
+}
+
 function CheckRow({
   name,
   sub,
   state,
   dark,
+  first,
   onPress,
 }: {
   name: string;
   sub?: string;
   state: 'done' | 'next' | 'pending';
   dark: boolean;
+  first?: boolean;
   onPress: () => void;
 }) {
   const accent = dark ? colors.clayBright : colors.clay;
@@ -56,7 +81,7 @@ function CheckRow({
         onPress();
       }}
       className="flex-row items-center gap-3.5 py-3"
-      style={{ borderTopWidth: 1, borderTopColor: dark ? colors.hairlineDark : colors.hairline }}>
+      style={{ borderTopWidth: first ? 0 : 1, borderTopColor: dark ? colors.hairlineDark : colors.hairline }}>
       <View
         className="h-[26px] w-[26px] items-center justify-center rounded-full"
         style={
@@ -64,7 +89,7 @@ function CheckRow({
             ? { backgroundColor: accent }
             : { borderWidth: state === 'next' ? 2 : 1.5, borderColor: state === 'next' ? accent : dark ? 'rgba(244,239,231,0.25)' : 'rgba(32,27,21,0.18)' }
         }>
-        {state === 'done' ? <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.paper }} /> : null}
+        {state === 'done' ? <Check /> : null}
       </View>
       <View className="flex-1">
         <Text
@@ -153,11 +178,23 @@ export default function TodayScreen() {
             ) : null}
           </View>
 
-          <Text variant="title" className="mt-4">
+          <Text variant="titleLg" className="mt-4">
             Good morning.
           </Text>
 
-          <View className="mt-6 rounded-card bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          <View
+            className="mt-6 rounded-card bg-paper-raised"
+            style={{
+              paddingHorizontal: 22,
+              paddingTop: 22,
+              paddingBottom: 12,
+              borderWidth: 1,
+              borderColor: colors.hairline,
+              shadowColor: '#201B15',
+              shadowOpacity: 0.04,
+              shadowRadius: 2,
+              shadowOffset: { width: 0, height: 1 },
+            }}>
             <View className="mb-2 flex-row items-center justify-between">
               <Text variant="body" className="font-sans-bold">
                 Morning routine
@@ -166,7 +203,7 @@ export default function TodayScreen() {
                 {doneCount} of {steps.length}
               </Text>
             </View>
-            {steps.map((s) => {
+            {steps.map((s, i) => {
               const k = stepKey('AM', s.productId);
               return (
                 <CheckRow
@@ -175,6 +212,7 @@ export default function TodayScreen() {
                   sub={s.instruction}
                   state={rowState(k, firstUndone)}
                   dark={false}
+                  first={i === 0}
                   onPress={() => void toggle(k)}
                 />
               );
@@ -243,6 +281,7 @@ export default function TodayScreen() {
           name: cTonight.night.productName ?? 'Tonight’s active',
           instruction: slotInstruction(cTonight.night.slot),
           order: 40,
+          role: cTonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined,
         }
       : null;
   const dailyPm = (plan?.pm ?? []).filter((s) => !s.cyclingNight);
@@ -260,7 +299,7 @@ export default function TodayScreen() {
         <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
           {dateLabel.toUpperCase()} · 9:41 PM
         </Text>
-        <Text variant="title" tone="inverse" className="mt-2">
+        <Text variant="titleLg" tone="inverse" className="mt-2">
           Good evening.
         </Text>
 
@@ -351,15 +390,16 @@ export default function TodayScreen() {
               {donePm} of {pmSteps.length}
             </Text>
           </View>
-          {pmSteps.map((s) => {
+          {pmSteps.map((s, i) => {
             const k = stepKey('PM', s.productId);
             return (
               <CheckRow
                 key={k}
                 name={s.name}
-                sub={s.instruction}
+                sub={pmDisplaySub(s)}
                 state={rowState(k, firstUndonePm)}
                 dark
+                first={i === 0}
                 onPress={() => void toggle(k)}
               />
             );
@@ -368,11 +408,11 @@ export default function TodayScreen() {
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (
-          <View className="mt-4 flex-row items-center gap-3 rounded-2xl px-5 py-4" style={{ backgroundColor: 'rgba(217,161,131,0.10)' }}>
+          <View className="mt-4 flex-row items-center gap-3 px-5 py-4" style={{ backgroundColor: 'rgba(217,161,131,0.10)', borderRadius: 18 }}>
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.75)', lineHeight: 20 }}>
-              Your {suppressedAcidName.toLowerCase()} is on alternate nights. Kept off your retinoid
-              night to protect your barrier.{nextAcidISO ? ` Next acid night: ${friendlyWeekday(nextAcidISO)}.` : ''}
+              Your {suppressedAcidName.toLowerCase()} is skipped tonight. It doesn&apos;t mix well with
+              retinol.{nextAcidISO ? ` Next acid night: ${friendlyWeekday(nextAcidISO)}.` : ''}
             </Text>
           </View>
         ) : null}

@@ -22,7 +22,7 @@ export default function RampScreen() {
         <Text variant="label" tone="clay" className="font-mono">
           RETINOID · RAMP-UP
         </Text>
-        <Text variant="title" className="mt-2 text-[32px]">
+        <Text variant="title" className="mt-2 text-[32px] leading-[35px]">
           Low and slow, on your terms.
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-1.5 text-[14px]">
@@ -34,7 +34,7 @@ export default function RampScreen() {
         </Text>
 
         {/* Ramp chart card */}
-        <View className="mt-6 rounded-card bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+        <View className="mt-6 rounded-[22px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
           <View className="mb-4 flex-row items-center justify-between">
             <Text variant="body" className="font-sans-bold text-[14px]">
               Nights per week
@@ -56,7 +56,7 @@ export default function RampScreen() {
                 />
                 <Text
                   className="mt-1.5 font-mono text-[10px]"
-                  style={{ color: b.accent ? colors.clay : '#C0B7A6' }}>
+                  style={{ color: b.accent ? colors.clay : colors.mutedFaint }}>
                   {b.label}
                 </Text>
               </View>
@@ -65,7 +65,7 @@ export default function RampScreen() {
         </View>
 
         {/* Offer card (dark) */}
-        <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.ink }}>
+        <View className="mt-4 rounded-[22px] p-5" style={{ backgroundColor: colors.ink }}>
           <Text className="font-sans-semibold text-[15px]" style={{ color: colors.paper }}>
             You&apos;ve held steady at 2 nights for three weeks.
           </Text>

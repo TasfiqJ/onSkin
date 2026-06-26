@@ -9,6 +9,7 @@ import { cn } from '@/lib/cn';
 type Variant =
   | 'display' // big serif welcome headline
   | 'title' // serif screen header
+  | 'titleLg' // larger serif header (Today AM/PM greeting, Progress)
   | 'titleSm' // smaller serif header
   | 'body' // sans body
   | 'bodySm' // smaller sans body
@@ -20,6 +21,7 @@ type Tone = 'ink' | 'muted' | 'clay' | 'inverse' | 'inverseMuted';
 const VARIANT: Record<Variant, string> = {
   display: 'font-serif text-[44px] leading-[46px]',
   title: 'font-serif text-[30px] leading-[34px]',
+  titleLg: 'font-serif text-[38px] leading-[40px]',
   titleSm: 'font-serif text-[22px] leading-[26px]',
   body: 'font-sans text-base leading-6',
   bodySm: 'font-sans text-sm leading-5',

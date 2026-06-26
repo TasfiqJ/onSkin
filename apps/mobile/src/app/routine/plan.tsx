@@ -13,7 +13,7 @@ import { colors } from '@/theme/tokens';
 function MorningRow({ index, name, synergy }: { index: number; name: string; synergy?: boolean }) {
   return (
     <View className="flex-row items-center gap-3 py-1.5">
-      <Text className="w-3.5 font-mono text-[11px]" style={{ color: '#C0B7A6' }}>
+      <Text className="w-3.5 font-mono text-[11px]" style={{ color: colors.mutedFaint }}>
         {index}
       </Text>
       <Text variant="body" className="font-sans-medium text-[14.5px]">
@@ -60,15 +60,15 @@ export default function PlanScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-1 pt-4">
-        <Text variant="label" tone="clay" className="font-mono">
+        <Text variant="label" tone="clay" className="font-mono text-[11.5px] tracking-[1.15px]">
           BUILT FOR DRY, SENSITIVE SKIN
         </Text>
-        <Text variant="title" className="mt-2">
+        <Text variant="title" className="mt-2 text-[34px] leading-[37px]">
           Your routine, in order.
         </Text>
 
         {/* Morning card */}
-        <View className="mt-5 rounded-card bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+        <View className="mt-5 rounded-[22px] bg-paper-raised" style={{ paddingHorizontal: 20, paddingVertical: 18, borderWidth: 1, borderColor: colors.hairline }}>
           <View className="mb-3 flex-row items-center gap-2.5">
             <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay-tint">
               <View className="h-1.5 w-1.5 rounded-full bg-clay" />
@@ -83,7 +83,7 @@ export default function PlanScreen() {
         </View>
 
         {/* Evening card (skin cycling). Dark */}
-        <View className="mt-3 rounded-card p-5" style={{ backgroundColor: colors.night }}>
+        <View className="mt-3 rounded-[22px]" style={{ backgroundColor: colors.night, paddingHorizontal: 20, paddingVertical: 18 }}>
           <View className="mb-3 flex-row items-center gap-2.5">
             <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.nightSurface }}>
               <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clayBright }} />
@@ -92,7 +92,9 @@ export default function PlanScreen() {
               Evening · skin cycling
             </Text>
           </View>
-          {exfoliant ? <EveningRow nightLabel="N1" name={exfoliant.name} suffix="exfoliate" accent={false} /> : null}
+          {exfoliant ? (
+            <EveningRow nightLabel="N1" name={exfoliant.name.replace(/\s*Toner$/i, '')} suffix="exfoliate" accent={false} />
+          ) : null}
           {retinoid ? (
             <EveningRow
               nightLabel="N2"
@@ -101,7 +103,7 @@ export default function PlanScreen() {
               accent
             />
           ) : null}
-          <EveningRow nightLabel="N3-4" name="Recover" suffix="ceramide only" accent={false} />
+          <EveningRow nightLabel="N3–4" name="Recover" suffix="ceramide only" accent={false} />
         </View>
 
         {/* Honest gap note. Only when a category is missing */}
@@ -115,7 +117,7 @@ export default function PlanScreen() {
         ) : null}
       </View>
 
-      <View className="pb-2">
+      <View className="pb-9">
         <Button
           label="Start today"
           variant="accent"

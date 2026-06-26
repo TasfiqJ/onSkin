@@ -52,11 +52,14 @@ function WidgetsScreen() {
             <Text variant="label" tone="clay" style={{ fontSize: 9.5 }}>
               TONIGHT
             </Text>
-            <Text variant="titleSm" className="mt-1.5" style={{ fontSize: 21, lineHeight: 22 }}>
+            <Text variant="titleSm" className="mt-1.5" style={{ fontSize: 24, lineHeight: 25 }}>
               Retinoid night
             </Text>
             <View className="flex-1" />
             <Bars filled={1} total={3} on={colors.clay} off={colors.greigeDeep} />
+            <Text className="mt-2" style={{ fontSize: 11.5, color: colors.muted }}>
+              1 of 3 done
+            </Text>
           </View>
           {/* Today ring */}
           <View
@@ -88,6 +91,9 @@ function WidgetsScreen() {
                 <View key={i} className="aspect-square flex-1 rounded-[3px]" style={{ backgroundColor: on ? colors.clay : 'rgba(244,239,231,0.14)' }} />
               ))}
             </View>
+            <Text className="mt-2" style={{ fontSize: 11.5, color: 'rgba(244,239,231,0.5)' }}>
+              protected
+            </Text>
           </View>
           {/* Cycle */}
           <View className="rounded-[22px] p-[18px]" style={{ width: '47%', aspectRatio: 1, backgroundColor: colors.paper }}>
@@ -162,25 +168,22 @@ function WidgetsScreen() {
             </View>
             <View className="flex-1">
               <Text className="font-sans-bold" style={{ fontSize: 15, color: colors.cream }}>
-                Evening routine · live
+                OnSkin · Retinoid night
               </Text>
               <Text style={{ fontSize: 12.5, color: 'rgba(244,239,231,0.55)', fontFamily: 'HankenGrotesk_400Regular' }}>
-                Retinoid night · 2 of 3
+                Evening routine · 1 of 3
               </Text>
             </View>
             <Text variant="label" style={{ color: colors.clayBright, fontSize: 11 }}>
-              NOW
+              NEXT
             </Text>
           </View>
-          <Bars filled={2} total={3} on={colors.clayBright} off="rgba(244,239,231,0.18)" />
+          <Bars filled={1} total={3} on={colors.clayBright} off="rgba(244,239,231,0.18)" />
           <View className="mt-3.5 flex-row items-center gap-3">
             <View className="h-[22px] w-[22px] rounded-full" style={{ borderWidth: 2, borderColor: colors.clayBright }} />
             <View className="flex-1">
               <Text className="font-sans-semibold" style={{ fontSize: 14, color: colors.cream }}>
-                Up next. Retinol 0.3%
-              </Text>
-              <Text style={{ fontSize: 12, color: 'rgba(244,239,231,0.5)', fontFamily: 'HankenGrotesk_400Regular' }}>
-                Pea-sized · gentle around the eyes
+                Up next · Retinol 0.3% · pea-sized
               </Text>
             </View>
           </View>

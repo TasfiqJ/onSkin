@@ -15,7 +15,7 @@ const CANONICAL = ['Cream cleanser', 'Vitamin C serum', 'Ceramide moisturizer', 
 const REORDERED = ['Cream cleanser', 'Ceramide moisturizer', 'Vitamin C serum', 'Mineral SPF 50'];
 
 function Handle({ active }: { active: boolean }) {
-  const c = active ? colors.clay : '#C0B7A6';
+  const c = active ? colors.clay : colors.mutedFaint;
   return (
     <View className="gap-1">
       {[0, 1, 2].map((i) => (
