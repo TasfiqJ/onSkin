@@ -238,6 +238,17 @@ export function shippableRecTypes(types: RecType[] = REC_TYPES): RecType[] {
   return types.filter((t) => !t.medicalAdjacent || t.reviewedBy != null);
 }
 
+/**
+ * Whether goal-driven (medically-adjacent) recommendations can ship. False in
+ * production until B-DERM-REVIEW, where the gate strips every goal active. The
+ * "you're set" copy must NOT claim the routine is "matched to your goals" when
+ * this is false, because the engine cannot serve goal recs then (docs/09 §4: the
+ * honesty bug where the gate silently removes the only goal mechanism).
+ */
+export function goalRecsShippable(): boolean {
+  return shippableRecTypes().some((t) => t.medicalAdjacent);
+}
+
 export function recTypeByKey(type: string, types: RecType[] = REC_TYPES): RecType | undefined {
   return types.find((t) => t.type === type);
 }

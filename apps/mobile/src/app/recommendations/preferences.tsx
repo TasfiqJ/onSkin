@@ -12,9 +12,10 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Preferences (docs/09 §8, §11). The values / format / budget filters. Honest
-// personalisation: they constrain *what fits you*, never *what sells*, and they
-// hard-constrain the candidate set (fit.ts). A fragrance-averse user never sees a
-// fragranced recommendation.
+// personalisation: they shape *what fits you*, never *what sells*. The engine is
+// type-first and WEIGHTS these in the fit score; the hard product-level exclusion
+// (a fragrance-averse user never seeing a fragranced product) lands with the
+// curated catalog (B-CATALOG-SEED), so the copy says "prioritise", not "never".
 
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
 const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];

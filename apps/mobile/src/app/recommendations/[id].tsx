@@ -2,15 +2,31 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
+import type { SequencingRole } from '@onskin/types';
+
 import { Screen, Text } from '@/components/ui';
 import { WhereToBuy } from '@/features/commerce/WhereToBuy';
+import { recTypeByKey } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { dismissRecommendation } from '@/features/recommendations/store';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
+import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
+
+// Map the recommended type's sequencing role to the manual-add category so an
+// accepted rec lands on a pre-filled form, not a blank/stale one (docs/09 §11).
+const ROLE_TO_CATEGORY: Partial<Record<SequencingRole, ProductCategory>> = {
+  spf: 'spf',
+  cleanser: 'cleanser',
+  moisturiser: 'moisturiser_tube',
+  hydrating_serum: 'serum',
+  antioxidant: 'vitamin_c_serum',
+  treatment: 'retinoid_serum',
+  exfoliant: 'serum',
+};
 
 // 02 · The what / why / how card (docs/09 §6, design 02). Every recommendation
 // carries the trust triad. What (type-first) / Why (your reason) / How (the
@@ -54,8 +70,11 @@ function Body({ rec }: { rec: Recommendation }) {
       return;
     }
     // No catalog yet (B-CATALOG-SEED) → the honest path is the manual-add flow, so
-    // the user adds their own product of this type. Church-and-state intact.
-    router.push('/shelf/manual');
+    // the user adds their own product of this type. Church-and-state intact. Carry
+    // the recommended type's category so the form is pre-filled, not blank/stale.
+    const recType = recTypeByKey(rec.productType);
+    const presetCategory = recType ? ROLE_TO_CATEGORY[recType.role] : undefined;
+    router.push(presetCategory ? { pathname: '/shelf/manual', params: { presetCategory } } : '/shelf/manual');
   };
 
   return (

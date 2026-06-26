@@ -1,5 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
@@ -8,6 +8,7 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 import { REC_COPY } from './copy';
+import { dismissRecommendation } from './store';
 import { useRecommendations } from './useRecommendations';
 
 // The recommendation surfaces ON Today (docs/09 §7.1/§7.2): a calm "For you" entry
@@ -48,8 +49,14 @@ function ForYouCard({ count, youreSet }: { count: number; youreSet: boolean }) {
 }
 
 function GapPrompt({ recId }: { recId: string }) {
-  const [dismissed, setDismissed] = useState(false);
-  if (dismissed) return null;
+  const qc = useQueryClient();
+  // Persist the dismissal (docs/09 §7.2): writing it to the dismissed store means
+  // the engine drops the rec, so a dismissed SPF nudge stays dismissed across
+  // sessions, matching the hub. (Was local useState that reappeared on remount.)
+  const dismiss = async () => {
+    await dismissRecommendation(recId);
+    await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
+  };
   return (
     <View
       className="mt-4 rounded-[18px] p-4"
@@ -57,7 +64,7 @@ function GapPrompt({ recId }: { recId: string }) {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Dismiss"
-        onPress={() => setDismissed(true)}
+        onPress={() => void dismiss()}
         hitSlop={8}
         className="absolute right-3.5 top-3.5 h-5 w-5 items-center justify-center rounded-full"
         style={{ backgroundColor: 'rgba(165,105,75,0.12)' }}>
@@ -92,7 +99,7 @@ function GapPrompt({ recId }: { recId: string }) {
             {REC_COPY.gapPrompt.cta}
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => setDismissed(true)} hitSlop={6}>
+        <Pressable accessibilityRole="button" onPress={() => void dismiss()} hitSlop={6}>
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.clay }}>
             {REC_COPY.gapPrompt.dismiss}
           </Text>

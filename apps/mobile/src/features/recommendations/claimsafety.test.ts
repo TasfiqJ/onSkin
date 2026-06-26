@@ -88,7 +88,7 @@ const builderStrings: string[] = [
 
 // The strings the engine actually emits over representative fixtures.
 function shelfItem(over: Partial<RecShelfItem> & { id: string; role: RecShelfItem['role'] }): RecShelfItem {
-  return { name: over.id, tags: [], fragranced: false, expiring: false, finished: false, ...over };
+  return { name: over.id, tags: [], fragranced: false, expiring: false, ...over };
 }
 function engineStrings(): string[] {
   (globalThis as { __DEV__?: boolean }).__DEV__ = true;
@@ -184,6 +184,13 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
   it('the engine can recommend NOTHING. The "you\'re set" copy exists and makes no sell', () => {
     expect(REC_COPY.youreSet.title.length).toBeGreaterThan(0);
     expect(offenders(REC_COPY.youreSet.body, [...URGENCY, ...GUILT])).toEqual([]);
+    expect(offenders(REC_COPY.youreSet.bodyNoGoals, [...URGENCY, ...GUILT])).toEqual([]);
+  });
+  it('the production "you\'re set" copy does not claim goal coverage (goal recs are gated)', () => {
+    // When goal actives are launch-gated (B-DERM-REVIEW), the engine cannot serve
+    // goal recs, so the shown copy must not assert "matched to your goals".
+    expect(REC_COPY.youreSet.bodyNoGoals.toLowerCase()).not.toContain('goal');
+    expect(REC_COPY.youreSet.body.toLowerCase()).toContain('goal'); // the dev/reviewed variant may
   });
   it('the hub subtitle states the cardinal rule (ranked by fit/evidence, never commission)', () => {
     expect(REC_COPY.hub.subtitle.toLowerCase()).toContain('never by commission');

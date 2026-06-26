@@ -39,7 +39,6 @@ export function useRecommendations() {
       tags: i.engineProduct.tags,
       fragranced: isFragranced(i.product),
       expiring: i.badge.kind === 'countdown' || i.badge.kind === 'expired',
-      finished: false,
     }));
     return recommend({
       profile: profile.data,

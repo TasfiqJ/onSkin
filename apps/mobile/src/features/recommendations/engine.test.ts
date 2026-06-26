@@ -28,7 +28,6 @@ function item(over: Partial<RecShelfItem> & { id: string; role: SequencingRole }
     tags: [],
     fragranced: false,
     expiring: false,
-    finished: false,
     ...over,
   };
 }

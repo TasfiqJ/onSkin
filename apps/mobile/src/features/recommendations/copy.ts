@@ -52,9 +52,13 @@ export const REC_COPY = {
     eyebrow: 'YOUR RECOMMENDATIONS',
   },
   // The honest seventh state (docs/09 §4). Recommending nothing is a feature.
+  // `body` claims goal coverage and is used ONLY when goal recs can ship; in
+  // production goal actives are gated (B-DERM-REVIEW), so `bodyNoGoals` is shown
+  // instead, which never asserts a goal-matching the engine cannot perform.
   youreSet: {
     title: 'Your routine looks complete.',
     body: 'Cleanser, treatment, moisturiser and SPF. All covered, conflict-free, and matched to your goals. Nothing to add right now.',
+    bodyNoGoals: 'Cleanser, treatment, moisturiser and SPF. All covered and conflict-free. Nothing to add right now.',
     checks: ['Cleanser · treatment · moisturiser · SPF', 'No unresolved conflicts'],
     footnote: 'we’ll tell you the moment that changes, never before',
   },
@@ -99,7 +103,9 @@ export const REC_COPY = {
     valuesLabel: 'Values',
     budgetLabel: 'Budget',
     formatLabel: 'Texture',
-    footnote: 'We only ever suggest things that pass these filters.',
+    // Honest until specific products carry attributes (B-CATALOG-SEED): the
+    // engine is type-first and weights these in fit, it does not yet hard-exclude.
+    footnote: 'We prioritise options that fit these.',
     none: 'No preference',
   },
 } as const;

@@ -28,9 +28,11 @@ export type RecShelfItem = {
   role: SequencingRole;
   tags: FunctionalTag[];
   fragranced: boolean;
-  /** Genuinely depleted/expiring (countdown or expired badge). The only replacement trigger. */
+  /** Genuinely depleted/expiring (countdown or expired badge). The only replacement
+   *  trigger sourced from the active shelf. (A separate "finished product" channel
+   *  sourced from the archive is a future enhancement: gap-detection vs replacement
+   *  for an already-archived role needs product sign-off, so it is not wired yet.) */
   expiring: boolean;
-  finished: boolean;
 };
 
 export type RecProfile = {
@@ -263,7 +265,7 @@ export function recommend(input: RecInput): RecResult {
   // 2. Replacement. A genuinely depleted/expiring product (docs/04). Shelf-anchored;
   // the existing replenishment sheet handles repurchase-or-better-fit (reuse).
   for (const item of input.shelf) {
-    if (!item.expiring && !item.finished) continue;
+    if (!item.expiring) continue;
     const id = `replacement:${item.id}`;
     out.push({
       id,

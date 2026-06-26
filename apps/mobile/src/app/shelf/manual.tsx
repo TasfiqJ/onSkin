@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
@@ -25,10 +25,18 @@ const inputClass =
 
 export default function ManualAddScreen() {
   const { draft, update } = useIntake();
-  const [name, setName] = useState(draft.name);
-  const [brand, setBrand] = useState(draft.brand ?? '');
-  const [category, setCategory] = useState<ProductCategory | null>(draft.category);
-  const [ingredients, setIngredients] = useState(draft.ingredients.join(', '));
+  // Arriving from an accepted recommendation (docs/09 §11): the rec passes the
+  // category so the form is pre-filled. With a preset we start the other fields
+  // fresh rather than inheriting a stale prior-intake draft.
+  const params = useLocalSearchParams<{ presetCategory?: string }>();
+  const presetCategory =
+    params.presetCategory && PRODUCT_CATEGORIES.some((c) => c.id === params.presetCategory)
+      ? (params.presetCategory as ProductCategory)
+      : null;
+  const [name, setName] = useState(presetCategory ? '' : draft.name);
+  const [brand, setBrand] = useState(presetCategory ? '' : (draft.brand ?? ''));
+  const [category, setCategory] = useState<ProductCategory | null>(presetCategory ?? draft.category);
+  const [ingredients, setIngredients] = useState(presetCategory ? '' : draft.ingredients.join(', '));
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const paoFromCategory = reviewedCategoryPao(category);

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { goalRecsShippable } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
@@ -119,7 +120,7 @@ function YoureSet() {
         {REC_COPY.youreSet.title}
       </Text>
       <Text variant="body" tone="muted" className="mt-3.5 max-w-[300px] text-center" style={{ lineHeight: 23 }}>
-        {REC_COPY.youreSet.body}
+        {goalRecsShippable() ? REC_COPY.youreSet.body : REC_COPY.youreSet.bodyNoGoals}
       </Text>
       <View className="mt-7 w-full max-w-[300px] gap-2.5">
         {REC_COPY.youreSet.checks.map((c) => (
