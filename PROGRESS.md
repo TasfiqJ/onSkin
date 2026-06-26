@@ -909,6 +909,23 @@ gates, and a no-number `changeState`. Classical CV (not an LLM, never marketed a
 (correct): real on-device CV engine (B-AI-ONDEVICE), skin-tone fairness cohort validation (B-AI-FAIRNESS),
 FDA/FTC/EU legal sign-off + DPIA (B-AI-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/13 — "Ask OnSkin" assistant ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/13. Verdict: faithful and complete — **no unblocked gap**. The
+deterministic, on-device, $0, **template-bounded** conversational front-end (NOT an open chatbot) is built
+to spec. Migration 0025: `ask_onskin` default-off consent #9; `ask_sessions`/`ask_turn_audit` are
+**content-free** (NO message_text/transcript column "by construction"); `ask_safety_audit` is the only
+health-content store, exists **only with ask_onskin consent** (excluded from training/backup/sale,
+deletion-on-revocation); **NO commission/affiliate/photo/score column** in any Ask path (church-and-state +
+doc-12 no-score). `answer.ts` is template-bounded (D-057 — every substantive claim filled from
+`detectConflicts`/`recommend`/`generatePlan`, model never free-generates a health claim), with the
+deterministic medical-first intent router (`intent.ts`), the broadened runtime claim-safety guard
+(`guard.ts`), **verbal-only escalation (no misrouted CTA)** and **safety conflicts that ALWAYS escalate,
+never "you're set"** (D-077); product-fit uses catalog-backed recs (D-078). The 5 surfaces + Today/You entry
+are present; adversarially reviewed (18→17 fixed). Validated as a 7-figure **contributor, not king-maker**.
+Blocked (correct): the whole cloud-grounded language layer (B-AI-ASSISTANT-VENDOR/SAFETY/LEGAL), seeded
+corpus (B-CATALOG-SEED/B-DERM-REVIEW), in-app derm finder (B-DERM-REVIEW), server persistence (B-SUPABASE),
+final consent copy (B-PRIVACY-COPY). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
