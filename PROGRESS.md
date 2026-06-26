@@ -880,6 +880,21 @@ attribution.test 9 + claimsafety) are all present; order-report-poll Edge Functi
 (B-CATALOG-SEED), final consent copy/DPIA/FTC wording (B-PRIVACY/B-PRIVACY-COPY), derm stack sign-off
 (B-DERM-REVIEW), Play external-link confirmation (B-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/11 — community layer ("Skin Notes") ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/11. Verdict: faithful and complete — **no unblocked gap**. The
+expert-anchored, anonymous, claim-safe myth-vs-evidence trust layer (NOT an open feed) is built to the
+architecture-level guarantees. Migration 0023 (7 tables) is **PHOTO-FREE** (explicit "NO image/photo/
+storage_path/local_uri column anywhere", D-064 — verified by grep), has **no likes/followers/leaderboard/DM
+columns**, is **anon-locked-out** (restrictive `community_questions_block_anon`), adds the
+`community_participation` consent to the enum with a `current_community_consent()` helper gating inserts +
+the 16+ gate, moderated reads (`select_published`/`select_approved`), and the Apple-1.2/Play UGC floor
+(reports + blocks + moderation_events). The expert corpus is B-DERM-REVIEW-gated (`shippableNotes`); the
+claim-safety pre-moderation flag + the 5 surfaces (hub/card/in-context/Ask/people-like-you) are present.
+Validated as a retention **multiplier, not a 7-figure pillar**; Phase 1 (expert read-mostly) live, peer
+posting consent+moderation-gated. Blocked (correct): peer moderation/legal store floor + posting
+(B-COMMUNITY-MOD/B-COMMUNITY-LEGAL/B-EXPERT-NETWORK), expert clinical sign-off (B-DERM-REVIEW), consent
+copy + DPIA (B-PRIVACY/B-PRIVACY-COPY), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
