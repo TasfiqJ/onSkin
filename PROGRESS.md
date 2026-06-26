@@ -822,6 +822,19 @@ capture is simulated), DPIA + "never leaves your device" claim + final photo con
 (B-PRIVACY/B-PRIVACY-COPY), server persistence (B-SUPABASE), reminder delivery (Doc 7).
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
 
+### docs/07 — reminders / streaks / widgets ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/07. Verdict: faithful and complete — **no unblocked gap**.
+Migration 0019 matches §7 (additive `notification_preferences` toggles + quiet hours + `lockscreen_discreet`;
+append-only `streak_freezes`; content-free `notification_log`; owner RLS). The pure `notifications/policy.ts`
+implements the 3 tiers (utility/behavioural/promotional), correct per-tier weekly caps (∞/3/1), per-kind
+toggle gating, overnight-aware quiet hours, and `canSend` (quiet hours suppress all, caps suppress
+non-utility) — tested (13). The calm forgiving streak (`streak/streak.ts`, verified in the docs/03 pass)
+implements recovery-nights-count + auto-freeze window + weekly adherence + heat-map + non-decreasing best.
+Local-first delivery (`deliver.ts`), soft-ask priming, settings/timing/welcome-back surfaces present;
+claim-safe copy guard. Blocked (correct): native WidgetKit/Glance widgets + interactive check-off + Live
+Activity (B-WIDGETS; previews built), on-device delivery + Android-14 exact-alarm verification
+(B-NOTIF-VERIFY), APNs/FCM push win-backs + PostHog (keys). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
