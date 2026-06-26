@@ -979,17 +979,18 @@ paperWarm, sageMuted); Smart Shelf per-screen deltas; the synergy badge + family
 3-branch conflict sheet incl. a **dark night-mode safety sheet**; the `titleLg` header variant + geometric
 checkmark + per-screen radii/copy across the routine builder. All claim-safe, em-dash-free, 947 tests green.
 
-**Remaining functional follow-ups (tracked, lower-priority / blocked-adjacent — NOT yet done):**
-- Smart Shelf: no skeleton/"0 products" flash on cold load (§5.1); no proactive "Replace ->" affordance on
-  countdown/expired cards (§6); `added_via='onboarding'` seed path is dead (onboarding/products.tsx is
-  skip-only); contribute-back copy asserts a `shelf_scans` write that never runs (soften or write the row);
-  scan-funnel events absent; PAO provenance can flip estimate->label on an unchanged value.
-- Ingredient Intelligence: the "paired / alternate nights" copy still asserts placement even when no cycle is
-  active (§4.6, gate on real scheduler output); dead `intelligence/scheduler.ts` exports + the stale
+**Functional follow-ups — progress:**
+- Smart Shelf: ✅ cold-load skeleton (commit 4e69e9d); ✅ proactive "Replace ->" affordance on countdown/
+  expired cards (4e69e9d); ✅ `added_via='onboarding'` seed path now live (inline quick-add, commit 99d7fee).
+  Still open: contribute-back copy asserts a `shelf_scans` write that never runs (soften or write the row);
+  scan-funnel events absent (blocked on the scan engine); PAO provenance can flip estimate->label on an
+  unchanged value.
+- Routine Builder: ✅ ramp/tolerance now persist (local-first rampStore + useRamp; the offer gates on
+  shouldOfferStepUp; tolerance persists applyTolerance, commit 99d7fee). Still open: adaptation/reorder use
+  hardcoded data (concrete manifestations of B-ROUTINE-PERSIST / B-DRAG-DND).
+- Ingredient Intelligence: still open — the "paired / alternate nights" copy asserts placement even when no
+  cycle is active (§4.6, gate on real scheduler output); dead `intelligence/scheduler.ts` exports + the stale
   rules.ts "DB-cached rules" comment (no client queries conflict_rules) need cleanup.
-- Routine Builder: ramp/tolerance/adaptation/reorder are visually faithful but still static — the ramp
-  offer isn't gated on `shouldOfferStepUp`, tolerance "comfortable/dry" don't persist `applyTolerance`,
-  adaptation/reorder use hardcoded data (these are concrete manifestations of B-ROUTINE-PERSIST / B-DRAG-DND).
 
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
