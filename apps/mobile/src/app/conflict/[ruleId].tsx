@@ -7,6 +7,7 @@ import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { evidenceChip, pairTitle, severityLabel } from '@/features/intelligence/presentation';
 import { useShelf } from '@/features/shelf/useShelf';
+import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
@@ -174,6 +175,12 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
           </>
         )}
       </View>
+
+      {/* Standing not-medical-advice disclaimer (docs/02 §9): in-app copy is a
+          claims surface; show it contextually on the conflict-detail and safety screens. */}
+      <Text variant="bodySm" tone="muted" className="mt-5 text-center text-[11px]">
+        {NOT_MEDICAL_ADVICE_SHORT}
+      </Text>
     </>
   );
 }

@@ -731,6 +731,30 @@ anon→social linking mitigation → B-VERIFY-AUTH-LINKING; hard-delete-by-desig
 consents ip/ua server-side). See BLOCKERS.md "Design-audit follow-ups".
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/02 — ingredient intelligence (catalog / conflict engine / scheduler / PAO) ✅ (2026-06-25)
+Feature-fidelity re-audit against docs/02. Verdict: faithful and high-quality. All §3
+catalog tables match (ingredients/synonyms/tags/products/product_ingredients/conflict_rules/
+ingredient_pao_defaults + routine_conflicts; catalog world-readable, service-role write,
+only `is_active` rules exposed; routine_conflicts owner-RLS hardened with `owns_user_product`).
+The §4 engine is complete (5 interaction types + `myth`, both-orders tag matching, concentration/
+sensitivity modulation, sub-flag exemptions, dose-gated + pregnancy-pseudo-tag safety, safety-first
+ranking) with the **B-DERM-REVIEW runtime gate** (`shippableRules`/`reviewedCategoryPao` hide
+unreviewed rules/PAO in production). 13 of the ~15 §4.4 rules seeded; seed SQL (0013) mirrors the
+client `rules.ts` UUIDs exactly. The Maya fixture asserts **Moderate / contested / alternate_nights**;
+the scheduler computes the **next-acid-night**. PAO (§6) resolves label→category→honest "PAO est.";
+the conflict sheet is resolution-first, never-blocked, with the §4.3 honesty note. One real gap
+**closed**:
+- **Standing "not medical advice" disclaimer (§9)** — was present only in community/ask; added a
+  shared `lib/legal/disclaimer.ts` and surfaced it on the conflict-detail/safety sheet, in Settings
+  (You tab), and on the onboarding health-consent screen. Final wording is a counsel item
+  (B-LEGAL / B-PRIVACY-COPY).
+
+Deferred-by-design (documented): server `detect_conflicts(uid)` SECURITY DEFINER deferred in
+favor of one tested TS detector (D-021 / B-SERVER-DETECT). Key/clinical-blocked (correct):
+CosIng/OBF catalog seeding + OCR/scan (B-CATALOG-SEED), clinical sign-off of the matrix + PAO
+defaults (B-DERM-REVIEW), PostHog conflict funnel events (B-POSTHOG).
+**Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,

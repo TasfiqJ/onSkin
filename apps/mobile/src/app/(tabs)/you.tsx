@@ -11,6 +11,7 @@ import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { deleteAccount, exportData } from '@/features/settings/actions';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
+import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { colors } from '@/theme/tokens';
@@ -339,6 +340,11 @@ export default function YouScreen() {
             Photos stay on your device by default. No ads, no data sales.
           </Text>
         </Card>
+
+        {/* Standing not-medical-advice disclaimer (docs/02 §9). */}
+        <Text variant="bodySm" tone="muted" className="mt-5 px-2 text-center text-[12px]">
+          {NOT_MEDICAL_ADVICE}
+        </Text>
       </ScrollView>
     </Screen>
   );

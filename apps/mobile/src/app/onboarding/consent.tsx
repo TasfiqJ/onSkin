@@ -6,6 +6,7 @@ import { Button, Card, Screen, Text } from '@/components/ui';
 import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import { track } from '@/lib/analytics/track';
 import { recordConsent } from '@/lib/consent/consent';
+import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 
 // 03 · Health-data collection consent. Dedicated + unbundled, BEFORE the quiz
 // (docs/01 §4: MHMDA "collection" + GDPR Art. 9 explicit). Collection only;
@@ -64,6 +65,10 @@ export default function HealthConsentScreen() {
             {HEALTH_DATA_CONSENT.footnote}
           </Text>
         </Card>
+        {/* Standing not-medical-advice disclaimer (docs/02 §9). */}
+        <Text variant="bodySm" tone="muted" className="mt-4 text-[12px]">
+          {NOT_MEDICAL_ADVICE_SHORT}
+        </Text>
       </View>
       <View className="pb-4">
         <Button label="I agree. Continue" onPress={agree} disabled={busy} />
