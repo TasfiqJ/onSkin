@@ -992,6 +992,46 @@ checkmark + per-screen radii/copy across the routine builder. All claim-safe, em
   cycle is active (§4.6, gate on real scheduler output); dead `intelligence/scheduler.ts` exports + the stale
   rules.ts "DB-cached rules" comment (no client queries conflict_rules) need cleanup.
 
+### Deep-verification remediation pass — docs 01, 05-13 + 06 (2026-06-26)
+Drove the full deep-verification reports (one per doc) to ground: fixed every genuine, non-blocked
+functional gap they surfaced, one commit per doc, each gated (typecheck + lint + vitest + em-dash sweep)
+and pushed. Key-, native-, clinical-, and vendor-blocked items were left as honest deferrals with markers.
+
+- **docs/01 (07e5610):** `data-export` Edge Fn was service-role with no user filter (returned ALL users'
+  data) → now reads every table through a caller-JWT client so RLS owner-scopes it. Health-data consent
+  withdrawal (promised in copy, no mechanism) → real `withdrawHealthDataConsent` control. Orphaned
+  server-completion hooks deleted; offline queue documented as the deferred sync target. `persistSkinProfile`
+  made local-first so a failed server write never re-onboards a returning user.
+- **docs/05 (7a88ec2):** ramp `freqByProductId` now populated from the live merged ramp into orchestrate
+  (was dead-read → every active defaulted to the cap); pause/travel now drops the potent active (`!paused`
+  guard); cycle PostHog events wired; "add it now anyway" staging override made real. +2 tests.
+- **docs/07 (3481a46):** the entire behavioural/promotional notification tier had zero callers → wired a
+  weekly capture nudge + a `BehaviouralTriggers` component (replenishment/ramp/win-back on app-background),
+  with a local-first sent-log so the per-tier cap holds offline. Milestones detected + surfaced (+6 tests);
+  48h backfill cap on completions; freeze-ledger deferral documented.
+- **docs/08 (366f0fe):** the "2 days before trial ends" reminder (promised on 4 screens, never scheduled)
+  → `scheduleTrialReminder` on startTrial + re-created in rescheduleReminders. Purchase-stub now signals
+  `stub:true` so the grant can't bypass on a real cancellation. Win-back success copy branched off the trial
+  framing (no false "14-day trial").
+- **docs/09 (faef471):** "you're set" no longer claims goal coverage in production where goal recs are gated
+  (+2 honesty tests); accept→add-to-shelf carries the rec category; dead `finished` channel removed; values
+  copy softened to "prioritise" (type-first engine doesn't hard-exclude yet); SPF gap-prompt dismissal persists.
+- **docs/10-13 (c1c3100):** replenish "see similar" routed through the commerce gate; You-tab where-to-buy
+  row made a real revocable toggle + both data-sharing toggles read the resolved (ledger-else-local) consent;
+  community hard 16+ age gate made a real ticked control (was decorative); "This helped" reaction persists;
+  trend gate counts the front series (not all angles); no-score screen swaps invite→manage once opted in;
+  Ask leads proactively on first open with a deterministic shelf answer; dormant grounded-turn cap marked.
+- **docs/06 (f74ca21):** the complete-but-unwired guided-capture quality engine is now driven into the
+  capture chrome over a mock signal, and saved photos carry engine-computed varied scores (was two frozen
+  constants that silently defeated the review "darker than usual" note); timeline thumbnails render
+  `localUri`; milestones render inline at each crossing photo; skin-prep + cloud-tradeoff copy surfaced;
+  dead `reminders.ts` deleted.
+
+Deferred-by-design (flagged, not fixed): the free-tier "one conflict check" cap (gating harm-relevant safety
+conflicts behind Pro is wrong for a safety app; needs a product decision), the PM-reminder per-night content
+(needs a daily content refresh, B-NOTIF-VERIFY), and "People like you" (Phase-2 scaffold, B-COMMUNITY-MOD).
+**Gates across all 7 commits: typecheck + lint + 960 tests green, em-dash-free, pushed to origin/main.**
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
