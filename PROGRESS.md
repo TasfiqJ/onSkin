@@ -926,6 +926,27 @@ Blocked (correct): the whole cloud-grounded language layer (B-AI-ASSISTANT-VENDO
 corpus (B-CATALOG-SEED/B-DERM-REVIEW), in-app derm finder (B-DERM-REVIEW), server persistence (B-SUPABASE),
 final consent copy (B-PRIVACY-COPY). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/14 — growth to seven figures (GTM playbook) ✅ (2026-06-25) — flagship artifact BUILT
+docs/14 is the go-to-market **strategy** doc, not a feature spec — most of it (the paid-UA math, ASO,
+organic short-form, credentialed-creator seeding, the quiz→paywall funnel) is founder/marketing execution,
+and the funnel it relies on is already built. It names **one concrete app artifact** as "the single most
+important thing to build" and "the growth engine": the shareable **Shelf Conflict Card** (§3). That was the
+one open docs/14 implementation gap, and it is now **built**:
+- **`features/growth/`** — `ConflictCard.tsx` (a fixed-size, branded, watermarked, claim-safe card rendered
+  from a `DetectedConflict` via the engine's guard-scanned presentation helpers, so it can never assert a
+  claim the engine didn't), `shareCard.ts` (one-tap PNG export via **react-native-view-shot** `captureRef`
+  → `expo-sharing`), `cardCopy.ts` (claim-safe brand/CTA copy) + `cardCopy.test.ts` (4 tests: no drug verbs,
+  no disease names, no urgency/FOMO, carries the not-medical-advice footnote + watermark).
+- **`app/share/conflict/[ruleId].tsx`** — the share screen (renders the card + "Share to Stories"), reached
+  from a "Share this card" affordance on the conflict-detail sheet (gated OFF for safety contraindications —
+  a clinician matter, never a growth share).
+- Installed `react-native-view-shot` 5.1.0 (Expo-pinned); the `onskin://` deep-link scheme already existed.
+Blocked/launch items (correct): the live universal / App-Store **smart link** with a web fallback for
+not-yet-users needs the marketing domain + store listing (**B-GROWTH-LINK**); `captureRef` needs a **custom
+dev build** to run natively (the card renders everywhere; the export is dev-build-only, like B-CAMERA); the
+secondary **referral program** is deferred by design (docs/14 §"artifact first, referral second"); PostHog
+share-funnel events via the shim (**B-POSTHOG**). **Gates:** typecheck ✅ · lint ✅ · **943 tests ✅** (4 new).
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,

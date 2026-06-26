@@ -184,6 +184,20 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
         )}
       </View>
 
+      {/* Shareable Shelf Conflict Card (docs/14 §3, the word-of-mouth growth artifact).
+          Not offered for safety contraindications: those are a clinician matter, never
+          a growth share. */}
+      {!isSafety ? (
+        <Pressable
+          accessibilityRole="button"
+          className="mt-4 items-center"
+          onPress={() => router.push(`/share/conflict/${r.id}`)}>
+          <Text variant="bodySm" tone="muted" className="font-sans-semibold">
+            Share this card
+          </Text>
+        </Pressable>
+      ) : null}
+
       {/* Standing not-medical-advice disclaimer (docs/02 §9): in-app copy is a
           claims surface; show it contextually on the conflict-detail and safety screens. */}
       <Text variant="bodySm" tone="muted" className="mt-5 text-center text-[11px]">
