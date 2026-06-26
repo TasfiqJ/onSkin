@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
@@ -5,6 +6,7 @@ import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
 import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
+import { conflictKey, setConflictOverride } from '@/features/intelligence/overrides';
 import { evidenceChip, pairTitle, severityLabel } from '@/features/intelligence/presentation';
 import { useShelf } from '@/features/shelf/useShelf';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
@@ -34,6 +36,9 @@ function Chip({ label, dot, bg, fg }: { label: string; dot?: string; bg: string;
 }
 
 async function recordChoice(c: DetectedConflict, choice: 'keep' | 'use_together') {
+  // Local-first so the choice sticks offline and the app stops re-nagging
+  // immediately (docs/03 §7); the server mirror below is best-effort.
+  await setConflictOverride(conflictKey(c), choice === 'use_together');
   try {
     const { data } = await supabase.auth.getUser();
     if (!data.user?.id) return;
@@ -81,6 +86,7 @@ export default function ConflictSheet() {
 }
 
 function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onDismiss: () => void }) {
+  const qc = useQueryClient();
   const r = conflict.rule;
   const isReassure = r.interactionType === 'myth' || r.interactionType === 'synergy';
   const isSafety = r.interactionType === 'safety';
@@ -152,6 +158,7 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
               label="Keep this suggestion"
               onPress={async () => {
                 await recordChoice(conflict, 'keep');
+                await qc.invalidateQueries({ queryKey: ['shelf'] });
                 onDismiss();
               }}
             />
@@ -160,6 +167,7 @@ function ConflictBody({ conflict, onDismiss }: { conflict: DetectedConflict; onD
               className="items-center py-2"
               onPress={async () => {
                 await recordChoice(conflict, 'use_together');
+                await qc.invalidateQueries({ queryKey: ['shelf'] });
                 onDismiss();
               }}>
               <Text variant="body" tone="muted" className="font-sans-semibold">

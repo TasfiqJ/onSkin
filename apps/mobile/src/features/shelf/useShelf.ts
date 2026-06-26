@@ -8,6 +8,7 @@ import {
   type EngineProduct,
   type EngineProfile,
 } from '@/features/intelligence/engine';
+import { conflictKey, getOverriddenKeys } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
@@ -124,8 +125,14 @@ export function useShelf() {
 
       const conflicts = detectConflicts(engineProducts, profile, shippableRules());
       const reassurances = conflicts.filter(isReassuring);
+      // Respect "use together anyway" overrides (docs/03 §7): a conflict the user
+      // already resolved that way is not re-surfaced in the calm banner ("we won't
+      // re-nag"). Server mirror is routine_conflicts (B-SUPABASE).
+      const overridden = await getOverriddenKeys();
       const banner =
-        conflicts.find((c) => !isReassuring(c) && c.computedSeverity !== 'none') ?? null;
+        conflicts.find(
+          (c) => !isReassuring(c) && c.computedSeverity !== 'none' && !overridden.has(conflictKey(c)),
+        ) ?? null;
 
       // Products in an already-resolved (separated) interaction earn "paired".
       const pairedIds = new Set<string>();

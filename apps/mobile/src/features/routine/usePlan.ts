@@ -1,5 +1,5 @@
 import type { EngineProfile } from '@/features/intelligence/engine';
-import { STARTER_RULES } from '@/features/intelligence/rules';
+import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { useShelf } from '@/features/shelf/useShelf';
 
@@ -42,7 +42,10 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     const real: EngineProfile & { goals: string[] } = profile.data
       ? { sensitivity: profile.data.sensitivity, pregnancy: profile.data.pregnancy, goals: profile.data.goals }
       : MAYA_PROFILE;
-    return { data: { plan: generatePlan(products, real, STARTER_RULES), isExample: false }, isLoading: false };
+    // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
+    // useShelf/recommendations. In production the conflict layer stays inert until
+    // clinical sign-off; in dev the full starter matrix drives the plan.
+    return { data: { plan: generatePlan(products, real, shippableRules()), isExample: false }, isLoading: false };
   }
-  return { data: { plan: generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, STARTER_RULES), isExample: true }, isLoading: false };
+  return { data: { plan: generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules()), isExample: true }, isLoading: false };
 }

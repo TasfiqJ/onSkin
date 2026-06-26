@@ -755,6 +755,28 @@ CosIng/OBF catalog seeding + OCR/scan (B-CATALOG-SEED), clinical sign-off of the
 defaults (B-DERM-REVIEW), PostHog conflict funnel events (B-POSTHOG).
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/03 — routine builder (generation / sequencing / ramp / cycling / habit loop) ✅ (2026-06-25)
+Feature-fidelity re-audit against docs/03. Verdict: faithful and high-quality. §2 deterministic
+pipeline (`generate.ts`: classify → sequence → cycling nights → ramp init → gaps → gated conflict
+detection); §3 `sequencing_rules` (0014, 10 roles, versioned, B-DERM-REVIEW); §4 `active_ramp` (0015,
+owner-RLS) + `ramp.ts` (sensitivity-keyed init, offer-only step-ups ~21d, auto de-escalate); §5
+cycling + next-acid-night; §6 calm forgiving streak (`streak.ts`: freeze window, recovery-nights-count,
+neutral-today, non-decreasing best, weekly adherence + month heat-map) — the persisted offline
+check-off queue it depends on (D-007/§6) was the docs/01 fix above. Two real gaps **closed**:
+- **"Use together anyway" re-nag (§7 / Rec 7)** — the override was written to `routine_conflicts`
+  (B-SUPABASE, best-effort) but never read back, so the shelf banner re-surfaced the conflict despite
+  the sheet promising "we won't re-nag". Added a local-first override store (`intelligence/overrides.ts`),
+  suppressed overridden conflicts from the shelf banner (`useShelf`), and persist + invalidate on choice.
+- **B-DERM-REVIEW gate leak** — `usePlan` passed raw `STARTER_RULES` (ungated) while useShelf/recommendations/
+  `generate` default to `shippableRules()`; in production this surfaced unreviewed conflict rules in the
+  plan (e.g. the vit-C synergy note). Switched usePlan to `shippableRules()`.
+
+Deferred-by-design/blocked (documented): server `build_routine(uid)`/`recompute` + per-user cycle
+anchor persistence (B-ROUTINE-PERSIST/B-SUPABASE; client engine + local anchor cover v1), full
+drag-and-drop reorder (B-DRAG-DND; handles + non-blocking nudge built), clinical sign-off of
+sequencing/ramp/cycling rules (B-DERM-REVIEW), PostHog routine events (B-POSTHOG).
+**Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
