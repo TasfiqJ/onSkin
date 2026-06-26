@@ -8,6 +8,7 @@ import { isCommerceConsented } from '@/features/commerce/consent';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
+import { PHOTO_COPY } from '@/features/photos/copy';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
 import { track } from '@/lib/analytics/track';
@@ -92,7 +93,11 @@ export default function YouScreen() {
 
   async function setCloud(enabled: boolean) {
     qc.setQueryData(['photo_cloud_backup'], enabled);
-    if (enabled) track('cloud_backup_opted_in');
+    if (enabled) {
+      track('cloud_backup_opted_in');
+      // Surface the device-loss tradeoff honestly when turning backup ON (docs/06 §6).
+      Alert.alert('Encrypted cloud backup', PHOTO_COPY.lock.cloudTradeoff, [{ text: 'Got it' }]);
+    }
     try {
       await setCloudBackupEnabled(enabled);
     } catch {

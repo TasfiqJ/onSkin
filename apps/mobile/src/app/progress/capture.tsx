@@ -1,13 +1,15 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
-import { PHOTO_COPY, COACHING } from '@/features/photos/copy';
+import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
+import { capturedSignals, demoReadySignals } from '@/features/photos/mockSignals';
+import { coachingLine, lightingState } from '@/features/photos/quality';
 import { haptics } from '@/theme/haptics';
 
 // Guided capture (docs/06 §3, design screen 01). The dark palette keeps the face
@@ -39,9 +41,16 @@ function ConsentGate({ onGrant }: { onGrant: () => void }) {
           </View>
         ),
       )}
-      <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 11, color: 'rgba(244,239,231,0.45)', marginTop: 6, marginBottom: 22 }}>
+      <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 11, color: 'rgba(244,239,231,0.45)', marginTop: 6, marginBottom: 14 }}>
         {PHOTO_CAPTURE_CONSENT.footnote}
       </Text>
+      {/* Skin-prep guidance for comparable captures (docs/06 §3). */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 22 }}>
+        <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
+        <Text style={{ fontFamily: 'HankenGrotesk_500Medium', fontSize: 12.5, color: 'rgba(244,239,231,0.7)', flex: 1, lineHeight: 17 }}>
+          {PHOTO_COPY.capture.skinPrep}
+        </Text>
+      </View>
       <Pressable
         accessibilityRole="button"
         onPress={onGrant}
@@ -63,15 +72,25 @@ export default function CaptureScreen() {
     void hasPhotoCaptureConsent().then(setConsented);
   }, []);
 
+  // The live chrome is driven by the REAL quality engine over a (mock until
+  // B-CAMERA) signal, so the coaching line + lighting label/bar are computed, not
+  // hardcoded. The live evolving pose stream arrives with the camera.
+  const signals = useMemo(() => demoReadySignals(), []);
+  const coaching = coachingLine(signals);
+  const light = lightingState(signals);
+
   function capture() {
     // Never capture before the photo_capture consent is known + granted
     // (docs/06 §7). The gate below covers the loading window; this is the guard.
     if (consented !== true) return;
     haptics.success();
-    // Simulated quality (B-CAMERA supplies the real on-device scores). A captured
-    // frame is "ready". Alignment/lighting near the top of tolerance.
-    const alignment = 0.93;
-    const lighting = 0.84;
+    // The captured frame's scores come from the engine over a slightly-varied
+    // signal (B-CAMERA supplies the real on-device scores), so saved photos differ
+    // and the review "darker than usual" comparison can fire across real captures,
+    // instead of every photo getting two frozen constants.
+    const shot = capturedSignals(Math.random());
+    const alignment = shot.alignment;
+    const lighting = lightingState(shot).fill;
     router.replace({
       pathname: '/progress/review',
       params: {
@@ -128,7 +147,7 @@ export default function CaptureScreen() {
         <View
           style={{ position: 'absolute', bottom: 18, backgroundColor: 'rgba(22,19,15,0.82)', borderRadius: 999, paddingHorizontal: 20, paddingVertical: 11, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: '#D9A183' }} />
-          <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}>{COACHING.ready}</Text>
+          <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}>{coaching}</Text>
         </View>
       </View>
 
@@ -139,9 +158,9 @@ export default function CaptureScreen() {
             {PHOTO_COPY.capture.lightingLabel}
           </Text>
           <View style={{ flex: 1, height: 5, borderRadius: 3, backgroundColor: 'rgba(244,239,231,0.14)', overflow: 'hidden' }}>
-            <View style={{ width: '78%', height: '100%', backgroundColor: READY, borderRadius: 3 }} />
+            <View style={{ width: `${Math.round(light.fill * 100)}%`, height: '100%', backgroundColor: READY, borderRadius: 3 }} />
           </View>
-          <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>Good</Text>
+          <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>{light.label}</Text>
         </View>
         <View className="flex-row items-center justify-between">
           <View style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: 'rgba(244,239,231,0.1)' }} />

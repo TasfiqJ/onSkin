@@ -226,7 +226,6 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
 
 // ── Timeline (design screen 05) ──────────────────────────────────────────────
 function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>['data']> }) {
-  const topMilestone = data.milestones[data.milestones.length - 1];
   return (
     <View className="mt-2">
       {/* quiet time-lapse affordance (design screen 05; the frames come with B-CAMERA) */}
@@ -245,7 +244,12 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
           </Text>
         </Pressable>
       </View>
-      {data.monthGroups.map((group, gi) => (
+      {data.monthGroups.map((group) => {
+        // Milestones whose crossing photo falls in this month group, so each marker
+        // shows inline at the photo that earned it and earlier markers don't vanish.
+        const ids = new Set(group.photos.map((p) => p.id));
+        const groupMilestones = data.milestones.filter((m) => m.milestone !== 'first' && ids.has(m.photo.id));
+        return (
         <View key={group.key} className="mb-5">
           <Text variant="label" tone="muted" className="mb-2.5" style={{ letterSpacing: 1 }}>
             {group.label.toUpperCase()}
@@ -260,7 +264,11 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
                 style={{ width: '31.6%', aspectRatio: 3 / 4 }}
                 className="overflow-hidden rounded-[12px]"
               >
-                <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+                {p.localUri ? (
+                  <Image source={{ uri: p.localUri }} style={{ flex: 1 }} contentFit="cover" />
+                ) : (
+                  <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+                )}
                 <View className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5" style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}>
                   <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
                     {short(p.takenLocalDate)}
@@ -272,19 +280,20 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
               </Pressable>
             ))}
           </View>
-          {/* a calm milestone marker after the first group (docs/06 §4) */}
-          {gi === 0 && topMilestone && topMilestone.milestone !== 'first' ? (
-            <View className="mt-4 flex-row items-center gap-3 rounded-card p-3.5" style={{ backgroundColor: colors.clayTint }}>
+          {/* calm milestone markers, inline at the photo that crossed each (docs/06 §4) */}
+          {groupMilestones.map((m) => (
+            <View key={m.milestone} className="mt-4 flex-row items-center gap-3 rounded-card p-3.5" style={{ backgroundColor: colors.clayTint }}>
               <View className="h-[30px] w-[30px] items-center justify-center rounded-full" style={{ backgroundColor: colors.paperRaised }}>
                 <View className="h-[11px] w-[11px] rounded-full" style={{ backgroundColor: colors.clay }} />
               </View>
               <Text variant="bodySm" className="flex-1" style={{ color: colors.clayDeep }}>
-                {MILESTONE_COPY[topMilestone.milestone]}
+                {MILESTONE_COPY[m.milestone]}
               </Text>
             </View>
-          ) : null}
+          ))}
         </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
