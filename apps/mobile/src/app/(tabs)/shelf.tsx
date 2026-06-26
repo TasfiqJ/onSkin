@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { ConflictBanner, ExpiryBadge, Screen, SegmentChip, StripedThumb, Text } from '@/components/ui';
-import { bannerSubhead, bannerTitle } from '@/features/intelligence/presentation';
+import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
+import { colors } from '@/theme/tokens';
 
 // Shelf list (design "OnSkin Smart Shelf" screen 05, docs/04 §5.1): title + count,
 // All/Actives/Expiring filters, the calm conflict banner, product cards with the
@@ -33,10 +34,13 @@ function ProductCard({ item }: { item: ShelfItem }) {
         haptics.select();
         router.push(`/shelf/${item.id}`);
       }}
-      style={({ pressed }) => (pressed ? { opacity: 0.85 } : undefined)}
-      className={`flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4 ${
-        attention ? 'border border-amber/40' : 'border border-hairline'
-      }`}>
+      style={({ pressed }) => [
+        // The countdown card carries the faint amber accent border (design frame 03,
+        // rgba(176,122,60,0.45)); everything else stays on the neutral hairline.
+        { borderWidth: 1, borderColor: attention ? 'rgba(176,122,60,0.45)' : colors.hairline },
+        pressed ? { opacity: 0.85 } : null,
+      ]}
+      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4">
       <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
       <View className="flex-1">
         <Text variant="body" className="font-sans-semibold">
@@ -158,18 +162,11 @@ export default function ShelfScreen() {
               className="mt-4"
               title={bannerTitle(data.banner)}
               subhead={bannerSubhead(data.banner)}
+              severityPill={severityLabel(data.banner.computedSeverity)}
               onReview={() => {
                 haptics.select();
                 router.push(`/conflict/${data.banner!.rule.id}`);
               }}
-            />
-          ) : null}
-
-          {data?.reassurances.length ? (
-            <ConflictBanner
-              className="mt-3"
-              title="These pair well"
-              subhead={data.reassurances[0]!.rule.resolutionCopy}
             />
           ) : null}
 

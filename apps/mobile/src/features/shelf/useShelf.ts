@@ -86,6 +86,16 @@ function metaLine(p: ShelfProduct): string {
   return parts.filter(Boolean).join(' · ');
 }
 
+/** True when the product's surfaced expiry is only an estimate (a category PAO
+ *  default, not a label/catalog value or a printed expiry). Drives the honest
+ *  two-line "est.\n{Mon}" badge (design frame 03, Vitamin C). Mirrors the "est."
+ *  branch of metaLine so the badge and the meta line never disagree. */
+function isEstimatedExpiry(p: ShelfProduct): boolean {
+  if (!p.isOpened || p.paoMonths == null) return false;
+  if (usesPrintedExpiry(p.category) && p.expiryDate) return false; // printed wins
+  return p.paoSource !== 'label' && p.paoSource !== 'catalog';
+}
+
 export function useShelf() {
   const today = localDateString();
 
@@ -152,6 +162,16 @@ export function useShelf() {
         if (c.productBId) pairedIds.add(c.productBId);
       }
 
+      // Products in a surfaced synergy/myth pairing earn the calm "synergy" pill
+      // (design frame 03, Niacinamide 10%). Mirrors the pairedIds loop over the
+      // already-filtered reassurances. "paired" wins the calm slot if a product is
+      // in both (a resolved conflict is the higher-signal state).
+      const synergyIds = new Set<string>();
+      for (const c of reassurances) {
+        if (c.productAId && !pairedIds.has(c.productAId)) synergyIds.add(c.productAId);
+        if (c.productBId && !pairedIds.has(c.productBId)) synergyIds.add(c.productBId);
+      }
+
       const byEngine = new Map(engineProducts.map((e) => [e.id, e] as const));
 
       const toItem = (p: ShelfProduct): ShelfItem => {
@@ -163,6 +183,8 @@ export function useShelf() {
         const badge = expiryBadge(surfacedExpiry(p), today, {
           safetyCritical: isSafetyCriticalCategory(p.category),
           paired: pairedIds.has(p.id),
+          synergy: synergyIds.has(p.id),
+          estimate: isEstimatedExpiry(p),
         });
         return {
           id: p.id,

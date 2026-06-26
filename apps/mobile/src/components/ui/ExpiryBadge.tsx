@@ -19,6 +19,8 @@ const KIND_STYLE: Record<ExpiryBadgeKind, Style> = {
   countdown: { bg: AMBER_TINT, fg: colors.amber, pill: true, mono: false },
   paired: { bg: colors.clayTint, fg: colors.clayDeep, pill: true, mono: false },
   expired: { bg: EXPIRED_BG, fg: EXPIRED_FG, pill: true, mono: false },
+  // The calm positive pill for a surfaced synergy/myth pairing (design frame 03).
+  synergy: { bg: colors.sageTint, fg: colors.sage, pill: true, mono: false },
 };
 
 export function ExpiryBadge({ badge }: { badge: ExpiryBadgeData }) {

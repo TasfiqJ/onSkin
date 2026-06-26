@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { withProGate } from '@/features/subscription/ProGate';
-import { slotLabel } from '@/features/scheduler/projection';
-import { useCycle } from '@/features/scheduler/useCycle';
+import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
+import { useCycle, type CycleData } from '@/features/scheduler/useCycle';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -17,6 +17,7 @@ function WeekScreen() {
 
   const cycle = data?.cycle ?? null;
   const variantLabel = cycle ? `${cycle.variant}, ${cycle.lengthNights} nights` : 'simple daily';
+  const note = data ? resolutionNote(data) : null;
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
@@ -39,11 +40,11 @@ function WeekScreen() {
           </Pressable>
         </View>
 
-        <Text variant="label" tone="inverseMuted" className="mt-1">
-          YOUR CYCLE · {variantLabel}
+        <Text variant="label" tone="inverseMuted" className="mt-1 uppercase">
+          Your cycle · {variantLabel}
         </Text>
-        <Text variant="title" tone="inverse" className="mt-1" accessibilityRole="header">
-          The week ahead.
+        <Text variant="title" tone="inverse" className="mt-1 text-[34px] leading-[38px]" accessibilityRole="header">
+          This week, by night.
         </Text>
 
         {data?.paused ? (
@@ -93,12 +94,12 @@ function WeekScreen() {
                         : { backgroundColor: colors.nightSurface }
                     }>
                     <Text
-                      className="w-9 font-mono text-[12px]"
-                      style={{ color: tonight ? colors.clayBright : 'rgba(244,239,231,0.4)' }}>
-                      {tonight ? 'Now' : p.weekday}
+                      className="w-[30px] font-mono text-[12px]"
+                      style={{ color: tonight ? colors.clayBright : 'rgba(244,239,231,0.45)' }}>
+                      N{i + 1}
                     </Text>
                     <View className="flex-1">
-                      <Text className="font-sans-bold text-[14.5px]" style={{ color: colors.cream }}>
+                      <Text className="font-sans-bold text-[15px]" style={{ color: colors.cream }}>
                         {slotLabel(p.night.slot)}
                         {tonight ? <Text style={{ color: colors.clayBright, fontWeight: '500' }}> · tonight</Text> : null}
                         {isNextAcid && !tonight ? (
@@ -107,15 +108,38 @@ function WeekScreen() {
                           </Text>
                         ) : null}
                       </Text>
-                      <Text className="mt-0.5 text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
+                      <Text className="mt-0.5 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
                         {nightSub(p.night.slot, p.night.productName)}
                       </Text>
                     </View>
-                    {tonight ? <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clayBright }} /> : null}
+                    {tonight ? (
+                      <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+                    ) : (
+                      <Text className="text-[12px]" style={{ color: 'rgba(244,239,231,0.4)' }}>
+                        {p.weekday}
+                      </Text>
+                    )}
                   </Pressable>
                 );
               })}
             </View>
+
+            {note ? (
+              <View
+                className="mt-4 flex-row items-start gap-3 rounded-[18px]"
+                style={{ backgroundColor: 'rgba(217,161,131,0.10)', paddingHorizontal: 20, paddingVertical: 16 }}>
+                <View
+                  className="rounded-full"
+                  style={{ width: 7, height: 7, marginTop: 5, backgroundColor: colors.clayBright }}
+                />
+                <Text className="flex-1 text-[13.5px] leading-[21px]" style={{ color: 'rgba(244,239,231,0.78)' }}>
+                  {note.lead}
+                  <Text className="font-sans-bold" style={{ color: colors.cream }}>
+                    {note.tail}
+                  </Text>
+                </Text>
+              </View>
+            ) : null}
 
             {data!.notes.length ? (
               <Pressable
@@ -185,6 +209,20 @@ function amSummary(amDaily: { className: string }[] | undefined): string {
 function nightSub(slot: string, productName: string | null): string {
   if (slot === 'recover') return productName ? `${productName} · barrier support` : 'Barrier support';
   return productName ?? '';
+}
+
+/** The frame-07 resolution note. Surfaced only when tonight is a retinoid night and
+ *  an exfoliating acid is being held back, naming the next acid night. Renders the
+ *  alternate_nights conflict as the calm "they're better apart" line, em-dash-free. */
+function resolutionNote(data: CycleData): { lead: string; tail: string } | null {
+  const cycle = data.cycle;
+  if (!cycle || data.tonight?.night.slot !== 'retinoid') return null;
+  const acid = cycle.nights.find((n) => n.slot === 'exfoliate')?.productName;
+  if (!acid || !data.nextAcidNight) return null;
+  return {
+    lead: `Because tonight is retinoid night, your ${acid.toLowerCase()} is held back. They're better apart. `,
+    tail: `Next acid night: ${friendlyWeekday(data.nextAcidNight)}.`,
+  };
 }
 
 // The full skin-cycling scheduler is a Pro value prop (docs/08 §2.2). Gated.

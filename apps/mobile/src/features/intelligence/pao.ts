@@ -83,10 +83,11 @@ export function computeExpiry(opts: {
   return `${y}-${mm}-${dd}`;
 }
 
-/** The five badge states (docs/04 §5.3). `safety` carries the firmer eye/SPF
+/** The badge states (docs/04 §5.3). `safety` carries the firmer eye/SPF
  *  treatment ("replace for safety") on an expired item; text always reads its
- *  meaning so colour is never load-bearing (accessibility, §5.9). */
-export type ExpiryBadgeKind = 'date' | 'countdown' | 'paired' | 'expired' | 'unknown';
+ *  meaning so colour is never load-bearing (accessibility, §5.9). `synergy` is the
+ *  calm positive badge for a product in a surfaced synergy/myth pairing. */
+export type ExpiryBadgeKind = 'date' | 'countdown' | 'paired' | 'expired' | 'unknown' | 'synergy';
 export type ExpiryBadge = {
   kind: ExpiryBadgeKind;
   label: string;
@@ -97,9 +98,18 @@ export type ExpiryBadgeOpts = {
   thresholdDays?: number;
   /** Eye-area / sunscreen → expired copy is firmer (docs/04 §3 exceptions). */
   safetyCritical?: boolean;
-  /** A conflict on this product is already resolved by the engine/scheduler , 
+  /** A conflict on this product is already resolved by the engine/scheduler ,
    *  shows "paired" instead of a neutral future date (docs/04 §5.3). */
   paired?: boolean;
+  /** This product is part of a surfaced synergy/myth pairing , takes the calm
+   *  slot with a sage "synergy" pill instead of a neutral future date (design
+   *  frame 03, Niacinamide 10%). */
+  synergy?: boolean;
+  /** The surfaced expiry is only an estimate (a category PAO default, not a
+   *  label/catalog value). Comfortably ahead, the badge reads the honest two-line
+   *  mono "est.\n{Mon}" rather than a falsely precise dated pill (design frame 03,
+   *  Vitamin C). */
+  estimate?: boolean;
 };
 
 /** The shelf badge for a product (docs/04 §5.3 badge taxonomy). Date-driven,
@@ -110,7 +120,7 @@ export function expiryBadge(
   todayISO: string,
   opts: ExpiryBadgeOpts = {},
 ): ExpiryBadge {
-  const { thresholdDays = 30, safetyCritical = false, paired = false } = opts;
+  const { thresholdDays = 30, safetyCritical = false, paired = false, synergy = false, estimate = false } = opts;
   if (!expiryISO) return { kind: 'unknown', label: 'PAO est.' };
   const days = Math.round((parseLocal(expiryISO).getTime() - parseLocal(todayISO).getTime()) / 86_400_000);
   if (days < 0) {
@@ -123,9 +133,15 @@ export function expiryBadge(
     const wks = Math.round(days / 7);
     return { kind: 'countdown', label: wks <= 1 ? `${days} days left` : `${wks} wks left` };
   }
-  // Comfortably ahead: "paired" (handled) takes the calm slot if applicable,
-  // otherwise the neutral month/year.
+  // Comfortably ahead. The calm slot is, in priority: "paired" (a resolved
+  // conflict), then "synergy" (a surfaced good pairing), then the honest two-line
+  // "est.\n{Mon}" when the date is only an estimate, else the neutral month/year.
   if (paired) return { kind: 'paired', label: 'paired' };
+  if (synergy) return { kind: 'synergy', label: 'synergy' };
+  if (estimate) {
+    const mon = parseLocal(expiryISO).toLocaleDateString('en-US', { month: 'short' });
+    return { kind: 'unknown', label: `est.\n${mon}` };
+  }
   const label = parseLocal(expiryISO).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   return { kind: 'date', label };
 }
