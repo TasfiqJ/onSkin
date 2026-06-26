@@ -851,6 +851,20 @@ LTV-by-channel), not app code. Blocked (correct): native RevenueCat SDK + purcha
 prices + server reverse-trial grant (B-REVENUECAT), store/ARL/external-link/final-policy legal review
 (B-LEGAL/B-PRIVACY-COPY), server entitlement mirror (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 ✅.
 
+### docs/09 — personalized recommendations (independent advisor) ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/09. Verdict: faithful and complete — **no unblocked gap**.
+Migration 0021 is exemplary on **church and state**: NO commission/affiliate/partnership column anywhere,
+the only catalog ref is a merit datum, owner RLS; recommendation_preferences (values/budget/format) +
+the recommendations cache (trigger/type/fit_rationale mandatory). `fit.ts` FIT score = six **merit-only**
+inputs (profile/evidence/need-priority/simplicity/preference/catalog-quality, weights sum 1.0) with NO
+commercial parameter; hard safety exclusions (pregnancy/conflict/preference/refuted) run first (excluded,
+never down-ranked); §5 priority ladder; skinimalism penalty. `engine.ts` implements the 6 honest triggers
++ "you're set" over the gated catalog (`shippableRules`/`shippableRecTypes` B-DERM-REVIEW launch gate);
+what/why/how + evidence grade + caveats mandatory; the ranking path imports no commerce module (verified).
+Claim-safety guard (216 tests). Blocked (correct): commerce/affiliate path (doc 10 / B-PRIVACY data-sharing
+/ B-SHOPMY), specific-product recs thin → type-first until B-CATALOG-SEED, goal-active clinical sign-off
+(B-DERM-REVIEW), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
