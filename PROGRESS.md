@@ -807,6 +807,21 @@ server `orchestrate()`/`schedule_for()` (B-SERVER-DETECT/B-ROUTINE-PERSIST), dra
 (B-DRAG-DND), reminder delivery (doc 7), clinical sign-off of frequency/separation/recovery rules
 (B-DERM-REVIEW). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
 
+### docs/06 — guided photo capture + progress comparison ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/06. Verdict: faithful and complete — **no unblocked gap**.
+Migration 0018 adds the §6 columns (reference/series/session/coarse pose/taken_local_date/time_of_day/
+notes/local_uri/is_encrypted) with a **restrictive policy forcing `reference_photo_id` to be owned**
+(defense-in-depth via `owns_photo`) and RLS unchanged. The local-first photo store (`photos/store.ts`)
+enforces the privacy core: **`local_only` always true, `storage_path` null, metadata-only Supabase mirror
+(image bytes + `local_uri` never sent), `is_encrypted` true, no faceprint (head pose is coarse QA only),
+first-of-series → reference**. The two unbundled consents (`photo_capture` + `photo_cloud_backup`,
+off-by-default) + biometric gallery lock + the no-AI-score stance (`about.tsx`, claim-safety guard) +
+Compare slider/Timeline/single-photo surfaces are all present; quality/timeline helpers are pure+tested
+(89 fixtures). Blocked (correct): on-device camera + face detection + encryption + cloud upload (B-CAMERA;
+capture is simulated), DPIA + "never leaves your device" claim + final photo consent copy
+(B-PRIVACY/B-PRIVACY-COPY), server persistence (B-SUPABASE), reminder delivery (Doc 7).
+**Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
