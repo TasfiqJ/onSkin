@@ -865,6 +865,21 @@ Claim-safety guard (216 tests). Blocked (correct): commerce/affiliate path (doc 
 / B-SHOPMY), specific-product recs thin → type-first until B-CATALOG-SEED, goal-active clinical sign-off
 (B-DERM-REVIEW), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/10 — creator stacks + ShopMy (commerce layer) ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/10 (build spec). Verdict: faithful and complete — **no unblocked
+gap**. Migration 0022 enforces church-and-state at the row level: `order_attributions` (holding
+`commission_cents`) has **intentionally NO client policies → service-role-only**; `affiliate_links` exposes
+no commission column (only the disclosed price + `is_paid`); `commerce_click_events` is owner-RLS with **no
+health column** + opaque token; catalog stacks world-readable/service-role-write. `attribution.ts` builds
+an opaque outbound URL with a tested FORBIDDEN list (concern/goal/skin/pregnancy/photo/profile never reach a
+retailer); rail-agnostic `resolveWhereToBuy` is source-tagged (B-SHOPMY hedge). The strict MHMDA default
+(no `data_sharing` consent → no paid links shown), `shippableStacks` (B-DERM-REVIEW) gate, the transparency
+page, and the FTC guard ("paid link" enforced, no "affiliate link", no dark patterns; commerce.test 11 +
+attribution.test 9 + claimsafety) are all present; order-report-poll Edge Function stubbed. Blocked
+(correct): live ShopMy house-account + Order-Report poll (B-SHOPMY), real catalog/retailers/prices
+(B-CATALOG-SEED), final consent copy/DPIA/FTC wording (B-PRIVACY/B-PRIVACY-COPY), derm stack sign-off
+(B-DERM-REVIEW), Play external-link confirmation (B-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
