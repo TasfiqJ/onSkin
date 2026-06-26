@@ -1,8 +1,10 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
+import { applyToleranceToRamps } from '@/features/routine/rampStore';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
@@ -21,10 +23,16 @@ const OPTIONS = [
 export default function ToleranceScreen() {
   const [selected, setSelected] = useState<string | null>(null);
   const m = useCycleMutations();
+  const qc = useQueryClient();
 
-  // Each answer states what the app does (docs/03 §4 / docs/05 §7). "Irritated"
-  // triggers auto de-escalation: pause actives, start a barrier-recovery window.
+  // Each answer states what the app does (docs/03 §4 / docs/05 §7) and now PERSISTS to
+  // the ramp: comfortable marks steady (a step-up may be offered later), a bit dry
+  // holds the pace, irritated de-escalates the ramp AND starts a barrier-recovery
+  // window. Previously comfortable/dry did nothing (review fix).
   const onSave = async () => {
+    if (!selected) return;
+    await applyToleranceToRamps(selected as 'comfortable' | 'a_bit_dry' | 'irritated');
+    await qc.invalidateQueries({ queryKey: ['ramp'] });
     if (selected === 'irritated') {
       await m.beginRecovery(7, 'irritation');
       router.replace('/cycle/recovery');
