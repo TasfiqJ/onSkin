@@ -895,6 +895,20 @@ posting consent+moderation-gated. Blocked (correct): peer moderation/legal store
 (B-COMMUNITY-MOD/B-COMMUNITY-LEGAL/B-EXPERT-NETWORK), expert clinical sign-off (B-DERM-REVIEW), consent
 copy + DPIA (B-PRIVACY/B-PRIVACY-COPY), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 ✅.
 
+### docs/12 — AI trend analysis ("Changes in your own photos") ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/12. Verdict: faithful and complete — **no unblocked gap**. The
+population skin score is **killed**; the no-AI-score refusal is preserved + marketed; the only-defensible
+narrow exception is built. Migration 0024 has **NO score/grade/percentage/skin_age column** (D-068/D-070,
+"by construction" — verified) and **no image/storage/faceprint column** (source stays local_only); the
+**separate default-off `photo_trend_insights` consent** is added (installed base re-consented, D-072), owner
+RLS + deletion-on-revocation; `narrative_key` is descriptive (no number/grade). `trend.ts` implements the
+**fairness-adjusted MDC floor** (`toneAdjustedMdc`: equal-or-higher noise threshold for darker Monk tones,
+monotonic, unknown→conservative — redness never the metric, physics not tunable), insufficient-data/lighting
+gates, and a no-number `changeState`. Classical CV (not an LLM, never marketed as "AI"), claim-safety guard
+(D-070: no number/score/disease/superiority/AI; 50 fixtures). Validated as **not a 7-figure pillar**. Blocked
+(correct): real on-device CV engine (B-AI-ONDEVICE), skin-tone fairness cohort validation (B-AI-FAIRNESS),
+FDA/FTC/EU legal sign-off + DPIA (B-AI-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
