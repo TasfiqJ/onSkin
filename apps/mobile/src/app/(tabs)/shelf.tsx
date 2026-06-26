@@ -51,6 +51,23 @@ function ProductCard({ item }: { item: ShelfItem }) {
             {item.metaLine}
           </Text>
         ) : null}
+        {/* Proactive, honest PAO-triggered replenishment nudge on the card itself
+            (docs/04 §6): a quiet "Replace ->" on countdown/expired items. */}
+        {item.badge.kind === 'countdown' || item.badge.kind === 'expired' ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Replace ${item.name}`}
+            hitSlop={6}
+            className="mt-1 self-start"
+            onPress={() => {
+              haptics.select();
+              router.push(`/shelf/replenish?id=${item.id}`);
+            }}>
+            <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+              Replace →
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
       <ExpiryBadge badge={item.badge} />
     </Pressable>
@@ -102,6 +119,44 @@ function EmptyShelf() {
   );
 }
 
+function SkeletonCard() {
+  return (
+    <View
+      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4"
+      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      <StripedThumb size={50} radius={14} />
+      <View className="flex-1 gap-2">
+        <View className="h-3.5 w-2/3 rounded-[5px]" style={{ backgroundColor: colors.greige }} />
+        <View className="h-2.5 w-1/2 rounded-[5px]" style={{ backgroundColor: colors.greigeChip }} />
+      </View>
+    </View>
+  );
+}
+
+// Cold-load skeleton (docs/04 §5.1/§5.8: skeleton cards, never spinners, and never a
+// flash of "0 products" while the local-first store reads).
+function SkeletonShelf() {
+  return (
+    <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
+      <View className="mt-2">
+        <Text variant="title" className="text-[38px] leading-[40px]">
+          Shelf
+        </Text>
+      </View>
+      <View className="mt-3.5 flex-row gap-2.5">
+        {(['All', 'Actives', 'Expiring'] as const).map((l, i) => (
+          <SegmentChip key={l} label={l} selected={i === 0} />
+        ))}
+      </View>
+      <View className="mt-7 gap-2.5">
+        {[0, 1, 2, 3].map((i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
+
 export default function ShelfScreen() {
   const { data, isLoading } = useShelf();
   const [filter, setFilter] = useState<Filter>('all');
@@ -115,11 +170,14 @@ export default function ShelfScreen() {
     return true;
   });
 
+  const showLoading = isLoading && items.length === 0;
   const isEmpty = !isLoading && items.length === 0;
 
   return (
     <Screen edges={['top']}>
-      {isEmpty ? (
+      {showLoading ? (
+        <SkeletonShelf />
+      ) : isEmpty ? (
         <>
           <View className="mt-2">
             <Text variant="title" className="text-[38px] leading-[40px]">
@@ -199,7 +257,7 @@ export default function ShelfScreen() {
         </ScrollView>
       )}
 
-      {!isEmpty ? (
+      {!isEmpty && !showLoading ? (
         <View className="absolute inset-x-0 bottom-4 items-center">
           <Pressable
             accessibilityRole="button"

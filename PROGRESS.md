@@ -947,6 +947,50 @@ dev build** to run natively (the card renders everywhere; the export is dev-buil
 secondary **referral program** is deferred by design (docs/14 §"artifact first, referral second"); PostHog
 share-funnel events via the shim (**B-POSTHOG**). **Gates:** typecheck ✅ · lint ✅ · **943 tests ✅** (4 new).
 
+### Design-fidelity + deep-verification + 7-figure validation pass (2026-06-25)
+A multi-agent workflow (3 design specs + 3 deep functional verifications + 4 web-research briefs +
+synthesis) drove this pass. The 3 Claude Design `.dc.html` mockups (Smart Shelf, Ingredient Intelligence,
+Routine Builder) were imported from the local dx13 handoff bundle (the design MCP can't auth headlessly)
+and implemented to pixel-perfect fidelity.
+
+**7-figure validation verdict (synthesised, adversarially stress-tested): CONDITIONAL YES.** The three core
+features are commodities in their headline form (free analyzers/builders exist; ChatGPT erodes the
+personalize-my-routine verb), so as a parity headline they land at the ~$8.3K MRR median, ~10x short. They
+ARE king-making only in their *compounding-data* reconfiguration: resolution-first evidence-graded
+intelligence (never a hazard score), the routine builder demoted to a **calm forgiving daily adherence loop**
+(the real moat, Lally 2010 + Duolingo grace), and the shelf as the **system of record** with switching-cost
+lock-in + the highest-intent affiliate trigger — plus an organic share artifact (the Conflict Card) to close
+the distribution gap. OnSkin's architecture already implements most of the best-execution plan. Yuka ($7.17M
+subs, zero marketing) proves the ceiling but is survivorship, not a blueprint. Full verdict + 10 best-execution
+recs + 8 risks in the workflow output.
+
+**Critical functional fixes (the deep verification found dead wiring my first audit missed):**
+- **Today daily loop wired end-to-end** (was local `useState` that never persisted → activation never fired,
+  streak/heat-map permanently empty). New local-first `completionsStore` (D-029 pattern); today.tsx persists +
+  fires the activation metric; useProgress unions it so the forgiving streak + heat-map populate. This is the
+  research verdict's #1 lever.
+- **Concentration band re-enabled** (`EngineProduct.concentration` was never populated → the "0.3% != 1.0%"
+  promise was inert AND the high-dose-salicylic×pregnancy SAFETY rule could never fire). New tested
+  `deriveConcentration` threaded through useShelf + usePlan + generate.
+- Override now clears the "paired" badge; shelf sort orders by actual expiry date within each bucket.
+
+**Design fidelity (3 commits):** new `StripedThumb` no-SVG diagonal-hatch placeholder + tokens (mutedFaint,
+paperWarm, sageMuted); Smart Shelf per-screen deltas; the synergy badge + family-level conflict titles + the
+3-branch conflict sheet incl. a **dark night-mode safety sheet**; the `titleLg` header variant + geometric
+checkmark + per-screen radii/copy across the routine builder. All claim-safe, em-dash-free, 947 tests green.
+
+**Remaining functional follow-ups (tracked, lower-priority / blocked-adjacent — NOT yet done):**
+- Smart Shelf: no skeleton/"0 products" flash on cold load (§5.1); no proactive "Replace ->" affordance on
+  countdown/expired cards (§6); `added_via='onboarding'` seed path is dead (onboarding/products.tsx is
+  skip-only); contribute-back copy asserts a `shelf_scans` write that never runs (soften or write the row);
+  scan-funnel events absent; PAO provenance can flip estimate->label on an unchanged value.
+- Ingredient Intelligence: the "paired / alternate nights" copy still asserts placement even when no cycle is
+  active (§4.6, gate on real scheduler output); dead `intelligence/scheduler.ts` exports + the stale
+  rules.ts "DB-cached rules" comment (no client queries conflict_rules) need cleanup.
+- Routine Builder: ramp/tolerance/adaptation/reorder are visually faithful but still static — the ramp
+  offer isn't gated on `shouldOfferStepUp`, tolerance "comfortable/dry" don't persist `applyTolerance`,
+  adaptation/reorder use hardcoded data (these are concrete manifestations of B-ROUTINE-PERSIST / B-DRAG-DND).
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
