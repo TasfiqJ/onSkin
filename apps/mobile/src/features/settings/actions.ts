@@ -1,6 +1,9 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
+import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
+import { clearStoredSkinProfile } from '@/features/onboarding/skinProfileStore';
+import { recordConsent } from '@/lib/consent/consent';
 import { supabase } from '@/lib/supabase/client';
 
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
@@ -9,7 +12,32 @@ import { supabase } from '@/lib/supabase/client';
 export async function deleteAccount(): Promise<void> {
   const { error } = await supabase.functions.invoke('account-deletion', { method: 'POST' });
   if (error) throw error;
+  // Clear the device-global local-first onboarding record so the next (fresh
+  // anonymous) session is correctly routed back through onboarding rather than
+  // inheriting the deleted account's "already onboarded" entry-gate signal.
+  await clearStoredSkinProfile();
   await supabase.auth.signOut();
+}
+
+// Health-data consent withdrawal (docs/01 §4: MHMDA/GDPR right to withdraw,
+// which must be as easy as granting). The skin profile, quiz answers, and
+// goals ARE the account, so withdrawing health-data-collection consent records
+// an immutable granted=false ledger row (proof of the withdrawal) and then
+// deletes the account and all data via the same cascade as deleteAccount. The
+// You-tab copy that promises "your data is then deleted" is now backed by code.
+export async function withdrawHealthDataConsent(): Promise<void> {
+  try {
+    await recordConsent({
+      type: 'health_data_collection',
+      granted: false,
+      version: HEALTH_DATA_WITHDRAWAL.version,
+      consentText: HEALTH_DATA_WITHDRAWAL.fullText,
+    });
+  } catch {
+    // Best-effort ledger write until the backend is configured (B-SUPABASE).
+    // The deletion below is the substantive guarantee and runs regardless.
+  }
+  await deleteAccount();
 }
 
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;

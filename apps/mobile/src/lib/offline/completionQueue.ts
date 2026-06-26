@@ -7,10 +7,18 @@ import { isStale, withQueued, type PendingCompletion } from './completionQueue.p
 export type { PendingCompletion } from './completionQueue.pure';
 
 // Persisted offline write queue for routine check-offs (docs/01 §6: "writes must
-// succeed locally and sync later"). This is the doc's recommended v1: a simple
-// queue-and-retry on the already-present AsyncStorage, no extra dependency. A
-// check-off is enqueued durably (it survives an app kill) and drained to Supabase
-// when connectivity returns; dedup mirrors the DB unique (user, step, day).
+// succeed locally and sync later"): a dependency-free queue-and-retry on the
+// already-present AsyncStorage. A check-off is enqueued durably (it survives an
+// app kill) and drained to Supabase when connectivity returns; dedup mirrors the
+// DB unique (user, step, day).
+//
+// DEFERRED SYNC TARGET (B-SUPABASE / B-ROUTINE-PERSIST): the v1 source of truth
+// for completions is the local-first log in `features/today/completionsStore.ts`.
+// This queue is the server-sync half: it activates once the routine is persisted
+// server-side and check-offs carry real `routine_id`/`step_id` UUIDs to insert.
+// Until then `flushCompletions` no-ops (no session) and the feeder that maps the
+// local log to server ids lands with B-ROUTINE-PERSIST. The pure dedup/staleness
+// logic (completionQueue.pure.ts) is unit-tested and ready.
 const KEY = 'onskin.completions.pending';
 
 export async function getPendingCompletions(): Promise<PendingCompletion[]> {

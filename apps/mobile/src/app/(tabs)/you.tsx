@@ -8,7 +8,7 @@ import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
-import { deleteAccount, exportData } from '@/features/settings/actions';
+import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
@@ -97,6 +97,29 @@ export default function YouScreen() {
     mutationFn: exportData,
     onError: (e) => Alert.alert('Export failed', e instanceof Error ? e.message : 'Please try again.'),
   });
+
+  function confirmWithdrawHealthData() {
+    Alert.alert(
+      'Withdraw health-data consent?',
+      'This records your withdrawal and deletes your collected health data. Your account and routine are closed. App Store billing continues until you cancel your subscription.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Withdraw & delete',
+          style: 'destructive',
+          onPress: () => {
+            setBusy(true);
+            withdrawHealthDataConsent()
+              .then(() => router.replace('/'))
+              .catch((e: unknown) =>
+                Alert.alert('Withdrawal failed', e instanceof Error ? e.message : 'Please try again.'),
+              )
+              .finally(() => setBusy(false));
+          },
+        },
+      ],
+    );
+  }
 
   function confirmDelete() {
     Alert.alert(
@@ -319,9 +342,18 @@ export default function YouScreen() {
               ›
             </Text>
           </Row>
-          <Text variant="bodySm" tone="muted" className="mt-1">
-            Withdraw health-data consent from the privacy policy screen. Your data is then deleted.
-          </Text>
+          <Row
+            label="Withdraw health-data consent"
+            hint="Records your withdrawal in the consent ledger and deletes your collected health data.">
+            <Text
+              variant="body"
+              tone="muted"
+              onPress={confirmWithdrawHealthData}
+              accessibilityRole="button"
+              style={{ fontSize: 18 }}>
+              ›
+            </Text>
+          </Row>
         </Card>
 
         <Card className="mt-4">

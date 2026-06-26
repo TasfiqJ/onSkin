@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { supabase } from '@/lib/supabase/client';
@@ -15,12 +16,16 @@ export default function WelcomeScreen() {
   const { ensureAnonymousSession, session, initializing } = useAuth();
   const [busy, setBusy] = useState(false);
 
-  // Onboarding-completion check as a query (no setState-in-effect).
+  // Onboarding-completion check as a query (no setState-in-effect). Reads the
+  // local-first completion record FIRST (the v1 source of truth, D-029): a
+  // returning onboarded user is recognized even with no backend, so a failed or
+  // absent server write never re-onboards them. Falls back to the server row.
   const onboarded = useQuery({
     queryKey: ['onboarded', session?.user.id],
     enabled: !!session && !initializing,
     retry: 0,
     queryFn: async () => {
+      if (await isOnboardedLocal()) return true;
       const { count } = await supabase
         .from('skin_profiles')
         .select('id', { count: 'exact', head: true })

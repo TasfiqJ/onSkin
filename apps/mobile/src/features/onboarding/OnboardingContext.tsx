@@ -4,6 +4,7 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from 're
 import { supabase } from '@/lib/supabase/client';
 
 import { PLACEHOLDER_QUIZ, scoreQuiz, type QuizAnswers, type SkinProfileResult } from './quiz';
+import { setStoredSkinProfile } from './skinProfileStore';
 
 // In-progress onboarding answers, accumulated client-side and persisted at the
 // reveal step. Goals are capped at 2 (design spec: "choose up to two").
@@ -44,25 +45,38 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       },
       async persistSkinProfile() {
         const result = scoreQuiz(quizAnswers, PLACEHOLDER_QUIZ);
-        const { data: userData } = await supabase.auth.getUser();
-        const userId = userData.user?.id;
-        if (!userId) throw new Error('persistSkinProfile requires a session');
-        // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).
-        const { error } = await supabase.from('skin_profiles').insert({
-          user_id: userId,
-          oily_dry: result.axisScores.oily_dry,
-          sensitive_resistant: result.axisScores.sensitive_resistant,
-          pigmented_non: result.axisScores.pigmented_non,
-          wrinkled_tight: result.axisScores.wrinkled_tight,
-          fitzpatrick: result.fitzpatrick,
-          monk_tone: result.monkTone,
-          sensitivities: result.sensitivities,
-          pregnancy_status: result.pregnancyStatus,
-          goals,
-          completed_at: new Date().toISOString(),
-          version: 1,
-        });
-        if (error) throw error;
+        const completedAt = new Date().toISOString();
+        // Local-first (D-029): record completion on-device FIRST so the entry
+        // gate (app/index.tsx) recognizes this user as onboarded even if the
+        // server write fails or no backend exists yet. This is the v1 source of
+        // truth; the Supabase insert below is a best-effort mirror that must not
+        // throw past this point (a returning user must never be re-onboarded).
+        await setStoredSkinProfile({ result, goals, completedAt });
+        try {
+          const { data: userData } = await supabase.auth.getUser();
+          const userId = userData.user?.id;
+          if (userId) {
+            // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).
+            const { error } = await supabase.from('skin_profiles').insert({
+              user_id: userId,
+              oily_dry: result.axisScores.oily_dry,
+              sensitive_resistant: result.axisScores.sensitive_resistant,
+              pigmented_non: result.axisScores.pigmented_non,
+              wrinkled_tight: result.axisScores.wrinkled_tight,
+              fitzpatrick: result.fitzpatrick,
+              monk_tone: result.monkTone,
+              sensitivities: result.sensitivities,
+              pregnancy_status: result.pregnancyStatus,
+              goals,
+              completed_at: completedAt,
+              version: 1,
+            });
+            if (error) throw error;
+          }
+        } catch {
+          // Best-effort server mirror until the backend is configured
+          // (B-SUPABASE). The local record above is the durable v1 signal.
+        }
         return result;
       },
       reset() {

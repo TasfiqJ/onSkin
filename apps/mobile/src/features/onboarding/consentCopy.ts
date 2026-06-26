@@ -19,6 +19,16 @@ export const HEALTH_DATA_CONSENT = {
     'This consent covers collection only; sharing is requested separately.',
 } as const;
 
+// The exact text hashed into the ledger when a user WITHDRAWS health-data
+// collection consent (docs/01 §4: withdrawal must be as easy as granting).
+// Recording the granted=false row is the durable proof; deletion is the effect.
+export const HEALTH_DATA_WITHDRAWAL = {
+  version: CONSENT_COPY_VERSION,
+  fullText:
+    '[PLACEHOLDER. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent ' +
+    'WITHDRAWN. Collected health data is to be deleted and the account closed.',
+} as const;
+
 export const ACCOUNT_CONSENT = {
   version: CONSENT_COPY_VERSION,
   fullText:
