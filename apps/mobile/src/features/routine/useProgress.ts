@@ -73,6 +73,11 @@ export function useProgress() {
         .limit(1)
         .maybeSingle();
 
+      // The freeze state is computed deterministically from the completion gaps
+      // (streak.ts), which is the v1 source of truth and recomputes identically on
+      // every device. The server `streak_freezes` ledger (docs/07 §4.4/§7) is the
+      // deferred sync/audit target for the server `recompute_streak` function
+      // (B-SUPABASE); it is intentionally not read/written by the client in v1.
       const s = streakState(completed, todayISO);
       const frozen = new Set(s.frozenDates);
       const week = buildWeek(completed, todayISO, frozen);

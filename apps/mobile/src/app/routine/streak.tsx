@@ -1,8 +1,13 @@
 import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Card, Screen, Text } from '@/components/ui';
 import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
+import { useCycle } from '@/features/scheduler/useCycle';
+import { currentMilestone } from '@/features/streak/milestones';
+import { markMilestoneSeen } from '@/features/streak/milestoneStore';
+import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
 // Streak & adherence. The calm, forgiving streak (docs/03 §6/§9.5, D-025).
@@ -32,8 +37,22 @@ function weekDaySquare(state: DayState): { bg: string; dot?: string; ring?: bool
 
 export default function StreakScreen() {
   const { data } = useProgress();
+  const { data: cycleData } = useCycle();
   const week = data?.week ?? [];
   const heat = data?.heat ?? [];
+
+  // Highest calm milestone the current streak has reached (docs/07 §4.5). The
+  // "one cycle" marker uses the real cycle length when available.
+  const cycleLength = cycleData?.cycle?.lengthNights ?? 4;
+  const milestone = currentMilestone(data?.streak ?? 0, cycleLength);
+
+  // Fire the analytics event once per milestone (first crossing only).
+  useEffect(() => {
+    if (!milestone) return;
+    void markMilestoneSeen(milestone.key).then((fresh) => {
+      if (fresh) track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
+    });
+  }, [milestone?.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Screen edges={['top']}>
@@ -56,6 +75,20 @@ export default function StreakScreen() {
         <Text variant="bodySm" tone="muted" className="mt-1">
           {(data?.streak ?? 0) > 0 ? `${data?.streak}-day streak · best ${data?.longest ?? 0}` : 'Your nights, no pressure.'}
         </Text>
+
+        {/* Calm milestone marker (docs/07 §4.5). A gentle acknowledgement, no confetti. */}
+        {milestone ? (
+          <View
+            className="mt-4 flex-row items-center gap-3.5 rounded-card p-4"
+            style={{ backgroundColor: colors.sageTint }}>
+            <View className="h-9 w-9 items-center justify-center rounded-full bg-paper-raised">
+              <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.sage }} />
+            </View>
+            <Text variant="bodySm" className="flex-1" style={{ color: colors.sageDeep }}>
+              {milestone.copy}
+            </Text>
+          </View>
+        ) : null}
 
         {/* This week */}
         <Card className="mt-5">

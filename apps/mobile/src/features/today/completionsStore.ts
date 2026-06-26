@@ -41,12 +41,28 @@ export async function getCompletedSteps(date: string = localDateString()): Promi
   return new Set(log[date] ?? []);
 }
 
+/** Whether a completion date is older than the ~48h backfill cap (docs/07 §4.4):
+ *  the server rejects backdating past today-2, so the local store must too, or a
+ *  future "log an earlier day" surface could silently inflate the streak. Cutoff =
+ *  today - 2 local days; dates on/after the cutoff are allowed. */
+export function isBeyondBackfillCap(date: string, today: string = localDateString()): boolean {
+  const t = new Date(`${today}T00:00:00`);
+  const cutoff = localDateString(new Date(t.getFullYear(), t.getMonth(), t.getDate() - 2));
+  return date < cutoff;
+}
+
 /** Toggle a step's completion for a day. Returns whether it is now done and whether
- *  this was the user's first-ever completion (the north-star activation moment). */
+ *  this was the user's first-ever completion (the north-star activation moment).
+ *  Backdating past the 48h cap (docs/07 §4.4) is rejected to prevent streak abuse. */
 export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
 ): Promise<{ done: boolean; firstEver: boolean }> {
+  if (isBeyondBackfillCap(date)) {
+    // Outside the 48h backfill window: do not record, report it as not-done.
+    const existing = await getCompletedSteps(date);
+    return { done: existing.has(key), firstEver: false };
+  }
   const log = await load();
   const hadAny = Object.values(log).some((a) => a.length > 0);
   const day = new Set(log[date] ?? []);

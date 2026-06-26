@@ -2,6 +2,7 @@ import { router, Tabs } from 'expo-router';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
+import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRoute } from '@/features/subscription/lifecycle';
 import { colors } from '@/theme/tokens';
 
@@ -35,34 +36,39 @@ function Dot({ focused }: { focused: boolean }) {
 export default function TabsLayout() {
   useExpiryReoffer();
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.ink,
-        tabBarInactiveTintColor: colors.muted,
-        tabBarStyle: {
-          backgroundColor: colors.paper,
-          borderTopColor: colors.hairline,
-          borderTopWidth: 1,
-        },
-        tabBarLabelStyle: { fontFamily: 'HankenGrotesk_500Medium', fontSize: 12 },
-      }}>
-      <Tabs.Screen
-        name="today"
-        options={{ title: 'Today', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
-      />
-      <Tabs.Screen
-        name="progress"
-        options={{ title: 'Progress', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
-      />
-      <Tabs.Screen
-        name="shelf"
-        options={{ title: 'Shelf', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
-      />
-      <Tabs.Screen
-        name="you"
-        options={{ title: 'You', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
-      />
-    </Tabs>
+    <>
+      {/* Evaluates the behavioural/promotional notification triggers on background. */}
+      <BehaviouralTriggers />
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.ink,
+          tabBarInactiveTintColor: colors.muted,
+          tabBarStyle: {
+            backgroundColor: colors.paper,
+            borderTopColor: colors.hairline,
+            borderTopWidth: 1,
+          },
+          tabBarLabelStyle: { fontFamily: 'HankenGrotesk_500Medium', fontSize: 12 },
+        }}
+      >
+        <Tabs.Screen
+          name="today"
+          options={{ title: 'Today', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
+        />
+        <Tabs.Screen
+          name="progress"
+          options={{ title: 'Progress', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
+        />
+        <Tabs.Screen
+          name="shelf"
+          options={{ title: 'Shelf', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
+        />
+        <Tabs.Screen
+          name="you"
+          options={{ title: 'You', tabBarIcon: ({ focused }) => <Dot focused={focused} /> }}
+        />
+      </Tabs>
+    </>
   );
 }

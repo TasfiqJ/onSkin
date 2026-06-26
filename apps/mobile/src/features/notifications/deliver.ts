@@ -7,7 +7,13 @@ import { supabase } from '@/lib/supabase/client';
 
 import { REMINDER_COPY } from './copy';
 import { canSend, tierEnabled, tierOf, toMinutes, withinQuietHours } from './policy';
+import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
+
+/** The current local wall-clock time as "HH:MM" (for quiet-hours / cap checks). */
+export function nowHHMM(d = new Date()): string {
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
 
 /**
  * Local-first notification delivery (docs/07 §3.4/§9). The utility AM/PM reminders
@@ -98,6 +104,25 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
     };
     if (p.amEnabled) await schedule('am_reminder', p.amTime);
     if (p.pmEnabled) await schedule('pm_step', p.pmTime);
+
+    // Weekly progress-photo capture nudge (docs/07 §3.3 / docs/06 §5): a recurring
+    // WEEKLY local notification when opted in, the weekly cadence being its own
+    // frequency control. Skipped if its time lands in quiet hours.
+    if (p.captureReminders && !withinQuietHours(p.amTime, p.quietStart, p.quietEnd)) {
+      const mins = toMinutes(p.amTime);
+      if (mins != null) {
+        await Notifications.scheduleNotificationAsync({
+          content: copyFor('capture', p.lockscreenDiscreet),
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+            weekday: 1, // Sunday, a calm weekly check-in cadence
+            hour: Math.floor(mins / 60),
+            minute: mins % 60,
+            ...(channelId ? { channelId } : {}),
+          },
+        });
+      }
+    }
   } catch {
     /* unsupported environment. No-op (B-NOTIF-VERIFY) */
   }
@@ -126,21 +151,31 @@ async function sentThisWeekForTier(userId: string, tier: string): Promise<number
  * was sent. Behavioural delivery is wired here for the features that raise these
  * triggers to call; the trigger *content* is owned by those features (docs/07 §1).
  */
-export async function notifyBehavioural(kind: NotificationKind, nowHHMM: string): Promise<boolean> {
+export async function notifyBehavioural(kind: NotificationKind, hhmm: string): Promise<boolean> {
   const p = await loadNotifPrefs();
-  // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier , 
+  // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier ,
   // and especially the off-by-default promotional tier. Never fires.
   if (!tierEnabled(kind, p)) return false;
-  let sent = 0;
+  const now = Date.now();
+  // Frequency cap source of truth = the local sent-log (works offline), unioned
+  // with the server log when present. Without this, the server count is 0 offline
+  // (v1) and a foreground trigger would re-fire on every app open (docs/07 §9).
+  let sent = await sentThisWeekForTierLocal(tierOf(kind), now);
   let userId: string | undefined;
   try {
     const { data } = await supabase.auth.getUser();
     userId = data.user?.id;
-    if (userId) sent = await sentThisWeekForTier(userId, tierOf(kind));
+    if (userId) sent = Math.max(sent, await sentThisWeekForTier(userId, tierOf(kind)));
   } catch {
-    /* offline. Treat as 0 sent */
+    /* offline. Local count stands */
   }
-  const decision = canSend({ kind, sentThisWeekForTier: sent, now: nowHHMM, quietStart: p.quietStart, quietEnd: p.quietEnd });
+  const decision = canSend({
+    kind,
+    sentThisWeekForTier: sent,
+    now: hhmm,
+    quietStart: p.quietStart,
+    quietEnd: p.quietEnd,
+  });
   if (!decision.allowed) return false;
   try {
     await Notifications.scheduleNotificationAsync({
@@ -149,7 +184,9 @@ export async function notifyBehavioural(kind: NotificationKind, nowHHMM: string)
       // trigger, not content (SDK 56). A bare { channelId } means deliver now.
       trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
     });
-    if (userId) await supabase.from('notification_log').insert({ user_id: userId, tier: tierOf(kind), kind });
+    await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
+    if (userId)
+      await supabase.from('notification_log').insert({ user_id: userId, tier: tierOf(kind), kind });
   } catch {
     return false;
   }
