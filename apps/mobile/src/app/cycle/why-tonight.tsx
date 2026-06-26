@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle } from '@/features/scheduler/useCycle';
+import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
 // "Why is this on tonight?" (design screen 02, docs/05 §6.3). The reasoning
@@ -35,6 +37,10 @@ export default function WhyTonightScreen() {
   const { data } = useCycle();
   const cycle = data?.cycle;
   const tonight = data?.tonight;
+
+  useEffect(() => {
+    track('why_tonight_viewed');
+  }, []);
 
   if (!cycle || !tonight) {
     return (

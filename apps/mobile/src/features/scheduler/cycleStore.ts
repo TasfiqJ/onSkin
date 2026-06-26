@@ -29,10 +29,22 @@ export type CycleConfig = {
   pauseReason: DisruptionReason | null;
   recovery: RecoveryState | null;
   skips: string[];
+  /** Product ids the user chose to start NOW, opting out of phased staging
+   *  (docs/05 §6.2: "the user may proceed anyway"). orchestrate stops treating
+   *  these as new so they enter the cycle immediately. */
+  stagingOverrides: string[];
 };
 
 function defaults(anchorISO: string): CycleConfig {
-  return { variant: 'auto', anchorISO, pausedFrom: null, pauseReason: null, recovery: null, skips: [] };
+  return {
+    variant: 'auto',
+    anchorISO,
+    pausedFrom: null,
+    pauseReason: null,
+    recovery: null,
+    skips: [],
+    stagingOverrides: [],
+  };
 }
 
 export async function loadCycleConfig(): Promise<CycleConfig> {
@@ -90,6 +102,13 @@ export async function skipTonight(): Promise<void> {
   const today = localDateString();
   if (c.skips.includes(today)) return;
   await updateCycleConfig({ skips: [...c.skips, today] });
+}
+
+/** Opt a product out of phased staging so it enters the cycle now (docs/05 §6.2). */
+export async function overrideStaging(productId: string): Promise<void> {
+  const c = await loadCycleConfig();
+  if (c.stagingOverrides.includes(productId)) return;
+  await updateCycleConfig({ stagingOverrides: [...c.stagingOverrides, productId] });
 }
 
 /** Begin a recovery window (post-procedure or auto-de-escalation, docs/05 §7). */

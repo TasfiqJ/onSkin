@@ -1,7 +1,7 @@
 import type { FunctionalTag } from '@onskin/types';
 import { describe, expect, it } from 'vitest';
 
-import { CAPS_REVIEWED, frequencyCap } from './classes';
+import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
 import { orchestrate, type Cycle, type SchedulerActive, type SchedulerProfile } from './orchestrate';
 
 // Multi-active orchestration fixtures (docs/05 §4). The doc mandates the rules be
@@ -42,6 +42,31 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
     const retinoidNights = new Set(cycle!.nights.filter((n) => n.slot === 'retinoid').map((n) => n.index));
     const exfoliateNights = new Set(cycle!.nights.filter((n) => n.slot === 'exfoliate').map((n) => n.index));
     for (const i of retinoidNights) expect(exfoliateNights.has(i)).toBe(false);
+  });
+
+  it('schedules a ramped active on its ramp frequency (freq = min(ramp, cap)), not the full cap', () => {
+    // Regression: the ramp's freq_per_week must reach the scheduler (docs/05 §2/§4).
+    // Previously freqByProductId was read by orchestrate but never populated, so
+    // every active defaulted to the class cap regardless of the user's ramp.
+    const r = active('r', 'Retinol 0.3%', ['retinoid']);
+    const cap = reviewedFrequencyCap('retinoid', base.sensitivity);
+    const rampFreq = Math.max(1, cap - 1); // strictly below the cap when cap > 1
+
+    const { cycle: ramped } = orchestrate([r], { ...base, freqByProductId: { r: rampFreq } });
+    const rampedNights = ramped!.nights.filter((n) => n.slot === 'retinoid').length;
+    expect(rampedNights).toBe(rampFreq);
+
+    const { cycle: capped } = orchestrate([r], base); // no ramp → full cap
+    expect(capped!.nights.filter((n) => n.slot === 'retinoid').length).toBe(cap);
+
+    if (cap > 1) expect(rampedNights).toBeLessThan(cap);
+  });
+
+  it('never exceeds the cap even when the ramp frequency is higher', () => {
+    const r = active('r', 'Retinol 0.3%', ['retinoid']);
+    const cap = reviewedFrequencyCap('retinoid', base.sensitivity);
+    const { cycle } = orchestrate([r], { ...base, freqByProductId: { r: cap + 5 } });
+    expect(cycle!.nights.filter((n) => n.slot === 'retinoid').length).toBe(cap);
   });
 
   it('keeps vitamin C + niacinamide in the AM, off the night cycle', () => {

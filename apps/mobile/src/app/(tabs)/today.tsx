@@ -134,6 +134,7 @@ export default function TodayScreen() {
   const cTonight = cycleData?.tonight ?? null;
   const skippedTonight = cycleData?.skippedTonight ?? false;
   const recoveryActive = cycleData?.recovery.active ?? false;
+  const paused = cycleData?.paused ?? false;
   const tonightSlot = cTonight?.night.slot ?? null;
 
   // Persist the check-off to the local-first store, fire the activation metric on the
@@ -273,9 +274,11 @@ export default function TodayScreen() {
   const nightNumber = cTonight ? cTonight.index + 1 : 2;
   const nightTotal = cycle?.lengthNights ?? FALLBACK_SLOTS.length;
   // Tonight's cycled active comes from the engine (suppressed correctly for
-  // pregnancy etc.). Not from a hardcoded literal. Skipped/recovery nights drop it.
+  // pregnancy etc.). Not from a hardcoded literal. Skipped, recovery, AND
+  // paused/travel nights all drop the potent active so the evening trims to the
+  // stable barrier basics the pause/travel banners promise (docs/05 §6.4).
   const cycledStep =
-    !skippedTonight && !recoveryActive && cTonight?.night.productId
+    !skippedTonight && !recoveryActive && !paused && cTonight?.night.productId
       ? {
           productId: cTonight.night.productId,
           name: cTonight.night.productName ?? 'Tonight’s active',

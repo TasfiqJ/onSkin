@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
-import { useCycle } from '@/features/scheduler/useCycle';
+import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 
 // Phased introduction (design screen 07, docs/05 §4). Don't start every active at
 // once. A new active is staged in next, on its own night, so any reaction is
@@ -51,9 +51,18 @@ function Step({
 
 export default function PhasedIntroScreen() {
   const { data } = useCycle();
+  const { overrideStaging } = useCycleMutations();
   // The staged active's name comes from the orchestration note when present.
   const note = data?.notes.find((n) => /add your/i.test(n));
   const newName = note?.match(/add your (.+?) next week/i)?.[1] ?? 'new active';
+  const stagedIds = data?.stagedActiveIds ?? [];
+
+  // "Add it now anyway" (docs/05 §6.2): opt the staged active(s) out of phasing
+  // so the next orchestration brings them straight into the cycle.
+  async function addNow() {
+    await Promise.all(stagedIds.map((id) => overrideStaging(id)));
+    router.back();
+  }
 
   return (
     <Sheet>
@@ -76,7 +85,12 @@ export default function PhasedIntroScreen() {
 
       <Button label="Sounds good" onPress={() => router.back()} />
       <View className="items-center">
-        <Text variant="bodySm" tone="muted" className="py-3 font-sans-semibold" onPress={() => router.back()}>
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className="py-3 font-sans-semibold"
+          accessibilityRole="button"
+          onPress={() => void addNow()}>
           Add it now anyway
         </Text>
       </View>
