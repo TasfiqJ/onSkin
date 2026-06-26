@@ -777,6 +777,22 @@ drag-and-drop reorder (B-DRAG-DND; handles + non-blocking nudge built), clinical
 sequencing/ramp/cycling rules (B-DERM-REVIEW), PostHog routine events (B-POSTHOG).
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
+### docs/04 — smart shelf (intake / PAO / lifecycle / replenishment) ✅ CLEAN (2026-06-25)
+Feature-fidelity re-audit against docs/04. Verdict: faithful and complete — **no unblocked gap found**.
+Migration 0016 matches §2 (additive `user_products` columns with correct enums + the careful note that
+created_at/updated_at already exist in 0005; the `(user_id, status, expiry_computed)` index; `shelf_scans`
+owner-RLS incl. the contribute-back UPDATE). The local-first store (`shelf/store.ts`) carries the full §2
+shape (opened-date linchpin, `isOpened` unopened state, `paoSource`/`expirySource` provenance, lifecycle
+`status`/`finishedAt`, `repurchaseCount`, on-device `thumbnailPath`) with add/update/remove/`reAddProduct`
+(replenish: archive old unit + fresh one, reset clock, carry repurchase count). The 5-state badge taxonomy
+(`pao.ts`), the SPF-printed-expiry-wins `least()` logic, the All/Actives/Expiring filters, the calm
+override-aware conflict banner, and the intake routes (scan/no-match/ocr/manual/opened/[id]/archive/replenish)
+are all present. Replenishment is correctly **inert + consent-gated** (shares nothing; B-PRIVACY).
+Blocked (correct): live barcode/OBF scan + OCR (B-CATALOG-SEED + B-CAMERA), contribute-back job
+(B-SHELF-CONTRIB), data-sharing consent + ShopMy affiliate (B-PRIVACY / B-SHOPMY), server persistence
+(B-SUPABASE), PAO defaults sign-off (B-DERM-REVIEW), PostHog scan funnel (B-POSTHOG).
+**Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
