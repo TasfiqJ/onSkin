@@ -30,6 +30,8 @@ export type SubscriptionState = {
   expiresAt: string | null;
   daysLeft: number | null; // whole days until expiry (reverse trial / trial / renewal)
   willRenew: boolean | null;
+  /** Active product id (lets the success screen tell a win-back from a normal buy). */
+  productId: string | null;
   inReverseTrial: boolean;
   inTrial: boolean;
   /** Had an entitlement that has lapsed. Drives the graceful downgrade + win-back. */
@@ -60,6 +62,7 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
     expiresAt: null,
     daysLeft: null,
     willRenew: null,
+    productId: null,
     inReverseTrial: false,
     inTrial: false,
     expired: false,
@@ -75,6 +78,7 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
       expiresAt: e.expiresAt,
       daysLeft: daysUntil(e.expiresAt, nowISO),
       willRenew: e.willRenew,
+      productId: e.productId,
       inReverseTrial: e.periodType === 'reverse_trial',
       inTrial: e.periodType === 'trial',
       expired: false,

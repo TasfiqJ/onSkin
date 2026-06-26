@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { cancelTrialReminder, scheduleTrialReminder } from '@/features/notifications/deliver';
 import { track } from '@/lib/analytics/track';
 import { purchasePackage, restorePurchases } from '@/lib/iap/revenuecat';
 
@@ -47,8 +48,14 @@ export function useEntitlementActions() {
   // (B-REVENUECAT); v1 grants the trial locally so the flow + success screen work.
   const startTrial = useMutation({
     mutationFn: async () => {
-      await purchasePackage('annual');
+      const result = await purchasePackage('annual');
+      // Bypass guard (docs/08 §3.3): once the real SDK lands, a user cancellation
+      // returns { purchased:false } and must NOT grant Pro. The v1 stub returns
+      // { stub:true } so the demo flow still completes locally.
+      if (!result.purchased && !result.stub) return;
       await grantTrial();
+      // Schedule the promised "2 days before the trial ends" reminder (docs/08 §6).
+      await scheduleTrialReminder();
       track('trial_started', { product: 'onskin_pro_annual' });
     },
     onSettled: invalidate,
@@ -56,8 +63,10 @@ export function useEntitlementActions() {
 
   const purchase = useMutation({
     mutationFn: async () => {
-      await purchasePackage('annual');
+      const result = await purchasePackage('annual');
+      if (!result.purchased && !result.stub) return; // same bypass guard
       await setActivePaid();
+      await cancelTrialReminder(); // now paid, no trial conversion to warn about
       track('purchase_completed', { product: 'onskin_pro_annual' });
     },
     onSettled: invalidate,
@@ -82,6 +91,7 @@ export function useEntitlementActions() {
   const winback = useMutation({
     mutationFn: async () => {
       await setActivePaid('onskin_pro_annual_winback');
+      await cancelTrialReminder(); // win-back is immediate paid, no trial
       track('winback_converted');
     },
     onSettled: invalidate,

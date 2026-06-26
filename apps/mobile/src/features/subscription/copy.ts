@@ -57,6 +57,11 @@ export const PAYWALL_COPY = {
     bodyFor: (price: string) =>
       `Your 14 days of Pro start now. We’ll remind you 2 days before it converts to ${price}/year. Cancel anytime.`,
     metaFor: (endDate: string, price: string) => `trial ends ${endDate} · renews ${price}/yr`,
+    // Paid path (win-back / direct purchase): there is no trial, so do not promise
+    // a trial conversion. The amount the user actually paid is the one shown.
+    bodyForPaid: (price: string) =>
+      `Pro is active now. Your plan renews at ${price}/year. Cancel anytime.`,
+    metaForPaid: (endDate: string, price: string) => `active until ${endDate} · renews ${price}/yr`,
     cta: 'See tonight’s routine',
   },
   // Manage subscription (design 06, docs/08 §3.4).

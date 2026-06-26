@@ -17,10 +17,12 @@ export async function configureRevenueCat(_appUserId: string): Promise<void> {
   // no-op until the SDK is installed (B-REVENUECAT)
 }
 
-/** Opens the native purchase sheet. Stub returns purchased:false (no SDK); the
- *  caller grants the v1 entitlement locally so the flow completes (B-REVENUECAT). */
-export async function purchasePackage(_plan: PlanId): Promise<{ purchased: boolean }> {
-  return { purchased: false };
+/** Opens the native purchase sheet. The stub returns `{ purchased:false, stub:true }`
+ *  so the caller can grant the v1 entitlement locally (the flow completes) WITHOUT
+ *  blindly granting on a real `{ purchased:false }` user-cancellation once the SDK
+ *  lands (docs/08 §3.3 paywall-bypass guard). Real impl omits `stub`. (B-REVENUECAT) */
+export async function purchasePackage(_plan: PlanId): Promise<{ purchased: boolean; stub?: boolean }> {
+  return { purchased: false, stub: true };
 }
 
 /** Re-syncs entitlements for reinstalls/device-switches (docs/08 §3.3). */

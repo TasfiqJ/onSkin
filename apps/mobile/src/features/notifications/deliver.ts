@@ -3,6 +3,9 @@ import { Platform } from 'react-native';
 
 import type { NotificationKind } from '@onskin/types';
 
+import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { PLANS } from '@/features/subscription/plans';
+import { loadEntitlement } from '@/features/subscription/store';
 import { supabase } from '@/lib/supabase/client';
 
 import { REMINDER_COPY } from './copy';
@@ -123,8 +126,58 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
         });
       }
     }
+    // The one-shot "2 days before your trial ends" pre-charge reminder (docs/08
+    // §6, the honesty promise made on the paywall + success screens). Re-created
+    // here so the cancelAll above never strands it when the user edits any pref.
+    await scheduleTrialReminder();
   } catch {
     /* unsupported environment. No-op (B-NOTIF-VERIFY) */
+  }
+}
+
+const TRIAL_REMINDER_ID = 'onskin-trial-reminder';
+
+function fmtShortDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/**
+ * Schedule the one-shot pre-charge reminder fired 2 days before a carded trial
+ * converts (docs/08 §6 / docs/07): the app promises this on the paywall + success
+ * screens, so it must actually be scheduled. Reads the entitlement; only schedules
+ * for an ACTIVE carded trial whose 2-days-before instant is still in the future.
+ * Idempotent (fixed identifier, cancelled + recreated). No-op off-device.
+ */
+export async function scheduleTrialReminder(): Promise<void> {
+  try {
+    await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID).catch(() => {});
+    const e = await loadEntitlement();
+    if (!e || !e.isActive || e.periodType !== 'trial' || !e.expiresAt) return;
+    const fireAt = new Date(e.expiresAt).getTime() - 2 * 86_400_000;
+    if (fireAt <= Date.now()) return; // already inside the final 2 days. Nothing to schedule
+    await Notifications.scheduleNotificationAsync({
+      identifier: TRIAL_REMINDER_ID,
+      content: {
+        title: PAYWALL_COPY.trialReminder.title,
+        body: PAYWALL_COPY.trialReminder.bodyFor(fmtShortDate(e.expiresAt), PLANS.annual.priceLabel),
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+        date: fireAt,
+        ...(Platform.OS === 'android' ? { channelId: 'routine' } : {}),
+      },
+    });
+  } catch {
+    /* unsupported environment. No-op (B-NOTIF-VERIFY) */
+  }
+}
+
+/** Cancel the pre-charge reminder (on conversion or trial cancellation). */
+export async function cancelTrialReminder(): Promise<void> {
+  try {
+    await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID);
+  } catch {
+    /* no-op */
   }
 }
 
