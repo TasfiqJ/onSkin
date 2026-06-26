@@ -42,7 +42,9 @@ export default function WelcomeScreen() {
       // non-fatal before backend is configured
     }
     setBusy(false);
-    router.push('/onboarding/goals');
+    // Neutral DOB age gate (docs/01 §4) precedes any data collection; it self-skips
+    // to goals if this device already passed it.
+    router.push('/onboarding/age');
   }
 
   // Stay on splash while deciding; render nothing while redirecting an onboarded user.

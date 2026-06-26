@@ -708,6 +708,29 @@ founder blocker (accounts/keys/legal/clinical/native dev build/catalog seed) —
 
 13. ✅ "Ask OnSkin" assistant — Doc 13 (Slice 27): the grounded, **template-bounded** conversational front-end to the on-device intelligence layer — NOT an open chatbot. The deterministic, on-device, $0 advisor (conflict/routine/fit answers about your own shelf, refuse-over-guess, verbal clinician escalation, **safety conflicts always escalate**) ships as v1; substantive claims are template-filled from `detectConflicts`/`recommend`/`generatePlan`, never free-generated. New `ask_onskin` default-OFF consent + content-free/safety-audit-only schema (migration 0025); the broadened runtime claim-safety guard; the 5 surfaces + Today/You entry. Stress-tested + adversarially reviewed. Validated as a seven-figure **contributor, not a king-maker** (narrow/structural moat). The whole **cloud-grounded language layer is deferred** (**B-AI-ASSISTANT-VENDOR** / **B-AI-ASSISTANT-SAFETY** / **B-AI-ASSISTANT-LEGAL**, + **B-CATALOG-SEED** / **B-DERM-REVIEW** for the corpus).
 
+## Post-build audit (per-doc fidelity pass)
+
+### docs/01 — auth / onboarding / data model / RLS ✅ (2026-06-25)
+Feature-fidelity re-audit of the implemented build against docs/01. Verdict: faithful and
+high-quality — all 12 §3 tables match (RLS `(select auth.uid())` + `TO authenticated` +
+`WITH CHECK` + indexed + definer helpers; append-only completions w/ 48h server cap +
+hybrid cached streaks; immutable consents w/ DB update-block; private photos bucket + the
+anon no-cloud-backup restrictive policy). LargeSecureStore, native Apple/Google + email-OTP,
+biometric app-lock, the full §2 onboarding sequence (health-consent gates the quiz), and the
+deletion/export/RC-webhook Edge Functions are all present. Two real, non-founder-blocked gaps
+were found and **closed**:
+- **Neutral DOB age gate (§4)** — built `app/onboarding/age.tsx` + tested pure `ageGate.ts`
+  + `ageGateStore.ts` (stores only the pass flag, **never the DOB**). Placed before any data
+  collection; blocks under-16. Threshold/parental-consent path still a counsel call.
+- **Persisted offline check-off queue (§6)** — built `lib/offline/completionQueue.ts`
+  (+ tested pure helpers) + `OfflineSync.tsx` foreground drain; the Today read merges pending.
+  Fixed the misleading `queryClient.ts` comment.
+
+Remaining docs/01 items are minor/deferred (orphan-anon cleanup → infra/B-SUPABASE;
+anon→social linking mitigation → B-VERIFY-AUTH-LINKING; hard-delete-by-design;
+consents ip/ua server-side). See BLOCKERS.md "Design-audit follow-ups".
+**Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
 ## Open questions for the founder
 - See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
   are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,

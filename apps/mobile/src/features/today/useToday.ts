@@ -2,6 +2,7 @@ import type { RoutineType } from '@onskin/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { track } from '@/lib/analytics/track';
+import { enqueueCompletion, flushCompletions, pendingStepIdsForDate } from '@/lib/offline/completionQueue';
 import { supabase } from '@/lib/supabase/client';
 
 export type TodayStep = {
@@ -76,6 +77,9 @@ export function useToday() {
         .select('step_id')
         .eq('completed_date', today);
       const doneSet = new Set((completions ?? []).map((c) => c.step_id));
+      // Merge offline check-offs not yet synced (docs/01 §6) so they survive a
+      // refetch/restart and aren't visually un-checked before the server confirms.
+      for (const id of await pendingStepIdsForDate(today)) doneSet.add(id);
 
       // Resolve product names for steps that reference a user_product.
       const productIds = (steps ?? []).map((s) => s.user_product_id).filter((id): id is string => !!id);
@@ -114,14 +118,19 @@ export function useToggleStep() {
       const { data: userData } = await supabase.auth.getUser();
       const userId = userData.user?.id;
       if (!userId) throw new Error('not signed in');
-      // Append-only insert; server sets source + caps backfill (migration 0007).
-      const { error } = await supabase.from('routine_completions').insert({
-        user_id: userId,
-        routine_id: routineId,
-        step_id: stepId,
-        completed_date: today,
+      // Persist to the offline queue FIRST (docs/01 §6) so a killed or offline app
+      // still syncs this check-off later, then drain immediately when online. The
+      // append-only insert (server sets source + caps backfill, migration 0007)
+      // happens inside flushCompletions; a network failure there just leaves the
+      // row queued rather than throwing; the optimistic check-off stands.
+      await enqueueCompletion({
+        userId,
+        routineId,
+        stepId,
+        completedDate: today,
+        enqueuedAt: new Date().toISOString(),
       });
-      if (error) throw error;
+      await flushCompletions();
     },
     // Optimistic check-off (docs/01 §6). Bathroom check-offs feel instant.
     onMutate: async ({ stepId }) => {

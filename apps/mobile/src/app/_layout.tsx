@@ -12,6 +12,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { configureNotifications } from '@/features/notifications/deliver';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
+import { OfflineSync } from '@/lib/offline/OfflineSync';
 import { queryClient } from '@/lib/query/queryClient';
 import { fontMap } from '@/theme/fonts';
 
@@ -37,6 +38,7 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <AppLockProvider>
+              <OfflineSync />
               <StatusBar style="dark" />
               <Stack screenOptions={{ headerShown: false }} />
             </AppLockProvider>

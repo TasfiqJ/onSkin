@@ -1,8 +1,10 @@
 import { QueryClient } from '@tanstack/react-query';
 
-// v1 offline/data layer (docs/01 §6): TanStack Query + optimistic updates +
-// (added in the routine slice) a persisted mutation queue, so bathroom check-offs
-// succeed offline and sync later. Legend-State/PowerSync deferred.
+// v1 data layer (docs/01 §6): TanStack Query + optimistic updates. The persisted
+// offline write queue for bathroom check-offs (so they succeed offline and sync
+// later) lives in lib/offline/completionQueue.ts and is drained by lib/offline/
+// OfflineSync.tsx on foreground. Read-side offline persistence (persistQueryClient)
+// and Legend-State/PowerSync remain deferred upgrades.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

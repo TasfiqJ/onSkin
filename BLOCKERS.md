@@ -362,6 +362,37 @@ these — they need no founder input):
 - Interactive cycle rule-nudge + drag-reassign are honestly deferred under **B-DRAG-DND**
   (already tracked) — wire the reactive two-button nudge when drag lands.
 
+A 2026-06-25 feature-fidelity audit of **docs/01** (auth / onboarding / data model / RLS)
+found the build faithful and high-quality (the data model + RLS especially). Two real,
+non-founder-blocked gaps were found and **closed in-session**; a few minor items remain:
+
+- ✅ **Neutral DOB age gate (docs/01 §4)** — BUILT. `app/onboarding/age.tsx` + pure
+  `features/onboarding/ageGate.ts` (tested) + `ageGateStore.ts`. A real date-of-birth
+  entry (not "are you over X?", which invites falsification), placed after welcome and
+  **before any data collection**; blocks under-`MINIMUM_AGE` (16). We persist only the
+  pass/fail flag — **never the DOB itself** (data minimization). The exact threshold + any
+  parental-consent path remain a counsel decision (minors / **B-PRIVACY**). Previously the
+  only age check was the community "confirm 16+" tap — exactly the pattern §4 warns against.
+- ✅ **Persisted offline check-off queue (docs/01 §6)** — BUILT. `lib/offline/
+  completionQueue.ts` (+ pure `.pure.ts`, tested) durably queues check-offs on AsyncStorage
+  and drains them via `lib/offline/OfflineSync.tsx` on foreground; the Today read merges
+  not-yet-synced check-offs; stale (>48h, past the server cap) and other-user rows are
+  dropped. Corrected the misleading `queryClient.ts` comment (it claimed a persisted queue
+  that did not exist — only in-memory optimistic updates did). Read-side offline persistence
+  (`persistQueryClient`) + a NetInfo online-signal remain deferred upgrades (no dep added).
+- **Orphaned anonymous-account cleanup (docs/01 §1)** — NOT built. A scheduled Edge Function
+  to purge inactive anonymous accounts after N days; needs the live project + pg_cron to run.
+  Small/operational — track for the infra pass (shares **B-SUPABASE**).
+- **Anon → social linking mitigation (docs/01 §1)** — the "set the anon email first for
+  automatic email-based linking" path is still not coded; `signInWithIdToken` is called
+  directly. Remains under **B-VERIFY-AUTH-LINKING** (real-device verification decides whether
+  the `updateUser({email})` fallback is required).
+- **Account deletion is an immediate hard-delete, not soft-delete + grace** (docs/01 §4) —
+  a conscious deviation (MHMDA has no retention exception → prompt deletion is the safer
+  reading). Left as-is by design.
+- **`consents.ip` / `user_agent`** are not captured by client `recordConsent` — better
+  populated server-side (a client can't reliably read its own IP). Minor.
+
 ---
 
 ## New blockers discovered during build
