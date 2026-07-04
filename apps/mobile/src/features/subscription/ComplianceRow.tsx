@@ -2,6 +2,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { Alert, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { POLICY_LINKS } from '@/lib/legal/policyLinks';
 import { colors } from '@/theme/tokens';
 
 import { useEntitlementActions } from './useEntitlement';
@@ -12,8 +13,8 @@ import { useEntitlementActions } from './useEntitlement';
 // Restore re-syncs entitlements (docs/08 §3.3).
 // Placeholder policy pages. Final text is B-PRIVACY-COPY / B-LEGAL; the LINKS are
 // functional (Apple 3.1.2 requires functional Terms/Privacy in the binary).
-export const TERMS_URL = 'https://onskin.app/terms';
-export const PRIVACY_URL = 'https://onskin.app/privacy';
+export const TERMS_URL = POLICY_LINKS.terms.url;
+export const PRIVACY_URL = POLICY_LINKS.privacy.url;
 
 export function openPolicy(url: string) {
   void WebBrowser.openBrowserAsync(url).catch(() => {});
@@ -26,8 +27,14 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
 
   function onRestore() {
     restore.mutate(undefined, {
-      onSettled: () =>
-        Alert.alert('Restore purchases', 'We re-synced your account. Any active subscription is now restored on this device.'),
+      onSuccess: (result) =>
+        Alert.alert(
+          'Restore purchases',
+          result.active
+            ? 'Your active subscription is restored on this device.'
+            : 'No active subscription was found for this account.',
+        ),
+      onError: () => Alert.alert('Restore purchases', 'We could not restore purchases. Please try again.'),
     });
   }
 

@@ -1,4 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { Image } from 'expo-image';
+import * as FileSystem from 'expo-file-system/legacy';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -32,9 +34,23 @@ function Chip({ label, ok }: { label: string; ok: boolean }) {
 
 export default function ReviewScreen() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ alignment?: string; lighting?: string; timeOfDay?: string; takenLocalDate?: string }>();
+  const params = useLocalSearchParams<{
+    alignment?: string;
+    lighting?: string;
+    headRoll?: string;
+    headYaw?: string;
+    headPitch?: string;
+    captureSessionId?: string;
+    capturedUri?: string;
+    timeOfDay?: string;
+    takenLocalDate?: string;
+  }>();
   const alignment = Number(params.alignment ?? 0.9);
   const lighting = Number(params.lighting ?? 0.85);
+  const headRoll = params.headRoll != null ? Number(params.headRoll) : null;
+  const headYaw = params.headYaw != null ? Number(params.headYaw) : null;
+  const headPitch = params.headPitch != null ? Number(params.headPitch) : null;
+  const capturedUri = params.capturedUri ?? null;
   const timeOfDay = (params.timeOfDay as TimeOfDay) ?? null;
   const takenLocalDate = params.takenLocalDate ?? localDay();
 
@@ -46,10 +62,20 @@ export default function ReviewScreen() {
   function save() {
     const wasEmpty = (data?.count ?? 0) === 0;
     add.mutate(
-      { takenLocalDate, timeOfDay, alignmentScore: alignment, lightingScore: lighting },
+      {
+        takenLocalDate,
+        timeOfDay,
+        alignmentScore: alignment,
+        lightingScore: lighting,
+        headRoll,
+        headYaw,
+        headPitch,
+        captureSessionId: params.captureSessionId ?? null,
+        localUri: capturedUri,
+      },
       {
         onSettled: () => {
-          track('photo_captured', { on_device: true, alignment_score: alignment, lighting_score: lighting });
+          track('photo_captured', { on_device: true, result: verdict.flag });
           if (wasEmpty) track('first_photo_captured');
           router.back();
         },
@@ -63,13 +89,17 @@ export default function ReviewScreen() {
         {`${PHOTO_COPY.review.eyebrow} · ${fmt(takenLocalDate)}`}
       </Text>
 
-      {/* captured photo placeholder */}
+      {/* captured photo */}
       <View style={{ height: 380, borderRadius: 24, overflow: 'hidden', backgroundColor: '#2A251E' }}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>
-            your photo
-          </Text>
-        </View>
+        {capturedUri ? (
+          <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+        ) : (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>
+              your photo
+            </Text>
+          </View>
+        )}
         <View style={{ position: 'absolute', left: 14, bottom: 14, flexDirection: 'row', gap: 8 }}>
           <Chip label="Aligned" ok={verdict.aligned} />
           <Chip label="Well-lit" ok={verdict.wellLit} />
@@ -91,7 +121,10 @@ export default function ReviewScreen() {
       <View style={{ flexDirection: 'row', gap: 12, paddingBottom: insets.bottom + 24 }}>
         <Pressable
           accessibilityRole="button"
-          onPress={() => router.replace('/progress/capture')}
+          onPress={() => {
+            if (capturedUri) void FileSystem.deleteAsync(capturedUri, { idempotent: true });
+            router.replace('/progress/capture');
+          }}
           style={{ flex: 1, height: 56, borderRadius: 999, backgroundColor: 'rgba(244,239,231,0.1)', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: '#F4EFE7' }}>{PHOTO_COPY.review.retake}</Text>
         </Pressable>

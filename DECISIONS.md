@@ -18,12 +18,12 @@ Format: `D-NNN — date — decision — rationale`.
   mutually compatible; additions use `expo install` for the same reason.
 
 - **D-002 — 2026-06-12 — Turborepo monorepo** (`apps/mobile` + `packages/types`
-  + `supabase/`), per docs/00 §9 ("Turborepo monorepo with shared TS packages").
-  Shared `@onskin/types` package holds the Supabase `Database` type + domain
-  enums so the mobile client and Edge Functions share one source of truth.
-  NOTE: Metro's monorepo module resolution cannot be runtime-verified in this
-  environment (no Mac/simulator/device). Standard Expo monorepo `metro.config.js`
-  is used; flagged for first-device verification (see BLOCKERS B-VERIFY-METRO).
+  - `supabase/`), per docs/00 §9 ("Turborepo monorepo with shared TS packages").
+    Shared `@onskin/types` package holds the Supabase `Database` type + domain
+    enums so the mobile client and Edge Functions share one source of truth.
+    NOTE: Metro's monorepo module resolution cannot be runtime-verified in this
+    environment (no Mac/simulator/device). Standard Expo monorepo `metro.config.js`
+    is used; flagged for first-device verification (see BLOCKERS B-VERIFY-METRO).
 
 - **D-003 — 2026-06-12 — expo-router (file-based navigation).** Not specified in
   docs; expo-router is the current Expo default and what the template ships.
@@ -107,7 +107,7 @@ Format: `D-NNN — date — decision — rationale`.
   (incl. anonymous), service-role write only** (docs/02 §3). Product intake
   happens during the pre-account quiz, so anon (who hold the `authenticated`
   role) must read the catalog; `conflict_rules` exposes only `is_active` rows.
-  The Slice-1 docs/00 §2 catalog *sketch* (migration 0003) was rewritten to the
+  The Slice-1 docs/00 §2 catalog _sketch_ (migration 0003) was rewritten to the
   docs/02 §3 schema — it was a never-applied placeholder, so editing forward is
   clean (no deployed DB; B-SUPABASE).
 
@@ -213,11 +213,11 @@ Format: `D-NNN — date — decision — rationale`.
   urgent countdown/expired), so a resolved interaction is surfaced as "handled"
   without hiding a real expiry. The eye/SPF firmer case reuses the amber
   countdown tint with "Replace for safety" — visible but **never red**; a
-  safety-critical *countdown* stays a normal calm countdown.
+  safety-critical _countdown_ stays a normal calm countdown.
 
 - **D-032 — 2026-06-13 — PAO category defaults are launch-gated like the conflict
   matrix** (review finding). `pao.ts` now carries the same `*** BLOCKED:
-  B-DERM-REVIEW` banner as `rules.ts` plus `PAO_DEFAULTS_REVIEWED = false` and a
+B-DERM-REVIEW` banner as `rules.ts` plus `PAO_DEFAULTS_REVIEWED = false` and a
   `reviewedCategoryPao()` accessor that mirrors `shippableRules`: the unreviewed
   numbers are used in development (so the shelf is demoable) but **withheld in
   production** until cosmetic-chemist sign-off, where intake falls back to the
@@ -227,7 +227,7 @@ Format: `D-NNN — date — decision — rationale`.
 
 - **D-033 — 2026-06-13 — Printed best-before is a catalog/scan datum, with an
   inline manual fallback on the detail hub** (review finding, docs/04 §3/§5.6).
-  The design's "Mineral SPF 50 · printed expiry" is a *scanned/catalog* product
+  The design's "Mineral SPF 50 · printed expiry" is a _scanned/catalog_ product
   (OBF carries expiry data, B-CATALOG-SEED), so the manual-add form deliberately
   stays clean (matching the mock) and uses PAO. To keep the §3 "printed expiry
   wins for sunscreen" / `least()` rule reachable through the always-available
@@ -264,7 +264,7 @@ Format: `D-NNN — date — decision — rationale`.
   advances `anchor_date` by the paused duration so the sequence continues (you were
   on a recovery night, you still are), rather than snapping to today's modular
   position; a single **skip** does not re-anchor. Pause/travel/procedure/irritation
-  are all *managed* (a recovery window or a pause), never punished — consistent with
+  are all _managed_ (a recovery window or a pause), never punished — consistent with
   the calm streak (docs/03 §6). Auto de-escalation is conservative (pause + recovery,
   never escalate) and non-diagnostic.
 
@@ -281,7 +281,7 @@ Format: `D-NNN — date — decision — rationale`.
 
 ## Guided photo capture & progress (docs/06, Slice 20)
 
-> Note: docs/06 §6 *suggests* "D-028/029/030" for the photo privacy / flagged-not-
+> Note: docs/06 §6 _suggests_ "D-028/029/030" for the photo privacy / flagged-not-
 > blocked / no-AI-score decisions, but those numbers were already taken by the Smart
 > Shelf slice. They are recorded here as D-039/D-040/D-042 with the mapping noted.
 
@@ -304,12 +304,12 @@ Format: `D-NNN — date — decision — rationale`.
   computed or stored**; the additive `head_roll/yaw/pitch` columns are coarse pose QA,
   not an identification template (avoids BIPA's trigger). Migration 0018 is purely
   additive; owner-only RLS (0008) is unchanged, plus a hardened `owns_photo()` definer
-  + restrictive policies so a shot's `reference_photo_id` must be owned (the D-014
-  pattern).
+  - restrictive policies so a shot's `reference_photo_id` must be owned (the D-014
+    pattern).
 
 - **D-040 — 2026-06-13 — No real camera in v1; the capture pipeline is B-CAMERA** (the
   doc's suggested "D-029" — quality flagged, never blocked). `react-native-vision-
-  camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
+camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   on-device luminance/white-balance, auto-capture, client-side image encryption, and
   the Wi-Fi/charging cloud-upload job all need a **custom dev build** and on-device
   performance tuning (docs/00 §4 spike, docs/06 §10). The guided-capture / review /
@@ -430,15 +430,15 @@ Format: `D-NNN — date — decision — rationale`.
   **falls back to the free tier with data preserved — never deleted** (docs/08 §6).
   `ProGate` / `withProGate` wrap a feature behind a calm contextual upsell.
 
-- **D-051 — 2026-06-13 — Honest-by-design paywall = Apple-3.1.2-compliant + ARL-compliant
-  + trust-maximising** (docs/08 §7/§9, the doc's suggested "D-036"). The billed amount
-  is the most conspicuous price; **Terms + Privacy + Restore are present and functional**
-  on the paywall + the contextual upsell (`ComplianceRow`); **no free-trial toggle**; the
-  auto-renew disclosure + the 2-day-before reminder promise + cancel-anytime are shown;
-  the reverse trial is no-card; cancellation is a **one-tap OS deep-link** (no maze); the
-  win-back is a respectful, easy-"no" offer. A `claimsafety.test.ts` guard blocks
-  reintroduced urgency / guilt / fake-scarcity / drug claims and asserts the honest
-  disclosures are present.
+- \*\*D-051 — 2026-06-13 — Honest-by-design paywall = Apple-3.1.2-compliant + ARL-compliant
+  - trust-maximising** (docs/08 §7/§9, the doc's suggested "D-036"). The billed amount
+    is the most conspicuous price; **Terms + Privacy + Restore are present and functional**
+    on the paywall + the contextual upsell (`ComplianceRow`); **no free-trial toggle**; the
+    auto-renew disclosure + the 2-day-before reminder promise + cancel-anytime are shown;
+    the reverse trial is no-card; cancellation is a **one-tap OS deep-link\*\* (no maze); the
+    win-back is a respectful, easy-"no" offer. A `claimsafety.test.ts` guard blocks
+    reintroduced urgency / guilt / fake-scarcity / drug claims and asserts the honest
+    disclosures are present.
 
 - **D-052 — 2026-06-13 — Store IAP via RevenueCat is the universal default; prices are
   never hardcoded as truth** (docs/08 §7/§12, the doc's suggested "D-035"). `plans.ts`
@@ -501,7 +501,7 @@ Format: `D-NNN — date — decision — rationale`.
 - **D-057 — 2026-06-13 — The "For you" hub is NOT Pro-gated in v1; local-first
   state.** The docs do not specify gating recommendations behind Pro, and doc 9's
   thesis frames the independent advisor as the core trust feature — so gating it
-  would be *inventing a restriction*. The hub, the what/why/how card, and the
+  would be _inventing a restriction_. The hub, the what/why/how card, and the
   preferences surface are shown to all (revisit with doc-10 pricing if ever). The
   preferences + dismissals are a **local-first** AsyncStorage store (the D-029
   pattern) with a guarded owner-RLS `recommendation_preferences` mirror; the
@@ -773,6 +773,68 @@ Format: `D-NNN — date — decision — rationale`.
   blockers: **B-AI-ASSISTANT-VENDOR** (the zero-retention/no-training cloud LLM + the
   Edge-Function cost/abuse caps), **B-AI-ASSISTANT-SAFETY** (the grounding + layered guard +
   red-team eval launch gate), **B-AI-ASSISTANT-LEGAL** (§230 / FDA / FTC / EU AI Act Art. 50
-  + state companion-chatbot laws + minors/COPPA + the Art. 9 transmission consent + DPIA);
-  depends on **B-CATALOG-SEED** + **B-DERM-REVIEW** (the corpus is the prerequisite), and the
-  consent copy extends **B-PRIVACY / B-PRIVACY-COPY**.
+  - state companion-chatbot laws + minors/COPPA + the Art. 9 transmission consent + DPIA);
+    depends on **B-CATALOG-SEED** + **B-DERM-REVIEW** (the corpus is the prerequisite), and the
+    consent copy extends **B-PRIVACY / B-PRIVACY-COPY**.
+
+## Launch governance
+
+- **D-079 — 2026-07-04 — Phase 1 source-of-truth cleanup added launch-readiness,
+  brand, V1 scope, Phase 2, and seven-figure-readiness docs.** This does not
+  legally clear a brand. `B-BRAND` remains a founder/counsel launch blocker, but
+  engineering should not create production infrastructure under the `OnSkin`
+  identity unless counsel clears it in writing. The default planning path is a
+  rebrand before Phase 2; `RoutineKind` is a working clearance candidate only.
+
+- **D-080 — 2026-07-04 — Phase 2 infrastructure is scaffolded locally, but live
+  accounts remain blocked by brand/account/secret ownership.** The repo now has
+  EAS variant config, native SDK dependencies, guarded RevenueCat purchase/restore
+  wiring, PostHog capture/identify wiring, Sentry startup wiring, env validation,
+  a Supabase staging deploy wrapper, and a live-project RLS smoke test. The
+  implementation intentionally keeps real purchases, analytics, crash reporting,
+  and backend deploys inert without real provider keys and custom native builds.
+  Public launch remains blocked until staging/prod Supabase, Apple/Google,
+  RevenueCat, PostHog, Sentry, Turnstile, policy URLs, device QA, and legal/brand
+  gates are completed under the cleared identity.
+
+- **D-081 - 2026-07-04 - Phase 3 signoff is implemented as an auditable gate,
+  not as a fake local clearance.** The repo now has Phase 3 regulatory,
+  clinical, chemistry, privacy/data, consent, store-review, Apple/Google, claims,
+  and quiz-FTO packets; scripts to audit risky copy and generate exact file-hash
+  review manifests; central policy links; conservative store metadata; and tests
+  for store-claim safety plus production gates. The app remains launch-blocked
+  until actual counsel, dermatologist, cosmetic-chemist, privacy, and IP/FTO
+  signoffs are attached. `phase3:audit-copy:strict` is expected to fail until
+  placeholders and blocker markers are truly closed.
+
+- **D-082 - 2026-07-04 - Phase 4 catalog is implemented as source-gated
+  infrastructure, not a fake launch database.** The repo now has additive
+  catalog schema/RLS, import-batch provenance, parser/quality models, OBF fixture
+  import/QA tooling, lookup/search/report Edge Functions, mobile source/quality
+  disclosure, and a correction loop. Production recommendations may use only
+  `verified` or `usable` products that are reviewed, source-approved, and free of
+  open corrections. Open Beauty Facts contribution-back is not promised until
+  ODbL/source review, account credentials, moderation, and queue operations are
+  approved. Product images remain disabled until image rights are reviewed.
+
+- **D-083 - 2026-07-04 - Phase 5 native camera ships as an Expo Camera baseline,
+  while OCR and precise face/pose signals stay gated.** Expo Camera is the first
+  native camera stack because it matches the current Expo SDK, supports live
+  barcode scanning and still capture, and keeps the build surface smaller than a
+  full VisionCamera/MLKit frame-processor stack before device QA. The app may
+  claim live barcode capture and progress-photo capture only after physical
+  iOS/Android QA passes. Native OCR remains hidden while
+  `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false`; the label path is a real camera capture
+  plus editable user-confirmed text, not a simulated OCR claim. Progress-photo
+  signals are coarse preview estimates until a reviewed detector proves transient
+  face/pose processing without persisting faceprints, embeddings, tracking IDs,
+  or raw frame streams.
+
+- **D-084 - 2026-07-04 - Phase 5 local photo storage uses authenticated local
+  encryption and no exact-alarm escalation.** Captured progress-photo temp files
+  are encrypted into app-private `.onskinphoto` envelopes using
+  XChaCha20-Poly1305 with a SecureStore-held content key; renderers decrypt to
+  memory for display/share, and deletion removes ciphertext. Routine reminders
+  stay gentle/inexact and the app does not request Android exact-alarm
+  permissions. Strict Phase 5 completion requires the generated device QA packet
+  to contain real EAS build IDs, physical device names, and named signoff.

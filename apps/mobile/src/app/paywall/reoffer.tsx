@@ -1,11 +1,11 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { PLANS } from '@/features/subscription/plans';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -13,7 +13,23 @@ import { colors } from '@/theme/tokens';
 // Earned by real use, data preserved, an easy "no". Never a data-deleting lock.
 export default function ReofferScreen() {
   const { startTrial, downgrade } = useEntitlementActions();
-  const annual = PLANS.annual;
+  const offering = useSubscriptionOffering();
+  const annual = offering.data?.annual ?? null;
+  const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+
+  function onStartTrial() {
+    if (!canPurchase) {
+      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      return;
+    }
+    startTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+      },
+      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+    });
+  }
 
   useEffect(() => {
     track('paywall_shown', { context: 'reverse_trial_reoffer' });
@@ -51,22 +67,28 @@ export default function ReofferScreen() {
         </View>
         <View className="mt-4 flex-row items-center justify-between rounded-card p-4" style={{ backgroundColor: colors.clayTint }}>
           <Text variant="bodySm" style={{ color: colors.clayDeep }}>
-            Start {annual.trialDays} days free, then
+            {annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for'}
           </Text>
           <Text variant="title" style={{ color: colors.clayDeep, fontSize: 24 }}>
-            {annual.priceLabel}
+            {annual?.priceLabel ?? 'Unavailable'}
             <Text variant="bodySm" style={{ color: colors.clayDeep }}>
-              /yr
+              /{annual?.periodLabel ?? 'yr'}
             </Text>
           </Text>
         </View>
+        {offering.data?.status && offering.data.status !== 'available' ? (
+          <Text variant="label" tone="muted" className="mt-2 text-center" style={{ fontSize: 11.5, lineHeight: 16 }}>
+            {offering.data.reason}
+          </Text>
+        ) : null}
       </View>
       <View className="gap-2.5 pb-2">
         <Pressable
           accessibilityRole="button"
-          onPress={() => startTrial.mutate(undefined, { onSettled: () => router.replace('/paywall/success') })}
+          disabled={!canPurchase || startTrial.isPending}
+          onPress={onStartTrial}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}>
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}>
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
             {PAYWALL_COPY.reoffer.keepCta}
           </Text>

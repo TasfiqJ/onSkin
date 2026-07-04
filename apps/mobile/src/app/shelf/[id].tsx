@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Screen, StripedThumb, Text } from '@/components/ui';
+import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
+import { catalogQualityCopy, catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { bannerSubhead, tagLabel } from '@/features/intelligence/presentation';
 import { expiryMonthLabel, surfacedExpiry } from '@/features/shelf/expiry';
@@ -20,8 +22,8 @@ import { colors } from '@/theme/tokens';
 // it's used, and the full lifecycle actions. Claim-safe throughout.
 
 const PROVENANCE: Record<string, string> = {
-  barcode: 'data · Open Beauty Facts',
-  search: 'data · Open Beauty Facts',
+  barcode: 'barcode lookup',
+  search: 'catalog search',
   ocr: 'from the label you scanned',
   manual: 'added by hand',
   onboarding: 'added during setup',
@@ -82,7 +84,9 @@ export default function ProductDetailScreen() {
   const archived = p.status !== 'active';
   const expiry = surfacedExpiry(p);
   const best = expiryMonthLabel(expiry);
-  const provenance = PROVENANCE[p.addedVia] ?? 'added by hand';
+  const provenance = p.catalogSource
+    ? `data / ${sourceDisplayName(p.catalogSource)}`
+    : (PROVENANCE[p.addedVia] ?? 'added by hand');
   const openedLabel = p.isOpened
     ? p.openedAt
       ? new Date(p.openedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
@@ -129,6 +133,46 @@ export default function ProductDetailScreen() {
       },
     ]);
   };
+
+  const submitCatalogReport = async (correctionType: CatalogCorrectionType) => {
+    const result = await reportCatalogIssue({
+      correctionType,
+      productId: p.catalogProductId,
+      barcode: p.barcode,
+      description: `${correctionType} reported from product detail`,
+      clientContext: {
+        shelfProductId: p.id,
+        addedVia: p.addedVia,
+        quality: p.catalogMatchQuality,
+        source: p.catalogSource,
+      },
+    });
+    Alert.alert(
+      result.ok ? 'Report sent' : 'Report not sent',
+      result.ok
+        ? 'Thanks. Open catalog issues block product-specific recommendations until reviewed.'
+        : 'The catalog backend is not configured on this build. You can still keep this product on your shelf.',
+    );
+  };
+
+  const reportIssue = () => {
+    Alert.alert('Report catalog issue', 'What looks wrong?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Wrong product match', onPress: () => submitCatalogReport('wrong_match') },
+      { text: 'Ingredient issue', onPress: () => submitCatalogReport('ingredient_issue') },
+      { text: 'Expiry or PAO issue', onPress: () => submitCatalogReport('expiry_issue') },
+    ]);
+  };
+
+  const catalogSourceLabel =
+    p.catalogSourceName ?? sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
+  const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
+  const sourceDate = p.catalogSourceSnapshotDate
+    ? new Date(p.catalogSourceSnapshotDate).toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric',
+      })
+    : null;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -179,6 +223,54 @@ export default function ProductDetailScreen() {
             </Text>
           </View>
         ) : null}
+
+        {/* Catalog source and quality disclosure (Phase 4). */}
+        <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px] py-3.5">
+          <View className="flex-row items-start justify-between gap-3">
+            <View className="flex-1">
+              <Text variant="eyebrow" tone="clay">
+                Catalog
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-1">
+                {catalogSourceLabel}
+                {sourceDate ? ` / updated ${sourceDate}` : ''}
+              </Text>
+            </View>
+            <View className="rounded-pill bg-greige-chip px-3 py-1.5">
+              <Text variant="label" tone="muted">
+                {qualityLabel}
+              </Text>
+            </View>
+          </View>
+          <Text variant="bodySm" tone="muted" className="mt-2">
+            {catalogQualityCopy(p.catalogMatchQuality)}
+          </Text>
+          <View className="mt-3 gap-1.5">
+            {p.barcode ? (
+              <Text variant="label" tone="muted">
+                barcode {p.barcode}
+              </Text>
+            ) : null}
+            {p.category ? (
+              <Text variant="label" tone="muted">
+                category {p.category}
+              </Text>
+            ) : null}
+            {p.ingredientParseStatus ? (
+              <Text variant="label" tone="muted">
+                ingredients {p.ingredientParseStatus}
+                {p.ingredientParseConfidence != null
+                  ? ` / ${Math.round(p.ingredientParseConfidence * 100)}% confidence`
+                  : ''}
+              </Text>
+            ) : null}
+          </View>
+          <Pressable accessibilityRole="button" onPress={reportIssue} className="mt-3 self-start py-1">
+            <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+              Report an issue
+            </Text>
+          </Pressable>
+        </View>
 
         {/* Freshness block */}
         <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px]">

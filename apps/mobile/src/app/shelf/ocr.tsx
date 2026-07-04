@@ -1,49 +1,77 @@
-import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Image } from 'expo-image';
+import { router, useIsFocused } from 'expo-router';
+import * as FileSystem from 'expo-file-system/legacy';
+import { useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { parseIngredientText, type ParsedIngredientToken } from '@/features/catalog/ingredientParser';
 import { tagLabel } from '@/features/intelligence/presentation';
-import { tagsForIngredient } from '@/features/intelligence/tags';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { track } from '@/lib/analytics/track';
+import { env } from '@/lib/env';
 import { haptics } from '@/theme/haptics';
+import { colors } from '@/theme/tokens';
 
-// Scan the ingredient list (design screen 02, docs/04 §4.3). On-device OCR of the
-// printed INCI → tokenise → match the catalog → a CONFIRMABLE parse that flags
-// low-confidence tokens (INCI OCR is error-prone, so never block on it). The live
-// camera + ML Kit text recognition is blocked (B-CATALOG-SEED + native camera);
-// this parses a captured sample through the real client tag dictionary so the
-// confirm/correct surface is genuine, then hands the actives to the manual form
-// (name/brand from the user, actives from the parse).
-const SAMPLE_INCI =
-  'AQUA / WATER, GLYCERIN, NIACINAMIDE, CETEARYL ALCOHOL, CERAMIDE NP, RETINOL, TOCOPHEROL, SODIUM HYALURONATE, PANTHENOL, PHENOXYETHANOL';
+type CaptureState = 'camera' | 'capturing' | 'review';
 
-type Parsed = { token: string; tag: string };
-
-function parseActives(inci: string): Parsed[] {
-  const out: Parsed[] = [];
-  for (const raw of inci.split(',')) {
-    const token = raw.trim();
-    const tags = tagsForIngredient(token);
-    if (tags.length && tags[0]) {
-      // Title-case the token for display, keep its functional tag.
-      const display = token
-        .toLowerCase()
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-      out.push({ token: display, tag: tagLabel(tags[0].tag) });
-    }
-  }
-  return out;
+function primaryTag(token: ParsedIngredientToken): string {
+  return token.tags[0] ? tagLabel(token.tags[0]) : 'Review';
 }
 
 export default function OcrScreen() {
+  const isFocused = useIsFocused();
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef<CameraView | null>(null);
+  const [state, setState] = useState<CaptureState>('camera');
+  const [capturedUri, setCapturedUri] = useState<string | null>(null);
+  const [rawText, setRawText] = useState('');
   const { update } = useIntake();
-  const actives = parseActives(SAMPLE_INCI);
+
+  const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
+  const canShowCamera = cameraEnabled && Boolean(permission?.granted);
+  const parsed = useMemo(() => parseIngredientText(rawText), [rawText]);
+  const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
+  const lowConfidence = parsed.tokens.find((token) => token.isUnmatched);
+  const canContinue = rawText.trim().length > 0;
+
+  const capture = async () => {
+    if (!cameraRef.current || state === 'capturing') return;
+    haptics.select();
+    setState('capturing');
+    try {
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.72,
+        base64: false,
+        exif: false,
+        shutterSound: false,
+      });
+      setCapturedUri(photo.uri);
+      setState('review');
+      track('label_capture_photo_taken', { native_ocr_enabled: env.nativeOcrEnabled });
+    } catch {
+      setState('camera');
+    }
+  };
 
   const onContinue = () => {
+    if (!canContinue) return;
     haptics.select();
-    // Carry the recognised active names into the draft; the manual form collects
-    // name/brand/category and the opened-date step finalises (docs/04 §4.3).
-    update({ ingredients: actives.map((a) => a.token), addedVia: 'ocr' });
+    track('ingredient_parse_completed', {
+      source: 'ocr_label_capture',
+      native_ocr_enabled: env.nativeOcrEnabled,
+      result: parsed.status,
+      count: parsed.tokens.length,
+    });
+    update({
+      ingredients: parsed.tokens.map((token) => token.displayName),
+      addedVia: 'ocr',
+      ingredientParseStatus: parsed.status,
+      ingredientParseConfidence: parsed.confidence,
+      parserVersion: parsed.parserVersion,
+    });
+    if (capturedUri) void FileSystem.deleteAsync(capturedUri, { idempotent: true });
     router.replace('/shelf/manual');
   };
 
@@ -59,70 +87,126 @@ export default function OcrScreen() {
         <View className="w-10" />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
-        {/* Captured INCI image placeholder with the two amber OCR highlight bands. */}
-        <View className="mt-4 h-[150px] overflow-hidden rounded-[18px] bg-night-elevated p-4">
-          <Text className="font-mono text-[9.5px] leading-[17px]" tone="inverseMuted">
-            {SAMPLE_INCI} ...
-          </Text>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-5">
+        <View className="mt-4 h-[230px] overflow-hidden rounded-[18px] bg-night-elevated">
+          {state === 'review' && capturedUri ? (
+            <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+          ) : canShowCamera ? (
+            <CameraView
+              ref={cameraRef}
+              active={isFocused}
+              animateShutter
+              facing="back"
+              mode="picture"
+              onMountError={() => setState('review')}
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <View className="flex-1 items-center justify-center px-6">
+              <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                Capture the ingredient panel
+              </Text>
+              <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                Camera permission lets you keep the label beside the editable text. Manual entry still works.
+              </Text>
+              {cameraEnabled && permission && !permission.granted ? (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={permission.canAskAgain ? () => void requestPermission() : () => void Linking.openSettings()}
+                  className="mt-5 rounded-pill bg-paper px-5 py-3">
+                  <Text className="font-sans-semibold text-night">
+                    {permission.canAskAgain ? 'Allow camera' : 'Open settings'}
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
+          )}
           <View
-            className="absolute left-[14px] right-[14px] top-[42px] h-[14px] rounded-[3px]"
-            style={{
-              backgroundColor: 'rgba(217,161,131,0.25)',
-              borderWidth: 1,
-              borderColor: 'rgba(217,161,131,0.5)',
-            }}
-          />
-          <View
-            className="absolute left-[14px] top-[80px] h-[14px] w-[120px] rounded-[3px]"
-            style={{
-              backgroundColor: 'rgba(217,161,131,0.25)',
-              borderWidth: 1,
-              borderColor: 'rgba(217,161,131,0.5)',
-            }}
+            pointerEvents="none"
+            className="absolute left-5 right-5 top-[64px] h-[96px] rounded-[10px]"
+            style={{ borderWidth: 2, borderColor: 'rgba(217,161,131,0.65)' }}
           />
         </View>
 
-        <Text variant="bodySm" tone="muted" className="mt-3">
-          We found these actives. Tap to fix anything. OCR isn&apos;t perfect, so check before
-          saving.
-        </Text>
+        <View className="mt-3 rounded-[14px] bg-greige-chip p-3.5">
+          <Text variant="bodySm" tone="muted" style={{ lineHeight: 19 }}>
+            {env.nativeOcrEnabled
+              ? 'On-device OCR is enabled for this build. Check the text before saving.'
+              : 'On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.'}
+          </Text>
+        </View>
 
-        <Text variant="eyebrow" tone="clay" className="mt-4">
-          Parsed actives
+        {state !== 'review' ? (
+          <Button
+            label={state === 'capturing' ? 'Capturing...' : canShowCamera ? 'Capture label' : 'Continue with manual text'}
+            onPress={canShowCamera ? () => void capture() : () => setState('review')}
+          />
+        ) : null}
+
+        <Text variant="eyebrow" tone="clay" className="mt-5">
+          Editable label text
         </Text>
-        <View className="mt-2.5 gap-2">
-          {actives.map((a) => (
-            <View
-              key={a.token}
-              className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised p-3.5">
-              <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay">
-                <Text className="text-[10px] text-paper">✓</Text>
-              </View>
-              <Text variant="bodySm" className="flex-1 font-sans-semibold">
-                {a.token}
-              </Text>
-              <Text variant="label" tone="muted">
-                {a.tag}
-              </Text>
-            </View>
-          ))}
-          {/* A deliberately low-confidence OCR token. Flagged (dashed), never silently kept. */}
-          <View
-            className="flex-row items-center gap-3 rounded-[14px] border border-dashed bg-greige-chip p-3.5"
-            style={{ borderColor: 'rgba(32,27,21,0.18)' }}>
-            <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
-            <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
-              &quot;TOCOPHENOL&quot;. Not sure
+        <TextInput
+          accessibilityLabel="Ingredient label text"
+          value={rawText}
+          onChangeText={setRawText}
+          multiline
+          placeholder="Type or paste the INCI list from the label"
+          placeholderTextColor={colors.mutedLight}
+          className="mt-2 min-h-[132px] rounded-[16px] border border-hairline bg-paper-raised p-4 font-sans text-[14px] leading-5 text-ink"
+          textAlignVertical="top"
+        />
+
+        {rawText.trim().length > 0 ? (
+          <>
+            <Text variant="bodySm" tone="muted" className="mt-3">
+              Parser confidence: {Math.round(parsed.confidence * 100)}%. Low-confidence tokens stay visible for review.
             </Text>
-            <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-              Fix
+            <Text variant="eyebrow" tone="clay" className="mt-4">
+              Parsed actives
+            </Text>
+            <View className="mt-2.5 gap-2">
+              {activeTokens.map((token) => (
+                <View
+                  key={token.rawToken}
+                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised p-3.5">
+                  <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay">
+                    <Text className="text-[10px] text-paper">{'\u2713'}</Text>
+                  </View>
+                  <Text variant="bodySm" className="flex-1 font-sans-semibold">
+                    {token.displayName}
+                  </Text>
+                  <Text variant="label" tone="muted">
+                    {primaryTag(token)}
+                  </Text>
+                </View>
+              ))}
+              {lowConfidence ? (
+                <View
+                  className="flex-row items-center gap-3 rounded-[14px] border border-dashed bg-greige-chip p-3.5"
+                  style={{ borderColor: 'rgba(32,27,21,0.18)' }}>
+                  <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
+                  <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
+                    &quot;{lowConfidence.rawToken}&quot;. Not sure
+                  </Text>
+                  <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+                    Edit text
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+          </>
+        ) : state === 'capturing' ? (
+          <View className="mt-4 flex-row items-center gap-2">
+            <ActivityIndicator />
+            <Text variant="bodySm" tone="muted">
+              Capturing label
             </Text>
           </View>
-        </View>
+        ) : null}
       </ScrollView>
 
-      <Button label="Looks right. Continue" onPress={onContinue} />
+      <Button label="Looks right. Continue" onPress={onContinue} disabled={!canContinue} />
     </Screen>
   );
 }

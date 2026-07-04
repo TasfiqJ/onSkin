@@ -6,6 +6,7 @@ import { Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, notesByTopic, type SkinNote } from '@/features/community/notes';
 import { track } from '@/lib/analytics/track';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -22,7 +23,7 @@ function NoteCard({ note }: { note: SkinNote }) {
       accessibilityLabel={`${note.title}. ${pill.text}.`}
       onPress={() => {
         haptics.select();
-        track('skin_note_viewed', { id: note.id, topic: note.topicSlug });
+        track('skin_note_viewed', { surface: 'hub' });
         router.push({ pathname: '/community/note/[id]', params: { id: note.id } });
       }}
       className="mb-3 rounded-[18px] bg-paper-raised p-4"
@@ -59,11 +60,15 @@ export default function SkinNotesHub() {
             ‹ Back
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => router.push('/community/ask')} hitSlop={8}>
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            Ask
-          </Text>
-        </Pressable>
+        {phase7Flags.communityPosting ? (
+          <Pressable accessibilityRole="button" onPress={() => router.push('/community/ask')} hitSlop={8}>
+            <Text variant="body" tone="muted" className="font-sans-medium">
+              Ask
+            </Text>
+          </Pressable>
+        ) : (
+          <View />
+        )}
       </View>
 
       <Text variant="title" className="mt-3">

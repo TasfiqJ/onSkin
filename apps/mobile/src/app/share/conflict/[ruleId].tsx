@@ -2,32 +2,84 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Screen, Text } from '@/components/ui';
 import { ConflictCard } from '@/features/growth/ConflictCard';
 import { shareConflictCard } from '@/features/growth/shareCard';
+import { createConflictShareLink, type ConflictShareLink } from '@/features/growth/shareLinks';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
+import { canShareConflictCard, phase7Flags } from '@/lib/launch/phase7';
 
-// docs/14 §3: the shareable "Shelf Conflict Card" growth artifact. Renders the
-// branded, watermarked, claim-safe card for a detected conflict and exports it to the
-// OS share sheet as a one-tap watermarked Story image (react-native-view-shot). The
-// card is screenshot-worthy on its own, so even a manual screenshot carries the brand.
+const CREATIVE_VARIANT = 'story-v1';
+
+function nextFrame(): Promise<void> {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
+// Public Shelf Conflict Card growth artifact. Only reviewed, non-safety, real
+// two-product conflicts can reach this screen. The exported image is content-safe,
+// watermarked, and carries only an opaque first-party share URL.
 export default function ShareConflictScreen() {
   const { ruleId } = useLocalSearchParams<{ ruleId: string }>();
   const { data } = useShelf();
   const cardRef = useRef<View>(null);
   const [busy, setBusy] = useState(false);
-  const conflict = data?.conflicts.find((c) => c.rule.id === ruleId) ?? data?.conflicts[0];
+  const [shareLink, setShareLink] = useState<ConflictShareLink | null>(null);
+  const conflict = data?.conflicts.find((c) => c.rule.id === ruleId) ?? null;
+
+  if (!phase7Flags.shareCard) return <DeferredSurface surface="shareCard" />;
 
   async function onShare() {
-    if (!conflict) return;
+    if (!canShareConflictCard(conflict)) return;
     setBusy(true);
     try {
-      track('conflict_card_shared', { rule_id: conflict.rule.id });
+      track('share_card_export_started', { creative_variant: CREATIVE_VARIANT });
+      const link = await createConflictShareLink({ creativeVariant: CREATIVE_VARIANT });
+      if (!link) {
+        track('share_card_export_failed', {
+          creative_variant: CREATIVE_VARIANT,
+          reason: 'public_link_unavailable',
+        });
+        Alert.alert('Sharing is not ready', 'The public share link must be configured before this card can be exported.');
+        return;
+      }
+
+      setShareLink(link);
+      track('share_link_created', {
+        creative_variant: CREATIVE_VARIANT,
+        share_id: link.shareId,
+      });
+      await nextFrame();
+
       const ok = await shareConflictCard(cardRef);
-      if (!ok) Alert.alert('Sharing', 'Sharing isn’t available on this device.');
+      if (ok) {
+        track('share_card_export_succeeded', {
+          creative_variant: CREATIVE_VARIANT,
+          share_id: link.shareId,
+        });
+        track('share_card_exported', {
+          creative_variant: CREATIVE_VARIANT,
+          share_id: link.shareId,
+        });
+        track('share_sheet_opened', {
+          creative_variant: CREATIVE_VARIANT,
+          share_id: link.shareId,
+        });
+      } else {
+        track('share_card_export_failed', {
+          creative_variant: CREATIVE_VARIANT,
+          share_id: link.shareId,
+          reason: 'share_unavailable',
+        });
+        Alert.alert('Sharing', "Sharing isn't available on this device.");
+      }
     } catch (e) {
-      Alert.alert('Couldn’t create the card', e instanceof Error ? e.message : 'Please try again.');
+      track('share_card_export_failed', {
+        creative_variant: CREATIVE_VARIANT,
+        reason: 'exception',
+      });
+      Alert.alert("Couldn't create the card", e instanceof Error ? e.message : 'Please try again.');
     } finally {
       setBusy(false);
     }
@@ -39,18 +91,18 @@ export default function ShareConflictScreen() {
         <Text variant="label" tone="muted">
           SHARE YOUR SHELF CHECK
         </Text>
-        {conflict ? (
-          <ConflictCard ref={cardRef} conflict={conflict} />
+        {canShareConflictCard(conflict) ? (
+          <ConflictCard ref={cardRef} conflict={conflict} shareUrl={shareLink?.url} />
         ) : (
           <Text variant="body" tone="muted" className="text-center">
-            Nothing to share right now. Add a couple of products to your shelf first.
+            Nothing reviewed is shareable right now. Share cards unlock only for reviewed, non-safety shelf checks.
           </Text>
         )}
       </View>
       <View className="gap-2 pb-4">
         <Button
-          label={busy ? 'Preparing…' : 'Share to Stories'}
-          disabled={busy || !conflict}
+          label={busy ? 'Preparing...' : 'Share to Stories'}
+          disabled={busy || !canShareConflictCard(conflict)}
           onPress={() => void onShare()}
         />
         <Pressable accessibilityRole="button" className="items-center py-3" onPress={() => router.back()}>

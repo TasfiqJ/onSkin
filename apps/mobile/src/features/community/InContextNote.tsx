@@ -24,7 +24,7 @@ export function InContextNote({ noteId }: { noteId: string }) {
       accessibilityLabel={`${note.claim} ${pill.text}. ${COMMUNITY_COPY.inContext.read}`}
       onPress={() => {
         haptics.select();
-        track('skin_note_viewed', { id: note.id, surface: 'in_context' });
+        track('skin_note_viewed', { surface: 'in_context' });
         router.push({ pathname: '/community/note/[id]', params: { id: note.id } });
       }}
       className="rounded-[18px] bg-paper-raised p-4"

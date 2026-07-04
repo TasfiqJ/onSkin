@@ -24,7 +24,7 @@ export default function ReplenishScreen() {
 
   // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
   useEffect(() => {
-    if (item?.id) track('replenishment_nudge_shown', { product_id: item.id });
+    if (item?.id) track('replenishment_nudge_shown', { source: 'shelf' });
   }, [item?.id]);
 
   if (!item) {
@@ -57,7 +57,7 @@ export default function ReplenishScreen() {
 
   const seeSimilar = async () => {
     haptics.select();
-    track('replenishment_nudge_tapped', { product_id: item.id, action: 'see_similar' });
+    track('replenishment_nudge_tapped', { action: 'see_similar' });
     // Route through the SAME commerce MHMDA gate the where-to-buy surface uses
     // (docs/10 §3): no consent => open the consent sheet, never share silently.
     // Consented => the honest empty state until the catalog lands (B-CATALOG-SEED).

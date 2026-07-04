@@ -1,0 +1,164 @@
+{
+  "generatedAt": "2026-07-04T06:43:48.934Z",
+  "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
+  "buildEvidence": {
+    "iosBuildId": "",
+    "androidBuildId": "",
+    "iosDevice": "",
+    "androidDevice": "",
+    "qaSignedOff": false,
+    "signedOffBy": ""
+  },
+  "scenarios": [
+    {
+      "surface": "Install",
+      "scenario": "fresh install, update, reinstall, side-by-side dev/staging variants"
+    },
+    {
+      "surface": "Permissions",
+      "scenario": "camera granted/denied, notification granted/denied/swiped away, biometric unavailable"
+    },
+    {
+      "surface": "Barcode",
+      "scenario": "EAN-13, UPC-A, UPC-E, EAN-8, low light, glare, invalid checksum, duplicate read"
+    },
+    {
+      "surface": "Label capture",
+      "scenario": "clear INCI label, curved tube, tiny text, glare, manual correction"
+    },
+    {
+      "surface": "Photos",
+      "scenario": "first capture, retake, reference ghost, low light, no face, delete"
+    },
+    {
+      "surface": "Encryption",
+      "scenario": "restart, key present, key missing simulation, delete, share/export"
+    },
+    {
+      "surface": "Reminders",
+      "scenario": "AM/PM, quiet hours, timezone, reboot, app killed, battery saver, Focus mode"
+    },
+    {
+      "surface": "Share",
+      "scenario": "native share sheet, cancel path, long names, no sharing available"
+    },
+    {
+      "surface": "RevenueCat",
+      "scenario": "configure, fetch offerings, Test Store purchase, restore from user action"
+    },
+    {
+      "surface": "Offline",
+      "scenario": "manual add, timeline view, no-match fallback, queued metadata"
+    },
+    {
+      "surface": "Observability",
+      "scenario": "native crash captured, no sensitive event payloads"
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/mobile/app.base.json",
+      "exists": true,
+      "bytes": 2595,
+      "sha256": "01fae725a66f53e7e65c1af688face7886ad94d08410c8bb1f78b71fa70f8f06"
+    },
+    {
+      "path": "apps/mobile/app.config.js",
+      "exists": true,
+      "bytes": 2213,
+      "sha256": "4e8efe4a635f9384c8a1b330810d68ef4b3d10ef8d4da4839ef90e003769c018"
+    },
+    {
+      "path": "apps/mobile/eas.json",
+      "exists": true,
+      "bytes": 1209,
+      "sha256": "5aba9dfec9bc3530449b536736bde35a296750d1ecf2b2942933cecf17e05e43"
+    },
+    {
+      "path": "apps/mobile/package.json",
+      "exists": true,
+      "bytes": 2489,
+      "sha256": "5ace059afd7b43319bcfb5b4971ec6e9c27e34080c954f27112e42bb16e5231b"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/scan.tsx",
+      "exists": true,
+      "bytes": 13412,
+      "sha256": "ca527bb81da3b709888eaa7d2677eda6eaa81386f9ef4015f5ffc7a8020c2566"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/ocr.tsx",
+      "exists": true,
+      "bytes": 9046,
+      "sha256": "66d6df5a0ab976fbfca9b620b4ea102db2f0908a869a07ced970a7e30ad50a41"
+    },
+    {
+      "path": "apps/mobile/src/app/progress/capture.tsx",
+      "exists": true,
+      "bytes": 12269,
+      "sha256": "127722a73a3159842d201d6d28a36f575e4aa50ccd9a270f8bdd4e3cb7a2c8ae"
+    },
+    {
+      "path": "apps/mobile/src/app/progress/review.tsx",
+      "exists": true,
+      "bytes": 6086,
+      "sha256": "c34509d76af40e62cbd9f358a5199590d566fe80ae3fb1d97943f4360fb44eec"
+    },
+    {
+      "path": "apps/mobile/src/features/native/camera/barcode.ts",
+      "exists": true,
+      "bytes": 2764,
+      "sha256": "b8be7293a9cbb44c24c6b8370539aeee2240db5a899d8b46c0334cc1b3923ba2"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "exists": true,
+      "bytes": 5436,
+      "sha256": "dd79c1474a742b945ce9cd5e47b1b4e224f4eed09120ca31576cd7d9c0427f76"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "exists": true,
+      "bytes": 6880,
+      "sha256": "8d48beeac281d60c1f91f6dbfcf1e32df6ca8f8c170c62d15e5cdcda05e89ae7"
+    },
+    {
+      "path": "apps/mobile/src/features/notifications/deliver.ts",
+      "exists": true,
+      "bytes": 10170,
+      "sha256": "c96669cd88f19428b385822ef2dacd0cd2c31d581e2f232364631eed6b4c70fb"
+    },
+    {
+      "path": "apps/mobile/src/lib/iap/revenuecat.ts",
+      "exists": true,
+      "bytes": 4744,
+      "sha256": "33ce9c45f920b4ac219c05fc9315143819392687344f634af12508b9ab74b164"
+    },
+    {
+      "path": "docs/phase-5/native-build-runbook.md",
+      "exists": true,
+      "bytes": 1967,
+      "sha256": "ae18016b44edd447ced8b2c96cb042889d5839a58c4217403db7b0108eba6831"
+    },
+    {
+      "path": "docs/phase-5/device-qa-checklist.md",
+      "exists": true,
+      "bytes": 2153,
+      "sha256": "58f4cc2f446960e1ccdb4b3de920032d99bcc70f28415caed9c7c2c13dc28ab3"
+    },
+    {
+      "path": "docs/phase-5/phase-5-exit-review.md",
+      "exists": true,
+      "bytes": 1815,
+      "sha256": "427e72f7fa0e2e6edd5ea48db89e0b49de97d5b9ff1738ee825f0e395fcf0a84"
+    }
+  ],
+  "blockers": [
+    "Missing PHASE5_IOS_BUILD_ID.",
+    "Missing PHASE5_ANDROID_BUILD_ID.",
+    "Missing PHASE5_IOS_DEVICE.",
+    "Missing PHASE5_ANDROID_DEVICE.",
+    "Missing PHASE5_QA_SIGNOFF=true.",
+    "Missing PHASE5_SIGNED_OFF_BY."
+  ]
+}

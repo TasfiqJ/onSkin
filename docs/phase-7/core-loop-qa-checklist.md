@@ -1,0 +1,74 @@
+# Phase 7 Core Loop QA Checklist
+
+Run this checklist on real iOS and Android beta builds before enabling public production distribution.
+
+## Onboarding and consent
+
+- Final brand/domain visible where applicable.
+- Age gate rejects under-minimum users and records only necessary state.
+- Health-data consent text is final, versioned, and logged.
+- Placeholder consent copy is absent from production.
+- Policy links open real privacy, terms, support, export, deletion, and consumer-health pages.
+
+## Shelf intake
+
+- Add 3 real owned products using manual, search, and scan/OCR fallback paths.
+- Wrong match and no match are understandable.
+- Source and confidence labels are visible where data is not first-party.
+- PAO/expiry labels distinguish label/catalog/default estimates.
+- Offline add/edit/delete does not corrupt local shelf.
+
+## Intelligence and recommendations
+
+- Reviewed conflict rules surface with evidence and no alarm/medical claims.
+- Unreviewed rules do not surface in production.
+- If no reviewed rule applies, empty/no-issue state is honest.
+- Recommendations remain type-first and do not include commerce inputs.
+- Goal-active recommendations remain hidden unless reviewed.
+
+## Routine and Today
+
+- AM/PM plan persists after app restart.
+- Check-off works offline, then online, without duplicate records.
+- Undo/re-check behaves predictably.
+- Timezone and date rollover do not reset the wrong day.
+- Recovery/pause/skipped states do not contradict the routine.
+
+## Photos and privacy
+
+- Camera capture stores local file and timeline renders after restart.
+- App lock gates existing photo timeline.
+- Cloud backup is off by default and separate from capture consent.
+- Trend opt-in is hidden unless `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
+- No AI score/grade/age/percent wording appears.
+
+## Reminders
+
+- Permission prompt copy is accurate.
+- Quiet hours and configured routine time are respected.
+- Android notification permission behavior is verified on Android 13+.
+- Reminder tap/check-off is idempotent.
+- Review prompt appears only after real value.
+
+## Payments
+
+- Paywall loads localized RevenueCat prices.
+- Purchase, restore, cancellation, expiration, refund, and account deletion states are tested.
+- Pro gates unlock only from verified entitlement state.
+- Reverse trial expiration does not leave paid access behind.
+
+## Deferred surfaces
+
+- `/commerce/*`, `/ask/*`, `/trend/*`, `/routine/widgets`, `/community/ask`, `/community/people-like-you`, and `/share/conflict/*` are unavailable by default.
+- You tab does not show deferred rows by default.
+- Today does not show Ask teaser by default.
+- Progress does not show trend insight or opt-in by default.
+- Where-to-buy rows return null by default.
+
+## Share card
+
+- Requires final brand domain and share-card flags.
+- Requires exact current `ruleId`, not a fallback conflict.
+- Requires `conflict.rule.reviewedBy`.
+- Does not include sensitive notes, product IDs, local paths, or raw ingredient text.
+- Export/share events do not include product names.

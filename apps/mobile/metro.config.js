@@ -1,16 +1,16 @@
-// Metro config: NativeWind + Turborepo monorepo resolution.
+// Metro config: Sentry source maps + NativeWind + Turborepo monorepo resolution.
 // Follows Expo's documented monorepo pattern (watch the repo root, resolve
 // node_modules from both the app and the hoisted root).
 // BLOCKED: B-VERIFY-METRO — monorepo resolution can't be runtime-verified in
 // this environment; confirm `expo start` resolves @onskin/* on first device build.
-const { getDefaultConfig } = require('expo/metro-config');
+const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 const { withNativeWind } = require('nativewind/metro');
 const path = require('path');
 
 const projectRoot = __dirname;
 const monorepoRoot = path.resolve(projectRoot, '../..');
 
-const config = getDefaultConfig(projectRoot);
+const config = getSentryExpoConfig(projectRoot);
 
 // 1. Watch all files in the monorepo (so changes in packages/* trigger reloads).
 config.watchFolders = [monorepoRoot];

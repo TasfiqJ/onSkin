@@ -1,0 +1,23 @@
+[
+  {
+    "note": "Structure-only sample. Do not treat as a production curated batch.",
+    "brand": "Fixture Lab",
+    "productName": "Fixture Gentle Cleanser",
+    "barcode": "1234567890123",
+    "category": "cleanser",
+    "source": "curated",
+    "qualityGrade": "limited",
+    "reviewStatus": "unreviewed"
+  },
+  {
+    "note": "Structure-only sample. Do not treat as a production curated batch.",
+    "brand": "Fixture Lab",
+    "productName": "Fixture Daily Mineral SPF",
+    "barcode": "2234567890123",
+    "category": "spf",
+    "source": "curated",
+    "qualityGrade": "limited",
+    "reviewStatus": "unreviewed"
+  }
+]
+

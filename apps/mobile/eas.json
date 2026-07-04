@@ -1,0 +1,45 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development",
+      "env": {
+        "APP_VARIANT": "development",
+        "EXPO_PUBLIC_APP_ENV": "development",
+        "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
+        "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
+        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "channel": "staging",
+      "env": {
+        "APP_VARIANT": "staging",
+        "EXPO_PUBLIC_APP_ENV": "staging",
+        "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
+        "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
+        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "production",
+      "env": {
+        "APP_VARIANT": "production",
+        "EXPO_PUBLIC_APP_ENV": "production",
+        "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
+        "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
+        "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -15,6 +15,7 @@ import {
   tagLabel,
 } from '@/features/intelligence/presentation';
 import { useShelf } from '@/features/shelf/useShelf';
+import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
@@ -281,14 +282,16 @@ function StandardBody({
       </View>
 
       {/* Shareable Shelf Conflict Card (docs/14 §3, the word-of-mouth growth artifact). */}
-      <Pressable
-        accessibilityRole="button"
-        className="mt-4 items-center"
-        onPress={() => router.push(`/share/conflict/${r.id}`)}>
-        <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-          Share this card
-        </Text>
-      </Pressable>
+      {canShareConflictCard(conflict) ? (
+        <Pressable
+          accessibilityRole="button"
+          className="mt-4 items-center"
+          onPress={() => router.push(`/share/conflict/${r.id}`)}>
+          <Text variant="bodySm" tone="muted" className="font-sans-semibold">
+            Share this card
+          </Text>
+        </Pressable>
+      ) : null}
 
       {/* Standing not-medical-advice disclaimer (docs/02 §9). */}
       <Text variant="bodySm" tone="muted" className="mt-5 text-center text-[11px]">
@@ -365,14 +368,16 @@ function ReassureBody({
         <Button label="Got it" onPress={onDismiss} />
       </View>
 
-      <Pressable
-        accessibilityRole="button"
-        className="mt-4 items-center"
-        onPress={() => router.push(`/share/conflict/${r.id}`)}>
-        <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-          Share this card
-        </Text>
-      </Pressable>
+      {canShareConflictCard(conflict) ? (
+        <Pressable
+          accessibilityRole="button"
+          className="mt-4 items-center"
+          onPress={() => router.push(`/share/conflict/${r.id}`)}>
+          <Text variant="bodySm" tone="muted" className="font-sans-semibold">
+            Share this card
+          </Text>
+        </Pressable>
+      ) : null}
     </>
   );
 }

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { randomUUID } from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
+import type { CatalogQualityGrade } from '@/features/catalog/quality';
 
 // Local-first shelf store (docs/04 §8: the shelf must work in a bathroom with no
 // signal. View, manual-add, and queued lookups all offline). AsyncStorage is the
@@ -16,6 +17,19 @@ export type ShelfProduct = {
   brand: string | null;
   category: string | null;
   barcode: string | null;
+  catalogProductId: string | null;
+  catalogSourceId: string | null;
+  catalogSource: string | null;
+  catalogSourceName: string | null;
+  catalogSourceRef: string | null;
+  catalogSourceUrl: string | null;
+  catalogSourceSnapshotDate: string | null;
+  catalogMatchQuality: CatalogQualityGrade | 'manual' | null;
+  dataQualityScore: number | null;
+  ingredientParseStatus: string | null;
+  ingredientParseConfidence: number | null;
+  parserVersion: string | null;
+  sourceDisclosureAckAt: string | null;
   /** Free-text / parsed INCI tokens. The engine tags off these + the name. */
   ingredients: string[];
   openedAt: string | null; // ISO local date; null when unopened or unknown
@@ -39,6 +53,19 @@ export type NewShelfProduct = {
   brand?: string | null;
   category?: string | null;
   barcode?: string | null;
+  catalogProductId?: string | null;
+  catalogSourceId?: string | null;
+  catalogSource?: string | null;
+  catalogSourceName?: string | null;
+  catalogSourceRef?: string | null;
+  catalogSourceUrl?: string | null;
+  catalogSourceSnapshotDate?: string | null;
+  catalogMatchQuality?: CatalogQualityGrade | 'manual' | null;
+  dataQualityScore?: number | null;
+  ingredientParseStatus?: string | null;
+  ingredientParseConfidence?: number | null;
+  parserVersion?: string | null;
+  sourceDisclosureAckAt?: string | null;
   ingredients?: string[];
   openedAt?: string | null;
   isOpened?: boolean;
@@ -77,6 +104,19 @@ export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> 
     brand: input.brand ?? null,
     category: input.category ?? null,
     barcode: input.barcode ?? null,
+    catalogProductId: input.catalogProductId ?? null,
+    catalogSourceId: input.catalogSourceId ?? null,
+    catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
+    catalogSourceName: input.catalogSourceName ?? null,
+    catalogSourceRef: input.catalogSourceRef ?? null,
+    catalogSourceUrl: input.catalogSourceUrl ?? null,
+    catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
+    catalogMatchQuality: input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
+    dataQualityScore: input.dataQualityScore ?? null,
+    ingredientParseStatus: input.ingredientParseStatus ?? null,
+    ingredientParseConfidence: input.ingredientParseConfidence ?? null,
+    parserVersion: input.parserVersion ?? null,
+    sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
     ingredients: input.ingredients ?? [],
     openedAt: input.openedAt ?? null,
     isOpened: input.isOpened ?? true,

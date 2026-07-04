@@ -31,7 +31,7 @@ export const PRODUCT_CATEGORIES: { id: ProductCategory; label: string }[] = [
   { id: 'mascara', label: 'Mascara / liquid eye' },
   { id: 'spf', label: 'Sunscreen (SPF)' },
   { id: 'oil_balm', label: 'Oil / balm' },
-  { id: 'benzoyl_peroxide', label: 'Acne treatment' },
+  { id: 'benzoyl_peroxide', label: 'Benzoyl peroxide product' },
   { id: 'other', label: 'Something else' },
 ];
 

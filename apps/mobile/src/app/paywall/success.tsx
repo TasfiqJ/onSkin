@@ -3,8 +3,9 @@ import { View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { PLANS, WINBACK } from '@/features/subscription/plans';
+import { PLANS } from '@/features/subscription/plans';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
+import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { colors } from '@/theme/tokens';
 
@@ -21,15 +22,14 @@ function fmt(iso: string | null, fallbackDays: number): string {
 export default function SuccessScreen() {
   const { user } = useAuth();
   const { data } = useEntitlement();
+  const offering = useSubscriptionOffering();
   const firstName =
     (user?.user_metadata?.display_name as string | undefined)?.split(' ')[0] ??
     (user?.user_metadata?.full_name as string | undefined)?.split(' ')[0] ??
     null;
 
   const inTrial = data?.inTrial ?? true; // default to the trial flow (the common path)
-  const isWinback = data?.productId?.includes('winback') ?? false;
-  // The amount the user actually committed to: the win-back discount when applicable.
-  const price = isWinback ? WINBACK.priceLabel : PLANS.annual.priceLabel;
+  const price = data?.priceLabel ?? offering.data?.annual?.priceLabel ?? 'the store price';
   const endDate = fmt(data?.expiresAt ?? null, inTrial ? PLANS.annual.trialDays : 365);
   const body = inTrial ? PAYWALL_COPY.success.bodyFor(price) : PAYWALL_COPY.success.bodyForPaid(price);
   const meta = inTrial

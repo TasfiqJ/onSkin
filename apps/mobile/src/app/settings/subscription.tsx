@@ -3,11 +3,15 @@ import { Alert, Linking, Platform, Pressable, ScrollView, View } from 'react-nat
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
-import { openPolicy, PRIVACY_URL } from '@/features/subscription/ComplianceRow';
+import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { PLANS } from '@/features/subscription/plans';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { MANAGE_SUBSCRIPTION_URL_ANDROID, MANAGE_SUBSCRIPTION_URL_IOS } from '@/lib/iap/revenuecat';
+import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
+import {
+  MANAGE_SUBSCRIPTION_URL_ANDROID,
+  MANAGE_SUBSCRIPTION_URL_IOS,
+  showNativeManageSubscriptions,
+} from '@/lib/iap/revenuecat';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -15,7 +19,7 @@ import { colors } from '@/theme/tokens';
 // OS cancel deep-link, Restore, Terms/Privacy. ARL-compliant: cancel as easy as
 // signup, no maze. Shows a calm free-state when not subscribed.
 function fmtDate(iso: string | null): string {
-  if (!iso) return ', ';
+  if (!iso) return 'date unavailable';
   return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
 
@@ -37,15 +41,26 @@ function Row({ label, last, onPress }: { label: string; last?: boolean; onPress:
 export default function SubscriptionScreen() {
   const { data } = useEntitlement();
   const { restore } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
   const isPro = data?.isPro ?? false;
 
-  function openStore() {
+  async function openStore() {
     track('manage_subscription_opened');
-    void Linking.openURL(Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS).catch(() => {});
+    const openedNative = await showNativeManageSubscriptions();
+    if (openedNative) return;
+    const url = data?.managementUrl ?? (Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS);
+    void Linking.openURL(url).catch(() => {});
   }
   function onRestore() {
     restore.mutate(undefined, {
-      onSettled: () => Alert.alert('Restore purchases', 'We re-synced your account on this device.'),
+      onSuccess: (result) =>
+        Alert.alert(
+          'Restore purchases',
+          result.active
+            ? 'Your active subscription is restored on this device.'
+            : 'No active subscription was found for this account.',
+        ),
+      onError: () => Alert.alert('Restore purchases', 'We could not restore purchases. Please try again.'),
     });
   }
 
@@ -53,7 +68,13 @@ export default function SubscriptionScreen() {
     ? 'Reverse trial'
     : data?.inTrial
       ? 'Free trial'
-      : `Annual · ${PLANS.annual.priceLabel}/yr`;
+      : `OnSkin Pro${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
+  const manageLabel =
+    data?.store === 'play_store'
+      ? 'Manage in Google Play'
+      : data?.store === 'app_granted'
+        ? 'Review Pro options'
+        : PAYWALL_COPY.manage.manageRow;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -99,9 +120,10 @@ export default function SubscriptionScreen() {
             </View>
 
             <View className="mb-4 rounded-[18px] bg-paper-raised px-[18px]">
-              <Row label={PAYWALL_COPY.manage.manageRow} onPress={openStore} />
+              <Row label={manageLabel} onPress={openStore} />
               <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
-              <Row label={PAYWALL_COPY.manage.termsRow} last onPress={() => openPolicy(PRIVACY_URL)} />
+              <Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />
+              <Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />
             </View>
 
             <View className="flex-row gap-3 rounded-card bg-paper-raised p-4" style={{ borderWidth: 1, borderColor: colors.hairline }}>

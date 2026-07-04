@@ -47,7 +47,7 @@ export default function ProductsScreen() {
   }
 
   function go() {
-    track('screen_viewed', { screen_name: 'products_intake', added: added.length });
+    track('screen_viewed', { screen_name: 'products_intake', count: added.length });
     router.push('/onboarding/analyzing');
   }
 

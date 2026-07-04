@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -7,6 +6,8 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from 'react-nativ
 import { Text } from '@/components/ui';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
+
+import { PhotoImage } from './PhotoImage';
 
 // Before/after comparison (docs/06 §4, design screen 04). A draggable vertical
 // divider wipes between the two photos; the side-by-side mode (the accessible
@@ -18,7 +19,7 @@ export type ComparePhoto = { uri: string | null; date: string; tone: string };
 
 function Panel({ photo }: { photo: ComparePhoto }) {
   if (photo.uri) {
-    return <Image source={{ uri: photo.uri }} style={{ flex: 1 }} contentFit="cover" transition={150} />;
+    return <PhotoImage uri={photo.uri} style={{ flex: 1 }} contentFit="cover" fallbackTone={photo.tone} />;
   }
   return (
     <View style={{ flex: 1, backgroundColor: photo.tone, alignItems: 'center', justifyContent: 'center' }}>

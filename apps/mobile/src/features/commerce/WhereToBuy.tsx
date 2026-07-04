@@ -3,6 +3,7 @@ import { Alert, Linking, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -57,7 +58,7 @@ function OptionRow({ option, onPress }: { option: WhereToBuyOption; onPress: () 
   );
 }
 
-export function WhereToBuy({ productType }: { productType: string }) {
+function EnabledWhereToBuy({ productType }: { productType: string }) {
   const { data: consented } = useCommerceConsent();
   const { data: options } = useWhereToBuy(consented ? productType : null);
 
@@ -141,4 +142,10 @@ export function WhereToBuy({ productType }: { productType: string }) {
       </Text>
     </View>
   );
+}
+
+export function WhereToBuy({ productType }: { productType: string }) {
+  if (!phase7Flags.commerce) return null;
+
+  return <EnabledWhereToBuy productType={productType} />;
 }

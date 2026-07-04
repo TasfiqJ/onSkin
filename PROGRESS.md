@@ -4,13 +4,116 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
-Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 🚫 blocked on missing doc
+Legend: done / partial / not started / launch-blocked. Use the readiness
+statuses in `LAUNCH_READINESS.md` for current production state:
+`implemented`, `stubbed`, `simulated`, `inert`, `needs-device-verification`,
+and `launch-blocked`.
+
+## Current launch status (2026-07-04)
+
+The app is a substantial pre-launch build, not a production-ready release.
+Docs 00-14 plus `docs/legal-readiness.md` exist, and the stale missing-docs
+blocker has been removed from `BLOCKERS.md`.
+
+Fresh verification on 2026-07-04: `npm run typecheck`, `npm run lint`, and
+`npm test` passed; Vitest reported 38 test files and 986 tests.
+
+Fresh source-of-truth docs added for Phase 1:
+
+- `LAUNCH_READINESS.md`
+- `docs/brand-evidence.md`
+- `docs/brand-decision-memo.md`
+- `docs/v1-scope-freeze.md`
+- `docs/phase-2-readiness-checklist.md`
+- `docs/seven-figure-readiness.md`
+
+Phase 2 local infrastructure scaffolding added on 2026-07-04:
+
+- `apps/mobile/app.config.js` and `apps/mobile/eas.json` for dev/staging/prod
+  variants.
+- RevenueCat, PostHog, and Sentry native/runtime wiring with production guards.
+- `scripts/phase2/check-env.mjs`, `scripts/phase2/supabase-rls-smoke.mjs`, and
+  `scripts/phase2/deploy-supabase-staging.ps1`.
+- `docs/phase-2-production-infrastructure-runbook.md`,
+  `docs/phase-2-status.md`, and `docs/store-privacy-inventory.md`.
+
+Still blocked: real external accounts, secrets, Supabase deploy, RevenueCat
+products/offerings, Apple/Google store records, EAS builds, device QA, legal
+review, and brand clearance.
+
+Phase 3 local clinical/legal/policy scaffolding added on 2026-07-04:
+
+- `docs/phase-3/` regulatory positioning, claims vocabulary, clinical review,
+  chemistry review, quiz FTO, data inventory, consent, store metadata, Apple,
+  Google, and review-packet docs.
+- `scripts/phase3/audit-copy.mjs` and `scripts/phase3/build-review-packet.mjs`,
+  exposed through root package scripts.
+- Central policy link registry plus in-app policy/data-rights links.
+- Conservative store metadata draft and tests for store-claim safety.
+- Production gate tests verifying unreviewed rules, PAO defaults, stacks, notes,
+  and medical-adjacent recommendations stay gated until review.
+
+Still blocked: actual attorney, dermatologist, cosmetic chemist, privacy, and
+IP/FTO signoffs. Phase 3 cannot be honestly complete until those signoffs are
+attached to the generated review packet hashes.
+
+Phase 4 product and ingredient catalog scaffolding added on 2026-07-04:
+
+- Additive catalog migration for source records, import batches, brands,
+  product barcodes, categories, ingredient-list parse records, tag assignments,
+  active bands, PAO/expiry provenance, correction reports, contribution queue,
+  quality reports, lookup events, and shelf catalog metadata.
+- Source/legal docs for CosIng, Open Beauty Facts, ODbL, ingredient taxonomy,
+  curation sheet, observability dashboard, beta coverage, and exit review.
+- Pure TypeScript ingredient parser, product quality model, OBF mapping, catalog
+  client helpers, and focused tests.
+- `scripts/phase4/*` for source env checks, OBF fixture import, and generated QA
+  reports.
+- Supabase Edge Functions for exact barcode lookup, local catalog search, and
+  correction reporting.
+- Mobile shelf search fallback, parser-backed OCR/manual intake metadata,
+  source/quality disclosure on product detail, and report issue flow.
+
+Still blocked: source/legal review, ODbL posture, real OBF/CosIng import,
+curated launch batch, beta coverage, final attribution page/User-Agent, native
+camera device verification, native OCR, and professional review for
+recommendation-driving product data.
+
+Phase 5 native/device scaffolding added on 2026-07-04:
+
+- `expo-camera` dependency, config plugin, Android camera/notification
+  permissions, and `runtimeVersion.policy=fingerprint`.
+- Live shelf barcode scanner with checksum validation, duplicate suppression,
+  and Phase 4 catalog lookup.
+- Ingredient label capture path using a real camera still plus editable
+  user-confirmed text; native OCR remains off until ML Kit/Vision is reviewed
+  and device-tested.
+- Guided progress photo capture with front camera stills, review screen, and
+  encrypted app-private `.onskinphoto` storage using SecureStore-held keys.
+- Encrypted-aware timeline/detail/compare rendering and local encrypted-file
+  cleanup on deletion.
+- `scripts/phase5/*`, `docs/phase-5/*`, and generated device QA packet support.
+
+Still blocked: EAS iOS/Android build IDs, physical-device matrix, native OCR
+module/signoff if claimed, real face/pose detector if precise framing claims are
+used, notification device QA, RevenueCat native smoke, and native Sentry smoke.
+
+Current priority stack:
+
+1. Brand/legal decision: do not launch as `OnSkin` unless counsel clears it.
+2. Supabase live backend and RLS verification.
+3. Clinical/legal review for guidance, policies, claims, and consents.
+4. Product/ingredient catalog source review, real import, and curated beta-driven seed.
+5. Native camera/barcode/OCR/photo capture and notification device QA.
+6. RevenueCat purchase/restore/webhook integration.
+7. Closed beta proving activation, retention, and willingness to pay.
 
 ---
 
 ## Done
 
 ### Slice 0 — Project scaffold & tooling ✅ (2026-06-12)
+
 - Turborepo monorepo: `apps/mobile` (Expo SDK 56) + `packages/types` (`@onskin/types`) + `supabase/` (next slice).
 - Expo SDK 56 baseline (RN 0.85.3 / React 19.2.3), expo-router, New Architecture on.
 - NativeWind v4 + Tailwind v3.4 wired (babel/metro/tailwind config) with the
@@ -24,6 +127,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   Mac/simulator in this environment; flagged B-VERIFY-METRO.)
 
 ### Slice 1 — Data model + RLS ✅ (2026-06-12)
+
 - All 12 tables from docs/01 §3 as Supabase migrations (0001–0011): profiles
   (+defensive signup trigger), skin_profiles, user_products (generated PAO/expiry),
   routines + routine_steps (+`owns_routine` helper), append-only routine_completions
@@ -44,6 +148,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   Supabase Advisors on first `db push`.)
 
 ### Slice 2 — Supabase client + auth foundation ✅ (2026-06-12)
+
 - `LargeSecureStore` AES-256 token storage (docs/01 §5): AES key in SecureStore,
   encrypted session in AsyncStorage (dodges the ~2KB SecureStore limit).
 - Typed `supabase` client (`createClient<Database>`) with
@@ -62,6 +167,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅. New blocker: B-VERIFY-AUTH-LINKING.
 
 ### Slice 3 — Design system ✅ (2026-06-12)
+
 - Instrument Serif + Hanken Grotesk loaded; splash held until ready. JS tokens,
   haptics. Primitives: Text/Button/Card/ProgressBar/OptionCard/Chip/Screen.
 - **Bundle validated:** `expo export --platform ios` succeeded (Metro resolved the
@@ -69,6 +175,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   largely de-risked.
 
 ### Slice 4 — Onboarding flow ✅ (2026-06-12)
+
 - Full guest-first sequence (docs/01 §2 + design spec): welcome (silent anon
   session) → goals (multi-select ≤2) → unbundled health-data consent → quiz →
   products (skip) → analyzing theater → reveal (DSPT + axis sliders) →
@@ -85,6 +192,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅.
 
 ### Slice 5 — App shell + Today activation loop ✅ (2026-06-12)
+
 - 4-tab bottom navigation (Today/Progress/Shelf/You) with the design-spec clay-dot
   active indicator.
 - **Today** screen (design spec p.8/9): AM light / PM dark, time-aware greeting,
@@ -100,6 +208,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅.
 
 ### Slice 6 — You / privacy & account controls ✅ (2026-06-12)
+
 - **Biometric app-lock** (expo-local-authentication, docs/01 §5): opt-in Face ID
   to open the app; `AppLockProvider` locks on cold start + return-from-background;
   fully functional standalone (no backend needed).
@@ -114,6 +223,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅.
 
 ### Slice 7 — Intelligence catalog + conflict schema (docs/02 §3) ✅ (2026-06-13)
+
 - Rewrote the catalog (migration 0003) to the docs/02 §3 spec: `ingredients`
   (+synonyms, +tags), `products` (category/PAO/curated + tsvector search),
   `product_ingredients`, **tag-based** `conflict_rules`, `ingredient_pao_defaults`.
@@ -128,6 +238,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅.
 
 ### Slice 8 — Conflict / synergy engine + fixture tests (docs/02 §4) ✅ (2026-06-13)
+
 - Pure TS engine: tag dictionary, bundled starter ruleset (mirrors DB seed by
   fixed id), tag-based both-orders detection, concentration+sensitivity severity
   modulation, sub-flag exemptions, pregnancy pseudo-tag safety + dose-gating,
@@ -139,6 +250,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅ · test ✅.
 
 ### Slice 9 — Skin-cycling scheduler (docs/02 §5) ✅ (2026-06-13)
+
 - Pure TS: cycle templates (classic 4-night / gentle / advanced) personalised by
   sensitivity + barrier-repair goal (null when no actives); date-only (local-day)
   night/slot computation; next-acid-night projection; PM auto-resolution logic
@@ -147,6 +259,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅ · test ✅.
 
 ### Slice 10 — PAO intelligence + Shelf & conflict-detail surfaces ✅ (2026-06-13)
+
 - PAO/expiry helper (docs/02 §6): label → category default → honest "unknown"
   (never fabricated), `computeExpiry`, badge taxonomy (date/countdown/expired/
   unknown). 8 vitest fixtures (33 total).
@@ -163,6 +276,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (33).
 
 ### Slice 11 — Claim-safety regression guard (docs/02 §7.7/§9) ✅ (2026-06-13)
+
 - Test guard asserting no drug/disease verbs (treats/cures/heals/diagnose/
   stimulates collagen/repairs DNA) and no alarm words (danger/harmful/warning/
   avoid/!) in any rule's `mechanism`/`resolutionCopy`, plus invariants
@@ -172,6 +286,7 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   calm/resolution-first in both `rules.ts` and the SQL seed. **63 tests pass.**
 
 ### Slice 12 — Routine-builder schema + generation engine (docs/03 §2–§5) ✅ (2026-06-13)
+
 - Migrations: `sequencing_rules` (catalog, ~10 starter rules) + `active_ramp`
   (per-user, owner RLS). `@onskin/types` + Database type extended.
 - Pure TS engine: role classification (tags>name), canonical sequencing,
@@ -181,30 +296,35 @@ Legend: ✅ done · 🟡 partial (built around a blocker) · ⬜ not started · 
   gentle cycle, 2×/wk ramp, retinoid×glycolic moderate/alternate_nights). 77 tests.
 
 ### Slice 13 — Exact design tokens from the Claude Design handoff ✅ (2026-06-13)
+
 - Fetched + extracted the `.dc.html` bundle; ran a 3-agent extraction of the exact
   tokens + 13 per-screen specs. Aligned the palette to canonical hexes
   (paper #FAF7F2, clay #A5694B + sage/green system + severity ramp + amber +
   cream), added **IBM Plex Mono** (3-font system). Whole app re-themed via tokens.
 
 ### Slice 14 — Calm Progress / streak screen (docs/03 §6/§9.5, design 06) ✅ (2026-06-13)
+
 - The flagship Doc-3 daily surface: weekly adherence ("N of 7 nights"), a month
   **heat-map** (4-level intensity), and a grace-day **"Streak protected"** sage
   card — no shame copy, recovery counts. Reads the append-only completions log +
   cached streak. Replaces the Progress placeholder. typecheck + lint + test green.
 
 ### Slice 15 — Routine builder "Generate" screens (design 01–03) ✅ (2026-06-13)
+
 - `usePlan` (live `generatePlan` over the shelf; Maya example fallback). Plan-built
   "Start today" (sequenced AM + cycling PM + ramp default + honest gap note),
   drag-reorder edit with the non-blocking "Fix the order" nudge, retinoid ramp
   chart + offer-only step-up.
 
 ### Slice 16 — Today AM/PM daily loop + tolerance (design 04/05/07) ✅ (2026-06-13)
+
 - Today rebuilt to exact design: AM (paper) streak pill + morning check-off +
   Tonight teaser; PM (night) skin-cycling strip + evening check-off + the Doc-2
   **auto-resolution banner** ("next acid night") computed from the scheduler +
   a persisted cycle anchor. Optional non-diagnostic weekly tolerance check-in sheet.
 
 ### Slice 17 — Routine builder "Living & in control" (design 08–10) ✅ (2026-06-13)
+
 - Conflict **override sheet** (bottom-sheet; adapts for standard / myth-reassure /
   safety-defer; "Use together anyway" persists, "we won't re-nag"). Adaptation
   "Here's what changed" recompute view. Widgets + Live Activity preview.
@@ -217,12 +337,13 @@ full drag-and-drop (handles + nudge built; needs react-native-draggable-flatlist
 and routine persistence (server `build_routine`, docs/03 §11).
 
 ### Slice 18 — Doc 4 Smart Shelf + new design (docs/04, "OnSkin Smart Shelf") ✅ (2026-06-13)
+
 - **Schema** (migration 0016): additive `user_products` columns (`is_opened`,
   `finished_at`, `nickname`, `notes`, `thumbnail_path`, `pao_source`,
   `expiry_source`, `added_via`) + the owner-RLS `shelf_scans` intake/contribute-back
   log + the `(user_id, status, expiry_computed)` Expiring index. `created_at`/
   `updated_at` already existed (0005) — not re-added. `Database` type + `@onskin/
-  types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
+types` extended to match. Owner-only RLS throughout (D-028 adds the contribute-
   back UPDATE policy); no RLS weakened.
 - **Local-first store** (D-029): `features/shelf/store.ts` (AsyncStorage) is the
   v1 source of truth (offline-first, docs/04 §8), with a guarded `user_products`
@@ -255,6 +376,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (87).
 
 ### Slice 19 — Doc 5 Actives & Skin-Cycling Scheduler + new design ✅ (2026-06-13)
+
 - **Schema** (migration 0017): the stored/versioned `cycles` + `cycle_nights` (the
   part `cycling_night` alone never captured) with owner-only RLS via a new
   `owns_cycle()` definer helper (mirrors `owns_routine`). `Database` type + domain
@@ -286,6 +408,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (104).
 
 ### Slice 20 — Doc 6 Guided Photo Progress + new design ("OnSkin Photo Progress") ✅ (2026-06-13)
+
 - **Schema** (migration 0018): additive `photos` columns (`reference_photo_id`,
   `series`, `capture_session_id`, coarse `head_roll/yaw/pitch` pose QA — **never a
   faceprint**, `taken_local_date`, `time_of_day`, `notes`, `local_uri`,
@@ -335,6 +458,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (192).
 
 ### Slice 21 — Doc 7 Reminders, Streaks & Widgets + new design ✅ (2026-06-13)
+
 - **Schema** (migration 0019): `notification_preferences` tier/quiet-hours/discretion
   extensions (`am/pm_reminder_enabled`, `capture_reminders`, `quiet_hours_*`,
   `live_activity_enabled`, `promotional_opt_in`, `lockscreen_discreet`; **`updated_at`
@@ -342,11 +466,11 @@ and routine persistence (server `build_routine`, docs/03 §11).
   (append-only, owner-RLS), and a **content-free** `notification_log` (tier/kind/ts
   only). `Database` type + `@onskin/types` extended.
 - **Pure, tested cores**: `features/streak/streak.ts` — the calm forgiving streak
-  (a "completion day"; recovery nights count; **auto-freezes** absorb ≤2 *interior*
+  (a "completion day"; recovery nights count; **auto-freezes** absorb ≤2 _interior_
   misses, committed only when a further-back completion proves the gap was interior,
   so a clean ended run is never falsely "frozen"; earn-back; weekly adherence +
   heat-map; non-decreasing best, D-011) — **11 fixtures**; `features/notifications/
-  policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-kind
+policy.ts` — tiers, per-tier weekly caps, overnight quiet-hours, and the per-kind
   `tierEnabled` opt-out gate — **16 fixtures**; plus a notification claim-safety
   guard (guilt/urgency/drug/alarm, curly-apostrophe-aware). `useProgress` refactored
   to delegate to the streak module (Today + streak + welcome-back share one core).
@@ -373,6 +497,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (261).
 
 ### Slice 22 — Doc 8 Subscriptions, Paywall & Reverse Trial + new design ✅ (2026-06-13)
+
 - **Conversion model**: the **reverse trial** (default, docs/08 §2.1) — the onboarding
   offer's two honest paths ("Start free trial" → carded 14-day trial; "Explore first"
   → an **app-granted 7-day full-Pro reverse trial, no card** → generous free floor +
@@ -416,13 +541,14 @@ and routine persistence (server `build_routine`, docs/03 §11).
   honest-by-design, **18 agents, each finding verified**) → **0 blocking**; **1 high**
   flagged by all four dimensions and **fixed**: the reverse-trial expiry → re-offer /
   downgrade / win-back loop was built but unreachable — now wired via `lifecycle.ts` +
-  the manage win-back link. Lows fixed: webhook `will_renew` for NON_RENEWING/BILLING_
+  the manage win-back link. Lows fixed: webhook `will_renew` for NON*RENEWING/BILLING*
   ISSUE, the manage "Terms & Privacy" row now opens the policy pages (not the store),
   the reverse-trial banner now shows in PM too, and the claim-safety scope comment
   corrected. D-049…D-053.
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (346).
 
 ### Slice 23 — Doc 9 Personalized Recommendations + new design ✅ (2026-06-13)
+
 - **The independent advisor**: the needs-based recommendation engine that turns the
   profile (docs/01) + evidence-graded catalog (docs/02) + routine gaps (docs/03/05) +
   shelf state (docs/04) into honest, type-first suggestions — **ranked by fit and
@@ -477,10 +603,11 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (587).
 
 ### Slice 24 — Doc 10 Creator Stacks + ShopMy (the commerce layer) + new design ✅ (2026-06-13)
+
 - **Validated first** (cited deep-research, 25 claims confirmed / 0 refuted, primary
   sources): affiliate is a **six-figure supplement, not a seven-figure pillar** (Yuka:
   97.3% of $7.37M from subscriptions, zero affiliate) — the seven-figure business stays
-  a *subscription* business. The research also surfaced a **blocking unknown** (ShopMy's
+  a _subscription_ business. The research also surfaced a **blocking unknown** (ShopMy's
   documented APIs don't confirm a brand can mint links on its **own** recommendations
   under a house account; link creation is creator-OAuth-only, the Brand Partners API is
   reporting-only/poll-only, **no webhooks**) → the build is **rail-agnostic** and the
@@ -499,12 +626,12 @@ and routine persistence (server `build_routine`, docs/03 §11).
   trust guard** — `buildOutboundUrl` takes no profile, a health denylist + fixtures
   assert **no skin data ever reaches a retailer**, Doc 10's analogue of the docs/09
   "no commercial input" guard), `links.ts` (**rail-agnostic** `source`-tagged resolution
-  + honest empty state, dev-only demo), `stacks.ts` (expert/derm stacks, **B-DERM-REVIEW
-  launch gate** `STACKS_REVIEWED` + `shippableStacks()`), `consentLogic.ts` (the pure,
-  tested **ledger-authoritative-then-local** consent precedence), `copy.ts` + the
-  **FTC/claim-safety guard** ("paid link" not "affiliate link", disclosure unavoidable,
-  no dark patterns, concerns-not-conditions), `consent.ts`/`store.ts` (local-first
-  MHMDA consent + click token, the D-029 pattern). **83 new fixtures.**
+  - honest empty state, dev-only demo), `stacks.ts` (expert/derm stacks, **B-DERM-REVIEW
+    launch gate** `STACKS_REVIEWED` + `shippableStacks()`), `consentLogic.ts` (the pure,
+    tested **ledger-authoritative-then-local** consent precedence), `copy.ts` + the
+    **FTC/claim-safety guard** ("paid link" not "affiliate link", disclosure unavoidable,
+    no dark patterns, concerns-not-conditions), `consent.ts`/`store.ts` (local-first
+    MHMDA consent + click token, the D-029 pattern). **83 new fixtures.**
 - **4 design surfaces** + wiring: the quiet **consent-gated "where to buy"** beneath the
   rationale (`WhereToBuy.tsx`, in the Doc-9 rec card — replacing its inert link; FTC
   "Paid link" chip + the disclosure **visible with the links**, bold-inked independence
@@ -531,6 +658,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (670).
 
 ### Slice 25 — Doc 11 Community Layer ("Skin Notes") + new design ✅ (2026-06-13)
+
 - **Validated first** (cited deep-research, 24 verified claims): community is a
   retention/trust **multiplier, NOT a seven-figure pillar** and not required for one
   (Yuka: 97.3% of $7.37M from subscriptions, zero community — `community/forum/feed = 0`
@@ -577,11 +705,12 @@ and routine persistence (server `build_routine`, docs/03 §11).
 - **Gates:** typecheck ✅ · lint ✅ · test ✅ (767).
 
 ### Slice 26 — Doc 12 AI Trend Analysis ("Changes in your own photos") + new design ✅ (2026-06-13) — the LAST build item
+
 - **Validated first** (cited deep-research, 25 claims → 20 confirmed, primary sources):
   AI trend analysis is **NOT a seven-figure pillar** and the population skin score is a
   trust destroyer. Confirmed: the skin-tone fairness gap is **persistent into Dec 2025**
   (AUROC 0.82 darker vs 0.89 lighter, p<0.01); smartphone capture degrades AI (~0.90 →
-  0.81); **Monk > Fitzpatrick** (Nature npj 2025 + Google, who *forbid* training on
+  0.81); **Monk > Fitzpatrick** (Nature npj 2025 + Google, who _forbid_ training on
   MST-E); the **"AI" label is a measured trust tax** (only 5% of US adults trust AI "a
   lot"; healthcare net −23); Yuka is a subscription barcode-scanner with **zero AI face
   analysis**; even the flagship score app (Skin360) is "a sales/recommendation engine."
@@ -624,9 +753,11 @@ and routine persistence (server `build_routine`, docs/03 §11).
   **no score/grade/image column** exists in `photo_trend`; the fairness monotonicity +
   claim-safety + classification are covered by the 50 passing tests. The full multi-agent
   review can be re-run after the limit resets. D-068…D-072.
-- **Gates:** typecheck ✅ · lint ✅ · test ✅ (817).
+- **Historical gates:** typecheck ✅ · lint ✅ · test ✅ (817 at this slice; current
+  full-suite verification is 986 tests as of 2026-07-04).
 
 ### Slice 27 — Doc 13 "Ask OnSkin" assistant + new design ("OnSkin Ask Assistant") ✅ (2026-06-14) — founder-delegated, beyond the 12
+
 - **Stress-tested first** (a 13-agent adversarial fact-check + red-team + completeness pass
   on the written doc): retired the falsified "non-copyable context moat" (ChatGPT free-tier
   now persists context; independent shelf-aware competitors ship), corrected the misattributed
@@ -638,7 +769,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
   are template-filled from the engine, never free-generated** (D-073). The cloud-grounded
   layer is deferred (**B-AI-ASSISTANT-VENDOR**) and degrades honestly.
 - **Schema** (migration 0025): the `consents` enum gains a 9th type **`ask_onskin`**
-  (separate, default-OFF — the question is a health disclosure *transmitted* to the cloud,
+  (separate, default-OFF — the question is a health disclosure _transmitted_ to the cloud,
   Art. 9); **content-free** `ask_sessions`/`ask_turn_audit` (intent + verdicts + version
   pointers + a `narration_engine_mismatch` counter, **no message text**); the short,
   consented, encrypted `ask_safety_audit` window (resolving the "no transcript" vs
@@ -676,7 +807,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
   the queued authenticated POST job needs **B-SHELF-CONTRIB** (OBF write creds).
 - **Replenishment affiliate (docs/04 §6)** — sheet built opt-in + inert; live
   "see similar"/affiliate routing is gated by **B-PRIVACY** (data-sharing consent)
-  + **B-SHOPMY** + **B-CATALOG-SEED**.
+  - **B-SHOPMY** + **B-CATALOG-SEED**.
 - **PM auto-resolution live screen (docs/02 §7.4)** — built + tested + now driven
   by the Doc-5 orchestrated cycle (Slice 19).
 - **Server-authoritative scheduler** (`orchestrate()`/`schedule_for()`, docs/05 §10)
@@ -688,6 +819,7 @@ and routine persistence (server `build_routine`, docs/03 §11).
   category defaults + the scheduler frequency/recovery rules), **B-CATALOG-SEED**.
 
 ## Next (per docs/00 build order)
+
 1. ✅ scaffold → Auth + data model + RLS (Slices 0–6)
 2. ✅ Ingredient/product DB + conflict engine — Doc 2 (Slices 7–11)
 3. ✅ AM/PM routine builder — Doc 3 (Slices 12–17)
@@ -711,6 +843,7 @@ founder blocker (accounts/keys/legal/clinical/native dev build/catalog seed) —
 ## Post-build audit (per-doc fidelity pass)
 
 ### docs/01 — auth / onboarding / data model / RLS ✅ (2026-06-25)
+
 Feature-fidelity re-audit of the implemented build against docs/01. Verdict: faithful and
 high-quality — all 12 §3 tables match (RLS `(select auth.uid())` + `TO authenticated` +
 `WITH CHECK` + indexed + definer helpers; append-only completions w/ 48h server cap +
@@ -719,9 +852,10 @@ anon no-cloud-backup restrictive policy). LargeSecureStore, native Apple/Google 
 biometric app-lock, the full §2 onboarding sequence (health-consent gates the quiz), and the
 deletion/export/RC-webhook Edge Functions are all present. Two real, non-founder-blocked gaps
 were found and **closed**:
+
 - **Neutral DOB age gate (§4)** — built `app/onboarding/age.tsx` + tested pure `ageGate.ts`
-  + `ageGateStore.ts` (stores only the pass flag, **never the DOB**). Placed before any data
-  collection; blocks under-16. Threshold/parental-consent path still a counsel call.
+  - `ageGateStore.ts` (stores only the pass flag, **never the DOB**). Placed before any data
+    collection; blocks under-16. Threshold/parental-consent path still a counsel call.
 - **Persisted offline check-off queue (§6)** — built `lib/offline/completionQueue.ts`
   (+ tested pure helpers) + `OfflineSync.tsx` foreground drain; the Today read merges pending.
   Fixed the misleading `queryClient.ts` comment.
@@ -732,6 +866,7 @@ consents ip/ua server-side). See BLOCKERS.md "Design-audit follow-ups".
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/02 — ingredient intelligence (catalog / conflict engine / scheduler / PAO) ✅ (2026-06-25)
+
 Feature-fidelity re-audit against docs/02. Verdict: faithful and high-quality. All §3
 catalog tables match (ingredients/synonyms/tags/products/product_ingredients/conflict_rules/
 ingredient_pao_defaults + routine_conflicts; catalog world-readable, service-role write,
@@ -744,6 +879,7 @@ client `rules.ts` UUIDs exactly. The Maya fixture asserts **Moderate / contested
 the scheduler computes the **next-acid-night**. PAO (§6) resolves label→category→honest "PAO est.";
 the conflict sheet is resolution-first, never-blocked, with the §4.3 honesty note. One real gap
 **closed**:
+
 - **Standing "not medical advice" disclaimer (§9)** — was present only in community/ask; added a
   shared `lib/legal/disclaimer.ts` and surfaced it on the conflict-detail/safety sheet, in Settings
   (You tab), and on the onboarding health-consent screen. Final wording is a counsel item
@@ -756,6 +892,7 @@ defaults (B-DERM-REVIEW), PostHog conflict funnel events (B-POSTHOG).
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/03 — routine builder (generation / sequencing / ramp / cycling / habit loop) ✅ (2026-06-25)
+
 Feature-fidelity re-audit against docs/03. Verdict: faithful and high-quality. §2 deterministic
 pipeline (`generate.ts`: classify → sequence → cycling nights → ramp init → gaps → gated conflict
 detection); §3 `sequencing_rules` (0014, 10 roles, versioned, B-DERM-REVIEW); §4 `active_ramp` (0015,
@@ -763,6 +900,7 @@ owner-RLS) + `ramp.ts` (sensitivity-keyed init, offer-only step-ups ~21d, auto d
 cycling + next-acid-night; §6 calm forgiving streak (`streak.ts`: freeze window, recovery-nights-count,
 neutral-today, non-decreasing best, weekly adherence + month heat-map) — the persisted offline
 check-off queue it depends on (D-007/§6) was the docs/01 fix above. Two real gaps **closed**:
+
 - **"Use together anyway" re-nag (§7 / Rec 7)** — the override was written to `routine_conflicts`
   (B-SUPABASE, best-effort) but never read back, so the shelf banner re-surfaced the conflict despite
   the sheet promising "we won't re-nag". Added a local-first override store (`intelligence/overrides.ts`),
@@ -778,6 +916,7 @@ sequencing/ramp/cycling rules (B-DERM-REVIEW), PostHog routine events (B-POSTHOG
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/04 — smart shelf (intake / PAO / lifecycle / replenishment) ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/04. Verdict: faithful and complete — **no unblocked gap found**.
 Migration 0016 matches §2 (additive `user_products` columns with correct enums + the careful note that
 created_at/updated_at already exist in 0005; the `(user_id, status, expiry_computed)` index; `shelf_scans`
@@ -794,6 +933,7 @@ Blocked (correct): live barcode/OBF scan + OCR (B-CATALOG-SEED + B-CAMERA), cont
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
 
 ### docs/05 — actives / skin-cycling scheduler ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/05. Verdict: faithful and complete — **no unblocked gap**.
 Migration 0017 (`cycles` + `cycle_nights`, owner-RLS via `owns_cycle`) matches §3. The pure
 `projection.ts` implements the safe-modulo `night_index`, tonight/week-ahead, and `nextSlotDate`
@@ -808,6 +948,7 @@ server `orchestrate()`/`schedule_for()` (B-SERVER-DETECT/B-ROUTINE-PERSIST), dra
 (B-DERM-REVIEW). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
 
 ### docs/06 — guided photo capture + progress comparison ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/06. Verdict: faithful and complete — **no unblocked gap**.
 Migration 0018 adds the §6 columns (reference/series/session/coarse pose/taken_local_date/time_of_day/
 notes/local_uri/is_encrypted) with a **restrictive policy forcing `reference_photo_id` to be owned**
@@ -823,6 +964,7 @@ capture is simulated), DPIA + "never leaves your device" claim + final photo con
 **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅ (no code change this doc).
 
 ### docs/07 — reminders / streaks / widgets ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/07. Verdict: faithful and complete — **no unblocked gap**.
 Migration 0019 matches §7 (additive `notification_preferences` toggles + quiet hours + `lockscreen_discreet`;
 append-only `streak_freezes`; content-free `notification_log`; owner RLS). The pure `notifications/policy.ts`
@@ -836,6 +978,7 @@ Activity (B-WIDGETS; previews built), on-device delivery + Android-14 exact-alar
 (B-NOTIF-VERIFY), APNs/FCM push win-backs + PostHog (keys). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/08 — subscriptions / paywall (RevenueCat) ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/08. Verdict: faithful and complete — **no unblocked gap**.
 Migration 0020 matches §8 (additive `entitlements` columns store/period_type/will_renew/attribution;
 RLS unchanged, service-role writes incl. the app-granted reverse trial). The pure `entitlement.ts`
@@ -852,6 +995,7 @@ prices + server reverse-trial grant (B-REVENUECAT), store/ARL/external-link/fina
 (B-LEGAL/B-PRIVACY-COPY), server entitlement mirror (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 ✅.
 
 ### docs/09 — personalized recommendations (independent advisor) ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/09. Verdict: faithful and complete — **no unblocked gap**.
 Migration 0021 is exemplary on **church and state**: NO commission/affiliate/partnership column anywhere,
 the only catalog ref is a merit datum, owner RLS; recommendation_preferences (values/budget/format) +
@@ -859,13 +1003,15 @@ the recommendations cache (trigger/type/fit_rationale mandatory). `fit.ts` FIT s
 inputs (profile/evidence/need-priority/simplicity/preference/catalog-quality, weights sum 1.0) with NO
 commercial parameter; hard safety exclusions (pregnancy/conflict/preference/refuted) run first (excluded,
 never down-ranked); §5 priority ladder; skinimalism penalty. `engine.ts` implements the 6 honest triggers
-+ "you're set" over the gated catalog (`shippableRules`/`shippableRecTypes` B-DERM-REVIEW launch gate);
-what/why/how + evidence grade + caveats mandatory; the ranking path imports no commerce module (verified).
-Claim-safety guard (216 tests). Blocked (correct): commerce/affiliate path (doc 10 / B-PRIVACY data-sharing
-/ B-SHOPMY), specific-product recs thin → type-first until B-CATALOG-SEED, goal-active clinical sign-off
-(B-DERM-REVIEW), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
+
+- "you're set" over the gated catalog (`shippableRules`/`shippableRecTypes` B-DERM-REVIEW launch gate);
+  what/why/how + evidence grade + caveats mandatory; the ranking path imports no commerce module (verified).
+  Claim-safety guard (216 tests). Blocked (correct): commerce/affiliate path (doc 10 / B-PRIVACY data-sharing
+  / B-SHOPMY), specific-product recs thin → type-first until B-CATALOG-SEED, goal-active clinical sign-off
+  (B-DERM-REVIEW), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/10 — creator stacks + ShopMy (commerce layer) ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/10 (build spec). Verdict: faithful and complete — **no unblocked
 gap**. Migration 0022 enforces church-and-state at the row level: `order_attributions` (holding
 `commission_cents`) has **intentionally NO client policies → service-role-only**; `affiliate_links` exposes
@@ -881,6 +1027,7 @@ attribution.test 9 + claimsafety) are all present; order-report-poll Edge Functi
 (B-DERM-REVIEW), Play external-link confirmation (B-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/11 — community layer ("Skin Notes") ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/11. Verdict: faithful and complete — **no unblocked gap**. The
 expert-anchored, anonymous, claim-safe myth-vs-evidence trust layer (NOT an open feed) is built to the
 architecture-level guarantees. Migration 0023 (7 tables) is **PHOTO-FREE** (explicit "NO image/photo/
@@ -896,6 +1043,7 @@ posting consent+moderation-gated. Blocked (correct): peer moderation/legal store
 copy + DPIA (B-PRIVACY/B-PRIVACY-COPY), server persistence (B-SUPABASE). **Gates:** typecheck ✅ · lint ✅ · 939 ✅.
 
 ### docs/12 — AI trend analysis ("Changes in your own photos") ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/12. Verdict: faithful and complete — **no unblocked gap**. The
 population skin score is **killed**; the no-AI-score refusal is preserved + marketed; the only-defensible
 narrow exception is built. Migration 0024 has **NO score/grade/percentage/skin_age column** (D-068/D-070,
@@ -910,6 +1058,7 @@ gates, and a no-number `changeState`. Classical CV (not an LLM, never marketed a
 FDA/FTC/EU legal sign-off + DPIA (B-AI-LEGAL). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/13 — "Ask OnSkin" assistant ✅ CLEAN (2026-06-25)
+
 Feature-fidelity re-audit against docs/13. Verdict: faithful and complete — **no unblocked gap**. The
 deterministic, on-device, $0, **template-bounded** conversational front-end (NOT an open chatbot) is built
 to spec. Migration 0025: `ask_onskin` default-off consent #9; `ask_sessions`/`ask_turn_audit` are
@@ -927,11 +1076,13 @@ corpus (B-CATALOG-SEED/B-DERM-REVIEW), in-app derm finder (B-DERM-REVIEW), serve
 final consent copy (B-PRIVACY-COPY). **Gates:** typecheck ✅ · lint ✅ · 939 tests ✅.
 
 ### docs/14 — growth to seven figures (GTM playbook) ✅ (2026-06-25) — flagship artifact BUILT
+
 docs/14 is the go-to-market **strategy** doc, not a feature spec — most of it (the paid-UA math, ASO,
 organic short-form, credentialed-creator seeding, the quiz→paywall funnel) is founder/marketing execution,
 and the funnel it relies on is already built. It names **one concrete app artifact** as "the single most
 important thing to build" and "the growth engine": the shareable **Shelf Conflict Card** (§3). That was the
 one open docs/14 implementation gap, and it is now **built**:
+
 - **`features/growth/`** — `ConflictCard.tsx` (a fixed-size, branded, watermarked, claim-safe card rendered
   from a `DetectedConflict` via the engine's guard-scanned presentation helpers, so it can never assert a
   claim the engine didn't), `shareCard.ts` (one-tap PNG export via **react-native-view-shot** `captureRef`
@@ -941,13 +1092,14 @@ one open docs/14 implementation gap, and it is now **built**:
   from a "Share this card" affordance on the conflict-detail sheet (gated OFF for safety contraindications —
   a clinician matter, never a growth share).
 - Installed `react-native-view-shot` 5.1.0 (Expo-pinned); the `onskin://` deep-link scheme already existed.
-Blocked/launch items (correct): the live universal / App-Store **smart link** with a web fallback for
-not-yet-users needs the marketing domain + store listing (**B-GROWTH-LINK**); `captureRef` needs a **custom
-dev build** to run natively (the card renders everywhere; the export is dev-build-only, like B-CAMERA); the
-secondary **referral program** is deferred by design (docs/14 §"artifact first, referral second"); PostHog
-share-funnel events via the shim (**B-POSTHOG**). **Gates:** typecheck ✅ · lint ✅ · **943 tests ✅** (4 new).
+  Blocked/launch items (correct): the live universal / App-Store **smart link** with a web fallback for
+  not-yet-users needs the marketing domain + store listing (**B-GROWTH-LINK**); `captureRef` needs a **custom
+  dev build** to run natively (the card renders everywhere; the export is dev-build-only, like B-CAMERA); the
+  secondary **referral program** is deferred by design (docs/14 §"artifact first, referral second"); PostHog
+  share-funnel events via the shim (**B-POSTHOG**). **Gates:** typecheck ✅ · lint ✅ · **943 tests ✅** (4 new).
 
 ### Design-fidelity + deep-verification + 7-figure validation pass (2026-06-25)
+
 A multi-agent workflow (3 design specs + 3 deep functional verifications + 4 web-research briefs +
 synthesis) drove this pass. The 3 Claude Design `.dc.html` mockups (Smart Shelf, Ingredient Intelligence,
 Routine Builder) were imported from the local dx13 handoff bundle (the design MCP can't auth headlessly)
@@ -956,7 +1108,7 @@ and implemented to pixel-perfect fidelity.
 **7-figure validation verdict (synthesised, adversarially stress-tested): CONDITIONAL YES.** The three core
 features are commodities in their headline form (free analyzers/builders exist; ChatGPT erodes the
 personalize-my-routine verb), so as a parity headline they land at the ~$8.3K MRR median, ~10x short. They
-ARE king-making only in their *compounding-data* reconfiguration: resolution-first evidence-graded
+ARE king-making only in their _compounding-data_ reconfiguration: resolution-first evidence-graded
 intelligence (never a hazard score), the routine builder demoted to a **calm forgiving daily adherence loop**
 (the real moat, Lally 2010 + Duolingo grace), and the shelf as the **system of record** with switching-cost
 lock-in + the highest-intent affiliate trigger — plus an organic share artifact (the Conflict Card) to close
@@ -965,6 +1117,7 @@ subs, zero marketing) proves the ceiling but is survivorship, not a blueprint. F
 recs + 8 risks in the workflow output.
 
 **Critical functional fixes (the deep verification found dead wiring my first audit missed):**
+
 - **Today daily loop wired end-to-end** (was local `useState` that never persisted → activation never fired,
   streak/heat-map permanently empty). New local-first `completionsStore` (D-029 pattern); today.tsx persists +
   fires the activation metric; useProgress unions it so the forgiving streak + heat-map populate. This is the
@@ -980,6 +1133,7 @@ paperWarm, sageMuted); Smart Shelf per-screen deltas; the synergy badge + family
 checkmark + per-screen radii/copy across the routine builder. All claim-safe, em-dash-free, 947 tests green.
 
 **Functional follow-ups — progress:**
+
 - Smart Shelf: ✅ cold-load skeleton (commit 4e69e9d); ✅ proactive "Replace ->" affordance on countdown/
   expired cards (4e69e9d); ✅ `added_via='onboarding'` seed path now live (inline quick-add, commit 99d7fee).
   Still open: contribute-back copy asserts a `shelf_scans` write that never runs (soften or write the row);
@@ -993,6 +1147,7 @@ checkmark + per-screen radii/copy across the routine builder. All claim-safe, em
   rules.ts "DB-cached rules" comment (no client queries conflict_rules) need cleanup.
 
 ### Deep-verification remediation pass — docs 01, 05-13 + 06 (2026-06-26)
+
 Drove the full deep-verification reports (one per doc) to ground: fixed every genuine, non-blocked
 functional gap they surfaced, one commit per doc, each gated (typecheck + lint + vitest + em-dash sweep)
 and pushed. Key-, native-, clinical-, and vendor-blocked items were left as honest deferrals with markers.
@@ -1033,7 +1188,21 @@ conflicts behind Pro is wrong for a safety app; needs a product decision), the P
 **Gates across all 7 commits: typecheck + lint + 960 tests green, em-dash-free, pushed to origin/main.**
 
 ## Open questions for the founder
-- See [BLOCKERS.md](BLOCKERS.md) — consolidated. Highest priority: Documents 2–15
-  are missing from /docs (B-MISSING-DOCS); legal copy + quiz questions (B-QUIZ-COPY,
-  B-PRIVACY-COPY); and the account/key items (Supabase, RevenueCat, Apple, Google,
-  PostHog, Sentry, Turnstile).
+
+See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
+and the Phase 1 docs under `docs/`.
+
+Highest priority:
+
+1. Brand decision: keep `OnSkin` only with written counsel clearance; otherwise
+   clear and execute the rebrand path. `RoutineKind` is the working clearance
+   candidate, not a final legal conclusion.
+2. Assign account owners and billing for Supabase, Apple, Google, RevenueCat,
+   PostHog, Sentry, Turnstile, and domain registration.
+3. Retain counsel for privacy, terms, consumer-health-data, subscription, store
+   listing, photo, commerce, and AI/Ask review.
+4. Retain a dermatologist and cosmetic chemist for rules, PAO defaults,
+   recommendations, Skin Notes, and Ask corpus review.
+5. Decide whether V1 ships with commerce, community, widgets, and trend analysis
+   hidden or preview-only. Default is post-launch.
+6. Recruit the 50-100 user closed beta cohort for the frozen V1 loop.

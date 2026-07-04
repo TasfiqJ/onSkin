@@ -2,9 +2,11 @@ import { router } from 'expo-router';
 import { ScrollView, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Text } from '@/components/ui';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
 import { withProGate } from '@/features/subscription/ProGate';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
 
 // Widgets & Live Activity (docs/07 §5/§6, design screens 05/06/07). These are the
@@ -27,6 +29,8 @@ function Bars({ filled, total, on, off }: { filled: number; total: number; on: s
 function WidgetsScreen() {
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
+
+  if (!phase7Flags.widgets) return <DeferredSurface surface="widgets" />;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>

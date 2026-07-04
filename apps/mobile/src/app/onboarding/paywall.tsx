@@ -1,13 +1,13 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { monthlyEquivalent, PLANS } from '@/features/subscription/plans';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -33,10 +33,40 @@ function ValueProp({ label }: { label: string }) {
 export default function PaywallScreen() {
   const { goals, quizAnswers, computeResult } = useOnboarding();
   const { startTrial, startReverseTrial } = useEntitlementActions();
-  const annual = PLANS.annual;
+  const offering = useSubscriptionOffering();
+  const annual = offering.data?.annual ?? null;
+  const monthly = offering.data?.monthly ?? null;
+  const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const trialPrefix = annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for';
+  const priceLabel = annual?.priceLabel ?? 'Unavailable';
+  const periodLabel = annual?.periodLabel ?? 'year';
+  const monthlyEquivalent = annual?.pricePerMonthLabel ?? null;
+
+  function onStartTrial() {
+    if (!canPurchase) {
+      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      return;
+    }
+    startTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+      },
+      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+    });
+  }
+
+  function onStartReverseTrial() {
+    startReverseTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/routine/plan');
+      },
+      onError: () => Alert.alert('Explore first unavailable', 'We could not start the no-card Pro week for this account.'),
+    });
+  }
 
   useEffect(() => {
-    track('paywall_shown', { goals: goals.length });
+    track('paywall_shown', { count: goals.length });
   }, [goals.length]);
 
   // Personalized headline from the quiz axes (sign convention per the reveal: axes
@@ -75,18 +105,18 @@ export default function PaywallScreen() {
           <View className="flex-row items-baseline justify-between">
             <View>
               <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
-                Start {annual.trialDays} days free, then
+                {trialPrefix}
               </Text>
               <Text variant="title" style={{ color: colors.paper, fontSize: 34, lineHeight: 38 }}>
-                {annual.priceLabel}
+                {priceLabel}
                 <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
-                  /year
+                  /{periodLabel}
                 </Text>
               </Text>
             </View>
-            <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.55)', textAlign: 'right' }}>{`just\n${monthlyEquivalent(
-              annual.priceLabel,
-            )}/mo`}</Text>
+            {monthlyEquivalent ? (
+              <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.55)', textAlign: 'right' }}>{`just\n${monthlyEquivalent}/mo`}</Text>
+            ) : null}
           </View>
         </View>
 
@@ -98,16 +128,23 @@ export default function PaywallScreen() {
             Monthly
           </Text>
           <Text variant="label" tone="muted" style={{ fontSize: 13 }}>
-            {PLANS.monthly.priceLabel}/mo
+            {monthly ? `${monthly.priceLabel}/${monthly.periodLabel}` : 'Unavailable'}
           </Text>
         </View>
+
+        {offering.data?.status && offering.data.status !== 'available' ? (
+          <Text variant="label" tone="muted" className="mt-2 px-2 text-center" style={{ fontSize: 11.5, lineHeight: 16 }}>
+            {offering.data.reason}
+          </Text>
+        ) : null}
 
         {/* primary CTA */}
         <Pressable
           accessibilityRole="button"
-          onPress={() => startTrial.mutate(undefined, { onSettled: () => router.replace('/paywall/success') })}
+          disabled={!canPurchase || startTrial.isPending}
+          onPress={onStartTrial}
           className="mt-5 h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}>
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}>
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
             {PAYWALL_COPY.offer.cta}
           </Text>
@@ -119,7 +156,8 @@ export default function PaywallScreen() {
         {/* the second honest path. The reverse trial */}
         <Pressable
           accessibilityRole="button"
-          onPress={() => startReverseTrial.mutate(undefined, { onSettled: () => router.replace('/routine/plan') })}
+          disabled={startReverseTrial.isPending}
+          onPress={onStartReverseTrial}
           className="mt-3 flex-row items-center gap-3 rounded-card p-3.5"
           style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
           <View className="h-[34px] w-[34px] items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(165,105,75,0.15)' }}>

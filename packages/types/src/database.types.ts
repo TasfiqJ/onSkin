@@ -303,6 +303,9 @@ export type Database = {
           id: string;
           user_id: string;
           catalog_product_id: string | null;
+          catalog_source_id: string | null;
+          catalog_match_quality: string | null;
+          catalog_source_snapshot_date: DateStr | null;
           manual_name: string | null;
           manual_brand: string | null;
           barcode: string | null;
@@ -320,6 +323,10 @@ export type Database = {
           pao_source: string | null;
           expiry_source: string | null;
           added_via: string | null;
+          discard_after: DateStr | null;
+          discard_basis: string | null;
+          routine_slot: string | null;
+          source_disclosure_ack_at: Timestamptz | null;
           created_at: Timestamptz;
           updated_at: Timestamptz;
         };
@@ -327,6 +334,9 @@ export type Database = {
           id?: string;
           user_id: string;
           catalog_product_id?: string | null;
+          catalog_source_id?: string | null;
+          catalog_match_quality?: string | null;
+          catalog_source_snapshot_date?: DateStr | null;
           manual_name?: string | null;
           manual_brand?: string | null;
           barcode?: string | null;
@@ -343,6 +353,10 @@ export type Database = {
           pao_source?: string | null;
           expiry_source?: string | null;
           added_via?: string | null;
+          discard_after?: DateStr | null;
+          discard_basis?: string | null;
+          routine_slot?: string | null;
+          source_disclosure_ack_at?: Timestamptz | null;
           created_at?: Timestamptz;
           updated_at?: Timestamptz;
         };
@@ -550,6 +564,14 @@ export type Database = {
           offering_id: string | null;
           experiment_id: string | null;
           acquisition_channel: string | null;
+          source: string | null;
+          environment: string | null;
+          management_url: string | null;
+          verified_at: Timestamptz | null;
+          package_id: string | null;
+          store_user_id: string | null;
+          last_reconciled_at: Timestamptz | null;
+          raw_status: Json;
         };
         Insert: {
           user_id: string;
@@ -566,6 +588,14 @@ export type Database = {
           offering_id?: string | null;
           experiment_id?: string | null;
           acquisition_channel?: string | null;
+          source?: string | null;
+          environment?: string | null;
+          management_url?: string | null;
+          verified_at?: Timestamptz | null;
+          package_id?: string | null;
+          store_user_id?: string | null;
+          last_reconciled_at?: Timestamptz | null;
+          raw_status?: Json;
         };
         Update: Partial<Database['public']['Tables']['entitlements']['Insert']>;
         Relationships: [];
@@ -578,6 +608,18 @@ export type Database = {
           event_type: string | null;
           payload: Json | null;
           received_at: Timestamptz;
+          app_user_id: string | null;
+          original_app_user_id: string | null;
+          aliases: string[] | null;
+          resolved_user_id: string | null;
+          environment: string | null;
+          store: string | null;
+          product_id: string | null;
+          processed_at: Timestamptz | null;
+          processing_status: string | null;
+          error: string | null;
+          signature_verified: boolean | null;
+          auth_verified: boolean | null;
         };
         Insert: {
           id?: string;
@@ -586,8 +628,38 @@ export type Database = {
           event_type?: string | null;
           payload?: Json | null;
           received_at?: Timestamptz;
+          app_user_id?: string | null;
+          original_app_user_id?: string | null;
+          aliases?: string[] | null;
+          resolved_user_id?: string | null;
+          environment?: string | null;
+          store?: string | null;
+          product_id?: string | null;
+          processed_at?: Timestamptz | null;
+          processing_status?: string | null;
+          error?: string | null;
+          signature_verified?: boolean | null;
+          auth_verified?: boolean | null;
         };
         Update: Partial<Database['public']['Tables']['subscriptions_events']['Insert']>;
+        Relationships: [];
+      };
+      reverse_trial_grants: {
+        Row: {
+          user_id: string;
+          granted_at: Timestamptz;
+          expires_at: Timestamptz;
+          source: string;
+          metadata: Json;
+        };
+        Insert: {
+          user_id: string;
+          granted_at?: Timestamptz;
+          expires_at: Timestamptz;
+          source?: string;
+          metadata?: Json;
+        };
+        Update: Partial<Database['public']['Tables']['reverse_trial_grants']['Insert']>;
         Relationships: [];
       };
       consents: {

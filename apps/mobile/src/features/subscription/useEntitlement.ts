@@ -2,23 +2,62 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { cancelTrialReminder, scheduleTrialReminder } from '@/features/notifications/deliver';
 import { track } from '@/lib/analytics/track';
-import { purchasePackage, restorePurchases } from '@/lib/iap/revenuecat';
+import {
+  customerInfoToStoredEntitlement,
+  purchasePackage,
+  purchaseWinBackPackage,
+  restorePurchases,
+} from '@/lib/iap/revenuecat';
 
-import { deriveState, type SubscriptionState } from './entitlement';
+import { deriveState, type StoredEntitlement, type SubscriptionState } from './entitlement';
 import {
   downgradeToFree,
   fetchServerEntitlement,
-  grantReverseTrial,
-  grantTrial,
   loadEntitlement,
-  setActivePaid,
+  saveVerifiedEntitlement,
+  startReverseTrialOnServer,
 } from './store';
 
-// The entitlement gate (docs/08 §4). Reads the local-first cache (offline-safe),
-// reconciles with the server row when present, and derives the SubscriptionState
-// that every Pro feature gates on. Actions grant the app-granted reverse trial,
-// the (stubbed) carded trial/purchase, the win-back, and the graceful downgrade.
 const KEY = ['entitlement'] as const;
+
+export type EntitlementActionResult = {
+  active: boolean;
+  cancelled?: boolean;
+  offerUnavailable?: boolean;
+  entitlement: StoredEntitlement | null;
+};
+
+function activeResult(entitlement: StoredEntitlement | null, extras?: Omit<EntitlementActionResult, 'active' | 'entitlement'>): EntitlementActionResult {
+  const active = entitlement ? deriveState(entitlement, new Date().toISOString()).isPro : false;
+  return { active, entitlement, ...extras };
+}
+
+async function persistRevenueCatResult(input: {
+  customerInfo?: Parameters<typeof customerInfoToStoredEntitlement>[0];
+  packageId?: string;
+  offeringId?: string;
+  priceLabel?: string;
+}): Promise<StoredEntitlement | null> {
+  if (!input.customerInfo) return null;
+  const entitlement = customerInfoToStoredEntitlement(input.customerInfo);
+  if (!entitlement) return null;
+
+  const withAttribution: StoredEntitlement = {
+    ...entitlement,
+    packageId: input.packageId ?? entitlement.packageId ?? null,
+    offeringId: input.offeringId ?? entitlement.offeringId ?? null,
+    priceLabel: input.priceLabel ?? entitlement.priceLabel ?? null,
+  };
+  await saveVerifiedEntitlement(withAttribution);
+
+  if (withAttribution.isActive && withAttribution.periodType === 'trial') {
+    await scheduleTrialReminder();
+  } else if (withAttribution.isActive) {
+    await cancelTrialReminder();
+  }
+
+  return withAttribution;
+}
 
 export function useEntitlement() {
   return useQuery<SubscriptionState>({
@@ -26,7 +65,7 @@ export function useEntitlement() {
     retry: 0,
     queryFn: async () => {
       const local = await loadEntitlement();
-      const server = await fetchServerEntitlement(); // null without a backend (B-SUPABASE)
+      const server = await fetchServerEntitlement();
       return deriveState(server ?? local, new Date().toISOString());
     },
   });
@@ -38,25 +77,31 @@ export function useEntitlementActions() {
 
   const startReverseTrial = useMutation({
     mutationFn: async () => {
-      await grantReverseTrial();
-      track('reverse_trial_started');
+      const entitlement = await startReverseTrialOnServer();
+      track('reverse_trial_started', { source: 'server' });
+      return activeResult(entitlement);
     },
     onSettled: invalidate,
   });
 
-  // "Start free trial" → the carded 14-day store trial. Real StoreKit/Play purchase
-  // (B-REVENUECAT); v1 grants the trial locally so the flow + success screen work.
   const startTrial = useMutation({
     mutationFn: async () => {
       const result = await purchasePackage('annual');
-      // Bypass guard (docs/08 §3.3): once the real SDK lands, a user cancellation
-      // returns { purchased:false } and must NOT grant Pro. The v1 stub returns
-      // { stub:true } so the demo flow still completes locally.
-      if (!result.purchased && !result.stub) return;
-      await grantTrial();
-      // Schedule the promised "2 days before the trial ends" reminder (docs/08 §6).
-      await scheduleTrialReminder();
-      track('trial_started', { product: 'onskin_pro_annual' });
+      const entitlement = await persistRevenueCatResult(result);
+      if (!entitlement) return activeResult(null, { cancelled: result.cancelled });
+
+      if (entitlement.isActive && entitlement.periodType === 'trial') {
+        track('trial_started', {
+          source: 'revenuecat',
+          period_type: entitlement.periodType,
+        });
+      } else if (entitlement.isActive) {
+        track('purchase_completed', {
+          source: 'revenuecat',
+          period_type: entitlement.periodType,
+        });
+      }
+      return activeResult(entitlement, { cancelled: result.cancelled });
     },
     onSettled: invalidate,
   });
@@ -64,10 +109,14 @@ export function useEntitlementActions() {
   const purchase = useMutation({
     mutationFn: async () => {
       const result = await purchasePackage('annual');
-      if (!result.purchased && !result.stub) return; // same bypass guard
-      await setActivePaid();
-      await cancelTrialReminder(); // now paid, no trial conversion to warn about
-      track('purchase_completed', { product: 'onskin_pro_annual' });
+      const entitlement = await persistRevenueCatResult(result);
+      if (entitlement?.isActive) {
+        track('purchase_completed', {
+          source: 'revenuecat',
+          period_type: entitlement.periodType,
+        });
+      }
+      return activeResult(entitlement, { cancelled: result.cancelled });
     },
     onSettled: invalidate,
   });
@@ -75,7 +124,9 @@ export function useEntitlementActions() {
   const restore = useMutation({
     mutationFn: async () => {
       track('restore_tapped');
-      await restorePurchases();
+      const result = await restorePurchases();
+      const entitlement = await persistRevenueCatResult(result);
+      return activeResult(entitlement);
     },
     onSettled: invalidate,
   });
@@ -84,15 +135,25 @@ export function useEntitlementActions() {
     mutationFn: async () => {
       await downgradeToFree();
       track('reverse_trial_expired');
+      return activeResult(await loadEntitlement());
     },
     onSettled: invalidate,
   });
 
   const winback = useMutation({
     mutationFn: async () => {
-      await setActivePaid('onskin_pro_annual_winback');
-      await cancelTrialReminder(); // win-back is immediate paid, no trial
-      track('winback_converted');
+      const result = await purchaseWinBackPackage();
+      const entitlement = await persistRevenueCatResult(result);
+      if (entitlement?.isActive) {
+        track('winback_converted', {
+          source: 'revenuecat',
+          period_type: entitlement.periodType,
+        });
+      }
+      return activeResult(entitlement, {
+        cancelled: result.cancelled,
+        offerUnavailable: result.offerUnavailable,
+      });
     },
     onSettled: invalidate,
   });

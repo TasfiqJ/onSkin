@@ -6,9 +6,8 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// No-match fork (design screen 01, docs/04 §4.1). A barcode that isn't in Open
-// Beauty Facts is never a dead end. Route to OCR or manual, and queue the unknown
-// product for contribute-back (ODbL, §4.6). Calm, dark sheet.
+// A barcode miss is never a dead end. Contribution-back is not promised until
+// the source workflow is approved.
 export default function NoMatchScreen() {
   const { reset } = useIntake();
 
@@ -29,15 +28,15 @@ export default function NoMatchScreen() {
         className="mb-4 h-12 w-12 items-center justify-center rounded-full"
         style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
         <Text className="text-[18px]" tone="inverseMuted">
-          ⌕
+          ?
         </Text>
       </View>
       <Text variant="title" tone="inverse" className="text-[30px] leading-[33px]" accessibilityRole="header">
         We don&apos;t have this one yet.
       </Text>
       <Text variant="body" tone="inverseMuted" className="mt-2">
-        That barcode isn&apos;t in our database yet. No problem. Add it another way, and we&apos;ll
-        add it back for everyone.
+        That barcode isn&apos;t in our database yet. No problem. Add it another way, then report any
+        wrong details from the product page.
       </Text>
 
       <View className="mt-6 gap-2.5">
@@ -47,7 +46,7 @@ export default function NoMatchScreen() {
           className="flex-row items-center gap-3.5 rounded-[18px] p-4"
           style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
           <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">
-            <Text className="font-sans-bold text-clay-bright">≡</Text>
+            <Text className="font-sans-bold text-clay-bright">I</Text>
           </View>
           <View className="flex-1">
             <Text variant="body" tone="inverse" className="font-sans-semibold">
@@ -64,7 +63,7 @@ export default function NoMatchScreen() {
           className="flex-row items-center gap-3.5 rounded-[18px] p-4"
           style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
           <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">
-            <Text className="font-sans-bold text-clay-bright">✎</Text>
+            <Text className="font-sans-bold text-clay-bright">+</Text>
           </View>
           <View className="flex-1">
             <Text variant="body" tone="inverse" className="font-sans-semibold">
@@ -80,7 +79,7 @@ export default function NoMatchScreen() {
       <View className="mt-5 flex-row items-center justify-center gap-2">
         <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.sageMuted }} />
         <Text variant="label" tone="inverseMuted">
-          new products are contributed back to Open Beauty Facts
+          manual fallback keeps the shelf working
         </Text>
       </View>
     </Sheet>

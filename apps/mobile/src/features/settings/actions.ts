@@ -4,13 +4,21 @@ import * as Sharing from 'expo-sharing';
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import { clearStoredSkinProfile } from '@/features/onboarding/skinProfileStore';
 import { recordConsent } from '@/lib/consent/consent';
+import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
 import { supabase } from '@/lib/supabase/client';
 
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
 // tables), purges Storage, and removes the RC/PostHog records, then signs out.
 export async function deleteAccount(): Promise<void> {
-  const { error } = await supabase.functions.invoke('account-deletion', { method: 'POST' });
+  const { data } = await supabase.auth.getUser();
+  const appleAuthorizationCode = data.user
+    ? await getAppleAuthorizationCodeForRevocation(data.user).catch(() => null)
+    : null;
+  const { error } = await supabase.functions.invoke('account-deletion', {
+    method: 'POST',
+    body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
+  });
   if (error) throw error;
   // Clear the device-global local-first onboarding record so the next (fresh
   // anonymous) session is correctly routed back through onboarding rather than

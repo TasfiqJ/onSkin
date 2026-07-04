@@ -1,26 +1,25 @@
-import { router } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router, useIsFocused } from 'expo-router';
+import { randomUUID } from 'expo-crypto';
+import { useEffect, useRef, useState } from 'react';
+import { Linking, Platform, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
+import { useGuidedCaptureSignals } from '@/features/native/camera/guidedSignals';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
-import { capturedSignals, demoReadySignals } from '@/features/photos/mockSignals';
+import { PhotoImage } from '@/features/photos/PhotoImage';
 import { coachingLine, lightingState } from '@/features/photos/quality';
+import { usePhotos } from '@/features/photos/usePhotos';
+import { track } from '@/lib/analytics/track';
+import { env } from '@/lib/env';
 import { haptics } from '@/theme/haptics';
 
-// Guided capture (docs/06 §3, design screen 01). The dark palette keeps the face
-// the brightest thing on screen. The live feed + on-device face-detection frame
-// processor (alignment/pose/quality) + frame-buffer luminance check + auto-capture
-// are the device-build pipeline (B-CAMERA); here the full designed chrome is
-// rendered and the shutter performs a simulated capture so the timeline flow is
-// exercisable end-to-end. NO faceprint is ever stored (docs/06 §7).
-
-const BG = '#16130F'; // the photo design's near-black capture backdrop
-const GUIDE = '#9DB18A'; // sage alignment guide
+const BG = '#16130F';
+const GUIDE = '#9DB18A';
 const READY = '#9DB18A';
 
 function ConsentGate({ onGrant }: { onGrant: () => void }) {
@@ -44,7 +43,6 @@ function ConsentGate({ onGrant }: { onGrant: () => void }) {
       <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 11, color: 'rgba(244,239,231,0.45)', marginTop: 6, marginBottom: 14 }}>
         {PHOTO_CAPTURE_CONSENT.footnote}
       </Text>
-      {/* Skin-prep guidance for comparable captures (docs/06 §3). */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 22 }}>
         <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
         <Text style={{ fontFamily: 'HankenGrotesk_500Medium', fontSize: 12.5, color: 'rgba(244,239,231,0.7)', flex: 1, lineHeight: 17 }}>
@@ -64,94 +62,148 @@ function ConsentGate({ onGrant }: { onGrant: () => void }) {
   );
 }
 
+function PermissionGate({
+  canAskAgain,
+  onAsk,
+}: {
+  canAskAgain: boolean;
+  onAsk: () => void;
+}) {
+  return (
+    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(10,8,6,0.9)', padding: 28, justifyContent: 'center' }}>
+      <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 30, color: '#F4EFE7', marginBottom: 12 }}>
+        Camera access is needed for progress photos.
+      </Text>
+      <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 14.5, color: 'rgba(244,239,231,0.78)', lineHeight: 21, marginBottom: 22 }}>
+        The photo is captured on this device and saved into encrypted app-private storage.
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={canAskAgain ? onAsk : () => void Linking.openSettings()}
+        style={{ height: 56, borderRadius: 999, backgroundColor: '#F4EFE7', alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+          {canAskAgain ? 'Allow camera' : 'Open settings'}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 export default function CaptureScreen() {
   const insets = useSafeAreaInsets();
+  const isFocused = useIsFocused();
+  const cameraRef = useRef<CameraView | null>(null);
+  const [permission, requestPermission] = useCameraPermissions();
   const [consented, setConsented] = useState<boolean | null>(null);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [capturing, setCapturing] = useState(false);
+  const { data } = usePhotos('front');
 
   useEffect(() => {
     void hasPhotoCaptureConsent().then(setConsented);
   }, []);
 
-  // The live chrome is driven by the REAL quality engine over a (mock until
-  // B-CAMERA) signal, so the coaching line + lighting label/bar are computed, not
-  // hardcoded. The live evolving pose stream arrives with the camera.
-  const signals = useMemo(() => demoReadySignals(), []);
+  const canShowCamera = env.nativeCameraEnabled && Platform.OS !== 'web' && Boolean(permission?.granted);
+  const { signals, ready } = useGuidedCaptureSignals(cameraReady && canShowCamera);
   const coaching = coachingLine(signals);
   const light = lightingState(signals);
+  const referenceUri = data?.reference?.localUri ?? null;
 
-  function capture() {
-    // Never capture before the photo_capture consent is known + granted
-    // (docs/06 §7). The gate below covers the loading window; this is the guard.
-    if (consented !== true) return;
-    haptics.success();
-    // The captured frame's scores come from the engine over a slightly-varied
-    // signal (B-CAMERA supplies the real on-device scores), so saved photos differ
-    // and the review "darker than usual" comparison can fire across real captures,
-    // instead of every photo getting two frozen constants.
-    const shot = capturedSignals(Math.random());
-    const alignment = shot.alignment;
-    const lighting = lightingState(shot).fill;
-    router.replace({
-      pathname: '/progress/review',
-      params: {
-        alignment: String(alignment),
-        lighting: String(lighting),
-        timeOfDay: timeOfDayNow(),
-        takenLocalDate: localDay(),
-      },
-    });
+  async function capture() {
+    if (consented !== true || !cameraRef.current || !canShowCamera || capturing) return;
+    setCapturing(true);
+    try {
+      const shot = await cameraRef.current.takePictureAsync({
+        quality: 0.76,
+        base64: false,
+        exif: false,
+        shutterSound: true,
+      });
+      haptics.success();
+      const captureSessionId = randomUUID();
+      track('photo_capture_still_taken', { signal_source: 'camera_preview_estimate' });
+      router.replace({
+        pathname: '/progress/review',
+        params: {
+          alignment: String(signals.alignment),
+          lighting: String(light.fill),
+          headRoll: String(signals.roll),
+          headYaw: String(signals.yaw),
+          headPitch: String(signals.pitch),
+          captureSessionId,
+          capturedUri: shot.uri,
+          timeOfDay: timeOfDayNow(),
+          takenLocalDate: localDay(),
+        },
+      });
+    } catch {
+      setCapturing(false);
+    }
   }
 
   return (
     <View style={{ flex: 1, backgroundColor: BG, paddingTop: insets.top + 16 }}>
-      {/* top chrome */}
       <View className="flex-row items-center justify-between px-6">
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Close"
           onPress={() => router.back()}
           style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(244,239,231,0.12)', alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: '#F4EFE7', fontSize: 15 }}>✕</Text>
+          <Text style={{ color: '#F4EFE7', fontSize: 15 }}>x</Text>
         </Pressable>
         <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14, color: '#F4EFE7' }}>Front · weekly</Text>
         <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(244,239,231,0.12)' }} />
       </View>
 
-      {/* face zone. Ghost + alignment guide + coaching */}
       <View className="flex-1 items-center justify-center">
-        {/* ghost of the previous photo */}
-        <View
-          style={{ position: 'absolute', width: 210, height: 270, borderRadius: 130, backgroundColor: 'rgba(217,161,131,0.10)', transform: [{ translateX: 8 }, { translateY: -6 }] }}
-        />
-        {/* alignment guide */}
+        <View style={{ position: 'absolute', width: '100%', height: '100%', overflow: 'hidden' }}>
+          {canShowCamera ? (
+            <CameraView
+              ref={cameraRef}
+              active={isFocused}
+              animateShutter
+              facing="front"
+              mirror
+              mode="picture"
+              onCameraReady={() => setCameraReady(true)}
+              onMountError={() => setCameraReady(false)}
+              style={{ flex: 1 }}
+            />
+          ) : null}
+        </View>
+        {referenceUri ? (
+          <View style={{ position: 'absolute', width: 210, height: 270, borderRadius: 130, opacity: 0.18, overflow: 'hidden', transform: [{ translateX: 8 }, { translateY: -6 }] }}>
+            <PhotoImage uri={referenceUri} style={{ flex: 1 }} />
+          </View>
+        ) : (
+          <View style={{ position: 'absolute', width: 210, height: 270, borderRadius: 130, backgroundColor: 'rgba(217,161,131,0.10)', transform: [{ translateX: 8 }, { translateY: -6 }] }} />
+        )}
         <View
           style={{
             width: 218,
             height: 282,
             borderRadius: 130,
             borderWidth: 2,
-            borderColor: 'rgba(157,177,138,0.85)',
+            borderColor: ready ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.55)',
             borderStyle: 'dashed',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
           <View style={{ position: 'absolute', top: -10, width: 8, height: 8, borderRadius: 4, backgroundColor: GUIDE }} />
-          <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 10, color: 'rgba(244,239,231,0.4)', textAlign: 'center', lineHeight: 16 }}>
+          <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 10, color: 'rgba(244,239,231,0.75)', textAlign: 'center', lineHeight: 16 }}>
             {PHOTO_COPY.capture.ghostHint}
           </Text>
-          <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 9, color: 'rgba(244,239,231,0.28)', textAlign: 'center', marginTop: 8 }}>
-            preview · live in device build
+          <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 9, color: 'rgba(244,239,231,0.5)', textAlign: 'center', marginTop: 8 }}>
+            preview quality estimate
           </Text>
         </View>
-        {/* coaching line */}
         <View
           style={{ position: 'absolute', bottom: 18, backgroundColor: 'rgba(22,19,15,0.82)', borderRadius: 999, paddingHorizontal: 20, paddingVertical: 11, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: '#D9A183' }} />
+          <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: ready ? READY : '#D9A183' }} />
           <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}>{coaching}</Text>
         </View>
       </View>
 
-      {/* bottom controls */}
       <View style={{ backgroundColor: 'rgba(22,19,15,0.9)', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 26, paddingTop: 20, paddingBottom: insets.bottom + 24 }}>
         <View className="mb-5 flex-row items-center" style={{ gap: 14 }}>
           <Text style={{ width: 58, fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 12.5, color: 'rgba(244,239,231,0.6)' }}>
@@ -164,15 +216,15 @@ export default function CaptureScreen() {
         </View>
         <View className="flex-row items-center justify-between">
           <View style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: 'rgba(244,239,231,0.1)' }} />
-          {/* ready shutter. Auto-fires when matched (here: tap to capture) */}
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Capture photo"
-            onPress={capture}
-            style={{ width: 78, height: 78, borderRadius: 39, borderWidth: 4, borderColor: READY, alignItems: 'center', justifyContent: 'center' }}>
+            disabled={!canShowCamera || capturing}
+            onPress={() => void capture()}
+            style={{ width: 78, height: 78, borderRadius: 39, borderWidth: 4, borderColor: READY, alignItems: 'center', justifyContent: 'center', opacity: canShowCamera && !capturing ? 1 : 0.55 }}>
             <View style={{ width: 62, height: 62, borderRadius: 31, backgroundColor: READY, alignItems: 'center', justifyContent: 'center' }}>
               <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 11, color: BG, textAlign: 'center', lineHeight: 13 }}>
-                {PHOTO_COPY.capture.autoReady}
+                {capturing ? 'Saving' : PHOTO_COPY.capture.autoReady}
               </Text>
             </View>
           </Pressable>
@@ -187,11 +239,13 @@ export default function CaptureScreen() {
           onGrant={() => {
             void grantPhotoCaptureConsent();
             setConsented(true);
+            if (!permission?.granted) void requestPermission();
           }}
         />
       ) : consented === null ? (
-        // Block the shutter until the consent flag is known (fail closed, docs/06 §7).
         <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: BG }} />
+      ) : !canShowCamera ? (
+        <PermissionGate canAskAgain={permission?.canAskAgain ?? true} onAsk={() => void requestPermission()} />
       ) : null}
     </View>
   );

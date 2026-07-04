@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
 
 // 05 · "People like you" (docs/11 §9.4, design 05). Phase 2+. Structured, anonymised
@@ -11,6 +13,8 @@ import { colors } from '@/theme/tokens';
 // never a list of individuals, never a comparison ranking, never a photo. The aggregate
 // shown is an illustrative placeholder until peer density exists (B-COMMUNITY-MOD).
 export default function PeopleLikeYouScreen() {
+  if (!phase7Flags.communityPosting) return <DeferredSurface surface="communityPosting" />;
+
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pb-2 pt-1">

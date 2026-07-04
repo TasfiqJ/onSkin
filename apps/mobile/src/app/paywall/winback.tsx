@@ -1,12 +1,12 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { WINBACK } from '@/features/subscription/plans';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -17,6 +17,25 @@ const BG = '#1B1813';
 export default function WinbackScreen() {
   const insets = useSafeAreaInsets();
   const { winback } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
+  const offer = offering.data?.winBack ?? null;
+  const annual = offering.data?.annual ?? null;
+  const canWinBack = offering.data?.status === 'available' && offer?.canPurchase;
+
+  function onComeBack() {
+    if (!canWinBack) {
+      router.replace('/paywall/upsell?feature=full_routine');
+      return;
+    }
+    winback.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (result.offerUnavailable) Alert.alert('Offer unavailable', 'This welcome-back offer is not available for this account right now.');
+        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+      },
+      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+    });
+  }
 
   useEffect(() => {
     track('winback_shown');
@@ -42,32 +61,42 @@ export default function WinbackScreen() {
               </Text>
               <View className="mt-1 flex-row items-baseline gap-2">
                 <Text variant="title" style={{ color: colors.cream, fontSize: 28 }}>
-                  {WINBACK.priceLabel}
+                  {offer?.priceLabel ?? annual?.priceLabel ?? 'Unavailable'}
                 </Text>
-                <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.45)', textDecorationLine: 'line-through' }}>
-                  {WINBACK.originalLabel}
-                </Text>
+                {offer?.originalPriceLabel ? (
+                  <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.45)', textDecorationLine: 'line-through' }}>
+                    {offer.originalPriceLabel}
+                  </Text>
+                ) : null}
                 <Text variant="bodySm" style={{ color: colors.clayBright }}>
-                  / first year
+                  / {offer?.periodLabel ?? annual?.periodLabel ?? 'year'}
                 </Text>
               </View>
             </View>
-            <View className="rounded-pill px-3 py-1.5" style={{ backgroundColor: 'rgba(217,161,131,0.2)' }}>
-              <Text variant="label" className="font-sans-bold" style={{ color: colors.clayBright, fontSize: 11 }}>
-                {WINBACK.percentOff}% off
-              </Text>
-            </View>
+            {offer?.percentOff ? (
+              <View className="rounded-pill px-3 py-1.5" style={{ backgroundColor: 'rgba(217,161,131,0.2)' }}>
+                <Text variant="label" className="font-sans-bold" style={{ color: colors.clayBright, fontSize: 11 }}>
+                  {offer.percentOff}% off
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
+        {!canWinBack ? (
+          <Text variant="label" className="mt-3" style={{ color: 'rgba(244,239,231,0.55)', fontSize: 11.5, lineHeight: 16 }}>
+            A native welcome-back offer is not available on this account. You can still choose the current Pro plan.
+          </Text>
+        ) : null}
       </View>
       <View className="gap-3">
         <Pressable
           accessibilityRole="button"
-          onPress={() => winback.mutate(undefined, { onSettled: () => router.replace('/paywall/success') })}
+          disabled={winback.isPending}
+          onPress={onComeBack}
           className="h-[54px] items-center justify-center rounded-pill"
           style={{ backgroundColor: colors.cream }}>
           <Text className="font-sans-semibold" style={{ color: colors.ink, fontSize: 16 }}>
-            {PAYWALL_COPY.winback.cta}
+            {canWinBack ? PAYWALL_COPY.winback.cta : 'See current Pro plan'}
           </Text>
         </Pressable>
         <Pressable accessibilityRole="button" onPress={() => router.back()} className="h-[40px] items-center justify-center">

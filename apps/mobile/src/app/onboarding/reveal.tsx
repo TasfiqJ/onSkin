@@ -80,7 +80,7 @@ export default function RevealScreen() {
           label="See my routine"
           variant="inverse"
           onPress={() => {
-            track('screen_viewed', { screen_name: 'reveal', dspt: result.dspt });
+            track('screen_viewed', { screen_name: 'reveal' });
             router.push('/onboarding/notifications');
           }}
         />

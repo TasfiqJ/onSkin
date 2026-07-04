@@ -1,6 +1,8 @@
 import type { AddedVia, PaoSource } from '@onskin/types';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
+import type { CatalogQualityGrade } from '@/features/catalog/quality';
+
 import type { ProductCategory } from './categories';
 
 // Transient draft shared across the intake funnel (docs/04 §4): manual / OCR /
@@ -11,6 +13,19 @@ export type IntakeDraft = {
   brand: string | null;
   category: ProductCategory | null;
   barcode: string | null;
+  catalogProductId: string | null;
+  catalogSourceId: string | null;
+  catalogSource: string | null;
+  catalogSourceName: string | null;
+  catalogSourceRef: string | null;
+  catalogSourceUrl: string | null;
+  catalogSourceSnapshotDate: string | null;
+  catalogMatchQuality: CatalogQualityGrade | 'manual' | null;
+  dataQualityScore: number | null;
+  ingredientParseStatus: string | null;
+  ingredientParseConfidence: number | null;
+  parserVersion: string | null;
+  sourceDisclosureAckAt: string | null;
   /** Parsed/typed INCI tokens. The engine tags off these + the name. */
   ingredients: string[];
   addedVia: AddedVia;
@@ -25,6 +40,19 @@ const EMPTY: IntakeDraft = {
   brand: null,
   category: null,
   barcode: null,
+  catalogProductId: null,
+  catalogSourceId: null,
+  catalogSource: null,
+  catalogSourceName: null,
+  catalogSourceRef: null,
+  catalogSourceUrl: null,
+  catalogSourceSnapshotDate: null,
+  catalogMatchQuality: null,
+  dataQualityScore: null,
+  ingredientParseStatus: null,
+  ingredientParseConfidence: null,
+  parserVersion: null,
+  sourceDisclosureAckAt: null,
   ingredients: [],
   addedVia: 'manual',
   paoMonths: null,

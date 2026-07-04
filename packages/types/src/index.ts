@@ -176,9 +176,9 @@ export type SubscriptionTier = 'free' | 'pro' | 'pro_plus';
 /** How a `pro` entitlement was obtained (docs/08 §8 `period_type`). The reverse
  *  trial is app-granted (no store txn, no auto-renew); 'trial' is the carded
  *  14-day store trial; 'normal' is a paid subscription; 'intro' an intro offer. */
-export type PeriodType = 'reverse_trial' | 'trial' | 'intro' | 'normal';
+export type PeriodType = 'reverse_trial' | 'trial' | 'intro' | 'normal' | 'prepaid';
 /** Where the entitlement came from (docs/08 §8 `store`). */
-export type EntitlementStore = 'app_store' | 'play_store' | 'web' | 'app_granted';
+export type EntitlementStore = 'app_store' | 'play_store' | 'web' | 'app_granted' | 'test_store';
 /** The purchasable plans (docs/08 §2.3). No weekly plan by design. */
 export type PlanId = 'annual' | 'monthly';
 /** Pro-gated feature areas, used to frame the contextual upsell (docs/08 §3.2). */
@@ -385,7 +385,25 @@ export type FunctionalTag = (typeof FUNCTIONAL_TAGS)[number];
 /** Sub-flags that exempt/modulate a rule (docs/02 §2.4/§4.2). */
 export type IngredientSubflag = 'adapalene' | 'tretinoin' | 'encapsulated' | 'l_ascorbic_acid';
 
-export type CatalogSource = 'cosing' | 'open_beauty_facts' | 'curated' | 'user_contributed';
+export type CatalogSource =
+  | 'cosing'
+  | 'open_beauty_facts'
+  | 'curated'
+  | 'brand_label'
+  | 'user_local'
+  | 'internal_derived'
+  | 'user_contributed';
+export type CatalogQualityGrade = 'verified' | 'usable' | 'limited' | 'unverified' | 'blocked';
+export type CatalogReviewStatus = 'unreviewed' | 'needs_review' | 'reviewed' | 'blocked';
+export type CatalogCorrectionType =
+  | 'wrong_match'
+  | 'missing_product'
+  | 'ingredient_issue'
+  | 'duplicate'
+  | 'source_issue'
+  | 'expiry_issue'
+  | 'category_issue';
+export type CatalogLookupResult = 'matched' | 'no_match' | 'ambiguous' | 'manual' | 'offline';
 
 export type RoutineConflictStatus = 'suggested' | 'accepted' | 'overridden' | 'dismissed';
 

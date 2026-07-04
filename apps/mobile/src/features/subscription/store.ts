@@ -1,31 +1,95 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
 import type { StoredEntitlement } from './entitlement';
-import { PLANS, REVERSE_TRIAL_DAYS } from './plans';
 
 /**
- * Local-first entitlement cache (docs/08 §4 "gate on the cached entitlement,
- * offline-safe", the D-029 pattern). The server `entitlements` row is the eventual
- * source of truth (written service-role by the RevenueCat webhook + the reverse-
- * trial grant Edge Function), but clients can only SELECT it (RLS) and there is no
- * live backend yet (B-SUPABASE). So this AsyncStorage cache is the v1 authority,
- * reconciled from the server when present. The app-granted reverse trial is fully
- * functional locally; the carded trial/purchase are STUBBED until B-REVENUECAT.
+ * Local-first entitlement cache. This is only a cache of RevenueCat CustomerInfo
+ * or service-role Supabase grants; production flows never create paid/trial access
+ * locally. Offline Pro access remains usable only after a verified grant has been
+ * cached on this device.
  */
-const KEY = 'onskin.entitlement.v1';
+const KEY = 'onskin.entitlement.v2';
+const LEGACY_KEY = 'onskin.entitlement.v1';
+
+type EntitlementRow = {
+  entitlement: string | null;
+  is_active: boolean;
+  period_type: string | null;
+  store: string | null;
+  product_id: string | null;
+  expires_at: string | null;
+  will_renew: boolean | null;
+  original_purchase_at: string | null;
+  offering_id?: string | null;
+  package_id?: string | null;
+  source?: string | null;
+  environment?: string | null;
+  management_url?: string | null;
+  verified_at?: string | null;
+  store_user_id?: string | null;
+  updated_at?: string | null;
+};
 
 function nowISO(): string {
   return new Date().toISOString();
 }
-function plusDays(days: number): string {
-  return new Date(Date.now() + days * 86_400_000).toISOString();
+
+function asTier(value: string | null): StoredEntitlement['tier'] {
+  return value === 'pro' || value === 'pro_plus' ? value : null;
+}
+
+function asPeriod(value: string | null): StoredEntitlement['periodType'] {
+  if (value === 'reverse_trial' || value === 'trial' || value === 'intro' || value === 'normal' || value === 'prepaid') {
+    return value;
+  }
+  return null;
+}
+
+function asStore(value: string | null): StoredEntitlement['store'] {
+  if (value === 'app_store' || value === 'play_store' || value === 'web' || value === 'app_granted' || value === 'test_store') {
+    return value;
+  }
+  return null;
+}
+
+function asSource(value: string | null | undefined): StoredEntitlement['source'] {
+  if (value === 'revenuecat' || value === 'app_granted' || value === 'server' || value === 'local_cache') return value;
+  return null;
+}
+
+function asEnvironment(value: string | null | undefined): StoredEntitlement['environment'] {
+  if (value === 'production' || value === 'sandbox' || value === 'test_store' || value === 'development' || value === 'unknown') {
+    return value;
+  }
+  return null;
+}
+
+export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
+  return {
+    tier: asTier(row.entitlement),
+    isActive: row.is_active,
+    periodType: asPeriod(row.period_type),
+    store: asStore(row.store),
+    productId: row.product_id,
+    expiresAt: row.expires_at,
+    willRenew: row.will_renew,
+    grantedAt: row.original_purchase_at,
+    source: asSource(row.source) ?? (row.store === 'app_granted' ? 'app_granted' : 'server'),
+    environment: asEnvironment(row.environment),
+    managementUrl: row.management_url ?? null,
+    verifiedAt: row.verified_at ?? row.updated_at ?? nowISO(),
+    offeringId: row.offering_id ?? null,
+    packageId: row.package_id ?? null,
+    storeUserId: row.store_user_id ?? null,
+  };
 }
 
 export async function loadEntitlement(): Promise<StoredEntitlement | null> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = (await AsyncStorage.getItem(KEY)) ?? (await AsyncStorage.getItem(LEGACY_KEY));
     return raw ? (JSON.parse(raw) as StoredEntitlement) : null;
   } catch {
     return null;
@@ -33,89 +97,64 @@ export async function loadEntitlement(): Promise<StoredEntitlement | null> {
 }
 
 async function persist(e: StoredEntitlement | null): Promise<void> {
-  if (e === null) await AsyncStorage.removeItem(KEY);
-  else await AsyncStorage.setItem(KEY, JSON.stringify(e));
+  if (e === null) {
+    await AsyncStorage.multiRemove([KEY, LEGACY_KEY]);
+  } else {
+    await AsyncStorage.setItem(KEY, JSON.stringify(e));
+  }
 }
 
-/** The app-granted reverse trial: full Pro, no card, ~7 days (docs/08 §2.2/§4). */
-export async function grantReverseTrial(): Promise<StoredEntitlement> {
-  const e: StoredEntitlement = {
-    tier: 'pro',
-    isActive: true,
-    periodType: 'reverse_trial',
-    store: 'app_granted',
-    productId: null,
-    expiresAt: plusDays(REVERSE_TRIAL_DAYS),
-    willRenew: false, // never auto-renews. No card, no store txn
-    grantedAt: nowISO(),
+export async function saveVerifiedEntitlement(e: StoredEntitlement): Promise<StoredEntitlement> {
+  const verified: StoredEntitlement = {
+    ...e,
+    verifiedAt: e.verifiedAt ?? nowISO(),
   };
-  await persist(e);
-  return e;
+  await persist(verified);
+  return verified;
 }
 
-/** The carded 14-day store trial (STUBBED purchase, B-REVENUECAT). Real StoreKit/
- *  Play purchase replaces this grant when the SDK lands. */
-export async function grantTrial(): Promise<StoredEntitlement> {
-  const e: StoredEntitlement = {
-    tier: 'pro',
-    isActive: true,
-    periodType: 'trial',
-    store: 'app_store',
-    productId: PLANS.annual.productId,
-    expiresAt: plusDays(PLANS.annual.trialDays),
-    willRenew: true,
-    grantedAt: nowISO(),
-  };
-  await persist(e);
-  return e;
-}
-
-/** A converted/paid subscription (or a direct purchase). One year out for annual. */
-export async function setActivePaid(productId = PLANS.annual.productId): Promise<StoredEntitlement> {
-  const e: StoredEntitlement = {
-    tier: 'pro',
-    isActive: true,
-    periodType: 'normal',
-    store: 'app_store',
-    productId,
-    expiresAt: plusDays(365),
-    willRenew: true,
-    grantedAt: nowISO(),
-  };
-  await persist(e);
-  return e;
-}
-
-/** Graceful downgrade: deactivate but KEEP the record (so `expired` + priorPeriodType
- *  survive for the re-offer / downgrade framing). Data is never deleted (docs/08 §6). */
+/** Graceful local dismissal for expired/app-granted records only. Never cancels a store subscription. */
 export async function downgradeToFree(): Promise<void> {
   const cur = await loadEntitlement();
-  if (cur) await persist({ ...cur, isActive: false });
+  if (!cur) return;
+  const expired = Boolean(cur.expiresAt && new Date(cur.expiresAt).getTime() <= Date.now());
+  if (cur.periodType === 'reverse_trial' || expired) {
+    await persist({ ...cur, isActive: false, willRenew: false });
+  }
 }
 
-/** Best-effort read of the server entitlements row (forward-compat; B-SUPABASE).
- *  Returns null when there is no backend or no row. The local cache then stands. */
+/** Read the server entitlement mirror and refresh the local cache when available. */
 export async function fetchServerEntitlement(): Promise<StoredEntitlement | null> {
+  if (!isSupabaseConfigured) return null;
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('entitlements')
-      .select('entitlement, is_active, period_type, store, product_id, expires_at, will_renew, original_purchase_at')
+      .select('*')
       .limit(1)
       .maybeSingle();
-    if (!data) return null;
-    return {
-      tier: (data.entitlement as 'pro' | 'pro_plus' | null) ?? null,
-      isActive: data.is_active,
-      periodType: (data.period_type as StoredEntitlement['periodType']) ?? null,
-      store: (data.store as StoredEntitlement['store']) ?? null,
-      productId: data.product_id,
-      expiresAt: data.expires_at,
-      willRenew: data.will_renew,
-      grantedAt: data.original_purchase_at,
-    };
+    if (error || !data) return null;
+    const entitlement = rowToStoredEntitlement(data as EntitlementRow);
+    await saveVerifiedEntitlement(entitlement);
+    return entitlement;
   } catch {
     return null;
   }
+}
+
+export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
+  if (!isSupabaseConfigured) throw new Error('Reverse trial is unavailable until Supabase is configured.');
+
+  const { data, error } = await supabase.functions.invoke('subscription-grants', {
+    body: { action: 'start_reverse_trial' },
+  });
+  if (error) throw error;
+
+  const row = (data as { entitlement?: EntitlementRow })?.entitlement;
+  if (!row) throw new Error('Reverse trial grant did not return an entitlement.');
+
+  const entitlement = rowToStoredEntitlement(row);
+  await saveVerifiedEntitlement(entitlement);
+  return entitlement;
 }
 
 /** Test/seed reset. */

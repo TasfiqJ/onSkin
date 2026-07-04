@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-07-04T05:56:32.811Z",
+  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
+  "source": "open_beauty_facts",
+  "importMode": "export_or_fixture",
+  "totals": {
+    "inputRecords": 3,
+    "acceptedProducts": 2,
+    "rejectedRecords": 1,
+    "withIngredientText": 2,
+    "missingCategory": 0,
+    "missingIngredients": 0
+  },
+  "blockers": [],
+  "warnings": [],
+  "launchClear": true
+}

@@ -72,7 +72,6 @@ export function useAsk() {
         kind: final.kind,
         grounded: final.kind === 'grounded',
         refused: final.kind === 'refuse',
-        escalated: final.kind === 'escalate',
       });
       // DEAD WRITER until B-AI-ASSISTANT-VENDOR: when a real grounded (cloud) answer
       // ships, it MUST call recordGroundedTurn(period) here and invalidate

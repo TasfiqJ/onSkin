@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
 
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Screen, Text } from '@/components/ui';
 import { buildAnonHandle } from '@/features/community/anonHandle';
 import { scanClaimSafety } from '@/features/community/claimSafetyScan';
@@ -10,6 +11,7 @@ import { confirmCommunityAge, grantCommunityConsent } from '@/features/community
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { useCommunityGate } from '@/features/community/useCommunity';
 import { track } from '@/lib/analytics/track';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -202,6 +204,8 @@ function Composer() {
 
 export default function AskScreen() {
   const { data: gate } = useCommunityGate();
+
+  if (!phase7Flags.communityPosting) return <DeferredSurface surface="communityPosting" />;
 
   return (
     <Screen edges={['top']}>

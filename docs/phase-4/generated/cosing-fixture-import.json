@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-07-04T05:56:32.411Z",
+  "status": "fixture",
+  "warning": "CosIng is informative only. Do not treat ingredient presence as approval or safety.",
+  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\scripts\\phase4\\fixtures\\cosing-sample.csv",
+  "inputSha256": "ebb22fd29c4265597fa0b791092bf9e546c93583934e56812200fb57ea4abfac",
+  "totals": {
+    "inputRows": 3,
+    "ingredients": 3,
+    "synonyms": 2
+  },
+  "ingredients": [
+    {
+      "inciName": "NIACINAMIDE",
+      "displayName": "Niacinamide",
+      "casNumber": "98-92-0",
+      "ecNumber": "202-713-4",
+      "annexStatus": null,
+      "source": "cosing",
+      "reviewStatus": "unreviewed",
+      "synonyms": [
+        "Nicotinamide"
+      ]
+    },
+    {
+      "inciName": "RETINOL",
+      "displayName": "Retinol",
+      "casNumber": "68-26-8",
+      "ecNumber": "200-683-7",
+      "annexStatus": "restricted",
+      "source": "cosing",
+      "reviewStatus": "unreviewed",
+      "synonyms": [
+        "Vitamin A"
+      ]
+    },
+    {
+      "inciName": "ZINC OXIDE",
+      "displayName": "Zinc Oxide",
+      "casNumber": "1314-13-2",
+      "ecNumber": "215-222-5",
+      "annexStatus": "uv_filter",
+      "source": "cosing",
+      "reviewStatus": "unreviewed",
+      "synonyms": []
+    }
+  ]
+}

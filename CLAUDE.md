@@ -1,70 +1,122 @@
-\# OnSkin — Skincare Routine App
+# OnSkin - Skincare Routine App
 
+## What This Is
 
+Cross-platform iOS and Android skincare routine app built with Expo,
+Supabase, and local-first product logic. The business target is a paid
+subscription app with optional post-launch commerce, but the current project is
+not production-ready until the launch gates in `BLOCKERS.md` and
+`LAUNCH_READINESS.md` are cleared.
 
-\## What this is
+## Source-Of-Truth Docs
 
-Cross-platform (iOS + Android) skincare routine app. Building toward a
+Read the relevant source doc before changing a feature. These files are
+authoritative for product behavior, schema, privacy posture, and launch scope:
 
-subscription + affiliate business. Full specs live in /docs — those are
+- `docs/00-architecture.md`
+- `docs/01-auth-onboarding.md`
+- `docs/02-ingredient-intelligence.md`
+- `docs/03-routine-builder.md`
+- `docs/04-smart-shelf.md`
+- `docs/05-actives-scheduler.md`
+- `docs/06-photo-progress.md`
+- `docs/07-reminders-streaks-widgets.md`
+- `docs/08-subscriptions-paywall.md`
+- `docs/09-personalized-recommendations.md`
+- `docs/10-creator-stacks-build-spec.md`
+- `docs/11-community-layer.md`
+- `docs/12-ai-trend-analysis.md`
+- `docs/13-ask-onskin-assistant.md`
+- `docs/14-growth-to-seven-figures.md`
+- `docs/legal-readiness.md`
+- `LAUNCH_READINESS.md`
+- `docs/v1-scope-freeze.md`
+- `docs/brand-decision-memo.md`
+- `docs/brand-evidence.md`
+- `docs/seven-figure-readiness.md`
+- `docs/phase-2-readiness-checklist.md`
+- `docs/phase-2-production-infrastructure-runbook.md`
+- `docs/phase-2-status.md`
+- `docs/store-privacy-inventory.md`
+- `docs/phase-3/regulatory-positioning-memo.md`
+- `docs/phase-3/clinical-review-log.md`
+- `docs/phase-3/cosmetic-chemistry-review-log.md`
+- `docs/phase-3/quiz-fto-summary.md`
+- `docs/phase-3/data-inventory.md`
+- `docs/phase-3/consent-matrix.md`
+- `docs/phase-3/store-metadata-review.md`
+- `docs/phase-3/app-review-notes.md`
+- `docs/phase-3/google-play-health-declaration-notes.md`
+- `docs/phase-3/launch-claims-vocabulary.md`
+- `docs/phase-4/catalog-source-memo-cosing.md`
+- `docs/phase-4/catalog-source-memo-open-beauty-facts.md`
+- `docs/phase-4/odbl-compliance-memo.md`
+- `docs/phase-4/phase-4-exit-review.md`
 
-the source of truth.
+The previous `docs/design-spec.pdf` reference is obsolete. The design handoff
+source in this workspace is the local `dx*` handoff folders and their `.dc.html`
+files. Do not claim a PDF design spec exists unless it is restored to `docs/`.
 
+## Hard Rules
 
+- Do not call a surface production-ready because a screen exists. Use the
+  readiness statuses in `LAUNCH_READINESS.md`: `implemented`, `stubbed`,
+  `simulated`, `inert`, `needs-device-verification`, or `launch-blocked`.
+- If the source docs do not specify behavior, schema, privacy copy, or medical
+  guidance, stop and record the gap in `BLOCKERS.md`.
+- Never weaken Row-Level Security. Every user table remains owner-scoped.
+- Privacy is a product rule: photos are local-only by default, health-data
+  consent is unbundled, and analytics/sharing require explicit authorization.
+- Keep commerce independent from recommendations. Commission data must never
+  influence ranking or client-readable recommendation logic.
+- Treat catalog fixture imports as test data only. Product-specific
+  recommendations require source-approved, reviewed, correction-free products
+  with `verified` or `usable` quality.
+- Do not promise Open Beauty Facts contribution-back or display source images
+  until ODbL/source/image-rights review and the queue operation are approved.
+- Do not market AI skin scores, skin age, disease diagnosis, percentage
+  improvement, or unreviewed clinical recommendations.
 
-\## Source-of-truth docs (READ before building anything in scope)
+## Commands
 
-\- docs/00-architecture.md — stack, system architecture, data architecture, design system
+Repository-level commands:
 
-\- docs/01-auth-onboarding.md — auth, onboarding flow, full data model + RLS, consent
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run phase2:check-env
+npm run phase2:rls-smoke
+npm run phase3:audit-copy
+npm run phase3:review-packet
+npm run phase4:check-source-env
+npm run phase4:import-obf-fixture
+npm run phase4:qa-report
+```
 
-\- docs/design-spec.pdf — hi-fi visual direction (type, color, screen layouts)
+Mobile workspace commands:
 
+```bash
+npm --workspace apps/mobile run typecheck
+npm --workspace apps/mobile run lint
+npm --workspace apps/mobile run test
+```
 
+Useful development commands:
 
-\## Hard rules
+```bash
+npm --workspace apps/mobile run start
+npm --workspace apps/mobile run ios
+npm --workspace apps/mobile run android
+npm --workspace apps/mobile run web
+```
 
-\- The /docs files are authoritative. If something isn't specified there,
+## Workflow
 
-&#x20; STOP and ask — do not invent product behavior, schema, or copy.
-
-\- Confirm the current version of any library before using it; do not assume
-
-&#x20; APIs from memory. Flag anything the docs marked "re-verify at build time."
-
-\- Build in the order given by docs/00 §"build order". One feature slice at a time.
-
-\- After each slice: run typecheck + lint, then update PROGRESS.md.
-
-\- Never weaken Row-Level Security. Every table is owner-scoped per docs/01.
-
-\- Privacy is a product rule: photos are local-only by default; consent is
-
-&#x20; unbundled per docs/01. Do not add analytics/sharing the docs don't authorize.
-
-
-
-\## Stack (per docs/00 — confirm versions at install)
-
-\- React Native + Expo (New Architecture), TypeScript end-to-end
-
-\- Supabase (Postgres + Auth + Storage + Edge Functions), RLS on every table
-
-\- RevenueCat (subscriptions), PostHog (analytics), Sentry (crashes)
-
-
-
-\## Commands
-
-\- (fill in once scaffolded: build, typecheck, lint, test commands)
-
-
-
-\## Workflow
-
-\- Read the relevant /docs file fully before writing code for that feature.
-
-\- Propose a plan, wait for approval on anything destructive or schema-changing.
-
-\- Commit working slices to git with clear messages.
-
+- Read the relevant docs and blockers before changing code.
+- Keep implementation tightly scoped to the requested feature or launch gate.
+- After each slice, run typecheck, lint, and tests when feasible, then update
+  `PROGRESS.md` and any affected readiness docs.
+- Do not configure Apple, Google, Supabase, RevenueCat, Sentry, PostHog, or
+  domains under the `OnSkin` identity until `docs/brand-decision-memo.md` is
+  resolved by counsel/founder decision.

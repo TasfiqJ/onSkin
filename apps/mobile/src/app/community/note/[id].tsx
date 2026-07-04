@@ -29,11 +29,11 @@ export default function NoteDetail() {
     haptics.select();
     const next = await toggleNoteHelpful(note.id);
     qc.setQueryData(['noteHelped', id], next);
-    if (next) track('reaction_added', { id: note.id, reaction: 'helped' });
+    if (next) track('reaction_added', { reaction: 'helped' });
   };
 
   useEffect(() => {
-    if (note) track('skin_note_viewed', { id: note.id, surface: 'detail' });
+    if (note) track('skin_note_viewed', { surface: 'detail' });
   }, [note]);
 
   const onShare = () => {

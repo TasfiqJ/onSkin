@@ -22,7 +22,7 @@ export default function QuizScreen() {
 
   function selectSingle(optionId: string) {
     setAnswer(question.id, optionId);
-    track('quiz_question_answered', { question_id: question.id, axis: question.kind });
+    track('quiz_question_answered', { count: index + 1, type: 'single' });
   }
   function toggleMulti(optionId: string) {
     const prev = Array.isArray(current) ? current : [];

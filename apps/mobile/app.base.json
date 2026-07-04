@@ -7,18 +7,24 @@
     "icon": "./assets/images/icon.png",
     "scheme": "onskin",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
     "ios": {
       "bundleIdentifier": "com.onskin.app",
       "supportsTablet": false,
       "icon": "./assets/expo.icon",
       "infoPlist": {
-        "NSCameraUsageDescription": "OnSkin uses the camera for guided progress photos. Capture and face-detection happen on your device — no faceprint is stored and your photos never leave your phone unless you turn on encrypted cloud backup.",
+        "NSCameraUsageDescription": "OnSkin uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
         "NSFaceIDUsageDescription": "OnSkin uses Face ID to keep your private photo timeline for your eyes only."
       }
     },
     "android": {
       "package": "com.onskin.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.POST_NOTIFICATIONS"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#F5F1EA",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -44,7 +50,24 @@
           }
         }
       ],
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to scan barcodes, capture ingredient labels, and take guided progress photos.",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ],
       "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/android-icon-monochrome.png",
+          "color": "#A5694B",
+          "defaultChannel": "routine"
+        }
+      ],
       "@react-native-google-signin/google-signin",
       "expo-sharing",
       [
@@ -52,7 +75,9 @@
         {
           "faceIDPermission": "OnSkin uses Face ID to keep your private photo timeline for your eyes only."
         }
-      ]
+      ],
+      "expo-localization",
+      "@sentry/react-native"
     ],
     "experiments": {
       "typedRoutes": true,

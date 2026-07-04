@@ -1,0 +1,156 @@
+{
+  "generatedAt": "2026-07-04T07:32:58.043Z",
+  "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
+  "evidence": {
+    "brandReady": false,
+    "supabaseRlsPass": false,
+    "clinicalReviewPass": false,
+    "catalogBetaImportPass": false,
+    "deviceQaPass": false,
+    "revenueCatQaPass": false,
+    "privacyExportDeletePass": false,
+    "betaDashboardReady": false,
+    "signedOffBy": ""
+  },
+  "scenarios": [
+    {
+      "surface": "Onboarding",
+      "scenario": "final age/account/consent copy, policy links, and consent ledger verified"
+    },
+    {
+      "surface": "Shelf intake",
+      "scenario": "add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible"
+    },
+    {
+      "surface": "Reviewed guidance",
+      "scenario": "reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden"
+    },
+    {
+      "surface": "Routine builder",
+      "scenario": "AM/PM routine persists across restart, offline, timezone rollover"
+    },
+    {
+      "surface": "Today check-off",
+      "scenario": "offline/online check-off is idempotent and undoable"
+    },
+    {
+      "surface": "Photos",
+      "scenario": "baseline capture renders locally; app lock gates timeline; cloud backup remains off by default"
+    },
+    {
+      "surface": "Reminders",
+      "scenario": "permission, quiet hours, Android 13+ permission, timezone/DST behavior verified"
+    },
+    {
+      "surface": "Payments",
+      "scenario": "RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified"
+    },
+    {
+      "surface": "Privacy controls",
+      "scenario": "export, account deletion, health-data withdrawal, app lock, support links verified"
+    },
+    {
+      "surface": "Share card",
+      "scenario": "exact owned reviewed conflict only; no fallback; no sensitive analytics payload"
+    },
+    {
+      "surface": "Deferred surfaces",
+      "scenario": "commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled"
+    },
+    {
+      "surface": "Analytics",
+      "scenario": "activation, retention, payment, privacy, support, and deferred-surface events visible"
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 4145,
+      "sha256": "01ae9a9f2ccd610118709fb4d46f6347a8a8806e06c355d31c894f2f193fb0b3"
+    },
+    {
+      "path": "apps/mobile/src/components/launch/DeferredSurface.tsx",
+      "exists": true,
+      "bytes": 1530,
+      "sha256": "afa27876271501fcdbf9a672100f6e04cf8e752fbd368d23db36ef4084271eef"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/today.tsx",
+      "exists": true,
+      "bytes": 18953,
+      "sha256": "5cb8617fb8cea9eb3807d3cf68434aa8af5a8d5b7e1bd33202b037ce31784da1"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/progress.tsx",
+      "exists": true,
+      "bytes": 19987,
+      "sha256": "f27413da73d46cb004f2060fb7570276d7489f0ddc91a250fa52d9d6e6acc1f8"
+    },
+    {
+      "path": "apps/mobile/src/app/(tabs)/you.tsx",
+      "exists": true,
+      "bytes": 17646,
+      "sha256": "f53f0a272ca7ab5e4af017224f78e94c43bf13f8dedba90f4b29370ccbbb1dc5"
+    },
+    {
+      "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 2892,
+      "sha256": "93eb42c4c007b226b0b856b3fa49ab1f28716676a758fa6366dc53cfe2966642"
+    },
+    {
+      "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
+      "exists": true,
+      "bytes": 18181,
+      "sha256": "4e6986a005bd707492a01034398579456274320e883f0cbb648e2409944b0cc1"
+    },
+    {
+      "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
+      "exists": true,
+      "bytes": 6272,
+      "sha256": "7cb5f34e34ea7c1ca5427ffb2fa88d13298080fed74435efb2f8022f68d2b726"
+    },
+    {
+      "path": "docs/phase-7/surface-inventory.md",
+      "exists": true,
+      "bytes": 4829,
+      "sha256": "318cbc94312fc850313a887930b4292b30004d0892b62c8caee2315a1909a3a3"
+    },
+    {
+      "path": "docs/phase-7/launch-claim-matrix.md",
+      "exists": true,
+      "bytes": 3069,
+      "sha256": "52d9d1f1f368fab32c4664f6e04b8c360aef035f2550d88de2722937286a4597"
+    },
+    {
+      "path": "docs/phase-7/beta-evidence-dashboard.md",
+      "exists": true,
+      "bytes": 2688,
+      "sha256": "c9338462e2570a4b8da10341d2d94e2f0dabf8591e3c1176849f8a8d874f3da8"
+    },
+    {
+      "path": "docs/phase-7/core-loop-qa-checklist.md",
+      "exists": true,
+      "bytes": 3036,
+      "sha256": "1892307113c2723102bd6597ac13ca659ec81d8eaabce311a003c995c841c6df"
+    },
+    {
+      "path": "docs/phase-7/phase-7-exit-review.md",
+      "exists": true,
+      "bytes": 2339,
+      "sha256": "f738d222d1a6f9921ea8456276e8e5352858a7363ec2bda8be55103a5471380a"
+    }
+  ],
+  "blockers": [
+    "Missing brandReady evidence.",
+    "Missing supabaseRlsPass evidence.",
+    "Missing clinicalReviewPass evidence.",
+    "Missing catalogBetaImportPass evidence.",
+    "Missing deviceQaPass evidence.",
+    "Missing revenueCatQaPass evidence.",
+    "Missing privacyExportDeletePass evidence.",
+    "Missing betaDashboardReady evidence.",
+    "Missing PHASE7_SIGNED_OFF_BY."
+  ]
+}

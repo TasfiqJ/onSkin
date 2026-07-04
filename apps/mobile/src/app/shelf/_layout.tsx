@@ -10,6 +10,7 @@ export default function ShelfLayout() {
     <IntakeProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="scan" />
+        <Stack.Screen name="search" />
         <Stack.Screen name="manual" />
         <Stack.Screen name="ocr" />
         <Stack.Screen name="[id]" />

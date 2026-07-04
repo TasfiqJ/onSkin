@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Sharing from 'expo-sharing';
 import { useState } from 'react';
@@ -7,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
+import { createPhotoShareFile } from '@/features/photos/encryptedStorage';
+import { PhotoImage } from '@/features/photos/PhotoImage';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { track } from '@/lib/analytics/track';
@@ -53,7 +54,8 @@ export default function PhotoDetailScreen() {
     // part of the device-build capture pipeline (B-CAMERA). Share the on-device
     // file if it exists; otherwise explain the redaction step honestly.
     if (photo?.localUri && (await Sharing.isAvailableAsync())) {
-      await Sharing.shareAsync(photo.localUri);
+      const shareUri = await createPhotoShareFile(photo.localUri, photo.id);
+      await Sharing.shareAsync(shareUri);
     } else {
       Alert.alert('Share with redaction', 'Sharing with an optional face-blur arrives with on-device capture (B-CAMERA). Your photo never leaves your phone until you choose to share it.');
     }
@@ -76,7 +78,7 @@ export default function PhotoDetailScreen() {
       {/* photo */}
       <View style={{ height: 330, borderRadius: 20, overflow: 'hidden', backgroundColor: '#2A251E', marginBottom: 14 }}>
         {photo.localUri ? (
-          <Image source={{ uri: photo.localUri }} style={{ flex: 1 }} contentFit="cover" />
+          <PhotoImage uri={photo.localUri} style={{ flex: 1 }} />
         ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>

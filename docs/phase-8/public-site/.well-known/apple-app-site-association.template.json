@@ -1,0 +1,21 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["APPLE_TEAM_ID.com.onskin.app"],
+        "components": [
+          {
+            "/": "/s/*",
+            "comment": "Shelf Conflict Card public share links"
+          },
+          {
+            "/": "/*",
+            "exclude": true,
+            "comment": "Keep non-share marketing pages in the browser"
+          }
+        ]
+      }
+    ]
+  }
+}

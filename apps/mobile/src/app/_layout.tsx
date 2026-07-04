@@ -13,9 +13,11 @@ import { configureNotifications } from '@/features/notifications/deliver';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
+import { initSentry } from '@/lib/observability/sentry';
 import { queryClient } from '@/lib/query/queryClient';
 import { fontMap } from '@/theme/fonts';
 
+initSentry();
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {

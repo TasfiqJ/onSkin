@@ -9,11 +9,13 @@ import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
+import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
 import { currentRoutineType, localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -140,8 +142,9 @@ export default function TodayScreen() {
   // Persist the check-off to the local-first store, fire the activation metric on the
   // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
   async function toggle(key: string) {
-    const { firstEver } = await toggleCompletion(key, today);
-    if (firstEver) track('first_checkoff_completed', { step: key });
+    const { done, firstEver } = await toggleCompletion(key, today);
+    if (firstEver) track('first_checkoff_completed', { moment: type.toLowerCase() });
+    if (done && (progress?.streak ?? 0) >= 6) void requestReviewAfterValue('seven_checkoff_days');
     await qc.invalidateQueries({ queryKey: ['completions', today] });
     await qc.invalidateQueries({ queryKey: ['progress'] });
   }
@@ -224,7 +227,7 @@ export default function TodayScreen() {
           <RecommendationsTeaser showGapPrompt />
 
           {/* Ask OnSkin. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
-          <AskTeaser />
+          {phase7Flags.cloudAsk ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
           <Pressable

@@ -25,6 +25,10 @@ async function mirrorInsert(p: ShelfProduct): Promise<void> {
     if (!userId) return;
     await supabase.from('user_products').insert({
       user_id: userId,
+      catalog_product_id: p.catalogProductId,
+      catalog_source_id: p.catalogSourceId,
+      catalog_match_quality: p.catalogMatchQuality,
+      catalog_source_snapshot_date: p.catalogSourceSnapshotDate,
       manual_name: p.name,
       manual_brand: p.brand,
       barcode: p.barcode,
@@ -35,6 +39,7 @@ async function mirrorInsert(p: ShelfProduct): Promise<void> {
       pao_source: p.paoSource,
       expiry_source: p.expirySource,
       added_via: p.addedVia,
+      source_disclosure_ack_at: p.sourceDisclosureAckAt,
     });
   } catch {
     /* offline / no DB. The local store already holds it (D-029) */
@@ -75,13 +80,13 @@ export function useShelfMutations() {
 
     async markFinished(id: string): Promise<void> {
       await updateProduct(id, { status: 'finished', finishedAt: localDateString() });
-      track('product_finished', { product_id: id });
+      track('product_finished', { source: 'shelf' });
       await invalidate();
     },
 
     async markDiscarded(id: string): Promise<void> {
       await updateProduct(id, { status: 'discarded', finishedAt: localDateString() });
-      track('product_discarded', { product_id: id });
+      track('product_discarded', { source: 'shelf' });
       await invalidate();
     },
 
@@ -93,7 +98,7 @@ export function useShelfMutations() {
     /** Replenish "re-add the same one". Archives the unit, resets the clock (§6). */
     async replace(id: string): Promise<ShelfProduct | null> {
       const fresh = await reAddProduct(id);
-      track('replenishment_nudge_tapped', { product_id: id, action: 're_add' });
+      track('replenishment_nudge_tapped', { action: 're_add' });
       await invalidate();
       return fresh;
     },

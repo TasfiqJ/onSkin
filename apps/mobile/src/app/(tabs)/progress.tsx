@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -8,12 +7,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card, Screen, Text } from '@/components/ui';
 import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
+import { PhotoImage } from '@/features/photos/PhotoImage';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { TrendInsight } from '@/features/trend/TrendInsight';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { track } from '@/lib/analytics/track';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
 
 // Progress tab. The guided photo timeline (docs/06; design screens 03/04/05/08).
@@ -129,7 +130,7 @@ function PairPicker({
                     className="overflow-hidden rounded-[12px]"
                   >
                     {p.localUri ? (
-                      <Image source={{ uri: p.localUri }} style={{ flex: 1 }} contentFit="cover" />
+                      <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
                     ) : (
                       <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
                     )}
@@ -265,7 +266,7 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
                 className="overflow-hidden rounded-[12px]"
               >
                 {p.localUri ? (
-                  <Image source={{ uri: p.localUri }} style={{ flex: 1 }} contentFit="cover" />
+                  <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
                 ) : (
                   <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
                 )}
@@ -406,9 +407,11 @@ function PhotoProgressTab() {
 
             {/* "Changes in your own photos" (docs/12). Renders ONLY when opted in
                 (off by default); on-device, within-person, descriptive, no number. */}
-            <View className="mt-4">
-              <TrendInsight />
-            </View>
+            {phase7Flags.trend ? (
+              <View className="mt-4">
+                <TrendInsight />
+              </View>
+            ) : null}
 
             <View className="mt-4 flex-row items-center gap-2.5">
               <ModeTab label="Compare" active={mode === 'compare'} onPress={() => setMode('compare')} />

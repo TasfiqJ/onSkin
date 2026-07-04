@@ -1,0 +1,162 @@
+{
+  "generatedAt": "2026-07-04T07:07:31.393Z",
+  "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
+  "evidence": {
+    "rcOfferingReviewed": false,
+    "iosSandboxRestorePass": false,
+    "androidLicenseTestPass": false,
+    "webhookHmacTestPass": false,
+    "financeSignoff": false,
+    "signedOffBy": ""
+  },
+  "scenarios": [
+    {
+      "surface": "Offering load",
+      "scenario": "current RevenueCat offering returns annual and monthly packages with localized prices"
+    },
+    {
+      "surface": "Missing offering",
+      "scenario": "paywall disables purchase and shows unavailable state; no Pro grant"
+    },
+    {
+      "surface": "Trial purchase",
+      "scenario": "eligible annual trial opens store sheet, grants Pro only from CustomerInfo, schedules reminder"
+    },
+    {
+      "surface": "Paid purchase",
+      "scenario": "ineligible/no-trial annual purchase grants Pro only from CustomerInfo and cancels trial reminder"
+    },
+    {
+      "surface": "Cancellation",
+      "scenario": "webhook sets will_renew=false but keeps access until expiration"
+    },
+    {
+      "surface": "Expiration/refund",
+      "scenario": "webhook deactivates entitlement and lifecycle screen downgrades gracefully"
+    },
+    {
+      "surface": "Restore",
+      "scenario": "new install restores active subscription and writes verified local cache"
+    },
+    {
+      "surface": "Reverse trial",
+      "scenario": "authenticated Edge Function grants exactly once, server expiry RPC deactivates after 7 days"
+    },
+    {
+      "surface": "Win-back",
+      "scenario": "native eligible win-back offer purchases on iOS; unavailable offers are hidden/rerouted"
+    },
+    {
+      "surface": "Webhook auth",
+      "scenario": "bad HMAC rejected, stale timestamp rejected, duplicate event id idempotent"
+    },
+    {
+      "surface": "Account deletion",
+      "scenario": "mobile copy says deletion does not cancel store billing; server calls RevenueCat delete customer"
+    },
+    {
+      "surface": "Finance",
+      "scenario": "$49.99 annual model, refund/churn assumptions, entitlement denial/leakage reviewed"
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/mobile/src/lib/iap/revenuecat.ts",
+      "exists": true,
+      "bytes": 17187,
+      "sha256": "9db96d033831efebdc5050bc2f435ebab1c2ff9a4b14a55097b5edb1d504e0d8"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/store.ts",
+      "exists": true,
+      "bytes": 5495,
+      "sha256": "ea178e248e63c07a969b6fd3507edb3e971d97dcdd0481e423fe8524882ac4fd"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
+      "exists": true,
+      "bytes": 5351,
+      "sha256": "b84bcf2c0bb797c436f2fea08a788e5218b43bd02df65617c8691eab7ac3dc64"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/useSubscriptionOffering.ts",
+      "exists": true,
+      "bytes": 611,
+      "sha256": "2f173449b93e2a4a12e57d68861df74cc7784739dad8ff8fe93ab3ef71497f49"
+    },
+    {
+      "path": "apps/mobile/src/app/onboarding/paywall.tsx",
+      "exists": true,
+      "bytes": 8973,
+      "sha256": "ccf1f62e7ea05abc4cca46755006c9e6619ca80ce96155dc7cb1800114dc96ea"
+    },
+    {
+      "path": "apps/mobile/src/app/paywall/upsell.tsx",
+      "exists": true,
+      "bytes": 4258,
+      "sha256": "70ba89273272d67dab64bfab4934f54c4fc89f7ee1f7b5e8dbd7fdf20e79abb1"
+    },
+    {
+      "path": "apps/mobile/src/app/paywall/winback.tsx",
+      "exists": true,
+      "bytes": 5155,
+      "sha256": "cc6e6ce9db14ec3457c68e80dc2bf792c53de64564d990c446d0fec5f41687a2"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/subscription.tsx",
+      "exists": true,
+      "bytes": 7884,
+      "sha256": "7e5769d1194f67c9bc1d9a5db57a4cabd21fcf3b06c4b292fd4175b3d45d759d"
+    },
+    {
+      "path": "supabase/functions/revenuecat-webhook/index.ts",
+      "exists": true,
+      "bytes": 8857,
+      "sha256": "7fa26941896527bb52fa932872d4d4cc8c7be74005fdd4e0f0a9f62683480313"
+    },
+    {
+      "path": "supabase/functions/subscription-grants/index.ts",
+      "exists": true,
+      "bytes": 3730,
+      "sha256": "6a64618db961a876ecea59ffeacdf6ec863f0b83f9ec8e6e2a7d1cba31b69827"
+    },
+    {
+      "path": "supabase/functions/account-deletion/index.ts",
+      "exists": true,
+      "bytes": 3999,
+      "sha256": "00d5526d6f4e760ec5ecaa1a943e5b91ff606bfd0d5d4a5b4e43e65d148ad44d"
+    },
+    {
+      "path": "supabase/migrations/20260615000027_phase6_payments.sql",
+      "exists": true,
+      "bytes": 3061,
+      "sha256": "ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865"
+    },
+    {
+      "path": "docs/phase-6/payments-runbook.md",
+      "exists": true,
+      "bytes": 2953,
+      "sha256": "8b415aab8405ed7e1109fe6a7cca91759fc6d6a406c0a08d04df3243edf4191c"
+    },
+    {
+      "path": "docs/phase-6/payments-qa-checklist.md",
+      "exists": true,
+      "bytes": 2599,
+      "sha256": "2262a8a44e0d98349b7d4fda5d7350631be6dbd43e185047440f296e178142fb"
+    },
+    {
+      "path": "docs/phase-6/phase-6-exit-review.md",
+      "exists": true,
+      "bytes": 2228,
+      "sha256": "acbfe0d63607f4aa448a3d0c6e1a06fa5062afeb7085eadb820cd86f14e1f6b2"
+    }
+  ],
+  "blockers": [
+    "Missing PHASE6_RC_OFFERING_REVIEWED=true.",
+    "Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.",
+    "Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.",
+    "Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.",
+    "Missing PHASE6_FINANCE_SIGNOFF=true.",
+    "Missing PHASE6_SIGNED_OFF_BY."
+  ]
+}

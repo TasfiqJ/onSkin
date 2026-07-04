@@ -18,7 +18,7 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const shopmyBrandKey = Deno.env.get('SHOPMY_BRAND_API_KEY') ?? ''; // BLOCKED: B-SHOPMY
 
 // The documented Fetch Order Report contract (verified against docs.shopmy.us):

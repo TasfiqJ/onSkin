@@ -24,7 +24,7 @@ export default function StackDetailScreen() {
   const { data: consented } = useCommerceConsent();
 
   useEffect(() => {
-    if (stack) track('stack_viewed', { slug: stack.slug });
+    if (stack) track('stack_viewed', { source: 'stack' });
   }, [stack]);
 
   const tapItem = async (item: StackItem) => {

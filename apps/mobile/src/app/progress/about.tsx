@@ -5,6 +5,7 @@ import { Screen, Text } from '@/components/ui';
 import { NO_SCORE_COPY } from '@/features/photos/copy';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useTrendConsent } from '@/features/trend/useTrend';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
 
 // The honest, differentiating no-AI-score stance (docs/06 §8, design screen 07),
@@ -60,16 +61,18 @@ export default function AboutNoScoreScreen() {
         {/* docs/12. The optional, on-device, off-by-default opt-in. The refusal above
             is preserved as the default; this never overrides it. Once opted in, the
             copy switches to "manage" so it doesn't invite enabling what is already on. */}
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push('/trend/optin')}
-          className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
-          <Text variant="bodySm" className="flex-1 pr-3 font-sans-medium text-[12.5px]" style={{ color: colors.inkSoft, lineHeight: 18 }}>
-            {trendConsented ? TREND_COPY.manageLink : TREND_COPY.refusalLink}
-          </Text>
-          <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
-        </Pressable>
+        {phase7Flags.trend ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/trend/optin')}
+            className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}>
+            <Text variant="bodySm" className="flex-1 pr-3 font-sans-medium text-[12.5px]" style={{ color: colors.inkSoft, lineHeight: 18 }}>
+              {trendConsented ? TREND_COPY.manageLink : TREND_COPY.refusalLink}
+            </Text>
+            <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
     </Screen>
   );

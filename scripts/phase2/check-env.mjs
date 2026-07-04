@@ -1,0 +1,200 @@
+#!/usr/bin/env node
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const strict = process.argv.includes('--strict');
+const root = process.cwd();
+
+function parseDotEnv(content) {
+  for (const rawLine of content.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('#')) continue;
+    const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
+    if (!match) continue;
+
+    const [, key, rawValue] = match;
+    if (process.env[key]) continue;
+    let value = rawValue.trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    process.env[key] = value;
+  }
+}
+
+for (const candidate of [resolve(root, '.env'), resolve(root, 'apps/mobile/.env')]) {
+  if (existsSync(candidate)) parseDotEnv(readFileSync(candidate, 'utf8'));
+}
+
+const groups = [
+  {
+    name: 'App identity and brand clearance',
+    required: ['APP_VARIANT', 'EXPO_PUBLIC_APP_ENV', 'BRAND_LEGAL_CLEARANCE'],
+  },
+  {
+    name: 'Store listing URLs',
+    required: [
+      'EXPO_PUBLIC_PRIVACY_URL',
+      'EXPO_PUBLIC_TERMS_URL',
+      'EXPO_PUBLIC_SUPPORT_URL',
+      'EXPO_PUBLIC_ACCOUNT_DELETION_URL',
+      'EXPO_PUBLIC_DATA_EXPORT_URL',
+      'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
+    ],
+  },
+  {
+    name: 'Supabase client and deploy',
+    required: [
+      'SUPABASE_PROJECT_REF',
+      'EXPO_PUBLIC_SUPABASE_URL',
+      'EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
+    ],
+  },
+  {
+    name: 'Supabase server secrets',
+    required: ['SUPABASE_SECRET_KEY'],
+  },
+  {
+    name: 'RevenueCat',
+    required: [
+      'EXPO_PUBLIC_REVENUECAT_IOS_KEY',
+      'EXPO_PUBLIC_REVENUECAT_ANDROID_KEY',
+      'EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID',
+      'REVENUECAT_WEBHOOK_AUTH',
+    ],
+  },
+  {
+    name: 'Google Sign-In',
+    required: [
+      'EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID',
+      'EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID',
+      'EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME',
+    ],
+  },
+  {
+    name: 'Apple Sign-In server secrets',
+    required: [
+      'APPLE_TEAM_ID',
+      'APPLE_SIWA_SERVICE_ID',
+      'APPLE_SIWA_KEY_ID',
+      'APPLE_SIWA_PRIVATE_KEY',
+    ],
+  },
+  {
+    name: 'PostHog',
+    required: ['EXPO_PUBLIC_POSTHOG_KEY', 'EXPO_PUBLIC_POSTHOG_HOST', 'POSTHOG_PERSONAL_API_KEY'],
+  },
+  {
+    name: 'Sentry',
+    required: ['EXPO_PUBLIC_SENTRY_DSN', 'SENTRY_AUTH_TOKEN', 'SENTRY_ORG', 'SENTRY_PROJECT'],
+  },
+  {
+    name: 'Turnstile',
+    required: ['EXPO_PUBLIC_TURNSTILE_SITE_KEY'],
+  },
+];
+
+const placeholderFragments = [
+  'YOUR-',
+  'YOUR_',
+  'xxxxxxxx',
+  'XXXXXX',
+  'replace-with',
+  'example.com',
+  '...',
+];
+
+const forbiddenPublicFragments = [
+  'SECRET',
+  'PRIVATE_KEY',
+  'WEBHOOK_AUTH',
+  'PERSONAL_API_KEY',
+  'AUTH_TOKEN',
+  'CLIENT_SECRET',
+  'SERVICE_ROLE',
+];
+
+function valueFor(name) {
+  return process.env[name]?.trim() ?? '';
+}
+
+function isUsable(name) {
+  const value = valueFor(name);
+  return value.length > 0 && !placeholderFragments.some((fragment) => value.includes(fragment));
+}
+
+const errors = [];
+const warnings = [];
+
+for (const group of groups) {
+  const missing = group.required.filter((name) => !isUsable(name));
+  if (missing.length > 0)
+    errors.push(`${group.name}: missing or placeholder values: ${missing.join(', ')}`);
+}
+
+const appVariant = valueFor('APP_VARIANT');
+if (appVariant && !['development', 'staging', 'production'].includes(appVariant)) {
+  errors.push(`APP_VARIANT must be development, staging, or production; got ${appVariant}`);
+}
+
+const appEnv = valueFor('EXPO_PUBLIC_APP_ENV');
+if (appEnv && !['development', 'staging', 'production'].includes(appEnv)) {
+  warnings.push(`EXPO_PUBLIC_APP_ENV is non-standard: ${appEnv}`);
+}
+
+const publicSecretKeys = Object.keys(process.env)
+  .filter((name) => name.startsWith('EXPO_PUBLIC_'))
+  .filter((name) => forbiddenPublicFragments.some((fragment) => name.includes(fragment)));
+if (publicSecretKeys.length > 0) {
+  errors.push(`Secret-looking keys must not use EXPO_PUBLIC_: ${publicSecretKeys.join(', ')}`);
+}
+
+const displayName = valueFor('APP_DISPLAY_NAME') || 'OnSkin';
+if (
+  (appVariant === 'production' || appEnv === 'production') &&
+  /onskin/i.test(displayName) &&
+  valueFor('BRAND_LEGAL_CLEARANCE') !== 'cleared'
+) {
+  errors.push('Production identity still uses OnSkin without BRAND_LEGAL_CLEARANCE=cleared.');
+}
+
+if (
+  [appVariant, appEnv].some((value) => ['staging', 'production'].includes(value)) &&
+  valueFor('BRAND_LEGAL_CLEARANCE') !== 'cleared'
+) {
+  errors.push('Staging/production infrastructure requires BRAND_LEGAL_CLEARANCE=cleared.');
+}
+
+if (valueFor('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY').startsWith('eyJ')) {
+  warnings.push(
+    'EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY looks like a legacy anon JWT; use Supabase publishable keys.',
+  );
+}
+
+if (valueFor('SUPABASE_SECRET_KEY').startsWith('eyJ')) {
+  warnings.push(
+    'SUPABASE_SECRET_KEY looks like a legacy service_role JWT; prefer Supabase secret keys.',
+  );
+}
+
+for (const group of groups) {
+  const readyCount = group.required.filter(isUsable).length;
+  console.log(
+    `${readyCount === group.required.length ? 'OK ' : 'MISS'} ${group.name}: ${readyCount}/${group.required.length}`,
+  );
+}
+
+for (const warning of warnings) console.warn(`WARN ${warning}`);
+for (const error of errors) console.error(`FAIL ${error}`);
+
+if (errors.length > 0 && strict) process.exit(1);
+if (errors.length > 0) {
+  console.error(
+    `\nPhase 2 env is incomplete (${errors.length} blocker${errors.length === 1 ? '' : 's'}). Run with --strict in CI.`,
+  );
+} else {
+  console.log('\nPhase 2 env contract is complete.');
+}

@@ -2,6 +2,15 @@ import type { Session, User } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
+import { saveVerifiedEntitlement } from '@/features/subscription/store';
+import {
+  configureRevenueCat,
+  customerInfoToStoredEntitlement,
+  getCustomerInfo,
+  subscribeToCustomerInfoUpdates,
+} from '@/lib/iap/revenuecat';
+import { setSentryUser } from '@/lib/observability/sentry';
+
 import { supabase } from '../supabase/client';
 import { getAppleIdToken } from './apple';
 import { getGoogleIdToken } from './google';
@@ -52,6 +61,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const subscription = AppState.addEventListener('change', handle);
     return () => subscription.remove();
   }, []);
+
+  useEffect(() => {
+    const userId = session?.user.id ?? null;
+    setSentryUser(userId);
+    if (!userId) return;
+
+    let cleanup: (() => void) | null = null;
+    let cancelled = false;
+
+    void (async () => {
+      await configureRevenueCat(userId);
+      const current = await getCustomerInfo();
+      const entitlement = current ? customerInfoToStoredEntitlement(current) : null;
+      if (entitlement) await saveVerifiedEntitlement(entitlement);
+
+      cleanup = await subscribeToCustomerInfoUpdates((customerInfo) => {
+        const next = customerInfoToStoredEntitlement(customerInfo);
+        if (next) void saveVerifiedEntitlement(next);
+      });
+      if (cancelled && cleanup) cleanup();
+    })().catch((error: unknown) => {
+      if (__DEV__) console.warn('[revenuecat] configuration failed', error);
+    });
+
+    return () => {
+      cancelled = true;
+      if (cleanup) cleanup();
+    };
+  }, [session?.user.id]);
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;

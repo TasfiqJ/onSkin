@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, type ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
@@ -9,8 +9,8 @@ import type { GatedFeature } from '@onskin/types';
 
 import { ComplianceRow } from './ComplianceRow';
 import { UPSELL_COPY } from './copy';
-import { monthlyEquivalent, PLANS } from './plans';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
+import { useSubscriptionOffering } from './useSubscriptionOffering';
 
 // Feature gate (docs/08 §3.2/§4). When the user is Pro (incl. the reverse trial /
 // carded trial), render the feature; otherwise render a calm, honest contextual
@@ -19,6 +19,7 @@ import { useEntitlement, useEntitlementActions } from './useEntitlement';
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
   const { data } = useEntitlement();
   const { startTrial } = useEntitlementActions();
+  const offering = useSubscriptionOffering();
   const locked = data ? !data.isPro : false; // while loading, don't flash the wall
 
   useEffect(() => {
@@ -28,7 +29,22 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   if (!locked) return <>{children}</>;
 
   const copy = UPSELL_COPY[feature];
-  const annual = PLANS.annual;
+  const annual = offering.data?.annual ?? null;
+  const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+
+  function onStartTrial() {
+    if (!canPurchase) {
+      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      return;
+    }
+    startTrial.mutate(undefined, {
+      onSuccess: (result) => {
+        if (result.active) router.replace('/paywall/success');
+        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+      },
+      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+    });
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -59,24 +75,30 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           style={{ borderWidth: 1, borderColor: colors.hairline }}>
           <View>
             <Text variant="bodySm" tone="muted">
-              Start {annual.trialDays} days free, then
+              {annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for'}
             </Text>
             <Text variant="title" style={{ fontSize: 26, lineHeight: 30 }}>
-              {annual.priceLabel}
+              {annual?.priceLabel ?? 'Unavailable'}
               <Text variant="bodySm" tone="muted">
-                /year
+                /{annual?.periodLabel ?? 'year'}
               </Text>
             </Text>
           </View>
-          <Text variant="label" tone="muted">{`${monthlyEquivalent(annual.priceLabel)}\n/mo`}</Text>
+          {annual?.pricePerMonthLabel ? <Text variant="label" tone="muted">{`${annual.pricePerMonthLabel}\n/mo`}</Text> : null}
         </View>
+        {offering.data?.status && offering.data.status !== 'available' ? (
+          <Text variant="label" tone="muted" className="mt-2 text-center" style={{ fontSize: 11.5, lineHeight: 16 }}>
+            {offering.data.reason}
+          </Text>
+        ) : null}
       </View>
       <View className="pb-4">
         <Pressable
           accessibilityRole="button"
-          onPress={() => startTrial.mutate(undefined, { onSettled: () => router.replace('/paywall/success') })}
+          disabled={!canPurchase || startTrial.isPending}
+          onPress={onStartTrial}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}>
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}>
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
             Start free trial
           </Text>

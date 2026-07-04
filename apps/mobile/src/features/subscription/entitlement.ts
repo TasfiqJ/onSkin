@@ -18,6 +18,14 @@ export type StoredEntitlement = {
   expiresAt: string | null; // ISO; null = no expiry known
   willRenew: boolean | null;
   grantedAt: string | null; // ISO
+  source?: 'revenuecat' | 'app_granted' | 'server' | 'local_cache' | null;
+  environment?: 'production' | 'sandbox' | 'test_store' | 'development' | 'unknown' | null;
+  managementUrl?: string | null;
+  verifiedAt?: string | null; // ISO; when RC/server last confirmed this row
+  offeringId?: string | null;
+  packageId?: string | null;
+  storeUserId?: string | null;
+  priceLabel?: string | null;
 };
 
 export type SubscriptionState = {
@@ -32,6 +40,12 @@ export type SubscriptionState = {
   willRenew: boolean | null;
   /** Active product id (lets the success screen tell a win-back from a normal buy). */
   productId: string | null;
+  store: StoredEntitlement['store'];
+  priceLabel: string | null;
+  managementUrl: string | null;
+  source: StoredEntitlement['source'];
+  environment: StoredEntitlement['environment'];
+  verifiedAt: string | null;
   inReverseTrial: boolean;
   inTrial: boolean;
   /** Had an entitlement that has lapsed. Drives the graceful downgrade + win-back. */
@@ -63,6 +77,12 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
     daysLeft: null,
     willRenew: null,
     productId: null,
+    store: e?.store ?? null,
+    priceLabel: e?.priceLabel ?? null,
+    managementUrl: e?.managementUrl ?? null,
+    source: e?.source ?? null,
+    environment: e?.environment ?? null,
+    verifiedAt: e?.verifiedAt ?? null,
     inReverseTrial: false,
     inTrial: false,
     expired: false,
@@ -79,6 +99,12 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
       daysLeft: daysUntil(e.expiresAt, nowISO),
       willRenew: e.willRenew,
       productId: e.productId,
+      store: e.store,
+      priceLabel: e.priceLabel ?? null,
+      managementUrl: e.managementUrl ?? null,
+      source: e.source ?? null,
+      environment: e.environment ?? null,
+      verifiedAt: e.verifiedAt ?? null,
       inReverseTrial: e.periodType === 'reverse_trial',
       inTrial: e.periodType === 'trial',
       expired: false,

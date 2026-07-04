@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-07-04T17:19:49.340Z",
+  "app": {
+    "name": "OnSkin",
+    "slug": "onskin",
+    "version": "0.1.0",
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "scheme": "onskin",
+    "iosBundleIdentifier": "com.onskin.app",
+    "androidPackage": "com.onskin.app",
+    "androidPermissions": [
+      "android.permission.CAMERA",
+      "android.permission.POST_NOTIFICATIONS"
+    ]
+  },
+  "easProduction": {
+    "autoIncrement": true,
+    "channel": "production",
+    "env": {
+      "APP_VARIANT": "production",
+      "EXPO_PUBLIC_APP_ENV": "production",
+      "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
+      "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
+      "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+    }
+  },
+  "artifacts": {},
+  "blockers": [],
+  "warnings": [
+    "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",
+    "Android artifact not supplied for hashing: set PHASE9_ANDROID_ARTIFACT=path.",
+    "Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.",
+    "Missing Play internal/closed testing evidence: PHASE9_ANDROID_CLOSED_TEST_PASS=true.",
+    "Missing Android target API proof from built artifact: PHASE9_ANDROID_TARGET_API_PASS=true.",
+    "Missing Android 16 KB page-size proof: PHASE9_ANDROID_16KB_PASS=true.",
+    "Missing iOS privacy report/privacy manifest evidence: PHASE9_IOS_PRIVACY_REPORT_PASS=true.",
+    "Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true.",
+    "Missing Google Play review packet evidence: PHASE9_PLAY_PACKET_PASS=true."
+  ]
+}

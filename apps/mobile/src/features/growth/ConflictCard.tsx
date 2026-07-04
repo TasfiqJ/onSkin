@@ -19,8 +19,13 @@ const MONO = 'IBMPlexMono_500Medium';
 
 export const CONFLICT_CARD_SIZE = { width: 320, height: 480 };
 
-export const ConflictCard = forwardRef<View, { conflict: DetectedConflict }>(
-  function ConflictCard({ conflict }, ref) {
+function publicLinkLabel(url?: string | null): string {
+  if (!url) return CARD_COPY.handle;
+  return url.replace(/^https?:\/\//i, '').replace(/[?#].*$/, '');
+}
+
+export const ConflictCard = forwardRef<View, { conflict: DetectedConflict; shareUrl?: string | null }>(
+  function ConflictCard({ conflict, shareUrl }, ref) {
     const reassure = isReassuring(conflict);
     const accent = reassure ? colors.sage : colors.clay;
     const accentTint = reassure ? colors.sageTint : colors.clayTint;
@@ -78,7 +83,9 @@ export const ConflictCard = forwardRef<View, { conflict: DetectedConflict }>(
           <View style={{ height: 1, backgroundColor: 'rgba(32,27,21,0.10)', marginBottom: 16 }} />
           <Text style={{ fontFamily: SANS_SEMI, fontSize: 15, color: accent }}>{CARD_COPY.cta}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 12 }}>
-            <Text style={{ fontFamily: MONO, fontSize: 11, color: colors.muted }}>{CARD_COPY.handle}</Text>
+            <Text style={{ fontFamily: MONO, fontSize: 10, color: colors.muted, maxWidth: 118 }}>
+              {publicLinkLabel(shareUrl)}
+            </Text>
             <Text style={{ fontFamily: MONO, fontSize: 8, color: colors.mutedLight, maxWidth: 165, textAlign: 'right' }}>
               {CARD_COPY.footnote}
             </Text>

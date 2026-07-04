@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { categoryLabel, PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
@@ -44,15 +46,23 @@ export default function ManualAddScreen() {
   const canContinue = name.trim().length > 0;
 
   const onContinue = () => {
-    const tokens = ingredients
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const parsed = ingredients.trim() ? parseIngredientText(ingredients) : null;
+    const tokens = parsed?.tokens.map((token) => token.displayName) ?? [];
+    if (parsed) {
+      track('ingredient_parse_completed', {
+        source: 'manual',
+        result: parsed.status,
+        count: parsed.tokens.length,
+      });
+    }
     update({
       name: name.trim(),
       brand: brand.trim() || null,
       category,
       ingredients: tokens,
+      ingredientParseStatus: parsed?.status ?? null,
+      ingredientParseConfidence: parsed?.confidence ?? null,
+      parserVersion: parsed?.parserVersion ?? null,
       paoMonths: paoFromCategory,
       paoSource: paoFromCategory != null ? 'category_default' : 'unknown',
     });

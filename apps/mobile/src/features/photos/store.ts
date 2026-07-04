@@ -5,26 +5,25 @@ import type { PhotoSeries, TimeOfDay } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
 
+import {
+  decryptPhotoNote,
+  deleteEncryptedPhoto,
+  encryptCapturedPhoto,
+  encryptPhotoNote,
+  isEncryptedPhotoUri,
+  photoEncryptionInfo,
+} from './encryptedStorage';
 import type { PhotoMeta } from './timeline';
 
 /**
- * Local-first photo store (docs/06 §6, the D-029 shelf pattern). Photo METADATA
- * lives in AsyncStorage; the image BYTES live on-device at `localUri` in the app
- * sandbox, client-side encrypted, and NEVER leave the device while local_only is
- * true. A best-effort Supabase mirror writes METADATA ONLY (never image data,
- * docs/06 §10) so the row is ready once the backend exists (B-SUPABASE). And it
- * always sets local_only = true / storage_path = null (cloud backup is a separate,
- * off-by-default consent, docs/06 §7). NO faceprint is ever stored; head_* are
- * coarse pose QA only (docs/06 §7).
- *
- * v1 has no native camera (B-CAMERA), so a saved capture has localUri = null and
- * renders as the design's striped placeholder. The timeline/compare flow is fully
- * exercised end-to-end without real imagery (design Next-steps ①).
+ * Local-first photo store. Metadata stays in AsyncStorage; image bytes are
+ * encrypted into app-private `.onskinphoto` envelopes and never mirrored to
+ * Supabase while `localOnly` is true. Notes are encrypted before persistence.
  */
 const KEY = 'onskin.photos.v1';
 
 export type PhotoRecord = PhotoMeta & {
-  takenAt: string; // ISO timestamp
+  takenAt: string;
   captureSessionId: string | null;
   headRoll: number | null;
   headYaw: number | null;
@@ -33,6 +32,15 @@ export type PhotoRecord = PhotoMeta & {
   storagePath: string | null;
   faceRegionRedacted: boolean;
   isEncrypted: boolean;
+  encryptedLocalUri: string | null;
+  thumbnailLocalUri: string | null;
+  encryptionVersion: string;
+  keyId: string | null;
+};
+
+type StoredPhotoRecord = Omit<PhotoRecord, 'notes'> & {
+  notes: null;
+  notesCiphertext?: string | null;
 };
 
 export type NewPhoto = {
@@ -50,22 +58,45 @@ export type NewPhoto = {
   notes?: string | null;
 };
 
+async function normalizeStoredRecord(item: PhotoRecord & { notesCiphertext?: string | null }): Promise<PhotoRecord> {
+  const encryptedLocalUri = item.encryptedLocalUri ?? (isEncryptedPhotoUri(item.localUri) ? item.localUri : null);
+  const notes = item.notesCiphertext ? await decryptPhotoNote(item.notesCiphertext).catch(() => null) : item.notes ?? null;
+  return {
+    ...item,
+    notes,
+    encryptedLocalUri,
+    thumbnailLocalUri: item.thumbnailLocalUri ?? null,
+    encryptionVersion: item.encryptionVersion ?? (encryptedLocalUri ? photoEncryptionInfo.version : 'none'),
+    keyId: item.keyId ?? (encryptedLocalUri ? photoEncryptionInfo.keyId : null),
+    localUri: item.localUri ?? encryptedLocalUri ?? null,
+    isEncrypted: item.isEncrypted ?? Boolean(encryptedLocalUri),
+  };
+}
+
 export async function loadPhotos(): Promise<PhotoRecord[]> {
   try {
     const raw = await AsyncStorage.getItem(KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as PhotoRecord[];
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    return Promise.all(parsed.map(normalizeStoredRecord));
   } catch {
     return [];
   }
 }
 
 async function persist(items: PhotoRecord[]): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(items));
+  const stored: StoredPhotoRecord[] = await Promise.all(
+    items.map(async (item) => ({
+      ...item,
+      notes: null,
+      notesCiphertext: await encryptPhotoNote(item.notes),
+    })),
+  );
+  await AsyncStorage.setItem(KEY, JSON.stringify(stored));
 }
 
-/** Best-effort, metadata-only mirror (B-SUPABASE). Image bytes are never sent. */
+/** Best-effort metadata-only mirror. Image paths, notes, and bytes are never sent. */
 async function mirror(rec: PhotoRecord): Promise<void> {
   try {
     const { data: u } = await supabase.auth.getUser();
@@ -73,7 +104,6 @@ async function mirror(rec: PhotoRecord): Promise<void> {
     await supabase.from('photos').insert({
       id: rec.id,
       user_id: u.user.id,
-      // local-only ALWAYS here. Cloud backup is a separate consented path.
       local_only: true,
       storage_path: null,
       series: rec.series,
@@ -87,22 +117,32 @@ async function mirror(rec: PhotoRecord): Promise<void> {
       head_roll: rec.headRoll,
       head_yaw: rec.headYaw,
       head_pitch: rec.headPitch,
-      notes: rec.notes,
+      notes: null,
       is_encrypted: rec.isEncrypted,
-      // local_uri is intentionally NOT mirrored. It's a device path.
     });
   } catch {
-    /* best-effort until the backend is configured (B-SUPABASE) */
+    /* best-effort until the backend is configured */
   }
 }
 
 export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
   const items = await loadPhotos();
   const series = input.series ?? 'front';
-  // The first photo of a series becomes its reference (docs/06 §3).
   const hasReference = items.some((p) => p.series === series);
+  const id = randomUUID();
+  const encrypted =
+    input.localUri && !isEncryptedPhotoUri(input.localUri)
+      ? await encryptCapturedPhoto(input.localUri, id)
+      : input.localUri && isEncryptedPhotoUri(input.localUri)
+        ? {
+            encryptedLocalUri: input.localUri,
+            keyId: photoEncryptionInfo.keyId,
+            encryptionVersion: photoEncryptionInfo.version,
+          }
+        : null;
+
   const rec: PhotoRecord = {
-    id: randomUUID(),
+    id,
     series,
     takenLocalDate: input.takenLocalDate,
     takenAt: new Date().toISOString(),
@@ -115,12 +155,16 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
     isReference: !hasReference,
     referencePhotoId: input.referencePhotoId ?? null,
     captureSessionId: input.captureSessionId ?? null,
-    localUri: input.localUri ?? null,
+    localUri: encrypted?.encryptedLocalUri ?? null,
     notes: input.notes ?? null,
     localOnly: true,
     storagePath: null,
     faceRegionRedacted: false,
-    isEncrypted: true,
+    isEncrypted: Boolean(encrypted),
+    encryptedLocalUri: encrypted?.encryptedLocalUri ?? null,
+    thumbnailLocalUri: null,
+    encryptionVersion: encrypted?.encryptionVersion ?? 'none',
+    keyId: encrypted?.keyId ?? null,
   };
   await persist([rec, ...items]);
   void mirror(rec);
@@ -137,8 +181,10 @@ export async function updatePhoto(
 
 export async function removePhoto(id: string): Promise<void> {
   const items = await loadPhotos();
+  const target = items.find((p) => p.id === id);
   await persist(items.filter((p) => p.id !== id));
-  // Best-effort delete of any mirrored metadata row.
+  await deleteEncryptedPhoto(target?.encryptedLocalUri ?? target?.localUri);
+  await deleteEncryptedPhoto(target?.thumbnailLocalUri);
   try {
     await supabase.from('photos').delete().eq('id', id);
   } catch {
@@ -146,19 +192,17 @@ export async function removePhoto(id: string): Promise<void> {
   }
 }
 
-/** Make `id` the reference for its series (docs/06 §3. Re-set baseline). */
+/** Make `id` the reference for its series. */
 export async function setReference(id: string): Promise<void> {
   const items = await loadPhotos();
   const target = items.find((p) => p.id === id);
   if (!target) return;
-  await persist(
-    items.map((p) =>
-      p.series === target.series ? { ...p, isReference: p.id === id } : p,
-    ),
-  );
+  await persist(items.map((p) => (p.series === target.series ? { ...p, isReference: p.id === id } : p)));
 }
 
 /** Test/seed reset. */
 export async function clearPhotos(): Promise<void> {
+  const items = await loadPhotos();
+  await Promise.all(items.map((p) => deleteEncryptedPhoto(p.encryptedLocalUri ?? p.localUri)));
   await AsyncStorage.removeItem(KEY);
 }

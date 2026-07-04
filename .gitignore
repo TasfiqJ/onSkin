@@ -59,3 +59,8 @@ docs/_design2_p*.png
 docs/_decompressed*
 docs/_design/
 docs/_raw_response.txt
+
+# Local Codex/design exports and one-off research downloads
+/dx*/
+/design*.gz
+/ftc_tmp.html
