@@ -120,7 +120,7 @@
   - Proves unavailable store pricing displays as `Price unavailable`, never as a slash-period billed amount.
 - `apps/mobile/src/lib/navigation/safeBack.test.ts`
   - Proves direct-entry screens replace to a safe app route when no history exists.
-  - Proves route-specific fallbacks can return shelf flows to the Shelf tab.
+  - Proves route-specific fallbacks can return Shelf and Progress flows to their owning tabs.
 - `apps/mobile/src/features/subscription/dismissPaywall.test.ts`
   - Proves paywall dismiss keeps native back behavior when history exists.
   - Proves direct-entry paywalls replace to the Today route instead of a dead-end history state.

@@ -6,6 +6,7 @@ import { NO_SCORE_COPY } from '@/features/photos/copy';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useTrendConsent } from '@/features/trend/useTrend';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // The honest, differentiating no-AI-score stance (docs/06 §8, design screen 07),
@@ -16,7 +17,8 @@ function Bullet({ children }: { children: string }) {
     <View className="flex-row items-start gap-3.5">
       <View
         className="mt-0.5 h-[22px] w-[22px] items-center justify-center rounded-full"
-        style={{ backgroundColor: colors.sageTint }}>
+        style={{ backgroundColor: colors.sageTint }}
+      >
         <Text style={{ color: colors.sage, fontSize: 11 }}>✓</Text>
       </View>
       <Text variant="body" tone="ink" className="flex-1" style={{ color: colors.inkSoft }}>
@@ -31,7 +33,11 @@ export default function AboutNoScoreScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row justify-end pt-1">
-        <Pressable accessibilityRole="button" accessibilityLabel="Close" onPress={() => router.back()}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Close"
+          onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
+        >
           <Text variant="body" tone="muted" style={{ fontSize: 22 }}>
             ✕
           </Text>
@@ -40,7 +46,8 @@ export default function AboutNoScoreScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
         <View
           className="mb-6 mt-4 h-12 w-12 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.sageTint }}>
+          style={{ backgroundColor: colors.sageTint }}
+        >
           <Text style={{ color: colors.sage, fontSize: 22 }}>⊘</Text>
         </View>
         <Text variant="title" style={{ fontSize: 38, lineHeight: 40 }}>
@@ -66,8 +73,13 @@ export default function AboutNoScoreScreen() {
             accessibilityRole="button"
             onPress={() => router.push('/trend/optin')}
             className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}>
-            <Text variant="bodySm" className="flex-1 pr-3 font-sans-medium text-[12.5px]" style={{ color: colors.inkSoft, lineHeight: 18 }}>
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text
+              variant="bodySm"
+              className="flex-1 pr-3 font-sans-medium text-[12.5px]"
+              style={{ color: colors.inkSoft, lineHeight: 18 }}
+            >
               {trendConsented ? TREND_COPY.manageLink : TREND_COPY.refusalLink}
             </Text>
             <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>

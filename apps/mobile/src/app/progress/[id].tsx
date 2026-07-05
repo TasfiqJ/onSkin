@@ -12,6 +12,7 @@ import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
+import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // Single-photo detail (docs/06 §4, design screen 06). Date, quality, your note,
@@ -27,13 +28,36 @@ function PhotoDetailScreenContent() {
   const { reference, remove, note } = usePhotoActions();
   const photo = data?.all.find((p) => p.id === id);
   const [draft, setDraft] = useState(photo?.notes ?? '');
+  const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
   if (!photo) {
     return (
       <View
-        style={{ flex: 1, backgroundColor: BG, alignItems: 'center', justifyContent: 'center' }}
+        style={{
+          flex: 1,
+          backgroundColor: BG,
+          paddingTop: insets.top + 12,
+          paddingHorizontal: 24,
+        }}
       >
-        <Text style={{ color: '#F4EFE7' }}>Photo not found.</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+          onPress={closeToProgress}
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: 17,
+            backgroundColor: 'rgba(244,239,231,0.12)',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text style={{ color: '#F4EFE7', fontSize: 16 }}>{'<'}</Text>
+        </Pressable>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: '#F4EFE7' }}>Photo not found.</Text>
+        </View>
       </View>
     );
   }
@@ -50,7 +74,7 @@ function PhotoDetailScreenContent() {
       {
         text: 'Delete',
         style: 'destructive',
-        onPress: () => remove.mutate(id, { onSettled: () => router.back() }),
+        onPress: () => remove.mutate(id, { onSettled: closeToProgress }),
       },
     ]);
   }
@@ -84,7 +108,7 @@ function PhotoDetailScreenContent() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={closeToProgress}
           style={{
             width: 34,
             height: 34,

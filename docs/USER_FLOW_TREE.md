@@ -275,6 +275,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Add a photo, relaunch, and return to Progress.
   - Expected result: Local state is preserved as designed.
   - Evidence: Video or screenshot sequence.
+- Branch: direct-entry back, close, and permission escape
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Progress capture, review, no-score explainer, and missing photo detail routes directly, then use the visible Close, Back, or Not now control.
+  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history.
+  - Evidence: Screenshot sequence and visible route snapshot.
 
 ## Flow: Pro Feature Gating
 

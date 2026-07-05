@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   APP_HOME_ROUTE,
+  APP_PROGRESS_ROUTE,
   APP_SHELF_ROUTE,
   backOrReplace,
   type BackOrReplaceRouter,
@@ -41,5 +42,14 @@ describe('safe back navigation', () => {
 
     expect(router.back).not.toHaveBeenCalled();
     expect(router.replace).toHaveBeenCalledWith(APP_SHELF_ROUTE);
+  });
+
+  it('supports Progress as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_PROGRESS_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_PROGRESS_ROUTE);
   });
 });

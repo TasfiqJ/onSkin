@@ -17,13 +17,14 @@ import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
+import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 const BG = '#16130F';
 const GUIDE = '#9DB18A';
 const READY = '#9DB18A';
 
-function ConsentGate({ onGrant }: { onGrant: () => void }) {
+function ConsentGate({ onGrant, onCancel }: { onGrant: () => void; onCancel: () => void }) {
   return (
     <View
       style={{
@@ -112,7 +113,7 @@ function ConsentGate({ onGrant }: { onGrant: () => void }) {
       </Pressable>
       <Pressable
         accessibilityRole="button"
-        onPress={() => router.back()}
+        onPress={onCancel}
         style={{ marginTop: 12, alignItems: 'center' }}
       >
         <Text
@@ -129,7 +130,15 @@ function ConsentGate({ onGrant }: { onGrant: () => void }) {
   );
 }
 
-function PermissionGate({ canAskAgain, onAsk }: { canAskAgain: boolean; onAsk: () => void }) {
+function PermissionGate({
+  canAskAgain,
+  onAsk,
+  onCancel,
+}: {
+  canAskAgain: boolean;
+  onAsk: () => void;
+  onCancel: () => void;
+}) {
   return (
     <View
       style={{
@@ -179,6 +188,21 @@ function PermissionGate({ canAskAgain, onAsk }: { canAskAgain: boolean; onAsk: (
           {canAskAgain ? 'Allow camera' : 'Open settings'}
         </Text>
       </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onCancel}
+        style={{ marginTop: 12, alignItems: 'center' }}
+      >
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_500Medium',
+            fontSize: 15,
+            color: 'rgba(244,239,231,0.6)',
+          }}
+        >
+          Not now
+        </Text>
+      </Pressable>
     </View>
   );
 }
@@ -203,6 +227,7 @@ function CaptureScreenContent() {
   const coaching = coachingLine(signals);
   const light = lightingState(signals);
   const referenceUri = data?.reference?.localUri ?? null;
+  const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
   async function capture() {
     if (consented !== true || !cameraRef.current || !canShowCamera || capturing) return;
@@ -242,7 +267,7 @@ function CaptureScreenContent() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Close"
-          onPress={() => router.back()}
+          onPress={closeToProgress}
           style={{
             width: 36,
             height: 36,
@@ -496,6 +521,7 @@ function CaptureScreenContent() {
             setConsented(true);
             if (!permission?.granted) void requestPermission();
           }}
+          onCancel={closeToProgress}
         />
       ) : consented === null ? (
         <View
@@ -512,6 +538,7 @@ function CaptureScreenContent() {
         <PermissionGate
           canAskAgain={permission?.canAskAgain ?? true}
           onAsk={() => void requestPermission()}
+          onCancel={closeToProgress}
         />
       ) : null}
     </View>

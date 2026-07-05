@@ -12,6 +12,7 @@ import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
+import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import type { TimeOfDay } from '@onskin/types';
 
 // Review & retake (docs/06 §2, design screen 02). Quality is FLAGGED, never blocked
@@ -73,6 +74,10 @@ function ReviewScreenContent() {
   const { add } = usePhotoActions();
   const refLighting = data?.reference?.lightingScore ?? null;
   const verdict = reviewQuality({ alignment, lighting, refLighting });
+  const closeToProgress = () => {
+    if (capturedUri) void FileSystem.deleteAsync(capturedUri, { idempotent: true });
+    backOrReplace(router, APP_PROGRESS_ROUTE);
+  };
 
   function save() {
     const wasEmpty = (data?.count ?? 0) === 0;
@@ -92,7 +97,7 @@ function ReviewScreenContent() {
         onSettled: () => {
           track('photo_captured', { on_device: true, result: verdict.flag });
           if (wasEmpty) track('first_photo_captured');
-          router.back();
+          router.replace(APP_PROGRESS_ROUTE);
         },
       },
     );
@@ -108,6 +113,30 @@ function ReviewScreenContent() {
       >
         {`${PHOTO_COPY.review.eyebrow} · ${fmt(takenLocalDate)}`}
       </Text>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Close"
+        onPress={closeToProgress}
+        style={{
+          position: 'absolute',
+          left: 24,
+          top: insets.top + 10,
+          zIndex: 5,
+          paddingVertical: 8,
+          paddingRight: 12,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_600SemiBold',
+            fontSize: 15,
+            color: 'rgba(244,239,231,0.65)',
+          }}
+        >
+          Close
+        </Text>
+      </Pressable>
 
       {/* captured photo */}
       <View

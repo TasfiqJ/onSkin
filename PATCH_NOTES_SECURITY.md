@@ -389,9 +389,9 @@
 
 ## Direct-entry navigation recovery guard
 
-- Files: `apps/mobile/src/lib/navigation/safeBack.ts`, `apps/mobile/src/lib/navigation/safeBack.test.ts`, `apps/mobile/src/features/subscription/dismissPaywall.ts`, `apps/mobile/src/features/subscription/dismissPaywall.test.ts`, Ask/deferred/shelf/paywall route screens, `docs/USER_FLOW_TREE.md`.
-- Change: Added shared direct-entry navigation helpers. Ask, deferred, and paywall close controls now fall back to Today when no history exists; Shelf subroutes fall back to Shelf.
-- Why safe: Deep links, web refreshes, and cold route entries should not trap users on consent, deferred, shelf detail, or paywall screens with a Back/Close action that cannot go anywhere.
+- Files: `apps/mobile/src/lib/navigation/safeBack.ts`, `apps/mobile/src/lib/navigation/safeBack.test.ts`, `apps/mobile/src/features/subscription/dismissPaywall.ts`, `apps/mobile/src/features/subscription/dismissPaywall.test.ts`, Ask/deferred/shelf/progress/paywall route screens, `docs/USER_FLOW_TREE.md`.
+- Change: Added shared direct-entry navigation helpers. Ask, deferred, and paywall close controls now fall back to Today when no history exists; Shelf subroutes fall back to Shelf; progress capture falls back to Progress.
+- Why safe: Deep links, web refreshes, and cold route entries should not trap users on consent, deferred, shelf detail, progress capture, or paywall screens with a Back/Close action that cannot go anywhere.
 - Regression: `safeBack.test.ts` and `dismissPaywall.test.ts` prove history-preserving and no-history replacement behavior. `useToday.test.ts` also covers removal of the hard-coded Today header clock placeholder.
 
 ## RevenueCat webhook body limit

@@ -1,7 +1,11 @@
 export const APP_HOME_ROUTE = '/(tabs)/today' as const;
 export const APP_SHELF_ROUTE = '/(tabs)/shelf' as const;
+export const APP_PROGRESS_ROUTE = '/(tabs)/progress' as const;
 
-export type AppFallbackRoute = typeof APP_HOME_ROUTE | typeof APP_SHELF_ROUTE;
+export type AppFallbackRoute =
+  | typeof APP_HOME_ROUTE
+  | typeof APP_SHELF_ROUTE
+  | typeof APP_PROGRESS_ROUTE;
 
 export type BackOrReplaceRouter = {
   canGoBack: () => boolean;
