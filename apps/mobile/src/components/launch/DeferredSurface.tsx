@@ -5,10 +5,16 @@ import { View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { deferredSurfaceCopy, type DeferredSurfaceKind } from '@/lib/launch/phase7';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { backOrReplace, type AppFallbackRoute } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-export function DeferredSurface({ surface }: { surface: DeferredSurfaceKind }) {
+export function DeferredSurface({
+  surface,
+  fallbackRoute,
+}: {
+  surface: DeferredSurfaceKind;
+  fallbackRoute?: AppFallbackRoute;
+}) {
   const copy = deferredSurfaceCopy[surface];
 
   useEffect(() => {
@@ -41,7 +47,11 @@ export function DeferredSurface({ surface }: { surface: DeferredSurfaceKind }) {
           </Text>
         </View>
       </View>
-      <Button label={copy.cta} variant="ghost" onPress={() => backOrReplace(router)} />
+      <Button
+        label={copy.cta}
+        variant="ghost"
+        onPress={() => backOrReplace(router, fallbackRoute)}
+      />
     </Screen>
   );
 }

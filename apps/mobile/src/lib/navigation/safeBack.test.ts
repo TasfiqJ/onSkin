@@ -1,9 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  APP_COMMERCE_STACKS_ROUTE,
   APP_HOME_ROUTE,
   APP_PROGRESS_ROUTE,
+  APP_RECOMMENDATIONS_ROUTE,
   APP_SHELF_ROUTE,
+  APP_YOU_ROUTE,
   backOrReplace,
   type BackOrReplaceRouter,
 } from './safeBack';
@@ -51,5 +54,32 @@ describe('safe back navigation', () => {
 
     expect(router.back).not.toHaveBeenCalled();
     expect(router.replace).toHaveBeenCalledWith(APP_PROGRESS_ROUTE);
+  });
+
+  it('supports You as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_YOU_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_YOU_ROUTE);
+  });
+
+  it('supports Recommendations as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_RECOMMENDATIONS_ROUTE);
+  });
+
+  it('supports Commerce stacks as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_COMMERCE_STACKS_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_COMMERCE_STACKS_ROUTE);
   });
 });

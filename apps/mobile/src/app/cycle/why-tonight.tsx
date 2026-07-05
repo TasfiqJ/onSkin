@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // "Why is this on tonight?" (design screen 02, docs/05 §6.3). The reasoning
@@ -14,7 +15,7 @@ import { colors } from '@/theme/tokens';
 const SLOT_TITLE: Record<string, string> = {
   retinoid: 'Tonight is retinoid night.',
   exfoliate: 'Tonight is exfoliation night.',
-  recover: "Tonight is a recovery night.",
+  recover: 'Tonight is a recovery night.',
   other_active: 'Tonight is an active night.',
 };
 
@@ -22,11 +23,17 @@ function TraceRow({ tag, children, last }: { tag: string; children: string; last
   return (
     <View
       className="flex-row gap-3.5 py-3.5"
-      style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(244,239,231,0.08)' }}>
+      style={
+        last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(244,239,231,0.08)' }
+      }
+    >
       <Text className="w-14 font-mono text-[11px]" style={{ color: colors.clayBright }}>
         {tag}
       </Text>
-      <Text className="flex-1 text-[14px]" style={{ color: 'rgba(244,239,231,0.8)', lineHeight: 22 }}>
+      <Text
+        className="flex-1 text-[14px]"
+        style={{ color: 'rgba(244,239,231,0.8)', lineHeight: 22 }}
+      >
         {children}
       </Text>
     </View>
@@ -48,7 +55,7 @@ export default function WhyTonightScreen() {
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
           No cycle is running yet. Add an active to get started.
         </Text>
-        <Button label="Got it" variant="inverse" onPress={() => router.back()} />
+        <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
       </Sheet>
     );
   }
@@ -64,7 +71,12 @@ export default function WhyTonightScreen() {
       <Text variant="label" className="mb-2.5" style={{ color: colors.clayBright }}>
         WHY THIS, TONIGHT?
       </Text>
-      <Text variant="title" tone="inverse" className="text-[30px] leading-[34px]" accessibilityRole="header">
+      <Text
+        variant="title"
+        tone="inverse"
+        className="text-[30px] leading-[34px]"
+        accessibilityRole="header"
+      >
         {SLOT_TITLE[tonight.night.slot] ?? 'Tonight.'}
       </Text>
 
@@ -87,14 +99,17 @@ export default function WhyTonightScreen() {
         </TraceRow>
       </View>
 
-      <View className="my-5 rounded-2xl px-4 py-3.5" style={{ backgroundColor: 'rgba(217,161,131,0.1)' }}>
+      <View
+        className="my-5 rounded-2xl px-4 py-3.5"
+        style={{ backgroundColor: 'rgba(217,161,131,0.1)' }}
+      >
         <Text className="text-[12.5px]" style={{ color: 'rgba(244,239,231,0.6)', lineHeight: 19 }}>
           Every step here is traceable to a rule, your profile, or a choice you made. Never a black
           box.
         </Text>
       </View>
 
-      <Button label="Got it" variant="inverse" onPress={() => router.back()} />
+      <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
     </Sheet>
   );
 }

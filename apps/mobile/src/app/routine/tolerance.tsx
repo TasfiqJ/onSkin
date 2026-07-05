@@ -7,17 +7,39 @@ import { Button, Text } from '@/components/ui';
 import { applyToleranceToRamps } from '@/features/routine/rampStore';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// 07 · Weekly tolerance check-in (design 07, docs/03 §4). The ONLY assessment , 
+// 07 · Weekly tolerance check-in (design 07, docs/03 §4). The ONLY assessment ,
 // optional, explicitly non-diagnostic. That tunes the ramp cadence. Each answer
 // states exactly what the app will do (comfortable → offer step-up; dry → hold;
 // irritated → add recovery & ease off).
 const OPTIONS = [
-  { id: 'comfortable', title: 'Comfortable', sub: 'We may offer a small step-up', swatch: colors.sageTint, dot: colors.sage, restingBorder: colors.hairline },
-  { id: 'a_bit_dry', title: 'A bit dry', sub: "We'll hold your pace steady", swatch: colors.clayTint, dot: colors.clayBright, restingBorder: colors.hairline },
+  {
+    id: 'comfortable',
+    title: 'Comfortable',
+    sub: 'We may offer a small step-up',
+    swatch: colors.sageTint,
+    dot: colors.sage,
+    restingBorder: colors.hairline,
+  },
+  {
+    id: 'a_bit_dry',
+    title: 'A bit dry',
+    sub: "We'll hold your pace steady",
+    swatch: colors.clayTint,
+    dot: colors.clayBright,
+    restingBorder: colors.hairline,
+  },
   // Irritated carries a pre-emphasised amber inset border at rest (design 07).
-  { id: 'irritated', title: 'Irritated', sub: "We'll add recovery nights & ease off", swatch: 'rgba(176,122,60,0.14)', dot: colors.amber, restingBorder: 'rgba(176,122,60,0.4)' },
+  {
+    id: 'irritated',
+    title: 'Irritated',
+    sub: "We'll add recovery nights & ease off",
+    swatch: 'rgba(176,122,60,0.14)',
+    dot: colors.amber,
+    restingBorder: 'rgba(176,122,60,0.4)',
+  },
 ] as const;
 
 export default function ToleranceScreen() {
@@ -38,15 +60,27 @@ export default function ToleranceScreen() {
       router.replace('/cycle/recovery');
       return;
     }
-    router.back();
+    backOrReplace(router);
   };
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.45)' }}>
-      <Pressable className="absolute inset-0" accessibilityRole="button" accessibilityLabel="Dismiss" onPress={() => router.back()} />
+      <Pressable
+        className="absolute inset-0"
+        accessibilityRole="button"
+        accessibilityLabel="Dismiss"
+        onPress={() => backOrReplace(router)}
+      />
       <View className="rounded-t-sheet bg-paper px-7 pb-10 pt-4">
-        <View className="mb-5 h-[5px] w-10 self-center rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
-        <Pressable accessibilityRole="button" className="mb-1 self-end" onPress={() => router.back()}>
+        <View
+          className="mb-5 h-[5px] w-10 self-center rounded-[3px]"
+          style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+        />
+        <Pressable
+          accessibilityRole="button"
+          className="mb-1 self-end"
+          onPress={() => backOrReplace(router)}
+        >
           <Text variant="body" tone="muted" className="font-sans-semibold text-[14px]">
             Skip
           </Text>
@@ -68,9 +102,16 @@ export default function ToleranceScreen() {
               accessibilityRole="button"
               accessibilityState={{ selected: selected === o.id }}
               className={cn('flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4')}
-              style={{ borderWidth: selected === o.id ? 2 : 1, borderColor: selected === o.id ? colors.clay : o.restingBorder }}
-              onPress={() => setSelected(o.id)}>
-              <View className="h-[34px] w-[34px] items-center justify-center rounded-full" style={{ backgroundColor: o.swatch }}>
+              style={{
+                borderWidth: selected === o.id ? 2 : 1,
+                borderColor: selected === o.id ? colors.clay : o.restingBorder,
+              }}
+              onPress={() => setSelected(o.id)}
+            >
+              <View
+                className="h-[34px] w-[34px] items-center justify-center rounded-full"
+                style={{ backgroundColor: o.swatch }}
+              >
                 <View className="h-3 w-3 rounded-full" style={{ backgroundColor: o.dot }} />
               </View>
               <View className="flex-1">

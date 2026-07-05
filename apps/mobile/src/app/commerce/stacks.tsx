@@ -4,6 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { shippableStacks } from '@/features/commerce/stacks';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // The shoppable-stacks list (docs/10 §4). Expert/derm-reviewed routines as shoppable
@@ -18,9 +19,10 @@ export default function StacksScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
         <Text variant="body" className="font-sans-semibold" tone="muted">
@@ -48,14 +50,30 @@ export default function StacksScreen() {
               key={s.slug}
               accessibilityRole="button"
               accessibilityLabel={s.title}
-              onPress={() => router.push({ pathname: '/commerce/stack/[slug]', params: { slug: s.slug } })}
+              onPress={() =>
+                router.push({ pathname: '/commerce/stack/[slug]', params: { slug: s.slug } })
+              }
               className="mb-3 rounded-card bg-paper-raised p-5"
-              style={{ borderWidth: 1, borderColor: colors.hairline }}>
+              style={{ borderWidth: 1, borderColor: colors.hairline }}
+            >
               <View
                 className="mb-2.5 flex-row items-center gap-1.5 self-start rounded-pill px-3 py-1.5"
-                style={{ backgroundColor: s.curatorKind === 'derm' ? colors.sageTint : colors.clayTint }}>
-                <Text style={{ color: s.curatorKind === 'derm' ? colors.sage : colors.clay, fontSize: 10 }}>✦</Text>
-                <Text className="font-mono text-[10px]" style={{ color: s.curatorKind === 'derm' ? colors.sageDeep : colors.clayDeep }}>
+                style={{
+                  backgroundColor: s.curatorKind === 'derm' ? colors.sageTint : colors.clayTint,
+                }}
+              >
+                <Text
+                  style={{
+                    color: s.curatorKind === 'derm' ? colors.sage : colors.clay,
+                    fontSize: 10,
+                  }}
+                >
+                  ✦
+                </Text>
+                <Text
+                  className="font-mono text-[10px]"
+                  style={{ color: s.curatorKind === 'derm' ? colors.sageDeep : colors.clayDeep }}
+                >
                   {COMMERCE_COPY.stack.chipFor(s.curatorKind)}
                 </Text>
               </View>

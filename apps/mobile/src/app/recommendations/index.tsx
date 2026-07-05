@@ -9,6 +9,7 @@ import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
 import { track } from '@/lib/analytics/track';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -27,7 +28,9 @@ const TRIGGER_GLYPH: Record<RecommendationTrigger, string> = {
 };
 
 // Preserve the engine's priority order while grouping by trigger.
-function grouped(recs: Recommendation[]): { trigger: RecommendationTrigger; group: string; items: Recommendation[] }[] {
+function grouped(
+  recs: Recommendation[],
+): { trigger: RecommendationTrigger; group: string; items: Recommendation[] }[] {
   const order: RecommendationTrigger[] = [];
   const map = new Map<RecommendationTrigger, Recommendation[]>();
   for (const r of recs) {
@@ -60,9 +63,13 @@ function RecCard({ rec }: { rec: Recommendation }) {
       accessibilityLabel={`${rec.what}. ${rec.why}`}
       onPress={() => openRec(rec)}
       className="mb-4 rounded-[18px] bg-paper-raised p-4"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
       <View className="flex-row items-start gap-3">
-        <View className="h-9 w-9 items-center justify-center rounded-[10px]" style={{ backgroundColor: colors.clayTint }}>
+        <View
+          className="h-9 w-9 items-center justify-center rounded-[10px]"
+          style={{ backgroundColor: colors.clayTint }}
+        >
           <Text className="text-[16px]" style={{ color: colors.clay }}>
             {TRIGGER_GLYPH[rec.trigger]}
           </Text>
@@ -75,7 +82,15 @@ function RecCard({ rec }: { rec: Recommendation }) {
             {rec.fitLabel ? (
               <Text
                 className="font-mono text-[9.5px]"
-                style={{ color: colors.clay, backgroundColor: colors.clayTint, paddingHorizontal: 7, paddingVertical: 3, borderRadius: 6, overflow: 'hidden' }}>
+                style={{
+                  color: colors.clay,
+                  backgroundColor: colors.clayTint,
+                  paddingHorizontal: 7,
+                  paddingVertical: 3,
+                  borderRadius: 6,
+                  overflow: 'hidden',
+                }}
+              >
                 {rec.fitLabel}
               </Text>
             ) : null}
@@ -87,14 +102,16 @@ function RecCard({ rec }: { rec: Recommendation }) {
       </View>
       <View
         className="mt-3 flex-row items-center justify-between pt-3"
-        style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}>
+        style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}
+      >
         <View className="flex-row items-center gap-1.5">
           {rec.footIsEvidence && evidenceGood ? (
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.sage }} />
           ) : null}
           <Text
             className="font-mono text-[10.5px]"
-            style={{ color: rec.footIsEvidence && evidenceGood ? colors.sage : colors.muted }}>
+            style={{ color: rec.footIsEvidence && evidenceGood ? colors.sage : colors.muted }}
+          >
             {rec.footLabel}
           </Text>
         </View>
@@ -111,15 +128,25 @@ function YoureSet() {
     <View className="flex-1 items-center justify-center px-2">
       <View
         className="mb-7 h-[78px] w-[78px] items-center justify-center rounded-full bg-paper-raised"
-        style={{ borderWidth: 1.5, borderColor: 'rgba(165,105,75,0.3)' }}>
+        style={{ borderWidth: 1.5, borderColor: 'rgba(165,105,75,0.3)' }}
+      >
         <Text className="text-[30px]" style={{ color: colors.clay }}>
           ✓
         </Text>
       </View>
-      <Text variant="title" className="text-center text-[31px] leading-[34px]" accessibilityRole="header">
+      <Text
+        variant="title"
+        className="text-center text-[31px] leading-[34px]"
+        accessibilityRole="header"
+      >
         {REC_COPY.youreSet.title}
       </Text>
-      <Text variant="body" tone="muted" className="mt-3.5 max-w-[300px] text-center" style={{ lineHeight: 23 }}>
+      <Text
+        variant="body"
+        tone="muted"
+        className="mt-3.5 max-w-[300px] text-center"
+        style={{ lineHeight: 23 }}
+      >
         {goalRecsShippable() ? REC_COPY.youreSet.body : REC_COPY.youreSet.bodyNoGoals}
       </Text>
       <View className="mt-7 w-full max-w-[300px] gap-2.5">
@@ -127,8 +154,12 @@ function YoureSet() {
           <View
             key={c}
             className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}>
-            <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <View
+              className="h-[18px] w-[18px] items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.sageTint }}
+            >
               <Text className="text-[10px]" style={{ color: colors.sage }}>
                 ✓
               </Text>
@@ -159,12 +190,20 @@ export default function ForYouScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pt-1">
-        <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={8}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
+          hitSlop={8}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             ‹ Back
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => router.push('/recommendations/preferences')} hitSlop={8}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/recommendations/preferences')}
+          hitSlop={8}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Preferences
           </Text>

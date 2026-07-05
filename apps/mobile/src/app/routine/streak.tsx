@@ -8,6 +8,7 @@ import { useCycle } from '@/features/scheduler/useCycle';
 import { currentMilestone } from '@/features/streak/milestones';
 import { markMilestoneSeen } from '@/features/streak/milestoneStore';
 import { track } from '@/lib/analytics/track';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // Streak & adherence. The calm, forgiving streak (docs/03 §6/§9.5, D-025).
@@ -19,7 +20,12 @@ import { colors } from '@/theme/tokens';
 
 const HEAT = ['#EFEAE1', '#EDE5D8', '#E0C3AC', colors.clay] as const;
 
-function weekDaySquare(state: DayState): { bg: string; dot?: string; ring?: boolean; labelClay?: boolean } {
+function weekDaySquare(state: DayState): {
+  bg: string;
+  dot?: string;
+  ring?: boolean;
+  labelClay?: boolean;
+} {
   switch (state) {
     case 'done':
       return { bg: colors.clay };
@@ -50,7 +56,8 @@ export default function StreakScreen() {
   useEffect(() => {
     if (!milestone) return;
     void markMilestoneSeen(milestone.key).then((fresh) => {
-      if (fresh) track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
+      if (fresh)
+        track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
     });
   }, [milestone?.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -58,7 +65,11 @@ export default function StreakScreen() {
     <Screen edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
         <View className="flex-row items-center justify-between pt-1">
-          <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={() => router.back()}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+            onPress={() => backOrReplace(router)}
+          >
             <Text variant="body" tone="muted" style={{ fontSize: 22 }}>
               ‹
             </Text>
@@ -73,14 +84,17 @@ export default function StreakScreen() {
           Showing up beats being perfect.
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-1">
-          {(data?.streak ?? 0) > 0 ? `${data?.streak}-day streak · best ${data?.longest ?? 0}` : 'Your nights, no pressure.'}
+          {(data?.streak ?? 0) > 0
+            ? `${data?.streak}-day streak · best ${data?.longest ?? 0}`
+            : 'Your nights, no pressure.'}
         </Text>
 
         {/* Calm milestone marker (docs/07 §4.5). A gentle acknowledgement, no confetti. */}
         {milestone ? (
           <View
             className="mt-4 flex-row items-center gap-3.5 rounded-card p-4"
-            style={{ backgroundColor: colors.sageTint }}>
+            style={{ backgroundColor: colors.sageTint }}
+          >
             <View className="h-9 w-9 items-center justify-center rounded-full bg-paper-raised">
               <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.sage }} />
             </View>
@@ -107,13 +121,24 @@ export default function StreakScreen() {
                 <View key={i} className="flex-1 items-center">
                   <View
                     className="aspect-square w-full items-center justify-center rounded-[9px]"
-                    style={{ backgroundColor: s.bg, borderWidth: s.ring ? 1.5 : 0, borderColor: colors.hairline }}>
-                    {s.dot ? <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.dot }} /> : null}
+                    style={{
+                      backgroundColor: s.bg,
+                      borderWidth: s.ring ? 1.5 : 0,
+                      borderColor: colors.hairline,
+                    }}
+                  >
+                    {s.dot ? (
+                      <View
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ backgroundColor: s.dot }}
+                      />
+                    ) : null}
                   </View>
                   <Text
                     variant="label"
                     className="mt-1.5 font-mono text-[10px]"
-                    style={{ color: s.labelClay ? colors.clay : colors.muted }}>
+                    style={{ color: s.labelClay ? colors.clay : colors.muted }}
+                  >
                     {d.label}
                   </Text>
                 </View>
@@ -127,9 +152,13 @@ export default function StreakScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push('/routine/welcome-back')}
-            className="mt-3.5 flex-row items-center gap-3.5 rounded-card bg-sage-tint p-4">
+            className="mt-3.5 flex-row items-center gap-3.5 rounded-card bg-sage-tint p-4"
+          >
             <View className="h-10 w-10 items-center justify-center rounded-full bg-paper-raised">
-              <View className="h-4 w-4 rounded-[5px] border-2" style={{ borderColor: colors.sage }} />
+              <View
+                className="h-4 w-4 rounded-[5px] border-2"
+                style={{ borderColor: colors.sage }}
+              />
             </View>
             <View className="flex-1">
               <Text variant="body" className="font-sans-bold" style={{ color: colors.sageDeep }}>
@@ -148,16 +177,21 @@ export default function StreakScreen() {
             accessibilityRole="button"
             onPress={() => router.push('/routine/welcome-back')}
             className="mt-3.5 flex-row items-center gap-3.5 rounded-card p-4"
-            style={{ backgroundColor: colors.greige }}>
+            style={{ backgroundColor: colors.greige }}
+          >
             <View className="h-10 w-10 items-center justify-center rounded-full bg-paper-raised">
-              <View className="h-4 w-4 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+              <View
+                className="h-4 w-4 rounded-full"
+                style={{ backgroundColor: colors.clayBright }}
+              />
             </View>
             <View className="flex-1">
               <Text variant="body" className="font-sans-bold">
                 Welcome back
               </Text>
               <Text variant="bodySm" tone="muted" className="mt-0.5">
-                It&apos;s been a few days. That&apos;s okay. Pick up tonight; consistency over time is what counts.
+                It&apos;s been a few days. That&apos;s okay. Pick up tonight; consistency over time
+                is what counts.
               </Text>
             </View>
           </Pressable>
@@ -174,7 +208,11 @@ export default function StreakScreen() {
                 less
               </Text>
               {[HEAT[1], HEAT[2], HEAT[3]].map((c, i) => (
-                <View key={i} className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: c }} />
+                <View
+                  key={i}
+                  className="h-2.5 w-2.5 rounded-[3px]"
+                  style={{ backgroundColor: c }}
+                />
               ))}
               <Text variant="label" tone="muted" className="font-mono text-[10px]">
                 more

@@ -8,6 +8,13 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
+function expectNoRawBack(path: string) {
+  expect(
+    readAppRoute(path),
+    `${path} should use backOrReplace for direct-entry exits`,
+  ).not.toContain('router.back()');
+}
+
 describe('Pro-gated route contracts', () => {
   it('gates the full cycle route group, not only the week overview', () => {
     const layout = readAppRoute('cycle/_layout.tsx');
@@ -38,5 +45,25 @@ describe('Pro-gated route contracts', () => {
     expect(route).toContain('conflictCheckAccess');
     expect(route).toContain('recordFreeConflictCheckRuleId');
     expect(route).toContain('<ProGate feature="conflict_checks">');
+  });
+
+  it('keeps scheduler and routine exits safe for direct-entry Pro users', () => {
+    for (const route of [
+      'cycle/week.tsx',
+      'cycle/settings.tsx',
+      'cycle/procedure.tsx',
+      'cycle/recovery.tsx',
+      'cycle/why-tonight.tsx',
+      'cycle/disruption.tsx',
+      'cycle/phased-intro.tsx',
+      'routine/reorder.tsx',
+      'routine/ramp.tsx',
+      'routine/tolerance.tsx',
+      'routine/adaptation.tsx',
+      'routine/streak.tsx',
+      'routine/widgets.tsx',
+    ]) {
+      expectNoRawBack(route);
+    }
   });
 });

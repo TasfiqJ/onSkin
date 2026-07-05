@@ -11,6 +11,7 @@ import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
 import { shareCardUserMessage } from '@/lib/errors/userFacing';
 import { canShareConflictCard, phase7Flags } from '@/lib/launch/phase7';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 
 const CREATIVE_VARIANT = 'story-v1';
 
@@ -29,7 +30,9 @@ export default function ShareConflictScreen() {
   const [shareLink, setShareLink] = useState<ConflictShareLink | null>(null);
   const conflict = data?.conflicts.find((c) => c.rule.id === ruleId) ?? null;
 
-  if (!phase7Flags.shareCard) return <DeferredSurface surface="shareCard" />;
+  if (!phase7Flags.shareCard) {
+    return <DeferredSurface surface="shareCard" fallbackRoute={APP_SHELF_ROUTE} />;
+  }
 
   async function onShare() {
     if (!canShareConflictCard(conflict)) return;
@@ -42,7 +45,10 @@ export default function ShareConflictScreen() {
           creative_variant: CREATIVE_VARIANT,
           reason: 'public_link_unavailable',
         });
-        Alert.alert('Sharing is not ready', 'The public share link must be configured before this card can be exported.');
+        Alert.alert(
+          'Sharing is not ready',
+          'The public share link must be configured before this card can be exported.',
+        );
         return;
       }
 
@@ -96,7 +102,8 @@ export default function ShareConflictScreen() {
           <ConflictCard ref={cardRef} conflict={conflict} shareUrl={shareLink?.url} />
         ) : (
           <Text variant="body" tone="muted" className="text-center">
-            Nothing reviewed is shareable right now. Share cards unlock only for reviewed, non-safety shelf checks.
+            Nothing reviewed is shareable right now. Share cards unlock only for reviewed,
+            non-safety shelf checks.
           </Text>
         )}
       </View>
@@ -106,7 +113,11 @@ export default function ShareConflictScreen() {
           disabled={busy || !canShareConflictCard(conflict)}
           onPress={() => void onShare()}
         />
-        <Pressable accessibilityRole="button" className="items-center py-3" onPress={() => router.back()}>
+        <Pressable
+          accessibilityRole="button"
+          className="items-center py-3"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Done
           </Text>

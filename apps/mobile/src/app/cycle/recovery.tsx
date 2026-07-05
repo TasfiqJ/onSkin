@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 
 // Recovery mode (design screen 06, docs/05 §7). Auto de-escalation. Irritation or
 // a procedure → actives paused, barrier repair for ~7-10 days, ease back in. Calm,
@@ -16,7 +17,11 @@ export default function RecoveryScreen() {
     return (
       <Screen edges={['top', 'bottom']}>
         <View className="mt-2">
-          <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2">
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => backOrReplace(router)}
+            className="py-2"
+          >
             <Text className="font-sans-semibold">‹</Text>
           </Pressable>
         </View>
@@ -41,19 +46,30 @@ export default function RecoveryScreen() {
     <Screen edges={['top', 'bottom']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
         <View className="mt-2">
-          <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2">
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => backOrReplace(router)}
+            className="py-2"
+          >
             <Text className="font-sans-semibold">‹</Text>
           </Pressable>
         </View>
 
-        <View className="mt-1 flex-row items-center gap-2 self-start rounded-pill px-4 py-2" style={{ backgroundColor: '#E6ECE0' }}>
+        <View
+          className="mt-1 flex-row items-center gap-2 self-start rounded-pill px-4 py-2"
+          style={{ backgroundColor: '#E6ECE0' }}
+        >
           <View className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: '#4F7A4A' }} />
           <Text className="font-sans-bold text-[12.5px]" style={{ color: '#3F6A3A' }}>
             Recovery mode · day {rec.day} of {rec.days}
           </Text>
         </View>
 
-        <Text variant="title" className="mt-4 text-[32px] leading-[35px]" accessibilityRole="header">
+        <Text
+          variant="title"
+          className="mt-4 text-[32px] leading-[35px]"
+          accessibilityRole="header"
+        >
           We&apos;ve eased off for now.
         </Text>
         <Text variant="body" tone="muted" className="mt-2">
@@ -73,7 +89,14 @@ export default function RecoveryScreen() {
             </Text>
           </View>
           <View className="h-2 overflow-hidden rounded-pill" style={{ backgroundColor: '#EDE5D8' }}>
-            <View style={{ width: `${pct}%`, height: '100%', backgroundColor: '#4F7A4A', borderRadius: 4 }} />
+            <View
+              style={{
+                width: `${pct}%`,
+                height: '100%',
+                backgroundColor: '#4F7A4A',
+                borderRadius: 4,
+              }}
+            />
           </View>
           <View className="mt-2.5 flex-row justify-between">
             <Text variant="bodySm" tone="muted">
@@ -115,7 +138,7 @@ export default function RecoveryScreen() {
           label="Ease back in"
           onPress={async () => {
             await m.finishRecovery();
-            router.back();
+            backOrReplace(router);
           }}
         />
       </ScrollView>

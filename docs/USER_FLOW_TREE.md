@@ -344,6 +344,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open the same routes with an active Pro or reverse-trial entitlement.
   - Expected result: The intended Pro surface renders and remains usable.
   - Evidence: Screenshot of at least one unlocked route per feature group.
+- Branch: Pro direct-entry route exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: With an active Pro or reverse-trial entitlement, open scheduler and routine routes such as `/cycle/week`, `/cycle/why-tonight`, `/routine/reorder`, `/routine/tolerance`, and `/routine/widgets` directly, then use the visible Back, Done, Got it, Skip, Dismiss, or Not yet control.
+  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface with no navigation history.
+  - Evidence: Screenshot sequence and visible route snapshot.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
@@ -356,6 +362,162 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Inspect focusable controls and use keyboard activation on the paywall actions.
   - Expected result: Controls have roles, labels, and visible feedback without trapping focus.
   - Evidence: UI snapshot or accessibility notes.
+
+## Flow: Personalized Recommendations
+
+- Goal: A user can review independent For You recommendations, tune recommendation preferences, and escape stale/direct recommendation links without getting trapped.
+- Persona: Returning user deciding what to add, replace, or skip.
+- Entry state: User has completed onboarding or has seeded profile/shelf/routine state.
+- Start screen/URL/window: You tab, Today recommendation teaser, or direct recommendation routes.
+- Success state: Recommendations remain calm and explainable, and direct-entry recommendation screens recover to the correct parent surface.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web for route recovery; iOS and Android for native commerce/share surfaces.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/recommendations/`
+
+### Path A: For You Hub
+
+1. Action: Open `/recommendations`, inspect grouped suggestions or the "you're set" state, then open Preferences and return.
+   Expected result: The hub is advisory, not storefront-like, and preferences return to the For You hub.
+   Evidence: Screenshot sequence and visible route snapshot.
+
+### Branches
+
+- Branch: direct-entry recommendation exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/recommendations`, `/recommendations/preferences`, and a stale `/recommendations/[id]` route directly, then use the visible Back or Back to For you control.
+  - Expected result: The direct For You hub returns to the You tab; nested recommendation routes return to `/recommendations` instead of remaining on a no-history screen.
+  - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: stale recommendation detail
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open a recommendation detail ID that is no longer present after shelf/profile changes.
+  - Expected result: The app explains the suggestion is no longer current and provides a working Back to For you path.
+  - Evidence: Screenshot and route snapshot.
+- Branch: recommendation accept and dismiss
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open a real recommendation detail, dismiss it, then open another and accept it into manual add or conflict detail.
+  - Expected result: Dismissal persists, acceptance goes to the correct next step, and copy remains independent and claim-safe.
+  - Evidence: Screenshot sequence and local recommendation state.
+
+## Flow: Commerce Trust And Shoppable Routines
+
+- Goal: A user can inspect where-to-buy transparency, manage commerce consent, and browse shoppable routines without getting trapped on trust-critical direct-entry surfaces.
+- Persona: Returning user reviewing commerce independence before tapping a paid link or browsing a curated routine.
+- Entry state: User has completed onboarding; commerce feature flag may be enabled or deferred.
+- Start screen/URL/window: You tab, For You recommendation detail, stack list, stack detail, transparency page, consent sheet, or direct commerce routes.
+- Success state: Commerce remains secondary to recommendations, disclosures are visible, consent stays separate and revocable, and direct-entry commerce exits recover to the correct parent surface.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web for route recovery; iOS and Android for native outbound-link and modal behavior.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/commerce-routes/`
+
+### Path A: Transparency And Consent
+
+1. Action: Open the You tab commerce rows, open "How we stay honest", then return. Open a recommendation where-to-buy consent gate and choose Allow or Not now.
+   Expected result: The transparency page explains church-and-state commerce clearly; the consent gate is separate, calm, and dismisses back to the originating surface when there is navigation history.
+   Evidence: Screenshot sequence, route snapshot, and commerce-consent state.
+
+### Path B: Shoppable Routines
+
+1. Action: Open `/commerce/stacks`, open an available stack in development, tap "How this works", and return through the visible Back controls.
+   Expected result: The stack remains ordered by routine sequence, paid-link disclosure stays visible, transparency remains reachable, and Back returns through the stack hierarchy.
+   Evidence: Screenshot sequence and visible route snapshot.
+
+### Branches
+
+- Branch: direct-entry commerce exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/[slug]` directly, then use the visible Back, Dismiss, Allow, Not now, or scrim control.
+  - Expected result: Top-level commerce direct entries return to the You tab; stack details return to `/commerce/stacks`; deferred commerce routes also return to the You tab instead of a no-history dead end.
+  - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: unavailable stack
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/commerce/stack/[slug]` for a slug that is not currently shippable.
+  - Expected result: The app shows a calm unavailable state and a working Back path to `/commerce/stacks`.
+  - Evidence: Screenshot and route snapshot.
+- Branch: no commerce consent
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
+  - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state and can choose the shelf alternative.
+  - Evidence: Screenshot and local consent state.
+
+## Flow: Shelf Conflict Checks And Share Cards
+
+- Goal: A user can inspect conflict guidance and share reviewed conflict cards without getting stuck on direct-entry surfaces.
+- Persona: User checking whether two shelf products can be used together, or sharing a reviewed shelf check.
+- Entry state: User has completed onboarding or has seeded local shelf state.
+- Start screen/URL/window: Shelf tab or direct conflict/share routes.
+- Success state: Conflict guidance remains claim-safe, choices are saved when available, and direct-entry exits recover to the Shelf tab.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web for route recovery; iOS and Android for native share sheet behavior.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/conflict-routes/`
+
+### Path A: Conflict Detail
+
+1. Action: Open a real `/conflict/[ruleId]` route from a shelf conflict, review evidence/severity copy, choose Keep alternate nights or Use together anyway, and return to Shelf.
+   Expected result: The conflict copy is calm and claim-safe, the user choice persists, and the app does not re-nag immediately.
+   Evidence: Screenshot sequence and local choice state.
+
+### Branches
+
+- Branch: direct-entry conflict and share exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` directly, then use the visible Close, Done, Keep, or Use together control.
+  - Expected result: The user returns to the Shelf tab instead of remaining on a direct-entry conflict or share-card screen with no navigation history.
+  - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: missing or unshareable conflict
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open conflict and share-card routes for a rule that is not present in the current shelf.
+  - Expected result: The app shows a calm unavailable state and a working escape path.
+  - Evidence: Screenshot and route snapshot.
+- Branch: native share unavailable
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Attempt to export a reviewed share card on a surface without native sharing support.
+  - Expected result: The app explains sharing is unavailable without losing the user or exposing sensitive shelf details.
+  - Evidence: Screenshot or platform log.
+
+## Flow: Settings Account Controls
+
+- Goal: A user can manage subscription and reminder settings without getting trapped when settings routes are opened directly.
+- Persona: Returning user reviewing account or reminder preferences.
+- Entry state: User has completed onboarding or has seeded local account/reminder state.
+- Start screen/URL/window: You tab or direct settings routes.
+- Success state: Settings changes and exits are clear, and direct-entry settings screens recover to the You tab.
+- Priority: Important
+- Automate later: Yes
+- Surface: Expo web for route recovery; iOS and Android for native subscription and notification settings behavior.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/settings/`
+
+### Path A: Subscription Settings
+
+1. Action: Open `/settings/subscription`, review plan, Restore, Terms, Privacy, and Manage subscription controls.
+   Expected result: The account state is understandable, cancellation/restore paths are honest, and no unsupported billing action is implied.
+   Evidence: Screenshot and visible-text snapshot.
+
+### Branches
+
+- Branch: direct-entry settings exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/settings/subscription`, `/settings/notifications`, and `/settings/timing` directly, then use the visible Back control.
+  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history.
+  - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: reminder timing and discretion
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open notification settings, toggle reminder tiers, edit AM/PM timing and quiet hours, then return to settings.
+  - Expected result: User-set times and discreet lock-screen copy remain clear and calm, with no notification-pressure copy.
+  - Evidence: Screenshot sequence and local preference snapshot.
 
 ## Flow: Ask OnSkin Deterministic Advisor
 

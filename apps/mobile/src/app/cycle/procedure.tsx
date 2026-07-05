@@ -5,6 +5,7 @@ import { Pressable, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // Post-procedure recovery (design screen 05, docs/05 §6.4/§7). After a peel or
@@ -20,7 +21,11 @@ export default function ProcedureScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2">
-        <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2">
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => backOrReplace(router)}
+          className="py-2"
+        >
           <Text className="font-sans-semibold">‹</Text>
         </Pressable>
       </View>
@@ -32,8 +37,8 @@ export default function ProcedureScreen() {
         Let&apos;s give your skin a few days.
       </Text>
       <Text variant="body" tone="muted" className="mt-2">
-        After a peel or facial, actives can be too much. We&apos;ll pause them and keep things simple
-       . Then ease back in.
+        After a peel or facial, actives can be too much. We&apos;ll pause them and keep things
+        simple . Then ease back in.
       </Text>
 
       <Text variant="eyebrow" tone="clay" className="mb-2.5 mt-6">
@@ -54,7 +59,8 @@ export default function ProcedureScreen() {
               className={cn(
                 'flex-1 items-center rounded-[14px] bg-paper-raised py-3.5',
                 sel ? 'border-2 border-clay' : 'border border-hairline-strong',
-              )}>
+              )}
+            >
               <Text className="font-sans-bold text-[18px]" tone={sel ? 'clay' : 'ink'}>
                 {d}
               </Text>
@@ -73,7 +79,10 @@ export default function ProcedureScreen() {
         <View className="gap-2.5">
           {BARRIER_BASICS.map((b) => (
             <View key={b} className="flex-row items-center gap-2.5">
-              <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: '#4F7A4A' }}>
+              <View
+                className="h-[18px] w-[18px] items-center justify-center rounded-full"
+                style={{ backgroundColor: '#4F7A4A' }}
+              >
                 <Text className="text-[10px]" style={{ color: '#E6ECE0' }}>
                   ✓
                 </Text>

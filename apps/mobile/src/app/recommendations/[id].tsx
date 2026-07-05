@@ -13,6 +13,7 @@ import { dismissRecommendation } from '@/features/recommendations/store';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
+import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -39,7 +40,10 @@ function HowRow({ k, value, accent }: { k: string; value: string; accent?: strin
       <Text className="font-mono text-[10px]" tone="muted" style={{ width: 64 }}>
         {k}
       </Text>
-      <Text className="flex-1 text-[12.5px]" style={{ color: accent ?? colors.inkSoft, lineHeight: 18 }}>
+      <Text
+        className="flex-1 text-[12.5px]"
+        style={{ color: accent ?? colors.inkSoft, lineHeight: 18 }}
+      >
         {value}
       </Text>
     </View>
@@ -55,10 +59,10 @@ function Body({ rec }: { rec: Recommendation }) {
     track('recommendation_dismissed', { trigger: rec.trigger, type: rec.productType });
     await dismissRecommendation(rec.id);
     await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
-    router.back();
+    backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
   };
 
-  // Where-to-buy is for real catalog types (gap / goal / better-fit / completion) , 
+  // Where-to-buy is for real catalog types (gap / goal / better-fit / completion) ,
   // the shelf-anchored replacement & conflict triggers route elsewhere (docs/10 §3).
   const showWhereToBuy = rec.trigger !== 'replacement' && rec.trigger !== 'conflict';
 
@@ -74,12 +78,17 @@ function Body({ rec }: { rec: Recommendation }) {
     // the recommended type's category so the form is pre-filled, not blank/stale.
     const recType = recTypeByKey(rec.productType);
     const presetCategory = recType ? ROLE_TO_CATEGORY[recType.role] : undefined;
-    router.push(presetCategory ? { pathname: '/shelf/manual', params: { presetCategory } } : '/shelf/manual');
+    router.push(
+      presetCategory ? { pathname: '/shelf/manual', params: { presetCategory } } : '/shelf/manual',
+    );
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-      <View className="rounded-[22px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      <View
+        className="rounded-[22px] bg-paper-raised p-5"
+        style={{ borderWidth: 1, borderColor: colors.hairline }}
+      >
         {/* WHAT */}
         <Text variant="label" tone="muted" className="mb-1.5">
           {REC_COPY.card.whatLabel.toUpperCase()}
@@ -90,10 +99,15 @@ function Body({ rec }: { rec: Recommendation }) {
         {rec.example ? (
           <View
             className="mt-3 flex-row items-center gap-3 rounded-xl bg-paper p-2.5"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}>
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
             <View
               className="h-9 w-[26px] rounded"
-              style={{ backgroundColor: colors.greige, borderWidth: 1, borderColor: colors.hairline }}
+              style={{
+                backgroundColor: colors.greige,
+                borderWidth: 1,
+                borderColor: colors.hairline,
+              }}
             />
             <View className="flex-1">
               <Text variant="bodySm" className="font-sans-medium text-[12.5px]">
@@ -123,7 +137,9 @@ function Body({ rec }: { rec: Recommendation }) {
           <HowRow k={REC_COPY.howKeys.gap} value={rec.how.gap} />
           <HowRow k={REC_COPY.howKeys.evidence} value={rec.how.evidence} accent={colors.sageBody} />
           <HowRow k={REC_COPY.howKeys.fit} value={rec.how.fit} />
-          {rec.how.caveat ? <HowRow k={REC_COPY.howKeys.caveat} value={rec.how.caveat} accent="#8A6A55" /> : null}
+          {rec.how.caveat ? (
+            <HowRow k={REC_COPY.howKeys.caveat} value={rec.how.caveat} accent="#8A6A55" />
+          ) : null}
         </View>
 
         {/* Where to buy (docs/10 §3). A quiet, consent-gated, FTC-disclosed affordance
@@ -137,7 +153,8 @@ function Body({ rec }: { rec: Recommendation }) {
           accessibilityRole="button"
           onPress={accept}
           className="h-[50px] flex-1 items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}>
+          style={{ backgroundColor: colors.clay }}
+        >
           <Text className="font-sans-semibold text-[15px]" style={{ color: colors.paper }}>
             {isConflict ? 'See the clash' : REC_COPY.card.addToShelf}
           </Text>
@@ -146,7 +163,8 @@ function Body({ rec }: { rec: Recommendation }) {
           accessibilityRole="button"
           onPress={dismiss}
           className="h-[50px] items-center justify-center rounded-pill px-6"
-          style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}>
+          style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}
+        >
           <Text className="font-sans-semibold text-[15px]" tone="muted">
             {REC_COPY.card.dismiss}
           </Text>
@@ -170,9 +188,10 @@ export default function RecommendationDetail() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
         <Text variant="body" className="font-sans-semibold" tone="muted">
@@ -191,7 +210,11 @@ export default function RecommendationDetail() {
           <Text variant="body" tone="muted" className="text-center">
             This suggestion isn’t current anymore. Your routine may have changed.
           </Text>
-          <Pressable accessibilityRole="button" className="mt-4 py-2" onPress={() => router.back()}>
+          <Pressable
+            accessibilityRole="button"
+            className="mt-4 py-2"
+            onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
+          >
             <Text className="font-sans-semibold" tone="muted">
               Back to For you
             </Text>

@@ -25,6 +25,7 @@ import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
@@ -159,7 +160,7 @@ export default function ConflictSheet() {
   const conflict = data?.conflicts.find((c) => c.rule.id === ruleId);
   const conflictRuleId = conflict?.rule.id;
 
-  const dismiss = () => router.back();
+  const dismiss = () => backOrReplace(router, APP_SHELF_ROUTE);
   const isSafety = conflict?.rule.interactionType === 'safety';
 
   // The safety class renders on a calm night sheet (design frame 06); everything

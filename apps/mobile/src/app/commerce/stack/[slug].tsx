@@ -9,6 +9,7 @@ import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
 import { buildClickToken, recordClick } from '@/features/commerce/store';
 import { track } from '@/lib/analytics/track';
+import { APP_COMMERCE_STACKS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -36,10 +37,17 @@ export default function StackDetailScreen() {
     }
     track('where_to_buy_clicked', { product_type: item.productType, source: 'stack' });
     const token = buildClickToken();
-    await recordClick({ clickToken: token, productType: item.productType, source: 'none', consented: true });
+    await recordClick({
+      clickToken: token,
+      productType: item.productType,
+      source: 'none',
+      consented: true,
+    });
     // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Resolve + open the real retailer link here
     // (opaque token only). Until then, the honest stub.
-    Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [{ text: 'OK' }]);
+    Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [
+      { text: 'OK' },
+    ]);
   };
 
   return (
@@ -48,9 +56,10 @@ export default function StackDetailScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router, APP_COMMERCE_STACKS_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
       </View>
@@ -65,9 +74,22 @@ export default function StackDetailScreen() {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 pt-2">
           <View
             className="mb-3.5 flex-row items-center gap-1.5 self-start rounded-pill px-3 py-1.5"
-            style={{ backgroundColor: stack.curatorKind === 'derm' ? colors.sageTint : colors.clayTint }}>
-            <Text style={{ color: stack.curatorKind === 'derm' ? colors.sage : colors.clay, fontSize: 11 }}>✦</Text>
-            <Text className="font-mono text-[10px]" style={{ color: stack.curatorKind === 'derm' ? colors.sageDeep : colors.clayDeep }}>
+            style={{
+              backgroundColor: stack.curatorKind === 'derm' ? colors.sageTint : colors.clayTint,
+            }}
+          >
+            <Text
+              style={{
+                color: stack.curatorKind === 'derm' ? colors.sage : colors.clay,
+                fontSize: 11,
+              }}
+            >
+              ✦
+            </Text>
+            <Text
+              className="font-mono text-[10px]"
+              style={{ color: stack.curatorKind === 'derm' ? colors.sageDeep : colors.clayDeep }}
+            >
               {COMMERCE_COPY.stack.chipFor(stack.curatorKind)}
             </Text>
           </View>
@@ -87,13 +109,18 @@ export default function StackDetailScreen() {
                 accessibilityLabel={`${item.label}, ${item.roleLabel}, paid link`}
                 onPress={() => void tapItem(item)}
                 className="flex-row items-center gap-3 rounded-2xl bg-paper-raised p-3.5"
-                style={{ borderWidth: 1, borderColor: colors.hairline }}>
+                style={{ borderWidth: 1, borderColor: colors.hairline }}
+              >
                 <Text className="font-mono text-[11px]" tone="muted" style={{ width: 14 }}>
                   {item.position}
                 </Text>
                 <View
                   className="h-[38px] w-8 rounded"
-                  style={{ backgroundColor: colors.greige, borderWidth: 1, borderColor: colors.hairline }}
+                  style={{
+                    backgroundColor: colors.greige,
+                    borderWidth: 1,
+                    borderColor: colors.hairline,
+                  }}
                 />
                 <View className="flex-1">
                   <Text variant="bodySm" className="font-sans-bold text-[13.5px]">
@@ -106,7 +133,15 @@ export default function StackDetailScreen() {
                 <View className="flex-row items-center gap-1.5">
                   <Text
                     className="font-mono text-[9px]"
-                    style={{ color: colors.muted, backgroundColor: '#F0EBE2', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 5, overflow: 'hidden' }}>
+                    style={{
+                      color: colors.muted,
+                      backgroundColor: '#F0EBE2',
+                      paddingHorizontal: 6,
+                      paddingVertical: 2,
+                      borderRadius: 5,
+                      overflow: 'hidden',
+                    }}
+                  >
                     {COMMERCE_COPY.stack.paidChip}
                   </Text>
                   <Text style={{ color: colors.clay, fontSize: 12 }}>↗</Text>
@@ -119,7 +154,12 @@ export default function StackDetailScreen() {
           <Text className="mt-3.5 text-[11px]" tone="muted" style={{ lineHeight: 16 }}>
             {COMMERCE_COPY.stack.disclosure}
           </Text>
-          <Pressable accessibilityRole="button" onPress={() => router.push('/commerce/transparency')} className="mt-2" hitSlop={6}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/commerce/transparency')}
+            className="mt-2"
+            hitSlop={6}
+          >
             <Text className="font-sans-semibold text-[12px]" style={{ color: colors.clay }}>
               {COMMERCE_COPY.whereToBuy.howThisWorks} →
             </Text>

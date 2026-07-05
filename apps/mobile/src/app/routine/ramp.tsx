@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useRamp } from '@/features/routine/useRamp';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 03 · Retinoid ramp. Offer-only step-up (design screen 03, docs/03 §4). The app only
@@ -43,10 +44,13 @@ export default function RampScreen() {
         </Text>
 
         {!item && !isLoading ? (
-          <View className="mt-6 rounded-[22px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          <View
+            className="mt-6 rounded-[22px] bg-paper-raised p-5"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
             <Text variant="body" tone="muted" className="text-[14px]">
-              No actives are ramping yet. Add a retinoid or an acid to your shelf and we&apos;ll pace
-              it gently.
+              No actives are ramping yet. Add a retinoid or an acid to your shelf and we&apos;ll
+              pace it gently.
             </Text>
           </View>
         ) : null}
@@ -54,7 +58,10 @@ export default function RampScreen() {
         {item && state ? (
           <>
             {/* Ramp chart card (illustrative nights-per-week ramp toward the real target) */}
-            <View className="mt-6 rounded-[22px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+            <View
+              className="mt-6 rounded-[22px] bg-paper-raised p-5"
+              style={{ borderWidth: 1, borderColor: colors.hairline }}
+            >
               <View className="mb-4 flex-row items-center justify-between">
                 <Text variant="body" className="font-sans-bold text-[14px]">
                   Nights per week
@@ -71,12 +78,19 @@ export default function RampScreen() {
                       style={{
                         height: b.height,
                         backgroundColor: b.striped ? '#F1ECE3' : b.color,
-                        ...(b.striped ? { borderWidth: 1.5, borderColor: 'rgba(165,105,75,0.4)', borderStyle: 'dashed' } : {}),
+                        ...(b.striped
+                          ? {
+                              borderWidth: 1.5,
+                              borderColor: 'rgba(165,105,75,0.4)',
+                              borderStyle: 'dashed',
+                            }
+                          : {}),
                       }}
                     />
                     <Text
                       className="mt-1.5 font-mono text-[10px]"
-                      style={{ color: b.accent ? colors.clay : colors.mutedFaint }}>
+                      style={{ color: b.accent ? colors.clay : colors.mutedFaint }}
+                    >
                       {b.label}
                     </Text>
                   </View>
@@ -101,9 +115,13 @@ export default function RampScreen() {
                     style={{ backgroundColor: colors.clay }}
                     onPress={async () => {
                       await acceptStepUp(item.productId);
-                      router.back();
-                    }}>
-                    <Text className="font-sans-semibold text-[14.5px]" style={{ color: colors.paper }}>
+                      backOrReplace(router);
+                    }}
+                  >
+                    <Text
+                      className="font-sans-semibold text-[14.5px]"
+                      style={{ color: colors.paper }}
+                    >
                       Add a night
                     </Text>
                   </Pressable>
@@ -111,8 +129,12 @@ export default function RampScreen() {
                     accessibilityRole="button"
                     className="h-[46px] flex-1 items-center justify-center rounded-xl"
                     style={{ backgroundColor: 'rgba(250,247,242,0.1)' }}
-                    onPress={() => router.back()}>
-                    <Text className="font-sans-semibold text-[14.5px]" style={{ color: colors.paper }}>
+                    onPress={() => backOrReplace(router)}
+                  >
+                    <Text
+                      className="font-sans-semibold text-[14.5px]"
+                      style={{ color: colors.paper }}
+                    >
                       Not yet
                     </Text>
                   </Pressable>
@@ -120,7 +142,10 @@ export default function RampScreen() {
               </View>
             ) : (
               /* Calm status when no step-up is on offer (still building, or eased off). */
-              <View className="mt-4 rounded-[22px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+              <View
+                className="mt-4 rounded-[22px] bg-paper-raised p-5"
+                style={{ borderWidth: 1, borderColor: colors.hairline }}
+              >
                 <Text variant="body" className="font-sans-medium text-[14.5px]">
                   {paused
                     ? 'Easing off after some irritation. We will rebuild gently.'

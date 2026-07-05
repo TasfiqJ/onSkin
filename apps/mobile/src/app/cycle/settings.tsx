@@ -6,6 +6,7 @@ import { Screen, Text } from '@/components/ui';
 import { slotLabel } from '@/features/scheduler/projection';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // Cycle settings (design screen 03, docs/05 §6.2). Choose the variant, see the
@@ -23,14 +24,18 @@ export default function CycleSettingsScreen() {
   const m = useCycleMutations();
   const cycle = data?.cycle;
   const selected: CycleVariant | null =
-    data?.config.variant && data.config.variant !== 'auto' ? data.config.variant : (cycle?.variant ?? null);
+    data?.config.variant && data.config.variant !== 'auto'
+      ? data.config.variant
+      : (cycle?.variant ?? null);
 
-  const potentNights = (cycle?.nights ?? []).filter((n) => n.slot === 'exfoliate' || n.slot === 'retinoid');
+  const potentNights = (cycle?.nights ?? []).filter(
+    (n) => n.slot === 'exfoliate' || n.slot === 'retinoid',
+  );
 
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => router.back()}>
+        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router)}>
           Done
         </Text>
         <Text variant="body" className="font-sans-semibold">
@@ -58,7 +63,8 @@ export default function CycleSettingsScreen() {
                 className={cn(
                   'flex-1 items-center rounded-[14px] bg-paper-raised px-2 py-3',
                   isSel ? 'border-2 border-clay' : 'border border-hairline-strong',
-                )}>
+                )}
+              >
                 <Text className="font-sans-bold text-[13.5px]" tone={isSel ? 'ink' : 'muted'}>
                   {v.label}
                 </Text>
@@ -79,11 +85,16 @@ export default function CycleSettingsScreen() {
               {potentNights.map((n) => (
                 <View
                   key={n.index}
-                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised px-3.5 py-3">
+                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised px-3.5 py-3"
+                >
                   <View
                     className="rounded-md px-2 py-1"
-                    style={{ backgroundColor: n.slot === 'retinoid' ? '#A5694B' : '#F3E7DF' }}>
-                    <Text className="font-mono text-[11px]" style={{ color: n.slot === 'retinoid' ? '#FAF7F2' : '#8A5239' }}>
+                    style={{ backgroundColor: n.slot === 'retinoid' ? '#A5694B' : '#F3E7DF' }}
+                  >
+                    <Text
+                      className="font-mono text-[11px]"
+                      style={{ color: n.slot === 'retinoid' ? '#FAF7F2' : '#8A5239' }}
+                    >
                       N{n.index}
                     </Text>
                   </View>
@@ -121,7 +132,8 @@ export default function CycleSettingsScreen() {
           </>
         ) : (
           <Text variant="bodySm" tone="muted" className="mt-6">
-            Add a retinoid or an exfoliating acid to your shelf and we&apos;ll build your cycle here.
+            Add a retinoid or an exfoliating acid to your shelf and we&apos;ll build your cycle
+            here.
           </Text>
         )}
       </ScrollView>

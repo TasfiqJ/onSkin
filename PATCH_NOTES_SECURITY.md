@@ -394,6 +394,13 @@
 - Why safe: Deep links, web refreshes, and cold route entries should not trap users on consent, deferred, shelf detail, progress capture, or paywall screens with a Back/Close action that cannot go anywhere.
 - Regression: `safeBack.test.ts` and `dismissPaywall.test.ts` prove history-preserving and no-history replacement behavior. `useToday.test.ts` also covers removal of the hard-coded Today header clock placeholder.
 
+## Extended direct-entry route recovery guard
+
+- Files: `apps/mobile/src/lib/navigation/safeBack.ts`, `apps/mobile/src/lib/navigation/safeBack.test.ts`, `apps/mobile/src/features/subscription/proGatedRoutes.test.ts`, `apps/mobile/src/features/commerce/commerceRoutes.test.ts`, `apps/mobile/src/features/intelligence/conflictRoutes.test.ts`, `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`, `apps/mobile/src/features/settings/settingsRoutes.test.ts`, scheduler, routine, commerce, conflict/share-card, recommendation, and settings route screens, `apps/mobile/src/components/launch/DeferredSurface.tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: Added the You, recommendations, and commerce-stacks routes as safe fallbacks and replaced raw history-back exits across Pro scheduler, routine, commerce, conflict detail/share-card, recommendation, and settings surfaces. Deferred commerce and share-card screens now recover to their owning tabs when those surfaces are not enabled.
+- Why safe: These screens can expose health-adjacent routine timing, product conflict decisions, commerce consent/disclosure context, subscription state, and notification preferences. Direct links, app relaunches, or browser refreshes should not leave users stuck on a sensitive or gated surface with a no-op Back/Done control.
+- Regression: Route-contract tests now fail if scheduler/routine, commerce, conflict/share-card, recommendation, or settings routes reintroduce `router.back()` exits or lose their Commerce/Shelf/Recommendations/You fallback contracts. Community, trend, and the shared `Sheet` default remain tracked follow-up work.
+
 ## Public growth attribution sanitizer parity
 
 - Files: `apps/mobile/src/lib/growth/attribution.ts`, `apps/mobile/src/lib/growth/attribution.test.ts`, `supabase/functions/growth-event/index.ts`, `supabase/functions/waitlist/index.ts`, `scripts/phase9/edge-functions-check.mjs`.

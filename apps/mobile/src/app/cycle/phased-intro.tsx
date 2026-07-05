@@ -3,6 +3,7 @@ import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 
 // Phased introduction (design screen 07, docs/05 §4). Don't start every active at
 // once. A new active is staged in next, on its own night, so any reaction is
@@ -30,15 +31,26 @@ function Step({
               ? { backgroundColor: '#A5694B' }
               : state === 'next'
                 ? { backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#A5694B' }
-                : { backgroundColor: '#FFFFFF', borderWidth: 1.5, borderColor: 'rgba(32,27,21,0.18)' }
-          }>
+                : {
+                    backgroundColor: '#FFFFFF',
+                    borderWidth: 1.5,
+                    borderColor: 'rgba(32,27,21,0.18)',
+                  }
+          }
+        >
           {state === 'done' ? <Text className="text-[11px] text-paper">✓</Text> : null}
           {state === 'next' ? <View className="h-[7px] w-[7px] rounded-full bg-clay" /> : null}
         </View>
-        {!last ? <View className="my-1 w-[2px] flex-1 bg-greige-deep" style={{ minHeight: 24 }} /> : null}
+        {!last ? (
+          <View className="my-1 w-[2px] flex-1 bg-greige-deep" style={{ minHeight: 24 }} />
+        ) : null}
       </View>
       <View className="pb-4">
-        <Text variant="body" className="font-sans-bold" tone={state === 'pending' ? 'muted' : 'ink'}>
+        <Text
+          variant="body"
+          className="font-sans-bold"
+          tone={state === 'pending' ? 'muted' : 'ink'}
+        >
           {title}
         </Text>
         <Text variant="bodySm" tone="muted">
@@ -61,7 +73,7 @@ export default function PhasedIntroScreen() {
   // so the next orchestration brings them straight into the cycle.
   async function addNow() {
     await Promise.all(stagedIds.map((id) => overrideStaging(id)));
-    router.back();
+    backOrReplace(router);
   }
 
   return (
@@ -73,8 +85,11 @@ export default function PhasedIntroScreen() {
         Let&apos;s not start everything at once.
       </Text>
       <Text variant="body" tone="muted" className="mt-3">
-        You added {newName}. We&apos;ll bring it in <Text variant="body" className="font-sans-semibold">next week</Text>,
-        once your routine settles. So if anything reacts, you&apos;ll know what caused it.
+        You added {newName}. We&apos;ll bring it in{' '}
+        <Text variant="body" className="font-sans-semibold">
+          next week
+        </Text>
+        , once your routine settles. So if anything reacts, you&apos;ll know what caused it.
       </Text>
 
       <View className="mt-6">
@@ -83,14 +98,15 @@ export default function PhasedIntroScreen() {
         <Step state="pending" title="Then. Your full cycle" sub="Both, safely alternated" last />
       </View>
 
-      <Button label="Sounds good" onPress={() => router.back()} />
+      <Button label="Sounds good" onPress={() => backOrReplace(router)} />
       <View className="items-center">
         <Text
           variant="bodySm"
           tone="muted"
           className="py-3 font-sans-semibold"
           accessibilityRole="button"
-          onPress={() => void addNow()}>
+          onPress={() => void addNow()}
+        >
           Add it now anyway
         </Text>
       </View>

@@ -4,6 +4,7 @@ import { Platform, Pressable, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { cn } from '@/lib/cn';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 02 · Sequencing. Drag reorder + non-blocking nudge (design screen 02, docs/03 §7).
@@ -43,7 +44,7 @@ export default function ReorderScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Pressable accessibilityRole="button" onPress={() => router.back()}>
+        <Pressable accessibilityRole="button" onPress={() => backOrReplace(router)}>
           <Text variant="body" tone="muted" className="font-sans-semibold text-[15px]">
             Done
           </Text>
@@ -51,7 +52,7 @@ export default function ReorderScreen() {
         <Text variant="body" className="font-sans-bold text-[15px]">
           Edit morning
         </Text>
-        <Pressable accessibilityRole="button" onPress={() => router.back()}>
+        <Pressable accessibilityRole="button" onPress={() => backOrReplace(router)}>
           <Text variant="body" tone="clay" className="font-sans-semibold text-[15px]">
             Save
           </Text>

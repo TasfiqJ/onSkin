@@ -4,10 +4,16 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
-import { BUDGET_LABEL, FORMAT_LABEL, REC_COPY, VALUES_LABEL } from '@/features/recommendations/copy';
+import {
+  BUDGET_LABEL,
+  FORMAT_LABEL,
+  REC_COPY,
+  VALUES_LABEL,
+} from '@/features/recommendations/copy';
 import { DEFAULT_PREFERENCES, type RecPreferences } from '@/features/recommendations/preferences';
 import { loadPreferences, savePreferences } from '@/features/recommendations/store';
 import { track } from '@/lib/analytics/track';
+import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -20,7 +26,15 @@ import { colors } from '@/theme/tokens';
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
 const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
 
-function Toggle({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
+function Toggle({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -31,8 +45,12 @@ function Toggle({ label, active, onPress }: { label: string; active: boolean; on
         backgroundColor: active ? colors.ink : colors.paperRaised,
         borderWidth: 1,
         borderColor: active ? colors.ink : colors.hairlineStrong,
-      }}>
-      <Text className="font-sans-medium text-[13.5px]" style={{ color: active ? colors.paper : colors.inkSoft }}>
+      }}
+    >
+      <Text
+        className="font-sans-medium text-[13.5px]"
+        style={{ color: active ? colors.paper : colors.inkSoft }}
+      >
         {label}
       </Text>
     </Pressable>
@@ -54,10 +72,16 @@ export default function PreferencesScreen() {
   };
 
   const toggleValue = (v: ValuesFilter) =>
-    commit({ ...p, values: p.values.includes(v) ? p.values.filter((x) => x !== v) : [...p.values, v] });
+    commit({
+      ...p,
+      values: p.values.includes(v) ? p.values.filter((x) => x !== v) : [...p.values, v],
+    });
   const setBudget = (b: BudgetBand) => commit({ ...p, budget: p.budget === b ? null : b });
   const toggleFormat = (f: string) =>
-    commit({ ...p, formats: p.formats.includes(f) ? p.formats.filter((x) => x !== f) : [...p.formats, f] });
+    commit({
+      ...p,
+      formats: p.formats.includes(f) ? p.formats.filter((x) => x !== f) : [...p.formats, f],
+    });
 
   return (
     <Screen edges={['top']}>
@@ -65,9 +89,10 @@ export default function PreferencesScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
         <Text variant="body" className="font-sans-semibold" tone="muted">
@@ -88,7 +113,12 @@ export default function PreferencesScreen() {
         </Text>
         <View className="flex-row flex-wrap gap-2">
           {VALUES_FILTERS.map((v) => (
-            <Toggle key={v} label={VALUES_LABEL[v] ?? v} active={p.values.includes(v)} onPress={() => toggleValue(v)} />
+            <Toggle
+              key={v}
+              label={VALUES_LABEL[v] ?? v}
+              active={p.values.includes(v)}
+              onPress={() => toggleValue(v)}
+            />
           ))}
         </View>
 
@@ -97,7 +127,12 @@ export default function PreferencesScreen() {
         </Text>
         <View className="flex-row flex-wrap gap-2">
           {BUDGETS.map((b) => (
-            <Toggle key={b} label={BUDGET_LABEL[b] ?? b} active={p.budget === b} onPress={() => setBudget(b)} />
+            <Toggle
+              key={b}
+              label={BUDGET_LABEL[b] ?? b}
+              active={p.budget === b}
+              onPress={() => setBudget(b)}
+            />
           ))}
         </View>
 
@@ -106,7 +141,12 @@ export default function PreferencesScreen() {
         </Text>
         <View className="flex-row flex-wrap gap-2">
           {FORMATS.map((f) => (
-            <Toggle key={f} label={FORMAT_LABEL[f] ?? f} active={p.formats.includes(f)} onPress={() => toggleFormat(f)} />
+            <Toggle
+              key={f}
+              label={FORMAT_LABEL[f] ?? f}
+              active={p.formats.includes(f)}
+              onPress={() => toggleFormat(f)}
+            />
           ))}
         </View>
 

@@ -6,6 +6,7 @@ import { Text } from '@/components/ui';
 import { withProGate } from '@/features/subscription/ProGate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle, type CycleData } from '@/features/scheduler/useCycle';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -23,7 +24,11 @@ function WeekScreen() {
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-7 pb-10">
         <View className="mt-2 flex-row items-center justify-between">
-          <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2 pr-3">
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => backOrReplace(router)}
+            className="py-2 pr-3"
+          >
             <Text className="font-sans-semibold" tone="inverseMuted">
               ‹
             </Text>
@@ -33,7 +38,8 @@ function WeekScreen() {
             onPress={() => {
               haptics.select();
               router.push('/cycle/settings');
-            }}>
+            }}
+          >
             <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
               Settings
             </Text>
@@ -43,12 +49,20 @@ function WeekScreen() {
         <Text variant="label" tone="inverseMuted" className="mt-1 uppercase">
           Your cycle · {variantLabel}
         </Text>
-        <Text variant="title" tone="inverse" className="mt-1 text-[34px] leading-[38px]" accessibilityRole="header">
+        <Text
+          variant="title"
+          tone="inverse"
+          className="mt-1 text-[34px] leading-[38px]"
+          accessibilityRole="header"
+        >
           This week, by night.
         </Text>
 
         {data?.paused ? (
-          <Banner text="Your cycle is paused. Resume whenever you're ready." onPress={() => router.push('/cycle/disruption')} />
+          <Banner
+            text="Your cycle is paused. Resume whenever you're ready."
+            onPress={() => router.push('/cycle/disruption')}
+          />
         ) : data?.recovery.active ? (
           <Banner
             text={`Recovery mode · day ${data.recovery.day} of ${data.recovery.days}. Barrier support only.`}
@@ -57,7 +71,10 @@ function WeekScreen() {
         ) : null}
 
         {/* Stable AM block */}
-        <View className="mt-4 flex-row items-center gap-3 rounded-2xl px-4 py-3.5" style={{ backgroundColor: colors.nightSurface }}>
+        <View
+          className="mt-4 flex-row items-center gap-3 rounded-2xl px-4 py-3.5"
+          style={{ backgroundColor: colors.nightSurface }}
+        >
           <Text variant="label" tone="inverseMuted" className="w-12">
             EVERY AM
           </Text>
@@ -77,7 +94,8 @@ function WeekScreen() {
             <View className="gap-2">
               {data!.weekAhead.map((p, i) => {
                 const tonight = i === 0;
-                const isNextAcid = p.dateISO === data!.nextAcidNight && p.night.slot === 'exfoliate';
+                const isNextAcid =
+                  p.dateISO === data!.nextAcidNight && p.night.slot === 'exfoliate';
                 return (
                   <Pressable
                     key={p.dateISO}
@@ -90,30 +108,47 @@ function WeekScreen() {
                     className="flex-row items-center gap-3.5 rounded-2xl px-4 py-3.5"
                     style={
                       tonight
-                        ? { backgroundColor: 'rgba(217,161,131,0.12)', borderWidth: 1.5, borderColor: 'rgba(217,161,131,0.4)' }
+                        ? {
+                            backgroundColor: 'rgba(217,161,131,0.12)',
+                            borderWidth: 1.5,
+                            borderColor: 'rgba(217,161,131,0.4)',
+                          }
                         : { backgroundColor: colors.nightSurface }
-                    }>
+                    }
+                  >
                     <Text
                       className="w-[30px] font-mono text-[12px]"
-                      style={{ color: tonight ? colors.clayBright : 'rgba(244,239,231,0.45)' }}>
+                      style={{ color: tonight ? colors.clayBright : 'rgba(244,239,231,0.45)' }}
+                    >
                       N{i + 1}
                     </Text>
                     <View className="flex-1">
                       <Text className="font-sans-bold text-[15px]" style={{ color: colors.cream }}>
                         {slotLabel(p.night.slot)}
-                        {tonight ? <Text style={{ color: colors.clayBright, fontWeight: '500' }}> · tonight</Text> : null}
+                        {tonight ? (
+                          <Text style={{ color: colors.clayBright, fontWeight: '500' }}>
+                            {' '}
+                            · tonight
+                          </Text>
+                        ) : null}
                         {isNextAcid && !tonight ? (
                           <Text className="text-[11px]" style={{ color: colors.clayBright }}>
                             {'  '}next acid night
                           </Text>
                         ) : null}
                       </Text>
-                      <Text className="mt-0.5 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
+                      <Text
+                        className="mt-0.5 text-[12.5px]"
+                        style={{ color: 'rgba(244,239,231,0.45)' }}
+                      >
                         {nightSub(p.night.slot, p.night.productName)}
                       </Text>
                     </View>
                     {tonight ? (
-                      <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+                      <View
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: colors.clayBright }}
+                      />
                     ) : (
                       <Text className="text-[12px]" style={{ color: 'rgba(244,239,231,0.4)' }}>
                         {p.weekday}
@@ -127,12 +162,20 @@ function WeekScreen() {
             {note ? (
               <View
                 className="mt-4 flex-row items-start gap-3 rounded-[18px]"
-                style={{ backgroundColor: 'rgba(217,161,131,0.10)', paddingHorizontal: 20, paddingVertical: 16 }}>
+                style={{
+                  backgroundColor: 'rgba(217,161,131,0.10)',
+                  paddingHorizontal: 20,
+                  paddingVertical: 16,
+                }}
+              >
                 <View
                   className="rounded-full"
                   style={{ width: 7, height: 7, marginTop: 5, backgroundColor: colors.clayBright }}
                 />
-                <Text className="flex-1 text-[13.5px] leading-[21px]" style={{ color: 'rgba(244,239,231,0.78)' }}>
+                <Text
+                  className="flex-1 text-[13.5px] leading-[21px]"
+                  style={{ color: 'rgba(244,239,231,0.78)' }}
+                >
                   {note.lead}
                   <Text className="font-sans-bold" style={{ color: colors.cream }}>
                     {note.tail}
@@ -150,8 +193,12 @@ function WeekScreen() {
                     router.push('/cycle/phased-intro');
                   }
                 }}
-                className="mt-4">
-                <Text className="text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)', lineHeight: 18 }}>
+                className="mt-4"
+              >
+                <Text
+                  className="text-[12.5px]"
+                  style={{ color: 'rgba(244,239,231,0.5)', lineHeight: 18 }}
+                >
                   {data!.notes[0]}
                 </Text>
               </Pressable>
@@ -163,20 +210,27 @@ function WeekScreen() {
                 haptics.select();
                 router.push('/cycle/disruption');
               }}
-              className="mt-6 items-center py-2">
+              className="mt-6 items-center py-2"
+            >
               <Text variant="label" style={{ color: colors.clayBright }}>
                 Need a break? →
               </Text>
             </Pressable>
           </>
         ) : (
-          <View className="mt-6 rounded-2xl px-5 py-6" style={{ backgroundColor: colors.nightSurface }}>
+          <View
+            className="mt-6 rounded-2xl px-5 py-6"
+            style={{ backgroundColor: colors.nightSurface }}
+          >
             <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
               No actives to cycle yet.
             </Text>
-            <Text className="mt-2 text-[13px]" style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}>
-              Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating acid
-              and we&apos;ll build your cycle.
+            <Text
+              className="mt-2 text-[13px]"
+              style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}
+            >
+              Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating
+              acid and we&apos;ll build your cycle.
             </Text>
           </View>
         )}
@@ -191,7 +245,8 @@ function Banner({ text, onPress }: { text: string; onPress: () => void }) {
       accessibilityRole="button"
       onPress={onPress}
       className="mt-4 flex-row items-center gap-3 rounded-2xl px-4 py-3.5"
-      style={{ backgroundColor: 'rgba(217,161,131,0.1)' }}>
+      style={{ backgroundColor: 'rgba(217,161,131,0.1)' }}
+    >
       <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
       <Text className="flex-1 text-[13px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
         {text}
@@ -207,7 +262,8 @@ function amSummary(amDaily: { className: string }[] | undefined): string {
 }
 
 function nightSub(slot: string, productName: string | null): string {
-  if (slot === 'recover') return productName ? `${productName} · barrier support` : 'Barrier support';
+  if (slot === 'recover')
+    return productName ? `${productName} · barrier support` : 'Barrier support';
   return productName ?? '';
 }
 

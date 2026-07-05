@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui';
 import { SETTINGS_COPY } from '@/features/notifications/copy';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // Notification settings hub (docs/07 §3.1, design screen 02). Three tiers, each
@@ -29,7 +30,12 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 
 function SectionLabel({ children }: { children: string }) {
   return (
-    <Text variant="label" tone="muted" className="mb-2 ml-2 mt-4" style={{ fontSize: 10, letterSpacing: 1 }}>
+    <Text
+      variant="label"
+      tone="muted"
+      className="mb-2 ml-2 mt-4"
+      style={{ fontSize: 10, letterSpacing: 1 }}
+    >
       {children}
     </Text>
   );
@@ -53,12 +59,14 @@ function Row({
   return (
     <View
       className="flex-row items-center justify-between py-3.5"
-      style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}>
+      style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
+    >
       <Text
         accessibilityRole={onPress ? 'button' : undefined}
         onPress={onPress}
         className="flex-1 pr-3"
-        suppressHighlighting>
+        suppressHighlighting
+      >
         <Text variant="body" className="font-sans-semibold">
           {title}
         </Text>
@@ -79,7 +87,12 @@ export default function NotificationSettingsScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
         <View className="mb-1 flex-row items-center gap-3 pt-1">
-          <Text accessibilityRole="button" onPress={() => router.back()} variant="body" style={{ fontSize: 22 }}>
+          <Text
+            accessibilityRole="button"
+            onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
+            variant="body"
+            style={{ fontSize: 22 }}
+          >
             ‹
           </Text>
           <Text variant="title" style={{ fontSize: 28 }}>
@@ -108,9 +121,22 @@ export default function NotificationSettingsScreen() {
 
         <SectionLabel>GENTLE NUDGES · CAPPED</SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
-          <Row title="Streak &amp; adherence" value={p.streakNudges} onChange={(v) => set({ streakNudges: v })} />
-          <Row title="Replenishment" value={p.replenishmentAlerts} onChange={(v) => set({ replenishmentAlerts: v })} />
-          <Row title="Progress-photo nudge" value={p.captureReminders} onChange={(v) => set({ captureReminders: v })} last />
+          <Row
+            title="Streak &amp; adherence"
+            value={p.streakNudges}
+            onChange={(v) => set({ streakNudges: v })}
+          />
+          <Row
+            title="Replenishment"
+            value={p.replenishmentAlerts}
+            onChange={(v) => set({ replenishmentAlerts: v })}
+          />
+          <Row
+            title="Progress-photo nudge"
+            value={p.captureReminders}
+            onChange={(v) => set({ captureReminders: v })}
+            last
+          />
         </View>
 
         <SectionLabel>PROMOTIONAL</SectionLabel>

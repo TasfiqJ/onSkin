@@ -6,6 +6,7 @@ import { Text } from '@/components/ui';
 import { declineCommerceConsent, grantCommerceConsent } from '@/features/commerce/consent';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -18,7 +19,7 @@ import { colors } from '@/theme/tokens';
 export default function CommerceConsentSheet() {
   const qc = useQueryClient();
 
-  const close = () => router.back();
+  const close = () => backOrReplace(router, APP_YOU_ROUTE);
 
   const allow = async () => {
     haptics.success();
@@ -35,11 +36,22 @@ export default function CommerceConsentSheet() {
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.42)' }}>
-      <Pressable className="absolute inset-0" accessibilityRole="button" accessibilityLabel="Dismiss" onPress={close} />
+      <Pressable
+        className="absolute inset-0"
+        accessibilityRole="button"
+        accessibilityLabel="Dismiss"
+        onPress={close}
+      />
       <View className="rounded-t-sheet bg-paper px-7 pb-10 pt-4">
-        <View className="mb-5 h-[5px] w-10 self-center rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
+        <View
+          className="mb-5 h-[5px] w-10 self-center rounded-[3px]"
+          style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+        />
 
-        <View className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]" style={{ backgroundColor: colors.clayTint }}>
+        <View
+          className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
+          style={{ backgroundColor: colors.clayTint }}
+        >
           <LockGlyph size={22} color={colors.clay} />
         </View>
 
@@ -50,9 +62,18 @@ export default function CommerceConsentSheet() {
           {COMMERCE_COPY.consent.body}
         </Text>
 
-        <View className="mt-5 rounded-2xl bg-paper-raised px-4" style={{ borderWidth: 1, borderColor: colors.hairline }}>
-          <View className="flex-row items-center gap-3 py-3" style={{ borderBottomWidth: 1, borderBottomColor: colors.hairline }}>
-            <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
+        <View
+          className="mt-5 rounded-2xl bg-paper-raised px-4"
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
+          <View
+            className="flex-row items-center gap-3 py-3"
+            style={{ borderBottomWidth: 1, borderBottomColor: colors.hairline }}
+          >
+            <View
+              className="h-[18px] w-[18px] items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.sageTint }}
+            >
               <Text className="text-[10px]" style={{ color: colors.sage }}>
                 ✓
               </Text>
@@ -62,7 +83,10 @@ export default function CommerceConsentSheet() {
             </Text>
           </View>
           <View className="flex-row items-center gap-3 py-3">
-            <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.clayTint }}>
+            <View
+              className="h-[18px] w-[18px] items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.clayTint }}
+            >
               <Text className="text-[10px]" style={{ color: colors.clay }}>
                 ✕
               </Text>
@@ -81,12 +105,17 @@ export default function CommerceConsentSheet() {
           accessibilityRole="button"
           onPress={() => void allow()}
           className="mt-4 h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}>
+          style={{ backgroundColor: colors.clay }}
+        >
           <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
             {COMMERCE_COPY.consent.cta}
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => void decline()} className="h-[42px] items-center justify-center">
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void decline()}
+          className="h-[42px] items-center justify-center"
+        >
           <Text className="font-sans-semibold text-[15px]" tone="muted">
             {COMMERCE_COPY.consent.decline}
           </Text>
