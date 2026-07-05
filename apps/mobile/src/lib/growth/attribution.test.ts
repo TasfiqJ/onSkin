@@ -72,4 +72,13 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
       ),
     ).toEqual({ source: 'share_card', share_id: 'abcDEF_123456' });
   });
+
+  it('ignores malformed encoded attribution instead of throwing', () => {
+    expect(() =>
+      parseGrowthAttributionFromUrl('https://onskin.app/s/abcDEF_123456?source=%E0%A4%A&share_id=abcDEF_123456'),
+    ).not.toThrow();
+    expect(
+      parseGrowthAttributionFromUrl('https://onskin.app/s/abcDEF_123456?source=%E0%A4%A&share_id=abcDEF_123456'),
+    ).toEqual({ share_id: 'abcDEF_123456' });
+  });
 });

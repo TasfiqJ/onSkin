@@ -248,6 +248,10 @@
   - Runs Deno type/syntax checking against every Supabase Edge Function entrypoint.
   - Uses `supabase/functions/deno.lock` in frozen mode so Supabase JSR/npm dependency drift is explicit.
   - Caught and prevented Deno-only type regressions in account deletion, data export, RevenueCat webhook, and subscription grants.
+  - Proves public waitlist/growth Edge Functions keep opaque `share_id` validation and URL-safe attribution value guards.
+- `apps/mobile/src/lib/growth/attribution.test.ts`
+  - Verifies growth attribution keeps only approved campaign metadata and opaque share IDs.
+  - Verifies malformed percent-encoded public-link query values are ignored instead of throwing.
 - `apps/mobile/src/lib/analytics/track.test.ts`
   - Verifies sensitive analytics keys/values are dropped.
   - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.

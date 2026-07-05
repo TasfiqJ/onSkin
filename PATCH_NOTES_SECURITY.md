@@ -394,6 +394,13 @@
 - Why safe: Deep links, web refreshes, and cold route entries should not trap users on consent, deferred, shelf detail, progress capture, or paywall screens with a Back/Close action that cannot go anywhere.
 - Regression: `safeBack.test.ts` and `dismissPaywall.test.ts` prove history-preserving and no-history replacement behavior. `useToday.test.ts` also covers removal of the hard-coded Today header clock placeholder.
 
+## Public growth attribution sanitizer parity
+
+- Files: `apps/mobile/src/lib/growth/attribution.ts`, `apps/mobile/src/lib/growth/attribution.test.ts`, `supabase/functions/growth-event/index.ts`, `supabase/functions/waitlist/index.ts`, `scripts/phase9/edge-functions-check.mjs`.
+- Change: Mobile attribution parsing now ignores malformed percent-encoded query pairs instead of throwing. Public waitlist and growth-event functions now restrict attribution values to URL-safe opaque metadata and drop non-opaque `share_id` values before service-role writes.
+- Why safe: Public links and public-form endpoints are attacker-controlled input. The server cannot rely on the mobile client to pre-sanitize campaign fields, and a malformed public link should degrade to no attribution rather than crashing the route.
+- Regression: `attribution.test.ts` covers malformed encoded URLs, and `phase9:edge-functions-check` fails if either public-form Edge Function drops the opaque `share_id` or URL-safe attribution guards.
+
 ## RevenueCat webhook body limit
 
 - Files: `supabase/functions/revenuecat-webhook/index.ts`, `.env.example`, `.github/workflows/security.yml`, `scripts/phase9/live-revenuecat-webhook.mjs`, `scripts/phase9/edge-auth-smoke.mjs`, `scripts/phase9/release-smoke.mjs`, `scripts/phase9/security-ci-smoke.mjs`.

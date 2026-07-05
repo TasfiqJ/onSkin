@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { block, printResult, root } from './lib.mjs';
 
@@ -8,6 +8,10 @@ const errors = [];
 const warnings = [];
 const functionsDir = 'supabase/functions';
 const lockPath = 'supabase/functions/deno.lock';
+const publicGrowthEntrypoints = [
+  'supabase/functions/growth-event/index.ts',
+  'supabase/functions/waitlist/index.ts',
+];
 const entrypoints = readdirSync(join(root, functionsDir), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => join(functionsDir, entry.name, 'index.ts').replace(/\\/g, '/'))
@@ -16,6 +20,26 @@ const entrypoints = readdirSync(join(root, functionsDir), { withFileTypes: true 
 
 block(errors, entrypoints.length > 0, 'No Supabase Edge Function entrypoints found.');
 block(errors, existsSync(join(root, lockPath)), `${lockPath} is missing.`);
+
+for (const entrypoint of publicGrowthEntrypoints) {
+  const source = existsSync(join(root, entrypoint)) ? readFileSync(join(root, entrypoint), 'utf8') : '';
+  block(errors, Boolean(source), `${entrypoint} is missing.`);
+  block(
+    errors,
+    /const opaqueId\s*=\s*\/\^\[A-Za-z0-9_-\]\{8,64\}\$\/;/.test(source),
+    `${entrypoint} must enforce opaque share_id values.`,
+  );
+  block(
+    errors,
+    /const attributionValue\s*=\s*\/\^\[A-Za-z0-9\._~-\]\{1,120\}\$\/;/.test(source),
+    `${entrypoint} must restrict public attribution values to URL-safe opaque metadata.`,
+  );
+  block(
+    errors,
+    /key\s*===\s*'share_id'[\s\S]*!opaqueId\.test\(safe\)[\s\S]*continue;/.test(source),
+    `${entrypoint} must drop malformed share_id attribution.`,
+  );
+}
 
 function resolveDenoBin() {
   if (process.platform !== 'win32') return 'deno';

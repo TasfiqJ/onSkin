@@ -99,6 +99,14 @@ export function buildPublicGrowthUrl(
   return `https://${domain}${safePath}${query ? `?${query}` : ''}`;
 }
 
+function safeDecodeURIComponent(value: string): string | null {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
+
 export function parseGrowthAttributionFromUrl(url: string): GrowthAttribution {
   const query = url.split('?')[1]?.split('#')[0];
   if (!query) return {};
@@ -106,7 +114,10 @@ export function parseGrowthAttributionFromUrl(url: string): GrowthAttribution {
   for (const pair of query.split('&')) {
     const [rawKey, rawValue = ''] = pair.split('=');
     if (!rawKey) continue;
-    params[decodeURIComponent(rawKey)] = decodeURIComponent(rawValue.replace(/\+/g, ' '));
+    const key = safeDecodeURIComponent(rawKey);
+    const value = safeDecodeURIComponent(rawValue.replace(/\+/g, ' '));
+    if (!key || value === null) continue;
+    params[key] = value;
   }
   return sanitizeAttribution(params);
 }

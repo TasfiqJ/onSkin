@@ -40,6 +40,7 @@
 - SEC-P2-047: Onboarding profile scoring and persistence now require a complete set of valid quiz answers, so direct reveal/analyzing routes recover to the quiz instead of fabricating a default skin profile.
 - SEC-P2-048: Paywall and ProGate pricing now use a shared display helper and explicit unavailable offering state, so missing Store/RevenueCat pricing cannot render as a billable slash-period amount.
 - SEC-P2-049: Ask, deferred, shelf, progress-capture, and paywall direct-entry Back/Close controls now replace to a safe app surface when no navigation history exists.
+- SEC-P2-050: Public growth attribution now ignores malformed encoded query pairs on mobile and enforces the same URL-safe opaque `share_id` contract in the waitlist/growth-event service-role endpoints.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

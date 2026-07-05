@@ -55,6 +55,8 @@ const allowedKeys = new Set([
 
 const sensitive =
   /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|age|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide)/i;
+const opaqueId = /^[A-Za-z0-9_-]{8,64}$/;
+const attributionValue = /^[A-Za-z0-9._~-]{1,120}$/;
 
 function intEnv(name: string, fallback: number, min: number, max: number): number {
   const value = Number(Deno.env.get(name));
@@ -105,7 +107,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function safeValue(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const trimmed = value.trim();
-  if (!trimmed || trimmed.length > 120 || trimmed.includes('@') || /\s/.test(trimmed)) return null;
+  if (!trimmed || trimmed.includes('@') || /\s/.test(trimmed)) return null;
+  if (!attributionValue.test(trimmed)) return null;
   if (sensitive.test(trimmed)) return null;
   return trimmed;
 }
@@ -118,6 +121,7 @@ function sanitize(input: Record<string, unknown>): Record<string, string> | null
     if (key === 'event') continue;
     if (!allowedKeys.has(key) || sensitive.test(key)) continue;
     const safe = safeValue(value);
+    if (key === 'share_id' && safe && !opaqueId.test(safe)) continue;
     if (safe) out[key] = safe;
   }
   return out;
