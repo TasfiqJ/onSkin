@@ -1,71 +1,78 @@
 /**
  * Consent copy. BLOCKED: B-PRIVACY-COPY. Final wording + policy documents need
- * counsel (MHMDA Consumer Health Data Privacy Policy, GDPR Art. 9). The structure
- * (WHAT / WHY / NEVER, unbundled, withdrawable) follows the design spec, but the
- * text is a clearly-labelled placeholder. The `version` + the SHA-256 hash of
- * `fullText` recorded in the ledger are the real, shippable mechanism.
+ * counsel (MHMDA Consumer Health Data Privacy Policy, GDPR Art. 9). The visible
+ * WHAT / WHY / NEVER strings are plain-language draft copy grounded in the source
+ * docs; the ledger text remains clearly marked as pending legal review.
  */
-export const CONSENT_COPY_VERSION = 'placeholder-v0-2026-06-12';
+export const CONSENT_COPY_VERSION = 'draft-v0-2026-07-05';
 
 export const HEALTH_DATA_CONSENT = {
   version: CONSENT_COPY_VERSION,
-  what: '[Placeholder] Quiz answers, skin goals, and products you add.',
-  why: '[Placeholder] Only to build and adjust your routine.',
-  never: '[Placeholder] Sold, shared, or used to train AI.',
-  footnote: '[Placeholder] Withdraw anytime in Settings.',
+  what: 'Your quiz answers, skin goals, sensitivities, and products you add.',
+  why: 'To build your routine, check product conflicts, and adjust timing around your shelf.',
+  never: 'Sold, shared for ads, or used to train AI.',
+  footnote:
+    'You can withdraw this consent in Settings. Account deletion removes collected health data.',
+  declineCta: "I don't agree",
+  declinedTitle: 'No consent recorded',
+  declinedBody:
+    "We won't collect quiz health data unless you agree. The personalized quiz stays locked for now.",
   // Exact text recorded + hashed into the immutable consents ledger.
   fullText:
-    '[PLACEHOLDER. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent. ' +
+    '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent. ' +
     'This consent covers collection only; sharing is requested separately.',
+  declineText:
+    '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent declined before quiz access.',
 } as const;
 
 // The exact text hashed into the ledger when a user WITHDRAWS health-data
-// collection consent (docs/01 §4: withdrawal must be as easy as granting).
+// collection consent (docs/01: withdrawal must be as easy as granting).
 // Recording the granted=false row is the durable proof; deletion is the effect.
 export const HEALTH_DATA_WITHDRAWAL = {
   version: CONSENT_COPY_VERSION,
   fullText:
-    '[PLACEHOLDER. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent ' +
+    '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent ' +
     'WITHDRAWN. Collected health data is to be deleted and the account closed.',
 } as const;
 
 export const ACCOUNT_CONSENT = {
   version: CONSENT_COPY_VERSION,
   fullText:
-    '[PLACEHOLDER. Pending legal review B-PRIVACY-COPY] Acceptance of the Terms of ' +
+    '[DRAFT. Pending legal review B-PRIVACY-COPY] Acceptance of the Terms of ' +
     'Service and Privacy Policy.',
 } as const;
 
 /**
- * Photo CAPTURE consent. Requested at first camera use (docs/01 §4, docs/06 §7).
- * Skin photos are Art. 9 / MHMDA health-inference data → explicit, unbundled, and
- * SEPARATE from cloud backup. Placeholder copy; B-PRIVACY-COPY owns final wording.
+ * Photo CAPTURE consent. Requested at first camera use (docs/01, docs/06).
+ * Skin photos are Art. 9 / MHMDA health-inference data: explicit, unbundled, and
+ * separate from cloud backup. B-PRIVACY-COPY owns final wording.
  */
 export const PHOTO_CAPTURE_CONSENT = {
   version: CONSENT_COPY_VERSION,
-  what: '[Placeholder] Photos you take in guided capture.',
-  why: '[Placeholder] Only to build your private on-device progress timeline.',
-  never: '[Placeholder] Uploaded, shared, or used to train AI. They stay on this phone.',
-  footnote: '[Placeholder] No faceprint is ever stored. Withdraw anytime in Settings.',
+  what: 'Photos you choose to take with guided capture.',
+  why: 'To build your private progress timeline on this device.',
+  never:
+    'Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice.',
+  footnote: 'No faceprint or biometric template is stored. You can withdraw anytime in Settings.',
   fullText:
-    '[PLACEHOLDER. Pending legal review B-PRIVACY-COPY] Photo CAPTURE consent. Covers ' +
+    '[DRAFT. Pending legal review B-PRIVACY-COPY] Photo CAPTURE consent. Covers ' +
     'on-device capture and on-device storage only; cloud backup is requested separately. ' +
     'No biometric faceprint/template is computed or stored.',
 } as const;
 
 /**
- * Photo CLOUD-BACKUP consent. A DISTINCT, off-by-default opt-in (docs/01 §4,
- * docs/06 §7): uploading special-category images off-device is higher-risk, so it
- * is never bundled with capture. Placeholder; B-PRIVACY / B-PRIVACY-COPY own final.
+ * Photo CLOUD-BACKUP consent. A distinct, off-by-default opt-in (docs/01,
+ * docs/06): uploading special-category images off-device is higher-risk, so it
+ * is never bundled with capture. B-PRIVACY / B-PRIVACY-COPY own final wording.
  */
 export const PHOTO_CLOUD_BACKUP_CONSENT = {
   version: CONSENT_COPY_VERSION,
-  what: '[Placeholder] An encrypted copy of your photos, backed up to your private cloud space.',
-  why: '[Placeholder] So a lost or replaced phone doesn’t mean losing your timeline.',
-  never: '[Placeholder] Shared, sold, or used to train AI. Encrypted, owner-only.',
-  footnote: '[Placeholder] Off by default. A separate choice from capture. Turn off anytime.',
+  what: 'An encrypted backup copy of your progress photos in your private cloud space.',
+  why: 'So a lost or replaced phone does not mean losing your timeline.',
+  never: 'Shared, sold, or used to train AI. Backup stays off until you choose it.',
+  footnote: 'This is separate from photo capture. You can turn it off anytime.',
   fullText:
-    '[PLACEHOLDER. Pending legal review B-PRIVACY / B-PRIVACY-COPY] Photo CLOUD-BACKUP ' +
+    '[DRAFT. Pending legal review B-PRIVACY / B-PRIVACY-COPY] Photo CLOUD-BACKUP ' +
     'consent. Separate and distinct from capture consent; uploads encrypted images to a ' +
     'private, owner-only bucket. Off until affirmatively enabled.',
 } as const;

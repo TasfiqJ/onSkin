@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPrivateItem, multiRemovePrivateItems, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // Local-first trend state (docs/12 §8/§10, the D-029 pattern). The
 // photo_trend_insights consent flag is the v1 source of truth (default-OFF, offline-
@@ -12,22 +12,22 @@ const STATE_KEY = 'onskin.trendState.v1'; // the derived narrative state (no ima
 
 export async function getTrendInsightsLocal(): Promise<boolean> {
   try {
-    return (await AsyncStorage.getItem(CONSENT_KEY)) === 'true';
+    return (await getPrivateItem(CONSENT_KEY)) === 'true';
   } catch {
     return false;
   }
 }
 export async function setTrendInsightsLocal(enabled: boolean): Promise<void> {
-  await AsyncStorage.setItem(CONSENT_KEY, enabled ? 'true' : 'false');
+  await setPrivateItem(CONSENT_KEY, enabled ? 'true' : 'false');
 }
 
 /** Delete the derived trend state on revocation (no retention exception, §8/§10).
  *  The source photos are untouched (they're the docs/06 local store). */
 export async function deleteTrendState(): Promise<void> {
-  await AsyncStorage.removeItem(STATE_KEY);
+  await removePrivateItem(STATE_KEY);
 }
 
 /** Test/seed reset. */
 export async function clearTrendStore(): Promise<void> {
-  await AsyncStorage.multiRemove([CONSENT_KEY, STATE_KEY]);
+  await multiRemovePrivateItems([CONSENT_KEY, STATE_KEY]);
 }

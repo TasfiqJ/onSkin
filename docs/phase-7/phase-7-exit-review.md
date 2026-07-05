@@ -5,6 +5,7 @@
 - Added central Phase 7 launch flags in `apps/mobile/src/lib/launch/phase7.ts`.
 - Added reusable deferred route screen in `apps/mobile/src/components/launch/DeferredSurface.tsx`.
 - Gated commerce, trend, cloud Ask, community posting, widgets/live activity, and share-card routes.
+- Added a production runtime guard requiring a real final brand domain before deferred Phase 7 surfaces can open.
 - Hid deferred entry points from Today, Progress, and You.
 - Hid where-to-buy affordances when commerce is disabled.
 - Changed share-card export to require exact rule match, reviewed conflict, final domain, and explicit flags.
@@ -37,4 +38,4 @@ The idea is not validated as a seven-figure business until a closed beta proves 
 
 ## Do-not-ship rule
 
-Do not ship public production while strict Phase 7 checks fail. Closed beta may proceed only when the route gates remain closed for deferred surfaces and the beta cohort understands which surfaces are intentionally unavailable.
+Do not ship public production while strict Phase 7 checks fail. Production public flags for commerce, community posting, trend, cloud Ask, widgets, share cards, or goal-active recommendations require a real final brand domain, matching Phase 7 evidence, and `PHASE7_SIGNED_OFF_BY`; closed beta may proceed only when route gates remain closed for unavailable surfaces and the beta cohort understands which surfaces are intentionally unavailable.

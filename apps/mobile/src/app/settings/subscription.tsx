@@ -13,6 +13,7 @@ import {
   showNativeManageSubscriptions,
 } from '@/lib/iap/revenuecat';
 import { track } from '@/lib/analytics/track';
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { colors } from '@/theme/tokens';
 
 // Manage subscription (design 06, docs/08 §3.4). Plan/state, renewal date, one-tap
@@ -48,7 +49,8 @@ export default function SubscriptionScreen() {
     track('manage_subscription_opened');
     const openedNative = await showNativeManageSubscriptions();
     if (openedNative) return;
-    const url = data?.managementUrl ?? (Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS);
+    const fallbackUrl = Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS;
+    const url = safeExternalHttpsUrl(data?.managementUrl) ?? fallbackUrl;
     void Linking.openURL(url).catch(() => {});
   }
   function onRestore() {

@@ -45,7 +45,7 @@
     "expo-sharing": "~56.0.20",
     "expo-splash-screen": "~56.0.12",
     "expo-status-bar": "~56.0.4",
-    "expo-store-review": "^57.0.0",
+    "expo-store-review": "~56.0.3",
     "expo-system-ui": "~56.0.5",
     "expo-web-browser": "~56.0.5",
     "nativewind": "^4.2.5",
@@ -73,6 +73,6 @@
     "prettier": "^3.4.2",
     "tailwindcss": "^3.4.17",
     "typescript": "~6.0.3",
-    "vitest": "^3.2.6"
+    "vitest": "^4.1.9"
   }
 }

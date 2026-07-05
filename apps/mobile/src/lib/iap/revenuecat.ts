@@ -12,6 +12,7 @@ import type {
 import type { StoredEntitlement } from '@/features/subscription/entitlement';
 import { PLANS } from '@/features/subscription/plans';
 import { env } from '@/lib/env';
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
 export type SubscriptionPackageView = {
   plan: PlanId;
@@ -392,7 +393,7 @@ export function customerInfoToStoredEntitlement(customerInfo: CustomerInfo): Sto
     grantedAt: info.originalPurchaseDate,
     source: 'revenuecat',
     environment: mapEnvironment(info.store, info.isSandbox),
-    managementUrl: customerInfo.managementURL ?? subscriptionInfo?.managementURL ?? null,
+    managementUrl: safeExternalHttpsUrl(customerInfo.managementURL ?? subscriptionInfo?.managementURL),
     verifiedAt: customerInfo.requestDate,
     offeringId: null,
     packageId: null,

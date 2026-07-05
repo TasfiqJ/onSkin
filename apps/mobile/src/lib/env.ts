@@ -6,17 +6,63 @@
  */
 
 const PLACEHOLDER = '__BLOCKED_PLACEHOLDER__';
+const SUPABASE_URL_PLACEHOLDER = 'https://blocked-supabase-url.invalid';
+const SUPABASE_EXAMPLE_URL = 'https://YOUR-PROJECT-ref.supabase.co';
+const SUPABASE_EXAMPLE_KEY = 'sb_publishable_xxxxxxxxxxxxxxxxxxxx';
+const APP_ENVIRONMENTS = new Set(['development', 'staging', 'production']);
+
+export type AppEnvironment = 'development' | 'staging' | 'production';
+
+function isDevRuntime(): boolean {
+  return typeof __DEV__ !== 'undefined' && __DEV__;
+}
 
 function readEnv(name: string, value: string | undefined, blockerId: string): string {
-  if (value && value.length > 0) return value;
-  if (typeof __DEV__ !== 'undefined' && __DEV__) {
+  const candidate = value?.trim();
+  if (candidate && !isKnownPlaceholder(candidate)) return candidate;
+  if (isDevRuntime()) {
     console.warn(`[env] ${name} is not set. Using placeholder. BLOCKED: ${blockerId}`);
   }
   return PLACEHOLDER;
 }
 
+function readAppEnvironment(value: string | undefined): AppEnvironment {
+  const candidate = value?.trim().toLowerCase();
+  if (candidate && APP_ENVIRONMENTS.has(candidate)) return candidate as AppEnvironment;
+  return isDevRuntime() ? 'development' : 'production';
+}
+
+function isKnownPlaceholder(value: string): boolean {
+  return (
+    value === PLACEHOLDER ||
+    value === SUPABASE_URL_PLACEHOLDER ||
+    value === SUPABASE_EXAMPLE_URL ||
+    value === SUPABASE_EXAMPLE_KEY
+  );
+}
+
+function isHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function readSupabaseUrlEnv(name: string, value: string | undefined, blockerId: string): string {
+  const candidate = value?.trim();
+  if (candidate && !isKnownPlaceholder(candidate) && isHttpUrl(candidate)) return candidate;
+  if (isDevRuntime()) {
+    console.warn(
+      `[env] ${name} is not a valid Supabase URL. Using placeholder. BLOCKED: ${blockerId}`,
+    );
+  }
+  return SUPABASE_URL_PLACEHOLDER;
+}
+
 export const env = {
-  appEnvironment: process.env.EXPO_PUBLIC_APP_ENV ?? 'development',
+  appEnvironment: readAppEnvironment(process.env.EXPO_PUBLIC_APP_ENV),
   privacyUrl: process.env.EXPO_PUBLIC_PRIVACY_URL ?? '',
   termsUrl: process.env.EXPO_PUBLIC_TERMS_URL ?? '',
   supportUrl: process.env.EXPO_PUBLIC_SUPPORT_URL ?? '',
@@ -32,7 +78,8 @@ export const env = {
   nativeCameraEnabled: process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED !== 'false',
   nativeOcrEnabled: process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED === 'true',
   phase7CommerceEnabled: process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED === 'true',
-  phase7CommunityPostingEnabled: process.env.EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED === 'true',
+  phase7CommunityPostingEnabled:
+    process.env.EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED === 'true',
   phase7TrendEnabled: process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED === 'true',
   phase7CloudAskEnabled: process.env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED === 'true',
   phase7WidgetsEnabled: process.env.EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED === 'true',
@@ -46,7 +93,7 @@ export const env = {
   phase8CreatorLinksEnabled: process.env.EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED === 'true',
   phase8PaidMeasurementEnabled: process.env.EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED === 'true',
   // BLOCKED: B-SUPABASE
-  supabaseUrl: readEnv(
+  supabaseUrl: readSupabaseUrlEnv(
     'EXPO_PUBLIC_SUPABASE_URL',
     process.env.EXPO_PUBLIC_SUPABASE_URL,
     'B-SUPABASE',
@@ -76,7 +123,7 @@ export const env = {
 
 /** True when a value is the BLOCKED placeholder (e.g. Supabase not configured). */
 export function isPlaceholder(value: string): boolean {
-  return value === PLACEHOLDER;
+  return isKnownPlaceholder(value);
 }
 
 /** Whether Supabase is actually configured (vs. running on placeholders). */

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Modal, Pressable, ScrollView, Switch, View } from 'react-native';
+import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
@@ -88,7 +88,7 @@ export default function TimingScreen() {
     setPicking(null);
   }
 
-  const discreetBody = p.lockscreenDiscreet ? REMINDER_COPY.pm_step.discreet : REMINDER_COPY.pm_step.body;
+  const discreetBody = REMINDER_COPY.pm_step.discreet;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -152,12 +152,11 @@ export default function TimingScreen() {
                 {SETTINGS_COPY.discreetHint}
               </Text>
             </View>
-            <Switch
-              value={p.lockscreenDiscreet}
-              onValueChange={(v) => update.mutate({ lockscreenDiscreet: v })}
-              trackColor={{ true: colors.clay, false: '#D8D0C2' }}
-              thumbColor={colors.paperRaised}
-            />
+            <View className="rounded-[8px] px-3 py-1.5" style={{ backgroundColor: colors.greigeChip }}>
+              <Text className="font-sans-semibold" style={{ color: colors.clay, fontSize: 13 }}>
+                On
+              </Text>
+            </View>
           </View>
           {/* discreet preview */}
           <View className="py-3.5">
@@ -173,7 +172,7 @@ export default function TimingScreen() {
               </View>
             </View>
             <Text variant="label" tone="muted" className="mt-2 text-center" style={{ fontSize: 11 }}>
-              {p.lockscreenDiscreet ? 'preview. Kept generic on purpose' : 'preview. Showing routine detail'}
+              Always generic on the lock screen
             </Text>
           </View>
         </View>

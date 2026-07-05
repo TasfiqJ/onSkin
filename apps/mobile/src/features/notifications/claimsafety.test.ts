@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { MILESTONE_COPY, REMINDER_COPY, SETTINGS_COPY, SOFT_ASK, WELCOME_BACK } from './copy';
+import {
+  LOCK_SCREEN_NOTIFICATION_TITLE,
+  MILESTONE_COPY,
+  notificationContentForLockScreen,
+  REMINDER_COPY,
+  SETTINGS_COPY,
+  SOFT_ASK,
+  WELCOME_BACK,
+} from './copy';
 
 // Claim-safety + calm-copy guard for the engagement layer (docs/07 §2/§3.3, the
 // Slice-11/20 pattern). Notifications are a claims surface AND a place dark patterns
@@ -75,6 +83,28 @@ describe('discretion: lock-screen copy is generic (docs/07 §3.6)', () => {
     const banned = [/retino/i, /acid\b/i, /acne/i, /\bspf\b/i, /vitamin\s*c/i, /niacinamide/i];
     for (const k of Object.keys(REMINDER_COPY) as (keyof typeof REMINDER_COPY)[]) {
       expect(offenders(REMINDER_COPY[k].discreet, banned)).toEqual([]);
+    }
+  });
+
+  it('OS notification payloads always use generic title/body copy', () => {
+    const banned = [
+      /progress\s*photo/i,
+      /\bphoto\b/i,
+      /\bproduct/i,
+      /\bskin\b/i,
+      /retino/i,
+      /acid\b/i,
+      /acne/i,
+      /\bspf\b/i,
+      /vitamin\s*c/i,
+      /niacinamide/i,
+      /recovery\s+nights?/i,
+      /step-up/i,
+    ];
+    for (const k of Object.keys(REMINDER_COPY) as (keyof typeof REMINDER_COPY)[]) {
+      const content = notificationContentForLockScreen(k);
+      expect(content.title).toBe(LOCK_SCREEN_NOTIFICATION_TITLE);
+      expect(offenders(content.body, banned)).toEqual([]);
     }
   });
 });

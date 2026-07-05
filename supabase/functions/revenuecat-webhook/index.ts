@@ -12,7 +12,8 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const webhookAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH') ?? '';
 const signingSecret = Deno.env.get('REVENUECAT_WEBHOOK_SIGNING_SECRET') ?? '';
-const signatureToleranceSeconds = Number(Deno.env.get('REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS') ?? '300');
+const signatureToleranceSeconds = intEnv('REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS', 300, 1, 3600);
+const maxBodyBytes = intEnv('REVENUECAT_WEBHOOK_MAX_BYTES', 65536, 1024, 262144);
 
 const GRANT_TYPES = new Set(['INITIAL_PURCHASE', 'RENEWAL', 'PRODUCT_CHANGE', 'UNCANCELLATION', 'NON_RENEWING_PURCHASE']);
 const REVOKE_TYPES = new Set(['EXPIRATION', 'REFUND', 'SUBSCRIPTION_PAUSED']);
@@ -37,12 +38,51 @@ type RevenueCatEvent = {
   is_sandbox?: boolean;
   presented_offering_id?: string;
 };
+type EdgeSupabaseClient = any;
+
+function intEnv(name: string, fallback: number, min: number, max: number): number {
+  const value = Number(Deno.env.get(name));
+  if (!Number.isInteger(value) || value < min || value > max) return fallback;
+  return value;
+}
 
 function json(body: unknown, status = 200): Response {
   return new Response(typeof body === 'string' ? body : JSON.stringify(body), {
     status,
     headers: { 'Content-Type': typeof body === 'string' ? 'text/plain' : 'application/json' },
   });
+}
+
+async function readLimitedText(req: Request, maxBytes: number): Promise<{ ok: true; body: string } | { ok: false }> {
+  const contentLength = Number(req.headers.get('content-length'));
+  if (Number.isFinite(contentLength) && contentLength > maxBytes) return { ok: false };
+  if (!req.body) return { ok: true, body: '' };
+
+  const reader = req.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      try {
+        await reader.cancel();
+      } catch {
+        // Ignore cancellation failures after the request is already too large.
+      }
+      return { ok: false };
+    }
+    chunks.push(value);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { ok: true, body: new TextDecoder().decode(bytes) };
 }
 
 function mapStore(s: string | undefined): string | null {
@@ -62,6 +102,44 @@ function mapEnvironment(event: RevenueCatEvent): string {
   const env = event.environment?.toLowerCase();
   if (env === 'production' || env === 'sandbox') return env;
   return 'unknown';
+}
+
+function optionalString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.length > 0 ? value : undefined;
+}
+
+function optionalNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function optionalBoolean(value: unknown): boolean | undefined {
+  return typeof value === 'boolean' ? value : undefined;
+}
+
+function optionalStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const filtered = value.filter((item): item is string => typeof item === 'string' && item.length > 0);
+  return filtered.length > 0 ? filtered : undefined;
+}
+
+function compactRecord(record: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(record).filter(([, value]) => value !== undefined));
+}
+
+function sanitizeRevenueCatEvent(event: RevenueCatEvent): Record<string, unknown> {
+  return compactRecord({
+    id: optionalString(event.id),
+    type: optionalString(event.type),
+    product_id: optionalString(event.product_id),
+    store: optionalString(event.store),
+    environment: optionalString(event.environment),
+    entitlement_ids: optionalStringArray(event.entitlement_ids),
+    expiration_at_ms: optionalNumber(event.expiration_at_ms),
+    original_purchase_date_ms: optionalNumber(event.original_purchase_date_ms),
+    period_type: optionalString(event.period_type),
+    is_sandbox: optionalBoolean(event.is_sandbox),
+    presented_offering_id: optionalString(event.presented_offering_id),
+  });
 }
 
 function parseSignature(header: string | null): { timestamp: string; signature: string } | null {
@@ -119,10 +197,16 @@ async function verifySignature(req: Request, rawBody: string): Promise<{ ok: boo
 }
 
 function userCandidates(event: RevenueCatEvent): string[] {
-  return [...new Set([event.app_user_id, event.original_app_user_id, ...(event.aliases ?? [])].filter(Boolean) as string[])];
+  return [
+    ...new Set(
+      [optionalString(event.app_user_id), optionalString(event.original_app_user_id), ...(optionalStringArray(event.aliases) ?? [])].filter(
+        Boolean,
+      ) as string[],
+    ),
+  ];
 }
 
-async function resolveUserId(supabase: ReturnType<typeof createClient>, event: RevenueCatEvent): Promise<string | null> {
+async function resolveUserId(supabase: EdgeSupabaseClient, event: RevenueCatEvent): Promise<string | null> {
   for (const candidate of userCandidates(event)) {
     if (!UUID_RE.test(candidate)) continue;
     const { data } = await supabase.auth.admin.getUserById(candidate);
@@ -132,12 +216,24 @@ async function resolveUserId(supabase: ReturnType<typeof createClient>, event: R
 }
 
 Deno.serve(async (req) => {
-  const rawBody = await req.text();
-  const authVerified = webhookAuth ? req.headers.get('Authorization') === webhookAuth : null;
+  if (req.method !== 'POST') return json('method not allowed', 405);
+
+  if (!webhookAuth && !signingSecret) {
+    return json('webhook verification not configured', 503);
+  }
+
+  const authVerified = webhookAuth ? req.headers.get('Authorization') === webhookAuth : false;
   if (webhookAuth && !authVerified) return json('unauthorized', 401);
 
+  const limitedBody = await readLimitedText(req, maxBodyBytes);
+  if (!limitedBody.ok) return json('payload too large', 413);
+  const rawBody = limitedBody.body;
+
   const signature = await verifySignature(req, rawBody);
-  if (signingSecret && !signature.ok) return json(`bad signature: ${signature.reason}`, 401);
+  if (signingSecret && !signature.ok) {
+    console.warn('REVENUECAT_WEBHOOK_BAD_SIGNATURE');
+    return json('bad signature', 401);
+  }
 
   let body: { event?: RevenueCatEvent };
   try {
@@ -146,7 +242,9 @@ Deno.serve(async (req) => {
     return json('bad request', 400);
   }
   const event = body?.event as RevenueCatEvent | undefined;
-  if (!event?.id || !event.type) return json('bad request', 400);
+  if (typeof event?.id !== 'string' || event.id.length === 0 || typeof event.type !== 'string' || event.type.length === 0) {
+    return json('bad request', 400);
+  }
 
   const supabase = createClient(supabaseUrl, serviceKey);
 
@@ -160,14 +258,18 @@ Deno.serve(async (req) => {
   const resolvedUserId = await resolveUserId(supabase, event);
   const store = mapStore(event.store);
   const environment = mapEnvironment(event);
+  const sanitizedEvent = sanitizeRevenueCatEvent(event);
+  const appUserId = optionalString(event.app_user_id) ?? null;
+  const originalAppUserId = optionalString(event.original_app_user_id) ?? null;
+  const aliases = optionalStringArray(event.aliases) ?? null;
   const eventBase = {
     rc_event_id: event.id,
     user_id: resolvedUserId,
     event_type: event.type,
-    payload: body,
-    app_user_id: event.app_user_id ?? null,
-    original_app_user_id: event.original_app_user_id ?? null,
-    aliases: event.aliases ?? null,
+    payload: { event: sanitizedEvent },
+    app_user_id: appUserId,
+    original_app_user_id: originalAppUserId,
+    aliases,
     resolved_user_id: resolvedUserId,
     environment,
     store,
@@ -207,9 +309,9 @@ Deno.serve(async (req) => {
         source: 'revenuecat',
         environment,
         verified_at: now,
-        store_user_id: event.app_user_id ?? event.original_app_user_id ?? null,
+        store_user_id: appUserId ?? originalAppUserId,
         last_reconciled_at: now,
-        raw_status: event,
+        raw_status: sanitizedEvent,
       },
       { onConflict: 'user_id' },
     );
@@ -219,7 +321,7 @@ Deno.serve(async (req) => {
       .update({
         processed_at: now,
         processing_status: error ? 'error' : 'processed',
-        error: error?.message ?? null,
+        error: error ? 'ENTITLEMENT_WRITE_FAILED' : null,
       })
       .eq('rc_event_id', event.id);
   }

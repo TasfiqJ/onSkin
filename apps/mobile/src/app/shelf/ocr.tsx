@@ -3,10 +3,21 @@ import { Image } from 'expo-image';
 import { router, useIsFocused } from 'expo-router';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
-import { parseIngredientText, type ParsedIngredientToken } from '@/features/catalog/ingredientParser';
+import {
+  parseIngredientText,
+  type ParsedIngredientToken,
+} from '@/features/catalog/ingredientParser';
 import { tagLabel } from '@/features/intelligence/presentation';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
@@ -107,13 +118,19 @@ export default function OcrScreen() {
                 Capture the ingredient panel
               </Text>
               <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
-                Camera permission lets you keep the label beside the editable text. Manual entry still works.
+                Camera permission lets you keep the label beside the editable text. Manual entry
+                still works.
               </Text>
               {cameraEnabled && permission && !permission.granted ? (
                 <Pressable
                   accessibilityRole="button"
-                  onPress={permission.canAskAgain ? () => void requestPermission() : () => void Linking.openSettings()}
-                  className="mt-5 rounded-pill bg-paper px-5 py-3">
+                  onPress={
+                    permission.canAskAgain
+                      ? () => void requestPermission()
+                      : () => void Linking.openSettings()
+                  }
+                  className="mt-5 rounded-pill bg-paper px-5 py-3"
+                >
                   <Text className="font-sans-semibold text-night">
                     {permission.canAskAgain ? 'Allow camera' : 'Open settings'}
                   </Text>
@@ -122,9 +139,8 @@ export default function OcrScreen() {
             </View>
           )}
           <View
-            pointerEvents="none"
             className="absolute left-5 right-5 top-[64px] h-[96px] rounded-[10px]"
-            style={{ borderWidth: 2, borderColor: 'rgba(217,161,131,0.65)' }}
+            style={{ pointerEvents: 'none', borderWidth: 2, borderColor: 'rgba(217,161,131,0.65)' }}
           />
         </View>
 
@@ -138,7 +154,13 @@ export default function OcrScreen() {
 
         {state !== 'review' ? (
           <Button
-            label={state === 'capturing' ? 'Capturing...' : canShowCamera ? 'Capture label' : 'Continue with manual text'}
+            label={
+              state === 'capturing'
+                ? 'Capturing...'
+                : canShowCamera
+                  ? 'Capture label'
+                  : 'Continue with manual text'
+            }
             onPress={canShowCamera ? () => void capture() : () => setState('review')}
           />
         ) : null}
@@ -160,7 +182,8 @@ export default function OcrScreen() {
         {rawText.trim().length > 0 ? (
           <>
             <Text variant="bodySm" tone="muted" className="mt-3">
-              Parser confidence: {Math.round(parsed.confidence * 100)}%. Low-confidence tokens stay visible for review.
+              Parser confidence: {Math.round(parsed.confidence * 100)}%. Low-confidence tokens stay
+              visible for review.
             </Text>
             <Text variant="eyebrow" tone="clay" className="mt-4">
               Parsed actives
@@ -169,7 +192,8 @@ export default function OcrScreen() {
               {activeTokens.map((token) => (
                 <View
                   key={token.rawToken}
-                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised p-3.5">
+                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised p-3.5"
+                >
                   <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay">
                     <Text className="text-[10px] text-paper">{'\u2713'}</Text>
                   </View>
@@ -184,7 +208,8 @@ export default function OcrScreen() {
               {lowConfidence ? (
                 <View
                   className="flex-row items-center gap-3 rounded-[14px] border border-dashed bg-greige-chip p-3.5"
-                  style={{ borderColor: 'rgba(32,27,21,0.18)' }}>
+                  style={{ borderColor: 'rgba(32,27,21,0.18)' }}
+                >
                   <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
                   <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
                     &quot;{lowConfidence.rawToken}&quot;. Not sure

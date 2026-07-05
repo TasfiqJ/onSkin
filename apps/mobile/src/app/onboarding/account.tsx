@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { Platform, Pressable, TextInput, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { track, identify } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
-import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
+import { isSupabaseConfigured } from '@/lib/env';
+import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
 import { supabase } from '@/lib/supabase/client';
 
 // 09 · Account creation at the value moment (docs/01 §1/§2). SIWA mandatory on iOS
@@ -40,12 +42,17 @@ export default function AccountScreen() {
   }
 
   async function run(fn: () => Promise<void>) {
+    if (!isSupabaseConfigured) {
+      setError(AUTH_UNAVAILABLE_MESSAGE);
+      return;
+    }
+
     setBusy(true);
     setError(null);
     try {
       await fn();
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong');
+      setError(authUserMessage(e));
     } finally {
       setBusy(false);
     }
@@ -64,51 +71,62 @@ export default function AccountScreen() {
           Create an account so your routine and progress are yours on any device. Your photos still
           stay on this phone.
         </Text>
+        {!isSupabaseConfigured ? (
+          <Text variant="bodySm" tone="clay" className="mt-4">
+            {AUTH_UNAVAILABLE_MESSAGE}
+          </Text>
+        ) : null}
 
         {stage === 'menu' ? (
           <View className="mt-8 gap-3">
-            {Platform.OS === 'ios' ? (
+            {Platform.OS === 'ios' && isSupabaseConfigured ? (
               <AppleAuthentication.AppleAuthenticationButton
                 buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
                 buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
                 cornerRadius={999}
                 style={{ height: 56 }}
-                onPress={() => run(async () => {
-                  await signInWithApple();
-                  await finish();
-                })}
+                onPress={() =>
+                  run(async () => {
+                    if (await signInWithApple()) await finish();
+                  })
+                }
               />
             ) : null}
             <Button
               label="Continue with Google"
               variant="inverse"
-              onPress={() => run(async () => {
-                await signInWithGoogle();
-                await finish();
-              })}
-              disabled={busy}
+              onPress={() =>
+                run(async () => {
+                  if (await signInWithGoogle()) await finish();
+                })
+              }
+              disabled={busy || !isSupabaseConfigured}
             />
             <View className="mt-2">
               <Text variant="label" tone="muted" className="mb-2">
                 OR WITH EMAIL
               </Text>
               <TextInput
+                accessibilityLabel="Email address"
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 inputMode="email"
+                editable={isSupabaseConfigured}
                 className="rounded-card border border-hairline bg-paper-raised px-4 py-4 font-sans text-base text-ink"
               />
               <Button
                 className="mt-3"
                 label="Email me a code"
-                disabled={busy || !email.includes('@')}
-                onPress={() => run(async () => {
-                  await sendEmailOtp(email);
-                  setStage('code');
-                })}
+                disabled={busy || !isSupabaseConfigured || !email.includes('@')}
+                onPress={() =>
+                  run(async () => {
+                    await sendEmailOtp(email);
+                    setStage('code');
+                  })
+                }
               />
             </View>
           </View>
@@ -118,6 +136,7 @@ export default function AccountScreen() {
               Enter the 6-digit code we sent to {email}.
             </Text>
             <TextInput
+              accessibilityLabel="Verification code"
               value={code}
               onChangeText={setCode}
               placeholder="123456"
@@ -128,13 +147,19 @@ export default function AccountScreen() {
             />
             <Button
               label="Verify"
-              disabled={busy || code.length !== 6}
-              onPress={() => run(async () => {
-                await verifyEmailOtp(email, code);
-                await finish();
-              })}
+              disabled={busy || !isSupabaseConfigured || code.length !== 6}
+              onPress={() =>
+                run(async () => {
+                  await verifyEmailOtp(email, code);
+                  await finish();
+                })
+              }
             />
-            <Pressable accessibilityRole="button" className="items-center py-2" onPress={() => setStage('menu')}>
+            <Pressable
+              accessibilityRole="button"
+              className="items-center py-2"
+              onPress={() => setStage('menu')}
+            >
               <Text variant="body" tone="muted">
                 Use a different method
               </Text>
@@ -153,7 +178,8 @@ export default function AccountScreen() {
         <Pressable
           accessibilityRole="button"
           className="items-center py-3"
-          onPress={() => router.replace('/onboarding/paywall')}>
+          onPress={() => router.replace('/onboarding/paywall')}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Not now
           </Text>

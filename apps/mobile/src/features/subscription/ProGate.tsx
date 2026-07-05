@@ -17,14 +17,22 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // paywall framed around THIS feature, with the same compliance posture. Dismissible,
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
-  const { data } = useEntitlement();
+  const { data, isLoading } = useEntitlement();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
-  const locked = data ? !data.isPro : false; // while loading, don't flash the wall
+  const locked = data ? !data.isPro : false;
 
   useEffect(() => {
     if (locked) track('contextual_paywall_shown', { feature });
   }, [locked, feature]);
+
+  if (isLoading || !data) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View />
+      </Screen>
+    );
+  }
 
   if (!locked) return <>{children}</>;
 
@@ -40,9 +48,14 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (!result.cancelled)
+          Alert.alert('Purchase not active', 'No active subscription was found for this account.');
       },
-      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+      onError: () =>
+        Alert.alert(
+          'Purchase unavailable',
+          'We could not open the store purchase sheet. Please try again.',
+        ),
     });
   }
 
@@ -52,7 +65,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Pressable
           accessibilityRole="button"
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/today'))}
-          hitSlop={8}>
+          hitSlop={8}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Maybe later
           </Text>
@@ -61,7 +75,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       <View className="flex-1 justify-center">
         <View
           className="mb-5 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
-          style={{ backgroundColor: colors.clayTint }}>
+          style={{ backgroundColor: colors.clayTint }}
+        >
           <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.clay }} />
         </View>
         <Text variant="title" style={{ fontSize: 32, lineHeight: 36 }}>
@@ -72,7 +87,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         </Text>
         <View
           className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <View>
             <Text variant="bodySm" tone="muted">
               {annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for'}
@@ -84,10 +100,17 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               </Text>
             </Text>
           </View>
-          {annual?.pricePerMonthLabel ? <Text variant="label" tone="muted">{`${annual.pricePerMonthLabel}\n/mo`}</Text> : null}
+          {annual?.pricePerMonthLabel ? (
+            <Text variant="label" tone="muted">{`${annual.pricePerMonthLabel}\n/mo`}</Text>
+          ) : null}
         </View>
         {offering.data?.status && offering.data.status !== 'available' ? (
-          <Text variant="label" tone="muted" className="mt-2 text-center" style={{ fontSize: 11.5, lineHeight: 16 }}>
+          <Text
+            variant="label"
+            tone="muted"
+            className="mt-2 text-center"
+            style={{ fontSize: 11.5, lineHeight: 16 }}
+          >
             {offering.data.reason}
           </Text>
         ) : null}
@@ -98,7 +121,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}>
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
+        >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
             Start free trial
           </Text>
@@ -110,7 +134,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
 }
 
 /** HOC to gate a whole screen behind Pro with one line at the default export. */
-export function withProGate<P extends object>(feature: GatedFeature, Component: (props: P) => ReactNode) {
+export function withProGate<P extends object>(
+  feature: GatedFeature,
+  Component: (props: P) => ReactNode,
+) {
   return function Gated(props: P) {
     return (
       <ProGate feature={feature}>

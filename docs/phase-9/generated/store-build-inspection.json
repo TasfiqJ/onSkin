@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-04T17:19:49.340Z",
+  "generatedAt": "2026-07-05T21:07:40.558Z",
   "app": {
     "name": "OnSkin",
     "slug": "onskin",
@@ -10,20 +10,62 @@
     "scheme": "onskin",
     "iosBundleIdentifier": "com.onskin.app",
     "androidPackage": "com.onskin.app",
+    "androidAllowBackup": false,
     "androidPermissions": [
       "android.permission.CAMERA",
       "android.permission.POST_NOTIFICATIONS"
     ]
   },
-  "easProduction": {
-    "autoIncrement": true,
-    "channel": "production",
-    "env": {
-      "APP_VARIANT": "production",
-      "EXPO_PUBLIC_APP_ENV": "production",
-      "EXPO_PUBLIC_CAMERA_STACK": "expo-camera",
-      "EXPO_PUBLIC_NATIVE_CAMERA_ENABLED": "true",
-      "EXPO_PUBLIC_NATIVE_OCR_ENABLED": "false"
+  "easBuildProfiles": {
+    "development": {
+      "channel": "development",
+      "distribution": "internal",
+      "developmentClient": true,
+      "appVariant": "development",
+      "appEnvironment": "development"
+    },
+    "staging": {
+      "channel": "staging",
+      "distribution": "internal",
+      "developmentClient": false,
+      "appVariant": "staging",
+      "appEnvironment": "staging"
+    },
+    "production": {
+      "channel": "production",
+      "distribution": "store",
+      "developmentClient": false,
+      "appVariant": "production",
+      "appEnvironment": "production"
+    }
+  },
+  "resolvedVariants": {
+    "development": {
+      "name": "OnSkin Dev",
+      "scheme": "onskin-development",
+      "iosBundleIdentifier": "com.onskin.app.development",
+      "androidPackage": "com.onskin.app.development",
+      "androidAllowBackup": false,
+      "appVariant": "development",
+      "appEnvironment": "development"
+    },
+    "staging": {
+      "name": "OnSkin Staging",
+      "scheme": "onskin-staging",
+      "iosBundleIdentifier": "com.onskin.app.staging",
+      "androidPackage": "com.onskin.app.staging",
+      "androidAllowBackup": false,
+      "appVariant": "staging",
+      "appEnvironment": "staging"
+    },
+    "production": {
+      "name": "OnSkin",
+      "scheme": "onskin",
+      "iosBundleIdentifier": "com.onskin.app",
+      "androidPackage": "com.onskin.app",
+      "androidAllowBackup": false,
+      "appVariant": "production",
+      "appEnvironment": "production"
     }
   },
   "artifacts": {},

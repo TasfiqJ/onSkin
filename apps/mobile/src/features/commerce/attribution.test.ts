@@ -24,9 +24,17 @@ describe('the outbound URL carries ONLY an opaque token. Never skin data', () =>
     expect(buildOutboundUrl('https://example.com/p?x=1', 'tok123')).toBe('https://example.com/p?x=1&oref=tok123');
   });
 
+  it('rejects unsafe external handoff URLs before adding the token', () => {
+    expect(buildOutboundUrl('onskin://retailer/path', 'tok123')).toBeNull();
+    expect(buildOutboundUrl('https://user:pass@example.com/p', 'tok123')).toBeNull();
+    expect(buildOutboundUrl('http://example.com/p', 'tok123')).toBeNull();
+  });
+
   it('the portion WE add is only the attribution param. No profile/concern/goal', () => {
     const base = 'https://example.com/p/demo';
     const final = buildOutboundUrl(base, 'opaque-abc');
+    expect(final).not.toBeNull();
+    if (!final) return;
     const delta = final.slice(base.length); // exactly what we appended
     expect(delta).toBe('?oref=opaque-abc');
     expect(urlLeaksHealthData(delta)).toBe(false);

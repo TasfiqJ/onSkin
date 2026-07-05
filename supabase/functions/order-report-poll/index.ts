@@ -16,10 +16,13 @@
 // Until partnerships confirms the account model + provisions a brand API key, this
 // no-ops. The shape below documents the poll contract so it stays version-controlled.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const shopmyBrandKey = Deno.env.get('SHOPMY_BRAND_API_KEY') ?? ''; // BLOCKED: B-SHOPMY
+const schedulerSecret =
+  Deno.env.get('ORDER_REPORT_POLL_SECRET') ?? Deno.env.get('SHOPMY_ORDER_REPORT_POLL_SECRET') ?? '';
 
 // The documented Fetch Order Report contract (verified against docs.shopmy.us):
 //   POST https://api.shopmy.us/api/v1/Partners/OrderReport
@@ -40,21 +43,47 @@ type ShopMyOrder = {
   recordUpdatedDate?: string;
   clickToken?: string;
 };
+type ShopMyOrderReport = { orders?: ShopMyOrder[] };
 
 function mapStatus(s: string | undefined): 'pending' | 'locked' | 'returned' {
   const u = (s ?? '').toLowerCase();
   return u === 'locked' ? 'locked' : u === 'returned' ? 'returned' : 'pending';
 }
 
-Deno.serve(async () => {
+function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json', ...headers },
+  });
+}
+
+function constantTimeEqual(left: string, right: string): boolean {
+  let diff = left.length ^ right.length;
+  const max = Math.max(left.length, right.length);
+  for (let i = 0; i < max; i += 1) {
+    diff |= (left.charCodeAt(i) || 0) ^ (right.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+
+function authorizedSchedulerRequest(req: Request): boolean {
+  if (!schedulerSecret) return false;
+  const authHeader = req.headers.get('Authorization') ?? '';
+  const bearer = authHeader.match(/^Bearer\s+(.+)$/i)?.[1] ?? '';
+  const schedulerHeader = req.headers.get('x-scheduler-secret') ?? '';
+  return constantTimeEqual(bearer, schedulerSecret) || constantTimeEqual(schedulerHeader, schedulerSecret);
+}
+
+Deno.serve(async (req) => {
+  if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, { Allow: 'POST' });
+
   // INERT until B-SHOPMY: no brand key => no poll. Returns 200 so a scheduler treats it
   // as a successful no-op rather than retrying.
   if (!shopmyBrandKey) {
-    return new Response(JSON.stringify({ ok: true, skipped: 'B-SHOPMY: no brand API key (poll inert)' }), {
-      status: 200,
-      headers: { 'content-type': 'application/json' },
-    });
+    return json({ ok: true, skipped: 'B-SHOPMY: no brand API key (poll inert)' });
   }
+  if (!schedulerSecret) return json({ error: 'scheduler_secret_not_configured' }, 503);
+  if (!authorizedSchedulerRequest(req)) return json({ error: 'unauthorized' }, 401);
 
   const supabase = createClient(supabaseUrl, serviceKey);
   // Incremental: poll from the last record_updated_at we ingested (re-cover the pending
@@ -66,13 +95,13 @@ Deno.serve(async () => {
   let upserted = 0;
   // The real loop paginates until a short page; capped here to respect 200 req/day.
   for (; page <= 200; page++) {
-    const res = await fetch(ORDER_REPORT_URL, {
+    const res = await fetchWithTimeout(ORDER_REPORT_URL, {
       method: 'POST',
       headers: { 'x-api-key': shopmyBrandKey, 'content-type': 'application/json' },
       body: JSON.stringify({ recordUpdatedStartDate: since, recordUpdatedEndDate: until, page, pageSize: PAGE_SIZE }),
     }).catch(() => null);
     if (!res?.ok) break;
-    const orders = ((await res.json().catch(() => null))?.orders ?? []) as ShopMyOrder[];
+    const orders = ((await readLimitedResponseJson<ShopMyOrderReport>(res))?.orders ?? []) as ShopMyOrder[];
     if (orders.length === 0) break;
 
     // Idempotent upsert on external_order_id (the report is re-polled as statuses
@@ -91,8 +120,5 @@ Deno.serve(async () => {
     if (orders.length < PAGE_SIZE) break;
   }
 
-  return new Response(JSON.stringify({ ok: true, upserted }), {
-    status: 200,
-    headers: { 'content-type': 'application/json' },
-  });
+  return json({ ok: true, upserted });
 });

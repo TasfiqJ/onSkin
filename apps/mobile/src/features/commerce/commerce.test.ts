@@ -17,6 +17,8 @@ const rows: AffiliateLinkRow[] = [
   { id: 'a', product_type: 'mineral_spf', retailer: 'Partner', label: 'Zinc SPF 30', url: 'https://x.example/a', price_cents: 3400, currency: 'USD', source: 'shopmy', is_paid: true, is_active: true },
   { id: 'b', product_type: 'mineral_spf', retailer: 'Other', label: 'Fluid SPF 30', url: 'https://x.example/b', price_cents: 2900, currency: 'USD', source: 'skimlinks', is_paid: true, is_active: false },
   { id: 'c', product_type: 'ceramide_moisturiser', retailer: 'Partner', label: 'Cream', url: 'https://x.example/c', price_cents: null, currency: 'USD', source: 'direct', is_paid: false, is_active: true },
+  { id: 'd', product_type: 'mineral_spf', retailer: 'Bad', label: 'Unsafe link', url: 'onskin://commerce/callback', price_cents: null, currency: 'USD', source: 'direct', is_paid: false, is_active: true },
+  { id: 'e', product_type: 'mineral_spf', retailer: 'Bad', label: 'Credentialed link', url: 'https://user:pass@x.example/e', price_cents: null, currency: 'USD', source: 'direct', is_paid: false, is_active: true },
 ];
 
 describe('rail-agnostic resolution (the B-SHOPMY hedge)', () => {
@@ -24,6 +26,12 @@ describe('rail-agnostic resolution (the B-SHOPMY hedge)', () => {
     const out = resolveWhereToBuy('mineral_spf', rows);
     expect(out.map((o) => o.id)).toEqual(['a']); // 'b' is inactive
     expect(out[0]!.source).toBe('shopmy');
+  });
+
+  it('filters malformed or credentialed retailer URLs before they reach the tap surface', () => {
+    const out = resolveWhereToBuy('mineral_spf', rows);
+    expect(out.map((o) => o.id)).not.toContain('d');
+    expect(out.map((o) => o.id)).not.toContain('e');
   });
 
   it('returns [] for a type with no links. The honest empty state, never fabricated', () => {
@@ -45,6 +53,8 @@ describe('the outbound link is health-safe (opaque token only)', () => {
   it('builds a URL with no health-adjacent attribute', () => {
     const opt = resolveWhereToBuy('mineral_spf', rows)[0]!;
     const url = outboundFor(opt, 'opaque-token');
+    expect(url).not.toBeNull();
+    if (!url) return;
     expect(url).toContain('oref=opaque-token');
     expect(urlLeaksHealthData(url.slice(opt.url.length))).toBe(false);
   });

@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import type { NotificationKind, NotificationTier } from '@onskin/types';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { tierOf } from './policy';
 
@@ -16,7 +15,7 @@ type SentRecord = { kind: NotificationKind; tier: NotificationTier; at: number }
 
 async function load(): Promise<SentRecord[]> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     const parsed = raw ? (JSON.parse(raw) as SentRecord[]) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -25,7 +24,7 @@ async function load(): Promise<SentRecord[]> {
 }
 
 async function save(list: SentRecord[]): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(list));
+  await setPrivateItem(KEY, JSON.stringify(list));
 }
 
 /** Record a sent notification locally, pruning entries older than ~30 days. */
@@ -47,5 +46,5 @@ export async function sentThisWeekForTierLocal(
 
 /** Test/seed reset. */
 export async function clearSentLocal(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

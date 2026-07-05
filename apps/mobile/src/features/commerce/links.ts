@@ -1,5 +1,7 @@
 import type { AffiliateSource } from '@onskin/types';
 
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
+
 import { buildOutboundUrl } from './attribution';
 
 // Rail-agnostic "where to buy" resolution (docs/10 §5, the B-SHOPMY hedge). The
@@ -48,20 +50,26 @@ function toSource(s: string): AffiliateSource {
 export function resolveWhereToBuy(productType: string, rows: AffiliateLinkRow[]): WhereToBuyOption[] {
   return rows
     .filter((r) => r.is_active && r.product_type === productType)
-    .map((r) => ({
-      id: r.id,
-      retailer: r.retailer,
-      label: r.label,
-      url: r.url,
-      priceCents: r.price_cents,
-      currency: r.currency ?? 'USD',
-      source: toSource(r.source),
-      isPaid: r.is_paid,
-    }));
+    .flatMap((r) => {
+      const url = safeExternalHttpsUrl(r.url);
+      if (!url) return [];
+      return [
+        {
+          id: r.id,
+          retailer: r.retailer,
+          label: r.label,
+          url,
+          priceCents: r.price_cents,
+          currency: r.currency ?? 'USD',
+          source: toSource(r.source),
+          isPaid: r.is_paid,
+        },
+      ];
+    });
 }
 
 /** The final outbound URL for a tapped option. Opaque token only (attribution.ts). */
-export function outboundFor(option: WhereToBuyOption, clickToken: string): string {
+export function outboundFor(option: WhereToBuyOption, clickToken: string): string | null {
   return buildOutboundUrl(option.url, clickToken);
 }
 

@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
-import { rescheduleReminders, requestPermission } from '@/features/notifications/deliver';
 import { SOFT_ASK } from '@/features/notifications/copy';
-import { saveNotifPrefs } from '@/features/notifications/store';
+import { acceptRoutineReminderSoftAsk, declineRoutineReminderSoftAsk } from '@/features/notifications/onboarding';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -29,17 +28,29 @@ function CheckRow({ label }: { label: string }) {
 export default function NotificationsScreen() {
   const [busy, setBusy] = useState(false);
 
-  async function enable() {
+  async function finish(action: () => Promise<void>) {
+    if (busy) return;
     setBusy(true);
-    track('notification_prompt_shown');
-    const granted = await requestPermission();
-    track(granted ? 'notification_prompt_granted' : 'notification_prompt_denied');
-    if (granted) {
-      const prefs = await saveNotifPrefs({ amEnabled: true, pmEnabled: true });
-      await rescheduleReminders(prefs);
+    try {
+      await action();
+    } catch {
+      /* Unsupported local notification/storage environments should not trap onboarding. */
+    } finally {
+      setBusy(false);
+      router.push('/onboarding/account');
     }
-    setBusy(false);
-    router.push('/onboarding/account');
+  }
+
+  function enable() {
+    void finish(async () => {
+      track('notification_prompt_shown');
+      const granted = await acceptRoutineReminderSoftAsk();
+      track(granted ? 'notification_prompt_granted' : 'notification_prompt_denied');
+    });
+  }
+
+  function skip() {
+    void finish(declineRoutineReminderSoftAsk);
   }
 
   return (
@@ -62,8 +73,10 @@ export default function NotificationsScreen() {
         <Button label={SOFT_ASK.yes} onPress={enable} disabled={busy} />
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ disabled: busy }}
           className="mt-3 items-center py-3"
-          onPress={() => router.push('/onboarding/account')}>
+          disabled={busy}
+          onPress={skip}>
           <Text variant="body" tone="muted" className="font-sans-medium">
             {SOFT_ASK.no}
           </Text>

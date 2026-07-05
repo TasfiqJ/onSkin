@@ -1,0 +1,17 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "dataExportRateLimitMax": 5,
+  "dataExportRateLimitWindowSeconds": 3600,
+  "dataExportPhotoUrlTtlSeconds": 3600,
+  "dataExportProbeBudget": 7,
+  "signedUrlExpiryCheck": false,
+  "signedUrlExpiryWaitSeconds": 0,
+  "checks": [],
+  "samples": [],
+  "warnings": [
+    "Live data-rights harness not run; set PHASE9_RUN_LIVE_DATA_RIGHTS=true with staging credentials."
+  ],
+  "errors": []
+}

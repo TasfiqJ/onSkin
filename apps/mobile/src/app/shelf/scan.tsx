@@ -34,7 +34,12 @@ function activeIngredients(product: CatalogProductSummary): {
   parserVersion: string | null;
 } {
   if (!product.rawIngredientsText) {
-    return { ingredients: [], status: product.ingredient_parse_status as never, confidence: product.ingredient_parse_confidence ?? null, parserVersion: null };
+    return {
+      ingredients: [],
+      status: product.ingredient_parse_status as never,
+      confidence: product.ingredient_parse_confidence ?? null,
+      parserVersion: null,
+    };
   }
   const parsed = parseIngredientText(product.rawIngredientsText);
   return {
@@ -111,7 +116,10 @@ export default function ScanScreen() {
     lastScan.current = { barcode: normalized.lookupValue, atMs: now };
 
     if (normalized.validChecksum === false) {
-      setState({ kind: 'invalid', reason: 'That read failed the barcode checksum. Try holding steady in brighter light.' });
+      setState({
+        kind: 'invalid',
+        reason: 'That read failed the barcode checksum. Try holding steady in brighter light.',
+      });
       track('barcode_decode_rejected', { reason: 'checksum', barcode_type: normalized.type });
       return;
     }
@@ -129,14 +137,26 @@ export default function ScanScreen() {
           });
           return;
         }
-        if (response.result === 'no_match' || response.result === 'too_short' || response.result === 'offline') {
+        if (
+          response.result === 'no_match' ||
+          response.result === 'too_short' ||
+          response.result === 'offline'
+        ) {
           setState({ kind: 'no_match', barcode: normalized.lookupValue });
           return;
         }
-        setState({ kind: 'error', barcode: normalized.lookupValue, reason: 'Lookup failed. Add it another way.' });
+        setState({
+          kind: 'error',
+          barcode: normalized.lookupValue,
+          reason: 'Lookup failed. Add it another way.',
+        });
       })
       .catch(() => {
-        setState({ kind: 'error', barcode: normalized.lookupValue, reason: 'Lookup failed. Add it another way.' });
+        setState({
+          kind: 'error',
+          barcode: normalized.lookupValue,
+          reason: 'Lookup failed. Add it another way.',
+        });
       });
   };
 
@@ -159,7 +179,8 @@ export default function ScanScreen() {
             accessibilityState={{ checked: torch }}
             disabled={!canShowCamera}
             onPress={() => setTorch((value) => !value)}
-            className="py-2">
+            className="py-2"
+          >
             <Text variant="label" tone={canShowCamera ? 'inverseMuted' : 'muted'}>
               torch
             </Text>
@@ -175,9 +196,19 @@ export default function ScanScreen() {
                 barcodeScannerSettings={{ barcodeTypes: PRODUCT_BARCODE_TYPES }}
                 enableTorch={torch}
                 facing="back"
-                onBarcodeScanned={state.kind === 'looking_up' || state.kind === 'matched' ? undefined : onBarcodeScanned}
+                onBarcodeScanned={
+                  state.kind === 'looking_up' || state.kind === 'matched'
+                    ? undefined
+                    : onBarcodeScanned
+                }
                 onCameraReady={() => setCameraReady(true)}
-                onMountError={() => setState({ kind: 'error', barcode: '', reason: 'Camera could not start on this device.' })}
+                onMountError={() =>
+                  setState({
+                    kind: 'error',
+                    barcode: '',
+                    reason: 'Camera could not start on this device.',
+                  })
+                }
                 style={{ flex: 1 }}
               />
             ) : (
@@ -191,8 +222,11 @@ export default function ScanScreen() {
                 {cameraEnabled && permission && !permission.granted ? (
                   <Pressable
                     accessibilityRole="button"
-                    onPress={permission.canAskAgain ? requestCamera : () => void Linking.openSettings()}
-                    className="mt-5 rounded-pill bg-paper px-5 py-3">
+                    onPress={
+                      permission.canAskAgain ? requestCamera : () => void Linking.openSettings()
+                    }
+                    className="mt-5 rounded-pill bg-paper px-5 py-3"
+                  >
                     <Text className="font-sans-semibold text-night">
                       {permission.canAskAgain ? 'Allow camera' : 'Open settings'}
                     </Text>
@@ -201,9 +235,12 @@ export default function ScanScreen() {
               </View>
             )}
             <View
-              pointerEvents="none"
               className="absolute left-8 right-8 top-[118px] h-28 rounded-[18px]"
-              style={{ borderWidth: 2, borderColor: cameraReady ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.45)' }}
+              style={{
+                pointerEvents: 'none',
+                borderWidth: 2,
+                borderColor: cameraReady ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.45)',
+              }}
             />
           </View>
           <Text variant="body" tone="inverseMuted" className="mt-5">
@@ -239,14 +276,16 @@ export default function ScanScreen() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => applyProduct(state.product, state.barcode)}
-                className="flex-1 items-center rounded-pill bg-paper px-4 py-3">
+                className="flex-1 items-center rounded-pill bg-paper px-4 py-3"
+              >
                 <Text className="font-sans-semibold text-night">Add this</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/shelf/no-match')}
                 className="items-center rounded-pill px-4 py-3"
-                style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}>
+                style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}
+              >
                 <Text tone="inverseMuted" className="font-sans-semibold">
                   Wrong
                 </Text>
@@ -255,7 +294,8 @@ export default function ScanScreen() {
           </View>
         ) : state.kind === 'no_match' ? (
           <Text variant="bodySm" tone="inverseMuted" className="mb-4">
-            Barcode {state.barcode} is not in the catalog yet. Add it another way, then report the miss if you want.
+            Barcode {state.barcode} is not in the catalog yet. Add it another way, then report the
+            miss if you want.
           </Text>
         ) : state.kind === 'invalid' || state.kind === 'error' ? (
           <Text variant="bodySm" tone="inverseMuted" className="mb-4">
@@ -263,14 +303,30 @@ export default function ScanScreen() {
           </Text>
         ) : (
           <Text variant="bodySm" tone="inverseMuted" className="mb-4">
-            Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app.
+            Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called
+            from the app.
           </Text>
         )}
 
         <View className="gap-2.5">
-          <FallbackRow icon="=" title="Capture the ingredient label" subtitle="Editable low-confidence label flow" onPress={goOcr} />
-          <FallbackRow icon="S" title="Search the catalog" subtitle="Use the reviewed catalog search path" onPress={goSearch} />
-          <FallbackRow icon="+" title="Add it by hand" subtitle="Always works, even offline" onPress={goManual} />
+          <FallbackRow
+            icon="="
+            title="Capture the ingredient label"
+            subtitle="Editable low-confidence label flow"
+            onPress={goOcr}
+          />
+          <FallbackRow
+            icon="S"
+            title="Search the catalog"
+            subtitle="Use the reviewed catalog search path"
+            onPress={goSearch}
+          />
+          <FallbackRow
+            icon="+"
+            title="Add it by hand"
+            subtitle="Always works, even offline"
+            onPress={goManual}
+          />
         </View>
         {(state.kind === 'no_match' || state.kind === 'error') && (
           <Pressable
@@ -279,7 +335,8 @@ export default function ScanScreen() {
             onPress={() => {
               haptics.select();
               router.push('/shelf/no-match');
-            }}>
+            }}
+          >
             <Text variant="label" tone="inverseMuted">
               Product not found
             </Text>
@@ -306,7 +363,8 @@ function FallbackRow({
       accessibilityRole="button"
       onPress={onPress}
       className="flex-row items-center gap-3.5 rounded-[18px] p-4"
-      style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
+      style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+    >
       <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-clay-bright/20">
         <Text className="font-sans-bold text-clay-bright">{icon}</Text>
       </View>

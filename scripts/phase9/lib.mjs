@@ -29,7 +29,9 @@ export function mkdir(path) {
 }
 
 export function hash(path) {
-  return createHash('sha256').update(readFileSync(abs(path))).digest('hex');
+  return createHash('sha256')
+    .update(readFileSync(abs(path)))
+    .digest('hex');
 }
 
 export function parseEnv(text) {
@@ -51,6 +53,14 @@ export function envSnapshot() {
   return { ...envFile('.env.example'), ...envFile('.env'), ...process.env };
 }
 
+export function readScriptAppEnvironment() {
+  const runtimeEnv = { ...envFile('.env'), ...process.env };
+  const raw = runtimeEnv.EXPO_PUBLIC_APP_ENV ?? runtimeEnv.APP_ENV ?? runtimeEnv.APP_VARIANT;
+  const candidate = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+  if (['development', 'staging', 'production'].includes(candidate)) return candidate;
+  return 'production';
+}
+
 export function listFiles(dir = '.') {
   const base = abs(dir);
   if (!existsSync(base)) return [];
@@ -60,7 +70,8 @@ export function listFiles(dir = '.') {
     const current = stack.pop();
     for (const entry of readdirSync(current, { withFileTypes: true })) {
       const full = join(current, entry.name);
-      if (full.includes(`${join('node_modules', '')}`) || full.includes(`${join('.git', '')}`)) continue;
+      if (full.includes(`${join('node_modules', '')}`) || full.includes(`${join('.git', '')}`))
+        continue;
       if (entry.isDirectory()) stack.push(full);
       else out.push(full);
     }
@@ -100,7 +111,9 @@ export function printResult(title, errors, warnings) {
   }
 
   if (warnings.length > 0 && strict) {
-    console.error(`\n${title} strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`);
+    console.error(
+      `\n${title} strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`,
+    );
     process.exit(1);
   }
 
@@ -118,9 +131,13 @@ export function requiredPhase9EvidenceKeys() {
     'PHASE9_RLS_STAGING_PASS',
     'PHASE9_RLS_PRODUCTION_PASS',
     'PHASE9_EDGE_AUTH_PASS',
+    'PHASE9_PUBLIC_FORMS_PASS',
+    'PHASE9_CATALOG_RATE_LIMIT_PASS',
+    'PHASE9_ORDER_REPORT_POLL_PASS',
     'PHASE9_DATA_EXPORT_DELETE_PASS',
     'PHASE9_CONSENT_WITHDRAWAL_PASS',
     'PHASE9_OBSERVABILITY_PAYLOAD_PASS',
+    'PHASE9_REVENUECAT_WEBHOOK_PASS',
     'PHASE9_REVENUECAT_NATIVE_QA_PASS',
     'PHASE9_IOS_TESTFLIGHT_PASS',
     'PHASE9_ANDROID_CLOSED_TEST_PASS',

@@ -3,6 +3,7 @@ import { Alert, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { colors } from '@/theme/tokens';
 
 import { useEntitlementActions } from './useEntitlement';
@@ -17,7 +18,12 @@ export const TERMS_URL = POLICY_LINKS.terms.url;
 export const PRIVACY_URL = POLICY_LINKS.privacy.url;
 
 export function openPolicy(url: string) {
-  void WebBrowser.openBrowserAsync(url).catch(() => {});
+  const safeUrl = safeExternalHttpsUrl(url);
+  if (!safeUrl) {
+    Alert.alert('Link not configured', 'This policy URL must be configured before launch.');
+    return;
+  }
+  void WebBrowser.openBrowserAsync(safeUrl).catch(() => {});
 }
 
 export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {

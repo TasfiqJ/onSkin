@@ -10,6 +10,10 @@ const publishableKey =
   Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_ANON_KEY')!;
 const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const dataExportRateLimitMax = intEnv('DATA_EXPORT_RATE_LIMIT_MAX', 5, 1, 100);
+const dataExportRateLimitWindowSeconds = intEnv('DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS', 3600, 60, 86400);
+const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
+let rateLimitHmacKey: CryptoKey | null = null;
 
 type TableFilter = { column: string; value: string } | null;
 type ExportTable = {
@@ -18,6 +22,7 @@ type ExportTable = {
   scope: 'caller_rls' | 'service_role_filtered';
   note?: string;
 };
+type EdgeSupabaseClient = any;
 
 export const CALLER_RLS_EXPORT_TABLES: ExportTable[] = [
   { table: 'profiles', filter: { column: 'id', value: 'USER_ID' }, scope: 'caller_rls' },
@@ -59,14 +64,27 @@ export const SERVICE_ROLE_FILTERED_EXPORTS = [
   'order_attributions_by_click_token',
 ] as const;
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(typeof body === 'string' ? body : JSON.stringify(body, null, 2), {
     status,
     headers: {
+      ...corsHeaders,
       'Content-Type': typeof body === 'string' ? 'text/plain' : 'application/json',
       ...headers,
     },
   });
+}
+
+function intEnv(name: string, fallback: number, min: number, max: number): number {
+  const value = Number(Deno.env.get(name));
+  if (!Number.isInteger(value) || value < min || value > max) return fallback;
+  return value;
 }
 
 function applyFilter(query: any, filter: TableFilter, userId: string) {
@@ -74,8 +92,13 @@ function applyFilter(query: any, filter: TableFilter, userId: string) {
   return query.eq(filter.column, filter.value === 'USER_ID' ? userId : filter.value);
 }
 
+function photoPathBelongsToUser(userId: string, storagePath: string): boolean {
+  const [prefix, fileName, ...rest] = storagePath.split('/');
+  return prefix === userId && Boolean(fileName) && rest.every((part) => part.length > 0);
+}
+
 async function selectRows(
-  client: ReturnType<typeof createClient>,
+  client: EdgeSupabaseClient,
   table: string,
   filter: TableFilter,
   userId: string,
@@ -85,7 +108,44 @@ async function selectRows(
   return data ?? [];
 }
 
+async function hmacSha256Hex(value: string): Promise<string> {
+  const encoder = new TextEncoder();
+  rateLimitHmacKey ??= await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(serviceKey),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const signature = await crypto.subtle.sign('HMAC', rateLimitHmacKey, encoder.encode(value));
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function enforceRateLimit(admin: EdgeSupabaseClient, userId: string): Promise<Response | null> {
+  const keyHash = await hmacSha256Hex(`data-export|${userId}`);
+  const { data, error } = await admin.rpc('consume_edge_rate_limit', {
+    p_scope: 'data-export',
+    p_key_hash: keyHash,
+    p_limit: dataExportRateLimitMax,
+    p_window_seconds: dataExportRateLimitWindowSeconds,
+  });
+
+  if (error) {
+    console.warn('DATA_EXPORT_RATE_LIMIT_FAILED');
+    return json({ error: 'RATE_LIMIT_UNAVAILABLE' }, 503);
+  }
+  if (data !== true) {
+    return json({ error: 'RATE_LIMITED' }, 429, {
+      'Retry-After': String(dataExportRateLimitWindowSeconds),
+    });
+  }
+  return null;
+}
+
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
+
   const authHeader = req.headers.get('Authorization') ?? '';
 
   const supabase = createClient(supabaseUrl, publishableKey, {
@@ -99,6 +159,9 @@ Deno.serve(async (req) => {
   const { data: userData, error: userErr } = await supabase.auth.getUser();
   const userId = userData.user?.id;
   if (userErr || !userId) return json('unauthorized', 401);
+
+  const rateLimitError = await enforceRateLimit(admin, userId);
+  if (rateLimitError) return rateLimitError;
 
   try {
     const bundle: Record<string, unknown> = {
@@ -162,20 +225,26 @@ Deno.serve(async (req) => {
     const cloudPhotos = ((bundle.photos as Array<{ id?: string; storage_path?: string | null; local_only?: boolean }> | undefined) ?? [])
       .filter((photo) => !photo.local_only && photo.storage_path);
     const photoUrls: { id: string | null; url: string | null }[] = [];
+    const photoUrlOmissions: { id: string | null; reason: string }[] = [];
     for (const photo of cloudPhotos) {
+      if (!photoPathBelongsToUser(userId, photo.storage_path as string)) {
+        photoUrlOmissions.push({ id: photo.id ?? null, reason: 'INVALID_STORAGE_PATH' });
+        continue;
+      }
       const { data: signed, error } = await admin.storage
         .from('photos')
-        .createSignedUrl(photo.storage_path as string, 60 * 60);
+        .createSignedUrl(photo.storage_path as string, dataExportPhotoUrlTtlSeconds);
       if (error) throw new Error(`EXPORT_PHOTO_URL_FAILED:${error.message}`);
       photoUrls.push({ id: photo.id ?? null, url: signed?.signedUrl ?? null });
     }
     bundle.photo_download_urls = photoUrls;
+    bundle.photo_download_url_omissions = photoUrlOmissions;
 
     return json(bundle, 200, {
       'Content-Disposition': 'attachment; filename="onskin-export.json"',
     });
   } catch (error) {
-    console.error('[data-export]', error);
+    console.error('[data-export]', 'DATA_EXPORT_FAILED');
     return json({ error: 'DATA_EXPORT_FAILED' }, 500);
   }
 });

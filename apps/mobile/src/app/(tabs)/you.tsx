@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { type Href, router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { Alert, ScrollView, Switch, View } from 'react-native';
@@ -17,9 +17,11 @@ import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { appLockUserMessage, dataRightsUserMessage } from '@/lib/errors/userFacing';
 import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
 import { type PolicyLinkKey, policyLinkRows } from '@/lib/legal/policyLinks';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { colors } from '@/theme/tokens';
 
 const POLICY_ROWS = policyLinkRows([
@@ -39,6 +41,8 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
   accountDeletion: 'How account deletion works before and after deleting in app.',
   dataExport: 'How to request and read your export.',
 };
+
+type StaticRouteHref = Extract<Href, string>;
 
 function Row({
   label,
@@ -78,11 +82,12 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 }
 
 function openPolicyUrl(url: string) {
-  if (!url) {
+  const safeUrl = safeExternalHttpsUrl(url);
+  if (!safeUrl) {
     Alert.alert('Link not configured', 'This policy URL must be configured before launch.');
     return;
   }
-  void WebBrowser.openBrowserAsync(url).catch(() => {});
+  void WebBrowser.openBrowserAsync(safeUrl).catch(() => {});
 }
 
 export default function YouScreen() {
@@ -114,7 +119,7 @@ export default function YouScreen() {
       : ent?.isPro
         ? 'OnSkin Pro · active'
         : 'Free plan';
-  const routineRows: { label: string; href: string }[] = [
+  const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
     { label: 'Retinoid ramp', href: '/routine/ramp' },
@@ -126,7 +131,7 @@ export default function YouScreen() {
     routineRows.push({ label: 'Widgets & Live Activity', href: '/routine/widgets' });
   }
 
-  const forYouRows: { label: string; href: string }[] = [
+  const forYouRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Recommendations', href: '/recommendations' },
     { label: 'Recommendation preferences', href: '/recommendations/preferences' },
     { label: 'Skin Notes. Myth vs evidence', href: '/community' },
@@ -182,8 +187,7 @@ export default function YouScreen() {
     onSuccess: () => {
       void requestReviewAfterValue('data_export_success');
     },
-    onError: (e) =>
-      Alert.alert('Export failed', e instanceof Error ? e.message : 'Please try again.'),
+    onError: () => Alert.alert('Export failed', dataRightsUserMessage()),
   });
 
   function confirmWithdrawHealthData() {
@@ -199,12 +203,7 @@ export default function YouScreen() {
             setBusy(true);
             withdrawHealthDataConsent()
               .then(() => router.replace('/'))
-              .catch((e: unknown) =>
-                Alert.alert(
-                  'Withdrawal failed',
-                  e instanceof Error ? e.message : 'Please try again.',
-                ),
-              )
+              .catch(() => Alert.alert('Withdrawal failed', dataRightsUserMessage()))
               .finally(() => setBusy(false));
           },
         },
@@ -225,12 +224,7 @@ export default function YouScreen() {
             setBusy(true);
             deleteAccount()
               .then(() => router.replace('/'))
-              .catch((e: unknown) =>
-                Alert.alert(
-                  'Deletion failed',
-                  e instanceof Error ? e.message : 'Please try again.',
-                ),
-              )
+              .catch(() => Alert.alert('Deletion failed', dataRightsUserMessage()))
               .finally(() => setBusy(false));
           },
         },
@@ -324,34 +318,34 @@ export default function YouScreen() {
         </Card>
 
         {phase7Flags.commerce ? (
-        <Card className="mt-4">
-          <Text variant="label" tone="muted" className="mb-1">
-            WHERE TO BUY
-          </Text>
-          <Row
-            label="How we stay honest"
-            hint="Why recommendations and money stay separate. And every paid link is disclosed."
-          >
-            <Text
-              variant="body"
-              tone="muted"
-              onPress={() => router.push('/commerce/transparency')}
-              accessibilityRole="button"
-              style={{ fontSize: 18 }}
-            >
-              ›
+          <Card className="mt-4">
+            <Text variant="label" tone="muted" className="mb-1">
+              WHERE TO BUY
             </Text>
-          </Row>
-          <Row
-            label="Share data with partners (where-to-buy)"
-            hint="Off by default. A separate, revocable MHMDA choice. Turn off and we won’t show paid links."
-          >
-            <Toggle
-              value={commerceConsent.data ?? false}
-              onChange={(v) => void setConsent('data_sharing', v)}
-            />
-          </Row>
-        </Card>
+            <Row
+              label="How we stay honest"
+              hint="Why recommendations and money stay separate. And every paid link is disclosed."
+            >
+              <Text
+                variant="body"
+                tone="muted"
+                onPress={() => router.push('/commerce/transparency')}
+                accessibilityRole="button"
+                style={{ fontSize: 18 }}
+              >
+                ›
+              </Text>
+            </Row>
+            <Row
+              label="Share data with partners (where-to-buy)"
+              hint="Off by default. A separate, revocable MHMDA choice. Turn off and we won’t show paid links."
+            >
+              <Toggle
+                value={commerceConsent.data ?? false}
+                onChange={(v) => void setConsent('data_sharing', v)}
+              />
+            </Row>
+          </Card>
         ) : null}
 
         <Card className="mt-4">
@@ -365,9 +359,7 @@ export default function YouScreen() {
             <Toggle
               value={lockEnabled}
               onChange={(v) =>
-                void setLockEnabled(v).catch((e: unknown) =>
-                  Alert.alert('App lock', e instanceof Error ? e.message : 'Not available.'),
-                )
+                void setLockEnabled(v).catch(() => Alert.alert('App lock', appLockUserMessage()))
               }
             />
           </Row>

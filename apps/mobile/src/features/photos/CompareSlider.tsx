@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
@@ -16,13 +16,37 @@ import { PhotoImage } from './PhotoImage';
 // capture lands (B-CAMERA); expo-image renders the on-device file once it exists.
 
 export type ComparePhoto = { uri: string | null; date: string; tone: string };
+const HANDLE_SHADOW =
+  Platform.OS === 'web'
+    ? { boxShadow: '0 3px 12px rgba(0, 0, 0, 0.28)' }
+    : {
+        shadowColor: '#000',
+        shadowOpacity: 0.28,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 3 },
+        elevation: 4,
+      };
 
 function Panel({ photo }: { photo: ComparePhoto }) {
   if (photo.uri) {
-    return <PhotoImage uri={photo.uri} style={{ flex: 1 }} contentFit="cover" fallbackTone={photo.tone} />;
+    return (
+      <PhotoImage
+        uri={photo.uri}
+        style={{ flex: 1 }}
+        contentFit="cover"
+        fallbackTone={photo.tone}
+      />
+    );
   }
   return (
-    <View style={{ flex: 1, backgroundColor: photo.tone, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: photo.tone,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Text variant="label" style={{ color: 'rgba(32,27,21,0.28)' }}>
         your photo
       </Text>
@@ -34,14 +58,19 @@ function DateChip({ date, dark, onPress }: { date: string; dark?: boolean; onPre
   const inner = (
     <View
       className="rounded-pill px-3.5 py-1.5"
-      style={{ backgroundColor: dark ? 'rgba(32,27,21,0.85)' : 'rgba(250,247,242,0.92)' }}>
+      style={{ backgroundColor: dark ? 'rgba(32,27,21,0.85)' : 'rgba(250,247,242,0.92)' }}
+    >
       <Text variant="label" style={{ color: dark ? colors.cream : colors.ink, fontSize: 11.5 }}>
         {date}
       </Text>
     </View>
   );
   return onPress ? (
-    <Pressable accessibilityRole="button" accessibilityLabel={`Change to a different date (currently ${date})`} onPress={onPress}>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Change to a different date (currently ${date})`}
+      onPress={onPress}
+    >
       {inner}
     </Pressable>
   ) : (
@@ -98,10 +127,15 @@ export function CompareSlider({
           <View
             key={i}
             className="flex-1 overflow-hidden rounded-card"
-            style={{ height: 368, borderWidth: 1, borderColor: colors.hairline }}>
+            style={{ height: 368, borderWidth: 1, borderColor: colors.hairline }}
+          >
             <Panel photo={p} />
             <View className="absolute left-2.5 top-2.5">
-              <DateChip date={p.date} dark={i === 1} onPress={i === 0 ? onPickBefore : onPickAfter} />
+              <DateChip
+                date={p.date}
+                dark={i === 1}
+                onPress={i === 0 ? onPickBefore : onPickAfter}
+              />
             </View>
           </View>
         ))}
@@ -113,7 +147,8 @@ export function CompareSlider({
     <View
       className="overflow-hidden rounded-card"
       style={{ height: 368, borderWidth: 1, borderColor: colors.hairline }}
-      onLayout={(e) => onLayout(e.nativeEvent.layout.width)}>
+      onLayout={(e) => onLayout(e.nativeEvent.layout.width)}
+    >
       <GestureDetector gesture={pan}>
         <View style={{ flex: 1 }}>
           {/* base = after (right side) */}
@@ -121,7 +156,12 @@ export function CompareSlider({
             <Panel photo={after} />
           </View>
           {/* before clipped to the left */}
-          <Animated.View style={[{ position: 'absolute', top: 0, bottom: 0, left: 0, overflow: 'hidden' }, beforeClip]}>
+          <Animated.View
+            style={[
+              { position: 'absolute', top: 0, bottom: 0, left: 0, overflow: 'hidden' },
+              beforeClip,
+            ]}
+          >
             <View style={{ width: w, height: '100%' }}>
               <Panel photo={before} />
             </View>
@@ -129,7 +169,13 @@ export function CompareSlider({
           {/* divider */}
           <Animated.View
             style={[
-              { position: 'absolute', top: 0, bottom: 0, width: 2.5, backgroundColor: colors.paper },
+              {
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                width: 2.5,
+                backgroundColor: colors.paper,
+              },
               dividerStyle,
             ]}
           />
@@ -150,14 +196,11 @@ export function CompareSlider({
                 justifyContent: 'center',
                 flexDirection: 'row',
                 gap: 5,
-                shadowColor: '#000',
-                shadowOpacity: 0.28,
-                shadowRadius: 12,
-                shadowOffset: { width: 0, height: 3 },
-                elevation: 4,
+                ...HANDLE_SHADOW,
               },
               handleStyle,
-            ]}>
+            ]}
+          >
             <Text style={{ color: colors.ink, fontSize: 13 }}>‹</Text>
             <Text style={{ color: colors.ink, fontSize: 13 }}>›</Text>
           </Animated.View>

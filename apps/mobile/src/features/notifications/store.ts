@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { supabase } from '@/lib/supabase/client';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 /**
  * Local-first notification preferences (docs/07 §7, the D-029 shelf/photos pattern).
@@ -43,11 +42,19 @@ export const DEFAULT_PREFS: NotifPrefs = {
   lockscreenDiscreet: true,
 };
 
+export function normalizeNotifPatch(patch: Partial<NotifPrefs>): Partial<NotifPrefs> {
+  return patch.lockscreenDiscreet === false ? { ...patch, lockscreenDiscreet: true } : patch;
+}
+
+export function normalizeNotifPrefs(prefs: Partial<NotifPrefs> = {}): NotifPrefs {
+  return { ...DEFAULT_PREFS, ...prefs, lockscreenDiscreet: true };
+}
+
 export async function loadNotifPrefs(): Promise<NotifPrefs> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     if (!raw) return DEFAULT_PREFS;
-    return { ...DEFAULT_PREFS, ...(JSON.parse(raw) as Partial<NotifPrefs>) };
+    return normalizeNotifPrefs(JSON.parse(raw) as Partial<NotifPrefs>);
   } catch {
     return DEFAULT_PREFS;
   }
@@ -83,13 +90,13 @@ async function mirror(p: NotifPrefs): Promise<void> {
 }
 
 export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
-  const next = { ...(await loadNotifPrefs()), ...patch };
-  await AsyncStorage.setItem(KEY, JSON.stringify(next));
+  const next = normalizeNotifPrefs({ ...(await loadNotifPrefs()), ...normalizeNotifPatch(patch) });
+  await setPrivateItem(KEY, JSON.stringify(next));
   void mirror(next);
   return next;
 }
 
 /** Test/seed reset. */
 export async function clearNotifPrefs(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

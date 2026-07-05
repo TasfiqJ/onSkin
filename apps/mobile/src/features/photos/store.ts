@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { randomUUID } from 'expo-crypto';
 
 import type { PhotoSeries, TimeOfDay } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import {
   decryptPhotoNote,
@@ -16,9 +16,10 @@ import {
 import type { PhotoMeta } from './timeline';
 
 /**
- * Local-first photo store. Metadata stays in AsyncStorage; image bytes are
- * encrypted into app-private `.onskinphoto` envelopes and never mirrored to
- * Supabase while `localOnly` is true. Notes are encrypted before persistence.
+ * Local-first photo store. Metadata is encrypted before it enters AsyncStorage;
+ * image bytes are encrypted into app-private `.onskinphoto` envelopes and never
+ * mirrored to Supabase while `localOnly` is true. Notes are encrypted separately
+ * inside the encrypted metadata envelope for legacy migration safety.
  */
 const KEY = 'onskin.photos.v1';
 
@@ -75,7 +76,7 @@ async function normalizeStoredRecord(item: PhotoRecord & { notesCiphertext?: str
 
 export async function loadPhotos(): Promise<PhotoRecord[]> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as PhotoRecord[];
     if (!Array.isArray(parsed)) return [];
@@ -93,7 +94,7 @@ async function persist(items: PhotoRecord[]): Promise<void> {
       notesCiphertext: await encryptPhotoNote(item.notes),
     })),
   );
-  await AsyncStorage.setItem(KEY, JSON.stringify(stored));
+  await setPrivateItem(KEY, JSON.stringify(stored));
 }
 
 /** Best-effort metadata-only mirror. Image paths, notes, and bytes are never sent. */
@@ -204,5 +205,5 @@ export async function setReference(id: string): Promise<void> {
 export async function clearPhotos(): Promise<void> {
   const items = await loadPhotos();
   await Promise.all(items.map((p) => deleteEncryptedPhoto(p.encryptedLocalUri ?? p.localUri)));
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

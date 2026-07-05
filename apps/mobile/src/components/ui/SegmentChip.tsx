@@ -20,6 +20,8 @@ export function SegmentChip({ label, selected = false, onPress, className }: Seg
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
+      accessibilityLabel={label}
+      aria-pressed={selected}
       onPress={() => {
         haptics.select();
         onPress?.();
@@ -28,8 +30,11 @@ export function SegmentChip({ label, selected = false, onPress, className }: Seg
         'min-h-[40px] justify-center rounded-pill px-[18px] py-2.5',
         selected ? 'bg-ink' : 'border border-hairline-strong bg-paper-raised',
         className,
-      )}>
-      <Text className={cn('font-sans-semibold text-[13px]', selected ? 'text-paper' : 'text-muted')}>
+      )}
+    >
+      <Text
+        className={cn('font-sans-semibold text-[13px]', selected ? 'text-paper' : 'text-muted')}
+      >
         {label}
       </Text>
     </Pressable>

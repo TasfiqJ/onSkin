@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { randomUUID } from 'expo-crypto';
 
 import { supabase } from '@/lib/supabase/client';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { isHealthSafePayload, type ClickPayload } from './attribution';
 
@@ -16,14 +16,14 @@ const CONSENT_KEY = 'onskin.commerceConsent.v1';
 
 export async function getCommerceConsentLocal(): Promise<boolean> {
   try {
-    return (await AsyncStorage.getItem(CONSENT_KEY)) === 'true';
+    return (await getPrivateItem(CONSENT_KEY)) === 'true';
   } catch {
     return false;
   }
 }
 
 export async function setCommerceConsentLocal(granted: boolean): Promise<void> {
-  await AsyncStorage.setItem(CONSENT_KEY, granted ? 'true' : 'false');
+  await setPrivateItem(CONSENT_KEY, granted ? 'true' : 'false');
 }
 
 /** An opaque, random click token. Carries no profile/concern/photo (docs/10 §5). */
@@ -52,5 +52,5 @@ export async function recordClick(payload: ClickPayload): Promise<void> {
 
 /** Test/seed reset. */
 export async function clearCommerceState(): Promise<void> {
-  await AsyncStorage.removeItem(CONSENT_KEY);
+  await removePrivateItem(CONSENT_KEY);
 }

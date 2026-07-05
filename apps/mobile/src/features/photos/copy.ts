@@ -54,6 +54,12 @@ export const PHOTO_COPY = {
   detail: {
     noteLabel: 'Your note',
     setReference: 'Set as reference',
+    shareLabel: 'Share photo',
+    shareTitle: 'Share this photo?',
+    shareBody: 'This sends the photo image you choose. It is not blurred, and your notes are not included.',
+    shareConfirm: 'Share photo',
+    shareUnavailable:
+      "Sharing isn't available on this device. Your photo stays on your phone unless you choose another way to export it.",
     notePlaceholder: 'Add a note. “started retinol”, “travel breakout”',
   },
   // Privacy / app-lock (design screen 08, docs/06 §7).

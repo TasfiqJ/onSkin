@@ -11,7 +11,7 @@ import { track } from '@/lib/analytics/track';
 // 07b · Reveal. The "aha" payoff (docs/01 §2/§8, design spec p.6). Shows the
 // computed 4-axis profile as sliders. The poetic headline + routine prose on the
 // spec are final product/health copy (BLOCKED: B-QUIZ-COPY). Here we show the
-// factual axis descriptor + a clearly-labelled placeholder recommendation.
+// factual axis descriptor and claim-safe draft routine framing.
 const AXIS_ORDER: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
 
 function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
@@ -70,8 +70,8 @@ export default function RevealScreen() {
 
         <Card tone="night" className="mt-4">
           <Text variant="bodySm" tone="inverseMuted">
-            [Placeholder recommendation. Pending B-QUIZ-COPY] A gentle, barrier-first routine
-            tuned to your profile. Your full plan and conflict checks come next.
+            Your first routine starts gentle and barrier-first. Your full plan and conflict
+            checks come next.
           </Text>
         </Card>
       </View>

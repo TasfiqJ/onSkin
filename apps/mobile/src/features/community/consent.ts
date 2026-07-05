@@ -1,5 +1,6 @@
 import { track } from '@/lib/analytics/track';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { withdrawConsent } from '@/lib/consent/withdrawal';
 
 import { COMMUNITY_COPY } from './copy';
 import { getCommunityConsentLocal, setAgeConfirmedLocal, setCommunityConsentLocal } from './store';
@@ -47,14 +48,9 @@ export async function confirmCommunityAge(): Promise<void> {
 
 export async function withdrawCommunityConsent(): Promise<void> {
   await setCommunityConsentLocal(false);
-  try {
-    await recordConsent({
-      type: 'community_participation',
-      granted: false,
-      version: COMMUNITY_COPY.consentVersion,
-      consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
-    });
-  } catch {
-    /* best-effort */
-  }
+  await withdrawConsent({
+    type: 'community_participation',
+    version: COMMUNITY_COPY.consentVersion,
+    consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
+  });
 }

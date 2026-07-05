@@ -1,0 +1,11 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "userEdgeBodyMaxBytes": 16384,
+  "checks": [],
+  "warnings": [
+    "Live Edge auth harness not run; set PHASE9_RUN_LIVE_EDGE_AUTH=true with staging credentials."
+  ],
+  "errors": []
+}

@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 import * as StoreReview from 'expo-store-review';
 
 import { track } from '@/lib/analytics/track';
@@ -15,7 +15,7 @@ const REVIEW_PROMPT_KEY = 'onskin.reviewPrompt.v1';
 
 async function loadState(): Promise<ReviewPromptState> {
   try {
-    const raw = await AsyncStorage.getItem(REVIEW_PROMPT_KEY);
+    const raw = await getPrivateItem(REVIEW_PROMPT_KEY);
     const parsed = raw ? (JSON.parse(raw) as Partial<ReviewPromptState>) : {};
     return { attemptedAt: Array.isArray(parsed.attemptedAt) ? parsed.attemptedAt : [] };
   } catch {
@@ -24,7 +24,7 @@ async function loadState(): Promise<ReviewPromptState> {
 }
 
 async function saveState(state: ReviewPromptState): Promise<void> {
-  await AsyncStorage.setItem(REVIEW_PROMPT_KEY, JSON.stringify(state));
+  await setPrivateItem(REVIEW_PROMPT_KEY, JSON.stringify(state));
 }
 
 export async function requestReviewAfterValue(

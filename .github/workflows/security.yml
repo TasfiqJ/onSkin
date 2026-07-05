@@ -1,0 +1,336 @@
+name: Security
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '17 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  code-gates:
+    name: Code security gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        # actions/setup-node v6.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Deno
+        # denoland/setup-deno v2.0.4
+        uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282
+        with:
+          deno-version: v2.7.5
+
+      - name: Install
+        run: npm ci
+
+      - name: Phase 9 verification
+        id: phase9_verify
+        continue-on-error: true
+        run: npm run phase9:verify
+
+      - name: Dependency SBOM with audit metadata
+        id: dependency_sbom
+        continue-on-error: true
+        run: npm run phase9:dependency-sbom
+        env:
+          PHASE9_RUN_NPM_AUDIT: 'true'
+
+      - name: Fail on high or critical npm advisories
+        id: npm_audit_high
+        continue-on-error: true
+        run: |
+          mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          npm audit --audit-level=high --json > docs/phase-9/generated/ci-scanner-evidence/npm-audit-high.json
+
+      - name: Write code-gate evidence manifest
+        if: always()
+        run: |
+          mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          cat > docs/phase-9/generated/ci-scanner-evidence/code-gates-outcomes.json <<JSON
+          {
+            "job": "code-gates",
+            "sha": "${{ github.sha }}",
+            "run_id": "${{ github.run_id }}",
+            "phase9_verify": "${{ steps.phase9_verify.outcome }}",
+            "dependency_sbom": "${{ steps.dependency_sbom.outcome }}",
+            "npm_audit_high": "${{ steps.npm_audit_high.outcome }}"
+          }
+          JSON
+
+      - name: Upload code-gate evidence
+        if: always()
+        # actions/upload-artifact v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: code-security-evidence-${{ github.run_id }}
+          path: docs/phase-9/generated/ci-scanner-evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce code-gate results
+        if: always()
+        run: |
+          test "${{ steps.phase9_verify.outcome }}" = "success"
+          test "${{ steps.dependency_sbom.outcome }}" = "success"
+          test "${{ steps.npm_audit_high.outcome }}" = "success"
+
+  secret-scan:
+    name: Secret scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Gitleaks
+        id: gitleaks
+        continue-on-error: true
+        # gitleaks/gitleaks-action v2
+        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc
+        env:
+          GITLEAKS_ENABLE_COMMENTS: 'false'
+
+      - name: TruffleHog verified secrets
+        id: trufflehog
+        continue-on-error: true
+        # trufflesecurity/trufflehog v3.95.8
+        uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+      - name: Write secret scanner evidence manifest
+        if: always()
+        run: |
+          mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          cat > docs/phase-9/generated/ci-scanner-evidence/secret-scan-outcomes.json <<JSON
+          {
+            "job": "secret-scan",
+            "sha": "${{ github.sha }}",
+            "run_id": "${{ github.run_id }}",
+            "gitleaks": "${{ steps.gitleaks.outcome }}",
+            "trufflehog": "${{ steps.trufflehog.outcome }}"
+          }
+          JSON
+
+      - name: Upload secret scanner evidence
+        if: always()
+        # actions/upload-artifact v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: secret-scanner-evidence-${{ github.run_id }}
+          path: docs/phase-9/generated/ci-scanner-evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce secret scanner results
+        if: always()
+        run: |
+          test "${{ steps.gitleaks.outcome }}" = "success"
+          test "${{ steps.trufflehog.outcome }}" = "success"
+
+  static-analysis:
+    name: Static analysis and OSV
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        # actions/setup-node v6.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Semgrep OWASP/TypeScript/React/secrets
+        id: semgrep
+        continue-on-error: true
+        # semgrep/semgrep-action v1
+        uses: semgrep/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d
+        with:
+          config: >-
+            p/owasp-top-ten
+            p/typescript
+            p/react
+            p/secrets
+
+      - name: OSV scanner
+        id: osv
+        continue-on-error: true
+        # google/osv-scanner-action/osv-scanner-action v2.3.8
+        uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2
+        with:
+          scan-args: |-
+            --recursive
+            .
+
+      - name: Write static scanner evidence manifest
+        if: always()
+        run: |
+          mkdir -p docs/phase-9/generated/ci-scanner-evidence
+          cat > docs/phase-9/generated/ci-scanner-evidence/static-analysis-outcomes.json <<JSON
+          {
+            "job": "static-analysis",
+            "sha": "${{ github.sha }}",
+            "run_id": "${{ github.run_id }}",
+            "semgrep": "${{ steps.semgrep.outcome }}",
+            "osv": "${{ steps.osv.outcome }}"
+          }
+          JSON
+
+      - name: Upload static scanner evidence
+        if: always()
+        # actions/upload-artifact v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: static-scanner-evidence-${{ github.run_id }}
+          path: docs/phase-9/generated/ci-scanner-evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce static scanner results
+        if: always()
+        run: |
+          test "${{ steps.semgrep.outcome }}" = "success"
+          test "${{ steps.osv.outcome }}" = "success"
+
+  live-supabase-adversarial:
+    name: Live Supabase adversarial evidence
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment: staging-security
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        # actions/setup-node v6.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Run live staging Edge auth harness
+        run: npm run phase9:live-edge-auth:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_EDGE_AUTH: 'true'
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging Supabase adversarial harness
+        run: npm run phase9:live-supabase-adversarial:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL: 'true'
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging data-rights harness
+        run: npm run phase9:live-data-rights:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_DATA_RIGHTS: 'true'
+          DATA_EXPORT_RATE_LIMIT_MAX: ${{ vars.STAGING_DATA_EXPORT_RATE_LIMIT_MAX }}
+          DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS: ${{ vars.STAGING_DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS }}
+          DATA_EXPORT_PHOTO_URL_TTL_SECONDS: ${{ vars.STAGING_DATA_EXPORT_PHOTO_URL_TTL_SECONDS }}
+          PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX: ${{ vars.STAGING_DATA_EXPORT_RATE_LIMIT_PROBE_MAX }}
+          PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK: 'true'
+          PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS: ${{ vars.STAGING_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS }}
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging consent-withdrawal harness
+        run: npm run phase9:live-consent-withdrawal:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL: 'true'
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging public-forms Turnstile harness
+        run: npm run phase9:live-public-forms:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_PUBLIC_FORMS: 'true'
+          PHASE9_TURNSTILE_VALID_TOKEN: ${{ secrets.STAGING_TURNSTILE_VALID_TOKEN }}
+          PUBLIC_FORMS_RATE_LIMIT_MAX: ${{ vars.STAGING_PUBLIC_FORMS_RATE_LIMIT_MAX }}
+          PUBLIC_FORMS_MAX_BYTES: ${{ vars.STAGING_PUBLIC_FORMS_MAX_BYTES }}
+          PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX: ${{ vars.STAGING_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX }}
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging catalog rate-limit harness
+        run: npm run phase9:live-catalog-rate-limit:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_CATALOG_RATE_LIMIT: 'true'
+          CATALOG_RATE_LIMIT_MAX: ${{ vars.STAGING_CATALOG_RATE_LIMIT_MAX }}
+          PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX: ${{ vars.STAGING_CATALOG_RATE_LIMIT_PROBE_MAX }}
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging order-report-poll harness
+        run: npm run phase9:live-order-report-poll:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_ORDER_REPORT_POLL: 'true'
+          PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED: ${{ vars.STAGING_ORDER_REPORT_POLL_ACTIVATED_EXPECTED }}
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Run live staging RevenueCat webhook harness
+        run: npm run phase9:live-revenuecat-webhook:strict
+        env:
+          EXPO_PUBLIC_APP_ENV: staging
+          PHASE9_RUN_LIVE_REVENUECAT_WEBHOOK: 'true'
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.STAGING_SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          REVENUECAT_WEBHOOK_AUTH: ${{ secrets.STAGING_REVENUECAT_WEBHOOK_AUTH }}
+          REVENUECAT_WEBHOOK_SIGNING_SECRET: ${{ secrets.STAGING_REVENUECAT_WEBHOOK_SIGNING_SECRET }}
+          REVENUECAT_WEBHOOK_MAX_BYTES: ${{ vars.STAGING_REVENUECAT_WEBHOOK_MAX_BYTES }}

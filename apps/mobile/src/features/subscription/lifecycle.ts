@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 import { loadEntitlement } from './store';
 
 /**
@@ -21,9 +20,9 @@ export async function pendingLifecycleRoute(nowISO: string): Promise<LifecycleRo
   const lapsed = !e.isActive || new Date(e.expiresAt).getTime() <= new Date(nowISO).getTime();
   if (!lapsed) return null;
   try {
-    const prompted = await AsyncStorage.getItem(PROMPT_KEY);
+    const prompted = await getPrivateItem(PROMPT_KEY);
     if (prompted === e.expiresAt) return null; // already re-offered for this expiry
-    await AsyncStorage.setItem(PROMPT_KEY, e.expiresAt);
+    await setPrivateItem(PROMPT_KEY, e.expiresAt);
   } catch {
     /* if storage fails, fall through and present once */
   }

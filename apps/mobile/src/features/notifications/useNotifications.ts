@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { rescheduleReminders } from './deliver';
-import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
+import { loadNotifPrefs, normalizeNotifPatch, saveNotifPrefs, type NotifPrefs } from './store';
 
 // Reads/writes the local-first notification preferences and reschedules the
 // utility reminders whenever they change (docs/07 §3.4). Optimistic so the
@@ -23,7 +23,7 @@ export function useUpdateNotifPrefs() {
     onMutate: async (patch: Partial<NotifPrefs>) => {
       await qc.cancelQueries({ queryKey: KEY });
       const prev = qc.getQueryData<NotifPrefs>(KEY);
-      if (prev) qc.setQueryData<NotifPrefs>(KEY, { ...prev, ...patch });
+      if (prev) qc.setQueryData<NotifPrefs>(KEY, { ...prev, ...normalizeNotifPatch(patch) });
       return { prev };
     },
     onError: (_e, _v, ctx) => {

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
@@ -27,6 +27,15 @@ import { colors } from '@/theme/tokens';
 // with the skin-cycling strip + the Doc-2 auto-resolution banner ("next acid night").
 // Fallback strip labels when no cycle is running yet (the classic rhythm).
 const FALLBACK_SLOTS = ['Exfoliate', 'Retinoid', 'Recover', 'Recover'];
+const ROUTINE_CARD_SHADOW =
+  Platform.OS === 'web'
+    ? { boxShadow: '0 1px 2px rgba(32, 27, 21, 0.04)' }
+    : {
+        shadowColor: '#201B15',
+        shadowOpacity: 0.04,
+        shadowRadius: 2,
+        shadowOffset: { width: 0, height: 1 },
+      };
 
 function slotInstruction(slot: string): string {
   if (slot === 'retinoid') return 'Apply to dry skin · pea-sized · avoid the eye area.';
@@ -48,10 +57,28 @@ function Check({ color = colors.paper }: { color?: string }) {
   return (
     <View style={{ width: 11, height: 9 }}>
       <View
-        style={{ position: 'absolute', left: 0, top: 4, width: 5, height: 2, backgroundColor: color, borderRadius: 1, transform: [{ rotate: '45deg' }] }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 4,
+          width: 5,
+          height: 2,
+          backgroundColor: color,
+          borderRadius: 1,
+          transform: [{ rotate: '45deg' }],
+        }}
       />
       <View
-        style={{ position: 'absolute', left: 3, top: 2, width: 9, height: 2, backgroundColor: color, borderRadius: 1, transform: [{ rotate: '-50deg' }] }}
+        style={{
+          position: 'absolute',
+          left: 3,
+          top: 2,
+          width: 9,
+          height: 2,
+          backgroundColor: color,
+          borderRadius: 1,
+          transform: [{ rotate: '-50deg' }],
+        }}
       />
     </View>
   );
@@ -78,30 +105,48 @@ function CheckRow({
       accessibilityRole="checkbox"
       accessibilityState={{ checked: state === 'done' }}
       accessibilityLabel={name}
+      aria-checked={state === 'done'}
       onPress={() => {
         if (state !== 'done') haptics.success();
         onPress();
       }}
       className="flex-row items-center gap-3.5 py-3"
-      style={{ borderTopWidth: first ? 0 : 1, borderTopColor: dark ? colors.hairlineDark : colors.hairline }}>
+      style={{
+        borderTopWidth: first ? 0 : 1,
+        borderTopColor: dark ? colors.hairlineDark : colors.hairline,
+      }}
+    >
       <View
         className="h-[26px] w-[26px] items-center justify-center rounded-full"
         style={
           state === 'done'
             ? { backgroundColor: accent }
-            : { borderWidth: state === 'next' ? 2 : 1.5, borderColor: state === 'next' ? accent : dark ? 'rgba(244,239,231,0.25)' : 'rgba(32,27,21,0.18)' }
-        }>
+            : {
+                borderWidth: state === 'next' ? 2 : 1.5,
+                borderColor:
+                  state === 'next'
+                    ? accent
+                    : dark
+                      ? 'rgba(244,239,231,0.25)'
+                      : 'rgba(32,27,21,0.18)',
+              }
+        }
+      >
         {state === 'done' ? <Check /> : null}
       </View>
       <View className="flex-1">
         <Text
           variant="body"
           className={cn('font-sans-medium text-[15.5px]', state === 'done' && 'line-through')}
-          style={{ color: state === 'done' ? colors.mutedLight : dark ? colors.cream : colors.ink }}>
+          style={{ color: state === 'done' ? colors.mutedLight : dark ? colors.cream : colors.ink }}
+        >
           {name}
         </Text>
         {sub ? (
-          <Text className="mt-0.5 text-[12.5px]" style={{ color: dark ? 'rgba(244,239,231,0.45)' : colors.muted }}>
+          <Text
+            className="mt-0.5 text-[12.5px]"
+            style={{ color: dark ? 'rgba(244,239,231,0.45)' : colors.muted }}
+          >
             {sub}
           </Text>
         ) : null}
@@ -152,13 +197,17 @@ export default function TodayScreen() {
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
     done.has(key) ? 'done' : key === firstUndoneKey ? 'next' : 'pending';
 
-  const dateLabel = new Date()
-    .toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const dateLabel = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
 
   // ---- AM ----
   if (!dark) {
     const steps = plan?.am ?? [];
-    const firstUndone = steps.map((s) => stepKey('AM', s.productId)).find((k) => !done.has(k)) ?? null;
+    const firstUndone =
+      steps.map((s) => stepKey('AM', s.productId)).find((k) => !done.has(k)) ?? null;
     const doneCount = steps.filter((s) => done.has(stepKey('AM', s.productId))).length;
     return (
       <Screen edges={['top']}>
@@ -173,7 +222,8 @@ export default function TodayScreen() {
                 accessibilityRole="button"
                 accessibilityLabel="View your streak and adherence"
                 onPress={() => router.push('/routine/streak')}
-                className="flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-3.5 py-1.5">
+                className="flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-3.5 py-1.5"
+              >
                 <View className="h-1.5 w-1.5 rounded-full bg-clay" />
                 <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
                   {progress.streak} days
@@ -194,11 +244,9 @@ export default function TodayScreen() {
               paddingBottom: 12,
               borderWidth: 1,
               borderColor: colors.hairline,
-              shadowColor: '#201B15',
-              shadowOpacity: 0.04,
-              shadowRadius: 2,
-              shadowOffset: { width: 0, height: 1 },
-            }}>
+              ...ROUTINE_CARD_SHADOW,
+            }}
+          >
             <View className="mb-2 flex-row items-center justify-between">
               <Text variant="body" className="font-sans-bold">
                 Morning routine
@@ -238,9 +286,16 @@ export default function TodayScreen() {
             onPress={() => {
               haptics.select();
               router.push('/cycle/week');
-            }}>
-            <View className="h-[38px] w-[38px] items-center justify-center rounded-full" style={{ backgroundColor: colors.nightSurface }}>
-              <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+            }}
+          >
+            <View
+              className="h-[38px] w-[38px] items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.nightSurface }}
+            >
+              <View
+                className="h-3.5 w-3.5 rounded-full"
+                style={{ backgroundColor: colors.clayBright }}
+              />
             </View>
             <View className="flex-1">
               <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
@@ -291,11 +346,16 @@ export default function TodayScreen() {
         }
       : null;
   const dailyPm = (plan?.pm ?? []).filter((s) => !s.cyclingNight);
-  const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort((a, b) => a.order - b.order);
-  const firstUndonePm = pmSteps.map((s) => stepKey('PM', s.productId)).find((k) => !done.has(k)) ?? null;
+  const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
+    (a, b) => a.order - b.order,
+  );
+  const firstUndonePm =
+    pmSteps.map((s) => stepKey('PM', s.productId)).find((k) => !done.has(k)) ?? null;
   const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
   const suppressedAcidName =
-    tonightSlot === 'retinoid' && cycle ? (cycle.nights.find((n) => n.slot === 'exfoliate')?.productName ?? null) : null;
+    tonightSlot === 'retinoid' && cycle
+      ? (cycle.nights.find((n) => n.slot === 'exfoliate')?.productName ?? null)
+      : null;
   const nextAcidISO = cycleData?.nextAcidNight ?? null;
 
   return (
@@ -318,11 +378,12 @@ export default function TodayScreen() {
             onPress={() => {
               haptics.select();
               router.push('/cycle/recovery');
-            }}>
+            }}
+          >
             <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.sage }} />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
-              Recovery mode · day {cycleData.recovery.day} of {cycleData.recovery.days}. Barrier support
-              tonight.
+              Recovery mode · day {cycleData.recovery.day} of {cycleData.recovery.days}. Barrier
+              support tonight.
             </Text>
             <Text style={{ color: 'rgba(244,239,231,0.4)' }}>›</Text>
           </Pressable>
@@ -334,16 +395,26 @@ export default function TodayScreen() {
             onPress={() => {
               haptics.select();
               router.push('/cycle/disruption');
-            }}>
-            <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+            }}
+          >
+            <View
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: colors.clayBright }}
+            />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
               Your cycle is paused. Resume whenever you&apos;re ready.
             </Text>
             <Text style={{ color: 'rgba(244,239,231,0.4)' }}>›</Text>
           </Pressable>
         ) : skippedTonight ? (
-          <View className="mt-6 flex-row items-center gap-3 rounded-card px-5 py-4" style={{ backgroundColor: colors.nightSurface }}>
-            <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+          <View
+            className="mt-6 flex-row items-center gap-3 rounded-card px-5 py-4"
+            style={{ backgroundColor: colors.nightSurface }}
+          >
+            <View
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: colors.clayBright }}
+            />
             <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.8)' }}>
               You skipped tonight. Nothing breaks, your cycle picks up tomorrow.
             </Text>
@@ -359,9 +430,13 @@ export default function TodayScreen() {
           onPress={() => {
             haptics.select();
             router.push('/cycle/week');
-          }}>
+          }}
+        >
           <View className="mb-4 flex-row items-center justify-between">
-            <Text className="font-sans-bold text-[13px] uppercase tracking-[1px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
+            <Text
+              className="font-sans-bold text-[13px] uppercase tracking-[1px]"
+              style={{ color: 'rgba(244,239,231,0.5)' }}
+            >
               Skin cycling · night {nightNumber} of {nightTotal}
             </Text>
             <Text className="text-[12px]" style={{ color: colors.clayBright }}>
@@ -369,20 +444,31 @@ export default function TodayScreen() {
             </Text>
           </View>
           <View className="flex-row gap-2">
-            {(cycle ? cycle.nights.map((n) => slotLabel(n.slot)) : FALLBACK_SLOTS).map((label, i) => {
-              const active = cTonight ? i === cTonight.index : i + 1 === nightNumber;
-              return (
-                <View key={i} className="flex-1">
-                  <View className="h-1.5 rounded-pill" style={{ backgroundColor: active ? colors.clayBright : 'rgba(244,239,231,0.16)' }} />
-                  <Text
-                    numberOfLines={1}
-                    className="mt-2 text-center text-[10.5px]"
-                    style={{ color: active ? colors.clayBright : 'rgba(244,239,231,0.45)', fontWeight: active ? '700' : '400' }}>
-                    {label}
-                  </Text>
-                </View>
-              );
-            })}
+            {(cycle ? cycle.nights.map((n) => slotLabel(n.slot)) : FALLBACK_SLOTS).map(
+              (label, i) => {
+                const active = cTonight ? i === cTonight.index : i + 1 === nightNumber;
+                return (
+                  <View key={i} className="flex-1">
+                    <View
+                      className="h-1.5 rounded-pill"
+                      style={{
+                        backgroundColor: active ? colors.clayBright : 'rgba(244,239,231,0.16)',
+                      }}
+                    />
+                    <Text
+                      numberOfLines={1}
+                      className="mt-2 text-center text-[10.5px]"
+                      style={{
+                        color: active ? colors.clayBright : 'rgba(244,239,231,0.45)',
+                        fontWeight: active ? '700' : '400',
+                      }}
+                    >
+                      {label}
+                    </Text>
+                  </View>
+                );
+              },
+            )}
           </View>
         </Pressable>
 
@@ -414,11 +500,20 @@ export default function TodayScreen() {
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (
-          <View className="mt-4 flex-row items-center gap-3 px-5 py-4" style={{ backgroundColor: 'rgba(217,161,131,0.10)', borderRadius: 18 }}>
-            <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
-            <Text className="flex-1 text-[13.5px]" style={{ color: 'rgba(244,239,231,0.75)', lineHeight: 20 }}>
-              Your {suppressedAcidName.toLowerCase()} is skipped tonight. It doesn&apos;t mix well with
-              retinol.{nextAcidISO ? ` Next acid night: ${friendlyWeekday(nextAcidISO)}.` : ''}
+          <View
+            className="mt-4 flex-row items-center gap-3 px-5 py-4"
+            style={{ backgroundColor: 'rgba(217,161,131,0.10)', borderRadius: 18 }}
+          >
+            <View
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: colors.clayBright }}
+            />
+            <Text
+              className="flex-1 text-[13.5px]"
+              style={{ color: 'rgba(244,239,231,0.75)', lineHeight: 20 }}
+            >
+              Your {suppressedAcidName.toLowerCase()} is skipped tonight. It doesn&apos;t mix well
+              with retinol.{nextAcidISO ? ` Next acid night: ${friendlyWeekday(nextAcidISO)}.` : ''}
             </Text>
           </View>
         ) : null}

@@ -1,0 +1,10 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "checks": [],
+  "warnings": [
+    "Live Supabase adversarial harness not run; set PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL=true with staging credentials."
+  ],
+  "errors": []
+}

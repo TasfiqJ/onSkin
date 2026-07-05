@@ -4,18 +4,18 @@ import { ScrollView, View } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
-import { PLACEHOLDER_QUIZ } from '@/features/onboarding/quiz';
+import { ONBOARDING_QUIZ, toggleExclusiveNoneSelection } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
 // 04 · Quiz. Original 4-axis questions, data-driven from the engine. The content
-// is PLACEHOLDER (BLOCKED: B-QUIZ-COPY). The pregnancy/sensitivities screening
+// is still pending final B-QUIZ-COPY/legal review. The pregnancy/sensitivities
 // questions live at the end of the set, so this also covers docs/01 §2 step 5.
 export default function QuizScreen() {
   const { quizAnswers, setAnswer } = useOnboarding();
   const [index, setIndex] = useState(0);
 
-  const total = PLACEHOLDER_QUIZ.length;
-  const question = PLACEHOLDER_QUIZ[index]!;
+  const total = ONBOARDING_QUIZ.length;
+  const question = ONBOARDING_QUIZ[index]!;
   const current = quizAnswers[question.id];
   const isMulti = question.multiSelect === true;
   const answered = isMulti ? Array.isArray(current) && current.length > 0 : typeof current === 'string';
@@ -26,7 +26,7 @@ export default function QuizScreen() {
   }
   function toggleMulti(optionId: string) {
     const prev = Array.isArray(current) ? current : [];
-    setAnswer(question.id, prev.includes(optionId) ? prev.filter((o) => o !== optionId) : [...prev, optionId]);
+    setAnswer(question.id, toggleExclusiveNoneSelection(prev, optionId));
   }
 
   function next() {

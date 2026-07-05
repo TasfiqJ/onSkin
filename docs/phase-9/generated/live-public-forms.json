@@ -1,0 +1,14 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "publicFormsRateLimitMax": 20,
+  "publicFormsMaxBytes": 8192,
+  "probeBudget": 22,
+  "checks": [],
+  "samples": [],
+  "warnings": [
+    "Live public-forms harness not run; set PHASE9_RUN_LIVE_PUBLIC_FORMS=true with staging credentials."
+  ],
+  "errors": []
+}

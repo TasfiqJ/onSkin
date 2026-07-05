@@ -27,7 +27,10 @@ export type EntitlementActionResult = {
   entitlement: StoredEntitlement | null;
 };
 
-function activeResult(entitlement: StoredEntitlement | null, extras?: Omit<EntitlementActionResult, 'active' | 'entitlement'>): EntitlementActionResult {
+function activeResult(
+  entitlement: StoredEntitlement | null,
+  extras?: Omit<EntitlementActionResult, 'active' | 'entitlement'>,
+): EntitlementActionResult {
   const active = entitlement ? deriveState(entitlement, new Date().toISOString()).isPro : false;
   return { active, entitlement, ...extras };
 }
@@ -78,7 +81,7 @@ export function useEntitlementActions() {
   const startReverseTrial = useMutation({
     mutationFn: async () => {
       const entitlement = await startReverseTrialOnServer();
-      track('reverse_trial_started', { source: 'server' });
+      track('reverse_trial_started', { source: entitlement.source ?? 'server' });
       return activeResult(entitlement);
     },
     onSettled: invalidate,

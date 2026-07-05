@@ -1,5 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { GoalId } from '@onskin/types';
+
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import type { SkinProfileResult } from './quiz';
 
@@ -20,7 +21,7 @@ export type StoredSkinProfile = {
 
 export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     return raw ? (JSON.parse(raw) as StoredSkinProfile) : null;
   } catch {
     return null;
@@ -28,7 +29,7 @@ export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> 
 }
 
 export async function setStoredSkinProfile(rec: StoredSkinProfile): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(rec));
+  await setPrivateItem(KEY, JSON.stringify(rec));
 }
 
 /** Has the user completed onboarding on this device? (the entry-gate signal). */
@@ -38,5 +39,5 @@ export async function isOnboardedLocal(): Promise<boolean> {
 
 /** Cleared on account deletion / full reset (not on an in-session retry). */
 export async function clearStoredSkinProfile(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

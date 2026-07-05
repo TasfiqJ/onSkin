@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { cn } from '@/lib/cn';
@@ -13,6 +13,15 @@ import { colors } from '@/theme/tokens';
 // the handles + the non-blocking nudge (the doc's actual point) are functional.
 const CANONICAL = ['Cream cleanser', 'Vitamin C serum', 'Ceramide moisturizer', 'Mineral SPF 50'];
 const REORDERED = ['Cream cleanser', 'Ceramide moisturizer', 'Vitamin C serum', 'Mineral SPF 50'];
+const MOVING_SHADOW =
+  Platform.OS === 'web'
+    ? { boxShadow: '0 12px 28px rgba(32, 27, 21, 0.18)' }
+    : {
+        shadowColor: '#201B15',
+        shadowOpacity: 0.18,
+        shadowRadius: 28,
+        shadowOffset: { width: 0, height: 12 },
+      };
 
 function Handle({ active }: { active: boolean }) {
   const c = active ? colors.clay : colors.mutedFaint;
@@ -50,8 +59,8 @@ export default function ReorderScreen() {
       </View>
 
       <Text variant="bodySm" tone="muted" className="mt-4 text-[13px]">
-        Drag to reorder. We sort thinnest-to-thickest so lighter actives absorb first. But
-        it&apos;s your routine.
+        Drag to reorder. We sort thinnest-to-thickest so lighter actives absorb first. But it&apos;s
+        your routine.
       </Text>
 
       <View className="mt-4 gap-2">
@@ -66,12 +75,17 @@ export default function ReorderScreen() {
               )}
               style={{
                 borderWidth: moving ? 1.5 : 1,
-                ...(moving
-                  ? { shadowColor: '#201B15', shadowOpacity: 0.18, shadowRadius: 28, shadowOffset: { width: 0, height: 12 }, transform: [{ translateY: -2 }] }
-                  : {}),
-              }}>
+                ...(moving ? { ...MOVING_SHADOW, transform: [{ translateY: -2 }] } : {}),
+              }}
+            >
               <Handle active={moving} />
-              <Text variant="body" className={cn('flex-1 text-[14.5px]', moving ? 'font-sans-bold' : 'font-sans-medium')}>
+              <Text
+                variant="body"
+                className={cn(
+                  'flex-1 text-[14.5px]',
+                  moving ? 'font-sans-bold' : 'font-sans-medium',
+                )}
+              >
                 {name}
               </Text>
               {moving ? (
@@ -98,14 +112,16 @@ export default function ReorderScreen() {
               accessibilityRole="button"
               className="h-9 flex-1 items-center justify-center rounded-[10px]"
               style={{ backgroundColor: colors.ink }}
-              onPress={() => setOrder(CANONICAL)}>
+              onPress={() => setOrder(CANONICAL)}
+            >
               <Text className="font-sans-semibold text-[13px] text-paper">Fix the order</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
               className="h-9 flex-1 items-center justify-center rounded-[10px]"
               style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
-              onPress={() => setNudgeDismissed(true)}>
+              onPress={() => setNudgeDismissed(true)}
+            >
               <Text className="font-sans-semibold text-[13px]" style={{ color: colors.muted }}>
                 Keep mine
               </Text>

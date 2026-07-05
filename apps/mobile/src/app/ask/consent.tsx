@@ -2,9 +2,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, Switch, View } from 'react-native';
 
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
+import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
 
 // The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
@@ -18,7 +20,10 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
   const fg = kind === 'keep' ? colors.sageDeep : colors.clayDeep;
   return (
     <View className="flex-row items-start gap-2.5">
-      <View className="mt-0.5 h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: bg }}>
+      <View
+        className="mt-0.5 h-[18px] w-[18px] items-center justify-center rounded-full"
+        style={{ backgroundColor: bg }}
+      >
         <Text style={{ color: fg, fontSize: 10 }}>{kind === 'keep' ? '✓' : '✕'}</Text>
       </View>
       <Text className="flex-1 text-[12.5px]" style={{ color: colors.inkSoft, lineHeight: 18 }}>
@@ -30,7 +35,14 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 
 export default function AskConsentScreen() {
   const qc = useQueryClient();
-  const consented = useQuery({ queryKey: ['ask_onskin'], queryFn: isAskConsented, retry: 0 });
+  const consented = useQuery({
+    queryKey: ['ask_onskin'],
+    queryFn: isAskConsented,
+    enabled: phase7Flags.cloudAsk,
+    retry: 0,
+  });
+
+  if (!phase7Flags.cloudAsk) return <DeferredSurface surface="cloudAsk" />;
 
   const onToggle = async (enabled: boolean) => {
     qc.setQueryData(['ask_onskin'], enabled);
@@ -47,7 +59,12 @@ export default function AskConsentScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row items-center gap-2 pt-1">
-        <Pressable accessibilityRole="button" accessibilityLabel="Back" onPress={() => router.back()} hitSlop={8}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+          onPress={() => router.back()}
+          hitSlop={8}
+        >
           <Text style={{ color: colors.ink, fontSize: 20 }}>‹</Text>
         </Pressable>
         <Text variant="body" className="font-sans-semibold" tone="muted">
@@ -55,12 +72,21 @@ export default function AskConsentScreen() {
         </Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8" className="mt-3">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-8"
+        className="mt-3"
+      >
         <Card>
           <Text variant="title" className="text-[25px]" accessibilityRole="header">
             {ASK_COPY.privacy.title}
           </Text>
-          <Text variant="body" tone="muted" className="mb-4 mt-2.5 text-[13px]" style={{ lineHeight: 20 }}>
+          <Text
+            variant="body"
+            tone="muted"
+            className="mb-4 mt-2.5 text-[13px]"
+            style={{ lineHeight: 20 }}
+          >
             {ASK_COPY.privacy.body}
           </Text>
           <View className="gap-3">
@@ -69,7 +95,10 @@ export default function AskConsentScreen() {
             ))}
             <Bullet kind="never" text={ASK_COPY.privacy.never} />
           </View>
-          <View className="mt-4 flex-row items-center gap-2 border-t pt-3.5" style={{ borderTopColor: colors.hairline }}>
+          <View
+            className="mt-4 flex-row items-center gap-2 border-t pt-3.5"
+            style={{ borderTopColor: colors.hairline }}
+          >
             <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clay }} />
             <Text className="flex-1 text-[11px]" style={{ color: colors.muted, lineHeight: 16 }}>
               {ASK_COPY.privacy.consentLine}
@@ -94,7 +123,10 @@ export default function AskConsentScreen() {
           />
         </Card>
 
-        <Text className="mt-4 text-center font-mono text-[10px]" style={{ color: colors.mutedLight, lineHeight: 16 }}>
+        <Text
+          className="mt-4 text-center font-mono text-[10px]"
+          style={{ color: colors.mutedLight, lineHeight: 16 }}
+        >
           {ASK_COPY.privacy.footer}
         </Text>
 

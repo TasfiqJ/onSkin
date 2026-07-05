@@ -5,7 +5,11 @@ import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
-import { categoryLabel, PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
+import {
+  categoryLabel,
+  PRODUCT_CATEGORIES,
+  type ProductCategory,
+} from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
@@ -37,8 +41,12 @@ export default function ManualAddScreen() {
       : null;
   const [name, setName] = useState(presetCategory ? '' : draft.name);
   const [brand, setBrand] = useState(presetCategory ? '' : (draft.brand ?? ''));
-  const [category, setCategory] = useState<ProductCategory | null>(presetCategory ?? draft.category);
-  const [ingredients, setIngredients] = useState(presetCategory ? '' : draft.ingredients.join(', '));
+  const [category, setCategory] = useState<ProductCategory | null>(
+    presetCategory ?? draft.category,
+  );
+  const [ingredients, setIngredients] = useState(
+    presetCategory ? '' : draft.ingredients.join(', '),
+  );
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const paoFromCategory = reviewedCategoryPao(category);
@@ -81,7 +89,11 @@ export default function ManualAddScreen() {
         <View className="w-12" />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4" keyboardShouldPersistTaps="handled">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-4"
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="bodySm" tone="muted" className="mb-5 mt-3">
           The floor under every other path. This always works, even fully offline.
         </Text>
@@ -90,6 +102,7 @@ export default function ManualAddScreen() {
           <View>
             <FieldLabel>Product name</FieldLabel>
             <TextInput
+              accessibilityLabel="Product name"
               value={name}
               onChangeText={setName}
               placeholder="e.g. Gentle Retinol Night Serum"
@@ -102,6 +115,7 @@ export default function ManualAddScreen() {
             <View className="flex-[1.3]">
               <FieldLabel>Brand</FieldLabel>
               <TextInput
+                accessibilityLabel="Brand"
                 value={brand}
                 onChangeText={setBrand}
                 placeholder="Brand"
@@ -112,9 +126,12 @@ export default function ManualAddScreen() {
             <View className="flex-1">
               <FieldLabel>Category</FieldLabel>
               <Pressable
+                accessibilityLabel={category ? `Category, ${categoryLabel(category)}` : 'Category'}
+                accessibilityHint="Choose product category"
                 accessibilityRole="button"
                 onPress={() => setPickerOpen((o) => !o)}
-                className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}>
+                className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}
+              >
                 <Text className="font-sans-medium text-[15px]" tone={category ? 'ink' : 'muted'}>
                   {category ? categoryLabel(category) : 'Choose'}
                 </Text>
@@ -136,7 +153,8 @@ export default function ManualAddScreen() {
                   className={cn(
                     'flex-row items-center justify-between px-4 py-3',
                     i > 0 && 'border-t border-hairline',
-                  )}>
+                  )}
+                >
                   <Text variant="bodySm" className="font-sans-medium">
                     {c.label}
                   </Text>
@@ -151,11 +169,13 @@ export default function ManualAddScreen() {
               Ingredients
               <Text
                 className="font-mono text-[10.5px]"
-                style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}>
+                style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}
+              >
                 {' · optional, we’ll find the actives'}
               </Text>
             </Text>
             <TextInput
+              accessibilityLabel="Ingredients"
               value={ingredients}
               onChangeText={setIngredients}
               placeholder="Paste or type the INCI list…"

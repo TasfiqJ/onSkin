@@ -69,17 +69,21 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
 
   const tapOption = async (option: WhereToBuyOption) => {
     haptics.select();
-    track('where_to_buy_clicked', { product_type: productType, source: option.source });
     const token = buildClickToken();
+    const outboundUrl = outboundFor(option, token);
+    if (!outboundUrl) {
+      Alert.alert('Link unavailable', 'This retailer link is not available right now.');
+      return;
+    }
+    track('where_to_buy_clicked', { product_type: productType, source: option.source });
     await recordClick({ clickToken: token, productType, source: option.source, consented: true });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. When a real, approved rail + catalogue land,
-    // replace this honest stub with: void Linking.openURL(outboundFor(option, token));
-    // (the opaque token only. Attribution.ts guarantees no skin data leaves).
+    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Dev demo links stay inert; real approved
+    // retailer links open only after the HTTPS URL guard appends the opaque token.
     const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
     if (isDev && option.url.startsWith('https://example.com')) {
       Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [{ text: 'OK' }]);
     } else {
-      void Linking.openURL(outboundFor(option, token));
+      void Linking.openURL(outboundUrl);
     }
   };
 

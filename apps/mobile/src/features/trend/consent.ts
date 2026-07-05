@@ -1,5 +1,6 @@
 import { track } from '@/lib/analytics/track';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { withdrawConsent } from '@/lib/consent/withdrawal';
 
 import { TREND_COPY } from './copy';
 import { deleteTrendState, getTrendInsightsLocal, setTrendInsightsLocal } from './store';
@@ -41,14 +42,9 @@ export async function revokeTrendInsightsConsent(): Promise<void> {
   await setTrendInsightsLocal(false);
   await deleteTrendState(); // deletion-on-revocation (§8/§10)
   track('trend_consent_revoked');
-  try {
-    await recordConsent({
-      type: 'photo_trend_insights',
-      granted: false,
-      version: TREND_COPY.consentVersion,
-      consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
-    });
-  } catch {
-    /* best-effort */
-  }
+  await withdrawConsent({
+    type: 'photo_trend_insights',
+    version: TREND_COPY.consentVersion,
+    consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
+  });
 }

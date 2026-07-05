@@ -14,6 +14,7 @@ import { localDay, timeOfDayNow } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { coachingLine, lightingState } from '@/features/photos/quality';
 import { usePhotos } from '@/features/photos/usePhotos';
+import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { haptics } from '@/theme/haptics';
@@ -24,63 +25,156 @@ const READY = '#9DB18A';
 
 function ConsentGate({ onGrant }: { onGrant: () => void }) {
   return (
-    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(10,8,6,0.92)', padding: 28, justifyContent: 'center' }}>
-      <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 30, color: '#F4EFE7', marginBottom: 16 }}>
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(10,8,6,0.92)',
+        padding: 28,
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: 'InstrumentSerif_400Regular',
+          fontSize: 30,
+          color: '#F4EFE7',
+          marginBottom: 16,
+        }}
+      >
         Your photos stay on this phone.
       </Text>
-      {([['What', PHOTO_CAPTURE_CONSENT.what], ['Why', PHOTO_CAPTURE_CONSENT.why], ['Never', PHOTO_CAPTURE_CONSENT.never]] as const).map(
-        ([k, v]) => (
-          <View key={k} style={{ marginBottom: 14 }}>
-            <Text variant="label" style={{ color: '#D9A183', marginBottom: 2 }}>
-              {k.toUpperCase()}
-            </Text>
-            <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 14.5, color: 'rgba(244,239,231,0.85)', lineHeight: 21 }}>
-              {v}
-            </Text>
-          </View>
-        ),
-      )}
-      <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 11, color: 'rgba(244,239,231,0.45)', marginTop: 6, marginBottom: 14 }}>
+      {(
+        [
+          ['What', PHOTO_CAPTURE_CONSENT.what],
+          ['Why', PHOTO_CAPTURE_CONSENT.why],
+          ['Never', PHOTO_CAPTURE_CONSENT.never],
+        ] as const
+      ).map(([k, v]) => (
+        <View key={k} style={{ marginBottom: 14 }}>
+          <Text variant="label" style={{ color: '#D9A183', marginBottom: 2 }}>
+            {k.toUpperCase()}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 14.5,
+              color: 'rgba(244,239,231,0.85)',
+              lineHeight: 21,
+            }}
+          >
+            {v}
+          </Text>
+        </View>
+      ))}
+      <Text
+        style={{
+          fontFamily: 'IBMPlexMono_400Regular',
+          fontSize: 11,
+          color: 'rgba(244,239,231,0.45)',
+          marginTop: 6,
+          marginBottom: 14,
+        }}
+      >
         {PHOTO_CAPTURE_CONSENT.footnote}
       </Text>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 22 }}>
         <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
-        <Text style={{ fontFamily: 'HankenGrotesk_500Medium', fontSize: 12.5, color: 'rgba(244,239,231,0.7)', flex: 1, lineHeight: 17 }}>
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_500Medium',
+            fontSize: 12.5,
+            color: 'rgba(244,239,231,0.7)',
+            flex: 1,
+            lineHeight: 17,
+          }}
+        >
           {PHOTO_COPY.capture.skinPrep}
         </Text>
       </View>
       <Pressable
         accessibilityRole="button"
         onPress={onGrant}
-        style={{ height: 56, borderRadius: 999, backgroundColor: '#F4EFE7', alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>Take photos. On device only</Text>
+        style={{
+          height: 56,
+          borderRadius: 999,
+          backgroundColor: '#F4EFE7',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+          Take photos. On device only
+        </Text>
       </Pressable>
-      <Pressable accessibilityRole="button" onPress={() => router.back()} style={{ marginTop: 12, alignItems: 'center' }}>
-        <Text style={{ fontFamily: 'HankenGrotesk_500Medium', fontSize: 15, color: 'rgba(244,239,231,0.6)' }}>Not now</Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={{ marginTop: 12, alignItems: 'center' }}
+      >
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_500Medium',
+            fontSize: 15,
+            color: 'rgba(244,239,231,0.6)',
+          }}
+        >
+          Not now
+        </Text>
       </Pressable>
     </View>
   );
 }
 
-function PermissionGate({
-  canAskAgain,
-  onAsk,
-}: {
-  canAskAgain: boolean;
-  onAsk: () => void;
-}) {
+function PermissionGate({ canAskAgain, onAsk }: { canAskAgain: boolean; onAsk: () => void }) {
   return (
-    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(10,8,6,0.9)', padding: 28, justifyContent: 'center' }}>
-      <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 30, color: '#F4EFE7', marginBottom: 12 }}>
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(10,8,6,0.9)',
+        padding: 28,
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: 'InstrumentSerif_400Regular',
+          fontSize: 30,
+          color: '#F4EFE7',
+          marginBottom: 12,
+        }}
+      >
         Camera access is needed for progress photos.
       </Text>
-      <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 14.5, color: 'rgba(244,239,231,0.78)', lineHeight: 21, marginBottom: 22 }}>
+      <Text
+        style={{
+          fontFamily: 'HankenGrotesk_400Regular',
+          fontSize: 14.5,
+          color: 'rgba(244,239,231,0.78)',
+          lineHeight: 21,
+          marginBottom: 22,
+        }}
+      >
         The photo is captured on this device and saved into encrypted app-private storage.
       </Text>
       <Pressable
         accessibilityRole="button"
         onPress={canAskAgain ? onAsk : () => void Linking.openSettings()}
-        style={{ height: 56, borderRadius: 999, backgroundColor: '#F4EFE7', alignItems: 'center', justifyContent: 'center' }}>
+        style={{
+          height: 56,
+          borderRadius: 999,
+          backgroundColor: '#F4EFE7',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
           {canAskAgain ? 'Allow camera' : 'Open settings'}
         </Text>
@@ -89,7 +183,7 @@ function PermissionGate({
   );
 }
 
-export default function CaptureScreen() {
+function CaptureScreenContent() {
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const cameraRef = useRef<CameraView | null>(null);
@@ -103,7 +197,8 @@ export default function CaptureScreen() {
     void hasPhotoCaptureConsent().then(setConsented);
   }, []);
 
-  const canShowCamera = env.nativeCameraEnabled && Platform.OS !== 'web' && Boolean(permission?.granted);
+  const canShowCamera =
+    env.nativeCameraEnabled && Platform.OS !== 'web' && Boolean(permission?.granted);
   const { signals, ready } = useGuidedCaptureSignals(cameraReady && canShowCamera);
   const coaching = coachingLine(signals);
   const light = lightingState(signals);
@@ -148,11 +243,28 @@ export default function CaptureScreen() {
           accessibilityRole="button"
           accessibilityLabel="Close"
           onPress={() => router.back()}
-          style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(244,239,231,0.12)', alignItems: 'center', justifyContent: 'center' }}>
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: 'rgba(244,239,231,0.12)',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Text style={{ color: '#F4EFE7', fontSize: 15 }}>x</Text>
         </Pressable>
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14, color: '#F4EFE7' }}>Front · weekly</Text>
-        <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(244,239,231,0.12)' }} />
+        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14, color: '#F4EFE7' }}>
+          Front · weekly
+        </Text>
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: 'rgba(244,239,231,0.12)',
+          }}
+        />
       </View>
 
       <View className="flex-1 items-center justify-center">
@@ -172,11 +284,30 @@ export default function CaptureScreen() {
           ) : null}
         </View>
         {referenceUri ? (
-          <View style={{ position: 'absolute', width: 210, height: 270, borderRadius: 130, opacity: 0.18, overflow: 'hidden', transform: [{ translateX: 8 }, { translateY: -6 }] }}>
+          <View
+            style={{
+              position: 'absolute',
+              width: 210,
+              height: 270,
+              borderRadius: 130,
+              opacity: 0.18,
+              overflow: 'hidden',
+              transform: [{ translateX: 8 }, { translateY: -6 }],
+            }}
+          >
             <PhotoImage uri={referenceUri} style={{ flex: 1 }} />
           </View>
         ) : (
-          <View style={{ position: 'absolute', width: 210, height: 270, borderRadius: 130, backgroundColor: 'rgba(217,161,131,0.10)', transform: [{ translateX: 8 }, { translateY: -6 }] }} />
+          <View
+            style={{
+              position: 'absolute',
+              width: 210,
+              height: 270,
+              borderRadius: 130,
+              backgroundColor: 'rgba(217,161,131,0.10)',
+              transform: [{ translateX: 8 }, { translateY: -6 }],
+            }}
+          />
         )}
         <View
           style={{
@@ -188,47 +319,171 @@ export default function CaptureScreen() {
             borderStyle: 'dashed',
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
-          <View style={{ position: 'absolute', top: -10, width: 8, height: 8, borderRadius: 4, backgroundColor: GUIDE }} />
-          <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 10, color: 'rgba(244,239,231,0.75)', textAlign: 'center', lineHeight: 16 }}>
+          }}
+        >
+          <View
+            style={{
+              position: 'absolute',
+              top: -10,
+              width: 8,
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: GUIDE,
+            }}
+          />
+          <Text
+            style={{
+              fontFamily: 'IBMPlexMono_400Regular',
+              fontSize: 10,
+              color: 'rgba(244,239,231,0.75)',
+              textAlign: 'center',
+              lineHeight: 16,
+            }}
+          >
             {PHOTO_COPY.capture.ghostHint}
           </Text>
-          <Text style={{ fontFamily: 'IBMPlexMono_400Regular', fontSize: 9, color: 'rgba(244,239,231,0.5)', textAlign: 'center', marginTop: 8 }}>
+          <Text
+            style={{
+              fontFamily: 'IBMPlexMono_400Regular',
+              fontSize: 9,
+              color: 'rgba(244,239,231,0.5)',
+              textAlign: 'center',
+              marginTop: 8,
+            }}
+          >
             preview quality estimate
           </Text>
         </View>
         <View
-          style={{ position: 'absolute', bottom: 18, backgroundColor: 'rgba(22,19,15,0.82)', borderRadius: 999, paddingHorizontal: 20, paddingVertical: 11, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: ready ? READY : '#D9A183' }} />
-          <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}>{coaching}</Text>
+          style={{
+            position: 'absolute',
+            bottom: 18,
+            backgroundColor: 'rgba(22,19,15,0.82)',
+            borderRadius: 999,
+            paddingHorizontal: 20,
+            paddingVertical: 11,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
+          <View
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: 4,
+              backgroundColor: ready ? READY : '#D9A183',
+            }}
+          />
+          <Text
+            style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}
+          >
+            {coaching}
+          </Text>
         </View>
       </View>
 
-      <View style={{ backgroundColor: 'rgba(22,19,15,0.9)', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 26, paddingTop: 20, paddingBottom: insets.bottom + 24 }}>
+      <View
+        style={{
+          backgroundColor: 'rgba(22,19,15,0.9)',
+          borderTopLeftRadius: 28,
+          borderTopRightRadius: 28,
+          paddingHorizontal: 26,
+          paddingTop: 20,
+          paddingBottom: insets.bottom + 24,
+        }}
+      >
         <View className="mb-5 flex-row items-center" style={{ gap: 14 }}>
-          <Text style={{ width: 58, fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 12.5, color: 'rgba(244,239,231,0.6)' }}>
+          <Text
+            style={{
+              width: 58,
+              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontSize: 12.5,
+              color: 'rgba(244,239,231,0.6)',
+            }}
+          >
             {PHOTO_COPY.capture.lightingLabel}
           </Text>
-          <View style={{ flex: 1, height: 5, borderRadius: 3, backgroundColor: 'rgba(244,239,231,0.14)', overflow: 'hidden' }}>
-            <View style={{ width: `${Math.round(light.fill * 100)}%`, height: '100%', backgroundColor: READY, borderRadius: 3 }} />
+          <View
+            style={{
+              flex: 1,
+              height: 5,
+              borderRadius: 3,
+              backgroundColor: 'rgba(244,239,231,0.14)',
+              overflow: 'hidden',
+            }}
+          >
+            <View
+              style={{
+                width: `${Math.round(light.fill * 100)}%`,
+                height: '100%',
+                backgroundColor: READY,
+                borderRadius: 3,
+              }}
+            />
           </View>
-          <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>{light.label}</Text>
+          <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>
+            {light.label}
+          </Text>
         </View>
         <View className="flex-row items-center justify-between">
-          <View style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: 'rgba(244,239,231,0.1)' }} />
+          <View
+            style={{
+              width: 46,
+              height: 46,
+              borderRadius: 13,
+              backgroundColor: 'rgba(244,239,231,0.1)',
+            }}
+          />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Capture photo"
             disabled={!canShowCamera || capturing}
             onPress={() => void capture()}
-            style={{ width: 78, height: 78, borderRadius: 39, borderWidth: 4, borderColor: READY, alignItems: 'center', justifyContent: 'center', opacity: canShowCamera && !capturing ? 1 : 0.55 }}>
-            <View style={{ width: 62, height: 62, borderRadius: 31, backgroundColor: READY, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 11, color: BG, textAlign: 'center', lineHeight: 13 }}>
+            style={{
+              width: 78,
+              height: 78,
+              borderRadius: 39,
+              borderWidth: 4,
+              borderColor: READY,
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: canShowCamera && !capturing ? 1 : 0.55,
+            }}
+          >
+            <View
+              style={{
+                width: 62,
+                height: 62,
+                borderRadius: 31,
+                backgroundColor: READY,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'HankenGrotesk_700Bold',
+                  fontSize: 11,
+                  color: BG,
+                  textAlign: 'center',
+                  lineHeight: 13,
+                }}
+              >
                 {capturing ? 'Saving' : PHOTO_COPY.capture.autoReady}
               </Text>
             </View>
           </Pressable>
-          <Text style={{ width: 104, textAlign: 'right', fontFamily: 'IBMPlexMono_400Regular', fontSize: 10, lineHeight: 15, color: 'rgba(244,239,231,0.42)' }}>
+          <Text
+            style={{
+              width: 104,
+              textAlign: 'right',
+              fontFamily: 'IBMPlexMono_400Regular',
+              fontSize: 10,
+              lineHeight: 15,
+              color: 'rgba(244,239,231,0.42)',
+            }}
+          >
             {PHOTO_COPY.capture.onDevice}
           </Text>
         </View>
@@ -243,10 +498,30 @@ export default function CaptureScreen() {
           }}
         />
       ) : consented === null ? (
-        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: BG }} />
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: BG,
+          }}
+        />
       ) : !canShowCamera ? (
-        <PermissionGate canAskAgain={permission?.canAskAgain ?? true} onAsk={() => void requestPermission()} />
+        <PermissionGate
+          canAskAgain={permission?.canAskAgain ?? true}
+          onAsk={() => void requestPermission()}
+        />
       ) : null}
     </View>
+  );
+}
+
+export default function CaptureScreen() {
+  return (
+    <ProGate feature="photo_timeline">
+      <CaptureScreenContent />
+    </ProGate>
   );
 }

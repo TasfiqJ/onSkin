@@ -42,6 +42,7 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 *.log
+test-results/
 
 # OS
 .DS_Store

@@ -1,14 +1,13 @@
 import type { PregnancyStatus, SkinAxis } from '@onskin/types';
 
 /**
- * Skin-quiz ENGINE (production-ready) + PLACEHOLDER content.
+ * Skin-quiz engine + original draft content.
  *
- * BLOCKED: B-QUIZ-COPY. The validated Baumann BSTI questionnaire is patented +
- * copyrighted (docs/01 §2). The 4-axis CONCEPT (Oily/Dry, Sensitive/Resistant,
- * Pigmented/Non, Wrinkled/Tight) is implementable, but the actual questions +
- * scoring need original authoring and a mandatory patent/trademark attorney
- * review. Everything in PLACEHOLDER_QUIZ below is throwaway scaffolding to
- * exercise the engine. DO NOT SHIP. The scoring math is real and reusable.
+ * BLOCKED: B-QUIZ-COPY. The validated Baumann BSTI questionnaire is patented
+ * and copyrighted (docs/01 section 2). The 4-axis concept is implementable, but
+ * the exact questions and scoring still need patent/trademark attorney review.
+ * The copy below is original OnSkin draft wording, not final legally reviewed
+ * quiz copy.
  */
 
 // Per axis: a positive option score leans toward the first pole letter.
@@ -35,160 +34,165 @@ export type QuizQuestion = {
   id: string;
   /** Which axis/dimension this question informs. */
   kind: SkinAxis | 'phototype' | 'monk' | 'sensitivities' | 'pregnancy';
-  eyebrow: string; // mono label e.g. "OIL & MOISTURE"
+  eyebrow: string;
   prompt: string;
   options: QuizOption[];
   multiSelect?: boolean;
 };
 
-// ---------------------------------------------------------------------------
-// PLACEHOLDER QUIZ. Throwaway. Replace wholesale once B-QUIZ-COPY clears.
-// Wording is intentionally generic and labelled so it can never be mistaken for
-// final, attorney-reviewed copy.
-// ---------------------------------------------------------------------------
-export const PLACEHOLDER_QUIZ: QuizQuestion[] = [
+export const ONBOARDING_QUIZ: QuizQuestion[] = [
   {
     id: 'q_oil',
     kind: 'oily_dry',
-    eyebrow: 'PLACEHOLDER · OIL & MOISTURE',
-    prompt: '[Placeholder] How does your skin feel a few hours after cleansing?',
+    eyebrow: 'OIL + MOISTURE',
+    prompt: 'A few hours after cleansing, how does your skin usually feel?',
     options: [
-      { id: 'a', label: '[Placeholder] Tight or flaky', score: { oily_dry: -2 } },
-      { id: 'b', label: '[Placeholder] Comfortable', score: { oily_dry: 0 } },
-      { id: 'c', label: '[Placeholder] Shiny in places', score: { oily_dry: 1 } },
-      { id: 'd', label: '[Placeholder] Oily all over', score: { oily_dry: 2 } },
+      { id: 'a', label: 'Tight or flaky', score: { oily_dry: -2 } },
+      { id: 'b', label: 'Comfortable', score: { oily_dry: 0 } },
+      { id: 'c', label: 'Shiny in places', score: { oily_dry: 1 } },
+      { id: 'd', label: 'Oily all over', score: { oily_dry: 2 } },
     ],
   },
   {
     id: 'q_hydration',
     kind: 'oily_dry',
-    eyebrow: 'PLACEHOLDER · OIL & MOISTURE',
-    prompt: '[Placeholder] How often does your skin need extra moisture?',
+    eyebrow: 'OIL + MOISTURE',
+    prompt: 'How often does your skin ask for more moisture during the day?',
     options: [
-      { id: 'a', label: '[Placeholder] Constantly', score: { oily_dry: -2 } },
-      { id: 'b', label: '[Placeholder] Sometimes', score: { oily_dry: 0 } },
-      { id: 'c', label: '[Placeholder] Rarely', score: { oily_dry: 1 } },
+      { id: 'a', label: 'Most days', score: { oily_dry: -2 } },
+      { id: 'b', label: 'Some days', score: { oily_dry: 0 } },
+      { id: 'c', label: 'Rarely', score: { oily_dry: 1 } },
     ],
   },
   {
     id: 'q_react',
     kind: 'sensitive_resistant',
-    eyebrow: 'PLACEHOLDER · SENSITIVITY',
-    prompt: '[Placeholder] How does your skin respond to new products?',
+    eyebrow: 'SENSITIVITY',
+    prompt: 'When you try a new product, how often does your skin react?',
     options: [
-      { id: 'a', label: '[Placeholder] Often stings or reddens', score: { sensitive_resistant: 2 } },
-      { id: 'b', label: '[Placeholder] Occasionally', score: { sensitive_resistant: 1 } },
-      { id: 'c', label: '[Placeholder] Almost never', score: { sensitive_resistant: -2 } },
+      { id: 'a', label: 'Often stings, burns, or reddens', score: { sensitive_resistant: 2 } },
+      { id: 'b', label: 'Occasionally reacts', score: { sensitive_resistant: 1 } },
+      { id: 'c', label: 'Almost never reacts', score: { sensitive_resistant: -2 } },
     ],
   },
   {
     id: 'q_redness',
     kind: 'sensitive_resistant',
-    eyebrow: 'PLACEHOLDER · SENSITIVITY',
-    prompt: '[Placeholder] Do you experience redness or flushing?',
+    eyebrow: 'SENSITIVITY',
+    prompt: 'How often do you notice redness, flushing, or a hot-feeling face?',
     options: [
-      { id: 'a', label: '[Placeholder] Frequently', score: { sensitive_resistant: 2 } },
-      { id: 'b', label: '[Placeholder] Sometimes', score: { sensitive_resistant: 0 } },
-      { id: 'c', label: '[Placeholder] No', score: { sensitive_resistant: -2 } },
+      { id: 'a', label: 'Frequently', score: { sensitive_resistant: 2 } },
+      { id: 'b', label: 'Sometimes', score: { sensitive_resistant: 0 } },
+      { id: 'c', label: 'Rarely or never', score: { sensitive_resistant: -2 } },
     ],
   },
   {
     id: 'q_tone',
     kind: 'pigmented_non',
-    eyebrow: 'PLACEHOLDER · TONE',
-    prompt: '[Placeholder] Do you notice dark spots or uneven tone?',
+    eyebrow: 'TONE',
+    prompt: 'Do you notice dark spots, uneven tone, or areas that look more pigmented?',
     options: [
-      { id: 'a', label: '[Placeholder] Yes, noticeably', score: { pigmented_non: 2 } },
-      { id: 'b', label: '[Placeholder] A little', score: { pigmented_non: 1 } },
-      { id: 'c', label: '[Placeholder] Not really', score: { pigmented_non: -2 } },
+      { id: 'a', label: 'Yes, noticeably', score: { pigmented_non: 2 } },
+      { id: 'b', label: 'A little', score: { pigmented_non: 1 } },
+      { id: 'c', label: 'Not really', score: { pigmented_non: -2 } },
     ],
   },
   {
     id: 'q_marks',
     kind: 'pigmented_non',
-    eyebrow: 'PLACEHOLDER · TONE',
-    prompt: '[Placeholder] Do marks linger after a breakout?',
+    eyebrow: 'TONE',
+    prompt: 'After a breakout or irritation, how long do marks tend to linger?',
     options: [
-      { id: 'a', label: '[Placeholder] For a long time', score: { pigmented_non: 2 } },
-      { id: 'b', label: '[Placeholder] Briefly', score: { pigmented_non: 0 } },
-      { id: 'c', label: '[Placeholder] Rarely', score: { pigmented_non: -2 } },
+      { id: 'a', label: 'Weeks or longer', score: { pigmented_non: 2 } },
+      { id: 'b', label: 'A short while', score: { pigmented_non: 0 } },
+      { id: 'c', label: 'Rarely leaves a mark', score: { pigmented_non: -2 } },
     ],
   },
   {
     id: 'q_lines',
     kind: 'wrinkled_tight',
-    eyebrow: 'PLACEHOLDER · FIRMNESS',
-    prompt: '[Placeholder] Do you see fine lines or loss of firmness?',
+    eyebrow: 'FIRMNESS',
+    prompt: 'Which best describes fine lines or firmness right now?',
     options: [
-      { id: 'a', label: '[Placeholder] Yes', score: { wrinkled_tight: 2 } },
-      { id: 'b', label: '[Placeholder] Starting to', score: { wrinkled_tight: 1 } },
-      { id: 'c', label: '[Placeholder] Not yet', score: { wrinkled_tight: -2 } },
+      { id: 'a', label: 'Fine lines or firmness changes are visible', score: { wrinkled_tight: 2 } },
+      { id: 'b', label: 'I am starting to notice small changes', score: { wrinkled_tight: 1 } },
+      { id: 'c', label: 'Not something I notice right now', score: { wrinkled_tight: -2 } },
     ],
   },
   {
     id: 'q_sun',
     kind: 'wrinkled_tight',
-    eyebrow: 'PLACEHOLDER · FIRMNESS',
-    prompt: '[Placeholder] How much lifetime sun exposure have you had?',
+    eyebrow: 'FIRMNESS',
+    prompt: 'Thinking about your usual outdoor time, how much sun exposure has your skin had?',
     options: [
-      { id: 'a', label: '[Placeholder] A lot', score: { wrinkled_tight: 2 } },
-      { id: 'b', label: '[Placeholder] Moderate', score: { wrinkled_tight: 0 } },
-      { id: 'c', label: '[Placeholder] Minimal', score: { wrinkled_tight: -2 } },
+      { id: 'a', label: 'A lot over time', score: { wrinkled_tight: 2 } },
+      { id: 'b', label: 'A moderate amount', score: { wrinkled_tight: 0 } },
+      { id: 'c', label: 'Not much', score: { wrinkled_tight: -2 } },
     ],
   },
   {
     id: 'q_phototype',
     kind: 'phototype',
-    eyebrow: 'PLACEHOLDER · SUN RESPONSE',
-    prompt: '[Placeholder] How does your skin react to sun? (paired with a tone selector for inclusivity)',
+    eyebrow: 'SUN RESPONSE',
+    prompt: 'Without sunscreen, how does your skin usually respond to strong sun?',
     options: [
-      { id: '1', label: '[Placeholder] Always burns', value: 1 },
-      { id: '2', label: '[Placeholder] Usually burns', value: 2 },
-      { id: '3', label: '[Placeholder] Sometimes burns', value: 3 },
-      { id: '4', label: '[Placeholder] Rarely burns', value: 4 },
-      { id: '5', label: '[Placeholder] Very rarely burns', value: 5 },
-      { id: '6', label: '[Placeholder] Never burns', value: 6 },
+      { id: '1', label: 'Always burns', value: 1 },
+      { id: '2', label: 'Usually burns', value: 2 },
+      { id: '3', label: 'Sometimes burns', value: 3 },
+      { id: '4', label: 'Rarely burns', value: 4 },
+      { id: '5', label: 'Very rarely burns', value: 5 },
+      { id: '6', label: 'Does not burn', value: 6 },
     ],
   },
   {
     id: 'q_monk',
     kind: 'monk',
-    eyebrow: 'PLACEHOLDER · SKIN TONE',
-    prompt: '[Placeholder] Choose the tone closest to yours (Monk 10-shade scale).',
+    eyebrow: 'SKIN TONE',
+    prompt: 'Choose the skin tone range closest to yours.',
     options: Array.from({ length: 10 }, (_, i) => ({
       id: String(i + 1),
-      label: `[Placeholder] Tone ${i + 1}`,
+      label: `Tone ${i + 1}`,
       value: i + 1,
     })),
   },
   {
     id: 'q_sensitivities',
     kind: 'sensitivities',
-    eyebrow: 'PLACEHOLDER · SENSITIVITIES',
-    prompt: '[Placeholder] Any known sensitivities or allergies? (select all)',
+    eyebrow: 'SENSITIVITIES',
+    prompt: 'Any known sensitivities or ingredients you try to avoid? Select all that apply.',
     multiSelect: true,
     options: [
-      { id: 'fragrance', label: '[Placeholder] Fragrance' },
-      { id: 'essential_oils', label: '[Placeholder] Essential oils' },
-      { id: 'alcohol', label: '[Placeholder] Drying alcohols' },
-      { id: 'none', label: '[Placeholder] None that I know of' },
+      { id: 'fragrance', label: 'Fragrance' },
+      { id: 'essential_oils', label: 'Essential oils' },
+      { id: 'alcohol', label: 'Drying alcohols' },
+      { id: 'none', label: 'None that I know of' },
     ],
   },
   {
     id: 'q_pregnancy',
     kind: 'pregnancy',
-    eyebrow: 'PLACEHOLDER · SAFETY',
-    prompt: '[Placeholder] Are you pregnant or breastfeeding? (affects retinoid safety)',
+    eyebrow: 'SAFETY',
+    prompt: 'Are you pregnant, trying to become pregnant, or breastfeeding?',
     options: [
-      { id: 'none', label: '[Placeholder] No' },
-      { id: 'pregnant', label: '[Placeholder] Pregnant' },
-      { id: 'breastfeeding', label: '[Placeholder] Breastfeeding' },
-      { id: 'prefer_not', label: '[Placeholder] Prefer not to say' },
+      { id: 'none', label: 'No' },
+      { id: 'pregnant', label: 'Pregnant or trying' },
+      { id: 'breastfeeding', label: 'Breastfeeding' },
+      { id: 'prefer_not', label: 'Prefer not to say' },
     ],
   },
 ];
 
 export type QuizAnswers = Record<string, string | string[]>; // questionId -> optionId(s)
+
+export function toggleExclusiveNoneSelection(
+  current: readonly string[],
+  optionId: string,
+  noneOptionId = 'none',
+): string[] {
+  if (current.includes(optionId)) return current.filter((id) => id !== optionId);
+  if (optionId === noneOptionId) return [noneOptionId];
+  return [...current.filter((id) => id !== noneOptionId), optionId];
+}
 
 export type SkinProfileResult = {
   axes: Record<SkinAxis, number>; // normalized 0..1 (0 = negative pole, 1 = positive pole)
@@ -203,7 +207,7 @@ export type SkinProfileResult = {
 const AXES: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
 
 /** Pure scoring. Sum signed axis contributions, derive poles + a 0..1 slider position. */
-export function scoreQuiz(answers: QuizAnswers, quiz: QuizQuestion[] = PLACEHOLDER_QUIZ): SkinProfileResult {
+export function scoreQuiz(answers: QuizAnswers, quiz: QuizQuestion[] = ONBOARDING_QUIZ): SkinProfileResult {
   const axisScores: Record<SkinAxis, number> = {
     oily_dry: 0,
     sensitive_resistant: 0,
@@ -246,7 +250,7 @@ export function scoreQuiz(answers: QuizAnswers, quiz: QuizQuestion[] = PLACEHOLD
       monkTone = chosen.value ?? null;
       continue;
     }
-    // axis question. Accumulate score and track the max possible magnitude.
+    // Axis question. Accumulate score and track the max possible magnitude.
     for (const axis of AXES) {
       const contribution = chosen.score?.[axis];
       if (contribution !== undefined) axisScores[axis] += contribution;

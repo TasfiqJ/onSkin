@@ -1,9 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
+import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { addDays } from './projection';
 
@@ -49,7 +48,7 @@ function defaults(anchorISO: string): CycleConfig {
 
 export async function loadCycleConfig(): Promise<CycleConfig> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     if (raw) return { ...defaults(localDateString()), ...(JSON.parse(raw) as CycleConfig) };
   } catch {
     /* fall through */
@@ -61,7 +60,7 @@ export async function loadCycleConfig(): Promise<CycleConfig> {
 
 async function persist(config: CycleConfig): Promise<void> {
   try {
-    await AsyncStorage.setItem(KEY, JSON.stringify(config));
+    await setPrivateItem(KEY, JSON.stringify(config));
   } catch {
     /* best-effort */
   }

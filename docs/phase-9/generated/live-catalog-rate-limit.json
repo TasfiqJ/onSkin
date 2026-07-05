@@ -1,0 +1,13 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "catalogRateLimitMax": 120,
+  "probeBudget": 122,
+  "checks": [],
+  "samples": [],
+  "warnings": [
+    "Live catalog rate-limit harness not run; set PHASE9_RUN_LIVE_CATALOG_RATE_LIMIT=true with staging credentials."
+  ],
+  "errors": []
+}

@@ -1,10 +1,13 @@
 import * as Sentry from '@sentry/react-native';
 import { Platform } from 'react-native';
 
+import { pseudonymousUserId } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
-import { sanitizeObservabilityContext } from '@/lib/observability/scrub';
+import { devWarn } from '@/lib/observability/safeLog';
+import { sanitizeCapturedException, sanitizeObservabilityContext } from '@/lib/observability/scrub';
 
 let initialized = false;
+let sentryUserUpdate = 0;
 
 function canUseSentry(): boolean {
   return env.sentryDsn.length > 0;
@@ -30,16 +33,29 @@ export function initSentry(): void {
 
 export function setSentryUser(userId: string | null): void {
   if (!initialized) return;
-  Sentry.setUser(userId ? { id: userId } : null);
+  const update = ++sentryUserUpdate;
+  if (!userId) {
+    Sentry.setUser(null);
+    return;
+  }
+
+  void pseudonymousUserId(userId)
+    .then((id) => {
+      if (initialized && update === sentryUserUpdate) Sentry.setUser({ id });
+    })
+    .catch(() => {
+      if (update === sentryUserUpdate) Sentry.setUser(null);
+    });
 }
 
 export function captureException(error: unknown, context?: Record<string, unknown>): void {
   if (!initialized) {
-    if (__DEV__) console.warn('[sentry] capture skipped because Sentry is not configured', error);
+    devWarn('[sentry] capture skipped because Sentry is not configured', error);
     return;
   }
   const safeContext = sanitizeObservabilityContext(context);
-  Sentry.captureException(error, Object.keys(safeContext).length ? { extra: safeContext } : undefined);
+  const safeError = sanitizeCapturedException(error);
+  Sentry.captureException(safeError, Object.keys(safeContext).length ? { extra: safeContext } : undefined);
 }
 
 export function capturePhase2TestError(): void {

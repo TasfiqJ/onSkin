@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { isSupabaseConfigured } from '@/lib/env';
+import { env, isSupabaseConfigured } from '@/lib/env';
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { supabase } from '@/lib/supabase/client';
+import { getPrivateItem, multiRemovePrivateItems, setPrivateItem } from '@/lib/storage/privateKV';
 
 import type { StoredEntitlement } from './entitlement';
 
@@ -13,6 +13,7 @@ import type { StoredEntitlement } from './entitlement';
  */
 const KEY = 'onskin.entitlement.v2';
 const LEGACY_KEY = 'onskin.entitlement.v1';
+const LOCAL_REVERSE_TRIAL_DAYS = 7;
 
 type EntitlementRow = {
   entitlement: string | null;
@@ -37,31 +38,61 @@ function nowISO(): string {
   return new Date().toISOString();
 }
 
+function daysFromNowISO(days: number): string {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + days);
+  return expiresAt.toISOString();
+}
+
 function asTier(value: string | null): StoredEntitlement['tier'] {
   return value === 'pro' || value === 'pro_plus' ? value : null;
 }
 
 function asPeriod(value: string | null): StoredEntitlement['periodType'] {
-  if (value === 'reverse_trial' || value === 'trial' || value === 'intro' || value === 'normal' || value === 'prepaid') {
+  if (
+    value === 'reverse_trial' ||
+    value === 'trial' ||
+    value === 'intro' ||
+    value === 'normal' ||
+    value === 'prepaid'
+  ) {
     return value;
   }
   return null;
 }
 
 function asStore(value: string | null): StoredEntitlement['store'] {
-  if (value === 'app_store' || value === 'play_store' || value === 'web' || value === 'app_granted' || value === 'test_store') {
+  if (
+    value === 'app_store' ||
+    value === 'play_store' ||
+    value === 'web' ||
+    value === 'app_granted' ||
+    value === 'test_store'
+  ) {
     return value;
   }
   return null;
 }
 
 function asSource(value: string | null | undefined): StoredEntitlement['source'] {
-  if (value === 'revenuecat' || value === 'app_granted' || value === 'server' || value === 'local_cache') return value;
+  if (
+    value === 'revenuecat' ||
+    value === 'app_granted' ||
+    value === 'server' ||
+    value === 'local_cache'
+  )
+    return value;
   return null;
 }
 
 function asEnvironment(value: string | null | undefined): StoredEntitlement['environment'] {
-  if (value === 'production' || value === 'sandbox' || value === 'test_store' || value === 'development' || value === 'unknown') {
+  if (
+    value === 'production' ||
+    value === 'sandbox' ||
+    value === 'test_store' ||
+    value === 'development' ||
+    value === 'unknown'
+  ) {
     return value;
   }
   return null;
@@ -79,7 +110,7 @@ export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
     grantedAt: row.original_purchase_at,
     source: asSource(row.source) ?? (row.store === 'app_granted' ? 'app_granted' : 'server'),
     environment: asEnvironment(row.environment),
-    managementUrl: row.management_url ?? null,
+    managementUrl: safeExternalHttpsUrl(row.management_url),
     verifiedAt: row.verified_at ?? row.updated_at ?? nowISO(),
     offeringId: row.offering_id ?? null,
     packageId: row.package_id ?? null,
@@ -89,7 +120,7 @@ export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
 
 export async function loadEntitlement(): Promise<StoredEntitlement | null> {
   try {
-    const raw = (await AsyncStorage.getItem(KEY)) ?? (await AsyncStorage.getItem(LEGACY_KEY));
+    const raw = (await getPrivateItem(KEY)) ?? (await getPrivateItem(LEGACY_KEY));
     return raw ? (JSON.parse(raw) as StoredEntitlement) : null;
   } catch {
     return null;
@@ -98,9 +129,9 @@ export async function loadEntitlement(): Promise<StoredEntitlement | null> {
 
 async function persist(e: StoredEntitlement | null): Promise<void> {
   if (e === null) {
-    await AsyncStorage.multiRemove([KEY, LEGACY_KEY]);
+    await multiRemovePrivateItems([KEY, LEGACY_KEY]);
   } else {
-    await AsyncStorage.setItem(KEY, JSON.stringify(e));
+    await setPrivateItem(KEY, JSON.stringify(e));
   }
 }
 
@@ -127,11 +158,7 @@ export async function downgradeToFree(): Promise<void> {
 export async function fetchServerEntitlement(): Promise<StoredEntitlement | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase
-      .from('entitlements')
-      .select('*')
-      .limit(1)
-      .maybeSingle();
+    const { data, error } = await supabase.from('entitlements').select('*').limit(1).maybeSingle();
     if (error || !data) return null;
     const entitlement = rowToStoredEntitlement(data as EntitlementRow);
     await saveVerifiedEntitlement(entitlement);
@@ -142,7 +169,30 @@ export async function fetchServerEntitlement(): Promise<StoredEntitlement | null
 }
 
 export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
-  if (!isSupabaseConfigured) throw new Error('Reverse trial is unavailable until Supabase is configured.');
+  if (!isSupabaseConfigured) {
+    if (env.appEnvironment !== 'development') {
+      throw new Error('Reverse trial is unavailable until Supabase is configured.');
+    }
+
+    return saveVerifiedEntitlement({
+      tier: 'pro',
+      isActive: true,
+      periodType: 'reverse_trial',
+      store: 'app_granted',
+      productId: 'onskin_pro_reverse_trial_local',
+      expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
+      willRenew: false,
+      grantedAt: nowISO(),
+      source: 'app_granted',
+      environment: 'development',
+      managementUrl: null,
+      verifiedAt: nowISO(),
+      offeringId: 'local_reverse_trial',
+      packageId: 'reverse_trial_7d',
+      storeUserId: null,
+      priceLabel: null,
+    });
+  }
 
   const { data, error } = await supabase.functions.invoke('subscription-grants', {
     body: { action: 'start_reverse_trial' },

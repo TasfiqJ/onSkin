@@ -1,7 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { PHOTO_CAPTURE_CONSENT, PHOTO_CLOUD_BACKUP_CONSENT } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
+import { withdrawConsent } from '@/lib/consent/withdrawal';
+import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 /**
  * Photo consents (docs/01 §4, docs/06 §7). Unbundled and local-first. Capture
@@ -16,7 +16,7 @@ const CLOUD_KEY = 'onskin.photos.cloudBackup';
 
 async function getFlag(key: string): Promise<boolean> {
   try {
-    return (await AsyncStorage.getItem(key)) === '1';
+    return (await getPrivateItem(key)) === '1';
   } catch {
     return false;
   }
@@ -27,7 +27,7 @@ export async function hasPhotoCaptureConsent(): Promise<boolean> {
 }
 
 export async function grantPhotoCaptureConsent(): Promise<void> {
-  await AsyncStorage.setItem(CAPTURE_KEY, '1');
+  await setPrivateItem(CAPTURE_KEY, '1');
   try {
     await recordConsent({
       type: 'photo_capture',
@@ -45,11 +45,19 @@ export async function getCloudBackupEnabled(): Promise<boolean> {
 }
 
 export async function setCloudBackupEnabled(enabled: boolean): Promise<void> {
-  await AsyncStorage.setItem(CLOUD_KEY, enabled ? '1' : '0');
+  await setPrivateItem(CLOUD_KEY, enabled ? '1' : '0');
+  if (!enabled) {
+    await withdrawConsent({
+      type: 'photo_cloud_backup',
+      version: PHOTO_CLOUD_BACKUP_CONSENT.version,
+      consentText: PHOTO_CLOUD_BACKUP_CONSENT.fullText,
+    });
+    return;
+  }
   try {
     await recordConsent({
       type: 'photo_cloud_backup',
-      granted: enabled, // revocation is a new row with granted=false (D-015)
+      granted: true,
       version: PHOTO_CLOUD_BACKUP_CONSENT.version,
       consentText: PHOTO_CLOUD_BACKUP_CONSENT.fullText,
     });

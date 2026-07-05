@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sanitizeAnalyticsProps } from './track';
+import { pseudonymousUserId, sanitizeAnalyticsProps } from './track';
 
 describe('analytics sanitizer', () => {
   it('drops sensitive keys and complex payloads', () => {
@@ -38,5 +38,15 @@ describe('analytics sanitizer', () => {
         content: 'skin_profile',
       }),
     ).toEqual({ source: 'share_card' });
+  });
+
+  it('derives a stable pseudonymous user id without exposing the raw Supabase id', async () => {
+    const raw = '00000000-0000-4000-8000-000000000001';
+    const first = await pseudonymousUserId(raw);
+    const second = await pseudonymousUserId(raw);
+
+    expect(first).toBe(second);
+    expect(first).toMatch(/^u_[a-f0-9]{32}$/);
+    expect(first).not.toContain(raw);
   });
 });

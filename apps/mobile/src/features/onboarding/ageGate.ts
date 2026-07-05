@@ -7,6 +7,7 @@
 // unit-testable in the Node vitest env; the device flag lives in ageGateStore.ts.
 
 export const MINIMUM_AGE = 16;
+export const INVALID_DOB_MESSAGE = 'Enter a real birth date that is not in the future.';
 
 export type Dob = { year: number; month: number; day: number };
 
@@ -32,4 +33,9 @@ export function isValidDob(dob: Dob, on: Date): boolean {
 
 export function meetsMinimumAge(dob: Dob, on: Date): boolean {
   return isValidDob(dob, on) && ageOn(dob, on) >= MINIMUM_AGE;
+}
+
+export function getDobValidationError(dob: Dob, on: Date, complete: boolean): string | null {
+  if (!complete || isValidDob(dob, on)) return null;
+  return INVALID_DOB_MESSAGE;
 }

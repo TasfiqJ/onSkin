@@ -14,6 +14,7 @@ import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { localDateString } from '@/features/today/useToday';
+import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
 import { categoryLabel, isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
@@ -108,23 +109,25 @@ export function useShelf() {
       // Skin profile drives sensitivity/pregnancy modulation; guarded so the
       // shelf renders before the backend is configured (B-SUPABASE).
       let profile: EngineProfile = { sensitivity: 'neutral', pregnancy: false };
-      try {
-        const { data: profileRow } = await supabase
-          .from('skin_profiles')
-          .select('sensitive_resistant, pregnancy_status')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-        if (profileRow) {
-          profile = {
-            sensitivity: sensitivityFromAxis(profileRow.sensitive_resistant ?? null),
-            pregnancy:
-              profileRow.pregnancy_status === 'pregnant' ||
-              profileRow.pregnancy_status === 'breastfeeding',
-          };
+      if (isSupabaseConfigured) {
+        try {
+          const { data: profileRow } = await supabase
+            .from('skin_profiles')
+            .select('sensitive_resistant, pregnancy_status')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          if (profileRow) {
+            profile = {
+              sensitivity: sensitivityFromAxis(profileRow.sensitive_resistant ?? null),
+              pregnancy:
+                profileRow.pregnancy_status === 'pregnant' ||
+                profileRow.pregnancy_status === 'breastfeeding',
+            };
+          }
+        } catch {
+          /* offline / no DB. Neutral profile */
         }
-      } catch {
-        /* offline / no DB. Neutral profile */
       }
 
       const active = products.filter((p) => p.status === 'active');
@@ -147,7 +150,8 @@ export function useShelf() {
       const overridden = await getOverriddenKeys();
       const banner =
         conflicts.find(
-          (c) => !isReassuring(c) && c.computedSeverity !== 'none' && !overridden.has(conflictKey(c)),
+          (c) =>
+            !isReassuring(c) && c.computedSeverity !== 'none' && !overridden.has(conflictKey(c)),
         ) ?? null;
 
       // Products in an already-resolved (separated) interaction earn "paired" .

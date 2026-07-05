@@ -1,3 +1,5 @@
+import { appendExternalQueryParam } from '@/lib/navigation/externalUrl';
+
 // Opaque-token attribution (docs/10 §5/§7). The trust guarantee, validated by the
 // MHMDA research: a "where to buy" hand-off shares ONLY an opaque correlation token
 // with the affiliate partner. NEVER a health-adjacent attribute (concern, goal,
@@ -37,9 +39,8 @@ export const HEALTH_DENYLIST = [
  * cannot be attached even by mistake (docs/10 §5). Deep-link straight out; no in-app
  * webview (keeps OnSkin out of the transaction + reduces data-handling liability).
  */
-export function buildOutboundUrl(retailerUrl: string, clickToken: string): string {
-  const sep = retailerUrl.includes('?') ? '&' : '?';
-  return `${retailerUrl}${sep}${ATTRIBUTION_PARAM}=${encodeURIComponent(clickToken)}`;
+export function buildOutboundUrl(retailerUrl: string, clickToken: string): string | null {
+  return appendExternalQueryParam(retailerUrl, ATTRIBUTION_PARAM, clickToken);
 }
 
 /** True if a URL contains any health-adjacent term. Used to prove an outbound link

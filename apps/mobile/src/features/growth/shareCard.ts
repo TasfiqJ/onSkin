@@ -1,3 +1,4 @@
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import type { RefObject } from 'react';
 import type { View } from 'react-native';
@@ -18,11 +19,15 @@ export async function shareConflictCard(ref: RefObject<View | null>): Promise<bo
     quality: 1,
     result: 'tmpfile',
   });
-  if (!(await Sharing.isAvailableAsync())) return false;
-  await Sharing.shareAsync(uri, {
-    mimeType: 'image/png',
-    dialogTitle: 'Share your shelf check',
-    UTI: 'public.png',
-  });
-  return true;
+  try {
+    if (!(await Sharing.isAvailableAsync())) return false;
+    await Sharing.shareAsync(uri, {
+      mimeType: 'image/png',
+      dialogTitle: 'Share your shelf check',
+      UTI: 'public.png',
+    });
+    return true;
+  } finally {
+    await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+  }
 }

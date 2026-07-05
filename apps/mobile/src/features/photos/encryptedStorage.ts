@@ -11,6 +11,8 @@ import {
 import * as FileSystem from 'expo-file-system/legacy';
 import * as SecureStore from 'expo-secure-store';
 
+import { stripImageMetadataFromBase64 } from './metadata';
+
 const PHOTO_DIR = `${FileSystem.documentDirectory ?? ''}photos/v1/`;
 const KEY_ID = 'photo-content-key-v1';
 const KEY_STORE_NAME = 'onskin.photo.content_key.v1';
@@ -73,6 +75,10 @@ function mimeForUri(uri: string): 'image/jpeg' | 'image/png' {
   return uri.toLowerCase().includes('.png') ? 'image/png' : 'image/jpeg';
 }
 
+function safePhotoShareId(photoId: string): string {
+  return photoId.replace(/[^A-Za-z0-9_-]/g, '') || 'photo';
+}
+
 export function isEncryptedPhotoUri(uri?: string | null): boolean {
   return Boolean(uri?.endsWith('.onskinphoto'));
 }
@@ -81,11 +87,13 @@ export async function encryptCapturedPhoto(sourceUri: string, photoId: string): 
   if (!sourceUri) throw new Error('Missing captured photo URI.');
   await ensureDir();
   const key = await getContentKey();
+  const mimeType = mimeForUri(sourceUri);
   const base64 = await FileSystem.readAsStringAsync(sourceUri, { encoding: FileSystem.EncodingType.Base64 });
-  const encrypted = encryptBytesWithKey(utf8ToBytes(base64), key);
+  const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
+  const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
   const envelope: EncryptedPhotoEnvelope = {
     ...encrypted,
-    mimeType: mimeForUri(sourceUri),
+    mimeType,
   };
   const encryptedLocalUri = `${PHOTO_DIR}${photoId}.onskinphoto`;
   await FileSystem.writeAsStringAsync(encryptedLocalUri, JSON.stringify(envelope), {
@@ -114,15 +122,30 @@ export async function createPhotoShareFile(encryptedLocalUri: string, photoId: s
   const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, { encoding: FileSystem.EncodingType.UTF8 });
   const envelope = JSON.parse(raw) as EncryptedPhotoEnvelope;
   const base64 = bytesToUtf8(decryptBytesWithKey(envelope, key));
+  const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
   const extension = envelope.mimeType === 'image/png' ? 'png' : 'jpg';
-  const exportUri = `${FileSystem.cacheDirectory ?? ''}onskin-share-${photoId}.${extension}`;
-  await FileSystem.writeAsStringAsync(exportUri, base64, { encoding: FileSystem.EncodingType.Base64 });
+  const cacheDirectory = FileSystem.cacheDirectory;
+  if (!cacheDirectory) throw new Error('PHOTO_SHARE_CACHE_UNAVAILABLE');
+  const exportUri = `${cacheDirectory}onskin-share-${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
+  await FileSystem.writeAsStringAsync(exportUri, strippedBase64, { encoding: FileSystem.EncodingType.Base64 });
   return exportUri;
+}
+
+export async function deletePhotoShareFile(uri?: string | null, sourceUri?: string | null): Promise<void> {
+  if (!uri || uri === sourceUri) return;
+  const cacheDirectory = FileSystem.cacheDirectory;
+  if (!cacheDirectory || !uri.startsWith(`${cacheDirectory}onskin-share-`)) return;
+  await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
 }
 
 export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
   if (!uri || !isEncryptedPhotoUri(uri)) return;
   await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+}
+
+export async function clearEncryptedPhotoStorage(): Promise<void> {
+  await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true }).catch(() => {});
+  await SecureStore.deleteItemAsync(KEY_STORE_NAME).catch(() => {});
 }
 
 export async function encryptPhotoNote(note: string | null | undefined): Promise<string | null> {

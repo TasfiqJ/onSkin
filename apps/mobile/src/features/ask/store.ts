@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPrivateItem, multiRemovePrivateItems, setPrivateItem } from '@/lib/storage/privateKV';
 
 // Local-first Ask state (docs/13 §7/§15, the D-029 pattern). Two pieces of state, both
 // offline-safe: (1) the ask_onskin consent flag. DEFAULT-OFF, the v1 source of truth
@@ -12,14 +12,14 @@ const TURNS_KEY = 'onskin.ask.groundedTurns.v1'; // { period: 'YYYY-MM', count: 
 
 export async function getAskConsentLocal(): Promise<boolean> {
   try {
-    return (await AsyncStorage.getItem(CONSENT_KEY)) === 'true';
+    return (await getPrivateItem(CONSENT_KEY)) === 'true';
   } catch {
     return false;
   }
 }
 
 export async function setAskConsentLocal(enabled: boolean): Promise<void> {
-  await AsyncStorage.setItem(CONSENT_KEY, enabled ? 'true' : 'false');
+  await setPrivateItem(CONSENT_KEY, enabled ? 'true' : 'false');
 }
 
 type TurnRecord = { period: string; count: number };
@@ -38,7 +38,7 @@ function parseTurns(raw: string | null): TurnRecord | null {
 /** Grounded (cloud) turns used in `period` (a 'YYYY-MM' string); resets per period. */
 export async function getGroundedTurns(period: string): Promise<number> {
   try {
-    const rec = parseTurns(await AsyncStorage.getItem(TURNS_KEY));
+    const rec = parseTurns(await getPrivateItem(TURNS_KEY));
     return rec && rec.period === period ? rec.count : 0;
   } catch {
     return 0;
@@ -48,9 +48,9 @@ export async function getGroundedTurns(period: string): Promise<number> {
 /** Increment the grounded-turn counter for `period` (resets when the period rolls over). */
 export async function recordGroundedTurn(period: string): Promise<void> {
   try {
-    const rec = parseTurns(await AsyncStorage.getItem(TURNS_KEY));
+    const rec = parseTurns(await getPrivateItem(TURNS_KEY));
     const count = rec && rec.period === period ? rec.count + 1 : 1;
-    await AsyncStorage.setItem(TURNS_KEY, JSON.stringify({ period, count } satisfies TurnRecord));
+    await setPrivateItem(TURNS_KEY, JSON.stringify({ period, count } satisfies TurnRecord));
   } catch {
     /* best-effort. The cap is a cost guardrail, not a hard wall */
   }
@@ -58,5 +58,5 @@ export async function recordGroundedTurn(period: string): Promise<void> {
 
 /** Test/seed reset, and the deletion-on-revocation hook (no content is stored here). */
 export async function clearAskStore(): Promise<void> {
-  await AsyncStorage.multiRemove([CONSENT_KEY, TURNS_KEY]);
+  await multiRemovePrivateItems([CONSENT_KEY, TURNS_KEY]);
 }

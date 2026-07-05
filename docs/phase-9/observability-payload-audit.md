@@ -2,15 +2,19 @@
 
 ## Sentry
 
-The app initializes Sentry with `sendDefaultPii: false`, failed request capture disabled, screenshots disabled, and view hierarchy disabled. `captureException` passes context through `sanitizeObservabilityContext` before sending `extra`.
+The app initializes Sentry with `sendDefaultPii: false`, failed request capture disabled, screenshots disabled, and view hierarchy disabled. `setSentryUser` uses a pseudonymous account ID. `captureException` passes context through `sanitizeObservabilityContext` before sending `extra`, and passes the throwable through `sanitizeCapturedException` so Sentry receives a generic `redacted_exception` instead of raw exception messages, stacks, causes, or attached fields.
 
-The scrubber drops route params, URLs, query strings, product data, barcodes, OCR text, notes, photo paths, receipt-like values, profile/skin/health-adjacent keys, and free-text-looking values.
+The scrubber drops route params, URLs, query strings, product data, barcodes, OCR text, notes, photo paths, receipt-like values, profile/skin/health-adjacent keys, and free-text-looking values. Captured exception names are reduced to safe names, and sensitive names fall back to `Error`.
 
 ## PostHog
 
-Analytics props are allowlisted in `apps/mobile/src/lib/analytics/eventRegistry.ts`. `sanitizeAnalyticsProps` drops keys not in the registry, sensitive keys, complex values, contact-looking strings, and sensitive-looking strings.
+Analytics props are allowlisted in `apps/mobile/src/lib/analytics/eventRegistry.ts`. `identify` uses a pseudonymous account ID. `sanitizeAnalyticsProps` drops keys not in the registry, sensitive keys, complex values, contact-looking strings, and sensitive-looking strings.
 
 Allowed props must remain buckets or opaque IDs only. Product IDs, rule IDs, content IDs, quiz axes, skin profile outputs, local paths, barcodes, notes, OCR text, scores, and free text are not approved telemetry.
+
+## Development Logs
+
+Development/QA warning paths use `devWarn()` and `redactedErrorForLog()` so exception messages, stacks, URLs, tokens, paths, user IDs, and attached fields are not printed when PostHog, Sentry, or RevenueCat setup/capture paths fail.
 
 ## Release Requirement
 

@@ -1,37 +1,55 @@
 // LargeSecureStore (docs/01 §5): SecureStore has a ~2KB limit and the Supabase
-// session JSON exceeds it. So we generate an AES-256 key per value, keep that key
-// in SecureStore (small), and store the AES-encrypted session in AsyncStorage.
-// This keeps JWTs encrypted at rest (plain AsyncStorage is unencrypted).
+// session JSON exceeds it. So we keep the content key in SecureStore (small) and
+// store an authenticated encrypted session envelope in AsyncStorage.
 import 'react-native-get-random-values'; // polyfills crypto.getRandomValues
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as aesjs from 'aes-js';
+import { bytesToHex, hexToBytes, randomBytes } from '@noble/ciphers/utils.js';
 import * as SecureStore from 'expo-secure-store';
 
+import { decryptLargeSecureStoreValue, encryptLargeSecureStoreValue } from './largeSecureStoreCrypto';
+
 export class LargeSecureStore {
-  private async encrypt(key: string, value: string): Promise<string> {
-    const encryptionKey = crypto.getRandomValues(new Uint8Array(32));
-    const cipher = new aesjs.ModeOfOperation.ctr(encryptionKey, new aesjs.Counter(1));
-    const encryptedBytes = cipher.encrypt(aesjs.utils.utf8.toBytes(value));
-    await SecureStore.setItemAsync(key, aesjs.utils.hex.fromBytes(encryptionKey));
-    return aesjs.utils.hex.fromBytes(encryptedBytes);
+  private async getContentKey(key: string): Promise<Uint8Array | null> {
+    const existing = await SecureStore.getItemAsync(key);
+    if (!existing) return null;
+    try {
+      return hexToBytes(existing);
+    } catch {
+      return null;
+    }
   }
 
-  private async decrypt(key: string, value: string): Promise<string | null> {
-    const encryptionKeyHex = await SecureStore.getItemAsync(key);
-    if (!encryptionKeyHex) return null;
-    const cipher = new aesjs.ModeOfOperation.ctr(aesjs.utils.hex.toBytes(encryptionKeyHex), new aesjs.Counter(1));
-    const decryptedBytes = cipher.decrypt(aesjs.utils.hex.toBytes(value));
-    return aesjs.utils.utf8.fromBytes(decryptedBytes);
+  private async ensureContentKey(key: string): Promise<Uint8Array> {
+    const existing = await this.getContentKey(key);
+    if (existing) return existing;
+    const contentKey = randomBytes(32);
+    await SecureStore.setItemAsync(key, bytesToHex(contentKey));
+    return contentKey;
   }
 
   async getItem(key: string): Promise<string | null> {
     const encrypted = await AsyncStorage.getItem(key);
     if (!encrypted) return null;
-    return this.decrypt(key, encrypted);
+    const contentKey = await this.getContentKey(key);
+    if (!contentKey) {
+      await AsyncStorage.removeItem(key);
+      return null;
+    }
+
+    const result = decryptLargeSecureStoreValue(encrypted, contentKey);
+    if (result.plaintext === null) {
+      await this.removeItem(key);
+      return null;
+    }
+    if (result.needsMigration) {
+      await AsyncStorage.setItem(key, encryptLargeSecureStoreValue(result.plaintext, contentKey));
+    }
+    return result.plaintext;
   }
 
   async setItem(key: string, value: string): Promise<void> {
-    const encrypted = await this.encrypt(key, value);
+    const contentKey = await this.ensureContentKey(key);
+    const encrypted = encryptLargeSecureStoreValue(value, contentKey);
     await AsyncStorage.setItem(key, encrypted);
   }
 

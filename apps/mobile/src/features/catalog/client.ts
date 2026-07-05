@@ -56,13 +56,27 @@ export type CatalogCorrectionType =
   | 'expiry_issue'
   | 'category_issue';
 
+type CatalogReportScalar = string | number | boolean | null;
+type CatalogReportPayloadKey =
+  | 'productName'
+  | 'brand'
+  | 'barcode'
+  | 'category'
+  | 'ingredientsText'
+  | 'sourceUrl'
+  | 'sourceName'
+  | 'defaultPaoMonths'
+  | 'qualityIssue'
+  | 'suggestedCorrection';
+type CatalogReportContextKey = 'addedVia' | 'quality' | 'source' | 'platform' | 'appVersion' | 'buildNumber' | 'route';
+
 export async function reportCatalogIssue(input: {
   correctionType: CatalogCorrectionType;
   productId?: string | null;
   barcode?: string | null;
   description?: string | null;
-  proposedPayload?: Record<string, unknown>;
-  clientContext?: Record<string, unknown>;
+  proposedPayload?: Partial<Record<CatalogReportPayloadKey, CatalogReportScalar>>;
+  clientContext?: Partial<Record<CatalogReportContextKey, CatalogReportScalar>>;
 }): Promise<{ ok: boolean; offline?: boolean }> {
   track('catalog_correction_reported', { correction_type: input.correctionType });
   if (!isSupabaseConfigured) return { ok: false, offline: true };
@@ -72,4 +86,3 @@ export async function reportCatalogIssue(input: {
   });
   return { ok: !error };
 }
-

@@ -141,10 +141,10 @@ export default function ProductDetailScreen() {
       barcode: p.barcode,
       description: `${correctionType} reported from product detail`,
       clientContext: {
-        shelfProductId: p.id,
         addedVia: p.addedVia,
         quality: p.catalogMatchQuality,
         source: p.catalogSource,
+        route: 'shelf_detail',
       },
     });
     Alert.alert(

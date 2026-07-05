@@ -1,9 +1,285 @@
 {
-  "generatedAt": "2026-07-04T17:19:49.728Z",
+  "generatedAt": "2026-07-05T21:07:43.009Z",
   "packageManager": null,
   "lockfileVersion": 3,
-  "packageCount": 1124,
-  "vulnerabilities": null,
+  "packageCount": 1071,
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 14,
+    "high": 0,
+    "critical": 0,
+    "total": 14
+  },
+  "auditFindings": [
+    {
+      "name": "@expo/cli",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/inline-modules",
+        "@expo/metro-config",
+        "@expo/prebuild-config"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/cli"
+      ],
+      "fixAvailable": "expo@46.0.21 (breaking)"
+    },
+    {
+      "name": "@expo/config",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || >=3.3.23-alpha.0",
+      "via": [
+        "@expo/config-plugins"
+      ],
+      "effects": [
+        "@expo/local-build-cache-provider",
+        "@expo/metro-config",
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/config"
+      ],
+      "fixAvailable": "expo@46.0.21 (breaking)"
+    },
+    {
+      "name": "@expo/config-plugins",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "xcode"
+      ],
+      "effects": [
+        "@expo/cli",
+        "@expo/config",
+        "@expo/inline-modules",
+        "@expo/prebuild-config",
+        "expo",
+        "expo-sharing",
+        "expo-splash-screen"
+      ],
+      "nodes": [
+        "node_modules/@expo/config-plugins"
+      ],
+      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+    },
+    {
+      "name": "@expo/inline-modules",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": ">=0.0.2-canary-20260409-6fc2991",
+      "via": [
+        "@expo/config-plugins"
+      ],
+      "effects": [
+        "@expo/cli"
+      ],
+      "nodes": [
+        "node_modules/@expo/inline-modules"
+      ],
+      "fixAvailable": "expo@46.0.21 (breaking)"
+    },
+    {
+      "name": "@expo/local-build-cache-provider",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "@expo/config"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/local-build-cache-provider"
+      ],
+      "fixAvailable": "expo@46.0.21 (breaking)"
+    },
+    {
+      "name": "@expo/metro-config",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "<=0.0.1-canary-20240418-8d74597 || >=0.1.49-alpha.0",
+      "via": [
+        "@expo/config"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "nodes": [
+        "node_modules/@expo/metro-config"
+      ],
+      "fixAvailable": "expo@46.0.21 (breaking)"
+    },
+    {
+      "name": "@expo/prebuild-config",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "*",
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/@expo/prebuild-config"
+      ],
+      "fixAvailable": "available"
+    },
+    {
+      "name": "@react-native-google-signin/google-signin",
+      "severity": "moderate",
+      "isDirect": true,
+      "range": ">=9.0.0",
+      "via": [
+        "expo"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/@react-native-google-signin/google-signin"
+      ],
+      "fixAvailable": "@react-native-google-signin/google-signin@8.2.2 (breaking)"
+    },
+    {
+      "name": "@sentry/react-native",
+      "severity": "moderate",
+      "isDirect": true,
+      "range": ">=5.16.0-alpha.1",
+      "via": [
+        "expo"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/@sentry/react-native"
+      ],
+      "fixAvailable": "@sentry/react-native@5.15.2 (breaking)"
+    },
+    {
+      "name": "expo",
+      "severity": "moderate",
+      "isDirect": true,
+      "range": "40.0.0-alpha.0 - 40.0.0-beta.5 || >=41.0.0-alpha.0",
+      "via": [
+        "@expo/cli",
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/local-build-cache-provider",
+        "@expo/metro-config"
+      ],
+      "effects": [
+        "@react-native-google-signin/google-signin",
+        "@sentry/react-native"
+      ],
+      "nodes": [
+        "node_modules/expo"
+      ],
+      "fixAvailable": "expo@46.0.21 (breaking)"
+    },
+    {
+      "name": "expo-sharing",
+      "severity": "moderate",
+      "isDirect": true,
+      "range": ">=14.0.9-canary-20251205-756eb7a",
+      "via": [
+        "@expo/config-plugins"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/expo-sharing"
+      ],
+      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
+    },
+    {
+      "name": "expo-splash-screen",
+      "severity": "moderate",
+      "isDirect": true,
+      "range": "55.0.10-canary-20260424-7bedc9d - 55.0.10-canary-20260429-a5e59cf || >=56.0.0-canary-20260212-4f61309",
+      "via": [
+        "@expo/config-plugins"
+      ],
+      "effects": [],
+      "nodes": [
+        "node_modules/expo-splash-screen"
+      ],
+      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+    },
+    {
+      "name": "uuid",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": "<11.1.1",
+      "via": [
+        "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided (<11.1.1)"
+      ],
+      "effects": [
+        "xcode"
+      ],
+      "nodes": [
+        "node_modules/uuid"
+      ],
+      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+    },
+    {
+      "name": "xcode",
+      "severity": "moderate",
+      "isDirect": false,
+      "range": ">=0.9.2",
+      "via": [
+        "uuid"
+      ],
+      "effects": [
+        "@expo/config-plugins"
+      ],
+      "nodes": [
+        "node_modules/xcode"
+      ],
+      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+    }
+  ],
+  "installScriptPackages": [
+    {
+      "path": "node_modules/@sentry/cli",
+      "name": "@sentry/cli",
+      "version": "2.58.4",
+      "key": "@sentry/cli@2.58.4",
+      "dev": false,
+      "optional": false,
+      "license": "FSL-1.1-MIT",
+      "allowed": true,
+      "allowlistReason": "Sentry native CLI binary installer used by @sentry/react-native tooling."
+    },
+    {
+      "path": "node_modules/fsevents",
+      "name": "fsevents",
+      "version": "2.3.3",
+      "key": "fsevents@2.3.3",
+      "dev": true,
+      "optional": true,
+      "license": "MIT",
+      "allowed": true,
+      "allowlistReason": "Optional Darwin file-watcher native package; not installed on non-Darwin CI runners."
+    },
+    {
+      "path": "node_modules/unrs-resolver",
+      "name": "unrs-resolver",
+      "version": "1.12.2",
+      "key": "unrs-resolver@1.12.2",
+      "dev": true,
+      "optional": false,
+      "license": "MIT",
+      "allowed": true,
+      "allowlistReason": "ESLint resolver native binding installer used by lint tooling."
+    }
+  ],
   "packages": [
     {
       "path": "apps/mobile",
@@ -11,6 +287,13 @@
       "version": "0.1.0",
       "license": null,
       "resolved": null
+    },
+    {
+      "path": "apps/mobile/node_modules/expo-store-review",
+      "name": "expo-store-review",
+      "version": "56.0.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-56.0.3.tgz"
     },
     {
       "path": "node_modules/@adobe/css-tools",
@@ -433,32 +716,11 @@
       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-development/-/plugin-transform-react-jsx-development-7.29.7.tgz"
     },
     {
-      "path": "node_modules/@babel/plugin-transform-react-jsx-self",
-      "name": "@babel/plugin-transform-react-jsx-self",
-      "version": "7.29.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-self/-/plugin-transform-react-jsx-self-7.29.7.tgz"
-    },
-    {
-      "path": "node_modules/@babel/plugin-transform-react-jsx-source",
-      "name": "@babel/plugin-transform-react-jsx-source",
-      "version": "7.29.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-source/-/plugin-transform-react-jsx-source-7.29.7.tgz"
-    },
-    {
       "path": "node_modules/@babel/plugin-transform-react-pure-annotations",
       "name": "@babel/plugin-transform-react-pure-annotations",
       "version": "7.29.7",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-pure-annotations/-/plugin-transform-react-pure-annotations-7.29.7.tgz"
-    },
-    {
-      "path": "node_modules/@babel/plugin-transform-regenerator",
-      "name": "@babel/plugin-transform-regenerator",
-      "version": "7.29.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-regenerator/-/plugin-transform-regenerator-7.29.7.tgz"
     },
     {
       "path": "node_modules/@babel/plugin-transform-runtime",
@@ -559,188 +821,6 @@
       "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz"
     },
     {
-      "path": "node_modules/@esbuild/aix-ppc64",
-      "name": "@esbuild/aix-ppc64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/android-arm",
-      "name": "@esbuild/android-arm",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/android-arm/-/android-arm-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/android-arm64",
-      "name": "@esbuild/android-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/android-arm64/-/android-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/android-x64",
-      "name": "@esbuild/android-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/android-x64/-/android-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/darwin-arm64",
-      "name": "@esbuild/darwin-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/darwin-x64",
-      "name": "@esbuild/darwin-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/freebsd-arm64",
-      "name": "@esbuild/freebsd-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-arm64/-/freebsd-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/freebsd-x64",
-      "name": "@esbuild/freebsd-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/freebsd-x64/-/freebsd-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-arm",
-      "name": "@esbuild/linux-arm",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm/-/linux-arm-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-arm64",
-      "name": "@esbuild/linux-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-arm64/-/linux-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-ia32",
-      "name": "@esbuild/linux-ia32",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-ia32/-/linux-ia32-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-loong64",
-      "name": "@esbuild/linux-loong64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-mips64el",
-      "name": "@esbuild/linux-mips64el",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-mips64el/-/linux-mips64el-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-ppc64",
-      "name": "@esbuild/linux-ppc64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-ppc64/-/linux-ppc64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-riscv64",
-      "name": "@esbuild/linux-riscv64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-riscv64/-/linux-riscv64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-s390x",
-      "name": "@esbuild/linux-s390x",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-s390x/-/linux-s390x-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/linux-x64",
-      "name": "@esbuild/linux-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/netbsd-arm64",
-      "name": "@esbuild/netbsd-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-arm64/-/netbsd-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/netbsd-x64",
-      "name": "@esbuild/netbsd-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/netbsd-x64/-/netbsd-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/openbsd-arm64",
-      "name": "@esbuild/openbsd-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-arm64/-/openbsd-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/openbsd-x64",
-      "name": "@esbuild/openbsd-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/openbsd-x64/-/openbsd-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/openharmony-arm64",
-      "name": "@esbuild/openharmony-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/openharmony-arm64/-/openharmony-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/sunos-x64",
-      "name": "@esbuild/sunos-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/sunos-x64/-/sunos-x64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/win32-arm64",
-      "name": "@esbuild/win32-arm64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/win32-arm64/-/win32-arm64-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/win32-ia32",
-      "name": "@esbuild/win32-ia32",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/win32-ia32/-/win32-ia32-0.27.7.tgz"
-    },
-    {
-      "path": "node_modules/@esbuild/win32-x64",
-      "name": "@esbuild/win32-x64",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.27.7.tgz"
-    },
-    {
       "path": "node_modules/@eslint-community/eslint-utils",
       "name": "@eslint-community/eslint-utils",
       "version": "4.9.1",
@@ -837,6 +917,41 @@
       "version": "0.4.38",
       "license": "MIT AND Apache-2.0",
       "resolved": "https://registry.npmjs.org/@expo-google-fonts/material-symbols/-/material-symbols-0.4.38.tgz"
+    },
+    {
+      "path": "node_modules/@expo/cli",
+      "name": "@expo/cli",
+      "version": "56.1.18",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-56.1.18.tgz"
+    },
+    {
+      "path": "node_modules/@expo/cli/node_modules/@expo/env",
+      "name": "@expo/cli/node_modules/@expo/env",
+      "version": "2.3.1",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
+    },
+    {
+      "path": "node_modules/@expo/cli/node_modules/@expo/router-server",
+      "name": "@expo/cli/node_modules/@expo/router-server",
+      "version": "56.0.15",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@expo/router-server/-/router-server-56.0.15.tgz"
+    },
+    {
+      "path": "node_modules/@expo/cli/node_modules/semver",
+      "name": "@expo/cli/node_modules/semver",
+      "version": "7.8.5",
+      "license": "ISC",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
+    },
+    {
+      "path": "node_modules/@expo/cli/node_modules/zod",
+      "name": "@expo/cli/node_modules/zod",
+      "version": "3.25.76",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz"
     },
     {
       "path": "node_modules/@expo/code-signing-certificates",
@@ -1233,9 +1348,9 @@
     {
       "path": "node_modules/@napi-rs/wasm-runtime",
       "name": "@napi-rs/wasm-runtime",
-      "version": "1.1.5",
+      "version": "1.1.6",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@napi-rs/wasm-runtime/-/wasm-runtime-1.1.5.tgz"
+      "resolved": "https://registry.npmjs.org/@napi-rs/wasm-runtime/-/wasm-runtime-1.1.6.tgz"
     },
     {
       "path": "node_modules/@noble/ciphers",
@@ -1285,6 +1400,13 @@
       "version": null,
       "license": null,
       "resolved": "packages/types"
+    },
+    {
+      "path": "node_modules/@oxc-project/types",
+      "name": "@oxc-project/types",
+      "version": "0.138.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@oxc-project/types/-/types-0.138.0.tgz"
     },
     {
       "path": "node_modules/@posthog/core",
@@ -1532,13 +1654,6 @@
       "resolved": "https://registry.npmjs.org/@react-native/babel-plugin-codegen/-/babel-plugin-codegen-0.85.3.tgz"
     },
     {
-      "path": "node_modules/@react-native/babel-preset",
-      "name": "@react-native/babel-preset",
-      "version": "0.85.3",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/babel-preset/-/babel-preset-0.85.3.tgz"
-    },
-    {
       "path": "node_modules/@react-native/codegen",
       "name": "@react-native/codegen",
       "version": "0.85.3",
@@ -1602,20 +1717,6 @@
       "resolved": "https://registry.npmjs.org/@react-native/js-polyfills/-/js-polyfills-0.85.3.tgz"
     },
     {
-      "path": "node_modules/@react-native/metro-babel-transformer",
-      "name": "@react-native/metro-babel-transformer",
-      "version": "0.85.3",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/metro-babel-transformer/-/metro-babel-transformer-0.85.3.tgz"
-    },
-    {
-      "path": "node_modules/@react-native/metro-config",
-      "name": "@react-native/metro-config",
-      "version": "0.85.3",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@react-native/metro-config/-/metro-config-0.85.3.tgz"
-    },
-    {
       "path": "node_modules/@react-native/normalize-colors",
       "name": "@react-native/normalize-colors",
       "version": "0.85.3",
@@ -1651,179 +1752,137 @@
       "resolved": "https://registry.npmjs.org/@revenuecat/purchases-typescript-internal/-/purchases-typescript-internal-18.18.0.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-android-arm-eabi",
-      "name": "@rollup/rollup-android-arm-eabi",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-android-arm64",
+      "name": "@rolldown/binding-android-arm64",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-android-arm64/-/binding-android-arm64-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-android-arm64",
-      "name": "@rollup/rollup-android-arm64",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-darwin-arm64",
+      "name": "@rolldown/binding-darwin-arm64",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-android-arm64/-/rollup-android-arm64-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-darwin-arm64/-/binding-darwin-arm64-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-darwin-arm64",
-      "name": "@rollup/rollup-darwin-arm64",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-darwin-x64",
+      "name": "@rolldown/binding-darwin-x64",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-darwin-x64/-/binding-darwin-x64-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-darwin-x64",
-      "name": "@rollup/rollup-darwin-x64",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-freebsd-x64",
+      "name": "@rolldown/binding-freebsd-x64",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-freebsd-x64/-/binding-freebsd-x64-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-freebsd-arm64",
-      "name": "@rollup/rollup-freebsd-arm64",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-arm-gnueabihf",
+      "name": "@rolldown/binding-linux-arm-gnueabihf",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-freebsd-x64",
-      "name": "@rollup/rollup-freebsd-x64",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-arm64-gnu",
+      "name": "@rolldown/binding-linux-arm64-gnu",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-freebsd-x64/-/rollup-freebsd-x64-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-arm-gnueabihf",
-      "name": "@rollup/rollup-linux-arm-gnueabihf",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-arm64-musl",
+      "name": "@rolldown/binding-linux-arm64-musl",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-arm-musleabihf",
-      "name": "@rollup/rollup-linux-arm-musleabihf",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-ppc64-gnu",
+      "name": "@rolldown/binding-linux-ppc64-gnu",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-arm64-gnu",
-      "name": "@rollup/rollup-linux-arm64-gnu",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-s390x-gnu",
+      "name": "@rolldown/binding-linux-s390x-gnu",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-arm64-musl",
-      "name": "@rollup/rollup-linux-arm64-musl",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-x64-gnu",
+      "name": "@rolldown/binding-linux-x64-gnu",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-loong64-gnu",
-      "name": "@rollup/rollup-linux-loong64-gnu",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-linux-x64-musl",
+      "name": "@rolldown/binding-linux-x64-musl",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-loong64-gnu/-/rollup-linux-loong64-gnu-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-linux-x64-musl/-/binding-linux-x64-musl-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-loong64-musl",
-      "name": "@rollup/rollup-linux-loong64-musl",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-openharmony-arm64",
+      "name": "@rolldown/binding-openharmony-arm64",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-loong64-musl/-/rollup-linux-loong64-musl-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-openharmony-arm64/-/binding-openharmony-arm64-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-ppc64-gnu",
-      "name": "@rollup/rollup-linux-ppc64-gnu",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-wasm32-wasi",
+      "name": "@rolldown/binding-wasm32-wasi",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-gnu/-/rollup-linux-ppc64-gnu-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-wasm32-wasi/-/binding-wasm32-wasi-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-ppc64-musl",
-      "name": "@rollup/rollup-linux-ppc64-musl",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-wasm32-wasi/node_modules/@emnapi/core",
+      "name": "@rolldown/binding-wasm32-wasi/node_modules/@emnapi/core",
+      "version": "1.11.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-ppc64-musl/-/rollup-linux-ppc64-musl-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@emnapi/core/-/core-1.11.1.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-riscv64-gnu",
-      "name": "@rollup/rollup-linux-riscv64-gnu",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-wasm32-wasi/node_modules/@emnapi/runtime",
+      "name": "@rolldown/binding-wasm32-wasi/node_modules/@emnapi/runtime",
+      "version": "1.11.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.1.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-riscv64-musl",
-      "name": "@rollup/rollup-linux-riscv64-musl",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-wasm32-wasi/node_modules/@emnapi/wasi-threads",
+      "name": "@rolldown/binding-wasm32-wasi/node_modules/@emnapi/wasi-threads",
+      "version": "1.2.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.2.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-s390x-gnu",
-      "name": "@rollup/rollup-linux-s390x-gnu",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-win32-arm64-msvc",
+      "name": "@rolldown/binding-win32-arm64-msvc",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-x64-gnu",
-      "name": "@rollup/rollup-linux-x64-gnu",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/binding-win32-x64-msvc",
+      "name": "@rolldown/binding-win32-x64-msvc",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.1.4.tgz"
     },
     {
-      "path": "node_modules/@rollup/rollup-linux-x64-musl",
-      "name": "@rollup/rollup-linux-x64-musl",
-      "version": "4.61.1",
+      "path": "node_modules/@rolldown/pluginutils",
+      "name": "@rolldown/pluginutils",
+      "version": "1.0.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.61.1.tgz"
-    },
-    {
-      "path": "node_modules/@rollup/rollup-openbsd-x64",
-      "name": "@rollup/rollup-openbsd-x64",
-      "version": "4.61.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-openbsd-x64/-/rollup-openbsd-x64-4.61.1.tgz"
-    },
-    {
-      "path": "node_modules/@rollup/rollup-openharmony-arm64",
-      "name": "@rollup/rollup-openharmony-arm64",
-      "version": "4.61.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-openharmony-arm64/-/rollup-openharmony-arm64-4.61.1.tgz"
-    },
-    {
-      "path": "node_modules/@rollup/rollup-win32-arm64-msvc",
-      "name": "@rollup/rollup-win32-arm64-msvc",
-      "version": "4.61.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-arm64-msvc/-/rollup-win32-arm64-msvc-4.61.1.tgz"
-    },
-    {
-      "path": "node_modules/@rollup/rollup-win32-ia32-msvc",
-      "name": "@rollup/rollup-win32-ia32-msvc",
-      "version": "4.61.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-ia32-msvc/-/rollup-win32-ia32-msvc-4.61.1.tgz"
-    },
-    {
-      "path": "node_modules/@rollup/rollup-win32-x64-gnu",
-      "name": "@rollup/rollup-win32-x64-gnu",
-      "version": "4.61.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-gnu/-/rollup-win32-x64-gnu-4.61.1.tgz"
-    },
-    {
-      "path": "node_modules/@rollup/rollup-win32-x64-msvc",
-      "name": "@rollup/rollup-win32-x64-msvc",
-      "version": "4.61.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz"
     },
     {
       "path": "node_modules/@rtsao/scc",
@@ -1987,6 +2046,13 @@
       "resolved": "https://registry.npmjs.org/@sinclair/typebox/-/typebox-0.27.10.tgz"
     },
     {
+      "path": "node_modules/@standard-schema/spec",
+      "name": "@standard-schema/spec",
+      "version": "1.1.0",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/@standard-schema/spec/-/spec-1.1.0.tgz"
+    },
+    {
       "path": "node_modules/@supabase/auth-js",
       "name": "@supabase/auth-js",
       "version": "2.108.1",
@@ -2048,34 +2114,6 @@
       "version": "5.101.0",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.101.0.tgz"
-    },
-    {
-      "path": "node_modules/@testing-library/dom",
-      "name": "@testing-library/dom",
-      "version": "10.4.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@testing-library/dom/-/dom-10.4.1.tgz"
-    },
-    {
-      "path": "node_modules/@testing-library/dom/node_modules/ansi-styles",
-      "name": "@testing-library/dom/node_modules/ansi-styles",
-      "version": "5.2.0",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-5.2.0.tgz"
-    },
-    {
-      "path": "node_modules/@testing-library/dom/node_modules/pretty-format",
-      "name": "@testing-library/dom/node_modules/pretty-format",
-      "version": "27.5.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/pretty-format/-/pretty-format-27.5.1.tgz"
-    },
-    {
-      "path": "node_modules/@testing-library/dom/node_modules/react-is",
-      "name": "@testing-library/dom/node_modules/react-is",
-      "version": "17.0.2",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
     },
     {
       "path": "node_modules/@testing-library/jest-dom",
@@ -2143,9 +2181,9 @@
     {
       "path": "node_modules/@tybys/wasm-util",
       "name": "@tybys/wasm-util",
-      "version": "0.10.2",
+      "version": "0.10.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@tybys/wasm-util/-/wasm-util-0.10.2.tgz"
+      "resolved": "https://registry.npmjs.org/@tybys/wasm-util/-/wasm-util-0.10.3.tgz"
     },
     {
       "path": "node_modules/@types/aes-js",
@@ -2153,13 +2191,6 @@
       "version": "3.1.4",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/@types/aes-js/-/aes-js-3.1.4.tgz"
-    },
-    {
-      "path": "node_modules/@types/aria-query",
-      "name": "@types/aria-query",
-      "version": "5.0.4",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@types/aria-query/-/aria-query-5.0.4.tgz"
     },
     {
       "path": "node_modules/@types/chai",
@@ -2542,51 +2573,51 @@
     {
       "path": "node_modules/@vitest/expect",
       "name": "@vitest/expect",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/expect/-/expect-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/expect/-/expect-4.1.9.tgz"
     },
     {
       "path": "node_modules/@vitest/mocker",
       "name": "@vitest/mocker",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/mocker/-/mocker-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/mocker/-/mocker-4.1.9.tgz"
     },
     {
       "path": "node_modules/@vitest/pretty-format",
       "name": "@vitest/pretty-format",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/pretty-format/-/pretty-format-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/pretty-format/-/pretty-format-4.1.9.tgz"
     },
     {
       "path": "node_modules/@vitest/runner",
       "name": "@vitest/runner",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/runner/-/runner-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/runner/-/runner-4.1.9.tgz"
     },
     {
       "path": "node_modules/@vitest/snapshot",
       "name": "@vitest/snapshot",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/snapshot/-/snapshot-4.1.9.tgz"
     },
     {
       "path": "node_modules/@vitest/spy",
       "name": "@vitest/spy",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/spy/-/spy-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/spy/-/spy-4.1.9.tgz"
     },
     {
       "path": "node_modules/@vitest/utils",
       "name": "@vitest/utils",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@vitest/utils/-/utils-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/@vitest/utils/-/utils-4.1.9.tgz"
     },
     {
       "path": "node_modules/@xmldom/xmldom",
@@ -3002,13 +3033,6 @@
       "resolved": "https://registry.npmjs.org/bytes/-/bytes-3.1.2.tgz"
     },
     {
-      "path": "node_modules/cac",
-      "name": "cac",
-      "version": "6.7.14",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/cac/-/cac-6.7.14.tgz"
-    },
-    {
       "path": "node_modules/call-bind",
       "name": "call-bind",
       "version": "1.0.9",
@@ -3060,9 +3084,9 @@
     {
       "path": "node_modules/chai",
       "name": "chai",
-      "version": "5.3.3",
+      "version": "6.2.2",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/chai/-/chai-5.3.3.tgz"
+      "resolved": "https://registry.npmjs.org/chai/-/chai-6.2.2.tgz"
     },
     {
       "path": "node_modules/chalk",
@@ -3070,13 +3094,6 @@
       "version": "4.1.2",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz"
-    },
-    {
-      "path": "node_modules/check-error",
-      "name": "check-error",
-      "version": "2.1.3",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/check-error/-/check-error-2.1.3.tgz"
     },
     {
       "path": "node_modules/chokidar",
@@ -3359,13 +3376,6 @@
       "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.2.tgz"
     },
     {
-      "path": "node_modules/deep-eql",
-      "name": "deep-eql",
-      "version": "5.0.2",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/deep-eql/-/deep-eql-5.0.2.tgz"
-    },
-    {
       "path": "node_modules/deep-is",
       "name": "deep-is",
       "version": "0.1.4",
@@ -3464,13 +3474,6 @@
       "resolved": "https://registry.npmjs.org/doctrine/-/doctrine-2.1.0.tgz"
     },
     {
-      "path": "node_modules/dom-accessibility-api",
-      "name": "dom-accessibility-api",
-      "version": "0.5.16",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.5.16.tgz"
-    },
-    {
       "path": "node_modules/dunder-proto",
       "name": "dunder-proto",
       "version": "1.0.1",
@@ -3543,9 +3546,9 @@
     {
       "path": "node_modules/es-module-lexer",
       "name": "es-module-lexer",
-      "version": "1.7.0",
+      "version": "2.3.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-1.7.0.tgz"
+      "resolved": "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-2.3.0.tgz"
     },
     {
       "path": "node_modules/es-object-atoms",
@@ -3574,13 +3577,6 @@
       "version": "1.3.0",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/es-to-primitive/-/es-to-primitive-1.3.0.tgz"
-    },
-    {
-      "path": "node_modules/esbuild",
-      "name": "esbuild",
-      "version": "0.27.7",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.27.7.tgz"
     },
     {
       "path": "node_modules/escalade",
@@ -4052,13 +4048,6 @@
       "resolved": "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-56.0.4.tgz"
     },
     {
-      "path": "node_modules/expo-store-review",
-      "name": "expo-store-review",
-      "version": "57.0.0",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/expo-store-review/-/expo-store-review-57.0.0.tgz"
-    },
-    {
       "path": "node_modules/expo-symbols",
       "name": "expo-symbols",
       "version": "56.0.6",
@@ -4085,41 +4074,6 @@
       "version": "56.0.5",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/expo-web-browser/-/expo-web-browser-56.0.5.tgz"
-    },
-    {
-      "path": "node_modules/expo/node_modules/@expo/cli",
-      "name": "expo/node_modules/@expo/cli",
-      "version": "56.1.18",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/cli/-/cli-56.1.18.tgz"
-    },
-    {
-      "path": "node_modules/expo/node_modules/@expo/cli/node_modules/@expo/router-server",
-      "name": "expo/node_modules/@expo/cli/node_modules/@expo/router-server",
-      "version": "56.0.15",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/router-server/-/router-server-56.0.15.tgz"
-    },
-    {
-      "path": "node_modules/expo/node_modules/@expo/env",
-      "name": "expo/node_modules/@expo/env",
-      "version": "2.3.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/@expo/env/-/env-2.3.1.tgz"
-    },
-    {
-      "path": "node_modules/expo/node_modules/semver",
-      "name": "expo/node_modules/semver",
-      "version": "7.8.5",
-      "license": "ISC",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
-    },
-    {
-      "path": "node_modules/expo/node_modules/zod",
-      "name": "expo/node_modules/zod",
-      "version": "3.25.76",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz"
     },
     {
       "path": "node_modules/exponential-backoff",
@@ -5319,25 +5273,11 @@
       "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
     },
     {
-      "path": "node_modules/loupe",
-      "name": "loupe",
-      "version": "3.2.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/loupe/-/loupe-3.2.1.tgz"
-    },
-    {
       "path": "node_modules/lru-cache",
       "name": "lru-cache",
       "version": "5.1.1",
       "license": "ISC",
       "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-5.1.1.tgz"
-    },
-    {
-      "path": "node_modules/lz-string",
-      "name": "lz-string",
-      "version": "1.5.0",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/lz-string/-/lz-string-1.5.0.tgz"
     },
     {
       "path": "node_modules/magic-string",
@@ -5830,6 +5770,13 @@
       "resolved": "https://registry.npmjs.org/object.values/-/object.values-1.2.1.tgz"
     },
     {
+      "path": "node_modules/obug",
+      "name": "obug",
+      "version": "2.1.3",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/obug/-/obug-2.1.3.tgz"
+    },
+    {
       "path": "node_modules/on-finished",
       "name": "on-finished",
       "version": "2.3.0",
@@ -6005,13 +5952,6 @@
       "resolved": "https://registry.npmjs.org/pathe/-/pathe-2.0.3.tgz"
     },
     {
-      "path": "node_modules/pathval",
-      "name": "pathval",
-      "version": "2.0.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/pathval/-/pathval-2.0.1.tgz"
-    },
-    {
       "path": "node_modules/picocolors",
       "name": "picocolors",
       "version": "1.1.1",
@@ -6070,9 +6010,9 @@
     {
       "path": "node_modules/postcss",
       "name": "postcss",
-      "version": "8.5.15",
+      "version": "8.5.16",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.15.tgz"
+      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.16.tgz"
     },
     {
       "path": "node_modules/postcss-import",
@@ -6691,11 +6631,11 @@
       "resolved": "https://registry.npmjs.org/reusify/-/reusify-1.1.0.tgz"
     },
     {
-      "path": "node_modules/rollup",
-      "name": "rollup",
-      "version": "4.61.1",
+      "path": "node_modules/rolldown",
+      "name": "rolldown",
+      "version": "1.1.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/rollup/-/rollup-4.61.1.tgz"
+      "resolved": "https://registry.npmjs.org/rolldown/-/rolldown-1.1.4.tgz"
     },
     {
       "path": "node_modules/rtl-detect",
@@ -7057,9 +6997,9 @@
     {
       "path": "node_modules/std-env",
       "name": "std-env",
-      "version": "3.10.0",
+      "version": "4.1.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/std-env/-/std-env-3.10.0.tgz"
+      "resolved": "https://registry.npmjs.org/std-env/-/std-env-4.1.0.tgz"
     },
     {
       "path": "node_modules/stop-iteration-iterator",
@@ -7165,20 +7105,6 @@
       "version": "3.1.1",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
-    },
-    {
-      "path": "node_modules/strip-literal",
-      "name": "strip-literal",
-      "version": "3.1.0",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/strip-literal/-/strip-literal-3.1.0.tgz"
-    },
-    {
-      "path": "node_modules/strip-literal/node_modules/js-tokens",
-      "name": "strip-literal/node_modules/js-tokens",
-      "version": "9.0.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-9.0.1.tgz"
     },
     {
       "path": "node_modules/structured-headers",
@@ -7302,9 +7228,9 @@
     {
       "path": "node_modules/tinyexec",
       "name": "tinyexec",
-      "version": "0.3.2",
+      "version": "1.2.4",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/tinyexec/-/tinyexec-0.3.2.tgz"
+      "resolved": "https://registry.npmjs.org/tinyexec/-/tinyexec-1.2.4.tgz"
     },
     {
       "path": "node_modules/tinyglobby",
@@ -7314,25 +7240,11 @@
       "resolved": "https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.17.tgz"
     },
     {
-      "path": "node_modules/tinypool",
-      "name": "tinypool",
-      "version": "1.1.1",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/tinypool/-/tinypool-1.1.1.tgz"
-    },
-    {
       "path": "node_modules/tinyrainbow",
       "name": "tinyrainbow",
-      "version": "2.0.0",
+      "version": "3.1.0",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-2.0.0.tgz"
-    },
-    {
-      "path": "node_modules/tinyspy",
-      "name": "tinyspy",
-      "version": "4.0.4",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/tinyspy/-/tinyspy-4.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/tinyrainbow/-/tinyrainbow-3.1.0.tgz"
     },
     {
       "path": "node_modules/tmpl",
@@ -7610,23 +7522,16 @@
     {
       "path": "node_modules/vite",
       "name": "vite",
-      "version": "7.3.5",
+      "version": "8.1.3",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/vite/-/vite-7.3.5.tgz"
-    },
-    {
-      "path": "node_modules/vite-node",
-      "name": "vite-node",
-      "version": "3.2.4",
-      "license": "MIT",
-      "resolved": "https://registry.npmjs.org/vite-node/-/vite-node-3.2.4.tgz"
+      "resolved": "https://registry.npmjs.org/vite/-/vite-8.1.3.tgz"
     },
     {
       "path": "node_modules/vitest",
       "name": "vitest",
-      "version": "3.2.6",
+      "version": "4.1.9",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/vitest/-/vitest-3.2.6.tgz"
+      "resolved": "https://registry.npmjs.org/vitest/-/vitest-4.1.9.tgz"
     },
     {
       "path": "node_modules/vlq",
@@ -7876,7 +7781,6 @@
   ],
   "blockers": [],
   "warnings": [
-    "npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.",
     "Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true."
   ]
 }

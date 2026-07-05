@@ -2,10 +2,12 @@
 // Runs with the service-role key and verify_jwt=true. Clients can request a grant,
 // but cannot write entitlements directly.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const appEnvironment = Deno.env.get('APP_ENV') ?? Deno.env.get('EXPO_PUBLIC_APP_ENV') ?? 'unknown';
+const maxBodyBytes = userEdgeBodyMaxBytes();
 
 const REVERSE_TRIAL_DAYS = 7;
 
@@ -26,9 +28,14 @@ function isStillActive(row: { is_active: boolean; expires_at: string | null; sto
   return !(row.store === 'app_granted' && row.period_type === 'reverse_trial');
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok');
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
+  if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
 
   const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '');
   const supabase = createClient(supabaseUrl, serviceKey);
@@ -36,10 +43,12 @@ Deno.serve(async (req) => {
   const userId = userData.user?.id;
   if (userErr || !userId) return json({ error: 'unauthorized' }, 401);
 
-  const body = await req.json().catch(() => ({}));
+  const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'bad_json' });
+  if (parsed instanceof Response) return parsed;
+  const body = isRecord(parsed) ? parsed : {};
   if (body?.action !== 'start_reverse_trial') return json({ error: 'unknown_action' }, 400);
 
-  await supabase.rpc('expire_app_granted_reverse_trials').catch(() => null);
+  await supabase.rpc('expire_app_granted_reverse_trials');
 
   const { data: current } = await supabase
     .from('entitlements')
@@ -66,7 +75,10 @@ Deno.serve(async (req) => {
     source: 'server',
     metadata: { action: 'start_reverse_trial' },
   });
-  if (grantErr) return json({ error: grantErr.message }, 500);
+  if (grantErr) {
+    console.error('[subscription-grants]', 'reverse_trial_grant_failed');
+    return json({ error: 'reverse_trial_grant_failed' }, 500);
+  }
 
   const entitlement = {
     user_id: userId,
@@ -97,6 +109,9 @@ Deno.serve(async (req) => {
     .select()
     .single();
 
-  if (error) return json({ error: error.message }, 500);
+  if (error) {
+    console.error('[subscription-grants]', 'entitlement_write_failed');
+    return json({ error: 'entitlement_write_failed' }, 500);
+  }
   return json({ entitlement: data });
 });

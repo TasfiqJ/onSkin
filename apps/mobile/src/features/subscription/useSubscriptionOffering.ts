@@ -10,7 +10,6 @@ export function useSubscriptionOffering() {
 
   return useQuery({
     queryKey: [...KEY, user?.id ?? 'anonymous'],
-    enabled: Boolean(user?.id),
     retry: 1,
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {

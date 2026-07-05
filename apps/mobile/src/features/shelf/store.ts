@@ -1,8 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { randomUUID } from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // Local-first shelf store (docs/04 §8: the shelf must work in a bathroom with no
 // signal. View, manual-add, and queued lookups all offline). AsyncStorage is the
@@ -82,7 +82,7 @@ function nowISO(): string {
 
 export async function loadShelf(): Promise<ShelfProduct[]> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as ShelfProduct[];
     return Array.isArray(parsed) ? parsed : [];
@@ -92,7 +92,7 @@ export async function loadShelf(): Promise<ShelfProduct[]> {
 }
 
 async function persist(items: ShelfProduct[]): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(items));
+  await setPrivateItem(KEY, JSON.stringify(items));
 }
 
 export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
@@ -177,5 +177,5 @@ export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
 
 /** Test/seed reset. */
 export async function clearShelf(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

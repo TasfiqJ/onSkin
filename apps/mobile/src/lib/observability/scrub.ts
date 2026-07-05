@@ -10,6 +10,14 @@ export interface ScrubbedContext {
   [key: string]: ScrubbedValue;
 }
 
+function safeErrorName(value: unknown): string {
+  if (typeof value !== 'string') return 'Error';
+  const trimmed = value.trim();
+  if (!trimmed || SENSITIVE_VALUE.test(trimmed) || SENSITIVE_CONTEXT_KEY.test(trimmed)) return 'Error';
+  const normalized = trimmed.replace(/[^A-Za-z0-9_. -]/g, '').slice(0, 80).trim();
+  return normalized || 'Error';
+}
+
 function scrubValue(value: unknown, depth: number): ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext | undefined {
   if (value === undefined) return undefined;
   if (value === null || typeof value === 'boolean' || typeof value === 'number') return value;
@@ -47,4 +55,10 @@ export function sanitizeObservabilityContext(
     if (scrubbed !== undefined) clean[key] = scrubbed;
   }
   return clean;
+}
+
+export function sanitizeCapturedException(error: unknown): Error {
+  const safe = new Error('redacted_exception');
+  safe.name = error instanceof Error ? safeErrorName(error.name) : safeErrorName(typeof error);
+  return safe;
 }

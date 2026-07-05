@@ -3,6 +3,7 @@ import type { PostHog } from 'posthog-react-native';
 
 import { isAllowedAnalyticsPropKey } from '@/lib/analytics/eventRegistry';
 import { env } from '@/lib/env';
+import { devWarn } from '@/lib/observability/safeLog';
 
 let posthogPromise: Promise<PostHog | null> | null = null;
 type AnalyticsProps = Parameters<PostHog['capture']>[1];
@@ -10,6 +11,23 @@ type AnalyticsProps = Parameters<PostHog['capture']>[1];
 export const SENSITIVE_ANALYTICS_KEY =
   /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
 const APPROVED_BUCKET_KEYS = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
+
+function bytesToHex(bytes: ArrayBuffer): string {
+  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+export async function pseudonymousUserId(userId: string): Promise<string> {
+  const input = `onskin:user:${userId}`;
+  let digest: string;
+  if (globalThis.crypto?.subtle) {
+    const bytes = new TextEncoder().encode(input);
+    digest = bytesToHex(await globalThis.crypto.subtle.digest('SHA-256', bytes));
+  } else {
+    const Crypto = await import('expo-crypto');
+    digest = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, input);
+  }
+  return `u_${digest.slice(0, 32)}`;
+}
 
 function canUsePostHog(): boolean {
   return env.posthogKey.length > 0 && env.posthogHost.length > 0;
@@ -28,7 +46,7 @@ async function getPostHog(): Promise<PostHog | null> {
       });
     })
     .catch((error: unknown) => {
-      if (__DEV__) console.warn('[analytics] PostHog initialization failed', error);
+      devWarn('[analytics] PostHog initialization failed', error);
       return null;
     });
 
@@ -58,28 +76,26 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
 
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
   const safeProps = sanitizeAnalyticsProps(props);
-  if (__DEV__) console.log('[analytics]', event, safeProps ?? {});
 
   void getPostHog()
     .then((posthog) => {
       posthog?.capture(event, safeProps);
     })
     .catch((error: unknown) => {
-      if (__DEV__) console.warn('[analytics] capture failed', error);
+      devWarn('[analytics] capture failed', error);
     });
 }
 
 // Call at the anonymous-to-permanent conversion (account creation) per docs/01 section 7.
 export function identify(userId: string, props?: Record<string, unknown>): void {
   const safeProps = sanitizeAnalyticsProps(props);
-  if (__DEV__) console.log('[analytics] identify', userId, safeProps ?? {});
 
-  void getPostHog()
-    .then((posthog) => {
-      posthog?.identify(userId, safeProps);
+  void Promise.all([getPostHog(), pseudonymousUserId(userId)])
+    .then(([posthog, pseudonymousId]) => {
+      posthog?.identify(pseudonymousId, safeProps);
     })
     .catch((error: unknown) => {
-      if (__DEV__) console.warn('[analytics] identify failed', error);
+      devWarn('[analytics] identify failed', error);
     });
 }
 

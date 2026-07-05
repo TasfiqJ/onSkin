@@ -19,20 +19,23 @@ export type DeferredSurfaceCopy = {
 
 const finalDomain = env.finalBrandDomain.trim();
 const finalDomainReady = finalDomain.length > 0 && !/example\.com/i.test(finalDomain);
+const productionSurfaceReady = env.appEnvironment !== 'production' || finalDomainReady;
 
 export const phase7Flags = {
   finalDomainReady,
+  productionSurfaceReady,
   commerce: env.phase7CommerceEnabled && finalDomainReady,
-  communityPosting: env.phase7CommunityPostingEnabled,
-  trend: env.phase7TrendEnabled,
-  cloudAsk: env.phase7CloudAskEnabled,
-  widgets: env.phase7WidgetsEnabled,
+  communityPosting: env.phase7CommunityPostingEnabled && productionSurfaceReady,
+  trend: env.phase7TrendEnabled && productionSurfaceReady,
+  cloudAsk: env.phase7CloudAskEnabled && productionSurfaceReady,
+  widgets: env.phase7WidgetsEnabled && productionSurfaceReady,
   shareCard:
     env.phase7ShareCardEnabled &&
     env.phase7ReviewedConflictSharingEnabled &&
     env.phase8PublicLinksEnabled &&
+    productionSurfaceReady &&
     finalDomainReady,
-  goalActiveRecommendations: env.phase7GoalActiveRecommendationsEnabled,
+  goalActiveRecommendations: env.phase7GoalActiveRecommendationsEnabled && productionSurfaceReady,
 } as const;
 
 const SURFACE_TO_FLAG: Record<DeferredSurfaceKind, boolean> = {
@@ -49,13 +52,15 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   commerce: {
     title: 'Where-to-buy is not in this beta',
     body: 'Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.',
-    detail: 'This keeps money out of the decision engine while the core routine loop is being validated.',
+    detail:
+      'This keeps money out of the decision engine while the core routine loop is being validated.',
     cta: 'Back',
   },
   communityPosting: {
     title: 'Community posting is not in this beta',
     body: 'Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful.',
-    detail: 'No user post is accepted until the review desk and consent copy are production-approved.',
+    detail:
+      'No user post is accepted until the review desk and consent copy are production-approved.',
     cta: 'Back',
   },
   trend: {
@@ -67,7 +72,8 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   cloudAsk: {
     title: 'Ask OnSkin is not in this beta',
     body: 'The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls.',
-    detail: 'A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship.',
+    detail:
+      'A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship.',
     cta: 'Back',
   },
   widgets: {
@@ -85,7 +91,8 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   goalActiveRecommendations: {
     title: 'Goal-active suggestions are not in this beta',
     body: 'Structural routine gaps can ship. New active-ingredient suggestions need clinical review and source-cleared catalog support.',
-    detail: 'The recommendation engine stays useful without pushing medical-adjacent actives early.',
+    detail:
+      'The recommendation engine stays useful without pushing medical-adjacent actives early.',
     cta: 'Back',
   },
 };

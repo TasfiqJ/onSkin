@@ -31,10 +31,11 @@ export default function CatalogSearchScreen() {
   const [results, setResults] = useState<CatalogProductSummary[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
+  const canSearch = query.trim().length >= 2 && !searching;
 
   const runSearch = async () => {
     const cleaned = query.trim();
-    if (cleaned.length < 2 || searching) return;
+    if (!canSearch) return;
     setSearching(true);
     const response = await searchCatalog(cleaned);
     setResults(response.products ?? []);
@@ -57,7 +58,9 @@ export default function CatalogSearchScreen() {
 
   const chooseProduct = (product: CatalogProductSummary) => {
     haptics.select();
-    const parsed = product.rawIngredientsText ? parseIngredientText(product.rawIngredientsText) : null;
+    const parsed = product.rawIngredientsText
+      ? parseIngredientText(product.rawIngredientsText)
+      : null;
     update({
       name: product.name,
       brand: product.brand,
@@ -97,6 +100,7 @@ export default function CatalogSearchScreen() {
 
       <View className="mt-4 flex-row gap-2">
         <TextInput
+          accessibilityLabel="Catalog search query"
           value={query}
           onChangeText={setQuery}
           onSubmitEditing={runSearch}
@@ -107,12 +111,15 @@ export default function CatalogSearchScreen() {
         />
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ busy: searching, disabled: !canSearch }}
+          disabled={!canSearch}
           onPress={runSearch}
           className={cn(
             'h-[50px] items-center justify-center rounded-[14px] px-4',
-            query.trim().length >= 2 ? 'bg-ink' : 'bg-greige-chip',
-          )}>
-          <Text className="font-sans-semibold text-[14px]" tone={query.trim().length >= 2 ? 'inverse' : 'muted'}>
+            canSearch ? 'bg-ink' : 'bg-greige-chip',
+          )}
+        >
+          <Text className="font-sans-semibold text-[14px]" tone={canSearch ? 'inverse' : 'muted'}>
             Search
           </Text>
         </Pressable>
@@ -137,12 +144,17 @@ export default function CatalogSearchScreen() {
               key={product.id ?? `${product.source}-${product.barcode}-${product.name}`}
               accessibilityRole="button"
               onPress={() => chooseProduct(product)}
-              className="rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5">
+              className="rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5"
+            >
               <Text variant="body" className="font-sans-semibold">
                 {product.name}
               </Text>
               <Text variant="bodySm" tone="muted" className="mt-0.5">
-                {[product.brand, sourceDisplayName(product.source), catalogQualityLabel(product.quality_grade)]
+                {[
+                  product.brand,
+                  sourceDisplayName(product.source),
+                  catalogQualityLabel(product.quality_grade),
+                ]
                   .filter(Boolean)
                   .join(' / ')}
               </Text>

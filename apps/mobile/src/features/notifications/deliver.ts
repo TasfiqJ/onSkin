@@ -8,7 +8,7 @@ import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
 import { supabase } from '@/lib/supabase/client';
 
-import { REMINDER_COPY } from './copy';
+import { notificationContentForLockScreen } from './copy';
 import { canSend, tierEnabled, tierOf, toMinutes, withinQuietHours } from './policy';
 import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
@@ -74,11 +74,6 @@ export async function requestPermission(): Promise<boolean> {
   }
 }
 
-function copyFor(kind: NotificationKind, discreet: boolean): { title: string; body: string } {
-  const c = REMINDER_COPY[kind];
-  return { title: discreet ? 'OnSkin' : c.title, body: discreet ? c.discreet : c.body };
-}
-
 /**
  * Cancel + reschedule the utility AM/PM reminders from the user's prefs. A reminder
  * whose time falls inside quiet hours is skipped ("nothing fires" there). Idempotent
@@ -94,7 +89,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
       const mins = toMinutes(hm);
       if (mins == null) return;
       await Notifications.scheduleNotificationAsync({
-        content: copyFor(kind, p.lockscreenDiscreet),
+        content: notificationContentForLockScreen(kind),
         // channelId belongs on the trigger in expo-notifications (SDK 56), not on
         // content. So the calm 'routine' channel is actually applied on Android.
         trigger: {
@@ -115,7 +110,7 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
       const mins = toMinutes(p.amTime);
       if (mins != null) {
         await Notifications.scheduleNotificationAsync({
-          content: copyFor('capture', p.lockscreenDiscreet),
+          content: notificationContentForLockScreen('capture'),
           trigger: {
             type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
             weekday: 1, // Sunday, a calm weekly check-in cadence
@@ -232,7 +227,7 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
   if (!decision.allowed) return false;
   try {
     await Notifications.scheduleNotificationAsync({
-      content: copyFor(kind, p.lockscreenDiscreet),
+      content: notificationContentForLockScreen(kind),
       // Immediate, on the calm 'routine' channel (Android); channelId must be on the
       // trigger, not content (SDK 56). A bare { channelId } means deliver now.
       trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,

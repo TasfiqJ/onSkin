@@ -2,10 +2,11 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
-import { clearStoredSkinProfile } from '@/features/onboarding/skinProfileStore';
 import { recordConsent } from '@/lib/consent/consent';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
 import { supabase } from '@/lib/supabase/client';
+
+import { clearLocalPrivateData } from './localPrivateData';
 
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
@@ -20,11 +21,11 @@ export async function deleteAccount(): Promise<void> {
     body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
   });
   if (error) throw error;
-  // Clear the device-global local-first onboarding record so the next (fresh
-  // anonymous) session is correctly routed back through onboarding rather than
-  // inheriting the deleted account's "already onboarded" entry-gate signal.
-  await clearStoredSkinProfile();
-  await supabase.auth.signOut();
+  try {
+    await supabase.auth.signOut();
+  } finally {
+    await clearLocalPrivateData();
+  }
 }
 
 // Health-data consent withdrawal (docs/01 §4: MHMDA/GDPR right to withdraw,
@@ -49,14 +50,21 @@ export async function withdrawHealthDataConsent(): Promise<void> {
 }
 
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;
-// we write it to a cache file and hand it to the OS share sheet.
+// we write it to a one-time cache file, hand it to the OS share sheet, and then
+// immediately remove the plaintext bundle from app cache.
 export async function exportData(): Promise<void> {
   const { data, error } = await supabase.functions.invoke('data-export', { method: 'POST' });
   if (error) throw error;
   const json = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
-  const uri = `${FileSystem.cacheDirectory ?? ''}onskin-export.json`;
-  await FileSystem.writeAsStringAsync(uri, json);
-  if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(uri, { mimeType: 'application/json', dialogTitle: 'Export your OnSkin data' });
+  const cacheDirectory = FileSystem.cacheDirectory;
+  if (!cacheDirectory) throw new Error('DATA_EXPORT_CACHE_UNAVAILABLE');
+  const uri = `${cacheDirectory}onskin-export-${Date.now()}.json`;
+  try {
+    await FileSystem.writeAsStringAsync(uri, json);
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(uri, { mimeType: 'application/json', dialogTitle: 'Export your OnSkin data' });
+    }
+  } finally {
+    await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
   }
 }

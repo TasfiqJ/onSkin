@@ -1,5 +1,6 @@
 import { track } from '@/lib/analytics/track';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { withdrawConsent } from '@/lib/consent/withdrawal';
 
 import { ASK_COPY } from './copy';
 import { clearAskStore, getAskConsentLocal, setAskConsentLocal } from './store';
@@ -43,14 +44,9 @@ export async function revokeAskConsent(): Promise<void> {
   // withdrawal. No conversation content is stored locally (no transcript).
   await clearAskStore();
   track('ask_consent_revoked');
-  try {
-    await recordConsent({
-      type: 'ask_onskin',
-      granted: false,
-      version: ASK_COPY.consentVersion,
-      consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
-    });
-  } catch {
-    /* best-effort */
-  }
+  await withdrawConsent({
+    type: 'ask_onskin',
+    version: ASK_COPY.consentVersion,
+    consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
+  });
 }

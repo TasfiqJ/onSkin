@@ -9,6 +9,7 @@ import { shareConflictCard } from '@/features/growth/shareCard';
 import { createConflictShareLink, type ConflictShareLink } from '@/features/growth/shareLinks';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
+import { shareCardUserMessage } from '@/lib/errors/userFacing';
 import { canShareConflictCard, phase7Flags } from '@/lib/launch/phase7';
 
 const CREATIVE_VARIANT = 'story-v1';
@@ -74,12 +75,12 @@ export default function ShareConflictScreen() {
         });
         Alert.alert('Sharing', "Sharing isn't available on this device.");
       }
-    } catch (e) {
+    } catch {
       track('share_card_export_failed', {
         creative_variant: CREATIVE_VARIANT,
         reason: 'exception',
       });
-      Alert.alert("Couldn't create the card", e instanceof Error ? e.message : 'Please try again.');
+      Alert.alert("Couldn't create the card", shareCardUserMessage());
     } finally {
       setBusy(false);
     }

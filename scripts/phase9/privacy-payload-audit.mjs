@@ -8,6 +8,18 @@ const registrySource = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
 const trackSource = read('apps/mobile/src/lib/analytics/track.ts');
 const sentrySource = read('apps/mobile/src/lib/observability/sentry.ts');
 const scrubSource = read('apps/mobile/src/lib/observability/scrub.ts');
+const safeLogSource = read('apps/mobile/src/lib/observability/safeLog.ts');
+const authProviderSource = read('apps/mobile/src/lib/auth/AuthProvider.tsx');
+const shareCardSource = read('apps/mobile/src/features/growth/shareCard.ts');
+const encryptedPhotoSource = read('apps/mobile/src/features/photos/encryptedStorage.ts');
+const photoMetadataSource = read('apps/mobile/src/features/photos/metadata.ts');
+const photoDetailSource = read('apps/mobile/src/app/progress/[id].tsx');
+const photoCopySource = read('apps/mobile/src/features/photos/copy.ts');
+const notificationCopySource = read('apps/mobile/src/features/notifications/copy.ts');
+const notificationDeliverSource = read('apps/mobile/src/features/notifications/deliver.ts');
+const notificationStoreSource = read('apps/mobile/src/features/notifications/store.ts');
+const notificationTimingSource = read('apps/mobile/src/app/settings/timing.tsx');
+const notificationLockscreenMigrationSource = read('supabase/migrations/20260705000033_phase9_notification_lock_screen_privacy.sql');
 
 const registryBody = registrySource.match(/ANALYTICS_ALLOWED_PROP_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/)?.[1] ?? '';
 const allowed = new Set([...registryBody.matchAll(/'([^']+)'/g)].map((match) => match[1]));
@@ -18,10 +30,117 @@ const approvedBucketExceptions = new Set(['barcode_type', 'native_ocr_enabled', 
 block(errors, allowed.size > 0, 'Analytics event registry is empty or missing.');
 block(errors, /isAllowedAnalyticsPropKey/.test(trackSource), 'Analytics sanitizer must call isAllowedAnalyticsPropKey.');
 block(errors, /SENSITIVE_ANALYTICS_KEY/.test(trackSource), 'Analytics sanitizer is missing sensitive-key guard.');
+block(errors, /pseudonymousUserId/.test(trackSource), 'Analytics identify must pseudonymize raw user IDs before vendor calls.');
+block(errors, /posthog\?\.identify\(pseudonymousId/.test(trackSource), 'PostHog identify must use a pseudonymous user ID.');
 block(errors, /sanitizeObservabilityContext/.test(sentrySource), 'Sentry captureException must sanitize context.');
+block(errors, /sanitizeCapturedException/.test(sentrySource), 'Sentry captureException must sanitize the captured throwable.');
+block(errors, !/Sentry\.captureException\(error/.test(sentrySource), 'Sentry captureException must not send the raw throwable to Sentry.');
+block(errors, /pseudonymousUserId/.test(sentrySource), 'Sentry setUser must pseudonymize raw user IDs before vendor calls.');
 block(errors, /SENSITIVE_CONTEXT_KEY/.test(scrubSource), 'Sentry scrubber is missing sensitive-key guard.');
 block(errors, /SENSITIVE_VALUE/.test(scrubSource), 'Sentry scrubber is missing sensitive-value guard.');
+block(errors, /sanitizeCapturedException/.test(scrubSource), 'Sentry scrubber must expose a captured-exception sanitizer.');
 block(errors, /route|query|url|receipt|ocr|barcode|free_text/i.test(scrubSource), 'Sentry scrubber must explicitly cover route/query/url/receipt/OCR/barcode/free text.');
+block(errors, /redactedErrorForLog/.test(safeLogSource), 'Mobile dev logging must use a redacted error helper.');
+block(errors, !/\.message|\.stack/.test(safeLogSource), 'Mobile dev logging redaction must not include exception message or stack.');
+block(errors, /devWarn/.test(trackSource), 'Analytics dev warnings must not log raw exception objects.');
+block(errors, /devWarn/.test(sentrySource), 'Sentry dev warnings must not log raw exception objects.');
+block(errors, /devWarn/.test(authProviderSource), 'RevenueCat setup warnings must not log raw exception objects.');
+block(errors, !/console\.log\(/.test(trackSource), 'Analytics tracking must not log events or props to the dev console.');
+block(errors, /result:\s*'tmpfile'/.test(shareCardSource), 'Share-card export must keep using an OS tmpfile capture result.');
+block(
+  errors,
+  /try\s*\{[\s\S]*Sharing\.isAvailableAsync\(\)[\s\S]*Sharing\.shareAsync\(uri[\s\S]*return true;[\s\S]*\}\s*finally\s*\{[\s\S]*FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
+    shareCardSource,
+  ),
+  'Share-card export must delete its generated tmpfile after the share attempt.',
+);
+block(errors, /PHOTO_SHARE_CACHE_UNAVAILABLE/.test(encryptedPhotoSource), 'Photo share export must fail closed when cacheDirectory is unavailable.');
+block(errors, /safePhotoShareId/.test(encryptedPhotoSource), 'Photo share export filenames must sanitize local photo IDs.');
+block(errors, /onskin-share-\$\{safePhotoShareId\(photoId\)\}-\$\{Date\.now\(\)\}/.test(encryptedPhotoSource), 'Photo share export must use a unique generated cache filename.');
+block(
+  errors,
+  /stripImageMetadataFromBase64/.test(encryptedPhotoSource) &&
+    /const strippedBase64 = stripImageMetadataFromBase64\(base64,\s*mimeType\)/.test(encryptedPhotoSource) &&
+    /const strippedBase64 = stripImageMetadataFromBase64\(base64,\s*envelope\.mimeType\)/.test(encryptedPhotoSource),
+  'Photo storage/share must strip image metadata before encrypting or exporting bytes.',
+);
+block(
+  errors,
+  /marker === 0xe1/.test(photoMetadataSource) &&
+    /marker === 0xed/.test(photoMetadataSource) &&
+    /marker === 0xfe/.test(photoMetadataSource) &&
+    /PNG_METADATA_CHUNKS/.test(photoMetadataSource) &&
+    /eXIf/.test(photoMetadataSource),
+  'Photo metadata stripper must remove JPEG EXIF/IPTC/comment metadata and PNG EXIF/text metadata.',
+);
+block(
+  errors,
+  /export async function deletePhotoShareFile/.test(encryptedPhotoSource) &&
+    /uri\.startsWith\(`\$\{cacheDirectory\}onskin-share-`\)/.test(encryptedPhotoSource) &&
+    /FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
+      encryptedPhotoSource,
+    ),
+  'Photo share export must expose a scoped cache cleanup helper.',
+);
+block(
+  errors,
+  /deletePhotoShareFile/.test(photoDetailSource) &&
+    /try\s*\{[\s\S]*createPhotoShareFile\(photo\.localUri,\s*photo\.id\)[\s\S]*Sharing\.shareAsync\(shareUri\)[\s\S]*\}\s*finally\s*\{[\s\S]*deletePhotoShareFile\(shareUri,\s*photo\.localUri\)/.test(
+      photoDetailSource,
+    ),
+  'Photo detail share must delete generated decrypted share files without deleting the source photo URI.',
+);
+block(errors, !/Share with redaction/.test(photoDetailSource), 'Photo detail share UI must not promise redaction unless redaction is implemented.');
+block(errors, /sharePhotoImageOnly/.test(photoDetailSource), 'Photo detail share helper must describe the current image-only behavior.');
+block(
+  errors,
+  /confirmShare/.test(photoDetailSource) &&
+    /Alert\.alert\(PHOTO_COPY\.detail\.shareTitle,\s*PHOTO_COPY\.detail\.shareBody/.test(photoDetailSource) &&
+    /PHOTO_COPY\.detail\.shareConfirm/.test(photoDetailSource),
+  'Photo detail share must require explicit confirmation before exporting a progress photo.',
+);
+block(
+  errors,
+  /shareBody:\s*'[^']*not blurred[^']*notes are not included/.test(photoCopySource) &&
+    /shareUnavailable/.test(photoCopySource),
+  'Photo share confirmation copy must disclose that the image is not blurred and notes are not included.',
+);
+block(
+  errors,
+  /LOCK_SCREEN_NOTIFICATION_TITLE\s*=\s*'OnSkin'/.test(notificationCopySource) &&
+    /function notificationContentForLockScreen/.test(notificationCopySource) &&
+    /body:\s*c\.discreet/.test(notificationCopySource),
+  'Notification lock-screen content must use the generic title and discreet body helper.',
+);
+block(
+  errors,
+  /notificationContentForLockScreen\(kind\)/.test(notificationDeliverSource) &&
+    /notificationContentForLockScreen\('capture'\)/.test(notificationDeliverSource) &&
+    !/copyFor\(/.test(notificationDeliverSource) &&
+    !/p\.lockscreenDiscreet/.test(notificationDeliverSource),
+  'Notification delivery must never choose detailed copy based on lockscreenDiscreet.',
+);
+block(
+  errors,
+  /normalizeNotifPrefs/.test(notificationStoreSource) &&
+    /\.\.\.prefs,\s*lockscreenDiscreet:\s*true/.test(notificationStoreSource) &&
+    /normalizeNotifPatch/.test(notificationStoreSource) &&
+    /patch\.lockscreenDiscreet\s*===\s*false/.test(notificationStoreSource),
+  'Notification preferences must coerce legacy discretion-off values back to true.',
+);
+block(
+  errors,
+  !/onValueChange=\{\(v\)\s*=>\s*update\.mutate\(\{\s*lockscreenDiscreet:\s*v\s*\}\)\}/.test(notificationTimingSource) &&
+    !/Showing routine detail/.test(notificationTimingSource) &&
+    /Always generic on the lock screen/.test(notificationTimingSource),
+  'Notification settings must not expose a switch that disables generic lock-screen copy.',
+);
+block(
+  errors,
+  /notification_preferences_lockscreen_discreet_true/.test(notificationLockscreenMigrationSource) &&
+    /check\s*\(\s*lockscreen_discreet\s+is\s+true\s*\)/i.test(notificationLockscreenMigrationSource),
+  'Notification lock-screen privacy migration must constrain lockscreen_discreet to true.',
+);
 
 for (const key of allowed) {
   block(errors, !sensitiveKey.test(key) || approvedBucketExceptions.has(key), `Sensitive analytics prop is allowlisted: ${key}.`);
@@ -41,8 +160,76 @@ function objectFromTrackSnippet(snippet) {
   return '';
 }
 
+function stripJsComments(source) {
+  let out = '';
+  let quote = null;
+  let escaped = false;
+  let lineComment = false;
+  let blockComment = false;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    const next = source[index + 1];
+
+    if (lineComment) {
+      if (char === '\n') {
+        lineComment = false;
+        out += char;
+      }
+      continue;
+    }
+
+    if (blockComment) {
+      if (char === '*' && next === '/') {
+        blockComment = false;
+        index += 1;
+      }
+      continue;
+    }
+
+    if (quote) {
+      out += char;
+      if (escaped) {
+        escaped = false;
+      } else if (char === '\\') {
+        escaped = true;
+      } else if (char === quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'" || char === '`') {
+      quote = char;
+      out += char;
+      continue;
+    }
+
+    if (char === '/' && next === '/') {
+      lineComment = true;
+      index += 1;
+      continue;
+    }
+
+    if (char === '/' && next === '*') {
+      blockComment = true;
+      index += 1;
+      continue;
+    }
+
+    out += char;
+  }
+
+  return out;
+}
+
 for (const file of listFiles('apps/mobile/src').filter((item) => /\.(ts|tsx)$/.test(item) && !item.endsWith('.test.ts'))) {
   const text = read(file);
+  const normalizedFile = file.replace(/\\/g, '/');
+  if (!normalizedFile.endsWith('apps/mobile/src/lib/observability/safeLog.ts')) {
+    const rawConsoleError = text.match(/console\.(warn|error|log)\([^;\n]*(error|err|exception)\b/i);
+    block(errors, !rawConsoleError, `Raw exception object may be logged to console in ${file.replace(abs('.'), '.')}.`);
+  }
   const lines = text.split(/\r?\n/);
   for (let index = 0; index < lines.length; index += 1) {
     if (!/\btrack\(/.test(lines[index])) continue;
@@ -50,7 +237,7 @@ for (const file of listFiles('apps/mobile/src').filter((item) => /\.(ts|tsx)$/.t
     for (let next = index + 1; next < Math.min(lines.length, index + 12) && !/\);/.test(snippet); next += 1) {
       snippet += `\n${lines[next]}`;
     }
-    const objectLiteral = objectFromTrackSnippet(snippet);
+    const objectLiteral = stripJsComments(objectFromTrackSnippet(snippet));
     if (!objectLiteral) continue;
     for (const keyMatch of objectLiteral.matchAll(/([A-Za-z_$][A-Za-z0-9_$]*)\s*:/g)) {
       const key = keyMatch[1];

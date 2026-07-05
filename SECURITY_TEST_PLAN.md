@@ -1,0 +1,283 @@
+# Security Test Plan
+
+## Automated checks run in this pass
+
+- `npm run typecheck`
+- `npm run lint`
+- `npm test`
+- `npm run phase9:release-smoke`
+- `npm run phase9:rls-adversarial`
+- `npm run phase9:supabase-policy-lint`
+- `npm run phase9:live-supabase-adversarial`
+- `npm run phase9:edge-auth-smoke`
+- `npm run phase9:edge-functions-check`
+- `node --check scripts/phase9/live-supabase-adversarial.mjs`
+- `node --check scripts/phase9/rls-adversarial.mjs`
+- `node --check scripts/phase9/supabase-policy-lint.mjs`
+- `node --check scripts/phase9/live-data-rights.mjs`
+- `node --check scripts/phase9/live-consent-withdrawal.mjs`
+- `node --check scripts/phase9/data-rights-smoke.mjs`
+- `node --check scripts/phase9/edge-auth-smoke.mjs`
+- `node --check scripts/phase9/release-smoke.mjs`
+- `node --check scripts/phase7/check-core-loop.mjs`
+- `node --check scripts/phase7/build-core-loop-qa-packet.mjs`
+- `node --check scripts/phase2/check-env.mjs`
+- `node --check scripts/phase9/build-release-qa-packet.mjs`
+- `node --check scripts/phase9/lib.mjs`
+- `node --check scripts/phase9/edge-functions-check.mjs`
+- `node --check scripts/phase9/live-edge-auth.mjs`
+- `node --check scripts/phase9/live-supabase-adversarial.mjs`
+- `node --check scripts/phase9/live-data-rights.mjs`
+- `node --check scripts/phase9/live-consent-withdrawal.mjs`
+- `node --check scripts/phase9/live-public-forms.mjs`
+- `node --check scripts/phase9/live-catalog-rate-limit.mjs`
+- `node --check scripts/phase9/live-order-report-poll.mjs`
+- `node --check scripts/phase9/live-revenuecat-webhook.mjs`
+- `npm run phase9:live-edge-auth`
+- `npm run phase9:live-public-forms`
+- `npm run phase9:live-catalog-rate-limit`
+- `npm run phase9:live-order-report-poll`
+- `npm run phase9:live-revenuecat-webhook`
+- `npm run phase9:security-ci-smoke`
+- `npm run phase9:data-rights-smoke`
+- `npm run phase2:check-env`
+- `npm run phase9:live-data-rights`
+- `npm run phase9:consent-withdrawal`
+- `npm run phase9:live-consent-withdrawal`
+- `npm run phase9:privacy-payload-audit`
+- `npm run phase9:store-build-inspect`
+- `npx vitest run src/features/photos/metadata.test.ts src/features/photos/claimsafety.test.ts src/features/photos/quality.test.ts`
+- `npx vitest run src/lib/auth/sessionBoundary.test.ts`
+- `npx vitest run src/lib/supabase/largeSecureStoreCrypto.test.ts`
+- `npx vitest run src/lib/applock/privacyState.test.ts`
+- `npx vitest run src/features/notifications/claimsafety.test.ts src/features/notifications/store.test.ts src/features/notifications/policy.test.ts`
+- `npx vitest run src/lib/analytics/track.test.ts src/lib/observability/scrub.test.ts`
+- `npx vitest run src/lib/navigation/externalUrl.test.ts src/features/commerce/attribution.test.ts src/features/commerce/commerce.test.ts`
+- `npx vitest run src/lib/errors/userFacing.test.ts`
+- `npx vitest run src/lib/observability/safeLog.test.ts`
+- `npx vitest run src/lib/env.test.ts`
+- `npx vitest run src/lib/launch/phase7.test.ts`
+- `npm run phase7:check-core-loop`
+- `npm run phase7:qa-packet`
+- `npm run phase9:store-build-inspect`
+- `npm run phase9:dependency-sbom`
+- `$env:PHASE9_RUN_NPM_AUDIT='true'; npm run phase9:dependency-sbom`
+- `npm run phase9:qa-packet`
+- `npm run phase9:verify`
+- `$env:PHASE9_RUN_NPM_AUDIT='true'; npm run phase9:verify`
+- `$env:EXPO_PUBLIC_APP_ENV='production'; $env:EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED='true'; node scripts/phase9/release-smoke.mjs` (expected failure probe for production Phase 7 evidence blockers)
+- Missing-app-env live Edge auth expected failure probe with `PHASE9_RUN_LIVE_EDGE_AUTH=true` and fake non-placeholder Supabase credentials; proves live harnesses classify absent real app env as production and refuse without `PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH=true`.
+- `npm audit --audit-level=moderate`
+- `npm audit --audit-level=high`
+- `npx expo-doctor`
+
+## Tests added
+
+- `apps/mobile/src/features/settings/localPrivateDataKeys.test.ts`
+  - Proves every `onskin.*` local storage key in source is registered for deletion.
+  - Proves there are no duplicate local wipe keys.
+- `apps/mobile/src/features/notifications/claimsafety.test.ts`
+  - Proves every lock-screen notification payload uses the generic `OnSkin` title and discreet body copy.
+  - Proves OS notification bodies do not contain progress-photo, product, skin, treatment, ingredient, or escalation details.
+- `apps/mobile/src/features/notifications/store.test.ts`
+  - Proves legacy local notification prefs with `lockscreenDiscreet: false` load as discreet.
+  - Proves saving a false lock-screen discretion patch persists and mirrors `lockscreen_discreet: true`.
+- `apps/mobile/src/features/photos/metadata.test.ts`
+  - Proves JPEG EXIF, IPTC, and comment metadata segments are removed while preserving image bytes.
+  - Proves PNG EXIF, text, compressed text, international text, and time metadata chunks are removed while preserving image chunks.
+- `apps/mobile/src/lib/auth/sessionBoundary.test.ts`
+  - Proves initial session restore and first sign-in do not wipe local private data.
+  - Proves token refresh for the same user keeps local private data.
+  - Proves sign-out or a Supabase user ID change requires a local private-data wipe before the new session is accepted.
+- `apps/mobile/src/lib/supabase/largeSecureStoreCrypto.test.ts`
+  - Proves Supabase session JSON is stored in an authenticated XChaCha20-Poly1305 envelope that does not contain raw access or refresh token strings.
+  - Proves tampered authenticated ciphertext, unexpected plaintext JSON, and malformed stored values fail closed.
+  - Proves legacy AES-CTR ciphertext can be read only as a migration source and is flagged for rewrite.
+- `apps/mobile/src/lib/applock/privacyState.test.ts`
+  - Proves the global privacy shield is required for every non-active app state.
+  - Proves biometric app lock triggers on inactive/background states only when enabled.
+- `apps/mobile/src/lib/env.test.ts`
+  - Proves missing, copied-placeholder, and invalid Supabase public env values leave the app bootable but unconfigured.
+  - Proves missing or invalid app-environment values default to production outside the dev runtime.
+  - Proves development fallback behavior is available only when the runtime is actually dev.
+  - Proves supported app-environment values are normalized before payment/release logic reads them.
+- `apps/mobile/src/lib/launch/phase7.test.ts`
+  - Proves production Phase 7 deferred surfaces stay disabled when public flags are true but the final brand domain is missing or still an example domain.
+  - Proves staging can still exercise deferred surfaces without a final brand domain while commerce/share-card paths remain domain-gated.
+  - Proves production surfaces open only when public identity is ready, and share cards still require reviewed, non-safety, non-pregnancy owned-product conflicts.
+- `scripts/phase9/release-smoke.mjs`
+  - Blocks production builds when `EXPO_PUBLIC_PHASE7_*` public flags expose commerce, community posting, trend insights, cloud Ask, widgets, share cards, or goal-active recommendations without the matching `PHASE7_*` evidence and `PHASE7_SIGNED_OFF_BY`.
+  - Statically requires the Phase 7 production fail-closed guard and regression tests, and the release QA packet now hashes those files.
+  - Statically requires live Phase 9 harnesses to use `readScriptAppEnvironment()` and rejects any return to `?? 'development'` app-environment defaults.
+- `scripts/phase9/lib.mjs`
+  - Provides `readScriptAppEnvironment()`, which reads only real `.env` plus process env, ignores `.env.example`, normalizes supported app environments, and defaults missing/invalid values to production for live-harness production guards.
+- `scripts/phase9/edge-auth-smoke.mjs`
+  - Proves public waitlist and growth-event Edge Functions include Turnstile verification.
+  - Proves those functions fail closed when production Turnstile is not configured.
+  - Proves those functions use the Postgres rate-limit RPC before Turnstile verification, keyed-hash request identity before storage, and return `429` when limited.
+  - Proves the rate-limit migration uses RLS, a pinned-search-path `SECURITY DEFINER` function, and service-role-only RPC execution.
+  - Proves RevenueCat webhook rejects non-`POST` before raw body parsing.
+  - Proves the ShopMy order-report poll rejects non-`POST`, remains inert without a brand key, and requires a scheduler secret before any activated service-role poll work.
+  - Proves every user-JWT Edge Function rejects non-`POST` before caller auth resolution and that catalog lookup cannot reintroduce GET/query-string barcode lookup.
+  - Proves body-parsing user-JWT Edge Functions use `USER_EDGE_BODY_MAX_BYTES`, reject oversized bodies with `413 payload_too_large`, and check `Content-Length` before auth/body parsing work.
+  - Proves catalog search/lookup use the shared Postgres rate-limit RPC with HMAC-keyed user identity, fail closed when the limiter is unavailable, return `429` when limited, and enforce the limit before request body parsing, service-role catalog reads, lookup telemetry writes, or Open Beauty Facts calls.
+  - Proves external-provider functions use `fetchWithTimeout` plus bounded response text/JSON readers, and rejects raw provider `fetch()`, `.json()`, or `.text()` parsing in account deletion, catalog lookup, public forms, and order polling.
+- `scripts/phase9/live-public-forms.mjs`
+  - When explicitly enabled, verifies public waitlist/growth endpoints reject missing and invalid Turnstile tokens.
+  - In strict evidence mode with `PHASE9_TURNSTILE_VALID_TOKEN`, verifies valid-token writes and sanitization for both endpoints.
+  - Sends oversized waitlist and growth-event public-form bodies and proves deployed `413 payload too large` behavior without form writes.
+  - Exhausts public-form rate limits with missing-token probes, verifies `429 rate limited` plus `Retry-After`, verifies redacted keyed-hash samples in `edge_rate_limits`, and proves the probes do not write waitlist/growth rows.
+  - Writes `docs/phase-9/generated/live-public-forms.*` as an evidence packet.
+- `scripts/phase9/live-catalog-rate-limit.mjs`
+  - When explicitly enabled, creates a temporary staging user and verifies deployed catalog search/lookup return `429 rate_limited` after the configured `CATALOG_RATE_LIMIT_MAX`.
+  - Uses a too-short search query and invalid barcode so probes do not write catalog lookup telemetry, perform service-role catalog reads, or call Open Beauty Facts.
+  - Verifies `edge_rate_limits` rows for catalog scopes use 64-character keyed hashes and writes redacted `docs/phase-9/generated/live-catalog-rate-limit.*` evidence artifacts.
+- `scripts/phase9/live-order-report-poll.mjs`
+  - When explicitly enabled, verifies deployed `order-report-poll` rejects non-`POST` before service-role work.
+  - Verifies missing and wrong scheduler secrets do not write `order_attributions`, while accepting either inert no-ShopMy-key responses or activated fail-closed responses according to `PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED`.
+  - Does not read or send the real scheduler secret and intentionally avoids the authorized ShopMy API path.
+  - Writes `docs/phase-9/generated/live-order-report-poll.*` as an evidence packet.
+- `scripts/phase9/live-revenuecat-webhook.mjs`
+  - When explicitly enabled, verifies deployed RevenueCat webhook rejects non-`POST` methods without writing subscription events.
+  - When explicitly enabled, verifies deployed RevenueCat webhook rejection for invalid shared auth, invalid HMAC signatures, and stale HMAC signatures without returning raw signature failure reasons.
+  - Verifies initial-purchase grant, renewal, cancellation, billing issue, expiration, duplicate event idempotency, and refund revocation against live `subscriptions_events` and `entitlements` rows.
+  - Injects raw provider canaries such as subscriber attributes, customer info, raw receipts, auth headers, and API keys, then proves persisted `subscriptions_events.payload` and `entitlements.raw_status` contain only sanitized allowlisted event snapshots.
+  - Sends a signed/authenticated oversized raw webhook body and proves deployed `413 payload too large` behavior without a `subscriptions_events` write.
+  - Writes `docs/phase-9/generated/live-revenuecat-webhook.*` as an evidence packet.
+- `scripts/phase9/live-supabase-adversarial.mjs`
+  - Creates two live users when explicitly enabled, then tests owner-only profile, skin profile, shelf, routine, completion, consent, entitlement, reverse-trial client denial, photo metadata, and private photo storage behavior.
+  - Tests newer user-owned and health-adjacent tables: routine conflicts, active ramps, shelf scans, cycles/nights, streak freezes, notification preferences/logs, recommendation preferences/recommendations, photo trend, catalog corrections/lookups, commerce clicks, community blocks/questions/reports/reactions, and Ask sessions/turn/safety audit rows.
+  - Proves modified clients cannot create owned child rows that point at another user's product, Ask turn, or private pending community question.
+  - Proves modified clients cannot create photo metadata with a cross-user cloud storage path or a local-only row that still carries a cloud path.
+  - Proves community reactions can target published notes, but not unpublished or null notes.
+  - Proves consent-gated writes require a current grant, then appends false consent rows and verifies cloud photo metadata/storage upload, photo trend, commerce click, community question/reaction, and Ask session/safety writes are blocked after revocation.
+  - Writes `docs/phase-9/generated/live-supabase-adversarial.*` as an evidence packet.
+- `scripts/phase9/rls-adversarial.mjs`
+  - Statically fails if the cross-owner FK RLS overrides for routine steps, cycle nights, Ask safety audit, or community reports disappear.
+  - Statically fails if photo metadata path policies or published-note community reaction policies disappear.
+  - Statically fails if current-consent RLS/storage policies disappear for cloud photos, trend insights, commerce clicks, community reactions, Ask sessions, Ask turns, or Ask safety audit writes.
+  - Statically fails if the live Supabase harness drops coverage for newer user-owned Ask, community, commerce, catalog telemetry, notification, cycle/ramp/streak, recommendation, or trend tables.
+- `scripts/phase9/supabase-policy-lint.mjs`
+  - Statically inspects the effective latest migration definitions for every `SECURITY DEFINER` function.
+  - Fails if a definer function does not use `set search_path = ''`, lacks an explicit PUBLIC execute revoke, grants execute to `anon`/`public`, grants `authenticated` outside the RLS-helper allowlist, or grants `service_role` outside the service-RPC allowlist.
+  - Fails if any policy uses `with check (true)`, or if `using (true)` appears outside select-only authenticated public catalog policies.
+  - Fails if a public view lacks `security_invoker = true`.
+- `scripts/phase9/security-ci-smoke.mjs`
+  - Proves the checked GitHub Actions security workflow includes Phase 9 gates, npm high/critical audit, Gitleaks, TruffleHog, Semgrep, OSV, manual-only live Edge auth/Supabase/data-rights evidence, and immutable SHA-pinned action refs.
+  - Proves every checkout disables persisted credentials and rejects `npm install` in favor of lockfile-only `npm ci`.
+  - Proves scanner jobs write code/secret/static outcome manifests, archive `ci-scanner-evidence` artifacts with `if-no-files-found: error` and 30-day retention, and enforce gate/scanner outcomes after artifact upload.
+- `scripts/phase9/live-data-rights.mjs`
+  - Creates two live users when explicitly enabled, seeds exportable health/payment/photo/commerce data, verifies `data-export` is caller-only, and verifies `account-deletion` removes caller rows/storage without deleting the other user.
+  - Seeds a malformed legacy photo metadata row with the caller's `user_id` but another user's storage path, then proves `data-export` records `INVALID_STORAGE_PATH` in `photo_download_url_omissions` instead of creating a signed URL.
+  - In staging with `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK=true` and a short `DATA_EXPORT_PHOTO_URL_TTL_SECONDS`, downloads the synthetic exported photo before expiry, waits past the TTL, and verifies the same signed URL is no longer downloadable without persisting the URL in artifacts.
+  - Exhausts the deployed data-export per-user rate limit under `PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX`, verifies `429 RATE_LIMITED` plus numeric `Retry-After`, and records redacted keyed-hash-only `edge_rate_limits` samples.
+  - Seeds explicit `photo_cloud_backup` and `data_sharing` grants before live cloud photo and commerce writes so the harness remains compatible with consent-enforced RLS.
+  - Writes `docs/phase-9/generated/live-data-rights.*` as an evidence packet.
+- `scripts/phase9/live-consent-withdrawal.mjs`
+  - When explicitly enabled, creates a temporary staging user and seeds each consent-gated data class.
+  - Invokes deployed `consent-withdrawal` for `photo_cloud_backup`, `ask_onskin`, `photo_trend_insights`, `community_participation`, and `data_sharing`.
+  - Verifies false ledger rows, cloud photo storage removal plus metadata relocalization, Ask safety-audit deletion, trend-row deletion, community row deletion, commerce click deletion, and order-attribution token detachment.
+  - Refuses production unless `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL=true` and writes `docs/phase-9/generated/live-consent-withdrawal.*` as an evidence packet.
+- `scripts/phase9/data-rights-smoke.mjs`
+  - Proves account deletion and data export do not log or return raw provider/database errors.
+  - Proves data export uses `consume_edge_rate_limit` with a keyed-HMAC per-user identity, fails closed when rate limiting is unavailable, returns `429` with `Retry-After` when limited, and runs the rate-limit check before export table reads or photo signed URL generation.
+  - Proves account deletion preflights provider deletion configuration before storage cleanup and runs RevenueCat/PostHog deletion before local destructive cleanup.
+  - Proves account deletion and data export return CORS preflight early and reject non-`POST` execution methods before body parsing, auth resolution, or service-role side effects.
+  - Proves account deletion provider calls use timed fetches and bounded response readers for Apple, RevenueCat, and PostHog, with static rejection of raw provider `fetch()`, `.json()`, or `.text()` parsing.
+  - Proves `data-export` verifies photo storage path ownership before calling `createSignedUrl`.
+  - Proves `data-export` uses `DATA_EXPORT_PHOTO_URL_TTL_SECONDS` for photo signed URLs and that the live data-rights harness contains the signed-URL expiry plus `429 RATE_LIMITED`/keyed-hash limiter evidence paths behind explicit run flags.
+  - Proves mobile data export uses a unique one-time cache filename and writes/deletes the plaintext bundle inside a cleanup `finally` block around the write/share attempt.
+- `scripts/phase9/edge-auth-smoke.mjs`
+  - Proves subscription grants return stable write-failure codes instead of raw database error messages.
+  - Proves RevenueCat webhook signature tolerance is bounded and fail-safe, and public HMAC failures return only a stable `bad signature` response.
+  - Proves RevenueCat webhook persistence uses sanitized event snapshots and blocks raw webhook body/event JSON from `subscriptions_events.payload` and `entitlements.raw_status`.
+  - Proves RevenueCat webhook entitlement mirror failures persist only the stable `ENTITLEMENT_WRITE_FAILED` code and never raw database error messages.
+  - Proves RevenueCat webhook uses a bounded raw-body reader, rejects oversized bodies with `413`, and returns missing-verification/bad shared-auth errors before reading the request body.
+  - Proves catalog-report rejects unexpected fields, persists only sanitized support payload/context objects, normalizes source URLs, rejects non-finite numbers, and the mobile caller does not send local shelf product IDs in report context.
+  - Proves public waitlist/growth endpoints use `PUBLIC_FORMS_MAX_BYTES`, reject oversized bodies with `413`, and run the `Content-Length` oversized check before rate-limit/body parsing work.
+  - Proves provider-backed Edge Functions share `EDGE_EXTERNAL_FETCH_TIMEOUT_MS` and `EDGE_EXTERNAL_RESPONSE_MAX_BYTES` controls, use `AbortController` timeouts, and bound provider response reads before parsing.
+- `scripts/phase9/live-edge-auth.mjs`
+  - When explicitly enabled, verifies deployed user-JWT Edge Functions reject missing and invalid JWTs.
+  - Verifies all user-JWT Edge Functions reject valid-JWT non-`POST` requests and do not delete the live harness user or write entitlements, reverse-trial grants, catalog lookup events, or consent ledger rows.
+  - Verifies body-parsing user-JWT Edge Functions reject oversized JSON bodies with `413 payload_too_large` without deleting the harness user or writing entitlements, reverse-trial grants, catalog lookup events, or consent ledger rows.
+  - Verifies malformed subscription-grants actions do not write entitlements or reverse-trial grants.
+  - Verifies catalog search/lookup malformed inputs return safe errors without lookup event writes.
+  - Verifies catalog-report rejects bad JSON, unexpected fields, invalid nested payloads, and persists only sanitized report payload/context values.
+  - Writes `docs/phase-9/generated/live-edge-auth.*` as an evidence packet.
+- `scripts/phase9/consent-withdrawal-smoke.mjs`
+  - Proves mobile granular revocation helpers call the server `consent-withdrawal` path after local relocking.
+  - Proves `consent-withdrawal` is JWT-gated, POST-only, validates request shape, appends false ledger rows, returns stable errors, removes only caller-owned cloud photo storage paths, relocalizes photo metadata, deletes Ask safety audit/trend/community data, and detaches commerce order links before deleting click rows.
+  - Proves `consent-withdrawal` logs only a stable `CONSENT_WITHDRAWAL_FAILED` failure code and never raw exception messages.
+  - Proves the consent-withdrawal RLS migration makes the latest consent row authoritative for future sensitive writes.
+- `scripts/phase9/store-build-inspect.mjs`
+  - Proves EAS build profiles publish only to matching development/staging/production channels.
+  - Proves dev/staging use internal distribution and production uses store distribution without a development client.
+  - Proves resolved dev/staging/prod configs have isolated schemes, bundle IDs, Android package names, and public environment metadata.
+  - Proves Android Auto Backup stays disabled in the base config and every resolved app variant.
+  - Proves `runtimeVersion.policy` remains `fingerprint` for native-compatible OTA targeting.
+- `apps/mobile/package.json` / `package-lock.json`
+  - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.
+  - Verified with `npm test`, `npm run typecheck`, `npm run lint`, `npm audit --audit-level=moderate`, and the audit-enabled Phase 9 dependency SBOM.
+- `scripts/phase9/dependency-sbom.mjs`
+  - Runs npm audit through the active Node/npm CLI path on Windows.
+  - Writes aggregate vulnerability counts plus advisory-level audit findings with package, severity, directness, via chain, fix target, and node paths.
+  - Writes a dependency install-script table and fails if any lifecycle-script package appears outside the reviewed allowlist.
+  - Keeps high and critical npm audit results as blocking code gates while leaving moderate advisories for explicit release review/signoff.
+- `scripts/phase9/edge-functions-check.mjs`
+  - Runs Deno type/syntax checking against every Supabase Edge Function entrypoint.
+  - Uses `supabase/functions/deno.lock` in frozen mode so Supabase JSR/npm dependency drift is explicit.
+  - Caught and prevented Deno-only type regressions in account deletion, data export, RevenueCat webhook, and subscription grants.
+- `apps/mobile/src/lib/analytics/track.test.ts`
+  - Verifies sensitive analytics keys/values are dropped.
+  - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.
+- `apps/mobile/src/lib/navigation/externalUrl.test.ts`
+  - Verifies external handoffs allow only normalized HTTPS URLs, reject custom schemes, plaintext HTTP, embedded credentials, malformed strings, and control characters, and strip fragments before opening.
+  - Verifies opaque commerce attribution parameters are appended only after URL validation.
+- `apps/mobile/src/lib/errors/userFacing.test.ts`
+  - Verifies common auth failures map to stable user copy.
+  - Verifies raw backend/provider details such as table names, tokens, and user IDs are not reflected in auth, privacy-rights, app-lock, or share-card error messages.
+- `apps/mobile/src/lib/observability/safeLog.test.ts`
+  - Verifies dev warnings log only redacted error kind/name metadata.
+  - Verifies exception messages, stacks, signed URLs, tokens, paths, user IDs, and attached object fields are not logged.
+- `apps/mobile/src/lib/observability/scrub.test.ts`
+  - Verifies Sentry/observability context drops route, URL, query, product, barcode, OCR, note, photo, receipt, profile, and free-text fields.
+  - Verifies captured exceptions are replaced with a generic redacted error before vendor capture, preserving only a safe error name.
+- `apps/mobile/src/features/commerce/attribution.test.ts` and `apps/mobile/src/features/commerce/commerce.test.ts`
+  - Verify where-to-buy URLs fail closed for unsafe schemes or embedded credentials.
+  - Verify unsafe affiliate rows are filtered before rendering and that outbound commerce URLs still append only the opaque `oref` token.
+- `scripts/phase9/privacy-payload-audit.mjs`
+  - Proves analytics/Sentry identity paths use pseudonymous IDs.
+  - Ignores code comments inside `track()` object literals so audit warnings reflect real payload keys.
+  - Fails if analytics, Sentry, or RevenueCat setup warnings reintroduce raw exception-object console logging.
+  - Fails if analytics tracking reintroduces development console logging for event names or sanitized props.
+  - Fails if Sentry capture stops sanitizing the captured throwable or sends the raw exception object to Sentry.
+  - Fails if decrypted photo share files or generated shelf share-card tmpfiles stop being deleted after share attempts.
+  - Fails if photo storage/share stops stripping image metadata before encryption or generated share export.
+  - Fails if photo sharing reintroduces a redaction promise without implementation, drops the explicit image-only confirmation, or stops disclosing that notes are excluded.
+  - Fails if notification delivery stops using generic lock-screen copy, if notification prefs stop coercing discretion-off values to true, if the settings screen can disable generic lock-screen copy, or if the Supabase `lockscreen_discreet` constraint disappears.
+
+## Required live tests before closed beta
+
+- Supabase two-user table/storage isolation using `npm run phase9:live-supabase-adversarial:strict` with staging credentials after deploying the latest migrations, then production only with explicit approval.
+- Supabase Storage isolation for `photos`: upload/list/read/update/delete, cross-user path write attempts, and metadata rows that try to bind a caller to another user's storage prefix.
+- Anonymous user negative tests for cloud photo backup and community posting.
+- Edge Function auth tests for data export, account deletion, subscription grants, and catalog functions, including valid-JWT non-`POST` rejection for every user-JWT function and no side effects from those rejected calls.
+- Live Edge auth negative tests using `npm run phase9:live-edge-auth:strict`, then set `PHASE9_EDGE_AUTH_PASS=true` only after staging artifact review.
+- RevenueCat webhook lifecycle using `npm run phase9:live-revenuecat-webhook:strict`: non-POST rejection, invalid auth, invalid signature, stale signature, oversized body rejection, duplicate delivery, initial purchase grant, renewal, cancellation, billing issue, expiration, refund revoke, raw-payload minimization, and dashboard secret parity.
+- ShopMy order-report poll activation test before enabling commerce attribution: run `phase9:live-order-report-poll:strict`; prove `POST` only, no-op without brand key, `503` if brand key exists without `ORDER_REPORT_POLL_SECRET`, `401` with missing/wrong scheduler secret, no `order_attributions` write before authorization, and no real scheduler secret in the harness. Authorized scheduler success should be tested only in a controlled ShopMy sandbox/partner environment.
+- Public waitlist/growth abuse-control tests: missing server secret returns 503, missing token returns 403, invalid token returns 403, oversized bodies return 413 without writes, valid token writes the expected sanitized record, and repeated requests produce `429` without persisting raw IP/user-agent values. Missing/invalid, oversized-body, valid-token, and 429/keyed-hash paths are covered by `phase9:live-public-forms:strict`; missing-secret evidence still requires staging deployment logs or a targeted staging probe.
+- Authenticated catalog abuse-control tests: run `npm run phase9:live-catalog-rate-limit:strict` with staging credentials and matching `CATALOG_RATE_LIMIT_MAX`/`PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX`; repeated `catalog-search` and `catalog-lookup` POSTs should produce `429` plus `rate_limited`, and redacted artifacts should show only keyed hashes in `edge_rate_limits`, not raw user IDs.
+- Account deletion with photos, shelf, routines, entitlement rows, RevenueCat deletion, PostHog deletion, local cache wipe, and notification cancellation. The deployed backend portion is covered by `phase9:live-data-rights:strict`; local device wipe still needs real-device QA.
+- Account switching and auth linking on device: same-user token refresh must preserve local stores, explicit sign-out must wipe them, and any Supabase user ID change must not display the previous account's shelf/profile/photos/routines to the new account. Anonymous-to-Apple/Google/email transitions need staging evidence that the product either keeps the same user ID or has an intentional migration/clear UX.
+- Data export with two users, malformed legacy photo metadata omission, deployed rate-limit behavior, and cloud photo signed URL expiration. The owner-only, malformed-path omission, commission-redaction, signed-URL expiry, and rate-limit `429`/keyed-hash checks are covered by `phase9:live-data-rights:strict` when staging sets a short `DATA_EXPORT_PHOTO_URL_TTL_SECONDS`, `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK=true`, and `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS` greater than the TTL.
+- Consent withdrawal disables cloud/AI/commerce sharing, blocks future consent-gated writes from modified clients, and deletes/detaches prior cloud/shared rows where promised. The deployed cleanup path is covered by `phase9:live-consent-withdrawal:strict`; post-revocation write denial is covered by `phase9:live-supabase-adversarial:strict`.
+- RevenueCat native sandbox matrix: purchase, restore, cancel, renewal, billing issue, store refund/refund webhook, sandbox/production separation, and RevenueCat dashboard timeline samples.
+- Real-device QA: camera, encrypted photo render/share/cache cleanup, EXIF/GPS absence in saved/shared photo files, shelf share-card tmpfile cleanup, generic lock-screen notification copy, app-switcher privacy shield, account switch/session replacement, anonymous-to-provider linking, reinstall, offline/online, biometric app lock.
+- Sentry/PostHog payload sample review with no photos, prompts, tokens, URLs, product shelf details, pregnancy flags, or skin concerns.
+- Binary scans: MobSF/MASTG-style APK/IPA review, app permissions, Android `allowBackup=false`, iOS backup/keychain restore behavior, debug flags, OTA channel/runtime, and EAS Update branch/channel evidence from the Expo dashboard.
+
+## Tool gaps to close
+
+- Install/run Supabase CLI: `supabase db lint`, `supabase migration list`.
+- Run the checked Security workflow and archive redacted Gitleaks, TruffleHog, Semgrep, OSV, high/critical npm audit output, and the rationale for the remaining Expo config-tooling moderate advisories listed in `docs/phase-9/generated/dependency-inventory.*`.
+- Review pinned GitHub Action SHAs on a monthly cadence and update only after action changelog review.

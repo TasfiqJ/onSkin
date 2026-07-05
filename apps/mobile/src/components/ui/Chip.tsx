@@ -17,6 +17,8 @@ export function Chip({ label, selected = false, onPress, className }: ChipProps)
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
+      accessibilityLabel={label}
+      aria-pressed={selected}
       onPress={() => {
         haptics.select();
         onPress?.();
@@ -25,7 +27,8 @@ export function Chip({ label, selected = false, onPress, className }: ChipProps)
         'min-h-[40px] items-center justify-center rounded-pill border px-4 py-2',
         selected ? 'border-clay bg-clay/10' : 'border-hairline bg-paper-raised',
         className,
-      )}>
+      )}
+    >
       <Text className={cn('font-sans-medium text-[14px]', selected ? 'text-clay' : 'text-ink')}>
         {label}
       </Text>

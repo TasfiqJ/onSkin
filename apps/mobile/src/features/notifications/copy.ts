@@ -6,7 +6,7 @@ import type { NotificationKind } from '@onskin/types';
  * ("Don't break your streak"), NO manufactured urgency, NO drug/disease claims,
  * NO alarm words (docs/07 §2/§3.3). Health-adjacent detail is discreet by default
  * (§3.6): the lock-screen body stays generic; the scheduler's specifics surface
- * only in-app or when the user turns discretion off. `claimsafety.test.ts` scans
+ * only in-app. `claimsafety.test.ts` scans
  * these on every edit. Final marketing/consent wording: B-PRIVACY / B-PRIVACY-COPY.
  */
 
@@ -18,6 +18,8 @@ export type ReminderCopy = {
   /** Generic lock-screen body. No product or condition names (§3.6). */
   discreet: string;
 };
+
+export const LOCK_SCREEN_NOTIFICATION_TITLE = 'OnSkin';
 
 export const REMINDER_COPY: Record<NotificationKind, ReminderCopy> = {
   am_reminder: {
@@ -57,6 +59,11 @@ export const REMINDER_COPY: Record<NotificationKind, ReminderCopy> = {
   },
 };
 
+export function notificationContentForLockScreen(kind: NotificationKind): { title: string; body: string } {
+  const c = REMINDER_COPY[kind];
+  return { title: LOCK_SCREEN_NOTIFICATION_TITLE, body: c.discreet };
+}
+
 /** Soft-ask permission priming (design screen 01, docs/07 §3.2). */
 export const SOFT_ASK = {
   title: 'A gentle nudge at your routine times?',
@@ -90,7 +97,7 @@ export const MILESTONE_COPY: Record<string, string> = {
 /** Settings-surface labels (design screens 02/03). */
 export const SETTINGS_COPY = {
   capNote: 'we cap gentle nudges so they never stack up',
-  discreetLabel: 'Keep it discreet',
-  discreetHint: 'Generic wording, no product or condition names',
+  discreetLabel: 'Lock screen privacy',
+  discreetHint: 'Always generic; product, photo, and condition details stay inside the app',
   quietLabel: 'Nothing fires',
 } as const;

@@ -4,6 +4,7 @@ import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
+import { ONBOARDING_PRODUCT_CATEGORIES } from '@/features/onboarding/productCategories';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
@@ -14,16 +15,6 @@ import { colors } from '@/theme/tokens';
 // from the user's REAL products (the conflict engine tags off the name). Skip stays
 // visible. The full barcode/OCR intake lives on the Shelf (docs/04); this is the
 // lightweight first-population that was previously a dead skip-only screen.
-const CATEGORIES = [
-  { id: 'cleanser', label: 'Cleanser' },
-  { id: 'toner', label: 'Toner' },
-  { id: 'serum', label: 'Serum' },
-  { id: 'treatment', label: 'Treatment' },
-  { id: 'moisturiser', label: 'Moisturiser' },
-  { id: 'spf', label: 'SPF' },
-  { id: 'oil', label: 'Oil' },
-] as const;
-
 export default function ProductsScreen() {
   const { data } = useShelf();
   const m = useShelfMutations();
@@ -67,6 +58,7 @@ export default function ProductsScreen() {
             PRODUCT NAME
           </Text>
           <TextInput
+            accessibilityLabel="Product name"
             value={name}
             onChangeText={setName}
             placeholder="e.g. Retinol 0.3% Night Serum"
@@ -79,7 +71,7 @@ export default function ProductsScreen() {
             CATEGORY · OPTIONAL
           </Text>
           <View className="flex-row flex-wrap gap-2">
-            {CATEGORIES.map((c) => (
+            {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
               <Chip
                 key={c.id}
                 label={c.label}
@@ -107,7 +99,8 @@ export default function ProductsScreen() {
                 <View
                   key={it.id}
                   className="flex-row items-center justify-between rounded-card bg-paper-raised px-4 py-3"
-                  style={{ borderWidth: 1, borderColor: colors.hairline }}>
+                  style={{ borderWidth: 1, borderColor: colors.hairline }}
+                >
                   <Text variant="body" className="flex-1 font-sans-medium">
                     {it.name}
                   </Text>
@@ -115,7 +108,8 @@ export default function ProductsScreen() {
                     accessibilityRole="button"
                     accessibilityLabel={`Remove ${it.name}`}
                     hitSlop={8}
-                    onPress={() => void m.remove(it.id)}>
+                    onPress={() => void m.remove(it.id)}
+                  >
                     <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
                       ×
                     </Text>

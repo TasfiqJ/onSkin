@@ -1,8 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import type { BudgetBand, ValuesFilter } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
+import { getPrivateItem, multiRemovePrivateItems, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 
@@ -21,7 +20,7 @@ const DISMISSED_KEY = 'onskin.recDismissed.v1';
 // --- preferences --------------------------------------------------------------
 export async function loadPreferences(): Promise<RecPreferences> {
   try {
-    const raw = await AsyncStorage.getItem(PREF_KEY);
+    const raw = await getPrivateItem(PREF_KEY);
     if (!raw) return DEFAULT_PREFERENCES;
     const parsed = JSON.parse(raw) as Partial<RecPreferences>;
     return {
@@ -35,7 +34,7 @@ export async function loadPreferences(): Promise<RecPreferences> {
 }
 
 export async function savePreferences(prefs: RecPreferences): Promise<void> {
-  await AsyncStorage.setItem(PREF_KEY, JSON.stringify(prefs));
+  await setPrivateItem(PREF_KEY, JSON.stringify(prefs));
   // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
   // own row. Guarded so the store works fully before the backend is configured.
   try {
@@ -56,7 +55,7 @@ export async function savePreferences(prefs: RecPreferences): Promise<void> {
 // --- dismissed suggestions ("not for me") -------------------------------------
 export async function loadDismissed(): Promise<string[]> {
   try {
-    const raw = await AsyncStorage.getItem(DISMISSED_KEY);
+    const raw = await getPrivateItem(DISMISSED_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as string[];
     return Array.isArray(parsed) ? parsed : [];
@@ -68,10 +67,10 @@ export async function loadDismissed(): Promise<string[]> {
 export async function dismissRecommendation(id: string): Promise<void> {
   const cur = await loadDismissed();
   if (cur.includes(id)) return;
-  await AsyncStorage.setItem(DISMISSED_KEY, JSON.stringify([...cur, id]));
+  await setPrivateItem(DISMISSED_KEY, JSON.stringify([...cur, id]));
 }
 
 /** Test/seed reset. */
 export async function clearRecState(): Promise<void> {
-  await AsyncStorage.multiRemove([PREF_KEY, DISMISSED_KEY]);
+  await multiRemovePrivateItems([PREF_KEY, DISMISSED_KEY]);
 }

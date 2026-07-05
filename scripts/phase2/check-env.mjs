@@ -55,7 +55,7 @@ const groups = [
   },
   {
     name: 'Supabase server secrets',
-    required: ['SUPABASE_SECRET_KEY'],
+    required: ['SUPABASE_SECRET_KEY', 'USER_EDGE_BODY_MAX_BYTES', 'EDGE_EXTERNAL_FETCH_TIMEOUT_MS', 'EDGE_EXTERNAL_RESPONSE_MAX_BYTES'],
   },
   {
     name: 'RevenueCat',
@@ -93,7 +93,13 @@ const groups = [
   },
   {
     name: 'Turnstile',
-    required: ['EXPO_PUBLIC_TURNSTILE_SITE_KEY'],
+    required: [
+      'EXPO_PUBLIC_TURNSTILE_SITE_KEY',
+      'TURNSTILE_SECRET_KEY',
+      'PUBLIC_FORMS_RATE_LIMIT_MAX',
+      'PUBLIC_FORMS_RATE_LIMIT_WINDOW_SECONDS',
+      'PUBLIC_FORMS_MAX_BYTES',
+    ],
   },
 ];
 
@@ -124,6 +130,11 @@ function valueFor(name) {
 function isUsable(name) {
   const value = valueFor(name);
   return value.length > 0 && !placeholderFragments.some((fragment) => value.includes(fragment));
+}
+
+function isIntegerInRange(name, min, max) {
+  const parsed = Number(valueFor(name));
+  return Number.isInteger(parsed) && parsed >= min && parsed <= max;
 }
 
 const errors = [];
@@ -178,6 +189,30 @@ if (valueFor('SUPABASE_SECRET_KEY').startsWith('eyJ')) {
   warnings.push(
     'SUPABASE_SECRET_KEY looks like a legacy service_role JWT; prefer Supabase secret keys.',
   );
+}
+
+if (!isIntegerInRange('USER_EDGE_BODY_MAX_BYTES', 1024, 65536)) {
+  errors.push('USER_EDGE_BODY_MAX_BYTES must be an integer from 1024 to 65536.');
+}
+
+if (!isIntegerInRange('EDGE_EXTERNAL_FETCH_TIMEOUT_MS', 1000, 30000)) {
+  errors.push('EDGE_EXTERNAL_FETCH_TIMEOUT_MS must be an integer from 1000 to 30000.');
+}
+
+if (!isIntegerInRange('EDGE_EXTERNAL_RESPONSE_MAX_BYTES', 1024, 1048576)) {
+  errors.push('EDGE_EXTERNAL_RESPONSE_MAX_BYTES must be an integer from 1024 to 1048576.');
+}
+
+if (!isIntegerInRange('PUBLIC_FORMS_RATE_LIMIT_MAX', 1, 1000)) {
+  errors.push('PUBLIC_FORMS_RATE_LIMIT_MAX must be an integer from 1 to 1000.');
+}
+
+if (!isIntegerInRange('PUBLIC_FORMS_RATE_LIMIT_WINDOW_SECONDS', 60, 86400)) {
+  errors.push('PUBLIC_FORMS_RATE_LIMIT_WINDOW_SECONDS must be an integer from 60 to 86400.');
+}
+
+if (!isIntegerInRange('PUBLIC_FORMS_MAX_BYTES', 1024, 65536)) {
+  errors.push('PUBLIC_FORMS_MAX_BYTES must be an integer from 1024 to 65536.');
 }
 
 for (const group of groups) {

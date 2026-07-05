@@ -21,17 +21,20 @@ export function StepRow({ name, instruction, done, isNext, dark, onPress }: Step
       accessibilityRole="checkbox"
       accessibilityState={{ checked: done }}
       accessibilityLabel={name}
+      aria-checked={done}
       onPress={() => {
         if (!done) haptics.success();
         onPress();
       }}
       className="flex-row items-start border-t py-4"
-      style={{ borderTopColor: dark ? '#3A322A' : '#E0D9CC' }}>
+      style={{ borderTopColor: dark ? '#3A322A' : '#E0D9CC' }}
+    >
       <View
         className={cn(
           'mt-0.5 h-6 w-6 items-center justify-center rounded-full border-2',
           done ? 'border-clay bg-clay' : dark ? 'border-cream/20' : 'border-greige-deep',
-        )}>
+        )}
+      >
         {done ? <View className="h-2 w-2 rounded-full bg-paper" /> : null}
       </View>
       <View className="ml-3 flex-1">

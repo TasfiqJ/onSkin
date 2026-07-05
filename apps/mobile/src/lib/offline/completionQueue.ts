@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { supabase } from '@/lib/supabase/client';
+import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
 
@@ -8,7 +7,7 @@ export type { PendingCompletion } from './completionQueue.pure';
 
 // Persisted offline write queue for routine check-offs (docs/01 §6: "writes must
 // succeed locally and sync later"): a dependency-free queue-and-retry on the
-// already-present AsyncStorage. A check-off is enqueued durably (it survives an
+// encrypted private KV store. A check-off is enqueued durably (it survives an
 // app kill) and drained to Supabase when connectivity returns; dedup mirrors the
 // DB unique (user, step, day).
 //
@@ -23,7 +22,7 @@ const KEY = 'onskin.completions.pending';
 
 export async function getPendingCompletions(): Promise<PendingCompletion[]> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     return raw ? (JSON.parse(raw) as PendingCompletion[]) : [];
   } catch {
     return [];
@@ -31,7 +30,7 @@ export async function getPendingCompletions(): Promise<PendingCompletion[]> {
 }
 
 async function savePending(list: PendingCompletion[]): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(list));
+  await setPrivateItem(KEY, JSON.stringify(list));
 }
 
 export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {

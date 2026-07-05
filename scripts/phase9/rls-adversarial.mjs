@@ -9,6 +9,8 @@ const migrations = listFiles('supabase/migrations')
   .map((file) => read(file))
   .join('\n');
 const exportSource = read('supabase/functions/data-export/index.ts');
+const packageJson = JSON.parse(read('package.json'));
+const liveHarness = read('scripts/phase9/live-supabase-adversarial.mjs');
 
 const createdTables = new Set(
   [...migrations.matchAll(/create table(?: if not exists)? public\.([a-z_]+)/gi)].map((match) => match[1]),
@@ -118,6 +120,133 @@ block(errors, /photos_objects_delete_own/.test(migrations), 'Storage RLS policy 
 block(errors, /owns_routine/.test(migrations), 'Child-table routine ownership helper is missing.');
 block(errors, /owns_cycle/.test(migrations), 'Child-table cycle ownership helper is missing.');
 block(errors, /ask_turn_audit_select_own/.test(migrations), 'Ask turn audit parent-owner policy is missing.');
+block(
+  errors,
+  /drop policy if exists "routine_steps_insert_own"[\s\S]*create policy "routine_steps_insert_own"[\s\S]*owns_user_product\(user_product_id\)/i.test(
+    migrations,
+  ),
+  'Routine step RLS must block cross-user product references.',
+);
+block(
+  errors,
+  /drop policy if exists "cycle_nights_insert_own"[\s\S]*create policy "cycle_nights_insert_own"[\s\S]*owns_user_product\(user_product_id\)/i.test(
+    migrations,
+  ),
+  'Cycle night RLS must block cross-user product references.',
+);
+block(
+  errors,
+  /create or replace function public\.owns_ask_turn_audit[\s\S]*drop policy if exists "ask_safety_audit_insert_own"[\s\S]*owns_ask_turn_audit\(turn_audit_id\)/i.test(
+    migrations,
+  ),
+  'Ask safety audit RLS must prove the referenced turn belongs to the caller.',
+);
+block(
+  errors,
+  /drop policy if exists "community_reports_insert_own"[\s\S]*moderation_state = 'approved'/i.test(migrations),
+  'Community report RLS must block reports against private pending questions.',
+);
+block(
+  errors,
+  /create policy "photos_storage_path_owned_insert"[\s\S]*split_part\(storage_path, '\/', 1\) = \(select auth\.uid\(\)\)::text/i.test(
+    migrations,
+  ),
+  'Photo metadata RLS must bind cloud storage_path to the caller prefix.',
+);
+block(
+  errors,
+  /create policy "photos_storage_path_owned_update"[\s\S]*local_only = true[\s\S]*storage_path is null[\s\S]*local_only = false/i.test(
+    migrations,
+  ),
+  'Photo metadata RLS must block local-only rows with cloud storage paths.',
+);
+block(
+  errors,
+  /drop policy if exists "community_reactions_insert_own"[\s\S]*create policy "community_reactions_insert_own"[\s\S]*note_id is not null[\s\S]*reviewed_by is not null[\s\S]*claim_safety_ok = true/i.test(
+    migrations,
+  ),
+  'Community reactions must target published claim-safe notes.',
+);
+block(errors, /create or replace function public\.has_current_consent/i.test(migrations), 'Current consent helper is missing.');
+for (const [type, tablePolicy] of [
+  ['photo_cloud_backup', 'photos_cloud_backup_consent_insert'],
+  ['photo_cloud_backup', 'photos_objects_insert_own'],
+  ['data_sharing', 'commerce_click_events_consent_insert'],
+  ['photo_trend_insights', 'photo_trend_consent_insert'],
+  ['community_participation', 'community_reactions_consent_insert'],
+  ['ask_onskin', 'ask_sessions_consent_insert'],
+  ['ask_onskin', 'ask_turn_audit_consent_insert'],
+  ['ask_onskin', 'ask_safety_audit_consent_insert'],
+]) {
+  block(
+    errors,
+    new RegExp(`${tablePolicy}[\\s\\S]*has_current_consent\\('${type}'\\)`, 'i').test(migrations),
+    `${tablePolicy} must require current ${type} consent.`,
+  );
+}
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-supabase-adversarial']),
+  'package.json is missing phase9:live-supabase-adversarial.',
+);
+block(
+  errors,
+  /storage\.from\('photos'\)/.test(liveHarness) && /PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL/.test(liveHarness),
+  'Live Supabase adversarial harness must test private photo storage and require an explicit run flag.',
+);
+
+const requiredLiveHarnessTables = [
+  'routine_conflicts',
+  'active_ramp',
+  'shelf_scans',
+  'cycles',
+  'cycle_nights',
+  'streak_freezes',
+  'notification_preferences',
+  'notification_log',
+  'recommendation_preferences',
+  'recommendations',
+  'photo_trend',
+  'catalog_corrections',
+  'catalog_lookup_events',
+  'commerce_click_events',
+  'community_blocks',
+  'community_questions',
+  'community_reports',
+  'community_reactions',
+  'ask_sessions',
+  'ask_turn_audit',
+  'ask_safety_audit',
+  'reverse_trial_grants',
+];
+
+for (const table of requiredLiveHarnessTables) {
+  block(
+    errors,
+    liveHarness.includes(`'${table}'`),
+    `Live Supabase adversarial harness is missing ${table} coverage.`,
+  );
+}
+
+const requiredLiveHarnessChecks = [
+  'photo metadata cross-user storage path insert',
+  'photo metadata local-only storage path insert',
+  'photo metadata cross-user storage path update',
+  'community reaction unpublished note insert',
+  'community reaction null note insert',
+  'photo trend revoked consent insert',
+  'commerce click revoked consent insert',
+  'community question revoked consent insert',
+  'community reaction revoked consent insert',
+  'Ask session revoked consent insert',
+  'Ask safety revoked consent insert',
+  'photo metadata revoked cloud consent insert',
+  'storage upload after photo_cloud_backup revocation unexpectedly succeeded',
+];
+
+for (const check of requiredLiveHarnessChecks) {
+  block(errors, liveHarness.includes(check), `Live Supabase adversarial harness is missing: ${check}.`);
+}
 
 warn(warnings, process.env.PHASE9_RLS_STAGING_PASS === 'true', 'Missing live staging RLS adversarial evidence: PHASE9_RLS_STAGING_PASS=true.');
 warn(warnings, process.env.PHASE9_RLS_PRODUCTION_PASS === 'true', 'Missing live production RLS adversarial evidence: PHASE9_RLS_PRODUCTION_PASS=true.');

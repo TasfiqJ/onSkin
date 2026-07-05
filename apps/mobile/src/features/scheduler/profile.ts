@@ -2,6 +2,7 @@ import type { GoalId } from '@onskin/types';
 import { useQuery } from '@tanstack/react-query';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
 // The skin-profile bits the scheduler + plan generator need (sensitivity,
@@ -13,6 +14,8 @@ export type ProfileBits = { sensitivity: SensitivityLevel; pregnancy: boolean; g
 const NEUTRAL: ProfileBits = { sensitivity: 'neutral', pregnancy: false, goals: [] };
 
 export async function readProfileBits(): Promise<ProfileBits> {
+  if (!isSupabaseConfigured) return NEUTRAL;
+
   try {
     const { data } = await supabase
       .from('skin_profiles')
@@ -24,7 +27,8 @@ export async function readProfileBits(): Promise<ProfileBits> {
       const s = data.sensitive_resistant ?? 0;
       return {
         sensitivity: s === 0 ? 'neutral' : s > 0 ? 'sensitive' : 'resistant',
-        pregnancy: data.pregnancy_status === 'pregnant' || data.pregnancy_status === 'breastfeeding',
+        pregnancy:
+          data.pregnancy_status === 'pregnant' || data.pregnancy_status === 'breastfeeding',
         goals: (data.goals ?? []) as GoalId[],
       };
     }

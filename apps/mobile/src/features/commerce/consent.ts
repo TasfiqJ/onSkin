@@ -1,5 +1,6 @@
 import { track } from '@/lib/analytics/track';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { withdrawConsent } from '@/lib/consent/withdrawal';
 
 import { resolveCommerceConsent } from './consentLogic';
 import { COMMERCE_COPY } from './copy';
@@ -52,4 +53,9 @@ export async function grantCommerceConsent(): Promise<void> {
 export async function declineCommerceConsent(): Promise<void> {
   await setCommerceConsentLocal(false);
   track('commerce_consent_declined');
+  await withdrawConsent({
+    type: 'data_sharing',
+    version: COMMERCE_COPY.consentVersion,
+    consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
+  });
 }

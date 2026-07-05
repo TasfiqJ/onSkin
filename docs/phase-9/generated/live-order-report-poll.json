@@ -1,0 +1,12 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "activatedExpected": false,
+  "checks": [],
+  "observations": [],
+  "warnings": [
+    "Live order-report-poll harness not run; set PHASE9_RUN_LIVE_ORDER_REPORT_POLL=true with staging credentials."
+  ],
+  "errors": []
+}

@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // Local-first record of the structured "This helped" reactions (docs/11 §6/§10,
 // the docs/09 flywheel signal). The server `community_reactions` table is the
@@ -9,7 +9,7 @@ const KEY = 'onskin.community.reactions.v1';
 
 async function load(): Promise<string[]> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     const parsed = raw ? (JSON.parse(raw) as string[]) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -27,7 +27,7 @@ export async function toggleNoteHelpful(id: string): Promise<boolean> {
   const has = list.includes(id);
   const next = has ? list.filter((x) => x !== id) : [...list, id];
   try {
-    await AsyncStorage.setItem(KEY, JSON.stringify(next));
+    await setPrivateItem(KEY, JSON.stringify(next));
   } catch {
     /* best-effort */
   }
@@ -36,5 +36,5 @@ export async function toggleNoteHelpful(id: string): Promise<boolean> {
 
 /** Test/seed reset. */
 export async function clearNoteReactions(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

@@ -9,6 +9,7 @@ const outDir = resolve(root, 'docs/phase-7/generated');
 
 const requiredFiles = [
   'apps/mobile/src/lib/launch/phase7.ts',
+  'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
   'apps/mobile/src/app/(tabs)/today.tsx',
   'apps/mobile/src/app/(tabs)/progress.tsx',
@@ -25,17 +26,38 @@ const requiredFiles = [
 
 const scenarios = [
   ['Onboarding', 'final age/account/consent copy, policy links, and consent ledger verified'],
-  ['Shelf intake', 'add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible'],
-  ['Reviewed guidance', 'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden'],
+  [
+    'Shelf intake',
+    'add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible',
+  ],
+  [
+    'Reviewed guidance',
+    'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden',
+  ],
   ['Routine builder', 'AM/PM routine persists across restart, offline, timezone rollover'],
   ['Today check-off', 'offline/online check-off is idempotent and undoable'],
-  ['Photos', 'baseline capture renders locally; app lock gates timeline; cloud backup remains off by default'],
+  [
+    'Photos',
+    'baseline capture renders locally; app lock gates timeline; cloud backup remains off by default',
+  ],
   ['Reminders', 'permission, quiet hours, Android 13+ permission, timezone/DST behavior verified'],
-  ['Payments', 'RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified'],
-  ['Privacy controls', 'export, account deletion, health-data withdrawal, app lock, support links verified'],
+  [
+    'Payments',
+    'RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified',
+  ],
+  [
+    'Privacy controls',
+    'export, account deletion, health-data withdrawal, app lock, support links verified',
+  ],
   ['Share card', 'exact owned reviewed conflict only; no fallback; no sensitive analytics payload'],
-  ['Deferred surfaces', 'commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled'],
-  ['Analytics', 'activation, retention, payment, privacy, support, and deferred-surface events visible'],
+  [
+    'Deferred surfaces',
+    'commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled',
+  ],
+  [
+    'Analytics',
+    'activation, retention, payment, privacy, support, and deferred-surface events visible',
+  ],
 ];
 
 const evidence = {
@@ -86,7 +108,9 @@ mkdirSync(outDir, { recursive: true });
 const jsonPath = join(outDir, 'core-loop-qa-packet.json');
 writeFileSync(jsonPath, `${JSON.stringify(packet, null, 2)}\n`);
 
-const scenarioRows = scenarios.map(([surface, scenario]) => `| ${surface} | ${scenario} |`).join('\n');
+const scenarioRows = scenarios
+  .map(([surface, scenario]) => `| ${surface} | ${scenario} |`)
+  .join('\n');
 const fileRows = files
   .map((file) =>
     file.exists
@@ -139,6 +163,8 @@ console.log(`Wrote ${relative(root, jsonPath).replaceAll('\\', '/')}`);
 console.log(`Wrote ${relative(root, mdPath).replaceAll('\\', '/')}`);
 
 if (strict && blockers.length > 0) {
-  console.error(`\nPhase 7 strict QA packet has ${blockers.length} blocker${blockers.length === 1 ? '' : 's'}.`);
+  console.error(
+    `\nPhase 7 strict QA packet has ${blockers.length} blocker${blockers.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }

@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // Whether this device has passed the neutral age gate (docs/01 §4). We persist ONLY
 // the pass/fail boolean, never the date of birth itself (data minimization). Mirror
@@ -7,12 +7,12 @@ const KEY = 'onskin.ageVerified';
 
 export async function getAgeVerified(): Promise<boolean> {
   try {
-    return (await AsyncStorage.getItem(KEY)) === '1';
+    return (await getPrivateItem(KEY)) === '1';
   } catch {
     return false;
   }
 }
 
 export async function setAgeVerified(): Promise<void> {
-  await AsyncStorage.setItem(KEY, '1');
+  await setPrivateItem(KEY, '1');
 }

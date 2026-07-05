@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { ageOn, isValidDob, meetsMinimumAge, MINIMUM_AGE } from './ageGate';
+import {
+  ageOn,
+  getDobValidationError,
+  INVALID_DOB_MESSAGE,
+  isValidDob,
+  meetsMinimumAge,
+  MINIMUM_AGE,
+} from './ageGate';
 
 const today = new Date(2026, 5, 25); // 2026-06-25 (local)
 
@@ -23,5 +30,13 @@ describe('neutral age gate (docs/01 §4)', () => {
     expect(isValidDob({ year: 2030, month: 1, day: 1 }, today)).toBe(false); // future
     expect(isValidDob({ year: 1850, month: 1, day: 1 }, today)).toBe(false); // pre-1900
     expect(isValidDob({ year: 2000, month: 6, day: 15 }, today)).toBe(true);
+  });
+
+  it('returns user-facing guidance only after a completed invalid date', () => {
+    expect(getDobValidationError({ year: 2026, month: 2, day: 30 }, today, true)).toBe(
+      INVALID_DOB_MESSAGE,
+    );
+    expect(getDobValidationError({ year: 2000, month: 6, day: 15 }, today, true)).toBeNull();
+    expect(getDobValidationError({ year: 0, month: 2, day: 30 }, today, false)).toBeNull();
   });
 });

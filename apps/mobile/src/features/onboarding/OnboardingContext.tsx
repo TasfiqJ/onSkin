@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from 're
 
 import { supabase } from '@/lib/supabase/client';
 
-import { PLACEHOLDER_QUIZ, scoreQuiz, type QuizAnswers, type SkinProfileResult } from './quiz';
+import { ONBOARDING_QUIZ, scoreQuiz, type QuizAnswers, type SkinProfileResult } from './quiz';
 import { setStoredSkinProfile } from './skinProfileStore';
 
 // In-progress onboarding answers, accumulated client-side and persisted at the
@@ -41,10 +41,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         setQuizAnswers((prev) => ({ ...prev, [questionId]: val }));
       },
       computeResult() {
-        return scoreQuiz(quizAnswers, PLACEHOLDER_QUIZ);
+        return scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
       },
       async persistSkinProfile() {
-        const result = scoreQuiz(quizAnswers, PLACEHOLDER_QUIZ);
+        const result = scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
         const completedAt = new Date().toISOString();
         // Local-first (D-029): record completion on-device FIRST so the entry
         // gate (app/index.tsx) recognizes this user as onboarded even if the

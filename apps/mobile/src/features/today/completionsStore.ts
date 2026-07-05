@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 import { localDateString } from './useToday';
 
 // Local-first daily check-off log (docs/03 §6: the activation + streak loop, and
@@ -23,7 +22,7 @@ export function stepKey(phase: 'AM' | 'PM', productId: string): string {
 
 async function load(): Promise<Log> {
   try {
-    const raw = await AsyncStorage.getItem(KEY);
+    const raw = await getPrivateItem(KEY);
     const parsed = raw ? (JSON.parse(raw) as Log) : {};
     return parsed && typeof parsed === 'object' ? parsed : {};
   } catch {
@@ -32,7 +31,7 @@ async function load(): Promise<Log> {
 }
 
 async function save(log: Log): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(log));
+  await setPrivateItem(KEY, JSON.stringify(log));
 }
 
 /** The step keys checked off on `date`. */
@@ -96,5 +95,5 @@ export async function getCountByDate(): Promise<Map<string, number>> {
 
 /** Test/seed reset. */
 export async function clearCompletions(): Promise<void> {
-  await AsyncStorage.removeItem(KEY);
+  await removePrivateItem(KEY);
 }

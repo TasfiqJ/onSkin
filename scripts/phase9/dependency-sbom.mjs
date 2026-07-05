@@ -8,11 +8,12 @@ const env = envSnapshot();
 block(errors, exists('package-lock.json'), 'package-lock.json is missing.');
 
 const lock = exists('package-lock.json') ? JSON.parse(read('package-lock.json')) : { packages: {} };
+const packageNameFromPath = (path) => path.replace(/^node_modules\//, '').replace(/^apps\/mobile\/node_modules\//, '');
 const packages = Object.entries(lock.packages ?? {})
   .filter(([name]) => name)
   .map(([name, meta]) => ({
     path: name,
-    name: name.replace(/^node_modules\//, '').replace(/^apps\/mobile\/node_modules\//, ''),
+    name: packageNameFromPath(name),
     version: meta.version ?? null,
     license: meta.license ?? null,
     resolved: meta.resolved ?? null,
@@ -22,7 +23,11 @@ const packages = Object.entries(lock.packages ?? {})
 let audit = null;
 if (env.PHASE9_RUN_NPM_AUDIT === 'true') {
   try {
-    audit = JSON.parse(command('npm', ['audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] }));
+    const npmExecPath = process.env.npm_execpath;
+    const auditJson = npmExecPath
+      ? command(process.execPath, [npmExecPath, 'audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] })
+      : command('npm', ['audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    audit = JSON.parse(auditJson);
   } catch (error) {
     const stdout = error?.stdout?.toString?.() ?? '';
     try {
@@ -41,6 +46,86 @@ if (vulnerabilities) {
   block(errors, (vulnerabilities.critical ?? 0) === 0, `npm audit found ${vulnerabilities.critical} critical vulnerabilities.`);
 }
 
+const installScriptAllowlist = new Map(
+  [
+    ['@sentry/cli@2.58.4', 'Sentry native CLI binary installer used by @sentry/react-native tooling.'],
+    ['fsevents@2.3.3', 'Optional Darwin file-watcher native package; not installed on non-Darwin CI runners.'],
+    ['unrs-resolver@1.12.2', 'ESLint resolver native binding installer used by lint tooling.'],
+  ].map(([key, reason]) => [key, reason]),
+);
+
+const installScriptPackages = Object.entries(lock.packages ?? {})
+  .filter(([path, meta]) => path && meta?.hasInstallScript)
+  .map(([path, meta]) => {
+    const name = packageNameFromPath(path);
+    const version = meta.version ?? 'unknown';
+    const key = `${name}@${version}`;
+    return {
+      path,
+      name,
+      version,
+      key,
+      dev: Boolean(meta.dev),
+      optional: Boolean(meta.optional),
+      license: meta.license ?? null,
+      allowed: installScriptAllowlist.has(key),
+      allowlistReason: installScriptAllowlist.get(key) ?? null,
+    };
+  })
+  .sort((a, b) => a.key.localeCompare(b.key));
+const unexpectedInstallScripts = installScriptPackages.filter((pkg) => !pkg.allowed);
+block(
+  errors,
+  unexpectedInstallScripts.length === 0,
+  `Unexpected dependency install scripts detected: ${unexpectedInstallScripts.map((pkg) => pkg.key).join(', ')}.`,
+);
+
+const cleanText = (value) =>
+  String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const summarizeVia = (via) =>
+  (via ?? [])
+    .map((item) => {
+      if (typeof item === 'string') {
+        return item;
+      }
+      const title = cleanText(item.title || item.name || item.dependency || item.source);
+      const range = item.range ? `(${item.range})` : '';
+      return cleanText(`${title} ${range}`);
+    })
+    .filter(Boolean);
+
+const summarizeFix = (fixAvailable) => {
+  if (fixAvailable === true) {
+    return 'available';
+  }
+  if (!fixAvailable) {
+    return 'none';
+  }
+  const major = fixAvailable.isSemVerMajor ? 'breaking' : 'non-breaking';
+  return cleanText(`${fixAvailable.name}@${fixAvailable.version} (${major})`);
+};
+
+const auditFindings = Object.values(audit?.vulnerabilities ?? {})
+  .map((finding) => ({
+    name: finding.name,
+    severity: finding.severity,
+    isDirect: Boolean(finding.isDirect),
+    range: finding.range ?? null,
+    via: summarizeVia(finding.via),
+    effects: finding.effects ?? [],
+    nodes: finding.nodes ?? [],
+    fixAvailable: summarizeFix(finding.fixAvailable),
+  }))
+  .sort((a, b) => `${a.severity}:${a.name}`.localeCompare(`${b.severity}:${b.name}`));
+
+const markdownCell = (value) => {
+  const text = Array.isArray(value) ? value.join(', ') : String(value ?? '');
+  return text.replace(/\|/g, '\\|') || '-';
+};
+
 warn(warnings, env.PHASE9_DEPENDENCY_AUDIT_PASS === 'true', 'Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.');
 
 const packet = {
@@ -49,6 +134,8 @@ const packet = {
   lockfileVersion: lock.lockfileVersion ?? null,
   packageCount: packages.length,
   vulnerabilities,
+  auditFindings,
+  installScriptPackages,
   packages,
   blockers: errors,
   warnings,
@@ -67,6 +154,30 @@ write(
     '## Vulnerabilities',
     '',
     vulnerabilities ? `\`${JSON.stringify(vulnerabilities)}\`` : '- npm audit not run in this invocation.',
+    '',
+    '## Audit Findings',
+    '',
+    auditFindings.length
+      ? '| Package | Severity | Direct | Via | Fix available | Nodes |\n| --- | --- | --- | --- | --- | --- |\n' +
+          auditFindings
+            .map(
+              (finding) =>
+                `| \`${markdownCell(finding.name)}\` | ${markdownCell(finding.severity)} | ${finding.isDirect ? 'yes' : 'no'} | ${markdownCell(finding.via)} | ${markdownCell(finding.fixAvailable)} | ${markdownCell(finding.nodes)} |`,
+            )
+            .join('\n')
+      : '- No npm audit findings recorded.',
+    '',
+    '## Install Scripts',
+    '',
+    installScriptPackages.length
+      ? '| Package | Dev | Optional | Allowed | Reason | Path |\n| --- | --- | --- | --- | --- | --- |\n' +
+          installScriptPackages
+            .map(
+              (pkg) =>
+                `| \`${markdownCell(pkg.key)}\` | ${pkg.dev ? 'yes' : 'no'} | ${pkg.optional ? 'yes' : 'no'} | ${pkg.allowed ? 'yes' : 'no'} | ${markdownCell(pkg.allowlistReason)} | ${markdownCell(pkg.path)} |`,
+            )
+            .join('\n')
+      : '- No dependency install scripts recorded in the lockfile.',
     '',
     '## Blockers',
     '',

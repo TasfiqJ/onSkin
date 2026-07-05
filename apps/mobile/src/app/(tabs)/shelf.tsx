@@ -1,8 +1,15 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View } from 'react-native';
 
-import { ConflictBanner, ExpiryBadge, Screen, SegmentChip, StripedThumb, Text } from '@/components/ui';
+import {
+  ConflictBanner,
+  ExpiryBadge,
+  Screen,
+  SegmentChip,
+  StripedThumb,
+  Text,
+} from '@/components/ui';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
@@ -14,6 +21,16 @@ import { colors } from '@/theme/tokens';
 // claim-safe. The cabinet that knows when to replace, never when to alarm.
 type Filter = 'all' | 'actives' | 'expiring';
 const ACTIVE_TAGS = new Set(['retinoid', 'aha', 'bha', 'benzoyl_peroxide', 'vitamin_c']);
+const SCAN_FAB_SHADOW =
+  Platform.OS === 'web'
+    ? { boxShadow: '0 8px 12px rgba(32, 27, 21, 0.25)' }
+    : {
+        shadowColor: '#201B15',
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 8 },
+        elevation: 6,
+      };
 
 const SUBHEAD: Record<Filter, string> = {
   all: 'Everything on your shelf, soonest to replace first.',
@@ -40,7 +57,8 @@ function ProductCard({ item }: { item: ShelfItem }) {
         { borderWidth: 1, borderColor: attention ? 'rgba(176,122,60,0.45)' : colors.hairline },
         pressed ? { opacity: 0.85 } : null,
       ]}
-      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4">
+      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4"
+    >
       <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
       <View className="flex-1">
         <Text variant="body" className="font-sans-semibold">
@@ -62,7 +80,8 @@ function ProductCard({ item }: { item: ShelfItem }) {
             onPress={() => {
               haptics.select();
               router.push(`/shelf/replenish?id=${item.id}`);
-            }}>
+            }}
+          >
             <Text variant="bodySm" tone="clay" className="font-sans-semibold">
               Replace →
             </Text>
@@ -100,7 +119,8 @@ function EmptyShelf() {
             haptics.select();
             router.push('/shelf/scan');
           }}
-          className="h-14 items-center justify-center rounded-pill bg-ink">
+          className="h-14 items-center justify-center rounded-pill bg-ink"
+        >
           <Text className="font-sans-semibold text-[16px] text-paper">Scan a barcode</Text>
         </Pressable>
         <Pressable
@@ -109,7 +129,8 @@ function EmptyShelf() {
             haptics.select();
             router.push('/shelf/manual');
           }}
-          className="h-[50px] items-center justify-center">
+          className="h-[50px] items-center justify-center"
+        >
           <Text className="font-sans-semibold text-[15px]" tone="muted">
             Add by hand
           </Text>
@@ -123,11 +144,15 @@ function SkeletonCard() {
   return (
     <View
       className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
       <StripedThumb size={50} radius={14} />
       <View className="flex-1 gap-2">
         <View className="h-3.5 w-2/3 rounded-[5px]" style={{ backgroundColor: colors.greige }} />
-        <View className="h-2.5 w-1/2 rounded-[5px]" style={{ backgroundColor: colors.greigeChip }} />
+        <View
+          className="h-2.5 w-1/2 rounded-[5px]"
+          style={{ backgroundColor: colors.greigeChip }}
+        />
       </View>
     </View>
   );
@@ -165,8 +190,7 @@ export default function ShelfScreen() {
   const archiveCount = data?.archive.length ?? 0;
   const filtered = items.filter((i) => {
     if (filter === 'actives') return i.engineProduct.tags.some((t) => ACTIVE_TAGS.has(t));
-    if (filter === 'expiring')
-      return i.badge.kind === 'countdown' || i.badge.kind === 'expired';
+    if (filter === 'expiring') return i.badge.kind === 'countdown' || i.badge.kind === 'expired';
     return true;
   });
 
@@ -248,7 +272,8 @@ export default function ShelfScreen() {
               onPress={() => {
                 haptics.select();
                 router.push('/shelf/archive');
-              }}>
+              }}
+            >
               <Text variant="label" tone="muted">
                 View archive ({archiveCount}) →
               </Text>
@@ -265,17 +290,9 @@ export default function ShelfScreen() {
               haptics.select();
               router.push('/shelf/scan');
             }}
-            style={({ pressed }) => [
-              {
-                shadowColor: '#201B15',
-                shadowOpacity: 0.25,
-                shadowRadius: 12,
-                shadowOffset: { width: 0, height: 8 },
-                elevation: 6,
-              },
-              pressed ? { opacity: 0.9 } : null,
-            ]}
-            className="rounded-pill bg-ink px-7 py-3.5">
+            style={({ pressed }) => [SCAN_FAB_SHADOW, pressed ? { opacity: 0.9 } : null]}
+            className="rounded-pill bg-ink px-7 py-3.5"
+          >
             <Text className="font-sans-semibold text-[15px] text-paper">Scan a barcode</Text>
           </Pressable>
         </View>

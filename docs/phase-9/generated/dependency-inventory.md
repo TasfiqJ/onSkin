@@ -1,12 +1,39 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-04T17:19:49.728Z
-Package count: 1124
+Generated: 2026-07-05T21:07:43.009Z
+Package count: 1071
 Lockfile version: 3
 
 ## Vulnerabilities
 
-- npm audit not run in this invocation.
+`{"info":0,"low":0,"moderate":14,"high":0,"critical":0,"total":14}`
+
+## Audit Findings
+
+| Package | Severity | Direct | Via | Fix available | Nodes |
+| --- | --- | --- | --- | --- | --- |
+| `@expo/cli` | moderate | no | @expo/config, @expo/config-plugins, @expo/inline-modules, @expo/metro-config, @expo/prebuild-config | expo@46.0.21 (breaking) | node_modules/@expo/cli |
+| `@expo/config` | moderate | no | @expo/config-plugins | expo@46.0.21 (breaking) | node_modules/@expo/config |
+| `@expo/config-plugins` | moderate | no | xcode | expo-splash-screen@55.0.22 (breaking) | node_modules/@expo/config-plugins |
+| `@expo/inline-modules` | moderate | no | @expo/config-plugins | expo@46.0.21 (breaking) | node_modules/@expo/inline-modules |
+| `@expo/local-build-cache-provider` | moderate | no | @expo/config | expo@46.0.21 (breaking) | node_modules/@expo/local-build-cache-provider |
+| `@expo/metro-config` | moderate | no | @expo/config | expo@46.0.21 (breaking) | node_modules/@expo/metro-config |
+| `@expo/prebuild-config` | moderate | no | @expo/config, @expo/config-plugins | available | node_modules/@expo/prebuild-config |
+| `@react-native-google-signin/google-signin` | moderate | yes | expo | @react-native-google-signin/google-signin@8.2.2 (breaking) | node_modules/@react-native-google-signin/google-signin |
+| `@sentry/react-native` | moderate | yes | expo | @sentry/react-native@5.15.2 (breaking) | node_modules/@sentry/react-native |
+| `expo` | moderate | yes | @expo/cli, @expo/config, @expo/config-plugins, @expo/local-build-cache-provider, @expo/metro-config | expo@46.0.21 (breaking) | node_modules/expo |
+| `expo-sharing` | moderate | yes | @expo/config-plugins | expo-sharing@14.0.8 (breaking) | node_modules/expo-sharing |
+| `expo-splash-screen` | moderate | yes | @expo/config-plugins | expo-splash-screen@55.0.22 (breaking) | node_modules/expo-splash-screen |
+| `uuid` | moderate | no | uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided (<11.1.1) | expo-splash-screen@55.0.22 (breaking) | node_modules/uuid |
+| `xcode` | moderate | no | uuid | expo-splash-screen@55.0.22 (breaking) | node_modules/xcode |
+
+## Install Scripts
+
+| Package | Dev | Optional | Allowed | Reason | Path |
+| --- | --- | --- | --- | --- | --- |
+| `@sentry/cli@2.58.4` | no | no | yes | Sentry native CLI binary installer used by @sentry/react-native tooling. | node_modules/@sentry/cli |
+| `fsevents@2.3.3` | yes | yes | yes | Optional Darwin file-watcher native package; not installed on non-Darwin CI runners. | node_modules/fsevents |
+| `unrs-resolver@1.12.2` | yes | no | yes | ESLint resolver native binding installer used by lint tooling. | node_modules/unrs-resolver |
 
 ## Blockers
 
@@ -14,12 +41,12 @@ Lockfile version: 3
 
 ## Warnings
 
-- npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
 - Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.
 
 ## Packages
 
 - `apps/mobile` 0.1.0
+- `expo-store-review` 56.0.3
 - `@adobe/css-tools` 4.5.0
 - `@alloc/quick-lru` 5.2.0
 - `@babel/code-frame` 7.29.7
@@ -80,10 +107,7 @@ Lockfile version: 3
 - `@babel/plugin-transform-react-display-name` 7.29.7
 - `@babel/plugin-transform-react-jsx` 7.29.7
 - `@babel/plugin-transform-react-jsx-development` 7.29.7
-- `@babel/plugin-transform-react-jsx-self` 7.29.7
-- `@babel/plugin-transform-react-jsx-source` 7.29.7
 - `@babel/plugin-transform-react-pure-annotations` 7.29.7
-- `@babel/plugin-transform-regenerator` 7.29.7
 - `@babel/plugin-transform-runtime` 7.29.7
 - `@babel/plugin-transform-shorthand-properties` 7.29.7
 - `@babel/plugin-transform-template-literals` 7.29.7
@@ -98,32 +122,6 @@ Lockfile version: 3
 - `@emnapi/core` 1.10.0
 - `@emnapi/runtime` 1.10.0
 - `@emnapi/wasi-threads` 1.2.1
-- `@esbuild/aix-ppc64` 0.27.7
-- `@esbuild/android-arm` 0.27.7
-- `@esbuild/android-arm64` 0.27.7
-- `@esbuild/android-x64` 0.27.7
-- `@esbuild/darwin-arm64` 0.27.7
-- `@esbuild/darwin-x64` 0.27.7
-- `@esbuild/freebsd-arm64` 0.27.7
-- `@esbuild/freebsd-x64` 0.27.7
-- `@esbuild/linux-arm` 0.27.7
-- `@esbuild/linux-arm64` 0.27.7
-- `@esbuild/linux-ia32` 0.27.7
-- `@esbuild/linux-loong64` 0.27.7
-- `@esbuild/linux-mips64el` 0.27.7
-- `@esbuild/linux-ppc64` 0.27.7
-- `@esbuild/linux-riscv64` 0.27.7
-- `@esbuild/linux-s390x` 0.27.7
-- `@esbuild/linux-x64` 0.27.7
-- `@esbuild/netbsd-arm64` 0.27.7
-- `@esbuild/netbsd-x64` 0.27.7
-- `@esbuild/openbsd-arm64` 0.27.7
-- `@esbuild/openbsd-x64` 0.27.7
-- `@esbuild/openharmony-arm64` 0.27.7
-- `@esbuild/sunos-x64` 0.27.7
-- `@esbuild/win32-arm64` 0.27.7
-- `@esbuild/win32-ia32` 0.27.7
-- `@esbuild/win32-x64` 0.27.7
 - `@eslint-community/eslint-utils` 4.9.1
 - `@eslint-community/eslint-utils/node_modules/eslint-visitor-keys` 3.4.3
 - `@eslint-community/regexpp` 4.12.2
@@ -138,6 +136,11 @@ Lockfile version: 3
 - `@expo-google-fonts/ibm-plex-mono` 0.4.1
 - `@expo-google-fonts/instrument-serif` 0.4.1
 - `@expo-google-fonts/material-symbols` 0.4.38
+- `@expo/cli` 56.1.18
+- `@expo/cli/node_modules/@expo/env` 2.3.1
+- `@expo/cli/node_modules/@expo/router-server` 56.0.15
+- `@expo/cli/node_modules/semver` 7.8.5
+- `@expo/cli/node_modules/zod` 3.25.76
 - `@expo/code-signing-certificates` 0.0.6
 - `@expo/config` 56.0.11
 - `@expo/config-plugins` 56.0.11
@@ -194,7 +197,7 @@ Lockfile version: 3
 - `@jridgewell/source-map` 0.3.11
 - `@jridgewell/sourcemap-codec` 1.5.5
 - `@jridgewell/trace-mapping` 0.3.31
-- `@napi-rs/wasm-runtime` 1.1.5
+- `@napi-rs/wasm-runtime` 1.1.6
 - `@noble/ciphers` 2.2.0
 - `@nodelib/fs.scandir` 2.1.5
 - `@nodelib/fs.stat` 2.0.5
@@ -202,6 +205,7 @@ Lockfile version: 3
 - `@nolyfill/is-core-module` 1.0.39
 - `@onskin/mobile` unknown
 - `@onskin/types` unknown
+- `@oxc-project/types` 0.138.0
 - `@posthog/core` 1.39.6
 - `@posthog/types` 1.392.1
 - `@radix-ui/primitive` 1.1.4
@@ -237,7 +241,6 @@ Lockfile version: 3
 - `@react-native-masked-view/masked-view` 0.3.2
 - `@react-native/assets-registry` 0.85.3
 - `@react-native/babel-plugin-codegen` 0.85.3
-- `@react-native/babel-preset` 0.85.3
 - `@react-native/codegen` 0.85.3
 - `@react-native/community-cli-plugin` 0.85.3
 - `@react-native/community-cli-plugin/node_modules/semver` 7.8.4
@@ -247,38 +250,30 @@ Lockfile version: 3
 - `@react-native/dev-middleware/node_modules/ws` 7.5.11
 - `@react-native/gradle-plugin` 0.85.3
 - `@react-native/js-polyfills` 0.85.3
-- `@react-native/metro-babel-transformer` 0.85.3
-- `@react-native/metro-config` 0.85.3
 - `@react-native/normalize-colors` 0.85.3
 - `@react-native/virtualized-lists` 0.85.3
 - `@revenuecat/purchases-js` 1.46.0
 - `@revenuecat/purchases-js-hybrid-mappings` 18.18.0
 - `@revenuecat/purchases-typescript-internal` 18.18.0
-- `@rollup/rollup-android-arm-eabi` 4.61.1
-- `@rollup/rollup-android-arm64` 4.61.1
-- `@rollup/rollup-darwin-arm64` 4.61.1
-- `@rollup/rollup-darwin-x64` 4.61.1
-- `@rollup/rollup-freebsd-arm64` 4.61.1
-- `@rollup/rollup-freebsd-x64` 4.61.1
-- `@rollup/rollup-linux-arm-gnueabihf` 4.61.1
-- `@rollup/rollup-linux-arm-musleabihf` 4.61.1
-- `@rollup/rollup-linux-arm64-gnu` 4.61.1
-- `@rollup/rollup-linux-arm64-musl` 4.61.1
-- `@rollup/rollup-linux-loong64-gnu` 4.61.1
-- `@rollup/rollup-linux-loong64-musl` 4.61.1
-- `@rollup/rollup-linux-ppc64-gnu` 4.61.1
-- `@rollup/rollup-linux-ppc64-musl` 4.61.1
-- `@rollup/rollup-linux-riscv64-gnu` 4.61.1
-- `@rollup/rollup-linux-riscv64-musl` 4.61.1
-- `@rollup/rollup-linux-s390x-gnu` 4.61.1
-- `@rollup/rollup-linux-x64-gnu` 4.61.1
-- `@rollup/rollup-linux-x64-musl` 4.61.1
-- `@rollup/rollup-openbsd-x64` 4.61.1
-- `@rollup/rollup-openharmony-arm64` 4.61.1
-- `@rollup/rollup-win32-arm64-msvc` 4.61.1
-- `@rollup/rollup-win32-ia32-msvc` 4.61.1
-- `@rollup/rollup-win32-x64-gnu` 4.61.1
-- `@rollup/rollup-win32-x64-msvc` 4.61.1
+- `@rolldown/binding-android-arm64` 1.1.4
+- `@rolldown/binding-darwin-arm64` 1.1.4
+- `@rolldown/binding-darwin-x64` 1.1.4
+- `@rolldown/binding-freebsd-x64` 1.1.4
+- `@rolldown/binding-linux-arm-gnueabihf` 1.1.4
+- `@rolldown/binding-linux-arm64-gnu` 1.1.4
+- `@rolldown/binding-linux-arm64-musl` 1.1.4
+- `@rolldown/binding-linux-ppc64-gnu` 1.1.4
+- `@rolldown/binding-linux-s390x-gnu` 1.1.4
+- `@rolldown/binding-linux-x64-gnu` 1.1.4
+- `@rolldown/binding-linux-x64-musl` 1.1.4
+- `@rolldown/binding-openharmony-arm64` 1.1.4
+- `@rolldown/binding-wasm32-wasi` 1.1.4
+- `@rolldown/binding-wasm32-wasi/node_modules/@emnapi/core` 1.11.1
+- `@rolldown/binding-wasm32-wasi/node_modules/@emnapi/runtime` 1.11.1
+- `@rolldown/binding-wasm32-wasi/node_modules/@emnapi/wasi-threads` 1.2.2
+- `@rolldown/binding-win32-arm64-msvc` 1.1.4
+- `@rolldown/binding-win32-x64-msvc` 1.1.4
+- `@rolldown/pluginutils` 1.0.1
 - `@rtsao/scc` 1.1.0
 - `@sentry-internal/browser-utils` 10.37.0
 - `@sentry-internal/feedback` 10.37.0
@@ -302,6 +297,7 @@ Lockfile version: 3
 - `@sentry/react-native` 7.11.0
 - `@sentry/types` 10.37.0
 - `@sinclair/typebox` 0.27.10
+- `@standard-schema/spec` 1.1.0
 - `@supabase/auth-js` 2.108.1
 - `@supabase/functions-js` 2.108.1
 - `@supabase/phoenix` 0.4.2
@@ -311,10 +307,6 @@ Lockfile version: 3
 - `@supabase/supabase-js` 2.108.1
 - `@tanstack/query-core` 5.101.0
 - `@tanstack/react-query` 5.101.0
-- `@testing-library/dom` 10.4.1
-- `@testing-library/dom/node_modules/ansi-styles` 5.2.0
-- `@testing-library/dom/node_modules/pretty-format` 27.5.1
-- `@testing-library/dom/node_modules/react-is` 17.0.2
 - `@testing-library/jest-dom` 6.9.1
 - `@testing-library/jest-dom/node_modules/dom-accessibility-api` 0.6.3
 - `@testing-library/user-event` 14.6.1
@@ -324,9 +316,8 @@ Lockfile version: 3
 - `@turbo/linux-arm64` 2.9.18
 - `@turbo/windows-64` 2.9.18
 - `@turbo/windows-arm64` 2.9.18
-- `@tybys/wasm-util` 0.10.2
+- `@tybys/wasm-util` 0.10.3
 - `@types/aes-js` 3.1.4
-- `@types/aria-query` 5.0.4
 - `@types/chai` 5.2.3
 - `@types/deep-eql` 4.0.2
 - `@types/emscripten` 1.41.5
@@ -381,13 +372,13 @@ Lockfile version: 3
 - `@unrs/resolver-binding-win32-arm64-msvc` 1.12.2
 - `@unrs/resolver-binding-win32-ia32-msvc` 1.12.2
 - `@unrs/resolver-binding-win32-x64-msvc` 1.12.2
-- `@vitest/expect` 3.2.6
-- `@vitest/mocker` 3.2.6
-- `@vitest/pretty-format` 3.2.6
-- `@vitest/runner` 3.2.6
-- `@vitest/snapshot` 3.2.6
-- `@vitest/spy` 3.2.6
-- `@vitest/utils` 3.2.6
+- `@vitest/expect` 4.1.9
+- `@vitest/mocker` 4.1.9
+- `@vitest/pretty-format` 4.1.9
+- `@vitest/runner` 4.1.9
+- `@vitest/snapshot` 4.1.9
+- `@vitest/spy` 4.1.9
+- `@vitest/utils` 4.1.9
 - `@xmldom/xmldom` 0.8.13
 - `abort-controller` 3.0.0
 - `accepts` 1.3.8
@@ -447,7 +438,6 @@ Lockfile version: 3
 - `buffer` 5.7.1
 - `buffer-from` 1.1.2
 - `bytes` 3.1.2
-- `cac` 6.7.14
 - `call-bind` 1.0.9
 - `call-bind-apply-helpers` 1.0.2
 - `call-bound` 1.0.4
@@ -455,9 +445,8 @@ Lockfile version: 3
 - `camelcase` 6.3.0
 - `camelcase-css` 2.0.1
 - `caniuse-lite` 1.0.30001799
-- `chai` 5.3.3
+- `chai` 6.2.2
 - `chalk` 4.1.2
-- `check-error` 2.1.3
 - `chokidar` 3.6.0
 - `chokidar/node_modules/glob-parent` 5.1.2
 - `chrome-launcher` 0.15.2
@@ -498,7 +487,6 @@ Lockfile version: 3
 - `data-view-byte-offset` 1.0.1
 - `debug` 4.4.3
 - `decode-uri-component` 0.2.2
-- `deep-eql` 5.0.2
 - `deep-is` 0.1.4
 - `deepmerge` 4.3.1
 - `defaults` 1.0.4
@@ -513,7 +501,6 @@ Lockfile version: 3
 - `dlv` 1.1.3
 - `dnssd-advertise` 1.1.6
 - `doctrine` 2.1.0
-- `dom-accessibility-api` 0.5.16
 - `dunder-proto` 1.0.1
 - `ee-first` 1.1.1
 - `electron-to-chromium` 1.5.372
@@ -524,12 +511,11 @@ Lockfile version: 3
 - `es-define-property` 1.0.1
 - `es-errors` 1.3.0
 - `es-iterator-helpers` 1.3.3
-- `es-module-lexer` 1.7.0
+- `es-module-lexer` 2.3.0
 - `es-object-atoms` 1.1.2
 - `es-set-tostringtag` 2.1.0
 - `es-shim-unscopables` 1.1.0
 - `es-to-primitive` 1.3.0
-- `esbuild` 0.27.7
 - `escalade` 3.2.0
 - `escape-html` 1.0.3
 - `escape-string-regexp` 4.0.0
@@ -597,16 +583,10 @@ Lockfile version: 3
 - `expo-sharing` 56.0.20
 - `expo-splash-screen` 56.0.12
 - `expo-status-bar` 56.0.4
-- `expo-store-review` 57.0.0
 - `expo-symbols` 56.0.6
 - `expo-system-ui` 56.0.5
 - `expo-updates-interface` 56.0.2
 - `expo-web-browser` 56.0.5
-- `expo/node_modules/@expo/cli` 56.1.18
-- `expo/node_modules/@expo/cli/node_modules/@expo/router-server` 56.0.15
-- `expo/node_modules/@expo/env` 2.3.1
-- `expo/node_modules/semver` 7.8.5
-- `expo/node_modules/zod` 3.25.76
 - `exponential-backoff` 3.1.3
 - `fast-base64-decode` 1.0.0
 - `fast-deep-equal` 3.1.3
@@ -778,9 +758,7 @@ Lockfile version: 3
 - `log-symbols/node_modules/has-flag` 3.0.0
 - `log-symbols/node_modules/supports-color` 5.5.0
 - `loose-envify` 1.4.0
-- `loupe` 3.2.1
 - `lru-cache` 5.1.1
-- `lz-string` 1.5.0
 - `magic-string` 0.30.21
 - `makeerror` 1.0.12
 - `marky` 1.3.0
@@ -851,6 +829,7 @@ Lockfile version: 3
 - `object.fromentries` 2.0.8
 - `object.groupby` 1.0.3
 - `object.values` 1.2.1
+- `obug` 2.1.3
 - `on-finished` 2.3.0
 - `on-headers` 1.1.0
 - `onetime` 2.0.1
@@ -876,7 +855,6 @@ Lockfile version: 3
 - `path-scurry` 2.0.2
 - `path-scurry/node_modules/lru-cache` 11.5.1
 - `pathe` 2.0.3
-- `pathval` 2.0.1
 - `picocolors` 1.1.1
 - `picomatch` 4.0.4
 - `pify` 2.3.0
@@ -885,7 +863,7 @@ Lockfile version: 3
 - `plist/node_modules/@xmldom/xmldom` 0.9.10
 - `pngjs` 3.4.0
 - `possible-typed-array-names` 1.1.0
-- `postcss` 8.5.15
+- `postcss` 8.5.16
 - `postcss-import` 15.1.0
 - `postcss-js` 4.1.0
 - `postcss-load-config` 6.0.1
@@ -974,7 +952,7 @@ Lockfile version: 3
 - `resolve-workspace-root` 2.0.1
 - `restore-cursor` 2.0.0
 - `reusify` 1.1.0
-- `rollup` 4.61.1
+- `rolldown` 1.1.4
 - `rtl-detect` 1.1.2
 - `run-parallel` 1.2.0
 - `safe-array-concat` 1.1.4
@@ -1026,7 +1004,7 @@ Lockfile version: 3
 - `stacktrace-parser` 0.1.11
 - `standard-navigation` 0.0.5
 - `statuses` 1.5.0
-- `std-env` 3.10.0
+- `std-env` 4.1.0
 - `stop-iteration-iterator` 1.1.0
 - `stream-buffers` 2.2.0
 - `strict-uri-encode` 2.0.0
@@ -1042,8 +1020,6 @@ Lockfile version: 3
 - `strip-bom` 3.0.0
 - `strip-indent` 3.0.0
 - `strip-json-comments` 3.1.1
-- `strip-literal` 3.1.0
-- `strip-literal/node_modules/js-tokens` 9.0.1
 - `structured-headers` 0.4.1
 - `styleq` 0.1.3
 - `sucrase` 3.35.1
@@ -1061,11 +1037,9 @@ Lockfile version: 3
 - `thenify-all` 1.6.0
 - `throat` 5.0.0
 - `tinybench` 2.9.0
-- `tinyexec` 0.3.2
+- `tinyexec` 1.2.4
 - `tinyglobby` 0.2.17
-- `tinypool` 1.1.1
-- `tinyrainbow` 2.0.0
-- `tinyspy` 4.0.4
+- `tinyrainbow` 3.1.0
 - `tmpl` 1.0.5
 - `to-regex-range` 5.0.1
 - `toidentifier` 1.0.1
@@ -1105,9 +1079,8 @@ Lockfile version: 3
 - `validate-npm-package-name` 5.0.1
 - `vary` 1.1.2
 - `vaul` 1.1.2
-- `vite` 7.3.5
-- `vite-node` 3.2.4
-- `vitest` 3.2.6
+- `vite` 8.1.3
+- `vitest` 4.1.9
 - `vlq` 1.0.1
 - `walker` 1.0.8
 - `warn-once` 0.1.1

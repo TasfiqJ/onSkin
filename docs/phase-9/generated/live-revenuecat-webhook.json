@@ -1,0 +1,10 @@
+{
+  "status": "not-run",
+  "appEnvironment": "production",
+  "supabaseHost": "your-project-ref.supabase.co",
+  "checks": [],
+  "warnings": [
+    "Live RevenueCat webhook harness not run; set PHASE9_RUN_LIVE_REVENUECAT_WEBHOOK=true with staging credentials."
+  ],
+  "errors": []
+}
