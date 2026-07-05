@@ -8,6 +8,7 @@ import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
 import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionStore';
 import { track } from '@/lib/analytics/track';
+import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -48,7 +49,7 @@ export default function NoteDetail() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
           style={{ borderWidth: 1, borderColor: colors.hairline }}>
           <Text style={{ color: colors.ink }}>‹</Text>

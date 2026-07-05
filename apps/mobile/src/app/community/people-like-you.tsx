@@ -5,6 +5,7 @@ import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 05 · "People like you" (docs/11 §9.4, design 05). Phase 2+. Structured, anonymised
@@ -13,7 +14,8 @@ import { colors } from '@/theme/tokens';
 // never a list of individuals, never a comparison ranking, never a photo. The aggregate
 // shown is an illustrative placeholder until peer density exists (B-COMMUNITY-MOD).
 export default function PeopleLikeYouScreen() {
-  if (!phase7Flags.communityPosting) return <DeferredSurface surface="communityPosting" />;
+  if (!phase7Flags.communityPosting)
+    return <DeferredSurface surface="communityPosting" fallbackRoute={APP_COMMUNITY_ROUTE} />;
 
   return (
     <Screen edges={['top']}>
@@ -22,7 +24,7 @@ export default function PeopleLikeYouScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Back"
-            onPress={() => router.back()}
+            onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
             className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
             style={{ borderWidth: 1, borderColor: colors.hairline }}>
             <Text style={{ color: colors.ink }}>‹</Text>

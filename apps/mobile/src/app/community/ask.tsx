@@ -12,6 +12,7 @@ import { COMMUNITY_COPY } from '@/features/community/copy';
 import { useCommunityGate } from '@/features/community/useCommunity';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -98,7 +99,11 @@ function ConsentGate() {
           {COMMUNITY_COPY.consent.cta}
         </Text>
       </Pressable>
-      <Pressable accessibilityRole="button" onPress={() => router.back()} className="h-[42px] items-center justify-center">
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
+        className="h-[42px] items-center justify-center"
+      >
         <Text className="font-sans-semibold text-[15px]" tone="muted">
           {COMMUNITY_COPY.consent.decline}
         </Text>
@@ -205,7 +210,8 @@ function Composer() {
 export default function AskScreen() {
   const { data: gate } = useCommunityGate();
 
-  if (!phase7Flags.communityPosting) return <DeferredSurface surface="communityPosting" />;
+  if (!phase7Flags.communityPosting)
+    return <DeferredSurface surface="communityPosting" fallbackRoute={APP_COMMUNITY_ROUTE} />;
 
   return (
     <Screen edges={['top']}>
@@ -214,7 +220,7 @@ export default function AskScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Back"
-            onPress={() => router.back()}
+            onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
             className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
             style={{ borderWidth: 1, borderColor: colors.hairline }}>
             <Text style={{ color: colors.ink }}>‹</Text>

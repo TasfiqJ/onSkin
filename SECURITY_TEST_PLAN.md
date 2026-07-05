@@ -120,7 +120,7 @@
   - Proves unavailable store pricing displays as `Price unavailable`, never as a slash-period billed amount.
 - `apps/mobile/src/lib/navigation/safeBack.test.ts`
   - Proves direct-entry screens replace to a safe app route when no history exists.
-  - Proves route-specific fallbacks can return Shelf, Progress, You, recommendations, and commerce-stack flows to their owning routes.
+  - Proves route-specific fallbacks can return Shelf, Progress, You, recommendations, commerce-stack, community, and trend-opt-in flows to their owning routes.
 - `apps/mobile/src/features/subscription/dismissPaywall.test.ts`
   - Proves paywall dismiss keeps native back behavior when history exists.
   - Proves direct-entry paywalls replace to the Today route instead of a dead-end history state.
@@ -128,12 +128,16 @@
   - Proves scheduler and routine Pro-gated routes do not reintroduce raw history-back exits.
 - `apps/mobile/src/features/commerce/commerceRoutes.test.ts`
   - Proves commerce consent, transparency, stack list, stack detail, and deferred-commerce route exits recover to You or the commerce stack list instead of raw history back.
+- `apps/mobile/src/features/community/communityRoutes.test.ts`
+  - Proves the community hub returns direct-entry users to You, while nested community posting/notes routes return to the community hub, including deferred posting states.
 - `apps/mobile/src/features/intelligence/conflictRoutes.test.ts`
   - Proves conflict detail and share-card route exits recover direct-entry users to Shelf, including deferred share-card states.
 - `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`
   - Proves the For You hub returns direct-entry users to You, while nested recommendation detail/preference routes return to the recommendations hub.
 - `apps/mobile/src/features/settings/settingsRoutes.test.ts`
   - Proves subscription, notification, and timing settings exits recover direct-entry users to the You tab.
+- `apps/mobile/src/features/trend/trendRoutes.test.ts`
+  - Proves Trend opt-in and deferred Trend direct entries recover to Progress, and the nested fairness explainer recovers to the Trend opt-in route.
 - `apps/mobile/src/features/today/useToday.test.ts`
   - Proves the Today header uses local date/time helpers instead of hard-coded design-placeholder clock copy.
 - `scripts/phase9/release-smoke.mjs`

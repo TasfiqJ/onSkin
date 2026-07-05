@@ -41,7 +41,7 @@
 - SEC-P2-048: Paywall and ProGate pricing now use a shared display helper and explicit unavailable offering state, so missing Store/RevenueCat pricing cannot render as a billable slash-period amount.
 - SEC-P2-049: Ask, deferred, shelf, progress-capture, and paywall direct-entry Back/Close controls now replace to a safe app surface when no navigation history exists.
 - SEC-P2-050: Public growth attribution now ignores malformed encoded query pairs on mobile and enforces the same URL-safe opaque `share_id` contract in the waitlist/growth-event service-role endpoints.
-- SEC-P2-051: Scheduler, routine, commerce, conflict/share-card, recommendations, and settings direct-entry exits now use safe tab fallbacks instead of raw history back behavior, with remaining community/trend route exits and the shared `Sheet` default tracked for follow-up.
+- SEC-P2-051: Scheduler, routine, commerce, community, conflict/share-card, recommendations, settings, and trend direct-entry exits now use safe tab fallbacks instead of raw history back behavior, with the shared `Sheet` default tracked for follow-up.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.
@@ -101,7 +101,7 @@
 ## Backlog hardening
 
 - Keep the live Supabase harness aligned with every new user-owned table/RPC as features move from local-first to server sync.
-- Continue direct-entry recovery hardening for the remaining community and trend routes plus the shared `Sheet` default that still contain raw `router.back()` controls.
+- Continue direct-entry recovery hardening for the shared `Sheet` default that still contains raw `router.back()` behavior when no explicit close handler is provided.
 - Add a Supabase CLI job once project linking and migration credentials exist.
 - Add Edge Function unit tests for RevenueCat signature helper behavior if Deno test harness is introduced.
 - Expand RevenueCat evidence to dashboard timeline screenshots and native StoreKit/Play Billing purchase/restore/refund/cancel/renewal scenarios.

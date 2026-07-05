@@ -4,6 +4,8 @@ export const APP_PROGRESS_ROUTE = '/(tabs)/progress' as const;
 export const APP_YOU_ROUTE = '/(tabs)/you' as const;
 export const APP_RECOMMENDATIONS_ROUTE = '/recommendations' as const;
 export const APP_COMMERCE_STACKS_ROUTE = '/commerce/stacks' as const;
+export const APP_TREND_OPTIN_ROUTE = '/trend/optin' as const;
+export const APP_COMMUNITY_ROUTE = '/community' as const;
 
 export type AppFallbackRoute =
   | typeof APP_HOME_ROUTE
@@ -11,7 +13,9 @@ export type AppFallbackRoute =
   | typeof APP_PROGRESS_ROUTE
   | typeof APP_YOU_ROUTE
   | typeof APP_RECOMMENDATIONS_ROUTE
-  | typeof APP_COMMERCE_STACKS_ROUTE;
+  | typeof APP_COMMERCE_STACKS_ROUTE
+  | typeof APP_TREND_OPTIN_ROUTE
+  | typeof APP_COMMUNITY_ROUTE;
 
 export type BackOrReplaceRouter = {
   canGoBack: () => boolean;

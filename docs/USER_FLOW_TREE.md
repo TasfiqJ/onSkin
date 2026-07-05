@@ -282,6 +282,45 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history.
   - Evidence: Screenshot sequence and visible route snapshot.
 
+## Flow: Photo Trend Insights
+
+- Goal: A user can review or opt into on-device "changes in your own photos" without score-like claims, silent enrollment, or direct-entry dead ends.
+- Persona: Progress user deciding whether to enable optional photo trend narration.
+- Entry state: User has completed onboarding; photo trend feature flag may be enabled or deferred.
+- Start screen/URL/window: Progress tab, You privacy row, direct `/trend/optin`, direct `/trend/fairness`, or deferred Trend routes.
+- Success state: Trend remains off by default, copy stays claim-safe and fairness-aware, and direct-entry exits recover to the photo-progress parent flow.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web for route recovery; iOS and Android for native photo/toggle confirmation.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/trend-routes/`
+
+### Path A: Optional Opt-In
+
+1. Action: Open `/trend/optin`, read the consent framing, toggle the setting on and off, open the fairness explainer, then return.
+   Expected result: Consent is separate and revocable, the feature is off by default, no photo is uploaded, and fairness copy avoids score or diagnostic language.
+   Evidence: Screenshot sequence and local trend-consent state.
+
+### Branches
+
+- Branch: direct-entry Trend exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/trend/optin` and `/trend/fairness` directly, then use the visible Back control. Repeat while the Trend feature flag is deferred.
+  - Expected result: Direct opt-in and deferred Trend routes return to the Progress tab; the nested fairness explainer returns to `/trend/optin` instead of a no-history dead end.
+  - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: installed-base reconsent
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Simulate a returning user with photo history but no `photo_trend_insights` consent.
+  - Expected result: Trend insight stays hidden until the user explicitly opts in; no previous photo user is silently enrolled.
+  - Evidence: Screenshot and local consent state.
+- Branch: fairness floor copy
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the fairness explainer across light, unknown, and darker Monk tone fixtures.
+  - Expected result: The threshold framing is equal-or-higher for darker tones, redness is not treated as the metric, and no "works for everyone" claim appears.
+  - Evidence: Screenshot or visible-text snapshot.
+
 ## Flow: Pro Feature Gating
 
 - Goal: A free user cannot reach Pro-only surfaces by direct navigation, while a Pro or reverse-trial user can.

@@ -4,6 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useMonkBand } from '@/features/trend/useTrend';
+import { APP_TREND_OPTIN_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 05 · The fairness floor (docs/12 §7, design 05). Monk scale (never Fitzpatrick),
@@ -15,7 +16,10 @@ const MONK_SWATCHES = ['#F4E3D2', '#E9CBAA', '#D2A77E', '#B07E52', '#8A5A36', '#
 export default function FairnessScreen() {
   const { data: monkBand } = useMonkBand();
   // Map Monk 1-10 onto the 7-swatch illustrative row.
-  const activeIdx = monkBand == null ? -1 : Math.min(MONK_SWATCHES.length - 1, Math.floor(((monkBand - 1) / 9) * MONK_SWATCHES.length));
+  const activeIdx =
+    monkBand == null
+      ? -1
+      : Math.min(MONK_SWATCHES.length - 1, Math.floor(((monkBand - 1) / 9) * MONK_SWATCHES.length));
 
   return (
     <Screen edges={['top']}>
@@ -23,9 +27,10 @@ export default function FairnessScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router, APP_TREND_OPTIN_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
         <Text variant="body" className="font-sans-semibold" tone="muted">
@@ -42,7 +47,10 @@ export default function FairnessScreen() {
         </Text>
 
         {/* Monk tone band */}
-        <View className="mt-5 rounded-[20px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+        <View
+          className="mt-5 rounded-[20px] bg-paper-raised p-5"
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text variant="label" tone="muted" className="mb-3">
             {TREND_COPY.fairness.monkLabel.toUpperCase()}
           </Text>
@@ -51,11 +59,19 @@ export default function FairnessScreen() {
               <View
                 key={c}
                 className="h-[26px] flex-1 rounded"
-                style={i === activeIdx ? { backgroundColor: c, borderWidth: 2, borderColor: colors.clay } : { backgroundColor: c }}
+                style={
+                  i === activeIdx
+                    ? { backgroundColor: c, borderWidth: 2, borderColor: colors.clay }
+                    : { backgroundColor: c }
+                }
               />
             ))}
           </View>
-          <Text variant="bodySm" className="text-[12.5px]" style={{ color: colors.inkSoft, lineHeight: 18 }}>
+          <Text
+            variant="bodySm"
+            className="text-[12.5px]"
+            style={{ color: colors.inkSoft, lineHeight: 18 }}
+          >
             {TREND_COPY.fairness.monkNote}
           </Text>
         </View>
@@ -63,7 +79,12 @@ export default function FairnessScreen() {
         {/* redness is never the metric */}
         <View
           className="mt-3.5 rounded-[18px] p-4"
-          style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.18)' }}>
+          style={{
+            backgroundColor: colors.clayTint,
+            borderWidth: 1,
+            borderColor: 'rgba(165,105,75,0.18)',
+          }}
+        >
           <View className="mb-2 flex-row items-center gap-2">
             <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-paper-raised">
               <Text className="text-[10px]" style={{ color: colors.clay }}>
@@ -80,7 +101,10 @@ export default function FairnessScreen() {
         </View>
 
         {/* the gate */}
-        <View className="mt-3.5 flex-row items-center gap-3 rounded-[18px] p-4" style={{ backgroundColor: colors.greige }}>
+        <View
+          className="mt-3.5 flex-row items-center gap-3 rounded-[18px] p-4"
+          style={{ backgroundColor: colors.greige }}
+        >
           <Text className="font-mono text-[11px]" style={{ color: colors.clay }}>
             {TREND_COPY.fairness.gateLabel}
           </Text>
@@ -89,7 +113,12 @@ export default function FairnessScreen() {
           </Text>
         </View>
 
-        <Text variant="label" tone="muted" className="mt-6 px-2 text-center" style={{ lineHeight: 17 }}>
+        <Text
+          variant="label"
+          tone="muted"
+          className="mt-6 px-2 text-center"
+          style={{ lineHeight: 17 }}
+        >
           {TREND_COPY.fairness.footer}
         </Text>
       </ScrollView>

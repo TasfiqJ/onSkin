@@ -2,10 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   APP_COMMERCE_STACKS_ROUTE,
+  APP_COMMUNITY_ROUTE,
   APP_HOME_ROUTE,
   APP_PROGRESS_ROUTE,
   APP_RECOMMENDATIONS_ROUTE,
   APP_SHELF_ROUTE,
+  APP_TREND_OPTIN_ROUTE,
   APP_YOU_ROUTE,
   backOrReplace,
   type BackOrReplaceRouter,
@@ -81,5 +83,23 @@ describe('safe back navigation', () => {
 
     expect(router.back).not.toHaveBeenCalled();
     expect(router.replace).toHaveBeenCalledWith(APP_COMMERCE_STACKS_ROUTE);
+  });
+
+  it('supports Trend opt-in as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_TREND_OPTIN_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_TREND_OPTIN_ROUTE);
+  });
+
+  it('supports Community as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_COMMUNITY_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_COMMUNITY_ROUTE);
   });
 });

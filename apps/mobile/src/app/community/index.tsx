@@ -7,6 +7,7 @@ import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, notesByTopic, type SkinNote } from '@/features/community/notes';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -55,7 +56,11 @@ export default function SkinNotesHub() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pt-1">
-        <Pressable accessibilityRole="button" onPress={() => router.back()} hitSlop={8}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
+          hitSlop={8}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             ‹ Back
           </Text>
