@@ -242,6 +242,17 @@ function developmentFallbackPackage(plan: PlanId): SubscriptionPackageView {
   };
 }
 
+function unavailableOffering(reason: string): SubscriptionOfferingView {
+  return {
+    status: 'unavailable',
+    offeringId: null,
+    annual: null,
+    monthly: null,
+    winBack: null,
+    reason,
+  };
+}
+
 function findPackage(offerings: PurchasesOfferings, plan: PlanId): PurchasesPackage | null {
   const current = offerings.current;
   if (!current) return null;
@@ -333,14 +344,7 @@ export async function configureRevenueCat(appUserId: string): Promise<void> {
 export async function getSubscriptionOffering(): Promise<SubscriptionOfferingView> {
   if (!canUseRevenueCat()) {
     if (env.appEnvironment === 'production') {
-      return {
-        status: 'unavailable',
-        offeringId: null,
-        annual: null,
-        monthly: null,
-        winBack: null,
-        reason: 'Store pricing is unavailable in this production build.',
-      };
+      return unavailableOffering('Store pricing is unavailable in this production build.');
     }
     return {
       status: 'development_fallback',
@@ -352,20 +356,19 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
     };
   }
 
-  const offerings = await fetchOfferings();
+  let offerings: PurchasesOfferings | null;
+  try {
+    offerings = await fetchOfferings();
+  } catch {
+    return unavailableOffering('Store pricing is unavailable right now.');
+  }
+
   const current = offerings?.current ?? null;
   const annual = offerings ? findPackage(offerings, 'annual') : null;
   const monthly = offerings ? findPackage(offerings, 'monthly') : null;
 
   if (!current || !annual || !monthly) {
-    return {
-      status: 'unavailable',
-      offeringId: null,
-      annual: null,
-      monthly: null,
-      winBack: null,
-      reason: 'The current RevenueCat offering is missing the annual or monthly OnSkin Pro package.',
-    };
+    return unavailableOffering('The current RevenueCat offering is missing the annual or monthly OnSkin Pro package.');
   }
 
   return {

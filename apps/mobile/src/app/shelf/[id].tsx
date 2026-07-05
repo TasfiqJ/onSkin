@@ -4,7 +4,11 @@ import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Screen, StripedThumb, Text } from '@/components/ui';
 import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
-import { catalogQualityCopy, catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
+import {
+  catalogQualityCopy,
+  catalogQualityLabel,
+  sourceDisplayName,
+} from '@/features/catalog/copy';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { bannerSubhead, tagLabel } from '@/features/intelligence/presentation';
 import { expiryMonthLabel, surfacedExpiry } from '@/features/shelf/expiry';
@@ -14,6 +18,7 @@ import { useShelf } from '@/features/shelf/useShelf';
 import { usePlan } from '@/features/routine/usePlan';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -62,12 +67,18 @@ export default function ProductDetailScreen() {
   const [bestOpen, setBestOpen] = useState(false);
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
+  const closeToShelf = () => backOrReplace(router, APP_SHELF_ROUTE);
 
   if (!item) {
     return (
       <Screen edges={['top', 'bottom']}>
         <View className="mt-2 flex-row items-center">
-          <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2 pr-4">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+            onPress={closeToShelf}
+            className="py-2 pr-4"
+          >
             <Text className="font-sans-semibold">‹ Back</Text>
           </Pressable>
         </View>
@@ -102,7 +113,8 @@ export default function ProductDetailScreen() {
   if (plan.data && !plan.data.isExample) {
     const pm = plan.data.plan.pm.find((s) => s.productId === id);
     if (pm) usage = { phase: 'Evening routine', night: pm.cyclingNight };
-    else if (plan.data.plan.am.find((s) => s.productId === id)) usage = { phase: 'Morning routine' };
+    else if (plan.data.plan.am.find((s) => s.productId === id))
+      usage = { phase: 'Morning routine' };
   }
 
   const otherName = (c: DetectedConflict) =>
@@ -120,7 +132,7 @@ export default function ProductDetailScreen() {
         text: 'Mark discarded (keep history)',
         onPress: async () => {
           await m.markDiscarded(id);
-          router.back();
+          closeToShelf();
         },
       },
       {
@@ -128,7 +140,7 @@ export default function ProductDetailScreen() {
         style: 'destructive',
         onPress: async () => {
           await m.remove(id);
-          router.back();
+          closeToShelf();
         },
       },
     ]);
@@ -165,7 +177,8 @@ export default function ProductDetailScreen() {
   };
 
   const catalogSourceLabel =
-    p.catalogSourceName ?? sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
+    p.catalogSourceName ??
+    sourceDisplayName(p.catalogSource ?? (p.addedVia === 'manual' ? 'user_local' : null));
   const qualityLabel = catalogQualityLabel(p.catalogMatchQuality);
   const sourceDate = p.catalogSourceSnapshotDate
     ? new Date(p.catalogSourceSnapshotDate).toLocaleDateString('en-US', {
@@ -180,15 +193,17 @@ export default function ProductDetailScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
-          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised">
+          onPress={closeToShelf}
+          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
+        >
           <Text className="text-[16px] text-ink">‹</Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="More options"
           onPress={confirmRemove}
-          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised">
+          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
+        >
           <Text className="text-[14px] text-ink">⋯</Text>
         </Pressable>
       </View>
@@ -265,7 +280,11 @@ export default function ProductDetailScreen() {
               </Text>
             ) : null}
           </View>
-          <Pressable accessibilityRole="button" onPress={reportIssue} className="mt-3 self-start py-1">
+          <Pressable
+            accessibilityRole="button"
+            onPress={reportIssue}
+            className="mt-3 self-start py-1"
+          >
             <Text variant="bodySm" tone="clay" className="font-sans-semibold">
               Report an issue
             </Text>
@@ -283,9 +302,13 @@ export default function ProductDetailScreen() {
               onPress={() => {
                 haptics.select();
                 setEditOpen((o) => !o);
-              }}>
+              }}
+            >
               <Text variant="bodySm" className="font-sans-semibold">
-                {openedLabel} <Text variant="bodySm" tone="clay">· edit</Text>
+                {openedLabel}{' '}
+                <Text variant="bodySm" tone="clay">
+                  · edit
+                </Text>
               </Text>
             </Pressable>
           </View>
@@ -296,7 +319,8 @@ export default function ProductDetailScreen() {
                   key={o.label}
                   accessibilityRole="button"
                   onPress={() => setOpened(o.monthsAgo)}
-                  className="rounded-pill border border-hairline bg-paper-raised px-3.5 py-2">
+                  className="rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
+                >
                   <Text className="font-sans-medium text-[13px]">{o.label}</Text>
                 </Pressable>
               ))}
@@ -327,7 +351,8 @@ export default function ProductDetailScreen() {
                 onPress={() => {
                   haptics.select();
                   setBestOpen((o) => !o);
-                }}>
+                }}
+              >
                 <Text variant="bodySm" className="font-sans-bold text-clay-deep">
                   {best ?? 'estimated'}{' '}
                   <Text variant="bodySm" tone="clay">
@@ -352,7 +377,8 @@ export default function ProductDetailScreen() {
                       });
                       setBestOpen(false);
                     }}
-                    className="rounded-pill border border-hairline bg-paper-raised px-3.5 py-2">
+                    className="rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
+                  >
                     <Text className="font-sans-medium text-[13px]">{b.label}</Text>
                   </Pressable>
                 ))}
@@ -362,11 +388,13 @@ export default function ProductDetailScreen() {
                     onPress={async () => {
                       await m.edit(id, {
                         expiryDate: null,
-                        expirySource: p.isOpened && p.paoMonths != null ? 'pao_computed' : 'unknown',
+                        expirySource:
+                          p.isOpened && p.paoMonths != null ? 'pao_computed' : 'unknown',
                       });
                       setBestOpen(false);
                     }}
-                    className="rounded-pill px-3.5 py-2">
+                    className="rounded-pill px-3.5 py-2"
+                  >
                     <Text className="font-sans-medium text-[13px]" tone="muted">
                       Clear
                     </Text>
@@ -381,7 +409,8 @@ export default function ProductDetailScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={() => m.setOpened(id, { openedAt: localDateString(), isOpened: true })}
-            className="mt-2.5 items-center rounded-[14px] border border-hairline bg-paper-raised py-3">
+            className="mt-2.5 items-center rounded-[14px] border border-hairline bg-paper-raised py-3"
+          >
             <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
               Mark as opened. Start the freshness clock
             </Text>
@@ -398,7 +427,8 @@ export default function ProductDetailScreen() {
               {item.engineProduct.tags.map((t) => (
                 <View
                   key={t}
-                  className="rounded-pill border border-hairline bg-paper-raised px-3 py-1.5">
+                  className="rounded-pill border border-hairline bg-paper-raised px-3 py-1.5"
+                >
                   <Text variant="bodySm" className="font-sans-semibold">
                     {tagLabel(t)}
                   </Text>
@@ -410,13 +440,15 @@ export default function ProductDetailScreen() {
 
         {/* Conflicts & pairings */}
         {conflicts.map((c) => {
-          const reassure = c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
+          const reassure =
+            c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
           return (
             <Pressable
               key={c.rule.id}
               accessibilityRole="button"
               onPress={() => router.push(`/conflict/${c.rule.id}`)}
-              className="mt-3 flex-row gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5">
+              className="mt-3 flex-row gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5"
+            >
               <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-clay" />
               <Text variant="bodySm" tone="muted" className="flex-1">
                 {reassure ? 'Pairs well with ' : 'Paired with '}
@@ -424,7 +456,10 @@ export default function ProductDetailScreen() {
                   {otherName(c)}
                 </Text>
                 {'. '}
-                {bannerSubhead(c)} <Text variant="bodySm" className="font-sans-bold text-clay-deep">Review →</Text>
+                {bannerSubhead(c)}{' '}
+                <Text variant="bodySm" className="font-sans-bold text-clay-deep">
+                  Review →
+                </Text>
               </Text>
             </Pressable>
           );
@@ -435,7 +470,10 @@ export default function ProductDetailScreen() {
           <View className="mt-2.5 flex-row gap-3 rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5">
             <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
             <Text variant="bodySm" tone="muted" className="flex-1">
-              Used in your <Text variant="bodySm" className="font-sans-semibold">{usage.phase}</Text>
+              Used in your{' '}
+              <Text variant="bodySm" className="font-sans-semibold">
+                {usage.phase}
+              </Text>
               {usage.night ? `. Cycling night ${usage.night}.` : '.'}
             </Text>
           </View>
@@ -456,16 +494,18 @@ export default function ProductDetailScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push(`/shelf/replenish?id=${id}`)}
-            className="h-[50px] flex-1 items-center justify-center rounded-[14px] bg-ink">
+            className="h-[50px] flex-1 items-center justify-center rounded-[14px] bg-ink"
+          >
             <Text className="font-sans-semibold text-paper">Replace</Text>
           </Pressable>
           <Pressable
             accessibilityRole="button"
             onPress={async () => {
               await m.markFinished(id);
-              router.back();
+              closeToShelf();
             }}
-            className="h-[50px] flex-1 items-center justify-center rounded-[14px] border border-hairline-strong bg-paper-raised">
+            className="h-[50px] flex-1 items-center justify-center rounded-[14px] border border-hairline-strong bg-paper-raised"
+          >
             <Text className="font-sans-semibold" tone="muted">
               Mark finished
             </Text>
@@ -476,7 +516,8 @@ export default function ProductDetailScreen() {
             onPress={confirmRemove}
             className={cn(
               'h-[50px] w-[50px] items-center justify-center rounded-[14px] border border-hairline-strong bg-paper-raised',
-            )}>
+            )}
+          >
             {/* Text-presentation (U+FE0E) bin glyph so it stays monochrome + honours the clay tint. */}
             <Text className="text-[18px]" style={{ color: '#9A6A4B' }}>
               {'\u{1F5D1}\u{FE0E}'}

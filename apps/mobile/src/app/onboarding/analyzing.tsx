@@ -4,6 +4,7 @@ import { Animated, Easing, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -11,10 +12,16 @@ import { colors } from '@/theme/tokens';
 // Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
 // hero (BLOCKED: B-VERIFY-RIVE-LOTTIE). Persists the skin profile, then reveals.
 export default function AnalyzingScreen() {
-  const { persistSkinProfile } = useOnboarding();
+  const { persistSkinProfile, quizAnswers } = useOnboarding();
+  const quizCompletion = getQuizCompletionState(quizAnswers);
   const [pulse] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
+    if (!quizCompletion.complete) {
+      router.replace('/onboarding/quiz');
+      return;
+    }
+
     track('personalization_shown');
     const loop = Animated.loop(
       Animated.sequence([
@@ -31,7 +38,7 @@ export default function AnalyzingScreen() {
       loop.stop();
       clearTimeout(t);
     };
-  }, [persistSkinProfile, pulse]);
+  }, [persistSkinProfile, pulse, quizCompletion.complete]);
 
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });

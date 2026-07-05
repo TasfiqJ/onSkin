@@ -1,6 +1,6 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-05T21:07:43.009Z
+Generated: 2026-07-05T22:01:12.924Z
 Package count: 1071
 Lockfile version: 3
 
@@ -14,7 +14,7 @@ Lockfile version: 3
 | --- | --- | --- | --- | --- | --- |
 | `@expo/cli` | moderate | no | @expo/config, @expo/config-plugins, @expo/inline-modules, @expo/metro-config, @expo/prebuild-config | expo@46.0.21 (breaking) | node_modules/@expo/cli |
 | `@expo/config` | moderate | no | @expo/config-plugins | expo@46.0.21 (breaking) | node_modules/@expo/config |
-| `@expo/config-plugins` | moderate | no | xcode | expo-splash-screen@55.0.22 (breaking) | node_modules/@expo/config-plugins |
+| `@expo/config-plugins` | moderate | no | xcode | expo-sharing@14.0.8 (breaking) | node_modules/@expo/config-plugins |
 | `@expo/inline-modules` | moderate | no | @expo/config-plugins | expo@46.0.21 (breaking) | node_modules/@expo/inline-modules |
 | `@expo/local-build-cache-provider` | moderate | no | @expo/config | expo@46.0.21 (breaking) | node_modules/@expo/local-build-cache-provider |
 | `@expo/metro-config` | moderate | no | @expo/config | expo@46.0.21 (breaking) | node_modules/@expo/metro-config |
@@ -24,8 +24,8 @@ Lockfile version: 3
 | `expo` | moderate | yes | @expo/cli, @expo/config, @expo/config-plugins, @expo/local-build-cache-provider, @expo/metro-config | expo@46.0.21 (breaking) | node_modules/expo |
 | `expo-sharing` | moderate | yes | @expo/config-plugins | expo-sharing@14.0.8 (breaking) | node_modules/expo-sharing |
 | `expo-splash-screen` | moderate | yes | @expo/config-plugins | expo-splash-screen@55.0.22 (breaking) | node_modules/expo-splash-screen |
-| `uuid` | moderate | no | uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided (<11.1.1) | expo-splash-screen@55.0.22 (breaking) | node_modules/uuid |
-| `xcode` | moderate | no | uuid | expo-splash-screen@55.0.22 (breaking) | node_modules/xcode |
+| `uuid` | moderate | no | uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided (<11.1.1) | expo-sharing@14.0.8 (breaking) | node_modules/uuid |
+| `xcode` | moderate | no | uuid | expo-sharing@14.0.8 (breaking) | node_modules/xcode |
 
 ## Install Scripts
 

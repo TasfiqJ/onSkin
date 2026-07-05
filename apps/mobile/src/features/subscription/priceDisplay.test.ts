@@ -1,0 +1,87 @@
+import { describe, expect, it } from 'vitest';
+
+import type { SubscriptionOfferingView, SubscriptionPackageView } from '@/lib/iap/revenuecat';
+
+import { planLineLabel, planPriceDisplay } from './priceDisplay';
+
+function packageView(overrides: Partial<SubscriptionPackageView> = {}): SubscriptionPackageView {
+  return {
+    plan: 'annual',
+    packageId: 'pkg',
+    offeringId: 'offering',
+    productId: 'onskin_pro_annual',
+    title: 'OnSkin Pro Annual',
+    priceLabel: '$59.99',
+    pricePerMonthLabel: '$4.99',
+    periodLabel: 'year',
+    subscriptionPeriod: 'P1Y',
+    trialDays: 14,
+    introLabel: '14 days free',
+    canPurchase: true,
+    ...overrides,
+  };
+}
+
+describe('subscription price display', () => {
+  it('uses approved fallback labels while the offering is still loading', () => {
+    const display = planPriceDisplay('annual', undefined);
+
+    expect(display.priceLabel).toBe('$49.99');
+    expect(display.periodLabel).toBe('year');
+    expect(display.pricePerMonthLabel).toBe('$4.16');
+    expect(display.canShowPurchasePrice).toBe(true);
+    expect(planLineLabel(display)).toBe('$49.99/year');
+  });
+
+  it('uses RevenueCat package labels when available', () => {
+    const offering: SubscriptionOfferingView = {
+      status: 'available',
+      offeringId: 'current',
+      annual: packageView(),
+      monthly: packageView({ plan: 'monthly', priceLabel: '$9.99', periodLabel: 'month' }),
+      winBack: null,
+    };
+
+    const display = planPriceDisplay('annual', offering);
+
+    expect(display.priceLabel).toBe('$59.99');
+    expect(display.pricePerMonthLabel).toBe('$4.99');
+    expect(display.reason).toBeNull();
+    expect(planLineLabel(display)).toBe('$59.99/year');
+  });
+
+  it('keeps development fallback pricing but returns the disabled-store reason', () => {
+    const offering: SubscriptionOfferingView = {
+      status: 'development_fallback',
+      offeringId: 'development-fallback',
+      annual: packageView({ priceLabel: '$49.99', pricePerMonthLabel: '$4.16', canPurchase: false }),
+      monthly: packageView({ plan: 'monthly', priceLabel: '$8.99', periodLabel: 'month', canPurchase: false }),
+      winBack: null,
+      reason: 'RevenueCat is not configured. Prices are disabled development previews.',
+    };
+
+    const display = planPriceDisplay('annual', offering);
+
+    expect(display.priceLabel).toBe('$49.99');
+    expect(display.reason).toContain('RevenueCat is not configured');
+    expect(display.canShowPurchasePrice).toBe(true);
+  });
+
+  it('never formats unavailable pricing as a slash-period price', () => {
+    const offering: SubscriptionOfferingView = {
+      status: 'unavailable',
+      offeringId: null,
+      annual: null,
+      monthly: null,
+      winBack: null,
+      reason: 'Store pricing is unavailable in this production build.',
+    };
+
+    const display = planPriceDisplay('annual', offering);
+
+    expect(display.priceLabel).toBe('Price unavailable');
+    expect(display.periodLabel).toBeNull();
+    expect(display.canShowPurchasePrice).toBe(false);
+    expect(planLineLabel(display)).toBe('Price unavailable');
+  });
+});

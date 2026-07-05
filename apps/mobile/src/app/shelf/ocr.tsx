@@ -22,6 +22,7 @@ import { tagLabel } from '@/features/intelligence/presentation';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -89,7 +90,7 @@ export default function OcrScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => router.back()}>
+        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}>
           Back
         </Text>
         <Text variant="body" className="font-sans-semibold">

@@ -17,6 +17,7 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
+import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 type ScanState =
@@ -168,12 +169,15 @@ export default function ScanScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
       <View className="flex-1 px-6">
-        <View className="mt-2 flex-row items-center justify-between">
-          <Pressable accessibilityRole="button" onPress={() => router.back()} className="py-2">
-            <Text className="font-sans-semibold text-[15px]" tone="inverseMuted">
-              Close
-            </Text>
-          </Pressable>
+        <View className="mt-2 flex-row items-center justify-between" style={{ zIndex: 10 }}>
+          <Text
+            accessibilityRole="button"
+            className="py-2 font-sans-semibold text-[15px]"
+            tone="inverseMuted"
+            onPress={() => router.replace(APP_SHELF_ROUTE)}
+          >
+            Close
+          </Text>
           <Pressable
             accessibilityRole="switch"
             accessibilityState={{ checked: torch }}

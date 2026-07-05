@@ -25,3 +25,12 @@ export function localDateString(d = new Date()): string {
 export function currentRoutineType(d = new Date()): RoutineType {
   return d.getHours() < 17 ? 'AM' : 'PM';
 }
+
+/** Local clock label for user-visible routine headers. */
+export function localClockLabel(d = new Date()): string {
+  const hour = d.getHours();
+  const hour12 = hour % 12 || 12;
+  const minute = String(d.getMinutes()).padStart(2, '0');
+  const meridiem = hour < 12 ? 'AM' : 'PM';
+  return `${hour12}:${minute} ${meridiem}`;
+}

@@ -9,6 +9,8 @@ import type { GatedFeature } from '@onskin/types';
 
 import { ComplianceRow } from './ComplianceRow';
 import { UPSELL_COPY } from './copy';
+import { dismissPaywall } from './dismissPaywall';
+import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
 import { useSubscriptionOffering } from './useSubscriptionOffering';
 
@@ -39,6 +41,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const copy = UPSELL_COPY[feature];
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const annualDisplay = planPriceDisplay('annual', offering.data);
 
   function onStartTrial() {
     if (!canPurchase) {
@@ -62,11 +65,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row justify-end pt-1">
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/today'))}
-          hitSlop={8}
-        >
+        <Pressable accessibilityRole="button" onPress={() => dismissPaywall(router)} hitSlop={8}>
           <Text variant="body" tone="muted" className="font-sans-medium">
             Maybe later
           </Text>
@@ -91,17 +90,19 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         >
           <View>
             <Text variant="bodySm" tone="muted">
-              {annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for'}
+              {annualDisplay.introLabel}
             </Text>
             <Text variant="title" style={{ fontSize: 26, lineHeight: 30 }}>
-              {annual?.priceLabel ?? 'Unavailable'}
-              <Text variant="bodySm" tone="muted">
-                /{annual?.periodLabel ?? 'year'}
-              </Text>
+              {annualDisplay.priceLabel}
+              {annualDisplay.periodLabel ? (
+                <Text variant="bodySm" tone="muted">
+                  /{annualDisplay.periodLabel}
+                </Text>
+              ) : null}
             </Text>
           </View>
-          {annual?.pricePerMonthLabel ? (
-            <Text variant="label" tone="muted">{`${annual.pricePerMonthLabel}\n/mo`}</Text>
+          {annualDisplay.pricePerMonthLabel ? (
+            <Text variant="label" tone="muted">{`${annualDisplay.pricePerMonthLabel}\n/mo`}</Text>
           ) : null}
         </View>
         {offering.data?.status && offering.data.status !== 'available' ? (

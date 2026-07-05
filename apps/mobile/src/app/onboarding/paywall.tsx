@@ -4,8 +4,10 @@ import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { planLineLabel, planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
@@ -35,12 +37,11 @@ export default function PaywallScreen() {
   const { startTrial, startReverseTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const annual = offering.data?.annual ?? null;
-  const monthly = offering.data?.monthly ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
-  const trialPrefix = annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for';
-  const priceLabel = annual?.priceLabel ?? 'Unavailable';
-  const periodLabel = annual?.periodLabel ?? 'year';
-  const monthlyEquivalent = annual?.pricePerMonthLabel ?? null;
+  const annualDisplay = planPriceDisplay('annual', offering.data);
+  const monthlyDisplay = planPriceDisplay('monthly', offering.data);
+  const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
+  const quizCompletion = getQuizCompletionState(quizAnswers);
 
   function onStartTrial() {
     if (!canPurchase) {
@@ -72,7 +73,7 @@ export default function PaywallScreen() {
   // Personalized headline from the quiz axes (sign convention per the reveal: axes
   // >= 0.5 is the positive pole). Only when the quiz was actually taken.
   let headline: string = PAYWALL_COPY.offer.headlineFallback;
-  if (Object.keys(quizAnswers).length > 0) {
+  if (quizCompletion.complete) {
     const r = computeResult();
     const descriptor = `${r.axes.oily_dry < 0.5 ? 'dry' : 'oily'}, ${r.axes.sensitive_resistant >= 0.5 ? 'sensitive' : 'resistant'} skin`;
     headline = PAYWALL_COPY.offer.headlineFor(descriptor);
@@ -105,13 +106,15 @@ export default function PaywallScreen() {
           <View className="flex-row items-baseline justify-between">
             <View>
               <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
-                {trialPrefix}
+                {annualDisplay.introLabel}
               </Text>
               <Text variant="title" style={{ color: colors.paper, fontSize: 34, lineHeight: 38 }}>
-                {priceLabel}
-                <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
-                  /{periodLabel}
-                </Text>
+                {annualDisplay.priceLabel}
+                {annualDisplay.periodLabel ? (
+                  <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
+                    /{annualDisplay.periodLabel}
+                  </Text>
+                ) : null}
               </Text>
             </View>
             {monthlyEquivalent ? (
@@ -128,7 +131,7 @@ export default function PaywallScreen() {
             Monthly
           </Text>
           <Text variant="label" tone="muted" style={{ fontSize: 13 }}>
-            {monthly ? `${monthly.priceLabel}/${monthly.periodLabel}` : 'Unavailable'}
+            {planLineLabel(monthlyDisplay)}
           </Text>
         </View>
 

@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, StripedThumb, Text } from '@/components/ui';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // Lifecycle / archive (design screen 08, docs/04 §5.7). Finished + discarded
@@ -39,7 +40,8 @@ function ArchiveCard({ item }: { item: ShelfItem }) {
         haptics.select();
         router.push(`/shelf/${p.id}`);
       }}
-      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-warm px-4 py-3.5">
+      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-warm px-4 py-3.5"
+    >
       <StripedThumb light size={48} radius={14} faded />
       <View className="flex-1">
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">
@@ -51,9 +53,7 @@ function ArchiveCard({ item }: { item: ShelfItem }) {
       </View>
       {p.status === 'finished' && p.repurchaseCount > 1 ? (
         <View className="rounded-pill bg-sage-tint px-2.5 py-1.5">
-          <Text className="font-sans-bold text-[11px] text-sage">
-            {p.repurchaseCount}× bought
-          </Text>
+          <Text className="font-sans-bold text-[11px] text-sage">{p.repurchaseCount}× bought</Text>
         </View>
       ) : (
         <Text variant="label" tone="muted">
@@ -74,8 +74,9 @@ export default function ArchiveScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
-          className="h-[30px] w-[30px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised">
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+          className="h-[30px] w-[30px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
+        >
           <Text className="text-[14px] text-ink">‹</Text>
         </Pressable>
         <Text variant="title" className="text-[30px]">

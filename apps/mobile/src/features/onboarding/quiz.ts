@@ -184,6 +184,46 @@ export const ONBOARDING_QUIZ: QuizQuestion[] = [
 
 export type QuizAnswers = Record<string, string | string[]>; // questionId -> optionId(s)
 
+export type QuizCompletionState = {
+  answeredCount: number;
+  total: number;
+  complete: boolean;
+  missingQuestionIds: string[];
+};
+
+export function isQuizQuestionAnswered(
+  question: QuizQuestion,
+  answer: string | string[] | undefined,
+): boolean {
+  const optionIds = new Set(question.options.map((option) => option.id));
+  if (question.multiSelect === true) {
+    return (
+      Array.isArray(answer) &&
+      answer.length > 0 &&
+      answer.every((optionId) => optionIds.has(optionId))
+    );
+  }
+  return typeof answer === 'string' && optionIds.has(answer);
+}
+
+export function getQuizCompletionState(
+  answers: QuizAnswers,
+  quiz: QuizQuestion[] = ONBOARDING_QUIZ,
+): QuizCompletionState {
+  const missingQuestionIds: string[] = [];
+  for (const question of quiz) {
+    if (!isQuizQuestionAnswered(question, answers[question.id])) {
+      missingQuestionIds.push(question.id);
+    }
+  }
+  return {
+    answeredCount: quiz.length - missingQuestionIds.length,
+    total: quiz.length,
+    complete: missingQuestionIds.length === 0,
+    missingQuestionIds,
+  };
+}
+
 export function toggleExclusiveNoneSelection(
   current: readonly string[],
   optionId: string,

@@ -1,0 +1,21 @@
+import { describe, expect, it } from 'vitest';
+
+import { currentRoutineType, localClockLabel, localDateString } from './useToday';
+
+describe('today date and time helpers', () => {
+  it('formats the local calendar date as YYYY-MM-DD', () => {
+    expect(localDateString(new Date(2026, 6, 5, 9, 7))).toBe('2026-07-05');
+  });
+
+  it('uses AM before 5pm and PM from 5pm onward', () => {
+    expect(currentRoutineType(new Date(2026, 6, 5, 16, 59))).toBe('AM');
+    expect(currentRoutineType(new Date(2026, 6, 5, 17, 0))).toBe('PM');
+  });
+
+  it('formats the local clock without relying on hardcoded screen-copy times', () => {
+    expect(localClockLabel(new Date(2026, 6, 5, 0, 4))).toBe('12:04 AM');
+    expect(localClockLabel(new Date(2026, 6, 5, 9, 7))).toBe('9:07 AM');
+    expect(localClockLabel(new Date(2026, 6, 5, 12, 0))).toBe('12:00 PM');
+    expect(localClockLabel(new Date(2026, 6, 5, 21, 41))).toBe('9:41 PM');
+  });
+});

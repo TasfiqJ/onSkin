@@ -143,8 +143,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: back/relaunch during onboarding
   - Priority: Important
   - Automate later: Yes
-  - Action: Navigate back, background/relaunch, or refresh on Expo web.
-  - Expected result: Progress is preserved or reset intentionally with no broken state.
+  - Action: Navigate back, background/relaunch, refresh on Expo web, or directly open `/onboarding/reveal` or `/onboarding/analyzing` without completed quiz answers.
+  - Expected result: Progress is preserved or reset intentionally with no broken state; reveal/analyzing must not fabricate a default skin profile and must recover to the quiz path.
   - Evidence: Video or before/after screenshots.
 
 ## Flow: Today Routine Completion
@@ -185,6 +185,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Complete a step, relaunch the app, and return to Today.
   - Expected result: The state remains correct.
   - Evidence: Video or screenshot sequence.
+- Branch: local date and clock display
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Today in the evening routine state.
+  - Expected result: The header uses the current local date and clock time, never a static design-placeholder time.
+  - Evidence: Screenshot and visible-text snapshot.
 
 ## Flow: Shelf Product Add
 
@@ -224,6 +230,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Set an opened date or replenish state at a boundary date.
   - Expected result: The app explains expiration/replenish status clearly.
   - Evidence: Screenshot.
+- Branch: direct-entry back or close navigation
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Shelf add, search, OCR, archive, product detail, and replenish routes directly, then use the visible Back, Close, Cancel, or Not now control.
+  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen with no navigation history.
+  - Evidence: Screenshot sequence and visible route snapshot.
 
 ## Flow: Photo Progress
 
@@ -314,6 +326,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Load a gated route while entitlement is still resolving.
   - Expected result: No premium content flashes before the entitlement decision.
   - Evidence: Screenshot or trace.
+- Branch: store pricing loading or unavailable
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open onboarding and contextual paywalls before RevenueCat pricing is available, or with the local development fallback.
+  - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; it must never render `Unavailable` as if it were the billed amount.
+  - Evidence: Screenshot and visible-text snapshot.
 - Branch: Pro entitlement state
   - Priority: Critical
   - Automate later: Yes
@@ -323,8 +341,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
-  - Action: Refresh the browser or navigate away and back on a locked direct route.
-  - Expected result: Gating stays stable and the dismiss action returns to a safe app surface.
+  - Action: Refresh the browser, navigate away and back on a locked direct route, or directly open `/paywall/upsell?feature=full_routine` and `/paywall/winback`.
+  - Expected result: Gating stays stable and dismissing a direct-entry paywall returns to a safe app surface, not a blank or dead-end history state.
   - Evidence: Screenshot sequence.
 - Branch: accessibility and keyboard
   - Priority: Important
@@ -368,8 +386,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
-  - Action: Refresh `/ask`, navigate to `/ask/consent`, then return.
-  - Expected result: Deterministic Ask remains reachable, and only the cloud consent route is deferred while the flag is off.
+  - Action: Refresh `/ask`, directly open `/ask` and use the Back control, then directly open `/ask/consent` and use the deferred Back CTA.
+  - Expected result: Deterministic Ask remains reachable, only the cloud consent route is deferred while the flag is off, and direct-entry Back controls return to a safe app surface instead of no-oping.
   - Evidence: Screenshot sequence.
 - Branch: accessibility and keyboard
   - Priority: Important

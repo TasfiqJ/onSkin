@@ -7,6 +7,7 @@ import { Button, Card, Screen, Text } from '@/components/ui';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
@@ -62,7 +63,7 @@ export default function AskConsentScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => router.back()}
+          onPress={() => backOrReplace(router)}
           hitSlop={8}
         >
           <Text style={{ color: colors.ink, fontSize: 20 }}>‹</Text>

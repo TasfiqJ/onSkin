@@ -13,6 +13,7 @@ import {
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // Add by hand (design screen 03, docs/04 §4.4). The always-works floor under
@@ -80,7 +81,7 @@ export default function ManualAddScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => router.back()}>
+        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}>
           Cancel
         </Text>
         <Text variant="body" className="font-sans-semibold">

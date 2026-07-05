@@ -3,7 +3,13 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from 're
 
 import { supabase } from '@/lib/supabase/client';
 
-import { ONBOARDING_QUIZ, scoreQuiz, type QuizAnswers, type SkinProfileResult } from './quiz';
+import {
+  getQuizCompletionState,
+  ONBOARDING_QUIZ,
+  scoreQuiz,
+  type QuizAnswers,
+  type SkinProfileResult,
+} from './quiz';
 import { setStoredSkinProfile } from './skinProfileStore';
 
 // In-progress onboarding answers, accumulated client-side and persisted at the
@@ -44,6 +50,12 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         return scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
       },
       async persistSkinProfile() {
+        const completion = getQuizCompletionState(quizAnswers, ONBOARDING_QUIZ);
+        if (!completion.complete) {
+          throw new Error(
+            `Cannot persist incomplete onboarding quiz: ${completion.missingQuestionIds.join(', ')}`,
+          );
+        }
         const result = scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
         const completedAt = new Date().toISOString();
         // Local-first (D-029): record completion on-device FIRST so the entry

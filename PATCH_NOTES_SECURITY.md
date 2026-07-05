@@ -373,6 +373,27 @@
 - Why safe: The live harnesses can create users, write rows, delete accounts, exhaust rate limits, and call deployed Edge Functions. A missing app env should never inherit `.env.example`'s development value and accidentally bypass production refusal checks.
 - Regression: Release smoke now fails if a live harness stops using `readScriptAppEnvironment()` or reintroduces `?? 'development'`. The QA packet hashes the helper and every live harness, and the expected-failure probe proves a missing real app env refuses live Edge auth execution as production.
 
+## Onboarding quiz completion profile guard
+
+- Files: `apps/mobile/src/features/onboarding/quiz.ts`, `apps/mobile/src/features/onboarding/quizCompletion.test.ts`, `apps/mobile/src/features/onboarding/OnboardingContext.tsx`, `apps/mobile/src/app/onboarding/analyzing.tsx`, `apps/mobile/src/app/onboarding/reveal.tsx`, `apps/mobile/src/app/onboarding/paywall.tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: Added `getQuizCompletionState()` and `isQuizQuestionAnswered()` so profile scoring is treated as complete only when every quiz question has a valid current option. `persistSkinProfile()` now rejects incomplete answers; analyzing redirects incomplete state back to the quiz; reveal shows a recovery screen instead of a computed default; paywall personalization waits for completion.
+- Why safe: A direct route, stale local answer, or modified navigation path can no longer create a health-adjacent skin profile or personalized paywall copy from default quiz-score fallbacks.
+- Regression: `quizCompletion.test.ts` covers empty answers, complete answers, stale option IDs, and empty multi-select answers. Mobile workspace typecheck and lint pass with the guard.
+
+## Subscription price display unavailable-state guard
+
+- Files: `apps/mobile/src/features/subscription/priceDisplay.ts`, `apps/mobile/src/features/subscription/priceDisplay.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, onboarding/contextual paywall screens, `apps/mobile/src/features/subscription/ProGate.tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: Added a shared price-display helper for annual/monthly labels. Unavailable store pricing renders as `Price unavailable` with no slash-period suffix, while loading/development fallback states use approved fallback labels. `getSubscriptionOffering()` now catches offering-fetch failures and returns an explicit unavailable offering with stable copy.
+- Why safe: Subscription pricing is a payment/store-review surface; missing or failed store pricing must not look like a real billed amount or expose raw RevenueCat failure details.
+- Regression: `priceDisplay.test.ts` covers loading fallback labels, RevenueCat package labels, development fallback labels, and unavailable pricing. Mobile workspace typecheck and lint pass with the shared helper.
+
+## Direct-entry navigation recovery guard
+
+- Files: `apps/mobile/src/lib/navigation/safeBack.ts`, `apps/mobile/src/lib/navigation/safeBack.test.ts`, `apps/mobile/src/features/subscription/dismissPaywall.ts`, `apps/mobile/src/features/subscription/dismissPaywall.test.ts`, Ask/deferred/shelf/paywall route screens, `docs/USER_FLOW_TREE.md`.
+- Change: Added shared direct-entry navigation helpers. Ask, deferred, and paywall close controls now fall back to Today when no history exists; Shelf subroutes fall back to Shelf.
+- Why safe: Deep links, web refreshes, and cold route entries should not trap users on consent, deferred, shelf detail, or paywall screens with a Back/Close action that cannot go anywhere.
+- Regression: `safeBack.test.ts` and `dismissPaywall.test.ts` prove history-preserving and no-history replacement behavior. `useToday.test.ts` also covers removal of the hard-coded Today header clock placeholder.
+
 ## RevenueCat webhook body limit
 
 - Files: `supabase/functions/revenuecat-webhook/index.ts`, `.env.example`, `.github/workflows/security.yml`, `scripts/phase9/live-revenuecat-webhook.mjs`, `scripts/phase9/edge-auth-smoke.mjs`, `scripts/phase9/release-smoke.mjs`, `scripts/phase9/security-ci-smoke.mjs`.

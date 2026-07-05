@@ -5,7 +5,7 @@ import { View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
-import { AXIS_LABELS } from '@/features/onboarding/quiz';
+import { AXIS_LABELS, getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
 // 07b · Reveal. The "aha" payoff (docs/01 §2/§8, design spec p.6). Shows the
@@ -38,16 +38,46 @@ function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
 }
 
 export default function RevealScreen() {
-  const { computeResult } = useOnboarding();
-  const result = useMemo(() => computeResult(), [computeResult]);
+  const { computeResult, quizAnswers } = useOnboarding();
+  const quizCompletion = useMemo(() => getQuizCompletionState(quizAnswers), [quizAnswers]);
+  const result = useMemo(
+    () => (quizCompletion.complete ? computeResult() : null),
+    [computeResult, quizCompletion.complete],
+  );
 
   const descriptor = useMemo(() => {
+    if (!result) return '';
     const traits = AXIS_ORDER.map((axis) => {
       const { posLabel, negLabel } = AXIS_LABELS[axis];
       return result.axes[axis] >= 0.5 ? posLabel : negLabel;
     });
     return traits.join(' · ');
   }, [result]);
+
+  if (!result) {
+    return (
+      <Screen tone="night">
+        <View className="flex-1 justify-center">
+          <Text variant="eyebrow" tone="inverseMuted">
+            PROFILE PAUSED
+          </Text>
+          <Text variant="title" tone="inverse" className="mt-2">
+            Finish the quiz to see your profile.
+          </Text>
+          <Text variant="body" tone="inverseMuted" className="mt-3">
+            Your reveal needs the quiz answers first, so the result reflects your skin.
+          </Text>
+        </View>
+        <View className="pb-4">
+          <Button
+            label="Back to quiz"
+            variant="inverse"
+            onPress={() => router.replace('/onboarding/quiz')}
+          />
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen tone="night">

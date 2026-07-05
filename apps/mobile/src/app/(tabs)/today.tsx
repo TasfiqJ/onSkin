@@ -12,7 +12,7 @@ import { RecommendationsTeaser } from '@/features/recommendations/Recommendation
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
-import { currentRoutineType, localDateString } from '@/features/today/useToday';
+import { currentRoutineType, localClockLabel, localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { phase7Flags } from '@/lib/launch/phase7';
@@ -202,6 +202,7 @@ export default function TodayScreen() {
     month: 'long',
     day: 'numeric',
   });
+  const clockLabel = localClockLabel();
 
   // ---- AM ----
   if (!dark) {
@@ -363,7 +364,7 @@ export default function TodayScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
         <ReverseTrialBanner tone="night" />
         <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
-          {dateLabel.toUpperCase()} · 9:41 PM
+          {dateLabel.toUpperCase()} · {clockLabel}
         </Text>
         <Text variant="titleLg" tone="inverse" className="mt-2">
           Good evening.

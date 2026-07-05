@@ -4,6 +4,7 @@ import { Alert, Pressable, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
@@ -16,6 +17,7 @@ export default function ReofferScreen() {
   const offering = useSubscriptionOffering();
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const annualDisplay = planPriceDisplay('annual', offering.data);
 
   function onStartTrial() {
     if (!canPurchase) {
@@ -67,13 +69,15 @@ export default function ReofferScreen() {
         </View>
         <View className="mt-4 flex-row items-center justify-between rounded-card p-4" style={{ backgroundColor: colors.clayTint }}>
           <Text variant="bodySm" style={{ color: colors.clayDeep }}>
-            {annual?.trialDays ? `Start ${annual.trialDays} days free, then` : 'Subscribe for'}
+            {annualDisplay.introLabel}
           </Text>
           <Text variant="title" style={{ color: colors.clayDeep, fontSize: 24 }}>
-            {annual?.priceLabel ?? 'Unavailable'}
-            <Text variant="bodySm" style={{ color: colors.clayDeep }}>
-              /{annual?.periodLabel ?? 'yr'}
-            </Text>
+            {annualDisplay.priceLabel}
+            {annualDisplay.periodLabel ? (
+              <Text variant="bodySm" style={{ color: colors.clayDeep }}>
+                /{annualDisplay.periodLabel}
+              </Text>
+            ) : null}
           </Text>
         </View>
         {offering.data?.status && offering.data.status !== 'available' ? (

@@ -57,6 +57,11 @@
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
 - `npx vitest run src/lib/launch/phase7.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/subscription/priceDisplay.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts src/features/today/useToday.test.ts`
+- `npm --workspace @onskin/mobile run typecheck`
+- `npm --workspace @onskin/mobile run lint`
 - `npm run phase7:check-core-loop`
 - `npm run phase7:qa-packet`
 - `npm run phase9:store-build-inspect`
@@ -105,6 +110,22 @@
   - Proves production Phase 7 deferred surfaces stay disabled when public flags are true but the final brand domain is missing or still an example domain.
   - Proves staging can still exercise deferred surfaces without a final brand domain while commerce/share-card paths remain domain-gated.
   - Proves production surfaces open only when public identity is ready, and share cards still require reviewed, non-safety, non-pregnancy owned-product conflicts.
+- `apps/mobile/src/features/onboarding/quizCompletion.test.ts`
+  - Proves empty quiz answers are incomplete instead of ready for reveal scoring.
+  - Proves every single-select and multi-select question requires a valid current option.
+  - Proves empty multi-select answers and stale option IDs keep the profile incomplete.
+- `apps/mobile/src/features/subscription/priceDisplay.test.ts`
+  - Proves loading states use approved fallback price labels.
+  - Proves RevenueCat package labels override fallback labels when available.
+  - Proves unavailable store pricing displays as `Price unavailable`, never as a slash-period billed amount.
+- `apps/mobile/src/lib/navigation/safeBack.test.ts`
+  - Proves direct-entry screens replace to a safe app route when no history exists.
+  - Proves route-specific fallbacks can return shelf flows to the Shelf tab.
+- `apps/mobile/src/features/subscription/dismissPaywall.test.ts`
+  - Proves paywall dismiss keeps native back behavior when history exists.
+  - Proves direct-entry paywalls replace to the Today route instead of a dead-end history state.
+- `apps/mobile/src/features/today/useToday.test.ts`
+  - Proves the Today header uses local date/time helpers instead of hard-coded design-placeholder clock copy.
 - `scripts/phase9/release-smoke.mjs`
   - Blocks production builds when `EXPO_PUBLIC_PHASE7_*` public flags expose commerce, community posting, trend insights, cloud Ask, widgets, share cards, or goal-active recommendations without the matching `PHASE7_*` evidence and `PHASE7_SIGNED_OFF_BY`.
   - Statically requires the Phase 7 production fail-closed guard and regression tests, and the release QA packet now hashes those files.

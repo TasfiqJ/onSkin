@@ -37,6 +37,9 @@
 - SEC-P2-044: Missing or invalid mobile `EXPO_PUBLIC_APP_ENV` now fails closed to production behavior outside the real dev runtime, so misbuilt release bundles cannot use development payment fallback behavior.
 - SEC-P2-045: Production Phase 7 deferred surfaces now fail closed without a real final brand domain, and production release smoke blocks public commerce/community/trend/cloud Ask/widgets/share/recommendation flags unless matching Phase 7 evidence and signoff are present.
 - SEC-P2-046: Live Phase 9 harnesses now derive app environment only from real `.env` plus process env, ignore `.env.example` defaults, and fail closed to production when missing or invalid.
+- SEC-P2-047: Onboarding profile scoring and persistence now require a complete set of valid quiz answers, so direct reveal/analyzing routes recover to the quiz instead of fabricating a default skin profile.
+- SEC-P2-048: Paywall and ProGate pricing now use a shared display helper and explicit unavailable offering state, so missing Store/RevenueCat pricing cannot render as a billable slash-period amount.
+- SEC-P2-049: Ask, deferred, shelf, and paywall direct-entry Back/Close controls now replace to a safe app surface when no navigation history exists.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T21:07:43.009Z",
+  "generatedAt": "2026-07-05T22:01:12.924Z",
   "packageManager": null,
   "lockfileVersion": 3,
   "packageCount": 1071,
@@ -70,7 +70,7 @@
       "nodes": [
         "node_modules/@expo/config-plugins"
       ],
-      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
     },
     {
       "name": "@expo/inline-modules",
@@ -226,7 +226,7 @@
       "nodes": [
         "node_modules/uuid"
       ],
-      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
     },
     {
       "name": "xcode",
@@ -242,7 +242,7 @@
       "nodes": [
         "node_modules/xcode"
       ],
-      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
+      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
     }
   ],
   "installScriptPackages": [

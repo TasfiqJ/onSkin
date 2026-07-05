@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { deferredSurfaceCopy, type DeferredSurfaceKind } from '@/lib/launch/phase7';
+import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 export function DeferredSurface({ surface }: { surface: DeferredSurfaceKind }) {
@@ -19,7 +20,8 @@ export function DeferredSurface({ surface }: { surface: DeferredSurfaceKind }) {
       <View className="flex-1 justify-center">
         <View
           className="mb-6 h-12 w-12 items-center justify-center rounded-full"
-          style={{ backgroundColor: colors.clayTint }}>
+          style={{ backgroundColor: colors.clayTint }}
+        >
           <Text variant="label" tone="clay">
             BETA
           </Text>
@@ -32,13 +34,14 @@ export function DeferredSurface({ surface }: { surface: DeferredSurfaceKind }) {
         </Text>
         <View
           className="mt-5 rounded-card bg-paper-raised p-4"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text variant="bodySm" tone="muted" style={{ lineHeight: 20 }}>
             {copy.detail}
           </Text>
         </View>
       </View>
-      <Button label={copy.cta} variant="ghost" onPress={() => router.back()} />
+      <Button label={copy.cta} variant="ghost" onPress={() => backOrReplace(router)} />
     </Screen>
   );
 }

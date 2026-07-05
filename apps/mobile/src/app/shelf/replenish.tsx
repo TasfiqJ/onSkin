@@ -9,6 +9,7 @@ import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // Replenishment (design screen 09, docs/04 §6). An HONEST PAO-triggered prompt
@@ -33,7 +34,11 @@ export default function ReplenishScreen() {
         <Text variant="body" tone="muted" className="py-6 text-center">
           This product is no longer on your shelf.
         </Text>
-        <Pressable accessibilityRole="button" className="items-center py-2" onPress={() => router.back()}>
+        <Pressable
+          accessibilityRole="button"
+          className="items-center py-2"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        >
           <Text className="font-sans-semibold" tone="muted">
             Close
           </Text>
@@ -43,11 +48,15 @@ export default function ReplenishScreen() {
   }
 
   const safety = isSafetyCriticalCategory(item.category);
-  const headline = safety ? `Your ${item.name} is nearly finished.` : `Time to top up ${item.name}.`;
+  const headline = safety
+    ? `Your ${item.name} is nearly finished.`
+    : `Time to top up ${item.name}.`;
   const body = safety
     ? 'Sun protection is one to keep fresh. Its filters lose strength over time. Want to line up the next one?'
     : 'You’re running low. Want to line up the next one so you don’t run out?';
-  const similarSub = safety ? 'Same protection, claim-safe matches' : 'Same role, claim-safe matches';
+  const similarSub = safety
+    ? 'Same protection, claim-safe matches'
+    : 'Same role, claim-safe matches';
 
   const reAdd = async () => {
     haptics.select();
@@ -94,7 +103,8 @@ export default function ReplenishScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={reAdd}
-          className="flex-row items-center gap-3.5 rounded-[18px] border-2 border-clay bg-paper-raised p-4">
+          className="flex-row items-center gap-3.5 rounded-[18px] border-2 border-clay bg-paper-raised p-4"
+        >
           <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-clay-tint">
             <Text className="font-sans-bold text-clay">+</Text>
           </View>
@@ -110,7 +120,8 @@ export default function ReplenishScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={() => void seeSimilar()}
-          className="flex-row items-center gap-3.5 rounded-[18px] border border-hairline bg-paper-raised p-4">
+          className="flex-row items-center gap-3.5 rounded-[18px] border border-hairline bg-paper-raised p-4"
+        >
           <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-greige">
             <Text tone="muted">⌕</Text>
           </View>
@@ -134,7 +145,11 @@ export default function ReplenishScreen() {
         </Text>
       </View>
 
-      <Pressable accessibilityRole="button" className="mt-3 items-center py-2" onPress={() => router.back()}>
+      <Pressable
+        accessibilityRole="button"
+        className="mt-3 items-center py-2"
+        onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+      >
         <Text className="font-sans-semibold" tone="muted">
           Not now
         </Text>
