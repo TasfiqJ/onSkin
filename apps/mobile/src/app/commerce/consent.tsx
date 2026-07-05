@@ -36,13 +36,19 @@ export default function CommerceConsentSheet() {
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.42)' }}>
-      <Pressable
-        className="absolute inset-0"
-        accessibilityRole="button"
-        accessibilityLabel="Dismiss"
-        onPress={close}
-      />
+      <Pressable className="absolute inset-0" accessible={false} onPress={close} />
       <View className="rounded-t-sheet bg-paper px-7 pb-10 pt-4">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Dismiss"
+          onPress={close}
+          className="absolute right-5 top-4 h-9 w-9 items-center justify-center rounded-full"
+          style={{ backgroundColor: 'rgba(32,27,21,0.06)' }}
+        >
+          <Text className="text-[20px] leading-[22px]" style={{ color: colors.muted }}>
+            ×
+          </Text>
+        </Pressable>
         <View
           className="mb-5 h-[5px] w-10 self-center rounded-[3px]"
           style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
