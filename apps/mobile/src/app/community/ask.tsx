@@ -28,8 +28,14 @@ import { colors } from '@/theme/tokens';
 
 function GateRow({ label }: { label: string }) {
   return (
-    <View className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3" style={{ borderWidth: 1, borderColor: colors.hairline }}>
-      <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
+    <View
+      className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
+      <View
+        className="h-[18px] w-[18px] items-center justify-center rounded-full"
+        style={{ backgroundColor: colors.sageTint }}
+      >
         <Text className="text-[10px]" style={{ color: colors.sage }}>
           ✓
         </Text>
@@ -70,15 +76,21 @@ function ConsentGate() {
           accessibilityState={{ checked: ageChecked }}
           onPress={() => setAgeChecked((v) => !v)}
           className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
-          style={{ borderWidth: 1, borderColor: ageChecked ? colors.clay : colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: ageChecked ? colors.clay : colors.hairline }}
+        >
           <View
             className="h-[18px] w-[18px] items-center justify-center rounded-[5px]"
             style={{
               backgroundColor: ageChecked ? colors.clay : 'transparent',
               borderWidth: ageChecked ? 0 : 1.5,
               borderColor: colors.hairlineStrong,
-            }}>
-            {ageChecked ? <Text className="text-[10px]" style={{ color: colors.paper }}>✓</Text> : null}
+            }}
+          >
+            {ageChecked ? (
+              <Text className="text-[10px]" style={{ color: colors.paper }}>
+                ✓
+              </Text>
+            ) : null}
           </View>
           <Text variant="bodySm" className="flex-1 text-[12.5px]" style={{ lineHeight: 17 }}>
             {COMMUNITY_COPY.consent.age}
@@ -94,7 +106,8 @@ function ConsentGate() {
         disabled={!ageChecked}
         onPress={() => void allow()}
         className="mt-5 h-[54px] items-center justify-center rounded-pill"
-        style={{ backgroundColor: colors.clay, opacity: ageChecked ? 1 : 0.4 }}>
+        style={{ backgroundColor: colors.clay, opacity: ageChecked ? 1 : 0.4 }}
+      >
         <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
           {COMMUNITY_COPY.consent.cta}
         </Text>
@@ -122,15 +135,23 @@ function Composer() {
     haptics.select();
     track('question_submitted', { flagged: scan.flagged });
     // Peer posting is deferred (B-COMMUNITY-MOD). The honest pre-moderation reality.
-    Alert.alert(COMMUNITY_COPY.ask.deferredTitle, COMMUNITY_COPY.ask.deferredBody, [{ text: 'OK' }]);
+    Alert.alert(COMMUNITY_COPY.ask.deferredTitle, COMMUNITY_COPY.ask.deferredBody, [
+      { text: 'OK' },
+    ]);
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8 pt-1">
       {/* composer */}
-      <View className="rounded-[22px] bg-paper-raised p-4" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      <View
+        className="rounded-[22px] bg-paper-raised p-4"
+        style={{ borderWidth: 1, borderColor: colors.hairline }}
+      >
         <View className="mb-3.5 flex-row items-center gap-2.5">
-          <View className="h-[30px] w-[30px] items-center justify-center rounded-full" style={{ backgroundColor: colors.greige }}>
+          <View
+            className="h-[30px] w-[30px] items-center justify-center rounded-full"
+            style={{ backgroundColor: colors.greige }}
+          >
             <Text tone="muted">☺</Text>
           </View>
           <View className="flex-1">
@@ -152,13 +173,28 @@ function Composer() {
           placeholder="Ask a calm, claim-safe question…"
           placeholderTextColor={colors.mutedLight}
           accessibilityLabel="Your anonymous question"
-          style={{ fontSize: 15, color: colors.ink, minHeight: 72, lineHeight: 22, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: colors.hairline }}
+          style={{
+            fontSize: 15,
+            color: colors.ink,
+            minHeight: 72,
+            lineHeight: 22,
+            paddingBottom: 14,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.hairline,
+          }}
         />
         {hasText ? (
           <View className="mt-3 flex-row items-center gap-2">
-            <Text style={{ color: scan.flagged ? colors.clay : colors.sage, fontSize: 12 }}>{scan.flagged ? '◇' : '✓'}</Text>
-            <Text className="flex-1 text-[11px]" style={{ color: scan.flagged ? colors.clayDeep : colors.sageBody, lineHeight: 15 }}>
-              {scan.flagged ? COMMUNITY_COPY.ask.claimSafeFlagged : COMMUNITY_COPY.ask.claimSafePassed}
+            <Text style={{ color: scan.flagged ? colors.clay : colors.sage, fontSize: 12 }}>
+              {scan.flagged ? '◇' : '✓'}
+            </Text>
+            <Text
+              className="flex-1 text-[11px]"
+              style={{ color: scan.flagged ? colors.clayDeep : colors.sageBody, lineHeight: 15 }}
+            >
+              {scan.flagged
+                ? COMMUNITY_COPY.ask.claimSafeFlagged
+                : COMMUNITY_COPY.ask.claimSafePassed}
             </Text>
           </View>
         ) : null}
@@ -167,8 +203,14 @@ function Composer() {
       {/* gates */}
       <View className="mt-3.5 gap-2">
         <GateRow label={COMMUNITY_COPY.ask.ageGate} />
-        <View className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3" style={{ borderWidth: 1, borderColor: colors.hairline }}>
-          <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
+        <View
+          className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
+          <View
+            className="h-[18px] w-[18px] items-center justify-center rounded-full"
+            style={{ backgroundColor: colors.sageTint }}
+          >
             <Text className="text-[10px]" style={{ color: colors.sage }}>
               ✓
             </Text>
@@ -185,7 +227,12 @@ function Composer() {
       {/* pre-moderation state */}
       <View
         className="mt-3.5 flex-row items-center gap-3 rounded-2xl p-4"
-        style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.2)' }}>
+        style={{
+          backgroundColor: colors.clayTint,
+          borderWidth: 1,
+          borderColor: 'rgba(165,105,75,0.2)',
+        }}
+      >
         <Text style={{ color: colors.clay, fontSize: 16 }}>◷</Text>
         <Text className="flex-1 text-[12.5px]" style={{ color: '#6F4A36', lineHeight: 18 }}>
           {COMMUNITY_COPY.ask.preModeration}
@@ -198,7 +245,8 @@ function Composer() {
         disabled={!hasText}
         onPress={submit}
         className="mt-4 h-[50px] items-center justify-center rounded-pill"
-        style={{ backgroundColor: colors.clay, opacity: hasText ? 1 : 0.4 }}>
+        style={{ backgroundColor: colors.clay, opacity: hasText ? 1 : 0.4 }}
+      >
         <Text className="font-sans-semibold text-[15px]" style={{ color: colors.paper }}>
           {COMMUNITY_COPY.ask.submit}
         </Text>
@@ -222,7 +270,8 @@ export default function AskScreen() {
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
             className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}>
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
             <Text style={{ color: colors.ink }}>‹</Text>
           </Pressable>
           <Text variant="body" className="font-sans-semibold" tone="muted">

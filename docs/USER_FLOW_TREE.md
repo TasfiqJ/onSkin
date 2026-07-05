@@ -486,6 +486,51 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state and can choose the shelf alternative.
   - Evidence: Screenshot and local consent state.
 
+## Flow: Skin Notes Community Trust Layer
+
+- Goal: A user can inspect expert Skin Notes, note details, and deferred community posting routes without getting trapped or seeing social-proof patterns that overpromise.
+- Persona: Returning user looking for calm, evidence-backed explanations before asking an anonymous community question.
+- Entry state: User has completed onboarding; community posting may be enabled, consent-gated, or deferred.
+- Start screen/URL/window: You tab Skin Notes row, direct `/community`, direct `/community/note/[id]`, direct `/community/ask`, or direct `/community/people-like-you`.
+- Success state: The library stays expert-led, posting remains clearly gated or deferred, and direct-entry exits return to the right parent surface.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web for route recovery; iOS and Android for native consent and moderation behavior.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/community-routes/`
+
+### Path A: Expert Skin Notes
+
+1. Action: Open `/community`, inspect topic groups, open a note detail, and return.
+   Expected result: Notes are topic-structured and evidence-labeled, not ranked by popularity or author following; note detail returns to the Skin Notes hub.
+   Evidence: Screenshot sequence and visible route snapshot.
+
+### Path B: Posting Gate
+
+1. Action: Open `/community/ask` with posting deferred, then repeat with posting enabled but no age or consent state.
+   Expected result: Deferred posting returns to the Skin Notes hub; enabled posting shows separate 16+ and consent controls, and Not now exits to the hub.
+   Evidence: Screenshot sequence and local gate state.
+
+### Branches
+
+- Branch: direct-entry Community exits
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/community`, `/community/note/[id]`, `/community/ask`, and `/community/people-like-you` directly, then use Back or Not now.
+  - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`.
+  - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: missing note detail
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open a stale `/community/note/[id]` route that is no longer present.
+  - Expected result: The app explains the note is unavailable and provides a working Back path to `/community`.
+  - Evidence: Screenshot and route snapshot.
+- Branch: claim-safe anonymous ask
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With community posting enabled and consent granted, type claim-heavy and calm questions into the anonymous ask composer.
+  - Expected result: Claim-safety copy flags risky wording as a first pass, never as an automated moderation decision, and no question is posted publicly before human review is staffed.
+  - Evidence: Screenshot sequence and local moderation state.
+
 ## Flow: Shelf Conflict Checks And Share Cards
 
 - Goal: A user can inspect conflict guidance and share reviewed conflict cards without getting stuck on direct-entry surfaces.

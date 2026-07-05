@@ -28,14 +28,27 @@ function NoteCard({ note }: { note: SkinNote }) {
         router.push({ pathname: '/community/note/[id]', params: { id: note.id } });
       }}
       className="mb-3 rounded-[18px] bg-paper-raised p-4"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
       <View className="mb-2 flex-row items-start justify-between gap-2.5">
-        <Text variant="body" className="flex-1 font-sans-bold text-[14.5px]" style={{ lineHeight: 19 }}>
+        <Text
+          variant="body"
+          className="flex-1 font-sans-bold text-[14.5px]"
+          style={{ lineHeight: 19 }}
+        >
           {note.title}
         </Text>
         <Text
           className="font-sans-bold text-[10px]"
-          style={{ color: pill.fg, backgroundColor: pill.bg, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 999, overflow: 'hidden' }}>
+          style={{
+            color: pill.fg,
+            backgroundColor: pill.bg,
+            paddingHorizontal: 9,
+            paddingVertical: 4,
+            borderRadius: 999,
+            overflow: 'hidden',
+          }}
+        >
           {pill.text}
         </Text>
       </View>
@@ -58,6 +71,7 @@ export default function SkinNotesHub() {
       <View className="flex-row items-center justify-between pt-1">
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           hitSlop={8}
         >
@@ -66,7 +80,11 @@ export default function SkinNotesHub() {
           </Text>
         </Pressable>
         {phase7Flags.communityPosting ? (
-          <Pressable accessibilityRole="button" onPress={() => router.push('/community/ask')} hitSlop={8}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/community/ask')}
+            hitSlop={8}
+          >
             <Text variant="body" tone="muted" className="font-sans-medium">
               Ask
             </Text>
@@ -101,7 +119,12 @@ export default function SkinNotesHub() {
               ))}
             </View>
           ))}
-          <Text variant="label" tone="muted" className="mt-3 px-2 text-center" style={{ lineHeight: 17 }}>
+          <Text
+            variant="label"
+            tone="muted"
+            className="mt-3 px-2 text-center"
+            style={{ lineHeight: 17 }}
+          >
             {COMMUNITY_COPY.hub.libraryFooter}
           </Text>
         </ScrollView>

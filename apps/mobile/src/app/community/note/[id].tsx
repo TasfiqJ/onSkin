@@ -21,7 +21,11 @@ export default function NoteDetail() {
   const qc = useQueryClient();
   const note = id ? noteById(id) : undefined;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
-  const helpedQ = useQuery({ queryKey: ['noteHelped', id], queryFn: () => isNoteHelpful(id ?? ''), enabled: !!id });
+  const helpedQ = useQuery({
+    queryKey: ['noteHelped', id],
+    queryFn: () => isNoteHelpful(id ?? ''),
+    enabled: !!id,
+  });
   const helped = helpedQ.data ?? false;
   const pill = note ? evidencePill(note.evidenceLabel) : null;
 
@@ -51,7 +55,8 @@ export default function NoteDetail() {
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
           className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
         <Text variant="body" className="font-sans-semibold" tone="muted">
@@ -67,7 +72,10 @@ export default function NoteDetail() {
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-          <View className="rounded-[22px] bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+          <View
+            className="rounded-[22px] bg-paper-raised p-5"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
             {/* THE CLAIM */}
             <Text variant="label" tone="muted" className="mb-1.5">
               {COMMUNITY_COPY.card.claimLabel.toUpperCase()}
@@ -80,13 +88,17 @@ export default function NoteDetail() {
             <View className="mt-4 flex-row flex-wrap gap-2">
               <View
                 className="flex-row items-center gap-2 rounded-pill"
-                style={{ backgroundColor: pill.bg, paddingHorizontal: 13, paddingVertical: 6 }}>
+                style={{ backgroundColor: pill.bg, paddingHorizontal: 13, paddingVertical: 6 }}
+              >
                 <View className="h-2 w-2 rounded-full" style={{ backgroundColor: pill.fg }} />
                 <Text className="font-sans-bold text-[12px]" style={{ color: pill.fg }}>
                   {note.evidenceLabel === 'refuted' ? 'Refuted myth' : pill.text}
                 </Text>
               </View>
-              <View className="rounded-pill" style={{ backgroundColor: pill.bg, paddingHorizontal: 13, paddingVertical: 6 }}>
+              <View
+                className="rounded-pill"
+                style={{ backgroundColor: pill.bg, paddingHorizontal: 13, paddingVertical: 6 }}
+              >
                 <Text className="font-sans-bold text-[12px]" style={{ color: pill.fg }}>
                   {note.verdict}
                 </Text>
@@ -105,7 +117,8 @@ export default function NoteDetail() {
             <View className="mt-4 rounded-2xl p-4" style={{ backgroundColor: colors.greigeChip }}>
               <View
                 className="flex-row items-center justify-between pb-2.5"
-                style={{ borderBottomWidth: 1, borderBottomColor: colors.hairline }}>
+                style={{ borderBottomWidth: 1, borderBottomColor: colors.hairline }}
+              >
                 <Text variant="bodySm" tone="muted" className="text-[12px]">
                   {COMMUNITY_COPY.card.evidenceGradeLabel}
                 </Text>
@@ -114,8 +127,17 @@ export default function NoteDetail() {
                   {note.evidenceGrade ? ` · SORT ${note.evidenceGrade}` : ' · broad consensus'}
                 </Text>
               </View>
-              <Text variant="bodySm" tone="muted" className="mt-2.5 text-[12px]" style={{ lineHeight: 17 }}>
-                {COMMUNITY_COPY.card.reviewedByLead} <Text className="font-sans-semibold" style={{ color: colors.ink }}>{note.authorCredential.toLowerCase()}</Text>. {COMMUNITY_COPY.card.sourceLead} {note.sourceLabel}.
+              <Text
+                variant="bodySm"
+                tone="muted"
+                className="mt-2.5 text-[12px]"
+                style={{ lineHeight: 17 }}
+              >
+                {COMMUNITY_COPY.card.reviewedByLead}{' '}
+                <Text className="font-sans-semibold" style={{ color: colors.ink }}>
+                  {note.authorCredential.toLowerCase()}
+                </Text>
+                . {COMMUNITY_COPY.card.sourceLead} {note.sourceLabel}.
               </Text>
             </View>
 
@@ -135,7 +157,12 @@ export default function NoteDetail() {
               accessibilityState={{ selected: helped }}
               onPress={() => void toggleHelped()}
               className="h-12 flex-1 flex-row items-center justify-center gap-2 rounded-pill"
-              style={{ borderWidth: 1.5, borderColor: helped ? colors.sage : 'rgba(79,122,74,0.4)', backgroundColor: helped ? colors.sageTint : 'transparent' }}>
+              style={{
+                borderWidth: 1.5,
+                borderColor: helped ? colors.sage : 'rgba(79,122,74,0.4)',
+                backgroundColor: helped ? colors.sageTint : 'transparent',
+              }}
+            >
               <Text style={{ color: colors.sage, fontSize: 14 }}>♥</Text>
               <Text className="font-sans-semibold text-[14.5px]" style={{ color: colors.sage }}>
                 {COMMUNITY_COPY.card.helped}
@@ -145,7 +172,8 @@ export default function NoteDetail() {
               accessibilityRole="button"
               onPress={onShare}
               className="h-12 items-center justify-center rounded-pill px-6"
-              style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}>
+              style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}
+            >
               <Text className="font-sans-semibold text-[14.5px]" tone="muted">
                 {COMMUNITY_COPY.card.share}
               </Text>
