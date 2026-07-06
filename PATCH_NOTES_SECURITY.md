@@ -593,6 +593,13 @@
 - Why safe: Partner-sharing withdrawal is a regulated consent event. Analytics should not record a completed decline if server-side withdrawal/cleanup fails, even though the local app must still fail closed by relocking commerce.
 - Regression: `consent.test.ts` proves grant analytics wait for local persistence, decline analytics wait for withdrawal, and withdrawal failure does not emit the completed-decline event.
 
+## Notification preference save recovery
+
+- Files: `apps/mobile/src/features/notifications/applyPreferences.ts`, `apps/mobile/src/features/notifications/applyPreferences.test.ts`, `apps/mobile/src/features/notifications/useNotifications.ts`.
+- Change: Notification preference updates now save through a helper before reminders are rescheduled or visible React Query state is updated. The hook no longer uses `onMutate` optimistic query writes for reminder toggles or timing changes.
+- Why safe: Reminder, promotional, and lock-screen-related preferences are privacy-sensitive. A toggle should not look saved, and reminders should not be rescheduled, when private local preference persistence failed.
+- Regression: `applyPreferences.test.ts` covers save-before-reschedule ordering, fail-closed persistence errors, and a source-level guard against reintroducing optimistic query updates in `useNotifications`.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

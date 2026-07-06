@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { applyNotificationPreferencePatch } from './applyPreferences';
 import { rescheduleReminders } from './deliver';
-import { loadNotifPrefs, normalizeNotifPatch, saveNotifPrefs, type NotifPrefs } from './store';
+import { loadNotifPrefs, saveNotifPrefs, type NotifPrefs } from './store';
 
 // Reads/writes the local-first notification preferences and reschedules the
-// utility reminders whenever they change (docs/07 §3.4). Optimistic so the
-// settings toggles feel instant.
+// utility reminders whenever they change (docs/07 §3.4). Visible state updates
+// only after local private persistence succeeds.
 const KEY = ['notifPrefs'] as const;
 
 export function useNotifPrefs() {
@@ -16,19 +17,12 @@ export function useUpdateNotifPrefs() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (patch: Partial<NotifPrefs>) => {
-      const next = await saveNotifPrefs(patch);
-      await rescheduleReminders(next);
-      return next;
+      return applyNotificationPreferencePatch(patch, {
+        save: saveNotifPrefs,
+        reschedule: rescheduleReminders,
+      });
     },
-    onMutate: async (patch: Partial<NotifPrefs>) => {
-      await qc.cancelQueries({ queryKey: KEY });
-      const prev = qc.getQueryData<NotifPrefs>(KEY);
-      if (prev) qc.setQueryData<NotifPrefs>(KEY, { ...prev, ...normalizeNotifPatch(patch) });
-      return { prev };
-    },
-    onError: (_e, _v, ctx) => {
-      if (ctx?.prev) qc.setQueryData(KEY, ctx.prev);
-    },
+    onSuccess: (next) => qc.setQueryData<NotifPrefs>(KEY, next),
     onSettled: () => void qc.invalidateQueries({ queryKey: KEY }),
   });
 }
