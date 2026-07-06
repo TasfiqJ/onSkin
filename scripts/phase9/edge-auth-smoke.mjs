@@ -225,6 +225,13 @@ block(
 );
 block(
   errors,
+  /auth === 'raw'/.test(liveEdgeAuth) &&
+    /user Edge Functions reject raw JWT without Bearer scheme/.test(liveEdgeAuth) &&
+    /raw-JWT catalog call wrote lookup event/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove raw JWT Authorization headers are rejected without side effects.',
+);
+block(
+  errors,
   /user Edge Functions reject valid JWT non-POST methods/.test(liveEdgeAuth) &&
     /user Edge Functions reject oversized bodies before side effects/.test(liveEdgeAuth) &&
     /USER_EDGE_BODY_MAX_BYTES/.test(liveEdgeAuth) &&

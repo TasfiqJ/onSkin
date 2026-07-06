@@ -809,3 +809,10 @@
 - Change: User-JWT Edge Functions now require a strict `Authorization: Bearer <token>` header through a shared parser before direct auth validation or caller-scoped RLS clients are created.
 - Why safe: Modified clients should not be able to rely on raw JWT headers or inconsistent ad hoc Bearer stripping. The shared parser keeps auth handling consistent across data rights, consent, catalog, and subscription grant paths.
 - Regression: Phase 9 Edge auth smoke enforces shared helper usage and blocks reintroducing ad hoc Bearer string replacement.
+
+## Raw JWT live Edge auth evidence
+
+- Files: `scripts/phase9/live-edge-auth.mjs`, `scripts/phase9/edge-auth-smoke.mjs`.
+- Change: The live Edge auth harness now sends a valid caller JWT as a raw `Authorization` header without the Bearer scheme and requires every user-JWT function to return 401 with no side effects.
+- Why safe: The stricter shared parser needs deployed evidence that raw JWT headers are rejected, not only missing or invalid Bearer headers.
+- Regression: Phase 9 Edge auth smoke statically requires the raw-JWT negative path and side-effect checks in the live harness.

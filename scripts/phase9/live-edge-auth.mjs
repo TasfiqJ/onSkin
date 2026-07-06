@@ -179,6 +179,7 @@ async function postFunction(
   };
   if (auth === 'valid') headers.Authorization = `Bearer ${token}`;
   if (auth === 'invalid') headers.Authorization = `Bearer invalid-${randomUUID()}`;
+  if (auth === 'raw') headers.Authorization = token;
 
   const request = {
     method,
@@ -308,6 +309,37 @@ async function main() {
         });
         assertStatus(response.status, 401, `${functionName} invalid JWT`, response.text);
       }
+    });
+
+    await runCheck('user Edge Functions reject raw JWT without Bearer scheme', async () => {
+      for (const functionName of userJwtFunctions) {
+        const response = await postFunction(functionName, {
+          auth: 'raw',
+          token: user.token,
+          body: defaultBody(functionName),
+        });
+        assertStatus(response.status, 401, `${functionName} raw JWT`, response.text);
+      }
+      assert(
+        await liveUserExists(admin, user.id),
+        'raw-JWT account-deletion removed the live harness user.',
+      );
+      assert(
+        (await countRows(admin, 'entitlements', 'user_id', user.id)) === 0,
+        'raw-JWT subscription call wrote entitlement.',
+      );
+      assert(
+        (await countRows(admin, 'reverse_trial_grants', 'user_id', user.id)) === 0,
+        'raw-JWT subscription call wrote grant.',
+      );
+      assert(
+        (await countRows(admin, 'catalog_lookup_events', 'user_id', user.id)) === 0,
+        'raw-JWT catalog call wrote lookup event.',
+      );
+      assert(
+        (await countRows(admin, 'consents', 'user_id', user.id)) === 0,
+        'raw-JWT consent-withdrawal wrote consent.',
+      );
     });
 
     await runCheck('user Edge Functions reject valid JWT non-POST methods', async () => {
