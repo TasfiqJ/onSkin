@@ -36,7 +36,7 @@ export default function ReplenishScreen() {
         </Text>
         <Pressable
           accessibilityRole="button"
-          className="min-h-[44px] items-center justify-center py-2"
+          className="min-h-[48px] items-center justify-center py-2"
           onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
         >
           <Text className="font-sans-semibold" tone="muted">
@@ -147,7 +147,7 @@ export default function ReplenishScreen() {
 
       <Pressable
         accessibilityRole="button"
-        className="mt-3 min-h-[44px] items-center justify-center py-2"
+        className="mt-3 min-h-[48px] items-center justify-center py-2"
         onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
       >
         <Text className="font-sans-semibold" tone="muted">

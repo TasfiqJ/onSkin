@@ -85,10 +85,11 @@ describe('Shelf route mobile contracts', () => {
     }
   });
 
-  it('keeps text exits at least 44px tall when a label is clearer than an icon', () => {
+  it('keeps text exits buffered above 44px when a label is clearer than an icon', () => {
     const source = readAppRoute('shelf/replenish.tsx');
 
-    expect(source).toContain('min-h-[44px] items-center justify-center py-2');
+    expect(source).toContain('min-h-[48px] items-center justify-center py-2');
+    expect(source).not.toContain('min-h-[44px] items-center justify-center py-2');
     expect(source).not.toContain('className="mt-3 items-center py-2"');
     expect(source).not.toContain('className="items-center py-2"');
   });

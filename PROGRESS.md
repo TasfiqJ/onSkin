@@ -9,6 +9,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Human-simulated E2E reproduced the expired subscription settings win-back CTA
   at 43.99 px tall on a 320 px phone viewport. Buffered the CTA to 48 px and
   added a settings route contract test to prevent the exact-44 px regression.
+- Human-simulated E2E reproduced the Shelf replenish missing-product `Close`
+  exit at 43.99 px tall on a 320 px phone viewport. Buffered replenish text
+  exits to 48 px and updated the Shelf route contract test.
 
 Legend: done / partial / not started / launch-blocked. Use the readiness
 statuses in `LAUNCH_READINESS.md` for current production state:
