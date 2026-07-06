@@ -13,6 +13,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   and 320x568 human-simulated E2E evidence in
   `test-results/human-e2e/2026-07-06/shelf-empty-overflow/`; native thumbnail
   rendering still needs simulator/device visual QA.
+- Added a production native identity guard for the rebrand path. Expo production
+  config now refuses to resolve legacy `OnSkin` app names, schemes, permission
+  copy, bundle IDs, or Android package IDs unless
+  `BRAND_LEGAL_CLEARANCE=cleared`; development builds still use isolated local
+  install identities. Phase 9 store-build inspection records this as a blocker
+  instead of crashing, and Phase 5 warns when production EAS profiles do not
+  declare final identity keys.
 - Added a runtime brand identity module for the working `RoutineKind` rebrand and
   moved high-visibility app copy through it: Pro/paywall labels, Ask labels,
   app-lock prompts and shields, lock-screen notification title, share-card
