@@ -100,7 +100,7 @@ export default function CatalogSearchScreen() {
         <View className="w-[44px]" />
       </View>
 
-      <View className="mt-4 flex-row gap-2">
+      <View className="mt-4 flex-row items-center gap-2">
         <TextInput
           accessibilityLabel="Catalog search query"
           value={query}
@@ -108,7 +108,7 @@ export default function CatalogSearchScreen() {
           onSubmitEditing={runSearch}
           placeholder="Brand or product name"
           placeholderTextColor={colors.mutedLight}
-          className="h-[50px] flex-1 rounded-[14px] border border-hairline bg-paper-raised px-4 font-sans-medium text-[15px] text-ink"
+          className="h-[50px] min-w-0 flex-1 rounded-[14px] border border-hairline bg-paper-raised px-4 font-sans-medium text-[15px] text-ink"
           returnKeyType="search"
         />
         <Pressable
@@ -117,7 +117,7 @@ export default function CatalogSearchScreen() {
           disabled={!canSearch}
           onPress={runSearch}
           className={cn(
-            'h-[50px] items-center justify-center rounded-[14px] px-4',
+            'h-[50px] min-w-[72px] shrink-0 items-center justify-center rounded-[14px] px-3',
             canSearch ? 'bg-ink' : 'bg-greige-chip',
           )}
         >

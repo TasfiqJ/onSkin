@@ -118,6 +118,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('min-h-[44px] min-w-[44px] items-center justify-center px-2');
   });
 
+  it('keeps the Shelf catalog search row inside narrow phones', () => {
+    const source = readAppRoute('shelf/search.tsx');
+
+    expect(source).toContain(
+      'className="h-[50px] min-w-0 flex-1 rounded-[14px] border border-hairline bg-paper-raised px-4',
+    );
+    expect(source).toContain(
+      "'h-[50px] min-w-[72px] shrink-0 items-center justify-center rounded-[14px] px-3'",
+    );
+    expect(source).not.toContain('className="h-[50px] flex-1 rounded-[14px]');
+    expect(source).not.toContain("'h-[50px] items-center justify-center rounded-[14px] px-4'");
+  });
+
   it('keeps barcode lookup outcomes wired to the owner-scoped shelf scan log', () => {
     const source = readAppRoute('shelf/scan.tsx');
 

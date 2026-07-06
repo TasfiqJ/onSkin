@@ -6,6 +6,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf catalog search row after 320 px E2E showed the Search action
+  clipping past the right edge. The input now shrinks correctly and the Search
+  action keeps a 50 px buffered target inside the viewport.
 - Fixed the populated Progress comparison surface after 320 px E2E showed the
   Photo CTA, Compare/Timeline tabs, No scores link, Side-by-side toggle, and
   date-change chips rendering below 44 px or clipping right. The controls now
