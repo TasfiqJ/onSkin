@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -11,6 +11,7 @@ import { planLineLabel, planPriceDisplay } from '@/features/subscription/priceDi
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
+import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
 
 // 10 · Onboarding offer. Two honest paths (docs/08 §3.1, design 01). "Start free
@@ -19,13 +20,24 @@ import { colors } from '@/theme/tokens';
 // amount most conspicuous, no trial toggle, Terms/Privacy/Restore present, trust
 // block below the plans (Apple 3.1.2). Purchase is STUBBED (B-REVENUECAT); the v1
 // trial/reverse-trial are granted via the local-first entitlement store.
-function ValueProp({ label }: { label: string }) {
+function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
   return (
-    <View className="flex-row items-center gap-3">
-      <View className="h-8 w-8 items-center justify-center rounded-[9px]" style={{ backgroundColor: colors.clayTint }}>
-        <View className="h-2.5 w-2.5 rounded-[3px]" style={{ backgroundColor: colors.clay }} />
+    <View className={cn('flex-row items-center', compact ? 'gap-2' : 'gap-3')}>
+      <View
+        className={cn(
+          'items-center justify-center',
+          compact ? 'h-5 w-5 rounded-[7px]' : 'h-8 w-8 rounded-[9px]',
+        )}
+        style={{ backgroundColor: colors.clayTint }}>
+        <View
+          className={compact ? 'h-2 w-2 rounded-[3px]' : 'h-2.5 w-2.5 rounded-[3px]'}
+          style={{ backgroundColor: colors.clay }}
+        />
       </View>
-      <Text variant="bodySm" className="flex-1 font-sans-semibold" style={{ lineHeight: 18 }}>
+      <Text
+        variant="bodySm"
+        className="flex-1 font-sans-semibold"
+        style={{ fontSize: compact ? 11.5 : undefined, lineHeight: compact ? 14 : 18 }}>
         {label}
       </Text>
     </View>
@@ -33,6 +45,7 @@ function ValueProp({ label }: { label: string }) {
 }
 
 export default function PaywallScreen() {
+  const { height } = useWindowDimensions();
   const { goals, quizAnswers, computeResult } = useOnboarding();
   const { startTrial, startReverseTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
@@ -42,6 +55,7 @@ export default function PaywallScreen() {
   const monthlyDisplay = planPriceDisplay('monthly', offering.data);
   const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
   const quizCompletion = getQuizCompletionState(quizAnswers);
+  const compactPaywall = height < 640;
 
   function onStartTrial() {
     if (!canPurchase) {
@@ -81,24 +95,40 @@ export default function PaywallScreen() {
 
   return (
     <Screen edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-        <Text variant="title" className="mt-2" style={{ fontSize: 30, lineHeight: 34 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-8'}
+      >
+        <Text
+          variant="title"
+          className={compactPaywall ? 'mt-0' : 'mt-2'}
+          style={{ fontSize: compactPaywall ? 24 : 30, lineHeight: compactPaywall ? 27 : 34 }}>
           {headline}
         </Text>
-        <Text variant="bodySm" tone="muted" className="mt-1.5">
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={compactPaywall ? 'mt-1' : 'mt-1.5'}
+          style={compactPaywall ? { fontSize: 11.5, lineHeight: 15 } : undefined}
+        >
           {PAYWALL_COPY.offer.subhead}
         </Text>
 
         {/* four value props */}
-        <View className="mt-5 gap-2.5">
+        <View className={compactPaywall ? 'mt-2.5 gap-1' : 'mt-5 gap-2.5'}>
           {PAYWALL_COPY.offer.valueProps.map((v) => (
-            <ValueProp key={v} label={v} />
+            <ValueProp key={v} label={v} compact={compactPaywall} />
           ))}
         </View>
 
         {/* the offer. Billed amount most conspicuous (Apple 3.1.2) */}
-        <View className="mt-5 rounded-card p-5" style={{ backgroundColor: colors.ink }}>
-          <View className="mb-2 self-start rounded-pill px-3 py-1" style={{ backgroundColor: colors.clay }}>
+        <View
+          className={compactPaywall ? 'mt-2.5 rounded-card p-3' : 'mt-5 rounded-card p-5'}
+          style={{ backgroundColor: colors.ink }}
+        >
+          <View
+            className={compactPaywall ? 'mb-1 self-start rounded-pill px-3 py-1' : 'mb-2 self-start rounded-pill px-3 py-1'}
+            style={{ backgroundColor: colors.clay }}>
             <Text variant="label" style={{ color: colors.paper, fontSize: 10.5 }}>
               {PAYWALL_COPY.offer.annualBadge.toUpperCase()}
             </Text>
@@ -108,7 +138,13 @@ export default function PaywallScreen() {
               <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
                 {annualDisplay.introLabel}
               </Text>
-              <Text variant="title" style={{ color: colors.paper, fontSize: 34, lineHeight: 38 }}>
+              <Text
+                variant="title"
+                style={{
+                  color: colors.paper,
+                  fontSize: compactPaywall ? 26 : 34,
+                  lineHeight: compactPaywall ? 30 : 38,
+                }}>
                 {annualDisplay.priceLabel}
                 {annualDisplay.periodLabel ? (
                   <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
@@ -125,7 +161,11 @@ export default function PaywallScreen() {
 
         {/* monthly secondary */}
         <View
-          className="mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-[18px] py-3"
+          className={
+            compactPaywall
+              ? 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-1.5'
+              : 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-[18px] py-3'
+          }
           style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}>
           <Text variant="bodySm" className="font-sans-semibold" tone="muted">
             Monthly
@@ -136,7 +176,11 @@ export default function PaywallScreen() {
         </View>
 
         {offering.data?.status && offering.data.status !== 'available' ? (
-          <Text variant="label" tone="muted" className="mt-2 px-2 text-center" style={{ fontSize: 11.5, lineHeight: 16 }}>
+          <Text
+            variant="label"
+            tone="muted"
+            className={compactPaywall ? 'mt-0.5 px-2 text-center' : 'mt-2 px-2 text-center'}
+            style={{ fontSize: compactPaywall ? 10 : 11.5, lineHeight: compactPaywall ? 12 : 16 }}>
             {offering.data.reason}
           </Text>
         ) : null}
@@ -146,13 +190,18 @@ export default function PaywallScreen() {
           accessibilityRole="button"
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
-          className="mt-5 h-[54px] items-center justify-center rounded-pill"
+          className={compactPaywall ? 'mt-2 h-[48px] items-center justify-center rounded-pill' : 'mt-5 h-[54px] items-center justify-center rounded-pill'}
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}>
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
             {PAYWALL_COPY.offer.cta}
           </Text>
         </Pressable>
-        <Text variant="bodySm" tone="muted" className="mt-2.5 text-center">
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={compactPaywall ? 'mt-1 text-center' : 'mt-2.5 text-center'}
+          style={compactPaywall ? { fontSize: 11, lineHeight: 14 } : undefined}
+        >
           {PAYWALL_COPY.offer.trialReassurance}
         </Text>
 
@@ -161,16 +210,31 @@ export default function PaywallScreen() {
           accessibilityRole="button"
           disabled={startReverseTrial.isPending}
           onPress={onStartReverseTrial}
-          className="mt-3 flex-row items-center gap-3 rounded-card p-3.5"
+          className={
+            compactPaywall
+              ? 'mt-1.5 flex-row items-center gap-2 rounded-card px-3 py-2'
+              : 'mt-3 flex-row items-center gap-3 rounded-card p-3.5'
+          }
           style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
-          <View className="h-[34px] w-[34px] items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(165,105,75,0.15)' }}>
+          <View
+            className={compactPaywall ? 'h-7 w-7 items-center justify-center rounded-full' : 'h-[34px] w-[34px] items-center justify-center rounded-full'}
+            style={{ backgroundColor: 'rgba(165,105,75,0.15)' }}>
             <View className="h-3 w-3 rounded-full border-2" style={{ borderColor: colors.clay }} />
           </View>
           <View className="flex-1">
-            <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clayDeep }}>
+            <Text
+              variant="bodySm"
+              className="font-sans-semibold"
+              style={{
+                color: colors.clayDeep,
+                fontSize: compactPaywall ? 12.5 : undefined,
+                lineHeight: compactPaywall ? 16 : undefined,
+              }}>
               {PAYWALL_COPY.offer.exploreTitle}
             </Text>
-            <Text variant="label" style={{ color: colors.clay, fontSize: 11.5 }}>
+            <Text
+              variant="label"
+              style={{ color: colors.clay, fontSize: compactPaywall ? 10.5 : 11.5, lineHeight: compactPaywall ? 13 : undefined }}>
               {PAYWALL_COPY.offer.exploreBody}
             </Text>
           </View>

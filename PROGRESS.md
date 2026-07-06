@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the onboarding paywall short-phone conversion path after 320x568 E2E
+  showed `Start free trial`, `Explore first`, and the compliance row below the
+  first viewport. Compact phones now tighten paywall spacing while preserving the
+  four value props, conspicuous annual price, no-card reverse-trial path, and
+  48 px Terms/Privacy/Restore targets; E2E verified `Explore first` routes to
+  `/routine/plan`.
 - Fixed onboarding fixed-footer overlap after 320x568 E2E showed the final goals
   and product `Add to shelf` action running underneath the bottom Continue/Skip
   button. Goals and product intake now keep enough scroll padding for short

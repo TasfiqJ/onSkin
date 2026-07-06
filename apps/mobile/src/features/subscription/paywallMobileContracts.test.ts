@@ -88,4 +88,18 @@ describe('paywall mobile contracts', () => {
     expect(source.match(/style=\{\{ minHeight: 48, minWidth: 48 \}\}/g)).toHaveLength(3);
     expect(source).not.toContain('hitSlop={8}');
   });
+
+  it('keeps the onboarding paywall actions visible sooner on short phones', () => {
+    const source = readAppRoute('onboarding/paywall.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactPaywall = height < 640');
+    expect(source).toContain("contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-8'}");
+    expect(source).toContain("className={compactPaywall ? 'mt-2.5 gap-1' : 'mt-5 gap-2.5'}");
+    expect(source).toContain(
+      "className={compactPaywall ? 'mt-2 h-[48px] items-center justify-center rounded-pill' : 'mt-5 h-[54px] items-center justify-center rounded-pill'}",
+    );
+    expect(source).toContain("compact={compactPaywall}");
+    expect(source).not.toContain('contentContainerClassName="pb-8"');
+  });
 });
