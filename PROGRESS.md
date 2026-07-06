@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the remaining Shelf card metadata orphan-wrap case after 320 px E2E
+  showed `Jul` could still land on its own line. Short metadata phrases now stay
+  together while separators still allow clean line breaks, and Expo web E2E
+  verified the manual retinoid card wraps as `opened Jul`.
 - Fixed the Shelf card metadata wrap after 320 px navigation E2E showed a manual
   product line breaking to a stray leading `· opened Jul`. Shelf metadata now
   uses a non-breaking separator so provenance and opened-date text wraps cleanly.

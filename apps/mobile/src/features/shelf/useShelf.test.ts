@@ -104,12 +104,15 @@ describe('shelf paired badge resolution gate', () => {
 });
 
 describe('shelf metadata formatting', () => {
-  it('keeps separators attached so narrow cards never wrap to a leading dot', () => {
+  it('keeps metadata phrases attached so narrow cards wrap at clean boundaries', () => {
     const meta = formatShelfMetaLine(shelfProduct());
 
     expect(meta).toBe(
-      ['added by hand', 'opened Jul', 'est. 6 mo'].join(SHELF_META_SEPARATOR),
+      ['added\u00A0by\u00A0hand', 'opened\u00A0Jul', 'est.\u00A06\u00A0mo'].join(
+        SHELF_META_SEPARATOR,
+      ),
     );
+    expect(meta).not.toContain('opened Jul');
     expect(meta).not.toContain(' · ');
   });
 });
