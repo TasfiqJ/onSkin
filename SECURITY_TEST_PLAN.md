@@ -408,6 +408,7 @@
   - Fails if analytics, Sentry, or RevenueCat setup warnings reintroduce raw exception-object console logging.
   - Fails if analytics tracking reintroduces development console logging for event names or sanitized props.
   - Fails if Sentry capture stops sanitizing the captured throwable or sends the raw exception object to Sentry.
+  - Fails if PostHog/RevenueCat client identity reset wrappers or local private-data wipe calls disappear.
   - Fails if decrypted photo share files or generated shelf share-card tmpfiles stop being deleted after share attempts.
   - Fails if photo storage/share stops stripping image metadata before encryption or generated share export.
   - Fails if photo sharing reintroduces a redaction promise without implementation, drops the explicit image-only confirmation, or stops disclosing that notes are excluded.

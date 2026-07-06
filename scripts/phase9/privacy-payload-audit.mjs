@@ -10,6 +10,8 @@ const sentrySource = read('apps/mobile/src/lib/observability/sentry.ts');
 const scrubSource = read('apps/mobile/src/lib/observability/scrub.ts');
 const safeLogSource = read('apps/mobile/src/lib/observability/safeLog.ts');
 const authProviderSource = read('apps/mobile/src/lib/auth/AuthProvider.tsx');
+const localPrivateDataSource = read('apps/mobile/src/features/settings/localPrivateData.ts');
+const revenueCatSource = read('apps/mobile/src/lib/iap/revenuecat.ts');
 const shareCardSource = read('apps/mobile/src/features/growth/shareCard.ts');
 const encryptedPhotoSource = read('apps/mobile/src/features/photos/encryptedStorage.ts');
 const sharePhotoSource = read('apps/mobile/src/features/photos/sharePhoto.ts');
@@ -50,6 +52,26 @@ block(errors, /devWarn/.test(trackSource), 'Analytics dev warnings must not log 
 block(errors, /devWarn/.test(sentrySource), 'Sentry dev warnings must not log raw exception objects.');
 block(errors, /devWarn/.test(authProviderSource), 'RevenueCat setup warnings must not log raw exception objects.');
 block(errors, !/console\.log\(/.test(trackSource), 'Analytics tracking must not log events or props to the dev console.');
+block(
+  errors,
+  /export async function resetAnalyticsIdentity/.test(trackSource) &&
+    /posthog\?\.reset\(\)/.test(trackSource),
+  'PostHog client identity must expose an account-boundary reset.',
+);
+block(
+  errors,
+  /export async function resetRevenueCatIdentity/.test(revenueCatSource) &&
+    /await Purchases\.logOut\(\)/.test(revenueCatSource) &&
+    /configuredForUserId = null/.test(revenueCatSource) &&
+    /cachedOfferings = null/.test(revenueCatSource),
+  'RevenueCat client identity reset must log out and clear cached account/offering state.',
+);
+block(
+  errors,
+  /resetAnalyticsIdentity\(\)/.test(localPrivateDataSource) &&
+    /resetRevenueCatIdentity\(\)/.test(localPrivateDataSource),
+  'Local private-data cleanup must reset PostHog and RevenueCat client identities.',
+);
 block(errors, /result:\s*'tmpfile'/.test(shareCardSource), 'Share-card export must keep using an OS tmpfile capture result.');
 block(
   errors,
