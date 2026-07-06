@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -29,15 +29,23 @@ const READY = '#9DB18A';
 
 function CaptureOverlay({
   backgroundColor = 'rgba(10,8,6,0.9)',
+  compact = false,
   children,
 }: {
   backgroundColor?: string;
+  compact?: boolean;
   children: ReactNode;
 }) {
   return (
     <ScrollView
       style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor }}
-      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 28 }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: compact ? 'flex-start' : 'center',
+        paddingHorizontal: 28,
+        paddingTop: compact ? 16 : 28,
+        paddingBottom: compact ? 20 : 28,
+      }}
       showsVerticalScrollIndicator={false}
     >
       {children}
@@ -54,14 +62,17 @@ function ConsentGate({
   onGrant: () => void;
   onCancel: () => void;
 }) {
+  const compact = useWindowDimensions().height < 640;
+
   return (
-    <CaptureOverlay backgroundColor="rgba(10,8,6,0.92)">
+    <CaptureOverlay backgroundColor="rgba(10,8,6,0.92)" compact={compact}>
       <Text
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
-          fontSize: 30,
+          fontSize: compact ? 27 : 30,
+          lineHeight: compact ? 29 : undefined,
           color: '#F4EFE7',
-          marginBottom: 16,
+          marginBottom: compact ? 10 : 16,
         }}
       >
         Your photos stay on this phone.
@@ -73,16 +84,16 @@ function ConsentGate({
           ['Never', PHOTO_CAPTURE_CONSENT.never],
         ] as const
       ).map(([k, v]) => (
-        <View key={k} style={{ marginBottom: 14 }}>
+        <View key={k} style={{ marginBottom: compact ? 9 : 14 }}>
           <Text variant="label" style={{ color: '#D9A183', marginBottom: 2 }}>
             {k.toUpperCase()}
           </Text>
           <Text
             style={{
               fontFamily: 'HankenGrotesk_400Regular',
-              fontSize: 14.5,
+              fontSize: compact ? 14 : 14.5,
               color: 'rgba(244,239,231,0.85)',
-              lineHeight: 21,
+              lineHeight: compact ? 19 : 21,
             }}
           >
             {v}
@@ -92,23 +103,31 @@ function ConsentGate({
       <Text
         style={{
           fontFamily: 'IBMPlexMono_400Regular',
-          fontSize: 11,
+          fontSize: compact ? 10.5 : 11,
           color: 'rgba(244,239,231,0.45)',
-          marginTop: 6,
-          marginBottom: 14,
+          lineHeight: compact ? 15 : undefined,
+          marginTop: compact ? 2 : 6,
+          marginBottom: compact ? 8 : 14,
         }}
       >
         {PHOTO_CAPTURE_CONSENT.footnote}
       </Text>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 22 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 8,
+          marginBottom: compact ? 14 : 22,
+        }}
+      >
         <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
         <Text
           style={{
             fontFamily: 'HankenGrotesk_500Medium',
-            fontSize: 12.5,
+            fontSize: compact ? 12 : 12.5,
             color: 'rgba(244,239,231,0.7)',
             flex: 1,
-            lineHeight: 17,
+            lineHeight: compact ? 16 : 17,
           }}
         >
           {PHOTO_COPY.capture.skinPrep}
@@ -119,7 +138,7 @@ function ConsentGate({
         disabled={granting}
         onPress={onGrant}
         style={{
-          height: 56,
+          height: compact ? 54 : 56,
           borderRadius: 999,
           backgroundColor: '#F4EFE7',
           alignItems: 'center',
@@ -134,7 +153,12 @@ function ConsentGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ height: 44, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
+        style={{
+          height: 48,
+          marginTop: compact ? 4 : 8,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         <Text
           style={{
@@ -198,7 +222,7 @@ function CameraUnavailableGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ height: 44, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
+        style={{ height: 48, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
       >
         <Text
           style={{
@@ -264,7 +288,7 @@ function PermissionGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ height: 44, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
+        style={{ height: 48, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
       >
         <Text
           style={{

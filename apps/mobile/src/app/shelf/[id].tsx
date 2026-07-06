@@ -188,7 +188,7 @@ export default function ProductDetailScreen() {
           accessibilityRole="button"
           accessibilityLabel="More options"
           onPress={confirmRemove}
-          className="h-[44px] w-[44px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
+          className="h-[48px] w-[48px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
         >
           <Text className="text-[14px] text-ink">...</Text>
         </Pressable>
@@ -269,7 +269,7 @@ export default function ProductDetailScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={reportIssue}
-            className="mt-3 self-start py-1"
+            className="mt-3 min-h-[48px] self-start items-center justify-center px-1"
           >
             <Text variant="bodySm" tone="clay" className="font-sans-semibold">
               Report an issue
@@ -279,25 +279,25 @@ export default function ProductDetailScreen() {
 
         {/* Freshness block */}
         <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px]">
-          <View className="flex-row items-center justify-between border-b border-hairline py-3">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Edit opened date"
+            onPress={() => {
+              haptics.select();
+              setEditOpen((o) => !o);
+            }}
+            className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"
+          >
             <Text variant="bodySm" tone="muted">
               Opened
             </Text>
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => {
-                haptics.select();
-                setEditOpen((o) => !o);
-              }}
-            >
-              <Text variant="bodySm" className="font-sans-semibold">
-                {openedLabel}{' '}
-                <Text variant="bodySm" tone="clay">
-                  · edit
-                </Text>
+            <Text variant="bodySm" className="font-sans-semibold">
+              {openedLabel}{' '}
+              <Text variant="bodySm" tone="clay">
+                · edit
               </Text>
-            </Pressable>
-          </View>
+            </Text>
+          </Pressable>
           {editOpen ? (
             <View className="flex-row flex-wrap gap-2 py-3">
               {RECENT_OPENS.map((o) => (
@@ -305,7 +305,7 @@ export default function ProductDetailScreen() {
                   key={o.label}
                   accessibilityRole="button"
                   onPress={() => setOpened(o.monthsAgo)}
-                  className="rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
+                  className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
                 >
                   <Text className="font-sans-medium text-[13px]">{o.label}</Text>
                 </Pressable>
@@ -327,26 +327,25 @@ export default function ProductDetailScreen() {
             </Text>
           </View>
           <View className="py-3">
-            <View className="flex-row items-center justify-between">
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Set printed best-before date"
+              onPress={() => {
+                haptics.select();
+                setBestOpen((o) => !o);
+              }}
+              className="min-h-[56px] flex-row items-center justify-between"
+            >
               <Text variant="bodySm" tone="muted">
                 {p.isOpened ? 'Best used by' : 'Shelf life'}
               </Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Set printed best-before date"
-                onPress={() => {
-                  haptics.select();
-                  setBestOpen((o) => !o);
-                }}
-              >
-                <Text variant="bodySm" className="font-sans-bold text-clay-deep">
-                  {best ?? 'estimated'}{' '}
-                  <Text variant="bodySm" tone="clay">
-                    · {p.expirySource === 'printed' ? 'edit' : 'set'}
-                  </Text>
+              <Text variant="bodySm" className="font-sans-bold text-clay-deep">
+                {best ?? 'estimated'}{' '}
+                <Text variant="bodySm" tone="clay">
+                  · {p.expirySource === 'printed' ? 'edit' : 'set'}
                 </Text>
-              </Pressable>
-            </View>
+              </Text>
+            </Pressable>
             {bestOpen ? (
               <View className="mt-2.5 flex-row flex-wrap items-center gap-2">
                 <Text variant="label" tone="muted" className="w-full">
@@ -363,7 +362,7 @@ export default function ProductDetailScreen() {
                       });
                       setBestOpen(false);
                     }}
-                    className="rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
+                    className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
                   >
                     <Text className="font-sans-medium text-[13px]">{b.label}</Text>
                   </Pressable>
@@ -379,7 +378,7 @@ export default function ProductDetailScreen() {
                       });
                       setBestOpen(false);
                     }}
-                    className="rounded-pill px-3.5 py-2"
+                    className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
                   >
                     <Text className="font-sans-medium text-[13px]" tone="muted">
                       Clear
@@ -395,7 +394,7 @@ export default function ProductDetailScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={() => m.setOpened(id, { openedAt: localDateString(), isOpened: true })}
-            className="mt-2.5 items-center rounded-[14px] border border-hairline bg-paper-raised py-3"
+            className="mt-2.5 min-h-[48px] items-center justify-center rounded-[14px] border border-hairline bg-paper-raised py-3"
           >
             <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
               Mark as opened. Start the freshness clock

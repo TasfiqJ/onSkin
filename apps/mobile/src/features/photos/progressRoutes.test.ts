@@ -37,10 +37,10 @@ describe('Progress route mobile contracts', () => {
 
     expect(source).toContain('function CaptureOverlay');
     expect(source).toContain('<ScrollView');
-    expect(source).toContain(
-      "contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 28 }}",
-    );
-    expect(source.match(/style=\{\{ height: 44, marginTop: 8/g)).toHaveLength(3);
+    expect(source).toContain("justifyContent: compact ? 'flex-start' : 'center'");
+    expect(source).toContain('useWindowDimensions().height < 640');
+    expect(source.match(/height: 48/g)).toHaveLength(3);
+    expect(source).not.toContain('height: 44, marginTop: 8');
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });
 });

@@ -46,7 +46,7 @@ export default function ReorderScreen() {
       <View className="mt-2 flex-row items-center justify-between">
         <Pressable
           accessibilityRole="button"
-          className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+          className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           onPress={() => backOrReplace(router)}
         >
           <Text variant="body" tone="muted" className="font-sans-semibold text-[15px]">
@@ -58,7 +58,7 @@ export default function ReorderScreen() {
         </Text>
         <Pressable
           accessibilityRole="button"
-          className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+          className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           onPress={() => backOrReplace(router)}
         >
           <Text variant="body" tone="clay" className="font-sans-semibold text-[15px]">
@@ -119,7 +119,7 @@ export default function ReorderScreen() {
           <View className="mt-3 flex-row gap-2">
             <Pressable
               accessibilityRole="button"
-              className="h-[44px] flex-1 items-center justify-center rounded-[10px]"
+              className="h-[48px] flex-1 items-center justify-center rounded-[10px]"
               style={{ backgroundColor: colors.ink }}
               onPress={() => setOrder(CANONICAL)}
             >
@@ -127,7 +127,7 @@ export default function ReorderScreen() {
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              className="h-[44px] flex-1 items-center justify-center rounded-[10px]"
+              className="h-[48px] flex-1 items-center justify-center rounded-[10px]"
               style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
               onPress={() => setNudgeDismissed(true)}
             >

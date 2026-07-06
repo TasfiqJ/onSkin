@@ -1377,6 +1377,42 @@ guards against returning to the fragile 44 px class, and human-simulated E2E wit
 small targets, no clipped controls, and zero horizontal overflow in
 `test-results/human-e2e/2026-07-06/commerce-consent-decline-target/`.
 
+### Community ask consent footer hardening (2026-07-06)
+
+Fixed `/community/ask` posting consent on a 320 x 568 phone viewport after the 16+ checkbox and `Not now` decline
+exit both rendered 43.99 px high and the decline exit started below the viewport. The consent explanation now scrolls
+above a stable bottom action area, the checkbox has a 48 px floor, `Not now` is 48 px high, and route contracts reject
+the exact 44 px decline class. Human-simulated E2E verified no small targets, no clipped controls, and zero horizontal
+overflow in `test-results/human-e2e/2026-07-06/community-ask-consent-decline-target/`.
+
+### Routine reorder nudge target buffer (2026-07-06)
+
+Fixed `/routine/reorder` after the paid routine edit screen rendered `Done`, `Save`, `Fix the order`, and `Keep mine`
+at 43.99 px high on a 320 x 568 phone viewport. Text exits now use a 48 px floor, the sequencing nudge actions are
+48 px tall, and route contracts reject returning the nudge buttons to exact 44 px. Human-simulated E2E used the app's
+local no-card reverse-trial fixture to reach the Pro route, verified no small targets or clipped controls, and tapped
+`Keep mine` to confirm the nudge still dismisses in
+`test-results/human-e2e/2026-07-06/routine-reorder-nudge-targets/`.
+
+### Shelf detail action target hardening (2026-07-06)
+
+Fixed `/shelf/[id]` product detail after a 320 x 568 phone E2E pass showed the `More options` menu rendering 43.99 px
+and the inline `Report an issue`, opened-date edit, and best-before edit controls rendering as text-sized targets.
+The overflow menu now uses a 48 px physical target, report/opened/best-before actions use full-height touch areas, and
+opened-date / best-before edit chips render with a 48 px floor. The shelf route contract now rejects the old exact-44
+and text-sized classes. Human-simulated E2E verified the manual-add-to-detail flow, scrolled freshness rows, expanded
+editors, Back recovery, no horizontal overflow, and post-fix target geometry in
+`test-results/human-e2e/2026-07-06/shelf-detail-action-targets/`.
+
+### Progress capture consent exit hardening (2026-07-06)
+
+Fixed `/progress/capture` after a 320 x 568 phone E2E pass showed the consent gate's `Not now` exit rendering at
+43.99 px high and below the visible viewport. The capture consent overlay now switches to compact short-phone spacing,
+the three capture gate exits use a 48 px floor, and the progress route contract rejects returning those exits to exact
+44 px sizing. Human-simulated E2E used the local no-card reverse-trial path to unlock the Pro route, verified the
+post-fix `Not now` target is visible at 48 px with no horizontal overflow, and tapped it back to `/progress` in
+`test-results/human-e2e/2026-07-06/progress-capture-not-now-targets/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

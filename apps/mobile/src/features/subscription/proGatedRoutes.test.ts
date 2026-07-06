@@ -91,15 +91,18 @@ describe('Pro-gated route contracts', () => {
       expectTouchableRouteIcon(route);
     }
 
-    for (const route of ['routine/reorder.tsx', 'routine/tolerance.tsx']) {
-      const source = readAppRoute(route);
+    const reorder = readAppRoute('routine/reorder.tsx');
+    expect(reorder, 'routine/reorder.tsx should buffer text exits above sub-pixel 44px').toContain(
+      'min-h-[48px] min-w-[48px]',
+    );
+    expect(reorder).toContain('className="h-[48px] flex-1');
+    expect(reorder).not.toContain('className="h-[44px] flex-1');
+    expect(reorder).not.toContain('className="h-9 flex-1');
 
-      expect(source, `${route} should keep text exits at least 44px tall`).toContain(
-        'min-h-[44px] min-w-[44px]',
-      );
-    }
-
-    expect(readAppRoute('routine/reorder.tsx')).not.toContain('className="h-9 flex-1');
+    const tolerance = readAppRoute('routine/tolerance.tsx');
+    expect(tolerance, 'routine/tolerance.tsx should keep text exits at least 44px tall').toContain(
+      'min-h-[44px] min-w-[44px]',
+    );
   });
 
   it('keeps scheduler and routine sheets reachable on short phones', () => {

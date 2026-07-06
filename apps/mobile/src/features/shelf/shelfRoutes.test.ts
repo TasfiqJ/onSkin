@@ -116,4 +116,27 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("'rounded-pill px-3.5 py-2'");
     expect(source).not.toContain("'rounded-pill px-4 py-2'");
   });
+
+  it('keeps Shelf product detail management actions above sub-pixel 44px targets', () => {
+    const source = readAppRoute('shelf/[id].tsx');
+
+    expect(source).toContain('className="h-[48px] w-[48px] items-center justify-center');
+    expect(source).toContain('className="mt-3 min-h-[48px] self-start items-center');
+    expect(source).toContain('accessibilityLabel="Edit opened date"');
+    expect(source).toContain(
+      'className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"',
+    );
+    expect(source).toContain(
+      'className="min-h-[56px] flex-row items-center justify-between"',
+    );
+    expect(source).toContain(
+      'className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"',
+    );
+    expect(source).toContain(
+      'className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"',
+    );
+    expect(source).toContain('className="mt-2.5 min-h-[48px] items-center justify-center');
+    expect(source).not.toContain('className="h-[44px] w-[44px]');
+    expect(source).not.toContain('className="mt-3 self-start py-1"');
+  });
 });
