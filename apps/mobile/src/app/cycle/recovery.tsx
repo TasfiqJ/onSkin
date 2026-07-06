@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
@@ -9,9 +9,11 @@ import { backOrReplace } from '@/lib/navigation/safeBack';
 // a procedure → actives paused, barrier repair for ~7-10 days, ease back in. Calm,
 // framed as strengthening, never a setback. Non-diagnostic.
 export default function RecoveryScreen() {
+  const { height } = useWindowDimensions();
   const { data } = useCycle();
   const m = useCycleMutations();
   const rec = data?.recovery;
+  const compactScreen = height < 640;
 
   if (!rec?.active) {
     return (
@@ -38,13 +40,20 @@ export default function RecoveryScreen() {
 
   return (
     <Screen edges={['top', 'bottom']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
-        <View className="mt-2">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactScreen ? 'pb-5' : 'pb-6'}
+      >
+        <View className={compactScreen ? 'mt-0' : 'mt-2'}>
           <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
         </View>
 
         <View
-          className="mt-1 flex-row items-center gap-2 self-start rounded-pill px-4 py-2"
+          className={
+            compactScreen
+              ? 'mt-0.5 flex-row items-center gap-2 self-start rounded-pill px-3.5 py-1.5'
+              : 'mt-1 flex-row items-center gap-2 self-start rounded-pill px-4 py-2'
+          }
           style={{ backgroundColor: '#E6ECE0' }}
         >
           <View className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: '#4F7A4A' }} />
@@ -55,20 +64,38 @@ export default function RecoveryScreen() {
 
         <Text
           variant="title"
-          className="mt-4 text-[32px] leading-[35px]"
+          className={
+            compactScreen ? 'mt-3 text-[29px] leading-[32px]' : 'mt-4 text-[32px] leading-[35px]'
+          }
           accessibilityRole="header"
         >
           We&apos;ve eased off for now.
         </Text>
-        <Text variant="body" tone="muted" className="mt-2">
+        <Text
+          variant="body"
+          tone="muted"
+          className={compactScreen ? 'mt-1.5 text-[14px] leading-[20px]' : 'mt-2'}
+        >
           {fromIrritation
             ? 'You told us your skin felt irritated, so we paused your actives and switched to barrier repair. This isn’t a setback. It’s how skin gets stronger.'
             : 'After your treatment, we paused your actives and switched to barrier repair. We’ll ease back in gently.'}
         </Text>
 
         {/* Progress */}
-        <View className="mt-5 rounded-card border border-hairline bg-paper-raised p-5">
-          <View className="mb-3 flex-row items-baseline justify-between">
+        <View
+          className={
+            compactScreen
+              ? 'mt-4 rounded-card border border-hairline bg-paper-raised p-4'
+              : 'mt-5 rounded-card border border-hairline bg-paper-raised p-5'
+          }
+        >
+          <View
+            className={
+              compactScreen
+                ? 'mb-2.5 flex-row items-baseline justify-between'
+                : 'mb-3 flex-row items-baseline justify-between'
+            }
+          >
             <Text variant="body" className="font-sans-bold">
               Resting your barrier
             </Text>
@@ -86,7 +113,11 @@ export default function RecoveryScreen() {
               }}
             />
           </View>
-          <View className="mt-2.5 flex-row justify-between">
+          <View
+            className={
+              compactScreen ? 'mt-2 flex-row justify-between' : 'mt-2.5 flex-row justify-between'
+            }
+          >
             <Text variant="bodySm" tone="muted">
               Paused actives
             </Text>
@@ -98,7 +129,10 @@ export default function RecoveryScreen() {
 
         {/* Paused actives */}
         {uniquePaused.length ? (
-          <View className="mt-3.5 rounded-card p-4" style={{ backgroundColor: '#F1ECE3' }}>
+          <View
+            className={compactScreen ? 'mt-2.5 rounded-card p-3.5' : 'mt-3.5 rounded-card p-4'}
+            style={{ backgroundColor: '#F1ECE3' }}
+          >
             <Text variant="bodySm" tone="muted" className="mb-2.5 font-sans-bold">
               Paused until you&apos;re comfortable
             </Text>
@@ -114,7 +148,13 @@ export default function RecoveryScreen() {
           </View>
         ) : null}
 
-        <View className="mt-3.5 flex-row gap-3 rounded-2xl border border-hairline bg-paper-raised px-4 py-3.5">
+        <View
+          className={
+            compactScreen
+              ? 'mt-2.5 flex-row gap-3 rounded-2xl border border-hairline bg-paper-raised px-3.5 py-3'
+              : 'mt-3.5 flex-row gap-3 rounded-2xl border border-hairline bg-paper-raised px-4 py-3.5'
+          }
+        >
           <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
           <Text variant="bodySm" tone="muted" className="flex-1">
             Feeling better already? You can ease back in early. We&apos;ll start with one active.
@@ -122,7 +162,7 @@ export default function RecoveryScreen() {
         </View>
 
         <Button
-          className="mt-6"
+          className={compactScreen ? 'mt-4' : 'mt-6'}
           label="Ease back in"
           onPress={async () => {
             await m.finishRecovery();

@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the weekly tolerance check-in sheet after 320x568 E2E showed the
+  `Irritated` choice and disabled `Save` action below the first viewport.
+  Compact phones now show Skip, all three tolerance choices, and Save with
+  buffered touch targets; selecting `Irritated` still routes into recovery, whose
+  short-phone layout now keeps the `Ease back in` action visible.
 - Fixed the cycle disruption sheet after 320x568 E2E showed the post-procedure
   recovery option hidden below the first viewport. Compact phones now show all
   four disruption choices as 70 px+ rows with contextual accessibility labels,

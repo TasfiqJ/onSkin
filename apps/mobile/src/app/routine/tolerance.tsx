@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { applyToleranceToRamps } from '@/features/routine/rampStore';
@@ -43,9 +43,11 @@ const OPTIONS = [
 ] as const;
 
 export default function ToleranceScreen() {
+  const { height } = useWindowDimensions();
   const [selected, setSelected] = useState<string | null>(null);
   const m = useCycleMutations();
   const qc = useQueryClient();
+  const compactSheet = height < 640;
 
   // Each answer states what the app does (docs/03 §4 / docs/05 §7) and now PERSISTS to
   // the ramp: comfortable marks steady (a step-up may be offered later), a bit dry
@@ -64,10 +66,19 @@ export default function ToleranceScreen() {
   };
 
   return (
-    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
+    <Sheet
+      fallbackRoute={APP_HOME_ROUTE}
+      scroll
+      backdropAccessible={!compactSheet}
+      className={compactSheet ? 'pb-6' : undefined}
+    >
       <Pressable
         accessibilityRole="button"
-        className="mb-1 min-h-[48px] min-w-[48px] self-end items-center justify-center px-2"
+        accessibilityLabel="Skip tolerance check-in"
+        className={cn(
+          'min-h-[48px] min-w-[48px] self-end items-center justify-center px-2',
+          compactSheet ? 'mb-0' : 'mb-1',
+        )}
         onPress={() => backOrReplace(router)}
       >
         <Text variant="body" tone="muted" className="font-sans-semibold text-[14px]">
@@ -77,20 +88,31 @@ export default function ToleranceScreen() {
       <Text variant="label" tone="clay" className="font-mono">
         ONE QUICK CHECK-IN
       </Text>
-      <Text variant="title" className="mt-2.5 text-[33px]">
+      <Text
+        variant="title"
+        className={compactSheet ? 'mt-1.5 text-[29px] leading-[32px]' : 'mt-2.5 text-[33px]'}
+      >
         How did your skin feel this week?
       </Text>
-      <Text variant="bodySm" tone="muted" className="mt-2 text-[14px]">
+      <Text
+        variant="bodySm"
+        tone="muted"
+        className={compactSheet ? 'mt-1.5 text-[13px] leading-[18px]' : 'mt-2 text-[14px]'}
+      >
         It only tunes your pace. Nothing here is a diagnosis. Optional, always.
       </Text>
 
-      <View className="mt-6 gap-2.5">
+      <View className={compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}>
         {OPTIONS.map((o) => (
           <Pressable
             key={o.id}
             accessibilityRole="button"
+            accessibilityLabel={`${o.title}. ${o.sub}`}
             accessibilityState={{ selected: selected === o.id }}
-            className={cn('flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4')}
+            className={cn(
+              'flex-row items-center rounded-[18px] bg-paper-raised',
+              compactSheet ? 'h-[72px] min-h-[72px] gap-3 px-3.5 py-2.5' : 'gap-3.5 p-4',
+            )}
             style={{
               borderWidth: selected === o.id ? 2 : 1,
               borderColor: selected === o.id ? colors.clay : o.restingBorder,
@@ -113,7 +135,12 @@ export default function ToleranceScreen() {
         ))}
       </View>
 
-      <Button className="mt-6" label="Save" disabled={!selected} onPress={onSave} />
+      <Button
+        className={compactSheet ? 'mt-3 h-[48px] min-h-[48px] py-2.5' : 'mt-6'}
+        label="Save"
+        disabled={!selected}
+        onPress={onSave}
+      />
     </Sheet>
   );
 }

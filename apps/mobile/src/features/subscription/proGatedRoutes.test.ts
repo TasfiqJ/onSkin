@@ -160,6 +160,27 @@ describe('Pro-gated route contracts', () => {
     expect(phasedIntro).toContain('min-h-[48px] items-center justify-center');
     expect(phasedIntro).not.toContain('min-h-[44px] items-center justify-center');
     expect(phasedIntro).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
+
+    const recovery = readAppRoute('cycle/recovery.tsx');
+    expect(recovery).toContain('useWindowDimensions');
+    expect(recovery).toContain('const compactScreen = height < 640');
+    expect(recovery).toContain(
+      "contentContainerClassName={compactScreen ? 'pb-5' : 'pb-6'}",
+    );
+    expect(recovery).toContain("className={compactScreen ? 'mt-4' : 'mt-6'}");
+
+    const tolerance = readAppRoute('routine/tolerance.tsx');
+    expect(tolerance).toContain('useWindowDimensions');
+    expect(tolerance).toContain('const compactSheet = height < 640');
+    expect(tolerance).toContain('backdropAccessible={!compactSheet}');
+    expect(tolerance).toContain("className={compactSheet ? 'pb-6' : undefined}");
+    expect(tolerance).toContain("className={compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}");
+    expect(tolerance).toContain("'h-[72px] min-h-[72px] gap-3 px-3.5 py-2.5'");
+    expect(tolerance).toContain('accessibilityLabel={`${o.title}. ${o.sub}`}');
+    expect(tolerance).toContain(
+      "className={compactSheet ? 'mt-3 h-[48px] min-h-[48px] py-2.5' : 'mt-6'}",
+    );
+    expect(tolerance).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
   });
 
   it('keeps the widgets Live Activity opt-in on the 44px shared switch', () => {
