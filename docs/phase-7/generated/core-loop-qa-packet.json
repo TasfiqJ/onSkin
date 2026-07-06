@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T20:04:38.992Z",
+  "generatedAt": "2026-07-06T20:53:30.203Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -78,44 +78,44 @@
     {
       "path": "apps/mobile/src/components/launch/DeferredSurface.tsx",
       "exists": true,
-      "bytes": 1530,
-      "sha256": "afa27876271501fcdbf9a672100f6e04cf8e752fbd368d23db36ef4084271eef"
+      "bytes": 1968,
+      "sha256": "c40d077116101ea43a532306a91e731a3b123fe72cd0300574c84aba71ec74c1"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/today.tsx",
       "exists": true,
-      "bytes": 20462,
-      "sha256": "6837c2c38401e68f76c843c72326270484697ffcf5071243a2a1f9e6acb2ae23"
+      "bytes": 22546,
+      "sha256": "7d4e426879b741ab71004cf582f86121a5b0c0e3a4e80380687aa378c490ec5c"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
       "exists": true,
-      "bytes": 19987,
-      "sha256": "f27413da73d46cb004f2060fb7570276d7489f0ddc91a250fa52d9d6e6acc1f8"
+      "bytes": 20591,
+      "sha256": "3075e77c30545b3c9adc40f8427d4b31456b77342e3c6a4bceb0d0d805715748"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 17779,
-      "sha256": "c79df7063fb53d0f0c25e8546585b8425e7f96dc9779d0518245c72c2ff54cbe"
+      "bytes": 21755,
+      "sha256": "005e03a3dd804f50a362c6b306f3a0ca26beb4f7ba088ff0fc826b8ed703c203"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 4411,
-      "sha256": "3f978c6dfdf52d20363b0e23856ef88f3d53f6754e627717b26bdbd3e1043629"
+      "bytes": 4636,
+      "sha256": "8876a0cf56ea71c145786a7f1f4a7ad86105f80057ae3cb8b62eb729114ff8bb"
     },
     {
       "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 18181,
-      "sha256": "4e6986a005bd707492a01034398579456274320e883f0cbb648e2409944b0cc1"
+      "bytes": 21852,
+      "sha256": "165acde7fc3c1afb6010d0652a4e7f141e4724fb70c957d669dd313e5c3f904d"
     },
     {
       "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
       "exists": true,
-      "bytes": 6355,
-      "sha256": "0740e7e2d972de962f19e614bcdce9ee40b3acadbc33c29e658c25445a7e09c2"
+      "bytes": 7673,
+      "sha256": "5b1f5216efc5ec76c6554dda4b8cf253fb47d51ac7910eb4e8dca131627ab0dc"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

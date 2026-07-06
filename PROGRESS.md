@@ -1780,6 +1780,14 @@ E2E verified the repaired 320 x 568 Progress paywall, the 390 x 844 Progress pay
 small controls, clipped text, horizontal overflow, or tab-bar overlap in
 `test-results/human-e2e/2026-07-06/shelf-progress-phone-sweep/`.
 
+### Phase 7 core-loop readiness checker (2026-07-06)
+
+Fixed the Phase 7 core-loop gate after it still required the whole Ask route group to be cloud-gated and missed the
+existing Today compact-phone condition. The checker now enforces the current launch contract: deterministic `/ask`
+stays reachable, `/ask/consent` is deferred behind `phase7Flags.cloudAsk`, and the Today Ask teaser remains hidden unless
+cloud Ask is enabled. Regenerated the Phase 7 QA packet and verified `npm run phase7:verify` passes. Strict Phase 7 still
+fails only on external launch evidence, final production URLs, placeholder privacy/legal copy, and review-owner warnings.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

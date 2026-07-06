@@ -109,7 +109,6 @@ require(has(
 const gatedRoutes = [
   ['apps/mobile/src/app/commerce/_layout.tsx', /phase7Flags\.commerce/, 'commerce route group'],
   ['apps/mobile/src/app/trend/_layout.tsx', /phase7Flags\.trend/, 'trend route group'],
-  ['apps/mobile/src/app/ask/_layout.tsx', /phase7Flags\.cloudAsk/, 'cloud Ask route group'],
   [
     'apps/mobile/src/app/community/ask.tsx',
     /phase7Flags\.communityPosting/,
@@ -127,9 +126,24 @@ for (const [path, pattern, label] of gatedRoutes) {
   require(has(path, pattern), `${label} is missing its Phase 7 flag check.`);
 }
 
+const askLayout = read('apps/mobile/src/app/ask/_layout.tsx');
+require(
+  /<Stack screenOptions=\{\{ headerShown: false \}\} \/>/.test(askLayout) &&
+    !/phase7Flags\.cloudAsk|DeferredSurface/.test(askLayout),
+  'Deterministic Ask route group must stay reachable while cloud Ask is deferred.',
+);
+require(
+  has('apps/mobile/src/app/ask/consent.tsx', /DeferredSurface/) &&
+    has('apps/mobile/src/app/ask/consent.tsx', /phase7Flags\.cloudAsk/) &&
+    has(
+      'apps/mobile/src/app/ask/consent.tsx',
+      /<DeferredSurface surface="cloudAsk" fallbackRoute=\{APP_ASK_ROUTE\} \/>/,
+    ),
+  'Cloud Ask consent route must render DeferredSurface when gated.',
+);
 require(has(
   'apps/mobile/src/app/(tabs)/today.tsx',
-  /phase7Flags\.cloudAsk\s*\?\s*<AskTeaser/,
+  /phase7Flags\.cloudAsk[\s\S]{0,120}<AskTeaser/,
 ), 'Today must hide AskTeaser unless cloud Ask is enabled.');
 require(has(
   'apps/mobile/src/app/(tabs)/progress.tsx',
