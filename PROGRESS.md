@@ -49,8 +49,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
   derives real plan labels from saved `oily_dry` and `sensitive_resistant`
   profile axes, and falls back to `BUILT FROM YOUR SHELF` instead of fabricating
-  dry/sensitive claims. Added pure mapping tests and the `Routine Plan First
-  Value` branch to `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
+  dry/sensitive claims. Added pure mapping tests and updated the Routine Plan
+  First Value branch in `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
   320x568 Expo web, the local no-card `Explore first` unlock path, and
   `Start today` handoff in
   `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`.
@@ -81,6 +81,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   cache file and returns the You tab's handled `Export unavailable` path instead
   of surfacing a generic privacy-request failure. Added cleanup/false-return
   regression coverage; native share-sheet device QA remains outstanding.
+- Fixed the compact Progress-tab contextual paywall after 320x568 E2E found
+  `Terms`, `Privacy`, and `Restore` sitting under the floating tab bar when
+  store pricing was unavailable. Compact Progress-tab photo paywalls now require
+  a deliberate scroll for the compliance row, and the scrolled controls remain
+  48 px tall and clear of the tab bar. Evidence and bug report are in
+  `test-results/human-e2e/2026-07-06/fresh-compact-scan/` and
+  `docs/e2e-bug-reports/2026-07-06-progress-paywall-compliance-tab-overlap.md`;
+  native RevenueCat/device QA remains outstanding.
+- Made RevenueCat product identifiers config-driven for the rebrand path. Annual,
+  monthly, and local reverse-trial IDs now read from public env keys with neutral
+  `routinekind_*` development defaults, while strict Phase 6 payments gates warn
+  until final App Store/Play/RevenueCat product IDs replace the placeholders.
 - Refined the bottom navigation into a stronger premium floating control. The
   selected tab now uses a dark rounded pill with white icon/label contrast,
   stable one-line label fitting, and per-tab test IDs; the old tiny active rail
@@ -219,8 +231,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   clipped text, or bad visible hit targets in
   `test-results/human-e2e/2026-07-06/shelf-add-phone-sweep/`.
 - Fixed the Ask OnSkin empty-shelf conflict reassurance after 320x568 E2E showed a
-  typed retinol/glycolic question on `/ask` replying `Nothing on your shelf clashes
-  right now. You’re set.` even though there were no shelf products to check. The
+  typed retinol/glycolic question on `/ask` replying that nothing on the shelf
+  clashed even though there were no shelf products to check. The
   deterministic Ask context now distinguishes an empty shelf from a populated shelf
   with zero conflicts, so empty-shelf conflict questions ask the user to add products
   before real pair checks. E2E rechecked `/ask`, Ask report feedback, `/ask/consent`,

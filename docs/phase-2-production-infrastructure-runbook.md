@@ -73,8 +73,12 @@ eas build --profile production --platform all
 
 ## RevenueCat Contract
 
-- Product IDs must match `apps/mobile/src/features/subscription/plans.ts`:
-  `onskin_pro_annual` and `onskin_pro_monthly` until rebrand/product IDs change.
+- Product IDs are read from
+  `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID`,
+  `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`, and
+  `EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID`. The committed defaults are
+  local placeholders only; replace them with final App Store/Play/RevenueCat IDs
+  after brand clearance.
 - Entitlement defaults to `pro`; override with
   `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID` only if the dashboard uses another ID.
 - `appUserID` is the Supabase user ID, including the anonymous user ID.

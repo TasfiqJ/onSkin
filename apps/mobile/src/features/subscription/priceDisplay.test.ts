@@ -9,7 +9,7 @@ function packageView(overrides: Partial<SubscriptionPackageView> = {}): Subscrip
     plan: 'annual',
     packageId: 'pkg',
     offeringId: 'offering',
-    productId: 'onskin_pro_annual',
+    productId: 'routinekind_pro_annual_dev',
     title: 'OnSkin Pro Annual',
     priceLabel: '$59.99',
     pricePerMonthLabel: '$4.99',
@@ -54,8 +54,17 @@ describe('subscription price display', () => {
     const offering: SubscriptionOfferingView = {
       status: 'development_fallback',
       offeringId: 'development-fallback',
-      annual: packageView({ priceLabel: '$49.99', pricePerMonthLabel: '$4.16', canPurchase: false }),
-      monthly: packageView({ plan: 'monthly', priceLabel: '$8.99', periodLabel: 'month', canPurchase: false }),
+      annual: packageView({
+        priceLabel: '$49.99',
+        pricePerMonthLabel: '$4.16',
+        canPurchase: false,
+      }),
+      monthly: packageView({
+        plan: 'monthly',
+        priceLabel: '$8.99',
+        periodLabel: 'month',
+        canPurchase: false,
+      }),
       winBack: null,
       reason: 'RevenueCat is not configured. Prices are disabled development previews.',
     };

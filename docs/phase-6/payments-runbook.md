@@ -7,7 +7,10 @@ Use StoreKit and Google Play subscriptions through RevenueCat only. Do not add w
 Required dashboard configuration:
 
 - Entitlement: `pro`
-- Products: `onskin_pro_annual`, `onskin_pro_monthly`
+- Products: set final App Store/Play/RevenueCat IDs in
+  `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID` and
+  `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`; committed `routinekind_*_dev`
+  defaults are local placeholders only.
 - Current offering: annual and monthly packages present for both iOS and Android
 - Annual package: default paywall path, localized store price rendered by SDK
 - Monthly package: secondary anchor, localized store price rendered by SDK
@@ -19,6 +22,9 @@ Production environment:
 - `EXPO_PUBLIC_REVENUECAT_IOS_KEY`
 - `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`
+- `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID`
+- `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`
+- `EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID`
 - `REVENUECAT_WEBHOOK_SIGNING_SECRET`
 - `REVENUECAT_SECRET_API_KEY`
 - `EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY` blank

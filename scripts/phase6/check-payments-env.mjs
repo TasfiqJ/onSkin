@@ -43,6 +43,10 @@ function has(path, pattern) {
   return pattern.test(read(path));
 }
 
+function isLocalProductId(value) {
+  return !value || /_dev$|_local$|placeholder|example/i.test(value);
+}
+
 const pkg = readJson('apps/mobile/package.json');
 const rootPkg = readJson('package.json');
 const eas = readJson('apps/mobile/eas.json');
@@ -51,46 +55,61 @@ const localEnv = envFile();
 const productionEasEnv = eas.build?.production?.env ?? {};
 const prodEnv = { ...exampleEnv, ...localEnv, ...productionEasEnv };
 
-require(Boolean(pkg.dependencies?.['react-native-purchases']), 'react-native-purchases dependency is missing.');
-require(Boolean(rootPkg.scripts?.['phase6:check-payments-env']), 'Root package is missing phase6:check-payments-env.');
-require(Boolean(rootPkg.scripts?.['phase6:qa-packet']), 'Root package is missing phase6:qa-packet.');
+require(Boolean(
+  pkg.dependencies?.['react-native-purchases'],
+), 'react-native-purchases dependency is missing.');
+require(Boolean(
+  rootPkg.scripts?.['phase6:check-payments-env'],
+), 'Root package is missing phase6:check-payments-env.');
+require(Boolean(
+  rootPkg.scripts?.['phase6:qa-packet'],
+), 'Root package is missing phase6:qa-packet.');
 require(Boolean(rootPkg.scripts?.['phase6:verify']), 'Root package is missing phase6:verify.');
 
-require(
-  existsSync(resolve(root, 'supabase/functions/subscription-grants/index.ts')),
-  'subscription-grants Edge Function is missing.',
-);
-require(
-  existsSync(resolve(root, 'supabase/migrations/20260615000027_phase6_payments.sql')),
-  'Phase 6 payments migration is missing.',
-);
+require(existsSync(
+  resolve(root, 'supabase/functions/subscription-grants/index.ts'),
+), 'subscription-grants Edge Function is missing.');
+require(existsSync(
+  resolve(root, 'supabase/migrations/20260615000027_phase6_payments.sql'),
+), 'Phase 6 payments migration is missing.');
 
-require(
-  has('supabase/functions/revenuecat-webhook/index.ts', /X-RevenueCat-Webhook-Signature/),
-  'RevenueCat webhook does not verify the HMAC signature header.',
-);
-require(
-  has('supabase/functions/revenuecat-webhook/index.ts', /readLimitedText\(req,\s*maxBodyBytes\)/) &&
-    has('supabase/functions/revenuecat-webhook/index.ts', /JSON\.parse\(rawBody\s*\|\|\s*'\{\}'\)/),
-  'RevenueCat webhook must read the bounded raw request body before JSON parsing.',
-);
-require(
-  has('supabase/functions/account-deletion/index.ts', /DELETE/),
-  'Account deletion does not call RevenueCat customer deletion.',
-);
-require(
-  has('supabase/functions/account-deletion/index.ts', /api\.revenuecat\.com\/v1\/subscribers/),
-  'Account deletion is missing RevenueCat subscriber deletion endpoint.',
-);
+require(has(
+  'supabase/functions/revenuecat-webhook/index.ts',
+  /X-RevenueCat-Webhook-Signature/,
+), 'RevenueCat webhook does not verify the HMAC signature header.');
+require(has(
+  'supabase/functions/revenuecat-webhook/index.ts',
+  /readLimitedText\(req,\s*maxBodyBytes\)/,
+) &&
+  has(
+    'supabase/functions/revenuecat-webhook/index.ts',
+    /JSON\.parse\(rawBody\s*\|\|\s*'\{\}'\)/,
+  ), 'RevenueCat webhook must read the bounded raw request body before JSON parsing.');
+require(has(
+  'supabase/functions/account-deletion/index.ts',
+  /DELETE/,
+), 'Account deletion does not call RevenueCat customer deletion.');
+require(has(
+  'supabase/functions/account-deletion/index.ts',
+  /api\.revenuecat\.com\/v1\/subscribers/,
+), 'Account deletion is missing RevenueCat subscriber deletion endpoint.');
 
 const forbiddenLocalGrants = [
-  ['apps/mobile/src/features/subscription/store.ts', /grantTrial|grantReverseTrial|setActivePaid|stubbed/i],
-  ['apps/mobile/src/features/subscription/useEntitlement.ts', /grantTrial|grantReverseTrial|setActivePaid|stub:\s*true/i],
+  [
+    'apps/mobile/src/features/subscription/store.ts',
+    /grantTrial|grantReverseTrial|setActivePaid|stubbed/i,
+  ],
+  [
+    'apps/mobile/src/features/subscription/useEntitlement.ts',
+    /grantTrial|grantReverseTrial|setActivePaid|stub:\s*true/i,
+  ],
   ['apps/mobile/src/lib/iap/revenuecat.ts', /stub:\s*true/i],
   ['apps/mobile/src/app/paywall/winback.tsx', /WINBACK/],
 ];
 for (const [path, pattern] of forbiddenLocalGrants) {
-  require(!pattern.test(read(path)), `${path} still contains a forbidden local payment stub/grant.`);
+  require(!pattern.test(
+    read(path),
+  ), `${path} still contains a forbidden local payment stub/grant.`);
 }
 
 for (const path of [
@@ -99,21 +118,58 @@ for (const path of [
   'apps/mobile/src/app/paywall/reoffer.tsx',
   'apps/mobile/src/features/subscription/ProGate.tsx',
 ]) {
-  require(has(path, /useSubscriptionOffering/), `${path} does not use RevenueCat offering pricing.`);
+  require(has(
+    path,
+    /useSubscriptionOffering/,
+  ), `${path} does not use RevenueCat offering pricing.`);
 }
 
-require(productionEasEnv.EXPO_PUBLIC_APP_ENV === 'production', 'EAS production profile must set EXPO_PUBLIC_APP_ENV=production.');
+require(productionEasEnv.EXPO_PUBLIC_APP_ENV ===
+  'production', 'EAS production profile must set EXPO_PUBLIC_APP_ENV=production.');
 require(!productionEasEnv.EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY, 'EAS production profile must not set a RevenueCat Test Store key.');
 
-warn(prodEnv.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID === 'pro', 'Production RevenueCat entitlement id should be `pro`.');
-warn(Boolean(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY), 'Missing EXPO_PUBLIC_REVENUECAT_IOS_KEY for production.');
-warn(Boolean(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY), 'Missing EXPO_PUBLIC_REVENUECAT_ANDROID_KEY for production.');
-warn(Boolean(exampleEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET), '.env.example must document REVENUECAT_WEBHOOK_SIGNING_SECRET.');
-warn(Boolean(exampleEnv.REVENUECAT_SECRET_API_KEY), '.env.example must document REVENUECAT_SECRET_API_KEY.');
-warn(prodEnv.BRAND_LEGAL_CLEARANCE === 'cleared', 'BRAND_LEGAL_CLEARANCE is not cleared for production.');
+warn(
+  prodEnv.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID === 'pro',
+  'Production RevenueCat entitlement id should be `pro`.',
+);
+warn(
+  Boolean(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY),
+  'Missing EXPO_PUBLIC_REVENUECAT_IOS_KEY for production.',
+);
+warn(
+  Boolean(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY),
+  'Missing EXPO_PUBLIC_REVENUECAT_ANDROID_KEY for production.',
+);
+warn(
+  !isLocalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
+  'Production annual RevenueCat product id must be a final App Store/Play product id.',
+);
+warn(
+  !isLocalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
+  'Production monthly RevenueCat product id must be a final App Store/Play product id.',
+);
+warn(
+  !isLocalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID),
+  'Production reverse-trial RevenueCat product id must be final or intentionally app-granted in the dashboard/runbook.',
+);
+warn(
+  Boolean(exampleEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
+  '.env.example must document REVENUECAT_WEBHOOK_SIGNING_SECRET.',
+);
+warn(
+  Boolean(exampleEnv.REVENUECAT_SECRET_API_KEY),
+  '.env.example must document REVENUECAT_SECRET_API_KEY.',
+);
+warn(
+  prodEnv.BRAND_LEGAL_CLEARANCE === 'cleared',
+  'BRAND_LEGAL_CLEARANCE is not cleared for production.',
+);
 
 for (const key of ['EXPO_PUBLIC_PRIVACY_URL', 'EXPO_PUBLIC_TERMS_URL', 'EXPO_PUBLIC_SUPPORT_URL']) {
-  warn(Boolean(prodEnv[key]) && !/example\.com/i.test(prodEnv[key]), `${key} must be a real production URL.`);
+  warn(
+    Boolean(prodEnv[key]) && !/example\.com/i.test(prodEnv[key]),
+    `${key} must be a real production URL.`,
+  );
 }
 
 const externalEvidence = {
@@ -134,12 +190,16 @@ for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 
 if (errors.length > 0) {
-  console.error(`\nPhase 6 payments baseline has ${errors.length} blocker${errors.length === 1 ? '' : 's'}.`);
+  console.error(
+    `\nPhase 6 payments baseline has ${errors.length} blocker${errors.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }
 
 if (warnings.length > 0 && strict) {
-  console.error(`\nPhase 6 strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`);
+  console.error(
+    `\nPhase 6 strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }
 

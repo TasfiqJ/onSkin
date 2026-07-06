@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import { useEffect, type ReactNode } from 'react';
 import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
@@ -21,11 +21,14 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
   const { height } = useWindowDimensions();
+  const pathname = usePathname();
   const { data, isLoading } = useEntitlement();
   const { startReverseTrial, startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
+  const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';
+  const compactComplianceSpacer = compactPaywall && insideTabbedPhotoPaywall ? 96 : 0;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
 
   useEffect(() => {
@@ -237,6 +240,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
           </Pressable>
         ) : null}
+        {compactComplianceSpacer > 0 ? <View style={{ height: compactComplianceSpacer }} /> : null}
         <ComplianceRow />
       </ScrollView>
     </Screen>

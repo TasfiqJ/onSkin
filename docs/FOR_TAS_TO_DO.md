@@ -14,7 +14,15 @@ Status: launch-blocked
 - Run formal trademark, App Store, Google Play, domain, social handle, and paid-search checks for the final candidate.
 - Choose final app name, legal entity display, domain, support email, bundle ID, Android package ID, URL scheme, policy URL root, and share-card watermark.
 - Record the decision in `docs/brand-decision-memo.md`.
-- After the 2026-07-06 runtime and Phase 8 public-copy sweeps, `npm run brand:audit` reports 21 remaining public launch-risk references. They are intentionally limited to native app config (`apps/mobile/app.base.json` display/slug/scheme/bundle/package/permission strings), RevenueCat product IDs/local reverse-trial product ID, and Supabase redirect/project config. Do not rename these until the final identity is cleared and matching Apple, Google, RevenueCat, Supabase, domain, and OAuth console changes are ready.
+- After the 2026-07-06 runtime, Phase 8 public-copy, and RevenueCat product-ID
+  config sweeps, `npm run brand:audit` reports 18 remaining public launch-risk
+  references. They are intentionally limited to native app config
+  (`apps/mobile/app.base.json` display/slug/scheme/bundle/package/permission
+  strings) and Supabase redirect/project config. Annual, monthly, and local
+  reverse-trial RevenueCat product IDs are now env-driven with neutral local
+  placeholders; replace them only after the final identity is cleared and
+  matching Apple, Google, RevenueCat, Supabase, domain, and OAuth console
+  changes are ready.
 
 Evidence needed:
 
@@ -31,6 +39,10 @@ Status: launch-blocked
 - Apple Developer and App Store Connect app under cleared bundle ID.
 - Google Play Console app and OAuth clients under cleared package ID.
 - RevenueCat project, products, offerings, entitlements, and webhook secret.
+- Final RevenueCat annual, monthly, and reverse-trial product IDs for
+  `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID`,
+  `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`, and
+  `EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID`.
 - PostHog project and deletion process.
 - Sentry project and source-map upload credentials.
 - Turnstile site key and secret if kept for abuse prevention.
@@ -138,7 +150,7 @@ These are the exact external proof switches surfaced by the local launch gates o
 | `phase2:check-env:strict`           | Final app identity, policy URLs, Supabase, RevenueCat, OAuth, PostHog, Sentry, Turnstile, body-limit, rate-limit, and secret-storage values configured outside git.                                                                                                                                  |
 | `phase3:audit-copy:strict`          | Final legal/privacy/consent copy plus clinical and cosmetic reviewer signoff for rules, routines, PAO defaults, recommendations, Skin Notes, Ask, community, and commerce-adjacent copy.                                                                                                             |
 | `phase5:check-native-config:strict` | iOS and Android build IDs, physical device names/OS versions, native camera/OCR/photo/notification/share-sheet QA, and named tester signoff.                                                                                                                                                         |
-| `phase6:check-payments-env:strict`  | RevenueCat sandbox evidence for purchase, restore, trial/reverse-trial, expiry, refund/grace states, webhook verification, finance reconciliation, and store product setup.                                                                                                                          |
+| `phase6:check-payments-env:strict`  | Final RevenueCat annual/monthly/reverse-trial product IDs plus sandbox evidence for purchase, restore, trial/reverse-trial, expiry, refund/grace states, webhook verification, finance reconciliation, and store product setup.                                                                      |
 | `phase9:verify` strict gates        | Live Supabase, RLS staging/production, Edge auth, public forms, catalog rate limits, order-report polling, data export/delete, consent withdrawal, observability payload approval, store build inspection, dependency audit, rollback drill, incident response, and beta evidence.                   |
 | `phase10:verify` strict gates       | Closed beta identity, TestFlight, Play closed test including 12 testers for 14 days where required, recruiting, beta terms, dashboards, support desk, privacy-payload approval, payment QA, catalog beta report, retention report, public-launch decision, and named signoff.                        |
 | `phase11:verify` strict gates       | Phase 10 exit review, RC signoff, store approval, production environment, RevenueCat production verification, monitoring, support readiness, incident/rollback drill, launch ring reports, ASO review, creator disclosure review, revenue reconciliation, week-1 decision, and named launch signoff. |

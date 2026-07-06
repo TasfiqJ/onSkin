@@ -5,7 +5,10 @@ import { clearEntitlement, loadEntitlement, startReverseTrialOnServer } from './
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
-  env: { appEnvironment: 'development' as 'development' | 'staging' | 'production' },
+  env: {
+    appEnvironment: 'development' as 'development' | 'staging' | 'production',
+    revenueCatReverseTrialProductId: 'routinekind_pro_reverse_trial_local',
+  },
   isSupabaseConfigured: false,
   invoke: vi.fn(),
 }));
@@ -60,7 +63,7 @@ describe('subscription store reverse trial', () => {
       source: 'app_granted',
       environment: 'development',
       willRenew: false,
-      productId: 'onskin_pro_reverse_trial_local',
+      productId: 'routinekind_pro_reverse_trial_local',
     });
     expect(entitlement.expiresAt).toBe('2026-07-12T12:00:00.000Z');
     await expect(loadEntitlement()).resolves.toMatchObject(entitlement);

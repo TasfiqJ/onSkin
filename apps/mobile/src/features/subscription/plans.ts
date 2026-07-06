@@ -1,5 +1,7 @@
 import type { PlanId } from '@onskin/types';
 
+import { env } from '@/lib/env';
+
 /**
  * The plan catalog (docs/08 §2.3). Annual is the DEFAULT (Health & Fitness earns
  * 68% of revenue from annual, retains ~3.6× better than weekly); monthly is the
@@ -23,8 +25,20 @@ export type Plan = {
 };
 
 export const PLANS: Record<PlanId, Plan> = {
-  annual: { id: 'annual', productId: 'onskin_pro_annual', priceLabel: '$49.99', unit: 'year', trialDays: 14 },
-  monthly: { id: 'monthly', productId: 'onskin_pro_monthly', priceLabel: '$8.99', unit: 'month', trialDays: 0 },
+  annual: {
+    id: 'annual',
+    productId: env.revenueCatAnnualProductId,
+    priceLabel: '$49.99',
+    unit: 'year',
+    trialDays: 14,
+  },
+  monthly: {
+    id: 'monthly',
+    productId: env.revenueCatMonthlyProductId,
+    priceLabel: '$8.99',
+    unit: 'month',
+    trialDays: 0,
+  },
 };
 
 export const DEFAULT_PLAN: PlanId = 'annual';

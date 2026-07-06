@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T21:20:42.419Z",
+  "generatedAt": "2026-07-06T23:29:04.781Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "evidence": {
     "rcOfferingReviewed": false,
@@ -63,14 +63,14 @@
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 17966,
-      "sha256": "90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a"
+      "bytes": 18270,
+      "sha256": "95465c77ee182a66526ee39710ce8664e8f3c2dced4fa6bb772627318160bef8"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
       "exists": true,
-      "bytes": 6484,
-      "sha256": "f54147a9a6bee0f56a23a0ca830777b956063aff2c36e9f503a4f7d971001dea"
+      "bytes": 6487,
+      "sha256": "5a905346a58231713ccfb0725011a96c8d12b2607adcb5503732d4c79c97dc19"
     },
     {
       "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
@@ -105,8 +105,8 @@
     {
       "path": "apps/mobile/src/app/settings/subscription.tsx",
       "exists": true,
-      "bytes": 9197,
-      "sha256": "c3062bf8ead7ce389a0b344d7f698676f66e87b69e7b4986029a6a17b0136255"
+      "bytes": 9245,
+      "sha256": "bc66030e6d733529cdb6e7d0a01456bb51f2bc0af2357cbe30ab63266962cbc9"
     },
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",
@@ -135,8 +135,8 @@
     {
       "path": "docs/phase-6/payments-runbook.md",
       "exists": true,
-      "bytes": 2953,
-      "sha256": "8b415aab8405ed7e1109fe6a7cca91759fc6d6a406c0a08d04df3243edf4191c"
+      "bytes": 3263,
+      "sha256": "1279bccdb7f786516d1c5c466bed0b4012e779e8086aaa9f7486111f010f4a15"
     },
     {
       "path": "docs/phase-6/payments-qa-checklist.md",

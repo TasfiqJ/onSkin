@@ -15,7 +15,7 @@ function ent(over: Partial<StoredEntitlement>): StoredEntitlement {
     isActive: true,
     periodType: 'normal',
     store: 'app_store',
-    productId: 'onskin_pro_annual',
+    productId: 'routinekind_pro_annual_dev',
     expiresAt: null,
     willRenew: true,
     grantedAt: NOW,

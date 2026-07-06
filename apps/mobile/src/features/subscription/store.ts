@@ -179,7 +179,7 @@ export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
       isActive: true,
       periodType: 'reverse_trial',
       store: 'app_granted',
-      productId: 'onskin_pro_reverse_trial_local',
+      productId: env.revenueCatReverseTrialProductId,
       expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
       willRenew: false,
       grantedAt: nowISO(),

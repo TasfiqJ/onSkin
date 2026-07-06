@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
+const REPO_DIR = fileURLToPath(new URL('../../../../../', import.meta.url));
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
@@ -81,6 +82,26 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('paddingBottom: compactPaywall ? 112 : 24');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
+  });
+
+  it('keeps compact Progress-tab paywall compliance clear of the floating tab bar', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const flowTree = readFileSync(`${REPO_DIR}/docs/USER_FLOW_TREE.md`, 'utf8');
+
+    expect(proGate).toContain("import { router, usePathname } from 'expo-router';");
+    expect(proGate).toContain('const pathname = usePathname();');
+    expect(proGate).toContain(
+      "const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';",
+    );
+    expect(proGate).toContain(
+      'const compactComplianceSpacer = compactPaywall && insideTabbedPhotoPaywall ? 96 : 0;',
+    );
+    expect(proGate).toContain(
+      'compactComplianceSpacer > 0 ? <View style={{ height: compactComplianceSpacer }} /> : null',
+    );
+    expect(flowTree).toContain(
+      'including when store pricing is unavailable and the disabled-pricing reason is visible.',
+    );
   });
 
   it('keeps contextual routine paywalls value-first for first-time free users', () => {
