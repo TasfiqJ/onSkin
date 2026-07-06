@@ -1152,11 +1152,10 @@ checkmark + per-screen radii/copy across the routine builder. All claim-safe, em
 - Smart Shelf: ✅ cold-load skeleton (commit 4e69e9d); ✅ proactive "Replace ->" affordance on countdown/
   expired cards (4e69e9d); ✅ `added_via='onboarding'` seed path now live (inline quick-add, commit 99d7fee).
   Still open: contribute-back copy asserts a `shelf_scans` write that never runs (soften or write the row);
-  scan-funnel events absent (blocked on the scan engine); PAO provenance can flip estimate->label on an
-  unchanged value.
+  scan-funnel events absent (blocked on the scan engine).
 - Routine Builder: ✅ ramp/tolerance now persist (local-first rampStore + useRamp; the offer gates on
-  shouldOfferStepUp; tolerance persists applyTolerance, commit 99d7fee). Still open: adaptation/reorder use
-  hardcoded data (concrete manifestations of B-ROUTINE-PERSIST / B-DRAG-DND).
+  shouldOfferStepUp; tolerance persists applyTolerance, commit 99d7fee). Adaptation/reorder hardcoded-data
+  follow-ups were closed in the 2026-07-06 generated-plan surface pass.
 - Ingredient Intelligence: still open — the "paired / alternate nights" copy asserts placement even when no
   cycle is active (§4.6, gate on real scheduler output); dead `intelligence/scheduler.ts` exports + the stale
   rules.ts "DB-cached rules" comment (no client queries conflict_rules) need cleanup.
@@ -1447,6 +1446,15 @@ scrollable on short phones. Route contracts reject the old fixed demo arrays/cop
 binding. Human-simulated E2E verified the local reverse-trial Pro route, the moved-order nudge, visible 48 px actions,
 no small targets, no old Azelaic copy, and final screenshots in
 `test-results/human-e2e/2026-07-06/routine-generated-plan-screens/`.
+
+### Shelf PAO provenance honesty (2026-07-06)
+
+Fixed the opened-date PAO editor so tapping an unchanged prefilled value preserves its existing provenance instead of
+turning an estimated/category-default value into `from label`. Changed values are still treated as user-read label
+values. Added a pure provenance regression test and verified the manual Shelf intake branch at 320 x 568: a Cleanser
+manual add prefilled `12 months` as estimated, tapping the unchanged `12 mo` chip kept the opened sheet and final
+product detail on `estimated` with no `from label` copy and no visible small controls. Evidence:
+`test-results/human-e2e/2026-07-06/shelf-pao-provenance/`.
 
 ## Open questions for the founder
 

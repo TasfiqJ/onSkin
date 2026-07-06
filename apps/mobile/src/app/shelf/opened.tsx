@@ -7,6 +7,7 @@ import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { paoSourceLabel } from '@/features/shelf/labels';
 import { useShelfMutations } from '@/features/shelf/mutations';
+import { editedPaoSource } from '@/features/shelf/paoProvenance';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -237,7 +238,13 @@ export default function OpenedDateScreen() {
               onPress={() => {
                 haptics.select();
                 setPao(n);
-                setPaoSource('label'); // user-asserted from the jar
+                setPaoSource(
+                  editedPaoSource({
+                    currentMonths: draft.paoMonths,
+                    currentSource: draft.paoSource,
+                    nextMonths: n,
+                  }),
+                );
                 setPaoEditOpen(false);
               }}
               className={cn(
