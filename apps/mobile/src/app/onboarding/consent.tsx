@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
@@ -18,13 +18,21 @@ import { colors } from '@/theme/tokens';
 // 03 · Health-data collection consent. Dedicated + unbundled, BEFORE the quiz
 // (docs/01 §4: MHMDA "collection" + GDPR Art. 9 explicit). Collection only;
 // sharing is asked separately later. BLOCKED: B-PRIVACY-COPY (final wording).
-function Block({ label, body }: { label: string; body: string }) {
+function Block({
+  label,
+  body,
+  compact = false,
+}: {
+  label: string;
+  body: string;
+  compact?: boolean;
+}) {
   return (
-    <View className="mb-4">
+    <View className={compact ? 'mb-3' : 'mb-4'}>
       <Text variant="label" tone="clay">
         {label}
       </Text>
-      <Text variant="body" className="mt-1">
+      <Text variant="body" className={compact ? 'mt-0.5' : 'mt-1'}>
         {body}
       </Text>
     </View>
@@ -32,10 +40,17 @@ function Block({ label, body }: { label: string; body: string }) {
 }
 
 export default function HealthConsentScreen() {
+  const { height } = useWindowDimensions();
+  const compactPhone = height < 640;
+  const scrollRef = useRef<ScrollView>(null);
   const [busy, setBusy] = useState(false);
   const [declined, setDeclined] = useState(false);
   const [consentSaveError, setConsentSaveError] = useState(false);
   const [policyLinkMissing, setPolicyLinkMissing] = useState(false);
+
+  function scrollToStatus() {
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  }
 
   async function agree() {
     if (busy) return;
@@ -47,6 +62,7 @@ export default function HealthConsentScreen() {
       await grantHealthDataCollectionConsent();
     } catch {
       setConsentSaveError(true);
+      scrollToStatus();
       setBusy(false);
       return;
     }
@@ -62,8 +78,10 @@ export default function HealthConsentScreen() {
       await declineHealthDataCollectionConsent();
       track('health_consent_declined');
       setDeclined(true);
+      scrollToStatus();
     } catch {
       setConsentSaveError(true);
+      scrollToStatus();
     } finally {
       setBusy(false);
     }
@@ -80,55 +98,62 @@ export default function HealthConsentScreen() {
 
   return (
     <Screen>
-      <ScrollView
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-6 pt-10"
-      >
-        <Text variant="title">
-          Before the quiz,{' '}
-          <Text variant="title" italic tone="clay">
-            your privacy.
+      <View className="flex-1 overflow-hidden">
+        <ScrollView
+          ref={scrollRef}
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName={compactPhone ? 'pb-8 pt-8' : 'pb-6 pt-10'}
+        >
+          <Text variant="title">
+            Before the quiz,{' '}
+            <Text variant="title" italic tone="clay">
+              your privacy.
+            </Text>
           </Text>
-        </Text>
-        <Text variant="body" tone="muted" className="mt-3">
-          Your answers describe your skin&apos;s health, so we ask plainly. This consent covers
-          collection only. We&apos;ll ask separately before anything is ever shared.
-        </Text>
-        <Card className="mt-7">
-          <Block label="WHAT" body={HEALTH_DATA_CONSENT.what} />
-          <Block label="WHY" body={HEALTH_DATA_CONSENT.why} />
-          <Block label="NEVER" body={HEALTH_DATA_CONSENT.never} />
-          <Text variant="bodySm" tone="muted">
-            {HEALTH_DATA_CONSENT.footnote}
+          <Text variant="body" tone="muted" className="mt-3">
+            Your answers describe your skin&apos;s health, so we ask plainly. This consent covers
+            collection only. We&apos;ll ask separately before anything is ever shared.
           </Text>
-        </Card>
-        {/* Standing not-medical-advice disclaimer (docs/02 §9). */}
-        <Text variant="bodySm" tone="muted" className="mt-4 text-[12px]">
-          {NOT_MEDICAL_ADVICE_SHORT}
-        </Text>
-        {declined ? (
-          <View className="mt-4 rounded-[14px] p-4" style={{ backgroundColor: colors.clayTint }}>
-            <Text variant="body" className="font-sans-semibold">
-              {HEALTH_DATA_CONSENT.declinedTitle}
+          {declined ? (
+            <View className="mt-4 rounded-[14px] p-4" style={{ backgroundColor: colors.clayTint }}>
+              <Text variant="body" className="font-sans-semibold">
+                {HEALTH_DATA_CONSENT.declinedTitle}
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-1">
+                {HEALTH_DATA_CONSENT.declinedBody}
+              </Text>
+            </View>
+          ) : null}
+          {consentSaveError ? (
+            <View className="mt-4 rounded-[14px] p-4" style={{ backgroundColor: colors.clayTint }}>
+              <Text variant="body" className="font-sans-semibold">
+                {HEALTH_DATA_CONSENT.saveFailedTitle}
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-1">
+                {HEALTH_DATA_CONSENT.saveFailedBody}
+              </Text>
+            </View>
+          ) : null}
+          <Card className={compactPhone ? 'mt-5 p-4' : 'mt-7'}>
+            <Block label="WHAT" body={HEALTH_DATA_CONSENT.what} compact={compactPhone} />
+            <Block label="WHY" body={HEALTH_DATA_CONSENT.why} compact={compactPhone} />
+            <Block label="NEVER" body={HEALTH_DATA_CONSENT.never} compact={compactPhone} />
+            <Text variant="bodySm" tone="muted">
+              {HEALTH_DATA_CONSENT.footnote}
             </Text>
-            <Text variant="bodySm" tone="muted" className="mt-1">
-              {HEALTH_DATA_CONSENT.declinedBody}
-            </Text>
-          </View>
-        ) : null}
-        {consentSaveError ? (
-          <View className="mt-4 rounded-[14px] p-4" style={{ backgroundColor: colors.clayTint }}>
-            <Text variant="body" className="font-sans-semibold">
-              {HEALTH_DATA_CONSENT.saveFailedTitle}
-            </Text>
-            <Text variant="bodySm" tone="muted" className="mt-1">
-              {HEALTH_DATA_CONSENT.saveFailedBody}
-            </Text>
-          </View>
-        ) : null}
-      </ScrollView>
-      <View className="pb-6 pt-2">
+          </Card>
+          {/* Standing not-medical-advice disclaimer (docs/02 §9). */}
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className={compactPhone ? 'mt-3 text-[12px]' : 'mt-4 text-[12px]'}
+          >
+            {NOT_MEDICAL_ADVICE_SHORT}
+          </Text>
+        </ScrollView>
+      </View>
+      <View className="bg-paper pb-4 pt-2">
         <Button label="I agree. Continue" onPress={agree} disabled={busy} />
         <Pressable
           accessibilityRole="button"

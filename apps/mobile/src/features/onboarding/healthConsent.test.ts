@@ -8,49 +8,89 @@ import {
 
 const mocks = vi.hoisted(() => ({
   recordConsent: vi.fn(async () => {}),
+  setHealthDataCollectionConsentLocal: vi.fn(async () => {}),
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
   recordConsent: mocks.recordConsent,
 }));
 
+vi.mock('./healthConsentStore', () => ({
+  setHealthDataCollectionConsentLocal: mocks.setHealthDataCollectionConsentLocal,
+}));
+
 describe('health-data onboarding consent', () => {
   beforeEach(() => {
     mocks.recordConsent.mockClear();
     mocks.recordConsent.mockResolvedValue(undefined);
+    mocks.setHealthDataCollectionConsentLocal.mockClear();
+    mocks.setHealthDataCollectionConsentLocal.mockResolvedValue(undefined);
   });
 
-  it('records an explicit grant before the quiz can start', async () => {
+  it('records an explicit local grant before mirroring the ledger', async () => {
     await grantHealthDataCollectionConsent();
 
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
+      granted: true,
+      version: HEALTH_DATA_CONSENT.version,
+      consentText: HEALTH_DATA_CONSENT.fullText,
+    });
     expect(mocks.recordConsent).toHaveBeenCalledWith({
       type: 'health_data_collection',
       granted: true,
       version: HEALTH_DATA_CONSENT.version,
       consentText: HEALTH_DATA_CONSENT.fullText,
     });
+    expect(mocks.setHealthDataCollectionConsentLocal.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.recordConsent.mock.invocationCallOrder[0],
+    );
   });
 
-  it('records an explicit decline without granting quiz access', async () => {
+  it('records an explicit local decline without granting quiz access', async () => {
     await declineHealthDataCollectionConsent();
 
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
+      granted: false,
+      version: HEALTH_DATA_CONSENT.version,
+      consentText: HEALTH_DATA_CONSENT.declineText,
+    });
     expect(mocks.recordConsent).toHaveBeenCalledWith({
       type: 'health_data_collection',
       granted: false,
       version: HEALTH_DATA_CONSENT.version,
       consentText: HEALTH_DATA_CONSENT.declineText,
     });
+    expect(mocks.setHealthDataCollectionConsentLocal.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.recordConsent.mock.invocationCallOrder[0],
+    );
   });
 
-  it('propagates grant persistence failure so the quiz can stay locked', async () => {
+  it('keeps pre-account quiz entry local-first when the ledger is unavailable', async () => {
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
-    await expect(grantHealthDataCollectionConsent()).rejects.toThrow('ledger unavailable');
+    await expect(grantHealthDataCollectionConsent()).resolves.toBeUndefined();
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
+      granted: true,
+      version: HEALTH_DATA_CONSENT.version,
+      consentText: HEALTH_DATA_CONSENT.fullText,
+    });
   });
 
-  it('propagates decline persistence failure so declined state is not overstated', async () => {
+  it('keeps the decline branch best-effort when the ledger is unavailable', async () => {
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
-    await expect(declineHealthDataCollectionConsent()).rejects.toThrow('ledger unavailable');
+    await expect(declineHealthDataCollectionConsent()).resolves.toBeUndefined();
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledWith({
+      granted: false,
+      version: HEALTH_DATA_CONSENT.version,
+      consentText: HEALTH_DATA_CONSENT.declineText,
+    });
+  });
+
+  it('propagates local grant persistence failure so the quiz can stay locked', async () => {
+    mocks.setHealthDataCollectionConsentLocal.mockRejectedValueOnce(new Error('local unavailable'));
+
+    await expect(grantHealthDataCollectionConsent()).rejects.toThrow('local unavailable');
+    expect(mocks.recordConsent).not.toHaveBeenCalled();
   });
 });

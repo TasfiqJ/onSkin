@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -11,14 +11,18 @@ import { track } from '@/lib/analytics/track';
 // is still pending final B-QUIZ-COPY/legal review. The pregnancy/sensitivities
 // questions live at the end of the set, so this also covers docs/01 §2 step 5.
 export default function QuizScreen() {
+  const { height } = useWindowDimensions();
   const { quizAnswers, setAnswer } = useOnboarding();
   const [index, setIndex] = useState(0);
+  const compactPhone = height < 640;
 
   const total = ONBOARDING_QUIZ.length;
   const question = ONBOARDING_QUIZ[index]!;
   const current = quizAnswers[question.id];
   const isMulti = question.multiSelect === true;
-  const answered = isMulti ? Array.isArray(current) && current.length > 0 : typeof current === 'string';
+  const answered = isMulti
+    ? Array.isArray(current) && current.length > 0
+    : typeof current === 'string';
 
   function selectSingle(optionId: string) {
     setAnswer(question.id, optionId);
@@ -46,40 +50,56 @@ export default function QuizScreen() {
           {index + 1} / {total}
         </Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
-        <Text variant="eyebrow" tone="clay" className="mt-7">
-          {question.eyebrow}
-        </Text>
-        <Text variant="title" className="mt-2">
-          {question.prompt}
-        </Text>
-        {isMulti ? (
-          <View className="mt-6 flex-row flex-wrap gap-2">
-            {question.options.map((o) => (
-              <Chip
-                key={o.id}
-                label={o.label}
-                selected={Array.isArray(current) && current.includes(o.id)}
-                onPress={() => toggleMulti(o.id)}
-              />
-            ))}
-          </View>
-        ) : (
-          <View className="mt-6 gap-3">
-            {question.options.map((o) => (
-              <OptionCard
-                key={o.id}
-                title={o.label}
-                subtitle={o.subtitle}
-                selected={current === o.id}
-                onPress={() => selectSingle(o.id)}
-              />
-            ))}
-          </View>
-        )}
-      </ScrollView>
-      <View className="pb-4">
-        <Button label={index < total - 1 ? 'Next' : 'See my profile'} disabled={!answered} onPress={next} />
+      <View className="flex-1 overflow-hidden">
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-28"
+        >
+          <Text variant="eyebrow" tone="clay" className={compactPhone ? 'mt-5' : 'mt-7'}>
+            {question.eyebrow}
+          </Text>
+          <Text variant="title" className="mt-2">
+            {question.prompt}
+          </Text>
+          {isMulti ? (
+            <View
+              className={
+                compactPhone ? 'mt-4 flex-row flex-wrap gap-2' : 'mt-6 flex-row flex-wrap gap-2'
+              }
+            >
+              {question.options.map((o) => (
+                <Chip
+                  key={o.id}
+                  label={o.label}
+                  selected={Array.isArray(current) && current.includes(o.id)}
+                  onPress={() => toggleMulti(o.id)}
+                />
+              ))}
+            </View>
+          ) : (
+            <View className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}>
+              {question.options.map((o) => (
+                <OptionCard
+                  key={o.id}
+                  title={o.label}
+                  subtitle={o.subtitle}
+                  selected={current === o.id}
+                  onPress={() => selectSingle(o.id)}
+                  compact={compactPhone}
+                  tight={compactPhone}
+                />
+              ))}
+            </View>
+          )}
+        </ScrollView>
+      </View>
+      <View className="bg-paper pb-4 pt-2">
+        <Button
+          label={index < total - 1 ? 'Next' : 'See my profile'}
+          disabled={!answered}
+          onPress={next}
+        />
       </View>
     </Screen>
   );

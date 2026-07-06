@@ -13,6 +13,7 @@ export type OptionCardProps = {
   onPress?: () => void;
   className?: string;
   compact?: boolean;
+  tight?: boolean;
 };
 
 export function OptionCard({
@@ -22,6 +23,7 @@ export function OptionCard({
   onPress,
   className,
   compact = false,
+  tight = false,
 }: OptionCardProps) {
   return (
     <Pressable
@@ -34,18 +36,26 @@ export function OptionCard({
         onPress?.();
       }}
       className={cn(
-        'flex-row items-center justify-between rounded-card border px-5',
-        compact ? 'min-h-[60px] py-3' : 'min-h-[64px] py-4',
+        'flex-row items-center justify-between rounded-card border',
+        tight
+          ? 'min-h-[52px] px-4 py-2'
+          : compact
+            ? 'min-h-[60px] px-5 py-3'
+            : 'min-h-[64px] px-5 py-4',
         selected ? 'border-clay bg-clay/5' : 'border-hairline bg-paper-raised',
         className,
       )}
     >
       <View className="flex-1 pr-3">
-        <Text className={cn('font-sans-medium text-ink', compact ? 'text-[15.5px]' : 'text-[17px]')}>
+        <Text
+          className={cn('font-sans-medium text-ink', compact ? 'text-[15.5px]' : 'text-[17px]')}
+        >
           {title}
         </Text>
         {subtitle ? (
-          <Text className={cn('mt-0.5 font-sans text-muted', compact ? 'text-[12px]' : 'text-[13px]')}>
+          <Text
+            className={cn('mt-0.5 font-sans text-muted', compact ? 'text-[12px]' : 'text-[13px]')}
+          >
             {subtitle}
           </Text>
         ) : null}

@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the fresh-phone onboarding path after 320x568 E2E exposed multiple
+  short-phone blockers: goals and quiz answers could sit under fixed footers,
+  consent copy could bleed behind actions or become unscrollable when clipped
+  incorrectly, local placeholder Supabase blocked pre-account health consent,
+  consent decline feedback appeared below the fold, and product intake hid the
+  add action/confirmation. Onboarding fixed-footer screens now use a clipping
+  wrapper with scrollable content, compact OptionCards, local-first health-data
+  consent proof with version/hash and private-data cleanup registration, visible
+  consent feedback, and a compact product footer that adds first then continues.
+  Human-simulated E2E covered welcome, invalid/underage age gate, goals, consent
+  decline/agree, quiz including None exclusivity, product add/remove, reveal,
+  notifications/account fallbacks, paywall disclosure scroll, and Explore first
+  to routine plan in
+  `test-results/human-e2e/2026-07-06/onboarding-fresh-phone-sweep/`.
 - Final cross-phone sweep found and fixed two remaining phone-polish issues in
   the primary navigation slice. Shelf manual add now gives the bottom Continue
   CTA a real phone cushion while keeping the category picker and PAO note clean

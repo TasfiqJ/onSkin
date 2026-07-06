@@ -14,6 +14,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.cycleAnchor',
   'onskin.entitlement.v1',
   'onskin.entitlement.v2',
+  'onskin.healthDataCollectionConsent.v1',
   'onskin.milestones.v1',
   'onskin.notifPrefs.v1',
   'onskin.notiflog.v1',
