@@ -1676,6 +1676,16 @@ Today route contracts now cover the compact banner and row-density behavior. Hum
 overflow, no mojibake, and post-fix geometry (`See why` bottom `420.8`, dismiss bottom `415.7`, tab bar top `494.9`) in
 `test-results/human-e2e/2026-07-06/today-spf-compact-banner/`.
 
+### Onboarding goals footer clearance (2026-07-06)
+
+Fixed `/onboarding/goals` after a 320 x 568 phone E2E pass showed the fixed `Continue` footer covering lower goal
+cards. The goals route now uses explicit scroll flexing, short-phone-only card density, and bottom clearance so the
+visible options stay complete above the footer while the final option remains reachable by normal scroll. The products
+onboarding route received the same footer separation treatment, and route/component contracts now cover the compact
+card behavior. Human-simulated E2E verified the visible-card geometry, scrolled to `Barrier repair`, selected it, and
+continued to `/onboarding/consent` in
+`test-results/human-e2e/2026-07-06/onboarding-goals-footer-clearance/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
