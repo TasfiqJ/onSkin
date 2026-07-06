@@ -65,6 +65,7 @@ describe('Recommendation route contracts', () => {
 
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('h-7 w-7');
+    expect(source).toContain('Preferences');
     expect(source).toContain('className="min-h-[44px] items-center justify-center rounded-pill');
   });
 
@@ -73,6 +74,7 @@ describe('Recommendation route contracts', () => {
 
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('h-7 w-7');
-    expect(source).toContain('mt-4 min-h-[44px] items-center justify-center py-2');
+    expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
+    expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');
   });
 });

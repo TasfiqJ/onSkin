@@ -114,7 +114,7 @@ export default function PreferencesScreen() {
           onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
         />
         <Text variant="body" className="font-sans-semibold" tone="muted">
-          {REC_COPY.preferences.title}
+          Preferences
         </Text>
       </View>
 

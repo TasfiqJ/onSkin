@@ -207,7 +207,7 @@ export default function RecommendationDetail() {
           </Text>
           <Pressable
             accessibilityRole="button"
-            className="mt-4 min-h-[44px] items-center justify-center py-2"
+            className="mt-4 min-h-[48px] items-center justify-center py-2"
             onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
           >
             <Text className="font-sans-semibold" tone="muted">

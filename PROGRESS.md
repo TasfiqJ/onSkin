@@ -1413,6 +1413,15 @@ the three capture gate exits use a 48 px floor, and the progress route contract 
 post-fix `Not now` target is visible at 48 px with no horizontal overflow, and tapped it back to `/progress` in
 `test-results/human-e2e/2026-07-06/progress-capture-not-now-targets/`.
 
+### Recommendation stale-detail exit hardening (2026-07-06)
+
+Fixed the stale `/recommendations/[id]` direct-entry fallback after a 320 x 568 phone E2E pass showed `Back to For you`
+rendering at 43.99 px high. The fallback exit now uses a 48 px floor, the recommendation route contract rejects the old
+exact-44 px class, and the preferences top bar now uses a short `Preferences` label so it does not wrap above the
+screen title on narrow phones. Human-simulated E2E verified the stale-detail exit target, tapped it back to
+`/recommendations`, checked zero horizontal overflow, and confirmed the preferences header/chips in
+`test-results/human-e2e/2026-07-06/recommendation-preferences-chip-targets/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
