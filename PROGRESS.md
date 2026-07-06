@@ -37,10 +37,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `com.onskin.app` identifiers. Human-simulated E2E served the static public
   site locally and checked `index.html`, `share.html`, `support.html`, and
   `waitlist.html` at 390x844 in
-  `test-results/human-e2e/2026-07-06/phase8-public-site-brand/`. `npm run
-brand:audit` now reports 21 public launch-risk references, down from 44; the
-  remaining public-risk items require cleared native/store/RevenueCat/Supabase
-  identity migration.
+  `test-results/human-e2e/2026-07-06/phase8-public-site-brand/`. E2E then found
+  and fixed the support page's visible `__SUPPORT_EMAIL__` placeholder by
+  rendering a human-readable fallback until the final monitored address is
+  substituted; post-fix evidence is in
+  `test-results/human-e2e/2026-07-06/phase8-public-site-support-placeholder/`.
+  `npm run brand:audit` now reports 21 public launch-risk references, down from
+  44; the remaining public-risk items require cleared
+  native/store/RevenueCat/Supabase identity migration.
 - Fixed routine-plan profile-label honesty for the first-value loop. The
   generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
   derives real plan labels from saved `oily_dry` and `sensitive_resistant`
