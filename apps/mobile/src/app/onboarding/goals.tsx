@@ -15,7 +15,7 @@ export default function GoalsScreen() {
       <View className="pt-2">
         <ProgressBar total={5} current={1} />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-28">
         <Text variant="title" className="mt-8">
           What brings you here?
         </Text>

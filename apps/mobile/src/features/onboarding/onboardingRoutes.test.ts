@@ -20,6 +20,16 @@ describe('onboarding route contracts', () => {
     expect(products).not.toContain('hitSlop={8}');
   });
 
+  it('keeps onboarding fixed-footer screens scrollable above phone actions', () => {
+    const goals = readAppRoute('onboarding/goals.tsx');
+    const products = readAppRoute('onboarding/products.tsx');
+
+    expect(goals).toContain('contentContainerClassName="pb-28"');
+    expect(products).toContain('contentContainerClassName="pb-28"');
+    expect(goals).not.toContain('contentContainerClassName="pb-4"');
+    expect(products).not.toContain('contentContainerClassName="pb-4"');
+  });
+
   it('keeps health-data consent fail-closed before quiz access', () => {
     const source = readAppRoute('onboarding/consent.tsx');
 

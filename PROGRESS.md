@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed onboarding fixed-footer overlap after 320x568 E2E showed the final goals
+  and product `Add to shelf` action running underneath the bottom Continue/Skip
+  button. Goals and product intake now keep enough scroll padding for short
+  phones, and E2E verified selecting `Barrier repair`, continuing to consent,
+  typing a product, and adding it from the lower form action.
 - Fixed the weekly tolerance check-in sheet after 320x568 E2E showed the
   `Irritated` choice and disabled `Save` action below the first viewport.
   Compact phones now show Skip, all three tolerance choices, and Save with

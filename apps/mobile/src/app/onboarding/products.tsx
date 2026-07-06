@@ -44,7 +44,7 @@ export default function ProductsScreen() {
 
   return (
     <Screen>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-28">
         <Text variant="title" className="mt-6">
           What&apos;s on your shelf?
         </Text>
