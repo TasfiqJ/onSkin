@@ -33,8 +33,9 @@ export async function grantAskConsent(): Promise<void> {
       consentText: `[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
     });
     track('ask_consent_granted');
-  } catch {
-    /* best-effort until backend configured */
+  } catch (error) {
+    await setAskConsentLocal(false).catch(() => undefined);
+    throw error;
   }
 }
 

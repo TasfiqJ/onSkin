@@ -60,13 +60,14 @@ describe('Ask consent persistence', () => {
     );
   });
 
-  it('does not emit Ask grant analytics when the consent ledger fails', async () => {
+  it('fails closed and relocks Ask consent when the consent ledger fails', async () => {
     const { grantAskConsent } = await import('./consent');
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
-    await expect(grantAskConsent()).resolves.toBeUndefined();
+    await expect(grantAskConsent()).rejects.toThrow('ledger unavailable');
 
-    expect(mocks.setAskConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.setAskConsentLocal).toHaveBeenNthCalledWith(1, true);
+    expect(mocks.setAskConsentLocal).toHaveBeenNthCalledWith(2, false);
     expect(mocks.track).not.toHaveBeenCalledWith('ask_consent_granted');
   });
 

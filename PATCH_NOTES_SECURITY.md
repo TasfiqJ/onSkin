@@ -621,6 +621,13 @@
 - Why safe: The quiz collects health-adjacent skin goals, sensitivities, and product data. That collection must not begin unless the app has durable consent evidence for the exact copy/version shown.
 - Regression: Onboarding consent tests prove grant/decline ledger failures propagate, the route keeps quiz navigation after the grant call, and the old non-fatal catch cannot return.
 
+## Ask and Trend grant relock on ledger failure
+
+- Files: `apps/mobile/src/features/ask/consent.ts`, `apps/mobile/src/features/ask/consent.test.ts`, `apps/mobile/src/features/trend/consent.ts`, `apps/mobile/src/features/trend/consent.test.ts`.
+- Change: Ask cloud consent and photo-trend insight grants now roll their local consent flags back off and rethrow if `recordConsent` fails. Trend also clears derived trend state on a failed grant.
+- Why safe: The existing route helpers already keep visible toggle state unapplied when a grant rejects. Relocking the local flags closes the offline/local fallback path too, so a failed ledger write cannot leave cloud Ask or Trend enabled.
+- Regression: Consent tests prove failed Ask/Trend grants set the local flag back to false, emit no grant analytics, and keep the failure visible to the route helper.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

@@ -60,13 +60,15 @@ describe('trend insight consent persistence', () => {
     );
   });
 
-  it('does not emit trend opt-in analytics when the consent ledger fails', async () => {
+  it('fails closed and relocks trend consent when the consent ledger fails', async () => {
     const { grantTrendInsightsConsent } = await import('./consent');
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
-    await expect(grantTrendInsightsConsent()).resolves.toBeUndefined();
+    await expect(grantTrendInsightsConsent()).rejects.toThrow('ledger unavailable');
 
-    expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(true);
+    expect(mocks.setTrendInsightsLocal).toHaveBeenNthCalledWith(1, true);
+    expect(mocks.setTrendInsightsLocal).toHaveBeenNthCalledWith(2, false);
+    expect(mocks.deleteTrendState).toHaveBeenCalledTimes(1);
     expect(mocks.track).not.toHaveBeenCalledWith('trend_insights_opted_in');
   });
 

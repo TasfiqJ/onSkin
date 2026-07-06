@@ -33,8 +33,10 @@ export async function grantTrendInsightsConsent(): Promise<void> {
       consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
     });
     track('trend_insights_opted_in');
-  } catch {
-    /* best-effort until backend configured */
+  } catch (error) {
+    await setTrendInsightsLocal(false).catch(() => undefined);
+    await deleteTrendState().catch(() => undefined);
+    throw error;
   }
 }
 
