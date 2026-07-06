@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {
   block,
+  command,
   envFile,
   envSnapshot,
   exists,
@@ -268,6 +269,16 @@ for (const key of Object.keys(exampleEnv).filter((name) => name.startsWith('EXPO
 const placeholder = (value) =>
   !value ||
   /example\.com|YOUR-PROJECT|xxxxxxxx|XXXXXXXX|\.\.\.|__BLOCKED_PLACEHOLDER__/i.test(String(value));
+
+function markdownTableValue(source, label) {
+  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return (
+    source
+      .match(new RegExp(`^\\|\\s*${escaped}\\s*\\|\\s*([^|]+?)\\s*\\|\\s*$`, 'im'))?.[1]
+      ?.trim() ?? ''
+  );
+}
+
 for (const key of [
   'EXPO_PUBLIC_PRIVACY_URL',
   'EXPO_PUBLIC_TERMS_URL',
@@ -344,6 +355,30 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
         !/\b(?:TBD|BLOCKED)\b/.test(read(file)),
         `${file} must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.`,
       );
+    }
+
+    const manifestPath = `${releaseCandidateDir}/manifest.md`;
+    if (exists(manifestPath)) {
+      const manifestSource = read(manifestPath);
+      const manifestSha = markdownTableValue(manifestSource, 'Git SHA');
+      let currentSha = '';
+      try {
+        currentSha = command('git', ['rev-parse', 'HEAD']).trim();
+      } catch {
+        block(errors, false, 'Current Git SHA could not be read for release-candidate verification.');
+      }
+      block(
+        errors,
+        /^[a-f0-9]{40}$/i.test(manifestSha),
+        `${manifestPath} must contain a full 40-character Git SHA.`,
+      );
+      if (currentSha && /^[a-f0-9]{40}$/i.test(manifestSha)) {
+        block(
+          errors,
+          manifestSha.toLowerCase() === currentSha.toLowerCase(),
+          `${manifestPath} Git SHA must match the current commit (${currentSha}).`,
+        );
+      }
     }
   }
 }

@@ -12,7 +12,7 @@ At a seven-figure subscription target, trust defects become revenue defects. Pha
 
 Every evidence packet must point to one immutable source revision and one pair of native builds. Evidence from an earlier build can inform investigation, but it does not sign off a later release candidate.
 
-Before any `PHASE9_*_PASS=true` flag or `PHASE9_SIGNED_OFF_BY` value is accepted, set `PHASE9_RELEASE_CANDIDATE_DIR` to a non-template folder under `docs/phase-9/release-candidates/`. The folder must contain the full RC packet and the core manifest/review/signoff files must have all `TBD` and `BLOCKED` placeholders replaced with reviewed evidence.
+Before any `PHASE9_*_PASS=true` flag or `PHASE9_SIGNED_OFF_BY` value is accepted, set `PHASE9_RELEASE_CANDIDATE_DIR` to a non-template folder under `docs/phase-9/release-candidates/`. The folder must contain the full RC packet, the manifest `Git SHA` must match the commit being verified, and the core manifest/review/signoff files must have all `TBD` and `BLOCKED` placeholders replaced with reviewed evidence.
 
 ## Current Non-Code Blockers
 
