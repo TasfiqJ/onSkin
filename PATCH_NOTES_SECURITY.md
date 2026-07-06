@@ -641,3 +641,10 @@
 - Change: First-use Progress photo capture now saves the local `photo_capture` consent flag before marking the consent gate as passed or requesting camera permission. The CTA is disabled while saving, and local persistence failure shows stable "Photo choice not saved" copy while keeping the camera blocked and retryable.
 - Why safe: Facial/skin photos are the app's most sensitive data. Camera access must not start from a UI state that merely assumes consent was saved.
 - Regression: `applyCaptureConsent.test.ts` covers save-before-open sequencing, fail-closed persistence errors, OS permission prompt failure after a saved consent, and the capture route contract.
+
+## Photo consent ledger fail-closed grants
+
+- Files: `apps/mobile/src/features/photos/consent.ts`, `apps/mobile/src/features/photos/consent.test.ts`.
+- Change: `photo_capture` and `photo_cloud_backup` grant helpers now roll their local private flags back off and rethrow if `recordConsent` fails.
+- Why safe: Progress photos and backup settings are sensitive health-adjacent choices. A failed immutable ledger write must not leave camera capture or cloud backup locally unlocked through offline/local gates.
+- Regression: `consent.test.ts` proves successful grants set local flags only after ledger persistence, failed grants relock local flags and reject, and cloud-backup withdrawal still relocks locally before the withdrawal call.

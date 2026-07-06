@@ -363,6 +363,9 @@
 - `apps/mobile/src/features/photos/sharePhoto.test.ts`
   - Verifies Progress photo detail sharing alerts on missing URI, unavailable native sharing, temporary export failure, and native share-sheet rejection.
   - Verifies the temporary decrypted share export is deleted after the share attempt and the route delegates to the failure-handled helper.
+- `apps/mobile/src/features/photos/consent.test.ts`
+  - Verifies photo capture and encrypted-cloud-backup grants reject and roll local private flags back off when immutable consent ledger persistence fails.
+  - Verifies cloud-backup withdrawal still relocks the local flag before recording the withdrawal.
 - `apps/mobile/src/features/settings/actions.test.ts`
   - Verifies data export unavailable-share paths still delete the plaintext export file and surface export-unavailable copy from the You tab instead of firing the success/review path.
 - `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`

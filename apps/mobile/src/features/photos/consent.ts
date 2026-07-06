@@ -6,10 +6,10 @@ import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 /**
  * Photo consents (docs/01 §4, docs/06 §7). Unbundled and local-first. Capture
  * consent is requested at FIRST camera use; cloud backup is a SEPARATE, off-by-
- * default opt-in. Each grant/revoke writes the immutable ledger (best-effort until
- * B-SUPABASE) AND a local flag so the gates work offline. The image bytes stay on
- * device regardless. These flags gate behaviour, not storage location for v1
- * (the cloud upload job itself is B-CAMERA).
+ * default opt-in. Each grant/revoke writes the immutable ledger AND a local flag
+ * so the gates work offline. The image bytes stay on device regardless. These
+ * flags gate behaviour, not storage location for v1 (the cloud upload job itself
+ * is B-CAMERA).
  */
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
 const CLOUD_KEY = 'onskin.photos.cloudBackup';
@@ -35,8 +35,9 @@ export async function grantPhotoCaptureConsent(): Promise<void> {
       version: PHOTO_CAPTURE_CONSENT.version,
       consentText: PHOTO_CAPTURE_CONSENT.fullText,
     });
-  } catch {
-    /* best-effort until backend configured (B-SUPABASE) */
+  } catch (error) {
+    await setPrivateItem(CAPTURE_KEY, '0').catch(() => undefined);
+    throw error;
   }
 }
 
@@ -61,7 +62,8 @@ export async function setCloudBackupEnabled(enabled: boolean): Promise<void> {
       version: PHOTO_CLOUD_BACKUP_CONSENT.version,
       consentText: PHOTO_CLOUD_BACKUP_CONSENT.fullText,
     });
-  } catch {
-    /* best-effort */
+  } catch (error) {
+    await setPrivateItem(CLOUD_KEY, '0').catch(() => undefined);
+    throw error;
   }
 }
