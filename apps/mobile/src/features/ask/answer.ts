@@ -46,6 +46,8 @@ export type AskRecSummary = {
 export type AskContext = {
   /** The launch-gated conflicts for the user's real shelf (useShelf().data.conflicts). */
   conflicts: DetectedConflict[];
+  /** Empty conflict lists can mean "nothing clashes" or "nothing was available to check". */
+  hasShelfProducts: boolean;
   /** Tonight's PM steps in order, from the generated plan (usePlan). */
   pmSteps: { name: string; role: string }[];
   isExamplePlan: boolean;
@@ -153,6 +155,15 @@ function conflictAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
       why: ASK_COPY.triad.whyShelf,
       how: ASK_COPY.triad.howConflict,
       citation: { label: pairHeadline(reassurance), evidence: evidenceChip(reassurance.rule.evidenceLabel) },
+    };
+  }
+  if (!ctx.hasShelfProducts) {
+    return {
+      ...BLANK,
+      intent,
+      kind: 'deterministic',
+      badge: ASK_COPY.badges.deterministic,
+      claim: ASK_COPY.emptyShelfConflict,
     };
   }
   return { ...BLANK, intent, kind: 'deterministic', badge: ASK_COPY.badges.deterministic, claim: ASK_COPY.noConflicts };

@@ -25,6 +25,7 @@ const PREGNANT_CONFLICTS = detectConflicts(
 
 const CTX: AskContext = {
   conflicts: CONFLICTS,
+  hasShelfProducts: true,
   pmSteps: [
     { name: 'Glycolic 7% Toner', role: 'exfoliant' },
     { name: 'Ceramide moisturizer', role: 'moisturiser' },
@@ -56,6 +57,17 @@ describe('the conflict answer is deterministic and template-bounded from the eng
   it('says "you’re set" when nothing clashes', () => {
     const a = answerPrompt('conflict', { ...CTX, conflicts: [] });
     expect(a.claim).toBe(ASK_COPY.noConflicts);
+  });
+  it('does not reassure when the shelf is empty', () => {
+    const a = answerQuestion('Can I use retinol with glycolic toner?', {
+      ...CTX,
+      conflicts: [],
+      hasShelfProducts: false,
+    });
+
+    expect(a.kind).toBe('deterministic');
+    expect(a.claim).toBe(ASK_COPY.emptyShelfConflict);
+    expect(a.claim).not.toBe(ASK_COPY.noConflicts);
   });
   it('a safety contraindication (e.g. pregnancy) escalates. NEVER "you’re set"', () => {
     expect(PREGNANT_CONFLICTS.some((c) => c.rule.interactionType === 'safety')).toBe(true);

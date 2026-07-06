@@ -51,6 +51,8 @@ export const ASK_COPY = {
   recommendationNote: 'This is a recommendation, not a rule. Your routine, your call.',
   claimSafeNote: 'Worded for how skin looks, never a medical claim, never influenced by commission.',
   noConflicts: 'Nothing on your shelf clashes right now. You’re set.',
+  emptyShelfConflict:
+    'I do not see products on your shelf yet. Add them and I will check real pairs instead of guessing.',
   tonight: {
     lead: 'Here’s tonight, in order:',
     exampleLead: 'Add your products and I’ll build tonight in order. Here’s an example for now:',

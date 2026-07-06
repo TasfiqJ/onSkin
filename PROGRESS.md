@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Ask OnSkin empty-shelf conflict reassurance after 320x568 E2E showed a
+  typed retinol/glycolic question on `/ask` replying `Nothing on your shelf clashes
+  right now. You’re set.` even though there were no shelf products to check. The
+  deterministic Ask context now distinguishes an empty shelf from a populated shelf
+  with zero conflicts, so empty-shelf conflict questions ask the user to add products
+  before real pair checks. E2E rechecked `/ask`, Ask report feedback, `/ask/consent`,
+  Skin Notes hub/detail, deferred community posting routes, stale note recovery, and
+  phone-width control geometry in `test-results/human-e2e/2026-07-06/ask-community-composer-next-slice/`.
 - Fixed the cycle settings variant copy after a 320x568 E2E pass with real
   retinol and glycolic shelf actives showed `/cycle/week` honestly generated a
   `classic, 6 nights` schedule while `/cycle/settings` still advertised the

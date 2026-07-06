@@ -52,6 +52,7 @@ const CONFLICTS = detectConflicts(PRODUCTS, PROFILE, STARTER_RULES);
 
 const CTX: AskContext = {
   conflicts: CONFLICTS,
+  hasShelfProducts: true,
   pmSteps: [
     { name: 'Glycolic 7% Toner', role: 'exfoliant' },
     { name: 'Ceramide moisturizer', role: 'moisturiser' },
@@ -65,10 +66,12 @@ const CTX: AskContext = {
   groundedReason: 'free_locked',
 };
 const NO_CONFLICT_CTX: AskContext = { ...CTX, conflicts: [] };
+const EMPTY_SHELF_CTX: AskContext = { ...CTX, conflicts: [], hasShelfProducts: false };
 
 const GENERATED_CLAIMS = [
   answerPrompt('conflict', CTX).claim,
   answerPrompt('conflict', NO_CONFLICT_CTX).claim,
+  answerPrompt('conflict', EMPTY_SHELF_CTX).claim,
   answerPrompt('tonight', CTX).claim,
   answerPrompt('fit', CTX).claim,
   answerPrompt('fit', { ...CTX, topRec: null }).claim,

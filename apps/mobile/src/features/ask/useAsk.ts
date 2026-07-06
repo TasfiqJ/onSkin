@@ -46,6 +46,7 @@ export function useAsk() {
     const goal = profile.data?.goals[0] ?? null;
     return {
       conflicts: shelf.data?.conflicts ?? [],
+      hasShelfProducts: (shelf.data?.items.length ?? 0) > 0,
       pmSteps: (plan.data?.plan.pm ?? []).map((s) => ({ name: s.name, role: String(s.role) })),
       isExamplePlan: plan.data?.isExample ?? false,
       hasReplenish: (shelf.data?.items ?? []).some(
@@ -108,7 +109,7 @@ export function useAsk() {
     askSuggested,
     // Whether the user has any products on their shelf, so the screen can lead
     // proactively only when there is something real to answer about (docs/13 §14).
-    hasShelf: (shelf.data?.items.length ?? 0) > 0,
+    hasShelf: ctx.hasShelfProducts,
     isLoading: shelf.isLoading || plan.isLoading || recs.isLoading,
   };
 }
