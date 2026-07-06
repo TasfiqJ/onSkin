@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Ask OnSkin empty state after 320 px E2E showed the third suggested
+  prompt sliding under the fixed composer. The prompt rows keep 48 px touch
+  targets but use tighter short-phone spacing so all starter prompts clear the
+  input bar.
 - Fixed the Shelf OCR manual fallback after 320 px E2E showed the disabled final
   Continue action overlapping the ingredient text area before manual-review
   mode. The editable text area and final action now appear only in review mode,

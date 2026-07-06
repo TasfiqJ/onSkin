@@ -63,4 +63,19 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('minHeight: 48');
     expect(home).toContain('mt-3 min-h-[48px] self-start items-center justify-center');
   });
+
+  it('keeps suggested prompts clear of the fixed Ask composer on short phones', () => {
+    const home = readAppRoute('ask/index.tsx');
+
+    expect(home).toContain(
+      'className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"',
+    );
+    expect(home).toContain('className="pt-1"');
+    expect(home).toContain('className="mb-3 flex-row flex-wrap gap-1.5"');
+    expect(home).toContain('className="mb-3 text-[12.5px]"');
+    expect(home).toContain('style={{ lineHeight: 19 }}');
+    expect(home).toContain('className="mb-2 font-mono text-[10px] uppercase"');
+    expect(home).toContain('className="gap-2"');
+    expect(home).not.toContain('py-3.5');
+  });
 });

@@ -780,7 +780,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Tab through prompt chips, text input, and send controls.
-  - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, and keyboard focus without trapping the user.
+  - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, suggested prompts do not sit underneath the fixed composer on short phones, and keyboard focus does not trap the user.
   - Evidence: UI snapshot or accessibility notes.
 
 ## Open Questions

@@ -268,7 +268,7 @@ function SuggestedPrompt({ label, onPress }: { label: string; onPress: () => voi
         haptics.select();
         onPress();
       }}
-      className="flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-3.5"
+      className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
       <Text className="flex-1 text-[13.5px]" style={{ color: colors.ink }}>
@@ -352,8 +352,8 @@ export default function AskScreen() {
         contentContainerClassName="pb-4"
       >
         {empty ? (
-          <View className="pt-2">
-            <View className="mb-4 flex-row flex-wrap gap-1.5">
+          <View className="pt-1">
+            <View className="mb-3 flex-row flex-wrap gap-1.5">
               {ASK_COPY.home.pills.map((p) => (
                 <View
                   key={p}
@@ -369,18 +369,18 @@ export default function AskScreen() {
             <Text
               variant="body"
               tone="muted"
-              className="mb-5 text-[13px]"
-              style={{ lineHeight: 20 }}
+              className="mb-3 text-[12.5px]"
+              style={{ lineHeight: 19 }}
             >
               {ASK_COPY.home.intro}
             </Text>
             <Text
-              className="mb-2.5 font-mono text-[10px] uppercase"
+              className="mb-2 font-mono text-[10px] uppercase"
               style={{ color: colors.mutedLight, letterSpacing: 1 }}
             >
               {ASK_COPY.home.groundedEyebrow}
             </Text>
-            <View className="gap-2.5">
+            <View className="gap-2">
               <SuggestedPrompt
                 label={ASK_COPY.home.prompts.conflict}
                 onPress={() => pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'))}
