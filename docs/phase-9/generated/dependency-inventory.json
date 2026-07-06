@@ -1,250 +1,17 @@
 {
-  "generatedAt": "2026-07-05T22:01:12.924Z",
+  "generatedAt": "2026-07-06T19:12:13.317Z",
   "packageManager": null,
   "lockfileVersion": 3,
   "packageCount": 1071,
   "vulnerabilities": {
     "info": 0,
     "low": 0,
-    "moderate": 14,
+    "moderate": 0,
     "high": 0,
     "critical": 0,
-    "total": 14
+    "total": 0
   },
-  "auditFindings": [
-    {
-      "name": "@expo/cli",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "<=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44",
-      "via": [
-        "@expo/config",
-        "@expo/config-plugins",
-        "@expo/inline-modules",
-        "@expo/metro-config",
-        "@expo/prebuild-config"
-      ],
-      "effects": [
-        "expo"
-      ],
-      "nodes": [
-        "node_modules/@expo/cli"
-      ],
-      "fixAvailable": "expo@46.0.21 (breaking)"
-    },
-    {
-      "name": "@expo/config",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "<=0.0.1-canary-20240418-8d74597 || >=3.3.23-alpha.0",
-      "via": [
-        "@expo/config-plugins"
-      ],
-      "effects": [
-        "@expo/local-build-cache-provider",
-        "@expo/metro-config",
-        "expo"
-      ],
-      "nodes": [
-        "node_modules/@expo/config"
-      ],
-      "fixAvailable": "expo@46.0.21 (breaking)"
-    },
-    {
-      "name": "@expo/config-plugins",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "*",
-      "via": [
-        "xcode"
-      ],
-      "effects": [
-        "@expo/cli",
-        "@expo/config",
-        "@expo/inline-modules",
-        "@expo/prebuild-config",
-        "expo",
-        "expo-sharing",
-        "expo-splash-screen"
-      ],
-      "nodes": [
-        "node_modules/@expo/config-plugins"
-      ],
-      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
-    },
-    {
-      "name": "@expo/inline-modules",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": ">=0.0.2-canary-20260409-6fc2991",
-      "via": [
-        "@expo/config-plugins"
-      ],
-      "effects": [
-        "@expo/cli"
-      ],
-      "nodes": [
-        "node_modules/@expo/inline-modules"
-      ],
-      "fixAvailable": "expo@46.0.21 (breaking)"
-    },
-    {
-      "name": "@expo/local-build-cache-provider",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "*",
-      "via": [
-        "@expo/config"
-      ],
-      "effects": [
-        "expo"
-      ],
-      "nodes": [
-        "node_modules/@expo/local-build-cache-provider"
-      ],
-      "fixAvailable": "expo@46.0.21 (breaking)"
-    },
-    {
-      "name": "@expo/metro-config",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "<=0.0.1-canary-20240418-8d74597 || >=0.1.49-alpha.0",
-      "via": [
-        "@expo/config"
-      ],
-      "effects": [
-        "expo"
-      ],
-      "nodes": [
-        "node_modules/@expo/metro-config"
-      ],
-      "fixAvailable": "expo@46.0.21 (breaking)"
-    },
-    {
-      "name": "@expo/prebuild-config",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "*",
-      "via": [
-        "@expo/config",
-        "@expo/config-plugins"
-      ],
-      "effects": [],
-      "nodes": [
-        "node_modules/@expo/prebuild-config"
-      ],
-      "fixAvailable": "available"
-    },
-    {
-      "name": "@react-native-google-signin/google-signin",
-      "severity": "moderate",
-      "isDirect": true,
-      "range": ">=9.0.0",
-      "via": [
-        "expo"
-      ],
-      "effects": [],
-      "nodes": [
-        "node_modules/@react-native-google-signin/google-signin"
-      ],
-      "fixAvailable": "@react-native-google-signin/google-signin@8.2.2 (breaking)"
-    },
-    {
-      "name": "@sentry/react-native",
-      "severity": "moderate",
-      "isDirect": true,
-      "range": ">=5.16.0-alpha.1",
-      "via": [
-        "expo"
-      ],
-      "effects": [],
-      "nodes": [
-        "node_modules/@sentry/react-native"
-      ],
-      "fixAvailable": "@sentry/react-native@5.15.2 (breaking)"
-    },
-    {
-      "name": "expo",
-      "severity": "moderate",
-      "isDirect": true,
-      "range": "40.0.0-alpha.0 - 40.0.0-beta.5 || >=41.0.0-alpha.0",
-      "via": [
-        "@expo/cli",
-        "@expo/config",
-        "@expo/config-plugins",
-        "@expo/local-build-cache-provider",
-        "@expo/metro-config"
-      ],
-      "effects": [
-        "@react-native-google-signin/google-signin",
-        "@sentry/react-native"
-      ],
-      "nodes": [
-        "node_modules/expo"
-      ],
-      "fixAvailable": "expo@46.0.21 (breaking)"
-    },
-    {
-      "name": "expo-sharing",
-      "severity": "moderate",
-      "isDirect": true,
-      "range": ">=14.0.9-canary-20251205-756eb7a",
-      "via": [
-        "@expo/config-plugins"
-      ],
-      "effects": [],
-      "nodes": [
-        "node_modules/expo-sharing"
-      ],
-      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
-    },
-    {
-      "name": "expo-splash-screen",
-      "severity": "moderate",
-      "isDirect": true,
-      "range": "55.0.10-canary-20260424-7bedc9d - 55.0.10-canary-20260429-a5e59cf || >=56.0.0-canary-20260212-4f61309",
-      "via": [
-        "@expo/config-plugins"
-      ],
-      "effects": [],
-      "nodes": [
-        "node_modules/expo-splash-screen"
-      ],
-      "fixAvailable": "expo-splash-screen@55.0.22 (breaking)"
-    },
-    {
-      "name": "uuid",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "<11.1.1",
-      "via": [
-        "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided (<11.1.1)"
-      ],
-      "effects": [
-        "xcode"
-      ],
-      "nodes": [
-        "node_modules/uuid"
-      ],
-      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
-    },
-    {
-      "name": "xcode",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": ">=0.9.2",
-      "via": [
-        "uuid"
-      ],
-      "effects": [
-        "@expo/config-plugins"
-      ],
-      "nodes": [
-        "node_modules/xcode"
-      ],
-      "fixAvailable": "expo-sharing@14.0.8 (breaking)"
-    }
-  ],
+  "auditFindings": [],
   "installScriptPackages": [
     {
       "path": "node_modules/@sentry/cli",
@@ -7494,9 +7261,9 @@
     {
       "path": "node_modules/uuid",
       "name": "uuid",
-      "version": "7.0.3",
+      "version": "11.1.1",
       "license": "MIT",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-7.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-11.1.1.tgz"
     },
     {
       "path": "node_modules/validate-npm-package-name",

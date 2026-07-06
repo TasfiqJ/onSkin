@@ -1,31 +1,16 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-05T22:01:12.924Z
+Generated: 2026-07-06T19:12:13.317Z
 Package count: 1071
 Lockfile version: 3
 
 ## Vulnerabilities
 
-`{"info":0,"low":0,"moderate":14,"high":0,"critical":0,"total":14}`
+`{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0}`
 
 ## Audit Findings
 
-| Package | Severity | Direct | Via | Fix available | Nodes |
-| --- | --- | --- | --- | --- | --- |
-| `@expo/cli` | moderate | no | @expo/config, @expo/config-plugins, @expo/inline-modules, @expo/metro-config, @expo/prebuild-config | expo@46.0.21 (breaking) | node_modules/@expo/cli |
-| `@expo/config` | moderate | no | @expo/config-plugins | expo@46.0.21 (breaking) | node_modules/@expo/config |
-| `@expo/config-plugins` | moderate | no | xcode | expo-sharing@14.0.8 (breaking) | node_modules/@expo/config-plugins |
-| `@expo/inline-modules` | moderate | no | @expo/config-plugins | expo@46.0.21 (breaking) | node_modules/@expo/inline-modules |
-| `@expo/local-build-cache-provider` | moderate | no | @expo/config | expo@46.0.21 (breaking) | node_modules/@expo/local-build-cache-provider |
-| `@expo/metro-config` | moderate | no | @expo/config | expo@46.0.21 (breaking) | node_modules/@expo/metro-config |
-| `@expo/prebuild-config` | moderate | no | @expo/config, @expo/config-plugins | available | node_modules/@expo/prebuild-config |
-| `@react-native-google-signin/google-signin` | moderate | yes | expo | @react-native-google-signin/google-signin@8.2.2 (breaking) | node_modules/@react-native-google-signin/google-signin |
-| `@sentry/react-native` | moderate | yes | expo | @sentry/react-native@5.15.2 (breaking) | node_modules/@sentry/react-native |
-| `expo` | moderate | yes | @expo/cli, @expo/config, @expo/config-plugins, @expo/local-build-cache-provider, @expo/metro-config | expo@46.0.21 (breaking) | node_modules/expo |
-| `expo-sharing` | moderate | yes | @expo/config-plugins | expo-sharing@14.0.8 (breaking) | node_modules/expo-sharing |
-| `expo-splash-screen` | moderate | yes | @expo/config-plugins | expo-splash-screen@55.0.22 (breaking) | node_modules/expo-splash-screen |
-| `uuid` | moderate | no | uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided (<11.1.1) | expo-sharing@14.0.8 (breaking) | node_modules/uuid |
-| `xcode` | moderate | no | uuid | expo-sharing@14.0.8 (breaking) | node_modules/xcode |
+- No npm audit findings recorded.
 
 ## Install Scripts
 
@@ -1075,7 +1060,7 @@ Lockfile version: 3
 - `util-deprecate` 1.0.2
 - `utils-merge` 1.0.1
 - `utrie` 1.0.2
-- `uuid` 7.0.3
+- `uuid` 11.1.1
 - `validate-npm-package-name` 5.0.1
 - `vary` 1.1.2
 - `vaul` 1.1.2

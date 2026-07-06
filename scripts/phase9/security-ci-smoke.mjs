@@ -23,6 +23,7 @@ if (exists(workflowPath)) {
   });
   const checkoutSteps = workflowSteps.filter((step) => /uses:\s*actions\/checkout@[^\s#]+/i.test(step));
   const artifactUploadSteps = workflowSteps.filter((step) => /uses:\s*actions\/upload-artifact@[^\s#]+/i.test(step));
+  const trufflehogSteps = workflowSteps.filter((step) => /uses:\s*trufflesecurity\/trufflehog@[^\s#]+/i.test(step));
   const runSteps = workflowSteps.filter((step) => /^\s*run:\s*/m.test(step));
   const actionUses = [...workflow.matchAll(/uses:\s*([^\s#]+)/g)].map((match) => match[1]);
   const unpinnedActions = actionUses.filter((ref) => !ref.startsWith('./') && !ref.startsWith('docker://') && !/@[a-f0-9]{40}$/i.test(ref));
@@ -45,6 +46,11 @@ if (exists(workflowPath)) {
   block(errors, /npm-audit-high\.json/.test(workflow), 'Security workflow must archive high/critical npm audit JSON evidence.');
   block(errors, /gitleaks\/gitleaks-action/.test(workflow), 'Security workflow must run Gitleaks.');
   block(errors, /trufflesecurity\/trufflehog@[a-f0-9]{40}/i.test(workflow), 'Security workflow must run TruffleHog on an immutable SHA.');
+  block(
+    errors,
+    trufflehogSteps.length > 0 && trufflehogSteps.every((step) => !/^\s+(?:base|head):\s*/m.test(step)),
+    'TruffleHog must use event-derived base/head SHAs; hard-coded base/head inputs break pushes to main.',
+  );
   block(errors, /semgrep\/semgrep-action/.test(workflow), 'Security workflow must run Semgrep.');
   block(errors, /google\/osv-scanner-action/.test(workflow), 'Security workflow must run OSV scanner.');
   block(errors, /actions\/upload-artifact@[a-f0-9]{40}/i.test(workflow), 'Security workflow must upload scanner evidence with immutable upload-artifact.');

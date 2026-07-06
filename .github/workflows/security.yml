@@ -119,8 +119,6 @@ jobs:
         uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
           extra_args: --only-verified
 
       - name: Write secret scanner evidence manifest
