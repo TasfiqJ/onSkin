@@ -1,13 +1,14 @@
 const base = require('./app.base.json');
 
-const variant = process.env.APP_VARIANT ?? 'production';
+const variant = process.env.APP_VARIANT ?? 'development';
 const isProduction = variant === 'production';
 
-const variantSuffix = {
-  development: 'Dev',
-  staging: 'Staging',
-  production: '',
-}[variant] ?? variant;
+const variantSuffix =
+  {
+    development: 'Dev',
+    staging: 'Staging',
+    production: '',
+  }[variant] ?? variant;
 
 function withVariant(baseValue, suffix) {
   if (isProduction || !suffix) return baseValue;
@@ -16,6 +17,7 @@ function withVariant(baseValue, suffix) {
 
 function displayName(baseName) {
   if (process.env.APP_DISPLAY_NAME) return process.env.APP_DISPLAY_NAME;
+  if (process.env.EXPO_PUBLIC_APP_DISPLAY_NAME) return process.env.EXPO_PUBLIC_APP_DISPLAY_NAME;
   if (isProduction || !variantSuffix) return baseName;
   return `${baseName} ${variantSuffix}`;
 }
@@ -24,13 +26,39 @@ function pluginName(plugin) {
   return Array.isArray(plugin) ? plugin[0] : plugin;
 }
 
-function buildPlugins(plugins) {
+function pluginOptions(plugin) {
+  return Array.isArray(plugin) && typeof plugin[1] === 'object' && plugin[1] !== null
+    ? plugin[1]
+    : {};
+}
+
+function buildPlugins(plugins, permissionCopy) {
   const googleIosUrlScheme = process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME;
   const sentryOrg = process.env.SENTRY_ORG;
   const sentryProject = process.env.SENTRY_PROJECT;
 
   return plugins.map((plugin) => {
     const name = pluginName(plugin);
+
+    if (name === 'expo-camera') {
+      return [
+        name,
+        {
+          ...pluginOptions(plugin),
+          cameraPermission: permissionCopy.cameraPermission,
+        },
+      ];
+    }
+
+    if (name === 'expo-local-authentication') {
+      return [
+        name,
+        {
+          ...pluginOptions(plugin),
+          faceIDPermission: permissionCopy.faceIDPermission,
+        },
+      ];
+    }
 
     if (name === '@react-native-google-signin/google-signin' && googleIosUrlScheme) {
       return [name, { iosUrlScheme: googleIosUrlScheme }];
@@ -77,13 +105,35 @@ module.exports = () => {
   const playStoreUrl = productionUrl(process.env.EXPO_PUBLIC_PLAY_STORE_URL);
 
   expo.name = displayName(expo.name);
+  const appName = expo.name;
+  const permissionCopy = {
+    cameraUsageDescription:
+      process.env.APP_CAMERA_USAGE_DESCRIPTION ??
+      `${appName} uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.`,
+    faceIDUsageDescription:
+      process.env.APP_FACE_ID_USAGE_DESCRIPTION ??
+      `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,
+    cameraPermission:
+      process.env.APP_CAMERA_PERMISSION ??
+      `Allow ${appName} to scan barcodes, capture ingredient labels, and take guided progress photos.`,
+    faceIDPermission:
+      process.env.APP_FACE_ID_PERMISSION ??
+      `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,
+  };
   expo.slug = process.env.APP_SLUG ?? expo.slug;
   expo.scheme =
-    process.env.APP_SCHEME ?? (isProduction ? baseScheme : `${baseScheme}-${variant}`);
+    process.env.APP_SCHEME ??
+    process.env.EXPO_PUBLIC_APP_SCHEME ??
+    (isProduction ? baseScheme : `${baseScheme}-${variant}`);
   expo.ios.bundleIdentifier =
     process.env.APP_IOS_BUNDLE_IDENTIFIER ?? withVariant(baseIosBundle, variant);
   expo.android.package =
     process.env.APP_ANDROID_PACKAGE ?? withVariant(baseAndroidPackage, variant);
+  expo.ios.infoPlist = {
+    ...(expo.ios.infoPlist ?? {}),
+    NSCameraUsageDescription: permissionCopy.cameraUsageDescription,
+    NSFaceIDUsageDescription: permissionCopy.faceIDUsageDescription,
+  };
   if (finalDomain) {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),
@@ -100,7 +150,7 @@ module.exports = () => {
   }
   if (appStoreUrl) expo.ios.appStoreUrl = appStoreUrl;
   if (playStoreUrl) expo.android.playStoreUrl = playStoreUrl;
-  expo.plugins = buildPlugins(expo.plugins);
+  expo.plugins = buildPlugins(expo.plugins, permissionCopy);
   expo.extra = {
     ...(expo.extra ?? {}),
     appVariant: variant,

@@ -13,6 +13,17 @@ not production-ready until the launch gates in `BLOCKERS.md` and
 Read the relevant source doc before changing a feature. These files are
 authoritative for product behavior, schema, privacy posture, and launch scope:
 
+- `docs/MASTER_PLAN.md`
+- `docs/PRODUCT_REQUIREMENTS.md`
+- `docs/ARCHITECTURE.md`
+- `docs/FEATURE_INDEX.md`
+- `docs/ROADMAP.md`
+- `docs/DECISIONS.md`
+- `docs/TESTING_STRATEGY.md`
+- `docs/CODE_REVIEW.md`
+- `docs/MASTER_PLAN_UPDATE_PATCH.md`
+- `docs/rebrand-and-core-loop-migration-checklist.md`
+- `docs/FOR_TAS_TO_DO.md`
 - `docs/00-architecture.md`
 - `docs/01-auth-onboarding.md`
 - `docs/02-ingredient-intelligence.md`

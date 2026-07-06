@@ -15,7 +15,7 @@ import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// Shelf list (design "OnSkin Smart Shelf" screen 05, docs/04 §5.1): title + count,
+// Shelf list (Smart Shelf design screen 05, docs/04 §5.1): title + count,
 // All/Actives/Expiring filters, the calm conflict banner, product cards with the
 // five-state badge taxonomy, and the "Scan a barcode" FAB. Light-mode, calm,
 // claim-safe. The cabinet that knows when to replace, never when to alarm.

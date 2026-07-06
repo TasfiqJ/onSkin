@@ -3,7 +3,7 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.onskin.app",
+      "package_name": "FINAL_ANDROID_PACKAGE_NAME",
       "sha256_cert_fingerprints": ["ANDROID_CERT_SHA256_FINGERPRINT"]
     }
   }

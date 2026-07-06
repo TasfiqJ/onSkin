@@ -1,6 +1,8 @@
 import type { ResolutionType } from '@onskin/types';
 
-// Centralised, claim-safe "Ask OnSkin" copy (docs/13, the Slice-11..26 guard pattern).
+import { BRAND } from '@/lib/brand';
+
+// Centralised, claim-safe Ask copy (docs/13, the Slice-11..26 guard pattern).
 // *** THE COPY IS THE REGULATED SURFACE (docs/13 §5/§10). *** Every user-facing string
 // must be: worded for how skin LOOKS (cosmetic, "the appearance of"), NEVER a drug/
 // disease claim ("treats/cures/heals/prevents/diagnoses" → FDA SaMD), NEVER a condition
@@ -14,10 +16,9 @@ import type { ResolutionType } from '@onskin/types';
 
 export const ASK_COPY = {
   home: {
-    title: 'Ask OnSkin',
+    title: BRAND.askName,
     pills: ['knows your shelf', 'evidence-grounded', 'private'] as const,
-    intro:
-      'Ask about your own shelf, routine and conflicts. I answer from OnSkin’s evidence base, and I’ll tell you when I don’t know.',
+    intro: `Ask about your own shelf, routine and conflicts. I answer from ${BRAND.appName}'s evidence base, and I'll tell you when I don't know.`,
     groundedEyebrow: 'Grounded in your shelf right now',
     prompts: {
       conflict: 'Is there a conflict on my shelf?',
@@ -33,8 +34,7 @@ export const ASK_COPY = {
   // DISCLOSURE (Art. 50 / SB 243), verbatim & counsel-gated (B-AI-ASSISTANT-LEGAL). Names
   // the AI without implying medical authority, and without the empty "not medical advice"
   // disclaimer that does NOT downgrade risk (docs/13 §9/§10). AI-marketing-scan exempt.
-  firstRunDisclosure:
-    'Ask OnSkin is an AI advisor. It answers from OnSkin’s evidence-graded guidance and your own shelf. It isn’t a medical service, and it points you to a clinician for anything beyond skincare.',
+  firstRunDisclosure: `${BRAND.askName} is an AI advisor. It answers from ${BRAND.appName}'s evidence-graded guidance and your own shelf. It isn't a medical service, and it points you to a clinician for anything beyond skincare.`,
   badges: {
     deterministic: 'answered by your conflict engine · $0',
     fitEngine: 'from your profile + the fit engine · $0',
@@ -49,7 +49,8 @@ export const ASK_COPY = {
     howPlan: 'From your generated plan. Your products, in your sequence.',
   },
   recommendationNote: 'This is a recommendation, not a rule. Your routine, your call.',
-  claimSafeNote: 'Worded for how skin looks, never a medical claim, never influenced by commission.',
+  claimSafeNote:
+    'Worded for how skin looks, never a medical claim, never influenced by commission.',
   noConflicts: 'Nothing on your shelf clashes right now. You’re set.',
   emptyShelfConflict:
     'I do not see products on your shelf yet. Add them and I will check real pairs instead of guessing.',
@@ -69,7 +70,8 @@ export const ASK_COPY = {
   fit: {
     leadGoal: (concern: string, what: string): string =>
       `For your goal of ${concern}, an evidence-backed option to consider is ${what}.`,
-    leadGeneric: (what: string): string => `An evidence-backed option worth considering for you is ${what}.`,
+    leadGeneric: (what: string): string =>
+      `An evidence-backed option worth considering for you is ${what}.`,
     youreSet:
       'Your routine looks complete. Most new products would be optional. Add one to your shelf and I’ll check it against your conflicts and fit.',
     deeperNote:
@@ -79,8 +81,7 @@ export const ASK_COPY = {
     unsupported:
       'I don’t have sourced information on that specific product yet, but I can tell you about its key ingredient if you add it to your shelf.',
     outOfScope: 'I don’t have sourced information on that yet.',
-    groundedLocked:
-      'I can answer about your own shelf, routine and conflicts today, for free. A deeper, evidence-grounded advisor that answers in your own words is part of OnSkin Pro.',
+    groundedLocked: `I can answer about your own shelf, routine and conflicts today, for free. A deeper, evidence-grounded advisor that answers in your own words is part of ${BRAND.proName}.`,
     groundedSetup:
       'I can answer about your own shelf, routine and conflicts today. The deeper, evidence-grounded advisor that answers broader questions in your own words is being set up.',
   },
@@ -102,18 +103,18 @@ export const ASK_COPY = {
       'The cloud model is zero-retention and no-training, and no transcript is kept beyond a short, encrypted safety window you consent to.',
     ] as const,
     never: 'Never a raw photo, never a faceprint, never sold or shared.',
-    consentLine: 'A separate ask_onskin consent. Distinct and revocable.',
-    toggleLabel: 'Enable Ask OnSkin',
+    consentLine: 'A separate advisor consent. Distinct and revocable.',
+    toggleLabel: `Enable ${BRAND.askName}`,
     toggleHint: 'Off by default',
     saveFailedTitle: 'Choice not saved',
-    saveFailedBody: 'We could not save that Ask OnSkin choice. Please try again.',
+    saveFailedBody: `We could not save that ${BRAND.askName} choice. Please try again.`,
     footer: 'Pro-gated · hard trial cap · the answers about your own shelf are always free',
   },
   // The consent-ledger body (placeholder copy. B-PRIVACY-COPY). The honest, stress-tested
   // posture (docs/13 §7): NOT "no transcript ever" but a short, consented safety window.
   consentLedgerBody:
     'On-device context · a minimised summary only, to a zero-retention, no-training cloud language layer · no transcript beyond a short, consented, encrypted safety window · never a photo, never sold, never used to train a model · revocable, and the safety window is deleted when you turn it off.',
-  consentVersion: 'ask-onskin-2026-06-14-placeholder', // BLOCKED: B-PRIVACY-COPY
+  consentVersion: 'ask-advisor-2026-06-14-placeholder', // BLOCKED: B-PRIVACY-COPY
   // The wrong-answer feedback control (docs/13 §9. Content-free).
   feedback: {
     prompt: 'Was this helpful?',
@@ -122,7 +123,7 @@ export const ASK_COPY = {
   },
   // A calm Today entry (docs/13 §9. The first-session moat taste), never "AI" hype.
   todayCard: {
-    title: 'Ask OnSkin',
+    title: BRAND.askName,
     body: 'Evidence-grounded answers about your own shelf, and an honest “I don’t know.”',
   },
 } as const;

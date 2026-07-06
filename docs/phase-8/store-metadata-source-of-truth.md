@@ -28,7 +28,7 @@ Store copy must not describe:
 
 ## iOS Packet
 
-- App name: `OnSkin`
+- App name: `RoutineKind` (working candidate; final legal/store-console clearance still required)
 - Subtitle: `Routine and shelf tracker`
 - Promotional text: configured in code
 - Keywords: configured in code
@@ -38,7 +38,7 @@ Store copy must not describe:
 
 ## Google Play Packet
 
-- Title: `OnSkin`
+- Title: `RoutineKind` (working candidate; final legal/store-console clearance still required)
 - Short description: configured in code
 - Full description: configured in code
 - Screenshot captions: configured in code

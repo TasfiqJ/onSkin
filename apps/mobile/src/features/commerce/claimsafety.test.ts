@@ -8,17 +8,31 @@ import { STARTER_STACKS } from './stacks';
 // The deep-research pass made the FTC wording legally load-bearing:
 //   - "paid link" is FTC-adequate; "affiliate link" / "commissionable link" are NOT;
 //   - a "buy now" button is not a disclosure;
-//   - the disclosure must state OnSkin's independence.
+//   - the disclosure must state the app's independence.
 // Plus: no dark patterns (urgency/scarcity/guilt), and claim-safe (concerns, not
 // conditions). Curly-apostrophe-aware (['’]).
 
 const FTC_INADEQUATE = [/\baffiliate\s+link/i, /\bcommissionable\s+link/i, /\bbuy\s+now\b/i];
-const URGENCY = [/\bdon['’]?t\s+miss\b/i, /\bhurry\b/i, /\blast\s+chance\b/i, /\bonly\s+\d+\s+left\b/i, /\bselling\s+fast\b/i, /\blimited\s+time\b/i];
+const URGENCY = [
+  /\bdon['’]?t\s+miss\b/i,
+  /\bhurry\b/i,
+  /\blast\s+chance\b/i,
+  /\bonly\s+\d+\s+left\b/i,
+  /\bselling\s+fast\b/i,
+  /\blimited\s+time\b/i,
+];
 const GUILT = [/\byou['’]?ll\s+lose\b/i, /\bdon['’]?t\s+lose\b/i];
 // `treats` (3rd-person) is the drug-CLAIM form ("treats acne"); the bare routine-step
 // verb "Treat" (Cleanse · Treat · Moisturise · Protect) is allowed. Real claims are
 // still caught by `treats` + the disease-name list ("Treat acne" → matches `acne`).
-const CONDITION_OR_DRUG = [/\btreats\b/i, /\bcures?\b/i, /\bheals?\b/i, /\bprevents?\b/i, /\bdiagnos\w*/i, /\b(eczema|rosacea|psoriasis|dermatitis|melasma|acne)\b/i];
+const CONDITION_OR_DRUG = [
+  /\btreats\b/i,
+  /\bcures?\b/i,
+  /\bheals?\b/i,
+  /\bprevents?\b/i,
+  /\bdiagnos\w*/i,
+  /\b(eczema|rosacea|psoriasis|dermatitis|melasma|acne)\b/i,
+];
 
 function collect(v: unknown, out: string[] = []): string[] {
   if (typeof v === 'string') out.push(v);
@@ -40,7 +54,12 @@ function offenders(text: string, pats: RegExp[]): string[] {
 
 const ALL = [
   ...collect(COMMERCE_COPY),
-  ...STARTER_STACKS.flatMap((s) => [s.title, s.subtitle, s.curator, ...s.items.flatMap((i) => [i.label, i.roleLabel])]),
+  ...STARTER_STACKS.flatMap((s) => [
+    s.title,
+    s.subtitle,
+    s.curator,
+    ...s.items.flatMap((i) => [i.label, i.roleLabel]),
+  ]),
 ];
 
 describe('commerce copy is FTC-correct, dark-pattern-free, and claim-safe (docs/10 §8)', () => {
@@ -69,7 +88,9 @@ describe('the FTC-required disclosure wording is present (paid link + independen
     expect(COMMERCE_COPY.stack.disclosure.toLowerCase()).toContain('never changed the list');
   });
   it('the transparency page states ranking is independent by architecture', () => {
-    expect(COMMERCE_COPY.transparency.principles[0]!.body.toLowerCase()).toContain('never enter the ranking');
+    expect(COMMERCE_COPY.transparency.principles[0]!.body.toLowerCase()).toContain(
+      'never enter the ranking',
+    );
   });
   it('the consent gate states it is separate, revocable, and shares no skin data', () => {
     expect(COMMERCE_COPY.consent.note.toLowerCase()).toContain('separate');
@@ -80,7 +101,9 @@ describe('the FTC-required disclosure wording is present (paid link + independen
 describe('the guard catches reintroduced violations', () => {
   it('rejects the FTC-inadequate "affiliate link" wording and a "buy now" CTA', () => {
     expect(offenders('Affiliate link. We earn a cut', FTC_INADEQUATE).length).toBeGreaterThan(0);
-    expect(offenders('Buy now before it sells out', [...FTC_INADEQUATE, ...URGENCY]).length).toBeGreaterThan(0);
+    expect(
+      offenders('Buy now before it sells out', [...FTC_INADEQUATE, ...URGENCY]).length,
+    ).toBeGreaterThan(0);
   });
   it('rejects a condition claim', () => {
     expect(offenders('Treats acne in two weeks', CONDITION_OR_DRUG).length).toBeGreaterThan(0);

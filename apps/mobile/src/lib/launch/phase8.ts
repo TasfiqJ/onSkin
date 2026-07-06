@@ -1,3 +1,4 @@
+import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { normalizePublicDomain } from '@/lib/growth/attribution';
 
@@ -12,7 +13,7 @@ function supportEmailReady(value: string): boolean {
 const finalDomain = normalizePublicDomain(env.finalBrandDomain);
 
 export const phase8PublicIdentity = {
-  brandName: 'OnSkin',
+  brandName: BRAND.appName,
   finalDomain,
   marketingUrlReady: productionUrl(env.marketingUrl),
   appStoreUrlReady: productionUrl(env.appStoreUrl),
@@ -22,16 +23,12 @@ export const phase8PublicIdentity = {
 
 export const phase8Flags = {
   publicLinks:
-    env.phase8PublicLinksEnabled &&
-    Boolean(finalDomain) &&
-    phase8PublicIdentity.marketingUrlReady,
+    env.phase8PublicLinksEnabled && Boolean(finalDomain) && phase8PublicIdentity.marketingUrlReady,
   reviewPrompt:
     env.phase8ReviewPromptEnabled &&
     (phase8PublicIdentity.appStoreUrlReady || phase8PublicIdentity.playStoreUrlReady),
   creatorLinks:
-    env.phase8CreatorLinksEnabled &&
-    Boolean(finalDomain) &&
-    phase8PublicIdentity.supportEmailReady,
+    env.phase8CreatorLinksEnabled && Boolean(finalDomain) && phase8PublicIdentity.supportEmailReady,
   paidMeasurement:
     env.phase8PaidMeasurementEnabled &&
     Boolean(finalDomain) &&

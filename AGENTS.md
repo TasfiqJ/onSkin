@@ -2,6 +2,22 @@
 
 This repo is an Expo React Native skincare app. Read `CLAUDE.md` before changing behavior, then read the source-of-truth docs for the feature area being touched. Keep changes scoped to the requested feature or launch gate.
 
+## Strategy And Launch Docs
+
+The `04_repo_docs` strategy packet has been integrated into the active `docs/` tree. Before work that affects product scope, launch positioning, pricing, architecture, growth, or readiness, read:
+
+- `docs/MASTER_PLAN.md`
+- `docs/PRODUCT_REQUIREMENTS.md`
+- `docs/ARCHITECTURE.md`
+- `docs/FEATURE_INDEX.md`
+- `docs/ROADMAP.md`
+- `docs/DECISIONS.md`
+- `docs/TESTING_STRATEGY.md`
+- `docs/CODE_REVIEW.md`
+- `docs/MASTER_PLAN_UPDATE_PATCH.md`
+- `docs/rebrand-and-core-loop-migration-checklist.md`
+- `docs/FOR_TAS_TO_DO.md`
+
 ## Commands
 
 Repository-level checks:

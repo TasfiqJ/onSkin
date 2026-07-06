@@ -4,6 +4,7 @@ import * as Sharing from 'expo-sharing';
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
+import { BRAND } from '@/lib/brand';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -66,7 +67,7 @@ export async function exportData(): Promise<boolean> {
     if (!(await Sharing.isAvailableAsync().catch(() => false))) return false;
     await Sharing.shareAsync(uri, {
       mimeType: 'application/json',
-      dialogTitle: 'Export your OnSkin data',
+      dialogTitle: `Export your ${BRAND.appName} data`,
     });
     return true;
   } finally {

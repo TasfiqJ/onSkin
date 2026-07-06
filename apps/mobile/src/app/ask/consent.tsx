@@ -8,6 +8,7 @@ import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/com
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
+import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -142,7 +143,11 @@ export default function AskConsentScreen() {
           {ASK_COPY.privacy.footer}
         </Text>
 
-        <Button className="mt-5" label="Open Ask OnSkin" onPress={() => router.replace('/ask')} />
+        <Button
+          className="mt-5"
+          label={`Open ${BRAND.askName}`}
+          onPress={() => router.replace('/ask')}
+        />
       </ScrollView>
     </Screen>
   );

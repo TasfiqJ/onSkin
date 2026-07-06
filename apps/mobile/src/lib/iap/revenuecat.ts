@@ -11,6 +11,7 @@ import type {
 
 import type { StoredEntitlement } from '@/features/subscription/entitlement';
 import { PLANS } from '@/features/subscription/plans';
+import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
@@ -102,7 +103,9 @@ function assertRevenueCatKeyAllowed(key: string): void {
 
 function assertAppUserId(appUserId: string): void {
   if (!UUID_RE.test(appUserId) || appUserId.includes('@')) {
-    throw new Error('RevenueCat appUserID must be the authenticated Supabase UUID, never an email or device id.');
+    throw new Error(
+      'RevenueCat appUserID must be the authenticated Supabase UUID, never an email or device id.',
+    );
   }
 }
 
@@ -161,13 +164,21 @@ function mapStore(store: RevenueCatStore | string | null | undefined): StoredEnt
 
 function mapPeriod(periodType: string | null | undefined): StoredEntitlement['periodType'] {
   const normalized = periodType?.toLowerCase();
-  if (normalized === 'trial' || normalized === 'intro' || normalized === 'normal' || normalized === 'prepaid') {
+  if (
+    normalized === 'trial' ||
+    normalized === 'intro' ||
+    normalized === 'normal' ||
+    normalized === 'prepaid'
+  ) {
     return normalized;
   }
   return null;
 }
 
-function mapEnvironment(store: RevenueCatStore | string | null | undefined, isSandbox: boolean): StoredEntitlement['environment'] {
+function mapEnvironment(
+  store: RevenueCatStore | string | null | undefined,
+  isSandbox: boolean,
+): StoredEntitlement['environment'] {
   if (store === 'TEST_STORE') return 'test_store';
   if (isSandbox) return 'sandbox';
   if (env.appEnvironment === 'development') return 'development';
@@ -175,7 +186,11 @@ function mapEnvironment(store: RevenueCatStore | string | null | undefined, isSa
   return 'unknown';
 }
 
-function periodDays(unit: string | undefined, units: number | undefined, cycles = 1): number | null {
+function periodDays(
+  unit: string | undefined,
+  units: number | undefined,
+  cycles = 1,
+): number | null {
   if (!unit || !units) return null;
   const total = units * cycles;
   if (unit === 'DAY') return total;
@@ -193,7 +208,11 @@ function trialDaysForPackage(pack: PurchasesPackage): number | null {
 
   const freePhase = pack.product.defaultOption?.freePhase;
   if (freePhase) {
-    return periodDays(freePhase.billingPeriod.unit, freePhase.billingPeriod.value, freePhase.billingCycleCount ?? 1);
+    return periodDays(
+      freePhase.billingPeriod.unit,
+      freePhase.billingPeriod.value,
+      freePhase.billingCycleCount ?? 1,
+    );
   }
 
   return null;
@@ -206,7 +225,11 @@ function periodLabelFor(plan: PlanId, pack: PurchasesPackage): 'year' | 'month' 
   return plan === 'monthly' ? 'month' : 'year';
 }
 
-function packageToView(plan: PlanId, pack: PurchasesPackage, canPurchase: boolean): SubscriptionPackageView {
+function packageToView(
+  plan: PlanId,
+  pack: PurchasesPackage,
+  canPurchase: boolean,
+): SubscriptionPackageView {
   const trialDays = trialDaysForPackage(pack);
   return {
     plan,
@@ -231,7 +254,7 @@ function developmentFallbackPackage(plan: PlanId): SubscriptionPackageView {
     packageId: `development-${plan}`,
     offeringId: 'development-fallback',
     productId: p.productId,
-    title: `OnSkin Pro ${plan}`,
+    title: `${BRAND.proName} ${plan}`,
     priceLabel: p.priceLabel,
     pricePerMonthLabel: plan === 'annual' ? '$4.16' : null,
     periodLabel: p.unit,
@@ -294,7 +317,9 @@ async function winBackViewForPackage(pack: PurchasesPackage): Promise<WinBackOff
   if (!offer) return null;
 
   const percentOff =
-    pack.product.price > 0 ? Math.round(Math.max(0, 1 - offer.price / pack.product.price) * 100) : null;
+    pack.product.price > 0
+      ? Math.round(Math.max(0, 1 - offer.price / pack.product.price) * 100)
+      : null;
 
   return {
     offerId: offer.identifier,
@@ -304,7 +329,10 @@ async function winBackViewForPackage(pack: PurchasesPackage): Promise<WinBackOff
     priceLabel: offer.priceString,
     originalPriceLabel: pack.product.priceString,
     percentOff,
-    periodLabel: offer.cycles > 1 ? `${offer.cycles} ${offer.periodUnit.toLowerCase()}s` : offer.periodUnit.toLowerCase(),
+    periodLabel:
+      offer.cycles > 1
+        ? `${offer.cycles} ${offer.periodUnit.toLowerCase()}s`
+        : offer.periodUnit.toLowerCase(),
     canPurchase: true,
   };
 }
@@ -388,7 +416,9 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
   const monthly = offerings ? findPackage(offerings, 'monthly') : null;
 
   if (!current || !annual || !monthly) {
-    return unavailableOffering('The current RevenueCat offering is missing the annual or monthly OnSkin Pro package.');
+    return unavailableOffering(
+      `The current RevenueCat offering is missing the annual or monthly ${BRAND.proName} package.`,
+    );
   }
 
   return {
@@ -400,7 +430,9 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
   };
 }
 
-export function customerInfoToStoredEntitlement(customerInfo: CustomerInfo): StoredEntitlement | null {
+export function customerInfoToStoredEntitlement(
+  customerInfo: CustomerInfo,
+): StoredEntitlement | null {
   const info = entitlementInfo(customerInfo);
   if (!info) return null;
   const subscriptionInfo = customerInfo.subscriptionsByProductIdentifier[info.productIdentifier];
@@ -416,7 +448,9 @@ export function customerInfoToStoredEntitlement(customerInfo: CustomerInfo): Sto
     grantedAt: info.originalPurchaseDate,
     source: 'revenuecat',
     environment: mapEnvironment(info.store, info.isSandbox),
-    managementUrl: safeExternalHttpsUrl(customerInfo.managementURL ?? subscriptionInfo?.managementURL),
+    managementUrl: safeExternalHttpsUrl(
+      customerInfo.managementURL ?? subscriptionInfo?.managementURL,
+    ),
     verifiedAt: customerInfo.requestDate,
     offeringId: null,
     packageId: null,
@@ -436,7 +470,9 @@ export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
   const offerings = cachedOfferings ?? (await fetchOfferings());
   const selectedPackage = offerings ? findPackage(offerings, plan) : null;
   if (!selectedPackage) {
-    throw new Error(`RevenueCat offering is missing the ${plan} package (${PLANS[plan].productId}).`);
+    throw new Error(
+      `RevenueCat offering is missing the ${plan} package (${PLANS[plan].productId}).`,
+    );
   }
 
   try {
@@ -445,13 +481,18 @@ export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
       purchased: hasActiveEntitlement(result.customerInfo),
       productId: result.productIdentifier,
       packageId: selectedPackage.identifier,
-      offeringId: selectedPackage.presentedOfferingContext?.offeringIdentifier ?? selectedPackage.offeringIdentifier,
+      offeringId:
+        selectedPackage.presentedOfferingContext?.offeringIdentifier ??
+        selectedPackage.offeringIdentifier,
       priceLabel: selectedPackage.product.priceString,
       customerInfo: result.customerInfo,
     };
   } catch (error) {
     const purchasesError = error as { code?: string; userCancelled?: boolean };
-    if (purchasesError.userCancelled || purchasesError.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
+    if (
+      purchasesError.userCancelled ||
+      purchasesError.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR
+    ) {
       return { purchased: false, cancelled: true };
     }
     throw error;
@@ -466,7 +507,9 @@ export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
   const annualPackage = offerings ? findPackage(offerings, 'annual') : null;
   if (!annualPackage || Platform.OS !== 'ios') return { purchased: false, offerUnavailable: true };
 
-  const offers = await Purchases.getEligibleWinBackOffersForPackage(annualPackage).catch(() => undefined);
+  const offers = await Purchases.getEligibleWinBackOffersForPackage(annualPackage).catch(
+    () => undefined,
+  );
   const winBackOffer = offers?.[0];
   if (!winBackOffer) return { purchased: false, offerUnavailable: true };
 
@@ -476,13 +519,18 @@ export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
       purchased: hasActiveEntitlement(result.customerInfo),
       productId: result.productIdentifier,
       packageId: annualPackage.identifier,
-      offeringId: annualPackage.presentedOfferingContext?.offeringIdentifier ?? annualPackage.offeringIdentifier,
+      offeringId:
+        annualPackage.presentedOfferingContext?.offeringIdentifier ??
+        annualPackage.offeringIdentifier,
       priceLabel: winBackOffer.priceString,
       customerInfo: result.customerInfo,
     };
   } catch (error) {
     const purchasesError = error as { code?: string; userCancelled?: boolean };
-    if (purchasesError.userCancelled || purchasesError.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
+    if (
+      purchasesError.userCancelled ||
+      purchasesError.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR
+    ) {
       return { purchased: false, cancelled: true };
     }
     throw error;
@@ -490,7 +538,10 @@ export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
 }
 
 /** Re-syncs entitlements for reinstalls/device switches. */
-export async function restorePurchases(): Promise<{ restored: boolean; customerInfo?: CustomerInfo }> {
+export async function restorePurchases(): Promise<{
+  restored: boolean;
+  customerInfo?: CustomerInfo;
+}> {
   const Purchases = await requireConfigured('restore');
   if (!Purchases) return { restored: false };
 
@@ -504,7 +555,9 @@ export async function getCustomerInfo(): Promise<CustomerInfo | null> {
   return Purchases.getCustomerInfo();
 }
 
-export async function subscribeToCustomerInfoUpdates(listener: CustomerInfoUpdateListener): Promise<() => void> {
+export async function subscribeToCustomerInfoUpdates(
+  listener: CustomerInfoUpdateListener,
+): Promise<() => void> {
   if (!canUseRevenueCat()) return () => {};
   const Purchases = await loadPurchases();
   Purchases.addCustomerInfoUpdateListener(listener);
@@ -526,6 +579,10 @@ export async function showNativeManageSubscriptions(): Promise<boolean> {
 
 /** Deep-links to the OS subscription settings for fallback manage flows. */
 export const MANAGE_SUBSCRIPTION_URL_IOS = 'https://apps.apple.com/account/subscriptions';
-export const MANAGE_SUBSCRIPTION_URL_ANDROID = 'https://play.google.com/store/account/subscriptions';
+export const MANAGE_SUBSCRIPTION_URL_ANDROID =
+  'https://play.google.com/store/account/subscriptions';
 
-export const STUB_PRODUCTS = { annual: PLANS.annual.productId, monthly: PLANS.monthly.productId } as const;
+export const STUB_PRODUCTS = {
+  annual: PLANS.annual.productId,
+  monthly: PLANS.monthly.productId,
+} as const;

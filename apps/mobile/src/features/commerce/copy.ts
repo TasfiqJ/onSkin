@@ -1,5 +1,7 @@
 import type { CuratorKind } from '@onskin/types';
 
+import { BRAND } from '@/lib/brand';
+
 /**
  * Centralised commerce copy (docs/10 §8, the Slice-11/20/21/22/23 guard pattern).
  * The FTC research is decisive and this wording is LEGALLY LOAD-BEARING:
@@ -9,7 +11,7 @@ import type { CuratorKind } from '@onskin/types';
  *    disclosure either.
  *  - the disclosure must be CLEAR & CONSPICUOUS / "unavoidable". Visible at the same
  *    time as the link, never collapsed behind a "more"/expand tap (16 CFR 255.0).
- *  - it must state OnSkin's independence ("never affects what we recommend").
+ *  - it must state the app's independence ("never affects what we recommend").
  * `claimsafety.test.ts` scans this module on every edit and asserts the wording.
  * Keep all persuasive/disclosure copy HERE, not inline in screens.
  */
@@ -26,13 +28,14 @@ export const COMMERCE_COPY = {
     // The disclosure sits DIRECTLY under the links, always visible (FTC "unavoidable").
     // Split so the independence clause renders bold-inked (design §3); `disclosure`
     // keeps the full sentence for the claim-safety guard.
-    disclosure: 'Paid link. OnSkin may earn a commission. It never affects what we recommend.',
-    disclosureLead: 'Paid link. OnSkin may earn a commission.',
+    disclosure: `Paid link. ${BRAND.appName} may earn a commission. It never affects what we recommend.`,
+    disclosureLead: `Paid link. ${BRAND.appName} may earn a commission.`,
     disclosureEmphasis: 'It never affects what we recommend.',
     howThisWorks: 'How this works',
     alreadyOwn: 'Already own one? Add it to your shelf instead',
     // The honest empty state until the catalog/partner approval lands (B-CATALOG-SEED / B-SHOPMY).
-    emptyState: 'We’ll show where to buy once our product catalogue is live. It never changes what we recommend.',
+    emptyState:
+      'We’ll show where to buy once our product catalogue is live. It never changes what we recommend.',
     // The inert tap explainer until the rail is approved (B-SHOPMY).
     stubTitle: 'Where to buy',
     stubBody:
@@ -41,11 +44,15 @@ export const COMMERCE_COPY = {
   // Surface 02. The shoppable Stack.
   stack: {
     chipFor: (kind: CuratorKind): string =>
-      kind === 'derm' ? 'DERMATOLOGIST-REVIEWED' : kind === 'creator' ? 'EXPERT-REVIEWED' : "EDITOR’S ROUTINE",
+      kind === 'derm'
+        ? 'DERMATOLOGIST-REVIEWED'
+        : kind === 'creator'
+          ? 'EXPERT-REVIEWED'
+          : 'EDITOR’S ROUTINE',
     subtitle: 'Curated on merit and evidence, not by who pays.',
     paidChip: 'Paid link',
     // Footer disclosure on a stack. States the order was set on merit, not commission.
-    disclosure: 'Paid links. OnSkin may earn a commission. We picked these on merit; the commission never changed the list.',
+    disclosure: `Paid links. ${BRAND.appName} may earn a commission. We picked these on merit; the commission never changed the list.`,
     orderedNote: 'In order. The routine sequence, not the payout.',
   },
   // Surface 03. The transparency page (the highest-leverage trust artifact).

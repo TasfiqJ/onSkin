@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { exportData } from './actions';
+import { BRAND } from '@/lib/brand';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -93,7 +94,7 @@ describe('settings data export', () => {
       expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
       {
         mimeType: 'application/json',
-        dialogTitle: 'Export your OnSkin data',
+        dialogTitle: `Export your ${BRAND.appName} data`,
       },
     );
     expect(mocks.deleteAsync).toHaveBeenCalledWith(

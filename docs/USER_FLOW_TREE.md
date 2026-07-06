@@ -237,6 +237,45 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The first viewport ends on complete plan content above the fixed CTA, lower notes are reachable by deliberate scroll, and `Start today` routes to Today.
   - Evidence: First-viewport screenshot, scrolled-bottom screenshot, route snapshot, and CTA geometry.
 
+## Flow: Runtime Brand Identity Smoke
+
+- Goal: A user sees one coherent public app identity across high-visibility runtime surfaces.
+- Persona: New or returning user using a build configured with the working rebrand candidate.
+- Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` and `EXPO_PUBLIC_APP_SCHEME=routinekind`.
+- Start screen/URL/window: Direct routes `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`.
+- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `RoutineKind` through runtime configuration; old public `OnSkin` copy is absent from the checked surfaces.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web smoke; iOS and Android after final native identifiers are cleared.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/runtime-brand-identity/`
+
+### Path A: Configured Runtime Copy
+
+1. Action: Start Expo web with the working public display name, open `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`, then inspect visible page copy.
+   Expected result: `/ask` renders `Ask RoutineKind`; the paywall/subscription surfaces render `RoutineKind Pro`; no checked surface displays old public `OnSkin` labels.
+   Evidence: Screenshots, visible-text snapshots, and browser console logs.
+
+### Branches
+
+- Branch: share-card placeholder identity
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Inspect the runtime share-card constants without a final brand domain.
+  - Expected result: The card watermark uses `RoutineKind`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
+  - Evidence: Unit test output and source snapshot.
+- Branch: public-copy sweep smoke
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Start Expo web with the working public display name, open `/onboarding/age`, `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local reverse-trial path before `/routine/widgets`.
+  - Expected result: Visible public copy on age gate, share landing, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; widgets route remains the existing native-widget deferred surface until device QA enables it.
+  - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
+- Branch: Phase 8 public-site identity smoke
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
+  - Expected result: The static launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared.
+  - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
+
 ## Flow: Today Routine Completion
 
 - Goal: A returning user can understand and complete today's routine steps.

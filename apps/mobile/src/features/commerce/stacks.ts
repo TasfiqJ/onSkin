@@ -1,9 +1,11 @@
 import type { CuratorKind } from '@onskin/types';
 
+import { BRAND } from '@/lib/brand';
+
 // Expert/derm-reviewed shoppable Stacks (docs/10 §4, Phase 2 concept; UI shipped now
 // with in-house curated content). The research is decisive: expert/derm-curated
 // content is more trusted than anonymous influencer content, and influencer stacks
-// are a trust liability. So OnSkin's stacks are EDITORIAL/derm-reviewed, never
+// are a trust liability. So the app's stacks are EDITORIAL/derm-reviewed, never
 // anonymous. Ordered by the routine SEQUENCE (docs/03), never by commission (church
 // and state). Stack content is medical-adjacent → launch-gated under B-DERM-REVIEW,
 // exactly like the conflict matrix (rules.ts) and the rec types (catalog.ts).
@@ -38,14 +40,34 @@ export const STARTER_STACKS: CreatorStack[] = [
     slug: 'sensitive-skin-starter-set',
     title: 'The sensitive-skin starter set',
     subtitle: 'Four products, in order.',
-    curator: 'OnSkin editorial',
+    curator: `${BRAND.appName} editorial`,
     curatorKind: 'derm',
     reviewedBy: null,
     items: [
-      { position: 1, productType: 'fragrance_free_cleanser', label: 'Gentle gel cleanser', roleLabel: 'Cleanse · fragrance-free' },
-      { position: 2, productType: 'niacinamide_serum', label: 'Niacinamide 5%', roleLabel: 'Treat · barrier-friendly' },
-      { position: 3, productType: 'ceramide_moisturiser', label: 'Ceramide moisturiser', roleLabel: 'Moisturise · seals it in' },
-      { position: 4, productType: 'mineral_spf', label: 'Mineral SPF 30', roleLabel: 'Protect · the AM finish' },
+      {
+        position: 1,
+        productType: 'fragrance_free_cleanser',
+        label: 'Gentle gel cleanser',
+        roleLabel: 'Cleanse · fragrance-free',
+      },
+      {
+        position: 2,
+        productType: 'niacinamide_serum',
+        label: 'Niacinamide 5%',
+        roleLabel: 'Treat · barrier-friendly',
+      },
+      {
+        position: 3,
+        productType: 'ceramide_moisturiser',
+        label: 'Ceramide moisturiser',
+        roleLabel: 'Moisturise · seals it in',
+      },
+      {
+        position: 4,
+        productType: 'mineral_spf',
+        label: 'Mineral SPF 30',
+        roleLabel: 'Protect · the AM finish',
+      },
     ],
   },
 ];
@@ -62,6 +84,9 @@ export function shippableStacks(stacks: CreatorStack[] = STARTER_STACKS): Creato
   return isDev ? stacks : stacks.filter((s) => s.reviewedBy != null);
 }
 
-export function stackBySlug(slug: string, stacks: CreatorStack[] = STARTER_STACKS): CreatorStack | undefined {
+export function stackBySlug(
+  slug: string,
+  stacks: CreatorStack[] = STARTER_STACKS,
+): CreatorStack | undefined {
   return shippableStacks(stacks).find((s) => s.slug === slug);
 }

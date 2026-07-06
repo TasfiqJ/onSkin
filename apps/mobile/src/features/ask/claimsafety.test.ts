@@ -1,14 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
 import { scanClaimSafety } from '@/features/community/claimSafetyScan';
-import { detectConflicts, type EngineProduct, type EngineProfile } from '@/features/intelligence/engine';
+import {
+  detectConflicts,
+  type EngineProduct,
+  type EngineProfile,
+} from '@/features/intelligence/engine';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 import { UPSELL_COPY } from '@/features/subscription/copy';
 
 import { answerPrompt, answerQuestion, type AskContext } from './answer';
 import { ASK_COPY, RESOLUTION_LEAD } from './copy';
 
-// Claim-safety guard EXTENDED to "Ask OnSkin" (docs/13 §4/§5/§10, the Slice-11..26 guard
+// Claim-safety guard EXTENDED to Ask (docs/13 §4/§5/§10, the Slice-11..26 guard
 // pattern). The copy AND the generated answers are the regulated surface. Forbidden: any
 // drug/disease verb ("treats/cures/heals/prevents/diagnoses" → FDA SaMD); a condition
 // NAMED as a diagnosis; a dose; a superiority claim ("dermatologist-grade"/"more accurate
@@ -20,9 +24,21 @@ import { ASK_COPY, RESOLUTION_LEAD } from './copy';
 
 const DRUG_DISEASE = [/\b(treat|cure|heal|prevent)(s|d|ed|ing)?\b/i, /\bdiagnos\w*/i];
 const DISEASE_NOUN = [/\b(acne|rosacea|psoriasis|dermatitis|melasma|eczema|hyperpigmentation)\b/i];
-const SUPERIORITY = [/\bdermatologist-grade\b/i, /\bmore\s+accurate\s+than\b/i, /\bobjective\b/i, /\bclinically\s+proven\b/i];
+const SUPERIORITY = [
+  /\bdermatologist-grade\b/i,
+  /\bmore\s+accurate\s+than\b/i,
+  /\bobjective\b/i,
+  /\bclinically\s+proven\b/i,
+];
 const DOSAGE = [/\b\d+\s?(mg|ml|iu)\b/i, /\b\d+\s+times?\s+(a|per)\s+day\b/i];
-const SKIN_SCORE = [/\bskin\s*score\b/i, /\bskin\s*age\b/i, /\bskin\s*health\b/i, /\b\d+\s?\/\s?\d+\b/, /\b\d+\s*stars?\b/i, /\b\d+\s+out\s+of\b/i];
+const SKIN_SCORE = [
+  /\bskin\s*score\b/i,
+  /\bskin\s*age\b/i,
+  /\bskin\s*health\b/i,
+  /\b\d+\s?\/\s?\d+\b/,
+  /\b\d+\s*stars?\b/i,
+  /\b\d+\s+out\s+of\b/i,
+];
 const AI_MARKETING = [/\bai\b/i];
 const ALARM = [/\b(danger\w*|harmful|toxic|poison\w*)\b/i, /!/];
 
@@ -30,7 +46,10 @@ const ALWAYS = [DRUG_DISEASE, DISEASE_NOUN, SUPERIORITY, DOSAGE, SKIN_SCORE, ALA
 
 // The Art. 50 / SB 243 disclosure strings legitimately name the AI. Exempt from the
 // AI-marketing term-scan ONLY (the Slice-24 NO_SCORE_COPY exemption pattern).
-const AI_DISCLOSURE_EXEMPT = new Set<string>([ASK_COPY.home.disclosureFooter, ASK_COPY.firstRunDisclosure]);
+const AI_DISCLOSURE_EXEMPT = new Set<string>([
+  ASK_COPY.home.disclosureFooter,
+  ASK_COPY.firstRunDisclosure,
+]);
 
 function collect(v: unknown, out: string[] = []): string[] {
   if (typeof v === 'string') out.push(v);
@@ -59,7 +78,11 @@ const CTX: AskContext = {
   ],
   isExamplePlan: false,
   hasReplenish: true,
-  topRec: { what: 'A vitamin C serum', example: 'e.g. a 10% L-ascorbic acid serum', evidenceLabel: 'plausible' },
+  topRec: {
+    what: 'A vitamin C serum',
+    example: 'e.g. a 10% L-ascorbic acid serum',
+    evidenceLabel: 'plausible',
+  },
   youreSet: false,
   goalConcernText: 'a more even-looking tone',
   groundedAllowed: false,
@@ -83,7 +106,11 @@ const GENERATED_CLAIMS = [
 
 // Includes UPSELL_COPY.ask. The Ask paywall copy, "the regulated surface" (docs/13 §10 /
 // FTC AI-washing). Which the subscription guard does NOT scan for AI/disease/superiority.
-const STATIC = [...collect(ASK_COPY), ...Object.values(RESOLUTION_LEAD), ...collect(UPSELL_COPY.ask)];
+const STATIC = [
+  ...collect(ASK_COPY),
+  ...Object.values(RESOLUTION_LEAD),
+  ...collect(UPSELL_COPY.ask),
+];
 
 describe('every generated ANSWER claim passes the FULL guard. Template-bounded, claim-safe', () => {
   for (const claim of GENERATED_CLAIMS) {
@@ -121,7 +148,7 @@ describe('the required stances are present (off-by-default, on-device, refuse, e
     expect(ASK_COPY.privacy.never.toLowerCase()).toContain('never sold');
   });
   it('refuse-over-guess and clinician escalation copy exist', () => {
-    expect(ASK_COPY.refuse.outOfScope.toLowerCase()).toContain("don’t have sourced information");
+    expect(ASK_COPY.refuse.outOfScope.toLowerCase()).toContain('don’t have sourced information');
     expect(ASK_COPY.escalate.body.toLowerCase()).toContain('dermatologist');
   });
   it('the AI is disclosed honestly (Art. 50 / SB 243)', () => {

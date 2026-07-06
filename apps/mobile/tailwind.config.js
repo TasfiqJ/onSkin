@@ -1,6 +1,6 @@
 /**
- * OnSkin design tokens — EXACT values from the Claude Design handoff
- * (OnSkin Core Flow / Ingredient Intelligence / Routine Builder .dc.html).
+ * App design tokens — EXACT values from the Claude Design handoff
+ * (Core Flow / Ingredient Intelligence / Routine Builder .dc.html).
  * Editorial-clinical: Instrument Serif (display) + Hanken Grotesk (UI) + IBM Plex
  * Mono (labels/eyebrows/counters). Warm clinical neutrals + one clay accent;
  * a sage/green positive accent for synergy/myth; "night" dark surfaces for
@@ -44,7 +44,11 @@ module.exports = {
         severity: { none: '#C9C1B2', mild: '#D9A183', moderate: '#A5694B', high: '#8A4A33' },
         amber: '#B07A3C',
         // Hairline border colors (RN has no inset box-shadow).
-        hairline: { DEFAULT: 'rgba(32,27,21,0.08)', strong: 'rgba(32,27,21,0.12)', dark: 'rgba(244,239,231,0.08)' },
+        hairline: {
+          DEFAULT: 'rgba(32,27,21,0.08)',
+          strong: 'rgba(32,27,21,0.12)',
+          dark: 'rgba(244,239,231,0.08)',
+        },
       },
       fontFamily: {
         serif: ['InstrumentSerif_400Regular'],

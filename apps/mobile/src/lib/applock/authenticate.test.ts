@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PHOTO_COPY } from '@/features/photos/copy';
+import { BRAND } from '@/lib/brand';
 
 import { authenticateAppLock, canUseAppLock } from './authenticate';
 
@@ -34,21 +35,21 @@ describe('app lock local authentication', () => {
   it('returns success when the native prompt authenticates', async () => {
     mocks.authenticateAsync.mockResolvedValueOnce({ success: true });
 
-    await expect(authenticateAppLock('Unlock OnSkin')).resolves.toBe('success');
+    await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('success');
 
-    expect(mocks.authenticateAsync).toHaveBeenCalledWith({ promptMessage: 'Unlock OnSkin' });
+    expect(mocks.authenticateAsync).toHaveBeenCalledWith({ promptMessage: BRAND.appLockPrompt });
   });
 
   it('keeps cancellations quiet as not authenticated', async () => {
     mocks.authenticateAsync.mockResolvedValueOnce({ success: false, error: 'user_cancel' });
 
-    await expect(authenticateAppLock('Unlock OnSkin')).resolves.toBe('not_authenticated');
+    await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('not_authenticated');
   });
 
   it('maps native prompt rejection to unavailable', async () => {
     mocks.authenticateAsync.mockRejectedValueOnce(new Error('native prompt unavailable'));
 
-    await expect(authenticateAppLock('Unlock OnSkin')).resolves.toBe('unavailable');
+    await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('unavailable');
   });
 
   it('checks hardware and enrollment without leaking native failures', async () => {
@@ -69,7 +70,7 @@ describe('app lock local authentication', () => {
     const provider = readSource('lib/applock/AppLockProvider.tsx');
     const progress = readSource('app/(tabs)/progress.tsx');
 
-    expect(provider).toContain("authenticateAppLock('Unlock OnSkin')");
+    expect(provider).toContain('authenticateAppLock(BRAND.appLockPrompt)');
     expect(provider).toContain("Alert.alert('App lock', appLockUserMessage())");
     expect(provider).not.toContain('LocalAuthentication.authenticateAsync');
 

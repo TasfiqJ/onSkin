@@ -6,14 +6,22 @@ import type { PregnancyStatus, SkinAxis } from '@onskin/types';
  * BLOCKED: B-QUIZ-COPY. The validated Baumann BSTI questionnaire is patented
  * and copyrighted (docs/01 section 2). The 4-axis concept is implementable, but
  * the exact questions and scoring still need patent/trademark attorney review.
- * The copy below is original OnSkin draft wording, not final legally reviewed
+ * The copy below is original app draft wording, not final legally reviewed
  * quiz copy.
  */
 
 // Per axis: a positive option score leans toward the first pole letter.
-const AXIS_POLES: Record<SkinAxis, { positive: string; negative: string; posLabel: string; negLabel: string }> = {
+const AXIS_POLES: Record<
+  SkinAxis,
+  { positive: string; negative: string; posLabel: string; negLabel: string }
+> = {
   oily_dry: { positive: 'O', negative: 'D', posLabel: 'Oily', negLabel: 'Dry' },
-  sensitive_resistant: { positive: 'S', negative: 'R', posLabel: 'Sensitive', negLabel: 'Resistant' },
+  sensitive_resistant: {
+    positive: 'S',
+    negative: 'R',
+    posLabel: 'Sensitive',
+    negLabel: 'Resistant',
+  },
   pigmented_non: { positive: 'P', negative: 'N', posLabel: 'Uneven tone', negLabel: 'Even' },
   wrinkled_tight: { positive: 'W', negative: 'T', posLabel: 'Lined', negLabel: 'Firm' },
 };
@@ -114,7 +122,11 @@ export const ONBOARDING_QUIZ: QuizQuestion[] = [
     eyebrow: 'FIRMNESS',
     prompt: 'Which best describes fine lines or firmness right now?',
     options: [
-      { id: 'a', label: 'Fine lines or firmness changes are visible', score: { wrinkled_tight: 2 } },
+      {
+        id: 'a',
+        label: 'Fine lines or firmness changes are visible',
+        score: { wrinkled_tight: 2 },
+      },
       { id: 'b', label: 'I am starting to notice small changes', score: { wrinkled_tight: 1 } },
       { id: 'c', label: 'Not something I notice right now', score: { wrinkled_tight: -2 } },
     ],
@@ -247,7 +259,10 @@ export type SkinProfileResult = {
 const AXES: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
 
 /** Pure scoring. Sum signed axis contributions, derive poles + a 0..1 slider position. */
-export function scoreQuiz(answers: QuizAnswers, quiz: QuizQuestion[] = ONBOARDING_QUIZ): SkinProfileResult {
+export function scoreQuiz(
+  answers: QuizAnswers,
+  quiz: QuizQuestion[] = ONBOARDING_QUIZ,
+): SkinProfileResult {
   const axisScores: Record<SkinAxis, number> = {
     oily_dry: 0,
     sensitive_resistant: 0,

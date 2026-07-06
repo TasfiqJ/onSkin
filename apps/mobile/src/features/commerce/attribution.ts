@@ -37,7 +37,7 @@ export const HEALTH_DENYLIST = [
  * Build the outbound retailer URL for a "where to buy" tap. Appends ONLY the opaque
  * click token. The signature accepts no profile/health argument, so health data
  * cannot be attached even by mistake (docs/10 §5). Deep-link straight out; no in-app
- * webview (keeps OnSkin out of the transaction + reduces data-handling liability).
+ * webview (keeps the app out of the transaction + reduces data-handling liability).
  */
 export function buildOutboundUrl(retailerUrl: string, clickToken: string): string | null {
   return appendExternalQueryParam(retailerUrl, ATTRIBUTION_PARAM, clickToken);
@@ -45,7 +45,10 @@ export function buildOutboundUrl(retailerUrl: string, clickToken: string): strin
 
 /** True if a URL contains any health-adjacent term. Used to prove an outbound link
  *  never leaks skin data (the tested invariant). Case-insensitive. */
-export function urlLeaksHealthData(url: string, denylist: readonly string[] = HEALTH_DENYLIST): boolean {
+export function urlLeaksHealthData(
+  url: string,
+  denylist: readonly string[] = HEALTH_DENYLIST,
+): boolean {
   const lower = url.toLowerCase();
   return denylist.some((term) => lower.includes(term));
 }

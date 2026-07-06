@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteIconButton, Text } from '@/components/ui';
 import { REMINDER_COPY, SETTINGS_COPY } from '@/features/notifications/copy';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
+import { BRAND } from '@/lib/brand';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -43,20 +44,14 @@ function TimePickerModal({
           : 'Quiet hours end';
   return (
     <Modal visible={field !== null} transparent animationType="slide" onRequestClose={onClose}>
-      <View
-        className="flex-1 justify-end"
-        style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}
-      >
+      <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
         <Pressable
           className="flex-1"
           accessibilityLabel="Dismiss time picker"
           accessibilityRole="button"
           onPress={onClose}
         />
-        <View
-          accessibilityViewIsModal
-          className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
-        >
+        <View accessibilityViewIsModal className="rounded-t-sheet bg-paper px-6 pb-10 pt-4">
           <View
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
             style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
@@ -271,7 +266,7 @@ export default function TimingScreen() {
               <View className="h-6 w-6 rounded-[7px]" style={{ backgroundColor: colors.clay }} />
               <View className="flex-1">
                 <Text className="font-sans-bold" style={{ color: colors.cream, fontSize: 12.5 }}>
-                  OnSkin
+                  {BRAND.appName}
                 </Text>
                 <Text
                   style={{

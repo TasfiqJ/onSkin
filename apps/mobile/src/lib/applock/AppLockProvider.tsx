@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { Alert, AppState, Pressable, Text, View, type AppStateStatus } from 'react-native';
 
+import { BRAND } from '@/lib/brand';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { colors } from '@/theme/tokens';
 
@@ -43,7 +44,7 @@ function LockOverlay({ onUnlock }: { onUnlock: () => void }) {
       }}
     >
       <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 40, color: colors.ink }}>
-        OnSkin
+        {BRAND.appName}
       </Text>
       <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 15, color: colors.muted }}>
         Locked. Unlock to continue
@@ -89,7 +90,7 @@ function PrivacyShield() {
       }}
     >
       <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 40, color: colors.ink }}>
-        OnSkin
+        {BRAND.appName}
       </Text>
     </View>
   );
@@ -124,7 +125,7 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   }, [enabled]);
 
   const authenticate = useCallback(() => {
-    void authenticateAppLock('Unlock OnSkin').then((status) => {
+    void authenticateAppLock(BRAND.appLockPrompt).then((status) => {
       if (status === 'success') setLocked(false);
       else if (status === 'unavailable') Alert.alert('App lock', appLockUserMessage());
     });

@@ -1,5 +1,7 @@
+import { BRAND } from '@/lib/brand';
+
 export const STORE_METADATA_DRAFT = {
-  appName: 'OnSkin',
+  appName: BRAND.appName,
   subtitle: 'Skincare routine, shelf, and progress.',
   shortDescription:
     'Build a calmer skincare routine, keep your shelf organized, compare progress photos, and understand possible product-order conflicts without scores or medical claims.',
@@ -27,8 +29,7 @@ export const STORE_METADATA_DRAFT = {
     'Progress photos, no scores.',
     'Paid links are disclosed.',
   ],
-  reviewNotes:
-    'OnSkin is a skincare routine organization app. It does not diagnose, treat, cure, prevent, or detect medical conditions. Progress photos have no score, skin age, grade, or disease detection.',
+  reviewNotes: `${BRAND.appName} is a skincare routine organization app. It does not diagnose, treat, cure, prevent, or detect medical conditions. Progress photos have no score, skin age, grade, or disease detection.`,
   prohibitedLaunchClaims: [
     'Treat acne.', // phase3-audit-allow intentional negative example
     'Diagnose your skin.', // phase3-audit-allow intentional negative example
@@ -57,21 +58,21 @@ export const STORE_METADATA_LIMITS = {
 
 export const PHASE8_STORE_METADATA_PACKET = {
   ios: {
-    appName: 'OnSkin',
+    appName: BRAND.appName,
     subtitle: 'Routine and shelf tracker',
     promotionalText:
       'Build a calmer skincare routine, organize your shelf, and compare your own progress photos without scores.',
     keywords: 'skincare,routine,shelf,progress,reminders,products',
     description: [
-      'OnSkin helps you keep a calmer skincare routine.',
+      `${BRAND.appName} helps you keep a calmer skincare routine.`,
       '',
       'Plan AM and PM steps, keep your products in one shelf, and see conservative routine-conflict flags for reviewed rules.',
       '',
-      'Progress photos are private by default and designed for side-by-side comparison under similar conditions. OnSkin does not grade your photos or estimate age.',
+      `Progress photos are private by default and designed for side-by-side comparison under similar conditions. ${BRAND.appName} does not grade your photos or estimate age.`,
       '',
       'Recommendations are separated from commerce. Paid links, when enabled, are disclosed.',
       '',
-      'OnSkin provides general cosmetic information only and is not medical advice.',
+      `${BRAND.appName} provides general cosmetic information only and is not medical advice.`,
     ].join('\n'),
     screenshotCaptions: [
       'Your shelf, in one place.',
@@ -80,14 +81,13 @@ export const PHASE8_STORE_METADATA_PACKET = {
       'Progress photos, no scores.',
       'Privacy controls and export.',
     ],
-    reviewNotes:
-      'OnSkin is a cosmetic routine organization app. It does not diagnose, treat, cure, prevent, or detect medical conditions. Progress photos have no score, skin age, grade, or disease detection. Account deletion and data export are available from the You tab.',
+    reviewNotes: `${BRAND.appName} is a cosmetic routine organization app. It does not diagnose, treat, cure, prevent, or detect medical conditions. Progress photos have no score, skin age, grade, or disease detection. Account deletion and data export are available from the You tab.`,
   },
   googlePlay: {
-    title: 'OnSkin',
+    title: BRAND.appName,
     shortDescription: 'Build a calmer skincare routine, shelf, reminders, and progress log.',
     fullDescription: [
-      'OnSkin helps you keep a calmer skincare routine.',
+      `${BRAND.appName} helps you keep a calmer skincare routine.`,
       '',
       'Use it to organize your product shelf, build AM and PM routines, check reviewed product-order conflicts, and compare your own progress photos under similar conditions.',
       '',
@@ -95,7 +95,7 @@ export const PHASE8_STORE_METADATA_PACKET = {
       '',
       'Recommendations are separated from commerce, and paid links are disclosed when enabled.',
       '',
-      'OnSkin provides general cosmetic information only and is not medical advice.',
+      `${BRAND.appName} provides general cosmetic information only and is not medical advice.`,
     ].join('\n'),
     screenshotCaptions: [
       'Organize your shelf.',
@@ -122,9 +122,10 @@ function hasBlockedClaim(text: string): boolean {
   return PUBLIC_CLAIM_BLOCKLIST.some((pattern) => pattern.test(text));
 }
 
-export function validateStoreMetadataPacket(
-  packet = PHASE8_STORE_METADATA_PACKET,
-): { errors: string[]; warnings: string[] } {
+export function validateStoreMetadataPacket(packet = PHASE8_STORE_METADATA_PACKET): {
+  errors: string[];
+  warnings: string[];
+} {
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -146,7 +147,9 @@ export function validateStoreMetadataPacket(
   if (packet.googlePlay.title.length > STORE_METADATA_LIMITS.googlePlay.title) {
     errors.push('Google Play title exceeds 30 characters.');
   }
-  if (packet.googlePlay.shortDescription.length > STORE_METADATA_LIMITS.googlePlay.shortDescription) {
+  if (
+    packet.googlePlay.shortDescription.length > STORE_METADATA_LIMITS.googlePlay.shortDescription
+  ) {
     errors.push('Google Play short description exceeds 80 characters.');
   }
   if (packet.googlePlay.fullDescription.length > STORE_METADATA_LIMITS.googlePlay.fullDescription) {
@@ -166,10 +169,14 @@ export function validateStoreMetadataPacket(
     ...packet.googlePlay.screenshotCaptions,
   ];
   for (const text of publicStrings) {
-    if (hasBlockedClaim(text)) errors.push(`Public store metadata contains a blocked claim: "${text.slice(0, 80)}"`);
+    if (hasBlockedClaim(text))
+      errors.push(`Public store metadata contains a blocked claim: "${text.slice(0, 80)}"`);
   }
 
-  for (const caption of [...packet.ios.screenshotCaptions, ...packet.googlePlay.screenshotCaptions]) {
+  for (const caption of [
+    ...packet.ios.screenshotCaptions,
+    ...packet.googlePlay.screenshotCaptions,
+  ]) {
     if (caption.length > STORE_METADATA_LIMITS.ios.screenshotCaption) {
       errors.push(`Screenshot caption exceeds 80 characters: "${caption}"`);
     }

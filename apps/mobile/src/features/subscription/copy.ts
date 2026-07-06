@@ -1,9 +1,11 @@
 import type { GatedFeature } from '@onskin/types';
 
+import { BRAND } from '@/lib/brand';
+
 /**
  * Centralised, honest-by-design paywall + lifecycle copy (docs/08 §9/§12, the
  * Slice-11/20/21 guard pattern). The subscription playbook is where dark patterns
- * creep in; OnSkin rejects them by mandate, by Apple 3.1.2, by the auto-renewal
+ * creep in; the app rejects them by mandate, by Apple 3.1.2, by the auto-renewal
  * laws, AND because trust monetises (the Yuka thesis), so this copy carries: NO
  * manufactured urgency ("Don't miss out!", fake countdowns), NO guilt, NO drug/
  * disease claims, and it DOES carry the honest auto-renew disclosure, the
@@ -19,7 +21,7 @@ export const PAYWALL_COPY = {
   offer: {
     headlineFor: (skin: string) => `Your plan for ${skin} is ready.`,
     headlineFallback: 'Your personalized plan is ready.',
-    subhead: 'Everything below is part of OnSkin Pro.',
+    subhead: `Everything below is part of ${BRAND.proName}.`,
     valueProps: [
       'Routine intelligence. Order, timing, skin cycling',
       'Ingredient conflict checks, with evidence grades',
@@ -89,7 +91,7 @@ export const PAYWALL_COPY = {
     freeTitle: 'You’re on the free plan',
     freeBody:
       'The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.',
-    upgradeCta: 'See OnSkin Pro',
+    upgradeCta: `See ${BRAND.proName}`,
   },
   // Graceful downgrade after a paid expiry (design 08, docs/08 §6).
   downgrade: {
@@ -124,29 +126,29 @@ export const PAYWALL_COPY = {
 export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> = {
   photo_timeline: {
     title: 'Unlock your private photo timeline.',
-    body: 'Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of OnSkin Pro.',
+    body: `Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of ${BRAND.proName}.`,
   },
   scheduler: {
     title: 'Unlock your full skin-cycling scheduler.',
-    body: 'Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of OnSkin Pro.',
+    body: `Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of ${BRAND.proName}.`,
   },
   conflict_checks: {
     title: 'Check every product, every time.',
-    body: 'Unlimited ingredient-conflict checks with evidence grades and calm resolutions. Part of OnSkin Pro.',
+    body: `Unlimited ingredient-conflict checks with evidence grades and calm resolutions. Part of ${BRAND.proName}.`,
   },
   reminders_widgets: {
     title: 'Reminders, streaks & home-screen widgets.',
-    body: 'Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of OnSkin Pro.',
+    body: `Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of ${BRAND.proName}.`,
   },
   full_routine: {
     title: 'Unlock your full routine.',
-    body: 'The complete builder, sequencing and ramp. Built around your skin. Part of OnSkin Pro.',
+    body: `The complete builder, sequencing and ramp. Built around your skin. Part of ${BRAND.proName}.`,
   },
   // docs/13 §15: only the deeper, cloud-grounded advisor is gated. The on-device,
   // evidence-grounded answers about your own shelf stay free. Honest, never "AI" hype.
   ask: {
     title: 'A deeper advisor, grounded in your shelf.',
-    body: 'Ask follow-ups in your own words and get fluent, evidence-grounded answers about your routine. Private, and never a substitute for your dermatologist. Part of OnSkin Pro.',
+    body: `Ask follow-ups in your own words and get fluent, evidence-grounded answers about your routine. Private, and never a substitute for your dermatologist. Part of ${BRAND.proName}.`,
   },
 };
 
