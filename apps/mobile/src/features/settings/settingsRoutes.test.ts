@@ -57,10 +57,11 @@ describe('Settings route contracts', () => {
 
     expect(timing).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
     expect(timing).toContain('min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px]');
-    expect(timing).toContain('flexWrap: \'wrap\'');
+    expect(timing).toContain("flexWrap: 'wrap'");
     expect(timing).toContain('style={{ flexShrink: 1, minWidth: 0 }}');
     expect(notifications).toContain('min-h-[56px] flex-row items-center justify-between py-3.5');
-    expect(notifications).toContain('min-h-[44px] flex-1 justify-center pr-3');
+    expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-3');
+    expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
   });

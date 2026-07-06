@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Audited the floating bottom tab bar on Expo web at 320 px and 390 px; labels
+  and tab switching passed. Buffered the notification settings editable reminder
+  row text targets from exact 44 px to 48 px and verified `/settings/notifications`
+  at 320 px.
 - Buffered remaining exact-44 interactive text controls in community, cycle,
   routine tolerance, recommendation preferences, and Shelf replacement surfaces
   to 48 px. Expo web E2E at 320 px verified recommendation preference chips

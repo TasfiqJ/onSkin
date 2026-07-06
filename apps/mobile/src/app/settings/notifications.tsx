@@ -54,7 +54,7 @@ function Row({
         <Pressable
           accessibilityRole="button"
           onPress={onPress}
-          className="min-h-[44px] flex-1 justify-center pr-3"
+          className="min-h-[48px] flex-1 justify-center pr-3"
         >
           <Text variant="body" className="font-sans-semibold">
             {title}
@@ -62,7 +62,7 @@ function Row({
           {subtitle ? <Text variant="bodySm" tone="muted">{`\n${subtitle}`}</Text> : null}
         </Pressable>
       ) : (
-        <View className="min-h-[44px] flex-1 justify-center pr-3">
+        <View className="min-h-[48px] flex-1 justify-center pr-3">
           <Text variant="body" className="font-sans-semibold">
             {title}
           </Text>
