@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Final cross-phone sweep found and fixed two remaining phone-polish issues in
+  the primary navigation slice. Shelf manual add now gives the bottom Continue
+  CTA a real phone cushion while keeping the category picker and PAO note clean
+  at 320 x 568. Today now treats sub-700 px heights as compact so the Tonight
+  teaser does not peek as a fragment behind the floating tab bar at 360 x 640,
+  while 390 x 844 still shows the full teaser. Human-simulated E2E covered
+  320/360/390 px tab geometry, Today/Progress/Shelf/You switching, You bottom
+  scroll, and manual-add -> opened-date handoff in
+  `test-results/human-e2e/2026-07-06/final-cross-phone-sweep/`.
 - Polished the floating bottom tab bar and Today clearance on phone widths after
   320x568 E2E showed the longest tab label had no practical text slack and the
   compact SPF prompt crowded the floating bar shadow. The tab bar now uses more

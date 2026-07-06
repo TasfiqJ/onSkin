@@ -246,7 +246,7 @@ export default function TodayScreen() {
     day: 'numeric',
   });
   const clockLabel = localClockLabel();
-  const compactPhone = height < 640;
+  const compactPhone = height < 700;
   const compactRecommendationPrompt = height < 860;
 
   // ---- AM ----

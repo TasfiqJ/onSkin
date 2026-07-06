@@ -183,6 +183,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('className="flex-1"');
     expect(source).toContain("contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}");
+    expect(source).toContain('<View className="pb-3 pt-1">');
     expect(source).toContain("return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');");
     expect(source).toContain('{categoryFieldLabel(category)}');
     expect(source).toContain('<View className="flex-1">');

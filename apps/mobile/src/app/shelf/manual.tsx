@@ -103,11 +103,11 @@ export default function ManualAddScreen() {
         contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}
         keyboardShouldPersistTaps="handled"
       >
-        <Text variant="bodySm" tone="muted" className="mb-5 mt-3">
+        <Text variant="bodySm" tone="muted" className="mb-4 mt-3">
           The floor under every other path. This always works, even fully offline.
         </Text>
 
-        <View className="gap-3.5">
+        <View className="gap-3">
           <View>
             <FieldLabel>Product name</FieldLabel>
             <TextInput
@@ -203,7 +203,7 @@ export default function ManualAddScreen() {
           </View>
 
           {/* PAO pre-fill note (honest, from the category default. Editable next). */}
-          <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5">
+          <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3">
             <View className="h-[7px] w-[7px] rounded-full bg-clay" />
             <Text variant="bodySm" tone="muted" className="flex-1">
               {paoFromCategory != null ? (
@@ -224,7 +224,9 @@ export default function ManualAddScreen() {
         </View>
       </ScrollView>
 
-      <Button label="Continue" variant="accent" disabled={!canContinue} onPress={onContinue} />
+      <View className="pb-3 pt-1">
+        <Button label="Continue" variant="accent" disabled={!canContinue} onPress={onContinue} />
+      </View>
     </Screen>
   );
 }

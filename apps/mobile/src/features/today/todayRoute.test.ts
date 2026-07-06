@@ -28,7 +28,7 @@ describe('Today route mobile contracts', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 
     expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const compactPhone = height < 640');
+    expect(source).toContain('const compactPhone = height < 700');
     expect(source).toContain('const compactRecommendationPrompt = height < 860');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
