@@ -1704,6 +1704,15 @@ the tab bar at 320 x 568, the full routine card is visible at 390 x 844, covered
 hits, and normal scroll reveals `Streak & adherence`, `Weekly check-in`, and `Recent changes` as full 48 px targets in
 `test-results/human-e2e/2026-07-06/you-first-viewport-tab-clearance/`.
 
+### Progress contextual paywall clearance (2026-07-06)
+
+Fixed the compact Progress contextual paywall after a 320 x 568 phone E2E pass showed the fixed `Start free trial`
+action overlapping the annual price card. `ProGate` now uses a short-phone compact layout and keeps the CTA plus
+Terms/Privacy/Restore controls in the scroll flow, preserving 44+ px controls above the floating tab bar. Human-simulated
+E2E verified the repaired 320 x 568 Progress paywall, the 390 x 844 Progress paywall, and Shelf at 390 x 844 with no
+small controls, clipped text, horizontal overflow, or tab-bar overlap in
+`test-results/human-e2e/2026-07-06/shelf-progress-phone-sweep/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

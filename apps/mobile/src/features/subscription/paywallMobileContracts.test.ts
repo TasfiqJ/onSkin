@@ -74,6 +74,14 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('<Sheet scroll backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');
     expect(proGate).toContain('className="h-[48px] justify-center px-2"');
+    expect(proGate).toContain('useWindowDimensions');
+    expect(proGate).toContain('const compactPaywall = height < 640');
+    expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
+    expect(proGate).toContain('paddingBottom: compactPaywall ? 112 : 24');
+    expect(proGate).toContain(
+      "? 'mt-2 h-[50px] items-center justify-center rounded-pill'",
+    );
+    expect(proGate).not.toContain('className="pb-4"');
   });
 
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {

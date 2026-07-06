@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, type ReactNode } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
@@ -19,10 +19,12 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // paywall framed around THIS feature, with the same compliance posture. Dismissible,
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
+  const { height } = useWindowDimensions();
   const { data, isLoading } = useEntitlement();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const locked = data ? !data.isPro : false;
+  const compactPaywall = height < 640;
 
   useEffect(() => {
     if (locked) track('contextual_paywall_shown', { feature });
@@ -78,29 +80,56 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 16 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: compactPaywall ? 'flex-start' : 'center',
+          paddingTop: compactPaywall ? 4 : 0,
+          paddingBottom: compactPaywall ? 112 : 24,
+        }}
       >
         <View
-          className="mb-5 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
+          className={
+            compactPaywall
+              ? 'mb-2 h-10 w-10 self-start items-center justify-center rounded-[12px]'
+              : 'mb-5 h-[52px] w-[52px] items-center justify-center rounded-[14px]'
+          }
           style={{ backgroundColor: colors.clayTint }}
         >
-          <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+          <View
+            className={compactPaywall ? 'h-2.5 w-2.5 rounded-full' : 'h-3.5 w-3.5 rounded-full'}
+            style={{ backgroundColor: colors.clay }}
+          />
         </View>
-        <Text variant="title" style={{ fontSize: 32, lineHeight: 36 }}>
+        <Text
+          variant="title"
+          style={{ fontSize: compactPaywall ? 28 : 32, lineHeight: compactPaywall ? 32 : 36 }}
+        >
           {copy.title}
         </Text>
-        <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 24 }}>
+        <Text
+          variant="body"
+          tone="muted"
+          className={compactPaywall ? 'mt-2' : 'mt-3'}
+          style={{ fontSize: compactPaywall ? 15 : undefined, lineHeight: compactPaywall ? 21 : 24 }}
+        >
           {copy.body}
         </Text>
         <View
-          className="mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
+          className={
+            compactPaywall
+              ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
+              : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+          }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
           <View>
             <Text variant="bodySm" tone="muted">
               {annualDisplay.introLabel}
             </Text>
-            <Text variant="title" style={{ fontSize: 26, lineHeight: 30 }}>
+            <Text
+              variant="title"
+              style={{ fontSize: compactPaywall ? 24 : 26, lineHeight: compactPaywall ? 28 : 30 }}
+            >
               {annualDisplay.priceLabel}
               {annualDisplay.periodLabel ? (
                 <Text variant="bodySm" tone="muted">
@@ -117,19 +146,21 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           <Text
             variant="label"
             tone="muted"
-            className="mt-2 text-center"
-            style={{ fontSize: 11.5, lineHeight: 16 }}
+            className={compactPaywall ? 'mt-1 text-center' : 'mt-2 text-center'}
+            style={{ fontSize: compactPaywall ? 10.5 : 11.5, lineHeight: compactPaywall ? 14 : 16 }}
           >
             {offering.data.reason}
           </Text>
         ) : null}
-      </ScrollView>
-      <View className="pb-4">
         <Pressable
           accessibilityRole="button"
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
-          className="h-[54px] items-center justify-center rounded-pill"
+          className={
+            compactPaywall
+              ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
+              : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+          }
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
@@ -137,7 +168,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           </Text>
         </Pressable>
         <ComplianceRow />
-      </View>
+      </ScrollView>
     </Screen>
   );
 }
