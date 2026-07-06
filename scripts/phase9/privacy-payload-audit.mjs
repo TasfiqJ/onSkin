@@ -45,6 +45,7 @@ block(errors, /SENSITIVE_ANALYTICS_VALUE/.test(trackSource), 'Analytics sanitize
 block(errors, /SENSITIVE_ANALYTICS_VALUE\.test\(trimmed\)/.test(trackSource), 'Analytics sanitizer must check trimmed string values against the sensitive-value guard.');
 block(errors, /MAX_SAFE_ANALYTICS_INTEGER/.test(trackSource), 'Analytics sanitizer must cap numeric prop values.');
 block(errors, /Number\.isSafeInteger\(value\)/.test(trackSource), 'Analytics sanitizer must drop non-integer numeric prop values.');
+block(errors, !/value\s+instanceof\s+Date/.test(trackSource), 'Analytics sanitizer must drop Date props instead of serializing precise timestamps.');
 block(errors, /pseudonymousUserId/.test(trackSource), 'Analytics identify must pseudonymize raw user IDs before vendor calls.');
 block(errors, /posthog\?\.identify\(pseudonymousId/.test(trackSource), 'PostHog identify must use a pseudonymous user ID.');
 block(errors, /captureAppLifecycleEvents:\s*false/.test(trackSource), 'PostHog automatic lifecycle capture must stay disabled.');
@@ -83,6 +84,7 @@ block(errors, /SENSITIVE_CONTEXT_KEY/.test(scrubSource), 'Sentry scrubber is mis
 block(errors, /SENSITIVE_VALUE/.test(scrubSource), 'Sentry scrubber is missing sensitive-value guard.');
 block(errors, /MAX_SAFE_CONTEXT_INTEGER/.test(scrubSource), 'Sentry scrubber must cap numeric context values.');
 block(errors, /Number\.isSafeInteger\(value\)/.test(scrubSource), 'Sentry scrubber must drop non-integer numeric context values.');
+block(errors, !/value\s+instanceof\s+Date/.test(scrubSource), 'Sentry scrubber must drop Date context values instead of serializing precise timestamps.');
 block(errors, /sanitizeCapturedException/.test(scrubSource), 'Sentry scrubber must expose a captured-exception sanitizer.');
 block(errors, /route|query|url|receipt|ocr|barcode|free_text/i.test(scrubSource), 'Sentry scrubber must explicitly cover route/query/url/receipt/OCR/barcode/free text.');
 block(errors, /redactedErrorForLog/.test(safeLogSource), 'Mobile dev logging must use a redacted error helper.');

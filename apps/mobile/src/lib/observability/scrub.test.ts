@@ -28,8 +28,10 @@ describe('observability context scrubber', () => {
         source: 'https://example.com/path?token=secret',
         reason: 'person@example.com',
         stage: 'paywall',
+        moment: new Date('2026-07-06T10:00:00.000Z'),
         nested: {
           mode: 'restore',
+          capturedAt: new Date('2026-07-06T10:01:00.000Z'),
           message: 'receipt payload',
           value: 'ok',
         },

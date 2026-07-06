@@ -25,6 +25,7 @@ describe('analytics sanitizer', () => {
         product_type: 'mineral_spf',
         trigger: 'gap',
         intent: 'medical',
+        moment: new Date('2026-07-06T10:00:00.000Z'),
         email: 'person@example.com',
         nested: { unsafe: true },
         change_state: 'consistent',

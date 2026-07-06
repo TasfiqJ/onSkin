@@ -705,6 +705,13 @@
 - Why safe: Approved analytics keys such as `count`, `days`, `result`, `variant`, or `surface` must remain coarse buckets and counters. Modified or future call sites should not be able to send numeric barcodes, database IDs, or derived photo/skin scores to PostHog under safe-looking keys.
 - Regression: `track.test.ts` covers small counters, large identifiers, decimals, and infinities. `phase9:privacy-payload-audit` now fails if the analytics numeric cap or non-integer rejection is removed.
 
+## Custom date telemetry minimization
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/observability/scrub.ts`, `apps/mobile/src/lib/observability/scrub.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: `sanitizeAnalyticsProps()` and `sanitizeObservabilityContext()` now drop app-supplied `Date` objects instead of serializing them to ISO timestamps.
+- Why safe: PostHog and Sentry already record event time. Custom timestamp props can reveal exact routine, photo, consent, purchase, or account-flow timing and are unnecessary for the minimized telemetry contract.
+- Regression: `track.test.ts` and `scrub.test.ts` cover dropped `Date` values under safe-looking keys. `phase9:privacy-payload-audit` now fails if either sanitizer reintroduces `Date` serialization.
+
 ## PostHog automatic capture disabled
 
 - Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.

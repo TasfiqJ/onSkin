@@ -81,8 +81,6 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
       if (!trimmed || trimmed.includes('@') || SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
       if (key === 'result' && PHOTO_QUALITY_RESULT_VALUES.has(trimmed)) continue;
       clean[key] = trimmed.slice(0, 160);
-    } else if (value instanceof Date) {
-      clean[key] = value.toISOString();
     }
   }
   return clean;

@@ -26,7 +26,6 @@ function scrubValue(value: unknown, depth: number): ScrubbedPrimitive | Scrubbed
     if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_CONTEXT_INTEGER) return undefined;
     return value;
   }
-  if (value instanceof Date) return value.toISOString();
   if (typeof value === 'string') {
     const trimmed = value.trim();
     if (!trimmed || SENSITIVE_VALUE.test(trimmed)) return undefined;
