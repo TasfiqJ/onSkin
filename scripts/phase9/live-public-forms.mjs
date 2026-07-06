@@ -2,7 +2,14 @@
 import { createHmac } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  printResult,
+  readScriptAppEnvironment,
+  redactedErrorKind,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -540,33 +547,34 @@ async function main() {
   } finally {
     const waitlistDelete = await admin.from('waitlist_signups').delete().eq('email', waitlistEmail);
     if (waitlistDelete.error)
-      warnings.push(`Waitlist cleanup warning: ${waitlistDelete.error.message}`);
+      warnings.push(`Waitlist cleanup warning: ${redactedErrorKind(waitlistDelete.error)}`);
     const waitlistRateDelete = await admin
       .from('waitlist_signups')
       .delete()
       .eq('email', waitlistRateLimitEmail);
     if (waitlistRateDelete.error)
-      warnings.push(`Waitlist rate-limit cleanup warning: ${waitlistRateDelete.error.message}`);
+      warnings.push(`Waitlist rate-limit cleanup warning: ${redactedErrorKind(waitlistRateDelete.error)}`);
     const waitlistOversizedDelete = await admin
       .from('waitlist_signups')
       .delete()
       .eq('email', waitlistOversizedEmail);
     if (waitlistOversizedDelete.error)
-      warnings.push(`Waitlist oversized cleanup warning: ${waitlistOversizedDelete.error.message}`);
+      warnings.push(`Waitlist oversized cleanup warning: ${redactedErrorKind(waitlistOversizedDelete.error)}`);
     const growthDelete = await admin.from('growth_events').delete().eq('share_id', shareId);
-    if (growthDelete.error) warnings.push(`Growth cleanup warning: ${growthDelete.error.message}`);
+    if (growthDelete.error)
+      warnings.push(`Growth cleanup warning: ${redactedErrorKind(growthDelete.error)}`);
     const growthRateDelete = await admin
       .from('growth_events')
       .delete()
       .eq('share_id', growthRateLimitShareId);
     if (growthRateDelete.error)
-      warnings.push(`Growth rate-limit cleanup warning: ${growthRateDelete.error.message}`);
+      warnings.push(`Growth rate-limit cleanup warning: ${redactedErrorKind(growthRateDelete.error)}`);
     const growthOversizedDelete = await admin
       .from('growth_events')
       .delete()
       .eq('share_id', growthOversizedShareId);
     if (growthOversizedDelete.error)
-      warnings.push(`Growth oversized cleanup warning: ${growthOversizedDelete.error.message}`);
+      warnings.push(`Growth oversized cleanup warning: ${redactedErrorKind(growthOversizedDelete.error)}`);
   }
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

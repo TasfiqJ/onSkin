@@ -2,7 +2,14 @@
 import { createHmac, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  printResult,
+  readScriptAppEnvironment,
+  redactedErrorKind,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -716,7 +723,7 @@ async function main() {
     await admin.from('subscriptions_events').delete().in('rc_event_id', Object.values(eventIds));
     const { error } = await admin.auth.admin.deleteUser(user.id);
     if (error)
-      warnings.push(`RevenueCat webhook user cleanup warning for ${user.email}: ${error.message}`);
+      warnings.push(`RevenueCat webhook user cleanup warning: ${redactedErrorKind(error)}`);
   }
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

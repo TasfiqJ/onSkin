@@ -91,6 +91,16 @@ export function warn(warnings, condition, message) {
   if (!condition) warnings.push(message);
 }
 
+export function redactedErrorKind(error) {
+  if (error instanceof Error) return error.name || 'Error';
+  if (error && typeof error === 'object') {
+    const code = 'code' in error ? String(error.code ?? '') : '';
+    if (/^[A-Za-z0-9_-]{1,40}$/.test(code)) return `code:${code}`;
+    return 'object';
+  }
+  return typeof error;
+}
+
 const PUBLIC_SECRET_NAME = /(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i;
 const PUBLIC_SECRET_VALUE =
   /(sb_secret_|service_role|whsec_|sk_(?:live|test|prod|secret)|sntrys_|phx_|-----BEGIN|PRIVATE KEY)/i;

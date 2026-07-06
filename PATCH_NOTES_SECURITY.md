@@ -830,3 +830,10 @@
 - Change: The Phase 9 release QA packet now includes its own builder in source hashes, warns when generated from a dirty Git worktree, and prints `Git status: clean` or `Git status: DIRTY` in the Markdown packet.
 - Why safe: Release evidence must be auditable to the tool that generated it. Hashing the packet generator and surfacing dirty-worktree state keeps reviewers from relying on stale or mixed-worktree evidence after security changes.
 - Regression: Release smoke statically requires the packet builder to hash itself and keep the dirty-worktree warning/status summary.
+
+## Live evidence cleanup warning redaction
+
+- Files: `scripts/phase9/lib.mjs`, Phase 9 live evidence harnesses, `scripts/phase9/release-smoke.mjs`, `docs/phase-9/source-of-truth.md`.
+- Change: Added `redactedErrorKind()` and changed live harness cleanup warnings to record only redacted error names or stable error codes.
+- Why safe: Cleanup warnings are written into generated release evidence. They must not include raw Supabase/provider messages, temporary staging emails, synthetic order IDs, URLs, tokens, or other operator-only diagnostics.
+- Regression: Release smoke now fails if live harness cleanup warnings reintroduce raw `.message`, `resultError(error)`, user email, or synthetic order-ID interpolation.

@@ -2,7 +2,14 @@
 import { randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  printResult,
+  readScriptAppEnvironment,
+  redactedErrorKind,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -518,27 +525,26 @@ async function main() {
       await admin.storage
         .from('photos')
         .remove(storagePaths)
-        .catch((error) => warnings.push(`Storage cleanup warning: ${resultError(error)}`));
+        .catch((error) => warnings.push(`Storage cleanup warning: ${redactedErrorKind(error)}`));
     }
     for (const externalOrderId of orderIds) {
       const { error } = await admin
         .from('order_attributions')
         .delete()
         .eq('external_order_id', externalOrderId);
-      if (error) warnings.push(`Order cleanup warning for ${externalOrderId}: ${error.message}`);
+      if (error) warnings.push(`Order cleanup warning: ${redactedErrorKind(error)}`);
     }
     if (noteIds.length > 0) {
       const { error } = await admin.from('community_notes').delete().in('id', noteIds);
-      if (error) warnings.push(`Community note cleanup warning: ${error.message}`);
+      if (error) warnings.push(`Community note cleanup warning: ${redactedErrorKind(error)}`);
     }
     if (topicIds.length > 0) {
       const { error } = await admin.from('community_topics').delete().in('id', topicIds);
-      if (error) warnings.push(`Community topic cleanup warning: ${error.message}`);
+      if (error) warnings.push(`Community topic cleanup warning: ${redactedErrorKind(error)}`);
     }
     if (user?.id) {
       const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error)
-        warnings.push(`Consent harness user cleanup warning for ${user.email}: ${error.message}`);
+      if (error) warnings.push(`Consent harness user cleanup warning: ${redactedErrorKind(error)}`);
     }
   }
 

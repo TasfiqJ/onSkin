@@ -2,7 +2,14 @@
 import { createHmac, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  printResult,
+  readScriptAppEnvironment,
+  redactedErrorKind,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -379,10 +386,11 @@ async function main() {
         .from('catalog_lookup_events')
         .delete()
         .eq('user_id', user.id);
-      if (lookupCleanup) warnings.push(`Catalog lookup cleanup warning: ${lookupCleanup.message}`);
+      if (lookupCleanup)
+        warnings.push(`Catalog lookup cleanup warning: ${redactedErrorKind(lookupCleanup)}`);
       const { error: userCleanup } = await admin.auth.admin.deleteUser(user.id);
       if (userCleanup)
-        warnings.push(`Catalog rate-limit user cleanup warning: ${userCleanup.message}`);
+        warnings.push(`Catalog rate-limit user cleanup warning: ${redactedErrorKind(userCleanup)}`);
     }
   }
 

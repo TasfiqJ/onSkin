@@ -16,6 +16,8 @@ Before any `PHASE9_*_PASS=true` flag or `PHASE9_SIGNED_OFF_BY` value is accepted
 
 Generated QA packets are supporting artifacts, not launch signoff by themselves. The packet must hash the packet builder, and its Markdown summary must show whether it was generated from a clean or dirty Git worktree so reviewers can reject stale or mixed-worktree evidence.
 
+Generated live evidence must also be minimized. Cleanup warnings may record only redacted error kinds or stable codes; they must not include raw provider/database messages, temporary test emails, synthetic order IDs, tokens, URLs, or other diagnostic payloads.
+
 ## Current Non-Code Blockers
 
 - Final brand/domain/store identity must be approved.

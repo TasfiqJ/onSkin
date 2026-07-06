@@ -2,7 +2,14 @@
 import { createHmac, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  printResult,
+  readScriptAppEnvironment,
+  redactedErrorKind,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -763,20 +770,20 @@ async function main() {
       await admin.storage
         .from('photos')
         .remove(storagePaths)
-        .catch((error) => warnings.push(`Storage cleanup warning: ${resultError(error)}`));
+        .catch((error) => warnings.push(`Storage cleanup warning: ${redactedErrorKind(error)}`));
     }
     for (const externalOrderId of externalOrderIds) {
       const { error } = await admin
         .from('order_attributions')
         .delete()
         .eq('external_order_id', externalOrderId);
-      if (error) warnings.push(`Order cleanup warning for ${externalOrderId}: ${error.message}`);
+      if (error) warnings.push(`Order cleanup warning: ${redactedErrorKind(error)}`);
     }
     for (const user of users) {
       if (!user?.id) continue;
       if (!(await userExists(admin, user.id))) continue;
       const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`User cleanup warning for ${user.email}: ${error.message}`);
+      if (error) warnings.push(`User cleanup warning: ${redactedErrorKind(error)}`);
     }
   }
 

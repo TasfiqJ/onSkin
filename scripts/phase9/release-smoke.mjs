@@ -237,6 +237,20 @@ for (const file of liveHarnessFiles) {
     !/\?\?\s*'development'/.test(source),
     `${file} must not default live app environment to development.`,
   );
+  if (/cleanup warning/i.test(source)) {
+    block(
+      errors,
+      /redactedErrorKind/.test(source),
+      `${file} cleanup warnings must use redacted error kinds.`,
+    );
+    block(
+      errors,
+      !/cleanup warning[^\n]*(?:\.message|resultError\(error\)|user\.email|externalOrderId)/i.test(
+        source,
+      ),
+      `${file} cleanup warnings must not include raw messages, user emails, or synthetic identifiers.`,
+    );
+  }
 }
 
 const qaPacketBuilder = read('scripts/phase9/build-release-qa-packet.mjs');

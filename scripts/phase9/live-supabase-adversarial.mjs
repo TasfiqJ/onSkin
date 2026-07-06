@@ -2,7 +2,14 @@
 import { randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  printResult,
+  readScriptAppEnvironment,
+  redactedErrorKind,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -1435,20 +1442,20 @@ async function main() {
       await admin.storage
         .from('photos')
         .remove(storagePaths)
-        .catch((error) => warnings.push(`Storage cleanup warning: ${resultError(error)}`));
+        .catch((error) => warnings.push(`Storage cleanup warning: ${redactedErrorKind(error)}`));
     }
     for (const user of users) {
       const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`User cleanup warning for ${user.email}: ${error.message}`);
+      if (error) warnings.push(`User cleanup warning: ${redactedErrorKind(error)}`);
     }
     await deleteByIds(admin, 'community_notes', globalCleanup.communityNoteIds).catch((error) =>
-      warnings.push(`Community note cleanup warning: ${resultError(error)}`),
+      warnings.push(`Community note cleanup warning: ${redactedErrorKind(error)}`),
     );
     await deleteByIds(admin, 'community_topics', globalCleanup.communityTopicIds).catch((error) =>
-      warnings.push(`Community topic cleanup warning: ${resultError(error)}`),
+      warnings.push(`Community topic cleanup warning: ${redactedErrorKind(error)}`),
     );
     await deleteByIds(admin, 'conflict_rules', globalCleanup.conflictRuleIds).catch((error) =>
-      warnings.push(`Conflict rule cleanup warning: ${resultError(error)}`),
+      warnings.push(`Conflict rule cleanup warning: ${redactedErrorKind(error)}`),
     );
   }
 
