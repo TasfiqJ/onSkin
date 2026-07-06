@@ -795,3 +795,10 @@
 - Change: Public-env key/value secret checks now live in a shared helper and run from Phase 10 beta readiness and Phase 11 launch readiness, not only Phase 9 release smoke.
 - Why safe: Later beta/public launch gates can be run directly during launch operations. They should fail closed if the active shell exposes private-looking values through `EXPO_PUBLIC_*`.
 - Regression: `phase9:release-smoke` still passes normal code gates, and expected-failure probes with `EXPO_PUBLIC_POSTHOG_KEY=sk_live_blocked` verify that Phase 10 and Phase 11 readiness reject private-looking public values.
+
+## Phase 2 public env key-name alignment
+
+- Files: `scripts/phase2/check-env.mjs`.
+- Change: Phase 2 env validation now uses the same secret-looking public key-name markers as the Phase 9/10/11 readiness guard.
+- Why safe: Early infrastructure checks should fail on the same public secret-name classes as later beta and launch gates.
+- Regression: An expected-failure probe with `EXPO_PUBLIC_PERSONAL_TOKEN=blocked` verifies that broader secret-looking public key names are blocked.

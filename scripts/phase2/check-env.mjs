@@ -113,15 +113,7 @@ const placeholderFragments = [
   '...',
 ];
 
-const forbiddenPublicFragments = [
-  'SECRET',
-  'PRIVATE_KEY',
-  'WEBHOOK_AUTH',
-  'PERSONAL_API_KEY',
-  'AUTH_TOKEN',
-  'CLIENT_SECRET',
-  'SERVICE_ROLE',
-];
+const forbiddenPublicName = /(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i;
 const forbiddenPublicValue =
   /(sb_secret_|service_role|whsec_|sk_(?:live|test|prod|secret)|sntrys_|phx_|-----BEGIN|PRIVATE KEY)/i;
 
@@ -160,7 +152,7 @@ if (appEnv && !['development', 'staging', 'production'].includes(appEnv)) {
 
 const publicSecretKeys = Object.keys(process.env)
   .filter((name) => name.startsWith('EXPO_PUBLIC_'))
-  .filter((name) => forbiddenPublicFragments.some((fragment) => name.includes(fragment)));
+  .filter((name) => forbiddenPublicName.test(name));
 if (publicSecretKeys.length > 0) {
   errors.push(`Secret-looking keys must not use EXPO_PUBLIC_: ${publicSecretKeys.join(', ')}`);
 }
