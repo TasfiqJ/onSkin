@@ -122,6 +122,8 @@ const forbiddenPublicFragments = [
   'CLIENT_SECRET',
   'SERVICE_ROLE',
 ];
+const forbiddenPublicValue =
+  /(sb_secret_|service_role|whsec_|sk_(?:live|test|prod|secret)|sntrys_|phx_|-----BEGIN|PRIVATE KEY)/i;
 
 function valueFor(name) {
   return process.env[name]?.trim() ?? '';
@@ -161,6 +163,12 @@ const publicSecretKeys = Object.keys(process.env)
   .filter((name) => forbiddenPublicFragments.some((fragment) => name.includes(fragment)));
 if (publicSecretKeys.length > 0) {
   errors.push(`Secret-looking keys must not use EXPO_PUBLIC_: ${publicSecretKeys.join(', ')}`);
+}
+const publicSecretValues = Object.keys(process.env)
+  .filter((name) => name.startsWith('EXPO_PUBLIC_'))
+  .filter((name) => forbiddenPublicValue.test(valueFor(name)));
+if (publicSecretValues.length > 0) {
+  errors.push(`Secret-looking values must not use EXPO_PUBLIC_: ${publicSecretValues.join(', ')}`);
 }
 
 const displayName = valueFor('APP_DISPLAY_NAME') || 'OnSkin';

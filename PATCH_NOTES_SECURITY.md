@@ -781,3 +781,10 @@
 - Change: Phase 9 release smoke now blocks private-looking values in `EXPO_PUBLIC_*` keys, including Supabase secret/service-role markers, webhook signing markers, private `sk_*` prefixes, Sentry auth tokens, PostHog personal tokens, and private-key blocks.
 - Why safe: Some public key names are legitimate, but a misconfigured release shell can accidentally assign a private value to them. Name-only checks are not enough for release evidence.
 - Regression: `phase9:release-smoke` still passes normal code gates, and an expected-failure probe with `EXPO_PUBLIC_POSTHOG_KEY=sk_live_blocked` verifies that private-looking public values are blocked.
+
+## Public env private-value Phase 2 gate
+
+- Files: `scripts/phase2/check-env.mjs`.
+- Change: Phase 2 strict env validation now blocks private-looking values in actual `EXPO_PUBLIC_*` keys while reporting only key names.
+- Why safe: Phase 2 is the earlier infrastructure gate operators run before release-candidate evidence. It should catch the same accidental public-secret assignment as the Phase 9 release gate.
+- Regression: `phase2:check-env` still reports the normal placeholder blockers, and an expected-failure probe with `EXPO_PUBLIC_POSTHOG_KEY=sk_live_blocked` verifies that private-looking public values are blocked.

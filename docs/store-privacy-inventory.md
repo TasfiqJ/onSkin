@@ -38,7 +38,7 @@ configuration before store submission.
 ## Current Engineering Safeguards
 
 - Separate env vars for public bundle values versus server secrets.
-- `scripts/phase2/check-env.mjs` rejects secret-looking `EXPO_PUBLIC_*` keys.
+- `scripts/phase2/check-env.mjs` rejects secret-looking `EXPO_PUBLIC_*` keys and private-looking values assigned to public keys.
 - PostHog session replay is disabled.
 - Sentry default PII, screenshots, view hierarchy, and failed request capture are
   disabled.
