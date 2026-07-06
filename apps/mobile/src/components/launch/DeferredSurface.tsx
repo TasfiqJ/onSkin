@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
@@ -23,7 +23,11 @@ export function DeferredSurface({
 
   return (
     <Screen edges={['top', 'bottom']}>
-      <View className="flex-1 justify-center">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="flex-grow justify-center pb-6 pt-4"
+      >
         <View
           className="mb-6 h-12 w-12 items-center justify-center rounded-full"
           style={{ backgroundColor: colors.clayTint }}
@@ -46,12 +50,15 @@ export function DeferredSurface({
             {copy.detail}
           </Text>
         </View>
+      </ScrollView>
+      <View className="pb-3 pt-2">
+        <Button
+          label={copy.cta}
+          variant="ghost"
+          className="mb-6"
+          onPress={() => backOrReplace(router, fallbackRoute)}
+        />
       </View>
-      <Button
-        label={copy.cta}
-        variant="ghost"
-        onPress={() => backOrReplace(router, fallbackRoute)}
-      />
     </Screen>
   );
 }

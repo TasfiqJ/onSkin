@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Buffered the shared deferred-surface Back CTA after 320 px E2E showed deferred
+  commerce direct-entry copy placing the only action flush against the bottom edge.
+  Deferred launch-gate copy now scrolls above a padded action area with a 24 px
+  rendered bottom buffer on Expo web.
 - Fixed the remaining Shelf card metadata orphan-wrap case after 320 px E2E
   showed `Jul` could still land on its own line. Short metadata phrases now stay
   together while separators still allow clean line breaks, and Expo web E2E
