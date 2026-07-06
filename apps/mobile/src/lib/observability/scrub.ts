@@ -3,6 +3,7 @@ const SENSITIVE_CONTEXT_KEY =
 
 const SENSITIVE_VALUE =
   /(@|https?:\/\/|file:\/\/|content:\/\/|\/data\/|\/var\/mobile\/|\/cache\/|\?.*=|barcode|ingredient|pregnan|diagnos|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|skin profile|free text|receipt)/i;
+const MAX_SAFE_CONTEXT_INTEGER = 10_000;
 
 type ScrubbedPrimitive = string | number | boolean | null;
 type ScrubbedValue = ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext;
@@ -20,7 +21,11 @@ function safeErrorName(value: unknown): string {
 
 function scrubValue(value: unknown, depth: number): ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext | undefined {
   if (value === undefined) return undefined;
-  if (value === null || typeof value === 'boolean' || typeof value === 'number') return value;
+  if (value === null || typeof value === 'boolean') return value;
+  if (typeof value === 'number') {
+    if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_CONTEXT_INTEGER) return undefined;
+    return value;
+  }
   if (value instanceof Date) return value.toISOString();
   if (typeof value === 'string') {
     const trimmed = value.trim();

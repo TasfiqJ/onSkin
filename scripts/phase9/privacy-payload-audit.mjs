@@ -79,6 +79,8 @@ block(
 );
 block(errors, /SENSITIVE_CONTEXT_KEY/.test(scrubSource), 'Sentry scrubber is missing sensitive-key guard.');
 block(errors, /SENSITIVE_VALUE/.test(scrubSource), 'Sentry scrubber is missing sensitive-value guard.');
+block(errors, /MAX_SAFE_CONTEXT_INTEGER/.test(scrubSource), 'Sentry scrubber must cap numeric context values.');
+block(errors, /Number\.isSafeInteger\(value\)/.test(scrubSource), 'Sentry scrubber must drop non-integer numeric context values.');
 block(errors, /sanitizeCapturedException/.test(scrubSource), 'Sentry scrubber must expose a captured-exception sanitizer.');
 block(errors, /route|query|url|receipt|ocr|barcode|free_text/i.test(scrubSource), 'Sentry scrubber must explicitly cover route/query/url/receipt/OCR/barcode/free text.');
 block(errors, /redactedErrorForLog/.test(safeLogSource), 'Mobile dev logging must use a redacted error helper.');

@@ -37,6 +37,24 @@ describe('observability context scrubber', () => {
     ).toEqual({ stage: 'paywall', nested: { mode: 'restore', value: 'ok' } });
   });
 
+  it('keeps only small integer counters from numeric context', () => {
+    expect(
+      sanitizeObservabilityContext({
+        count: 2,
+        retry: -1,
+        elapsed: 10_000,
+        lookupValue: 12_345_678_901,
+        ratio: 0.91,
+        oversized: 10_001,
+        invalid: Number.POSITIVE_INFINITY,
+        nested: {
+          attempts: 3,
+          derived: 0.42,
+        },
+      }),
+    ).toEqual({ count: 2, retry: -1, elapsed: 10_000, nested: { attempts: 3 } });
+  });
+
   it('redacts captured exception messages and sensitive names before vendor capture', () => {
     const raw = new TypeError('jwt=secret person@example.com file:///var/mobile/photo.jpg');
     raw.name = 'TypeError';

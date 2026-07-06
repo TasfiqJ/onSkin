@@ -212,6 +212,13 @@
 - Why safe: Even when `extra` context is scrubbed, raw exception objects can include sensitive messages, stack text, URLs, local file paths, provider responses, tokens, user identifiers, OCR/product text, or attached fields. Crash reporting should not receive those values for a health-adjacent app.
 - Regression: `scrub.test.ts` proves captured exceptions do not carry sensitive messages, stack fragments, or sensitive names. `phase9:privacy-payload-audit` now requires throwable sanitization and fails if `Sentry.captureException(error, ...)` returns.
 
+## Sentry numeric context minimization
+
+- Files: `apps/mobile/src/lib/observability/scrub.ts`, `apps/mobile/src/lib/observability/scrub.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: `sanitizeObservabilityContext()` now keeps only finite safe integers between `-10000` and `10000`. Large numbers, non-finite numbers, and precise decimal values are dropped before they can become Sentry `extra` or sanitized tag values.
+- Why safe: Modified or future call sites could attach numeric barcodes, database IDs, or derived skin/photo scores under otherwise safe keys. Crash context only needs small counters and coarse state.
+- Regression: `scrub.test.ts` covers small counters, large identifiers, decimals, and infinities. `phase9:privacy-payload-audit` now fails if the numeric cap or non-integer rejection is removed.
+
 ## Data export cache cleanup
 
 - Files: `apps/mobile/src/features/settings/actions.ts`, `apps/mobile/src/features/settings/localPrivateDataKeys.ts`, `scripts/phase9/data-rights-smoke.mjs`.
