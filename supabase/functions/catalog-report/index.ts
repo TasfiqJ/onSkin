@@ -1,6 +1,7 @@
 // User correction reports. Users can report wrong/missing product data without
 // writing global catalog tables.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -132,7 +133,8 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
 
-  const authHeader = req.headers.get('Authorization') ?? '';
+  const authHeader = bearerAuthorizationHeader(req);
+  if (!authHeader) return json({ error: 'unauthorized' }, 401);
   const caller = createClient(supabaseUrl, publishableKey, {
     global: { headers: { Authorization: authHeader } },
     auth: { persistSession: false, autoRefreshToken: false },

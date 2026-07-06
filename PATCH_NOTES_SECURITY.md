@@ -802,3 +802,10 @@
 - Change: Phase 2 env validation now uses the same secret-looking public key-name markers as the Phase 9/10/11 readiness guard.
 - Why safe: Early infrastructure checks should fail on the same public secret-name classes as later beta and launch gates.
 - Regression: An expected-failure probe with `EXPO_PUBLIC_PERSONAL_TOKEN=blocked` verifies that broader secret-looking public key names are blocked.
+
+## User Edge Bearer auth parsing
+
+- Files: `supabase/functions/_shared/auth.ts`, user-callable Supabase Edge Functions, `scripts/phase9/edge-auth-smoke.mjs`.
+- Change: User-JWT Edge Functions now require a strict `Authorization: Bearer <token>` header through a shared parser before direct auth validation or caller-scoped RLS clients are created.
+- Why safe: Modified clients should not be able to rely on raw JWT headers or inconsistent ad hoc Bearer stripping. The shared parser keeps auth handling consistent across data rights, consent, catalog, and subscription grant paths.
+- Regression: Phase 9 Edge auth smoke enforces shared helper usage and blocks reintroducing ad hoc Bearer string replacement.

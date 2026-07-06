@@ -9,6 +9,7 @@ const livePublicForms = read('scripts/phase9/live-public-forms.mjs');
 const liveCatalogRateLimit = read('scripts/phase9/live-catalog-rate-limit.mjs');
 const liveOrderReportPoll = read('scripts/phase9/live-order-report-poll.mjs');
 const liveRevenueCatWebhook = read('scripts/phase9/live-revenuecat-webhook.mjs');
+const userEdgeAuthHelper = read('supabase/functions/_shared/auth.ts');
 const userEdgeBodyHelper = read('supabase/functions/_shared/body.ts');
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
 
@@ -70,6 +71,13 @@ function externalProviderFetchChecks(source) {
 
 block(
   errors,
+  /function bearerToken/.test(userEdgeAuthHelper) &&
+    /\^Bearer\\s\+\(\\S\+\)\$/i.test(userEdgeAuthHelper) &&
+    /function bearerAuthorizationHeader/.test(userEdgeAuthHelper),
+  'Shared user Edge auth helper must require a Bearer token and normalize forwarded Authorization headers.',
+);
+block(
+  errors,
   /USER_EDGE_BODY_MAX_BYTES/.test(userEdgeBodyHelper) &&
     /16384/.test(userEdgeBodyHelper) &&
     /1024/.test(userEdgeBodyHelper) &&
@@ -94,6 +102,8 @@ for (const fn of userJwtFunctions) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   const handlerSource = source.slice(source.indexOf('Deno.serve'));
   block(errors, /auth\.getUser/.test(source), `${fn} must validate caller JWT with auth.getUser.`);
+  block(errors, /bearer(?:Token|AuthorizationHeader)\(req\)/.test(source), `${fn} must use strict shared Bearer auth parsing.`);
+  block(errors, !/replace\(\s*\/\^?Bearer/.test(source), `${fn} must not strip Bearer auth with ad hoc string replacement.`);
   block(errors, /401/.test(source) && /unauthorized/i.test(source), `${fn} must reject missing/wrong auth with 401.`);
   block(errors, /req\.method === 'OPTIONS'/.test(handlerSource), `${fn} must return early for CORS preflight requests.`);
   block(errors, /req\.method !== 'POST'/.test(handlerSource), `${fn} must reject non-POST execution methods.`);

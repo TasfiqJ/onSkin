@@ -5,6 +5,7 @@
 // only after that proof to append the revocation ledger row and perform the
 // promised cleanup for prior cloud/shared data.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -222,8 +223,8 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
 
-  const authHeader = req.headers.get('Authorization') ?? '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const token = bearerToken(req);
+  if (!token) return json({ error: 'UNAUTHORIZED' }, 401);
   const supabase = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

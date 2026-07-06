@@ -18,6 +18,7 @@
 - `node --check scripts/phase9/live-consent-withdrawal.mjs`
 - `node --check scripts/phase9/data-rights-smoke.mjs`
 - `node --check scripts/phase9/edge-auth-smoke.mjs`
+- `node --check supabase/functions/_shared/auth.ts`
 - `node --check scripts/phase9/release-smoke.mjs`
 - `node --check scripts/phase10/beta-readiness.mjs`
 - `node --check scripts/phase11/launch-readiness.mjs`
@@ -354,6 +355,8 @@
   - Proves Phase 2 uses the same secret-looking public key-name markers as the later readiness gates.
 - `scripts/phase9/lib.mjs`, `scripts/phase10/beta-readiness.mjs`, `scripts/phase11/launch-readiness.mjs`
   - Proves beta and public-launch readiness gates share the public-env secret guard instead of relying on operators to run earlier gates.
+- `supabase/functions/_shared/auth.ts` / `scripts/phase9/edge-auth-smoke.mjs`
+  - Proves user-callable Edge Functions require the shared strict Bearer parser and no longer use ad hoc Bearer string replacement.
 - `apps/mobile/package.json` / `package-lock.json`
   - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.
   - Verified with `npm test`, `npm run typecheck`, `npm run lint`, `npm audit --audit-level=moderate`, and the audit-enabled Phase 9 dependency SBOM.

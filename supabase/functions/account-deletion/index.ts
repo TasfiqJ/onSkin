@@ -5,6 +5,7 @@
 // is used only inside this function for provider deletion, storage purge, and the
 // final auth.users delete.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { fetchWithTimeout, readLimitedResponseJson, readLimitedResponseText } from '../_shared/fetch.ts';
 
@@ -363,8 +364,8 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
 
-  const authHeader = req.headers.get('Authorization') ?? '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const token = bearerToken(req);
+  if (!token) return json({ error: 'UNAUTHORIZED' }, 401);
   const supabase = createClient(supabaseUrl, serviceKey);
 
   const { data: userData, error: userErr } = await supabase.auth.getUser(token);

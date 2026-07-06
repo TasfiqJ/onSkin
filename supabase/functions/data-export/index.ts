@@ -3,6 +3,7 @@
 // exported.
 // Deploy with JWT verification enabled: `supabase functions deploy data-export`
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey =
@@ -146,7 +147,8 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
 
-  const authHeader = req.headers.get('Authorization') ?? '';
+  const authHeader = bearerAuthorizationHeader(req);
+  if (!authHeader) return json('unauthorized', 401);
 
   const supabase = createClient(supabaseUrl, publishableKey, {
     global: { headers: { Authorization: authHeader } },

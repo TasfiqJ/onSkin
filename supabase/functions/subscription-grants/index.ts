@@ -2,6 +2,7 @@
 // Runs with the service-role key and verify_jwt=true. Clients can request a grant,
 // but cannot write entitlements directly.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -37,7 +38,8 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
 
-  const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '');
+  const token = bearerToken(req);
+  if (!token) return json({ error: 'unauthorized' }, 401);
   const supabase = createClient(supabaseUrl, serviceKey);
   const { data: userData, error: userErr } = await supabase.auth.getUser(token);
   const userId = userData.user?.id;
