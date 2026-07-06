@@ -844,3 +844,10 @@
 - Change: Phase 2 RLS smoke cleanup warnings now use redacted error names or stable error codes and no longer print temporary user emails, synthetic product IDs, or raw provider/database messages.
 - Why safe: Phase 2 live smoke output is often copied into infrastructure tickets and launch notes. Cleanup failures should be actionable without leaking diagnostic payloads.
 - Regression: The script passes `node --check`, and the cleanup-warning scan has no raw `.message`, email, or product-ID cleanup interpolation matches.
+
+## Phase 2 RLS smoke app-env fail-closed
+
+- Files: `scripts/phase2/supabase-rls-smoke.mjs`.
+- Change: Missing or invalid app-environment values now resolve to `production` before the live RLS smoke script decides whether production is allowed.
+- Why safe: Live Supabase smoke tests are destructive against temporary users and seed rows. A shell with production Supabase credentials but no app-env flag must refuse by default instead of assuming development.
+- Regression: The expected-failure probe with fake non-placeholder Supabase credentials and no app env exits before network work with the production refusal message.

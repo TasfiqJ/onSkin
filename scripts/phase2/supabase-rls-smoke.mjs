@@ -35,7 +35,14 @@ const publishableKey =
   process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
   process.env.SUPABASE_ANON_KEY;
 const secretKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
-const appEnv = process.env.EXPO_PUBLIC_APP_ENV ?? process.env.APP_VARIANT ?? 'development';
+const appEnv = readScriptAppEnvironment();
+
+function readScriptAppEnvironment() {
+  const raw = process.env.EXPO_PUBLIC_APP_ENV ?? process.env.APP_ENV ?? process.env.APP_VARIANT;
+  const candidate = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+  if (['development', 'staging', 'production'].includes(candidate)) return candidate;
+  return 'production';
+}
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
