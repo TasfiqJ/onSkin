@@ -1,6 +1,6 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-04T07:07:31.393Z
+Generated at: 2026-07-06T20:49:59.566Z
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
 
@@ -34,17 +34,17 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| apps/mobile/src/lib/iap/revenuecat.ts | present | 17187 | 9db96d033831efebdc5050bc2f435ebab1c2ff9a4b14a55097b5edb1d504e0d8 |
-| apps/mobile/src/features/subscription/store.ts | present | 5495 | ea178e248e63c07a969b6fd3507edb3e971d97dcdd0481e423fe8524882ac4fd |
-| apps/mobile/src/features/subscription/useEntitlement.ts | present | 5351 | b84bcf2c0bb797c436f2fea08a788e5218b43bd02df65617c8691eab7ac3dc64 |
-| apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 611 | 2f173449b93e2a4a12e57d68861df74cc7784739dad8ff8fe93ab3ef71497f49 |
-| apps/mobile/src/app/onboarding/paywall.tsx | present | 8973 | ccf1f62e7ea05abc4cca46755006c9e6619ca80ce96155dc7cb1800114dc96ea |
-| apps/mobile/src/app/paywall/upsell.tsx | present | 4258 | 70ba89273272d67dab64bfab4934f54c4fc89f7ee1f7b5e8dbd7fdf20e79abb1 |
-| apps/mobile/src/app/paywall/winback.tsx | present | 5155 | cc6e6ce9db14ec3457c68e80dc2bf792c53de64564d990c446d0fec5f41687a2 |
-| apps/mobile/src/app/settings/subscription.tsx | present | 7884 | 7e5769d1194f67c9bc1d9a5db57a4cabd21fcf3b06c4b292fd4175b3d45d759d |
-| supabase/functions/revenuecat-webhook/index.ts | present | 8857 | 7fa26941896527bb52fa932872d4d4cc8c7be74005fdd4e0f0a9f62683480313 |
-| supabase/functions/subscription-grants/index.ts | present | 3730 | 6a64618db961a876ecea59ffeacdf6ec863f0b83f9ec8e6e2a7d1cba31b69827 |
-| supabase/functions/account-deletion/index.ts | present | 3999 | 00d5526d6f4e760ec5ecaa1a943e5b91ff606bfd0d5d4a5b4e43e65d148ad44d |
+| apps/mobile/src/lib/iap/revenuecat.ts | present | 17966 | 90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a |
+| apps/mobile/src/features/subscription/store.ts | present | 6484 | f54147a9a6bee0f56a23a0ca830777b956063aff2c36e9f503a4f7d971001dea |
+| apps/mobile/src/features/subscription/useEntitlement.ts | present | 5134 | 38851383ef23dda719aae4445a3ca919de06a1fb49aa42543cfe6bd9986d56f3 |
+| apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 579 | 68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675 |
+| apps/mobile/src/app/onboarding/paywall.tsx | present | 11284 | 988330bd831abc24cdbfc3bdd4e79dda24a4f6899b0bb1617c93eca8d506d10a |
+| apps/mobile/src/app/paywall/upsell.tsx | present | 4753 | 093b40d03d803b240409a2f33d52de410085bc854c821a95ce8d0afdbe11e515 |
+| apps/mobile/src/app/paywall/winback.tsx | present | 6284 | 3da03e9e8910404da62ea7dabc3679a2aacac93613321ddee0c8d09ea1702ca6 |
+| apps/mobile/src/app/settings/subscription.tsx | present | 9197 | c3062bf8ead7ce389a0b344d7f698676f66e87b69e7b4986029a6a17b0136255 |
+| supabase/functions/revenuecat-webhook/index.ts | present | 12847 | 7899144905d1966dccc526e106dfb1ace848c6f492383a97699d5859a7a49fa5 |
+| supabase/functions/subscription-grants/index.ts | present | 4492 | e146744807f42d221bc26771728efa6360da03b586a91e1d77c01d3b2c624d7f |
+| supabase/functions/account-deletion/index.ts | present | 15795 | d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73 |
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |
 | docs/phase-6/payments-runbook.md | present | 2953 | 8b415aab8405ed7e1109fe6a7cca91759fc6d6a406c0a08d04df3243edf4191c |
 | docs/phase-6/payments-qa-checklist.md | present | 2599 | 2262a8a44e0d98349b7d4fda5d7350631be6dbd43e185047440f296e178142fb |

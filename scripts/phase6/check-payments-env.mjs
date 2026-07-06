@@ -70,8 +70,9 @@ require(
   'RevenueCat webhook does not verify the HMAC signature header.',
 );
 require(
-  has('supabase/functions/revenuecat-webhook/index.ts', /await req\.text\(\)/),
-  'RevenueCat webhook must read the raw request body before JSON parsing.',
+  has('supabase/functions/revenuecat-webhook/index.ts', /readLimitedText\(req,\s*maxBodyBytes\)/) &&
+    has('supabase/functions/revenuecat-webhook/index.ts', /JSON\.parse\(rawBody\s*\|\|\s*'\{\}'\)/),
+  'RevenueCat webhook must read the bounded raw request body before JSON parsing.',
 );
 require(
   has('supabase/functions/account-deletion/index.ts', /DELETE/),

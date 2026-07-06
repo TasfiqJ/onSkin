@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Phase 6 payments readiness checker after it falsely failed the
+  RevenueCat webhook because it only accepted the old unbounded `req.text()`
+  pattern. The webhook already uses the safer bounded `readLimitedText(req,
+  maxBodyBytes)` path and parses `rawBody` only after signature verification, so
+  the checker now validates that implementation. Phase 6 baseline now passes;
+  strict mode remains blocked only by brand/legal URLs and external
+  RevenueCat/iOS/Android/webhook/finance evidence. Refreshed the generated
+  payments QA packet with current hashes.
 - Re-ran Phase 5 native readiness after the phone UI sweeps. This Windows
   workspace has no `adb`, Android emulator, or `xcodebuild` available, so real
   iOS/Android simulator/device execution remains device-gated. The non-strict

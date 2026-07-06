@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-04T07:07:31.393Z",
+  "generatedAt": "2026-07-06T20:49:59.566Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "evidence": {
     "rcOfferingReviewed": false,
@@ -63,68 +63,68 @@
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 17187,
-      "sha256": "9db96d033831efebdc5050bc2f435ebab1c2ff9a4b14a55097b5edb1d504e0d8"
+      "bytes": 17966,
+      "sha256": "90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
       "exists": true,
-      "bytes": 5495,
-      "sha256": "ea178e248e63c07a969b6fd3507edb3e971d97dcdd0481e423fe8524882ac4fd"
+      "bytes": 6484,
+      "sha256": "f54147a9a6bee0f56a23a0ca830777b956063aff2c36e9f503a4f7d971001dea"
     },
     {
       "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
       "exists": true,
-      "bytes": 5351,
-      "sha256": "b84bcf2c0bb797c436f2fea08a788e5218b43bd02df65617c8691eab7ac3dc64"
+      "bytes": 5134,
+      "sha256": "38851383ef23dda719aae4445a3ca919de06a1fb49aa42543cfe6bd9986d56f3"
     },
     {
       "path": "apps/mobile/src/features/subscription/useSubscriptionOffering.ts",
       "exists": true,
-      "bytes": 611,
-      "sha256": "2f173449b93e2a4a12e57d68861df74cc7784739dad8ff8fe93ab3ef71497f49"
+      "bytes": 579,
+      "sha256": "68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675"
     },
     {
       "path": "apps/mobile/src/app/onboarding/paywall.tsx",
       "exists": true,
-      "bytes": 8973,
-      "sha256": "ccf1f62e7ea05abc4cca46755006c9e6619ca80ce96155dc7cb1800114dc96ea"
+      "bytes": 11284,
+      "sha256": "988330bd831abc24cdbfc3bdd4e79dda24a4f6899b0bb1617c93eca8d506d10a"
     },
     {
       "path": "apps/mobile/src/app/paywall/upsell.tsx",
       "exists": true,
-      "bytes": 4258,
-      "sha256": "70ba89273272d67dab64bfab4934f54c4fc89f7ee1f7b5e8dbd7fdf20e79abb1"
+      "bytes": 4753,
+      "sha256": "093b40d03d803b240409a2f33d52de410085bc854c821a95ce8d0afdbe11e515"
     },
     {
       "path": "apps/mobile/src/app/paywall/winback.tsx",
       "exists": true,
-      "bytes": 5155,
-      "sha256": "cc6e6ce9db14ec3457c68e80dc2bf792c53de64564d990c446d0fec5f41687a2"
+      "bytes": 6284,
+      "sha256": "3da03e9e8910404da62ea7dabc3679a2aacac93613321ddee0c8d09ea1702ca6"
     },
     {
       "path": "apps/mobile/src/app/settings/subscription.tsx",
       "exists": true,
-      "bytes": 7884,
-      "sha256": "7e5769d1194f67c9bc1d9a5db57a4cabd21fcf3b06c4b292fd4175b3d45d759d"
+      "bytes": 9197,
+      "sha256": "c3062bf8ead7ce389a0b344d7f698676f66e87b69e7b4986029a6a17b0136255"
     },
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",
       "exists": true,
-      "bytes": 8857,
-      "sha256": "7fa26941896527bb52fa932872d4d4cc8c7be74005fdd4e0f0a9f62683480313"
+      "bytes": 12847,
+      "sha256": "7899144905d1966dccc526e106dfb1ace848c6f492383a97699d5859a7a49fa5"
     },
     {
       "path": "supabase/functions/subscription-grants/index.ts",
       "exists": true,
-      "bytes": 3730,
-      "sha256": "6a64618db961a876ecea59ffeacdf6ec863f0b83f9ec8e6e2a7d1cba31b69827"
+      "bytes": 4492,
+      "sha256": "e146744807f42d221bc26771728efa6360da03b586a91e1d77c01d3b2c624d7f"
     },
     {
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 3999,
-      "sha256": "00d5526d6f4e760ec5ecaa1a943e5b91ff606bfd0d5d4a5b4e43e65d148ad44d"
+      "bytes": 15795,
+      "sha256": "d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73"
     },
     {
       "path": "supabase/migrations/20260615000027_phase6_payments.sql",
