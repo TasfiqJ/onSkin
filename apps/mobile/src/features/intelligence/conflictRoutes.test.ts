@@ -41,4 +41,19 @@ describe('Conflict route contracts', () => {
     expect(source).not.toContain('Retinol on cycling night 2, glycolic on night 1');
     expect(source).not.toContain("We've left both in your AM routine");
   });
+
+  it('keeps dense conflict sheets scrollable and actions touchable on short phones', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const sheetMaxHeight = Math.max(320, height - 24)');
+    expect(source).toContain('maxHeight: sheetMaxHeight');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('contentContainerClassName="pb-10"');
+    expect(source).toContain('className="min-h-[48px] items-center justify-center py-2"');
+    expect(source).toContain('className="mt-4 min-h-[48px] items-center justify-center"');
+    expect(source).toContain('className="min-h-[48px] items-center justify-center py-3"');
+    expect(source).not.toContain('className="items-center py-2"');
+    expect(source).not.toContain('className="mt-4 items-center"');
+  });
 });

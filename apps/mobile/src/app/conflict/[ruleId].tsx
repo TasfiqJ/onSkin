@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
@@ -254,6 +254,9 @@ function ConflictFrame({
   conflict: DetectedConflict | undefined;
   onDismiss: () => void;
 }) {
+  const { height } = useWindowDimensions();
+  const sheetMaxHeight = Math.max(320, height - 24);
+
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: backdrop }}>
       <Pressable
@@ -262,22 +265,31 @@ function ConflictFrame({
         accessibilityLabel="Dismiss"
         onPress={onDismiss}
       />
-      <View className="rounded-t-sheet px-7 pb-10 pt-4" style={{ backgroundColor: sheetBg }}>
+      <View
+        className="rounded-t-sheet px-7 pt-4"
+        style={{ backgroundColor: sheetBg, maxHeight: sheetMaxHeight }}
+      >
         <View
           className="mb-5 h-[5px] w-10 self-center rounded-[3px]"
           style={{ backgroundColor: grabber }}
         />
 
-        {!conflict ? (
-          <>
-            <Text variant="body" tone="muted" className="py-6 text-center">
-              This conflict is no longer on your shelf.
-            </Text>
-            <Button label="Close" variant="ghost" onPress={onDismiss} />
-          </>
-        ) : (
-          <ConflictBody conflict={conflict} onDismiss={onDismiss} />
-        )}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-10"
+          keyboardShouldPersistTaps="handled"
+        >
+          {!conflict ? (
+            <>
+              <Text variant="body" tone="muted" className="py-6 text-center">
+                This conflict is no longer on your shelf.
+              </Text>
+              <Button label="Close" variant="ghost" onPress={onDismiss} />
+            </>
+          ) : (
+            <ConflictBody conflict={conflict} onDismiss={onDismiss} />
+          )}
+        </ScrollView>
       </View>
     </View>
   );
@@ -416,7 +428,7 @@ function StandardBody({
         />
         <Pressable
           accessibilityRole="button"
-          className="items-center py-2"
+          className="min-h-[48px] items-center justify-center py-2"
           onPress={async () => {
             await recordChoice(conflict, 'use_together');
             await qc.invalidateQueries({ queryKey: ['shelf'] });
@@ -439,7 +451,7 @@ function StandardBody({
       {canShareConflictCard(conflict) ? (
         <Pressable
           accessibilityRole="button"
-          className="mt-4 items-center"
+          className="mt-4 min-h-[48px] items-center justify-center"
           onPress={() => router.push(`/share/conflict/${r.id}`)}
         >
           <Text variant="bodySm" tone="muted" className="font-sans-semibold">
@@ -535,7 +547,7 @@ function ReassureBody({
       {canShareConflictCard(conflict) ? (
         <Pressable
           accessibilityRole="button"
-          className="mt-4 items-center"
+          className="mt-4 min-h-[48px] items-center justify-center"
           onPress={() => router.push(`/share/conflict/${r.id}`)}
         >
           <Text variant="bodySm" tone="muted" className="font-sans-semibold">
@@ -614,7 +626,11 @@ function SafetyBody({
 
       <View className="mt-6 gap-2">
         <Button label="Suggest a gentler routine" variant="inverse" onPress={onDismiss} />
-        <Pressable accessibilityRole="button" className="items-center py-3" onPress={onDismiss}>
+        <Pressable
+          accessibilityRole="button"
+          className="min-h-[48px] items-center justify-center py-3"
+          onPress={onDismiss}
+        >
           <Text className="font-sans-semibold text-[15px]" style={{ color: NIGHT_FAINT }}>
             Keep it on my shelf
           </Text>

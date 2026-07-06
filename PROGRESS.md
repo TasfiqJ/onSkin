@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the conflict detail short-phone sheet after 320x568 E2E with real
+  retinol/glycolic shelf data showed the dense sheet clipping its title and
+  context offscreen while `Use together anyway` rendered as a 40 px target.
+  Conflict sheets now cap to viewport height, scroll dense content internally,
+  and keep secondary, share, and safety actions at 48 px; E2E verified top
+  content visibility, reachable actions, and the direct-entry exit back to
+  Shelf.
 - Fixed the progress review short-phone action clip after 320x568 E2E showed
   `/progress/review` pushing `Retake` and `Save to my phone` below the viewport.
   The review hero now scales down on compact phones, the quality note spacing
