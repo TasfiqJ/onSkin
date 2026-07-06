@@ -4,6 +4,7 @@ import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
+import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import {
   catalogQualityCopy,
   catalogQualityLabel,
@@ -429,7 +430,7 @@ export default function ProductDetailScreen() {
             c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
           return (
             <Pressable
-              key={c.rule.id}
+              key={conflictKey(c)}
               accessibilityRole="button"
               onPress={() => router.push(`/conflict/${c.rule.id}`)}
               className="mt-3 flex-row gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5"

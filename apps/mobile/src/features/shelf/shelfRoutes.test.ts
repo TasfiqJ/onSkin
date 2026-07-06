@@ -149,7 +149,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
     expect(source).not.toContain('title="Capture the ingredient label"');
-    expect(source).not.toContain('<View\n              className="absolute left-8 right-8 top-[118px] h-28 rounded-[18px]"');
+    expect(source).not.toContain(
+      '<View\n              className="absolute left-8 right-8 top-[118px] h-28 rounded-[18px]"',
+    );
   });
 
   it('keeps the Shelf catalog search row inside narrow phones', () => {
@@ -168,13 +170,9 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf OCR manual review controls from overlapping on short phones', () => {
     const source = readAppRoute('shelf/ocr.tsx');
 
-    expect(source).toContain(
-      "contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}",
-    );
+    expect(source).toContain("contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}");
     expect(source).toContain("{state === 'review' ? (");
-    expect(source).toMatch(
-      /\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/,
-    );
+    expect(source).toMatch(/\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/);
     expect(source).not.toContain('contentContainerClassName="pb-5"');
   });
 
@@ -234,5 +232,15 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain("'Timing note with '");
     expect(source).not.toContain("'Paired with '");
+  });
+
+  it('keys repeated product-detail conflict rows by rule and product pair', () => {
+    const source = readAppRoute('shelf/[id].tsx');
+
+    expect(source).toContain(
+      "import { conflictKey } from '@/features/intelligence/conflictIdentity';",
+    );
+    expect(source).toContain('key={conflictKey(c)}');
+    expect(source).not.toContain('key={c.rule.id}');
   });
 });

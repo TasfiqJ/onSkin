@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed product-detail duplicate conflict rendering after 320x568 E2E with a
+  duplicated retinol shelf fixture showed a red runtime warning toast over the
+  detail UI. Product detail conflict rows now use the existing rule-plus-product
+  `conflictKey`, so repeated same-rule interactions render cleanly; E2E verified
+  no duplicate-key console errors, lower conflict rows scroll correctly, lifecycle
+  actions stay reachable, and direct-entry Back returns to Shelf.
 - Fixed the conflict detail short-phone sheet after 320x568 E2E with real
   retinol/glycolic shelf data showed the dense sheet clipping its title and
   context offscreen while `Use together anyway` rendered as a 40 px target.
