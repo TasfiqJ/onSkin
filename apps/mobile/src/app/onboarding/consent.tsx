@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
@@ -80,8 +80,12 @@ export default function HealthConsentScreen() {
 
   return (
     <Screen>
-      <View className="flex-1">
-        <Text variant="title" className="mt-10">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-6 pt-10"
+      >
+        <Text variant="title">
           Before the quiz,{' '}
           <Text variant="title" italic tone="clay">
             your privacy.
@@ -123,13 +127,13 @@ export default function HealthConsentScreen() {
             </Text>
           </View>
         ) : null}
-      </View>
-      <View className="pb-4">
+      </ScrollView>
+      <View className="pb-6 pt-2">
         <Button label="I agree. Continue" onPress={agree} disabled={busy} />
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ disabled: busy }}
-          className="mt-3 items-center py-3"
+          className="mt-3 min-h-[48px] items-center justify-center py-2"
           disabled={busy}
           onPress={() => void decline()}
         >
@@ -139,7 +143,7 @@ export default function HealthConsentScreen() {
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          className="mt-1 items-center py-3"
+          className="mt-1 min-h-[48px] items-center justify-center py-2"
           onPress={openHealthDataPolicy}
         >
           {/* BLOCKED: B-PRIVACY-COPY. Links to the Consumer Health Data Privacy Policy. */}

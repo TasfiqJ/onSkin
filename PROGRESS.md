@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the onboarding health-data consent screen after 320x568 E2E showed the
+  fixed action stack covering legal copy. Consent copy now scrolls above the
+  buffered agreement actions, with all three action targets staying at 48 px or
+  taller on short phones.
 - Buffered the shared deferred-surface Back CTA after 320 px E2E showed deferred
   commerce direct-entry copy placing the only action flush against the bottom edge.
   Deferred launch-gate copy now scrolls above a padded action area with a 24 px

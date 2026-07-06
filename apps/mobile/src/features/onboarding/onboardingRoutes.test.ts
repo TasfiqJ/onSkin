@@ -35,6 +35,20 @@ describe('onboarding route contracts', () => {
     );
   });
 
+  it('keeps health-data consent copy scrollable above buffered phone actions', () => {
+    const source = readAppRoute('onboarding/consent.tsx');
+
+    expect(source).toContain('ScrollView');
+    expect(source).toContain('className="flex-1"');
+    expect(source).toContain('contentContainerClassName="pb-6 pt-10"');
+    expect(source).toContain('className="pb-6 pt-2"');
+    expect(source).toContain('className="mt-3 min-h-[48px] items-center justify-center py-2"');
+    expect(source).toContain('className="mt-1 min-h-[48px] items-center justify-center py-2"');
+    expect(source).not.toContain('<View className="flex-1">');
+    expect(source).not.toContain('className="mt-3 items-center py-3"');
+    expect(source).not.toContain('className="mt-1 items-center py-3"');
+  });
+
   it('keeps account onboarding fail-closed before account-created side effects', () => {
     const source = readAppRoute('onboarding/account.tsx');
 
