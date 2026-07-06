@@ -17,6 +17,7 @@ vi.mock('@/lib/consent/consent', () => ({
 describe('health-data onboarding consent', () => {
   beforeEach(() => {
     mocks.recordConsent.mockClear();
+    mocks.recordConsent.mockResolvedValue(undefined);
   });
 
   it('records an explicit grant before the quiz can start', async () => {
@@ -39,5 +40,17 @@ describe('health-data onboarding consent', () => {
       version: HEALTH_DATA_CONSENT.version,
       consentText: HEALTH_DATA_CONSENT.declineText,
     });
+  });
+
+  it('propagates grant persistence failure so the quiz can stay locked', async () => {
+    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
+
+    await expect(grantHealthDataCollectionConsent()).rejects.toThrow('ledger unavailable');
+  });
+
+  it('propagates decline persistence failure so declined state is not overstated', async () => {
+    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
+
+    await expect(declineHealthDataCollectionConsent()).rejects.toThrow('ledger unavailable');
   });
 });

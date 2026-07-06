@@ -58,6 +58,7 @@
 - `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/features/photos/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/community/shareNote.test.ts src/features/community/community.test.ts src/features/community/claimsafety.test.ts src/features/community/communityRoutes.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/onboarding/healthConsent.test.ts src/features/onboarding/consentCopy.test.ts src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/photos/sharePhoto.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/settings/actions.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
@@ -143,6 +144,9 @@
   - Proves empty quiz answers are incomplete instead of ready for reveal scoring.
   - Proves every single-select and multi-select question requires a valid current option.
   - Proves empty multi-select answers and stale option IDs keep the profile incomplete.
+- `apps/mobile/src/features/onboarding/healthConsent.test.ts`, `apps/mobile/src/features/onboarding/consentCopy.test.ts`, `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`
+  - Prove health-data collection consent grant/decline rows use the dedicated copy/version and propagate ledger failures.
+  - Prove the onboarding consent route keeps quiz navigation after the grant call, shows stable retry copy on save failure, and does not return to non-fatal consent-write catches.
 - `apps/mobile/src/features/subscription/priceDisplay.test.ts`
   - Proves loading states use approved fallback price labels.
   - Proves RevenueCat package labels override fallback labels when available.
@@ -358,6 +362,7 @@
 - `apps/mobile/src/features/settings/actions.test.ts`
   - Verifies data export unavailable-share paths still delete the plaintext export file and surface export-unavailable copy from the You tab instead of firing the success/review path.
 - `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`
+  - Verifies health-data collection consent failures keep the quiz locked and visible retry copy present.
   - Verifies analyzing does not silently swallow local profile persistence failure before reveal.
   - Verifies the failed-save recovery path remains visible.
 - `apps/mobile/src/lib/errors/userFacing.test.ts`

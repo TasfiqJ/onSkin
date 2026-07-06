@@ -17,6 +17,9 @@ export const HEALTH_DATA_CONSENT = {
   declinedTitle: 'No consent recorded',
   declinedBody:
     "We won't collect quiz health data unless you agree. The personalized quiz stays locked for now.",
+  saveFailedTitle: 'Consent not saved',
+  saveFailedBody:
+    "We couldn't record your health-data choice. Please try again before starting the quiz.",
   // Exact text recorded + hashed into the immutable consents ledger.
   fullText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent. ' +

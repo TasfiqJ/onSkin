@@ -20,6 +20,7 @@
 - SEC-P1-014: RevenueCat webhook signature replay tolerance now falls back safely on malformed env values, and public signature failures no longer reveal validation reasons.
 - SEC-P1-015: RevenueCat webhook now persists allowlisted event snapshots instead of raw provider webhook JSON in subscription/payment JSON columns.
 - SEC-P1-016: RevenueCat webhook now rejects oversized raw request bodies with a bounded pre-parse reader and validates `REVENUECAT_WEBHOOK_MAX_BYTES`.
+- SEC-P1-017: Onboarding health-data collection consent now fails closed; the quiz stays locked and stable retry copy appears if the immutable consent ledger write fails.
 - SEC-P2-002: Public waitlist/growth endpoints now require Turnstile in production or when public-form protection is explicitly enabled.
 - SEC-P2-003: Phase 9 now has an explicit live Supabase two-user/storage adversarial harness.
 - SEC-P2-004: Security scanner coverage is now represented by a checked GitHub Actions workflow.

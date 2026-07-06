@@ -614,6 +614,13 @@
 - Why safe: These analytics events can become operational evidence for sensitive health-data choices. They should not claim a completed opt-in when the immutable, versioned consent row failed to persist.
 - Regression: Consent tests prove every grant event waits for the ledger call and is not emitted on ledger failure.
 
+## Health-data consent fail-closed quiz gate
+
+- Files: `apps/mobile/src/app/onboarding/consent.tsx`, `apps/mobile/src/features/onboarding/consentCopy.ts`, `apps/mobile/src/features/onboarding/consentCopy.test.ts`, `apps/mobile/src/features/onboarding/healthConsent.test.ts`, `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`.
+- Change: The health-data collection consent route no longer treats a failed `health_data_collection` ledger write as non-fatal. Grant failures keep the user on the consent screen with stable retry copy; declined state and `health_consent_declined` analytics now apply only after the false consent row saves.
+- Why safe: The quiz collects health-adjacent skin goals, sensitivities, and product data. That collection must not begin unless the app has durable consent evidence for the exact copy/version shown.
+- Regression: Onboarding consent tests prove grant/decline ledger failures propagate, the route keeps quiz navigation after the grant call, and the old non-fatal catch cannot return.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

@@ -14,6 +14,8 @@ const visibleConsentCopy = [
   HEALTH_DATA_CONSENT.declineCta,
   HEALTH_DATA_CONSENT.declinedTitle,
   HEALTH_DATA_CONSENT.declinedBody,
+  HEALTH_DATA_CONSENT.saveFailedTitle,
+  HEALTH_DATA_CONSENT.saveFailedBody,
   PHOTO_CAPTURE_CONSENT.what,
   PHOTO_CAPTURE_CONSENT.why,
   PHOTO_CAPTURE_CONSENT.never,

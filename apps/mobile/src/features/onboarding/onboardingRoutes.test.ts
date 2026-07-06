@@ -9,6 +9,21 @@ function readAppRoute(path: string): string {
 }
 
 describe('onboarding route contracts', () => {
+  it('keeps health-data consent fail-closed before quiz access', () => {
+    const source = readAppRoute('onboarding/consent.tsx');
+
+    expect(source).not.toContain('Non-fatal until the backend is configured');
+    expect(source).toContain('setConsentSaveError(true)');
+    expect(source).toContain('HEALTH_DATA_CONSENT.saveFailedTitle');
+    expect(source).toContain('HEALTH_DATA_CONSENT.saveFailedBody');
+    expect(source.indexOf('grantHealthDataCollectionConsent()')).toBeLessThan(
+      source.indexOf("router.push('/onboarding/quiz')"),
+    );
+    expect(source.indexOf('declineHealthDataCollectionConsent()')).toBeLessThan(
+      source.indexOf("track('health_consent_declined')"),
+    );
+  });
+
   it('does not reveal the profile after a failed local profile save', () => {
     const source = readAppRoute('onboarding/analyzing.tsx');
 

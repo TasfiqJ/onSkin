@@ -34,17 +34,21 @@ function Block({ label, body }: { label: string; body: string }) {
 export default function HealthConsentScreen() {
   const [busy, setBusy] = useState(false);
   const [declined, setDeclined] = useState(false);
+  const [consentSaveError, setConsentSaveError] = useState(false);
   const [policyLinkMissing, setPolicyLinkMissing] = useState(false);
 
   async function agree() {
     if (busy) return;
     setBusy(true);
     setDeclined(false);
+    setConsentSaveError(false);
     track('screen_viewed', { screen_name: 'health_consent' });
     try {
       await grantHealthDataCollectionConsent();
     } catch {
-      // Non-fatal until the backend is configured (B-SUPABASE).
+      setConsentSaveError(true);
+      setBusy(false);
+      return;
     }
     setBusy(false);
     router.push('/onboarding/quiz');
@@ -53,14 +57,16 @@ export default function HealthConsentScreen() {
   async function decline() {
     if (busy) return;
     setBusy(true);
-    track('health_consent_declined');
+    setConsentSaveError(false);
     try {
       await declineHealthDataCollectionConsent();
+      track('health_consent_declined');
+      setDeclined(true);
     } catch {
-      // Non-fatal until the backend is configured (B-SUPABASE).
+      setConsentSaveError(true);
+    } finally {
+      setBusy(false);
     }
-    setDeclined(true);
-    setBusy(false);
   }
 
   function openHealthDataPolicy() {
@@ -104,6 +110,16 @@ export default function HealthConsentScreen() {
             </Text>
             <Text variant="bodySm" tone="muted" className="mt-1">
               {HEALTH_DATA_CONSENT.declinedBody}
+            </Text>
+          </View>
+        ) : null}
+        {consentSaveError ? (
+          <View className="mt-4 rounded-[14px] p-4" style={{ backgroundColor: colors.clayTint }}>
+            <Text variant="body" className="font-sans-semibold">
+              {HEALTH_DATA_CONSENT.saveFailedTitle}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {HEALTH_DATA_CONSENT.saveFailedBody}
             </Text>
           </View>
         ) : null}
