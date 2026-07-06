@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { EngineProfile } from '@/features/intelligence/engine';
-import { STARTER_RULES } from '@/features/intelligence/rules';
+import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
 
 import { generatePlan, type RoutineProduct } from './generate';
@@ -16,6 +16,18 @@ function product(id: string, name: string, ingredients: string[] = []): RoutineP
 function shelfNameProduct(id: string, name: string, ingredients: string[] = []): RoutineProduct {
   const { tags } = tagsForIngredientList([name, ...ingredients]);
   return { id, name, tags: [...tags] };
+}
+
+function withDevFlag<T>(value: boolean, run: () => T): T {
+  const runtime = globalThis as { __DEV__?: boolean };
+  const previous = runtime.__DEV__;
+  runtime.__DEV__ = value;
+  try {
+    return run();
+  } finally {
+    if (previous === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = previous;
+  }
 }
 
 // Maya's shelf (docs/03 §2 worked example) + a cleanser (spec AM shows one).
@@ -125,6 +137,44 @@ describe('front-label shelf names', () => {
     expect(plan.conflicts.some((c) => c.rule.tagA === 'retinoid' && c.rule.tagB === 'aha')).toBe(
       true,
     );
+  });
+});
+
+describe('B-DERM-REVIEW routine launch gate', () => {
+  const retinoidAhaRule = STARTER_RULES.find((r) => r.tagA === 'retinoid' && r.tagB === 'aha')!;
+  const launchProfile: EngineProfile & { goals: string[] } = {
+    sensitivity: 'sensitive',
+    pregnancy: false,
+    goals: [],
+  };
+  const launchShelf = [
+    shelfNameProduct('retinoid', 'Retinol 0.3% Night Serum'),
+    shelfNameProduct('acid', 'Glycolic 7% Toner'),
+  ];
+
+  it('does not surface unreviewed conflict guidance through the default production generator', () => {
+    withDevFlag(false, () => {
+      const plan = generatePlan(launchShelf, launchProfile);
+
+      expect(plan.pm.map((s) => s.name)).toEqual(['Retinol 0.3% Night Serum', 'Glycolic 7% Toner']);
+      expect(plan.conflicts).toEqual([]);
+    });
+  });
+
+  it('surfaces reviewed conflict guidance when production rules are reviewed', () => {
+    const reviewedRetinoidAhaRule = { ...retinoidAhaRule, reviewedBy: 'B-DERM-REVIEW' };
+
+    withDevFlag(false, () => {
+      const plan = generatePlan(
+        launchShelf,
+        launchProfile,
+        shippableRules([reviewedRetinoidAhaRule]),
+      );
+
+      expect(plan.conflicts).toHaveLength(1);
+      expect(plan.conflicts[0]?.rule.id).toBe(retinoidAhaRule.id);
+      expect(plan.conflicts[0]?.rule.reviewedBy).toBe('B-DERM-REVIEW');
+    });
   });
 });
 

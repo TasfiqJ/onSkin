@@ -65,6 +65,12 @@ Value` branch to `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
   check-off path at 320x568. Evidence and bug report are in
   `test-results/human-e2e/2026-07-06/front-label-product-tags/` and
   `docs/e2e-bug-reports/2026-07-06-front-label-product-tags.md`.
+- Added production-mode B-DERM-REVIEW regressions for the core routine loop:
+  `shippableRules()` now has explicit tests for production withholding, reviewed
+  rule pass-through, and dev fixtures; `generatePlan()` now proves its default
+  production path does not surface unreviewed retinoid × glycolic guidance while
+  still surfacing a reviewed fixture rule. This is a local code gate only; final
+  public distribution still needs real reviewer identity and device QA evidence.
 - Fixed a compact-phone footer overlap on `/routine/plan`: the first 320x568
   viewport now ends on a complete evening card above `Start today`, the SPF gap
   note is reachable by deliberate scroll, and the CTA still routes to Today.
