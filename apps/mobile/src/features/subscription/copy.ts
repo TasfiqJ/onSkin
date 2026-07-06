@@ -38,7 +38,8 @@ export const PAYWALL_COPY = {
   },
   // Reverse trial in flight (design 02, docs/08 §6).
   reverseTrial: {
-    bannerTitle: (daysLeft: number) => `You’re exploring Pro. ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left`,
+    bannerTitle: (daysLeft: number) =>
+      `You’re exploring Pro. ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left`,
     bannerBody: 'Everything’s unlocked, no card on file. Keep it after your week?',
     keepCta: 'Keep Pro after your week',
   },
@@ -47,7 +48,11 @@ export const PAYWALL_COPY = {
     pill: 'Your week of Pro is up',
     title: 'Keep the routine you just built.',
     body: 'You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week:',
-    continues: ['The full scheduler & skin-cycling', 'Unlimited conflict checks', 'Your photo timeline & reminders'],
+    continues: [
+      'The full scheduler & skin-cycling',
+      'Unlimited conflict checks',
+      'Your photo timeline & reminders',
+    ],
     keepCta: 'Keep my full routine',
     declineCta: 'Continue on free',
   },
@@ -82,7 +87,8 @@ export const PAYWALL_COPY = {
     cancelNote: (date: string) =>
       `Cancelling is one tap in your App Store settings, and you keep Pro until ${date}. No maze, no calls.`,
     freeTitle: 'You’re on the free plan',
-    freeBody: 'The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.',
+    freeBody:
+      'The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.',
     upgradeCta: 'See OnSkin Pro',
   },
   // Graceful downgrade after a paid expiry (design 08, docs/08 §6).
@@ -91,7 +97,8 @@ export const PAYWALL_COPY = {
     title: 'Everything you made is still here.',
     body: 'Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up.',
     kept: ['Your routine & cycle. Kept', 'Your photos. On your phone', 'Your shelf & streak. Kept'],
-    floorNote: 'On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do.',
+    floorNote:
+      'On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do.',
     renewCta: 'Renew Pro',
     declineCta: 'Keep using free',
   },

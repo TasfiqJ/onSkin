@@ -31,7 +31,9 @@ export default function SuccessScreen() {
   const inTrial = data?.inTrial ?? true; // default to the trial flow (the common path)
   const price = data?.priceLabel ?? offering.data?.annual?.priceLabel ?? 'the store price';
   const endDate = fmt(data?.expiresAt ?? null, inTrial ? PLANS.annual.trialDays : 365);
-  const body = inTrial ? PAYWALL_COPY.success.bodyFor(price) : PAYWALL_COPY.success.bodyForPaid(price);
+  const body = inTrial
+    ? PAYWALL_COPY.success.bodyFor(price)
+    : PAYWALL_COPY.success.bodyForPaid(price);
   const metaRows = inTrial
     ? PAYWALL_COPY.success.metaRowsFor(endDate, price)
     : PAYWALL_COPY.success.metaRowsForPaid(endDate, price);
@@ -58,7 +60,12 @@ export default function SuccessScreen() {
         <Text variant="display" className="text-center" style={{ fontSize: 42, lineHeight: 45 }}>
           {PAYWALL_COPY.success.titleFor(firstName)}
         </Text>
-        <Text variant="body" tone="muted" className="mt-3.5 text-center" style={{ lineHeight: 25, maxWidth: 320 }}>
+        <Text
+          variant="body"
+          tone="muted"
+          className="mt-3.5 text-center"
+          style={{ lineHeight: 25, maxWidth: 320 }}
+        >
           {body}
         </Text>
         <View
