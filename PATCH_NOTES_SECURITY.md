@@ -712,6 +712,13 @@
 - Why safe: Sentry can capture unhandled errors outside the app's explicit `captureException()` wrapper. The global hook ensures automatic events still pass through a minimization layer before upload.
 - Regression: `sentry.test.ts` locks the before-send hook and dropped fields, and `phase9:privacy-payload-audit` fails if breadcrumbs, route transaction/grouping fields, or the global scrubber are removed.
 
+## Sentry diagnostic metadata minimization
+
+- Files: `apps/mobile/src/lib/observability/sentry.ts`, `apps/mobile/src/lib/observability/sentry.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: Extended `sanitizeSentryEvent()` to drop top-level log entries, thread traces, spans, modules, measurements, debug metadata, server names, SDK processing metadata, transaction source metadata, and event start timestamps before upload.
+- Why safe: These less common Sentry event fields can carry route, file, device, stack, package, or SDK-processing context that does not need to leave the device for privacy-minimized crash reporting.
+- Regression: `sentry.test.ts` asserts every uncommon diagnostic field is cleared, and `phase9:privacy-payload-audit` fails if the dropped-field list is removed.
+
 ## Client SDK identity reset on local wipe
 
 - Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `apps/mobile/src/features/settings/localPrivateData.test.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, `apps/mobile/src/lib/iap/revenuecat.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`, `scripts/phase9/build-release-qa-packet.mjs`.

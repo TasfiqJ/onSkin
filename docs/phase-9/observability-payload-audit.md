@@ -2,7 +2,7 @@
 
 ## Sentry
 
-The app initializes Sentry with `sendDefaultPii: false`, failed request capture disabled, screenshots disabled, and view hierarchy disabled. `setSentryUser` uses a pseudonymous account ID. `captureException` passes context through `sanitizeObservabilityContext` before sending `extra`, and passes the throwable through `sanitizeCapturedException` so Sentry receives a generic `redacted_exception` instead of raw exception messages, stacks, causes, or attached fields.
+The app initializes Sentry with `sendDefaultPii: false`, failed request capture disabled, screenshots disabled, view hierarchy disabled, performance tracing disabled, and breadcrumbs disabled. `setSentryUser` uses a pseudonymous account ID. `captureException` passes context through `sanitizeObservabilityContext` before sending `extra`, and passes the throwable through `sanitizeCapturedException` so Sentry receives a generic `redacted_exception` instead of raw exception messages, stacks, causes, or attached fields. The global `beforeSend` hook also strips request, context, transaction, fingerprint, log entry, thread, span, module, measurement, debug, server-name, SDK-processing, and transaction-source metadata before upload.
 
 The scrubber drops route params, URLs, query strings, product data, barcodes, OCR text, notes, photo paths, receipt-like values, profile/skin/health-adjacent keys, and free-text-looking values. Captured exception names are reduced to safe names, and sensitive names fall back to `Error`.
 

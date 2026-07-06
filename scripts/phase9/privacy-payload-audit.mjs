@@ -65,8 +65,17 @@ block(
     /breadcrumbs:\s*undefined/.test(sentrySource) &&
     /contexts:\s*undefined/.test(sentrySource) &&
     /fingerprint:\s*undefined/.test(sentrySource) &&
-    /transaction:\s*undefined/.test(sentrySource),
-  'Sentry global sanitizer must drop request, breadcrumb, context, fingerprint, and transaction fields.',
+    /transaction:\s*undefined/.test(sentrySource) &&
+    /debug_meta:\s*undefined/.test(sentrySource) &&
+    /logentry:\s*undefined/.test(sentrySource) &&
+    /measurements:\s*undefined/.test(sentrySource) &&
+    /modules:\s*undefined/.test(sentrySource) &&
+    /sdkProcessingMetadata:\s*undefined/.test(sentrySource) &&
+    /server_name:\s*undefined/.test(sentrySource) &&
+    /spans:\s*undefined/.test(sentrySource) &&
+    /threads:\s*undefined/.test(sentrySource) &&
+    /transaction_info:\s*undefined/.test(sentrySource),
+  'Sentry global sanitizer must drop request, breadcrumb, context, fingerprint, transaction, and diagnostic metadata fields.',
 );
 block(errors, /SENSITIVE_CONTEXT_KEY/.test(scrubSource), 'Sentry scrubber is missing sensitive-key guard.');
 block(errors, /SENSITIVE_VALUE/.test(scrubSource), 'Sentry scrubber is missing sensitive-value guard.');
