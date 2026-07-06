@@ -53,9 +53,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Value` branch to `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
   320x568 Expo web, the local no-card `Explore first` unlock path, and
   `Start today` handoff in
-  `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`. Direct free
-  `/routine/plan` still shows the existing `full_routine` contextual paywall;
-  that is recorded as a product-gating note for a future pay-after-value slice.
+  `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`.
 - Fixed the first-session front-label product-name tagging path after E2E found
   onboarding-entered `Glycolic 7% Toner` was treated as a generic morning toner
   instead of a PM exfoliant. The offline tag layer now recognizes conservative
@@ -71,6 +69,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   production path does not surface unreviewed retinoid × glycolic guidance while
   still surfacing a reviewed fixture rule. This is a local code gate only; final
   public distribution still needs real reviewer identity and device QA evidence.
+- Hardened conflict share-card export failure handling. If the native share
+  availability probe or share sheet rejects after the PNG is captured, the helper
+  now cleans up the temp image and returns the route's share-unavailable path
+  instead of surfacing a card-creation error; capture failures still bubble as
+  card-creation failures. Added focused unit coverage for unavailable sharing,
+  rejected share sheets, probe failures, cleanup, and capture errors. Native
+  share-sheet device QA remains outstanding.
+- Added a value-before-paywall path to contextual Pro gates. First-time free
+  users who direct-open `/routine/plan` now see the full-routine paywall with a
+  no-card `Explore first` reverse-trial action, while expired/lapsed entitlement
+  users remain on the paid re-offer path. Added entitlement eligibility and
+  mobile paywall contract tests, plus a direct-entry branch in
+  `docs/USER_FLOW_TREE.md`; human-simulated E2E evidence is recorded under
+  `test-results/human-e2e/2026-07-06/contextual-routine-explore-first/`.
 - Fixed a compact-phone footer overlap on `/routine/plan`: the first 320x568
   viewport now ends on a complete evening card above `Start today`, the SPF gap
   note is reachable by deliberate scroll, and the CTA still routes to Today.

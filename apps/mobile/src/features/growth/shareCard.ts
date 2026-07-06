@@ -20,13 +20,17 @@ export async function shareConflictCard(ref: RefObject<View | null>): Promise<bo
     result: 'tmpfile',
   });
   try {
-    if (!(await Sharing.isAvailableAsync())) return false;
-    await Sharing.shareAsync(uri, {
-      mimeType: 'image/png',
-      dialogTitle: 'Share your shelf check',
-      UTI: 'public.png',
-    });
-    return true;
+    try {
+      if (!(await Sharing.isAvailableAsync())) return false;
+      await Sharing.shareAsync(uri, {
+        mimeType: 'image/png',
+        dialogTitle: 'Share your shelf check',
+        UTI: 'public.png',
+      });
+      return true;
+    } catch {
+      return false;
+    }
   } finally {
     await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
   }

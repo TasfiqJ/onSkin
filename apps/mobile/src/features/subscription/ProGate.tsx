@@ -8,8 +8,9 @@ import { colors } from '@/theme/tokens';
 import type { GatedFeature } from '@onskin/types';
 
 import { ComplianceRow } from './ComplianceRow';
-import { UPSELL_COPY } from './copy';
+import { PAYWALL_COPY, UPSELL_COPY } from './copy';
 import { dismissPaywall } from './dismissPaywall';
+import { canStartContextualReverseTrial } from './entitlement';
 import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
 import { useSubscriptionOffering } from './useSubscriptionOffering';
@@ -21,10 +22,11 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
   const { height } = useWindowDimensions();
   const { data, isLoading } = useEntitlement();
-  const { startTrial } = useEntitlementActions();
+  const { startReverseTrial, startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
+  const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
 
   useEffect(() => {
     if (locked) track('contextual_paywall_shown', { feature });
@@ -60,6 +62,16 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         Alert.alert(
           'Purchase unavailable',
           'We could not open the store purchase sheet. Please try again.',
+        ),
+    });
+  }
+
+  function onStartReverseTrial() {
+    startReverseTrial.mutate(undefined, {
+      onError: () =>
+        Alert.alert(
+          'Explore first unavailable',
+          'We could not start the no-card Pro week for this account.',
         ),
     });
   }
@@ -110,7 +122,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           variant="body"
           tone="muted"
           className={compactPaywall ? 'mt-2' : 'mt-3'}
-          style={{ fontSize: compactPaywall ? 15 : undefined, lineHeight: compactPaywall ? 21 : 24 }}
+          style={{
+            fontSize: compactPaywall ? 15 : undefined,
+            lineHeight: compactPaywall ? 21 : 24,
+          }}
         >
           {copy.body}
         </Text>
@@ -167,6 +182,61 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             Start free trial
           </Text>
         </Pressable>
+        {showExploreFirst ? (
+          <Pressable
+            accessibilityRole="button"
+            disabled={startReverseTrial.isPending}
+            onPress={onStartReverseTrial}
+            className={
+              compactPaywall
+                ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
+                : 'mt-3 min-h-[52px] flex-row items-center gap-3 rounded-card px-3.5 py-3'
+            }
+            style={{
+              backgroundColor: colors.clayTint,
+              borderWidth: 1,
+              borderColor: 'rgba(165,105,75,0.22)',
+            }}
+          >
+            <View
+              className={
+                compactPaywall
+                  ? 'h-7 w-7 items-center justify-center rounded-full'
+                  : 'h-[34px] w-[34px] items-center justify-center rounded-full'
+              }
+              style={{ backgroundColor: 'rgba(165,105,75,0.15)' }}
+            >
+              <View
+                className="h-3 w-3 rounded-full border-2"
+                style={{ borderColor: colors.clay }}
+              />
+            </View>
+            <View className="flex-1">
+              <Text
+                variant="bodySm"
+                className="font-sans-semibold"
+                style={{
+                  color: colors.clayDeep,
+                  fontSize: compactPaywall ? 12.5 : undefined,
+                  lineHeight: compactPaywall ? 16 : undefined,
+                }}
+              >
+                {PAYWALL_COPY.offer.exploreTitle}
+              </Text>
+              <Text
+                variant="label"
+                style={{
+                  color: colors.clay,
+                  fontSize: compactPaywall ? 10.5 : 11.5,
+                  lineHeight: compactPaywall ? 13 : undefined,
+                }}
+              >
+                {PAYWALL_COPY.offer.exploreBody}
+              </Text>
+            </View>
+            <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
+          </Pressable>
+        ) : null}
         <ComplianceRow />
       </ScrollView>
     </Screen>

@@ -83,6 +83,17 @@ describe('paywall mobile contracts', () => {
     expect(proGate).not.toContain('className="pb-4"');
   });
 
+  it('keeps contextual routine paywalls value-first for first-time free users', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const entitlement = readSource('features/subscription/entitlement.ts');
+
+    expect(proGate).toContain('canStartContextualReverseTrial(data)');
+    expect(proGate).toContain('startReverseTrial.mutate');
+    expect(proGate).toContain('PAYWALL_COPY.offer.exploreTitle');
+    expect(proGate).toContain('PAYWALL_COPY.offer.exploreBody');
+    expect(entitlement).toContain('s.priorPeriodType === null');
+  });
+
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {
     const source = readSource('features/subscription/ComplianceRow.tsx');
 

@@ -230,6 +230,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan` directly and use the visible Back control.
   - Expected result: The user returns to the You tab instead of staying trapped on the plan route.
   - Evidence: Screenshot sequence and route snapshot.
+- Branch: direct-entry contextual Explore first
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/routine/plan` directly as a first-time free user, choose the visible no-card `Explore first` path, then inspect the generated plan.
+  - Expected result: The contextual full-routine paywall offers a value-first reverse-trial path before hard payment, `Explore first` unlocks the current route, and the generated AM/PM plan appears without requiring store pricing.
+  - Evidence: Paywall screenshot, post-unlock plan screenshot, route snapshot, and entitlement state.
 - Branch: compact fixed-footer clearance
   - Priority: Critical
   - Automate later: Yes
@@ -552,7 +558,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/routine/plan`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, and `/routine/adaptation` directly.
-  - Expected result: Free users see the full-routine contextual paywall, not the routine builder, sequencing, ramp, tolerance, or adaptation screen.
+  - Expected result: Free users see the full-routine contextual paywall, not the routine builder, sequencing, ramp, tolerance, or adaptation screen. First-time free users can choose the no-card `Explore first` path from that paywall; lapsed entitlement users remain on the paid re-offer path.
   - Evidence: Screenshots or UI snapshots.
 - Branch: reminders, streaks, and widgets routes
   - Priority: Critical

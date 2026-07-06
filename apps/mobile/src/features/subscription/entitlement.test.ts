@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { daysUntil, deriveState, type StoredEntitlement } from './entitlement';
+import {
+  canStartContextualReverseTrial,
+  daysUntil,
+  deriveState,
+  type StoredEntitlement,
+} from './entitlement';
 
 const NOW = '2026-06-13T12:00:00.000Z';
 
@@ -25,7 +30,14 @@ describe('entitlement state (docs/08 §4. Gate on is_active regardless of source
   });
 
   it('active reverse trial → Pro, inReverseTrial, days left', () => {
-    const s = deriveState(ent({ periodType: 'reverse_trial', store: 'app_granted', expiresAt: '2026-06-18T12:00:00.000Z' }), NOW);
+    const s = deriveState(
+      ent({
+        periodType: 'reverse_trial',
+        store: 'app_granted',
+        expiresAt: '2026-06-18T12:00:00.000Z',
+      }),
+      NOW,
+    );
     expect(s.isPro).toBe(true);
     expect(s.tier).toBe('pro');
     expect(s.inReverseTrial).toBe(true);
@@ -68,5 +80,40 @@ describe('daysUntil', () => {
     expect(daysUntil('2026-06-18T12:00:00.000Z', NOW)).toBe(5);
     expect(daysUntil('2026-06-10T12:00:00.000Z', NOW)).toBe(0);
     expect(daysUntil(null, NOW)).toBeNull();
+  });
+});
+
+describe('contextual reverse-trial eligibility', () => {
+  it('offers the no-card value path only before any prior entitlement', () => {
+    expect(canStartContextualReverseTrial(deriveState(null, NOW))).toBe(true);
+    expect(
+      canStartContextualReverseTrial(
+        deriveState(
+          ent({
+            periodType: 'reverse_trial',
+            store: 'app_granted',
+            expiresAt: '2026-06-18T12:00:00.000Z',
+          }),
+          NOW,
+        ),
+      ),
+    ).toBe(false);
+    expect(
+      canStartContextualReverseTrial(
+        deriveState(
+          ent({
+            periodType: 'reverse_trial',
+            store: 'app_granted',
+            expiresAt: '2026-06-10T12:00:00.000Z',
+          }),
+          NOW,
+        ),
+      ),
+    ).toBe(false);
+    expect(
+      canStartContextualReverseTrial(
+        deriveState(ent({ periodType: 'normal', expiresAt: '2026-06-10T12:00:00.000Z' }), NOW),
+      ),
+    ).toBe(false);
   });
 });
