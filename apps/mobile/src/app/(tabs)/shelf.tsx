@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import {
   ConflictBanner,
@@ -37,6 +37,25 @@ const SUBHEAD: Record<Filter, string> = {
   actives: 'The potent ingredients in your routine.',
   expiring: 'Soonest first. The honest reasons to replace something.',
 };
+
+function ScanShelfButton({ floating }: { floating: boolean }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => {
+        haptics.select();
+        router.push('/shelf/scan');
+      }}
+      style={({ pressed }) => [
+        floating ? SCAN_FAB_SHADOW : null,
+        pressed ? { opacity: floating ? 0.9 : 0.86 } : null,
+      ]}
+      className="rounded-pill bg-ink px-7 py-3.5"
+    >
+      <Text className="font-sans-semibold text-[15px] text-paper">Scan a barcode</Text>
+    </Pressable>
+  );
+}
 
 function ProductCard({ item }: { item: ShelfItem }) {
   // Only the countdown card carries the faint accent border (design screen 05);
@@ -212,6 +231,8 @@ function SkeletonShelf() {
 export default function ShelfScreen() {
   const { data, isLoading } = useShelf();
   const [filter, setFilter] = useState<Filter>('all');
+  const { height } = useWindowDimensions();
+  const compactShelf = height < 640;
 
   const items = data?.items ?? [];
   const archiveCount = data?.archive.length ?? 0;
@@ -309,22 +330,18 @@ export default function ShelfScreen() {
               </Text>
             </Pressable>
           ) : null}
+
+          {compactShelf ? (
+            <View className="mt-6 items-center pb-2">
+              <ScanShelfButton floating={false} />
+            </View>
+          ) : null}
         </ScrollView>
       )}
 
-      {!isEmpty && !showLoading ? (
+      {!isEmpty && !showLoading && !compactShelf ? (
         <View className="absolute inset-x-0 bottom-4 items-center">
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              haptics.select();
-              router.push('/shelf/scan');
-            }}
-            style={({ pressed }) => [SCAN_FAB_SHADOW, pressed ? { opacity: 0.9 } : null]}
-            className="rounded-pill bg-ink px-7 py-3.5"
-          >
-            <Text className="font-sans-semibold text-[15px] text-paper">Scan a barcode</Text>
-          </Pressable>
+          <ScanShelfButton floating />
         </View>
       ) : null}
     </Screen>

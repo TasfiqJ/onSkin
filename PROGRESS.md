@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf scan CTA short-phone overlap after 320x568 E2E showed the
+  floating `Scan a barcode` pill covering the first product card and stealing a
+  product-detail tap. Compact Shelf layouts now render the scan action inline
+  inside the scroll content while taller phones keep the floating CTA; E2E
+  verified product-card taps open detail, all active products can be marked
+  finished, the empty Shelf exposes a 48 px Archive action, and Archive opens,
+  scrolls, and returns cleanly.
 - Fixed product-detail duplicate conflict rendering after 320x568 E2E with a
   duplicated retinol shelf fixture showed a red runtime warning toast over the
   detail UI. Product detail conflict rows now use the existing rule-plus-product

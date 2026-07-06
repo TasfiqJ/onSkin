@@ -111,6 +111,17 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('event.stopPropagation()');
   });
 
+  it('keeps the Shelf scan action from overlaying product cards on short phones', () => {
+    const source = readAppRoute('(tabs)/shelf.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactShelf = height < 640');
+    expect(source).toContain('<ScanShelfButton floating={false} />');
+    expect(source).toContain('!isEmpty && !showLoading && !compactShelf');
+    expect(source).toContain('<ScanShelfButton floating />');
+    expect(source).not.toContain('!isEmpty && !showLoading ? (');
+  });
+
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
