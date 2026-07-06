@@ -24,10 +24,20 @@ describe('onboarding route contracts', () => {
     const goals = readAppRoute('onboarding/goals.tsx');
     const products = readAppRoute('onboarding/products.tsx');
 
+    expect(goals).toContain('className="flex-1"');
+    expect(products).toContain('className="flex-1"');
+    expect(goals).toContain('const compactPhone = height < 640');
+    expect(goals).toContain("className={compactPhone ? 'mt-5' : 'mt-8'}");
+    expect(goals).toContain("className={compactPhone ? 'mt-5 gap-2' : 'mt-6 gap-3'}");
+    expect(goals).toContain('compact={compactPhone}');
     expect(goals).toContain('contentContainerClassName="pb-28"');
     expect(products).toContain('contentContainerClassName="pb-28"');
+    expect(goals).toContain('className="bg-paper pb-4 pt-2"');
+    expect(products).toContain('className="bg-paper pb-4 pt-2"');
     expect(goals).not.toContain('contentContainerClassName="pb-4"');
     expect(products).not.toContain('contentContainerClassName="pb-4"');
+    expect(goals).not.toContain('<View className="pb-4">');
+    expect(products).not.toContain('<View className="pb-4">');
   });
 
   it('keeps health-data consent fail-closed before quiz access', () => {

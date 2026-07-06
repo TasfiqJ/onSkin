@@ -44,7 +44,11 @@ export default function ProductsScreen() {
 
   return (
     <Screen>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-28">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-28"
+      >
         <Text variant="title" className="mt-6">
           What&apos;s on your shelf?
         </Text>
@@ -122,7 +126,7 @@ export default function ProductsScreen() {
         ) : null}
       </ScrollView>
 
-      <View className="pb-4">
+      <View className="bg-paper pb-4 pt-2">
         <Button label={added.length > 0 ? 'Continue' : 'Skip for now'} onPress={go} />
       </View>
     </Screen>

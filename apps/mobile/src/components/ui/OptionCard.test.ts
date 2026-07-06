@@ -1,0 +1,18 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { describe, expect, it } from 'vitest';
+
+const UI_DIR = fileURLToPath(new URL('./', import.meta.url));
+
+describe('OptionCard controls', () => {
+  it('keeps default and compact option cards large enough for phone taps', () => {
+    const source = readFileSync(`${UI_DIR}/OptionCard.tsx`, 'utf8');
+
+    expect(source).toContain('accessibilityRole="button"');
+    expect(source).toContain('accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}');
+    expect(source).toContain('compact?: boolean;');
+    expect(source).toContain("compact ? 'min-h-[60px] py-3' : 'min-h-[64px] py-4'");
+    expect(source).not.toContain('min-h-[44px]');
+    expect(source).not.toContain('min-h-[48px]');
+  });
+});
