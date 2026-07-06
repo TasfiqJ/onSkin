@@ -22,7 +22,7 @@ describe('tab bar treatment', () => {
   it('uses a legible Wealthsimple-style floating app tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 76');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 72');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
@@ -46,19 +46,20 @@ describe('tab bar treatment', () => {
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
-    expect(source).toContain('backgroundColor: colors.paper');
-    expect(source).toContain('focused ? colors.paper : colors.inkSoft');
+    expect(source).toContain('backgroundColor: colors.paperRaised');
+    expect(source.match(/focused \? colors\.ink : colors\.mutedStrong/g)).toHaveLength(2);
     expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
-    expect(source).toContain('backgroundColor: colors.ink');
+    expect(source).toContain('transform: [{ translateY: -1 }]');
     expect(source).toContain("backgroundColor: 'transparent'");
     expect(source).toContain("borderColor: 'transparent'");
     expect(source).toContain('tabActiveRail');
     expect(source).toContain('tabActiveRailVisible');
     expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderRadius: 30');
+    expect(source).toContain('borderRadius: 28');
     expect(source).toContain("position: 'absolute'");
     expect(source).toContain('left: FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('right: FLOATING_TAB_BAR_SIDE_MARGIN');
+    expect(source).toContain('zIndex: 50');
     expect(source).toContain('height: FLOATING_TAB_BAR_HEIGHT');
     expect(source).toContain('accessibilityRole="tablist"');
     expect(source).toContain('accessibilityRole="tab"');
@@ -66,13 +67,13 @@ describe('tab bar treatment', () => {
     expect(source).toContain('aria-selected={focused}');
     expect(source).toContain("type: 'tabPress'");
     expect(source).toContain("type: 'tabLongPress'");
-    expect(source).toContain('fontSize: 12.5');
-    expect(source).toContain('lineHeight: 18');
-    expect(source).toContain('minHeight: 20');
+    expect(source).toContain('fontSize: 13');
+    expect(source).toContain('lineHeight: 17');
+    expect(source).toContain('minHeight: 18');
     expect(source).toContain('minHeight: MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP');
-    expect(source).toContain('width: 38');
+    expect(source).toContain('width: 42');
     expect(source).toContain("outlineStyle: 'none'");
     expect(source).toContain('boxShadow: ');
     expect(source).toContain('onFocus={() => setFocusRingRouteKey(route.key)}');
@@ -80,6 +81,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('setFocusRingRouteKey((currentKey)');
     expect(source).not.toContain('function Dot');
     expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
+    expect(source).not.toContain('iconShellActive: {\n    backgroundColor: colors.ink');
     expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
@@ -90,8 +92,8 @@ describe('tab bar treatment', () => {
 
     expect(source).toContain('function FloatingTabBar');
     expect(source).toContain('adjustsFontSizeToFit');
-    expect(source).toContain('maxFontSizeMultiplier={1.08}');
-    expect(source).toContain('minimumFontScale={0.88}');
+    expect(source).toContain('maxFontSizeMultiplier={1.12}');
+    expect(source).toContain('minimumFontScale={0.9}');
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('{displayLabel}');
     expect(source).toContain('TAB_ICON_BY_ROUTE');
@@ -101,6 +103,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('minWidth: 0');
     expect(source).toContain("width: '100%'");
     expect(source).toContain("textAlign: 'center'");
+    expect(source).toContain("textAlignVertical: 'center'");
     expect(source).toContain('hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}');
     expect(source).toContain("borderColor: 'transparent'");
     expect(source).toContain('accessible={false}');
@@ -111,6 +114,7 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('lineHeight: 15');
     expect(source).not.toContain('fontSize: 11');
     expect(source).not.toContain('fontSize: 12,\n    includeFontPadding: false');
+    expect(source).not.toContain('fontSize: 12.5');
     expect(source).not.toContain('minWidth: 56');
   });
 
@@ -127,7 +131,7 @@ describe('tab bar treatment', () => {
     expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
     expect(minTouchTarget).toBeGreaterThanOrEqual(44);
     expect(usableWidth / 4).toBeGreaterThanOrEqual(72);
-    expect(source).toContain('minimumFontScale={0.88}');
-    expect(source).toContain('maxFontSizeMultiplier={1.08}');
+    expect(source).toContain('minimumFontScale={0.9}');
+    expect(source).toContain('maxFontSizeMultiplier={1.12}');
   });
 });

@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Refined the floating bottom tab bar after E2E review showed the active black
+  icon chip made the navigation feel heavy and left label readability too tight
+  for a premium phone UI. The bar now uses a calmer white raised surface,
+  Wealthsimple-style minimal active treatment, 13 px one-line labels, 56 px tab
+  targets, and an explicit stacking layer; E2E verified Today, Progress, Shelf,
+  and You switching at 320 px plus readable 390 px geometry.
 - Fixed the onboarding paywall short-phone conversion path after 320x568 E2E
   showed `Start free trial`, `Explore first`, and the compliance row below the
   first viewport. Compact phones now tighten paywall spacing while preserving the
