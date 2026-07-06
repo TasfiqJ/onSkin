@@ -723,7 +723,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/settings/subscription`, `/settings/notifications`, and `/settings/timing` directly, then use the visible Back control.
-  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target.
+  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target. On compact phones, the You tab first viewport ends on complete rows with a clear buffer above the floating tab bar, and covered lower rows do not receive accidental hits until the user scrolls them into view.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
 - Branch: policy link handoff failure
   - Priority: Important

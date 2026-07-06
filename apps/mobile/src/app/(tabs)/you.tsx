@@ -151,7 +151,7 @@ function openPolicyUrl(url: string) {
 }
 
 export default function YouScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const { user, isAnonymous, signOut } = useAuth();
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
@@ -186,7 +186,7 @@ export default function YouScreen() {
       : ent?.isPro
         ? 'OnSkin Pro · active'
         : 'Free plan';
-  const compactPhone = height < 640;
+  const compactPhone = height < 640 || width < 430;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
@@ -356,12 +356,12 @@ export default function YouScreen() {
           You
         </Text>
 
-        <Card className={compactPhone ? 'mt-4 p-4' : 'mt-6'}>
+        <Card className={compactPhone ? 'mt-3 p-3' : 'mt-6'}>
           <Text variant="label" tone="muted">
             ACCOUNT
           </Text>
           {compactPhone ? (
-            <View className="mt-2 min-h-[48px] flex-row items-center justify-between gap-3">
+            <View className="mt-1 min-h-[48px] flex-row items-center justify-between gap-3">
               <Text variant="body" className="flex-1 font-sans-medium">
                 {accountLabel}
               </Text>
@@ -405,7 +405,7 @@ export default function YouScreen() {
           )}
         </Card>
 
-        <Card className={compactPhone ? 'mt-3 p-4' : 'mt-4'}>
+        <Card className={compactPhone ? 'mt-2 p-3' : 'mt-4'}>
           <Text variant="label" tone="muted" className="mb-1">
             SUBSCRIPTION
           </Text>
@@ -417,7 +417,7 @@ export default function YouScreen() {
           />
         </Card>
 
-        <Card className={compactPhone ? 'mt-3 p-4' : 'mt-4'}>
+        <Card className={compactPhone ? 'mt-2 p-3' : 'mt-4'}>
           <Text variant="label" tone="muted" className="mb-1">
             YOUR ROUTINE
           </Text>

@@ -1695,6 +1695,15 @@ copy (`Clean base first.`, `Under your SPF.`, `Seal it in.`), no horizontal over
 clearance at 320 x 568, plus no truncation at 360 x 640, in
 `test-results/human-e2e/2026-07-06/navigation-final-sweep/`.
 
+### You tab first-viewport clearance (2026-07-06)
+
+Fixed the compact You tab after a 320 x 568 phone E2E pass showed lower routine navigation rows entering the floating
+tab bar zone on first load. Phone-width account, subscription, and routine cards now use tighter compact margins and
+padding while preserving 48 px row targets. Human-simulated E2E verified `Retinoid ramp` is complete and tappable above
+the tab bar at 320 x 568, the full routine card is visible at 390 x 844, covered lower rows do not receive accidental
+hits, and normal scroll reveals `Streak & adherence`, `Weekly check-in`, and `Recent changes` as full 48 px targets in
+`test-results/human-e2e/2026-07-06/you-first-viewport-tab-clearance/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
