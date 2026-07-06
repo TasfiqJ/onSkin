@@ -257,6 +257,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Search for a product that should not match.
   - Expected result: No-match state offers manual add or safe next steps.
   - Evidence: Screenshot.
+- Branch: manual category picker on short phones
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Shelf manual add in a 320 px phone viewport, enter product and brand, open the category picker, scroll through all category options, and select the lower "Something else" option.
+  - Expected result: Category rows remain at least 48 px targets, lower options are reachable by scroll, visible option taps are not intercepted by the fixed Continue footer, and the collapsed category field stays polished on compact phones.
+  - Evidence: Screenshot sequence and hit-test geometry.
 - Branch: barcode no-match or offline lookup
   - Priority: Critical
   - Automate later: Yes

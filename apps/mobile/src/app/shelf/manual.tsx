@@ -27,6 +27,11 @@ function FieldLabel({ children }: { children: string }) {
   );
 }
 
+function categoryFieldLabel(category: ProductCategory | null): string {
+  if (!category) return 'Choose';
+  return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');
+}
+
 const inputClass =
   'rounded-[14px] border border-hairline bg-paper-raised px-4 text-[15px] text-ink font-sans-medium';
 
@@ -93,8 +98,9 @@ export default function ManualAddScreen() {
       </View>
 
       <ScrollView
+        className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-4"
+        contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}
         keyboardShouldPersistTaps="handled"
       >
         <Text variant="bodySm" tone="muted" className="mb-5 mt-3">
@@ -115,7 +121,7 @@ export default function ManualAddScreen() {
           </View>
 
           <View className="flex-row gap-3">
-            <View className="flex-[1.3]">
+            <View className="flex-1">
               <FieldLabel>Brand</FieldLabel>
               <TextInput
                 accessibilityLabel="Brand"
@@ -126,19 +132,26 @@ export default function ManualAddScreen() {
                 className={cn(inputClass, 'h-[50px]')}
               />
             </View>
-            <View className="flex-1">
+            <View className="flex-[1.1]">
               <FieldLabel>Category</FieldLabel>
               <Pressable
                 accessibilityLabel={category ? `Category, ${categoryLabel(category)}` : 'Category'}
                 accessibilityHint="Choose product category"
                 accessibilityRole="button"
                 onPress={() => setPickerOpen((o) => !o)}
-                className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}
+                className="h-[50px] flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3"
               >
-                <Text className="font-sans-medium text-[15px]" tone={category ? 'ink' : 'muted'}>
-                  {category ? categoryLabel(category) : 'Choose'}
+                <Text
+                  className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"
+                  tone={category ? 'ink' : 'muted'}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {categoryFieldLabel(category)}
                 </Text>
-                <Text tone="muted">▾</Text>
+                <Text tone="muted" className="shrink-0">
+                  ▾
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -154,7 +167,7 @@ export default function ManualAddScreen() {
                     setPickerOpen(false);
                   }}
                   className={cn(
-                    'flex-row items-center justify-between px-4 py-3',
+                    'min-h-[48px] flex-row items-center justify-between px-4 py-3',
                     i > 0 && 'border-t border-hairline',
                   )}
                 >

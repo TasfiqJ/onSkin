@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf manual-add category picker on 320x568 phones after E2E showed
+  lower picker rows could sit under the fixed Continue footer and hit-test to the
+  footer instead of the visible option. The manual add scroll view now reserves
+  picker-aware bottom space, category rows have stable 48 px targets, and the
+  compact collapsed category field stays one-line with an "Other" display label
+  for the catch-all category. E2E rechecked opening the picker, scrolling to the
+  lower options, selecting "Something else", and validating no small controls,
+  clipped text, or bad visible hit targets in
+  `test-results/human-e2e/2026-07-06/shelf-add-phone-sweep/`.
 - Fixed the Ask OnSkin empty-shelf conflict reassurance after 320x568 E2E showed a
   typed retinol/glycolic question on `/ask` replying `Nothing on your shelf clashes
   right now. You’re set.` even though there were no shelf products to check. The

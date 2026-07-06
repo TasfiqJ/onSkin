@@ -178,6 +178,35 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("'h-[50px] items-center justify-center rounded-[14px] px-4'");
   });
 
+  it('keeps Shelf manual add picker options clear of the fixed footer on short phones', () => {
+    const source = readAppRoute('shelf/manual.tsx');
+
+    expect(source).toContain('className="flex-1"');
+    expect(source).toContain("contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}");
+    expect(source).toContain("return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');");
+    expect(source).toContain('{categoryFieldLabel(category)}');
+    expect(source).toContain('<View className="flex-1">');
+    expect(source).toContain('<View className="flex-[1.1]">');
+    expect(source).toContain(
+      'className="h-[50px] flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3"',
+    );
+    expect(source).toContain(
+      'className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"',
+    );
+    expect(source).toContain('numberOfLines={1}');
+    expect(source).toContain('ellipsizeMode="tail"');
+    expect(source).toContain(
+      "'min-h-[48px] flex-row items-center justify-between px-4 py-3'",
+    );
+    expect(source).not.toContain('<View className="flex-[1.3]">');
+    expect(source).not.toContain(
+      "className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}",
+    );
+    expect(source).not.toContain('className="font-sans-medium text-[15px]"');
+    expect(source).not.toContain('contentContainerClassName="pb-4"');
+    expect(source).not.toContain("'flex-row items-center justify-between px-4 py-3'");
+  });
+
   it('keeps Shelf OCR manual review controls from overlapping on short phones', () => {
     const source = readAppRoute('shelf/ocr.tsx');
 
