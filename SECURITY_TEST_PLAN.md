@@ -337,6 +337,9 @@
   - Proves resolved dev/staging/prod configs have isolated schemes, bundle IDs, Android package names, and public environment metadata.
   - Proves Android Auto Backup stays disabled in the base config and every resolved app variant.
   - Proves `runtimeVersion.policy` remains `fingerprint` for native-compatible OTA targeting.
+- `scripts/phase9/release-smoke.mjs`
+  - Proves claimed Phase 9 evidence/signoff requires `PHASE9_RELEASE_CANDIDATE_DIR`.
+  - Proves claimed evidence points to a non-template RC folder with required review files and no `TBD`/`BLOCKED` placeholders in core manifest/review/signoff docs.
 - `apps/mobile/package.json` / `package-lock.json`
   - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.
   - Verified with `npm test`, `npm run typecheck`, `npm run lint`, `npm audit --audit-level=moderate`, and the audit-enabled Phase 9 dependency SBOM.

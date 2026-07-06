@@ -123,6 +123,7 @@ for (const key of [
   'PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS',
   'PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL',
   'PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL',
+  'PHASE9_RELEASE_CANDIDATE_DIR',
   ...phase7EvidenceKeys,
   ...requiredPhase9EvidenceKeys(),
   'PHASE9_SIGNED_OFF_BY',
@@ -291,6 +292,61 @@ warn(
   Boolean(env.PHASE9_SIGNED_OFF_BY),
   'Missing Phase 9 named signoff: PHASE9_SIGNED_OFF_BY.',
 );
+
+const claimedPhase9EvidenceKeys = requiredPhase9EvidenceKeys().filter((key) => env[key] === 'true');
+const claimedPhase9Signoff = Boolean(env.PHASE9_SIGNED_OFF_BY?.trim());
+const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '').replace(/\\/g, '/').replace(/\/+$/g, '');
+if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
+  block(
+    errors,
+    !placeholder(releaseCandidateDir),
+    'PHASE9_RELEASE_CANDIDATE_DIR is required when any Phase 9 evidence or signoff is claimed.',
+  );
+  if (!placeholder(releaseCandidateDir)) {
+    block(
+      errors,
+      /^docs\/phase-9\/release-candidates\/(?!_template(?:\/|$))[^/]+$/.test(
+        releaseCandidateDir,
+      ),
+      'PHASE9_RELEASE_CANDIDATE_DIR must point to one immutable non-template folder under docs/phase-9/release-candidates/.',
+    );
+
+    const rcFiles = [
+      'manifest.md',
+      'commands.md',
+      'automated-verification.md',
+      'manual-qa-matrix.md',
+      'security-review.md',
+      'privacy-review.md',
+      'payments-review.md',
+      'observability-review.md',
+      'store-review-packet.md',
+      'rollout-plan.md',
+      'incident-plan.md',
+      'signoff.md',
+    ].map((file) => `${releaseCandidateDir}/${file}`);
+
+    for (const file of rcFiles) block(errors, exists(file), `${file} is missing from claimed release-candidate evidence.`);
+
+    for (const file of [
+      'manifest.md',
+      'automated-verification.md',
+      'security-review.md',
+      'privacy-review.md',
+      'payments-review.md',
+      'observability-review.md',
+      'store-review-packet.md',
+      'signoff.md',
+    ].map((name) => `${releaseCandidateDir}/${name}`)) {
+      if (!exists(file)) continue;
+      block(
+        errors,
+        !/\b(?:TBD|BLOCKED)\b/.test(read(file)),
+        `${file} must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.`,
+      );
+    }
+  }
+}
 
 if (env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED === 'true') {
   warn(

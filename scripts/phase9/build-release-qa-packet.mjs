@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import {
   block,
+  abs,
   command,
   envSnapshot,
   exists,
   hash,
+  listFiles,
   markdownList,
   printResult,
   requiredPhase9EvidenceKeys,
@@ -96,6 +98,16 @@ warn(
   'External RC evidence missing: PHASE9_SIGNED_OFF_BY.',
 );
 
+const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '')
+  .replace(/\\/g, '/')
+  .replace(/\/+$/g, '');
+const releaseCandidateFiles =
+  releaseCandidateDir && exists(releaseCandidateDir)
+    ? listFiles(releaseCandidateDir).map((file) =>
+        file.replace(abs('.'), '').replace(/\\/g, '/').replace(/^\/+/, ''),
+      )
+    : [];
+
 const packet = {
   generatedAt: new Date().toISOString(),
   status: errors.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
@@ -109,9 +121,15 @@ const packet = {
     playStoreUrl: env.EXPO_PUBLIC_PLAY_STORE_URL ?? null,
     supportEmail: env.EXPO_PUBLIC_SUPPORT_EMAIL ?? null,
   },
+  releaseCandidate: {
+    dir: releaseCandidateDir || null,
+    files: releaseCandidateFiles,
+  },
   evidence,
   signedOffBy: env.PHASE9_SIGNED_OFF_BY ?? '',
-  sourceHashes: Object.fromEntries(sourceFiles.filter(exists).map((file) => [file, hash(file)])),
+  sourceHashes: Object.fromEntries(
+    [...sourceFiles, ...releaseCandidateFiles].filter(exists).map((file) => [file, hash(file)]),
+  ),
   blockers: errors,
   warnings,
 };
@@ -138,6 +156,7 @@ write(
     `- Play Store URL: ${packet.releaseIdentity.playStoreUrl || 'BLOCKED'}`,
     `- Support email: ${packet.releaseIdentity.supportEmail || 'BLOCKED'}`,
     `- Signed off by: ${packet.signedOffBy || 'BLOCKED'}`,
+    `- Release candidate folder: ${packet.releaseCandidate.dir || 'BLOCKED'}`,
     '',
     '## Blockers',
     '',
