@@ -169,6 +169,15 @@ function constantTimeEqualHex(a: string, b: string): boolean {
   return diff === 0;
 }
 
+function constantTimeEqualString(a: string, b: string): boolean {
+  let diff = a.length ^ b.length;
+  const max = Math.max(a.length, b.length);
+  for (let i = 0; i < max; i += 1) {
+    diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+
 async function hmacHex(secret: string, payload: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     'raw',
@@ -222,7 +231,8 @@ Deno.serve(async (req) => {
     return json('webhook verification not configured', 503);
   }
 
-  const authVerified = webhookAuth ? req.headers.get('Authorization') === webhookAuth : false;
+  const authHeader = req.headers.get('Authorization') ?? '';
+  const authVerified = webhookAuth ? constantTimeEqualString(authHeader, webhookAuth) : false;
   if (webhookAuth && !authVerified) return json('unauthorized', 401);
 
   const limitedBody = await readLimitedText(req, maxBodyBytes);

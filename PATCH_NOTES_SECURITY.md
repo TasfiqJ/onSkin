@@ -816,3 +816,10 @@
 - Change: The live Edge auth harness now sends a valid caller JWT as a raw `Authorization` header without the Bearer scheme and requires every user-JWT function to return 401 with no side effects.
 - Why safe: The stricter shared parser needs deployed evidence that raw JWT headers are rejected, not only missing or invalid Bearer headers.
 - Regression: Phase 9 Edge auth smoke statically requires the raw-JWT negative path and side-effect checks in the live harness.
+
+## RevenueCat shared auth constant-time comparison
+
+- Files: `supabase/functions/revenuecat-webhook/index.ts`, `scripts/phase9/edge-auth-smoke.mjs`.
+- Change: RevenueCat webhook shared `Authorization` verification now uses a constant-time string comparison.
+- Why safe: Webhook shared auth is a secret-bearing comparison. Keeping it constant-time matches the HMAC verification posture and avoids reintroducing direct secret equality checks.
+- Regression: Phase 9 Edge auth smoke statically requires `constantTimeEqualString(authHeader, webhookAuth)`.

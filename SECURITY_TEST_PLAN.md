@@ -20,6 +20,7 @@
 - `node --check scripts/phase9/data-rights-smoke.mjs`
 - `node --check scripts/phase9/edge-auth-smoke.mjs`
 - `node --check supabase/functions/_shared/auth.ts`
+- `node --check supabase/functions/revenuecat-webhook/index.ts`
 - `node --check scripts/phase9/release-smoke.mjs`
 - `node --check scripts/phase10/beta-readiness.mjs`
 - `node --check scripts/phase11/launch-readiness.mjs`
@@ -360,6 +361,8 @@
   - Proves user-callable Edge Functions require the shared strict Bearer parser and no longer use ad hoc Bearer string replacement.
 - `scripts/phase9/live-edge-auth.mjs`
   - Proves the live harness sends a raw JWT without the Bearer scheme and verifies no user-JWT side effects occur.
+- `supabase/functions/revenuecat-webhook/index.ts` / `scripts/phase9/edge-auth-smoke.mjs`
+  - Proves RevenueCat shared webhook Authorization uses constant-time comparison instead of direct string equality.
 - `apps/mobile/package.json` / `package-lock.json`
   - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.
   - Verified with `npm test`, `npm run typecheck`, `npm run lint`, `npm audit --audit-level=moderate`, and the audit-enabled Phase 9 dependency SBOM.

@@ -93,6 +93,7 @@
 - SEC-P2-092: Phase 2 env validation now uses the same secret-looking public key-name pattern as the Phase 9/10/11 readiness guard.
 - SEC-P2-093: User-callable Edge Functions now require strict Bearer Authorization parsing through a shared helper.
 - SEC-P2-094: Live Edge auth evidence now proves raw JWT Authorization headers are rejected without side effects.
+- SEC-P2-095: RevenueCat webhook shared Authorization verification now uses constant-time string comparison.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

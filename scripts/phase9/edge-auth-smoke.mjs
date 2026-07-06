@@ -264,6 +264,12 @@ block(
 const revenueCat = read('supabase/functions/revenuecat-webhook/index.ts');
 const revenueCatHandler = revenueCat.slice(revenueCat.indexOf('Deno.serve'));
 block(errors, /REVENUECAT_WEBHOOK_AUTH/.test(revenueCat), 'RevenueCat webhook must verify shared auth header.');
+block(
+  errors,
+  /constantTimeEqualString/.test(revenueCat) &&
+    /constantTimeEqualString\(authHeader,\s*webhookAuth\)/.test(revenueCat),
+  'RevenueCat webhook shared auth must use constant-time string comparison.',
+);
 block(errors, /REVENUECAT_WEBHOOK_SIGNING_SECRET/.test(revenueCat), 'RevenueCat webhook must support HMAC signing secret.');
 block(
   errors,
