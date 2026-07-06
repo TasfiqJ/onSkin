@@ -96,6 +96,7 @@
 - SEC-P2-095: RevenueCat webhook shared Authorization verification now uses constant-time string comparison.
 - SEC-P2-096: Phase 9 release QA packets now hash the packet builder itself and visibly warn when generated from a dirty Git worktree.
 - SEC-P2-097: Phase 9 live evidence cleanup warnings now redact provider/database error details, emails, and synthetic identifiers.
+- SEC-P2-098: Phase 2 live RLS smoke cleanup logs now redact provider/database error details, emails, and synthetic identifiers.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

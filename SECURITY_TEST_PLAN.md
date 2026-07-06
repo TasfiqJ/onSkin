@@ -28,6 +28,7 @@
 - `node --check scripts/phase7/check-core-loop.mjs`
 - `node --check scripts/phase7/build-core-loop-qa-packet.mjs`
 - `node --check scripts/phase2/check-env.mjs`
+- `node --check scripts/phase2/supabase-rls-smoke.mjs`
 - `node --check scripts/phase9/build-release-qa-packet.mjs`
 - `node --check scripts/phase9/lib.mjs`
 - `node --check scripts/phase9/edge-functions-check.mjs`
@@ -40,6 +41,7 @@
 - `node --check scripts/phase9/live-order-report-poll.mjs`
 - `node --check scripts/phase9/live-revenuecat-webhook.mjs`
 - `rg -n "warnings\\.push\\([^\\n]*(?:\\.message|user\\.email|externalOrderId|resultError\\(error\\))" scripts/phase9 -S` (expected no matches)
+- `rg -n "cleanup failed.*(?:\\.message|email|productId)" scripts/phase2/supabase-rls-smoke.mjs -S` (expected no matches)
 - `npm run phase9:live-edge-auth`
 - `npm run phase9:live-public-forms`
 - `npm run phase9:live-catalog-rate-limit`

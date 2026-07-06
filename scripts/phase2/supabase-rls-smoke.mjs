@@ -41,6 +41,16 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function redactedErrorKind(error) {
+  if (error instanceof Error) return error.name || 'Error';
+  if (error && typeof error === 'object') {
+    const code = 'code' in error ? String(error.code ?? '') : '';
+    if (/^[A-Za-z0-9_-]{1,40}$/.test(code)) return `code:${code}`;
+    return 'object';
+  }
+  return typeof error;
+}
+
 function assertEnv(name, value) {
   assert(value && !value.includes('YOUR-') && !value.includes('xxxxxxxx'), `${name} is missing or still a placeholder`);
 }
@@ -85,12 +95,12 @@ async function createSmokeUser(label) {
 async function cleanup(users, catalogProductIds = []) {
   for (const productId of catalogProductIds) {
     const { error } = await admin.from('products').delete().eq('id', productId);
-    if (error) console.warn(`WARN cleanup failed for catalog product ${productId}: ${error.message}`);
+    if (error) console.warn(`WARN catalog product cleanup failed: ${redactedErrorKind(error)}`);
   }
   for (const user of users) {
     if (!user?.id) continue;
     const { error } = await admin.auth.admin.deleteUser(user.id);
-    if (error) console.warn(`WARN cleanup failed for ${user.email}: ${error.message}`);
+    if (error) console.warn(`WARN smoke user cleanup failed: ${redactedErrorKind(error)}`);
   }
 }
 

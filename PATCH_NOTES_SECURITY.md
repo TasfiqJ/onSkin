@@ -837,3 +837,10 @@
 - Change: Added `redactedErrorKind()` and changed live harness cleanup warnings to record only redacted error names or stable error codes.
 - Why safe: Cleanup warnings are written into generated release evidence. They must not include raw Supabase/provider messages, temporary staging emails, synthetic order IDs, URLs, tokens, or other operator-only diagnostics.
 - Regression: Release smoke now fails if live harness cleanup warnings reintroduce raw `.message`, `resultError(error)`, user email, or synthetic order-ID interpolation.
+
+## Phase 2 RLS smoke cleanup redaction
+
+- Files: `scripts/phase2/supabase-rls-smoke.mjs`.
+- Change: Phase 2 RLS smoke cleanup warnings now use redacted error names or stable error codes and no longer print temporary user emails, synthetic product IDs, or raw provider/database messages.
+- Why safe: Phase 2 live smoke output is often copied into infrastructure tickets and launch notes. Cleanup failures should be actionable without leaking diagnostic payloads.
+- Regression: The script passes `node --check`, and the cleanup-warning scan has no raw `.message`, email, or product-ID cleanup interpolation matches.
