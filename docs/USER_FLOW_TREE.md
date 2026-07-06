@@ -684,6 +684,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/recommendations` on a 390 px or narrower phone viewport with long evidence labels.
   - Expected result: Evidence/footer labels wrap within the card and the `See how` action remains visible and tappable.
   - Evidence: Phone-width screenshot and visible-text snapshot.
+- Branch: compact recommendation budget preferences
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/recommendations/preferences` on a 320 px phone viewport and inspect the Drugstore, Mid-range, and Premium budget chips.
+  - Expected result: All budget chips remain on one row, labels are fully visible without clipping or overflow, and each chip remains at least 44 pt tall.
+  - Evidence: Phone-width screenshot, budget-chip geometry snapshot, and visible-text snapshot.
 - Branch: recommendation preference save failure
   - Priority: Important
   - Automate later: Yes

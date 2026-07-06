@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the compact Recommendation preferences budget row after a 320x568 route
+  audit found `Premium` half-clipped at the bottom of the viewport. Budget
+  options now render as equal-width 48 px compact chips with readable one-line
+  labels, while values and texture filters keep the normal wrapped chip layout.
+  Human-simulated E2E verified no clipped controls, small targets, horizontal
+  overflow, or ellipsized budget labels in
+  `test-results/human-e2e/2026-07-06/recommendation-preferences-budget-fit/`.
 - Fixed empty Shelf compact-phone horizontal overflow from the bottle
   illustration. On Expo web, `StripedThumb` now uses a single clipped
   repeating-gradient background while native keeps the composed stripe fallback,

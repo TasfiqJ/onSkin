@@ -72,6 +72,17 @@ describe('Recommendation route contracts', () => {
     );
   });
 
+  it('keeps recommendation budget preferences fully visible on compact phones', () => {
+    const source = readAppRoute('recommendations/preferences.tsx');
+
+    expect(source).toContain('fill?: boolean');
+    expect(source).toContain('numberOfLines={1}');
+    expect(source).toContain('flexGrow: fill ? 1 : undefined');
+    expect(source).toContain('paddingHorizontal: fill ? 8 : undefined');
+    expect(source).toContain('fontSize: fill ? 12 : undefined');
+    expect(source).toContain('<Toggle\n              key={b}\n              fill');
+  });
+
   it('keeps recommendation detail navigation touchable on phones', () => {
     const source = readAppRoute('recommendations/[id].tsx');
 
