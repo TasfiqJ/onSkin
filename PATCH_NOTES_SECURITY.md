@@ -712,6 +712,13 @@
 - Why safe: Allowlisted prop keys such as `source`, `medium`, `type`, `reason`, or `context` should carry only coarse buckets. A future or modified client must not be able to send signed URLs, local file paths, or credentials to PostHog through those safe-looking fields.
 - Regression: `track.test.ts` covers URL, token, content URI, signed-URL, and local path values on approved keys. `phase9:privacy-payload-audit` now fails if URL/token patterns disappear from the analytics denylist.
 
+## Analytics string bucket-token guard
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: `sanitizeAnalyticsProps()` now accepts string values only when they are compact 1-80 character bucket tokens made from letters, numbers, underscores, or hyphens.
+- Why safe: Approved keys are intended for stable product telemetry buckets, not arbitrary text. This prevents future or modified clients from sending prose, user-entered snippets, or punctuation-heavy context to PostHog if the denylist misses a word.
+- Regression: `track.test.ts` covers safe token values plus prose/punctuation rejection. `phase9:privacy-payload-audit` now fails if the token-format guard is removed.
+
 ## Custom date telemetry minimization
 
 - Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/observability/scrub.ts`, `apps/mobile/src/lib/observability/scrub.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.

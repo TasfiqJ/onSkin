@@ -16,6 +16,7 @@ export const SENSITIVE_ANALYTICS_VALUE =
 const APPROVED_BUCKET_KEYS = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
 const PHOTO_QUALITY_RESULT_VALUES = new Set(['matched', 'misaligned', 'darker', 'low']);
 const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
+const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
 
 function bytesToHex(bytes: ArrayBuffer): string {
   return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -79,8 +80,9 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
     } else if (typeof value === 'string') {
       const trimmed = value.trim();
       if (!trimmed || trimmed.includes('@') || SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
+      if (!SAFE_ANALYTICS_STRING_VALUE.test(trimmed)) continue;
       if (key === 'result' && PHOTO_QUALITY_RESULT_VALUES.has(trimmed)) continue;
-      clean[key] = trimmed.slice(0, 160);
+      clean[key] = trimmed;
     }
   }
   return clean;

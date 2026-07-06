@@ -44,6 +44,7 @@ block(errors, /SENSITIVE_ANALYTICS_KEY/.test(trackSource), 'Analytics sanitizer 
 block(errors, /SENSITIVE_ANALYTICS_VALUE/.test(trackSource), 'Analytics sanitizer is missing sensitive-value guard.');
 block(errors, /SENSITIVE_ANALYTICS_VALUE\.test\(trimmed\)/.test(trackSource), 'Analytics sanitizer must check trimmed string values against the sensitive-value guard.');
 block(errors, /https\?:\\\/\\\//.test(trackSource) && /token\|jwt\|secret\|signed_url/.test(trackSource), 'Analytics sensitive-value guard must block URLs and token-like strings.');
+block(errors, /SAFE_ANALYTICS_STRING_VALUE/.test(trackSource), 'Analytics sanitizer must require compact bucket-token string values.');
 block(errors, /MAX_SAFE_ANALYTICS_INTEGER/.test(trackSource), 'Analytics sanitizer must cap numeric prop values.');
 block(errors, /Number\.isSafeInteger\(value\)/.test(trackSource), 'Analytics sanitizer must drop non-integer numeric prop values.');
 block(errors, !/value\s+instanceof\s+Date/.test(trackSource), 'Analytics sanitizer must drop Date props instead of serializing precise timestamps.');

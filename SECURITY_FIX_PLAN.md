@@ -85,6 +85,7 @@
 - SEC-P2-084: Analytics props now drop large or non-integer numeric values, so PostHog receives only small integer counters from approved prop keys.
 - SEC-P2-085: Analytics and Sentry context sanitizers now drop custom `Date` values instead of serializing precise app-supplied timestamps to vendors.
 - SEC-P2-086: Analytics values now explicitly drop URL, local/content path, query-string, token, JWT, secret, and signed-URL strings even on approved prop keys.
+- SEC-P2-087: Analytics string props now must be compact bucket tokens, preventing free-form prose from reaching PostHog through approved keys.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

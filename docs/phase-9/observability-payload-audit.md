@@ -8,7 +8,7 @@ The scrubber drops route params, URLs, query strings, product data, barcodes, OC
 
 ## PostHog
 
-Analytics props are allowlisted in `apps/mobile/src/lib/analytics/eventRegistry.ts`. `identify` uses a pseudonymous account ID. `sanitizeAnalyticsProps` drops keys not in the registry, sensitive keys, complex values, app-supplied dates, contact-looking strings, URL/path/token-looking strings, sensitive-looking strings, and numeric values that are not small finite integers.
+Analytics props are allowlisted in `apps/mobile/src/lib/analytics/eventRegistry.ts`. `identify` uses a pseudonymous account ID. `sanitizeAnalyticsProps` drops keys not in the registry, sensitive keys, complex values, app-supplied dates, contact-looking strings, URL/path/token-looking strings, prose-like strings that are not compact bucket tokens, sensitive-looking strings, and numeric values that are not small finite integers.
 
 Allowed props must remain buckets or opaque IDs only. Product IDs, rule IDs, content IDs, quiz axes, skin profile outputs, local paths, barcodes, notes, OCR text, scores, and free text are not approved telemetry.
 

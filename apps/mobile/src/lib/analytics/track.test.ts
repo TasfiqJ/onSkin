@@ -65,6 +65,19 @@ describe('analytics sanitizer', () => {
     ).toEqual({ feature: 'routine_builder' });
   });
 
+  it('keeps only compact bucket tokens for string props', () => {
+    expect(
+      sanitizeAnalyticsProps({
+        source: ' routine_builder ',
+        medium: 'organic share',
+        type: 'routine.builder',
+        reason: 'retry#1',
+        feature: 'cycle-recovery',
+        surface: 'in_context',
+      }),
+    ).toEqual({ source: 'routine_builder', feature: 'cycle-recovery', surface: 'in_context' });
+  });
+
   it('drops photo quality result buckets while preserving generic result buckets', () => {
     expect(
       sanitizeAnalyticsProps({
