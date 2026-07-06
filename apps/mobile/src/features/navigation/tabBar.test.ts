@@ -8,12 +8,28 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
+function readNumericConstant(source: string, name: string): number {
+  const match = source.match(new RegExp(`const ${name} = (\\d+);`));
+
+  if (!match) {
+    throw new Error(`Missing numeric tab bar constant: ${name}`);
+  }
+
+  return Number(match[1]);
+}
+
 describe('tab bar treatment', () => {
   it('uses a legible floating app-style tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 90');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 76');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
+    expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
+    expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
+    expect(source).toContain('MIN_TAB_TOUCH_TARGET');
+    expect(source).toContain('TAB_ITEM_HEIGHT');
+    expect(source).toContain('WEB_TAB_ITEM_FOCUS_RESET');
+    expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');
@@ -31,12 +47,13 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
     expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source).toContain('backgroundColor: colors.clayTint');
+    expect(source).toContain('backgroundColor: colors.ink');
+    expect(source).toContain("backgroundColor: 'rgba(244,239,231,0.14)'");
     expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderRadius: 30');
+    expect(source).toContain('borderRadius: 28');
     expect(source).toContain("position: 'absolute'");
-    expect(source).toContain('left: 16');
-    expect(source).toContain('right: 16');
+    expect(source).toContain('left: FLOATING_TAB_BAR_SIDE_MARGIN');
+    expect(source).toContain('right: FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('height: FLOATING_TAB_BAR_HEIGHT');
     expect(source).toContain('accessibilityRole="tablist"');
     expect(source).toContain('accessibilityRole="tab"');
@@ -44,13 +61,18 @@ describe('tab bar treatment', () => {
     expect(source).toContain('aria-selected={focused}');
     expect(source).toContain("type: 'tabPress'");
     expect(source).toContain("type: 'tabLongPress'");
-    expect(source).toContain('fontSize: 13');
-    expect(source).toContain('lineHeight: 18');
-    expect(source).toContain('minHeight: 22');
-    expect(source).toContain('minHeight: 72');
-    expect(source).toContain('height: 72');
+    expect(source).toContain('fontSize: 12');
+    expect(source).toContain('lineHeight: 16');
+    expect(source).toContain('minHeight: 18');
+    expect(source).toContain('minHeight: MIN_TAB_TOUCH_TARGET');
+    expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP');
-    expect(source).toContain('width: 42');
+    expect(source).toContain('width: 36');
+    expect(source).toContain("outlineStyle: 'none'");
+    expect(source).toContain('boxShadow: ');
+    expect(source).toContain('onFocus={() => setFocusRingRouteKey(route.key)}');
+    expect(source).toContain('onBlur={() =>');
+    expect(source).toContain('setFocusRingRouteKey((currentKey)');
     expect(source).not.toContain('function Dot');
   });
 
@@ -66,10 +88,11 @@ describe('tab bar treatment', () => {
     expect(source).toContain('TAB_ICON_BY_ROUTE');
     expect(source).toContain('flexShrink: 1');
     expect(source).toContain('includeFontPadding: false');
-    expect(source).toContain('height: 72');
+    expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('minWidth: 0');
     expect(source).toContain("width: '100%'");
     expect(source).toContain("textAlign: 'center'");
+    expect(source).toContain('hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}');
     expect(source).not.toContain('function renderTabBarLabel');
     expect(source).not.toContain('tabLabelFrame');
     expect(source).not.toContain('tabBarLabel: renderTabBarLabel');
@@ -77,5 +100,22 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('lineHeight: 15');
     expect(source).not.toContain('fontSize: 11');
     expect(source).not.toContain('minWidth: 56');
+  });
+
+  it('protects the floating bar geometry on 320 px phones', () => {
+    const source = readAppRoute('(tabs)/_layout.tsx');
+    const tabBarHeight = readNumericConstant(source, 'FLOATING_TAB_BAR_HEIGHT');
+    const sideMargin = readNumericConstant(source, 'FLOATING_TAB_BAR_SIDE_MARGIN');
+    const horizontalPadding = readNumericConstant(source, 'FLOATING_TAB_BAR_HORIZONTAL_PADDING');
+    const minTouchTarget = readNumericConstant(source, 'MIN_TAB_TOUCH_TARGET');
+    const tabItemHeight = readNumericConstant(source, 'TAB_ITEM_HEIGHT');
+    const usableWidth = 320 - sideMargin * 2 - horizontalPadding * 2;
+
+    expect(tabBarHeight).toBeGreaterThanOrEqual(tabItemHeight + 16);
+    expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
+    expect(minTouchTarget).toBeGreaterThanOrEqual(44);
+    expect(usableWidth / 4).toBeGreaterThanOrEqual(68);
+    expect(source).toContain('minimumFontScale={0.88}');
+    expect(source).toContain('maxFontSizeMultiplier={1.08}');
   });
 });

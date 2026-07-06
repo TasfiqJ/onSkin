@@ -31,10 +31,14 @@ function useExpiryReoffer() {
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';
 
 const ICON_SIZE = 22;
-const FLOATING_TAB_BAR_HEIGHT = 90;
-const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 16, android: 12, default: 12 });
+const FLOATING_TAB_BAR_HEIGHT = 76;
+const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 14, android: 10, default: 10 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
-const FLOATING_TAB_BAR_GAP = 24;
+const FLOATING_TAB_BAR_GAP = 20;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 16;
+const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 6;
+const MIN_TAB_TOUCH_TARGET = 56;
+const TAB_ITEM_HEIGHT = 60;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -48,12 +52,26 @@ const TAB_BAR_SHADOW = Platform.select({
   },
   ios: {
     shadowColor: colors.ink,
-    shadowOffset: { height: 10, width: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 22,
+    shadowOffset: { height: 12, width: 0 },
+    shadowOpacity: 0.11,
+    shadowRadius: 24,
   },
   web: {
-    boxShadow: '0px 18px 35px rgba(32, 27, 21, 0.14)',
+    boxShadow: '0px 18px 34px rgba(32, 27, 21, 0.13), 0px 4px 12px rgba(32, 27, 21, 0.06)',
+  } as ViewStyle,
+  default: {},
+}) as ViewStyle;
+
+const WEB_TAB_ITEM_FOCUS_RESET = Platform.select({
+  web: {
+    outlineStyle: 'none',
+  } as unknown as ViewStyle,
+  default: {},
+}) as ViewStyle;
+
+const WEB_TAB_ITEM_FOCUS_RING = Platform.select({
+  web: {
+    boxShadow: '0px 0px 0px 2px rgba(165, 105, 75, 0.24)',
   } as ViewStyle,
   default: {},
 }) as ViewStyle;
@@ -120,7 +138,7 @@ function YouIcon({ color }: { color: string }) {
 }
 
 function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) {
-  const iconColor = focused ? colors.clayDeep : colors.ink;
+  const iconColor = focused ? colors.paper : colors.inkSoft;
   const Icon =
     name === 'today'
       ? TodayIcon
@@ -155,6 +173,7 @@ function useKeyboardVisible() {
 
 function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBarProps) {
   const keyboardVisible = useKeyboardVisible();
+  const [focusRingRouteKey, setFocusRingRouteKey] = useState<string | null>(null);
   const tabBarBottom = Math.max(insets.bottom, FLOATING_TAB_BAR_BOTTOM);
 
   if (keyboardVisible) {
@@ -172,7 +191,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-        const labelColor = focused ? colors.clayDeep : colors.ink;
+        const labelColor = focused ? colors.paper : colors.mutedStrong;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -200,10 +219,20 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
             accessibilityLabel={options.tabBarAccessibilityLabel}
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
-            hitSlop={4}
+            hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}
+            onBlur={() =>
+              setFocusRingRouteKey((currentKey) => (currentKey === route.key ? null : currentKey))
+            }
+            onFocus={() => setFocusRingRouteKey(route.key)}
             onLongPress={onLongPress}
             onPress={onPress}
-            style={({ pressed }) => [styles.tabItem, pressed ? styles.tabItemPressed : null]}
+            style={({ pressed }) => [
+              styles.tabItem,
+              WEB_TAB_ITEM_FOCUS_RESET,
+              focused ? styles.tabItemActive : null,
+              focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
+              pressed ? styles.tabItemPressed : null,
+            ]}
           >
             <TabBarIcon focused={focused} name={iconName} />
             <Text
@@ -211,7 +240,11 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
               maxFontSizeMultiplier={1.08}
               minimumFontScale={0.88}
               numberOfLines={1}
-              style={[styles.tabLabel, focused ? styles.tabLabelActive : null, { color: labelColor }]}
+              style={[
+                styles.tabLabel,
+                focused ? styles.tabLabelActive : null,
+                { color: labelColor },
+              ]}
             >
               {displayLabel}
             </Text>
@@ -294,13 +327,13 @@ const styles = StyleSheet.create({
   },
   iconShell: {
     alignItems: 'center',
-    borderRadius: 16,
-    height: 28,
+    borderRadius: 14,
+    height: 27,
     justifyContent: 'center',
-    width: 42,
+    width: 36,
   },
   iconShellActive: {
-    backgroundColor: colors.clayTint,
+    backgroundColor: 'rgba(244,239,231,0.14)',
   },
   progressBar: {
     borderRadius: 2,
@@ -326,26 +359,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.paperRaised,
     borderColor: colors.hairlineStrong,
-    borderRadius: 30,
+    borderRadius: 28,
     borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     height: FLOATING_TAB_BAR_HEIGHT,
     justifyContent: 'center',
-    left: 16,
+    left: FLOATING_TAB_BAR_SIDE_MARGIN,
     paddingBottom: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
     paddingTop: 8,
     position: 'absolute',
-    right: 16,
+    right: FLOATING_TAB_BAR_SIDE_MARGIN,
   },
   tabLabel: {
     flexShrink: 1,
     fontFamily: 'HankenGrotesk_600SemiBold',
-    fontSize: 13,
+    fontSize: 12,
     includeFontPadding: false,
     letterSpacing: 0,
-    lineHeight: 18,
-    minHeight: 22,
+    lineHeight: 16,
+    marginTop: 2,
+    minHeight: 18,
     minWidth: 0,
     overflow: 'visible',
     textAlign: 'center',
@@ -356,15 +390,19 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     alignItems: 'center',
-    borderRadius: 18,
+    borderRadius: 22,
     flex: 1,
     flexBasis: 0,
-    height: 72,
+    height: TAB_ITEM_HEIGHT,
     justifyContent: 'center',
-    minHeight: 72,
+    minHeight: MIN_TAB_TOUCH_TARGET,
     minWidth: 0,
     paddingBottom: 0,
+    paddingHorizontal: 3,
     paddingTop: 0,
+  },
+  tabItemActive: {
+    backgroundColor: colors.ink,
   },
   tabItemPressed: {
     opacity: 0.72,
