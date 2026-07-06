@@ -18,9 +18,7 @@ function expectNoRawBack(path: string) {
 function expectTouchableRouteIcon(path: string) {
   const source = readAppRoute(path);
 
-  expect(source, `${path} should use the shared 44pt route button`).toContain(
-    'RouteIconButton',
-  );
+  expect(source, `${path} should use the shared 44pt route button`).toContain('RouteIconButton');
   expect(source, `${path} should not rely on small hit slop for route exits`).not.toContain(
     'hitSlop={8}',
   );
@@ -103,6 +101,22 @@ describe('Pro-gated route contracts', () => {
     expect(tolerance, 'routine/tolerance.tsx should keep text exits at least 44px tall').toContain(
       'min-h-[44px] min-w-[44px]',
     );
+  });
+
+  it('keeps routine intelligence screens bound to generated plan data', () => {
+    const adaptation = readAppRoute('routine/adaptation.tsx');
+    expect(adaptation).toContain('usePlan');
+    expect(adaptation).not.toContain('Azelaic Acid 10%');
+    expect(adaptation).not.toContain('Azelaic plays well');
+
+    const reorder = readAppRoute('routine/reorder.tsx');
+    expect(reorder).toContain('usePlan');
+    expect(reorder).toContain('ScrollView');
+    expect(reorder).not.toContain("const CANONICAL = ['Cream cleanser'");
+    expect(reorder).not.toContain("const REORDERED = ['Cream cleanser'");
+    expect(reorder).not.toContain('Vitamin C serum');
+
+    expect(adaptation).toContain('ScrollView');
   });
 
   it('keeps scheduler and routine sheets reachable on short phones', () => {

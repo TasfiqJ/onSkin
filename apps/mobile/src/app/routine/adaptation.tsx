@@ -1,32 +1,76 @@
 import { router } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import type { GeneratedPlan } from '@/features/routine/generate';
+import { usePlan } from '@/features/routine/usePlan';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 09 · Adaptation. "Here's what changed" (design 09, docs/03 §7/§8). After a
 // product is added, the deterministic pipeline re-runs and explains exactly what
 // changed and why. And that prior overrides were preserved. Everything is undoable.
-// (Shown with the design's worked example; binds to the live recompute diff.)
+// Uses the same generated plan as the reveal/routine screens; until server-side
+// recompute diffs ship, it summarizes the current generated plan honestly instead
+// of presenting a hard-coded product as if it came from the user's shelf.
 type Change = { kind: 'added' | 'neutral' | 'kept'; title: string; body: string };
-const CHANGES: Change[] = [
-  {
-    kind: 'added',
-    title: 'Added to AM, after cleanser',
-    body: 'Gentle enough for daily use. It slots before your moisturizer.',
-  },
-  {
-    kind: 'neutral',
-    title: 'No new conflicts',
-    body: 'Azelaic plays well with your retinol and vitamin C.',
-  },
-  {
+
+function listNames(names: string[]): string {
+  if (names.length === 0) return 'your current products';
+  if (names.length === 1) return names[0]!;
+  if (names.length === 2) return `${names[0]} and ${names[1]}`;
+  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
+}
+
+function adaptationChanges(plan: GeneratedPlan | undefined, isExample: boolean): Change[] {
+  if (!plan) {
+    return [
+      {
+        kind: 'neutral',
+        title: 'Checking your routine',
+        body: 'We are loading the latest shelf and profile signals before showing a change summary.',
+      },
+    ];
+  }
+
+  const morning = plan.am.map((step) => step.name);
+  const eveningActives = plan.pm
+    .filter((step) => step.role === 'exfoliant' || step.role === 'treatment')
+    .map((step) => step.name);
+  const changes: Change[] = [
+    {
+      kind: 'added',
+      title: isExample ? 'Example order refreshed' : 'Routine order refreshed',
+      body: morning.length
+        ? `${listNames(morning)} stay in a calm morning sequence.`
+        : 'No morning products are on this plan yet, so we keep the routine open-ended.',
+    },
+  ];
+
+  if (eveningActives.length > 0) {
+    changes.push({
+      kind: 'neutral',
+      title: 'Active nights stay separated',
+      body: `${listNames(eveningActives)} stay scheduled away from recovery nights where needed.`,
+    });
+  } else {
+    changes.push({
+      kind: 'neutral',
+      title: 'No active-night changes',
+      body: 'There are no retinoid or exfoliant steps to reschedule right now.',
+    });
+  }
+
+  changes.push({
     kind: 'kept',
-    title: 'Your overrides kept',
-    body: 'Retinol & glycolic stay on alternate nights, as you set.',
-  },
-];
+    title: 'Your choices stay in control',
+    body: isExample
+      ? 'This is an example preview. Add products to your shelf to see live adaptation notes.'
+      : 'Any saved conflict choices stay respected when the routine is recalculated.',
+  });
+
+  return changes;
+}
 
 function ChangeCard({ change }: { change: Change }) {
   const sage = change.kind === 'added';
@@ -79,26 +123,38 @@ function ChangeCard({ change }: { change: Change }) {
 }
 
 export default function AdaptationScreen() {
+  const { data, isLoading } = usePlan();
+  const changes = adaptationChanges(data?.plan, Boolean(data?.isExample));
+
   return (
     <Screen edges={['top', 'bottom']}>
-      <View className="flex-1 pt-4">
-        <Text variant="label" tone="clay" className="font-mono">
-          YOU ADDED A PRODUCT
-        </Text>
-        <Text variant="title" className="mt-2.5 text-[32px]">
-          Here&apos;s what changed.
-        </Text>
-        <Text variant="bodySm" tone="muted" className="mt-2 text-[14px]">
-          Adding <Text className="font-sans-bold text-ink">Azelaic Acid 10%</Text> rebuilt your
-          plan. Nothing&apos;s locked. Undo anything.
-        </Text>
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-6 pt-4"
+      >
+        <View>
+          <Text variant="label" tone="clay" className="font-mono">
+            {data?.isExample ? 'EXAMPLE ROUTINE' : 'ROUTINE UPDATED'}
+          </Text>
+          <Text variant="title" className="mt-2.5 text-[32px]">
+            Here&apos;s what changed.
+          </Text>
+          <Text variant="bodySm" tone="muted" className="mt-2 text-[14px]">
+            {isLoading
+              ? 'Checking your shelf before we summarize the update.'
+              : data?.isExample
+                ? 'This preview shows the explanation style until your shelf has products.'
+                : 'We rechecked your shelf and routine rules. Nothing is locked.'}
+          </Text>
 
-        <View className="mt-6 gap-3">
-          {CHANGES.map((c) => (
-            <ChangeCard key={c.title} change={c} />
-          ))}
+          <View className="mt-6 gap-3">
+            {changes.map((c) => (
+              <ChangeCard key={c.title} change={c} />
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollView>
 
       <View className="flex-row items-center gap-2.5 pb-2">
         <View className="flex-1">

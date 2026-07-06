@@ -1437,6 +1437,17 @@ screen title on narrow phones. Human-simulated E2E verified the stale-detail exi
 `/recommendations`, checked zero horizontal overflow, and confirmed the preferences header/chips in
 `test-results/human-e2e/2026-07-06/recommendation-preferences-chip-targets/`.
 
+### Routine generated-plan surfaces (2026-07-06)
+
+Closed the remaining hardcoded routine-intelligence surface issue for `/routine/adaptation` and `/routine/reorder`.
+Both screens now read the generated plan through `usePlan`, clearly label the example state when the shelf is empty,
+and no longer present the Azelaic/Vitamin-C demo copy as if it came from the user's own shelf. The reorder fallback is
+now tap-to-select with 48 px `Earlier`/`Later` controls, keeps the sequencing nudge, and both changed screens are
+scrollable on short phones. Route contracts reject the old fixed demo arrays/copy and require the generated-plan
+binding. Human-simulated E2E verified the local reverse-trial Pro route, the moved-order nudge, visible 48 px actions,
+no small targets, no old Azelaic copy, and final screenshots in
+`test-results/human-e2e/2026-07-06/routine-generated-plan-screens/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
