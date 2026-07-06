@@ -52,6 +52,29 @@ function pmDisplaySub(step: { role?: string; instruction?: string }): string | u
   return step.instruction;
 }
 
+function compactRoutineInstruction(instruction: string): string {
+  switch (instruction) {
+    case 'Start with a clean base.':
+      return 'Clean base first.';
+    case 'Vitamin C in the morning, under your SPF.':
+      return 'Under your SPF.';
+    case 'Seal everything in.':
+      return 'Seal it in.';
+    case 'Apply to dry skin · pea-sized · avoid the eye area.':
+      return 'Dry skin. Pea-sized.';
+    case 'Pea-sized · avoid eye area':
+      return 'Pea-sized. Avoid eyes.';
+    case 'A thin layer. Exfoliation night only.':
+      return 'Thin layer tonight.';
+    case 'Barrier support. Keep it simple.':
+      return 'Barrier support.';
+    case 'Dry skin fully before the retinoid':
+      return 'Dry skin first.';
+    default:
+      return instruction;
+  }
+}
+
 function streakLabel(days: number): string {
   return `${days} ${days === 1 ? 'day' : 'days'}`;
 }
@@ -106,6 +129,7 @@ function CheckRow({
   onPress: () => void;
 }) {
   const accent = dark ? colors.clayBright : colors.clay;
+  const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -156,7 +180,7 @@ function CheckRow({
         >
           {name}
         </Text>
-        {sub ? (
+        {displaySub ? (
           <Text
             numberOfLines={compact ? 1 : undefined}
             className="mt-0.5 text-[12.5px]"
@@ -165,7 +189,7 @@ function CheckRow({
               lineHeight: compact ? 16 : undefined,
             }}
           >
-            {sub}
+            {displaySub}
           </Text>
         ) : null}
       </View>

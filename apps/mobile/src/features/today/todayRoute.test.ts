@@ -38,6 +38,11 @@ describe('Today route mobile contracts', () => {
     );
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
     expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
+    expect(source).toContain('function compactRoutineInstruction(instruction: string): string');
+    expect(source).toContain("case 'Vitamin C in the morning, under your SPF.':");
+    expect(source).toContain("return 'Under your SPF.';");
+    expect(source).toContain('const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;');
+    expect(source).toContain('{displaySub}');
     expect(source).toContain('compact?: boolean;');
     expect(source).toContain(
       "className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}",

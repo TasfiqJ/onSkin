@@ -1686,6 +1686,15 @@ card behavior. Human-simulated E2E verified the visible-card geometry, scrolled 
 continued to `/onboarding/consent` in
 `test-results/human-e2e/2026-07-06/onboarding-goals-footer-clearance/`.
 
+### Today compact routine copy polish (2026-07-06)
+
+Fixed the compact Today habit card after a 320 x 568 phone E2E pass showed routine instruction copy rendering with
+visual ellipses inside the Morning routine rows. Compact phone rows now use concise display-only instruction variants
+while preserving the generated plan data and full copy on larger phones. Human-simulated E2E verified complete compact
+copy (`Clean base first.`, `Under your SPF.`, `Seal it in.`), no horizontal overflow, and preserved SPF prompt/tab-bar
+clearance at 320 x 568, plus no truncation at 360 x 640, in
+`test-results/human-e2e/2026-07-06/navigation-final-sweep/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
