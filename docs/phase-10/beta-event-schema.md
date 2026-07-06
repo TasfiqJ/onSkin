@@ -14,17 +14,17 @@ The beta schema is frozen to answer whether real users reach value, return, trus
 
 ## Required Dashboards
 
-| Dashboard | Required views |
-| --- | --- |
-| Enrollment and install | invited, accepted, installed, first app open by platform/build/wave |
-| Onboarding and first value | onboarding_started, account_created, product intake, first-value proxy, drop-off |
-| Shelf and catalog | barcode/search/manual mix, no-match, corrections, manual fallback completion |
-| Routine loop | plan view, first_checkoff_completed, repeat check-offs, streak milestone |
-| Photo and reminder | permission prompt, capture, trend/progress usage, reminder opt-in/denial |
-| Paywall and entitlement | paywall_shown, contextual_paywall_shown, trial_started, purchase_completed, restore_tapped, manage_subscription_opened |
-| Privacy and support | deletion/export requests, consent withdrawal, support categories, privacy escalations |
-| Release health | crashes, ANRs, app-start, affected users, build adoption |
-| Retention cohorts | D1, D7, D14, D30 by activated/not activated, platform, wave, first-value path |
+| Dashboard                  | Required views                                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Enrollment and install     | invited, accepted, installed, first app open by platform/build/wave                                                    |
+| Onboarding and first value | onboarding_started, account_created, product intake, first-value proxy, drop-off                                       |
+| Shelf and catalog          | barcode/search/manual mix, no-match, corrections, manual fallback completion                                           |
+| Routine loop               | plan view, routine_created, first_useful_insight, first_checkoff_completed, repeat check-offs, streak milestone        |
+| Photo and reminder         | permission prompt, capture, trend/progress usage, reminder opt-in/denial                                               |
+| Paywall and entitlement    | paywall_shown, contextual_paywall_shown, trial_started, purchase_completed, restore_tapped, manage_subscription_opened |
+| Privacy and support        | deletion/export requests, consent withdrawal, support categories, privacy escalations                                  |
+| Release health             | crashes, ANRs, app-start, affected users, build adoption                                                               |
+| Retention cohorts          | D1, D7, D14, D30 by activated/not activated, platform, wave, first-value path                                          |
 
 ## Cohorts
 
@@ -49,6 +49,10 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `catalog_lookup_no_match`
 - `catalog_correction_reported`
 - `ingredient_parse_completed`
+- `routine_created`
+- `first_routine_created`
+- `first_useful_insight`
+- `conflict_detected`
 - `first_checkoff_completed`
 - `photo_captured`
 - `first_photo_captured`
@@ -83,14 +87,13 @@ Each dashboard must have:
 
 ## Evidence Slots
 
-| Item | Evidence |
-| --- | --- |
-| PostHog dashboard links | BLOCKED |
-| Sentry release health links | BLOCKED |
-| Play Console Android vitals link | BLOCKED |
-| App Store Connect analytics link | BLOCKED |
-| RevenueCat cohort/dashboard link | BLOCKED |
-| Support dashboard link | BLOCKED |
-| Phase 9 privacy payload audit rerun | BLOCKED |
-| Dashboard owner signoff | BLOCKED |
-
+| Item                                | Evidence |
+| ----------------------------------- | -------- |
+| PostHog dashboard links             | BLOCKED  |
+| Sentry release health links         | BLOCKED  |
+| Play Console Android vitals link    | BLOCKED  |
+| App Store Connect analytics link    | BLOCKED  |
+| RevenueCat cohort/dashboard link    | BLOCKED  |
+| Support dashboard link              | BLOCKED  |
+| Phase 9 privacy payload audit rerun | BLOCKED  |
+| Dashboard owner signoff             | BLOCKED  |

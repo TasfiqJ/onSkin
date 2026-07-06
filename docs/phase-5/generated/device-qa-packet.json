@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T20:47:29.035Z",
+  "generatedAt": "2026-07-06T21:25:56.334Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
   "buildEvidence": {
     "iosBuildId": "",
@@ -65,8 +65,8 @@
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 3468,
-      "sha256": "a61fa8ca0d36efcecb37a870a732f0d0fe0bd97a7da2f677d685363bbd5a0c46"
+      "bytes": 5085,
+      "sha256": "88067c0bb39ea844a41278cef1c1c21f1f8808a11353ca1a609f2b2d80b19f30"
     },
     {
       "path": "apps/mobile/eas.json",

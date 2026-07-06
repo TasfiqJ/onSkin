@@ -99,6 +99,8 @@
     "phase11:launch-packet:strict": "node scripts/phase11/build-launch-packet.mjs --strict",
     "phase11:verify": "npm run phase10:beta-packet && npm run phase11:launch-readiness && npm run phase11:ring-gates && npm run phase11:launch-packet && npm run typecheck && npm run lint && npm test",
     "phase10-11:verify": "npm run phase10:verify && npm run phase11:verify",
+    "brand:audit": "node scripts/brand-audit.mjs",
+    "brand:audit:strict": "node scripts/brand-audit.mjs --strict",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\""
   },

@@ -1,9 +1,12 @@
+import { useEffect, useRef } from 'react';
+
 import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { setCycleAnchor } from '@/features/routine/cycleAnchor';
 import { usePlan } from '@/features/routine/usePlan';
+import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -63,6 +66,7 @@ function EveningRow({
 export default function PlanScreen() {
   const { data } = usePlan();
   const plan = data?.plan;
+  const trackedPlanView = useRef(false);
 
   const exfoliant = plan?.pm.find((s) => s.role === 'exfoliant');
   const retinoid = plan?.pm.find((s) => s.role === 'treatment');
@@ -72,6 +76,28 @@ export default function PlanScreen() {
       c.rule.interactionType === 'synergy' &&
       (c.rule.tagA === 'vitamin_c' || c.rule.tagB === 'vitamin_c'),
   );
+
+  useEffect(() => {
+    if (!data || trackedPlanView.current) {
+      return;
+    }
+
+    trackedPlanView.current = true;
+
+    const source = data.isExample ? 'example' : 'routine_plan';
+    const insightCount = data.plan.conflicts.length + data.plan.gaps.length + 1;
+
+    track('routine_created', { source });
+    track('first_routine_created', { source });
+
+    if (!data.isExample) {
+      track('first_useful_insight', { count: insightCount, source: 'routine_plan' });
+    }
+
+    if (data.plan.conflicts.length > 0) {
+      track('conflict_detected', { count: data.plan.conflicts.length });
+    }
+  }, [data]);
 
   return (
     <Screen edges={['top', 'bottom']}>

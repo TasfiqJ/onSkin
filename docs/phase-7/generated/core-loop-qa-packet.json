@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T20:53:30.203Z",
+  "generatedAt": "2026-07-06T21:20:45.243Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -84,8 +84,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/today.tsx",
       "exists": true,
-      "bytes": 22546,
-      "sha256": "7d4e426879b741ab71004cf582f86121a5b0c0e3a4e80380687aa378c490ec5c"
+      "bytes": 22782,
+      "sha256": "810e9aace00946fb501d6bfdf5fcd9970d90b2f59b80212028090f2a2c780a45"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",

@@ -1,6 +1,6 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-06T20:49:59.566Z
+Generated at: 2026-07-06T21:20:42.419Z
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
 

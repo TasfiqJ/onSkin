@@ -125,6 +125,22 @@ describe('analytics sanitizer', () => {
     });
   });
 
+  it('allows V1 activation events without sensitive payload details', () => {
+    expect(sanitizeAnalyticsEventName('first_useful_insight')).toBe('first_useful_insight');
+    expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
+    expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
+
+    expect(
+      sanitizeAnalyticsProps({
+        source: 'routine_plan',
+        count: 3,
+        rule_id: '00000000-0000-4000-8000-000000000001',
+        product_name: 'Retinol 0.3%',
+        goal: 'barrier_repair',
+      }),
+    ).toEqual({ source: 'routine_plan', count: 3 });
+  });
+
   it('drops unapproved or user-derived event names', () => {
     expect(sanitizeAnalyticsEventName('photo_captured')).toBe('photo_captured');
     expect(sanitizeAnalyticsEventName('routine_step_irritation')).toBeNull();

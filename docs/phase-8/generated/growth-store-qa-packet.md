@@ -1,6 +1,6 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-06T20:54:59.864Z
+Generated: 2026-07-06T21:25:56.802Z
 Status: blocked
 
 ## Public Identity
@@ -74,7 +74,7 @@ Status: blocked
 
 ## Source Hashes
 
-- `apps/mobile/app.config.js`: `a61fa8ca0d36efcecb37a870a732f0d0fe0bd97a7da2f677d685363bbd5a0c46`
+- `apps/mobile/app.config.js`: `88067c0bb39ea844a41278cef1c1c21f1f8808a11353ca1a609f2b2d80b19f30`
 - `apps/mobile/src/lib/env.ts`: `567dd4f2edc078b1e28ce1dac400adc5382fbbaa5f1949ffa803a11f778ed687`
 - `apps/mobile/src/lib/launch/phase8.ts`: `9630757897d5d2f3252b740aa01f14de7444bf628ea3929f7f782ee746a6dfeb`
 - `apps/mobile/src/lib/growth/attribution.ts`: `2be10bc88371a9e80f06b2074e1b10396571b941e847f92bec09d8616f72b315`

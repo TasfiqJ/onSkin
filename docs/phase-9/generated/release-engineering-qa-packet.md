@@ -1,8 +1,9 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-05T22:21:20.164Z
+Generated: 2026-07-06T21:25:57.357Z
 Status: blocked
-Git SHA: 9b80d7717da3772c48726f2ed98e09f5024b510c
+Git SHA: c5d5ce029cf5429e35f3f7e0973acde4664e2e65
+Git status: DIRTY
 
 ## Release Identity
 
@@ -13,6 +14,7 @@ Git SHA: 9b80d7717da3772c48726f2ed98e09f5024b510c
 - Play Store URL: BLOCKED
 - Support email: BLOCKED
 - Signed off by: BLOCKED
+- Release candidate folder: BLOCKED
 
 ## Blockers
 
@@ -20,6 +22,7 @@ Git SHA: 9b80d7717da3772c48726f2ed98e09f5024b510c
 
 ## Warnings
 
+- Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.
 - External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.
 - External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.
 - External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.
@@ -77,54 +80,57 @@ Git SHA: 9b80d7717da3772c48726f2ed98e09f5024b510c
 
 ## Source Hashes
 
-- `package.json`: `d2e5d649b38852fea7d9dcb3f3c5e0dcd540e269b1383a5d88a208ddc4165b08`
-- `package-lock.json`: `26c64d1f4926e845d2c1d453e76f7c080cf9ace6c81c2f9a19fb6a77636e7246`
-- `.github/workflows/security.yml`: `97e2a0d58a9437beab381014bf0a73d6823cf1abaee8752f32972c300cd9f2dd`
+- `package.json`: `7da4aa00961080c7df51be7e2ff11c6b941440b4f4855d63ed882ca701f4248a`
+- `package-lock.json`: `207bc634928bd8576b8ce0b5fd0ef4c362bcfb1fe5bc980293858b9125818329`
+- `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `7a27df897bd3ec6a56f640d6948339783db61fc9521b76c1ef3b7a08e6cb585f`
-- `apps/mobile/app.config.js`: `a61fa8ca0d36efcecb37a870a732f0d0fe0bd97a7da2f677d685363bbd5a0c46`
+- `apps/mobile/app.config.js`: `88067c0bb39ea844a41278cef1c1c21f1f8808a11353ca1a609f2b2d80b19f30`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
 - `apps/mobile/src/lib/env.ts`: `567dd4f2edc078b1e28ce1dac400adc5382fbbaa5f1949ffa803a11f778ed687`
 - `apps/mobile/src/lib/env.test.ts`: `e503b97e2a5759822a11001a3227fd42d0fc7e7bbf24db85b49e89ad49536d83`
 - `apps/mobile/src/lib/launch/phase7.ts`: `7cb9b0fe7fdab1baad5bb7f11f2e49c806fd31e9466a5c9697a472558706e4c3`
 - `apps/mobile/src/lib/launch/phase7.test.ts`: `72e76ea593d1fb753544313ee4a3cef8ebfd66441c59a04550928e4b7c70402a`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `dab0e279c63018bdfddc2063718bb3ad62708c06866ebac036fd2da29448c457`
-- `apps/mobile/src/lib/analytics/track.ts`: `97d34b9f809f978f605114f78b7ddd3068e778255005549212a2cd9563bd7c82`
-- `apps/mobile/src/lib/observability/scrub.ts`: `a3d7b7277d351e35ef03a82b57f56f4c5d5f91bd965fa699ed416b9c9acf0e16`
-- `apps/mobile/src/lib/observability/sentry.ts`: `f5034d2ddd255c6f1f957cc374452343692363c441a135f465ac72e50b076185`
-- `apps/mobile/src/features/settings/actions.ts`: `56580b09744c2146c6be86645adbdb04ffeb06c4e3360c4748aac9d468d4551c`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `14bbf32c07a042e2ebbc7118824fb6ef15907036a7ff22ac84b156ad430aaca0`
+- `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
+- `apps/mobile/src/lib/iap/revenuecat.ts`: `90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a`
+- `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
+- `apps/mobile/src/lib/observability/sentry.ts`: `d228827c369b9119584b2b75bab2b067debca9b5bc5510f58c8233da931c3230`
+- `apps/mobile/src/features/settings/actions.ts`: `965a9614564a1e372dd07233f0e8a1dbf22986d19bdf42177d5a8598d9280682`
+- `apps/mobile/src/features/settings/localPrivateData.ts`: `ec22645356726c6cc23a250317869035c0ee0c0bba868bf1cafd2953680c053f`
 - `apps/mobile/src/lib/auth/apple.ts`: `fe416a59b89867f4bccdec38ba6b7f97a30e5ad7f18c5b93ec6f79181519de64`
-- `supabase/functions/account-deletion/index.ts`: `d1539b21f7a65767cf7ed47ab2c75db0730830573b93162f519adea9309d31b1`
+- `supabase/functions/account-deletion/index.ts`: `d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
 - `supabase/functions/_shared/fetch.ts`: `d8ff37a96a965d3826d3d7df14a69eb00f35dddbc119d3a2f4cc92d778226a25`
-- `supabase/functions/data-export/index.ts`: `1ffcdf1553f1153c66027cb8899ced971590fa8a4031dbc0656236a5692f0834`
-- `supabase/functions/consent-withdrawal/index.ts`: `2959176e711a6eb898b4f89b5230298fde3f6f275784da8d637f3ff9ba9da256`
-- `supabase/functions/subscription-grants/index.ts`: `368c47f4b887efceb4831d08f6ca23d7ac7489345f65733982bd3b6a11dd5d97`
-- `supabase/functions/catalog-search/index.ts`: `78ef1a6188c4091c263da92f2c66ed8d53b250a406378fcc2f8b8d5eb8e228a1`
-- `supabase/functions/catalog-lookup/index.ts`: `cae1862e718323439446b16c8ba4000120d411c08321394103aa0b7a9a8d3bdf`
-- `supabase/functions/catalog-report/index.ts`: `dcaac8486b9683990833f9ee3950278da576adc21b9712e6145753d8b8774cf6`
-- `supabase/functions/revenuecat-webhook/index.ts`: `008cb91fecfaf6db8c450e4e0a87e72be3ba869a01dfdbbea26c2c3e077d6483`
+- `supabase/functions/data-export/index.ts`: `613170a95c01697505bdf17a4b83dbdafd6e6823f041161059bd1d79dc107e93`
+- `supabase/functions/consent-withdrawal/index.ts`: `fa5f9949677e076c648ce90da97c631b67e53ea72ad94e0daa27199d68f14521`
+- `supabase/functions/subscription-grants/index.ts`: `e146744807f42d221bc26771728efa6360da03b586a91e1d77c01d3b2c624d7f`
+- `supabase/functions/catalog-search/index.ts`: `6469ad3fb88b6eba7e09bdc00a211618a2b25d36123ec6775bdb120c05c5c44d`
+- `supabase/functions/catalog-lookup/index.ts`: `943138cd87be526acaea5c84acff7250967670bfe964805f315c8eb71a9f474c`
+- `supabase/functions/catalog-report/index.ts`: `5a063bb6db5e1a5194e17b498b61ed0e9abbaef1d62c7cb80f09be9da429c621`
+- `supabase/functions/revenuecat-webhook/index.ts`: `7899144905d1966dccc526e106dfb1ace848c6f492383a97699d5859a7a49fa5`
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
-- `scripts/phase9/lib.mjs`: `8c10dddc14c1a6523d470b2841f2eea69f26891d0aab1410b4233a60c43219ca`
-- `scripts/phase9/release-smoke.mjs`: `2c5ee2b28edac6272b3855dd75967124c1ea2bdcc5295281d8f12c2b92f5a068`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `bb6407ff0f65e9ffb33beb9aeaa41f2dbd9ea641f88ac23413229f48d4d2c973`
-- `scripts/phase9/live-edge-auth.mjs`: `8ea85d4bcf80b41689c543026cabfc0a7fd34220c466fb7fdeb8cee8581c9b2a`
-- `scripts/phase9/live-data-rights.mjs`: `c8a3dea29a07b5a849602f94aeb6ad54e4058cfb71277e443e418749d52b71c4`
-- `scripts/phase9/live-consent-withdrawal.mjs`: `c5480223a9379fe30c3fe092a23ca7e5be595b4cc693cffd7da3ccec838e1189`
-- `scripts/phase9/live-public-forms.mjs`: `6f61a1aa2809c9a1b90770eda8f0ce6772c5ffc6c8eed64a55ac85b959747a0f`
-- `scripts/phase9/live-catalog-rate-limit.mjs`: `a2b9578b73c70e31ba4fcd951f4c85db8bd5097c1aa3259171c1721f31cf8743`
+- `scripts/phase9/lib.mjs`: `c13d3b4ce8f1257dd5bfb2d6919829204b49e245f3881548c528c9a33118916b`
+- `scripts/phase9/release-smoke.mjs`: `302aa3a997bd91d9b6695b6fb88dc0dbd0de3b9f0ba560d940b613f6937f71c3`
+- `scripts/phase9/build-release-qa-packet.mjs`: `053f13ac8e4faf718b371668a6c0bf6a56020bd792aca356d5961b388dbf2e98`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `0661ae154be6aae795b15bba994a3fa7352682bdbb8a943a970f31fe0cb5c034`
+- `scripts/phase9/live-edge-auth.mjs`: `6ea5dcc2e54f47f817a7357a0ae0aa0e5f4bb1d222562177abbd6e5634b92271`
+- `scripts/phase9/live-data-rights.mjs`: `f4dd3f441061260b8dc4f4a2bf0c39bd5cf99e6f22c4b641c4c1e66c94b276ba`
+- `scripts/phase9/live-consent-withdrawal.mjs`: `7b729cf09202d6475cbfbf6fb6ada62eca0eba1d1fc464b531425d982f6c1cde`
+- `scripts/phase9/live-public-forms.mjs`: `d4504017adb1a9889cde021af9eb2d766c9f464efc4c59075081b4730ddb6114`
+- `scripts/phase9/live-catalog-rate-limit.mjs`: `d8a52b05b7995d27c1e92e4bb8dd2814a46bb95bdabedc24c64319f39daf6663`
 - `scripts/phase9/live-order-report-poll.mjs`: `438113a48e0b1baff4312a5f71873cdd28ac1a8de98e6f75fcc4f792bcc15093`
-- `scripts/phase9/live-revenuecat-webhook.mjs`: `cea7547fa79b7fd84d1c0aabd5407dbaba0333d929064127784769c403614ffa`
-- `scripts/phase9/edge-auth-smoke.mjs`: `c4334285dd46c4318eed978cb31385b88c82b2ae625279e486916fd9ab3a40b6`
+- `scripts/phase9/live-revenuecat-webhook.mjs`: `9f73f3ad255a76abcf9c82ffef882a11d48492412415817b131aff88d13b6d2a`
+- `scripts/phase9/edge-auth-smoke.mjs`: `844dcf393c0b838be46806540895cc0480bc3c75e7dcc5839bae4f71cf77caa3`
 - `scripts/phase9/data-rights-smoke.mjs`: `b2fff6b199e1adc5b994a4113ebb9f27a7d07b4050452e02128e423ad1033d31`
 - `scripts/phase9/supabase-policy-lint.mjs`: `d6bf674a96a19922c83b053c3667e573c775a10b418a8af69c03e479d192a551`
-- `scripts/phase9/security-ci-smoke.mjs`: `026273b9a9968a261abbea7cb78dce880a421e4680ce7bde48c132ed774fbc14`
-- `scripts/phase9/privacy-payload-audit.mjs`: `254594713dc797d3c9ec2783ae01439531e8d0e5a087fa76e31ccbd2ec649889`
+- `scripts/phase9/security-ci-smoke.mjs`: `f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9`
+- `scripts/phase9/privacy-payload-audit.mjs`: `dbdafa3f53f588d5aa92348b846678ee119a9e5218c9b70e32062aa3c661438d`
 - `scripts/phase9/dependency-sbom.mjs`: `8f2358b22445dd93b6537c388bf7718c93f0730f93b5f0cfb607f57dccaa8d17`
 - `scripts/phase9/store-build-inspect.mjs`: `3db7dbd05a8ce2d8097acc6eadd4928c6404b75ee410b2cadfef36a509c2168e`
-- `docs/phase-9/source-of-truth.md`: `a4192583b24620681cac2233b5b81216cb94e142054b34a47e1e6a21e3920937`
+- `docs/phase-9/source-of-truth.md`: `c8ff3e307284f90a71ff497b131e9309c7e3d9c2876fbc9f7490b239a90f154f`
 - `docs/phase-9/data-inventory.md`: `5d82150b28857d47721b444bf21d580bdeb464759f00ae652aef0ed94aded222`
 - `docs/phase-9/edge-function-auth-matrix.md`: `eabfcd63602581316cf83f0ca42411f88b6206e578d0168bb7cc044a847c8743`
-- `docs/phase-9/observability-payload-audit.md`: `6f7671ec150c27cb3840245a7369ca3ceb4a0631fa1981a20b400464a60b8fde`
+- `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `1390557c60c5637f16ac10b46d2b1b38190ba4d0dddda43bf84a3bbd65c43428`
 - `docs/phase-9/rollout-rollback-plan.md`: `d251c08b7a24ad16686bc31b74b11ed50fb3158154d5aec4b0b81df4b2c24a2e`
 - `docs/phase-9/incident-response-plan.md`: `cd3c1c87c47f2ba5f08f8a9abfdd8f05a3e02985d4e2cf0301f6781c2bad8d4c`

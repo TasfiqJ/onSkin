@@ -6,14 +6,55 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Integrated the `04_repo_docs` strategy packet into the active `docs/` tree as
+  the master plan, product requirements, architecture, roadmap, feature index,
+  decision, testing, code-review, update-patch, and Codex implementation-prompt
+  docs. Added `docs/FOR_TAS_TO_DO.md` for founder/account/legal/device/beta
+  blockers Codex must not guess, and added
+  `docs/rebrand-and-core-loop-migration-checklist.md` to turn the Phase 0
+  rebrand and V1 loop plan into executable engineering slices. Wired the new
+  docs into `AGENTS.md`, `CLAUDE.md`, and `BLOCKERS.md`.
+- Added `scripts/brand-audit.mjs` plus `npm run brand:audit` and
+  `npm run brand:audit:strict` so the rebrand migration has an objective
+  inventory of remaining public identity references. Non-strict audit currently
+  reports 144 public launch-risk references and 52 review-needed references;
+  strict mode correctly fails until the brand migration is executed or counsel
+  clears `OnSkin`. `apps/mobile/app.config.js` now derives native camera and
+  Face ID permission copy from `APP_DISPLAY_NAME`, with optional env overrides,
+  so future cleared brands do not require hardcoded native-copy edits. Unset
+  local `APP_VARIANT` now resolves to the development install identity instead
+  of silently reading production identifiers, with a Vitest contract guarding the
+  behavior. Verified with `APP_DISPLAY_NAME=RoutineKind`,
+  `npm --workspace apps/mobile run test -- src/lib/appConfig.test.ts`,
+  `npm run phase5:check-native-config`, `npm run phase9:store-build-inspect`,
+  `npm run typecheck`, `npm run lint`, and `npm test`.
+- Added the V1 first-value analytics events from the master plan:
+  `routine_created`, `first_useful_insight`, and `conflict_detected`. The
+  routine plan screen now emits only privacy-safe source buckets and counts,
+  alongside the existing `first_routine_created` event, while the sanitizer test
+  rejects product names, rule IDs, and skin-goal payloads. Updated the Phase 10
+  beta event schema and fixed the beta analytics audit so it parses only
+  `ANALYTICS_ALLOWED_PROP_KEYS` instead of treating event names as property
+  keys. Verified with `npm --workspace apps/mobile run test --
+src/lib/analytics/track.test.ts`, `npm run phase10:beta-analytics-audit`,
+  `npm run typecheck`, `npm run lint`, and `npm test`; strict Phase 10 evidence
+  still needs external dashboard and privacy-payload proof.
+- Ran the non-strict launch gate sweep from Phase 2 through Phase 11 after the
+  docs and analytics work. Code gates pass where the repo has local checks, and
+  generated packets under `docs/phase-3` through `docs/phase-11` were refreshed
+  with current hashes and blocked status. Phase 2, strict Phase 3, native,
+  payment, beta, and public-launch gates remain blocked only by external
+  identity, environment, counsel/reviewer, production account, dashboard, device,
+  store, beta, and named-signoff evidence. Added the exact command-gate evidence
+  map to `docs/FOR_TAS_TO_DO.md`.
 - Fixed the Phase 6 payments readiness checker after it falsely failed the
   RevenueCat webhook because it only accepted the old unbounded `req.text()`
-  pattern. The webhook already uses the safer bounded `readLimitedText(req,
-  maxBodyBytes)` path and parses `rawBody` only after signature verification, so
-  the checker now validates that implementation. Phase 6 baseline now passes;
-  strict mode remains blocked only by brand/legal URLs and external
-  RevenueCat/iOS/Android/webhook/finance evidence. Refreshed the generated
-  payments QA packet with current hashes.
+  pattern. The webhook already uses the safer bounded
+  `readLimitedText(req, maxBodyBytes)` path and parses `rawBody` only after
+  signature verification, so the checker now validates that implementation.
+  Phase 6 baseline now passes; strict mode remains blocked only by brand/legal
+  URLs and external RevenueCat/iOS/Android/webhook/finance evidence. Refreshed
+  the generated payments QA packet with current hashes.
 - Re-ran Phase 5 native readiness after the phone UI sweeps. This Windows
   workspace has no `adb`, Android emulator, or `xcodebuild` available, so real
   iOS/Android simulator/device execution remains device-gated. The non-strict
@@ -75,7 +116,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `test-results/human-e2e/2026-07-06/shelf-add-phone-sweep/`.
 - Fixed the Ask OnSkin empty-shelf conflict reassurance after 320x568 E2E showed a
   typed retinol/glycolic question on `/ask` replying `Nothing on your shelf clashes
-  right now. You’re set.` even though there were no shelf products to check. The
+right now. You’re set.` even though there were no shelf products to check. The
   deterministic Ask context now distinguishes an empty shelf from a populated shelf
   with zero conflicts, so empty-shelf conflict questions ask the user to add products
   before real pair checks. E2E rechecked `/ask`, Ask report feedback, `/ask/consent`,

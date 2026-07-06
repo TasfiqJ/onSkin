@@ -9,6 +9,12 @@ production-ready.
 
 Read this with:
 
+- `docs/MASTER_PLAN.md`
+- `docs/PRODUCT_REQUIREMENTS.md`
+- `docs/FEATURE_INDEX.md`
+- `docs/ROADMAP.md`
+- `docs/rebrand-and-core-loop-migration-checklist.md`
+- `docs/FOR_TAS_TO_DO.md`
 - `LAUNCH_READINESS.md`
 - `docs/brand-decision-memo.md`
 - `docs/brand-evidence.md`
@@ -66,6 +72,15 @@ Read this with:
 The old `B-MISSING-DOCS` blocker is closed. The docs folder now contains
 `docs/00-architecture.md` through `docs/14-growth-to-seven-figures.md`, plus
 `docs/legal-readiness.md`.
+
+The `04_repo_docs` strategy packet has also been copied into active docs as
+`docs/MASTER_PLAN.md`, `docs/PRODUCT_REQUIREMENTS.md`, `docs/ARCHITECTURE.md`,
+`docs/FEATURE_INDEX.md`, `docs/ROADMAP.md`, `docs/DECISIONS.md`,
+`docs/TESTING_STRATEGY.md`, `docs/CODE_REVIEW.md`,
+`docs/MASTER_PLAN_UPDATE_PATCH.md`, and
+`docs/CODEX_IMPLEMENTATION_PROMPT.md`. Future strategy, pricing, launch,
+privacy, or architecture changes should use the master-plan patch process
+instead of silently editing implementation around the plan.
 
 Fresh verification on 2026-07-04: `npm run typecheck`, `npm run lint`, and
 `npm test` pass, with 38 test files and 986 tests. Re-run all three after any

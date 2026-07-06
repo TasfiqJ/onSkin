@@ -1,8 +1,8 @@
 # Phase 11 Public Launch Packet
 
-Generated: 2026-07-04T18:16:38.093Z
+Generated: 2026-07-06T21:25:58.534Z
 Status: blocked
-Git SHA: f354370c62516813eccc14378b13064a53cf8554
+Git SHA: c5d5ce029cf5429e35f3f7e0973acde4664e2e65
 Phase 9 packet status: blocked
 Phase 10 packet status: blocked
 Phase 10 decision: blocked
@@ -61,15 +61,15 @@ Phase 10 decision: blocked
 
 ## Source Hashes
 
-- `package.json`: `dcd6d5080c9faae68b76dcad0a91a77fd941c4751451365e31a4bd201653d200`
+- `package.json`: `7da4aa00961080c7df51be7e2ff11c6b941440b4f4855d63ed882ca701f4248a`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
-- `.env.example`: `4610395afff9a8790dfb074d2630e3cf7b324e3dddfef8dad9dfb1b9d584ad65`
-- `apps/mobile/eas.json`: `5aba9dfec9bc3530449b536736bde35a296750d1ecf2b2942933cecf17e05e43`
-- `apps/mobile/app.config.js`: `a61fa8ca0d36efcecb37a870a732f0d0fe0bd97a7da2f677d685363bbd5a0c46`
-- `apps/mobile/src/lib/env.ts`: `366cfbac20dbe98d488e5a53f9e3d4cc9e67a30a9ebc4bc788f3e91cdd5f52e7`
-- `apps/mobile/src/lib/iap/revenuecat.ts`: `9db96d033831efebdc5050bc2f435ebab1c2ff9a4b14a55097b5edb1d504e0d8`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `7e4d5daa37f27d8a931048940dddff9bca4e6e38e98682fbb36c82ad06923651`
-- `docs/phase-10/generated/closed-beta-packet.json`: `9b1c23bb56d1c5baba96546d3e1a9dc67867b2aec740949e95231994570469e3`
+- `.env.example`: `f2242f5e9ee21fbaa10fc88616f0d5d6cb264aecc1df69010ff9083f6cfc5777`
+- `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
+- `apps/mobile/app.config.js`: `88067c0bb39ea844a41278cef1c1c21f1f8808a11353ca1a609f2b2d80b19f30`
+- `apps/mobile/src/lib/env.ts`: `567dd4f2edc078b1e28ce1dac400adc5382fbbaa5f1949ffa803a11f778ed687`
+- `apps/mobile/src/lib/iap/revenuecat.ts`: `90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `f35569af88e458506e0fe65bb0bbb142f20a538cfc9365000282768d3069003c`
+- `docs/phase-10/generated/closed-beta-packet.json`: `dcbc7aeaa168e2f43ca1bd82c935de62b9d1655fd64b8529ec3ca5d6d563b72c`
 - `docs/phase-11/launch-command-center.md`: `1a63626d60342bb66a99b3d61f51622da062e77ced5949666e417b0877b81d92`
 - `docs/phase-11/phase-10-exit-review.md`: `2ca063c42e33c76f8244d778d8f72d3dff9b96db420f4241d2b7d52b5871fd0e`
 - `docs/phase-11/store-release-plan.md`: `dbd10e7753372f7a1ccc0ec28aed947423dc51c57977d359ca95efe951d4fbc8`

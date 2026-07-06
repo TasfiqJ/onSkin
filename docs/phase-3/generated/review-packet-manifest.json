@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T18:16:58.769Z",
+  "generatedAt": "2026-07-06T21:20:32.934Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
   "files": [
     {
@@ -188,8 +188,8 @@
       "packet": "ipFto",
       "path": "apps/mobile/src/app/onboarding/quiz.tsx",
       "exists": true,
-      "bytes": 3070,
-      "sha256": "80e42ea7d2c014f6fea466e544ce81be8fb12599cdf6ec0a519d55520e2a81f8"
+      "bytes": 3665,
+      "sha256": "d6a98629927753ff25b14c909fe083bb04ece9f58fa770c333ab718aade69145"
     },
     {
       "packet": "ipFto",
