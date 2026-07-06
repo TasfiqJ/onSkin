@@ -362,6 +362,7 @@
   - Verifies PostHog automatic lifecycle capture and session replay remain disabled.
   - Verifies sensitive analytics keys/values are dropped.
   - Verifies SPF/category, irritation, conflict-check, recommendation, commerce, and Ask-intent style values do not survive sanitization.
+  - Verifies URL, local/content path, query-string, token, JWT, secret, and signed-URL strings do not survive sanitization on approved prop keys.
   - Verifies photo-quality result labels are dropped from the generic `result` prop while non-sensitive result buckets remain available.
   - Verifies PostHog props keep only small integer counters and drop large numeric identifiers, non-finite numbers, and precise decimal values.
   - Verifies custom `Date` values are dropped instead of serialized into PostHog props.
@@ -416,6 +417,7 @@
 - `scripts/phase9/privacy-payload-audit.mjs`
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
   - Fails if analytics event names bypass the event-name allowlist, vendor capture uses the raw event name, or app call sites use non-literal/unapproved event names.
+  - Fails if analytics value filtering stops blocking URLs and token-like strings.
   - Fails if PostHog automatic lifecycle capture or session replay is re-enabled.
   - Fails if Sentry default PII, performance tracing, failed-request capture, screenshots, or view hierarchy attachments are re-enabled.
   - Fails if Sentry breadcrumbs, transaction/fingerprint dropping, uncommon diagnostic metadata dropping, or the global before-send event scrubber are removed.

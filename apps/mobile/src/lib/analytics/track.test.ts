@@ -52,6 +52,19 @@ describe('analytics sanitizer', () => {
     ).toEqual({ source: 'share_card' });
   });
 
+  it('drops string values that look like URLs, tokens, or local paths', () => {
+    expect(
+      sanitizeAnalyticsProps({
+        source: 'https://example.com/s/abc?token=secret',
+        medium: 'jwt_header.payload.signature',
+        type: 'content://photos/1',
+        reason: 'signed_url',
+        context: '/var/mobile/Containers/Data/photo.jpg',
+        feature: 'routine_builder',
+      }),
+    ).toEqual({ feature: 'routine_builder' });
+  });
+
   it('drops photo quality result buckets while preserving generic result buckets', () => {
     expect(
       sanitizeAnalyticsProps({

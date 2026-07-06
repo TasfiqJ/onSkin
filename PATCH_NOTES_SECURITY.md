@@ -705,6 +705,13 @@
 - Why safe: Approved analytics keys such as `count`, `days`, `result`, `variant`, or `surface` must remain coarse buckets and counters. Modified or future call sites should not be able to send numeric barcodes, database IDs, or derived photo/skin scores to PostHog under safe-looking keys.
 - Regression: `track.test.ts` covers small counters, large identifiers, decimals, and infinities. `phase9:privacy-payload-audit` now fails if the analytics numeric cap or non-integer rejection is removed.
 
+## Analytics URL and token value minimization
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: `SENSITIVE_ANALYTICS_VALUE` now rejects HTTP(S) URLs, file/content URIs, local app paths, query-string values, token/JWT/secret markers, and signed-URL markers.
+- Why safe: Allowlisted prop keys such as `source`, `medium`, `type`, `reason`, or `context` should carry only coarse buckets. A future or modified client must not be able to send signed URLs, local file paths, or credentials to PostHog through those safe-looking fields.
+- Regression: `track.test.ts` covers URL, token, content URI, signed-URL, and local path values on approved keys. `phase9:privacy-payload-audit` now fails if URL/token patterns disappear from the analytics denylist.
+
 ## Custom date telemetry minimization
 
 - Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/observability/scrub.ts`, `apps/mobile/src/lib/observability/scrub.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
