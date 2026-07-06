@@ -247,6 +247,7 @@ export default function TodayScreen() {
   });
   const clockLabel = localClockLabel();
   const compactPhone = height < 640;
+  const compactRecommendationPrompt = height < 860;
 
   // ---- AM ----
   if (!dark) {
@@ -321,7 +322,7 @@ export default function TodayScreen() {
           </View>
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
-          <RecommendationsTeaser compact={compactPhone} showGapPrompt />
+          <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
 
           {/* Ask OnSkin. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
           {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}

@@ -29,6 +29,7 @@ describe('Today route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPhone = height < 640');
+    expect(source).toContain('const compactRecommendationPrompt = height < 860');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');
@@ -50,7 +51,10 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source).toContain('lineHeight: compact ? 16 : undefined');
     expect(source.match(/<CheckRow[\s\S]*?compact=\{compactPhone\}/g)).toHaveLength(2);
-    expect(source).toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
+    expect(source).toContain(
+      '<RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />',
+    );
+    expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
     expect(source).toContain('{compactPhone ? null : (');
   });

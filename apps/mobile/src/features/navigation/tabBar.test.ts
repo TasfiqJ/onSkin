@@ -22,7 +22,7 @@ describe('tab bar treatment', () => {
   it('uses a legible Wealthsimple-style floating app tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 72');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 68');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
@@ -55,7 +55,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabActiveRail');
     expect(source).toContain('tabActiveRailVisible');
     expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderRadius: 28');
+    expect(source).toContain('borderRadius: 26');
     expect(source).toContain("position: 'absolute'");
     expect(source).toContain('left: FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('right: FLOATING_TAB_BAR_SIDE_MARGIN');
@@ -67,13 +67,13 @@ describe('tab bar treatment', () => {
     expect(source).toContain('aria-selected={focused}');
     expect(source).toContain("type: 'tabPress'");
     expect(source).toContain("type: 'tabLongPress'");
-    expect(source).toContain('fontSize: 13');
-    expect(source).toContain('lineHeight: 17');
-    expect(source).toContain('minHeight: 18');
+    expect(source).toContain('fontSize: 12.5');
+    expect(source).toContain('lineHeight: 16');
+    expect(source).toContain('minHeight: 17');
     expect(source).toContain('minHeight: MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP');
-    expect(source).toContain('width: 42');
+    expect(source).toContain('width: 38');
     expect(source).toContain("outlineStyle: 'none'");
     expect(source).toContain('boxShadow: ');
     expect(source).toContain('onFocus={() => setFocusRingRouteKey(route.key)}');
@@ -98,7 +98,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain('{displayLabel}');
     expect(source).toContain('TAB_ICON_BY_ROUTE');
     expect(source).toContain('flexShrink: 1');
+    expect(source).toContain('fontSize: 12.5');
     expect(source).toContain('includeFontPadding: false');
+    expect(source).toContain('lineHeight: 16');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('minWidth: 0');
     expect(source).toContain("width: '100%'");
@@ -114,7 +116,6 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('lineHeight: 15');
     expect(source).not.toContain('fontSize: 11');
     expect(source).not.toContain('fontSize: 12,\n    includeFontPadding: false');
-    expect(source).not.toContain('fontSize: 12.5');
     expect(source).not.toContain('minWidth: 56');
   });
 
@@ -127,10 +128,10 @@ describe('tab bar treatment', () => {
     const tabItemHeight = readNumericConstant(source, 'TAB_ITEM_HEIGHT');
     const usableWidth = 320 - sideMargin * 2 - horizontalPadding * 2;
 
-    expect(tabBarHeight).toBeGreaterThanOrEqual(tabItemHeight + 16);
+    expect(tabBarHeight).toBeGreaterThanOrEqual(tabItemHeight + 12);
     expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
-    expect(minTouchTarget).toBeGreaterThanOrEqual(44);
-    expect(usableWidth / 4).toBeGreaterThanOrEqual(72);
+    expect(minTouchTarget).toBeGreaterThanOrEqual(52);
+    expect(usableWidth / 4).toBeGreaterThanOrEqual(74);
     expect(source).toContain('minimumFontScale={0.9}');
     expect(source).toContain('maxFontSizeMultiplier={1.12}');
   });

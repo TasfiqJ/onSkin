@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Polished the floating bottom tab bar and Today clearance on phone widths after
+  320x568 E2E showed the longest tab label had no practical text slack and the
+  compact SPF prompt crowded the floating bar shadow. The tab bar now uses more
+  usable horizontal width, tighter one-line label typography, and stable 52 px
+  tab targets; Today uses the compact contextual recommendation prompt through
+  standard phone heights with a shorter display title. E2E rechecked 320 px and
+  390 px tab geometry, Today/Progress screenshots, and Today -> Progress ->
+  Shelf -> You tab switching in
+  `test-results/human-e2e/2026-07-06/navigation-tabbar-polish/`.
 - Fixed the Shelf manual-add category picker on 320x568 phones after E2E showed
   lower picker rows could sit under the fixed Continue footer and hit-test to the
   footer instead of the visible option. The manual add scroll view now reserves

@@ -49,6 +49,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Render the tab bar at 320 px and 390 px wide phone viewports.
   - Expected result: Today, Progress, Shelf, and You labels render on one line inside the floating bar, with no clipped glyphs, no text overlap, and at least 44 pt tap targets.
   - Evidence: Phone-width screenshots and DOM/native geometry snapshot.
+- Branch: content clearance beneath floating tab bar
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open Today at 320 px and 390 px phone viewports with the contextual SPF prompt visible.
+  - Expected result: No visible CTA or prompt control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view.
+  - Evidence: Phone-width screenshots, hit-test snapshot, and control geometry.
 - Branch: keyboard or text-scale pressure
   - Priority: Important
   - Automate later: Yes

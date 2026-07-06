@@ -30,15 +30,15 @@ function useExpiryReoffer() {
 
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';
 
-const ICON_SIZE = 22;
-const FLOATING_TAB_BAR_HEIGHT = 72;
-const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 10, default: 10 });
+const ICON_SIZE = 21;
+const FLOATING_TAB_BAR_HEIGHT = 68;
+const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 10, android: 8, default: 8 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 34;
-const FLOATING_TAB_BAR_GAP = 18;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 10;
-const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 6;
-const MIN_TAB_TOUCH_TARGET = 54;
-const TAB_ITEM_HEIGHT = 56;
+const FLOATING_TAB_BAR_GAP = 24;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 8;
+const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 4;
+const MIN_TAB_TOUCH_TARGET = 52;
+const TAB_ITEM_HEIGHT = 54;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -331,10 +331,10 @@ const styles = StyleSheet.create({
   },
   iconShell: {
     alignItems: 'center',
-    borderRadius: 15,
-    height: 30,
+    borderRadius: 14,
+    height: 28,
     justifyContent: 'center',
-    width: 42,
+    width: 38,
   },
   iconShellActive: {
     transform: [{ translateY: -1 }],
@@ -363,15 +363,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.paperRaised,
     borderColor: colors.hairlineStrong,
-    borderRadius: 28,
+    borderRadius: 26,
     borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     height: FLOATING_TAB_BAR_HEIGHT,
     justifyContent: 'center',
     left: FLOATING_TAB_BAR_SIDE_MARGIN,
-    paddingBottom: 7,
+    paddingBottom: 6,
     paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
-    paddingTop: 7,
+    paddingTop: 6,
     position: 'absolute',
     right: FLOATING_TAB_BAR_SIDE_MARGIN,
     zIndex: 50,
@@ -379,12 +379,12 @@ const styles = StyleSheet.create({
   tabLabel: {
     flexShrink: 1,
     fontFamily: 'HankenGrotesk_600SemiBold',
-    fontSize: 13,
+    fontSize: 12.5,
     includeFontPadding: false,
     letterSpacing: 0,
-    lineHeight: 17,
-    marginTop: 2,
-    minHeight: 18,
+    lineHeight: 16,
+    marginTop: 1,
+    minHeight: 17,
     minWidth: 0,
     overflow: 'visible',
     textAlign: 'center',
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     minHeight: MIN_TAB_TOUCH_TARGET,
     minWidth: 0,
     paddingBottom: 0,
-    paddingHorizontal: 2,
+    paddingHorizontal: 1,
     paddingTop: 0,
   },
   tabItemActive: {
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 2,
     height: 3,
-    marginTop: 2,
+    marginTop: 1,
     width: 18,
   },
   tabActiveRailVisible: {

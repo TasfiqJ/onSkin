@@ -60,6 +60,7 @@ function ForYouCard({ compact, count, youreSet }: { compact?: boolean; count: nu
 
 function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   const qc = useQueryClient();
+  const compactTitle = 'No SPF this morning';
   // Persist the dismissal (docs/09 §7.2): writing it to the dismissed store means
   // the engine drops the rec, so a dismissed SPF nudge stays dismissed across
   // sessions, matching the hub. (Was local useState that reappeared on remount.)
@@ -77,7 +78,7 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   if (compact) {
     return (
       <View
-        className="mt-3 flex-row items-center gap-2 rounded-[16px] p-2.5"
+        className="mt-0 flex-row items-center gap-2 rounded-[16px] p-0"
         style={{
           backgroundColor: colors.clayTint,
           borderWidth: 1,
@@ -91,7 +92,7 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           className="min-h-[48px] flex-1 flex-row items-center gap-2"
         >
           <View
-            className="h-8 w-8 items-center justify-center rounded-lg"
+            className="h-7 w-7 items-center justify-center rounded-lg"
             style={{ backgroundColor: colors.clay }}
           >
             <Text className="font-sans-bold text-[10px]" style={{ color: colors.paper }}>
@@ -100,13 +101,13 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           </View>
           <View className="min-w-0 flex-1">
             <Text
-              numberOfLines={2}
-              className="font-sans-bold text-[13px]"
-              style={{ color: colors.clayDeep, lineHeight: 16 }}
+              numberOfLines={1}
+              className="font-sans-bold text-[12.5px]"
+              style={{ color: colors.clayDeep, lineHeight: 15 }}
             >
-              {REC_COPY.gapPrompt.title}
+              {compactTitle}
             </Text>
-            <Text className="mt-0.5 font-sans-semibold text-[12.5px]" style={{ color: colors.clay }}>
+            <Text className="mt-0.5 font-sans-semibold text-[12px]" style={{ color: colors.clay }}>
               {REC_COPY.gapPrompt.cta}
             </Text>
           </View>
