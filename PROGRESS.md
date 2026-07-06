@@ -15,6 +15,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Human-simulated E2E reproduced the Shelf opened-date and PAO chips at
   43.99 px tall on a 320 px phone viewport. Buffered the intake chips to 48 px
   and updated the Shelf route contract test.
+- Human-simulated E2E reproduced the Shelf scan torch switch at 43.99 px tall
+  on a 320 px phone viewport. Buffered the switch target to 48 px and updated
+  the Shelf route contract test.
 
 Legend: done / partial / not started / launch-blocked. Use the readiness
 statuses in `LAUNCH_READINESS.md` for current production state:

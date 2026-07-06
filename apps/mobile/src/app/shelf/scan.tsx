@@ -182,7 +182,7 @@ export default function ScanScreen() {
             accessibilityState={{ checked: torch }}
             disabled={!canShowCamera}
             onPress={() => setTorch((value) => !value)}
-            className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+            className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
             <Text variant="label" tone={canShowCamera ? 'inverseMuted' : 'muted'}>
               torch
