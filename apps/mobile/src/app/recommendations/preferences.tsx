@@ -32,11 +32,13 @@ function Toggle({
   label,
   active,
   disabled,
+  fill = false,
   onPress,
 }: {
   label: string;
   active: boolean;
   disabled: boolean;
+  fill?: boolean;
   onPress: () => void;
 }) {
   return (
@@ -50,12 +52,21 @@ function Toggle({
         backgroundColor: active ? colors.ink : colors.paperRaised,
         borderWidth: 1,
         borderColor: active ? colors.ink : colors.hairlineStrong,
+        flexBasis: fill ? 0 : undefined,
+        flexGrow: fill ? 1 : undefined,
+        minWidth: fill ? 0 : undefined,
         opacity: disabled ? 0.58 : 1,
+        paddingHorizontal: fill ? 8 : undefined,
       }}
     >
       <Text
         className="font-sans-medium text-[13.5px]"
-        style={{ color: active ? colors.paper : colors.inkSoft }}
+        numberOfLines={1}
+        style={{
+          color: active ? colors.paper : colors.inkSoft,
+          fontSize: fill ? 12 : undefined,
+          lineHeight: fill ? 16 : undefined,
+        }}
       >
         {label}
       </Text>
@@ -148,6 +159,7 @@ export default function PreferencesScreen() {
           {BUDGETS.map((b) => (
             <Toggle
               key={b}
+              fill
               label={BUDGET_LABEL[b] ?? b}
               active={p.budget === b}
               disabled={controlsDisabled}
