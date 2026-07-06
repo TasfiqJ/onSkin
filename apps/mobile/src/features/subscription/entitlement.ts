@@ -118,3 +118,14 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
 export function isProState(s: SubscriptionState): boolean {
   return s.isPro;
 }
+
+/**
+ * The no-card reverse trial is a first-value path, not a repeat win-back.
+ * Contextual gates can offer it only to a free user with no prior entitlement
+ * record; lapsed reverse trials and paid expiries should see the paid re-offer.
+ */
+export function canStartContextualReverseTrial(
+  s: Pick<SubscriptionState, 'expired' | 'isPro' | 'priorPeriodType'>,
+): boolean {
+  return !s.isPro && !s.expired && s.priorPeriodType === null;
+}
