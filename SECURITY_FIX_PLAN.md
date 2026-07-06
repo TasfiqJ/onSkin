@@ -52,6 +52,7 @@
 - SEC-P2-059: Mobile data export now reports unavailable native sharing instead of silently treating an unshared export as successful.
 - SEC-P2-060: App-wide and photo-timeline biometric lock prompts now surface native prompt failures with stable copy while keeping user cancellations quiet and retryable.
 - SEC-P2-061: App-lock settings and Progress lock copy now use device-neutral wording that fits iOS and Android local-auth methods.
+- SEC-P2-062: Trend insight opt-in/revocation now surfaces consent save failures, refreshes stale consent state after failures, and disables the toggle while saving.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

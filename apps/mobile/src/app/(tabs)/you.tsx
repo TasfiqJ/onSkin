@@ -359,8 +359,8 @@ export default function YouScreen() {
             SECURITY
           </Text>
           <Row
-            label="Device app lock"
-            hint="Require unlock to open the app and your photo timeline."
+            label="App lock"
+            hint="Require your phone's unlock to open the app and your photo timeline."
           >
             <Toggle
               value={lockEnabled}

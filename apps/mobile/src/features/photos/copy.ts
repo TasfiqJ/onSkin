@@ -65,7 +65,7 @@ export const PHOTO_COPY = {
   // Privacy / app-lock (design screen 08, docs/06 §7).
   lock: {
     title: 'Your timeline is locked.',
-    body: 'Your device unlock keeps your photos for your eyes only. They live on this phone, encrypted.',
+    body: "Use your phone's unlock to keep your photos for your eyes only. They live on this phone, encrypted.",
     unlock: 'Unlock',
     cloudTitle: 'Encrypted cloud backup',
     cloudOff: 'Off. A separate choice. Photos stay on-device until you turn it on.',

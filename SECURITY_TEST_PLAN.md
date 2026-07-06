@@ -61,6 +61,7 @@
 - `npm --workspace @onskin/mobile run test -- src/features/photos/sharePhoto.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/settings/actions.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
@@ -115,6 +116,10 @@
   - Proves local-auth prompt success, user cancellation, native prompt rejection, and hardware/enrollment probing map to explicit app-lock statuses.
   - Proves app-wide and Progress photo-timeline lock overlays use the failure-handled helper instead of raw native authentication calls.
   - Proves app-lock copy stays device-neutral for iOS and Android instead of using Face ID-only wording.
+- `apps/mobile/src/features/trend/applyConsentChoice.test.ts`
+  - Proves Trend insight consent grant/revoke successes refresh visible consent state.
+  - Proves failed consent save or withdrawal attempts surface stable copy and still refresh stale consent state.
+  - Proves consent-query refresh failure does not turn a saved local choice into a failed user action.
 - `apps/mobile/src/lib/env.test.ts`
   - Proves missing, copied-placeholder, and invalid Supabase public env values leave the app bootable but unconfigured.
   - Proves missing or invalid app-environment values default to production outside the dev runtime.
@@ -169,6 +174,7 @@
   - Proves subscription, notification, and timing settings exits recover direct-entry users to the You tab.
 - `apps/mobile/src/features/trend/trendRoutes.test.ts`
   - Proves Trend opt-in and deferred Trend direct entries recover to Progress, and the nested fairness explainer recovers to the Trend opt-in route.
+  - Proves the Trend opt-in toggle uses the failure-handled consent helper, alerts on save failure, and disables while saving.
 - `apps/mobile/src/features/today/useToday.test.ts`
   - Proves the Today header uses local date/time helpers instead of hard-coded design-placeholder clock copy.
 - `scripts/phase9/release-smoke.mjs`

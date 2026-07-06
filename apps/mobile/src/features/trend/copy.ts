@@ -26,6 +26,8 @@ export const TREND_COPY = {
     consentLine: 'A separate, distinct, revocable choice, never bundled with anything else.',
     toggleLabel: 'Read my progress',
     toggleHint: 'Off by default',
+    saveFailedTitle: 'Choice not saved',
+    saveFailedBody: 'We could not save that choice. Please try again.',
     footer: 'never default-on · installed base is re-consented, never silently enrolled',
     cta: 'Turn on reading my progress',
     decline: 'Not now',

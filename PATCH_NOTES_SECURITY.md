@@ -529,3 +529,10 @@
 - Change: Replaced Face ID-only app-lock wording with device-neutral copy in the Progress lock surface and You tab security setting.
 - Why safe: The app ships on iOS and Android across phones with Face ID, Touch ID, fingerprint, face unlock, passcode fallback, or no enrolled biometric method. The UI should not imply that only Face ID users are supported.
 - Regression: `authenticate.test.ts` blocks reintroducing Face ID, Touch ID, iPhone, or fingerprint-specific wording in app-lock copy.
+
+## Trend consent toggle recovery
+
+- Files: `apps/mobile/src/features/trend/applyConsentChoice.ts`, `apps/mobile/src/features/trend/applyConsentChoice.test.ts`, `apps/mobile/src/app/trend/optin.tsx`, `apps/mobile/src/features/trend/copy.ts`, `apps/mobile/src/features/trend/trendRoutes.test.ts`.
+- Change: Trend insight opt-in/revocation now runs through a tested consent-choice helper. The helper surfaces stable "Choice not saved" copy on grant/revoke failure, always refreshes the visible consent query, and keeps query-refresh failures from turning a saved choice into a failed user action. The opt-in switch is disabled while saving.
+- Why safe: `photo_trend_insights` is a separate health-data consent. A failed save or withdrawal must not look like an inert toggle or silently leave stale consent state on screen.
+- Regression: `applyConsentChoice.test.ts` covers success, save failure, withdrawal failure, and refresh failure; `trendRoutes.test.ts` locks the route to the helper and disabled saving state.

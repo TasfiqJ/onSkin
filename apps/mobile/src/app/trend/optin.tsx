@@ -1,8 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, Switch, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { applyTrendConsentChoice } from '@/features/trend/applyConsentChoice';
 import { grantTrendInsightsConsent, revokeTrendInsightsConsent } from '@/features/trend/consent';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useTrendConsent } from '@/features/trend/useTrend';
@@ -39,12 +41,23 @@ function Bullet({ children }: { children: React.ReactNode }) {
 export default function TrendOptInScreen() {
   const qc = useQueryClient();
   const { data: consented } = useTrendConsent();
+  const [saving, setSaving] = useState(false);
 
   const setEnabled = async (on: boolean) => {
+    if (saving) return;
+    setSaving(true);
     haptics.select();
-    if (on) await grantTrendInsightsConsent();
-    else await revokeTrendInsightsConsent();
-    await qc.invalidateQueries({ queryKey: ['trendConsent'] });
+    try {
+      await applyTrendConsentChoice(on, {
+        grant: grantTrendInsightsConsent,
+        revoke: revokeTrendInsightsConsent,
+        invalidate: () => qc.invalidateQueries({ queryKey: ['trendConsent'] }),
+        onFailure: () =>
+          Alert.alert(TREND_COPY.optIn.saveFailedTitle, TREND_COPY.optIn.saveFailedBody),
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -111,6 +124,7 @@ export default function TrendOptInScreen() {
           </View>
           <Switch
             value={consented ?? false}
+            disabled={saving}
             onValueChange={(v) => void setEnabled(v)}
             trackColor={{ true: colors.sage, false: colors.greigeDeep }}
             thumbColor={colors.paperRaised}

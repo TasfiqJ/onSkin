@@ -17,6 +17,16 @@ describe('Trend route contracts', () => {
     expect(source).toContain('backOrReplace(router, APP_PROGRESS_ROUTE)');
   });
 
+  it('keeps the opt-in toggle failure handled and retryable', () => {
+    const source = readAppRoute('trend/optin.tsx');
+
+    expect(source).toContain('applyTrendConsentChoice');
+    expect(source).toContain('Alert.alert(TREND_COPY.optIn.saveFailedTitle');
+    expect(source).toContain("invalidate: () => qc.invalidateQueries({ queryKey: ['trendConsent'] })");
+    expect(source).toContain('disabled={saving}');
+    expect(source).toContain('setSaving(false)');
+  });
+
   it('keeps the fairness explainer safe for direct entry', () => {
     const source = readAppRoute('trend/fairness.tsx');
 

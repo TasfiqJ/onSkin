@@ -344,6 +344,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Simulate a returning user with photo history but no `photo_trend_insights` consent.
   - Expected result: Trend insight stays hidden until the user explicitly opts in; no previous photo user is silently enrolled.
   - Evidence: Screenshot and local consent state.
+- Branch: consent save or withdrawal failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Toggle Trend opt-in on and off while forcing local consent persistence, consent withdrawal, or consent query refresh to fail.
+  - Expected result: The switch is disabled while saving, failed grant/revoke attempts show stable "choice not saved" copy, the visible consent state refreshes after failure, and no raw backend/provider error appears.
+  - Evidence: Alert text, switch disabled state, query refresh assertion, and visible route state.
 - Branch: fairness floor copy
   - Priority: Critical
   - Automate later: Yes

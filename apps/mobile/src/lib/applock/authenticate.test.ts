@@ -82,9 +82,10 @@ describe('app lock local authentication', () => {
     const youTab = readSource('app/(tabs)/you.tsx');
     const lockCopy = [PHOTO_COPY.lock.body, PHOTO_COPY.lock.unlock].join(' ');
 
-    expect(lockCopy).toContain('device unlock');
+    expect(lockCopy).toContain("phone's unlock");
     expect(lockCopy).not.toMatch(/\b(Face ID|Touch ID|iPhone|fingerprint)\b/i);
-    expect(youTab).toContain('Device app lock');
+    expect(youTab).toContain('App lock');
+    expect(youTab).toContain("phone's unlock");
     expect(youTab).not.toContain('Face ID app lock');
   });
 });
