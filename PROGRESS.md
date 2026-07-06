@@ -4,6 +4,12 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-06
+
+- Human-simulated E2E reproduced the expired subscription settings win-back CTA
+  at 43.99 px tall on a 320 px phone viewport. Buffered the CTA to 48 px and
+  added a settings route contract test to prevent the exact-44 px regression.
+
 Legend: done / partial / not started / launch-blocked. Use the readiness
 statuses in `LAUNCH_READINESS.md` for current production state:
 `implemented`, `stubbed`, `simulated`, `inert`, `needs-device-verification`,

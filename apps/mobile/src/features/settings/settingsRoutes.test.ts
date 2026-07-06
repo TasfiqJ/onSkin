@@ -100,9 +100,10 @@ describe('Settings route contracts', () => {
     );
   });
 
-  it('keeps secondary subscription exits at least 44px tall', () => {
+  it('keeps secondary subscription exits buffered above 44px on phones', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
-    expect(source).toContain('mt-4 min-h-[44px] items-center justify-center py-2');
+    expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
+    expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');
   });
 });
