@@ -91,6 +91,22 @@ export function warn(warnings, condition, message) {
   if (!condition) warnings.push(message);
 }
 
+const PUBLIC_SECRET_NAME = /(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i;
+const PUBLIC_SECRET_VALUE =
+  /(sb_secret_|service_role|whsec_|sk_(?:live|test|prod|secret)|sntrys_|phx_|-----BEGIN|PRIVATE KEY)/i;
+
+export function blockPublicEnvSecrets(errors, env, exampleEnv = {}) {
+  const publicEnvKeys = new Set(
+    [...Object.keys(exampleEnv), ...Object.keys(env)].filter((name) => name.startsWith('EXPO_PUBLIC_')),
+  );
+
+  for (const key of publicEnvKeys) {
+    block(errors, !PUBLIC_SECRET_NAME.test(key), `Secret-looking key is public: ${key}.`);
+    const value = String(env[key] ?? exampleEnv[key] ?? '');
+    block(errors, !PUBLIC_SECRET_VALUE.test(value), `Secret-looking value is public: ${key}.`);
+  }
+}
+
 export function command(commandName, args, options = {}) {
   return execFileSync(commandName, args, {
     cwd: root,

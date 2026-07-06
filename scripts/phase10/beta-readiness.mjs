@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {
   block,
+  blockPublicEnvSecrets,
   envFile,
   envSnapshot,
   exists,
@@ -22,6 +23,7 @@ for (const file of phase10RequiredDocs()) block(errors, exists(file), `${file} i
 for (const key of [...requiredPhase10EvidenceKeys(), 'PHASE10_PUBLIC_LAUNCH_DECISION', 'PHASE10_SIGNED_OFF_BY']) {
   block(errors, Object.prototype.hasOwnProperty.call(exampleEnv, key), `.env.example is missing ${key}.`);
 }
+blockPublicEnvSecrets(errors, env, exampleEnv);
 
 const packageJson = JSON.parse(read('package.json'));
 for (const script of [

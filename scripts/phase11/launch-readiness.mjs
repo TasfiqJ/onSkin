@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {
   block,
+  blockPublicEnvSecrets,
   envFile,
   envSnapshot,
   exists,
@@ -22,6 +23,7 @@ for (const file of phase11RequiredDocs()) block(errors, exists(file), `${file} i
 for (const key of [...requiredPhase11EvidenceKeys(), 'PHASE11_SIGNED_OFF_BY']) {
   block(errors, Object.prototype.hasOwnProperty.call(exampleEnv, key), `.env.example is missing ${key}.`);
 }
+blockPublicEnvSecrets(errors, env, exampleEnv);
 
 const packageJson = JSON.parse(read('package.json'));
 for (const script of ['phase11:launch-readiness', 'phase11:ring-gates', 'phase11:launch-packet', 'phase11:verify']) {
@@ -75,4 +77,3 @@ for (const key of requiredPhase11EvidenceKeys()) {
 warn(warnings, Boolean(env.PHASE11_SIGNED_OFF_BY), 'Missing Phase 11 named signoff: PHASE11_SIGNED_OFF_BY.');
 
 printResult('Phase 11 launch readiness', errors, warnings);
-

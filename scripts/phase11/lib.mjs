@@ -1,6 +1,7 @@
 export {
   abs,
   block,
+  blockPublicEnvSecrets,
   command,
   envFile,
   envSnapshot,
@@ -72,4 +73,3 @@ export function phase11SourceFiles() {
     ...phase11RequiredDocs(),
   ];
 }
-

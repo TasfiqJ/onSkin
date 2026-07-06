@@ -19,6 +19,8 @@
 - `node --check scripts/phase9/data-rights-smoke.mjs`
 - `node --check scripts/phase9/edge-auth-smoke.mjs`
 - `node --check scripts/phase9/release-smoke.mjs`
+- `node --check scripts/phase10/beta-readiness.mjs`
+- `node --check scripts/phase11/launch-readiness.mjs`
 - `node --check scripts/phase7/check-core-loop.mjs`
 - `node --check scripts/phase7/build-core-loop-qa-packet.mjs`
 - `node --check scripts/phase2/check-env.mjs`
@@ -92,6 +94,8 @@
 - `$env:PHASE9_RUN_NPM_AUDIT='true'; npm run phase9:verify`
 - `$env:EXPO_PUBLIC_APP_ENV='production'; $env:EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED='true'; node scripts/phase9/release-smoke.mjs` (expected failure probe for production Phase 7 evidence blockers)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase2/check-env.mjs --strict` (expected failure probe for private-looking public env values)
+- `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase10/beta-readiness.mjs` (expected failure probe for private-looking public env values)
+- `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase11/launch-readiness.mjs` (expected failure probe for private-looking public env values)
 - Missing-app-env live Edge auth expected failure probe with `PHASE9_RUN_LIVE_EDGE_AUTH=true` and fake non-placeholder Supabase credentials; proves live harnesses classify absent real app env as production and refuse without `PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH=true`.
 - `npm audit --audit-level=moderate`
 - `npm audit --audit-level=high`
@@ -346,6 +350,8 @@
   - Proves obvious private-looking values are blocked from public env keys even when the public key name itself is allowed.
 - `scripts/phase2/check-env.mjs`
   - Proves actual `EXPO_PUBLIC_*` env keys fail strict validation when an allowed public key contains an obvious private-looking value.
+- `scripts/phase9/lib.mjs`, `scripts/phase10/beta-readiness.mjs`, `scripts/phase11/launch-readiness.mjs`
+  - Proves beta and public-launch readiness gates share the public-env secret guard instead of relying on operators to run earlier gates.
 - `apps/mobile/package.json` / `package-lock.json`
   - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.
   - Verified with `npm test`, `npm run typecheck`, `npm run lint`, `npm audit --audit-level=moderate`, and the audit-enabled Phase 9 dependency SBOM.

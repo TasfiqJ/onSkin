@@ -788,3 +788,10 @@
 - Change: Phase 2 strict env validation now blocks private-looking values in actual `EXPO_PUBLIC_*` keys while reporting only key names.
 - Why safe: Phase 2 is the earlier infrastructure gate operators run before release-candidate evidence. It should catch the same accidental public-secret assignment as the Phase 9 release gate.
 - Regression: `phase2:check-env` still reports the normal placeholder blockers, and an expected-failure probe with `EXPO_PUBLIC_POSTHOG_KEY=sk_live_blocked` verifies that private-looking public values are blocked.
+
+## Later readiness public-env secret gate
+
+- Files: `scripts/phase9/lib.mjs`, `scripts/phase9/release-smoke.mjs`, `scripts/phase10/lib.mjs`, `scripts/phase10/beta-readiness.mjs`, `scripts/phase11/lib.mjs`, `scripts/phase11/launch-readiness.mjs`.
+- Change: Public-env key/value secret checks now live in a shared helper and run from Phase 10 beta readiness and Phase 11 launch readiness, not only Phase 9 release smoke.
+- Why safe: Later beta/public launch gates can be run directly during launch operations. They should fail closed if the active shell exposes private-looking values through `EXPO_PUBLIC_*`.
+- Regression: `phase9:release-smoke` still passes normal code gates, and expected-failure probes with `EXPO_PUBLIC_POSTHOG_KEY=sk_live_blocked` verify that Phase 10 and Phase 11 readiness reject private-looking public values.

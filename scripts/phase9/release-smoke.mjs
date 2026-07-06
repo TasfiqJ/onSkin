@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {
   block,
+  blockPublicEnvSecrets,
   command,
   envFile,
   envSnapshot,
@@ -258,21 +259,7 @@ block(
   'Phase 7 launch tests must cover production fail-closed and staging exercise behavior.',
 );
 
-const publicEnvKeys = new Set(
-  [...Object.keys(exampleEnv), ...Object.keys(env)].filter((name) => name.startsWith('EXPO_PUBLIC_')),
-);
-const publicSecretValue =
-  /(sb_secret_|service_role|whsec_|sk_(?:live|test|prod|secret)|sntrys_|phx_|-----BEGIN|PRIVATE KEY)/i;
-
-for (const key of publicEnvKeys) {
-  block(
-    errors,
-    !/(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i.test(key),
-    `Secret-looking key is public: ${key}.`,
-  );
-  const value = String(env[key] ?? exampleEnv[key] ?? '');
-  block(errors, !publicSecretValue.test(value), `Secret-looking value is public: ${key}.`);
-}
+blockPublicEnvSecrets(errors, env, exampleEnv);
 
 const placeholder = (value) =>
   !value ||
