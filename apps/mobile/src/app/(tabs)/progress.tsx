@@ -106,8 +106,14 @@ function PairPicker({
 }) {
   return (
     <Modal visible={which !== null} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }} onPress={onClose}>
-        <Pressable className="rounded-t-sheet bg-paper px-6 pb-10 pt-4" onPress={() => {}}>
+      <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
+        <Pressable
+          className="flex-1"
+          accessibilityLabel="Dismiss photo picker"
+          accessibilityRole="button"
+          onPress={onClose}
+        />
+        <View accessibilityViewIsModal className="rounded-t-sheet bg-paper px-6 pb-10 pt-4">
           <View className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
           <Text variant="titleSm" className="mb-1">
             Choose the {which === 'before' ? 'first' : 'second'} photo
@@ -148,8 +154,8 @@ function PairPicker({
                 );
               })}
           </ScrollView>
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
     </Modal>
   );
 }

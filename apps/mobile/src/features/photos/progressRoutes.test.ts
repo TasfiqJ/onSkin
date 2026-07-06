@@ -43,4 +43,14 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('height: 44, marginTop: 8');
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });
+
+  it('keeps the compare photo picker dismissible without inert sheet buttons', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+
+    expect(source).toContain('accessibilityLabel="Dismiss photo picker"');
+    expect(source).toContain('accessibilityRole="button"');
+    expect(source).toContain('className="flex-1"\n          accessibilityLabel="Dismiss photo picker"');
+    expect(source).toContain('accessibilityViewIsModal');
+    expect(source).not.toContain('onPress={() => {}}');
+  });
 });

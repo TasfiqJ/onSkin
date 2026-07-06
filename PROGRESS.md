@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Reworked the reminder timing and Progress comparison picker sheets so their
+  backdrops expose named dismiss actions and their sheet bodies no longer create
+  inert unlabeled tap targets. Expo web E2E at 320 px verified timing picker
+  dismissal and modal accessibility geometry.
 - Removed the fake inactive circular control from the Progress capture header by
   replacing it with a transparent 48 px spacer that balances the real Close
   button. Expo web E2E at 320 px verified direct `/progress/capture` geometry

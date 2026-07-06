@@ -43,12 +43,20 @@ function TimePickerModal({
           : 'Quiet hours end';
   return (
     <Modal visible={field !== null} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable
+      <View
         className="flex-1 justify-end"
         style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}
-        onPress={onClose}
       >
-        <Pressable className="rounded-t-sheet bg-paper px-6 pb-10 pt-4" onPress={() => {}}>
+        <Pressable
+          className="flex-1"
+          accessibilityLabel="Dismiss time picker"
+          accessibilityRole="button"
+          onPress={onClose}
+        />
+        <View
+          accessibilityViewIsModal
+          className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
+        >
           <View
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
             style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
@@ -79,8 +87,8 @@ function TimePickerModal({
               );
             })}
           </ScrollView>
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
     </Modal>
   );
 }

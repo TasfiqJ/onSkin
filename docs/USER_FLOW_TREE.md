@@ -342,7 +342,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Progress capture, review, no-score explainer, and missing photo detail routes directly, then use the visible Close, Back, or Not now control.
-  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Visible route exits and Not now controls meet the 44 pt phone touch target, and capture permission/recovery gates scroll on short phones.
+  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Visible route exits and Not now controls meet the 44 pt phone touch target, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a named dismiss action without unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence and 320 px button-geometry snapshot.
 - Branch: single-photo share unavailable or rejected
   - Priority: Important
@@ -735,7 +735,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open notification settings, toggle reminder tiers, edit AM/PM timing and quiet hours, then return to settings.
-  - Expected result: User-set times, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy.
+  - Expected result: User-set times, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a named dismiss action and do not create unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence and local preference snapshot.
 
 ## Flow: Ask OnSkin Deterministic Advisor

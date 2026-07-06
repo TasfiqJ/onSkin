@@ -66,6 +66,16 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('accessibilityLabel={title}');
   });
 
+  it('keeps the reminder time picker dismissible without inert sheet buttons', () => {
+    const source = readAppRoute('settings/timing.tsx');
+
+    expect(source).toContain('accessibilityLabel="Dismiss time picker"');
+    expect(source).toContain('accessibilityRole="button"');
+    expect(source).toContain('className="flex-1"\n          accessibilityLabel="Dismiss time picker"');
+    expect(source).toContain('accessibilityViewIsModal');
+    expect(source).not.toContain('onPress={() => {}}');
+  });
+
   it('keeps You tab privacy and security switches on the 44px shared control', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
