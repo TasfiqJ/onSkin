@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the cycle disruption sheet after 320x568 E2E showed the post-procedure
+  recovery option hidden below the first viewport. Compact phones now show all
+  four disruption choices as 70 px+ rows with contextual accessibility labels,
+  and tapping `I had a facial or peel` still opens the recovery route.
 - Fixed the phased-introduction cycle sheet after 320x568 E2E showed the
   `Sounds good` action clipped and `Add it now anyway` pushed below the first
   viewport. Compact phones now use tighter sheet spacing, skip the tiny backdrop

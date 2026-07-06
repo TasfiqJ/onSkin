@@ -138,6 +138,17 @@ describe('Pro-gated route contracts', () => {
       );
     }
 
+    const disruption = readAppRoute('cycle/disruption.tsx');
+    expect(disruption).toContain('useWindowDimensions');
+    expect(disruption).toContain('const compactSheet = height < 640');
+    expect(disruption).toContain('backdropAccessible={!compactSheet}');
+    expect(disruption).toContain("className={compactSheet ? 'pb-6' : undefined}");
+    expect(disruption).toContain("className={compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}");
+    expect(disruption).toContain("'min-h-[72px] gap-3 px-3.5 py-3'");
+    expect(disruption).toContain('accessibilityLabel={`${title}. ${sub}`}');
+    expect(disruption).toContain('compact={compactSheet}');
+    expect(disruption).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
+
     const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
     expect(phasedIntro).toContain('useWindowDimensions');
     expect(phasedIntro).toContain('const compactSheet = height < 640');
