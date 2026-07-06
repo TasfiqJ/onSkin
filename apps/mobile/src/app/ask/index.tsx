@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import type { AskAnswer } from '@/features/ask/answer';
@@ -280,6 +280,7 @@ function SuggestedPrompt({ label, onPress }: { label: string; onPress: () => voi
 }
 
 export default function AskScreen() {
+  const { height } = useWindowDimensions();
   const { ask, askSuggested, isLoading, hasShelf } = useAsk();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
@@ -296,13 +297,19 @@ export default function AskScreen() {
     return `m${idRef.current}`;
   };
 
-  const pushTurn = (question: string, answer: AskAnswer) => {
+  const pushTurn = (
+    question: string,
+    answer: AskAnswer,
+    options: { scrollToEnd?: boolean } = {},
+  ) => {
     setMessages((m) => [
       ...m,
       { id: nextId(), role: 'user', text: question },
       { id: nextId(), role: 'assistant', answer },
     ]);
-    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+    if (options.scrollToEnd !== false) {
+      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+    }
   };
 
   // Proactive first answer (docs/13 §9/§14, "the conversion linchpin"): once the
@@ -313,7 +320,7 @@ export default function AskScreen() {
     if (ledRef.current || isLoading || !hasShelf || messages.length > 0) return;
     ledRef.current = true;
     track('ask_proactive_lead_shown');
-    pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'));
+    pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, hasShelf]);
 
@@ -325,6 +332,7 @@ export default function AskScreen() {
   };
 
   const empty = messages.length === 0;
+  const compactPhone = height < 640;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -410,10 +418,12 @@ export default function AskScreen() {
                 label={ASK_COPY.home.prompts.tonight}
                 onPress={() => pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'))}
               />
-              <SuggestedPrompt
-                label={ASK_COPY.home.prompts.fit}
-                onPress={() => pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'))}
-              />
+              {!compactPhone ? (
+                <SuggestedPrompt
+                  label={ASK_COPY.home.prompts.fit}
+                  onPress={() => pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'))}
+                />
+              ) : null}
             </View>
           </View>
         )}

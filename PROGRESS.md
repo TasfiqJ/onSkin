@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Ask OnSkin proactive-answer layout after 320x568 E2E showed the
+  automatic first answer starting scrolled under the header and a follow-up
+  prompt clipping behind the composer. Automatic lead-in answers now stay
+  anchored below the title, user-triggered turns still scroll to the latest
+  message, and compact phones show one follow-up prompt plus the composer; E2E
+  verified no clipped, small, or overlapped controls on `/ask`.
 - Fixed the Today SPF prompt short-phone tab-bar overlap after a 320x568 E2E
   sweep showed `See why` and `Not now` sitting under the floating navigation.
   Compact Today screens now tighten the trial banner and routine card, preserve

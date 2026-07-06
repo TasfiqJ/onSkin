@@ -78,4 +78,17 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('className="gap-2"');
     expect(home).not.toContain('py-3.5');
   });
+
+  it('does not auto-scroll the proactive first answer under the header on short phones', () => {
+    const home = readAppRoute('ask/index.tsx');
+
+    expect(home).toContain('useWindowDimensions');
+    expect(home).toContain('const compactPhone = height < 640');
+    expect(home).toContain('options: { scrollToEnd?: boolean } = {}');
+    expect(home).toContain('if (options.scrollToEnd !== false)');
+    expect(home).toContain(
+      "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
+    );
+    expect(home).toContain('{!compactPhone ? (');
+  });
 });
