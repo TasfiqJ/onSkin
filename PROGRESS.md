@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf empty-active archive trap after 320x568 E2E showed finishing
+  the only product returned to an empty Shelf with no route back to archived
+  history. The empty state now exposes the 48 px View archive action when archive
+  history exists, and the populated Shelf archive link uses the same buffered
+  target and accessibility label.
 - Tightened the floating bottom tab bar to a cleaner Wealthsimple-style capsule
   after 320 px E2E review showed the selected tab treatment still felt bulky and
   label geometry was operating at the edge. The active state now uses a compact

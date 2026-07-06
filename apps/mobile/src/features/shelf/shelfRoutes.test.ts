@@ -111,6 +111,22 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('event.stopPropagation()');
   });
 
+  it('keeps archived products reachable when the active Shelf is empty', () => {
+    const source = readAppRoute('(tabs)/shelf.tsx');
+
+    expect(source).toContain('function EmptyShelf({ archiveCount }: { archiveCount: number })');
+    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} />');
+    expect(source).toContain('{archiveCount > 0 ? (');
+    expect(source).toContain('accessibilityLabel={`View archive, ${archiveCount} archived ${');
+    expect(source).toContain("archiveCount === 1 ? 'product' : 'products'");
+    expect(source).toContain("router.push('/shelf/archive');");
+    expect(source).toContain('className="min-h-[48px] items-center justify-center py-2"');
+    expect(source).toContain('className="mt-6 min-h-[48px] items-center justify-center py-2"');
+    expect(source).not.toContain('function EmptyShelf()');
+    expect(source).not.toContain('<EmptyShelf />');
+    expect(source).not.toContain('className="mt-6 items-center py-2"');
+  });
+
   it('keeps the Shelf scan torch switch buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/scan.tsx');
 

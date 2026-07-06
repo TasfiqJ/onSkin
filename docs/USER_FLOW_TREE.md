@@ -281,6 +281,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Set an opened date or replenish state at a boundary date.
   - Expected result: The app explains expiration/replenish status clearly, and the opened-date sheet shows all three core opened-state choices without clipping on short phones before the user scrolls to PAO or save actions.
   - Evidence: Screenshot.
+- Branch: active shelf empty with archive history
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add one product, mark it finished or discarded, then return to the Shelf tab with no active products.
+  - Expected result: The empty Shelf still exposes a `View archive` action with the archived count, the action meets the 44 pt phone touch target, and tapping it opens the archive with the finished/discarded product visible.
+  - Evidence: Screenshot sequence, visible route snapshot, and touch target measurement.
 - Branch: direct-entry back or close navigation
   - Priority: Important
   - Automate later: Yes

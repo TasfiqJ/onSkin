@@ -103,7 +103,7 @@ function ProductCard({ item }: { item: ShelfItem }) {
   );
 }
 
-function EmptyShelf() {
+function EmptyShelf({ archiveCount }: { archiveCount: number }) {
   return (
     <View className="flex-1 items-center justify-center px-2 pb-16">
       <View className="mb-7 flex-row items-end gap-2.5">
@@ -145,6 +145,23 @@ function EmptyShelf() {
             Add by hand
           </Text>
         </Pressable>
+        {archiveCount > 0 ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`View archive, ${archiveCount} archived ${
+              archiveCount === 1 ? 'product' : 'products'
+            }`}
+            onPress={() => {
+              haptics.select();
+              router.push('/shelf/archive');
+            }}
+            className="min-h-[48px] items-center justify-center py-2"
+          >
+            <Text variant="label" tone="muted">
+              View archive ({archiveCount}) →
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );
@@ -221,7 +238,7 @@ export default function ShelfScreen() {
               empty for now
             </Text>
           </View>
-          <EmptyShelf />
+          <EmptyShelf archiveCount={archiveCount} />
         </>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
@@ -278,7 +295,10 @@ export default function ShelfScreen() {
           {archiveCount > 0 ? (
             <Pressable
               accessibilityRole="button"
-              className="mt-6 items-center py-2"
+              accessibilityLabel={`View archive, ${archiveCount} archived ${
+                archiveCount === 1 ? 'product' : 'products'
+              }`}
+              className="mt-6 min-h-[48px] items-center justify-center py-2"
               onPress={() => {
                 haptics.select();
                 router.push('/shelf/archive');
