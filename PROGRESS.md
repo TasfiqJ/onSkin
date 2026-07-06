@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed routine-plan profile-label honesty for the first-value loop. The
+  generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
+  derives real plan labels from saved `oily_dry` and `sensitive_resistant`
+  profile axes, and falls back to `BUILT FROM YOUR SHELF` instead of fabricating
+  dry/sensitive claims. Added pure mapping tests and the `Routine Plan First
+Value` branch to `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
+  320x568 Expo web, the local no-card `Explore first` unlock path, and
+  `Start today` handoff in
+  `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`. Direct free
+  `/routine/plan` still shows the existing `full_routine` contextual paywall;
+  that is recorded as a product-gating note for a future pay-after-value slice.
 - Fixed the Phase 6 payments readiness checker after it falsely failed the
   RevenueCat webhook because it only accepted the old unbounded `req.text()`
   pattern. The webhook already uses the safer bounded `readLimitedText(req,

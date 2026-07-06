@@ -192,6 +192,45 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app does not advance to reveal as if onboarding were saved; it shows a retry path while preserving the quiz answers in memory.
   - Evidence: Error-state screenshot and retry/reveal route snapshot.
 
+## Flow: Routine Plan First Value
+
+- Goal: A user sees a generated AM/PM routine that is clearly tied to their shelf and profile.
+- Persona: New or returning user reaching the first routine plan from onboarding or direct routine entry.
+- Entry state: User has either a real shelf/profile or the documented empty-shelf example state.
+- Start screen/URL/window: `/routine/plan`.
+- Success state: The plan explains whether it is using the user's profile or an example, shows no hardcoded mismatched skin profile, keeps a visible escape path, and lets the user start Today.
+- Priority: Critical
+- Automate later: Yes
+- Surface: iOS and Android first; Expo web for profile-label and compact-layout checks.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/routine-plan/`
+
+### Path A: Generated Plan Review
+
+1. Action: Open `/routine/plan`, inspect the profile label, review AM and PM cards, then tap Start today.
+   Expected result: The profile label reflects the actual plan context, the routine cards fit the viewport, and Start today routes to Today without a dead end.
+   Evidence: Screenshot, visible-text snapshot, and route snapshot.
+
+### Branches
+
+- Branch: empty-shelf example label
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/routine/plan` with no shelf products or saved profile.
+  - Expected result: The plan labels itself as an example and does not claim it was built for the user's real dry/sensitive profile.
+  - Evidence: Screenshot and visible-text snapshot.
+- Branch: real profile label
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/routine/plan` with a saved profile whose sensitivity is neutral or resistant.
+  - Expected result: The label reflects that profile state rather than hardcoding `dry, sensitive skin`.
+  - Evidence: Screenshot and local profile fixture snapshot.
+- Branch: direct-entry back recovery
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/routine/plan` directly and use the visible Back control.
+  - Expected result: The user returns to the You tab instead of staying trapped on the plan route.
+  - Evidence: Screenshot sequence and route snapshot.
+
 ## Flow: Today Routine Completion
 
 - Goal: A returning user can understand and complete today's routine steps.
