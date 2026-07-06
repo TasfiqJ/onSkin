@@ -11,6 +11,7 @@ import {
 } from '@/features/streak/streak';
 import { getCompletedDates, getCountByDate } from '@/features/today/completionsStore';
 import { localDateString } from '@/features/today/useToday';
+import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
 // Calm, forgiving progress data (docs/03 §6 + docs/07 §4): weekly adherence, a
@@ -36,6 +37,8 @@ export type ProgressData = {
   frozenDates: string[];
 };
 
+type ServerCompletion = { completed_date: string };
+
 export function useProgress() {
   const todayISO = localDateString();
 
@@ -48,14 +51,37 @@ export function useProgress() {
       // Look back far enough for the streak run (beyond the current month).
       const lookback = new Date(today.getTime() - 120 * 86_400_000);
 
-      const { data: completions } = await supabase
-        .from('routine_completions')
-        .select('completed_date')
-        .gte('completed_date', localDateString(lookback));
+      let completions: ServerCompletion[] = [];
+      let serverLongest = 0;
+      if (isSupabaseConfigured) {
+        try {
+          const { data } = await supabase
+            .from('routine_completions')
+            .select('completed_date')
+            .gte('completed_date', localDateString(lookback));
+          completions = (data ?? []).filter(
+            (completion): completion is ServerCompletion =>
+              typeof completion.completed_date === 'string',
+          );
+        } catch {
+          completions = [];
+        }
+
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('longest_streak')
+            .limit(1)
+            .maybeSingle();
+          serverLongest = profile?.longest_streak ?? 0;
+        } catch {
+          serverLongest = 0;
+        }
+      }
 
       const countByDate = new Map<string, number>();
       const completed = new Set<string>();
-      for (const c of completions ?? []) {
+      for (const c of completions) {
         completed.add(c.completed_date);
         countByDate.set(c.completed_date, (countByDate.get(c.completed_date) ?? 0) + 1);
       }
@@ -66,12 +92,6 @@ export function useProgress() {
       const localCounts = await getCountByDate();
       for (const d of localDates) completed.add(d);
       for (const [d, n] of localCounts) countByDate.set(d, Math.max(countByDate.get(d) ?? 0, n));
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('longest_streak')
-        .limit(1)
-        .maybeSingle();
 
       // The freeze state is computed deterministically from the completion gaps
       // (streak.ts), which is the v1 source of truth and recomputes identically on
@@ -86,7 +106,7 @@ export function useProgress() {
       for (const [date, n] of countByDate) if (date >= localDateString(monthStart)) monthCounts.set(date, n);
 
       // longest is a non-decreasing personal best (D-011): greatest(server best, computed).
-      const longest = Math.max(profile?.longest_streak ?? 0, bestStreak(completed), s.current);
+      const longest = Math.max(serverLongest, bestStreak(completed), s.current);
 
       return {
         streak: s.current,

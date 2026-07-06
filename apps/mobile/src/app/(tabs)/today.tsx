@@ -223,7 +223,7 @@ export default function TodayScreen() {
                 accessibilityRole="button"
                 accessibilityLabel="View your streak and adherence"
                 onPress={() => router.push('/routine/streak')}
-                className="flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-3.5 py-1.5"
+                className="min-h-[48px] flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-4 py-2.5"
               >
                 <View className="h-1.5 w-1.5 rounded-full bg-clay" />
                 <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>

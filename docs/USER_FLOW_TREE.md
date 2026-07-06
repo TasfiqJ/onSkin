@@ -201,7 +201,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Happy Path
 
 1. Action: Open Today, review routine steps, complete a step, and verify the completed state.
-   Expected result: Completion is responsive, visually clear, and persists after navigation away and back.
+   Expected result: Completion is responsive, visually clear, and persists after navigation away and back. When a streak is visible, the Today streak/adherence pill remains a buffered 48 px phone target and opens the adherence surface, or its contextual Pro gate for free users.
    Evidence: Screenshot before completion, after completion, and after navigation.
 
 ### Branches

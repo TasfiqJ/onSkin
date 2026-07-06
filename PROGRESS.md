@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Buffered the Today header streak/adherence pill to a 48 px phone target while
+  keeping the calm chip treatment, and made progress loading fail-soft when
+  Supabase is not configured so local check-offs still surface the streak. The
+  Today flow tree now includes the streak pill target in the routine-completion
+  path, with route/progress contract tests guarding both fixes.
 - Refined the floating bottom tab bar toward the Wealthsimple-style reference:
   wider phone geometry, a quieter warm selected state, dark active labels, and a
   small active rail instead of the cramped black active block. Expo web E2E at
