@@ -662,3 +662,10 @@
 - Change: The You-tab `data_sharing` privacy toggle now rolls local commerce consent back off and rethrows when the immutable consent ledger write fails.
 - Why safe: The You tab bypasses the feature-level commerce consent helper. Without the rollback, a failed MHMDA third-party-sharing ledger write could leave where-to-buy/partner-sharing affordances locally enabled.
 - Regression: `applyPrivacyChoice.test.ts` locks the route to the rollback and rejects the old `if (type !== 'data_sharing') throw error` swallow.
+
+## Photo quality analytics minimization
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`.
+- Change: The analytics sanitizer now drops photo-quality result labels (`matched`, `misaligned`, `darker`, `low`) when they arrive through the generic `result` prop.
+- Why safe: Guided-capture quality verdicts are derived from face/photo alignment and lighting signals. They should stay on-device and not become vendor analytics payloads.
+- Regression: `track.test.ts` proves photo-quality result labels are removed while generic result buckets such as `error` remain available for non-sensitive service telemetry.

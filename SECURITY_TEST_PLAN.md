@@ -349,6 +349,7 @@
 - `apps/mobile/src/lib/analytics/track.test.ts`
   - Verifies sensitive analytics keys/values are dropped.
   - Verifies SPF/category, irritation, conflict-check, recommendation, commerce, and Ask-intent style values do not survive sanitization.
+  - Verifies photo-quality result labels are dropped from the generic `result` prop while non-sensitive result buckets remain available.
   - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.
 - `apps/mobile/src/lib/navigation/externalUrl.test.ts`
   - Verifies external handoffs allow only normalized HTTPS URLs, reject custom schemes, plaintext HTTP, embedded credentials, malformed strings, and control characters, and strip fragments before opening.

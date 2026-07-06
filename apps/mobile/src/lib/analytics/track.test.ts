@@ -46,6 +46,17 @@ describe('analytics sanitizer', () => {
     ).toEqual({ source: 'share_card' });
   });
 
+  it('drops photo quality result buckets while preserving generic result buckets', () => {
+    expect(
+      sanitizeAnalyticsProps({
+        on_device: true,
+        result: 'misaligned',
+      }),
+    ).toEqual({ on_device: true });
+
+    expect(sanitizeAnalyticsProps({ result: 'error' })).toEqual({ result: 'error' });
+  });
+
   it('derives a stable pseudonymous user id without exposing the raw Supabase id', async () => {
     const raw = '00000000-0000-4000-8000-000000000001';
     const first = await pseudonymousUserId(raw);
