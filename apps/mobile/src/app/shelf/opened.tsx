@@ -9,6 +9,7 @@ import { paoSourceLabel } from '@/features/shelf/labels';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
+import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // The opened-date linchpin (design screen 04, docs/04 §4.5). Every intake path
@@ -25,7 +26,14 @@ function monthsAgoISO(months: number): string {
 }
 
 const PICK_OPTIONS: { label: string; iso: string }[] = [
-  { label: '2 weeks ago', iso: (() => { const d = new Date(); d.setDate(d.getDate() - 14); return localDateString(d); })() },
+  {
+    label: '2 weeks ago',
+    iso: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 14);
+      return localDateString(d);
+    })(),
+  },
   { label: '1 month ago', iso: monthsAgoISO(1) },
   { label: '3 months ago', iso: monthsAgoISO(3) },
   { label: '6 months ago', iso: monthsAgoISO(6) },
@@ -53,12 +61,14 @@ function OptionRow({
       className={cn(
         'flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4',
         selected ? 'border-2 border-clay' : 'border border-hairline',
-      )}>
+      )}
+    >
       <View
         className={cn(
           'h-[22px] w-[22px] items-center justify-center rounded-full',
           selected ? 'bg-clay' : 'border-[1.5px] border-hairline-strong',
-        )}>
+        )}
+      >
         {selected ? <Text className="text-[11px] text-paper">✓</Text> : null}
       </View>
       <View className="flex-1">
@@ -129,7 +139,7 @@ export default function OpenedDateScreen() {
   };
 
   return (
-    <Sheet>
+    <Sheet fallbackRoute={APP_SHELF_ROUTE}>
       <View className="mb-4 h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
         <Text className="text-[18px] text-clay">◴</Text>
       </View>
@@ -149,7 +159,11 @@ export default function OpenedDateScreen() {
         />
         <OptionRow
           title="Pick a date"
-          subtitle={pickIso ? PICK_OPTIONS.find((o) => o.iso === pickIso)?.label ?? 'Earlier' : 'I opened it earlier'}
+          subtitle={
+            pickIso
+              ? (PICK_OPTIONS.find((o) => o.iso === pickIso)?.label ?? 'Earlier')
+              : 'I opened it earlier'
+          }
           selected={mode === 'pick'}
           onPress={() => setMode('pick')}
         />
@@ -166,8 +180,12 @@ export default function OpenedDateScreen() {
                 className={cn(
                   'rounded-pill px-3.5 py-2',
                   pickIso === o.iso ? 'bg-clay' : 'border border-hairline bg-paper-raised',
-                )}>
-                <Text className="font-sans-medium text-[13px]" tone={pickIso === o.iso ? 'inverse' : 'ink'}>
+                )}
+              >
+                <Text
+                  className="font-sans-medium text-[13px]"
+                  tone={pickIso === o.iso ? 'inverse' : 'ink'}
+                >
                   {o.label}
                 </Text>
               </Pressable>
@@ -190,7 +208,8 @@ export default function OpenedDateScreen() {
           haptics.select();
           setPaoEditOpen((o) => !o);
         }}
-        className="mt-5 flex-row items-center justify-between rounded-[16px] bg-greige-chip px-4 py-3.5">
+        className="mt-5 flex-row items-center justify-between rounded-[16px] bg-greige-chip px-4 py-3.5"
+      >
         <View>
           <Text variant="body" className="font-sans-semibold">
             {pao != null ? `Lasts ~${pao} months opened` : 'PAO not set'}
@@ -217,7 +236,8 @@ export default function OpenedDateScreen() {
               className={cn(
                 'rounded-pill px-4 py-2',
                 pao === n ? 'bg-clay' : 'border border-hairline bg-paper-raised',
-              )}>
+              )}
+            >
               <Text className="font-sans-medium text-[13px]" tone={pao === n ? 'inverse' : 'ink'}>
                 {n} mo
               </Text>
@@ -226,7 +246,12 @@ export default function OpenedDateScreen() {
         </View>
       ) : null}
 
-      <Button className="mt-6" label="Add to shelf" disabled={!canSave || saving} onPress={onSave} />
+      <Button
+        className="mt-6"
+        label="Add to shelf"
+        disabled={!canSave || saving}
+        onPress={onSave}
+      />
     </Sheet>
   );
 }

@@ -1,4 +1,3 @@
-import * as LocalAuthentication from 'expo-local-authentication';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Modal, Pressable, ScrollView, View } from 'react-native';
@@ -12,7 +11,9 @@ import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { TrendInsight } from '@/features/trend/TrendInsight';
+import { authenticateAppLock } from '@/lib/applock/authenticate';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
+import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
@@ -303,8 +304,11 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
 function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
   const insets = useSafeAreaInsets();
   const authenticate = () => {
-    void LocalAuthentication.authenticateAsync({ promptMessage: 'Unlock your photo timeline' }).then((r) => {
-      if (r.success) onUnlock();
+    void authenticateAppLock('Unlock your photo timeline').then((status) => {
+      if (status === 'success') onUnlock();
+      else if (status === 'unavailable') {
+        Alert.alert('Photo timeline locked', appLockUserMessage());
+      }
     });
   };
   useEffect(() => {

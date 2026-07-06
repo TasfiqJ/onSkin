@@ -5,7 +5,7 @@ import { Pressable, View } from 'react-native';
 import { Sheet, Text } from '@/components/ui';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // Disruption hub (design screen 04, docs/05 §6.4/§7). Breaks are managed, not
@@ -67,7 +67,7 @@ export default function DisruptionScreen() {
   const pause = (reason: DisruptionReason) => act(() => m.pause(reason));
 
   return (
-    <Sheet>
+    <Sheet fallbackRoute={APP_HOME_ROUTE}>
       <Text variant="title" className="text-[30px] leading-[34px]" accessibilityRole="header">
         Life happens.
       </Text>

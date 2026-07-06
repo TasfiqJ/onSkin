@@ -2,10 +2,11 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
 import { useEffect, useRef, useState } from 'react';
-import { Linking, Platform, Pressable, View } from 'react-native';
+import { Alert, Platform, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
+import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { useGuidedCaptureSignals } from '@/features/native/camera/guidedSignals';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
@@ -17,6 +18,7 @@ import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
+import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
@@ -130,6 +132,81 @@ function ConsentGate({ onGrant, onCancel }: { onGrant: () => void; onCancel: () 
   );
 }
 
+function CameraUnavailableGate({
+  onRetry,
+  onCancel,
+}: {
+  onRetry: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(10,8,6,0.9)',
+        padding: 28,
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: 'InstrumentSerif_400Regular',
+          fontSize: 30,
+          color: '#F4EFE7',
+          marginBottom: 12,
+        }}
+      >
+        {CAMERA_FAILURE_COPY.progressUnavailableTitle}
+      </Text>
+      <Text
+        style={{
+          fontFamily: 'HankenGrotesk_400Regular',
+          fontSize: 14.5,
+          color: 'rgba(244,239,231,0.78)',
+          lineHeight: 21,
+          marginBottom: 22,
+        }}
+      >
+        {CAMERA_FAILURE_COPY.progressUnavailableBody}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onRetry}
+        style={{
+          height: 56,
+          borderRadius: 999,
+          backgroundColor: '#F4EFE7',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+          Try camera again
+        </Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onCancel}
+        style={{ marginTop: 12, alignItems: 'center' }}
+      >
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_500Medium',
+            fontSize: 15,
+            color: 'rgba(244,239,231,0.6)',
+          }}
+        >
+          Not now
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function PermissionGate({
   canAskAgain,
   onAsk,
@@ -175,7 +252,7 @@ function PermissionGate({
       </Text>
       <Pressable
         accessibilityRole="button"
-        onPress={canAskAgain ? onAsk : () => void Linking.openSettings()}
+        onPress={canAskAgain ? onAsk : () => void openAppSettings()}
         style={{
           height: 56,
           borderRadius: 999,
@@ -214,6 +291,7 @@ function CaptureScreenContent() {
   const [permission, requestPermission] = useCameraPermissions();
   const [consented, setConsented] = useState<boolean | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const { data } = usePhotos('front');
 
@@ -222,7 +300,10 @@ function CaptureScreenContent() {
   }, []);
 
   const canShowCamera =
-    env.nativeCameraEnabled && Platform.OS !== 'web' && Boolean(permission?.granted);
+    env.nativeCameraEnabled &&
+    Platform.OS !== 'web' &&
+    Boolean(permission?.granted) &&
+    !cameraUnavailable;
   const { signals, ready } = useGuidedCaptureSignals(cameraReady && canShowCamera);
   const coaching = coachingLine(signals);
   const light = lightingState(signals);
@@ -258,6 +339,7 @@ function CaptureScreenContent() {
       });
     } catch {
       setCapturing(false);
+      Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle, CAMERA_FAILURE_COPY.progressCaptureBody);
     }
   }
 
@@ -303,7 +385,10 @@ function CaptureScreenContent() {
               mirror
               mode="picture"
               onCameraReady={() => setCameraReady(true)}
-              onMountError={() => setCameraReady(false)}
+              onMountError={() => {
+                setCameraReady(false);
+                setCameraUnavailable(true);
+              }}
               style={{ flex: 1 }}
             />
           ) : null}
@@ -463,7 +548,7 @@ function CaptureScreenContent() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Capture photo"
-            disabled={!canShowCamera || capturing}
+            disabled={!canShowCamera || !cameraReady || capturing}
             onPress={() => void capture()}
             style={{
               width: 78,
@@ -473,7 +558,7 @@ function CaptureScreenContent() {
               borderColor: READY,
               alignItems: 'center',
               justifyContent: 'center',
-              opacity: canShowCamera && !capturing ? 1 : 0.55,
+              opacity: canShowCamera && cameraReady && !capturing ? 1 : 0.55,
             }}
           >
             <View
@@ -533,6 +618,14 @@ function CaptureScreenContent() {
             bottom: 0,
             backgroundColor: BG,
           }}
+        />
+      ) : cameraUnavailable ? (
+        <CameraUnavailableGate
+          onRetry={() => {
+            setCameraUnavailable(false);
+            setCameraReady(false);
+          }}
+          onCancel={closeToProgress}
         />
       ) : !canShowCamera ? (
         <PermissionGate

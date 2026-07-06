@@ -1,0 +1,77 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { COMMUNITY_COPY } from './copy';
+import { SKIN_NOTES } from './notes';
+import { buildSkinNoteShareMessage, shareSkinNote } from './shareNote';
+
+const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+
+function readSource(path: string): string {
+  return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
+}
+
+const mocks = vi.hoisted(() => ({
+  alerts: [] as unknown[][],
+  share: vi.fn(),
+}));
+
+vi.mock('react-native', () => ({
+  Alert: {
+    alert: (...args: unknown[]) => {
+      mocks.alerts.push(args);
+    },
+  },
+  Share: {
+    share: mocks.share,
+  },
+}));
+
+describe('community note sharing', () => {
+  beforeEach(() => {
+    mocks.alerts = [];
+    mocks.share.mockReset();
+  });
+
+  it('keeps the note disclaimer and source context in outbound share text', () => {
+    const note = SKIN_NOTES[0]!;
+    const message = buildSkinNoteShareMessage(note);
+
+    expect(message).toContain(note.claim);
+    expect(message).toContain(note.verdict);
+    expect(message).toContain(COMMUNITY_COPY.card.disclaimer);
+    expect(message).toContain(`${COMMUNITY_COPY.card.sourceLead} ${note.sourceLabel}.`);
+    expect(message).toContain(
+      `${COMMUNITY_COPY.card.reviewedByLead} ${note.authorCredential.toLowerCase()}.`,
+    );
+  });
+
+  it('returns true after opening the native share sheet', async () => {
+    const note = SKIN_NOTES[0]!;
+    mocks.share.mockResolvedValueOnce({ action: 'sharedAction' });
+
+    await expect(shareSkinNote(note)).resolves.toBe(true);
+
+    expect(mocks.share).toHaveBeenCalledWith({ message: buildSkinNoteShareMessage(note) });
+    expect(mocks.alerts).toEqual([]);
+  });
+
+  it('alerts and returns false when the native share sheet fails', async () => {
+    mocks.share.mockRejectedValueOnce(new Error('share unavailable'));
+
+    await expect(shareSkinNote(SKIN_NOTES[0]!)).resolves.toBe(false);
+
+    expect(mocks.alerts[0]).toEqual([
+      'Sharing unavailable',
+      "We couldn't open the share sheet. You can still read this note in Skin Notes.",
+    ]);
+  });
+
+  it('keeps the note route on the claim-safe share helper', () => {
+    const source = readSource('app/community/note/[id].tsx');
+
+    expect(source).toContain('shareSkinNote(note)');
+    expect(source).not.toContain('Share.share');
+  });
+});

@@ -52,7 +52,7 @@ export async function withdrawHealthDataConsent(): Promise<void> {
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;
 // we write it to a one-time cache file, hand it to the OS share sheet, and then
 // immediately remove the plaintext bundle from app cache.
-export async function exportData(): Promise<void> {
+export async function exportData(): Promise<boolean> {
   const { data, error } = await supabase.functions.invoke('data-export', { method: 'POST' });
   if (error) throw error;
   const json = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
@@ -61,9 +61,9 @@ export async function exportData(): Promise<void> {
   const uri = `${cacheDirectory}onskin-export-${Date.now()}.json`;
   try {
     await FileSystem.writeAsStringAsync(uri, json);
-    if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(uri, { mimeType: 'application/json', dialogTitle: 'Export your OnSkin data' });
-    }
+    if (!(await Sharing.isAvailableAsync().catch(() => false))) return false;
+    await Sharing.shareAsync(uri, { mimeType: 'application/json', dialogTitle: 'Export your OnSkin data' });
+    return true;
   } finally {
     await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
   }

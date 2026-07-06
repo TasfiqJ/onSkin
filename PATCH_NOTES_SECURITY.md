@@ -219,6 +219,13 @@
 - Why safe: The export bundle contains the user's health-adjacent account data. It should not remain as a stable plaintext file in app cache after the intentional share handoff, and stale files should be swept during sign-out/account deletion cleanup.
 - Regression: `phase9:data-rights-smoke` fails if the mobile export path returns to the legacy stable filename, writes outside the cleanup block, or stops deleting the plaintext cache file after sharing.
 
+## Data export share availability guard
+
+- Files: `apps/mobile/src/features/settings/actions.ts`, `apps/mobile/src/features/settings/actions.test.ts`, `apps/mobile/src/app/(tabs)/you.tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: `exportData()` now returns whether the OS share sheet actually opened. If native sharing is unavailable or the availability probe fails, the temporary plaintext export file is deleted and the You tab shows stable "Export unavailable" copy instead of treating the action as a successful export/review moment.
+- Why safe: Data export is a privacy-rights workflow. A customer should not see a silent no-op after asking for their data, and the plaintext bundle must still be removed when no share surface exists.
+- Regression: `actions.test.ts` covers successful export sharing, unavailable sharing, availability-probe failure, cache cleanup, and the You-tab non-success handling contract.
+
 ## Generated share cache cleanup
 
 - Files: `apps/mobile/src/features/photos/encryptedStorage.ts`, `apps/mobile/src/app/progress/[id].tsx`, `apps/mobile/src/features/growth/shareCard.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
@@ -399,7 +406,56 @@
 - Files: `apps/mobile/src/lib/navigation/safeBack.ts`, `apps/mobile/src/lib/navigation/safeBack.test.ts`, `apps/mobile/src/features/subscription/proGatedRoutes.test.ts`, `apps/mobile/src/features/commerce/commerceRoutes.test.ts`, `apps/mobile/src/features/community/communityRoutes.test.ts`, `apps/mobile/src/features/intelligence/conflictRoutes.test.ts`, `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`, `apps/mobile/src/features/settings/settingsRoutes.test.ts`, `apps/mobile/src/features/trend/trendRoutes.test.ts`, scheduler, routine, commerce, community, conflict/share-card, recommendation, settings, and trend route screens, `apps/mobile/src/components/launch/DeferredSurface.tsx`, `docs/USER_FLOW_TREE.md`.
 - Change: Added the You, recommendations, commerce-stacks, community, and trend-opt-in routes as safe fallbacks and replaced raw history-back exits across Pro scheduler, routine, commerce, community, conflict detail/share-card, recommendation, settings, and trend surfaces. Deferred commerce, community, share-card, and Trend screens now recover to their owning tabs when those surfaces are not enabled.
 - Why safe: These screens can expose health-adjacent routine timing, product conflict decisions, commerce consent/disclosure context, community participation context, subscription state, notification preferences, and optional photo-trend consent/fairness copy. Direct links, app relaunches, or browser refreshes should not leave users stuck on a sensitive or gated surface with a no-op Back/Done control.
-- Regression: Route-contract tests now fail if scheduler/routine, commerce, community, conflict/share-card, recommendation, settings, or trend routes reintroduce `router.back()` exits or lose their Commerce/Community/Shelf/Recommendations/You/Trend fallback contracts. The shared `Sheet` default remains tracked follow-up work.
+- Regression: Route-contract tests now fail if scheduler/routine, commerce, community, conflict/share-card, recommendation, settings, or trend routes reintroduce `router.back()` exits or lose their Commerce/Community/Shelf/Recommendations/You/Trend fallback contracts.
+
+## Shared Sheet route recovery guard
+
+- Files: `apps/mobile/src/components/ui/Sheet.tsx`, `apps/mobile/src/features/navigation/sheetRouteContracts.test.ts`, cycle sheet routes, shelf sheet routes, paywall upsell route, `docs/USER_FLOW_TREE.md`.
+- Change: Added a typed `fallbackRoute` prop to the shared bottom-sheet component and changed default backdrop dismissal to `backOrReplace(router, fallbackRoute)`. Shelf sheets pass `APP_SHELF_ROUTE`, scheduler sheets pass `APP_HOME_ROUTE`, and the paywall upsell keeps `dismissPaywall(router)` so entitlement-specific paywall recovery remains centralized.
+- Why safe: Bottom-sheet routes can be opened directly from a link, reload, or cold app state with no native navigation history. A backdrop Dismiss control should preserve history when it exists, but replace direct entries with the owning safe surface instead of no-oping on a sensitive or gated modal.
+- Regression: `sheetRouteContracts.test.ts` fails if the shared `Sheet` reintroduces `router.back()`, loses its typed fallback route prop, drops the `backOrReplace` default, or if Shelf/scheduler/paywall sheet routes lose their safe close contracts.
+
+## External handoff failure guard
+
+- Files: `apps/mobile/src/lib/navigation/externalOpen.ts`, `apps/mobile/src/lib/navigation/externalOpen.test.ts`, `apps/mobile/src/app/(tabs)/you.tsx`, `apps/mobile/src/app/settings/subscription.tsx`, `apps/mobile/src/features/subscription/ComplianceRow.tsx`, `apps/mobile/src/features/commerce/WhereToBuy.tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: Added `openExternalHttpsUrl()` as the shared opener for HTTPS-only policy, subscription-management, and retailer-link handoffs. It keeps the existing URL sanitizer, chooses WebBrowser or native Linking by mode, returns a boolean result, and shows stable invalid/failure alerts when the OS or browser cannot open the link.
+- Why safe: Privacy policy, consumer-health policy, terms, billing management, and paid retailer handoffs are trust and compliance controls. Failed external opens must be visible to the customer instead of making the app appear inert or hiding broken billing/legal paths.
+- Regression: `externalOpen.test.ts` covers unsafe URL rejection, sanitized browser opens, browser failure alerts, Linking failure alerts, and static caller contracts so policy, subscription, and retailer surfaces keep using the shared failure-alert helper.
+
+## Community Skin Note share guard
+
+- Files: `apps/mobile/src/features/community/shareNote.ts`, `apps/mobile/src/features/community/shareNote.test.ts`, `apps/mobile/src/app/community/note/[id].tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: Added a Skin Note sharing helper that builds outbound note text with the note claim, verdict, rationale, non-medical disclaimer, source label, and reviewer credential. The helper catches native share-sheet failures and shows a stable "Sharing unavailable" alert.
+- Why safe: Expert/community note sharing leaves the app context. The exported text must carry the same claim-safety disclaimer and source/reviewer context users saw in-app, and failed share attempts should not be silent.
+- Regression: `shareNote.test.ts` verifies outbound note text includes disclaimer/source/reviewer context, successful share calls use the helper-built message, failed shares alert, and the note route does not reintroduce inline `Share.share` message assembly.
+
+## Permission Settings failure guard
+
+- Files: `apps/mobile/src/lib/navigation/appSettings.ts`, `apps/mobile/src/lib/navigation/appSettings.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/app/shelf/ocr.tsx`, `apps/mobile/src/app/shelf/scan.tsx`, `apps/mobile/src/features/navigation/sheetRouteContracts.test.ts`, `docs/USER_FLOW_TREE.md`.
+- Change: Added `openAppSettings()` as the shared wrapper for native Settings handoffs. Progress photo capture, Shelf OCR, and Shelf barcode scan permission gates now use it instead of direct `Linking.openSettings()`.
+- Why safe: Once camera permission can no longer be requested in-app, Settings is the only recovery path. If that handoff fails, the user needs a clear alert and the app must remain usable through manual/search alternatives.
+- Regression: `appSettings.test.ts` covers successful Settings opens, default failure copy, and route-specific copy. `sheetRouteContracts.test.ts` fails if the permission routes reintroduce direct raw Settings calls.
+
+## Camera capture failure guard
+
+- Files: `apps/mobile/src/features/native/camera/failureCopy.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/app/shelf/ocr.tsx`, `apps/mobile/src/features/navigation/sheetRouteContracts.test.ts`, `docs/USER_FLOW_TREE.md`.
+- Change: Added shared camera failure copy. Progress capture now shows a camera-unavailable recovery overlay when camera startup fails, alerts when the still capture call rejects, and disables the shutter until the camera is ready. Shelf OCR now alerts on camera startup or label-capture failure and keeps manual ingredient entry available.
+- Why safe: Camera hardware/API failures are common on real devices and permission-edge states. These flows should never look like inert buttons or trap users in a broken preview; photo capture must leave the timeline unchanged, and OCR must preserve the manual fallback.
+- Regression: `sheetRouteContracts.test.ts` verifies the failure copy, progress recovery overlay, readiness-gated shutter, and Shelf OCR failure alerts. Photo claims-safety tests continue to scan progress copy.
+
+## Progress photo share failure guard
+
+- Files: `apps/mobile/src/features/photos/sharePhoto.ts`, `apps/mobile/src/features/photos/sharePhoto.test.ts`, `apps/mobile/src/app/progress/[id].tsx`, `docs/USER_FLOW_TREE.md`.
+- Change: Added `sharePhotoImageOnly()` as the shared image-only Progress photo sharing helper. It checks native sharing availability, catches availability/export/share-sheet failures, shows stable share-unavailable copy, returns a boolean result, and deletes any temporary decrypted export after the share attempt.
+- Why safe: Progress photos are the app's most sensitive user data. A failed native share/export should be visible, should not make the UI look inert, and must not leave decrypted cache files behind.
+- Regression: `sharePhoto.test.ts` covers successful share cleanup, missing URI, unavailable native sharing, export failure, share-sheet rejection, and the route-level helper contract.
+
+## Onboarding profile persistence recovery
+
+- Files: `apps/mobile/src/app/onboarding/analyzing.tsx`, `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`, `docs/USER_FLOW_TREE.md`.
+- Change: The analyzing screen now waits for `persistSkinProfile()` to complete before replacing to the reveal route. If local persistence fails, it stops the animation and shows retry/back-to-quiz recovery while keeping quiz answers in memory.
+- Why safe: The local skin-profile record is the source of truth for completed onboarding on this device. Advancing to reveal before that write succeeds makes onboarding look complete even though a cold start can send the user back to the beginning.
+- Regression: `onboardingRoutes.test.ts` fails if analyzing reintroduces silent `persistSkinProfile().catch(() => {})` behavior or drops the save-error recovery path.
 
 ## Public growth attribution sanitizer parity
 
@@ -459,3 +515,17 @@
 - Files: `scripts/phase9/dependency-sbom.mjs`, `scripts/phase9/security-ci-smoke.mjs`, `docs/phase-9/generated/dependency-inventory.json`, `docs/phase-9/generated/dependency-inventory.md`.
 - Change: Added a lockfile-derived `Install Scripts` inventory to the dependency SBOM and an allowlist gate for the current lifecycle-script packages: `@sentry/cli@2.58.4`, optional `fsevents@2.3.3`, and `unrs-resolver@1.12.2`. Tightened Security CI smoke checks so every checkout must disable persisted credentials and the workflow cannot switch from `npm ci` to `npm install`.
 - Why safe: Dependency lifecycle hooks are a supply-chain execution boundary. New install-script packages now require explicit review before Phase 9 dependency evidence can pass.
+
+## Biometric app-lock prompt recovery
+
+- Files: `apps/mobile/src/lib/applock/authenticate.ts`, `apps/mobile/src/lib/applock/authenticate.test.ts`, `apps/mobile/src/lib/applock/AppLockProvider.tsx`, `apps/mobile/src/app/(tabs)/progress.tsx`.
+- Change: App-wide lock and Progress photo-timeline lock prompts now use a shared local-auth helper that distinguishes success, user cancellation, and native prompt unavailability. Native prompt failures show stable app-lock copy, keep the user locked, and leave the Unlock action retryable.
+- Why safe: Progress photos are sensitive, so failed biometrics should fail closed without trapping users behind an inert control or leaking native exception details.
+- Regression: `authenticate.test.ts` covers success, cancellation, rejected native prompts, readiness probing, and static route/provider contracts.
+
+## Cross-platform app-lock wording
+
+- Files: `apps/mobile/src/features/photos/copy.ts`, `apps/mobile/src/app/(tabs)/you.tsx`, `apps/mobile/src/lib/applock/authenticate.test.ts`.
+- Change: Replaced Face ID-only app-lock wording with device-neutral copy in the Progress lock surface and You tab security setting.
+- Why safe: The app ships on iOS and Android across phones with Face ID, Touch ID, fingerprint, face unlock, passcode fallback, or no enrolled biometric method. The UI should not imply that only Face ID users are supported.
+- Regression: `authenticate.test.ts` blocks reintroducing Face ID, Touch ID, iPhone, or fingerprint-specific wording in app-lock copy.

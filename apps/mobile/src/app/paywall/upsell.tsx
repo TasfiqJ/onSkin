@@ -50,7 +50,7 @@ export default function UpsellSheet() {
   }, [key]);
 
   return (
-    <Sheet>
+    <Sheet onClose={() => dismissPaywall(router)}>
       <View
         className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
         style={{ backgroundColor: colors.clayTint }}

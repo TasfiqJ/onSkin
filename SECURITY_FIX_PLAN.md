@@ -41,7 +41,17 @@
 - SEC-P2-048: Paywall and ProGate pricing now use a shared display helper and explicit unavailable offering state, so missing Store/RevenueCat pricing cannot render as a billable slash-period amount.
 - SEC-P2-049: Ask, deferred, shelf, progress-capture, and paywall direct-entry Back/Close controls now replace to a safe app surface when no navigation history exists.
 - SEC-P2-050: Public growth attribution now ignores malformed encoded query pairs on mobile and enforces the same URL-safe opaque `share_id` contract in the waitlist/growth-event service-role endpoints.
-- SEC-P2-051: Scheduler, routine, commerce, community, conflict/share-card, recommendations, settings, and trend direct-entry exits now use safe tab fallbacks instead of raw history back behavior, with the shared `Sheet` default tracked for follow-up.
+- SEC-P2-051: Scheduler, routine, commerce, community, conflict/share-card, recommendations, settings, and trend direct-entry exits now use safe tab fallbacks instead of raw history back behavior.
+- SEC-P2-052: Shared `Sheet` backdrop dismissals now use typed safe route fallbacks, with shelf sheets returning to Shelf, scheduler sheets returning to Today, and paywall upsell preserving entitlement-aware dismissal.
+- SEC-P2-053: Policy, subscription-management, and retailer-link external handoffs now surface invalid or failed opens instead of silently doing nothing.
+- SEC-P2-054: Community Skin Note sharing now includes disclaimer/source/reviewer context and alerts if the native share sheet cannot open.
+- SEC-P2-055: Progress and Shelf camera permission recovery now alerts if native Settings cannot open instead of silently doing nothing.
+- SEC-P2-056: Progress photo capture and Shelf OCR now show stable camera failure recovery instead of inert capture states.
+- SEC-P2-057: Onboarding analyzing now waits for local profile persistence before reveal and shows a retry path if saving fails.
+- SEC-P2-058: Progress photo detail sharing now surfaces native share/export failures and still deletes temporary decrypted exports.
+- SEC-P2-059: Mobile data export now reports unavailable native sharing instead of silently treating an unshared export as successful.
+- SEC-P2-060: App-wide and photo-timeline biometric lock prompts now surface native prompt failures with stable copy while keeping user cancellations quiet and retryable.
+- SEC-P2-061: App-lock settings and Progress lock copy now use device-neutral wording that fits iOS and Android local-auth methods.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.
@@ -101,7 +111,6 @@
 ## Backlog hardening
 
 - Keep the live Supabase harness aligned with every new user-owned table/RPC as features move from local-first to server sync.
-- Continue direct-entry recovery hardening for the shared `Sheet` default that still contains raw `router.back()` behavior when no explicit close handler is provided.
 - Add a Supabase CLI job once project linking and migration credentials exist.
 - Add Edge Function unit tests for RevenueCat signature helper behavior if Deno test harness is introduced.
 - Expand RevenueCat evidence to dashboard timeline screenshots and native StoreKit/Play Billing purchase/restore/refund/cancel/renewal scenarios.

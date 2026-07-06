@@ -1,4 +1,3 @@
-import * as LocalAuthentication from 'expo-local-authentication';
 import {
   createContext,
   useCallback,
@@ -8,14 +7,16 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { AppState, Pressable, Text, View, type AppStateStatus } from 'react-native';
+import { Alert, AppState, Pressable, Text, View, type AppStateStatus } from 'react-native';
 
+import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { colors } from '@/theme/tokens';
 
+import { authenticateAppLock, canUseAppLock } from './authenticate';
 import { shouldLockForAppState, shouldShowPrivacyShieldForAppState } from './privacyState';
 import { getAppLockEnabled, setAppLockEnabledStored } from './store';
 
-// Biometric app-lock (docs/01 §5): opt-in Face ID/Touch ID to open the app ,
+// Biometric app-lock (docs/01 §5): opt-in device authentication to open the app,
 // a trust signal for an app holding progress photos. Locks on cold start and on
 // app-switch/background transitions when enabled. A generic shield also hides
 // health-adjacent UI from OS app-switcher snapshots even when app lock is off.
@@ -123,8 +124,9 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   }, [enabled]);
 
   const authenticate = useCallback(() => {
-    void LocalAuthentication.authenticateAsync({ promptMessage: 'Unlock OnSkin' }).then((res) => {
-      if (res.success) setLocked(false);
+    void authenticateAppLock('Unlock OnSkin').then((status) => {
+      if (status === 'success') setLocked(false);
+      else if (status === 'unavailable') Alert.alert('App lock', appLockUserMessage());
     });
   }, []);
 
@@ -136,15 +138,11 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
 
   const setEnabled = useCallback(async (v: boolean) => {
     if (v) {
-      const [hw, enrolled] = await Promise.all([
-        LocalAuthentication.hasHardwareAsync(),
-        LocalAuthentication.isEnrolledAsync(),
-      ]);
-      if (!hw || !enrolled) throw new Error('Biometrics are not set up on this device');
-      const res = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Confirm to enable app lock',
-      });
-      if (!res.success) return;
+      const ready = await canUseAppLock();
+      if (!ready) throw new Error('App lock unavailable');
+      const status = await authenticateAppLock('Confirm to enable app lock');
+      if (status === 'unavailable') throw new Error('App lock unavailable');
+      if (status !== 'success') return;
     }
     await setAppLockEnabledStored(v);
     setEnabledState(v);

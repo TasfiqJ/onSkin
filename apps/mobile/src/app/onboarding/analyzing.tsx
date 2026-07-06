@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Animated, Easing, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { Button, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
@@ -15,6 +15,8 @@ export default function AnalyzingScreen() {
   const { persistSkinProfile, quizAnswers } = useOnboarding();
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const [pulse] = useState(() => new Animated.Value(0));
+  const [saveError, setSaveError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     if (!quizCompletion.complete) {
@@ -31,17 +33,61 @@ export default function AnalyzingScreen() {
     );
     loop.start();
 
-    // Persist (best-effort) while the theater plays, then reveal after ~2.6s.
-    void persistSkinProfile().catch(() => {});
-    const t = setTimeout(() => router.replace('/onboarding/reveal'), 2600);
+    let revealTimer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+
+    // Persist the local completion record before reveal. Without that durable
+    // signal, a cold start can force the user back through onboarding.
+    void persistSkinProfile()
+      .then(() => {
+        if (cancelled) return;
+        revealTimer = setTimeout(() => router.replace('/onboarding/reveal'), 2600);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          loop.stop();
+          setSaveError(true);
+        }
+      });
+
     return () => {
+      cancelled = true;
       loop.stop();
-      clearTimeout(t);
+      if (revealTimer) clearTimeout(revealTimer);
     };
-  }, [persistSkinProfile, pulse, quizCompletion.complete]);
+  }, [persistSkinProfile, pulse, quizCompletion.complete, retryKey]);
 
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });
+
+  if (saveError) {
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <Text variant="title" className="text-center">
+            We could not save your profile.
+          </Text>
+          <Text variant="body" tone="muted" className="mt-2 text-center">
+            Try again. Your quiz answers are still here.
+          </Text>
+        </View>
+        <View className="gap-2 pb-4">
+          <Button
+            label="Try again"
+            onPress={() => {
+              setSaveError(false);
+              setRetryKey((value) => value + 1);
+            }}
+          />
+          <Button
+            label="Back to quiz"
+            variant="ghost"
+            onPress={() => router.replace('/onboarding/quiz')}
+          />
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen>

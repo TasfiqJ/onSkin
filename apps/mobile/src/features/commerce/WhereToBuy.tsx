@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
-import { Alert, Linking, Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -23,7 +24,15 @@ function PaidChip() {
   return (
     <Text
       className="font-mono text-[9px]"
-      style={{ color: colors.muted, backgroundColor: '#F0EBE2', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 5, overflow: 'hidden' }}>
+      style={{
+        color: colors.muted,
+        backgroundColor: '#F0EBE2',
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 5,
+        overflow: 'hidden',
+      }}
+    >
       {COMMERCE_COPY.whereToBuy.paidChip}
     </Text>
   );
@@ -37,7 +46,8 @@ function OptionRow({ option, onPress }: { option: WhereToBuyOption; onPress: () 
       accessibilityLabel={`${option.label}, ${COMMERCE_COPY.whereToBuy.partnerLabel(price)}, paid link`}
       onPress={onPress}
       className="flex-row items-center gap-3 rounded-xl p-3"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
       <View
         className="h-8 w-[26px] rounded"
         style={{ backgroundColor: colors.greige, borderWidth: 1, borderColor: colors.hairline }}
@@ -81,9 +91,18 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
     // retailer links open only after the HTTPS URL guard appends the opaque token.
     const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
     if (isDev && option.url.startsWith('https://example.com')) {
-      Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [{ text: 'OK' }]);
+      Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [
+        { text: 'OK' },
+      ]);
     } else {
-      void Linking.openURL(outboundUrl);
+      const opened = await openExternalHttpsUrl(outboundUrl, {
+        mode: 'linking',
+        failureTitle: 'Link unavailable',
+        failureMessage: 'We could not open this retailer link. Please try again.',
+      });
+      if (!opened) {
+        track('where_to_buy_link_failed', { product_type: productType, source: option.source });
+      }
     }
   };
 
@@ -99,11 +118,21 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
             <View className="mt-0.5">
               <LockGlyph size={12} color={colors.muted} />
             </View>
-            <Text variant="bodySm" tone="muted" className="flex-1 text-[12.5px]" style={{ lineHeight: 18 }}>
+            <Text
+              variant="bodySm"
+              tone="muted"
+              className="flex-1 text-[12.5px]"
+              style={{ lineHeight: 18 }}
+            >
               {COMMERCE_COPY.whereToBuy.lockedBody}
             </Text>
           </View>
-          <Pressable accessibilityRole="button" onPress={openConsent} className="mt-2.5 self-start" hitSlop={6}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={openConsent}
+            className="mt-2.5 self-start"
+            hitSlop={6}
+          >
             <Text className="font-sans-semibold text-[12.5px]" style={{ color: colors.clay }}>
               {COMMERCE_COPY.whereToBuy.lockedCta} →
             </Text>
@@ -124,7 +153,11 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
                 {COMMERCE_COPY.whereToBuy.disclosureEmphasis}
               </Text>
             </Text>
-            <Pressable accessibilityRole="button" onPress={() => router.push('/commerce/transparency')} hitSlop={6}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/commerce/transparency')}
+              hitSlop={6}
+            >
               <Text className="font-sans-semibold text-[11px]" style={{ color: colors.clay }}>
                 {COMMERCE_COPY.whereToBuy.howThisWorks} →
               </Text>
@@ -141,7 +174,8 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
         className="mt-3.5 text-center text-[13px] font-sans-semibold"
         tone="muted"
         accessibilityRole="button"
-        onPress={() => router.push('/shelf/manual')}>
+        onPress={() => router.push('/shelf/manual')}
+      >
         {COMMERCE_COPY.whereToBuy.alreadyOwn}
       </Text>
     </View>

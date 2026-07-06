@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, Linking, Platform, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
@@ -7,13 +7,14 @@ import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/Comp
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
+import { track } from '@/lib/analytics/track';
 import {
   MANAGE_SUBSCRIPTION_URL_ANDROID,
   MANAGE_SUBSCRIPTION_URL_IOS,
   showNativeManageSubscriptions,
 } from '@/lib/iap/revenuecat';
-import { track } from '@/lib/analytics/track';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
+import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -58,7 +59,12 @@ export default function SubscriptionScreen() {
     const fallbackUrl =
       Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS;
     const url = safeExternalHttpsUrl(data?.managementUrl) ?? fallbackUrl;
-    void Linking.openURL(url).catch(() => {});
+    await openExternalHttpsUrl(url, {
+      mode: 'linking',
+      failureTitle: 'Subscription link unavailable',
+      failureMessage:
+        'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.',
+    });
   }
   function onRestore() {
     restore.mutate(undefined, {

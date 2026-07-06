@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 
 // Phased introduction (design screen 07, docs/05 §4). Don't start every active at
 // once. A new active is staged in next, on its own night, so any reaction is
@@ -77,7 +77,7 @@ export default function PhasedIntroScreen() {
   }
 
   return (
-    <Sheet>
+    <Sheet fallbackRoute={APP_HOME_ROUTE}>
       <Text variant="label" tone="clay" className="mb-2.5">
         ONE AT A TIME
       </Text>

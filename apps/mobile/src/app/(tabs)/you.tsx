@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
-import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import { Alert, ScrollView, Switch, View } from 'react-native';
 
@@ -21,7 +20,7 @@ import { appLockUserMessage, dataRightsUserMessage } from '@/lib/errors/userFaci
 import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
 import { type PolicyLinkKey, policyLinkRows } from '@/lib/legal/policyLinks';
 import { phase7Flags } from '@/lib/launch/phase7';
-import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
+import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { colors } from '@/theme/tokens';
 
 const POLICY_ROWS = policyLinkRows([
@@ -82,12 +81,12 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 }
 
 function openPolicyUrl(url: string) {
-  const safeUrl = safeExternalHttpsUrl(url);
-  if (!safeUrl) {
-    Alert.alert('Link not configured', 'This policy URL must be configured before launch.');
-    return;
-  }
-  void WebBrowser.openBrowserAsync(safeUrl).catch(() => {});
+  void openExternalHttpsUrl(url, {
+    invalidTitle: 'Link not configured',
+    invalidMessage: 'This policy URL must be configured before launch.',
+    failureTitle: 'Link unavailable',
+    failureMessage: 'We could not open this policy link. Please try again.',
+  });
 }
 
 export default function YouScreen() {
@@ -184,7 +183,14 @@ export default function YouScreen() {
 
   const exportMut = useMutation({
     mutationFn: exportData,
-    onSuccess: () => {
+    onSuccess: (shared) => {
+      if (!shared) {
+        Alert.alert(
+          'Export unavailable',
+          "We couldn't open the export sheet on this device. The temporary export file was removed.",
+        );
+        return;
+      }
       void requestReviewAfterValue('data_export_success');
     },
     onError: () => Alert.alert('Export failed', dataRightsUserMessage()),
@@ -353,7 +359,7 @@ export default function YouScreen() {
             SECURITY
           </Text>
           <Row
-            label="Face ID app lock"
+            label="Device app lock"
             hint="Require unlock to open the app and your photo timeline."
           >
             <Toggle

@@ -146,6 +146,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Navigate back, background/relaunch, refresh on Expo web, or directly open `/onboarding/reveal` or `/onboarding/analyzing` without completed quiz answers.
   - Expected result: Progress is preserved or reset intentionally with no broken state; reveal/analyzing must not fabricate a default skin profile and must recover to the quiz path.
   - Evidence: Video or before/after screenshots.
+- Branch: profile save failure before reveal
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Complete the quiz, enter analyzing, and force the local skin-profile save to fail.
+  - Expected result: The app does not advance to reveal as if onboarding were saved; it shows a retry path while preserving the quiz answers in memory.
+  - Evidence: Error-state screenshot and retry/reveal route snapshot.
 
 ## Flow: Today Routine Completion
 
@@ -222,8 +228,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Attempt scan/OCR with camera permission denied.
-  - Expected result: The app shows a clear recovery path.
-  - Evidence: Screenshot and simulator permission state.
+  - Expected result: The app shows a clear recovery path, including Open settings when the OS will not prompt again; if Settings cannot open, the app shows a stable unavailable alert instead of appearing inert.
+  - Evidence: Screenshot, alert text, and simulator permission state.
+- Branch: camera start or label capture failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Shelf OCR on a device where the camera cannot start, or force the label photo capture call to reject.
+  - Expected result: The user sees stable camera-unavailable or label-not-captured copy and can continue with manual ingredient text instead of being returned to an unexplained camera state.
+  - Evidence: Alert text, visible fallback state, and route snapshot.
 - Branch: opened date or replenish edge case
   - Priority: Important
   - Automate later: Yes
@@ -233,8 +245,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: direct-entry back or close navigation
   - Priority: Important
   - Automate later: Yes
-  - Action: Open Shelf add, search, OCR, archive, product detail, and replenish routes directly, then use the visible Back, Close, Cancel, or Not now control.
-  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen with no navigation history.
+  - Action: Open Shelf add, search, OCR, no-match, opened-date, archive, product detail, and replenish routes directly, then use the visible Back, Close, Cancel, Not now, or backdrop Dismiss control.
+  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history.
   - Evidence: Screenshot sequence and visible route snapshot.
 
 ## Flow: Photo Progress
@@ -261,8 +273,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Deny camera or photo permission.
-  - Expected result: User sees a clear recovery path and no broken UI.
-  - Evidence: Screenshot and permission state.
+  - Expected result: User sees a clear recovery path and no broken UI, including a visible alert if the OS Settings handoff fails.
+  - Evidence: Screenshot, alert text, and permission state.
+- Branch: camera start or photo capture failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open Progress capture on a device where the camera cannot start, or force the still photo capture call to reject.
+  - Expected result: The app shows stable camera-unavailable or photo-not-captured copy, keeps the timeline unchanged, and does not leave a tappable shutter that appears inert.
+  - Evidence: Alert text, visible fallback state, and route snapshot.
 - Branch: empty timeline
   - Priority: Important
   - Automate later: Yes
@@ -281,6 +299,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress capture, review, no-score explainer, and missing photo detail routes directly, then use the visible Close, Back, or Not now control.
   - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history.
   - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: single-photo share unavailable or rejected
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open a single-photo detail, tap Share photo, confirm, and simulate native sharing being unavailable, the temporary export failing, or the share sheet rejecting.
+  - Expected result: The app shows stable share-unavailable copy, leaves the user on the photo detail, deletes any temporary decrypted export, and does not include notes or promise redaction.
+  - Evidence: Alert text, route state, share helper cleanup assertion, and native share-sheet log when available.
+- Branch: biometric app-lock prompt unavailable or rejected
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Enable app lock, open the app-wide lock overlay or the locked Progress timeline, and force the local-auth prompt to reject or become unavailable.
+  - Expected result: The app stays locked, shows stable app-lock-unavailable copy only for native prompt failure, keeps user cancellation quiet, leaves the Unlock control available for retry, and uses device-neutral copy that reads correctly on iOS and Android.
+  - Evidence: Alert text, route state, native auth log, and helper status assertion.
 
 ## Flow: Photo Trend Insights
 
@@ -377,6 +407,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open onboarding and contextual paywalls before RevenueCat pricing is available, or with the local development fallback.
   - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; it must never render `Unavailable` as if it were the billed amount.
   - Evidence: Screenshot and visible-text snapshot.
+- Branch: policy and billing link handoff failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Tap Terms, Privacy, Restore, and Manage subscription while the OS/browser cannot open external URLs.
+  - Expected result: Policy and billing links show a clear unavailable alert instead of silently doing nothing; Restore still reports success/failure through the purchase state.
+  - Evidence: Alert text and visible route snapshot.
 - Branch: Pro entitlement state
   - Priority: Critical
   - Automate later: Yes
@@ -386,8 +422,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: Pro direct-entry route exits
   - Priority: Important
   - Automate later: Yes
-  - Action: With an active Pro or reverse-trial entitlement, open scheduler and routine routes such as `/cycle/week`, `/cycle/why-tonight`, `/routine/reorder`, `/routine/tolerance`, and `/routine/widgets` directly, then use the visible Back, Done, Got it, Skip, Dismiss, or Not yet control.
-  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface with no navigation history.
+  - Action: With an active Pro or reverse-trial entitlement, open scheduler and routine routes such as `/cycle/week`, `/cycle/why-tonight`, `/routine/reorder`, `/routine/tolerance`, and `/routine/widgets` directly, then use the visible Back, Done, Got it, Skip, Dismiss, Not yet, or sheet backdrop Dismiss control.
+  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface or modal sheet with no navigation history.
   - Evidence: Screenshot sequence and visible route snapshot.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
@@ -485,6 +521,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
   - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state and can choose the shelf alternative.
   - Evidence: Screenshot and local consent state.
+- Branch: retailer link handoff failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: With commerce consent on and a real HTTPS retailer URL available, simulate the OS refusing to open the external URL.
+  - Expected result: The app shows a calm Link unavailable message, does not appear inert, and the user remains in the recommendation context.
+  - Evidence: Alert text, route snapshot, and telemetry/state notes.
 
 ## Flow: Skin Notes Community Trust Layer
 
@@ -524,6 +566,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a stale `/community/note/[id]` route that is no longer present.
   - Expected result: The app explains the note is unavailable and provides a working Back path to `/community`.
   - Evidence: Screenshot and route snapshot.
+- Branch: expert note share failure and outbound context
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open a Skin Note, tap Share note, and simulate the native share sheet being unavailable or rejected.
+  - Expected result: The outbound note text keeps the claim-safe disclaimer plus source/reviewer context, and a failed share sheet shows a clear Sharing unavailable alert without leaving the note.
+  - Evidence: Alert text and share payload snapshot.
 - Branch: claim-safe anonymous ask
   - Priority: Critical
   - Automate later: Yes
@@ -596,6 +644,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/settings/subscription`, `/settings/notifications`, and `/settings/timing` directly, then use the visible Back control.
   - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history.
   - Evidence: Screenshot sequence and visible route snapshot.
+- Branch: policy link handoff failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Tap Privacy, Consumer Health Privacy, Terms, Support, account deletion help, or data export help while the browser cannot open the URL.
+  - Expected result: The app shows a clear unavailable alert instead of swallowing the failed handoff.
+  - Evidence: Alert text and visible route snapshot.
+- Branch: data export share unavailable
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Tap Export my data while the OS share sheet is unavailable or cannot be detected.
+  - Expected result: The app shows a clear export-unavailable alert, does not treat the export as completed for review prompting, and deletes the temporary plaintext export file.
+  - Evidence: Alert text, mutation state, and cache cleanup assertion.
 - Branch: reminder timing and discretion
   - Priority: Important
   - Automate later: Yes

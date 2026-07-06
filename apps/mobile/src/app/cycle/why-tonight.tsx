@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // "Why is this on tonight?" (design screen 02, docs/05 §6.3). The reasoning
@@ -51,7 +51,7 @@ export default function WhyTonightScreen() {
 
   if (!cycle || !tonight) {
     return (
-      <Sheet tone="night">
+      <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE}>
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
           No cycle is running yet. Add an active to get started.
         </Text>
@@ -67,7 +67,7 @@ export default function WhyTonightScreen() {
   const hasBothPotent = !!retinoidName && !!acidName;
 
   return (
-    <Sheet tone="night">
+    <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE}>
       <Text variant="label" className="mb-2.5" style={{ color: colors.clayBright }}>
         WHY THIS, TONIGHT?
       </Text>

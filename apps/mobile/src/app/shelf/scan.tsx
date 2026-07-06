@@ -1,7 +1,7 @@
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, Linking, Platform, Pressable, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
@@ -17,6 +17,7 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
+import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
@@ -227,7 +228,7 @@ export default function ScanScreen() {
                   <Pressable
                     accessibilityRole="button"
                     onPress={
-                      permission.canAskAgain ? requestCamera : () => void Linking.openSettings()
+                      permission.canAskAgain ? requestCamera : () => void openAppSettings()
                     }
                     className="mt-5 rounded-pill bg-paper px-5 py-3"
                   >

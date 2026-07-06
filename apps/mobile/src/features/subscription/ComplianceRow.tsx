@@ -1,9 +1,8 @@
-import * as WebBrowser from 'expo-web-browser';
 import { Alert, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
-import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
+import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { colors } from '@/theme/tokens';
 
 import { useEntitlementActions } from './useEntitlement';
@@ -18,12 +17,12 @@ export const TERMS_URL = POLICY_LINKS.terms.url;
 export const PRIVACY_URL = POLICY_LINKS.privacy.url;
 
 export function openPolicy(url: string) {
-  const safeUrl = safeExternalHttpsUrl(url);
-  if (!safeUrl) {
-    Alert.alert('Link not configured', 'This policy URL must be configured before launch.');
-    return;
-  }
-  void WebBrowser.openBrowserAsync(safeUrl).catch(() => {});
+  void openExternalHttpsUrl(url, {
+    invalidTitle: 'Link not configured',
+    invalidMessage: 'This policy URL must be configured before launch.',
+    failureTitle: 'Link unavailable',
+    failureMessage: 'We could not open this policy link. Please try again.',
+  });
 }
 
 export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
@@ -40,7 +39,8 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
             ? 'Your active subscription is restored on this device.'
             : 'No active subscription was found for this account.',
         ),
-      onError: () => Alert.alert('Restore purchases', 'We could not restore purchases. Please try again.'),
+      onError: () =>
+        Alert.alert('Restore purchases', 'We could not restore purchases. Please try again.'),
     });
   }
 

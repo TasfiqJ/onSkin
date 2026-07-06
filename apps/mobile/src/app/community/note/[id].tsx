@@ -1,12 +1,13 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, Share, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
 import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionStore';
+import { shareSkinNote } from '@/features/community/shareNote';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -44,7 +45,7 @@ export default function NoteDetail() {
   const onShare = () => {
     if (!note) return;
     haptics.select();
-    void Share.share({ message: `${note.claim}. ${note.verdict}. ${note.why}` });
+    void shareSkinNote(note);
   };
 
   return (

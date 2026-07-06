@@ -3,15 +3,7 @@ import { Image } from 'expo-image';
 import { router, useIsFocused } from 'expo-router';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMemo, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Linking,
-  Platform,
-  Pressable,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import {
@@ -19,9 +11,11 @@ import {
   type ParsedIngredientToken,
 } from '@/features/catalog/ingredientParser';
 import { tagLabel } from '@/features/intelligence/presentation';
+import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
+import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -37,12 +31,13 @@ export default function OcrScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [state, setState] = useState<CaptureState>('camera');
+  const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [capturedUri, setCapturedUri] = useState<string | null>(null);
   const [rawText, setRawText] = useState('');
   const { update } = useIntake();
 
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
-  const canShowCamera = cameraEnabled && Boolean(permission?.granted);
+  const canShowCamera = cameraEnabled && Boolean(permission?.granted) && !cameraUnavailable;
   const parsed = useMemo(() => parseIngredientText(rawText), [rawText]);
   const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
   const lowConfidence = parsed.tokens.find((token) => token.isUnmatched);
@@ -64,6 +59,7 @@ export default function OcrScreen() {
       track('label_capture_photo_taken', { native_ocr_enabled: env.nativeOcrEnabled });
     } catch {
       setState('camera');
+      Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle, CAMERA_FAILURE_COPY.labelCaptureBody);
     }
   };
 
@@ -110,17 +106,27 @@ export default function OcrScreen() {
               animateShutter
               facing="back"
               mode="picture"
-              onMountError={() => setState('review')}
+              onMountError={() => {
+                setCameraUnavailable(true);
+                setState('review');
+                Alert.alert(
+                  CAMERA_FAILURE_COPY.labelUnavailableTitle,
+                  CAMERA_FAILURE_COPY.labelUnavailableBody,
+                );
+              }}
               style={{ flex: 1 }}
             />
           ) : (
             <View className="flex-1 items-center justify-center px-6">
               <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
-                Capture the ingredient panel
+                {cameraUnavailable
+                  ? CAMERA_FAILURE_COPY.labelUnavailableTitle
+                  : 'Capture the ingredient panel'}
               </Text>
               <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
-                Camera permission lets you keep the label beside the editable text. Manual entry
-                still works.
+                {cameraUnavailable
+                  ? CAMERA_FAILURE_COPY.labelUnavailableBody
+                  : 'Camera permission lets you keep the label beside the editable text. Manual entry still works.'}
               </Text>
               {cameraEnabled && permission && !permission.granted ? (
                 <Pressable
@@ -128,7 +134,7 @@ export default function OcrScreen() {
                   onPress={
                     permission.canAskAgain
                       ? () => void requestPermission()
-                      : () => void Linking.openSettings()
+                      : () => void openAppSettings()
                   }
                   className="mt-5 rounded-pill bg-paper px-5 py-3"
                 >

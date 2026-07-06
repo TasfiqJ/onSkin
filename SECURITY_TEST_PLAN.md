@@ -53,6 +53,14 @@
 - `npx vitest run src/features/notifications/claimsafety.test.ts src/features/notifications/store.test.ts src/features/notifications/policy.test.ts`
 - `npx vitest run src/lib/analytics/track.test.ts src/lib/observability/scrub.test.ts`
 - `npx vitest run src/lib/navigation/externalUrl.test.ts src/features/commerce/attribution.test.ts src/features/commerce/commerce.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/lib/navigation/externalOpen.test.ts src/lib/navigation/externalUrl.test.ts src/features/commerce/commerce.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/lib/navigation/appSettings.test.ts src/features/navigation/sheetRouteContracts.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/features/photos/claimsafety.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/community/shareNote.test.ts src/features/community/community.test.ts src/features/community/claimsafety.test.ts src/features/community/communityRoutes.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/quizCompletion.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/photos/sharePhoto.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/settings/actions.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
@@ -60,6 +68,8 @@
 - `npm --workspace @onskin/mobile run test -- src/features/onboarding/quizCompletion.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/subscription/priceDisplay.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts src/features/today/useToday.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/navigation/sheetRouteContracts.test.ts src/lib/navigation/safeBack.test.ts src/features/subscription/dismissPaywall.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/lib/navigation/externalOpen.test.ts src/features/community/shareNote.test.ts`
 - `npm --workspace @onskin/mobile run typecheck`
 - `npm --workspace @onskin/mobile run lint`
 - `npm run phase7:check-core-loop`
@@ -101,6 +111,10 @@
 - `apps/mobile/src/lib/applock/privacyState.test.ts`
   - Proves the global privacy shield is required for every non-active app state.
   - Proves biometric app lock triggers on inactive/background states only when enabled.
+- `apps/mobile/src/lib/applock/authenticate.test.ts`
+  - Proves local-auth prompt success, user cancellation, native prompt rejection, and hardware/enrollment probing map to explicit app-lock statuses.
+  - Proves app-wide and Progress photo-timeline lock overlays use the failure-handled helper instead of raw native authentication calls.
+  - Proves app-lock copy stays device-neutral for iOS and Android instead of using Face ID-only wording.
 - `apps/mobile/src/lib/env.test.ts`
   - Proves missing, copied-placeholder, and invalid Supabase public env values leave the app bootable but unconfigured.
   - Proves missing or invalid app-environment values default to production outside the dev runtime.
@@ -126,6 +140,23 @@
   - Proves direct-entry paywalls replace to the Today route instead of a dead-end history state.
 - `apps/mobile/src/features/subscription/proGatedRoutes.test.ts`
   - Proves scheduler and routine Pro-gated routes do not reintroduce raw history-back exits.
+- `apps/mobile/src/features/navigation/sheetRouteContracts.test.ts`
+  - Proves shared Sheet backdrop dismissals use typed safe route fallbacks instead of raw history back.
+  - Proves Shelf sheets recover to Shelf, scheduler sheets recover to Today, and paywall upsell uses the entitlement-aware paywall dismissal helper.
+  - Proves progress capture, Shelf OCR, and Shelf barcode scan use the shared settings opener instead of direct raw `Linking.openSettings()` calls.
+  - Proves progress capture and Shelf OCR route code surface camera mount/capture failures and do not leave an always-enabled inert shutter.
+- `apps/mobile/src/lib/navigation/externalOpen.test.ts`
+  - Proves unsafe external URLs are rejected before OS/browser handoff and failed browser/Linking opens show stable alerts.
+  - Proves policy, billing, and retailer-link callers keep using the shared external-open helper instead of swallowing handoff failures.
+- `apps/mobile/src/features/community/shareNote.test.ts`
+  - Proves outbound Skin Note share text includes the note disclaimer, source, and reviewer context.
+  - Proves native share-sheet failures show stable user copy and the note route uses the share helper.
+- `apps/mobile/src/features/photos/sharePhoto.test.ts`
+  - Proves image-only progress photo sharing opens with a temporary export and deletes that export after the share attempt.
+  - Proves missing photo URIs, unavailable native sharing, export failures, and share-sheet rejections show stable share-unavailable copy and keep the route on the shared helper.
+- `apps/mobile/src/features/settings/actions.test.ts`
+  - Proves mobile data export writes a one-time plaintext cache file, opens the OS share sheet when available, and deletes the file afterward.
+  - Proves unavailable or undetectable native sharing returns a non-success result, deletes the temporary export, and keeps the You tab from treating it as a successful export.
 - `apps/mobile/src/features/commerce/commerceRoutes.test.ts`
   - Proves commerce consent, transparency, stack list, stack detail, and deferred-commerce route exits recover to You or the commerce stack list instead of raw history back.
 - `apps/mobile/src/features/community/communityRoutes.test.ts`
@@ -272,6 +303,22 @@
 - `apps/mobile/src/lib/navigation/externalUrl.test.ts`
   - Verifies external handoffs allow only normalized HTTPS URLs, reject custom schemes, plaintext HTTP, embedded credentials, malformed strings, and control characters, and strip fragments before opening.
   - Verifies opaque commerce attribution parameters are appended only after URL validation.
+- `apps/mobile/src/lib/navigation/externalOpen.test.ts`
+  - Verifies unsafe policy/billing/retailer URLs fail before handoff with stable copy.
+  - Verifies browser and native Linking open failures surface user-visible alerts instead of being swallowed.
+- `apps/mobile/src/lib/navigation/appSettings.test.ts`
+  - Verifies native Settings opens return success, Settings failures show stable unavailable copy, and route-specific failure copy can be supplied.
+- `apps/mobile/src/features/community/shareNote.test.ts`
+  - Verifies outbound Skin Note share text keeps the non-medical disclaimer, source label, and reviewer credential.
+  - Verifies native share-sheet rejection shows stable "Sharing unavailable" copy.
+- `apps/mobile/src/features/photos/sharePhoto.test.ts`
+  - Verifies Progress photo detail sharing alerts on missing URI, unavailable native sharing, temporary export failure, and native share-sheet rejection.
+  - Verifies the temporary decrypted share export is deleted after the share attempt and the route delegates to the failure-handled helper.
+- `apps/mobile/src/features/settings/actions.test.ts`
+  - Verifies data export unavailable-share paths still delete the plaintext export file and surface export-unavailable copy from the You tab instead of firing the success/review path.
+- `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`
+  - Verifies analyzing does not silently swallow local profile persistence failure before reveal.
+  - Verifies the failed-save recovery path remains visible.
 - `apps/mobile/src/lib/errors/userFacing.test.ts`
   - Verifies common auth failures map to stable user copy.
   - Verifies raw backend/provider details such as table names, tokens, and user IDs are not reflected in auth, privacy-rights, app-lock, or share-card error messages.

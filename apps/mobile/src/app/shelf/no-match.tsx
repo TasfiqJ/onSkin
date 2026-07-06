@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { Sheet, Text } from '@/components/ui';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -23,15 +24,21 @@ export default function NoMatchScreen() {
   };
 
   return (
-    <Sheet tone="night">
+    <Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE}>
       <View
         className="mb-4 h-12 w-12 items-center justify-center rounded-full"
-        style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
+        style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+      >
         <Text className="text-[18px]" tone="inverseMuted">
           ?
         </Text>
       </View>
-      <Text variant="title" tone="inverse" className="text-[30px] leading-[33px]" accessibilityRole="header">
+      <Text
+        variant="title"
+        tone="inverse"
+        className="text-[30px] leading-[33px]"
+        accessibilityRole="header"
+      >
         We don&apos;t have this one yet.
       </Text>
       <Text variant="body" tone="inverseMuted" className="mt-2">
@@ -44,7 +51,8 @@ export default function NoMatchScreen() {
           accessibilityRole="button"
           onPress={goOcr}
           className="flex-row items-center gap-3.5 rounded-[18px] p-4"
-          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
+          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+        >
           <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">
             <Text className="font-sans-bold text-clay-bright">I</Text>
           </View>
@@ -61,7 +69,8 @@ export default function NoMatchScreen() {
           accessibilityRole="button"
           onPress={goManual}
           className="flex-row items-center gap-3.5 rounded-[18px] p-4"
-          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}>
+          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+        >
           <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">
             <Text className="font-sans-bold text-clay-bright">+</Text>
           </View>

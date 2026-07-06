@@ -1,13 +1,12 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import * as Sharing from 'expo-sharing';
 import { useState } from 'react';
 import { Alert, Pressable, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
-import { createPhotoShareFile, deletePhotoShareFile } from '@/features/photos/encryptedStorage';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
@@ -79,24 +78,10 @@ function PhotoDetailScreenContent() {
     ]);
   }
 
-  async function sharePhotoImageOnly() {
-    if (photo?.localUri && (await Sharing.isAvailableAsync())) {
-      let shareUri: string | null = null;
-      try {
-        shareUri = await createPhotoShareFile(photo.localUri, photo.id);
-        await Sharing.shareAsync(shareUri);
-      } finally {
-        await deletePhotoShareFile(shareUri, photo.localUri);
-      }
-    } else {
-      Alert.alert(PHOTO_COPY.detail.shareTitle, PHOTO_COPY.detail.shareUnavailable);
-    }
-  }
-
   function confirmShare() {
     Alert.alert(PHOTO_COPY.detail.shareTitle, PHOTO_COPY.detail.shareBody, [
       { text: 'Cancel', style: 'cancel' },
-      { text: PHOTO_COPY.detail.shareConfirm, onPress: () => void sharePhotoImageOnly() },
+      { text: PHOTO_COPY.detail.shareConfirm, onPress: () => void sharePhotoImageOnly(photo) },
     ]);
   }
 

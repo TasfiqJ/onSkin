@@ -30,7 +30,7 @@ export default function ReplenishScreen() {
 
   if (!item) {
     return (
-      <Sheet>
+      <Sheet fallbackRoute={APP_SHELF_ROUTE}>
         <Text variant="body" tone="muted" className="py-6 text-center">
           This product is no longer on your shelf.
         </Text>
@@ -79,7 +79,7 @@ export default function ReplenishScreen() {
   };
 
   return (
-    <Sheet>
+    <Sheet fallbackRoute={APP_SHELF_ROUTE}>
       <View className="flex-row items-center gap-4">
         <StripedThumb size={60} radius={16} />
         <View className="flex-1">
