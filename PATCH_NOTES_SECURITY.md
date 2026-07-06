@@ -767,3 +767,10 @@
 - Change: Added `PHASE9_RELEASE_CANDIDATE_DIR`. If any Phase 9 evidence flag or `PHASE9_SIGNED_OFF_BY` is claimed, release smoke now requires a clean Git worktree, a non-template folder under `docs/phase-9/release-candidates/`, all required RC review files, no `TBD`/`BLOCKED` placeholders in core manifest, verification, security, privacy, payments, observability, store, or signoff docs, and a manifest `Git SHA` matching the current commit. The QA packet records and hashes the RC folder files when present.
 - Why safe: Release evidence booleans are too easy to set without immutable supporting artifacts. Binding pass claims to a concrete RC folder makes the signoff auditable against one SHA, one native build pair, and one reviewed evidence packet.
 - Regression: `node --check` covers the changed scripts, `phase9:release-smoke` validates the new env key, dirty-worktree refusal, conditional RC-folder gate, and exact-SHA binding, and `phase9:qa-packet` proves the packet generator still runs with evidence warnings when no RC is claimed. An expected-failure probe with `PHASE9_FINAL_IDENTITY_PASS=true` in a dirty worktree proves a standalone pass flag is blocked before release evidence can be claimed.
+
+## Public env secret-name release gate
+
+- Files: `scripts/phase9/release-smoke.mjs`.
+- Change: Phase 9 release smoke now checks secret-looking `EXPO_PUBLIC_*` names from both `.env.example` and the actual verification-time environment.
+- Why safe: A CI, EAS, or local release shell could inject an unsafe public env name that is not listed in `.env.example`. The release gate should fail before that bundle can be treated as release-ready.
+- Regression: `phase9:release-smoke` still passes normal code gates, and an expected-failure probe with `EXPO_PUBLIC_SERVICE_ROLE_KEY` verifies that actual public secret-looking env keys are blocked.

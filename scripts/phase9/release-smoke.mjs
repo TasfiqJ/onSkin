@@ -258,7 +258,11 @@ block(
   'Phase 7 launch tests must cover production fail-closed and staging exercise behavior.',
 );
 
-for (const key of Object.keys(exampleEnv).filter((name) => name.startsWith('EXPO_PUBLIC_'))) {
+const publicEnvKeys = new Set(
+  [...Object.keys(exampleEnv), ...Object.keys(env)].filter((name) => name.startsWith('EXPO_PUBLIC_')),
+);
+
+for (const key of publicEnvKeys) {
   block(
     errors,
     !/(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i.test(key),
