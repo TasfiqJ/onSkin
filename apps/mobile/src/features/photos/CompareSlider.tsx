@@ -57,7 +57,7 @@ function Panel({ photo }: { photo: ComparePhoto }) {
 function DateChip({ date, dark, onPress }: { date: string; dark?: boolean; onPress?: () => void }) {
   const inner = (
     <View
-      className="rounded-pill px-3.5 py-1.5"
+      className="min-h-[48px] min-w-[72px] items-center justify-center rounded-pill px-3.5 py-2"
       style={{ backgroundColor: dark ? 'rgba(32,27,21,0.85)' : 'rgba(250,247,242,0.92)' }}
     >
       <Text variant="label" style={{ color: dark ? colors.cream : colors.ink, fontSize: 11.5 }}>
@@ -70,6 +70,7 @@ function DateChip({ date, dark, onPress }: { date: string; dark?: boolean; onPre
       accessibilityRole="button"
       accessibilityLabel={`Change to a different date (currently ${date})`}
       onPress={onPress}
+      className="min-h-[48px] min-w-[72px]"
     >
       {inner}
     </Pressable>

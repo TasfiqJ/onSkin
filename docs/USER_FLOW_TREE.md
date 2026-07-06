@@ -303,7 +303,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Happy Path
 
 1. Action: Open Progress, add or view a progress photo using safe local fixture behavior.
-   Expected result: The photo flow is clear, private by default, and does not imply diagnosis or guaranteed improvement.
+   Expected result: The photo flow is clear, private by default, and does not imply diagnosis or guaranteed improvement. When the comparison surface is populated, the Photo CTA, Compare/Timeline tabs, No scores link, Side-by-side toggle, and date-change chips meet the 44 pt phone touch target without clipping on small phones.
    Evidence: Screenshots or simulator video.
 
 ### Branches

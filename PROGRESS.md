@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the populated Progress comparison surface after 320 px E2E showed the
+  Photo CTA, Compare/Timeline tabs, No scores link, Side-by-side toggle, and
+  date-change chips rendering below 44 px or clipping right. The controls now
+  use 48 px buffered targets and the No scores link wraps to its own row.
 - Fixed the Today streak/adherence pill grammar so a one-day streak reads
   `1 day` instead of `1 days`, while keeping the 48 px phone target and
   local-first streak path.

@@ -36,7 +36,7 @@ function ModeTab({ label, active, onPress }: { label: string; active: boolean; o
       accessibilityRole="button"
       accessibilityState={{ selected: active }}
       onPress={onPress}
-      className="rounded-pill px-[18px] py-2.5"
+      className="min-h-[48px] min-w-[96px] items-center justify-center rounded-pill px-[18px] py-2.5"
       style={{ backgroundColor: active ? colors.ink : colors.paperRaised, borderWidth: active ? 0 : 1, borderColor: colors.hairlineStrong }}>
       <Text variant="bodySm" className="font-sans-semibold" style={{ color: active ? colors.paper : colors.muted }}>
         {label}
@@ -201,7 +201,7 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
           accessibilityRole="button"
           accessibilityState={{ selected: sideBySide }}
           onPress={() => setSideBySide((v) => !v)}
-          className="rounded-pill px-3.5 py-2"
+          className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
           style={{ backgroundColor: sideBySide ? colors.ink : colors.paperRaised, borderWidth: sideBySide ? 0 : 1, borderColor: colors.hairlineStrong }}>
           <Text variant="label" style={{ color: sideBySide ? colors.paper : colors.muted }}>
             {PHOTO_COPY.sideBySide}
@@ -244,7 +244,7 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
           onPress={() =>
             Alert.alert('Quiet time-lapse', 'A gentle time-lapse flips through your series. It arrives with on-device capture.')
           }
-          className="flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"
+          className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
           style={{ backgroundColor: colors.paperRaised, borderWidth: 1, borderColor: colors.hairlineStrong }}>
           <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
           <Text variant="label" tone="muted">
@@ -395,7 +395,7 @@ function PhotoProgressTab() {
               accessibilityRole="button"
               accessibilityLabel="Take a progress photo"
               onPress={() => router.push('/progress/capture')}
-              className="mt-3 flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"
+              className="mt-3 min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
               style={{ backgroundColor: colors.clay }}>
               <Text style={{ color: colors.paper, fontSize: 14 }}>＋</Text>
               <Text variant="label" style={{ color: colors.paper }}>
@@ -424,14 +424,17 @@ function PhotoProgressTab() {
               </View>
             ) : null}
 
-            <View className="mt-4 flex-row items-center gap-2.5">
-              <ModeTab label="Compare" active={mode === 'compare'} onPress={() => setMode('compare')} />
-              <ModeTab label="Timeline" active={mode === 'timeline'} onPress={() => setMode('timeline')} />
-              <View style={{ flex: 1 }} />
+            <View className="mt-4 gap-2.5">
+              <View className="flex-row items-center gap-2.5">
+                <ModeTab label="Compare" active={mode === 'compare'} onPress={() => setMode('compare')} />
+                <ModeTab label="Timeline" active={mode === 'timeline'} onPress={() => setMode('timeline')} />
+              </View>
               <Pressable
                 accessibilityRole="link"
                 accessibilityLabel="Why no AI score"
-                onPress={() => router.push('/progress/about')}>
+                onPress={() => router.push('/progress/about')}
+                className="min-h-[48px] self-start items-center justify-center rounded-pill px-3"
+              >
                 <Text variant="label" tone="clay">
                   No scores ⓘ
                 </Text>
