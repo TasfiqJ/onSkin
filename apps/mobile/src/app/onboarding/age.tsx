@@ -11,6 +11,7 @@ import {
 } from '@/features/onboarding/ageGate';
 import { getAgeVerified, setAgeVerified } from '@/features/onboarding/ageGateStore';
 import { track } from '@/lib/analytics/track';
+import { BRAND } from '@/lib/brand';
 
 // 01b · Neutral age gate (docs/01 §4). We ask for a date of birth (never "are you
 // over X?", which invites falsification) BEFORE any health-data collection, and
@@ -108,8 +109,8 @@ export default function AgeGateScreen() {
           </Text>
         </Text>
         <Text variant="body" tone="muted" className="mt-3">
-          OnSkin handles skin-health information, so we confirm your age before we begin. We don’t
-          store your birth date.
+          {BRAND.appName} handles skin-health information, so we confirm your age before we begin.
+          We don’t store your birth date.
         </Text>
 
         <View className="mt-8 flex-row gap-3">
@@ -142,7 +143,7 @@ export default function AgeGateScreen() {
 
         {validationError || blocked ? (
           <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
-            {validationError ?? `You need to be at least ${MINIMUM_AGE} to use OnSkin.`}
+            {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
           </Text>
         ) : null}
       </View>

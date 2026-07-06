@@ -11,7 +11,7 @@ import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
-// "Ask OnSkin". The conversational front-end to the on-device intelligence layer
+// Ask. The conversational front-end to the on-device intelligence layer
 // (docs/13). The DETERMINISTIC advisor (conflict / routine / fit answers about the user's
 // own shelf) runs here at $0 and needs no consent. It is the free moat taste. The deeper
 // cloud-grounded layer is Pro-gated and deferred (B-AI-ASSISTANT-VENDOR). The language
@@ -20,8 +20,7 @@ import { colors } from '@/theme/tokens';
 // no re-engagement, ends cleanly. Disclosed honestly as AI, never marketed as "AI".
 
 type Msg =
-  | { id: string; role: 'user'; text: string }
-  | { id: string; role: 'assistant'; answer: AskAnswer };
+  { id: string; role: 'user'; text: string } | { id: string; role: 'assistant'; answer: AskAnswer };
 
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
   const bg = tone === 'deterministic' ? colors.sageTint : colors.clayTint;
@@ -98,10 +97,10 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
           {answer.cta ? (
             <Pressable
               accessibilityRole="button"
-            onPress={() => {
-              haptics.select();
-              router.push(answer.cta!.route);
-            }}
+              onPress={() => {
+                haptics.select();
+                router.push(answer.cta!.route);
+              }}
               className="mt-3 h-[48px] flex-row items-center justify-center rounded-[12px]"
               style={{ backgroundColor: colors.ink }}
             >
@@ -233,7 +232,7 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
         onPress={() => {
           if (reported) return;
           setReported(true);
-        track('ask_reported_problem', { kind: answer.kind });
+          track('ask_reported_problem', { kind: answer.kind });
         }}
         className="mt-2 min-h-[48px] self-start justify-center py-1"
       >

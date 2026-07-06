@@ -286,7 +286,11 @@ export default function TodayScreen() {
           </Text>
 
           <View
-            className={compactPhone ? 'mt-4 rounded-card bg-paper-raised' : 'mt-6 rounded-card bg-paper-raised'}
+            className={
+              compactPhone
+                ? 'mt-4 rounded-card bg-paper-raised'
+                : 'mt-6 rounded-card bg-paper-raised'
+            }
             style={{
               paddingHorizontal: compactPhone ? 20 : 22,
               paddingTop: compactPhone ? 18 : 22,
@@ -324,7 +328,7 @@ export default function TodayScreen() {
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
 
-          {/* Ask OnSkin. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
+          {/* Ask. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
           {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
@@ -337,41 +341,42 @@ export default function TodayScreen() {
               onPress={() => {
                 haptics.select();
                 router.push('/cycle/week');
-              }}>
-            <View
-              className="h-[38px] w-[38px] items-center justify-center rounded-full"
-              style={{ backgroundColor: colors.nightSurface }}
+              }}
             >
               <View
-                className="h-3.5 w-3.5 rounded-full"
-                style={{ backgroundColor: colors.clayBright }}
-              />
-            </View>
-            <View className="flex-1">
-              <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
-                {recoveryActive
-                  ? 'Tonight · Recovery'
-                  : skippedTonight
-                    ? 'Tonight · Skipped'
-                    : cTonight
-                      ? `Tonight · Cycling night ${cTonight.index + 1}`
-                      : 'Tonight'}
-              </Text>
-              <Text className="text-[13px]" style={{ color: 'rgba(244,239,231,0.55)' }}>
-                {recoveryActive
-                  ? 'Barrier support. Actives paused'
-                  : skippedTonight
-                    ? 'Your cycle picks up tomorrow'
-                    : tonightSlot === 'retinoid'
-                      ? 'Retinoid night. Keep it simple'
-                      : tonightSlot === 'exfoliate'
-                        ? 'Exfoliation night'
-                        : tonightSlot === 'recover'
-                          ? 'Recovery night. Barrier support'
-                          : 'Your evening routine'}
-              </Text>
-            </View>
-            <Text style={{ color: 'rgba(244,239,231,0.4)', fontSize: 20 }}>›</Text>
+                className="h-[38px] w-[38px] items-center justify-center rounded-full"
+                style={{ backgroundColor: colors.nightSurface }}
+              >
+                <View
+                  className="h-3.5 w-3.5 rounded-full"
+                  style={{ backgroundColor: colors.clayBright }}
+                />
+              </View>
+              <View className="flex-1">
+                <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
+                  {recoveryActive
+                    ? 'Tonight · Recovery'
+                    : skippedTonight
+                      ? 'Tonight · Skipped'
+                      : cTonight
+                        ? `Tonight · Cycling night ${cTonight.index + 1}`
+                        : 'Tonight'}
+                </Text>
+                <Text className="text-[13px]" style={{ color: 'rgba(244,239,231,0.55)' }}>
+                  {recoveryActive
+                    ? 'Barrier support. Actives paused'
+                    : skippedTonight
+                      ? 'Your cycle picks up tomorrow'
+                      : tonightSlot === 'retinoid'
+                        ? 'Retinoid night. Keep it simple'
+                        : tonightSlot === 'exfoliate'
+                          ? 'Exfoliation night'
+                          : tonightSlot === 'recover'
+                            ? 'Recovery night. Barrier support'
+                            : 'Your evening routine'}
+                </Text>
+              </View>
+              <Text style={{ color: 'rgba(244,239,231,0.4)', fontSize: 20 }}>›</Text>
             </Pressable>
           )}
         </ScrollView>

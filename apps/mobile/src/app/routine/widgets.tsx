@@ -6,6 +6,7 @@ import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
 import { withProGate } from '@/features/subscription/ProGate';
+import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -246,7 +247,7 @@ function WidgetsScreen() {
             </View>
             <View className="flex-1">
               <Text className="font-sans-bold" style={{ fontSize: 15, color: colors.cream }}>
-                OnSkin · Retinoid night
+                {BRAND.appName} · Retinoid night
               </Text>
               <Text
                 style={{

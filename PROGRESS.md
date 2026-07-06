@@ -17,6 +17,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   config, and native bundle identifiers intentionally remain for a later
   cleared-identity migration. `npm run brand:audit` now reports 74 public
   launch-risk references, down from 144 before the runtime-copy slice.
+- Swept the remaining accessible runtime public-copy brand surfaces that do not
+  require a cleared identifier migration: age gate, public share landing,
+  catalog search disclosure, settings lock-screen preview, conflict safety
+  disclaimer, export dialog, photo-encryption error, store metadata draft, and
+  audit-counted comments. Human-simulated E2E checked `/onboarding/age`,
+  `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local
+  reverse-trial route into `/routine/widgets` at 390x844 in
+  `test-results/human-e2e/2026-07-06/runtime-brand-public-copy/`; visible
+  checked screens show `RoutineKind` and no `OnSkin`. Widgets still show the
+  existing deferred native-widget gate until device QA enables that surface.
+  `npm run brand:audit` now reports 44 public launch-risk references, down from
+  74 before this copy sweep.
 - Fixed routine-plan profile-label honesty for the first-value loop. The
   generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
   derives real plan labels from saved `oily_dry` and `sensitive_resistant`

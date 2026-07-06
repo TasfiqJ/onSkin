@@ -34,15 +34,16 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');
     expect(source).toContain("className={compactPhone ? 'mt-3' : 'mt-4'}");
-    expect(source).toContain(
-      "className={compactPhone ? 'mt-4 rounded-card bg-paper-raised' : 'mt-6 rounded-card bg-paper-raised'}",
-    );
+    expect(source).toContain("compactPhone\n                ? 'mt-4 rounded-card bg-paper-raised'");
+    expect(source).toContain(": 'mt-6 rounded-card bg-paper-raised'");
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
     expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
     expect(source).toContain('function compactRoutineInstruction(instruction: string): string');
     expect(source).toContain("case 'Vitamin C in the morning, under your SPF.':");
     expect(source).toContain("return 'Under your SPF.';");
-    expect(source).toContain('const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;');
+    expect(source).toContain(
+      'const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;',
+    );
     expect(source).toContain('{displaySub}');
     expect(source).toContain('compact?: boolean;');
     expect(source).toContain(

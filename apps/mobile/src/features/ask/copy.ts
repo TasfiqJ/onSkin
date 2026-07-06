@@ -114,7 +114,7 @@ export const ASK_COPY = {
   // posture (docs/13 §7): NOT "no transcript ever" but a short, consented safety window.
   consentLedgerBody:
     'On-device context · a minimised summary only, to a zero-retention, no-training cloud language layer · no transcript beyond a short, consented, encrypted safety window · never a photo, never sold, never used to train a model · revocable, and the safety window is deleted when you turn it off.',
-  consentVersion: 'ask-onskin-2026-06-14-placeholder', // BLOCKED: B-PRIVACY-COPY
+  consentVersion: 'ask-advisor-2026-06-14-placeholder', // BLOCKED: B-PRIVACY-COPY
   // The wrong-answer feedback control (docs/13 §9. Content-free).
   feedback: {
     prompt: 'Was this helpful?',

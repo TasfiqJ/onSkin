@@ -10,6 +10,7 @@ import type { CatalogQualityGrade } from '@/features/catalog/quality';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
+import { BRAND } from '@/lib/brand';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -128,7 +129,7 @@ export default function CatalogSearchScreen() {
       </View>
 
       <Text variant="bodySm" tone="muted" className="mt-3">
-        Search uses the OnSkin catalog only. Public API search is not used for live typing.
+        Search uses the {BRAND.appName} catalog only. Public API search is not used for live typing.
       </Text>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">

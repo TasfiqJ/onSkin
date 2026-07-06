@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { POLICY_LINKS } from './policyLinks';
+import { BRAND } from '@/lib/brand';
 import {
   PHASE8_STORE_METADATA_PACKET,
   STORE_METADATA_DRAFT,
@@ -43,6 +44,12 @@ const listingText = [
 ];
 
 describe('Phase 3 store metadata draft is claim-safe', () => {
+  it('uses the configured runtime brand for submitter-facing app names', () => {
+    expect(STORE_METADATA_DRAFT.appName).toBe(BRAND.appName);
+    expect(PHASE8_STORE_METADATA_PACKET.ios.appName).toBe(BRAND.appName);
+    expect(PHASE8_STORE_METADATA_PACKET.googlePlay.title).toBe(BRAND.appName);
+  });
+
   for (const text of listingText) {
     it(`keeps public listing copy clean: "${text.slice(0, 48)}..."`, () => {
       for (const patterns of [

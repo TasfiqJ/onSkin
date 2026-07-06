@@ -66,9 +66,11 @@ function encryptBytesWithKey(plaintext: Uint8Array, key: Uint8Array): EncryptedT
 
 function decryptBytesWithKey(envelope: EncryptedTextEnvelope, key: Uint8Array): Uint8Array {
   if (envelope.version !== ENCRYPTION_VERSION || envelope.keyId !== KEY_ID) {
-    throw new Error('Unsupported OnSkin photo encryption envelope.');
+    throw new Error('Unsupported photo encryption envelope.');
   }
-  return xchacha20poly1305(key, hexToBytes(envelope.nonceHex)).decrypt(hexToBytes(envelope.ciphertextHex));
+  return xchacha20poly1305(key, hexToBytes(envelope.nonceHex)).decrypt(
+    hexToBytes(envelope.ciphertextHex),
+  );
 }
 
 function mimeForUri(uri: string): 'image/jpeg' | 'image/png' {
@@ -83,12 +85,17 @@ export function isEncryptedPhotoUri(uri?: string | null): boolean {
   return Boolean(uri?.endsWith('.onskinphoto'));
 }
 
-export async function encryptCapturedPhoto(sourceUri: string, photoId: string): Promise<EncryptedPhotoWrite> {
+export async function encryptCapturedPhoto(
+  sourceUri: string,
+  photoId: string,
+): Promise<EncryptedPhotoWrite> {
   if (!sourceUri) throw new Error('Missing captured photo URI.');
   await ensureDir();
   const key = await getContentKey();
   const mimeType = mimeForUri(sourceUri);
-  const base64 = await FileSystem.readAsStringAsync(sourceUri, { encoding: FileSystem.EncodingType.Base64 });
+  const base64 = await FileSystem.readAsStringAsync(sourceUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
   const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
   const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
   const envelope: EncryptedPhotoEnvelope = {
@@ -110,16 +117,23 @@ export async function encryptCapturedPhoto(sourceUri: string, photoId: string): 
 export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
   const key = await getContentKey();
-  const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, { encoding: FileSystem.EncodingType.UTF8 });
+  const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+    encoding: FileSystem.EncodingType.UTF8,
+  });
   const envelope = JSON.parse(raw) as EncryptedPhotoEnvelope;
   const base64 = bytesToUtf8(decryptBytesWithKey(envelope, key));
   return `data:${envelope.mimeType};base64,${base64}`;
 }
 
-export async function createPhotoShareFile(encryptedLocalUri: string, photoId: string): Promise<string> {
+export async function createPhotoShareFile(
+  encryptedLocalUri: string,
+  photoId: string,
+): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
   const key = await getContentKey();
-  const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, { encoding: FileSystem.EncodingType.UTF8 });
+  const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+    encoding: FileSystem.EncodingType.UTF8,
+  });
   const envelope = JSON.parse(raw) as EncryptedPhotoEnvelope;
   const base64 = bytesToUtf8(decryptBytesWithKey(envelope, key));
   const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
@@ -127,11 +141,16 @@ export async function createPhotoShareFile(encryptedLocalUri: string, photoId: s
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory) throw new Error('PHOTO_SHARE_CACHE_UNAVAILABLE');
   const exportUri = `${cacheDirectory}onskin-share-${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
-  await FileSystem.writeAsStringAsync(exportUri, strippedBase64, { encoding: FileSystem.EncodingType.Base64 });
+  await FileSystem.writeAsStringAsync(exportUri, strippedBase64, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
   return exportUri;
 }
 
-export async function deletePhotoShareFile(uri?: string | null, sourceUri?: string | null): Promise<void> {
+export async function deletePhotoShareFile(
+  uri?: string | null,
+  sourceUri?: string | null,
+): Promise<void> {
   if (!uri || uri === sourceUri) return;
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory || !uri.startsWith(`${cacheDirectory}onskin-share-`)) return;
@@ -154,7 +173,9 @@ export async function encryptPhotoNote(note: string | null | undefined): Promise
   return JSON.stringify(encryptBytesWithKey(utf8ToBytes(note), key));
 }
 
-export async function decryptPhotoNote(ciphertext: string | null | undefined): Promise<string | null> {
+export async function decryptPhotoNote(
+  ciphertext: string | null | undefined,
+): Promise<string | null> {
   if (!ciphertext) return null;
   const key = await getContentKey();
   const envelope = JSON.parse(ciphertext) as EncryptedTextEnvelope;

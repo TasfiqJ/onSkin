@@ -23,6 +23,7 @@ import {
 } from '@/features/subscription/conflictQuota';
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
+import { BRAND } from '@/lib/brand';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -621,7 +622,8 @@ function SafetyBody({
       </View>
 
       <Text className="mt-3.5 text-[12px] leading-[19px]" style={{ color: NIGHT_FAINT }}>
-        OnSkin isn&apos;t medical advice. We err conservative and always defer to your clinician.
+        {BRAND.appName} isn&apos;t medical advice. We err conservative and always defer to your
+        clinician.
       </Text>
 
       <View className="mt-6 gap-2">

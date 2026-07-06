@@ -263,6 +263,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Inspect the runtime share-card constants without a final brand domain.
   - Expected result: The card watermark uses `RoutineKind`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
   - Evidence: Unit test output and source snapshot.
+- Branch: public-copy sweep smoke
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Start Expo web with the working public display name, open `/onboarding/age`, `/s/[shareId]`, `/shelf/search`, `/settings/timing`, and the local reverse-trial path before `/routine/widgets`.
+  - Expected result: Visible public copy on age gate, share landing, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; widgets route remains the existing native-widget deferred surface until device QA enables it.
+  - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
 
 ## Flow: Today Routine Completion
 
