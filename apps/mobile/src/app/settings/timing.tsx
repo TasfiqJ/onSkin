@@ -93,10 +93,20 @@ function TimePickerModal({
   );
 }
 
-function TimePill({ label, onPress }: { label: string; onPress: () => void }) {
+function TimePill({
+  accessibilityLabel,
+  label,
+  onPress,
+}: {
+  accessibilityLabel: string;
+  label: string;
+  onPress: () => void;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint="Opens time picker"
       onPress={onPress}
       className="min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px] px-3 py-1.5"
       style={{ backgroundColor: colors.greigeChip }}
@@ -121,6 +131,10 @@ export default function TimingScreen() {
     qend: 'quietEnd',
   };
   const currentValue = picking ? ((p[fieldKey[picking]] as string | null) ?? '22:00') : '22:00';
+  const amTimeLabel = fmtTime(p.amTime);
+  const pmTimeLabel = fmtTime(p.pmTime);
+  const quietStartTimeLabel = fmtTime(p.quietStart ?? '22:00');
+  const quietEndTimeLabel = fmtTime(p.quietEnd ?? '07:00');
 
   function choose(hm: string) {
     if (picking) update.mutate({ [fieldKey[picking]]: hm } as Parameters<typeof update.mutate>[0]);
@@ -151,13 +165,21 @@ export default function TimingScreen() {
             <Text variant="body" className="font-sans-semibold">
               Morning
             </Text>
-            <TimePill label={fmtTime(p.amTime)} onPress={() => setPicking('am')} />
+            <TimePill
+              accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}
+              label={amTimeLabel}
+              onPress={() => setPicking('am')}
+            />
           </View>
           <View className="flex-row items-center justify-between py-3.5">
             <Text variant="body" className="font-sans-semibold">
               Evening
             </Text>
-            <TimePill label={fmtTime(p.pmTime)} onPress={() => setPicking('pm')} />
+            <TimePill
+              accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}
+              label={pmTimeLabel}
+              onPress={() => setPicking('pm')}
+            />
           </View>
         </View>
 
@@ -189,11 +211,16 @@ export default function TimingScreen() {
             </Text>
             <View className="flex-row items-center gap-2">
               <TimePill
-                label={fmtTime(p.quietStart ?? '22:00')}
+                accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}
+                label={quietStartTimeLabel}
                 onPress={() => setPicking('qstart')}
               />
               <Text tone="muted">→</Text>
-              <TimePill label={fmtTime(p.quietEnd ?? '07:00')} onPress={() => setPicking('qend')} />
+              <TimePill
+                accessibilityLabel={`Quiet hours end, ${quietEndTimeLabel}`}
+                label={quietEndTimeLabel}
+                onPress={() => setPicking('qend')}
+              />
             </View>
           </View>
           <Text variant="bodySm" tone="muted" className="mt-2">

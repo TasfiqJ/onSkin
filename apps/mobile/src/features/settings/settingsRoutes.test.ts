@@ -57,6 +57,13 @@ describe('Settings route contracts', () => {
 
     expect(timing).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
     expect(timing).toContain('min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px]');
+    expect(timing).toContain('accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}');
+    expect(timing).toContain('accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}');
+    expect(timing).toContain(
+      'accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}',
+    );
+    expect(timing).toContain('accessibilityLabel={`Quiet hours end, ${quietEndTimeLabel}`}');
+    expect(timing).toContain('accessibilityHint="Opens time picker"');
     expect(timing).toContain("flexWrap: 'wrap'");
     expect(timing).toContain('style={{ flexShrink: 1, minWidth: 0 }}');
     expect(notifications).toContain('min-h-[56px] flex-row items-center justify-between py-3.5');

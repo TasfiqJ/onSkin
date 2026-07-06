@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Added contextual accessibility labels and time-picker hints to the reminder
+  timing pills so screen-reader users hear the control purpose, not just the
+  raw time. Expo web E2E at 320 px verified the timing route labels, 48 px
+  control geometry, and morning picker opening/dismissal surface.
 - Reworked the reminder timing and Progress comparison picker sheets so their
   backdrops expose named dismiss actions and their sheet bodies no longer create
   inert unlabeled tap targets. Expo web E2E at 320 px verified timing picker
