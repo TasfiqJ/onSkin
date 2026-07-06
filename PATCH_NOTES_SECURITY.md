@@ -823,3 +823,10 @@
 - Change: RevenueCat webhook shared `Authorization` verification now uses a constant-time string comparison.
 - Why safe: Webhook shared auth is a secret-bearing comparison. Keeping it constant-time matches the HMAC verification posture and avoids reintroducing direct secret equality checks.
 - Regression: Phase 9 Edge auth smoke statically requires `constantTimeEqualString(authHeader, webhookAuth)`.
+
+## Release QA packet generator integrity
+
+- Files: `scripts/phase9/build-release-qa-packet.mjs`, `scripts/phase9/release-smoke.mjs`, `docs/phase-9/source-of-truth.md`.
+- Change: The Phase 9 release QA packet now includes its own builder in source hashes, warns when generated from a dirty Git worktree, and prints `Git status: clean` or `Git status: DIRTY` in the Markdown packet.
+- Why safe: Release evidence must be auditable to the tool that generated it. Hashing the packet generator and surfacing dirty-worktree state keeps reviewers from relying on stale or mixed-worktree evidence after security changes.
+- Regression: Release smoke statically requires the packet builder to hash itself and keep the dirty-worktree warning/status summary.

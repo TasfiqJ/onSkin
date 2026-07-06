@@ -69,6 +69,7 @@ const requiredFiles = [
   'supabase/functions/consent-withdrawal/index.ts',
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'scripts/phase9/lib.mjs',
+  'scripts/phase9/build-release-qa-packet.mjs',
   ...liveHarnessFiles,
   'apps/mobile/src/lib/observability/scrub.ts',
   'apps/mobile/src/lib/analytics/eventRegistry.ts',
@@ -237,6 +238,19 @@ for (const file of liveHarnessFiles) {
     `${file} must not default live app environment to development.`,
   );
 }
+
+const qaPacketBuilder = read('scripts/phase9/build-release-qa-packet.mjs');
+block(
+  errors,
+  /scripts\/phase9\/build-release-qa-packet\.mjs/.test(qaPacketBuilder),
+  'Phase 9 release QA packet must include its own builder in source hashes.',
+);
+block(
+  errors,
+  /Release QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
+  'Phase 9 release QA packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
 block(
   errors,
   has('apps/mobile/src/lib/launch/phase7.ts', /productionSurfaceReady/) &&

@@ -22,6 +22,7 @@
 - `node --check supabase/functions/_shared/auth.ts`
 - `node --check supabase/functions/revenuecat-webhook/index.ts`
 - `node --check scripts/phase9/release-smoke.mjs`
+- `node --check scripts/phase9/build-release-qa-packet.mjs`
 - `node --check scripts/phase10/beta-readiness.mjs`
 - `node --check scripts/phase11/launch-readiness.mjs`
 - `node --check scripts/phase7/check-core-loop.mjs`

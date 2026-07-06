@@ -50,6 +50,7 @@ const sourceFiles = [
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase9/release-smoke.mjs',
+  'scripts/phase9/build-release-qa-packet.mjs',
   'scripts/phase9/live-supabase-adversarial.mjs',
   'scripts/phase9/live-edge-auth.mjs',
   'scripts/phase9/live-data-rights.mjs',
@@ -85,6 +86,11 @@ try {
 } catch {
   warn(warnings, false, 'Git SHA/status could not be captured.');
 }
+warn(
+  warnings,
+  gitStatus.length === 0,
+  'Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.',
+);
 
 const evidence = Object.fromEntries(
   requiredPhase9EvidenceKeys().map((key) => [key, env[key] === 'true']),
@@ -146,6 +152,7 @@ write(
     `Generated: ${packet.generatedAt}`,
     `Status: ${packet.status}`,
     `Git SHA: ${packet.gitSha}`,
+    `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
     '',
     '## Release Identity',
     '',
