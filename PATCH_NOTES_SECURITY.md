@@ -774,3 +774,10 @@
 - Change: Phase 9 release smoke now checks secret-looking `EXPO_PUBLIC_*` names from both `.env.example` and the actual verification-time environment.
 - Why safe: A CI, EAS, or local release shell could inject an unsafe public env name that is not listed in `.env.example`. The release gate should fail before that bundle can be treated as release-ready.
 - Regression: `phase9:release-smoke` still passes normal code gates, and an expected-failure probe with `EXPO_PUBLIC_SERVICE_ROLE_KEY` verifies that actual public secret-looking env keys are blocked.
+
+## Public env private-value release gate
+
+- Files: `scripts/phase9/release-smoke.mjs`.
+- Change: Phase 9 release smoke now blocks private-looking values in `EXPO_PUBLIC_*` keys, including Supabase secret/service-role markers, webhook signing markers, private `sk_*` prefixes, Sentry auth tokens, PostHog personal tokens, and private-key blocks.
+- Why safe: Some public key names are legitimate, but a misconfigured release shell can accidentally assign a private value to them. Name-only checks are not enough for release evidence.
+- Regression: `phase9:release-smoke` still passes normal code gates, and an expected-failure probe with `EXPO_PUBLIC_POSTHOG_KEY=sk_live_blocked` verifies that private-looking public values are blocked.

@@ -342,6 +342,7 @@
   - Proves claimed Phase 9 evidence/signoff fails from a dirty Git worktree.
   - Proves claimed evidence points to a non-template RC folder with required review files, no `TBD`/`BLOCKED` placeholders in core manifest/review/signoff docs, and a manifest `Git SHA` that matches the current commit.
   - Proves secret-looking `EXPO_PUBLIC_*` names are blocked from both `.env.example` and the actual verification environment.
+  - Proves obvious private-looking values are blocked from public env keys even when the public key name itself is allowed.
 - `apps/mobile/package.json` / `package-lock.json`
   - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.
   - Verified with `npm test`, `npm run typecheck`, `npm run lint`, `npm audit --audit-level=moderate`, and the audit-enabled Phase 9 dependency SBOM.
