@@ -1788,6 +1788,13 @@ stays reachable, `/ask/consent` is deferred behind `phase7Flags.cloudAsk`, and t
 cloud Ask is enabled. Regenerated the Phase 7 QA packet and verified `npm run phase7:verify` passes. Strict Phase 7 still
 fails only on external launch evidence, final production URLs, placeholder privacy/legal copy, and review-owner warnings.
 
+### Phase 8 growth/store readiness refresh (2026-07-06)
+
+Refreshed the Phase 8 growth/store QA packet against the current source hashes and re-ran the readiness gate. `npm run
+phase8:verify` passes with no code blockers. Strict Phase 8 intentionally still fails on external production evidence:
+final brand/domain, marketing and store URLs, device App Link/Universal Link proof, share-card QA, privacy attribution
+review, creator/support approvals, launch dashboard readiness, release certificate fingerprints, and named signoff.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
