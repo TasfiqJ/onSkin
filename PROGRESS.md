@@ -76,6 +76,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   card-creation failures. Added focused unit coverage for unavailable sharing,
   rejected share sheets, probe failures, cleanup, and capture errors. Native
   share-sheet device QA remains outstanding.
+- Hardened Settings data export share rejection handling. If the plaintext JSON
+  export is created but the OS share sheet rejects, `exportData()` now deletes the
+  cache file and returns the You tab's handled `Export unavailable` path instead
+  of surfacing a generic privacy-request failure. Added cleanup/false-return
+  regression coverage; native share-sheet device QA remains outstanding.
 - Refined the bottom navigation into a stronger premium floating control. The
   selected tab now uses a dark rounded pill with white icon/label contrast,
   stable one-line label fitting, and per-tab test IDs; the old tiny active rail

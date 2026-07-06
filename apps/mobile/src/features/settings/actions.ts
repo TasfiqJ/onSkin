@@ -65,11 +65,15 @@ export async function exportData(): Promise<boolean> {
   try {
     await FileSystem.writeAsStringAsync(uri, json);
     if (!(await Sharing.isAvailableAsync().catch(() => false))) return false;
-    await Sharing.shareAsync(uri, {
-      mimeType: 'application/json',
-      dialogTitle: `Export your ${BRAND.appName} data`,
-    });
-    return true;
+    try {
+      await Sharing.shareAsync(uri, {
+        mimeType: 'application/json',
+        dialogTitle: `Export your ${BRAND.appName} data`,
+      });
+      return true;
+    } catch {
+      return false;
+    }
   } finally {
     await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
   }

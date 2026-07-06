@@ -133,6 +133,27 @@ describe('settings data export', () => {
     );
   });
 
+  it('returns false and deletes the export file when the native share sheet rejects', async () => {
+    mocks.sharingAvailable.mockResolvedValueOnce(true);
+    mocks.shareAsync.mockRejectedValueOnce(new Error('share rejected'));
+
+    await expect(exportData()).resolves.toBe(false);
+
+    expect(mocks.shareAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      {
+        mimeType: 'application/json',
+        dialogTitle: `Export your ${BRAND.appName} data`,
+      },
+    );
+    expect(mocks.deleteAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      {
+        idempotent: true,
+      },
+    );
+  });
+
   it('keeps the You tab from treating unavailable sharing as a successful export', () => {
     const source = readSource('app/(tabs)/you.tsx');
     const actions = readSource('features/settings/actions.ts');

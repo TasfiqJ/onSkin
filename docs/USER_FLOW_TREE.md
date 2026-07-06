@@ -860,7 +860,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: data export share unavailable
   - Priority: Critical
   - Automate later: Yes
-  - Action: Tap Export my data while the OS share sheet is unavailable or cannot be detected.
+  - Action: Tap Export my data while the OS share sheet is unavailable, cannot be detected, or rejects after the temporary JSON export is created.
   - Expected result: The app shows a clear export-unavailable alert, does not treat the export as completed for review prompting, and deletes the temporary plaintext export file.
   - Evidence: Alert text, mutation state, and cache cleanup assertion.
 - Branch: reminder timing and discretion
