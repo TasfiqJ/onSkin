@@ -96,7 +96,10 @@ export default function OcrScreen() {
         <View className="w-[44px]" />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-5">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}
+      >
         <View className="mt-4 h-[230px] overflow-hidden rounded-[18px] bg-night-elevated">
           {state === 'review' && capturedUri ? (
             <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
@@ -173,61 +176,65 @@ export default function OcrScreen() {
           />
         ) : null}
 
-        <Text variant="eyebrow" tone="clay" className="mt-5">
-          Editable label text
-        </Text>
-        <TextInput
-          accessibilityLabel="Ingredient label text"
-          value={rawText}
-          onChangeText={setRawText}
-          multiline
-          placeholder="Type or paste the INCI list from the label"
-          placeholderTextColor={colors.mutedLight}
-          className="mt-2 min-h-[132px] rounded-[16px] border border-hairline bg-paper-raised p-4 font-sans text-[14px] leading-5 text-ink"
-          textAlignVertical="top"
-        />
-
-        {rawText.trim().length > 0 ? (
+        {state === 'review' ? (
           <>
-            <Text variant="bodySm" tone="muted" className="mt-3">
-              Parser confidence: {Math.round(parsed.confidence * 100)}%. Low-confidence tokens stay
-              visible for review.
+            <Text variant="eyebrow" tone="clay" className="mt-5">
+              Editable label text
             </Text>
-            <Text variant="eyebrow" tone="clay" className="mt-4">
-              Parsed actives
-            </Text>
-            <View className="mt-2.5 gap-2">
-              {activeTokens.map((token) => (
-                <View
-                  key={token.rawToken}
-                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised p-3.5"
-                >
-                  <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay">
-                    <Text className="text-[10px] text-paper">{'\u2713'}</Text>
-                  </View>
-                  <Text variant="bodySm" className="flex-1 font-sans-semibold">
-                    {token.displayName}
-                  </Text>
-                  <Text variant="label" tone="muted">
-                    {primaryTag(token)}
-                  </Text>
+            <TextInput
+              accessibilityLabel="Ingredient label text"
+              value={rawText}
+              onChangeText={setRawText}
+              multiline
+              placeholder="Type or paste the INCI list from the label"
+              placeholderTextColor={colors.mutedLight}
+              className="mt-2 min-h-[132px] rounded-[16px] border border-hairline bg-paper-raised p-4 font-sans text-[14px] leading-5 text-ink"
+              textAlignVertical="top"
+            />
+
+            {rawText.trim().length > 0 ? (
+              <>
+                <Text variant="bodySm" tone="muted" className="mt-3">
+                  Parser confidence: {Math.round(parsed.confidence * 100)}%. Low-confidence tokens
+                  stay visible for review.
+                </Text>
+                <Text variant="eyebrow" tone="clay" className="mt-4">
+                  Parsed actives
+                </Text>
+                <View className="mt-2.5 gap-2">
+                  {activeTokens.map((token) => (
+                    <View
+                      key={token.rawToken}
+                      className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised p-3.5"
+                    >
+                      <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay">
+                        <Text className="text-[10px] text-paper">{'\u2713'}</Text>
+                      </View>
+                      <Text variant="bodySm" className="flex-1 font-sans-semibold">
+                        {token.displayName}
+                      </Text>
+                      <Text variant="label" tone="muted">
+                        {primaryTag(token)}
+                      </Text>
+                    </View>
+                  ))}
+                  {lowConfidence ? (
+                    <View
+                      className="flex-row items-center gap-3 rounded-[14px] border border-dashed bg-greige-chip p-3.5"
+                      style={{ borderColor: 'rgba(32,27,21,0.18)' }}
+                    >
+                      <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
+                      <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
+                        &quot;{lowConfidence.rawToken}&quot;. Not sure
+                      </Text>
+                      <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+                        Edit text
+                      </Text>
+                    </View>
+                  ) : null}
                 </View>
-              ))}
-              {lowConfidence ? (
-                <View
-                  className="flex-row items-center gap-3 rounded-[14px] border border-dashed bg-greige-chip p-3.5"
-                  style={{ borderColor: 'rgba(32,27,21,0.18)' }}
-                >
-                  <View className="h-[18px] w-[18px] rounded-full border-[1.5px] border-muted-light" />
-                  <Text variant="bodySm" tone="muted" className="flex-1 font-sans-semibold">
-                    &quot;{lowConfidence.rawToken}&quot;. Not sure
-                  </Text>
-                  <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-                    Edit text
-                  </Text>
-                </View>
-              ) : null}
-            </View>
+              </>
+            ) : null}
           </>
         ) : state === 'capturing' ? (
           <View className="mt-4 flex-row items-center gap-2">
@@ -239,7 +246,9 @@ export default function OcrScreen() {
         ) : null}
       </ScrollView>
 
-      <Button label="Looks right. Continue" onPress={onContinue} disabled={!canContinue} />
+      {state === 'review' ? (
+        <Button label="Looks right. Continue" onPress={onContinue} disabled={!canContinue} />
+      ) : null}
     </Screen>
   );
 }

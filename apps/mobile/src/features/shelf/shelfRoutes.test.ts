@@ -131,6 +131,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("'h-[50px] items-center justify-center rounded-[14px] px-4'");
   });
 
+  it('keeps Shelf OCR manual review controls from overlapping on short phones', () => {
+    const source = readAppRoute('shelf/ocr.tsx');
+
+    expect(source).toContain(
+      "contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}",
+    );
+    expect(source).toContain("{state === 'review' ? (");
+    expect(source).toMatch(
+      /\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/,
+    );
+    expect(source).not.toContain('contentContainerClassName="pb-5"');
+  });
+
   it('keeps barcode lookup outcomes wired to the owner-scoped shelf scan log', () => {
     const source = readAppRoute('shelf/scan.tsx');
 

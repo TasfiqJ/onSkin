@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf OCR manual fallback after 320 px E2E showed the disabled final
+  Continue action overlapping the ingredient text area before manual-review
+  mode. The editable text area and final action now appear only in review mode,
+  with enough scroll padding for the fixed footer.
 - Fixed the Shelf opened-date intake sheet after 320 px E2E showed the third
   opened-state choice cut off on initial load. The sheet now uses the visible
   Close control instead of reserving a large backdrop strip, keeping all three

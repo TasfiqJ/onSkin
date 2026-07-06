@@ -273,7 +273,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Shelf OCR on a device where the camera cannot start, or force the label photo capture call to reject.
-  - Expected result: The user sees stable camera-unavailable or label-not-captured copy and can continue with manual ingredient text instead of being returned to an unexplained camera state.
+  - Expected result: The user sees stable camera-unavailable or label-not-captured copy and can continue with manual ingredient text instead of being returned to an unexplained camera state. On short phones, the manual review text area and final Continue action do not overlap.
   - Evidence: Alert text, visible fallback state, and route snapshot.
 - Branch: opened date or replenish edge case
   - Priority: Important
