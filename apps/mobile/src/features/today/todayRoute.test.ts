@@ -23,4 +23,23 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('px-4 py-2.5');
     expect(source).not.toContain('px-3.5 py-1.5');
   });
+
+  it('keeps Today prompt actions clear of the floating tab bar on short phones', () => {
+    const source = readAppRoute('(tabs)/today.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactPhone = height < 640');
+    expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
+    expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
+    expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');
+    expect(source).toContain("className={compactPhone ? 'mt-3' : 'mt-4'}");
+    expect(source).toContain(
+      "className={compactPhone ? 'mt-4 rounded-card bg-paper-raised' : 'mt-6 rounded-card bg-paper-raised'}",
+    );
+    expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
+    expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
+    expect(source).toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
+    expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
+    expect(source).toContain('{compactPhone ? null : (');
+  });
 });

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
@@ -165,6 +165,7 @@ function CheckRow({
 }
 
 export default function TodayScreen() {
+  const { height } = useWindowDimensions();
   const type = currentRoutineType();
   const dark = type === 'PM';
   const { data: planData } = usePlan();
@@ -207,6 +208,7 @@ export default function TodayScreen() {
     day: 'numeric',
   });
   const clockLabel = localClockLabel();
+  const compactPhone = height < 640;
 
   // ---- AM ----
   if (!dark) {
@@ -216,8 +218,11 @@ export default function TodayScreen() {
     const doneCount = steps.filter((s) => done.has(stepKey('AM', s.productId))).length;
     return (
       <Screen edges={['top']}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
-          <ReverseTrialBanner />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
+        >
+          <ReverseTrialBanner compact={compactPhone} />
           <View className="mt-1 flex-row items-start justify-between">
             <Text variant="label" tone="muted" className="font-mono mt-1">
               {dateLabel.toUpperCase()}
@@ -237,16 +242,16 @@ export default function TodayScreen() {
             ) : null}
           </View>
 
-          <Text variant="titleLg" className="mt-4">
+          <Text variant="titleLg" className={compactPhone ? 'mt-3' : 'mt-4'}>
             Good morning.
           </Text>
 
           <View
-            className="mt-6 rounded-card bg-paper-raised"
+            className={compactPhone ? 'mt-4 rounded-card bg-paper-raised' : 'mt-6 rounded-card bg-paper-raised'}
             style={{
-              paddingHorizontal: 22,
-              paddingTop: 22,
-              paddingBottom: 12,
+              paddingHorizontal: compactPhone ? 20 : 22,
+              paddingTop: compactPhone ? 18 : 22,
+              paddingBottom: compactPhone ? 8 : 12,
               borderWidth: 1,
               borderColor: colors.hairline,
               ...ROUTINE_CARD_SHADOW,
@@ -277,22 +282,22 @@ export default function TodayScreen() {
           </View>
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
-          <RecommendationsTeaser showGapPrompt />
+          <RecommendationsTeaser compact={compactPhone} showGapPrompt />
 
           {/* Ask OnSkin. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
-          {phase7Flags.cloudAsk ? <AskTeaser /> : null}
+          {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="See your cycle week ahead"
-            className="mt-4 flex-row items-center gap-4 rounded-card p-5"
-            style={{ backgroundColor: colors.night }}
-            onPress={() => {
-              haptics.select();
-              router.push('/cycle/week');
-            }}
-          >
+          {compactPhone ? null : (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="See your cycle week ahead"
+              className="mt-4 flex-row items-center gap-4 rounded-card p-5"
+              style={{ backgroundColor: colors.night }}
+              onPress={() => {
+                haptics.select();
+                router.push('/cycle/week');
+              }}>
             <View
               className="h-[38px] w-[38px] items-center justify-center rounded-full"
               style={{ backgroundColor: colors.nightSurface }}
@@ -327,7 +332,8 @@ export default function TodayScreen() {
               </Text>
             </View>
             <Text style={{ color: 'rgba(244,239,231,0.4)', fontSize: 20 }}>›</Text>
-          </Pressable>
+            </Pressable>
+          )}
         </ScrollView>
       </Screen>
     );
@@ -365,8 +371,11 @@ export default function TodayScreen() {
 
   return (
     <Screen tone="night" edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
-        <ReverseTrialBanner tone="night" />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
+      >
+        <ReverseTrialBanner compact={compactPhone} tone="night" />
         <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
           {dateLabel.toUpperCase()} · {clockLabel}
         </Text>

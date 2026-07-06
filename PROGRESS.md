@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Today SPF prompt short-phone tab-bar overlap after a 320x568 E2E
+  sweep showed `See why` and `Not now` sitting under the floating navigation.
+  Compact Today screens now tighten the trial banner and routine card, preserve
+  48 px recommendation actions, suppress redundant recommendation chrome while
+  the SPF prompt is visible, and keep optional lower cards out of the first
+  compact viewport; E2E verified zero overlapped controls and no horizontal
+  overflow at 320x568.
 - Refined the floating bottom tab bar after E2E review showed the active black
   icon chip made the navigation feel heavy and left label readability too tight
   for a premium phone UI. The bar now uses a calmer white raised surface,

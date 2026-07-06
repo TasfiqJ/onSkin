@@ -4,6 +4,7 @@ import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
+import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -15,7 +16,7 @@ import { useRecommendations } from './useRecommendations';
 // card + the in-routine SPF gap prompt (design 04). Inline, dismissible, never
 // modal-blocking, surfaced where the need arises. Both route into the hub.
 
-function ForYouCard({ count, youreSet }: { count: number; youreSet: boolean }) {
+function ForYouCard({ compact, count, youreSet }: { compact?: boolean; count: number; youreSet: boolean }) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -24,9 +25,18 @@ function ForYouCard({ count, youreSet }: { count: number; youreSet: boolean }) {
         haptics.select();
         router.push('/recommendations');
       }}
-      className="mt-4 flex-row items-center gap-4 rounded-card bg-paper-raised p-5"
+      className={cn(
+        'flex-row items-center rounded-card bg-paper-raised',
+        compact ? 'mt-3 gap-3 p-4' : 'mt-4 gap-4 p-5',
+      )}
       style={{ borderWidth: 1, borderColor: colors.hairline }}>
-      <View className="h-[38px] w-[38px] items-center justify-center rounded-full" style={{ backgroundColor: colors.clayTint }}>
+      <View
+        className={
+          compact
+            ? 'h-9 w-9 items-center justify-center rounded-full'
+            : 'h-[38px] w-[38px] items-center justify-center rounded-full'
+        }
+        style={{ backgroundColor: colors.clayTint }}>
         <Text className="text-[16px]" style={{ color: colors.clay }}>
           ✦
         </Text>
@@ -35,7 +45,7 @@ function ForYouCard({ count, youreSet }: { count: number; youreSet: boolean }) {
         <Text variant="body" className="font-sans-semibold text-[15px]">
           {REC_COPY.todayCard.title}
         </Text>
-        <Text variant="bodySm" tone="muted" className="text-[13px]">
+        <Text variant="bodySm" tone="muted" className={compact ? 'text-[12.5px]' : 'text-[13px]'}>
           {youreSet
             ? REC_COPY.todayCard.bodySet
             : count === 1
@@ -48,7 +58,7 @@ function ForYouCard({ count, youreSet }: { count: number; youreSet: boolean }) {
   );
 }
 
-function GapPrompt({ recId }: { recId: string }) {
+function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   const qc = useQueryClient();
   // Persist the dismissal (docs/09 §7.2): writing it to the dismissed store means
   // the engine drops the rec, so a dismissed SPF nudge stays dismissed across
@@ -59,13 +69,17 @@ function GapPrompt({ recId }: { recId: string }) {
   };
   return (
     <View
-      className="mt-4 rounded-[18px] p-4"
+      className={compact ? 'mt-3 rounded-[16px] p-3' : 'mt-4 rounded-[18px] p-4'}
       style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Dismiss SPF recommendation"
         onPress={() => void dismiss()}
-        className="absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full"
+        className={
+          compact
+            ? 'absolute right-2.5 top-2.5 h-11 w-11 items-center justify-center rounded-full'
+            : 'absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full'
+        }
         style={{
           backgroundColor: 'rgba(165,105,75,0.12)',
           borderWidth: 1,
@@ -75,20 +89,39 @@ function GapPrompt({ recId }: { recId: string }) {
           ✕
         </Text>
       </Pressable>
-      <View className="mb-2 flex-row items-center gap-2.5 pr-12">
-        <View className="h-[30px] w-[30px] items-center justify-center rounded-lg" style={{ backgroundColor: colors.clay }}>
-          <Text className="text-[15px]" style={{ color: colors.paper }}>
+      <View
+        className={
+          compact
+            ? 'mb-1.5 flex-row items-center gap-2 pr-11'
+            : 'mb-2 flex-row items-center gap-2.5 pr-12'
+        }>
+        <View
+          className={
+            compact
+              ? 'h-7 w-7 items-center justify-center rounded-lg'
+              : 'h-[30px] w-[30px] items-center justify-center rounded-lg'
+          }
+          style={{ backgroundColor: colors.clay }}>
+          <Text className={compact ? 'text-[14px]' : 'text-[15px]'} style={{ color: colors.paper }}>
             ☀
           </Text>
         </View>
-        <Text className="flex-1 font-sans-bold text-[14.5px]" style={{ color: colors.clayDeep }}>
+        <Text
+          className={
+            compact
+              ? 'flex-1 font-sans-bold text-[13.5px]'
+              : 'flex-1 font-sans-bold text-[14.5px]'
+          }
+          style={{ color: colors.clayDeep }}>
           {REC_COPY.gapPrompt.title}
         </Text>
       </View>
-      <Text className="mb-3 text-[12.5px]" style={{ color: '#6F4A36', lineHeight: 18 }}>
+      <Text
+        className={compact ? 'mb-2 text-[11.5px]' : 'mb-3 text-[12.5px]'}
+        style={{ color: '#6F4A36', lineHeight: compact ? 15 : 18 }}>
         {REC_COPY.gapPrompt.body}
       </Text>
-      <View className="flex-row items-center gap-4">
+      <View className={compact ? 'flex-row items-center gap-2' : 'flex-row items-center gap-4'}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.cta}
@@ -97,7 +130,11 @@ function GapPrompt({ recId }: { recId: string }) {
             track('recommendation_expanded');
             router.push({ pathname: '/recommendations/[id]', params: { id: recId } });
           }}
-          className="items-center justify-center rounded-pill px-5 py-2"
+          className={
+            compact
+              ? 'items-center justify-center rounded-pill px-4 py-2'
+              : 'items-center justify-center rounded-pill px-5 py-2'
+          }
           style={{ minHeight: 48, backgroundColor: colors.clay }}>
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.paper }}>
             {REC_COPY.gapPrompt.cta}
@@ -107,7 +144,11 @@ function GapPrompt({ recId }: { recId: string }) {
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.dismiss}
           onPress={() => void dismiss()}
-          className="items-center justify-center rounded-pill px-4 py-2"
+          className={
+            compact
+              ? 'items-center justify-center rounded-pill px-3.5 py-2'
+              : 'items-center justify-center rounded-pill px-4 py-2'
+          }
           style={{
             minHeight: 48,
             borderWidth: 1,
@@ -123,18 +164,27 @@ function GapPrompt({ recId }: { recId: string }) {
   );
 }
 
-export function RecommendationsTeaser({ showGapPrompt = false }: { showGapPrompt?: boolean }) {
+export function RecommendationsTeaser({
+  compact = false,
+  showGapPrompt = false,
+}: {
+  compact?: boolean;
+  showGapPrompt?: boolean;
+}) {
   const { result, isLoading } = useRecommendations();
   if (isLoading) return null;
 
   const spfGap = result.recommendations.find(
     (r) => (r.trigger === 'gap' || r.trigger === 'routine_completion') && r.productType.includes('spf'),
   );
+  const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap);
 
   return (
     <>
-      {showGapPrompt && spfGap ? <GapPrompt recId={spfGap.id} /> : null}
-      <ForYouCard count={result.recommendations.length} youreSet={result.youreSet} />
+      {showGapPrompt && spfGap ? <GapPrompt compact={compact} recId={spfGap.id} /> : null}
+      {showCompactGapOnly ? null : (
+        <ForYouCard compact={compact} count={result.recommendations.length} youreSet={result.youreSet} />
+      )}
     </>
   );
 }
