@@ -17,8 +17,9 @@ import { localDateString } from '@/features/today/useToday';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
-import { categoryLabel, isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
+import { isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
 import { surfacedExpiry } from './expiry';
+import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
 import { loadShelf, type ShelfProduct } from './store';
 
@@ -52,37 +53,15 @@ export type ShelfData = {
   banner: DetectedConflict | null;
 };
 
-function monthLabel(iso: string | null): string | null {
-  if (!iso) return null;
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y!, (m ?? 1) - 1, d ?? 1).toLocaleDateString('en-US', { month: 'short' });
-}
-
 function sensitivityFromAxis(score: number | null): EngineProfile['sensitivity'] {
   if (score == null || score === 0) return 'neutral';
   return score > 0 ? 'sensitive' : 'resistant'; // positive axis = Sensitive pole
 }
 
-/** The honest mono metadata line under a product name (docs/04 §5.2). */
-function metaLine(p: ShelfProduct): string {
-  const parts: (string | null | undefined)[] = [];
-  parts.push(p.brand ?? (p.addedVia === 'manual' ? 'added by hand' : categoryLabel(p.category)));
-  if (!p.isOpened) parts.push('unopened');
-  else if (p.openedAt) parts.push(`opened ${monthLabel(p.openedAt)}`);
-  else parts.push('no date set');
-  if (usesPrintedExpiry(p.category) && p.expiryDate) {
-    parts.push('printed expiry');
-  } else if (p.paoMonths != null) {
-    const fromLabel = p.paoSource === 'label' || p.paoSource === 'catalog';
-    parts.push(fromLabel ? `${p.paoMonths} mo PAO` : `est. ${p.paoMonths} mo`);
-  }
-  return parts.filter(Boolean).join(' · ');
-}
-
 /** True when the product's surfaced expiry is only an estimate (a category PAO
  *  default, not a label/catalog value or a printed expiry). Drives the honest
  *  two-line "est.\n{Mon}" badge (design frame 03, Vitamin C). Mirrors the "est."
- *  branch of metaLine so the badge and the meta line never disagree. */
+ *  branch of formatShelfMetaLine so the badge and the meta line never disagree. */
 function isEstimatedExpiry(p: ShelfProduct): boolean {
   if (!p.isOpened || p.paoMonths == null) return false;
   if (usesPrintedExpiry(p.category) && p.expiryDate) return false; // printed wins
@@ -185,7 +164,7 @@ export function useShelf() {
           name: p.name,
           brand: p.brand,
           category: p.category,
-          metaLine: metaLine(p),
+          metaLine: formatShelfMetaLine(p),
           badge,
           status: p.status,
           product: p,

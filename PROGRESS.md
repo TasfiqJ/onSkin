@@ -6,6 +6,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf card metadata wrap after 320 px navigation E2E showed a manual
+  product line breaking to a stray leading `· opened Jul`. Shelf metadata now
+  uses a non-breaking separator so provenance and opened-date text wraps cleanly.
 - Fixed the Cycle settings active-night labels after route audit found the
   scheduler week view correctly wraps zero-based indexes for users but settings
   still rendered raw `N0`-style night numbers. Settings now uses the same

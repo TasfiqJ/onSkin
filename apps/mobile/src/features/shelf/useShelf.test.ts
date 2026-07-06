@@ -4,9 +4,49 @@ import { detectConflicts, isReassuring } from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
+import { formatShelfMetaLine, SHELF_META_SEPARATOR } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
+import type { ShelfProduct } from './store';
 
 const profile = { sensitivity: 'sensitive', pregnancy: false } as const;
+
+function shelfProduct(overrides: Partial<ShelfProduct> = {}): ShelfProduct {
+  return {
+    id: 'product-1',
+    name: 'Retinol Serum',
+    brand: null,
+    category: null,
+    barcode: null,
+    catalogProductId: null,
+    catalogSourceId: null,
+    catalogSource: 'user_local',
+    catalogSourceName: null,
+    catalogSourceRef: null,
+    catalogSourceUrl: null,
+    catalogSourceSnapshotDate: null,
+    catalogMatchQuality: 'manual',
+    dataQualityScore: null,
+    ingredientParseStatus: null,
+    ingredientParseConfidence: null,
+    parserVersion: null,
+    sourceDisclosureAckAt: null,
+    ingredients: [],
+    openedAt: '2026-07-06',
+    isOpened: true,
+    paoMonths: 6,
+    paoSource: 'category_default',
+    expiryDate: null,
+    expirySource: 'pao_computed',
+    status: 'active',
+    finishedAt: null,
+    addedVia: 'manual',
+    repurchaseCount: 1,
+    thumbnailPath: null,
+    createdAt: '2026-07-06T12:00:00.000Z',
+    updatedAt: '2026-07-06T12:00:00.000Z',
+    ...overrides,
+  };
+}
 
 describe('shelf paired badge resolution gate', () => {
   it('does not mark alternate-night advice as paired until scheduler placement resolves it', () => {
@@ -60,5 +100,16 @@ describe('shelf paired badge resolution gate', () => {
     expect(pairedProductIdsForResolvedConflicts([conflict!], new Set([key]), new Set([key]))).toEqual(
       new Set(),
     );
+  });
+});
+
+describe('shelf metadata formatting', () => {
+  it('keeps separators attached so narrow cards never wrap to a leading dot', () => {
+    const meta = formatShelfMetaLine(shelfProduct());
+
+    expect(meta).toBe(
+      ['added by hand', 'opened Jul', 'est. 6 mo'].join(SHELF_META_SEPARATOR),
+    );
+    expect(meta).not.toContain(' · ');
   });
 });
