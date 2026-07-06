@@ -40,9 +40,10 @@ describe('paywall mobile contracts', () => {
       expect(source, `${route} should not keep a 42px route or decline target`).not.toContain(
         'h-[42px]',
       );
-      expect(source, `${route} should not rely on exact 44px sizing that renders at 43.99px`).not.toContain(
-        'h-[44px]',
-      );
+      expect(
+        source,
+        `${route} should not rely on exact 44px sizing that renders at 43.99px`,
+      ).not.toContain('h-[44px]');
     }
 
     for (const route of [
@@ -78,9 +79,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(proGate).toContain('paddingBottom: compactPaywall ? 112 : 24');
-    expect(proGate).toContain(
-      "? 'mt-2 h-[50px] items-center justify-center rounded-pill'",
-    );
+    expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
 
@@ -89,9 +88,7 @@ describe('paywall mobile contracts', () => {
 
     expect(source).toContain('className="min-h-[48px] flex-row');
     expect(
-      source.match(
-        /className="min-h-\[48px\] min-w-\[48px\] items-center justify-center px-1"/g,
-      ),
+      source.match(/className="min-h-\[48px\] min-w-\[48px\] items-center justify-center px-1"/g),
     ).toHaveLength(3);
     expect(source.match(/style=\{\{ minHeight: 48, minWidth: 48 \}\}/g)).toHaveLength(3);
     expect(source).not.toContain('hitSlop={8}');
@@ -104,9 +101,10 @@ describe('paywall mobile contracts', () => {
       expect(source, `${route} should import shared paywall compliance controls`).toContain(
         "import { ComplianceRow } from '@/features/subscription/ComplianceRow';",
       );
-      expect(source, `${route} should render Terms, Privacy, and Restore on the paywall surface`).toContain(
-        '<ComplianceRow />',
-      );
+      expect(
+        source,
+        `${route} should render Terms, Privacy, and Restore on the paywall surface`,
+      ).toContain('<ComplianceRow />');
     }
 
     const winback = readAppRoute('paywall/winback.tsx');
@@ -129,7 +127,7 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain(
       "className={compactPaywall ? 'mt-2 h-[48px] items-center justify-center rounded-pill' : 'mt-5 h-[54px] items-center justify-center rounded-pill'}",
     );
-    expect(source).toContain("compact={compactPaywall}");
+    expect(source).toContain('compact={compactPaywall}');
     expect(source).not.toContain('contentContainerClassName="pb-8"');
   });
 

@@ -58,12 +58,18 @@ Render the trial or paid renewal metadata as two compact centered rows inside a 
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-06/paywall-success-metadata-wrap/paywall-success-after-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-06/paywall-success-metadata-wrap/paywall-success-320x568.png`
 - Video: N/A
 - Trace: N/A
-- Logs: N/A
-- UI snapshot: `test-results/human-e2e/2026-07-06/paywall-success-metadata-wrap/paywall-success-after-320x568.json`
+- Logs: `test-results/human-e2e/2026-07-06/paywall-success-metadata-wrap/browser-warn-error-logs.json`
+- UI snapshot: `test-results/human-e2e/2026-07-06/paywall-success-metadata-wrap/paywall-success-320x568-state.json`
 - Terminal transcript: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts`, `npm --workspace apps/mobile run typecheck`, `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`, `npm run typecheck`, `npm run lint`, and `npm test` all passed.
+
+Post-fix result: Pass on Expo web at a 320 x 568 viewport. The metadata renders
+as two centered 238 px rows inside a 272 px container, and the Today CTA remains
+visible. Logs contain only the expected local placeholder Supabase and web
+notification warnings plus a stale Metro disconnect from the previous server
+restart.
 
 ## Remaining Risk
 
