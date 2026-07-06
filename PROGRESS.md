@@ -29,6 +29,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   existing deferred native-widget gate until device QA enables that surface.
   `npm run brand:audit` now reports 44 public launch-risk references, down from
   74 before this copy sweep.
+- Updated Phase 8 public launch assets for the `RoutineKind` working identity:
+  creator disclosure brief, support/review response template, store metadata
+  source-of-truth labels, public-site title/landing/share/support/waitlist copy,
+  and app-link association templates. The AASA and Android assetlinks templates
+  now use explicit final bundle/package placeholders instead of stale
+  `com.onskin.app` identifiers. Human-simulated E2E served the static public
+  site locally and checked `index.html`, `share.html`, `support.html`, and
+  `waitlist.html` at 390x844 in
+  `test-results/human-e2e/2026-07-06/phase8-public-site-brand/`. `npm run
+brand:audit` now reports 21 public launch-risk references, down from 44; the
+  remaining public-risk items require cleared native/store/RevenueCat/Supabase
+  identity migration.
 - Fixed routine-plan profile-label honesty for the first-value loop. The
   generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
   derives real plan labels from saved `oily_dry` and `sensitive_resistant`

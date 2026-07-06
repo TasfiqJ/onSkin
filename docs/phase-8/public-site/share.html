@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Open OnSkin Shelf Check</title>
+    <title>Open RoutineKind Shelf Check</title>
     <meta
       name="description"
-      content="Open a shared OnSkin shelf check and start your own skincare routine tracker."
+      content="Open a shared RoutineKind shelf check and start your own skincare routine tracker."
     />
     <style>
       :root {
@@ -19,7 +19,13 @@
       body {
         margin: 0;
         font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
         background: var(--paper);
         color: var(--ink);
       }
@@ -34,7 +40,7 @@
       }
       h1 {
         margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: Georgia, 'Times New Roman', serif;
         font-size: 64px;
         font-weight: 400;
         letter-spacing: 0;
@@ -82,7 +88,8 @@
       <section>
         <h1>Check your own shelf.</h1>
         <p>
-          This OnSkin card came from a reviewed product-order check. Open the app or start with your own shelf.
+          This RoutineKind card came from a reviewed product-order check. Open the app or start with
+          your own shelf.
         </p>
         <div class="actions">
           <a class="button primary" id="app-store" href="__APP_STORE_URL__">App Store</a>
@@ -94,36 +101,47 @@
     </main>
     <script>
       const allowed = new Set([
-        "source",
-        "medium",
-        "campaign",
-        "content",
-        "term",
-        "creative_variant",
-        "landing_variant",
-        "platform",
-        "app_version",
-        "build_number",
-        "store",
-        "share_id"
+        'source',
+        'medium',
+        'campaign',
+        'content',
+        'term',
+        'creative_variant',
+        'landing_variant',
+        'platform',
+        'app_version',
+        'build_number',
+        'store',
+        'share_id',
       ]);
-      const sensitive = /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|age|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide)/i;
+      const sensitive =
+        /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|age|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide)/i;
       function attribution() {
         const params = new URLSearchParams(window.location.search);
         const clean = {};
         for (const [key, value] of params.entries()) {
-          if (!allowed.has(key) || sensitive.test(key) || sensitive.test(value) || value.includes("@")) continue;
+          if (
+            !allowed.has(key) ||
+            sensitive.test(key) ||
+            sensitive.test(value) ||
+            value.includes('@')
+          )
+            continue;
           clean[key] = value.slice(0, 120);
         }
         return clean;
       }
       function track(event, extra) {
         const body = JSON.stringify({ event, ...attribution(), ...extra });
-        navigator.sendBeacon && navigator.sendBeacon("/api/growth-event", body);
+        navigator.sendBeacon && navigator.sendBeacon('/api/growth-event', body);
       }
-      track("landing_viewed", {});
-      document.getElementById("app-store").addEventListener("click", () => track("store_click", { store: "app_store" }));
-      document.getElementById("play-store").addEventListener("click", () => track("store_click", { store: "play_store" }));
+      track('landing_viewed', {});
+      document
+        .getElementById('app-store')
+        .addEventListener('click', () => track('store_click', { store: 'app_store' }));
+      document
+        .getElementById('play-store')
+        .addEventListener('click', () => track('store_click', { store: 'play_store' }));
     </script>
   </body>
 </html>

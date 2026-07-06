@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appIDs": ["APPLE_TEAM_ID.com.onskin.app"],
+        "appIDs": ["APPLE_TEAM_ID.FINAL_IOS_BUNDLE_IDENTIFIER"],
         "components": [
           {
             "/": "/s/*",
