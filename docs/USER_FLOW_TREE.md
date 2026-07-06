@@ -500,6 +500,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/recommendations` on a 390 px or narrower phone viewport with long evidence labels.
   - Expected result: Evidence/footer labels wrap within the card and the `See how` action remains visible and tappable.
   - Evidence: Phone-width screenshot and visible-text snapshot.
+- Branch: recommendation preference save failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/recommendations/preferences`, tap a value, budget, or texture chip while forcing local private preference persistence to reject.
+  - Expected result: Chips are disabled while saving, the new state is applied only after persistence succeeds, failures show stable copy, and the For You hub does not recompute from an unsaved preference.
+  - Evidence: Alert text, disabled chip state, and local preference state.
 
 ## Flow: Commerce Trust And Shoppable Routines
 

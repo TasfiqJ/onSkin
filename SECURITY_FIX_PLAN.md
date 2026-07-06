@@ -57,6 +57,8 @@
 - SEC-P2-064: Mobile analytics now blocks sensitive category values and no longer sends recommendation trigger/type, commerce product type, or Ask intent props to PostHog.
 - SEC-P2-065: Recommendations now wait for local private preferences/dismissals before rendering, so dismissed "Not for me" suggestions do not flash during cold-start loading.
 - SEC-P2-066: Recommendation card footers now wrap long evidence labels on phone-width screens while keeping the `See how` action visible.
+- SEC-P2-067: Recommendation preference chips now save local private state before updating visible filters or analytics, disable while saving, and surface stable failure copy.
+- SEC-P2-068: Analytics privacy payload audit now catches shorthand sensitive props and fails on sensitive keys; onboarding no longer attempts to send selected goals.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

@@ -228,6 +228,50 @@ function stripJsComments(source) {
   return out;
 }
 
+function maskJsStrings(source) {
+  let out = '';
+  let quote = null;
+  let escaped = false;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+
+    if (quote) {
+      out += char === '\n' ? char : ' ';
+      if (escaped) {
+        escaped = false;
+      } else if (char === '\\') {
+        escaped = true;
+      } else if (char === quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'" || char === '`') {
+      quote = char;
+      out += ' ';
+      continue;
+    }
+
+    out += char;
+  }
+
+  return out;
+}
+
+function trackPayloadKeys(objectLiteral) {
+  const masked = maskJsStrings(stripJsComments(objectLiteral));
+  const keys = new Set();
+  for (const keyMatch of masked.matchAll(/([A-Za-z_$][A-Za-z0-9_$]*)\s*:/g)) {
+    keys.add(keyMatch[1]);
+  }
+  for (const shorthandMatch of masked.matchAll(/(?:^|[,{]\s*)([A-Za-z_$][A-Za-z0-9_$]*)(?=\s*(?:,|$))/g)) {
+    keys.add(shorthandMatch[1]);
+  }
+  return keys;
+}
+
 for (const file of listFiles('apps/mobile/src').filter((item) => /\.(ts|tsx)$/.test(item) && !item.endsWith('.test.ts'))) {
   const text = read(file);
   const normalizedFile = file.replace(/\\/g, '/');
@@ -242,16 +286,15 @@ for (const file of listFiles('apps/mobile/src').filter((item) => /\.(ts|tsx)$/.t
     for (let next = index + 1; next < Math.min(lines.length, index + 12) && !/\);/.test(snippet); next += 1) {
       snippet += `\n${lines[next]}`;
     }
-    const objectLiteral = stripJsComments(objectFromTrackSnippet(snippet));
+    const objectLiteral = objectFromTrackSnippet(snippet);
     if (!objectLiteral) continue;
-    for (const keyMatch of objectLiteral.matchAll(/([A-Za-z_$][A-Za-z0-9_$]*)\s*:/g)) {
-      const key = keyMatch[1];
+    for (const key of trackPayloadKeys(objectLiteral)) {
       if (retiredAnalyticsProps.has(key)) {
         block(errors, false, `Retired sensitive analytics prop used in track payload: ${file.replace(abs('.'), '.')} -> ${key}.`);
+      } else if (sensitiveKey.test(key) && !approvedBucketExceptions.has(key)) {
+        block(errors, false, `Sensitive analytics prop used in track payload: ${file.replace(abs('.'), '.')} -> ${key}.`);
       } else if (!allowed.has(key)) {
         seenDropped.add(`${file.replace(abs('.'), '.')} -> ${key}`);
-      } else if (sensitiveKey.test(key) && !approvedBucketExceptions.has(key)) {
-        seenDropped.add(`${file.replace(abs('.'), '.')} -> sensitive ${key}`);
       }
     }
   }

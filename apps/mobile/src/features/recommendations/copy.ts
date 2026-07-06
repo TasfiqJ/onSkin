@@ -107,6 +107,8 @@ export const REC_COPY = {
     // engine is type-first and weights these in fit, it does not yet hard-exclude.
     footnote: 'We prioritise options that fit these.',
     none: 'No preference',
+    saveFailedTitle: 'Preference not saved',
+    saveFailedBody: "We couldn't save that preference. Please try again.",
   },
 } as const;
 

@@ -39,7 +39,7 @@ export default function GoalsScreen() {
           label="Continue"
           disabled={goals.length === 0}
           onPress={() => {
-            track('screen_viewed', { screen_name: 'goals', goals });
+            track('screen_viewed', { screen_name: 'goals' });
             router.push('/onboarding/consent');
           }}
         />

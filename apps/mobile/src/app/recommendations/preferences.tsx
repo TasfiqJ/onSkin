@@ -1,9 +1,11 @@
 import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@onskin/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { applyRecommendationPreferences } from '@/features/recommendations/applyPreferences';
 import {
   BUDGET_LABEL,
   FORMAT_LABEL,
@@ -29,22 +31,26 @@ const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
 function Toggle({
   label,
   active,
+  disabled,
   onPress,
 }: {
   label: string;
   active: boolean;
+  disabled: boolean;
   onPress: () => void;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ selected: active }}
+      accessibilityState={{ selected: active, disabled }}
+      disabled={disabled}
       onPress={onPress}
       className="rounded-pill px-4 py-2.5"
       style={{
         backgroundColor: active ? colors.ink : colors.paperRaised,
         borderWidth: 1,
         borderColor: active ? colors.ink : colors.hairlineStrong,
+        opacity: disabled ? 0.58 : 1,
       }}
     >
       <Text
@@ -59,16 +65,33 @@ function Toggle({
 
 export default function PreferencesScreen() {
   const qc = useQueryClient();
-  const { data: prefs } = useQuery({ queryKey: ['recPreferences'], queryFn: loadPreferences });
+  const [saving, setSaving] = useState(false);
+  const { data: prefs, isLoading } = useQuery({
+    queryKey: ['recPreferences'],
+    queryFn: loadPreferences,
+  });
   const p = prefs ?? DEFAULT_PREFERENCES;
+  const controlsDisabled = isLoading || saving;
 
   const commit = async (next: RecPreferences) => {
+    if (controlsDisabled) return;
     haptics.select();
-    qc.setQueryData(['recPreferences'], next);
-    track('preference_set');
-    await savePreferences(next);
-    // The For-you hub reads prefs+dismissals together. Refresh it too.
-    await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
+    setSaving(true);
+    try {
+      await applyRecommendationPreferences(next, {
+        save: savePreferences,
+        onSaved: async () => {
+          qc.setQueryData(['recPreferences'], next);
+          track('preference_set');
+          // The For-you hub reads prefs+dismissals together. Refresh it too.
+          await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
+        },
+        onFailure: () =>
+          Alert.alert(REC_COPY.preferences.saveFailedTitle, REC_COPY.preferences.saveFailedBody),
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const toggleValue = (v: ValuesFilter) =>
@@ -90,8 +113,16 @@ export default function PreferencesScreen() {
           accessibilityRole="button"
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
+          style={{
+            width: 44,
+            height: 44,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 22,
+            backgroundColor: colors.paperRaised,
+            borderWidth: 1,
+            borderColor: colors.hairline,
+          }}
         >
           <Text style={{ color: colors.ink }}>‹</Text>
         </Pressable>
@@ -117,7 +148,8 @@ export default function PreferencesScreen() {
               key={v}
               label={VALUES_LABEL[v] ?? v}
               active={p.values.includes(v)}
-              onPress={() => toggleValue(v)}
+              disabled={controlsDisabled}
+              onPress={() => void toggleValue(v)}
             />
           ))}
         </View>
@@ -131,7 +163,8 @@ export default function PreferencesScreen() {
               key={b}
               label={BUDGET_LABEL[b] ?? b}
               active={p.budget === b}
-              onPress={() => setBudget(b)}
+              disabled={controlsDisabled}
+              onPress={() => void setBudget(b)}
             />
           ))}
         </View>
@@ -145,7 +178,8 @@ export default function PreferencesScreen() {
               key={f}
               label={FORMAT_LABEL[f] ?? f}
               active={p.formats.includes(f)}
-              onPress={() => toggleFormat(f)}
+              disabled={controlsDisabled}
+              onPress={() => void toggleFormat(f)}
             />
           ))}
         </View>

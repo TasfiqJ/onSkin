@@ -41,4 +41,25 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('flexShrink: 1');
     expect(source).toContain("flexShrink: 0, textAlign: 'right'");
   });
+
+  it('keeps recommendation preferences fail-closed on local save failure', () => {
+    const source = readAppRoute('recommendations/preferences.tsx');
+
+    expect(source).toContain('applyRecommendationPreferences');
+    expect(source).toContain('disabled={controlsDisabled}');
+    expect(source).toContain('accessibilityState={{ selected: active, disabled }}');
+    expect(source).toContain('Alert.alert(REC_COPY.preferences.saveFailedTitle');
+    expect(source).toContain("track('preference_set')");
+    expect(source.indexOf('save: savePreferences')).toBeLessThan(
+      source.indexOf("track('preference_set')"),
+    );
+  });
+
+  it('keeps recommendation preferences navigation touchable on phones', () => {
+    const source = readAppRoute('recommendations/preferences.tsx');
+
+    expect(source).toContain('accessibilityLabel="Back"');
+    expect(source).toContain('width: 44');
+    expect(source).toContain('height: 44');
+  });
 });

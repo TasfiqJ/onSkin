@@ -544,6 +544,13 @@
 - Why safe: Even without raw text, photos, or product names, short category values can disclose sensitive health-adjacent context. The funnel still records coarse event occurrence, counts, safe sources, and safe answer kind without sending the user's need, product category, or question intent to the analytics vendor.
 - Regression: `track.test.ts` proves sensitive allowed-key values are dropped. `phase9:privacy-payload-audit` now fails if retired category/intent props are re-allowlisted or reintroduced in `track()` payloads.
 
+## Analytics shorthand sensitive-prop gate
+
+- Files: `apps/mobile/src/app/onboarding/goals.tsx`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: The onboarding goals screen now records only the `screen_name` bucket when continuing, not the selected `goals` array. The Phase 9 privacy payload audit now extracts shorthand object props such as `{ goals }`, masks quoted strings before scanning, and fails on sensitive analytics prop keys rather than treating sanitizer-dropped health props as warnings.
+- Why safe: Sensitive data should not be attempted at analytics call sites and rely on a runtime drop. A static blocker catches future shorthand payloads before review or QA builds can ship them.
+- Regression: `phase9:privacy-payload-audit` passes with the stronger shorthand parser and would fail if `goals` or another sensitive key returns to a `track()` payload.
+
 ## Recommendation dismissed-state loading gate
 
 - Files: `apps/mobile/src/features/recommendations/loading.ts`, `apps/mobile/src/features/recommendations/useRecommendations.ts`, `apps/mobile/src/features/recommendations/useRecommendations.test.ts`, `docs/USER_FLOW_TREE.md`.
@@ -557,6 +564,13 @@
 - Change: Recommendation card footers now give the evidence label a wrapping `min-w-0` flex region and keep the `See how` action non-shrinking and right-aligned.
 - Why safe: Long evidence labels must fit on iOS and Android phones without clipping the card or hiding the action that opens the explanation.
 - Regression: `recommendationRoutes.test.ts` locks the footer layout contract for the wrapping evidence label and non-shrinking action.
+
+## Recommendation preference save recovery
+
+- Files: `apps/mobile/src/features/recommendations/applyPreferences.ts`, `apps/mobile/src/features/recommendations/applyPreferences.test.ts`, `apps/mobile/src/app/recommendations/preferences.tsx`, `apps/mobile/src/features/recommendations/copy.ts`, `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`, `docs/USER_FLOW_TREE.md`.
+- Change: Recommendation preference changes now save local private state before updating visible query state, invalidating For You recommendations, or tracking `preference_set`. Preference chips are disabled while loading or saving, and failed local persistence shows stable "Preference not saved" copy.
+- Why safe: Recommendation preferences shape health-adjacent suggestions. A chip should not look selected, recompute the hub, or emit analytics when the preference was never durably saved on the device.
+- Regression: `applyPreferences.test.ts` covers save-before-apply and fail-closed persistence errors; `recommendationRoutes.test.ts` locks the route to the helper, disabled chips, and stable alert copy.
 
 ## Photo capture consent fail-closed gate
 

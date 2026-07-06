@@ -175,6 +175,9 @@
 - `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`
   - Proves the For You hub returns direct-entry users to You, while nested recommendation detail/preference routes return to the recommendations hub.
   - Proves recommendation card footers keep long evidence labels in a wrapping flex region and keep `See how` visible on narrow phone widths.
+  - Proves the preference route uses the fail-closed save helper, disables chips while saving/loading, and alerts with stable copy on persistence failure.
+- `apps/mobile/src/features/recommendations/applyPreferences.test.ts`
+  - Proves recommendation preferences are saved before visible/query state and analytics are applied, and failed local persistence does not mark the preference as saved.
 - `apps/mobile/src/features/recommendations/useRecommendations.test.ts`
   - Proves recommendation UI remains in a loading state until local private preferences and dismissed suggestion IDs have loaded, preventing stale dismissed cards from flashing.
 - `apps/mobile/src/features/settings/settingsRoutes.test.ts`
@@ -348,6 +351,7 @@
 - `scripts/phase9/privacy-payload-audit.mjs`
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
   - Ignores code comments inside `track()` object literals so audit warnings reflect real payload keys.
+  - Extracts shorthand object props such as `{ goals }`, then fails if sensitive analytics prop keys are attempted in source, even if the runtime sanitizer would drop them.
   - Fails if recommendation trigger/type, commerce product type, or Ask intent props are re-allowlisted or reintroduced in analytics payloads.
   - Fails if analytics, Sentry, or RevenueCat setup warnings reintroduce raw exception-object console logging.
   - Fails if analytics tracking reintroduces development console logging for event names or sanitized props.
