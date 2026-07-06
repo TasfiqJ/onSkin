@@ -341,6 +341,26 @@ export async function configureRevenueCat(appUserId: string): Promise<void> {
   await configurePromise;
 }
 
+export async function resetRevenueCatIdentity(): Promise<void> {
+  const pendingConfiguration = configurePromise;
+
+  try {
+    if (!canUseRevenueCat()) return;
+    await pendingConfiguration?.catch(() => {});
+
+    const Purchases = await loadPurchases();
+    const isConfigured = await Purchases.isConfigured().catch(() => false);
+    if (!isConfigured) return;
+
+    const isAnonymous = await Purchases.isAnonymous().catch(() => false);
+    if (!isAnonymous) await Purchases.logOut();
+  } finally {
+    configuredForUserId = null;
+    configurePromise = null;
+    cachedOfferings = null;
+  }
+}
+
 export async function getSubscriptionOffering(): Promise<SubscriptionOfferingView> {
   if (!canUseRevenueCat()) {
     if (env.appEnvironment === 'production') {

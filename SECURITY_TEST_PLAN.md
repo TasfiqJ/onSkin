@@ -101,6 +101,9 @@
 - `apps/mobile/src/features/settings/localPrivateDataKeys.test.ts`
   - Proves every `onskin.*` local storage key in source is registered for deletion.
   - Proves there are no duplicate local wipe keys.
+- `apps/mobile/src/features/settings/localPrivateData.test.ts`
+  - Proves local private-data cleanup clears app stores, generated cache files, scheduled notifications, and PostHog/RevenueCat client identities.
+  - Proves account-boundary cleanup fails closed when a client identity reset rejects.
 - `apps/mobile/src/features/notifications/claimsafety.test.ts`
   - Proves every lock-screen notification payload uses the generic `OnSkin` title and discreet body copy.
   - Proves OS notification bodies do not contain progress-photo, product, skin, treatment, ingredient, or escalation details.
@@ -356,6 +359,9 @@
   - Verifies photo-quality result labels are dropped from the generic `result` prop while non-sensitive result buckets remain available.
   - Verifies `change_state` is no longer an accepted analytics prop key.
   - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.
+  - Verifies the PostHog account-boundary reset wrapper remains present.
+- `apps/mobile/src/lib/iap/revenuecat.test.ts`
+  - Verifies the RevenueCat account-boundary reset wrapper keeps SDK logout and local user/offering cache reset logic.
 - `apps/mobile/src/lib/navigation/externalUrl.test.ts`
   - Verifies external handoffs allow only normalized HTTPS URLs, reject custom schemes, plaintext HTTP, embedded credentials, malformed strings, and control characters, and strip fragments before opening.
   - Verifies opaque commerce attribution parameters are appended only after URL validation.
@@ -418,7 +424,7 @@
 - ShopMy order-report poll activation test before enabling commerce attribution: run `phase9:live-order-report-poll:strict`; prove `POST` only, no-op without brand key, `503` if brand key exists without `ORDER_REPORT_POLL_SECRET`, `401` with missing/wrong scheduler secret, no `order_attributions` write before authorization, and no real scheduler secret in the harness. Authorized scheduler success should be tested only in a controlled ShopMy sandbox/partner environment.
 - Public waitlist/growth abuse-control tests: missing server secret returns 503, missing token returns 403, invalid token returns 403, oversized bodies return 413 without writes, valid token writes the expected sanitized record, and repeated requests produce `429` without persisting raw IP/user-agent values. Missing/invalid, oversized-body, valid-token, and 429/keyed-hash paths are covered by `phase9:live-public-forms:strict`; missing-secret evidence still requires staging deployment logs or a targeted staging probe.
 - Authenticated catalog abuse-control tests: run `npm run phase9:live-catalog-rate-limit:strict` with staging credentials and matching `CATALOG_RATE_LIMIT_MAX`/`PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX`; repeated `catalog-search` and `catalog-lookup` POSTs should produce `429` plus `rate_limited`, and redacted artifacts should show only keyed hashes in `edge_rate_limits`, not raw user IDs.
-- Account deletion with photos, shelf, routines, entitlement rows, RevenueCat deletion, PostHog deletion, local cache wipe, and notification cancellation. The deployed backend portion is covered by `phase9:live-data-rights:strict`; local device wipe still needs real-device QA.
+- Account deletion with photos, shelf, routines, entitlement rows, RevenueCat deletion, PostHog deletion, client SDK identity reset, local cache wipe, and notification cancellation. The deployed backend portion is covered by `phase9:live-data-rights:strict`; local device wipe still needs real-device QA.
 - Account switching and auth linking on device: same-user token refresh must preserve local stores, explicit sign-out must wipe them, and any Supabase user ID change must not display the previous account's shelf/profile/photos/routines to the new account. Anonymous-to-Apple/Google/email transitions need staging evidence that the product either keeps the same user ID or has an intentional migration/clear UX.
 - Data export with two users, malformed legacy photo metadata omission, deployed rate-limit behavior, and cloud photo signed URL expiration. The owner-only, malformed-path omission, commission-redaction, signed-URL expiry, and rate-limit `429`/keyed-hash checks are covered by `phase9:live-data-rights:strict` when staging sets a short `DATA_EXPORT_PHOTO_URL_TTL_SECONDS`, `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK=true`, and `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS` greater than the TTL.
 - Consent withdrawal disables cloud/AI/commerce sharing, blocks future consent-gated writes from modified clients, and deletes/detaches prior cloud/shared rows where promised. The deployed cleanup path is covered by `phase9:live-consent-withdrawal:strict`; post-revocation write denial is covered by `phase9:live-supabase-adversarial:strict`.

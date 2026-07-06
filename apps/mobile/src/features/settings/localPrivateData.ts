@@ -3,6 +3,8 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Notifications from 'expo-notifications';
 
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
+import { resetAnalyticsIdentity } from '@/lib/analytics/track';
+import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
 import { clearPrivateKVContentKey } from '@/lib/storage/privateKV';
 
 import {
@@ -36,6 +38,8 @@ export async function clearLocalPrivateData(): Promise<void> {
     clearPrivateKVContentKey(),
     clearGeneratedCacheFiles(),
     Notifications.cancelAllScheduledNotificationsAsync().catch(() => {}),
+    resetAnalyticsIdentity(),
+    resetRevenueCatIdentity(),
   ]);
 
   const failed = results.filter((result) => result.status === 'rejected');

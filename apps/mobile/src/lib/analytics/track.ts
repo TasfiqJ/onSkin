@@ -103,6 +103,11 @@ export function identify(userId: string, props?: Record<string, unknown>): void 
     });
 }
 
+export async function resetAnalyticsIdentity(): Promise<void> {
+  const posthog = await getPostHog();
+  await posthog?.reset();
+}
+
 export async function flushAnalytics(): Promise<void> {
   const posthog = await getPostHog();
   await posthog?.flush();

@@ -683,3 +683,10 @@
 - Change: Scheduler pause and recovery analytics now emit generic events without `reason` or `days`, and irritation-triggered recovery no longer emits the distinct `cycle_deescalated` event.
 - Why safe: Irritation and recovery duration are health-adjacent routine-disruption details. Aggregate event counts are enough for product telemetry without exporting the reason or duration.
 - Regression: `useCycleAnalytics.test.ts` locks pause/recovery analytics to generic event names and rejects reason/duration payloads plus the old de-escalation event name.
+
+## Client SDK identity reset on local wipe
+
+- Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `apps/mobile/src/features/settings/localPrivateData.test.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, `apps/mobile/src/lib/iap/revenuecat.test.ts`.
+- Change: `clearLocalPrivateData()` now resets the PostHog client identity and logs RevenueCat out of the current non-anonymous app user ID while clearing cached RevenueCat user/offering state. The same cleanup path runs for explicit sign-out, account deletion, and Supabase session replacement.
+- Why safe: Server-side deletion removes vendor records, but SDKs can also keep client-side identity/cache state on the device. Resetting at the local wipe boundary prevents the next account on the same device from inheriting the previous account's analytics or subscription SDK identity.
+- Regression: `localPrivateData.test.ts` proves identity resets run with local store/cache/notification cleanup and fail the account-boundary cleanup if a reset rejects. `track.test.ts` and `revenuecat.test.ts` lock the PostHog `reset()` and RevenueCat `logOut()` wrapper paths.

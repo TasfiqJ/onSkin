@@ -1,6 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { pseudonymousUserId, sanitizeAnalyticsProps } from './track';
+
+const TRACK_SOURCE = fileURLToPath(new URL('./track.ts', import.meta.url));
 
 describe('analytics sanitizer', () => {
   it('drops sensitive keys and complex payloads', () => {
@@ -66,5 +70,12 @@ describe('analytics sanitizer', () => {
     expect(first).toBe(second);
     expect(first).toMatch(/^u_[a-f0-9]{32}$/);
     expect(first).not.toContain(raw);
+  });
+
+  it('keeps an explicit account-boundary reset for PostHog identity', () => {
+    const source = readFileSync(TRACK_SOURCE, 'utf8');
+
+    expect(source).toContain('export async function resetAnalyticsIdentity');
+    expect(source).toContain('posthog?.reset()');
   });
 });
