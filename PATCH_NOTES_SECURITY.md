@@ -586,6 +586,13 @@
 - Why safe: Ask prompts are health-adjacent disclosures to a cloud language layer. The consent UI should not look enabled or revoked, and analytics should not say a revoke completed, unless the relevant local/ledger operation actually completed.
 - Regression: `applyConsentChoice.test.ts` covers grant/revoke save-before-apply and fail-closed persistence errors. `routeContract.test.ts` locks the route to the helper, disabled switch, immediate write guard, stable alert copy, and non-optimistic query update. `claimsafety.test.ts` scans the new copy.
 
+## Commerce decline analytics ordering
+
+- Files: `apps/mobile/src/features/commerce/consent.ts`, `apps/mobile/src/features/commerce/consent.test.ts`.
+- Change: `commerce_consent_declined` now tracks only after `withdrawConsent({ type: 'data_sharing' })` succeeds. The local-first commerce flag still flips off before the withdrawal call so paid-link affordances relock immediately.
+- Why safe: Partner-sharing withdrawal is a regulated consent event. Analytics should not record a completed decline if server-side withdrawal/cleanup fails, even though the local app must still fail closed by relocking commerce.
+- Regression: `consent.test.ts` proves grant analytics wait for local persistence, decline analytics wait for withdrawal, and withdrawal failure does not emit the completed-decline event.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

@@ -64,6 +64,7 @@
 - `npm --workspace @onskin/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
@@ -186,6 +187,9 @@
 - `apps/mobile/src/features/ask/applyConsentChoice.test.ts`
   - Proves Cloud Ask consent grants and revocations save before visible toggle state is applied.
   - Proves failed Ask consent persistence surfaces stable copy, leaves visible state unapplied, and refreshes stale consent state.
+- `apps/mobile/src/features/commerce/consent.test.ts`
+  - Proves commerce grant analytics emit only after the local consent flag saves.
+  - Proves commerce decline analytics emit only after consent withdrawal succeeds, and failed withdrawal does not record a completed decline.
 - `apps/mobile/src/features/recommendations/useRecommendations.test.ts`
   - Proves recommendation UI remains in a loading state until local private preferences and dismissed suggestion IDs have loaded, preventing stale dismissed cards from flashing.
 - `apps/mobile/src/features/settings/settingsRoutes.test.ts`
