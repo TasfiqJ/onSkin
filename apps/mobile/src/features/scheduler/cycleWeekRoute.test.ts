@@ -81,6 +81,14 @@ describe('cycle week route scheduler notes', () => {
     expect(source).not.toContain('gap-[3px]');
   });
 
+  it('keeps cycle settings night labels one-based like the week overview', () => {
+    const source = readAppRoute('cycle/settings.tsx');
+
+    expect(source).toContain('const cycleNightNumber = n.index + 1;');
+    expect(source).toContain('N{cycleNightNumber}');
+    expect(source).not.toContain('N{n.index}');
+  });
+
   it('keeps scheduler safety notes visible when no cycle is formed', () => {
     const source = readAppRoute('cycle/week.tsx');
     const noteRenderCount = source.match(/<SchedulerNote note=\{schedulerNote\} \/>/g) ?? [];

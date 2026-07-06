@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Cycle settings active-night labels after route audit found the
+  scheduler week view correctly wraps zero-based indexes for users but settings
+  still rendered raw `N0`-style night numbers. Settings now uses the same
+  one-based cycle-night label as the week overview.
 - Fixed the Ask OnSkin empty state after 320 px E2E showed the third suggested
   prompt sliding under the fixed composer. The prompt rows keep 48 px touch
   targets but use tighter short-phone spacing so all starter prompts clear the

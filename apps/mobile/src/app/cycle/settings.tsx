@@ -84,38 +84,42 @@ export default function CycleSettingsScreen() {
               Actives on your nights
             </Text>
             <View className="gap-2">
-              {potentNights.map((n) => (
-                <View
-                  key={n.index}
-                  className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised px-3.5 py-3"
-                >
+              {potentNights.map((n) => {
+                const cycleNightNumber = n.index + 1;
+
+                return (
                   <View
-                    className="rounded-md px-2 py-1"
-                    style={{ backgroundColor: n.slot === 'retinoid' ? '#A5694B' : '#F3E7DF' }}
+                    key={n.index}
+                    className="flex-row items-center gap-3 rounded-[14px] border border-hairline bg-paper-raised px-3.5 py-3"
                   >
-                    <Text
-                      className="font-mono text-[11px]"
-                      style={{ color: n.slot === 'retinoid' ? '#FAF7F2' : '#8A5239' }}
+                    <View
+                      className="rounded-md px-2 py-1"
+                      style={{ backgroundColor: n.slot === 'retinoid' ? '#A5694B' : '#F3E7DF' }}
                     >
-                      N{n.index}
+                      <Text
+                        className="font-mono text-[11px]"
+                        style={{ color: n.slot === 'retinoid' ? '#FAF7F2' : '#8A5239' }}
+                      >
+                        N{cycleNightNumber}
+                      </Text>
+                    </View>
+                    <Text variant="bodySm" className="flex-1 font-sans-semibold">
+                      {n.productName}{' '}
+                      <Text variant="label" tone="muted">
+                        {slotLabel(n.slot).toLowerCase()}
+                      </Text>
                     </Text>
+                    <View
+                      className="rounded-full px-2.5 py-1"
+                      style={{ backgroundColor: 'rgba(32,27,21,0.06)' }}
+                    >
+                      <Text variant="label" tone="muted" style={{ fontSize: 10.5 }}>
+                        Scheduled
+                      </Text>
+                    </View>
                   </View>
-                  <Text variant="bodySm" className="flex-1 font-sans-semibold">
-                    {n.productName}{' '}
-                    <Text variant="label" tone="muted">
-                      {slotLabel(n.slot).toLowerCase()}
-                    </Text>
-                  </Text>
-                  <View
-                    className="rounded-full px-2.5 py-1"
-                    style={{ backgroundColor: 'rgba(32,27,21,0.06)' }}
-                  >
-                    <Text variant="label" tone="muted" style={{ fontSize: 10.5 }}>
-                      Scheduled
-                    </Text>
-                  </View>
-                </View>
-              ))}
+                );
+              })}
             </View>
 
             {/* The firm rule, framed calmly (docs/05 §6.2 / §8). */}
