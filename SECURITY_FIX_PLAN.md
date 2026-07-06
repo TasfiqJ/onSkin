@@ -67,6 +67,7 @@
 - SEC-P2-073: Trend-insight revocation analytics now emit only after consent withdrawal succeeds, while local trend state still relocks before the withdrawal call.
 - SEC-P2-074: Ask, commerce, community, and trend consent-grant analytics now emit only after the immutable consent ledger write succeeds.
 - SEC-P2-075: Ask and Trend consent grants now relock local consent flags and rethrow when the immutable consent ledger write fails.
+- SEC-P2-076: Commerce and community consent grants now relock local consent flags when the immutable consent ledger write fails.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

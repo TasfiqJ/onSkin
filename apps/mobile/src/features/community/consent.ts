@@ -36,7 +36,7 @@ export async function grantCommunityConsent(): Promise<void> {
     });
     track('community_consent_granted');
   } catch {
-    /* best-effort until backend configured */
+    await setCommunityConsentLocal(false).catch(() => undefined);
   }
 }
 

@@ -60,13 +60,14 @@ describe('community consent persistence', () => {
     );
   });
 
-  it('does not emit community grant analytics when the consent ledger fails', async () => {
+  it('fails closed and relocks community consent when the consent ledger fails', async () => {
     const { grantCommunityConsent } = await import('./consent');
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
     await expect(grantCommunityConsent()).resolves.toBeUndefined();
 
-    expect(mocks.setCommunityConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.setCommunityConsentLocal).toHaveBeenNthCalledWith(1, true);
+    expect(mocks.setCommunityConsentLocal).toHaveBeenNthCalledWith(2, false);
     expect(mocks.track).not.toHaveBeenCalledWith('community_consent_granted');
   });
 

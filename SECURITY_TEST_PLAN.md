@@ -68,6 +68,7 @@
 - `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/trend/consent.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/ask/applyConsentChoice.test.ts src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/commerce/commerce.test.ts src/features/community/community.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
@@ -202,6 +203,7 @@
   - Prove sensitive consent grant analytics emit only after the immutable consent ledger write succeeds.
   - Prove consent grant analytics are not emitted when ledger persistence fails.
   - Prove Ask and Trend grant failures relock local consent flags so the consent-gated feature remains closed.
+  - Prove commerce and community grant failures relock local consent flags so paid links and community posting remain closed.
 - `apps/mobile/src/features/notifications/applyPreferences.test.ts`
   - Proves notification preference changes save local private state before reminders are rescheduled.
   - Proves failed local notification preference persistence does not reschedule reminders or optimistically change visible query state.

@@ -56,13 +56,14 @@ describe('commerce consent persistence', () => {
     );
   });
 
-  it('does not emit commerce grant analytics when the consent ledger fails', async () => {
+  it('fails closed and relocks commerce consent when the consent ledger fails', async () => {
     const { grantCommerceConsent } = await import('./consent');
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
     await expect(grantCommerceConsent()).resolves.toBeUndefined();
 
-    expect(mocks.setCommerceConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.setCommerceConsentLocal).toHaveBeenNthCalledWith(1, true);
+    expect(mocks.setCommerceConsentLocal).toHaveBeenNthCalledWith(2, false);
     expect(mocks.track).not.toHaveBeenCalledWith('commerce_consent_granted');
   });
 

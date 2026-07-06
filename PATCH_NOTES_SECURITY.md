@@ -628,6 +628,13 @@
 - Why safe: The existing route helpers already keep visible toggle state unapplied when a grant rejects. Relocking the local flags closes the offline/local fallback path too, so a failed ledger write cannot leave cloud Ask or Trend enabled.
 - Regression: Consent tests prove failed Ask/Trend grants set the local flag back to false, emit no grant analytics, and keep the failure visible to the route helper.
 
+## Commerce and community grant relock on ledger failure
+
+- Files: `apps/mobile/src/features/commerce/consent.ts`, `apps/mobile/src/features/commerce/consent.test.ts`, `apps/mobile/src/features/community/consent.ts`, `apps/mobile/src/features/community/consent.test.ts`.
+- Change: Commerce partner-sharing and community-participation grants now roll their local consent flags back off if `recordConsent` fails.
+- Why safe: These gates still have local/offline fallbacks. If the immutable consent ledger write fails, paid-link affordances and community posting must not remain locally unlocked from a stale local flag.
+- Regression: Commerce and community consent tests prove failed ledger writes relock local consent and emit no completed grant analytics.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

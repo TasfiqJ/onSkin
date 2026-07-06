@@ -46,7 +46,7 @@ export async function grantCommerceConsent(): Promise<void> {
     });
     track('commerce_consent_granted');
   } catch {
-    /* best-effort until backend configured */
+    await setCommerceConsentLocal(false).catch(() => undefined);
   }
 }
 
