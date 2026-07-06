@@ -735,7 +735,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open notification settings, toggle reminder tiers, edit AM/PM timing and quiet hours, then return to settings.
-  - Expected result: User-set times, contextual timing-control labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a named dismiss action and do not create unlabeled inert sheet-body controls.
+  - Expected result: User-set times, contextual timing-control and picker-row labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a named dismiss action and do not create unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence, local preference snapshot, and small-phone accessibility/geometry snapshot.
 
 ## Flow: Ask OnSkin Deterministic Advisor

@@ -66,11 +66,14 @@ function TimePickerModal({
           </Text>
           <ScrollView style={{ maxHeight: 340 }} showsVerticalScrollIndicator={false}>
             {TIMES.map((t) => {
+              const formattedTime = fmtTime(t);
               const sel = t === value;
               return (
                 <Pressable
                   key={t}
                   accessibilityRole="button"
+                  accessibilityLabel={`${title}, ${formattedTime}`}
+                  accessibilityHint={`Sets ${title.toLowerCase()} to ${formattedTime}`}
                   accessibilityState={{ selected: sel }}
                   onPress={() => onSelect(t)}
                   className="min-h-[48px] flex-row items-center justify-between py-2.5"
@@ -80,7 +83,7 @@ function TimePickerModal({
                     style={{ color: sel ? colors.clay : colors.ink }}
                     className={sel ? 'font-sans-semibold' : undefined}
                   >
-                    {fmtTime(t)}
+                    {formattedTime}
                   </Text>
                   {sel ? <Text style={{ color: colors.clay }}>✓</Text> : null}
                 </Pressable>

@@ -80,6 +80,11 @@ describe('Settings route contracts', () => {
     expect(source).toContain('accessibilityRole="button"');
     expect(source).toContain('className="flex-1"\n          accessibilityLabel="Dismiss time picker"');
     expect(source).toContain('accessibilityViewIsModal');
+    expect(source).toContain('accessibilityLabel={`${title}, ${formattedTime}`}');
+    expect(source).toContain(
+      'accessibilityHint={`Sets ${title.toLowerCase()} to ${formattedTime}`}',
+    );
+    expect(source).toContain('const formattedTime = fmtTime(t);');
     expect(source).not.toContain('onPress={() => {}}');
   });
 

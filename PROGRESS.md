@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Added contextual accessibility labels to each reminder time-picker row so
+  assistive tech names both the setting and the candidate time. Expo web E2E at
+  320 px verified contextual picker-row labels, 48 px row geometry, and applying
+  a new morning reminder time from the sheet.
 - Added contextual accessibility labels and time-picker hints to the reminder
   timing pills so screen-reader users hear the control purpose, not just the
   raw time. Expo web E2E at 320 px verified the timing route labels, 48 px
