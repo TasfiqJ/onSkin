@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Alert, ScrollView, Switch, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
@@ -10,13 +10,18 @@ import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
-import { useEntitlement } from '@/features/subscription/useEntitlement';
+import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
+import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
-import { appLockUserMessage, dataRightsUserMessage } from '@/lib/errors/userFacing';
+import {
+  appLockUserMessage,
+  dataRightsUserMessage,
+  privacyChoiceUserMessage,
+} from '@/lib/errors/userFacing';
 import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
 import { type PolicyLinkKey, policyLinkRows } from '@/lib/legal/policyLinks';
 import { phase7Flags } from '@/lib/launch/phase7';
@@ -69,10 +74,19 @@ function Row({
   );
 }
 
-function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
+function Toggle({
+  value,
+  disabled,
+  onChange,
+}: {
+  value: boolean;
+  disabled?: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
     <Switch
       value={value}
+      disabled={disabled}
       onValueChange={onChange}
       trackColor={{ true: colors.clay, false: colors.greigeDeep }}
       thumbColor={colors.paperRaised}
@@ -94,6 +108,10 @@ export default function YouScreen() {
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
+  const [savingPrivacy, setSavingPrivacy] = useState<
+    'marketing' | 'data_sharing' | 'photo_cloud_backup' | null
+  >(null);
+  const savingPrivacyRef = useRef(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
   // The RESOLVED commerce data-sharing consent (ledger-if-present, else the local
@@ -143,41 +161,77 @@ export default function YouScreen() {
   }
 
   async function setConsent(type: 'marketing' | 'data_sharing', granted: boolean) {
-    qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({
-      ...(prev ?? {}),
-      [type]: granted,
-    }));
-    // data_sharing IS the MHMDA third-party-sharing consent that gates "where to buy"
-    //. Keep the local-first commerce flag in sync so revoking here re-locks paid links
-    // even before the backend exists (review fix, docs/10 §6 / D-061).
-    if (type === 'data_sharing') {
-      qc.setQueryData<boolean>(['commerceConsent'], granted); // optimistic, both surfaces
-      await setCommerceConsentLocal(granted);
-      await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
-    }
+    if (savingPrivacyRef.current) return;
+    savingPrivacyRef.current = true;
+    setSavingPrivacy(type);
     try {
-      await recordConsent({
-        type,
-        granted,
-        version: CONSENT_COPY_VERSION,
-        consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
+      await applySettingsPrivacyChoice({
+        save: async () => {
+          if (type === 'data_sharing') {
+            await setCommerceConsentLocal(granted);
+          }
+          // data_sharing IS the MHMDA third-party-sharing consent that gates "where to buy"
+          // Keep the local-first commerce flag in sync so revoking here re-locks paid links
+          // even before the backend exists (review fix, docs/10 §6 / D-061).
+          try {
+            await recordConsent({
+              type,
+              granted,
+              version: CONSENT_COPY_VERSION,
+              consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
+            });
+          } catch (error) {
+            if (type !== 'data_sharing') throw error;
+          }
+        },
+        onSaved: () => {
+          qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({
+            ...(prev ?? {}),
+            [type]: granted,
+          }));
+          if (type === 'data_sharing') {
+            qc.setQueryData<boolean>(['commerceConsent'], granted);
+          }
+        },
+        onFailure: () => Alert.alert('Choice not saved', privacyChoiceUserMessage()),
+        onSettled: async () => {
+          await qc.invalidateQueries({ queryKey: ['consents'] });
+          if (type === 'data_sharing') {
+            await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+          }
+        },
       });
-    } catch {
-      /* best-effort until backend configured */
+    } finally {
+      savingPrivacyRef.current = false;
+      setSavingPrivacy(null);
     }
   }
 
   async function setCloud(enabled: boolean) {
-    qc.setQueryData(['photo_cloud_backup'], enabled);
-    if (enabled) {
-      track('cloud_backup_opted_in');
-      // Surface the device-loss tradeoff honestly when turning backup ON (docs/06 §6).
-      Alert.alert('Encrypted cloud backup', PHOTO_COPY.lock.cloudTradeoff, [{ text: 'Got it' }]);
-    }
+    if (savingPrivacyRef.current) return;
+    savingPrivacyRef.current = true;
+    setSavingPrivacy('photo_cloud_backup');
     try {
-      await setCloudBackupEnabled(enabled);
-    } catch {
-      /* best-effort */
+      await applySettingsPrivacyChoice({
+        save: async () => {
+          await setCloudBackupEnabled(enabled);
+        },
+        onSaved: () => {
+          qc.setQueryData(['photo_cloud_backup'], enabled);
+          if (enabled) {
+            track('cloud_backup_opted_in');
+            // Surface the device-loss tradeoff honestly when turning backup ON (docs/06 §6).
+            Alert.alert('Encrypted cloud backup', PHOTO_COPY.lock.cloudTradeoff, [
+              { text: 'Got it' },
+            ]);
+          }
+        },
+        onFailure: () => Alert.alert('Choice not saved', privacyChoiceUserMessage()),
+        onSettled: () => qc.invalidateQueries({ queryKey: ['photo_cloud_backup'] }),
+      });
+    } finally {
+      savingPrivacyRef.current = false;
+      setSavingPrivacy(null);
     }
   }
 
@@ -348,6 +402,7 @@ export default function YouScreen() {
             >
               <Toggle
                 value={commerceConsent.data ?? false}
+                disabled={savingPrivacy === 'data_sharing'}
                 onChange={(v) => void setConsent('data_sharing', v)}
               />
             </Row>
@@ -373,7 +428,11 @@ export default function YouScreen() {
             label="Encrypted cloud backup"
             hint="Off by default. A separate choice. Photos stay on this phone until you turn it on."
           >
-            <Toggle value={cloudBackup.data ?? false} onChange={(v) => void setCloud(v)} />
+            <Toggle
+              value={cloudBackup.data ?? false}
+              disabled={savingPrivacy === 'photo_cloud_backup'}
+              onChange={(v) => void setCloud(v)}
+            />
           </Row>
         </Card>
 
@@ -404,6 +463,7 @@ export default function YouScreen() {
           <Row label="Marketing emails" hint="Off by default. Opt in anytime.">
             <Toggle
               value={consents.data?.marketing ?? false}
+              disabled={savingPrivacy === 'marketing'}
               onChange={(v) => void setConsent('marketing', v)}
             />
           </Row>
@@ -414,6 +474,7 @@ export default function YouScreen() {
             >
               <Toggle
                 value={commerceConsent.data ?? false}
+                disabled={savingPrivacy === 'data_sharing'}
                 onChange={(v) => void setConsent('data_sharing', v)}
               />
             </Row>

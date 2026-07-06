@@ -48,6 +48,10 @@ export function appLockUserMessage(): string {
   return 'App lock is not available on this device right now.';
 }
 
+export function privacyChoiceUserMessage(): string {
+  return "We couldn't save that choice. Please try again.";
+}
+
 export function shareCardUserMessage(): string {
   return "We couldn't create the card. Please try again.";
 }

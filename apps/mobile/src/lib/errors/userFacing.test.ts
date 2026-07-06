@@ -5,6 +5,7 @@ import {
   appLockUserMessage,
   authUserMessage,
   dataRightsUserMessage,
+  privacyChoiceUserMessage,
   shareCardUserMessage,
 } from './userFacing';
 
@@ -24,6 +25,7 @@ describe('user-facing error copy', () => {
     expect(authUserMessage(new Error(raw))).toBe('Something went wrong. Please try again.');
     expect(dataRightsUserMessage()).not.toMatch(/relation|token|user_id|supabase|provider/i);
     expect(appLockUserMessage()).not.toMatch(/exception|stack|biometric|native/i);
+    expect(privacyChoiceUserMessage()).not.toMatch(/relation|token|user_id|supabase|provider/i);
     expect(shareCardUserMessage()).not.toMatch(/file|uri|path|stack/i);
   });
 });

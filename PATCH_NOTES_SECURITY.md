@@ -572,6 +572,13 @@
 - Why safe: Recommendation preferences shape health-adjacent suggestions. A chip should not look selected, recompute the hub, or emit analytics when the preference was never durably saved on the device.
 - Regression: `applyPreferences.test.ts` covers save-before-apply and fail-closed persistence errors; `recommendationRoutes.test.ts` locks the route to the helper, disabled chips, and stable alert copy.
 
+## You-tab privacy choice save recovery
+
+- Files: `apps/mobile/src/features/settings/applyPrivacyChoice.ts`, `apps/mobile/src/features/settings/applyPrivacyChoice.test.ts`, `apps/mobile/src/app/(tabs)/you.tsx`, `apps/mobile/src/lib/errors/userFacing.ts`, `apps/mobile/src/lib/errors/userFacing.test.ts`.
+- Change: Marketing, partner-sharing, and encrypted-cloud-backup toggles now save through a settings privacy helper before updating visible query state. The switches disable while saving, failed persistence shows stable "Choice not saved" copy, and cloud-backup opt-in analytics plus the backup tradeoff alert run only after `setCloudBackupEnabled` succeeds.
+- Why safe: Privacy and consent controls should not make a sensitive choice look durable, unlock partner-sharing affordances, or emit opt-in analytics when the underlying local/ledger save failed.
+- Regression: `applyPrivacyChoice.test.ts` covers save-before-visible-state ordering, fail-closed persistence errors, route use of the helper, disabled toggles, and cloud-backup analytics ordering. `userFacing.test.ts` keeps the failure copy stable and provider-detail-free.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.
