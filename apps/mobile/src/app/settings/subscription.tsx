@@ -35,7 +35,7 @@ function Row({ label, last, onPress }: { label: string; last?: boolean; onPress:
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="flex-row items-center justify-between py-3.5"
+      className="min-h-[48px] flex-row items-center justify-between py-3.5"
       style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: colors.hairline }}
     >
       <Text variant="body" className="font-sans-semibold">
@@ -202,7 +202,9 @@ export default function SubscriptionScreen() {
               </Pressable>
             </View>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
-              <Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />
+              <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
+              <Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />
+              <Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />
             </View>
             {data?.expired ? (
               <Pressable

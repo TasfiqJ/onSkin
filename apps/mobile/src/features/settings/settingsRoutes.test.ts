@@ -142,7 +142,21 @@ describe('Settings route contracts', () => {
   it('keeps secondary subscription exits buffered above 44px on phones', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
+    expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-3.5');
     expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
     expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');
+  });
+
+  it('keeps free subscription settings compliant with restore and policy access', () => {
+    const source = readAppRoute('settings/subscription.tsx');
+
+    expect(source).toContain('<Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />');
+    expect(source).toContain('<Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />');
+    expect(source).toContain(
+      '<Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />',
+    );
+    expect(source).not.toContain(
+      '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',
+    );
   });
 });

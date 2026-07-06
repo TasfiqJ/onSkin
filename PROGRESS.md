@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed subscription settings free-state policy access after 320x568 E2E showed
+  `/settings/subscription` exposed Restore only for free users, even though the
+  settings branch and subscription spec require Terms and Privacy access from the
+  subscription settings surface. Free subscription settings now show Restore,
+  Terms, and Privacy as 48 px full-row actions, and E2E rechecked
+  subscription/notification/timing direct-entry Back recovery to `/you`.
 - Fixed lifecycle paywall compliance reachability after 320x568 E2E showed
   `/paywall/reoffer`, `/paywall/downgrade`, and `/paywall/winback` could present
   purchase or re-subscribe actions without Terms, Privacy, or Restore controls
