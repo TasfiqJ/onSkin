@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import type { SequencingRole } from '@onskin/types';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { WhereToBuy } from '@/features/commerce/WhereToBuy';
 import { recTypeByKey } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
@@ -185,15 +185,10 @@ export default function RecommendationDetail() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
-        >
-          <Text style={{ color: colors.ink }}>‹</Text>
-        </Pressable>
+        />
         <Text variant="body" className="font-sans-semibold" tone="muted">
           Recommendation
         </Text>
@@ -212,7 +207,7 @@ export default function RecommendationDetail() {
           </Text>
           <Pressable
             accessibilityRole="button"
-            className="mt-4 py-2"
+            className="mt-4 min-h-[44px] items-center justify-center py-2"
             onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
           >
             <Text className="font-sans-semibold" tone="muted">

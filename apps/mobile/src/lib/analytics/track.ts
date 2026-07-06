@@ -1,7 +1,8 @@
 import type { OnboardingEvent } from '@onskin/types';
 import type { PostHog } from 'posthog-react-native';
 
-import { isAllowedAnalyticsPropKey } from '@/lib/analytics/eventRegistry';
+import type { AnalyticsAllowedEventName } from '@/lib/analytics/eventRegistry';
+import { isAllowedAnalyticsEventName, isAllowedAnalyticsPropKey } from '@/lib/analytics/eventRegistry';
 import { env } from '@/lib/env';
 import { devWarn } from '@/lib/observability/safeLog';
 
@@ -78,12 +79,20 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
   return clean;
 }
 
+export function sanitizeAnalyticsEventName(event: OnboardingEvent | string): AnalyticsAllowedEventName | null {
+  const normalized = event.trim();
+  return isAllowedAnalyticsEventName(normalized) ? normalized : null;
+}
+
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
+  const safeEvent = sanitizeAnalyticsEventName(event);
+  if (!safeEvent) return;
+
   const safeProps = sanitizeAnalyticsProps(props);
 
   void getPostHog()
     .then((posthog) => {
-      posthog?.capture(event, safeProps);
+      posthog?.capture(safeEvent, safeProps);
     })
     .catch((error: unknown) => {
       devWarn('[analytics] capture failed', error);

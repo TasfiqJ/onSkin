@@ -45,7 +45,8 @@ export default function NotificationsScreen() {
     void finish(async () => {
       track('notification_prompt_shown');
       const granted = await acceptRoutineReminderSoftAsk();
-      track(granted ? 'notification_prompt_granted' : 'notification_prompt_denied');
+      if (granted) track('notification_prompt_granted');
+      else track('notification_prompt_denied');
     });
   }
 

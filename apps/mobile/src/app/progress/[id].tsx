@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Alert, Pressable, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
@@ -39,21 +39,15 @@ function PhotoDetailScreenContent() {
           paddingHorizontal: 24,
         }}
       >
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={closeToProgress}
+          tone="night"
           style={{
-            width: 34,
-            height: 34,
-            borderRadius: 17,
             backgroundColor: 'rgba(244,239,231,0.12)',
-            alignItems: 'center',
-            justifyContent: 'center',
+            borderColor: 'transparent',
           }}
-        >
-          <Text style={{ color: '#F4EFE7', fontSize: 16 }}>{'<'}</Text>
-        </Pressable>
+        />
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ color: '#F4EFE7' }}>Photo not found.</Text>
         </View>
@@ -90,25 +84,19 @@ function PhotoDetailScreenContent() {
       style={{ flex: 1, backgroundColor: BG, paddingTop: insets.top + 12, paddingHorizontal: 24 }}
     >
       <View className="mb-4 flex-row items-center justify-between">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={closeToProgress}
+          tone="night"
           style={{
-            width: 34,
-            height: 34,
-            borderRadius: 17,
             backgroundColor: 'rgba(244,239,231,0.12)',
-            alignItems: 'center',
-            justifyContent: 'center',
+            borderColor: 'transparent',
           }}
-        >
-          <Text style={{ color: '#F4EFE7', fontSize: 16 }}>‹</Text>
-        </Pressable>
+        />
         <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 14, color: '#F4EFE7' }}>
           {dateLabel}
         </Text>
-        <View style={{ width: 34 }} />
+        <View style={{ width: 44 }} />
       </View>
 
       {/* photo */}

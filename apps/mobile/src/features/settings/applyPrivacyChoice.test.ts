@@ -56,9 +56,9 @@ describe('settings privacy choice application', () => {
     expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
     expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
     expect(source).toContain("disabled={savingPrivacy === 'photo_cloud_backup'}");
-    expect(source).toContain("if (type === 'data_sharing' && granted)");
-    expect(source).toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
-    expect(source).not.toContain("if (type !== 'data_sharing') throw error;");
+    expect(source).toContain("if (type !== 'data_sharing') throw error;");
+    expect(source).not.toContain("if (type === 'data_sharing' && granted)");
+    expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
     expect(saveCloudIndex).toBeGreaterThanOrEqual(0);
     expect(cloudQueryIndex).toBeGreaterThan(saveCloudIndex);
     expect(cloudAnalyticsIndex).toBeGreaterThan(saveCloudIndex);

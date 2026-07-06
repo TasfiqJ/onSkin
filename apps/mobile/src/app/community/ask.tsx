@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { buildAnonHandle } from '@/features/community/anonHandle';
 import { scanClaimSafety } from '@/features/community/claimSafetyScan';
 import { confirmCommunityAge, grantCommunityConsent } from '@/features/community/consent';
@@ -75,7 +75,7 @@ function ConsentGate() {
           accessibilityRole="checkbox"
           accessibilityState={{ checked: ageChecked }}
           onPress={() => setAgeChecked((v) => !v)}
-          className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+          className="min-h-[44px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
           style={{ borderWidth: 1, borderColor: ageChecked ? colors.clay : colors.hairline }}
         >
           <View
@@ -115,7 +115,7 @@ function ConsentGate() {
       <Pressable
         accessibilityRole="button"
         onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
-        className="h-[42px] items-center justify-center"
+        className="h-[44px] items-center justify-center"
       >
         <Text className="font-sans-semibold text-[15px]" tone="muted">
           {COMMUNITY_COPY.consent.decline}
@@ -265,15 +265,10 @@ export default function AskScreen() {
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pb-2 pt-1">
         <View className="flex-row items-center gap-3">
-          <Pressable
-            accessibilityRole="button"
+          <RouteIconButton
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
-            className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}
-          >
-            <Text style={{ color: colors.ink }}>‹</Text>
-          </Pressable>
+          />
           <Text variant="body" className="font-sans-semibold" tone="muted">
             {COMMUNITY_COPY.ask.title}
           </Text>

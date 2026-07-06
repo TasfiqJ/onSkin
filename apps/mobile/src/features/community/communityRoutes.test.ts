@@ -8,6 +8,17 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
+function expectTouchableRouteIcon(route: string): void {
+  const source = readAppRoute(route);
+
+  expect(source, `${route} should use the shared 44pt route icon button`).toContain(
+    'RouteIconButton',
+  );
+  expect(source, `${route} should not shrink route icons below phone touch targets`).not.toContain(
+    'h-7 w-7',
+  );
+}
+
 describe('Community route contracts', () => {
   it('keeps the community hub safe for direct entry', () => {
     const source = readAppRoute('community/index.tsx');
@@ -15,6 +26,11 @@ describe('Community route contracts', () => {
     expect(source).not.toContain('router.back()');
     expect(source).toContain('APP_YOU_ROUTE');
     expect(source).toContain('backOrReplace(router, APP_YOU_ROUTE)');
+    expect(source).toContain('RouteIconButton');
+    expect(source).not.toContain('hitSlop={8}');
+    expect(source).toContain(
+      'className="min-h-[44px] min-w-[44px] items-center justify-center px-2"',
+    );
   });
 
   it('keeps nested community routes safe for direct entry', () => {
@@ -45,5 +61,24 @@ describe('Community route contracts', () => {
         '<DeferredSurface surface="communityPosting" fallbackRoute={APP_COMMUNITY_ROUTE} />',
       );
     }
+  });
+
+  it('keeps community route escape controls touchable on phones', () => {
+    for (const route of [
+      'community/ask.tsx',
+      'community/people-like-you.tsx',
+      'community/note/[id].tsx',
+    ]) {
+      expectTouchableRouteIcon(route);
+    }
+  });
+
+  it('keeps community consent text exits at least 44px tall', () => {
+    const source = readAppRoute('community/ask.tsx');
+
+    expect(source).toContain(
+      'min-h-[44px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3',
+    );
+    expect(source).toContain('className="h-[44px] items-center justify-center"');
   });
 });

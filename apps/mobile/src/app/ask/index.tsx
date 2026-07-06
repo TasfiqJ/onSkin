@@ -2,12 +2,12 @@ import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import type { AskAnswer } from '@/features/ask/answer';
 import { ASK_COPY } from '@/features/ask/copy';
 import { useAsk } from '@/features/ask/useAsk';
 import { track } from '@/lib/analytics/track';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -98,11 +98,11 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
           {answer.cta ? (
             <Pressable
               accessibilityRole="button"
-              onPress={() => {
-                haptics.select();
-                router.push(answer.cta!.route);
-              }}
-              className="mt-3 h-[44px] flex-row items-center justify-center rounded-[12px]"
+            onPress={() => {
+              haptics.select();
+              router.push(answer.cta!.route);
+            }}
+              className="mt-3 h-[48px] flex-row items-center justify-center rounded-[12px]"
               style={{ backgroundColor: colors.ink }}
             >
               <Text className="font-sans-semibold text-[12.5px]" style={{ color: colors.cream }}>
@@ -189,7 +189,7 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
               haptics.select();
               router.push(answer.cta!.route as never);
             }}
-            className="mt-3 self-start rounded-pill px-4 py-2"
+            className="mt-3 min-h-[48px] self-start items-center justify-center rounded-pill px-4 py-2"
             style={{ backgroundColor: colors.greige }}
           >
             <Text className="font-sans-semibold text-[12px]" style={{ color: colors.ink }}>
@@ -233,10 +233,9 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
         onPress={() => {
           if (reported) return;
           setReported(true);
-          track('ask_reported_problem', { kind: answer.kind });
+        track('ask_reported_problem', { kind: answer.kind });
         }}
-        hitSlop={12}
-        className="mt-2 self-start py-1"
+        className="mt-2 min-h-[48px] self-start justify-center py-1"
       >
         <Text className="font-mono text-[9px]" style={{ color: colors.mutedLight }}>
           {reported
@@ -331,14 +330,10 @@ export default function AskScreen() {
     <Screen edges={['top', 'bottom']}>
       {/* Header */}
       <View className="flex-row items-center gap-3 pb-1 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
-          onPress={() => backOrReplace(router)}
-          hitSlop={8}
-        >
-          <Text style={{ color: colors.ink, fontSize: 20 }}>‹</Text>
-        </Pressable>
+          onPress={() => backOrReplace(router, APP_HOME_ROUTE)}
+        />
         <View
           className="h-[30px] w-[30px] items-center justify-center rounded-[9px]"
           style={{ backgroundColor: colors.ink }}
@@ -439,13 +434,13 @@ export default function AskScreen() {
             accessibilityLabel={ASK_COPY.home.inputA11y}
             returnKeyType="send"
             className="flex-1 text-[13px]"
-            style={{ color: colors.ink, paddingVertical: 2 }}
+            style={{ color: colors.ink, minHeight: 48, paddingVertical: 0 }}
           />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Send"
             onPress={onSend}
-            className="h-[30px] w-[30px] items-center justify-center rounded-[9px]"
+            className="h-[48px] w-[48px] items-center justify-center rounded-[14px]"
             style={{ backgroundColor: colors.ink }}
           >
             <Text style={{ color: colors.cream, fontSize: 15 }}>↑</Text>

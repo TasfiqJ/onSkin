@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Screen, StripedThumb, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
 import {
   catalogQualityCopy,
@@ -73,14 +73,7 @@ export default function ProductDetailScreen() {
     return (
       <Screen edges={['top', 'bottom']}>
         <View className="mt-2 flex-row items-center">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Back"
-            onPress={closeToShelf}
-            className="py-2 pr-4"
-          >
-            <Text className="font-sans-semibold">‹ Back</Text>
-          </Pressable>
+          <RouteIconButton accessibilityLabel="Back" onPress={closeToShelf} />
         </View>
         <View className="flex-1 items-center justify-center">
           <Text variant="body" tone="muted">
@@ -190,21 +183,14 @@ export default function ProductDetailScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          onPress={closeToShelf}
-          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
-        >
-          <Text className="text-[16px] text-ink">‹</Text>
-        </Pressable>
+        <RouteIconButton accessibilityLabel="Back" onPress={closeToShelf} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="More options"
           onPress={confirmRemove}
-          className="h-[34px] w-[34px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
+          className="h-[44px] w-[44px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
         >
-          <Text className="text-[14px] text-ink">⋯</Text>
+          <Text className="text-[14px] text-ink">...</Text>
         </Pressable>
       </View>
 

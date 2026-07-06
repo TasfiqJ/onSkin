@@ -684,6 +684,13 @@
 - Why safe: Irritation and recovery duration are health-adjacent routine-disruption details. Aggregate event counts are enough for product telemetry without exporting the reason or duration.
 - Regression: `useCycleAnalytics.test.ts` locks pause/recovery analytics to generic event names and rejects reason/duration payloads plus the old de-escalation event name.
 
+## Analytics event-name allowlist
+
+- Files: `apps/mobile/src/lib/analytics/eventRegistry.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/app/(tabs)/progress.tsx`, `apps/mobile/src/app/onboarding/notifications.tsx`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: Added an explicit analytics event-name allowlist and made `track()` drop unapproved event names before PostHog capture. The remaining ternary event-name calls now emit literal allowlisted events, and Phase 9 privacy audit fails if app call sites use non-literal or unapproved event names.
+- Why safe: Event names are vendor-visible. A future dynamic event string built from a routine state, concern, product, or prompt could leak sensitive context even when props are sanitized.
+- Regression: `track.test.ts` proves unapproved event names are dropped, and `phase9:privacy-payload-audit` proves vendor capture uses `safeEvent` plus literal allowlisted app call sites.
+
 ## Client SDK identity reset on local wipe
 
 - Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `apps/mobile/src/features/settings/localPrivateData.test.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, `apps/mobile/src/lib/iap/revenuecat.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`, `scripts/phase9/build-release-qa-packet.mjs`.

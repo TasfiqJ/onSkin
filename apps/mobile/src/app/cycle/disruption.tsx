@@ -67,7 +67,7 @@ export default function DisruptionScreen() {
   const pause = (reason: DisruptionReason) => act(() => m.pause(reason));
 
   return (
-    <Sheet fallbackRoute={APP_HOME_ROUTE}>
+    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
       <Text variant="title" className="text-[30px] leading-[34px]" accessibilityRole="header">
         Life happens.
       </Text>

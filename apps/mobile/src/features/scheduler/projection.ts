@@ -39,8 +39,8 @@ export function nightFor(cycle: Cycle, anchorISO: string, dateISO: string): Nigh
 
 export type ProjectedNight = { dateISO: string; weekday: string; night: NightSlot };
 
-/** Today + the next `days` nights, each with its slot + assigned active (docs/05 §6.1). */
-export function weekAhead(cycle: Cycle, anchorISO: string, fromISO: string, days = 4): ProjectedNight[] {
+/** Today + the next `days` nights, each with its slot + assigned active (docs/05 §3). */
+export function weekAhead(cycle: Cycle, anchorISO: string, fromISO: string, days = 6): ProjectedNight[] {
   const out: ProjectedNight[] = [];
   for (let d = 0; d <= days; d++) {
     const dateISO = addDays(fromISO, d);

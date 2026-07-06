@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { REMINDER_COPY, SETTINGS_COPY } from '@/features/notifications/copy';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -65,7 +65,7 @@ function TimePickerModal({
                   accessibilityRole="button"
                   accessibilityState={{ selected: sel }}
                   onPress={() => onSelect(t)}
-                  className="flex-row items-center justify-between py-2.5"
+                  className="min-h-[48px] flex-row items-center justify-between py-2.5"
                 >
                   <Text
                     variant="body"
@@ -90,7 +90,7 @@ function TimePill({ label, onPress }: { label: string; onPress: () => void }) {
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="rounded-[8px] px-3 py-1.5"
+      className="min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px] px-3 py-1.5"
       style={{ backgroundColor: colors.greigeChip }}
     >
       <Text className="font-mono-medium" style={{ fontSize: 14 }}>
@@ -125,14 +125,10 @@ export default function TimingScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
         <View className="mb-3 flex-row items-center gap-3 pt-1">
-          <Text
-            accessibilityRole="button"
+          <RouteIconButton
+            accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-            variant="body"
-            style={{ fontSize: 22 }}
-          >
-            ‹
-          </Text>
+          />
           <Text variant="title" style={{ fontSize: 28 }}>
             Timing
           </Text>
@@ -167,8 +163,20 @@ export default function TimingScreen() {
           QUIET HOURS
         </Text>
         <View className="rounded-[18px] bg-paper-raised px-[18px] py-4">
-          <View className="flex-row items-center justify-between">
-            <Text variant="body" className="font-sans-semibold">
+          <View
+            className="gap-3"
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text
+              variant="body"
+              className="font-sans-semibold"
+              style={{ flexShrink: 1, minWidth: 0 }}
+            >
               {SETTINGS_COPY.quietLabel}
             </Text>
             <View className="flex-row items-center gap-2">

@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import {
@@ -81,13 +81,15 @@ export default function ManualAddScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}>
-          Cancel
-        </Text>
+        <RouteIconButton
+          accessibilityLabel="Cancel"
+          glyph="x"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        />
         <Text variant="body" className="font-sans-semibold">
           Add by hand
         </Text>
-        <View className="w-12" />
+        <View className="w-[44px]" />
       </View>
 
       <ScrollView

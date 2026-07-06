@@ -41,7 +41,7 @@ describe('commerce consent persistence', () => {
     mocks.setCommerceConsentLocal.mockResolvedValue(undefined);
   });
 
-  it('records commerce grant analytics only after the consent ledger saves', async () => {
+  it('records commerce grant analytics after the local-first consent flag saves', async () => {
     const { grantCommerceConsent } = await import('./consent');
 
     await expect(grantCommerceConsent()).resolves.toBeUndefined();
@@ -56,18 +56,18 @@ describe('commerce consent persistence', () => {
     );
   });
 
-  it('fails closed and relocks commerce consent when the consent ledger fails', async () => {
+  it('keeps commerce grant local-first when the consent ledger is unavailable', async () => {
     const { grantCommerceConsent } = await import('./consent');
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
     await expect(grantCommerceConsent()).resolves.toBeUndefined();
 
-    expect(mocks.setCommerceConsentLocal).toHaveBeenNthCalledWith(1, true);
-    expect(mocks.setCommerceConsentLocal).toHaveBeenNthCalledWith(2, false);
-    expect(mocks.track).not.toHaveBeenCalledWith('commerce_consent_granted');
+    expect(mocks.setCommerceConsentLocal).toHaveBeenCalledTimes(1);
+    expect(mocks.setCommerceConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.track).toHaveBeenCalledWith('commerce_consent_granted');
   });
 
-  it('records commerce decline analytics only after withdrawal succeeds', async () => {
+  it('records commerce decline analytics after the local-first revocation saves', async () => {
     const { declineCommerceConsent } = await import('./consent');
 
     await expect(declineCommerceConsent()).resolves.toBeUndefined();
@@ -82,13 +82,13 @@ describe('commerce consent persistence', () => {
     );
   });
 
-  it('does not emit declined analytics when withdrawal fails', async () => {
+  it('keeps commerce revocation local-first when the consent ledger is unavailable', async () => {
     const { declineCommerceConsent } = await import('./consent');
     mocks.withdrawConsent.mockRejectedValueOnce(new Error('withdrawal unavailable'));
 
-    await expect(declineCommerceConsent()).rejects.toThrow('withdrawal unavailable');
+    await expect(declineCommerceConsent()).resolves.toBeUndefined();
 
     expect(mocks.setCommerceConsentLocal).toHaveBeenCalledWith(false);
-    expect(mocks.track).not.toHaveBeenCalledWith('commerce_consent_declined');
+    expect(mocks.track).toHaveBeenCalledWith('commerce_consent_declined');
   });
 });

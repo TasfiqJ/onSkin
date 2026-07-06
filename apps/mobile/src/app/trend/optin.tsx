@@ -1,9 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyTrendConsentChoice } from '@/features/trend/applyConsentChoice';
 import { grantTrendInsightsConsent, revokeTrendInsightsConsent } from '@/features/trend/consent';
 import { TREND_COPY } from '@/features/trend/copy';
@@ -63,15 +63,10 @@ export default function TrendOptInScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
-        >
-          <Text style={{ color: colors.ink }}>‹</Text>
-        </Pressable>
+        />
         <Text variant="body" className="font-sans-semibold" tone="muted">
           {TREND_COPY.optIn.title}
         </Text>
@@ -122,12 +117,13 @@ export default function TrendOptInScreen() {
               {TREND_COPY.optIn.toggleHint}
             </Text>
           </View>
-          <Switch
+          <ToggleSwitch
+            accessibilityLabel={TREND_COPY.optIn.toggleLabel}
             value={consented ?? false}
             disabled={saving}
-            onValueChange={(v) => void setEnabled(v)}
-            trackColor={{ true: colors.sage, false: colors.greigeDeep }}
-            thumbColor={colors.paperRaised}
+            activeTrackColor={colors.sage}
+            inactiveTrackColor={colors.greigeDeep}
+            onChange={(v) => void setEnabled(v)}
           />
         </View>
 

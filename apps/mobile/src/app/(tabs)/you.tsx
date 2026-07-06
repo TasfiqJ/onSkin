@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, ScrollView, Switch, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Card, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
@@ -46,19 +46,24 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
   dataExport: 'How to request and read your export.',
 };
 
+const EXPORT_UNAVAILABLE_MESSAGE =
+  "We couldn't open the export sheet on this device. The temporary export file was removed.";
+
 type StaticRouteHref = Extract<Href, string>;
 
 function Row({
   label,
   hint,
   children,
+  onPress,
 }: {
   label: string;
   hint?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  onPress?: () => void;
 }) {
-  return (
-    <View className="flex-row items-center justify-between py-3">
+  const labelContent = (
+    <>
       <View className="flex-1 pr-3">
         <Text variant="body" className="font-sans-medium">
           {label}
@@ -69,8 +74,34 @@ function Row({
           </Text>
         ) : null}
       </View>
-      {children}
-    </View>
+      {onPress ? (
+        <View className="h-[44px] w-[44px] items-center justify-center">
+          <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
+            &gt;
+          </Text>
+        </View>
+      ) : (
+        children
+      )}
+    </>
+  );
+
+  if (onPress) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        onPress={onPress}
+        className="min-h-[56px] flex-row items-center justify-between py-2"
+        style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
+      >
+        {labelContent}
+      </Pressable>
+    );
+  }
+
+  return (
+    <View className="min-h-[56px] flex-row items-center justify-between py-2">{labelContent}</View>
   );
 }
 
@@ -78,18 +109,20 @@ function Toggle({
   value,
   disabled,
   onChange,
+  accessibilityLabel,
 }: {
   value: boolean;
   disabled?: boolean;
   onChange: (v: boolean) => void;
+  accessibilityLabel: string;
 }) {
   return (
-    <Switch
+    <ToggleSwitch
+      accessibilityLabel={accessibilityLabel}
       value={value}
       disabled={disabled}
-      onValueChange={onChange}
-      trackColor={{ true: colors.clay, false: colors.greigeDeep }}
-      thumbColor={colors.paperRaised}
+      inactiveTrackColor={colors.greigeDeep}
+      onChange={onChange}
     />
   );
 }
@@ -111,6 +144,7 @@ export default function YouScreen() {
   const [savingPrivacy, setSavingPrivacy] = useState<
     'marketing' | 'data_sharing' | 'photo_cloud_backup' | null
   >(null);
+  const [exportFeedback, setExportFeedback] = useState<string | null>(null);
   const savingPrivacyRef = useRef(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
@@ -181,10 +215,7 @@ export default function YouScreen() {
               consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
             });
           } catch (error) {
-            if (type === 'data_sharing' && granted) {
-              await setCommerceConsentLocal(false).catch(() => undefined);
-            }
-            throw error;
+            if (type !== 'data_sharing') throw error;
           }
         },
         onSaved: () => {
@@ -240,17 +271,20 @@ export default function YouScreen() {
 
   const exportMut = useMutation({
     mutationFn: exportData,
+    onMutate: () => setExportFeedback(null),
     onSuccess: (shared) => {
       if (!shared) {
-        Alert.alert(
-          'Export unavailable',
-          "We couldn't open the export sheet on this device. The temporary export file was removed.",
-        );
+        setExportFeedback(EXPORT_UNAVAILABLE_MESSAGE);
+        Alert.alert('Export unavailable', EXPORT_UNAVAILABLE_MESSAGE);
         return;
       }
       void requestReviewAfterValue('data_export_success');
     },
-    onError: () => Alert.alert('Export failed', dataRightsUserMessage()),
+    onError: () => {
+      const message = dataRightsUserMessage();
+      setExportFeedback(message);
+      Alert.alert('Export failed', message);
+    },
   });
 
   function confirmWithdrawHealthData() {
@@ -329,17 +363,11 @@ export default function YouScreen() {
           <Text variant="label" tone="muted" className="mb-1">
             SUBSCRIPTION
           </Text>
-          <Row label="Manage subscription" hint={planLabel}>
-            <Text
-              variant="body"
-              tone="muted"
-              onPress={() => router.push('/settings/subscription')}
-              accessibilityRole="button"
-              style={{ fontSize: 18 }}
-            >
-              ›
-            </Text>
-          </Row>
+          <Row
+            label="Manage subscription"
+            hint={planLabel}
+            onPress={() => router.push('/settings/subscription')}
+          />
         </Card>
 
         <Card className="mt-4">
@@ -347,17 +375,7 @@ export default function YouScreen() {
             YOUR ROUTINE
           </Text>
           {routineRows.map(({ label, href }) => (
-            <Row key={href} label={label}>
-              <Text
-                variant="body"
-                tone="muted"
-                onPress={() => router.push(href)}
-                accessibilityRole="button"
-                style={{ fontSize: 18 }}
-              >
-                ›
-              </Text>
-            </Row>
+            <Row key={href} label={label} onPress={() => router.push(href)} />
           ))}
         </Card>
 
@@ -366,17 +384,7 @@ export default function YouScreen() {
             FOR YOU
           </Text>
           {forYouRows.map(({ label, href }) => (
-            <Row key={href} label={label}>
-              <Text
-                variant="body"
-                tone="muted"
-                onPress={() => router.push(href)}
-                accessibilityRole="button"
-                style={{ fontSize: 18 }}
-              >
-                ›
-              </Text>
-            </Row>
+            <Row key={href} label={label} onPress={() => router.push(href)} />
           ))}
         </Card>
 
@@ -388,22 +396,14 @@ export default function YouScreen() {
             <Row
               label="How we stay honest"
               hint="Why recommendations and money stay separate. And every paid link is disclosed."
-            >
-              <Text
-                variant="body"
-                tone="muted"
-                onPress={() => router.push('/commerce/transparency')}
-                accessibilityRole="button"
-                style={{ fontSize: 18 }}
-              >
-                ›
-              </Text>
-            </Row>
+              onPress={() => router.push('/commerce/transparency')}
+            />
             <Row
               label="Share data with partners (where-to-buy)"
               hint="Off by default. A separate, revocable MHMDA choice. Turn off and we won’t show paid links."
             >
               <Toggle
+                accessibilityLabel="Share data with partners for where-to-buy"
                 value={commerceConsent.data ?? false}
                 disabled={savingPrivacy === 'data_sharing'}
                 onChange={(v) => void setConsent('data_sharing', v)}
@@ -421,6 +421,7 @@ export default function YouScreen() {
             hint="Require your phone's unlock to open the app and your photo timeline."
           >
             <Toggle
+              accessibilityLabel="App lock"
               value={lockEnabled}
               onChange={(v) =>
                 void setLockEnabled(v).catch(() => Alert.alert('App lock', appLockUserMessage()))
@@ -432,6 +433,7 @@ export default function YouScreen() {
             hint="Off by default. A separate choice. Photos stay on this phone until you turn it on."
           >
             <Toggle
+              accessibilityLabel="Encrypted cloud backup"
               value={cloudBackup.data ?? false}
               disabled={savingPrivacy === 'photo_cloud_backup'}
               onChange={(v) => void setCloud(v)}
@@ -446,17 +448,8 @@ export default function YouScreen() {
           <Row
             label="Reminders & notifications"
             hint="Tiered, capped, at times you choose. Quiet hours & lock-screen discretion."
-          >
-            <Text
-              variant="body"
-              tone="muted"
-              onPress={() => router.push('/settings/notifications')}
-              accessibilityRole="button"
-              style={{ fontSize: 18 }}
-            >
-              ›
-            </Text>
-          </Row>
+            onPress={() => router.push('/settings/notifications')}
+          />
         </Card>
 
         <Card className="mt-4">
@@ -465,6 +458,7 @@ export default function YouScreen() {
           </Text>
           <Row label="Marketing emails" hint="Off by default. Opt in anytime.">
             <Toggle
+              accessibilityLabel="Marketing emails"
               value={consents.data?.marketing ?? false}
               disabled={savingPrivacy === 'marketing'}
               onChange={(v) => void setConsent('marketing', v)}
@@ -476,69 +470,36 @@ export default function YouScreen() {
               hint="Separate from collection (MHMDA). Off by default."
             >
               <Toggle
+                accessibilityLabel="Share data with partners"
                 value={commerceConsent.data ?? false}
                 disabled={savingPrivacy === 'data_sharing'}
                 onChange={(v) => void setConsent('data_sharing', v)}
               />
             </Row>
           ) : null}
-          <Row label="Photos & the no-AI-score promise">
-            <Text
-              variant="body"
-              tone="muted"
-              onPress={() => router.push('/progress/about')}
-              accessibilityRole="button"
-              style={{ fontSize: 18 }}
-            >
-              ›
-            </Text>
-          </Row>
+          <Row
+            label="Photos & the no-AI-score promise"
+            onPress={() => router.push('/progress/about')}
+          />
           {phase7Flags.trend ? (
             <Row
               label="Changes in your own photos"
               hint="Optional · on-device · off by default · no score, ever."
-            >
-              <Text
-                variant="body"
-                tone="muted"
-                onPress={() => router.push('/trend/optin')}
-                accessibilityRole="button"
-                style={{ fontSize: 18 }}
-              >
-                ›
-              </Text>
-            </Row>
+              onPress={() => router.push('/trend/optin')}
+            />
           ) : null}
           {phase7Flags.cloudAsk ? (
             <Row
               label="Ask OnSkin. Private advisor"
               hint="Optional · the deeper cloud advisor · off by default. The on-device answers about your own shelf are always free."
-            >
-              <Text
-                variant="body"
-                tone="muted"
-                onPress={() => router.push('/ask/consent')}
-                accessibilityRole="button"
-                style={{ fontSize: 18 }}
-              >
-                ›
-              </Text>
-            </Row>
+              onPress={() => router.push('/ask/consent')}
+            />
           ) : null}
           <Row
             label="Withdraw health-data consent"
             hint="Records your withdrawal in the consent ledger and deletes your collected health data."
-          >
-            <Text
-              variant="body"
-              tone="muted"
-              onPress={confirmWithdrawHealthData}
-              accessibilityRole="button"
-              style={{ fontSize: 18 }}
-            >
-              ›
-            </Text>
-          </Row>
+            onPress={confirmWithdrawHealthData}
+          />
         </Card>
 
         <Card className="mt-4">
@@ -546,17 +507,12 @@ export default function YouScreen() {
             POLICIES
           </Text>
           {POLICY_ROWS.map((row) => (
-            <Row key={row.key} label={row.label} hint={POLICY_HINTS[row.key]}>
-              <Text
-                variant="body"
-                tone="muted"
-                onPress={() => openPolicyUrl(row.url)}
-                accessibilityRole="button"
-                style={{ fontSize: 18 }}
-              >
-                &gt;
-              </Text>
-            </Row>
+            <Row
+              key={row.key}
+              label={row.label}
+              hint={POLICY_HINTS[row.key]}
+              onPress={() => openPolicyUrl(row.url)}
+            />
           ))}
         </Card>
 
@@ -578,6 +534,16 @@ export default function YouScreen() {
             disabled={busy}
             onPress={confirmDelete}
           />
+          {exportFeedback ? (
+            <Text
+              accessibilityRole="alert"
+              variant="bodySm"
+              tone="muted"
+              className="mt-3 text-center"
+            >
+              {exportFeedback}
+            </Text>
+          ) : null}
           <Text variant="bodySm" tone="muted" className="mt-3 text-center">
             Photos stay on your device by default. No ads, no data sales.
           </Text>

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
@@ -62,7 +62,11 @@ export default function WinbackScreen() {
         paddingHorizontal: 30,
       }}
     >
-      <View className="flex-1 justify-center">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 16 }}
+      >
         <Text variant="label" style={{ color: 'rgba(244,239,231,0.5)', letterSpacing: 2 }}>
           {PAYWALL_COPY.winback.eyebrow.toUpperCase()}
         </Text>
@@ -133,7 +137,7 @@ export default function WinbackScreen() {
             current Pro plan.
           </Text>
         ) : null}
-      </View>
+      </ScrollView>
       <View className="gap-3">
         <Pressable
           accessibilityRole="button"
@@ -149,7 +153,7 @@ export default function WinbackScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={() => dismissPaywall(router)}
-          className="h-[40px] items-center justify-center"
+          className="h-[48px] items-center justify-center"
         >
           <Text
             className="font-sans-semibold"

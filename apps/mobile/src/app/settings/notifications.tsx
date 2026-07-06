@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
-import { ScrollView, Switch, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { SETTINGS_COPY } from '@/features/notifications/copy';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -15,17 +15,6 @@ export function fmtTime(hm: string): string {
   const ap = (h ?? 0) < 12 ? 'AM' : 'PM';
   const hr = (h ?? 0) % 12 === 0 ? 12 : (h ?? 0) % 12;
   return `${hr}:${String(m ?? 0).padStart(2, '0')} ${ap}`;
-}
-
-function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <Switch
-      value={value}
-      onValueChange={onChange}
-      trackColor={{ true: colors.clay, false: '#D8D0C2' }}
-      thumbColor={colors.paperRaised}
-    />
-  );
 }
 
 function SectionLabel({ children }: { children: string }) {
@@ -58,21 +47,29 @@ function Row({
 }) {
   return (
     <View
-      className="flex-row items-center justify-between py-3.5"
+      className="min-h-[56px] flex-row items-center justify-between py-3.5"
       style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
     >
-      <Text
-        accessibilityRole={onPress ? 'button' : undefined}
-        onPress={onPress}
-        className="flex-1 pr-3"
-        suppressHighlighting
-      >
-        <Text variant="body" className="font-sans-semibold">
-          {title}
-        </Text>
-        {subtitle ? <Text variant="bodySm" tone="muted">{`\n${subtitle}`}</Text> : null}
-      </Text>
-      <Toggle value={value} onChange={onChange} />
+      {onPress ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={onPress}
+          className="min-h-[44px] flex-1 justify-center pr-3"
+        >
+          <Text variant="body" className="font-sans-semibold">
+            {title}
+          </Text>
+          {subtitle ? <Text variant="bodySm" tone="muted">{`\n${subtitle}`}</Text> : null}
+        </Pressable>
+      ) : (
+        <View className="min-h-[44px] flex-1 justify-center pr-3">
+          <Text variant="body" className="font-sans-semibold">
+            {title}
+          </Text>
+          {subtitle ? <Text variant="bodySm" tone="muted">{`\n${subtitle}`}</Text> : null}
+        </View>
+      )}
+      <ToggleSwitch accessibilityLabel={title} value={value} onChange={onChange} />
     </View>
   );
 }
@@ -87,14 +84,10 @@ export default function NotificationSettingsScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
         <View className="mb-1 flex-row items-center gap-3 pt-1">
-          <Text
-            accessibilityRole="button"
+          <RouteIconButton
+            accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-            variant="body"
-            style={{ fontSize: 22 }}
-          >
-            ‹
-          </Text>
+          />
           <Text variant="title" style={{ fontSize: 28 }}>
             Notifications
           </Text>

@@ -51,16 +51,31 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   );
 
   return (
-    <View className="flex-row items-center justify-center gap-3.5 py-3">
-      <Pressable accessibilityRole="button" onPress={() => openPolicy(TERMS_URL)} hitSlop={8}>
+    <View className="min-h-[48px] flex-row items-center justify-center gap-2.5">
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => openPolicy(TERMS_URL)}
+        className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+        style={{ minHeight: 48, minWidth: 48 }}
+      >
         {label('Terms')}
       </Pressable>
       <Text style={{ color: sep }}>·</Text>
-      <Pressable accessibilityRole="button" onPress={() => openPolicy(PRIVACY_URL)} hitSlop={8}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => openPolicy(PRIVACY_URL)}
+        className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+        style={{ minHeight: 48, minWidth: 48 }}
+      >
         {label('Privacy')}
       </Pressable>
       <Text style={{ color: sep }}>·</Text>
-      <Pressable accessibilityRole="button" onPress={onRestore} hitSlop={8}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onRestore}
+        className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+        style={{ minHeight: 48, minWidth: 48 }}
+      >
         {label('Restore')}
       </Pressable>
     </View>

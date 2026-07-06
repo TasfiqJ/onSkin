@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Card, Screen, Text } from '@/components/ui';
+import { Card, RouteIconButton, Screen, Text } from '@/components/ui';
 import { useProgress, type DayState, type HeatCell } from '@/features/routine/useProgress';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { currentMilestone } from '@/features/streak/milestones';
@@ -65,19 +65,11 @@ export default function StreakScreen() {
     <Screen edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
         <View className="flex-row items-center justify-between pt-1">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Back"
-            onPress={() => backOrReplace(router)}
-          >
-            <Text variant="body" tone="muted" style={{ fontSize: 22 }}>
-              ‹
-            </Text>
-          </Pressable>
+          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
           <Text variant="label" tone="muted">
             STREAK & ADHERENCE
           </Text>
-          <View style={{ width: 22 }} />
+          <View style={{ width: 44 }} />
         </View>
 
         <Text variant="title" className="mt-3">

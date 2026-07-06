@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { shippableStacks } from '@/features/commerce/stacks';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -16,15 +16,10 @@ export default function StacksScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
-        >
-          <Text style={{ color: colors.ink }}>‹</Text>
-        </Pressable>
+        />
         <Text variant="body" className="font-sans-semibold" tone="muted">
           Shoppable routines
         </Text>

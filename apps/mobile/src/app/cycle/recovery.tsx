@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 
@@ -17,13 +17,7 @@ export default function RecoveryScreen() {
     return (
       <Screen edges={['top', 'bottom']}>
         <View className="mt-2">
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => backOrReplace(router)}
-            className="py-2"
-          >
-            <Text className="font-sans-semibold">‹</Text>
-          </Pressable>
+          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
         </View>
         <View className="flex-1 items-center justify-center">
           <Text variant="body" tone="muted">
@@ -46,13 +40,7 @@ export default function RecoveryScreen() {
     <Screen edges={['top', 'bottom']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
         <View className="mt-2">
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => backOrReplace(router)}
-            className="py-2"
-          >
-            <Text className="font-sans-semibold">‹</Text>
-          </Pressable>
+          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
         </View>
 
         <View

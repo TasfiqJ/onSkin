@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { declineCommerceConsent, grantCommerceConsent } from '@/features/commerce/consent';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
@@ -18,6 +18,8 @@ import { colors } from '@/theme/tokens';
 // retailer regardless of consent (the opaque token carries none).
 export default function CommerceConsentSheet() {
   const qc = useQueryClient();
+  const { height } = useWindowDimensions();
+  const sheetMaxHeight = Math.max(280, height - 48);
 
   const close = () => backOrReplace(router, APP_YOU_ROUTE);
 
@@ -37,95 +39,102 @@ export default function CommerceConsentSheet() {
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.42)' }}>
       <Pressable className="absolute inset-0" accessible={false} onPress={close} />
-      <View className="rounded-t-sheet bg-paper px-7 pb-10 pt-4">
-        <Pressable
-          accessibilityRole="button"
+      <View
+        className="overflow-hidden rounded-t-sheet bg-paper"
+        style={{ maxHeight: sheetMaxHeight }}
+      >
+        <RouteIconButton
           accessibilityLabel="Dismiss"
+          glyph="x"
+          tone="muted"
           onPress={close}
-          className="absolute right-5 top-4 h-9 w-9 items-center justify-center rounded-full"
-          style={{ backgroundColor: 'rgba(32,27,21,0.06)' }}
-        >
-          <Text className="text-[20px] leading-[22px]" style={{ color: colors.muted }}>
-            ×
-          </Text>
-        </Pressable>
-        <View
-          className="mb-5 h-[5px] w-10 self-center rounded-[3px]"
-          style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+          style={{ position: 'absolute', right: 20, top: 16, zIndex: 1 }}
         />
-
-        <View
-          className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
-          style={{ backgroundColor: colors.clayTint }}
-        >
-          <LockGlyph size={22} color={colors.clay} />
-        </View>
-
-        <Text variant="title" className="text-[29px] leading-[32px]" accessibilityRole="header">
-          {COMMERCE_COPY.consent.title}
-        </Text>
-        <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
-          {COMMERCE_COPY.consent.body}
-        </Text>
-
-        <View
-          className="mt-5 rounded-2xl bg-paper-raised px-4"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        <ScrollView
+          style={{ flexShrink: 1 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="px-7 pb-4 pt-4"
         >
           <View
-            className="flex-row items-center gap-3 py-3"
-            style={{ borderBottomWidth: 1, borderBottomColor: colors.hairline }}
+            className="mb-5 h-[5px] w-10 self-center rounded-[3px]"
+            style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+          />
+
+          <View
+            className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
+            style={{ backgroundColor: colors.clayTint }}
+          >
+            <LockGlyph size={22} color={colors.clay} />
+          </View>
+
+          <Text variant="title" className="text-[29px] leading-[32px]" accessibilityRole="header">
+            {COMMERCE_COPY.consent.title}
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
+            {COMMERCE_COPY.consent.body}
+          </Text>
+
+          <View
+            className="mt-5 rounded-2xl bg-paper-raised px-4"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
           >
             <View
-              className="h-[18px] w-[18px] items-center justify-center rounded-full"
-              style={{ backgroundColor: colors.sageTint }}
+              className="flex-row items-center gap-3 py-3"
+              style={{ borderBottomWidth: 1, borderBottomColor: colors.hairline }}
             >
-              <Text className="text-[10px]" style={{ color: colors.sage }}>
-                ✓
+              <View
+                className="h-[18px] w-[18px] items-center justify-center rounded-full"
+                style={{ backgroundColor: colors.sageTint }}
+              >
+                <Text className="text-[10px]" style={{ color: colors.sage }}>
+                  ✓
+                </Text>
+              </View>
+              <Text variant="bodySm" className="flex-1 text-[13px]">
+                {COMMERCE_COPY.consent.allow}
               </Text>
             </View>
-            <Text variant="bodySm" className="flex-1 text-[13px]">
-              {COMMERCE_COPY.consent.allow}
-            </Text>
-          </View>
-          <View className="flex-row items-center gap-3 py-3">
-            <View
-              className="h-[18px] w-[18px] items-center justify-center rounded-full"
-              style={{ backgroundColor: colors.clayTint }}
-            >
-              <Text className="text-[10px]" style={{ color: colors.clay }}>
-                ✕
+            <View className="flex-row items-center gap-3 py-3">
+              <View
+                className="h-[18px] w-[18px] items-center justify-center rounded-full"
+                style={{ backgroundColor: colors.clayTint }}
+              >
+                <Text className="text-[10px]" style={{ color: colors.clay }}>
+                  ✕
+                </Text>
+              </View>
+              <Text variant="bodySm" className="flex-1 text-[13px]">
+                {COMMERCE_COPY.consent.never}
               </Text>
             </View>
-            <Text variant="bodySm" className="flex-1 text-[13px]">
-              {COMMERCE_COPY.consent.never}
-            </Text>
           </View>
+
+          <Text variant="label" tone="muted" className="mt-4" style={{ lineHeight: 17 }}>
+            {COMMERCE_COPY.consent.note}
+          </Text>
+        </ScrollView>
+
+        <View className="px-7 pb-8 pt-2">
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void allow()}
+            className="h-[54px] items-center justify-center rounded-pill"
+            style={{ backgroundColor: colors.clay }}
+          >
+            <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
+              {COMMERCE_COPY.consent.cta}
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void decline()}
+            className="h-[48px] items-center justify-center"
+          >
+            <Text className="font-sans-semibold text-[15px]" tone="muted">
+              {COMMERCE_COPY.consent.decline}
+            </Text>
+          </Pressable>
         </View>
-
-        <Text variant="label" tone="muted" className="mt-4" style={{ lineHeight: 17 }}>
-          {COMMERCE_COPY.consent.note}
-        </Text>
-
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => void allow()}
-          className="mt-4 h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}
-        >
-          <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
-            {COMMERCE_COPY.consent.cta}
-          </Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => void decline()}
-          className="h-[42px] items-center justify-center"
-        >
-          <Text className="font-sans-semibold text-[15px]" tone="muted">
-            {COMMERCE_COPY.consent.decline}
-          </Text>
-        </Pressable>
       </View>
     </View>
   );

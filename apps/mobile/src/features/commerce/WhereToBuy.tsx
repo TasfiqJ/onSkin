@@ -45,22 +45,24 @@ function OptionRow({ option, onPress }: { option: WhereToBuyOption; onPress: () 
       accessibilityRole="button"
       accessibilityLabel={`${option.label}, ${COMMERCE_COPY.whereToBuy.partnerLabel(price)}, paid link`}
       onPress={onPress}
-      className="flex-row items-center gap-3 rounded-xl p-3"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}
+      className="rounded-xl p-3"
+      style={{ minHeight: 88, borderWidth: 1, borderColor: colors.hairline }}
     >
-      <View
-        className="h-8 w-[26px] rounded"
-        style={{ backgroundColor: colors.greige, borderWidth: 1, borderColor: colors.hairline }}
-      />
-      <View className="flex-1">
-        <Text variant="bodySm" className="font-sans-semibold text-[13px]">
-          {option.label}
-        </Text>
-        <Text className="text-[11px]" tone="muted">
-          {COMMERCE_COPY.whereToBuy.partnerLabel(price)}
-        </Text>
+      <View className="flex-row items-center gap-3">
+        <View
+          className="h-8 w-[26px] rounded"
+          style={{ backgroundColor: colors.greige, borderWidth: 1, borderColor: colors.hairline }}
+        />
+        <View className="flex-1" style={{ minWidth: 0 }}>
+          <Text variant="bodySm" className="font-sans-semibold text-[13px]">
+            {option.label}
+          </Text>
+          <Text className="text-[11px]" tone="muted">
+            {COMMERCE_COPY.whereToBuy.partnerLabel(price)}
+          </Text>
+        </View>
       </View>
-      <View className="flex-row items-center gap-1.5">
+      <View className="mt-2 flex-row items-center self-end gap-1.5">
         <PaidChip />
         <Text style={{ color: colors.clay, fontSize: 12 }}>↗</Text>
       </View>
@@ -129,11 +131,15 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
           </View>
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={COMMERCE_COPY.whereToBuy.lockedCta}
             onPress={openConsent}
-            className="mt-2.5 self-start"
-            hitSlop={6}
+            className="mt-3 min-h-[48px] self-start justify-center rounded-pill px-4"
+            style={{ minHeight: 48, backgroundColor: colors.clayTint }}
           >
-            <Text className="font-sans-semibold text-[12.5px]" style={{ color: colors.clay }}>
+            <Text
+              className="text-center font-sans-semibold text-[13px]"
+              style={{ color: colors.clay }}
+            >
               {COMMERCE_COPY.whereToBuy.lockedCta} →
             </Text>
           </Pressable>
@@ -146,8 +152,8 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
             ))}
           </View>
           {/* FTC: the disclosure is visible WITH the links, never collapsed (16 CFR 255) */}
-          <View className="mt-3 flex-row items-start justify-between gap-3">
-            <Text className="flex-1 text-[11px]" tone="muted" style={{ lineHeight: 15 }}>
+          <View className="mt-3 gap-2">
+            <Text className="text-[11px]" tone="muted" style={{ lineHeight: 15 }}>
               {COMMERCE_COPY.whereToBuy.disclosureLead}{' '}
               <Text className="font-sans-semibold" style={{ color: colors.ink }}>
                 {COMMERCE_COPY.whereToBuy.disclosureEmphasis}
@@ -155,10 +161,12 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
             </Text>
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel="How where-to-buy links work"
               onPress={() => router.push('/commerce/transparency')}
-              hitSlop={6}
+              className="min-h-[48px] self-start justify-center rounded-pill px-3"
+              style={{ minHeight: 48, backgroundColor: colors.clayTint }}
             >
-              <Text className="font-sans-semibold text-[11px]" style={{ color: colors.clay }}>
+              <Text className="font-sans-semibold text-[12px]" style={{ color: colors.clay }}>
                 {COMMERCE_COPY.whereToBuy.howThisWorks} →
               </Text>
             </Pressable>
@@ -170,14 +178,17 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
         </Text>
       )}
 
-      <Text
-        className="mt-3.5 text-center text-[13px] font-sans-semibold"
-        tone="muted"
+      <Pressable
         accessibilityRole="button"
         onPress={() => router.push('/shelf/manual')}
+        accessibilityLabel="Add this product to your shelf instead"
+        className="mt-3.5 min-h-[48px] items-center justify-center rounded-pill px-4"
+        style={{ minHeight: 48, borderWidth: 1, borderColor: colors.hairline }}
       >
-        {COMMERCE_COPY.whereToBuy.alreadyOwn}
-      </Text>
+        <Text className="text-center text-[13px] font-sans-semibold" tone="muted">
+          {COMMERCE_COPY.whereToBuy.alreadyOwn}
+        </Text>
+      </Pressable>
     </View>
   );
 }

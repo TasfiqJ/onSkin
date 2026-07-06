@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { track } from '@/lib/analytics/track';
@@ -21,15 +21,11 @@ export default function TransparencyScreen() {
   return (
     <Screen tone="night" edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
+          tone="night"
           onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full"
-          style={{ borderWidth: 1, borderColor: colors.hairlineDark }}
-        >
-          <Text style={{ color: colors.cream }}>‹</Text>
-        </Pressable>
+        />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">

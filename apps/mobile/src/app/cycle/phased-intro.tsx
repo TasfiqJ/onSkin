@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
@@ -77,7 +77,7 @@ export default function PhasedIntroScreen() {
   }
 
   return (
-    <Sheet fallbackRoute={APP_HOME_ROUTE}>
+    <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
       <Text variant="label" tone="clay" className="mb-2.5">
         ONE AT A TIME
       </Text>
@@ -99,17 +99,15 @@ export default function PhasedIntroScreen() {
       </View>
 
       <Button label="Sounds good" onPress={() => backOrReplace(router)} />
-      <View className="items-center">
-        <Text
-          variant="bodySm"
-          tone="muted"
-          className="py-3 font-sans-semibold"
-          accessibilityRole="button"
-          onPress={() => void addNow()}
-        >
+      <Pressable
+        accessibilityRole="button"
+        className="min-h-[44px] items-center justify-center"
+        onPress={() => void addNow()}
+      >
+        <Text variant="bodySm" tone="muted" className="font-sans-semibold">
           Add it now anyway
         </Text>
-      </View>
+      </Pressable>
     </Sheet>
   );
 }

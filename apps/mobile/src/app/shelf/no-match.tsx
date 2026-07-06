@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
-import { Sheet, Text } from '@/components/ui';
+import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { useIntake } from '@/features/shelf/IntakeContext';
-import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -24,14 +24,22 @@ export default function NoMatchScreen() {
   };
 
   return (
-    <Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE}>
-      <View
-        className="mb-4 h-12 w-12 items-center justify-center rounded-full"
-        style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
-      >
-        <Text className="text-[18px]" tone="inverseMuted">
-          ?
-        </Text>
+    <Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE} scroll>
+      <View className="mb-4 flex-row items-start justify-between">
+        <View
+          className="h-12 w-12 items-center justify-center rounded-full"
+          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+        >
+          <Text className="text-[18px]" tone="inverseMuted">
+            ?
+          </Text>
+        </View>
+        <RouteIconButton
+          accessibilityLabel="Close"
+          glyph="x"
+          tone="night"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        />
       </View>
       <Text
         variant="title"

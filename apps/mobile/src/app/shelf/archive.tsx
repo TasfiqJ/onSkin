@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, StripedThumb, Text } from '@/components/ui';
+import { RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -71,14 +71,10 @@ export default function ArchiveScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center gap-3">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
-          className="h-[30px] w-[30px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
-        >
-          <Text className="text-[14px] text-ink">‹</Text>
-        </Pressable>
+        />
         <Text variant="title" className="text-[30px]">
           Archive
         </Text>

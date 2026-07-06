@@ -1,15 +1,15 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
-import { Button, Card, Screen, Text } from '@/components/ui';
+import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
 import { phase7Flags } from '@/lib/launch/phase7';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
@@ -47,7 +47,8 @@ export default function AskConsentScreen() {
     retry: 0,
   });
 
-  if (!phase7Flags.cloudAsk) return <DeferredSurface surface="cloudAsk" />;
+  if (!phase7Flags.cloudAsk)
+    return <DeferredSurface surface="cloudAsk" fallbackRoute={APP_ASK_ROUTE} />;
 
   const onToggle = async (enabled: boolean) => {
     if (savingRef.current) return;
@@ -73,14 +74,10 @@ export default function AskConsentScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row items-center gap-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
-          onPress={() => backOrReplace(router)}
-          hitSlop={8}
-        >
-          <Text style={{ color: colors.ink, fontSize: 20 }}>‹</Text>
-        </Pressable>
+          onPress={() => backOrReplace(router, APP_ASK_ROUTE)}
+        />
         <Text variant="body" className="font-sans-semibold" tone="muted">
           {ASK_COPY.privacy.header}
         </Text>
@@ -129,12 +126,12 @@ export default function AskConsentScreen() {
               {ASK_COPY.privacy.toggleHint}
             </Text>
           </View>
-          <Switch
+          <ToggleSwitch
+            accessibilityLabel={ASK_COPY.privacy.toggleLabel}
             value={consented.data ?? false}
             disabled={saving}
-            onValueChange={(v) => void onToggle(v)}
-            trackColor={{ true: colors.clay, false: colors.greigeDeep }}
-            thumbColor={colors.paperRaised}
+            inactiveTrackColor={colors.greigeDeep}
+            onChange={(v) => void onToggle(v)}
           />
         </Card>
 

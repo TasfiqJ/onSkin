@@ -29,10 +29,11 @@ describe('projection (docs/05 §3)', () => {
     expect(idx).toBeLessThan(cycle.lengthNights);
   });
 
-  it('weekAhead returns today + N nights, each with its slot', () => {
-    const week = weekAhead(cycle, '2026-06-01', '2026-06-12', 4);
-    expect(week.length).toBe(5);
+  it('weekAhead defaults to a full seven-night projection', () => {
+    const week = weekAhead(cycle, '2026-06-01', '2026-06-12');
+    expect(week.length).toBe(7);
     expect(week[0]!.dateISO).toBe('2026-06-12');
+    expect(week[6]!.dateISO).toBe('2026-06-18');
     for (const p of week) expect(['exfoliate', 'retinoid', 'recover', 'other_active']).toContain(p.night.slot);
   });
 

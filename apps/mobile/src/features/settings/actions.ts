@@ -4,6 +4,7 @@ import * as Sharing from 'expo-sharing';
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
+import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
 import { clearLocalPrivateData } from './localPrivateData';
@@ -53,6 +54,7 @@ export async function withdrawHealthDataConsent(): Promise<void> {
 // we write it to a one-time cache file, hand it to the OS share sheet, and then
 // immediately remove the plaintext bundle from app cache.
 export async function exportData(): Promise<boolean> {
+  if (!isSupabaseConfigured) throw new Error('DATA_EXPORT_BACKEND_UNAVAILABLE');
   const { data, error } = await supabase.functions.invoke('data-export', { method: 'POST' });
   if (error) throw error;
   const json = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
@@ -62,7 +64,10 @@ export async function exportData(): Promise<boolean> {
   try {
     await FileSystem.writeAsStringAsync(uri, json);
     if (!(await Sharing.isAvailableAsync().catch(() => false))) return false;
-    await Sharing.shareAsync(uri, { mimeType: 'application/json', dialogTitle: 'Export your OnSkin data' });
+    await Sharing.shareAsync(uri, {
+      mimeType: 'application/json',
+      dialogTitle: 'Export your OnSkin data',
+    });
     return true;
   } finally {
     await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});

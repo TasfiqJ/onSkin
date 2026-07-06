@@ -3,13 +3,13 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
-import { Button, Sheet, Text } from '@/components/ui';
+import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { paoSourceLabel } from '@/features/shelf/labels';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
-import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
+import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // The opened-date linchpin (design screen 04, docs/04 §4.5). Every intake path
@@ -139,9 +139,16 @@ export default function OpenedDateScreen() {
   };
 
   return (
-    <Sheet fallbackRoute={APP_SHELF_ROUTE}>
-      <View className="mb-4 h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
-        <Text className="text-[18px] text-clay">◴</Text>
+    <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>
+      <View className="mb-4 flex-row items-start justify-between">
+        <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
+          <Text className="text-[18px] text-clay">◴</Text>
+        </View>
+        <RouteIconButton
+          accessibilityLabel="Close"
+          glyph="x"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        />
       </View>
       <Text variant="title" className="text-[33px] leading-[34px]" accessibilityRole="header">
         When did you open it?
@@ -178,7 +185,7 @@ export default function OpenedDateScreen() {
                   setPickIso(o.iso);
                 }}
                 className={cn(
-                  'rounded-pill px-3.5 py-2',
+                  'min-h-[44px] items-center justify-center rounded-pill px-3.5 py-2',
                   pickIso === o.iso ? 'bg-clay' : 'border border-hairline bg-paper-raised',
                 )}
               >
@@ -234,7 +241,7 @@ export default function OpenedDateScreen() {
                 setPaoEditOpen(false);
               }}
               className={cn(
-                'rounded-pill px-4 py-2',
+                'min-h-[44px] items-center justify-center rounded-pill px-4 py-2',
                 pao === n ? 'bg-clay' : 'border border-hairline bg-paper-raised',
               )}
             >

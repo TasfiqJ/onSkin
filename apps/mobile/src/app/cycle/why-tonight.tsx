@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
@@ -12,12 +12,15 @@ import { colors } from '@/theme/tokens';
 // trace, calm and claim-safe, surfacing that every step is traceable to a rule,
 // the profile, or the user's own choice. The trust counterpart to the conflict
 // detail (docs/02 §7.3).
-const SLOT_TITLE: Record<string, string> = {
-  retinoid: 'Tonight is retinoid night.',
-  exfoliate: 'Tonight is exfoliation night.',
-  recover: 'Tonight is a recovery night.',
-  other_active: 'Tonight is an active night.',
-};
+const DATE_PARAM_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function slotTitle(slot: string, isTonight: boolean, weekday: string): string {
+  const when = isTonight ? 'Tonight' : weekday;
+  if (slot === 'retinoid') return `${when} is retinoid night.`;
+  if (slot === 'exfoliate') return `${when} is exfoliation night.`;
+  if (slot === 'recover') return `${when} is a recovery night.`;
+  return `${when} is an active night.`;
+}
 
 function TraceRow({ tag, children, last }: { tag: string; children: string; last?: boolean }) {
   return (
@@ -42,8 +45,10 @@ function TraceRow({ tag, children, last }: { tag: string; children: string; last
 
 export default function WhyTonightScreen() {
   const { data } = useCycle();
+  const params = useLocalSearchParams<{ date?: string }>();
   const cycle = data?.cycle;
   const tonight = data?.tonight;
+  const selectedDate = params.date && DATE_PARAM_RE.test(params.date) ? params.date : null;
 
   useEffect(() => {
     track('why_tonight_viewed');
@@ -51,7 +56,7 @@ export default function WhyTonightScreen() {
 
   if (!cycle || !tonight) {
     return (
-      <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE}>
+      <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
           No cycle is running yet. Add an active to get started.
         </Text>
@@ -60,6 +65,27 @@ export default function WhyTonightScreen() {
     );
   }
 
+  const todayProjection = data.weekAhead[0] ?? null;
+  const selectedProjection = selectedDate
+    ? data.weekAhead.find((p) => p.dateISO === selectedDate)
+    : todayProjection;
+  const selectedNight = selectedProjection
+    ? {
+        dateISO: selectedProjection.dateISO,
+        index: selectedProjection.night.index,
+        night: selectedProjection.night,
+        weekday: selectedProjection.weekday,
+      }
+    : {
+        dateISO: todayProjection?.dateISO ?? null,
+        index: tonight.index,
+        night: tonight.night,
+        weekday: todayProjection?.weekday ?? 'Tonight',
+      };
+  const isTonight = selectedNight.dateISO === todayProjection?.dateISO;
+  const selectedSlot = selectedNight.night.slot;
+  const selectedSlotLabel = selectedSlot === 'recover' ? 'recovery' : selectedSlot;
+  const selectedNightPrefix = isTonight ? "You're on" : `${selectedNight.weekday} is`;
   const retinoidName = cycle.nights.find((n) => n.slot === 'retinoid')?.productName ?? null;
   const acidName = cycle.nights.find((n) => n.slot === 'exfoliate')?.productName ?? null;
   const hasVitC = cycle.amDaily.some((a) => a.className === 'vitamin_c');
@@ -67,9 +93,9 @@ export default function WhyTonightScreen() {
   const hasBothPotent = !!retinoidName && !!acidName;
 
   return (
-    <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE}>
+    <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
       <Text variant="label" className="mb-2.5" style={{ color: colors.clayBright }}>
-        WHY THIS, TONIGHT?
+        {isTonight ? 'WHY THIS, TONIGHT?' : 'WHY THIS NIGHT?'}
       </Text>
       <Text
         variant="title"
@@ -77,12 +103,12 @@ export default function WhyTonightScreen() {
         className="text-[30px] leading-[34px]"
         accessibilityRole="header"
       >
-        {SLOT_TITLE[tonight.night.slot] ?? 'Tonight.'}
+        {slotTitle(selectedNight.night.slot, isTonight, selectedNight.weekday)}
       </Text>
 
       <View className="mt-4">
         <TraceRow tag="CYCLE">
-          {`You're on night ${tonight.index + 1} of your ${cycle.variant} cycle. The ${tonight.night.slot === 'recover' ? 'recovery' : tonight.night.slot} slot.`}
+          {`${selectedNightPrefix} night ${selectedNight.index + 1} of your ${cycle.variant} cycle. The ${selectedSlotLabel} slot.`}
         </TraceRow>
         {hasBothPotent ? (
           <TraceRow tag="APART">

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { pseudonymousUserId, sanitizeAnalyticsProps } from './track';
+import { pseudonymousUserId, sanitizeAnalyticsEventName, sanitizeAnalyticsProps } from './track';
 
 const TRACK_SOURCE = fileURLToPath(new URL('./track.ts', import.meta.url));
 
@@ -62,6 +62,12 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsProps({ result: 'error' })).toEqual({ result: 'error' });
   });
 
+  it('drops unapproved or user-derived event names', () => {
+    expect(sanitizeAnalyticsEventName('photo_captured')).toBe('photo_captured');
+    expect(sanitizeAnalyticsEventName('routine_step_irritation')).toBeNull();
+    expect(sanitizeAnalyticsEventName('Acne concern: cheeks')).toBeNull();
+  });
+
   it('derives a stable pseudonymous user id without exposing the raw Supabase id', async () => {
     const raw = '00000000-0000-4000-8000-000000000001';
     const first = await pseudonymousUserId(raw);
@@ -75,6 +81,8 @@ describe('analytics sanitizer', () => {
   it('keeps an explicit account-boundary reset for PostHog identity', () => {
     const source = readFileSync(TRACK_SOURCE, 'utf8');
 
+    expect(source).toContain('sanitizeAnalyticsEventName(event)');
+    expect(source).toContain('posthog?.capture(safeEvent, safeProps)');
     expect(source).toContain('export async function resetAnalyticsIdentity');
     expect(source).toContain('posthog?.reset()');
   });

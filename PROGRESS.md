@@ -1187,6 +1187,196 @@ conflicts behind Pro is wrong for a safety app; needs a product decision), the P
 (needs a daily content refresh, B-NOTIF-VERIFY), and "People like you" (Phase-2 scaffold, B-COMMUNITY-MOD).
 **Gates across all 7 commits: typecheck + lint + 960 tests green, em-dash-free, pushed to origin/main.**
 
+### Mobile route-escape touch targets (2026-07-06)
+
+Fixed undersized icon-only Back/Dismiss controls on direct-entry trust surfaces across recommendations,
+commerce, community, and trend routes by moving them to a shared 44 pt `RouteIconButton`. The commerce
+consent bottom sheet is now viewport-capped and scrollable so Dismiss stays reachable on 320 px wide short
+phones. Flow-tree expectations now explicitly require phone-sized route escapes for these branches, with
+focused route-contract coverage guarding against regressing to 28 px or 36 px controls.
+
+### Paywall short-phone reachability (2026-07-06)
+
+Fixed subscription lifecycle and contextual paywall surfaces for short iOS/Android phones: re-offer,
+downgrade, win-back, and Pro-gate bodies now scroll above fixed actions, secondary exits are at least
+44 px tall, the contextual upsell sheet is viewport-capped and scrollable, and Terms/Privacy/Restore
+links use explicit 44 x 44 native hit targets. The upsell scrim is hidden from accessibility when the
+visible 44 px "Maybe later" exit is present, avoiding a tiny accessible dismiss target on 320 px screens.
+
+### Progress photo route exits (2026-07-06)
+
+Fixed undersized Progress photo exits across photo detail, capture, review, and no-score routes by moving
+Back/Close controls to the shared 44 pt `RouteIconButton`. Capture consent, permission, and camera-recovery
+overlays now scroll on short phones and their Not now exits are 44 px tall, so a user can always back out of
+camera or privacy gates on small iOS and Android devices.
+
+### Shared toggle and You tab touch targets (2026-07-06)
+
+Replaced native/local switch variants with a shared `ToggleSwitch` that keeps a 52 x 48 phone target,
+explicit `role="switch"` state, labels, disabled handling, and the same slim visual track. Applied it to
+settings notifications, You privacy/security controls, Trend opt-in, Ask consent, and Widgets Live Activity
+surfaces. Also converted You tab navigation and policy chevrons from tiny text buttons into whole-row 56 px
+actions with a 44 x 44 chevron area. Expo web evidence at 320 x 568 found zero switch or button geometry
+failures in `test-results/human-e2e/2026-07-06/shared-toggle-switch-mobile/`.
+
+### Onboarding chip touch targets (2026-07-06)
+
+Fixed shared onboarding and filter chips so `Chip` and `SegmentChip` keep a 48 px minimum touch height on
+phone layouts, with source-contract tests guarding against regression to 40 px targets. The onboarding
+product remove control is now a 48 x 48 button instead of a tiny glyph-only press area. Expo web evidence
+at a confirmed 320 px CSS viewport found zero chip/remove geometry failures in
+`test-results/human-e2e/2026-07-06/onboarding-chip-touch-targets/`.
+
+### Recommendations teaser touch targets (2026-07-06)
+
+Fixed the Today SPF recommendation prompt so the close, See why, and Not now actions render as visible
+48 px phone targets instead of relying on tiny glyph/text hit-slop areas. Added a dev-only Today
+`?routine=AM|PM` preview hook so AM and PM surfaces can be verified on demand without changing production
+clock behavior. Expo web evidence at a confirmed 320 px CSS viewport found zero teaser target geometry
+failures in `test-results/human-e2e/2026-07-06/recommendations-teaser-touch-targets/`.
+
+### Commerce paid-link touch targets (2026-07-06)
+
+Fixed where-to-buy and stack paid-link surfaces for small iOS/Android phones: retailer rows now give product
+copy enough width, paid-link chips no longer squeeze names, disclosure/how-it-works controls are visible
+48 px targets, and the shelf fallback is a real 48 px button. The You-tab commerce sharing toggle now remains
+local-first when the consent ledger/backend is unavailable, so the real opt-in path works before Supabase is
+configured. Expo web evidence at a confirmed 320 px CSS viewport found zero paid-link/control geometry
+failures in `test-results/human-e2e/2026-07-06/commerce-touch-targets/`.
+
+### Floating tab bar polish (2026-07-06)
+
+Reworked the bottom tab bar from a tiny active dot to a floating OnSkin-style raised-paper capsule with
+compact geometric line icons, readable 12 px labels, a clay-tinted active state, and tab-scene bottom
+clearance so content does not sit under the pill. The four existing destinations remain unchanged.
+Expo web evidence at a confirmed 320 px CSS viewport found one active tab, no horizontal overflow, and four
+tab targets above 44 pt in
+`test-results/human-e2e/2026-07-06/wealthsimple-style-tabbar/`.
+
+### Settings export feedback (2026-07-06)
+
+Patched the You-tab data export path so placeholder/offline Supabase configuration fails fast instead of
+leaving the user with no visible result. The screen now keeps native alerts and also renders inline
+`accessibilityRole="alert"` feedback under the export controls for unavailable/failing exports. Expo web
+evidence at a confirmed 320 px CSS viewport verified You/settings route geometry, direct-entry Back recovery,
+bottom-scroll policy/data controls, and the visible export failure message in
+`test-results/human-e2e/2026-07-06/settings/`.
+
+### Navbar label legibility (2026-07-06)
+
+Patched the floating tab bar labels so Today, Progress, Shelf, and You no longer depend on the navigator's
+tight default label box or faint inactive tint. Labels now render through an explicit one-line `Text` control
+inside a 20 px label frame with protected shrink behavior, no Android font padding, 12 px text, 16 px
+line-height, and stronger `inkSoft` inactive contrast inside the 90 px floating capsule. Expo web evidence at
+a stress phone viewport verified all four labels visible with no tab-boundary clipping in
+`test-results/human-e2e/2026-07-06/navbar-labels/final-navbar-320.png`.
+
+### Navbar label visibility follow-up (2026-07-06)
+
+Expanded the floating tab bar item and label geometry so tab text no longer sits inside a fragile 18-20 px
+band. Each tab now owns one quarter of the capsule, labels render in a 24 px frame with 13 px text and 18 px
+line-height, and targets remain at least 68 x 62 px on 320 px and 390 px phone viewports. Expo web evidence
+verified tab switching, zero horizontal overflow, no clipped labels, and zero console errors in
+`test-results/human-e2e/2026-07-06/navbar-label-visibility/`.
+
+### Floating tab label slot correction (2026-07-06)
+
+Moved the floating tab labels back into the navigator label slot after finding that text inside `tabBarIcon`
+creates duplicate hidden/visible icon render layers. The final tab bar keeps the raised-paper floating capsule,
+uses darker inactive labels, safe-area-aware bottom offset, 72 px tab targets, and a 26 px one-line label frame.
+Expo web evidence at 320 x 844 and 320 x 568 verified one DOM label per tab, visible unclipped labels, zero
+horizontal overflow, and zero console errors in
+`test-results/human-e2e/2026-07-06/nav-tabbar-320/`.
+
+### Settings timing row wrap (2026-07-06)
+
+Fixed the remaining 320 px route-sweep overflow on `/settings/timing` by allowing the quiet-hours label and
+time-pill group to wrap instead of forcing one row. The timing screen now shows `Nothing fires` above the
+10:00 PM to 7:00 AM controls on narrow phones, with zero horizontal overflow, zero clipped text, and zero
+undersized controls in `test-results/human-e2e/2026-07-06/nav-tabbar-320/settings-timing-final.png`.
+
+### Shelf replace and opened-date touch targets (2026-07-06)
+
+Fixed the Shelf card Replace nudge so it is a visible 96 x 44 clay-tint pill instead of a tiny text link with
+`hitSlop`. The product-card tap target and Replace target are now sibling buttons, removing the invalid nested-button
+browser warning while preserving direct replenishment. Also raised opened-date and PAO choice chips from 40-42 px to
+44 px minimum targets on 320 px phones. Expo web evidence verified the Replace pill, zero nested-button console
+errors, no horizontal overflow, and zero opened-date/PAO chip geometry failures in
+`test-results/human-e2e/2026-07-06/shelf-touch-targets/`.
+
+### Cycle week scheduler note semantics (2026-07-06)
+
+Fixed `/cycle/week` scheduler notes so informational safety/fallback notes render as readable text cards instead of
+inert `button` controls. Phased-introduction notes are now the only tappable note CTA, with a visible 44 pt target
+and explicit "Review phased introduction" accessibility label. Safety notes are also rendered in the no-cycle branch,
+matching the scheduler contract that notes survive when no cycle forms, such as pregnancy retinoid suppression.
+Expo web evidence used the app-native onboarding "Explore first" reverse-trial path to unlock Pro locally, then
+verified locked and unlocked `/cycle/week` at a 320 px viewport with no console errors in
+`test-results/human-e2e/2026-07-06/cycle-week-notes/`.
+
+### Cycle week selected-night projection (2026-07-06)
+
+Fixed the cycle week projection so “This week, by night” renders the full seven-night window from the scheduler
+spec instead of only five rows. Projected night rows now route to `/cycle/why-tonight?date=...`, and the explainer
+reads that date so future rows show “WHY THIS NIGHT?” with selected-weekday trace copy instead of behaving like
+inert haptic-only buttons. Expo web evidence used the app-native no-card Pro week plus manual retinol shelf intake
+and verified seven visible night-row buttons, a future-row tap to `?date=2026-07-07`, Tuesday-specific explainer
+copy, no horizontal overflow, and zero browser console errors in
+`test-results/human-e2e/2026-07-06/cycle-week-selected-night/`.
+
+### Cycle week wrapped night labels (2026-07-06)
+
+Fixed the seven-night week view so row labels use the projected cycle-night index instead of the calendar row index.
+A classic four-night cycle now wraps visibly as `N1`, `N2`, `N3`, `N4`, `N1`, `N2`, `N3` instead of showing impossible
+`N5`/`N6`/`N7` labels. The same wrapped value is included in row accessibility labels as “cycle night X of 4,” keeping
+screen-reader output aligned with the visible schedule. Expo web evidence at a phone viewport verified the wrapped
+labels, no horizontal overflow, and zero browser console errors in
+`test-results/human-e2e/2026-07-06/cycle-week-cycle-labels/`.
+
+### Cycle repeated-active recovery spacing (2026-07-06)
+
+Fixed the scheduler's repeated potent-active spacing so a retinoid-only or exfoliant-only cycle no longer stacks
+the same product/slot on consecutive nights in the classic variant. The orchestration loop now inserts a recovery
+night between repeated products or repeated potent slots while preserving the valid classic acid-to-retinoid sequence
+for different slots. Expo web evidence used the app-native reverse-trial plus manual retinol shelf flow and verified
+`Retinoid -> Recover -> Retinoid -> Recover -> Recover`, zero horizontal overflow, and zero console errors in
+`test-results/human-e2e/2026-07-06/cycle-week-repeat-active-spacing/`.
+
+### Contextual paywall touch target buffer (2026-07-06)
+
+Fixed the Progress contextual paywall's borderline small-phone targets. The shared paywall dismiss control and
+Terms/Privacy/Restore compliance row now render with a 48 px floor instead of relying on nominal 44 px sizing that
+landed at 43.99 px in Expo web geometry. Human-simulated E2E at 320 px and 390 px verified `Maybe later`,
+`Start free trial`, `Terms`, `Privacy`, `Restore`, and the floating tabs all exceed 44 px, with zero horizontal
+overflow and zero browser console errors in
+`test-results/human-e2e/2026-07-06/navigation-small-phone-tabbar/`.
+
+### Paywall lifecycle decline target buffer (2026-07-06)
+
+Fixed the same nominal-44 px rendering problem on lifecycle paywall secondary exits. `/paywall/reoffer`,
+`/paywall/downgrade`, and `/paywall/winback` previously rendered their respectful "no" controls at 43.99 px on a
+320 px short phone; the contextual upsell `Maybe later` exit also still used exact 44 px sizing. All four now use a
+48 px floor, and the paywall mobile contract rejects exact `h-[44px]` exits. Human-simulated E2E at 320 x 568
+verified zero small paywall targets, zero horizontal overflow, and zero console errors in
+`test-results/human-e2e/2026-07-06/paywall-lifecycle-decline-targets/`.
+
+### Navbar text rendering hardening (2026-07-06)
+
+Replaced the remaining fragile bottom-tab label-slot path with a custom `FloatingTabBar` so Today, Progress,
+Shelf, and You render as direct text inside one controlled 72 px tab item each. The bar keeps the Wealthsimple-style
+floating raised capsule, explicit selected-tab semantics, safe-area positioning, and keyboard-hide behavior without
+depending on the navigator's nested label wrappers. Human-simulated E2E at 320 x 568 and 390 x 844 verified no
+clipped labels, no undersized tab targets, zero horizontal overflow, and clean tab switching evidence in
+`test-results/human-e2e/2026-07-06/navbar-text-rendering/`.
+
+### Commerce consent decline target buffer (2026-07-06)
+
+Fixed the exact-44 px secondary decline action on `/commerce/consent` after Expo web rendered `Not now` at
+43.99 px high on a 320 x 568 phone viewport. The action now uses a 48 px height buffer, the route contract test
+guards against returning to the fragile 44 px class, and human-simulated E2E with local commerce flags verified no
+small targets, no clipped controls, and zero horizontal overflow in
+`test-results/human-e2e/2026-07-06/commerce-consent-decline-target/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

@@ -63,16 +63,19 @@ function GapPrompt({ recId }: { recId: string }) {
       style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Dismiss"
+        accessibilityLabel="Dismiss SPF recommendation"
         onPress={() => void dismiss()}
-        hitSlop={8}
-        className="absolute right-3.5 top-3.5 h-5 w-5 items-center justify-center rounded-full"
-        style={{ backgroundColor: 'rgba(165,105,75,0.12)' }}>
-        <Text className="text-[11px]" style={{ color: colors.clay }}>
+        className="absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full"
+        style={{
+          backgroundColor: 'rgba(165,105,75,0.12)',
+          borderWidth: 1,
+          borderColor: 'rgba(165,105,75,0.14)',
+        }}>
+        <Text className="text-[14px]" style={{ color: colors.clay }}>
           ✕
         </Text>
       </Pressable>
-      <View className="mb-2 flex-row items-center gap-2.5 pr-6">
+      <View className="mb-2 flex-row items-center gap-2.5 pr-12">
         <View className="h-[30px] w-[30px] items-center justify-center rounded-lg" style={{ backgroundColor: colors.clay }}>
           <Text className="text-[15px]" style={{ color: colors.paper }}>
             ☀
@@ -88,18 +91,29 @@ function GapPrompt({ recId }: { recId: string }) {
       <View className="flex-row items-center gap-4">
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={REC_COPY.gapPrompt.cta}
           onPress={() => {
             haptics.select();
             track('recommendation_expanded');
             router.push({ pathname: '/recommendations/[id]', params: { id: recId } });
           }}
-          className="h-[38px] items-center justify-center rounded-pill px-5"
-          style={{ backgroundColor: colors.clay }}>
+          className="items-center justify-center rounded-pill px-5 py-2"
+          style={{ minHeight: 48, backgroundColor: colors.clay }}>
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.paper }}>
             {REC_COPY.gapPrompt.cta}
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => void dismiss()} hitSlop={6}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={REC_COPY.gapPrompt.dismiss}
+          onPress={() => void dismiss()}
+          className="items-center justify-center rounded-pill px-4 py-2"
+          style={{
+            minHeight: 48,
+            borderWidth: 1,
+            borderColor: 'rgba(165,105,75,0.22)',
+            backgroundColor: 'rgba(255,255,255,0.18)',
+          }}>
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.clay }}>
             {REC_COPY.gapPrompt.dismiss}
           </Text>

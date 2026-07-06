@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -21,15 +21,10 @@ export default function PeopleLikeYouScreen() {
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pb-2 pt-1">
         <View className="flex-row items-center gap-3">
-          <Pressable
-            accessibilityRole="button"
+          <RouteIconButton
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
-            className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-            style={{ borderWidth: 1, borderColor: colors.hairline }}
-          >
-            <Text style={{ color: colors.ink }}>‹</Text>
-          </Pressable>
+          />
           <Text variant="body" className="font-sans-semibold" tone="muted">
             {COMMUNITY_COPY.peopleLikeYou.title}
           </Text>

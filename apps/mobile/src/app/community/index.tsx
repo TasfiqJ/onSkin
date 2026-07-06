@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, notesByTopic, type SkinNote } from '@/features/community/notes';
 import { track } from '@/lib/analytics/track';
@@ -69,21 +69,15 @@ export default function SkinNotesHub() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-          hitSlop={8}
-        >
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            ‹ Back
-          </Text>
-        </Pressable>
+        />
         {phase7Flags.communityPosting ? (
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push('/community/ask')}
-            hitSlop={8}
+            className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
           >
             <Text variant="body" tone="muted" className="font-sans-medium">
               Ask

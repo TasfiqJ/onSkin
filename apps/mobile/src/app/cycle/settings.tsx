@@ -2,7 +2,7 @@ import type { CycleVariant } from '@onskin/types';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { slotLabel } from '@/features/scheduler/projection';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
@@ -35,13 +35,15 @@ export default function CycleSettingsScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router)}>
-          Done
-        </Text>
+        <RouteIconButton
+          accessibilityLabel="Done"
+          glyph="x"
+          onPress={() => backOrReplace(router)}
+        />
         <Text variant="body" className="font-sans-semibold">
           Cycle settings
         </Text>
-        <View className="w-10" />
+        <View className="w-[44px]" />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">

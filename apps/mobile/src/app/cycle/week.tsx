@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { withProGate } from '@/features/subscription/ProGate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle, type CycleData } from '@/features/scheduler/useCycle';
@@ -18,27 +18,26 @@ function WeekScreen() {
 
   const cycle = data?.cycle ?? null;
   const variantLabel = cycle ? `${cycle.variant}, ${cycle.lengthNights} nights` : 'simple daily';
-  const note = data ? resolutionNote(data) : null;
+  const resolution = data ? resolutionNote(data) : null;
+  const schedulerNote = data?.notes[0] ?? null;
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-7 pb-10">
         <View className="mt-2 flex-row items-center justify-between">
-          <Pressable
-            accessibilityRole="button"
+          <RouteIconButton
+            accessibilityLabel="Back"
+            tone="night"
             onPress={() => backOrReplace(router)}
-            className="py-2 pr-3"
-          >
-            <Text className="font-sans-semibold" tone="inverseMuted">
-              ‹
-            </Text>
-          </Pressable>
+          />
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel="Cycle settings"
             onPress={() => {
               haptics.select();
               router.push('/cycle/settings');
             }}
+            className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
           >
             <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
               Settings
@@ -94,16 +93,21 @@ function WeekScreen() {
             <View className="gap-2">
               {data!.weekAhead.map((p, i) => {
                 const tonight = i === 0;
+                const cycleNightNumber = p.night.index + 1;
+                const cycleNightLabel = `N${cycleNightNumber}`;
                 const isNextAcid =
                   p.dateISO === data!.nextAcidNight && p.night.slot === 'exfoliate';
                 return (
                   <Pressable
                     key={p.dateISO}
                     accessibilityRole="button"
-                    accessibilityLabel={`${p.weekday}: ${slotLabel(p.night.slot)} night${tonight ? ', tonight' : ''}`}
+                    accessibilityLabel={`${p.weekday}: ${slotLabel(p.night.slot)} night, cycle night ${cycleNightNumber} of ${cycle.lengthNights}${tonight ? ', tonight' : ''}`}
                     onPress={() => {
                       haptics.select();
-                      if (tonight) router.push('/cycle/why-tonight');
+                      router.push({
+                        pathname: '/cycle/why-tonight',
+                        params: { date: p.dateISO },
+                      });
                     }}
                     className="flex-row items-center gap-3.5 rounded-2xl px-4 py-3.5"
                     style={
@@ -120,7 +124,7 @@ function WeekScreen() {
                       className="w-[30px] font-mono text-[12px]"
                       style={{ color: tonight ? colors.clayBright : 'rgba(244,239,231,0.45)' }}
                     >
-                      N{i + 1}
+                      {cycleNightLabel}
                     </Text>
                     <View className="flex-1">
                       <Text className="font-sans-bold text-[15px]" style={{ color: colors.cream }}>
@@ -159,7 +163,7 @@ function WeekScreen() {
               })}
             </View>
 
-            {note ? (
+            {resolution ? (
               <View
                 className="mt-4 flex-row items-start gap-3 rounded-[18px]"
                 style={{
@@ -176,33 +180,15 @@ function WeekScreen() {
                   className="flex-1 text-[13.5px] leading-[21px]"
                   style={{ color: 'rgba(244,239,231,0.78)' }}
                 >
-                  {note.lead}
+                  {resolution.lead}
                   <Text className="font-sans-bold" style={{ color: colors.cream }}>
-                    {note.tail}
+                    {resolution.tail}
                   </Text>
                 </Text>
               </View>
             ) : null}
 
-            {data!.notes.length ? (
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => {
-                  if (/add your/i.test(data!.notes[0]!)) {
-                    haptics.select();
-                    router.push('/cycle/phased-intro');
-                  }
-                }}
-                className="mt-4"
-              >
-                <Text
-                  className="text-[12.5px]"
-                  style={{ color: 'rgba(244,239,231,0.5)', lineHeight: 18 }}
-                >
-                  {data!.notes[0]}
-                </Text>
-              </Pressable>
-            ) : null}
+            {schedulerNote ? <SchedulerNote note={schedulerNote} /> : null}
 
             <Pressable
               accessibilityRole="button"
@@ -210,7 +196,7 @@ function WeekScreen() {
                 haptics.select();
                 router.push('/cycle/disruption');
               }}
-              className="mt-6 items-center py-2"
+              className="mt-6 min-h-[44px] items-center justify-center py-2"
             >
               <Text variant="label" style={{ color: colors.clayBright }}>
                 Need a break? →
@@ -218,24 +204,77 @@ function WeekScreen() {
             </Pressable>
           </>
         ) : (
-          <View
-            className="mt-6 rounded-2xl px-5 py-6"
-            style={{ backgroundColor: colors.nightSurface }}
-          >
-            <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
-              No actives to cycle yet.
-            </Text>
-            <Text
-              className="mt-2 text-[13px]"
-              style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}
+          <>
+            <View
+              className="mt-6 rounded-2xl px-5 py-6"
+              style={{ backgroundColor: colors.nightSurface }}
             >
-              Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating
-              acid and we&apos;ll build your cycle.
-            </Text>
-          </View>
+              <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
+                No actives to cycle yet.
+              </Text>
+              <Text
+                className="mt-2 text-[13px]"
+                style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}
+              >
+                Your routine is a simple daily morning and evening. Add a retinoid or an
+                exfoliating acid and we&apos;ll build your cycle.
+              </Text>
+            </View>
+            {schedulerNote ? <SchedulerNote note={schedulerNote} /> : null}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function SchedulerNote({ note }: { note: string }) {
+  const opensPhasedIntro = /add your/i.test(note);
+  const noteStyle = {
+    backgroundColor: 'rgba(217,161,131,0.08)',
+    borderColor: 'rgba(217,161,131,0.18)',
+    borderWidth: 1,
+  };
+
+  if (opensPhasedIntro) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Review phased introduction"
+        onPress={() => {
+          haptics.select();
+          router.push('/cycle/phased-intro');
+        }}
+        className="mt-4 min-h-[44px] flex-row items-center gap-3 rounded-[18px] px-4 py-3"
+        style={noteStyle}
+      >
+        <View
+          className="h-1.5 w-1.5 rounded-full"
+          style={{ backgroundColor: colors.clayBright }}
+        />
+        <Text
+          className="flex-1 text-[13.5px] leading-[20px]"
+          style={{ color: 'rgba(244,239,231,0.78)' }}
+        >
+          {note}
+        </Text>
+        <Text className="text-[16px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
+          ›
+        </Text>
+      </Pressable>
+    );
+  }
+
+  return (
+    <View className="mt-4 flex-row items-start gap-3 rounded-[18px] px-4 py-3" style={noteStyle}>
+      <View className="mt-[7px] h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+      <Text
+        className="flex-1 text-[13.5px] leading-[20px]"
+        style={{ color: 'rgba(244,239,231,0.72)' }}
+      >
+        {note}
+      </Text>
+    </View>
   );
 }
 

@@ -1,0 +1,91 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { describe, expect, it } from 'vitest';
+
+const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
+
+function readSource(path: string): string {
+  return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
+}
+
+function readAppRoute(path: string): string {
+  return readFileSync(`${APP_DIR}/${path}`, 'utf8');
+}
+
+describe('paywall mobile contracts', () => {
+  it('keeps lifecycle paywall bodies scrollable above fixed actions on short phones', () => {
+    for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx', 'paywall/winback.tsx']) {
+      const source = readAppRoute(route);
+
+      expect(source, `${route} should support short phone viewports`).toContain('<ScrollView');
+      expect(source, `${route} should keep bottom actions outside the scroll body`).toContain(
+        'className="gap-',
+      );
+    }
+  });
+
+  it('keeps paywall decline and dismiss controls buffered above 44px on phones', () => {
+    for (const route of [
+      'paywall/reoffer.tsx',
+      'paywall/downgrade.tsx',
+      'paywall/winback.tsx',
+      'paywall/upsell.tsx',
+    ]) {
+      const source = readAppRoute(route);
+
+      expect(source, `${route} should not keep a 40px route or decline target`).not.toContain(
+        'h-[40px]',
+      );
+      expect(source, `${route} should not keep a 42px route or decline target`).not.toContain(
+        'h-[42px]',
+      );
+      expect(source, `${route} should not rely on exact 44px sizing that renders at 43.99px`).not.toContain(
+        'h-[44px]',
+      );
+    }
+
+    for (const route of [
+      'paywall/reoffer.tsx',
+      'paywall/downgrade.tsx',
+      'paywall/winback.tsx',
+      'paywall/upsell.tsx',
+    ]) {
+      const source = readAppRoute(route);
+
+      expect(source, `${route} should render paywall decline exits with 48px buffer`).toContain(
+        'className="h-[48px] items-center justify-center"',
+      );
+    }
+  });
+
+  it('keeps contextual paywall sheets viewport-capped and scrollable', () => {
+    const sheet = readSource('components/ui/Sheet.tsx');
+    const upsell = readAppRoute('paywall/upsell.tsx');
+    const proGate = readSource('features/subscription/ProGate.tsx');
+
+    expect(sheet).toContain('useWindowDimensions');
+    expect(sheet).toContain('backdropReserve = backdropAccessible ? 48 : 12');
+    expect(sheet).toContain('sheetMaxHeight');
+    expect(sheet).toContain('maxHeight: sheetMaxHeight');
+    expect(sheet).toContain('overflow-hidden rounded-t-sheet');
+    expect(sheet).toContain('style: { flexShrink: 1 }');
+    expect(sheet).toContain('backdropAccessible?: boolean');
+    expect(upsell).toContain('<Sheet scroll backdropAccessible={false}');
+    expect(proGate).toContain('<ScrollView');
+    expect(proGate).toContain('className="h-[48px] justify-center px-2"');
+  });
+
+  it('keeps paywall compliance links comfortably large enough for phone taps', () => {
+    const source = readSource('features/subscription/ComplianceRow.tsx');
+
+    expect(source).toContain('className="min-h-[48px] flex-row');
+    expect(
+      source.match(
+        /className="min-h-\[48px\] min-w-\[48px\] items-center justify-center px-1"/g,
+      ),
+    ).toHaveLength(3);
+    expect(source.match(/style=\{\{ minHeight: 48, minWidth: 48 \}\}/g)).toHaveLength(3);
+    expect(source).not.toContain('hitSlop={8}');
+  });
+});

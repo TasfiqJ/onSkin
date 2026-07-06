@@ -44,7 +44,11 @@ export default function ReorderScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Pressable accessibilityRole="button" onPress={() => backOrReplace(router)}>
+        <Pressable
+          accessibilityRole="button"
+          className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+          onPress={() => backOrReplace(router)}
+        >
           <Text variant="body" tone="muted" className="font-sans-semibold text-[15px]">
             Done
           </Text>
@@ -52,7 +56,11 @@ export default function ReorderScreen() {
         <Text variant="body" className="font-sans-bold text-[15px]">
           Edit morning
         </Text>
-        <Pressable accessibilityRole="button" onPress={() => backOrReplace(router)}>
+        <Pressable
+          accessibilityRole="button"
+          className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+          onPress={() => backOrReplace(router)}
+        >
           <Text variant="body" tone="clay" className="font-sans-semibold text-[15px]">
             Save
           </Text>
@@ -111,7 +119,7 @@ export default function ReorderScreen() {
           <View className="mt-3 flex-row gap-2">
             <Pressable
               accessibilityRole="button"
-              className="h-9 flex-1 items-center justify-center rounded-[10px]"
+              className="h-[44px] flex-1 items-center justify-center rounded-[10px]"
               style={{ backgroundColor: colors.ink }}
               onPress={() => setOrder(CANONICAL)}
             >
@@ -119,7 +127,7 @@ export default function ReorderScreen() {
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              className="h-9 flex-1 items-center justify-center rounded-[10px]"
+              className="h-[44px] flex-1 items-center justify-center rounded-[10px]"
               style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
               onPress={() => setNudgeDismissed(true)}
             >

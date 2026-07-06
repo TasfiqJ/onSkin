@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { applyRecommendationPreferences } from '@/features/recommendations/applyPreferences';
 import {
   BUDGET_LABEL,
@@ -45,7 +45,7 @@ function Toggle({
       accessibilityState={{ selected: active, disabled }}
       disabled={disabled}
       onPress={onPress}
-      className="rounded-pill px-4 py-2.5"
+      className="min-h-[44px] items-center justify-center rounded-pill px-4 py-2.5"
       style={{
         backgroundColor: active ? colors.ink : colors.paperRaised,
         borderWidth: 1,
@@ -109,23 +109,10 @@ export default function PreferencesScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
-          style={{
-            width: 44,
-            height: 44,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 22,
-            backgroundColor: colors.paperRaised,
-            borderWidth: 1,
-            borderColor: colors.hairline,
-          }}
-        >
-          <Text style={{ color: colors.ink }}>‹</Text>
-        </Pressable>
+        />
         <Text variant="body" className="font-sans-semibold" tone="muted">
           {REC_COPY.preferences.title}
         </Text>

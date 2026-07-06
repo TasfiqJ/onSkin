@@ -21,8 +21,18 @@ export function localDateString(d = new Date()): string {
   return `${y}-${m}-${day}`;
 }
 
+function devRoutineTypeOverride(): RoutineType | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  const locationLike = (globalThis as { location?: { search?: string } }).location;
+  if (!locationLike?.search || typeof URLSearchParams === 'undefined') return null;
+  const requested = new URLSearchParams(locationLike.search).get('routine');
+  return requested === 'AM' || requested === 'PM' ? requested : null;
+}
+
 /** AM before 5pm, PM after (design spec: morning check-off / evening cycling). */
 export function currentRoutineType(d = new Date()): RoutineType {
+  const override = devRoutineTypeOverride();
+  if (override) return override;
   return d.getHours() < 17 ? 'AM' : 'PM';
 }
 

@@ -5,7 +5,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import {
   parseIngredientText,
   type ParsedIngredientToken,
@@ -86,13 +86,14 @@ export default function OcrScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}>
-          Back
-        </Text>
+        <RouteIconButton
+          accessibilityLabel="Back"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        />
         <Text variant="body" className="font-sans-semibold">
           Read the label
         </Text>
-        <View className="w-10" />
+        <View className="w-[44px]" />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-5">

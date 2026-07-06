@@ -42,6 +42,10 @@ vi.mock('@/lib/consent/consent', () => ({
   recordConsent: mocks.recordConsent,
 }));
 
+vi.mock('@/lib/env', () => ({
+  isSupabaseConfigured: true,
+}));
+
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
     auth: {
@@ -85,13 +89,19 @@ describe('settings data export', () => {
       expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
       JSON.stringify({ account: { id: 'user-1' } }, null, 2),
     );
-    expect(mocks.shareAsync).toHaveBeenCalledWith(expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/), {
-      mimeType: 'application/json',
-      dialogTitle: 'Export your OnSkin data',
-    });
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/), {
-      idempotent: true,
-    });
+    expect(mocks.shareAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      {
+        mimeType: 'application/json',
+        dialogTitle: 'Export your OnSkin data',
+      },
+    );
+    expect(mocks.deleteAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      {
+        idempotent: true,
+      },
+    );
   });
 
   it('returns false and deletes the export file when native sharing is unavailable', async () => {
@@ -100,9 +110,12 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(false);
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/), {
-      idempotent: true,
-    });
+    expect(mocks.deleteAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      {
+        idempotent: true,
+      },
+    );
   });
 
   it('returns false and deletes the export file when availability probing fails', async () => {
@@ -111,16 +124,25 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(false);
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/), {
-      idempotent: true,
-    });
+    expect(mocks.deleteAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      {
+        idempotent: true,
+      },
+    );
   });
 
   it('keeps the You tab from treating unavailable sharing as a successful export', () => {
     const source = readSource('app/(tabs)/you.tsx');
+    const actions = readSource('features/settings/actions.ts');
 
+    expect(actions).toContain('if (!isSupabaseConfigured)');
+    expect(actions).toContain('DATA_EXPORT_BACKEND_UNAVAILABLE');
     expect(source).toContain('onSuccess: (shared)');
     expect(source).toContain('if (!shared)');
+    expect(source).toContain('setExportFeedback(EXPORT_UNAVAILABLE_MESSAGE)');
+    expect(source).toContain('setExportFeedback(message)');
+    expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('Export unavailable');
     expect(source).toContain('data_export_success');
   });

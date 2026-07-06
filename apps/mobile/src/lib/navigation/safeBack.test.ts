@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  APP_ASK_ROUTE,
   APP_COMMERCE_STACKS_ROUTE,
   APP_COMMUNITY_ROUTE,
   APP_HOME_ROUTE,
@@ -101,5 +102,14 @@ describe('safe back navigation', () => {
 
     expect(router.back).not.toHaveBeenCalled();
     expect(router.replace).toHaveBeenCalledWith(APP_COMMUNITY_ROUTE);
+  });
+
+  it('supports Ask as a route-specific fallback', () => {
+    const router = routerWithHistory(false);
+
+    backOrReplace(router, APP_ASK_ROUTE);
+
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_ASK_ROUTE);
   });
 });

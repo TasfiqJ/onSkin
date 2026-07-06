@@ -90,7 +90,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
 
     const anchor = config.anchorISO;
     const tonight = cycle ? { index: nightIndex(cycle, anchor, today), night: nightFor(cycle, anchor, today) } : null;
-    const week = cycle ? weekAhead(cycle, anchor, today, 4) : [];
+    const week = cycle ? weekAhead(cycle, anchor, today) : [];
     const nextAcidNight = cycle ? nextSlotDate(cycle, anchor, today, 'exfoliate') : null;
     const rec = recoveryProgress(config.recovery, today);
 

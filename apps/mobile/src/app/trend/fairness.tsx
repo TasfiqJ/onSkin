@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useMonkBand } from '@/features/trend/useTrend';
 import { APP_TREND_OPTIN_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -24,15 +24,10 @@ export default function FairnessScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_TREND_OPTIN_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
-        >
-          <Text style={{ color: colors.ink }}>‹</Text>
-        </Pressable>
+        />
         <Text variant="body" className="font-sans-semibold" tone="muted">
           {TREND_COPY.fairness.title}
         </Text>

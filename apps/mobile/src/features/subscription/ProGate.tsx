@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, type ReactNode } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
@@ -65,13 +65,21 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row justify-end pt-1">
-        <Pressable accessibilityRole="button" onPress={() => dismissPaywall(router)} hitSlop={8}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => dismissPaywall(router)}
+          className="h-[48px] justify-center px-2"
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Maybe later
           </Text>
         </Pressable>
       </View>
-      <View className="flex-1 justify-center">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 16 }}
+      >
         <View
           className="mb-5 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
           style={{ backgroundColor: colors.clayTint }}
@@ -115,7 +123,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             {offering.data.reason}
           </Text>
         ) : null}
-      </View>
+      </ScrollView>
       <View className="pb-4">
         <Pressable
           accessibilityRole="button"

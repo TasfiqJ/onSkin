@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { NO_SCORE_COPY } from '@/features/photos/copy';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useTrendConsent } from '@/features/trend/useTrend';
@@ -33,15 +33,12 @@ export default function AboutNoScoreScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row justify-end pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Close"
+          glyph="x"
+          tone="muted"
           onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
-        >
-          <Text variant="body" tone="muted" style={{ fontSize: 22 }}>
-            ✕
-          </Text>
-        </Pressable>
+        />
       </View>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
         <View

@@ -74,6 +74,14 @@ const SLOT_FOR_CLASS: Partial<Record<ActiveClass, SchedulerSlot>> = {
   retinoid: 'retinoid',
 };
 
+function slotForClass(cls: ActiveClass): SchedulerSlot {
+  return SLOT_FOR_CLASS[cls] ?? 'other_active';
+}
+
+function needsRecoveryBetween(a: Classified, b: Classified): boolean {
+  return a.id === b.id || slotForClass(a.cls) === slotForClass(b.cls);
+}
+
 type Classified = { id: string; name: string; cls: ActiveClass; isNew: boolean };
 type Push = { active: Classified };
 
@@ -160,13 +168,15 @@ export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfil
   pushes.forEach((p, i) => {
     nights.push({
       index: nights.length,
-      slot: SLOT_FOR_CLASS[p.active.cls] ?? 'other_active',
+      slot: slotForClass(p.active.cls),
       productId: p.active.id,
       productName: p.active.name,
       className: p.active.cls,
     });
     const isLast = i === pushes.length - 1;
-    const gaps = isLast ? rec.trailing : rec.between;
+    const nextPush = pushes[i + 1];
+    const repeatPotentSlot = nextPush ? needsRecoveryBetween(p.active, nextPush.active) : false;
+    const gaps = isLast ? rec.trailing : Math.max(rec.between, repeatPotentSlot ? 1 : 0);
     for (let g = 0; g < gaps; g++) nights.push(recoveryNight(nights.length));
   });
   // Guarantee at least one recovery night so the barrier always gets rest.

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { goalRecsShippable } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
@@ -200,19 +200,14 @@ export default function ForYouScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center justify-between pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
+          accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-          hitSlop={8}
-        >
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            ‹ Back
-          </Text>
-        </Pressable>
+        />
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/recommendations/preferences')}
-          hitSlop={8}
+          className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
         >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Preferences

@@ -44,18 +44,22 @@ export async function grantCommerceConsent(): Promise<void> {
       version: COMMERCE_COPY.consentVersion,
       consentText: `[PLACEHOLDER commerce data-sharing consent. B-PRIVACY-COPY] ${COMMERCE_COPY.consent.body}`,
     });
-    track('commerce_consent_granted');
   } catch {
-    await setCommerceConsentLocal(false).catch(() => undefined);
+    /* offline / no DB. Keep the local-first flag; ledger reconciles later. */
   }
+  track('commerce_consent_granted');
 }
 
 export async function declineCommerceConsent(): Promise<void> {
   await setCommerceConsentLocal(false);
-  await withdrawConsent({
-    type: 'data_sharing',
-    version: COMMERCE_COPY.consentVersion,
-    consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
-  });
+  try {
+    await withdrawConsent({
+      type: 'data_sharing',
+      version: COMMERCE_COPY.consentVersion,
+      consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
+    });
+  } catch {
+    /* offline / no DB. Keep the local revocation authoritative. */
+  }
   track('commerce_consent_declined');
 }

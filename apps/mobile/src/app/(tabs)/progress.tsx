@@ -365,7 +365,8 @@ function PhotoProgressTab() {
   const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
 
   useEffect(() => {
-    track(mode === 'compare' ? 'comparison_viewed' : 'timeline_viewed');
+    if (mode === 'compare') track('comparison_viewed');
+    else track('timeline_viewed');
   }, [mode]);
 
   const count = data?.count ?? 0;

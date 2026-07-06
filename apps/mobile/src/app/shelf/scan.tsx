@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { lookupBarcode, type CatalogProductSummary } from '@/features/catalog/client';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import {
@@ -171,20 +171,18 @@ export default function ScanScreen() {
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
       <View className="flex-1 px-6">
         <View className="mt-2 flex-row items-center justify-between" style={{ zIndex: 10 }}>
-          <Text
-            accessibilityRole="button"
-            className="py-2 font-sans-semibold text-[15px]"
-            tone="inverseMuted"
+          <RouteIconButton
+            accessibilityLabel="Close"
+            glyph="x"
+            tone="night"
             onPress={() => router.replace(APP_SHELF_ROUTE)}
-          >
-            Close
-          </Text>
+          />
           <Pressable
             accessibilityRole="switch"
             accessibilityState={{ checked: torch }}
             disabled={!canShowCamera}
             onPress={() => setTorch((value) => !value)}
-            className="py-2"
+            className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
           >
             <Text variant="label" tone={canShowCamera ? 'inverseMuted' : 'muted'}>
               torch

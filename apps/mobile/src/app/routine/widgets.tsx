@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
-import { ScrollView, Switch, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
 import { withProGate } from '@/features/subscription/ProGate';
 import { phase7Flags } from '@/lib/launch/phase7';
@@ -51,19 +51,12 @@ function WidgetsScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-12">
         <View className="mb-1 flex-row items-center gap-3 pt-1">
-          <Text
-            accessibilityRole="button"
-            onPress={() => backOrReplace(router)}
-            variant="body"
-            style={{ fontSize: 22 }}
-          >
-            ‹
-          </Text>
+          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
           <Text variant="title" style={{ fontSize: 28 }}>
             Widgets
           </Text>
         </View>
-        <Text variant="bodySm" tone="muted" className="mb-5 ml-9">
+        <Text variant="bodySm" tone="muted" className="mb-5 ml-[56px]">
           One to three things, readable in a glance. (Previews. The home-screen widgets arrive in
           the device build.)
         </Text>
@@ -291,11 +284,11 @@ function WidgetsScreen() {
               Opt-in · starts at your PM reminder, ends when you’re done
             </Text>
           </View>
-          <Switch
+          <ToggleSwitch
+            accessibilityLabel="Show on the Lock Screen"
             value={p?.liveActivityEnabled ?? false}
-            onValueChange={(v) => update.mutate({ liveActivityEnabled: v })}
-            trackColor={{ true: colors.clay, false: '#D8D0C2' }}
-            thumbColor={colors.paperRaised}
+            disabled={update.isPending}
+            onChange={(v) => update.mutate({ liveActivityEnabled: v })}
           />
         </View>
       </ScrollView>

@@ -23,6 +23,39 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Growth and sharing flows: share cards and conflict screens.
 - Trend, community, commerce, and Ask surfaces.
 
+## Flow: Bottom Tab Navigation
+
+- Goal: A user can always read and tap the primary app destinations from the floating bottom tab bar.
+- Persona: Returning mobile user moving between Today, Progress, Shelf, and You.
+- Entry state: App opened on any main tab with local or fixture data.
+- Start screen/URL/window: Today tab or any `(tabs)` route.
+- Success state: All four tab labels and icons are visible, centered, and tappable without clipping on phone widths.
+- Priority: Critical
+- Automate later: Yes
+- Surface: iOS and Android first; Expo web for responsive visual checks.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/navigation/`
+
+### Path A: Main Tab Switching
+
+1. Action: Open the app on a small phone viewport, inspect the floating tab bar, then switch between Today, Progress, Shelf, and You.
+   Expected result: Each tab remains reachable and visibly selected when active.
+   Evidence: Screenshot and tab geometry snapshot.
+
+### Branches
+
+- Branch: smallest supported phone width
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Render the tab bar at 320 px and 390 px wide phone viewports.
+  - Expected result: Today, Progress, Shelf, and You labels render on one line inside the floating bar, with no clipped glyphs, no text overlap, and at least 44 pt tap targets.
+  - Evidence: Phone-width screenshots and DOM/native geometry snapshot.
+- Branch: keyboard or text-scale pressure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open a screen with keyboard input or increased platform text scale where the harness supports it.
+  - Expected result: The tab bar hides when the keyboard is open and labels keep readable geometry when visible again.
+  - Evidence: Screenshot or simulator UI snapshot.
+
 ## Flow Template
 
 ```markdown
@@ -132,14 +165,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: On the sensitivities/allergies quiz step, select `None that I know of`, then select a concrete sensitivity such as `Fragrance`; repeat in the opposite order.
-  - Expected result: `None that I know of` behaves as an exclusive option and cannot remain selected with concrete sensitivities.
-  - Evidence: Screenshot and UI state snapshot.
+  - Expected result: `None that I know of` behaves as an exclusive option and cannot remain selected with concrete sensitivities. Multi-select chips meet the 44 pt phone touch target.
+  - Evidence: Screenshot, UI state snapshot, and small-phone chip-geometry snapshot.
 - Branch: product intake category metadata
   - Priority: Important
   - Automate later: Yes
   - Action: Add a first-run shelf product with a category such as Moisturiser or Oil / balm, then continue to the shelf/reveal path.
-  - Expected result: The product is added once, the selected category uses a canonical shelf ID, and PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category.
-  - Evidence: Screenshot and local shelf state or product metadata snapshot.
+  - Expected result: The product is added once, the selected category uses a canonical shelf ID, PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category, category chips meet the 44 pt phone touch target, and the visible remove-product control is at least 44 x 44.
+  - Evidence: Screenshot, local shelf state or product metadata snapshot, and small-phone control-geometry snapshot.
 - Branch: back/relaunch during onboarding
   - Priority: Important
   - Automate later: Yes
@@ -246,8 +279,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Shelf add, search, OCR, no-match, opened-date, archive, product detail, and replenish routes directly, then use the visible Back, Close, Cancel, Not now, or backdrop Dismiss control.
-  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. Visible route exits meet the 44 pt phone touch target, add/replenish sheets keep their actions reachable by scrolling on short phones, and sheets that can fill the viewport expose a visible Close control instead of relying on a tiny backdrop.
+  - Evidence: Screenshot sequence, visible route snapshot, and small-phone touch target measurements.
 
 ## Flow: Photo Progress
 
@@ -303,8 +336,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Progress capture, review, no-score explainer, and missing photo detail routes directly, then use the visible Close, Back, or Not now control.
-  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Visible route exits and Not now controls meet the 44 pt phone touch target, and capture permission/recovery gates scroll on short phones.
+  - Evidence: Screenshot sequence and 320 px button-geometry snapshot.
 - Branch: single-photo share unavailable or rejected
   - Priority: Important
   - Automate later: Yes
@@ -333,7 +366,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Optional Opt-In
 
 1. Action: Open `/trend/optin`, read the consent framing, toggle the setting on and off, open the fairness explainer, then return.
-   Expected result: Consent is separate and revocable, the feature is off by default, no photo is uploaded, and fairness copy avoids score or diagnostic language.
+   Expected result: Consent is separate and revocable, the feature is off by default, no photo is uploaded, the opt-in switch remains a 44 pt phone target, and fairness copy avoids score or diagnostic language.
    Evidence: Screenshot sequence and local trend-consent state.
 
 ### Branches
@@ -342,7 +375,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/trend/optin` and `/trend/fairness` directly, then use the visible Back control. Repeat while the Trend feature flag is deferred.
-  - Expected result: Direct opt-in and deferred Trend routes return to the Progress tab; the nested fairness explainer returns to `/trend/optin` instead of a no-history dead end.
+  - Expected result: Direct opt-in and deferred Trend routes return to the Progress tab; the nested fairness explainer returns to `/trend/optin` instead of a no-history dead end. Visible Back controls meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence and visible route snapshot.
 - Branch: installed-base reconsent
   - Priority: Critical
@@ -354,7 +387,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Toggle Trend opt-in on and off while forcing local consent persistence, consent withdrawal, or consent query refresh to fail.
-  - Expected result: The switch is disabled while saving, failed grant/revoke attempts show stable "choice not saved" copy, the visible consent state refreshes after failure, and no raw backend/provider error appears.
+  - Expected result: The switch is disabled while saving, keeps a usable 44 pt touch target, failed grant/revoke attempts show stable "choice not saved" copy, the visible consent state refreshes after failure, and no raw backend/provider error appears.
   - Evidence: Alert text, switch disabled state, query refresh assertion, and visible route state.
 - Branch: fairness floor copy
   - Priority: Critical
@@ -435,14 +468,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: With an active Pro or reverse-trial entitlement, open scheduler and routine routes such as `/cycle/week`, `/cycle/why-tonight`, `/routine/reorder`, `/routine/tolerance`, and `/routine/widgets` directly, then use the visible Back, Done, Got it, Skip, Dismiss, Not yet, or sheet backdrop Dismiss control.
-  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface or modal sheet with no navigation history.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface or modal sheet with no navigation history. Visible Pro route exits and the Widgets Live Activity opt-in switch meet the 44 pt phone touch target, empty Pro states still expose an exit, projected cycle-night rows open the selected night's explainability sheet instead of an inert haptic-only button, projected row labels use the wrapped cycle-night number instead of impossible row numbers such as `N5` in a four-night cycle, repeated retinoid or repeated exfoliant-slot nights are separated by recovery instead of appearing back-to-back, cycle safety/fallback notes render as readable text instead of inert buttons, phased-introduction cycle notes are the only tappable note CTA and meet the 44 pt phone touch target, and modal Pro sheets remain scrollable on short phones.
+  - Evidence: Screenshot sequence, visible route snapshot, cycle-night spacing snapshot, and small-phone button-geometry snapshot.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
   - Action: Refresh the browser, navigate away and back on a locked direct route, or directly open `/paywall/upsell?feature=full_routine` and `/paywall/winback`.
-  - Expected result: Gating stays stable and dismissing a direct-entry paywall returns to a safe app surface, not a blank or dead-end history state.
-  - Evidence: Screenshot sequence.
+  - Expected result: Gating stays stable and dismissing a direct-entry paywall returns to a safe app surface, not a blank or dead-end history state. On short phones, paywall bodies scroll above fixed actions, Terms/Privacy/Restore and decline controls meet the 44 pt touch target with a rendered buffer, and the contextual upsell exposes a real visible dismiss action instead of relying on a tiny scrim-only target.
+  - Evidence: Screenshot sequence plus 320 px button-geometry snapshot.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes
@@ -470,12 +503,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: Today recommendation teaser and SPF gap prompt
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Today with a shelf/profile state that produces an SPF gap, inspect the inline prompt, then tap See why or dismiss it.
+  - Expected result: The prompt stays advisory and dismissible, the visible close, See why, and Not now controls meet the 44 pt phone touch target, and no text or action overflows on a 320 px phone.
+  - Evidence: Small-phone screenshot, button-geometry snapshot, and local dismissed recommendation state when dismissing.
 - Branch: direct-entry recommendation exits
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/recommendations`, `/recommendations/preferences`, and a stale `/recommendations/[id]` route directly, then use the visible Back or Back to For you control.
-  - Expected result: The direct For You hub returns to the You tab; nested recommendation routes return to `/recommendations` instead of remaining on a no-history screen.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Expected result: The direct For You hub returns to the You tab; nested recommendation routes return to `/recommendations` instead of remaining on a no-history screen. Visible hub Back/Preferences controls, nested Back controls, stale-detail Back to For you, and preference chips meet the 44 pt phone touch target.
+  - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
 - Branch: stale recommendation detail
   - Priority: Important
   - Automate later: Yes
@@ -528,8 +567,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path B: Shoppable Routines
 
 1. Action: Open `/commerce/stacks`, open an available stack in development, tap "How this works", and return through the visible Back controls.
-   Expected result: The stack remains ordered by routine sequence, paid-link disclosure stays visible, transparency remains reachable, and Back returns through the stack hierarchy.
-   Evidence: Screenshot sequence and visible route snapshot.
+   Expected result: The stack remains ordered by routine sequence, paid-link disclosure stays visible, transparency remains reachable through a 44 pt phone target, and Back returns through the stack hierarchy.
+   Evidence: Screenshot sequence, visible route snapshot, and small-phone control-geometry snapshot.
 
 ### Branches
 
@@ -537,7 +576,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/[slug]` directly, then use the visible Back, Dismiss, Allow, Not now, or scrim control.
-  - Expected result: Top-level commerce direct entries return to the You tab; stack details return to `/commerce/stacks`; deferred commerce routes also return to the You tab instead of a no-history dead end.
+  - Expected result: Top-level commerce direct entries return to the You tab; stack details return to `/commerce/stacks`; deferred commerce routes also return to the You tab instead of a no-history dead end. Visible Back and Dismiss controls meet the 44 pt phone touch target, and the consent sheet keeps Dismiss reachable while its content scrolls on short phones.
   - Evidence: Screenshot sequence and visible route snapshot.
 - Branch: unavailable stack
   - Priority: Important
@@ -549,8 +588,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
-  - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state and can choose the shelf alternative.
-  - Evidence: Screenshot and local consent state.
+  - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state, and the Allow where-to-buy plus shelf alternative controls meet the 44 pt phone touch target.
+  - Evidence: Screenshot, local consent state, and small-phone control-geometry snapshot.
 - Branch: retailer link handoff failure
   - Priority: Important
   - Automate later: Yes
@@ -588,8 +627,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/community`, `/community/note/[id]`, `/community/ask`, and `/community/people-like-you` directly, then use Back or Not now.
-  - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`. Visible hub Back/Ask controls, nested-route Back controls, the 16+ consent checkbox, and Not now meet the 44 pt phone touch target.
+  - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
 - Branch: missing note detail
   - Priority: Important
   - Automate later: Yes
@@ -672,8 +711,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/settings/subscription`, `/settings/notifications`, and `/settings/timing` directly, then use the visible Back control.
-  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target.
+  - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
 - Branch: policy link handoff failure
   - Priority: Important
   - Automate later: Yes
@@ -690,7 +729,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open notification settings, toggle reminder tiers, edit AM/PM timing and quiet hours, then return to settings.
-  - Expected result: User-set times and discreet lock-screen copy remain clear and calm, with no notification-pressure copy.
+  - Expected result: User-set times, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy.
   - Evidence: Screenshot sequence and local preference snapshot.
 
 ## Flow: Ask OnSkin Deterministic Advisor
@@ -717,7 +756,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/ask/consent` directly with cloud Ask disabled.
-  - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature.
+  - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its deferred CTA returns to `/ask` on direct entry.
   - Evidence: Screenshot and visible-text snapshot.
 - Branch: empty shelf state
   - Priority: Important
@@ -729,13 +768,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Refresh `/ask`, directly open `/ask` and use the Back control, then directly open `/ask/consent` and use the deferred Back CTA.
-  - Expected result: Deterministic Ask remains reachable, only the cloud consent route is deferred while the flag is off, and direct-entry Back controls return to a safe app surface instead of no-oping.
-  - Evidence: Screenshot sequence.
+  - Expected result: Deterministic Ask remains reachable, only the cloud consent route is deferred while the flag is off, and direct-entry Back controls return to a safe app surface instead of no-oping. Visible Ask Back, report-answer, CTA, and send controls meet the 44 pt phone touch target.
+  - Evidence: Screenshot sequence and small-phone button-geometry snapshot.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes
   - Action: Tab through prompt chips, text input, and send controls.
-  - Expected result: Interactive controls have usable roles/labels and keyboard focus without trapping the user.
+  - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, and keyboard focus without trapping the user.
   - Evidence: UI snapshot or accessibility notes.
 
 ## Open Questions

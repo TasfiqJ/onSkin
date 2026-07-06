@@ -15,6 +15,11 @@ describe('Recommendation route contracts', () => {
     expect(source).not.toContain('router.back()');
     expect(source).toContain('APP_YOU_ROUTE');
     expect(source).toContain('backOrReplace(router, APP_YOU_ROUTE)');
+    expect(source).toContain('RouteIconButton');
+    expect(source).not.toContain('hitSlop={8}');
+    expect(source).toContain(
+      'className="min-h-[48px] min-w-[48px] items-center justify-center px-2"',
+    );
   });
 
   it('keeps nested recommendation exits safe for direct entry', () => {
@@ -58,8 +63,16 @@ describe('Recommendation route contracts', () => {
   it('keeps recommendation preferences navigation touchable on phones', () => {
     const source = readAppRoute('recommendations/preferences.tsx');
 
-    expect(source).toContain('accessibilityLabel="Back"');
-    expect(source).toContain('width: 44');
-    expect(source).toContain('height: 44');
+    expect(source).toContain('RouteIconButton');
+    expect(source).not.toContain('h-7 w-7');
+    expect(source).toContain('className="min-h-[44px] items-center justify-center rounded-pill');
+  });
+
+  it('keeps recommendation detail navigation touchable on phones', () => {
+    const source = readAppRoute('recommendations/[id].tsx');
+
+    expect(source).toContain('RouteIconButton');
+    expect(source).not.toContain('h-7 w-7');
+    expect(source).toContain('mt-4 min-h-[44px] items-center justify-center py-2');
   });
 });

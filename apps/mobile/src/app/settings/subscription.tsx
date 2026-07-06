@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
@@ -96,14 +96,10 @@ export default function SubscriptionScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
         <View className="mb-3 flex-row items-center gap-3 pt-1">
-          <Text
-            accessibilityRole="button"
+          <RouteIconButton
+            accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
-            variant="body"
-            style={{ fontSize: 22 }}
-          >
-            ‹
-          </Text>
+          />
           <Text variant="title" style={{ fontSize: 28 }}>
             {PAYWALL_COPY.manage.title}
           </Text>
@@ -212,7 +208,7 @@ export default function SubscriptionScreen() {
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/paywall/winback')}
-                className="mt-4 items-center py-2"
+                className="mt-4 min-h-[44px] items-center justify-center py-2"
               >
                 <Text variant="body" tone="clay" className="font-sans-semibold">
                   See your welcome-back offer →

@@ -4,7 +4,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
 import { localDay } from '@/features/photos/date';
 import { reviewQuality } from '@/features/photos/quality';
@@ -114,29 +114,20 @@ function ReviewScreenContent() {
         {`${PHOTO_COPY.review.eyebrow} · ${fmt(takenLocalDate)}`}
       </Text>
 
-      <Pressable
-        accessibilityRole="button"
+      <RouteIconButton
         accessibilityLabel="Close"
+        glyph="x"
         onPress={closeToProgress}
+        tone="night"
         style={{
           position: 'absolute',
           left: 24,
-          top: insets.top + 10,
+          top: insets.top + 8,
           zIndex: 5,
-          paddingVertical: 8,
-          paddingRight: 12,
+          backgroundColor: 'rgba(244,239,231,0.12)',
+          borderColor: 'transparent',
         }}
-      >
-        <Text
-          style={{
-            fontFamily: 'HankenGrotesk_600SemiBold',
-            fontSize: 15,
-            color: 'rgba(244,239,231,0.65)',
-          }}
-        >
-          Close
-        </Text>
-      </Pressable>
+      />
 
       {/* captured photo */}
       <View

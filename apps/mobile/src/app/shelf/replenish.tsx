@@ -36,7 +36,7 @@ export default function ReplenishScreen() {
         </Text>
         <Pressable
           accessibilityRole="button"
-          className="items-center py-2"
+          className="min-h-[44px] items-center justify-center py-2"
           onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
         >
           <Text className="font-sans-semibold" tone="muted">
@@ -79,7 +79,7 @@ export default function ReplenishScreen() {
   };
 
   return (
-    <Sheet fallbackRoute={APP_SHELF_ROUTE}>
+    <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>
       <View className="flex-row items-center gap-4">
         <StripedThumb size={60} radius={16} />
         <View className="flex-1">
@@ -147,7 +147,7 @@ export default function ReplenishScreen() {
 
       <Pressable
         accessibilityRole="button"
-        className="mt-3 items-center py-2"
+        className="mt-3 min-h-[44px] items-center justify-center py-2"
         onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
       >
         <Text className="font-sans-semibold" tone="muted">

@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import { searchCatalog, type CatalogProductSummary } from '@/features/catalog/client';
 import { catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
@@ -90,13 +90,14 @@ export default function CatalogSearchScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
-        <Text variant="bodySm" tone="muted" onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}>
-          Back
-        </Text>
+        <RouteIconButton
+          accessibilityLabel="Back"
+          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+        />
         <Text variant="body" className="font-sans-semibold">
           Search catalog
         </Text>
-        <View className="w-10" />
+        <View className="w-[44px]" />
       </View>
 
       <View className="mt-4 flex-row gap-2">

@@ -44,52 +44,62 @@ function ProductCard({ item }: { item: ShelfItem }) {
   // signals attention.
   const attention = item.badge.kind === 'countdown';
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${item.name}, ${item.badge.label}`}
-      onPress={() => {
-        haptics.select();
-        router.push(`/shelf/${item.id}`);
-      }}
-      style={({ pressed }) => [
+    <View
+      style={[
         // The countdown card carries the faint amber accent border (design frame 03,
         // rgba(176,122,60,0.45)); everything else stays on the neutral hairline.
         { borderWidth: 1, borderColor: attention ? 'rgba(176,122,60,0.45)' : colors.hairline },
-        pressed ? { opacity: 0.85 } : null,
       ]}
-      className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-raised p-4"
+      className="rounded-[18px] bg-paper-raised p-4"
     >
-      <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
-      <View className="flex-1">
-        <Text variant="body" className="font-sans-semibold">
-          {item.name}
-        </Text>
-        {item.metaLine ? (
-          <Text variant="bodySm" tone="muted" className="mt-0.5">
-            {item.metaLine}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${item.name}, ${item.badge.label}`}
+        onPress={() => {
+          haptics.select();
+          router.push(`/shelf/${item.id}`);
+        }}
+        style={({ pressed }) => [pressed ? { opacity: 0.85 } : null]}
+        className="flex-row items-center gap-3.5"
+      >
+        <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
+        <View className="flex-1">
+          <Text variant="body" className="font-sans-semibold">
+            {item.name}
           </Text>
-        ) : null}
-        {/* Proactive, honest PAO-triggered replenishment nudge on the card itself
-            (docs/04 §6): a quiet "Replace ->" on countdown/expired items. */}
-        {item.badge.kind === 'countdown' || item.badge.kind === 'expired' ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`Replace ${item.name}`}
-            hitSlop={6}
-            className="mt-1 self-start"
-            onPress={() => {
-              haptics.select();
-              router.push(`/shelf/replenish?id=${item.id}`);
-            }}
-          >
-            <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-              Replace →
+          {item.metaLine ? (
+            <Text variant="bodySm" tone="muted" className="mt-0.5">
+              {item.metaLine}
             </Text>
-          </Pressable>
-        ) : null}
-      </View>
-      <ExpiryBadge badge={item.badge} />
-    </Pressable>
+          ) : null}
+        </View>
+        <ExpiryBadge badge={item.badge} />
+      </Pressable>
+      {/* Proactive, honest PAO-triggered replenishment nudge on the card itself
+            (docs/04 §6): a quiet "Replace ->" on countdown/expired items. */}
+      {item.badge.kind === 'countdown' || item.badge.kind === 'expired' ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Replace ${item.name}`}
+          className="ml-[64px] mt-2 min-h-[44px] min-w-[84px] self-start items-center justify-center rounded-pill border border-clay/20 bg-clay-tint px-3 py-2"
+          style={({ pressed }) => [
+            {
+              minHeight: 44,
+              minWidth: 84,
+            },
+            pressed ? { opacity: 0.78 } : null,
+          ]}
+          onPress={() => {
+            haptics.select();
+            router.push(`/shelf/replenish?id=${item.id}`);
+          }}
+        >
+          <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+            Replace →
+          </Text>
+        </Pressable>
+      ) : null}
+    </View>
   );
 }
 

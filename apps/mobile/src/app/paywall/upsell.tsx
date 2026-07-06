@@ -50,7 +50,7 @@ export default function UpsellSheet() {
   }, [key]);
 
   return (
-    <Sheet onClose={() => dismissPaywall(router)}>
+    <Sheet scroll backdropAccessible={false} onClose={() => dismissPaywall(router)}>
       <View
         className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
         style={{ backgroundColor: colors.clayTint }}
@@ -109,7 +109,7 @@ export default function UpsellSheet() {
       <Pressable
         accessibilityRole="button"
         onPress={() => dismissPaywall(router)}
-        className="h-[40px] items-center justify-center"
+        className="h-[48px] items-center justify-center"
       >
         <Text className="font-sans-semibold" tone="muted" variant="body">
           Maybe later

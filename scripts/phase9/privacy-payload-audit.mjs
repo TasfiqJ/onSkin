@@ -24,6 +24,8 @@ const notificationStoreSource = read('apps/mobile/src/features/notifications/sto
 const notificationTimingSource = read('apps/mobile/src/app/settings/timing.tsx');
 const notificationLockscreenMigrationSource = read('supabase/migrations/20260705000033_phase9_notification_lock_screen_privacy.sql');
 
+const eventRegistryBody = registrySource.match(/ANALYTICS_ALLOWED_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as const/)?.[1] ?? '';
+const allowedEvents = new Set([...eventRegistryBody.matchAll(/'([^']+)'/g)].map((match) => match[1]));
 const registryBody = registrySource.match(/ANALYTICS_ALLOWED_PROP_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/)?.[1] ?? '';
 const allowed = new Set([...registryBody.matchAll(/'([^']+)'/g)].map((match) => match[1]));
 const sensitiveKey =
@@ -32,6 +34,11 @@ const retiredAnalyticsProps = new Set(['intent', 'product_type', 'trigger']);
 const approvedBucketExceptions = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
 
 block(errors, allowed.size > 0, 'Analytics event registry is empty or missing.');
+block(errors, allowedEvents.size > 0, 'Analytics event-name registry is empty or missing.');
+block(errors, /isAllowedAnalyticsEventName/.test(trackSource), 'Analytics event names must use the allowlist gate.');
+block(errors, /sanitizeAnalyticsEventName/.test(trackSource), 'Analytics tracker must sanitize event names before vendor capture.');
+block(errors, /posthog\?\.capture\(safeEvent,\s*safeProps\)/.test(trackSource), 'PostHog capture must use the sanitized event name.');
+block(errors, !/posthog\?\.capture\(event/.test(trackSource), 'PostHog capture must not receive the raw event name.');
 block(errors, /isAllowedAnalyticsPropKey/.test(trackSource), 'Analytics sanitizer must call isAllowedAnalyticsPropKey.');
 block(errors, /SENSITIVE_ANALYTICS_KEY/.test(trackSource), 'Analytics sanitizer is missing sensitive-key guard.');
 block(errors, /SENSITIVE_ANALYTICS_VALUE/.test(trackSource), 'Analytics sanitizer is missing sensitive-value guard.');
@@ -302,8 +309,23 @@ for (const file of listFiles('apps/mobile/src').filter((item) => /\.(ts|tsx)$/.t
     block(errors, !rawConsoleError, `Raw exception object may be logged to console in ${file.replace(abs('.'), '.')}.`);
   }
   const lines = text.split(/\r?\n/);
-  for (let index = 0; index < lines.length; index += 1) {
+  const scanTrackCalls = !normalizedFile.endsWith('apps/mobile/src/lib/analytics/track.ts');
+  for (let index = 0; scanTrackCalls && index < lines.length; index += 1) {
     if (!/\btrack\(/.test(lines[index])) continue;
+    const eventMatch = lines[index].match(/\btrack\(\s*(['"])([^'"]+)\1/);
+    block(
+      errors,
+      Boolean(eventMatch),
+      `Analytics track call must use a literal event name: ${file.replace(abs('.'), '.')}:${index + 1}.`,
+    );
+    if (eventMatch) {
+      block(
+        errors,
+        allowedEvents.has(eventMatch[2]),
+        `Analytics track event is not allowlisted: ${file.replace(abs('.'), '.')} -> ${eventMatch[2]}.`,
+      );
+    }
+
     let snippet = lines[index];
     for (let next = index + 1; next < Math.min(lines.length, index + 12) && !/\);/.test(snippet); next += 1) {
       snippet += `\n${lines[next]}`;

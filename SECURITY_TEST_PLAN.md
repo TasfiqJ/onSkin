@@ -358,6 +358,7 @@
   - Verifies growth attribution keeps only approved campaign metadata and opaque share IDs.
   - Verifies malformed percent-encoded public-link query values are ignored instead of throwing.
 - `apps/mobile/src/lib/analytics/track.test.ts`
+  - Verifies analytics event names are dropped unless they are in the approved event taxonomy.
   - Verifies sensitive analytics keys/values are dropped.
   - Verifies SPF/category, irritation, conflict-check, recommendation, commerce, and Ask-intent style values do not survive sanitization.
   - Verifies photo-quality result labels are dropped from the generic `result` prop while non-sensitive result buckets remain available.
@@ -406,6 +407,7 @@
   - Verify unsafe affiliate rows are filtered before rendering and that outbound commerce URLs still append only the opaque `oref` token.
 - `scripts/phase9/privacy-payload-audit.mjs`
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
+  - Fails if analytics event names bypass the event-name allowlist, vendor capture uses the raw event name, or app call sites use non-literal/unapproved event names.
   - Ignores code comments inside `track()` object literals so audit warnings reflect real payload keys.
   - Extracts shorthand object props such as `{ goals }`, then fails if sensitive analytics prop keys are attempted in source, even if the runtime sanitizer would drop them.
   - Fails if recommendation trigger/type, commerce product type, or Ask intent props are re-allowlisted or reintroduced in analytics payloads.

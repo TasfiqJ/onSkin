@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { useRamp } from '@/features/routine/useRamp';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -28,6 +28,9 @@ export default function RampScreen() {
 
   return (
     <Screen edges={['top', 'bottom']}>
+      <View className="mt-2 flex-row items-center">
+        <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+      </View>
       <View className="flex-1 pt-4">
         <Text variant="label" tone="clay" className="font-mono">
           RETINOID · RAMP-UP

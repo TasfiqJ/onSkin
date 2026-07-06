@@ -19,6 +19,17 @@ function potentNights(cycle: Cycle) {
   return cycle.nights.filter((n) => n.slot === 'retinoid' || n.slot === 'exfoliate');
 }
 
+function expectNoAdjacentRepeatedPotentSlot(cycle: Cycle) {
+  for (let i = 0; i < cycle.nights.length; i += 1) {
+    const current = cycle.nights[i]!;
+    const next = cycle.nights[(i + 1) % cycle.nights.length]!;
+    if (current.slot === 'recover' || next.slot === 'recover') continue;
+
+    expect(current.productId).not.toBe(next.productId);
+    expect(current.slot).not.toBe(next.slot);
+  }
+}
+
 describe('orchestration. FIRM invariants (docs/05 §4)', () => {
   const cabinet = [
     active('r', 'Retinol 0.3%', ['retinoid']),
@@ -80,6 +91,27 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
   it('always includes at least one recovery night for barrier rest', () => {
     const { cycle } = run(cabinet);
     expect(cycle!.nights.some((n) => n.slot === 'recover')).toBe(true);
+  });
+
+  it('spaces repeated retinoid nights with recovery, even in the classic variant', () => {
+    const { cycle } = orchestrate([active('r', 'Retinol 0.3%', ['retinoid'])], {
+      ...base,
+      freqByProductId: { r: 2 },
+      preferredVariant: 'classic',
+    });
+
+    expect(cycle!.nights.slice(0, 4).map((n) => n.slot)).toEqual(['retinoid', 'recover', 'retinoid', 'recover']);
+    expectNoAdjacentRepeatedPotentSlot(cycle!);
+  });
+
+  it('spaces repeated exfoliant-slot nights with recovery instead of stacking acids', () => {
+    const { cycle } = orchestrate(
+      [active('g', 'Glycolic 7%', ['aha']), active('s', 'Salicylic 2%', ['bha'])],
+      { ...base, freqByProductId: { g: 1, s: 1 }, preferredVariant: 'classic' },
+    );
+
+    expect(cycle!.nights.slice(0, 3).map((n) => n.slot)).toEqual(['exfoliate', 'recover', 'exfoliate']);
+    expectNoAdjacentRepeatedPotentSlot(cycle!);
   });
 });
 

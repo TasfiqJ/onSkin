@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
@@ -53,15 +53,10 @@ export default function StackDetailScreen() {
   return (
     <Screen edges={['top']}>
       <View className="flex-row items-center gap-3 pb-2 pt-1">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_COMMERCE_STACKS_ROUTE)}
-          className="h-7 w-7 items-center justify-center rounded-full bg-paper-raised"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
-        >
-          <Text style={{ color: colors.ink }}>‹</Text>
-        </Pressable>
+        />
       </View>
 
       {!stack ? (
@@ -108,29 +103,31 @@ export default function StackDetailScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={`${item.label}, ${item.roleLabel}, paid link`}
                 onPress={() => void tapItem(item)}
-                className="flex-row items-center gap-3 rounded-2xl bg-paper-raised p-3.5"
-                style={{ borderWidth: 1, borderColor: colors.hairline }}
+                className="rounded-2xl bg-paper-raised p-3.5"
+                style={{ minHeight: 96, borderWidth: 1, borderColor: colors.hairline }}
               >
-                <Text className="font-mono text-[11px]" tone="muted" style={{ width: 14 }}>
-                  {item.position}
-                </Text>
-                <View
-                  className="h-[38px] w-8 rounded"
-                  style={{
-                    backgroundColor: colors.greige,
-                    borderWidth: 1,
-                    borderColor: colors.hairline,
-                  }}
-                />
-                <View className="flex-1">
-                  <Text variant="bodySm" className="font-sans-bold text-[13.5px]">
-                    {item.label}
+                <View className="flex-row items-center gap-3">
+                  <Text className="font-mono text-[11px]" tone="muted" style={{ width: 14 }}>
+                    {item.position}
                   </Text>
-                  <Text className="text-[11px]" tone="muted">
-                    {item.roleLabel}
-                  </Text>
+                  <View
+                    className="h-[38px] w-8 rounded"
+                    style={{
+                      backgroundColor: colors.greige,
+                      borderWidth: 1,
+                      borderColor: colors.hairline,
+                    }}
+                  />
+                  <View className="flex-1" style={{ minWidth: 0 }}>
+                    <Text variant="bodySm" className="font-sans-bold text-[13.5px]">
+                      {item.label}
+                    </Text>
+                    <Text className="text-[11px]" tone="muted">
+                      {item.roleLabel}
+                    </Text>
+                  </View>
                 </View>
-                <View className="flex-row items-center gap-1.5">
+                <View className="mt-3 flex-row items-center self-end gap-1.5">
                   <Text
                     className="font-mono text-[9px]"
                     style={{
@@ -156,9 +153,10 @@ export default function StackDetailScreen() {
           </Text>
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel="How stack paid links work"
             onPress={() => router.push('/commerce/transparency')}
-            className="mt-2"
-            hitSlop={6}
+            className="mt-3 min-h-[48px] self-start justify-center rounded-pill px-3"
+            style={{ minHeight: 48, backgroundColor: colors.clayTint }}
           >
             <Text className="font-sans-semibold text-[12px]" style={{ color: colors.clay }}>
               {COMMERCE_COPY.whereToBuy.howThisWorks} →

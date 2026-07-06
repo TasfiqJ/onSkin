@@ -26,8 +26,9 @@ export function SegmentChip({ label, selected = false, onPress, className }: Seg
         haptics.select();
         onPress?.();
       }}
+      style={{ minHeight: 48 }}
       className={cn(
-        'min-h-[40px] justify-center rounded-pill px-[18px] py-2.5',
+        'min-h-[48px] justify-center rounded-pill px-[18px] py-2.5',
         selected ? 'bg-ink' : 'border border-hairline-strong bg-paper-raised',
         className,
       )}

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
@@ -31,7 +31,11 @@ export default function DowngradeScreen() {
 
   return (
     <Screen edges={['top', 'bottom']}>
-      <View className="flex-1">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-4"
+      >
         <View className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2" style={{ backgroundColor: colors.greige }}>
           <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.muted }} />
           <Text variant="label" className="font-sans-bold" tone="muted" style={{ fontSize: 12.5 }}>
@@ -62,7 +66,7 @@ export default function DowngradeScreen() {
         <Text variant="bodySm" tone="muted" className="mt-4" style={{ lineHeight: 19 }}>
           {PAYWALL_COPY.downgrade.floorNote}
         </Text>
-      </View>
+      </ScrollView>
       <View className="gap-3 pb-2">
         <Pressable
           accessibilityRole="button"
@@ -74,7 +78,7 @@ export default function DowngradeScreen() {
             {PAYWALL_COPY.downgrade.renewCta}
           </Text>
         </Pressable>
-        <Pressable accessibilityRole="button" onPress={() => router.replace('/(tabs)/today')} className="h-[42px] items-center justify-center">
+        <Pressable accessibilityRole="button" onPress={() => router.replace('/(tabs)/today')} className="h-[48px] items-center justify-center">
           <Text className="font-sans-semibold" tone="muted" variant="body">
             {PAYWALL_COPY.downgrade.declineCta}
           </Text>

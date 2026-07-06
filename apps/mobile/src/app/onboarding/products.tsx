@@ -107,8 +107,9 @@ export default function ProductsScreen() {
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`Remove ${it.name}`}
-                    hitSlop={8}
                     onPress={() => void m.remove(it.id)}
+                    className="h-12 w-12 items-center justify-center rounded-full"
+                    style={({ pressed }) => (pressed ? { opacity: 0.72 } : undefined)}
                   >
                     <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
                       ×

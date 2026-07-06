@@ -1,11 +1,11 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
-import { useEffect, useRef, useState } from 'react';
-import { Alert, Platform, Pressable, View } from 'react-native';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { RouteIconButton, Text } from '@/components/ui';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { useGuidedCaptureSignals } from '@/features/native/camera/guidedSignals';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
@@ -27,6 +27,24 @@ const BG = '#16130F';
 const GUIDE = '#9DB18A';
 const READY = '#9DB18A';
 
+function CaptureOverlay({
+  backgroundColor = 'rgba(10,8,6,0.9)',
+  children,
+}: {
+  backgroundColor?: string;
+  children: ReactNode;
+}) {
+  return (
+    <ScrollView
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor }}
+      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 28 }}
+      showsVerticalScrollIndicator={false}
+    >
+      {children}
+    </ScrollView>
+  );
+}
+
 function ConsentGate({
   granting,
   onGrant,
@@ -37,18 +55,7 @@ function ConsentGate({
   onCancel: () => void;
 }) {
   return (
-    <View
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(10,8,6,0.92)',
-        padding: 28,
-        justifyContent: 'center',
-      }}
-    >
+    <CaptureOverlay backgroundColor="rgba(10,8,6,0.92)">
       <Text
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
@@ -127,7 +134,7 @@ function ConsentGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ marginTop: 12, alignItems: 'center' }}
+        style={{ height: 44, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
       >
         <Text
           style={{
@@ -139,7 +146,7 @@ function ConsentGate({
           Not now
         </Text>
       </Pressable>
-    </View>
+    </CaptureOverlay>
   );
 }
 
@@ -151,18 +158,7 @@ function CameraUnavailableGate({
   onCancel: () => void;
 }) {
   return (
-    <View
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(10,8,6,0.9)',
-        padding: 28,
-        justifyContent: 'center',
-      }}
-    >
+    <CaptureOverlay>
       <Text
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
@@ -202,7 +198,7 @@ function CameraUnavailableGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ marginTop: 12, alignItems: 'center' }}
+        style={{ height: 44, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
       >
         <Text
           style={{
@@ -214,7 +210,7 @@ function CameraUnavailableGate({
           Not now
         </Text>
       </Pressable>
-    </View>
+    </CaptureOverlay>
   );
 }
 
@@ -228,18 +224,7 @@ function PermissionGate({
   onCancel: () => void;
 }) {
   return (
-    <View
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(10,8,6,0.9)',
-        padding: 28,
-        justifyContent: 'center',
-      }}
-    >
+    <CaptureOverlay>
       <Text
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
@@ -279,7 +264,7 @@ function PermissionGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ marginTop: 12, alignItems: 'center' }}
+        style={{ height: 44, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
       >
         <Text
           style={{
@@ -291,7 +276,7 @@ function PermissionGate({
           Not now
         </Text>
       </Pressable>
-    </View>
+    </CaptureOverlay>
   );
 }
 
@@ -374,29 +359,24 @@ function CaptureScreenContent() {
   return (
     <View style={{ flex: 1, backgroundColor: BG, paddingTop: insets.top + 16 }}>
       <View className="flex-row items-center justify-between px-6">
-        <Pressable
-          accessibilityRole="button"
+        <RouteIconButton
           accessibilityLabel="Close"
+          glyph="x"
           onPress={closeToProgress}
+          tone="night"
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
             backgroundColor: 'rgba(244,239,231,0.12)',
-            alignItems: 'center',
-            justifyContent: 'center',
+            borderColor: 'transparent',
           }}
-        >
-          <Text style={{ color: '#F4EFE7', fontSize: 15 }}>x</Text>
-        </Pressable>
+        />
         <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14, color: '#F4EFE7' }}>
           Front · weekly
         </Text>
         <View
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
+            width: 44,
+            height: 44,
+            borderRadius: 22,
             backgroundColor: 'rgba(244,239,231,0.12)',
           }}
         />
