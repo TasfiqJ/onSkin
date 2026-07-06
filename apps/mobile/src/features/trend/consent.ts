@@ -41,10 +41,10 @@ export async function grantTrendInsightsConsent(): Promise<void> {
 export async function revokeTrendInsightsConsent(): Promise<void> {
   await setTrendInsightsLocal(false);
   await deleteTrendState(); // deletion-on-revocation (§8/§10)
-  track('trend_consent_revoked');
   await withdrawConsent({
     type: 'photo_trend_insights',
     version: TREND_COPY.consentVersion,
     consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
   });
+  track('trend_consent_revoked');
 }

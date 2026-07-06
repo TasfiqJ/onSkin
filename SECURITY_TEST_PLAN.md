@@ -66,6 +66,7 @@
 - `npm --workspace @onskin/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
@@ -194,6 +195,9 @@
 - `apps/mobile/src/features/notifications/applyPreferences.test.ts`
   - Proves notification preference changes save local private state before reminders are rescheduled.
   - Proves failed local notification preference persistence does not reschedule reminders or optimistically change visible query state.
+- `apps/mobile/src/features/trend/consent.test.ts`
+  - Proves photo-trend revocation analytics emit only after consent withdrawal succeeds.
+  - Proves failed trend withdrawal does not record a completed revocation event while local relocking still runs.
 - `apps/mobile/src/features/recommendations/useRecommendations.test.ts`
   - Proves recommendation UI remains in a loading state until local private preferences and dismissed suggestion IDs have loaded, preventing stale dismissed cards from flashing.
 - `apps/mobile/src/features/settings/settingsRoutes.test.ts`

@@ -600,6 +600,13 @@
 - Why safe: Reminder, promotional, and lock-screen-related preferences are privacy-sensitive. A toggle should not look saved, and reminders should not be rescheduled, when private local preference persistence failed.
 - Regression: `applyPreferences.test.ts` covers save-before-reschedule ordering, fail-closed persistence errors, and a source-level guard against reintroducing optimistic query updates in `useNotifications`.
 
+## Trend revocation analytics ordering
+
+- Files: `apps/mobile/src/features/trend/consent.ts`, `apps/mobile/src/features/trend/consent.test.ts`.
+- Change: `trend_consent_revoked` now tracks only after `withdrawConsent({ type: 'photo_trend_insights' })` succeeds. The local trend flag and derived trend state still clear before the withdrawal call so the trend feature relocks immediately.
+- Why safe: Photo-trend insights are a separate health-data consent. Analytics should not record a completed revocation if the server-side withdrawal/cleanup path failed.
+- Regression: `consent.test.ts` proves trend opt-in analytics wait for local persistence, revocation analytics wait for withdrawal, and withdrawal failure does not emit a completed-revocation event.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

@@ -63,6 +63,7 @@
 - SEC-P2-070: Cloud Ask consent grant/revoke now saves before visible toggle state, disables while saving, refreshes stale consent state after failures, and records revocation analytics only after withdrawal succeeds.
 - SEC-P2-071: Commerce partner-sharing decline analytics now emit only after consent withdrawal succeeds, while local-first relocking still happens before the withdrawal call.
 - SEC-P2-072: Notification preference changes now save local private state before reminder rescheduling or visible query state updates, removing the optimistic toggle path on failed persistence.
+- SEC-P2-073: Trend-insight revocation analytics now emit only after consent withdrawal succeeds, while local trend state still relocks before the withdrawal call.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.
