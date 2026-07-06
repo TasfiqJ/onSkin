@@ -56,7 +56,9 @@
         <h1>Support</h1>
         <p>
           For account, billing, export, deletion, or product questions, contact
-          <a href="mailto:__SUPPORT_EMAIL__">__SUPPORT_EMAIL__</a>.
+          <span id="support-email"
+            >the monitored support address listed in the app store profile</span
+          >.
         </p>
         <p>
           Subscription billing is managed by Apple or Google. Deleting your account does not cancel
@@ -64,5 +66,16 @@
         </p>
       </section>
     </main>
+    <script>
+      const configuredSupportEmail = '__SUPPORT_EMAIL__'.trim();
+      const supportEmailNode = document.getElementById('support-email');
+
+      if (supportEmailNode && configuredSupportEmail && !configuredSupportEmail.startsWith('__')) {
+        const supportEmailLink = document.createElement('a');
+        supportEmailLink.href = `mailto:${configuredSupportEmail}`;
+        supportEmailLink.textContent = configuredSupportEmail;
+        supportEmailNode.replaceWith(supportEmailLink);
+      }
+    </script>
   </body>
 </html>
