@@ -71,13 +71,13 @@ export function familyTitle(c: DetectedConflict): string {
 }
 
 const SUBHEAD: Record<ResolutionType, string> = {
-  alternate_nights: "We've set them to alternate nights.",
+  alternate_nights: 'Use them on alternate nights.',
   separate_am_pm: 'Use one in the morning, the other at night.',
   buffer: 'Leave a little time between them.',
   lower_frequency: 'Ease off the frequency a little.',
   no_change: 'These work well together.',
   reassure: 'Good news. These are fine together.',
-  avoid_refer: "We've set this aside. Worth a word with your doctor.",
+  avoid_refer: 'Set this aside until you can ask your doctor.',
 };
 export const bannerSubhead = (c: DetectedConflict) => SUBHEAD[c.rule.resolutionType];
 

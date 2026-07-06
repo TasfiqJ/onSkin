@@ -663,7 +663,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Conflict Detail
 
 1. Action: Open a real `/conflict/[ruleId]` route from a shelf conflict, review evidence/severity copy, choose Keep alternate nights or Use together anyway, and return to Shelf.
-   Expected result: The conflict copy is calm and claim-safe, the user choice persists, and the app does not re-nag immediately.
+   Expected result: The conflict copy is calm and claim-safe, shelf-only copy gives timing advice without claiming the products were already placed by a cycle, the user choice persists, and the app does not re-nag immediately.
    Evidence: Screenshot sequence and local choice state.
 
 ### Branches

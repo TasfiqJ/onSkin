@@ -9,9 +9,8 @@ import type {
 
 // Bundled offline copy of the starter conflict matrix (docs/02 §4.4/§4.8). IDs +
 // data MIRROR supabase/migrations/...0013_seed_intelligence.sql exactly so a
-// routine_conflicts.rule_id is consistent whether detection runs from cached-DB
-// rules or this offline fallback. At runtime the engine prefers rules fetched +
-// cached from the DB (docs/02 §10); this is the fallback before the first fetch.
+// routine_conflicts.rule_id stays consistent with the future server-authoritative
+// detector/cache. Today the mobile client runs this local launch-gated ruleset.
 //
 // *** BLOCKED: B-DERM-REVIEW. Reviewed_by is null on every rule. Nothing here
 // *** ships to users until a board-certified dermatologist + cosmetic chemist
@@ -165,7 +164,7 @@ export const STARTER_RULES: ConflictRule[] = [
       'Many dermatologists suggest pausing topical retinoids while pregnant or breastfeeding, out of caution.',
     resolutionType: 'avoid_refer',
     resolutionCopy:
-      "Many dermatologists suggest pausing retinoids while pregnant or breastfeeding. This is a conversation for you and your doctor. We've set it aside for now and can suggest a gentler alternative.",
+      'Many dermatologists suggest pausing retinoids while pregnant or breastfeeding. This is a conversation for you and your doctor. Consider setting it aside for now; we can suggest a gentler alternative.',
     appliesWhen: { pregnancy: true },
     sourceCitation: 'AAD-aligned expert consensus; dermatology pregnancy/lactation reviews',
     ruleVersion: 1, reviewedBy: null,
@@ -178,7 +177,7 @@ export const STARTER_RULES: ConflictRule[] = [
       'High-dose salicylic acid is on common pregnancy-caution lists; low-dose cosmetic BHA is generally considered fine.',
     resolutionType: 'avoid_refer',
     resolutionCopy:
-      "High-strength salicylic acid is often paused in pregnancy. Please check with your doctor. We've set it aside for now.",
+      'High-strength salicylic acid is often paused in pregnancy. Please check with your doctor before using it.',
     appliesWhen: { pregnancy: true, requiresHighDose: true },
     sourceCitation: 'pregnancy-safe-skincare consensus',
     ruleVersion: 1, reviewedBy: null,
@@ -190,7 +189,7 @@ export const STARTER_RULES: ConflictRule[] = [
     mechanism: 'Cosmetic hydroquinone use is generally avoided during pregnancy and breastfeeding.',
     resolutionType: 'avoid_refer',
     resolutionCopy:
-      "Hydroquinone is usually paused in pregnancy and breastfeeding. Please check with your doctor. We've set it aside for now.",
+      'Hydroquinone is usually paused in pregnancy and breastfeeding. Please check with your doctor before using it.',
     appliesWhen: { pregnancy: true },
     sourceCitation: 'dermatology lactation reviews',
     ruleVersion: 1, reviewedBy: null,

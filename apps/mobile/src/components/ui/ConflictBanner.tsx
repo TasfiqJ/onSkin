@@ -5,7 +5,7 @@ import { colors } from '@/theme/tokens';
 import { Text } from './Text';
 
 // Calm, reusable conflict banner (design frame 03, docs/02 §7.2): clay tint not
-// red, a resolution-first subhead ("We've set them to alternate nights"), one
+// red, a resolution-first subhead ("Use them on alternate nights"), one
 // quiet "Review →" action, and an optional inline severity pill. Never an alert
 // icon, never red. Used on the Shelf and (night variant) PM Today.
 export type ConflictBannerProps = {

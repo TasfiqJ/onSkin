@@ -63,8 +63,7 @@ const COPY: Record<string, CopyOverride> = {
   '00000000-0000-4000-8000-000000000001': {
     mechanism:
       'Used the same evening, these can compound irritation, especially on sensitive skin like yours. The popular "they cancel each other out" idea isn’t supported, so this is about comfort, not effectiveness.',
-    suggestion: 'Alternate nights. Retinol on cycling night 2, glycolic on night 1. ',
-    suggestionAccent: 'Already in your plan.',
+    suggestion: 'Alternate nights. Keep retinol and glycolic on different evenings.',
     source:
       'Based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited. Source: dermatology literature review, 2025.',
   },
@@ -73,7 +72,7 @@ const COPY: Record<string, CopyOverride> = {
     mechanism:
       'You may have read these "cancel out" or cause flushing. That fear traces to a 1960s study that used niacin, a different ingredient, under heat. Modern niacinamide is stable, and the two are routinely formulated together.',
     suggestion:
-      "Nothing to change. We've left both in your AM routine. If anything, they complement each other.",
+      'Nothing to change. These are fine in the same routine, and they can complement each other.',
   },
 };
 
@@ -583,7 +582,7 @@ function SafetyBody({
         className="text-[32px] leading-[37px]"
         accessibilityRole="header"
       >
-        We&apos;ve set your {activeLabel} aside for now.
+        Pause your {activeLabel} until you can ask your doctor.
       </Text>
 
       <Text className="mt-3.5 text-[14.5px] leading-6" style={{ color: NIGHT_BODY }}>

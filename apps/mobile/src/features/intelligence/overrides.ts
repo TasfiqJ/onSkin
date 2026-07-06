@@ -1,5 +1,6 @@
-import type { DetectedConflict } from './engine';
 import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+
+export { conflictKey } from './conflictIdentity';
 
 // Persisted "use together anyway" overrides (docs/03 §7, Recommendation 7): once a
 // user overrides a conflict, the app must NOT re-nag. routine_conflicts is the
@@ -7,14 +8,6 @@ import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 // choice stick offline and immediately, honouring the conflict sheet's promise
 // ("your choice is saved, we won't re-nag"). Mirrors the app's other local stores.
 const KEY = 'onskin.conflict.overrides';
-
-/** Stable identity for a conflict: the rule + the unordered product pair. */
-export function conflictKey(
-  c: Pick<DetectedConflict, 'productAId' | 'productBId'> & { rule: { id: string } },
-): string {
-  const pair = [c.productAId ?? '', c.productBId ?? ''].sort().join('+');
-  return `${c.rule.id}:${pair}`;
-}
 
 export async function getOverriddenKeys(): Promise<Set<string>> {
   try {

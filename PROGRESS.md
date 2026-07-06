@@ -1156,9 +1156,12 @@ checkmark + per-screen radii/copy across the routine builder. All claim-safe, em
 - Routine Builder: ✅ ramp/tolerance now persist (local-first rampStore + useRamp; the offer gates on
   shouldOfferStepUp; tolerance persists applyTolerance, commit 99d7fee). Adaptation/reorder hardcoded-data
   follow-ups were closed in the 2026-07-06 generated-plan surface pass.
-- Ingredient Intelligence: still open — the "paired / alternate nights" copy asserts placement even when no
-  cycle is active (§4.6, gate on real scheduler output); dead `intelligence/scheduler.ts` exports + the stale
-  rules.ts "DB-cached rules" comment (no client queries conflict_rules) need cleanup.
+- Ingredient Intelligence: ✅ paired/alternate-night placement overclaims fixed. Shelf card "paired" now requires
+  scheduler-resolved conflict keys instead of inferring placement from `alternate_nights`; shelf/banner/detail copy
+  uses advice language until a real cycle exists; the E2E pass caught and fixed a remaining conflict-detail
+  `Already in your plan` override; dead `intelligence/scheduler.ts` exports were pruned and the stale rules.ts
+  "DB-cached rules" comment was corrected. Evidence:
+  `test-results/human-e2e/2026-07-06/shelf-conflict-paired-copy/`.
 
 ### Deep-verification remediation pass — docs 01, 05-13 + 06 (2026-06-26)
 

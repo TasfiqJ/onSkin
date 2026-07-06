@@ -22,6 +22,11 @@ const DRUG_CLAIMS = [
 // "no exclamation, no 'warning/danger/avoid'"). Safety copy defers calmly too.
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\bwarning\b/i, /\bavoid\b/i, /!/];
 
+const PLACEMENT_OVERCLAIMS = [
+  /\bwe('ve| have)?\s+(set|placed)\b/i,
+  /\balready reflected\b/i,
+];
+
 function offenders(text: string, patterns: RegExp[]): string[] {
   return patterns.flatMap((re) => {
     const m = text.match(re);
@@ -43,6 +48,14 @@ describe('calm copy: no alarmist words (§7.7)', () => {
     it(`${r.tagA} × ${r.tagB}. Mechanism + resolution are calm`, () => {
       expect(offenders(r.mechanism, ALARM)).toEqual([]);
       expect(offenders(r.resolutionCopy, ALARM)).toEqual([]);
+    });
+  }
+});
+
+describe('copy does not claim scheduling or safety action before the app has done it', () => {
+  for (const r of STARTER_RULES) {
+    it(`${r.tagA} × ${r.tagB}. Resolution avoids premature placement claims`, () => {
+      expect(offenders(r.resolutionCopy, PLACEMENT_OVERCLAIMS)).toEqual([]);
     });
   }
 });

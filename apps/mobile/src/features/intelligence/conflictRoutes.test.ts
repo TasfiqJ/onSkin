@@ -32,4 +32,13 @@ describe('Conflict route contracts', () => {
       '<DeferredSurface surface="shareCard" fallbackRoute={APP_SHELF_ROUTE} />',
     );
   });
+
+  it('does not claim conflict-detail placement without scheduler output', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain('Keep retinol and glycolic on different evenings.');
+    expect(source).not.toMatch(/Already in your plan|already reflected/i);
+    expect(source).not.toContain('Retinol on cycling night 2, glycolic on night 1');
+    expect(source).not.toContain("We've left both in your AM routine");
+  });
 });

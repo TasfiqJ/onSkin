@@ -436,7 +436,7 @@ export default function ProductDetailScreen() {
             >
               <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-clay" />
               <Text variant="bodySm" tone="muted" className="flex-1">
-                {reassure ? 'Pairs well with ' : 'Paired with '}
+                {reassure ? 'Pairs well with ' : 'Timing note with '}
                 <Text variant="bodySm" className="font-sans-semibold">
                   {otherName(c)}
                 </Text>

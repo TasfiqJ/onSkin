@@ -153,4 +153,11 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('className="h-[44px] w-[44px]');
     expect(source).not.toContain('className="mt-3 self-start py-1"');
   });
+
+  it('does not describe unresolved product-detail conflicts as already paired', () => {
+    const source = readAppRoute('shelf/[id].tsx');
+
+    expect(source).toContain("'Timing note with '");
+    expect(source).not.toContain("'Paired with '");
+  });
 });

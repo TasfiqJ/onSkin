@@ -1,4 +1,4 @@
-import type { ProductStatus, ResolutionType } from '@onskin/types';
+import type { ProductStatus } from '@onskin/types';
 import { useQuery } from '@tanstack/react-query';
 
 import {
@@ -19,6 +19,7 @@ import { supabase } from '@/lib/supabase/client';
 
 import { categoryLabel, isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
 import { surfacedExpiry } from './expiry';
+import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
 import { loadShelf, type ShelfProduct } from './store';
 
 // The Shelf data layer (docs/04 §5): reads the local-first store, tags products
@@ -50,15 +51,6 @@ export type ShelfData = {
   /** The top noteworthy (non-reassuring) interaction for the calm shelf banner. */
   banner: DetectedConflict | null;
 };
-
-// Resolutions that *separate* two products in time. I.e. a conflict the engine
-// has already handled, which earns the calm "paired" badge (docs/04 §5.3).
-const PAIRED_RESOLUTIONS = new Set<ResolutionType>([
-  'alternate_nights',
-  'separate_am_pm',
-  'buffer',
-  'lower_frequency',
-]);
 
 function monthLabel(iso: string | null): string | null {
   if (!iso) return null;
@@ -154,17 +146,15 @@ export function useShelf() {
             !isReassuring(c) && c.computedSeverity !== 'none' && !overridden.has(conflictKey(c)),
         ) ?? null;
 
-      // Products in an already-resolved (separated) interaction earn "paired" .
-      // A conflict the user chose to "use together anyway" is NOT paired/handled, so
-      // it is excluded here too (it would contradict their override, review fix).
-      const pairedIds = new Set<string>();
-      for (const c of conflicts) {
-        if (c.rule.interactionType === 'safety' || isReassuring(c)) continue;
-        if (!PAIRED_RESOLUTIONS.has(c.rule.resolutionType)) continue;
-        if (overridden.has(conflictKey(c))) continue;
-        if (c.productAId) pairedIds.add(c.productAId);
-        if (c.productBId) pairedIds.add(c.productBId);
-      }
+      // "paired" means the active scheduler/real routine placement has actually
+      // separated the products. Shelf-level detection only sees ownership, so it
+      // must not infer placement from a resolution verb such as alternate_nights.
+      const schedulerResolvedConflictKeys = new Set<string>();
+      const pairedIds = pairedProductIdsForResolvedConflicts(
+        conflicts,
+        schedulerResolvedConflictKeys,
+        overridden,
+      );
 
       // Products in a surfaced synergy/myth pairing earn the calm "synergy" pill
       // (design frame 03, Niacinamide 10%). Mirrors the pairedIds loop over the

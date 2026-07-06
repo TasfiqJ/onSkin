@@ -133,7 +133,7 @@ create index on public.user_products (user_id, status, expiry_computed);  -- for
 **The `expiry_computed` walkthrough (docs/01's generated column, applied).** `expiry_computed = least(expiry_date, opened_at + pao_months)` — i.e. **whichever comes first**, the printed expiry or the PAO-from-opening. Three practical consequences:
 - **Sunscreen** carries a printed expiry (OTC drug); that printed `expiry_date` will often be **sooner** than `opened_at + pao_months`, so it wins — exactly the spec's **Mineral SPF 50** card showing **"3 wks left"** (opened Aug 2025 + 12-mo PAO would be Aug 2026, but the printed expiry is weeks away, so `least()` surfaces the nearer date). This is the generated column behaving correctly and is the canonical example of why we store both.
 - **Unopened** products (`is_opened = false`, `opened_at` null) have **no PAO clock**; the shelf shows an *estimated shelf life* from `expiry_date` if printed, else a gentle "unopened — estimated shelf life ~N months," never a fabricated PAO countdown.
-- **Maya's other cards** all follow `opened_at + pao_months`: Retinol opened Mar + 6-mo PAO → **"Sep 2026"**; Ceramide opened May + 12-mo PAO → **"May 2027"**; Glycolic opened Jan + 12-mo PAO, shown with the **"paired"** badge because its conflict is already resolved (docs/02/03), not because of its date.
+- **Maya's other cards** all follow `opened_at + pao_months`: Retinol opened Mar + 6-mo PAO → **"Sep 2026"**; Ceramide opened May + 12-mo PAO → **"May 2027"**; Glycolic opened Jan + 12-mo PAO, shown with the **"paired"** badge only once scheduler/routine placement has confirmed the conflict is already resolved (docs/02/03), not because of its date.
 
 **PAO sourcing waterfall (records provenance in `pao_source`):**
 1. **Printed / catalog PAO** — `products.default_pao_months` from the label or the curated catalog (docs/02). `pao_source='label'|'catalog'`.
@@ -214,7 +214,7 @@ The onboarding "current products intake" (docs/01 §2 step 6) is the shelf's fir
 - **Status bar** — standard (9:41, signal/wifi/battery).
 - **Title block** — **"Shelf"** in Instrument Serif (large), with the product count **"14 products"** right-aligned in mono. Generous top padding on paper.
 - **Filter chips** — pill segments **All / Actives / Expiring**; **All** selected (ink fill, paper text), the others outlined. Single-select; a selection haptic on change. (Behaviour in §5.4.)
-- **Conflict banner** (when noteworthy) — a **clay-tinted, low-contrast** card with a small clay dot, a bold line ("Retinol + glycolic acid share your PM routine"), a calm resolution subhead ("We've placed them on alternate nights."), and a quiet **"Review →"** to the conflict detail (docs/02 §7.3). **Never red, never an alert icon.** Absent (or a subtle "all clear") when nothing needs attention.
+- **Conflict banner** (when noteworthy) — a **clay-tinted, low-contrast** card with a small clay dot, a bold line ("Retinol + glycolic acid share your PM routine"), a calm resolution subhead ("Use them on alternate nights."), and a quiet **"Review →"** to the conflict detail (docs/02 §7.3). Shelf-only detection must not claim the app already placed products; that copy belongs to scheduler-backed routine contexts. **Never red, never an alert icon.** Absent (or a subtle "all clear") when nothing needs attention.
 - **Product cards** — a vertical list of paper cards (§5.2).
 - **"Scan a barcode" FAB** — a dark (ink) pill, centred low, clearly primary.
 - **Tab bar** — Today · Progress · Shelf · You (Shelf active, clay dot).
@@ -230,7 +230,7 @@ A paper card, rounded corners, subtle border. Left: a **rounded-square thumbnail
 Right-aligned, mono. Five states, each with a precise trigger and tone:
 - **Future date** (neutral) — stacked **month/year** ("Sep 2026", "May 2027"); shown when `expiry_computed` is comfortably ahead (beyond the countdown threshold). Greige text on paper. *Information, not warning.*
 - **Countdown** (clay) — **"N wks/days left"** when `expiry_computed` is within the threshold (default **≤30 days**). Clay-tinted pill. The spec's **Mineral SPF 50 "3 wks left."**
-- **"paired"** (clay, calm) — when a conflict involving this product is **already resolved** by the scheduler/engine (docs/02/03). Signals "handled," not "problem." The spec's **Glycolic 7% "paired."**
+- **"paired"** (clay, calm) — when a conflict involving this product is **already resolved** by scheduler or real routine placement (docs/02/03). The conflict engine alone only returns advice; it does not earn the badge. Signals "handled," not "problem." The spec's **Glycolic 7% "paired."**
 - **Expired / replace** (gentle) — when past `expiry_computed`. A calm "Time to replace," never red, never "dangerous" (except the genuinely safety-critical eye/SPF cases, which may say "Replace for best protection").
 - **PAO unknown / estimated** (quiet) — when `pao_source='unknown'` or `opened_at` is missing; a low-key "PAO est." so the user knows the date is a guess. Honesty over false precision.
 
@@ -244,7 +244,7 @@ Right-aligned, mono. Five states, each with a precise trigger and tone:
 
 #### 5.5 Conflict banner (calm, reusable — docs/02 §7.2)
 
-Identical pattern to the PM routine banner: **clay tint not red**, a small dot, a verb-first calm subhead that states the **resolution** ("We've placed them on alternate nights"), one quiet action ("Review →"). It appears only when there's a noteworthy/unresolved interaction across the shelf; the reassurance variant (docs/02 §7.8) appears when two products the evidence *clears* are added (a quiet positive note).
+Identical pattern to the PM routine banner: **clay tint not red**, a small dot, a verb-first calm subhead that states the **resolution** ("Use them on alternate nights"), one quiet action ("Review →"). Only scheduler-backed contexts may claim actual placement. It appears only when there's a noteworthy/unresolved interaction across the shelf; the reassurance variant (docs/02 §7.8) appears when two products the evidence *clears* are added (a quiet positive note).
 
 #### 5.6 Product detail (the management hub) — tap a card
 
@@ -252,7 +252,7 @@ The shelf's deepest screen and the place product management happens. Top to bott
 - **Header** — product name (Instrument Serif), brand (mono), the thumbnail (tap to add/replace an on-device photo), and the **source attribution** (Open Beauty Facts / catalog, per ODbL) in fine print.
 - **Freshness block** — **opened date** (editable inline), **PAO** (editable, with its `pao_source` labelled honestly), the computed **expiry** (`expiry_computed`, with `expiry_source`), and the current **status**. For unopened items, a "Mark as opened" affordance that starts the PAO clock.
 - **What it contributes** — the **actives** this product brings (tags + concentration band from docs/02), in plain, claim-safe language.
-- **Conflicts & pairings** — any interactions this product is part of, rendered calmly ("Paired with your glycolic toner — on alternate nights. Review →") with a link to the conflict detail (docs/02 §7.3); positive pairings surfaced as reassurance.
+- **Conflicts & pairings** — any interactions this product is part of, rendered calmly ("Timing note with your glycolic toner — use on alternate nights. Review →") with a link to the conflict detail (docs/02 §7.3); positive pairings surfaced as reassurance. Use "paired" language only when scheduler/routine placement has confirmed the interaction is handled.
 - **Where it's used** — the routines/steps this product appears in (docs/03), so the user sees its role.
 - **Lifecycle actions** — **Mark opened** / **Edit opened-date** / **Mark finished** / **Mark discarded** / **Replace / replenish** (§6) / **Remove**. Destructive actions confirm; finishing/discarding archives (keeps history), removing deletes.
 - **Microcopy** — claim-safe throughout; freshness phrased as "best used by," "may be past its best," "time to replace."
