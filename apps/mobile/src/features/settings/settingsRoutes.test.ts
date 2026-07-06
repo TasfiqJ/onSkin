@@ -110,7 +110,8 @@ describe('Settings route contracts', () => {
   it('keeps You tab navigation rows touchable beyond the chevron glyph', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain('className="min-h-[56px] flex-row items-center justify-between py-2"');
+    expect(source).toContain("'min-h-[56px] flex-row items-center justify-between py-2'");
+    expect(source).toContain("'min-h-[48px] flex-row items-center justify-between py-0.5'");
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
     expect(source).toContain('accessibilityLabel={label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
@@ -121,6 +122,21 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain(
       'onPress={() => openPolicyUrl(row.url)}\n                accessibilityRole="button"',
     );
+  });
+
+  it('keeps You tab first-viewport rows clear of the floating tab bar on short phones', () => {
+    const source = readAppRoute('(tabs)/you.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactPhone = height < 640');
+    expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}");
+    expect(source).toContain("className={compactPhone ? 'mt-1' : 'mt-2'}");
+    expect(source).toContain("className={compactPhone ? 'mt-4 p-4' : 'mt-6'}");
+    expect(source).toContain("className={compactPhone ? 'mt-3 p-4' : 'mt-4'}");
+    expect(source).toContain('const accountLabel = isAnonymous ?');
+    expect(source).toContain('className="mt-2 min-h-[48px] flex-row items-center justify-between gap-3"');
+    expect(source).toContain('className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"');
+    expect(source).toContain("compact={compactPhone}");
   });
 
   it('keeps secondary subscription exits buffered above 44px on phones', () => {

@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the You tab short-phone first-viewport overlap after 320x568 E2E showed
+  routine rows sitting behind the floating tab bar. Compact You screens now use
+  denser account, subscription, and routine spacing, 48 px compact account and
+  row targets, and a larger scroll buffer; E2E verified the last visible routine
+  row taps through cleanly and the bottom data actions remain reachable.
 - Fixed the Ask OnSkin proactive-answer layout after 320x568 E2E showed the
   automatic first answer starting scrolled under the header and a follow-up
   prompt clipping behind the composer. Automatic lead-in answers now stay

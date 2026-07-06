@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
@@ -55,11 +55,13 @@ function Row({
   label,
   hint,
   children,
+  compact,
   onPress,
 }: {
   label: string;
   hint?: string;
   children?: React.ReactNode;
+  compact?: boolean;
   onPress?: () => void;
 }) {
   const labelContent = (
@@ -92,7 +94,11 @@ function Row({
         accessibilityRole="button"
         accessibilityLabel={label}
         onPress={onPress}
-        className="min-h-[56px] flex-row items-center justify-between py-2"
+        className={
+          compact
+            ? 'min-h-[48px] flex-row items-center justify-between py-0.5'
+            : 'min-h-[56px] flex-row items-center justify-between py-2'
+        }
         style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
       >
         {labelContent}
@@ -101,7 +107,15 @@ function Row({
   }
 
   return (
-    <View className="min-h-[56px] flex-row items-center justify-between py-2">{labelContent}</View>
+    <View
+      className={
+        compact
+          ? 'min-h-[48px] flex-row items-center justify-between py-0.5'
+          : 'min-h-[56px] flex-row items-center justify-between py-2'
+      }
+    >
+      {labelContent}
+    </View>
   );
 }
 
@@ -137,6 +151,7 @@ function openPolicyUrl(url: string) {
 }
 
 export default function YouScreen() {
+  const { height } = useWindowDimensions();
   const { user, isAnonymous, signOut } = useAuth();
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
@@ -163,6 +178,7 @@ export default function YouScreen() {
     retry: 0,
   });
   const { data: ent } = useEntitlement();
+  const accountLabel = isAnonymous ? 'Guest (not saved)' : (user?.email ?? 'Signed in');
   const planLabel = ent?.inReverseTrial
     ? 'Exploring Pro'
     : ent?.inTrial
@@ -170,6 +186,7 @@ export default function YouScreen() {
       : ent?.isPro
         ? 'OnSkin Pro · active'
         : 'Free plan';
+  const compactPhone = height < 640;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
@@ -331,51 +348,81 @@ export default function YouScreen() {
 
   return (
     <Screen edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-        <Text variant="title" className="mt-2">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}
+      >
+        <Text variant="title" className={compactPhone ? 'mt-1' : 'mt-2'}>
           You
         </Text>
 
-        <Card className="mt-6">
+        <Card className={compactPhone ? 'mt-4 p-4' : 'mt-6'}>
           <Text variant="label" tone="muted">
             ACCOUNT
           </Text>
-          <Text variant="body" className="mt-2 font-sans-medium">
-            {isAnonymous ? 'Guest (not saved)' : (user?.email ?? 'Signed in')}
-          </Text>
-          {isAnonymous ? (
-            <Button
-              className="mt-4"
-              label="Create an account"
-              onPress={() => router.push('/onboarding/account')}
-            />
+          {compactPhone ? (
+            <View className="mt-2 min-h-[48px] flex-row items-center justify-between gap-3">
+              <Text variant="body" className="flex-1 font-sans-medium">
+                {accountLabel}
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={isAnonymous ? 'Create an account' : 'Sign out'}
+                onPress={() =>
+                  isAnonymous ? router.push('/onboarding/account') : void signOut()
+                }
+                className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
+                style={({ pressed }) => [
+                  { backgroundColor: colors.greige },
+                  pressed ? { opacity: 0.82 } : undefined,
+                ]}
+              >
+                <Text className="font-sans-semibold text-[13px]" style={{ color: colors.ink }}>
+                  {isAnonymous ? 'Create' : 'Sign out'}
+                </Text>
+              </Pressable>
+            </View>
           ) : (
-            <Button
-              className="mt-4"
-              label="Sign out"
-              variant="ghost"
-              onPress={() => void signOut()}
-            />
+            <>
+              <Text variant="body" className="mt-2 font-sans-medium">
+                {accountLabel}
+              </Text>
+              {isAnonymous ? (
+                <Button
+                  className="mt-4"
+                  label="Create an account"
+                  onPress={() => router.push('/onboarding/account')}
+                />
+              ) : (
+                <Button
+                  className="mt-4"
+                  label="Sign out"
+                  variant="ghost"
+                  onPress={() => void signOut()}
+                />
+              )}
+            </>
           )}
         </Card>
 
-        <Card className="mt-4">
+        <Card className={compactPhone ? 'mt-3 p-4' : 'mt-4'}>
           <Text variant="label" tone="muted" className="mb-1">
             SUBSCRIPTION
           </Text>
           <Row
             label="Manage subscription"
             hint={planLabel}
+            compact={compactPhone}
             onPress={() => router.push('/settings/subscription')}
           />
         </Card>
 
-        <Card className="mt-4">
+        <Card className={compactPhone ? 'mt-3 p-4' : 'mt-4'}>
           <Text variant="label" tone="muted" className="mb-1">
             YOUR ROUTINE
           </Text>
           {routineRows.map(({ label, href }) => (
-            <Row key={href} label={label} onPress={() => router.push(href)} />
+            <Row key={href} label={label} compact={compactPhone} onPress={() => router.push(href)} />
           ))}
         </Card>
 
