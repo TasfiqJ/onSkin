@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
@@ -89,6 +90,7 @@ export default function ReofferScreen() {
             {offering.data.reason}
           </Text>
         ) : null}
+        <ComplianceRow />
       </ScrollView>
       <View className="gap-2.5 pb-2">
         <Pressable

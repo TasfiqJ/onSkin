@@ -4,6 +4,7 @@ import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
+import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
@@ -137,6 +138,7 @@ export default function WinbackScreen() {
             current Pro plan.
           </Text>
         ) : null}
+        <ComplianceRow tone="dark" />
       </ScrollView>
       <View className="gap-3">
         <Pressable

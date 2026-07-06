@@ -77,7 +77,7 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
         onPress={() => void dismiss()}
         className={
           compact
-            ? 'absolute right-2.5 top-2.5 h-11 w-11 items-center justify-center rounded-full'
+            ? 'absolute right-2 top-2 h-12 w-12 items-center justify-center rounded-full'
             : 'absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full'
         }
         style={{
@@ -92,7 +92,7 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
       <View
         className={
           compact
-            ? 'mb-1.5 flex-row items-center gap-2 pr-11'
+            ? 'mb-1.5 flex-row items-center gap-2 pr-12'
             : 'mb-2 flex-row items-center gap-2.5 pr-12'
         }>
         <View

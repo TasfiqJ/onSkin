@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
@@ -66,6 +67,7 @@ export default function DowngradeScreen() {
         <Text variant="bodySm" tone="muted" className="mt-4" style={{ lineHeight: 19 }}>
           {PAYWALL_COPY.downgrade.floorNote}
         </Text>
+        <ComplianceRow />
       </ScrollView>
       <View className="gap-3 pb-2">
         <Pressable

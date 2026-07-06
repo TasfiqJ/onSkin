@@ -89,6 +89,28 @@ describe('paywall mobile contracts', () => {
     expect(source).not.toContain('hitSlop={8}');
   });
 
+  it('keeps purchase-capable lifecycle paywalls compliant with Terms, Privacy, and Restore', () => {
+    for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx']) {
+      const source = readAppRoute(route);
+
+      expect(source, `${route} should import shared paywall compliance controls`).toContain(
+        "import { ComplianceRow } from '@/features/subscription/ComplianceRow';",
+      );
+      expect(source, `${route} should render Terms, Privacy, and Restore on the paywall surface`).toContain(
+        '<ComplianceRow />',
+      );
+    }
+
+    const winback = readAppRoute('paywall/winback.tsx');
+
+    expect(winback).toContain(
+      "import { ComplianceRow } from '@/features/subscription/ComplianceRow';",
+    );
+    expect(winback, 'dark win-back paywall should render readable compliance controls').toContain(
+      '<ComplianceRow tone="dark" />',
+    );
+  });
+
   it('keeps the onboarding paywall actions visible sooner on short phones', () => {
     const source = readAppRoute('onboarding/paywall.tsx');
 

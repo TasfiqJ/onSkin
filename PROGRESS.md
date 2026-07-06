@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed lifecycle paywall compliance reachability after 320x568 E2E showed
+  `/paywall/reoffer`, `/paywall/downgrade`, and `/paywall/winback` could present
+  purchase or re-subscribe actions without Terms, Privacy, or Restore controls
+  on the paywall surface. The three lifecycle routes now reuse the shared 48 px
+  compliance row, win-back uses the dark tone, and the paywall exit path also
+  buffered the Today SPF prompt dismiss control from exact 44 px to 48 px after
+  Expo web rendered it at 43.99 px.
 - Fixed the Shelf scan CTA short-phone overlap after 320x568 E2E showed the
   floating `Scan a barcode` pill covering the first product card and stealing a
   product-detail tap. Compact Shelf layouts now render the scan action inline
