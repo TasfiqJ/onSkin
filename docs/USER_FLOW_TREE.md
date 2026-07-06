@@ -230,6 +230,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan` directly and use the visible Back control.
   - Expected result: The user returns to the You tab instead of staying trapped on the plan route.
   - Evidence: Screenshot sequence and route snapshot.
+- Branch: compact fixed-footer clearance
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/routine/plan` through the no-card `Explore first` path at 320 px wide, inspect the evening card, scroll to the lower note, then tap `Start today`.
+  - Expected result: The first viewport ends on complete plan content above the fixed CTA, lower notes are reachable by deliberate scroll, and `Start today` routes to Today.
+  - Evidence: First-viewport screenshot, scrolled-bottom screenshot, route snapshot, and CTA geometry.
 
 ## Flow: Today Routine Completion
 

@@ -115,8 +115,15 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('backOrReplace(router, APP_YOU_ROUTE)');
     expect(plan).toContain('RouteIconButton');
     expect(plan).toContain('ScrollView');
-    expect(plan).toContain('contentContainerClassName="pb-6"');
-    expect(plan).toContain('className="pb-4"');
+    expect(plan).toContain('useWindowDimensions');
+    expect(plan).toContain('const compactPlan = height < 640');
+    expect(plan).toContain('style={{ overflow:');
+    expect(plan).toContain('contentContainerClassName="pb-[112px]"');
+    expect(plan).toContain('backgroundColor: colors.paper');
+    expect(plan).toContain('marginHorizontal: -24');
+    expect(plan).toContain('paddingHorizontal: 24');
+    expect(plan).toContain("'mt-8 flex-row gap-2.5 rounded-2xl");
+    expect(plan).not.toContain('contentContainerClassName="pb-6"');
     expect(plan).not.toContain('className="pb-9"');
 
     const adaptation = readAppRoute('routine/adaptation.tsx');
