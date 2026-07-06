@@ -22,7 +22,7 @@ describe('tab bar treatment', () => {
   it('uses a legible floating app-style tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 76');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 78');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
@@ -47,8 +47,13 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
     expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source).toContain('backgroundColor: colors.ink');
-    expect(source).toContain("backgroundColor: 'rgba(244,239,231,0.14)'");
+    expect(source).toContain('focused ? colors.clayDeep : colors.inkSoft');
+    expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
+    expect(source).toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
+    expect(source).toContain('backgroundColor: colors.clayTint');
+    expect(source).toContain("borderColor: 'rgba(165,105,75,0.20)'");
+    expect(source).toContain('tabActiveRail');
+    expect(source).toContain('tabActiveRailVisible');
     expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderRadius: 28');
     expect(source).toContain("position: 'absolute'");
@@ -74,6 +79,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('onBlur={() =>');
     expect(source).toContain('setFocusRingRouteKey((currentKey)');
     expect(source).not.toContain('function Dot');
+    expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
   });
 
   it('renders tab labels directly inside protected one-line phone geometry', () => {
@@ -93,6 +99,8 @@ describe('tab bar treatment', () => {
     expect(source).toContain("width: '100%'");
     expect(source).toContain("textAlign: 'center'");
     expect(source).toContain('hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}');
+    expect(source).toContain("borderColor: 'transparent'");
+    expect(source).toContain('accessible={false}');
     expect(source).not.toContain('function renderTabBarLabel');
     expect(source).not.toContain('tabLabelFrame');
     expect(source).not.toContain('tabBarLabel: renderTabBarLabel');
@@ -114,7 +122,7 @@ describe('tab bar treatment', () => {
     expect(tabBarHeight).toBeGreaterThanOrEqual(tabItemHeight + 16);
     expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
     expect(minTouchTarget).toBeGreaterThanOrEqual(44);
-    expect(usableWidth / 4).toBeGreaterThanOrEqual(68);
+    expect(usableWidth / 4).toBeGreaterThanOrEqual(72);
     expect(source).toContain('minimumFontScale={0.88}');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
   });

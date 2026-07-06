@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Refined the floating bottom tab bar toward the Wealthsimple-style reference:
+  wider phone geometry, a quieter warm selected state, dark active labels, and a
+  small active rail instead of the cramped black active block. Expo web E2E at
+  320 px and 390 px verified readable labels, 62 px tab targets, and successful
+  switching across Today, Progress, Shelf, and You.
 - Replaced the Pro cycle settings fake drag handle/deferred reorder copy with
   honest `Scheduled` row badges and polished variant-recalculation copy. Expo
   web E2E at 320 px added two shelf actives through manual intake, started the
