@@ -85,8 +85,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `Terms`, `Privacy`, and `Restore` sitting under the floating tab bar when
   store pricing was unavailable. Compact Progress-tab photo paywalls now require
   a deliberate scroll for the compliance row, and the scrolled controls remain
-  48 px tall and clear of the tab bar. Evidence and bug report are in
-  `test-results/human-e2e/2026-07-06/fresh-compact-scan/` and
+  48 px tall and clear of the tab bar. Post-fix evidence and bug report are in
+  `test-results/human-e2e/2026-07-06/progress-paywall-compact-compliance/` and
   `docs/e2e-bug-reports/2026-07-06-progress-paywall-compliance-tab-overlap.md`;
   native RevenueCat/device QA remains outstanding.
 - Made RevenueCat product identifiers config-driven for the rebrand path. Annual,

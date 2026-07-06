@@ -54,10 +54,10 @@ When the compact contextual photo paywall is rendered in the Progress tab, inser
 
 ## Post-Fix Evidence
 
-- First-viewport screenshot: `test-results/human-e2e/2026-07-06/fresh-compact-scan/progress-320-post-fix.png`
-- First-viewport geometry: `test-results/human-e2e/2026-07-06/fresh-compact-scan/progress-320-post-fix-state.json`
-- Scrolled screenshot: `test-results/human-e2e/2026-07-06/fresh-compact-scan/progress-320-post-fix-scrolled.png`
-- Scrolled geometry: `test-results/human-e2e/2026-07-06/fresh-compact-scan/progress-320-post-fix-scrolled-state.json`
+- First-viewport screenshot: `test-results/human-e2e/2026-07-06/progress-paywall-compact-compliance/progress-320.png`
+- First-viewport geometry: `test-results/human-e2e/2026-07-06/progress-paywall-compact-compliance/progress-320-geometry.json`
+- Scrolled screenshot: `test-results/human-e2e/2026-07-06/progress-paywall-compact-compliance/progress-320-scrolled.png`
+- Scrolled geometry: `test-results/human-e2e/2026-07-06/progress-paywall-compact-compliance/progress-320-scrolled-geometry.json`
 - Test: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts`
 
 ## Remaining Risk
