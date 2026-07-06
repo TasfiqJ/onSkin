@@ -14,6 +14,7 @@ Status: launch-blocked
 - Run formal trademark, App Store, Google Play, domain, social handle, and paid-search checks for the final candidate.
 - Choose final app name, legal entity display, domain, support email, bundle ID, Android package ID, URL scheme, policy URL root, and share-card watermark.
 - Record the decision in `docs/brand-decision-memo.md`.
+- After the 2026-07-06 runtime and Phase 8 public-copy sweeps, `npm run brand:audit` reports 21 remaining public launch-risk references. They are intentionally limited to native app config (`apps/mobile/app.base.json` display/slug/scheme/bundle/package/permission strings), RevenueCat product IDs/local reverse-trial product ID, and Supabase redirect/project config. Do not rename these until the final identity is cleared and matching Apple, Google, RevenueCat, Supabase, domain, and OAuth console changes are ready.
 
 Evidence needed:
 
