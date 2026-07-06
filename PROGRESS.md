@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed routine-plan profile-label honesty for the first-value loop. The
+  generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
+  derives real plan labels from saved `oily_dry` and `sensitive_resistant`
+  profile axes, and falls back to `BUILT FROM YOUR SHELF` instead of fabricating
+  dry/sensitive claims. Added pure mapping tests and the `Routine Plan First
+Value` branch to `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
+  320x568 Expo web, the local no-card `Explore first` unlock path, and
+  `Start today` handoff in
+  `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`. Direct free
+  `/routine/plan` still shows the existing `full_routine` contextual paywall;
+  that is recorded as a product-gating note for a future pay-after-value slice.
+- Fixed the compact-phone purchase-success confirmation after E2E found the
+  renewal metadata could orphan `yr` on 320 px screens. Success metadata now
+  renders as two stable rows inside a constrained container, with an escaped
+  checkmark and explicit line height. Added a mobile contract test and verified
+  `/paywall/success` at 320x568 in
+  `test-results/human-e2e/2026-07-06/paywall-success-metadata-wrap/`.
 - Integrated the `04_repo_docs` strategy packet into the active `docs/` tree as
   the master plan, product requirements, architecture, roadmap, feature index,
   decision, testing, code-review, update-patch, and Codex implementation-prompt

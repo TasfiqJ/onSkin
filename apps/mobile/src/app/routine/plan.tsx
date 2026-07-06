@@ -115,7 +115,7 @@ export default function PlanScreen() {
 
         <View className="pt-2">
           <Text variant="label" tone="clay" className="font-mono text-[11.5px] tracking-[1.15px]">
-            BUILT FOR DRY, SENSITIVE SKIN
+            {data?.profileLabel ?? 'BUILDING YOUR ROUTINE'}
           </Text>
           <Text variant="title" className="mt-2 text-[34px] leading-[37px]">
             Your routine, in order.

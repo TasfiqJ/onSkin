@@ -1,6 +1,7 @@
 import type { EngineProfile } from '@/features/intelligence/engine';
 import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
+import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
 
 import { generatePlan, type GeneratedPlan, type RoutineProduct } from './generate';
@@ -23,7 +24,7 @@ const MAYA_PROFILE: EngineProfile & { goals: string[] } = {
   goals: ['barrier_repair'],
 };
 
-export type PlanResult = { plan: GeneratedPlan; isExample: boolean };
+export type PlanResult = { plan: GeneratedPlan; isExample: boolean; profileLabel: string };
 
 export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
   const shelf = useShelf();
@@ -41,12 +42,30 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
     // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
     const real: EngineProfile & { goals: string[] } = profile.data
-      ? { sensitivity: profile.data.sensitivity, pregnancy: profile.data.pregnancy, goals: profile.data.goals }
+      ? {
+          sensitivity: profile.data.sensitivity,
+          pregnancy: profile.data.pregnancy,
+          goals: profile.data.goals,
+        }
       : MAYA_PROFILE;
     // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
     // useShelf/recommendations. In production the conflict layer stays inert until
     // clinical sign-off; in dev the full starter matrix drives the plan.
-    return { data: { plan: generatePlan(products, real, shippableRules()), isExample: false }, isLoading: false };
+    return {
+      data: {
+        plan: generatePlan(products, real, shippableRules()),
+        isExample: false,
+        profileLabel: routinePlanProfileLabel(profile.data ?? null, false),
+      },
+      isLoading: false,
+    };
   }
-  return { data: { plan: generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules()), isExample: true }, isLoading: false };
+  return {
+    data: {
+      plan: generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules()),
+      isExample: true,
+      profileLabel: routinePlanProfileLabel(null, true),
+    },
+    isLoading: false,
+  };
 }
