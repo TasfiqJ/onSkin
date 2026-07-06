@@ -5,11 +5,21 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Read-AppEnvironment {
+  $raw = $env:EXPO_PUBLIC_APP_ENV
+  if (-not $raw) { $raw = $env:APP_ENV }
+  if (-not $raw) { $raw = $env:APP_VARIANT }
+  $candidate = "$raw".Trim().ToLowerInvariant()
+  if (@("development", "staging", "production") -contains $candidate) { return $candidate }
+  return "production"
+}
+
 if (-not $ProjectRef) {
   throw "SUPABASE_PROJECT_REF is required. Set it to the staging project ref before deploying."
 }
 
-if ($env:EXPO_PUBLIC_APP_ENV -eq "production" -and $env:PHASE2_ALLOW_PRODUCTION_DEPLOY -ne "1") {
+$appEnv = Read-AppEnvironment
+if ($appEnv -eq "production" -and $env:PHASE2_ALLOW_PRODUCTION_DEPLOY -ne "1") {
   throw "Refusing production deploy without PHASE2_ALLOW_PRODUCTION_DEPLOY=1."
 }
 

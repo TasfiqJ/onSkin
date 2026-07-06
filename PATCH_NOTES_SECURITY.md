@@ -851,3 +851,10 @@
 - Change: Missing or invalid app-environment values now resolve to `production` before the live RLS smoke script decides whether production is allowed.
 - Why safe: Live Supabase smoke tests are destructive against temporary users and seed rows. A shell with production Supabase credentials but no app-env flag must refuse by default instead of assuming development.
 - Regression: The expected-failure probe with fake non-placeholder Supabase credentials and no app env exits before network work with the production refusal message.
+
+## Phase 2 Supabase deploy app-env fail-closed
+
+- Files: `scripts/phase2/deploy-supabase-staging.ps1`.
+- Change: Missing or invalid app-environment values now resolve to `production` before the staging deploy wrapper decides whether production deploys are allowed.
+- Why safe: The deploy wrapper runs migrations and deploys Edge Functions. A shell with production Supabase project settings but no app-env flag must refuse before any Supabase CLI command runs.
+- Regression: The expected-failure probe with a fake project ref and no app env exits with the production deploy refusal before `supabase link`, `db push`, or function deploy commands.

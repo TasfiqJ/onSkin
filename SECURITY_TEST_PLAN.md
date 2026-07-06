@@ -30,6 +30,7 @@
 - `node --check scripts/phase2/check-env.mjs`
 - `node --check scripts/phase2/supabase-rls-smoke.mjs`
 - Phase 2 RLS smoke expected-failure probe with fake non-placeholder Supabase credentials and no app env; verifies missing app env is treated as production and refuses without `PHASE2_ALLOW_PRODUCTION_SMOKE=1`.
+- Phase 2 Supabase deploy expected-failure probe with a fake project ref and no app env; verifies missing app env is treated as production and refuses without `PHASE2_ALLOW_PRODUCTION_DEPLOY=1` before Supabase CLI commands.
 - `node --check scripts/phase9/build-release-qa-packet.mjs`
 - `node --check scripts/phase9/lib.mjs`
 - `node --check scripts/phase9/edge-functions-check.mjs`
