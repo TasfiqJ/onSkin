@@ -89,6 +89,7 @@ function Check({ color = colors.paper }: { color?: string }) {
 }
 
 function CheckRow({
+  compact = false,
   name,
   sub,
   state,
@@ -96,6 +97,7 @@ function CheckRow({
   first,
   onPress,
 }: {
+  compact?: boolean;
   name: string;
   sub?: string;
   state: 'done' | 'next' | 'pending';
@@ -114,14 +116,17 @@ function CheckRow({
         if (state !== 'done') haptics.success();
         onPress();
       }}
-      className="flex-row items-center gap-3.5 py-3"
+      className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}
       style={{
         borderTopWidth: first ? 0 : 1,
         borderTopColor: dark ? colors.hairlineDark : colors.hairline,
       }}
     >
       <View
-        className="h-[26px] w-[26px] items-center justify-center rounded-full"
+        className={cn(
+          'items-center justify-center rounded-full',
+          compact ? 'h-6 w-6' : 'h-[26px] w-[26px]',
+        )}
         style={
           state === 'done'
             ? { backgroundColor: accent }
@@ -140,16 +145,25 @@ function CheckRow({
       </View>
       <View className="flex-1">
         <Text
+          numberOfLines={compact ? 1 : undefined}
           variant="body"
-          className={cn('font-sans-medium text-[15.5px]', state === 'done' && 'line-through')}
+          className={cn(
+            'font-sans-medium',
+            compact ? 'text-[15px]' : 'text-[15.5px]',
+            state === 'done' && 'line-through',
+          )}
           style={{ color: state === 'done' ? colors.mutedLight : dark ? colors.cream : colors.ink }}
         >
           {name}
         </Text>
         {sub ? (
           <Text
+            numberOfLines={compact ? 1 : undefined}
             className="mt-0.5 text-[12.5px]"
-            style={{ color: dark ? 'rgba(244,239,231,0.45)' : colors.muted }}
+            style={{
+              color: dark ? 'rgba(244,239,231,0.45)' : colors.muted,
+              lineHeight: compact ? 16 : undefined,
+            }}
           >
             {sub}
           </Text>
@@ -274,6 +288,7 @@ export default function TodayScreen() {
                   sub={s.instruction}
                   state={rowState(k, firstUndone)}
                   dark={false}
+                  compact={compactPhone}
                   first={i === 0}
                   onPress={() => void toggle(k)}
                 />
@@ -505,6 +520,7 @@ export default function TodayScreen() {
                 sub={pmDisplaySub(s)}
                 state={rowState(k, firstUndonePm)}
                 dark
+                compact={compactPhone}
                 first={i === 0}
                 onPress={() => void toggle(k)}
               />

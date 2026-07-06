@@ -67,19 +67,78 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
     await dismissRecommendation(recId);
     await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
   };
+
+  const openRecommendation = () => {
+    haptics.select();
+    track('recommendation_expanded');
+    router.push({ pathname: '/recommendations/[id]', params: { id: recId } });
+  };
+
+  if (compact) {
+    return (
+      <View
+        className="mt-3 flex-row items-center gap-2 rounded-[16px] p-2.5"
+        style={{
+          backgroundColor: colors.clayTint,
+          borderWidth: 1,
+          borderColor: 'rgba(165,105,75,0.22)',
+        }}
+      >
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={REC_COPY.gapPrompt.cta}
+          onPress={openRecommendation}
+          className="min-h-[48px] flex-1 flex-row items-center gap-2"
+        >
+          <View
+            className="h-8 w-8 items-center justify-center rounded-lg"
+            style={{ backgroundColor: colors.clay }}
+          >
+            <Text className="font-sans-bold text-[10px]" style={{ color: colors.paper }}>
+              SPF
+            </Text>
+          </View>
+          <View className="min-w-0 flex-1">
+            <Text
+              numberOfLines={2}
+              className="font-sans-bold text-[13px]"
+              style={{ color: colors.clayDeep, lineHeight: 16 }}
+            >
+              {REC_COPY.gapPrompt.title}
+            </Text>
+            <Text className="mt-0.5 font-sans-semibold text-[12.5px]" style={{ color: colors.clay }}>
+              {REC_COPY.gapPrompt.cta}
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={REC_COPY.gapPrompt.dismiss}
+          onPress={() => void dismiss()}
+          className="h-12 w-12 items-center justify-center rounded-full"
+          style={{
+            backgroundColor: 'rgba(165,105,75,0.12)',
+            borderWidth: 1,
+            borderColor: 'rgba(165,105,75,0.14)',
+          }}
+        >
+          <Text className="font-sans-bold text-[14px]" style={{ color: colors.clay }}>
+            x
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
+
   return (
     <View
-      className={compact ? 'mt-3 rounded-[16px] p-3' : 'mt-4 rounded-[18px] p-4'}
+      className="mt-4 rounded-[18px] p-4"
       style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Dismiss SPF recommendation"
         onPress={() => void dismiss()}
-        className={
-          compact
-            ? 'absolute right-2 top-2 h-12 w-12 items-center justify-center rounded-full'
-            : 'absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full'
-        }
+        className="absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full"
         style={{
           backgroundColor: 'rgba(165,105,75,0.12)',
           borderWidth: 1,
@@ -89,52 +148,31 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           ✕
         </Text>
       </Pressable>
-      <View
-        className={
-          compact
-            ? 'mb-1.5 flex-row items-center gap-2 pr-12'
-            : 'mb-2 flex-row items-center gap-2.5 pr-12'
-        }>
+      <View className="mb-2 flex-row items-center gap-2.5 pr-12">
         <View
-          className={
-            compact
-              ? 'h-7 w-7 items-center justify-center rounded-lg'
-              : 'h-[30px] w-[30px] items-center justify-center rounded-lg'
-          }
+          className="h-[30px] w-[30px] items-center justify-center rounded-lg"
           style={{ backgroundColor: colors.clay }}>
-          <Text className={compact ? 'text-[14px]' : 'text-[15px]'} style={{ color: colors.paper }}>
+          <Text className="text-[15px]" style={{ color: colors.paper }}>
             ☀
           </Text>
         </View>
         <Text
-          className={
-            compact
-              ? 'flex-1 font-sans-bold text-[13.5px]'
-              : 'flex-1 font-sans-bold text-[14.5px]'
-          }
+          className="flex-1 font-sans-bold text-[14.5px]"
           style={{ color: colors.clayDeep }}>
           {REC_COPY.gapPrompt.title}
         </Text>
       </View>
       <Text
-        className={compact ? 'mb-2 text-[11.5px]' : 'mb-3 text-[12.5px]'}
-        style={{ color: '#6F4A36', lineHeight: compact ? 15 : 18 }}>
+        className="mb-3 text-[12.5px]"
+        style={{ color: '#6F4A36', lineHeight: 18 }}>
         {REC_COPY.gapPrompt.body}
       </Text>
-      <View className={compact ? 'flex-row items-center gap-2' : 'flex-row items-center gap-4'}>
+      <View className="flex-row items-center gap-4">
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.cta}
-          onPress={() => {
-            haptics.select();
-            track('recommendation_expanded');
-            router.push({ pathname: '/recommendations/[id]', params: { id: recId } });
-          }}
-          className={
-            compact
-              ? 'items-center justify-center rounded-pill px-4 py-2'
-              : 'items-center justify-center rounded-pill px-5 py-2'
-          }
+          onPress={openRecommendation}
+          className="items-center justify-center rounded-pill px-5 py-2"
           style={{ minHeight: 48, backgroundColor: colors.clay }}>
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.paper }}>
             {REC_COPY.gapPrompt.cta}
@@ -144,11 +182,7 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.dismiss}
           onPress={() => void dismiss()}
-          className={
-            compact
-              ? 'items-center justify-center rounded-pill px-3.5 py-2'
-              : 'items-center justify-center rounded-pill px-4 py-2'
-          }
+          className="items-center justify-center rounded-pill px-4 py-2"
           style={{
             minHeight: 48,
             borderWidth: 1,

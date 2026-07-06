@@ -9,16 +9,22 @@ describe('RecommendationsTeaser mobile contracts', () => {
     const source = readFileSync(`${RECS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
 
     expect(source).toContain('accessibilityLabel="Dismiss SPF recommendation"');
-    expect(source).toContain("'absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full'");
-    expect(source).toContain("'absolute right-2 top-2 h-12 w-12 items-center justify-center rounded-full'");
+    expect(source).toContain('if (compact) {');
+    expect(source).toContain('className="mt-3 flex-row items-center gap-2 rounded-[16px] p-2.5"');
+    expect(source).toContain('className="min-h-[48px] flex-1 flex-row items-center gap-2"');
+    expect(source).toContain('numberOfLines={2}');
+    expect(source).toContain('style={{ color: colors.clayDeep, lineHeight: 16 }}');
+    expect(source).toContain('className="h-12 w-12 items-center justify-center rounded-full"');
+    expect(source).toContain('className="mt-4 rounded-[18px] p-4"');
+    expect(source).toContain('className="absolute right-3 top-3 h-12 w-12 items-center justify-center rounded-full"');
     expect(source).toContain('accessibilityLabel={REC_COPY.gapPrompt.cta}');
     expect(source).toContain('accessibilityLabel={REC_COPY.gapPrompt.dismiss}');
     expect(source).toContain('style={{ minHeight: 48, backgroundColor: colors.clay }}');
     expect(source).toContain('minHeight: 48');
-    expect(source).toContain("'mb-2 flex-row items-center gap-2.5 pr-12'");
-    expect(source).toContain("compact ? 'mt-3 rounded-[16px] p-3' : 'mt-4 rounded-[18px] p-4'");
-    expect(source).toContain("'mb-1.5 flex-row items-center gap-2 pr-12'");
-    expect(source).toContain("lineHeight: compact ? 15 : 18");
+    expect(source).toContain('className="mb-2 flex-row items-center gap-2.5 pr-12"');
+    expect(source).not.toContain("'absolute right-2 top-2 h-12 w-12 items-center justify-center rounded-full'");
+    expect(source).not.toContain("compact ? 'mt-3 rounded-[16px] p-3' : 'mt-4 rounded-[18px] p-4'");
+    expect(source).not.toContain("lineHeight: compact ? 15 : 18");
     expect(source).toContain('const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap)');
     expect(source).toContain('<GapPrompt compact={compact} recId={spfGap.id} />');
     expect(source).toContain('showCompactGapOnly ? null');

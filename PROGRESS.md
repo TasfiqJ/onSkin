@@ -1667,6 +1667,15 @@ manual add prefilled `12 months` as estimated, tapping the unchanged `12 mo` chi
 product detail on `estimated` with no `from label` copy and no visible small controls. Evidence:
 `test-results/human-e2e/2026-07-06/shelf-pao-provenance/`.
 
+### Today SPF compact prompt clearance (2026-07-06)
+
+Fixed the compact Today route after a 320 x 568 phone E2E pass showed the missing-SPF prompt actions rendering under
+the floating tab bar. Short-phone routine rows now keep instruction copy to one line, and the compact SPF prompt
+renders as a concise inline banner with 48 px `See why` and dismiss targets above the tab bar. The recommendation and
+Today route contracts now cover the compact banner and row-density behavior. Human-simulated E2E verified no horizontal
+overflow, no mojibake, and post-fix geometry (`See why` bottom `420.8`, dismiss bottom `415.7`, tab bar top `494.9`) in
+`test-results/human-e2e/2026-07-06/today-spf-compact-banner/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

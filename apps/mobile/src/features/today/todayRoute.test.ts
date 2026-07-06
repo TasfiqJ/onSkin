@@ -38,6 +38,13 @@ describe('Today route mobile contracts', () => {
     );
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
     expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
+    expect(source).toContain('compact?: boolean;');
+    expect(source).toContain(
+      "className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}",
+    );
+    expect(source).toContain('numberOfLines={compact ? 1 : undefined}');
+    expect(source).toContain('lineHeight: compact ? 16 : undefined');
+    expect(source.match(/<CheckRow[\s\S]*?compact=\{compactPhone\}/g)).toHaveLength(2);
     expect(source).toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
     expect(source).toContain('{compactPhone ? null : (');
