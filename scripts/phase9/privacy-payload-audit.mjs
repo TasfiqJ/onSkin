@@ -56,6 +56,18 @@ block(errors, /tracesSampleRate:\s*0/.test(sentrySource), 'Sentry performance tr
 block(errors, /enableCaptureFailedRequests:\s*false/.test(sentrySource), 'Sentry failed-request capture must stay disabled.');
 block(errors, /attachScreenshot:\s*false/.test(sentrySource), 'Sentry screenshot attachments must stay disabled.');
 block(errors, /attachViewHierarchy:\s*false/.test(sentrySource), 'Sentry view hierarchy attachments must stay disabled.');
+block(errors, /maxBreadcrumbs:\s*0/.test(sentrySource), 'Sentry breadcrumbs must stay disabled.');
+block(errors, /beforeBreadcrumb:\s*\(\)\s*=>\s*null/.test(sentrySource), 'Sentry breadcrumbs must be dropped before capture.');
+block(errors, /beforeSend:\s*sanitizeSentryEvent/.test(sentrySource), 'Sentry events must pass through the global sanitizer before upload.');
+block(
+  errors,
+  /request:\s*undefined/.test(sentrySource) &&
+    /breadcrumbs:\s*undefined/.test(sentrySource) &&
+    /contexts:\s*undefined/.test(sentrySource) &&
+    /fingerprint:\s*undefined/.test(sentrySource) &&
+    /transaction:\s*undefined/.test(sentrySource),
+  'Sentry global sanitizer must drop request, breadcrumb, context, fingerprint, and transaction fields.',
+);
 block(errors, /SENSITIVE_CONTEXT_KEY/.test(scrubSource), 'Sentry scrubber is missing sensitive-key guard.');
 block(errors, /SENSITIVE_VALUE/.test(scrubSource), 'Sentry scrubber is missing sensitive-value guard.');
 block(errors, /sanitizeCapturedException/.test(scrubSource), 'Sentry scrubber must expose a captured-exception sanitizer.');

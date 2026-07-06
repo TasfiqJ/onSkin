@@ -79,6 +79,7 @@
 - SEC-P2-078: Analytics event names are now allowlisted, sanitized before vendor capture, and enforced as literal event names by the Phase 9 privacy audit.
 - SEC-P2-079: PostHog automatic lifecycle capture is disabled so vendor analytics events only leave through the audited `track()` path.
 - SEC-P2-080: Sentry performance tracing and automatic sensitive attachment surfaces are disabled so crash telemetry stays on the sanitized exception path.
+- SEC-P2-081: Sentry before-send scrubbing now redacts automatic/unhandled error events and drops request, breadcrumb, and context fields before upload.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

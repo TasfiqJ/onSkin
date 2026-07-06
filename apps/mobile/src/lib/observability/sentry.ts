@@ -9,8 +9,51 @@ import { sanitizeCapturedException, sanitizeObservabilityContext } from '@/lib/o
 let initialized = false;
 let sentryUserUpdate = 0;
 
+type SentryInitOptions = Parameters<typeof Sentry.init>[0];
+type SentryBeforeSend = NonNullable<SentryInitOptions['beforeSend']>;
+type SentryErrorEvent = Parameters<SentryBeforeSend>[0];
+
 function canUseSentry(): boolean {
   return env.sentryDsn.length > 0;
+}
+
+function sanitizeSentryTags(tags: SentryErrorEvent['tags']): SentryErrorEvent['tags'] {
+  const safeContext = sanitizeObservabilityContext(tags as Record<string, unknown> | undefined);
+  const safeTags: Record<string, string> = {};
+  for (const [key, value] of Object.entries(safeContext)) {
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      safeTags[key] = String(value).slice(0, 80);
+    }
+  }
+  return Object.keys(safeTags).length ? safeTags : undefined;
+}
+
+function sanitizeSentryUser(user: SentryErrorEvent['user']): SentryErrorEvent['user'] {
+  const id = typeof user?.id === 'string' ? user.id : undefined;
+  return id && /^u_[a-f0-9]{32}$/.test(id) ? { id } : undefined;
+}
+
+export function sanitizeSentryEvent(event: SentryErrorEvent): SentryErrorEvent {
+  const rawType = event.exception?.values?.[0]?.type;
+  const rawException = new Error('redacted_exception');
+  rawException.name = typeof rawType === 'string' ? rawType : 'Error';
+  const safeName = sanitizeCapturedException(rawException).name;
+  const safeExtra = sanitizeObservabilityContext(event.extra as Record<string, unknown> | undefined);
+  return {
+    ...event,
+    message: 'redacted_exception',
+    breadcrumbs: undefined,
+    contexts: undefined,
+    extra: Object.keys(safeExtra).length ? safeExtra : undefined,
+    fingerprint: undefined,
+    request: undefined,
+    tags: sanitizeSentryTags(event.tags),
+    transaction: undefined,
+    user: sanitizeSentryUser(event.user),
+    exception: {
+      values: [{ type: safeName, value: 'redacted_exception' }],
+    },
+  };
 }
 
 export function initSentry(): void {
@@ -25,6 +68,9 @@ export function initSentry(): void {
     enableCaptureFailedRequests: false,
     attachScreenshot: false,
     attachViewHierarchy: false,
+    maxBreadcrumbs: 0,
+    beforeBreadcrumb: () => null,
+    beforeSend: sanitizeSentryEvent,
   });
 
   Sentry.setTag('app_environment', env.appEnvironment);

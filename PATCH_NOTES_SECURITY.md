@@ -705,6 +705,13 @@
 - Why safe: Performance traces and automatic native attachments can include screen, route, network, or UI context outside `captureException()` and its sanitizer. This keeps Sentry limited to explicit sanitized exception reports.
 - Regression: `sentry.test.ts` locks the privacy-sensitive Sentry init options, and `phase9:privacy-payload-audit` fails if those automatic capture surfaces are re-enabled.
 
+## Sentry global event scrubber
+
+- Files: `apps/mobile/src/lib/observability/sentry.ts`, `apps/mobile/src/lib/observability/sentry.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: Added `sanitizeSentryEvent()` as the global Sentry `beforeSend` hook. It replaces exception payloads with `redacted_exception`, sanitizes `extra`, and drops request, breadcrumb, and context fields. Breadcrumbs are also disabled with `maxBreadcrumbs: 0` and `beforeBreadcrumb: () => null`.
+- Why safe: Sentry can capture unhandled errors outside the app's explicit `captureException()` wrapper. The global hook ensures automatic events still pass through a minimization layer before upload.
+- Regression: `sentry.test.ts` locks the before-send hook and dropped fields, and `phase9:privacy-payload-audit` fails if breadcrumbs, route transaction/grouping fields, or the global scrubber are removed.
+
 ## Client SDK identity reset on local wipe
 
 - Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `apps/mobile/src/features/settings/localPrivateData.test.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, `apps/mobile/src/lib/iap/revenuecat.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`, `scripts/phase9/build-release-qa-packet.mjs`.
