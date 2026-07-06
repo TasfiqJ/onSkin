@@ -98,8 +98,12 @@ describe('Pro-gated route contracts', () => {
     expect(reorder).not.toContain('className="h-9 flex-1');
 
     const tolerance = readAppRoute('routine/tolerance.tsx');
-    expect(tolerance, 'routine/tolerance.tsx should keep text exits at least 44px tall').toContain(
-      'min-h-[44px] min-w-[44px]',
+    expect(
+      tolerance,
+      'routine/tolerance.tsx should buffer text exits above sub-pixel 44px targets',
+    ).toContain('min-h-[48px] min-w-[48px]');
+    expect(tolerance).not.toContain(
+      'className="mb-1 min-h-[44px] min-w-[44px] self-end items-center justify-center px-2"',
     );
   });
 
@@ -135,7 +139,8 @@ describe('Pro-gated route contracts', () => {
     }
 
     const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
-    expect(phasedIntro).toContain('min-h-[44px] items-center justify-center');
+    expect(phasedIntro).toContain('min-h-[48px] items-center justify-center');
+    expect(phasedIntro).not.toContain('min-h-[44px] items-center justify-center');
   });
 
   it('keeps the widgets Live Activity opt-in on the 44px shared switch', () => {

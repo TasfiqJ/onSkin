@@ -67,7 +67,7 @@ export default function ToleranceScreen() {
     <Sheet fallbackRoute={APP_HOME_ROUTE} scroll>
       <Pressable
         accessibilityRole="button"
-        className="mb-1 min-h-[44px] min-w-[44px] self-end items-center justify-center px-2"
+        className="mb-1 min-h-[48px] min-w-[48px] self-end items-center justify-center px-2"
         onPress={() => backOrReplace(router)}
       >
         <Text variant="body" tone="muted" className="font-sans-semibold text-[14px]">

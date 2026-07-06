@@ -101,7 +101,7 @@ export default function PhasedIntroScreen() {
       <Button label="Sounds good" onPress={() => backOrReplace(router)} />
       <Pressable
         accessibilityRole="button"
-        className="min-h-[44px] items-center justify-center"
+        className="min-h-[48px] items-center justify-center"
         onPress={() => void addNow()}
       >
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">

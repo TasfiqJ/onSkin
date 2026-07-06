@@ -81,10 +81,10 @@ function ProductCard({ item }: { item: ShelfItem }) {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Replace ${item.name}`}
-          className="ml-[64px] mt-2 min-h-[44px] min-w-[84px] self-start items-center justify-center rounded-pill border border-clay/20 bg-clay-tint px-3 py-2"
+          className="ml-[64px] mt-2 min-h-[48px] min-w-[84px] self-start items-center justify-center rounded-pill border border-clay/20 bg-clay-tint px-3 py-2"
           style={({ pressed }) => [
             {
-              minHeight: 44,
+              minHeight: 48,
               minWidth: 84,
             },
             pressed ? { opacity: 0.78 } : null,

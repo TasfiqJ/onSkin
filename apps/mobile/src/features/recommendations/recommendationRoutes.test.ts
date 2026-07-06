@@ -66,7 +66,10 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('h-7 w-7');
     expect(source).toContain('Preferences');
-    expect(source).toContain('className="min-h-[44px] items-center justify-center rounded-pill');
+    expect(source).toContain('className="min-h-[48px] items-center justify-center rounded-pill');
+    expect(source).not.toContain(
+      'className="min-h-[44px] items-center justify-center rounded-pill',
+    );
   });
 
   it('keeps recommendation detail navigation touchable on phones', () => {

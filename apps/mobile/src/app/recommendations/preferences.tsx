@@ -45,7 +45,7 @@ function Toggle({
       accessibilityState={{ selected: active, disabled }}
       disabled={disabled}
       onPress={onPress}
-      className="min-h-[44px] items-center justify-center rounded-pill px-4 py-2.5"
+      className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2.5"
       style={{
         backgroundColor: active ? colors.ink : colors.paperRaised,
         borderWidth: 1,

@@ -33,7 +33,9 @@ describe('cycle week route scheduler notes', () => {
     expect(whyTonight).toContain('const selectedDate = params.date');
     expect(whyTonight).toContain('data.weekAhead.find((p) => p.dateISO === selectedDate)');
     expect(whyTonight).toContain("isTonight ? 'WHY THIS, TONIGHT?' : 'WHY THIS NIGHT?'");
-    expect(whyTonight).toContain('slotTitle(selectedNight.night.slot, isTonight, selectedNight.weekday)');
+    expect(whyTonight).toContain(
+      'slotTitle(selectedNight.night.slot, isTonight, selectedNight.weekday)',
+    );
   });
 
   it('only exposes phased-introduction scheduler notes as tappable controls', () => {
@@ -44,10 +46,28 @@ describe('cycle week route scheduler notes', () => {
     expect(source).toContain('if (opensPhasedIntro)');
     expect(source).toContain('accessibilityLabel="Review phased introduction"');
     expect(source).toContain("router.push('/cycle/phased-intro')");
-    expect(source).toContain('min-h-[44px]');
+    expect(source).toContain(
+      'mt-4 min-h-[48px] flex-row items-center gap-3 rounded-[18px] px-4 py-3',
+    );
+    expect(source).not.toContain(
+      'mt-4 min-h-[44px] flex-row items-center gap-3 rounded-[18px] px-4 py-3',
+    );
     expect(source).toContain('<View className="mt-4 flex-row items-start');
     expect(source).not.toContain('if (/add your/i.test(data!.notes[0]!))');
     expect(source).not.toContain('{data!.notes[0]}');
+  });
+
+  it('keeps cycle week text actions buffered above sub-pixel phone targets', () => {
+    const source = readAppRoute('cycle/week.tsx');
+
+    expect(source).toContain(
+      'className="min-h-[48px] min-w-[48px] items-center justify-center px-2"',
+    );
+    expect(source).toContain('className="mt-6 min-h-[48px] items-center justify-center py-2"');
+    expect(source).not.toContain(
+      'className="min-h-[44px] min-w-[44px] items-center justify-center px-2"',
+    );
+    expect(source).not.toContain('className="mt-6 min-h-[44px] items-center justify-center py-2"');
   });
 
   it('keeps scheduler safety notes visible when no cycle is formed', () => {

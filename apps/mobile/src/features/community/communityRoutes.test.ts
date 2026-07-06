@@ -29,6 +29,9 @@ describe('Community route contracts', () => {
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('hitSlop={8}');
     expect(source).toContain(
+      'className="min-h-[48px] min-w-[48px] items-center justify-center px-2"',
+    );
+    expect(source).not.toContain(
       'className="min-h-[44px] min-w-[44px] items-center justify-center px-2"',
     );
   });

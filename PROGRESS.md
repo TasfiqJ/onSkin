@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Buffered remaining exact-44 interactive text controls in community, cycle,
+  routine tolerance, recommendation preferences, and Shelf replacement surfaces
+  to 48 px. Expo web E2E at 320 px verified recommendation preference chips
+  render around 48 px, remain scroll-reachable, and still toggle selection.
 - Human-simulated E2E reproduced the expired subscription settings win-back CTA
   at 43.99 px tall on a 320 px phone viewport. Buffered the CTA to 48 px and
   added a settings route contract test to prevent the exact-44 px regression.

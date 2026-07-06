@@ -37,7 +37,7 @@ function WeekScreen() {
               haptics.select();
               router.push('/cycle/settings');
             }}
-            className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+            className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
             <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
               Settings
@@ -196,7 +196,7 @@ function WeekScreen() {
                 haptics.select();
                 router.push('/cycle/disruption');
               }}
-              className="mt-6 min-h-[44px] items-center justify-center py-2"
+              className="mt-6 min-h-[48px] items-center justify-center py-2"
             >
               <Text variant="label" style={{ color: colors.clayBright }}>
                 Need a break? →
@@ -216,8 +216,8 @@ function WeekScreen() {
                 className="mt-2 text-[13px]"
                 style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}
               >
-                Your routine is a simple daily morning and evening. Add a retinoid or an
-                exfoliating acid and we&apos;ll build your cycle.
+                Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating
+                acid and we&apos;ll build your cycle.
               </Text>
             </View>
             {schedulerNote ? <SchedulerNote note={schedulerNote} /> : null}
@@ -245,13 +245,10 @@ function SchedulerNote({ note }: { note: string }) {
           haptics.select();
           router.push('/cycle/phased-intro');
         }}
-        className="mt-4 min-h-[44px] flex-row items-center gap-3 rounded-[18px] px-4 py-3"
+        className="mt-4 min-h-[48px] flex-row items-center gap-3 rounded-[18px] px-4 py-3"
         style={noteStyle}
       >
-        <View
-          className="h-1.5 w-1.5 rounded-full"
-          style={{ backgroundColor: colors.clayBright }}
-        />
+        <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
         <Text
           className="flex-1 text-[13.5px] leading-[20px]"
           style={{ color: 'rgba(244,239,231,0.78)' }}
@@ -267,7 +264,10 @@ function SchedulerNote({ note }: { note: string }) {
 
   return (
     <View className="mt-4 flex-row items-start gap-3 rounded-[18px] px-4 py-3" style={noteStyle}>
-      <View className="mt-[7px] h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+      <View
+        className="mt-[7px] h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: colors.clayBright }}
+      />
       <Text
         className="flex-1 text-[13.5px] leading-[20px]"
         style={{ color: 'rgba(244,239,231,0.72)' }}

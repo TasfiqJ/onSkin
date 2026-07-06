@@ -94,16 +94,18 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('className="items-center py-2"');
   });
 
-  it('keeps Shelf card replace nudges as visible 44pt phone targets', () => {
+  it('keeps Shelf card replace nudges buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
     expect(source).toContain('accessibilityLabel={`Replace ${item.name}`}');
     expect(source).toContain('className="rounded-[18px] bg-paper-raised p-4"');
     expect(source).toContain('className="flex-row items-center gap-3.5"');
-    expect(source).toContain('ml-[64px] mt-2 min-h-[44px] min-w-[84px]');
+    expect(source).toContain('ml-[64px] mt-2 min-h-[48px] min-w-[84px]');
     expect(source).toContain('border border-clay/20 bg-clay-tint');
-    expect(source).toContain('minHeight: 44');
+    expect(source).toContain('minHeight: 48');
     expect(source).toContain('minWidth: 84');
+    expect(source).not.toContain('ml-[64px] mt-2 min-h-[44px] min-w-[84px]');
+    expect(source).not.toContain('minHeight: 44');
     expect(source).not.toContain('hitSlop={6}');
     expect(source).not.toContain('className="mt-1 self-start"');
     expect(source).not.toContain('event.stopPropagation()');

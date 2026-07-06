@@ -77,7 +77,7 @@ export default function SkinNotesHub() {
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push('/community/ask')}
-            className="min-h-[44px] min-w-[44px] items-center justify-center px-2"
+            className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
           >
             <Text variant="body" tone="muted" className="font-sans-medium">
               Ask
