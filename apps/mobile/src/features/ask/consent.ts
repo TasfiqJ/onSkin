@@ -43,10 +43,10 @@ export async function revokeAskConsent(): Promise<void> {
   // turn counter; the short server-side safety-audit window is purged by an Edge Function on
   // withdrawal. No conversation content is stored locally (no transcript).
   await clearAskStore();
-  track('ask_consent_revoked');
   await withdrawConsent({
     type: 'ask_onskin',
     version: ASK_COPY.consentVersion,
     consentText: `[PLACEHOLDER ask_onskin withdrawal. B-PRIVACY-COPY]`,
   });
+  track('ask_consent_revoked');
 }

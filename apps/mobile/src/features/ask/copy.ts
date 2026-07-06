@@ -103,6 +103,8 @@ export const ASK_COPY = {
     consentLine: 'A separate ask_onskin consent. Distinct and revocable.',
     toggleLabel: 'Enable Ask OnSkin',
     toggleHint: 'Off by default',
+    saveFailedTitle: 'Choice not saved',
+    saveFailedBody: 'We could not save that Ask OnSkin choice. Please try again.',
     footer: 'Pro-gated · hard trial cap · the answers about your own shelf are always free',
   },
   // The consent-ledger body (placeholder copy. B-PRIVACY-COPY). The honest, stress-tested

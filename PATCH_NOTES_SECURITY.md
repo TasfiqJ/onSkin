@@ -579,6 +579,13 @@
 - Why safe: Privacy and consent controls should not make a sensitive choice look durable, unlock partner-sharing affordances, or emit opt-in analytics when the underlying local/ledger save failed.
 - Regression: `applyPrivacyChoice.test.ts` covers save-before-visible-state ordering, fail-closed persistence errors, route use of the helper, disabled toggles, and cloud-backup analytics ordering. `userFacing.test.ts` keeps the failure copy stable and provider-detail-free.
 
+## Cloud Ask consent save recovery
+
+- Files: `apps/mobile/src/features/ask/applyConsentChoice.ts`, `apps/mobile/src/features/ask/applyConsentChoice.test.ts`, `apps/mobile/src/app/ask/consent.tsx`, `apps/mobile/src/features/ask/consent.ts`, `apps/mobile/src/features/ask/copy.ts`, `apps/mobile/src/features/ask/routeContract.test.ts`.
+- Change: Cloud Ask consent changes now grant or revoke `ask_onskin` through a helper before the consent switch updates visible query state. The switch disables while saving, rapid duplicate writes are ignored, failed persistence shows stable "Choice not saved" copy, and stale consent state is refreshed after success or failure. Revocation analytics now emit only after withdrawal succeeds.
+- Why safe: Ask prompts are health-adjacent disclosures to a cloud language layer. The consent UI should not look enabled or revoked, and analytics should not say a revoke completed, unless the relevant local/ledger operation actually completed.
+- Regression: `applyConsentChoice.test.ts` covers grant/revoke save-before-apply and fail-closed persistence errors. `routeContract.test.ts` locks the route to the helper, disabled switch, immediate write guard, stable alert copy, and non-optimistic query update. `claimsafety.test.ts` scans the new copy.
+
 ## Photo capture consent fail-closed gate
 
 - Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.

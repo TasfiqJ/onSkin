@@ -23,4 +23,16 @@ describe('Ask route launch contracts', () => {
     expect(consent).toContain('phase7Flags.cloudAsk');
     expect(consent).toContain('<DeferredSurface surface="cloudAsk" />');
   });
+
+  it('saves cloud Ask consent before applying visible toggle state', () => {
+    const consent = readAppRoute('ask/consent.tsx');
+
+    expect(consent).toContain('applyAskConsentChoice');
+    expect(consent).toContain('savingRef.current');
+    expect(consent).toContain('disabled={saving}');
+    expect(consent).toContain('ASK_COPY.privacy.saveFailedTitle');
+    expect(consent).toContain('onSaved: () => {');
+    expect(consent).toContain("qc.setQueryData(['ask_onskin'], enabled);");
+    expect(consent).not.toContain("qc.setQueryData(['ask_onskin'], enabled);\n    try");
+  });
 });

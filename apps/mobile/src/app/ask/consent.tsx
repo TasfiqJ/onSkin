@@ -1,9 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, Switch, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
 import { phase7Flags } from '@/lib/launch/phase7';
@@ -36,6 +38,8 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 
 export default function AskConsentScreen() {
   const qc = useQueryClient();
+  const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
   const consented = useQuery({
     queryKey: ['ask_onskin'],
     queryFn: isAskConsented,
@@ -46,14 +50,23 @@ export default function AskConsentScreen() {
   if (!phase7Flags.cloudAsk) return <DeferredSurface surface="cloudAsk" />;
 
   const onToggle = async (enabled: boolean) => {
-    qc.setQueryData(['ask_onskin'], enabled);
+    if (savingRef.current) return;
+    savingRef.current = true;
+    setSaving(true);
     try {
-      if (enabled) await grantAskConsent();
-      else await revokeAskConsent();
-    } catch {
-      /* best-effort until backend configured */
+      await applyAskConsentChoice(enabled, {
+        grant: grantAskConsent,
+        revoke: revokeAskConsent,
+        onSaved: () => {
+          qc.setQueryData(['ask_onskin'], enabled);
+        },
+        onFailure: () =>
+          Alert.alert(ASK_COPY.privacy.saveFailedTitle, ASK_COPY.privacy.saveFailedBody),
+        invalidate: () => qc.invalidateQueries({ queryKey: ['ask_onskin'] }),
+      });
     } finally {
-      void qc.invalidateQueries({ queryKey: ['ask_onskin'] });
+      savingRef.current = false;
+      setSaving(false);
     }
   };
 
@@ -118,6 +131,7 @@ export default function AskConsentScreen() {
           </View>
           <Switch
             value={consented.data ?? false}
+            disabled={saving}
             onValueChange={(v) => void onToggle(v)}
             trackColor={{ true: colors.clay, false: colors.greigeDeep }}
             thumbColor={colors.paperRaised}

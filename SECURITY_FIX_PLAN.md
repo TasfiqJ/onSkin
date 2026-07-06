@@ -60,6 +60,7 @@
 - SEC-P2-067: Recommendation preference chips now save local private state before updating visible filters or analytics, disable while saving, and surface stable failure copy.
 - SEC-P2-068: Analytics privacy payload audit now catches shorthand sensitive props and fails on sensitive keys; onboarding no longer attempts to send selected goals.
 - SEC-P2-069: You-tab marketing, partner-sharing, and cloud-backup privacy toggles now save before visible state or analytics side effects, disable while saving, and surface stable failure copy.
+- SEC-P2-070: Cloud Ask consent grant/revoke now saves before visible toggle state, disables while saving, refreshes stale consent state after failures, and records revocation analytics only after withdrawal succeeds.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

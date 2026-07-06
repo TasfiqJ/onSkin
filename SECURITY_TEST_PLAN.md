@@ -63,6 +63,7 @@
 - `npm --workspace @onskin/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/privacyState.test.ts src/lib/errors/userFacing.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
 - `npx vitest run src/lib/observability/safeLog.test.ts`
 - `npx vitest run src/lib/env.test.ts`
@@ -182,6 +183,9 @@
 - `apps/mobile/src/features/settings/applyPrivacyChoice.test.ts`
   - Proves You-tab privacy choices save before visible/query state or cloud-backup analytics are applied.
   - Proves failed privacy-choice persistence surfaces stable copy, leaves visible state unapplied, refreshes stale state, and keeps marketing, partner-sharing, and cloud-backup toggles disabled while saving.
+- `apps/mobile/src/features/ask/applyConsentChoice.test.ts`
+  - Proves Cloud Ask consent grants and revocations save before visible toggle state is applied.
+  - Proves failed Ask consent persistence surfaces stable copy, leaves visible state unapplied, and refreshes stale consent state.
 - `apps/mobile/src/features/recommendations/useRecommendations.test.ts`
   - Proves recommendation UI remains in a loading state until local private preferences and dismissed suggestion IDs have loaded, preventing stale dismissed cards from flashing.
 - `apps/mobile/src/features/settings/settingsRoutes.test.ts`
