@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the routine plan direct-entry trap after 320x568 E2E showed
+  `/routine/plan` had no visible escape when opened from You, leaving only
+  `Start today`. The plan screen now uses the shared 48 px Back control with a
+  You fallback, scrollable review content, and a tighter CTA reserve; E2E
+  verified Back returns to `/you`, `Start today` remains 56 px, and the gap note
+  clears the CTA with no overflow or small controls.
 - Fixed the You tab short-phone first-viewport overlap after 320x568 E2E showed
   routine rows sitting behind the floating tab bar. Compact You screens now use
   denser account, subscription, and routine spacing, 48 px compact account and

@@ -65,6 +65,7 @@ describe('Pro-gated route contracts', () => {
       'cycle/why-tonight.tsx',
       'cycle/disruption.tsx',
       'cycle/phased-intro.tsx',
+      'routine/plan.tsx',
       'routine/reorder.tsx',
       'routine/ramp.tsx',
       'routine/tolerance.tsx',
@@ -82,6 +83,7 @@ describe('Pro-gated route contracts', () => {
       'cycle/settings.tsx',
       'cycle/procedure.tsx',
       'cycle/recovery.tsx',
+      'routine/plan.tsx',
       'routine/ramp.tsx',
       'routine/streak.tsx',
       'routine/widgets.tsx',
@@ -108,6 +110,15 @@ describe('Pro-gated route contracts', () => {
   });
 
   it('keeps routine intelligence screens bound to generated plan data', () => {
+    const plan = readAppRoute('routine/plan.tsx');
+    expect(plan).toContain('APP_YOU_ROUTE');
+    expect(plan).toContain('backOrReplace(router, APP_YOU_ROUTE)');
+    expect(plan).toContain('RouteIconButton');
+    expect(plan).toContain('ScrollView');
+    expect(plan).toContain('contentContainerClassName="pb-6"');
+    expect(plan).toContain('className="pb-4"');
+    expect(plan).not.toContain('className="pb-9"');
+
     const adaptation = readAppRoute('routine/adaptation.tsx');
     expect(adaptation).toContain('usePlan');
     expect(adaptation).not.toContain('Azelaic Acid 10%');

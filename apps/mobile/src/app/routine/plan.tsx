@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { setCycleAnchor } from '@/features/routine/cycleAnchor';
 import { usePlan } from '@/features/routine/usePlan';
+import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 01 · Plan built. "Start today" (design screen 01, docs/03 §2). The deterministic
@@ -30,10 +31,23 @@ function MorningRow({ index, name, synergy }: { index: number; name: string; syn
   );
 }
 
-function EveningRow({ nightLabel, name, suffix, accent }: { nightLabel: string; name: string; suffix: string; accent: boolean }) {
+function EveningRow({
+  nightLabel,
+  name,
+  suffix,
+  accent,
+}: {
+  nightLabel: string;
+  name: string;
+  suffix: string;
+  accent: boolean;
+}) {
   return (
     <View className="flex-row items-center gap-3 py-1.5">
-      <Text className="w-9 font-mono text-[11px]" style={{ color: accent ? colors.clayBright : 'rgba(244,239,231,0.4)' }}>
+      <Text
+        className="w-9 font-mono text-[11px]"
+        style={{ color: accent ? colors.clayBright : 'rgba(244,239,231,0.4)' }}
+      >
         {nightLabel}
       </Text>
       <Text className="font-sans-medium text-[14.5px]" style={{ color: colors.cream }}>
@@ -54,70 +68,121 @@ export default function PlanScreen() {
   const retinoid = plan?.pm.find((s) => s.role === 'treatment');
   const retRamp = plan?.ramp.find((r) => r.name === retinoid?.name);
   const hasVitCSynergy = plan?.conflicts.some(
-    (c) => c.rule.interactionType === 'synergy' && (c.rule.tagA === 'vitamin_c' || c.rule.tagB === 'vitamin_c'),
+    (c) =>
+      c.rule.interactionType === 'synergy' &&
+      (c.rule.tagA === 'vitamin_c' || c.rule.tagB === 'vitamin_c'),
   );
 
   return (
     <Screen edges={['top', 'bottom']}>
-      <View className="flex-1 pt-4">
-        <Text variant="label" tone="clay" className="font-mono text-[11.5px] tracking-[1.15px]">
-          BUILT FOR DRY, SENSITIVE SKIN
-        </Text>
-        <Text variant="title" className="mt-2 text-[34px] leading-[37px]">
-          Your routine, in order.
-        </Text>
-
-        {/* Morning card */}
-        <View className="mt-5 rounded-[22px] bg-paper-raised" style={{ paddingHorizontal: 20, paddingVertical: 18, borderWidth: 1, borderColor: colors.hairline }}>
-          <View className="mb-3 flex-row items-center gap-2.5">
-            <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay-tint">
-              <View className="h-1.5 w-1.5 rounded-full bg-clay" />
-            </View>
-            <Text className="font-mono text-[13px] uppercase tracking-[1px]" style={{ color: colors.clayDeep }}>
-              Morning
-            </Text>
-          </View>
-          {plan?.am.map((s, i) => (
-            <MorningRow key={s.productId} index={i + 1} name={s.name} synergy={s.role === 'antioxidant' && hasVitCSynergy} />
-          ))}
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-6"
+      >
+        <View className="flex-row items-center pt-1">
+          <RouteIconButton
+            accessibilityLabel="Back"
+            onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
+          />
         </View>
 
-        {/* Evening card (skin cycling). Dark */}
-        <View className="mt-3 rounded-[22px]" style={{ backgroundColor: colors.night, paddingHorizontal: 20, paddingVertical: 18 }}>
-          <View className="mb-3 flex-row items-center gap-2.5">
-            <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.nightSurface }}>
-              <View className="h-2 w-2 rounded-full" style={{ backgroundColor: colors.clayBright }} />
+        <View className="pt-2">
+          <Text variant="label" tone="clay" className="font-mono text-[11.5px] tracking-[1.15px]">
+            BUILT FOR DRY, SENSITIVE SKIN
+          </Text>
+          <Text variant="title" className="mt-2 text-[34px] leading-[37px]">
+            Your routine, in order.
+          </Text>
+
+          {/* Morning card */}
+          <View
+            className="mt-5 rounded-[22px] bg-paper-raised"
+            style={{
+              paddingHorizontal: 20,
+              paddingVertical: 18,
+              borderWidth: 1,
+              borderColor: colors.hairline,
+            }}
+          >
+            <View className="mb-3 flex-row items-center gap-2.5">
+              <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay-tint">
+                <View className="h-1.5 w-1.5 rounded-full bg-clay" />
+              </View>
+              <Text
+                className="font-mono text-[13px] uppercase tracking-[1px]"
+                style={{ color: colors.clayDeep }}
+              >
+                Morning
+              </Text>
             </View>
-            <Text className="font-mono text-[13px] uppercase tracking-[1px]" style={{ color: colors.clayBright }}>
-              Evening · skin cycling
-            </Text>
+            {plan?.am.map((s, i) => (
+              <MorningRow
+                key={s.productId}
+                index={i + 1}
+                name={s.name}
+                synergy={s.role === 'antioxidant' && hasVitCSynergy}
+              />
+            ))}
           </View>
-          {exfoliant ? (
-            <EveningRow nightLabel="N1" name={exfoliant.name.replace(/\s*Toner$/i, '')} suffix="exfoliate" accent={false} />
+
+          {/* Evening card (skin cycling). Dark */}
+          <View
+            className="mt-3 rounded-[22px]"
+            style={{ backgroundColor: colors.night, paddingHorizontal: 20, paddingVertical: 18 }}
+          >
+            <View className="mb-3 flex-row items-center gap-2.5">
+              <View
+                className="h-[18px] w-[18px] items-center justify-center rounded-full"
+                style={{ backgroundColor: colors.nightSurface }}
+              >
+                <View
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: colors.clayBright }}
+                />
+              </View>
+              <Text
+                className="font-mono text-[13px] uppercase tracking-[1px]"
+                style={{ color: colors.clayBright }}
+              >
+                Evening · skin cycling
+              </Text>
+            </View>
+            {exfoliant ? (
+              <EveningRow
+                nightLabel="N1"
+                name={exfoliant.name.replace(/\s*Toner$/i, '')}
+                suffix="exfoliate"
+                accent={false}
+              />
+            ) : null}
+            {retinoid ? (
+              <EveningRow
+                nightLabel="N2"
+                name={retinoid.name}
+                suffix={retRamp ? `${retRamp.state.freqPerWeek}×/week to start` : 'tonight'}
+                accent
+              />
+            ) : null}
+            <EveningRow nightLabel="N3–4" name="Recover" suffix="ceramide only" accent={false} />
+          </View>
+
+          {/* Honest gap note. Only when a category is missing */}
+          {plan?.gaps.length ? (
+            <View className="mt-3.5 flex-row gap-2.5 rounded-2xl bg-greige-chip px-4 py-3">
+              <View
+                className="mt-1.5 h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: colors.muted }}
+              />
+              <Text variant="bodySm" tone="muted" className="flex-1 text-[12.5px]">
+                {plan.gaps[0]}
+              </Text>
+            </View>
           ) : null}
-          {retinoid ? (
-            <EveningRow
-              nightLabel="N2"
-              name={retinoid.name}
-              suffix={retRamp ? `${retRamp.state.freqPerWeek}×/week to start` : 'tonight'}
-              accent
-            />
-          ) : null}
-          <EveningRow nightLabel="N3–4" name="Recover" suffix="ceramide only" accent={false} />
         </View>
+      </ScrollView>
 
-        {/* Honest gap note. Only when a category is missing */}
-        {plan?.gaps.length ? (
-          <View className="mt-3.5 flex-row gap-2.5 rounded-2xl bg-greige-chip px-4 py-3">
-            <View className="mt-1.5 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.muted }} />
-            <Text variant="bodySm" tone="muted" className="flex-1 text-[12.5px]">
-              {plan.gaps[0]}
-            </Text>
-          </View>
-        ) : null}
-      </View>
-
-      <View className="pb-9">
+      <View className="pb-4">
         <Button
           label="Start today"
           variant="accent"
