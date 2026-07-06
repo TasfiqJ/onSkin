@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the phased-introduction cycle sheet after 320x568 E2E showed the
+  `Sounds good` action clipped and `Add it now anyway` pushed below the first
+  viewport. Compact phones now use tighter sheet spacing, skip the tiny backdrop
+  reserve, and show both 48 px+ actions with a visible bottom buffer.
 - Fixed the Shelf empty-active archive trap after 320x568 E2E showed finishing
   the only product returned to an empty Shelf with no route back to archived
   history. The empty state now exposes the 48 px View archive action when archive

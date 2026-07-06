@@ -139,8 +139,16 @@ describe('Pro-gated route contracts', () => {
     }
 
     const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
+    expect(phasedIntro).toContain('useWindowDimensions');
+    expect(phasedIntro).toContain('const compactSheet = height < 640');
+    expect(phasedIntro).toContain('backdropAccessible={!compactSheet}');
+    expect(phasedIntro).toContain("className={compactSheet ? 'pb-6' : undefined}");
+    expect(phasedIntro).toContain("className={compactSheet ? 'mt-4' : 'mt-6'}");
+    expect(phasedIntro).toContain("className={compactSheet ? 'min-h-[48px] py-3' : undefined}");
+    expect(phasedIntro).toContain("compact={compactSheet}");
     expect(phasedIntro).toContain('min-h-[48px] items-center justify-center');
     expect(phasedIntro).not.toContain('min-h-[44px] items-center justify-center');
+    expect(phasedIntro).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
   });
 
   it('keeps the widgets Live Activity opt-in on the 44px shared switch', () => {
