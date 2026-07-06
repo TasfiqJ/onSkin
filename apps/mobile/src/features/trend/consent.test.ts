@@ -45,16 +45,29 @@ describe('trend insight consent persistence', () => {
     mocks.setTrendInsightsLocal.mockResolvedValue(undefined);
   });
 
-  it('records trend opt-in analytics only after the local consent flag is saved', async () => {
+  it('records trend opt-in analytics only after the consent ledger saves', async () => {
     const { grantTrendInsightsConsent } = await import('./consent');
 
     await expect(grantTrendInsightsConsent()).resolves.toBeUndefined();
 
     expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(true);
+    expect(mocks.recordConsent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'photo_trend_insights', granted: true }),
+    );
     expect(mocks.track).toHaveBeenCalledWith('trend_insights_opted_in');
-    expect(mocks.setTrendInsightsLocal.mock.invocationCallOrder[0]).toBeLessThan(
+    expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.track.mock.invocationCallOrder[0],
     );
+  });
+
+  it('does not emit trend opt-in analytics when the consent ledger fails', async () => {
+    const { grantTrendInsightsConsent } = await import('./consent');
+    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
+
+    await expect(grantTrendInsightsConsent()).resolves.toBeUndefined();
+
+    expect(mocks.setTrendInsightsLocal).toHaveBeenCalledWith(true);
+    expect(mocks.track).not.toHaveBeenCalledWith('trend_insights_opted_in');
   });
 
   it('records trend revocation analytics only after withdrawal succeeds', async () => {

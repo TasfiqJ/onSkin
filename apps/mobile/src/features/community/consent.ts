@@ -27,7 +27,6 @@ export async function isCommunityConsented(): Promise<boolean> {
  *  can require both (docs/11 §8: the hard age gate is a real control, not copy). */
 export async function grantCommunityConsent(): Promise<void> {
   await setCommunityConsentLocal(true);
-  track('community_consent_granted');
   try {
     await recordConsent({
       type: 'community_participation',
@@ -35,6 +34,7 @@ export async function grantCommunityConsent(): Promise<void> {
       version: COMMUNITY_COPY.consentVersion,
       consentText: `[PLACEHOLDER community_participation consent. B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
     });
+    track('community_consent_granted');
   } catch {
     /* best-effort until backend configured */
   }

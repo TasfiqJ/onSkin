@@ -37,7 +37,6 @@ export async function isCommerceConsented(): Promise<boolean> {
 
 export async function grantCommerceConsent(): Promise<void> {
   await setCommerceConsentLocal(true);
-  track('commerce_consent_granted');
   try {
     await recordConsent({
       type: 'data_sharing',
@@ -45,6 +44,7 @@ export async function grantCommerceConsent(): Promise<void> {
       version: COMMERCE_COPY.consentVersion,
       consentText: `[PLACEHOLDER commerce data-sharing consent. B-PRIVACY-COPY] ${COMMERCE_COPY.consent.body}`,
     });
+    track('commerce_consent_granted');
   } catch {
     /* best-effort until backend configured */
   }

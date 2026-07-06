@@ -25,7 +25,6 @@ export async function isAskConsented(): Promise<boolean> {
 
 export async function grantAskConsent(): Promise<void> {
   await setAskConsentLocal(true);
-  track('ask_consent_granted');
   try {
     await recordConsent({
       type: 'ask_onskin',
@@ -33,6 +32,7 @@ export async function grantAskConsent(): Promise<void> {
       version: ASK_COPY.consentVersion,
       consentText: `[PLACEHOLDER ask_onskin consent. B-PRIVACY-COPY] ${ASK_COPY.consentLedgerBody}`,
     });
+    track('ask_consent_granted');
   } catch {
     /* best-effort until backend configured */
   }

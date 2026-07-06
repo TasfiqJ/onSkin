@@ -591,7 +591,7 @@
 - Files: `apps/mobile/src/features/commerce/consent.ts`, `apps/mobile/src/features/commerce/consent.test.ts`.
 - Change: `commerce_consent_declined` now tracks only after `withdrawConsent({ type: 'data_sharing' })` succeeds. The local-first commerce flag still flips off before the withdrawal call so paid-link affordances relock immediately.
 - Why safe: Partner-sharing withdrawal is a regulated consent event. Analytics should not record a completed decline if server-side withdrawal/cleanup fails, even though the local app must still fail closed by relocking commerce.
-- Regression: `consent.test.ts` proves grant analytics wait for local persistence, decline analytics wait for withdrawal, and withdrawal failure does not emit the completed-decline event.
+- Regression: `consent.test.ts` proves grant analytics wait for ledger persistence, decline analytics wait for withdrawal, and withdrawal failure does not emit the completed-decline event.
 
 ## Notification preference save recovery
 
@@ -605,7 +605,14 @@
 - Files: `apps/mobile/src/features/trend/consent.ts`, `apps/mobile/src/features/trend/consent.test.ts`.
 - Change: `trend_consent_revoked` now tracks only after `withdrawConsent({ type: 'photo_trend_insights' })` succeeds. The local trend flag and derived trend state still clear before the withdrawal call so the trend feature relocks immediately.
 - Why safe: Photo-trend insights are a separate health-data consent. Analytics should not record a completed revocation if the server-side withdrawal/cleanup path failed.
-- Regression: `consent.test.ts` proves trend opt-in analytics wait for local persistence, revocation analytics wait for withdrawal, and withdrawal failure does not emit a completed-revocation event.
+- Regression: `consent.test.ts` proves trend opt-in analytics wait for ledger persistence, revocation analytics wait for withdrawal, and withdrawal failure does not emit a completed-revocation event.
+
+## Sensitive consent grant analytics ordering
+
+- Files: `apps/mobile/src/features/ask/consent.ts`, `apps/mobile/src/features/ask/consent.test.ts`, `apps/mobile/src/features/commerce/consent.ts`, `apps/mobile/src/features/commerce/consent.test.ts`, `apps/mobile/src/features/community/consent.ts`, `apps/mobile/src/features/community/consent.test.ts`, `apps/mobile/src/features/trend/consent.ts`, `apps/mobile/src/features/trend/consent.test.ts`.
+- Change: Ask, commerce, community, and photo-trend grant analytics now emit only after `recordConsent` succeeds. The local flags still save first for existing local/offline gates, but failed ledger writes no longer produce completed opt-in analytics events.
+- Why safe: These analytics events can become operational evidence for sensitive health-data choices. They should not claim a completed opt-in when the immutable, versioned consent row failed to persist.
+- Regression: Consent tests prove every grant event waits for the ledger call and is not emitted on ledger failure.
 
 ## Photo capture consent fail-closed gate
 

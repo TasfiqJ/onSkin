@@ -41,16 +41,29 @@ describe('commerce consent persistence', () => {
     mocks.setCommerceConsentLocal.mockResolvedValue(undefined);
   });
 
-  it('records commerce grant analytics only after the local consent flag is saved', async () => {
+  it('records commerce grant analytics only after the consent ledger saves', async () => {
     const { grantCommerceConsent } = await import('./consent');
 
     await expect(grantCommerceConsent()).resolves.toBeUndefined();
 
     expect(mocks.setCommerceConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.recordConsent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'data_sharing', granted: true }),
+    );
     expect(mocks.track).toHaveBeenCalledWith('commerce_consent_granted');
-    expect(mocks.setCommerceConsentLocal.mock.invocationCallOrder[0]).toBeLessThan(
+    expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.track.mock.invocationCallOrder[0],
     );
+  });
+
+  it('does not emit commerce grant analytics when the consent ledger fails', async () => {
+    const { grantCommerceConsent } = await import('./consent');
+    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
+
+    await expect(grantCommerceConsent()).resolves.toBeUndefined();
+
+    expect(mocks.setCommerceConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.track).not.toHaveBeenCalledWith('commerce_consent_granted');
   });
 
   it('records commerce decline analytics only after withdrawal succeeds', async () => {

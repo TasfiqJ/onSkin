@@ -25,7 +25,6 @@ export async function isTrendInsightsConsented(): Promise<boolean> {
 
 export async function grantTrendInsightsConsent(): Promise<void> {
   await setTrendInsightsLocal(true);
-  track('trend_insights_opted_in');
   try {
     await recordConsent({
       type: 'photo_trend_insights',
@@ -33,6 +32,7 @@ export async function grantTrendInsightsConsent(): Promise<void> {
       version: TREND_COPY.consentVersion,
       consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
     });
+    track('trend_insights_opted_in');
   } catch {
     /* best-effort until backend configured */
   }

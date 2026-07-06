@@ -65,6 +65,7 @@
 - `npm --workspace @onskin/mobile run test -- src/features/settings/applyPrivacyChoice.test.ts src/lib/errors/userFacing.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/ask/applyConsentChoice.test.ts src/features/ask/routeContract.test.ts src/features/ask/claimsafety.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/commerce/consent.test.ts src/features/commerce/commerce.test.ts src/features/commerce/claimsafety.test.ts`
+- `npm --workspace @onskin/mobile run test -- src/features/ask/consent.test.ts src/features/commerce/consent.test.ts src/features/community/consent.test.ts src/features/trend/consent.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/notifications/applyPreferences.test.ts src/features/notifications/store.test.ts src/features/notifications/claimsafety.test.ts src/features/notifications/policy.test.ts`
 - `npm --workspace @onskin/mobile run test -- src/features/trend/consent.test.ts src/features/trend/applyConsentChoice.test.ts src/features/trend/trendRoutes.test.ts src/features/trend/claimsafety.test.ts`
 - `npx vitest run src/lib/errors/userFacing.test.ts`
@@ -190,8 +191,11 @@
   - Proves Cloud Ask consent grants and revocations save before visible toggle state is applied.
   - Proves failed Ask consent persistence surfaces stable copy, leaves visible state unapplied, and refreshes stale consent state.
 - `apps/mobile/src/features/commerce/consent.test.ts`
-  - Proves commerce grant analytics emit only after the local consent flag saves.
+  - Proves commerce grant analytics emit only after the immutable consent ledger saves.
   - Proves commerce decline analytics emit only after consent withdrawal succeeds, and failed withdrawal does not record a completed decline.
+- `apps/mobile/src/features/ask/consent.test.ts`, `apps/mobile/src/features/commerce/consent.test.ts`, `apps/mobile/src/features/community/consent.test.ts`, `apps/mobile/src/features/trend/consent.test.ts`
+  - Prove sensitive consent grant analytics emit only after the immutable consent ledger write succeeds.
+  - Prove consent grant analytics are not emitted when ledger persistence fails.
 - `apps/mobile/src/features/notifications/applyPreferences.test.ts`
   - Proves notification preference changes save local private state before reminders are rescheduled.
   - Proves failed local notification preference persistence does not reschedule reminders or optimistically change visible query state.
