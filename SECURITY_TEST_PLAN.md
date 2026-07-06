@@ -370,8 +370,11 @@
   - Verifies data export unavailable-share paths still delete the plaintext export file and surface export-unavailable copy from the You tab instead of firing the success/review path.
 - `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`
   - Verifies health-data collection consent failures keep the quiz locked and visible retry copy present.
+  - Verifies account onboarding waits for Terms/Privacy consent persistence before account-created analytics and paywall navigation.
   - Verifies analyzing does not silently swallow local profile persistence failure before reveal.
   - Verifies the failed-save recovery path remains visible.
+- `apps/mobile/src/features/onboarding/accountConsent.test.ts`
+  - Verifies Terms/Privacy account acceptance is recorded with the current copy version and ledger failures propagate to keep onboarding retryable.
 - `apps/mobile/src/lib/errors/userFacing.test.ts`
   - Verifies common auth failures map to stable user copy.
   - Verifies raw backend/provider details such as table names, tokens, and user IDs are not reflected in auth, privacy-rights, app-lock, or share-card error messages.

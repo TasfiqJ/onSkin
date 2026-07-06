@@ -40,6 +40,8 @@ export const HEALTH_DATA_WITHDRAWAL = {
 
 export const ACCOUNT_CONSENT = {
   version: CONSENT_COPY_VERSION,
+  saveFailedBody:
+    "We couldn't record your account choice. Please try again before continuing.",
   fullText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Acceptance of the Terms of ' +
     'Service and Privacy Policy.',

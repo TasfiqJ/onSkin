@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { Platform, Pressable, TextInput, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { recordAccountConsent } from '@/features/onboarding/accountConsent';
 import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { track, identify } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
-import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
 import { supabase } from '@/lib/supabase/client';
@@ -26,17 +26,14 @@ export default function AccountScreen() {
 
   async function finish() {
     try {
-      await recordConsent({
-        type: 'account',
-        granted: true,
-        version: ACCOUNT_CONSENT.version,
-        consentText: ACCOUNT_CONSENT.fullText,
-      });
-      const { data } = await supabase.auth.getUser();
-      if (data.user?.id) identify(data.user.id, { method: 'account_created' });
+      await recordAccountConsent();
     } catch {
-      // best-effort until backend configured
+      setError(ACCOUNT_CONSENT.saveFailedBody);
+      return;
     }
+
+    const response = await supabase.auth.getUser().catch(() => null);
+    if (response?.data.user?.id) identify(response.data.user.id, { method: 'account_created' });
     track('account_created');
     router.replace('/onboarding/paywall');
   }

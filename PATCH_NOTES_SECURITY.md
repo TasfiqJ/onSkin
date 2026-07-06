@@ -648,3 +648,10 @@
 - Change: `photo_capture` and `photo_cloud_backup` grant helpers now roll their local private flags back off and rethrow if `recordConsent` fails.
 - Why safe: Progress photos and backup settings are sensitive health-adjacent choices. A failed immutable ledger write must not leave camera capture or cloud backup locally unlocked through offline/local gates.
 - Regression: `consent.test.ts` proves successful grants set local flags only after ledger persistence, failed grants relock local flags and reject, and cloud-backup withdrawal still relocks locally before the withdrawal call.
+
+## Account consent ledger fail-closed handoff
+
+- Files: `apps/mobile/src/app/onboarding/account.tsx`, `apps/mobile/src/features/onboarding/accountConsent.ts`, `apps/mobile/src/features/onboarding/accountConsent.test.ts`, `apps/mobile/src/features/onboarding/consentCopy.ts`, `apps/mobile/src/features/onboarding/consentCopy.test.ts`, `apps/mobile/src/features/onboarding/onboardingRoutes.test.ts`.
+- Change: Account onboarding now records Terms/Privacy acceptance through `recordAccountConsent()` and stays on the account screen with stable retry copy if the ledger write fails. `account_created` analytics, PostHog/Sentry identity, and paywall navigation happen only after that row saves.
+- Why safe: Account creation can already have succeeded at the auth provider, but the product must not claim completed account onboarding or advance the user without durable acceptance evidence for the copy/version shown.
+- Regression: `accountConsent.test.ts` proves account acceptance rows are written and failures propagate. `onboardingRoutes.test.ts` locks the route ordering and prevents the old best-effort catch from returning.

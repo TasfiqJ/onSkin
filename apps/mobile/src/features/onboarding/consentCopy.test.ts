@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  ACCOUNT_CONSENT,
   HEALTH_DATA_CONSENT,
   PHOTO_CAPTURE_CONSENT,
   PHOTO_CLOUD_BACKUP_CONSENT,
@@ -16,6 +17,7 @@ const visibleConsentCopy = [
   HEALTH_DATA_CONSENT.declinedBody,
   HEALTH_DATA_CONSENT.saveFailedTitle,
   HEALTH_DATA_CONSENT.saveFailedBody,
+  ACCOUNT_CONSENT.saveFailedBody,
   PHOTO_CAPTURE_CONSENT.what,
   PHOTO_CAPTURE_CONSENT.why,
   PHOTO_CAPTURE_CONSENT.never,

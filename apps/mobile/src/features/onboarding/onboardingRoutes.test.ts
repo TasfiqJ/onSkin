@@ -9,6 +9,17 @@ function readAppRoute(path: string): string {
 }
 
 describe('onboarding route contracts', () => {
+  it('keeps onboarding chip and product-remove controls touchable on phones', () => {
+    const quiz = readAppRoute('onboarding/quiz.tsx');
+    const products = readAppRoute('onboarding/products.tsx');
+
+    expect(quiz).toContain('<Chip');
+    expect(products).toContain('<Chip');
+    expect(products).toContain('accessibilityLabel={`Remove ${it.name}`}');
+    expect(products).toContain('className="h-12 w-12 items-center justify-center');
+    expect(products).not.toContain('hitSlop={8}');
+  });
+
   it('keeps health-data consent fail-closed before quiz access', () => {
     const source = readAppRoute('onboarding/consent.tsx');
 
@@ -21,6 +32,20 @@ describe('onboarding route contracts', () => {
     );
     expect(source.indexOf('declineHealthDataCollectionConsent()')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
+    );
+  });
+
+  it('keeps account onboarding fail-closed before account-created side effects', () => {
+    const source = readAppRoute('onboarding/account.tsx');
+
+    expect(source).not.toContain('best-effort until backend configured');
+    expect(source).toContain('recordAccountConsent');
+    expect(source).toContain('setError(ACCOUNT_CONSENT.saveFailedBody)');
+    expect(source.indexOf('await recordAccountConsent()')).toBeLessThan(
+      source.indexOf("track('account_created')"),
+    );
+    expect(source.indexOf('await recordAccountConsent()')).toBeLessThan(
+      source.indexOf("router.replace('/onboarding/paywall')"),
     );
   });
 
