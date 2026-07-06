@@ -77,8 +77,10 @@ describe('Community route contracts', () => {
     const source = readAppRoute('community/ask.tsx');
 
     expect(source).toContain(
-      'min-h-[44px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3',
+      'min-h-[48px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3',
     );
-    expect(source).toContain('className="h-[44px] items-center justify-center"');
+    expect(source).toContain('className="pb-2 pt-3"');
+    expect(source).toContain('className="h-[48px] items-center justify-center"');
+    expect(source).not.toContain('className="h-[44px] items-center justify-center"');
   });
 });

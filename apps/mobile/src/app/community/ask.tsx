@@ -29,7 +29,7 @@ import { colors } from '@/theme/tokens';
 function GateRow({ label }: { label: string }) {
   return (
     <View
-      className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+      className="min-h-[48px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
       <View
@@ -60,68 +60,79 @@ function ConsentGate() {
     await qc.invalidateQueries({ queryKey: ['communityGate'] });
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8 pt-2">
-      <Text variant="title" className="text-[28px] leading-[31px]">
-        {COMMUNITY_COPY.consent.title}
-      </Text>
-      <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
-        {COMMUNITY_COPY.consent.body}
-      </Text>
-      <View className="mt-5 gap-2">
-        <GateRow label={COMMUNITY_COPY.consent.allow} />
-        <GateRow label={COMMUNITY_COPY.consent.never} />
-        {/* Interactive 16+ affirmation. Must be ticked. Not a decorative checkmark. */}
-        <Pressable
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: ageChecked }}
-          onPress={() => setAgeChecked((v) => !v)}
-          className="min-h-[44px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
-          style={{ borderWidth: 1, borderColor: ageChecked ? colors.clay : colors.hairline }}
-        >
-          <View
-            className="h-[18px] w-[18px] items-center justify-center rounded-[5px]"
-            style={{
-              backgroundColor: ageChecked ? colors.clay : 'transparent',
-              borderWidth: ageChecked ? 0 : 1.5,
-              borderColor: colors.hairlineStrong,
-            }}
+    <View className="flex-1">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4 pt-1">
+        <Text variant="title" className="text-[28px] leading-[31px]">
+          {COMMUNITY_COPY.consent.title}
+        </Text>
+        <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
+          {COMMUNITY_COPY.consent.body}
+        </Text>
+        <View className="mt-5 gap-2">
+          <GateRow label={COMMUNITY_COPY.consent.allow} />
+          <GateRow label={COMMUNITY_COPY.consent.never} />
+          {/* Interactive 16+ affirmation. Must be ticked. Not a decorative checkmark. */}
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: ageChecked }}
+            onPress={() => setAgeChecked((v) => !v)}
+            className="min-h-[48px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+            style={{ borderWidth: 1, borderColor: ageChecked ? colors.clay : colors.hairline }}
           >
-            {ageChecked ? (
-              <Text className="text-[10px]" style={{ color: colors.paper }}>
-                ✓
-              </Text>
-            ) : null}
-          </View>
-          <Text variant="bodySm" className="flex-1 text-[12.5px]" style={{ lineHeight: 17 }}>
-            {COMMUNITY_COPY.consent.age}
+            <View
+              className="h-[18px] w-[18px] items-center justify-center rounded-[5px]"
+              style={{
+                backgroundColor: ageChecked ? colors.clay : 'transparent',
+                borderWidth: ageChecked ? 0 : 1.5,
+                borderColor: colors.hairlineStrong,
+              }}
+            >
+              {ageChecked ? (
+                <Text className="text-[10px]" style={{ color: colors.paper }}>
+                  ✓
+                </Text>
+              ) : null}
+            </View>
+            <Text variant="bodySm" className="flex-1 text-[12.5px]" style={{ lineHeight: 17 }}>
+              {COMMUNITY_COPY.consent.age}
+            </Text>
+          </Pressable>
+        </View>
+        <Text variant="label" tone="muted" className="mt-4">
+          {COMMUNITY_COPY.consent.note}
+        </Text>
+      </ScrollView>
+      <View
+        className="pb-2 pt-3"
+        style={{
+          backgroundColor: colors.paper,
+          borderTopWidth: 1,
+          borderTopColor: colors.hairline,
+        }}
+      >
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ disabled: !ageChecked }}
+          disabled={!ageChecked}
+          onPress={() => void allow()}
+          className="h-[54px] items-center justify-center rounded-pill"
+          style={{ backgroundColor: colors.clay, opacity: ageChecked ? 1 : 0.4 }}
+        >
+          <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
+            {COMMUNITY_COPY.consent.cta}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
+          className="h-[48px] items-center justify-center"
+        >
+          <Text className="font-sans-semibold text-[15px]" tone="muted">
+            {COMMUNITY_COPY.consent.decline}
           </Text>
         </Pressable>
       </View>
-      <Text variant="label" tone="muted" className="mt-4">
-        {COMMUNITY_COPY.consent.note}
-      </Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ disabled: !ageChecked }}
-        disabled={!ageChecked}
-        onPress={() => void allow()}
-        className="mt-5 h-[54px] items-center justify-center rounded-pill"
-        style={{ backgroundColor: colors.clay, opacity: ageChecked ? 1 : 0.4 }}
-      >
-        <Text className="font-sans-semibold text-[16px]" style={{ color: colors.paper }}>
-          {COMMUNITY_COPY.consent.cta}
-        </Text>
-      </Pressable>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => backOrReplace(router, APP_COMMUNITY_ROUTE)}
-        className="h-[44px] items-center justify-center"
-      >
-        <Text className="font-sans-semibold text-[15px]" tone="muted">
-          {COMMUNITY_COPY.consent.decline}
-        </Text>
-      </Pressable>
-    </ScrollView>
+    </View>
   );
 }
 
