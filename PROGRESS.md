@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed empty Shelf compact-phone horizontal overflow from the bottle
+  illustration. On Expo web, `StripedThumb` now uses a single clipped
+  repeating-gradient background while native keeps the composed stripe fallback,
+  eliminating offscreen transformed child geometry. Added a component contract
+  and 320x568 human-simulated E2E evidence in
+  `test-results/human-e2e/2026-07-06/shelf-empty-overflow/`; native thumbnail
+  rendering still needs simulator/device visual QA.
 - Added a runtime brand identity module for the working `RoutineKind` rebrand and
   moved high-visibility app copy through it: Pro/paywall labels, Ask labels,
   app-lock prompts and shields, lock-screen notification title, share-card

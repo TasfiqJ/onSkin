@@ -365,6 +365,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Search for a product that should not match.
   - Expected result: No-match state offers manual add or safe next steps.
   - Evidence: Screenshot.
+- Branch: empty Shelf compact phone overflow
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open the empty Shelf tab at a 320 px phone width.
+  - Expected result: The empty-state bottle illustration, headline, helper copy, Scan a barcode action, Add by hand
+    action, and floating tab bar stay within the viewport with no horizontal page overflow or side-scroll.
+  - Evidence: 320 px screenshot and overflow geometry snapshot.
 - Branch: manual category picker on short phones
   - Priority: Important
   - Automate later: Yes
