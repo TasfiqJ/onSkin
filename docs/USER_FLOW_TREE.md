@@ -426,7 +426,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/cycle/settings`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/phased-intro`, and `/cycle/procedure` directly.
-  - Expected result: Free users remain gated for the full scheduler route group.
+  - Expected result: Free users remain gated for the full scheduler route group. Reverse-trial or Pro users reach the intended scheduler surfaces; cycle settings rows read as scheduled outputs, not deferred drag-and-drop controls.
   - Evidence: Screenshots or UI snapshots.
 - Branch: full routine intelligence routes
   - Priority: Critical

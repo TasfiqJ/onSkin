@@ -106,11 +106,13 @@ export default function CycleSettingsScreen() {
                       {slotLabel(n.slot).toLowerCase()}
                     </Text>
                   </Text>
-                  {/* Drag handle. True drag-and-drop reorder is B-DRAG-DND (shared with the routine reorder). */}
-                  <View className="gap-[3px]">
-                    <View className="h-[1.5px] w-3.5 bg-greige-deep" />
-                    <View className="h-[1.5px] w-3.5 bg-greige-deep" />
-                    <View className="h-[1.5px] w-3.5 bg-greige-deep" />
+                  <View
+                    className="rounded-full px-2.5 py-1"
+                    style={{ backgroundColor: 'rgba(32,27,21,0.06)' }}
+                  >
+                    <Text variant="label" tone="muted" style={{ fontSize: 10.5 }}>
+                      Scheduled
+                    </Text>
                   </View>
                 </View>
               ))}
@@ -128,8 +130,8 @@ export default function CycleSettingsScreen() {
             </View>
 
             <Text variant="bodySm" tone="muted" className="mt-4">
-              Drag-to-reassign nights arrives with the reorder gesture. For now we keep your cabinet
-              barrier-safe automatically.
+              Variant changes recalculate your active nights from the products on your shelf. We keep
+              the barrier-safety rule firm in every version.
             </Text>
           </>
         ) : (

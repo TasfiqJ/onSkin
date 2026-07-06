@@ -70,6 +70,17 @@ describe('cycle week route scheduler notes', () => {
     expect(source).not.toContain('className="mt-6 min-h-[44px] items-center justify-center py-2"');
   });
 
+  it('keeps cycle settings free of deferred drag affordances', () => {
+    const source = readAppRoute('cycle/settings.tsx');
+
+    expect(source).toContain('Scheduled');
+    expect(source).toContain('Variant changes recalculate your active nights');
+    expect(source).not.toContain('Drag-to-reassign');
+    expect(source).not.toContain('arrives with the reorder gesture');
+    expect(source).not.toContain('B-DRAG-DND');
+    expect(source).not.toContain('gap-[3px]');
+  });
+
   it('keeps scheduler safety notes visible when no cycle is formed', () => {
     const source = readAppRoute('cycle/week.tsx');
     const noteRenderCount = source.match(/<SchedulerNote note=\{schedulerNote\} \/>/g) ?? [];

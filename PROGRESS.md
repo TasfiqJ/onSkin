@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Replaced the Pro cycle settings fake drag handle/deferred reorder copy with
+  honest `Scheduled` row badges and polished variant-recalculation copy. Expo
+  web E2E at 320 px added two shelf actives through manual intake, started the
+  no-card reverse trial, and verified unlocked `/cycle/settings` shows scheduled
+  rows with no deferred drag-and-drop copy.
 - Added contextual accessibility labels to each reminder time-picker row so
   assistive tech names both the setting and the candidate time. Expo web E2E at
   320 px verified contextual picker-row labels, 48 px row geometry, and applying
