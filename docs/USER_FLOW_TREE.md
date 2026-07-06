@@ -302,8 +302,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: direct-entry back or close navigation
   - Priority: Important
   - Automate later: Yes
-  - Action: Open Shelf add, search, OCR, no-match, opened-date, archive, product detail, and replenish routes directly, then use the visible Back, Close, Cancel, Not now, or backdrop Dismiss control.
-  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. Visible route exits meet the 44 pt phone touch target, add/replenish sheets keep their actions reachable by scrolling on short phones, and sheets that can fill the viewport expose a visible Close control instead of relying on a tiny backdrop.
+  - Action: Open `/shelf/add` (compatibility alias to `/shelf/manual`), `/shelf/search`, `/shelf/ocr`, `/shelf/no-match`, `/shelf/opened`, `/shelf/archive`, `/shelf/[id]`, and `/shelf/replenish` directly, then use the visible Back, Close, Cancel, Not now, or backdrop Dismiss control.
+  - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. `/shelf/add` must open the manual-add intake instead of being captured by the dynamic product-detail route. Visible route exits meet the 44 pt phone touch target, add/replenish sheets keep their actions reachable by scrolling on short phones, and sheets that can fill the viewport expose a visible Close control instead of relying on a tiny backdrop.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone touch target measurements.
 
 ## Flow: Photo Progress
@@ -365,8 +365,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: direct-entry back, close, and permission escape
   - Priority: Important
   - Automate later: Yes
-  - Action: Open Progress capture, review, no-score explainer, and missing photo detail routes directly, then use the visible Close, Back, or Not now control.
-  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Visible route exits and Not now controls meet the 44 pt phone touch target, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a named dismiss action without unlabeled inert sheet-body controls.
+  - Action: Open `/progress/capture`, `/progress/review`, `/progress/about`, and a missing `/progress/[id]` detail directly, then use the visible Close, Back, or Not now control. Repeat legacy `/photos/capture`, `/photos/review`, and `/photos/[id]` direct entries.
+  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Legacy `/photos/*` entries must recover into the matching Progress photo surface instead of showing an unmatched-route page. Visible route exits and Not now controls meet the 44 pt phone touch target, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a named dismiss action without unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence and 320 px button-geometry snapshot.
 - Branch: single-photo share unavailable or rejected
   - Priority: Important
@@ -740,8 +740,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: direct-entry settings exits
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/settings/subscription`, `/settings/notifications`, and `/settings/timing` directly, then use the visible Back control.
-  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target. On compact phones, the You tab first viewport ends on complete rows with a clear buffer above the floating tab bar, and covered lower rows do not receive accidental hits until the user scrolls them into view.
+  - Action: Open `/settings/subscription`, `/settings/notifications`, `/settings/timing`, and `/settings/privacy` directly, then use the visible Back control where the route has its own screen.
+  - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. `/settings/privacy` lands inside the You tab privacy-control surface instead of showing an unmatched-route page. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target. On compact phones, the You tab first viewport ends on complete rows with a clear buffer above the floating tab bar, and covered lower rows do not receive accidental hits until the user scrolls them into view.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
 - Branch: policy link handoff failure
   - Priority: Important

@@ -21,6 +21,13 @@ function expectTouchableRouteIcon(route: string): void {
 }
 
 describe('Settings route contracts', () => {
+  it('keeps privacy direct entries inside the You tab privacy controls surface', () => {
+    const source = readAppRoute('settings/privacy.tsx');
+
+    expect(source).toContain('Redirect');
+    expect(source).toContain('href="/(tabs)/you"');
+  });
+
   it('keeps direct-entry exits safe for account and reminder settings', () => {
     for (const route of [
       'settings/subscription.tsx',

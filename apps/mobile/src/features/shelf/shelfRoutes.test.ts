@@ -29,6 +29,14 @@ function expectTouchableRouteIcon(route: string): void {
 }
 
 describe('Shelf route mobile contracts', () => {
+  it('keeps the intuitive /shelf/add path on the manual-add intake surface', () => {
+    const source = readAppRoute('shelf/add.tsx');
+
+    expect(source).toContain('Redirect');
+    expect(source).toContain('href="/shelf/manual"');
+    expect(source).not.toContain('This product is no longer on your shelf');
+  });
+
   it('keeps direct-entry Shelf screens safe for no-history launches', () => {
     for (const route of [
       'shelf/[id].tsx',

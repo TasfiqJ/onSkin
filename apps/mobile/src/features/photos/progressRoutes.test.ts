@@ -24,6 +24,19 @@ function expectRouteEscapeButton(route: string): void {
 }
 
 describe('Progress route mobile contracts', () => {
+  it('keeps legacy /photos direct entries inside the Progress photo surfaces', () => {
+    const capture = readAppRoute('photos/capture.tsx');
+    const review = readAppRoute('photos/review.tsx');
+    const detail = readAppRoute('photos/[id].tsx');
+
+    expect(capture).toContain('Redirect');
+    expect(capture).toContain('href="/progress/capture"');
+    expect(review).toContain('Redirect');
+    expect(review).toContain('href="/progress/review"');
+    expect(detail).toContain("pathname: '/progress/[id]'");
+    expect(detail).toContain('useLocalSearchParams');
+  });
+
   it('keeps direct-entry progress exits touchable on phones', () => {
     for (const route of [
       'progress/[id].tsx',
