@@ -236,6 +236,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan` through the no-card `Explore first` path at 320 px wide, inspect the evening card, scroll to the lower note, then tap `Start today`.
   - Expected result: The first viewport ends on complete plan content above the fixed CTA, lower notes are reachable by deliberate scroll, and `Start today` routes to Today.
   - Evidence: First-viewport screenshot, scrolled-bottom screenshot, route snapshot, and CTA geometry.
+- Branch: manual front-label shelf products
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` from the onboarding products surface, unlock with the no-card `Explore first` path, inspect `/routine/plan`, tap `Start today`, and complete the generated Today PM check-off.
+  - Expected result: Common product-name shorthand is enough before catalog seed: Morning shows SPF and not glycolic, Evening shows glycolic as the exfoliant and retinol as the retinoid, Today PM opens to the matching Glycolic check-off, and the first check-off reaches `1 of 1`.
+  - Evidence: Pre/post visible-text snapshots, phone screenshots, browser logs, and check-off state.
 
 ## Flow: Runtime Brand Identity Smoke
 

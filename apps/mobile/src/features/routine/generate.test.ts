@@ -13,6 +13,11 @@ function product(id: string, name: string, ingredients: string[] = []): RoutineP
   return { id, name, tags: [...tags] };
 }
 
+function shelfNameProduct(id: string, name: string, ingredients: string[] = []): RoutineProduct {
+  const { tags } = tagsForIngredientList([name, ...ingredients]);
+  return { id, name, tags: [...tags] };
+}
+
 // Maya's shelf (docs/03 §2 worked example) + a cleanser (spec AM shows one).
 const maya: RoutineProduct[] = [
   product('cleanser', 'Cream cleanser'),
@@ -100,26 +105,64 @@ describe('gap notes (docs/03 §2. Never fabricate a product)', () => {
   });
 });
 
+describe('front-label shelf names', () => {
+  it('routes common manually entered actives into the right routine phases', () => {
+    const plan = generatePlan(
+      [
+        shelfNameProduct('r', 'Granactive Retinoid 2% Emulsion'),
+        shelfNameProduct('g', 'Glycolic 7% Toner'),
+        shelfNameProduct('s', 'Mineral SPF50'),
+      ],
+      { sensitivity: 'neutral', pregnancy: false, goals: [] },
+      STARTER_RULES,
+    );
+
+    expect(plan.am.map((s) => s.name)).toEqual(['Mineral SPF50']);
+    expect(plan.pm.map((s) => s.name)).toEqual([
+      'Granactive Retinoid 2% Emulsion',
+      'Glycolic 7% Toner',
+    ]);
+    expect(plan.conflicts.some((c) => c.rule.tagA === 'retinoid' && c.rule.tagB === 'aha')).toBe(
+      true,
+    );
+  });
+});
+
 describe('retinoid ramp (docs/03 §4)', () => {
   it('starts gentler for sensitive than resistant', () => {
     expect(initRamp('retinoid', 'sensitive').freqPerWeek).toBe(2);
     expect(initRamp('retinoid', 'resistant').freqPerWeek).toBe(3);
   });
   it('offers a step-up only after ~21 days, below target, not irritated', () => {
-    const base = { startedAt: '2026-06-01', lastStepUp: null, freqPerWeek: 2, targetPerWeek: 3, toleranceState: 'building' as const };
+    const base = {
+      startedAt: '2026-06-01',
+      lastStepUp: null,
+      freqPerWeek: 2,
+      targetPerWeek: 3,
+      toleranceState: 'building' as const,
+    };
     expect(shouldOfferStepUp({ ...base, today: '2026-06-10' })).toBe(false); // too soon
     expect(shouldOfferStepUp({ ...base, today: '2026-06-25' })).toBe(true); // 24 days
-    expect(shouldOfferStepUp({ ...base, today: '2026-06-25', toleranceState: 'paused_irritation' })).toBe(false);
+    expect(
+      shouldOfferStepUp({ ...base, today: '2026-06-25', toleranceState: 'paused_irritation' }),
+    ).toBe(false);
     expect(shouldOfferStepUp({ ...base, today: '2026-06-25', freqPerWeek: 3 })).toBe(false); // at target
   });
   it('de-escalates on irritation', () => {
-    const s = applyTolerance({ freqPerWeek: 3, targetPerWeek: 4, toleranceState: 'building' }, 'irritated');
+    const s = applyTolerance(
+      { freqPerWeek: 3, targetPerWeek: 4, toleranceState: 'building' },
+      'irritated',
+    );
     expect(s.freqPerWeek).toBe(2);
     expect(s.toleranceState).toBe('paused_irritation');
   });
   it('comfortable → steady; a bit dry → hold', () => {
-    expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'comfortable').toleranceState).toBe('steady');
-    expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'a_bit_dry').toleranceState).toBe('building');
+    expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'comfortable').toleranceState).toBe(
+      'steady',
+    );
+    expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'a_bit_dry').toleranceState).toBe(
+      'building',
+    );
     void deEscalate; // referenced for coverage
   });
 });

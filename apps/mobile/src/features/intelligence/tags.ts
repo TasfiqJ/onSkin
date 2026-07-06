@@ -1,7 +1,7 @@
 import type { FunctionalTag, IngredientSubflag } from '@onskin/types';
 
 // Starter INCI → functional-tag dictionary (docs/02 §2.4). The AUTHORITATIVE
-// mapping lives in the DB (ingredient_tags, populated by the CosIng/OBF seed , 
+// mapping lives in the DB (ingredient_tags, populated by the CosIng/OBF seed ,
 // BLOCKED: B-CATALOG-SEED). This client-side dictionary covers the ~handful of
 // active families that actually drive conflicts, so manual-entry / OCR / curated
 // products can be tagged and the engine works offline and pre-seed.
@@ -54,17 +54,48 @@ const DICTIONARY: Record<string, TagDef[]> = {
   ceramide: [{ tag: 'ceramide' }, { tag: 'barrier' }],
 };
 
+const LABEL_ALIASES: { pattern: RegExp; defs: TagDef[] }[] = [
+  // Front-label shorthand used by manual/onboarding entry before catalog seed.
+  { pattern: /\bretinoids?\b/i, defs: [{ tag: 'retinoid' }] },
+  { pattern: /\bhydroxypinacolone\s+retinoate\b/i, defs: [{ tag: 'retinoid' }] },
+  { pattern: /\bglycolic\b/i, defs: [{ tag: 'aha' }] },
+  { pattern: /\blactic\b/i, defs: [{ tag: 'aha' }] },
+  { pattern: /\bmandelic\b/i, defs: [{ tag: 'aha' }] },
+  { pattern: /\baha\b/i, defs: [{ tag: 'aha' }] },
+  { pattern: /\bsalicylic\b/i, defs: [{ tag: 'bha' }] },
+  { pattern: /\bbha\b/i, defs: [{ tag: 'bha' }] },
+  { pattern: /\bvit(?:amin)?[\s-]*c\b/i, defs: [{ tag: 'vitamin_c' }] },
+  { pattern: /\bsunscreens?\b/i, defs: [{ tag: 'sunscreen' }] },
+  { pattern: /\bsun\s+screens?\b/i, defs: [{ tag: 'sunscreen' }] },
+  { pattern: /\bsunblocks?\b/i, defs: [{ tag: 'sunscreen' }] },
+  { pattern: /\bspf(?:\s*\d{1,3})?\b/i, defs: [{ tag: 'sunscreen' }] },
+];
+
 export type TaggedIngredient = { tag: FunctionalTag; subflag?: IngredientSubflag };
+
+function dedupeTagDefs(defs: TagDef[]): TagDef[] {
+  const seen = new Set<string>();
+  return defs.filter((def) => {
+    const key = `${def.tag}:${def.subflag ?? ''}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 
 /** Resolve a single ingredient name to its functional tags (case/space tolerant). */
 export function tagsForIngredient(name: string): TaggedIngredient[] {
   const key = name.trim().toLowerCase();
   if (DICTIONARY[key]) return DICTIONARY[key];
+  const matches: TagDef[] = [];
   // loose contains-match for compound names ("ceramide np, ceramide ap")
   for (const [dictKey, defs] of Object.entries(DICTIONARY)) {
-    if (key.includes(dictKey)) return defs;
+    if (key.includes(dictKey)) matches.push(...defs);
   }
-  return [];
+  for (const alias of LABEL_ALIASES) {
+    if (alias.pattern.test(key)) matches.push(...alias.defs);
+  }
+  return dedupeTagDefs(matches);
 }
 
 /** Resolve a product's whole ingredient list to a de-duplicated tag set + subflags. */
