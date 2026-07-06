@@ -2,6 +2,7 @@ const base = require('./app.base.json');
 
 const variant = process.env.APP_VARIANT ?? 'development';
 const isProduction = variant === 'production';
+const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
 
 const variantSuffix =
   {
@@ -95,6 +96,33 @@ function productionUrl(value) {
   return url;
 }
 
+function assertProductionIdentity(expo, permissionCopy) {
+  if (!isProduction || process.env.BRAND_LEGAL_CLEARANCE === 'cleared') return;
+
+  const identityValues = {
+    APP_DISPLAY_NAME: expo.name,
+    APP_SLUG: expo.slug,
+    APP_SCHEME: expo.scheme,
+    APP_IOS_BUNDLE_IDENTIFIER: expo.ios?.bundleIdentifier,
+    APP_ANDROID_PACKAGE: expo.android?.package,
+    APP_CAMERA_USAGE_DESCRIPTION: permissionCopy.cameraUsageDescription,
+    APP_FACE_ID_USAGE_DESCRIPTION: permissionCopy.faceIDUsageDescription,
+    APP_CAMERA_PERMISSION: permissionCopy.cameraPermission,
+    APP_FACE_ID_PERMISSION: permissionCopy.faceIDPermission,
+  };
+  const legacyKeys = Object.entries(identityValues)
+    .filter(([, value]) => legacyIdentityPattern.test(String(value ?? '')))
+    .map(([key]) => key);
+
+  if (legacyKeys.length > 0) {
+    throw new Error(
+      `Production app identity still resolves legacy OnSkin values without BRAND_LEGAL_CLEARANCE=cleared: ${legacyKeys.join(
+        ', ',
+      )}. Set final brand env values before building production.`,
+    );
+  }
+}
+
 module.exports = () => {
   const expo = JSON.parse(JSON.stringify(base.expo));
   const baseScheme = expo.scheme;
@@ -134,6 +162,7 @@ module.exports = () => {
     NSCameraUsageDescription: permissionCopy.cameraUsageDescription,
     NSFaceIDUsageDescription: permissionCopy.faceIDUsageDescription,
   };
+  assertProductionIdentity(expo, permissionCopy);
   if (finalDomain) {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),

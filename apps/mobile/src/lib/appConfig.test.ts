@@ -7,6 +7,7 @@ const APP_CONFIG_PATH = requireConfig.resolve('../../app.config.js');
 const APP_ENV_KEYS = [
   'APP_VARIANT',
   'EXPO_PUBLIC_APP_ENV',
+  'BRAND_LEGAL_CLEARANCE',
   'APP_DISPLAY_NAME',
   'EXPO_PUBLIC_APP_DISPLAY_NAME',
   'APP_SLUG',
@@ -62,6 +63,7 @@ describe('Expo app identity config', () => {
     const expo = buildExpoConfig({
       APP_VARIANT: 'production',
       EXPO_PUBLIC_APP_ENV: 'production',
+      BRAND_LEGAL_CLEARANCE: 'cleared',
       APP_DISPLAY_NAME: 'RoutineKind',
       APP_SLUG: 'routinekind',
       APP_SCHEME: 'routinekind',
@@ -76,6 +78,27 @@ describe('Expo app identity config', () => {
     expect(expo.android.package).toBe('com.routinekind.app');
     expect(expo.extra.appVariant).toBe('production');
     expect(expo.extra.appEnvironment).toBe('production');
+  });
+
+  it('blocks uncleared production builds that would resolve legacy identity values', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+      }),
+    ).toThrow(/Production app identity still resolves legacy OnSkin values/);
+  });
+
+  it('blocks partial rebrand production builds that still inherit legacy package IDs', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+      }),
+    ).toThrow(/APP_IOS_BUNDLE_IDENTIFIER/);
   });
 
   it('allows public runtime identity env to drive native display and scheme fallbacks', () => {
