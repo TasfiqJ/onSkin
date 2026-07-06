@@ -185,7 +185,7 @@ export default function OpenedDateScreen() {
                   setPickIso(o.iso);
                 }}
                 className={cn(
-                  'min-h-[44px] items-center justify-center rounded-pill px-3.5 py-2',
+                  'min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2',
                   pickIso === o.iso ? 'bg-clay' : 'border border-hairline bg-paper-raised',
                 )}
               >
@@ -241,7 +241,7 @@ export default function OpenedDateScreen() {
                 setPaoEditOpen(false);
               }}
               className={cn(
-                'min-h-[44px] items-center justify-center rounded-pill px-4 py-2',
+                'min-h-[48px] items-center justify-center rounded-pill px-4 py-2',
                 pao === n ? 'bg-clay' : 'border border-hairline bg-paper-raised',
               )}
             >
