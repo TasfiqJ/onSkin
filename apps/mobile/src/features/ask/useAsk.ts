@@ -65,7 +65,6 @@ export function useAsk() {
       const guard = guardClaim(answer.claim);
       const final = guard.ok ? answer : safetyRefusal(answer.intent);
       track('ask_turn', {
-        intent: final.intent,
         // `grounded` is intentionally always false pre-vendor: no code path returns
         // kind 'grounded' yet (concern questions honestly refuse). It flips true when
         // the cloud layer ships. Do not "fix" the telemetry by guessing.
@@ -80,7 +79,7 @@ export function useAsk() {
       // NOT a dropped wire. Note docs/13 §8 / D-060 also requires server-side
       // enforcement at the Edge Function; this AsyncStorage counter is client-only.
       // TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period) on a grounded answer.
-      if (final.kind === 'escalate') track('ask_escalated_to_clinician', { intent: final.intent });
+      if (final.kind === 'escalate') track('ask_escalated_to_clinician');
       // The grounded (cloud) layer was gated. The Pro / trial-cap upsell funnel (docs/13 §15).
       if (final.kind === 'refuse' && final.intent === 'concern_q' && ctx.groundedReason) {
         track('ask_grounded_gated', { reason: ctx.groundedReason });

@@ -85,7 +85,7 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
       Alert.alert('Link unavailable', 'This retailer link is not available right now.');
       return;
     }
-    track('where_to_buy_clicked', { product_type: productType, source: option.source });
+    track('where_to_buy_clicked', { source: option.source });
     await recordClick({ clickToken: token, productType, source: option.source, consented: true });
     // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Dev demo links stay inert; real approved
     // retailer links open only after the HTTPS URL guard appends the opaque token.
@@ -101,7 +101,7 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
         failureMessage: 'We could not open this retailer link. Please try again.',
       });
       if (!opened) {
-        track('where_to_buy_link_failed', { product_type: productType, source: option.source });
+        track('where_to_buy_link_failed', { source: option.source });
       }
     }
   };

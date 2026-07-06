@@ -13,7 +13,6 @@ export const ANALYTICS_ALLOWED_PROP_KEYS = [
   'feature',
   'flagged',
   'grounded',
-  'intent',
   'is_opened',
   'kind',
   'lookup_type',
@@ -23,7 +22,6 @@ export const ANALYTICS_ALLOWED_PROP_KEYS = [
   'native_ocr_enabled',
   'on_device',
   'period_type',
-  'product_type',
   'reason',
   'reaction',
   'refused',
@@ -34,7 +32,6 @@ export const ANALYTICS_ALLOWED_PROP_KEYS = [
   'source',
   'streak',
   'surface',
-  'trigger',
   'type',
   'variant',
 ] as const;

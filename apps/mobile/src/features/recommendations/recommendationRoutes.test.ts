@@ -32,4 +32,13 @@ describe('Recommendation route contracts', () => {
       );
     }
   });
+
+  it('keeps recommendation card footers usable on narrow phones', () => {
+    const source = readAppRoute('recommendations/index.tsx');
+
+    expect(source).toContain('min-w-0 flex-1 flex-row items-start');
+    expect(source).toContain('className="flex-1 font-mono text-[10.5px]"');
+    expect(source).toContain('flexShrink: 1');
+    expect(source).toContain("flexShrink: 0, textAlign: 'right'");
+  });
 });

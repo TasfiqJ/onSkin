@@ -90,7 +90,7 @@ function GapPrompt({ recId }: { recId: string }) {
           accessibilityRole="button"
           onPress={() => {
             haptics.select();
-            track('recommendation_expanded', { trigger: 'gap', type: 'spf' });
+            track('recommendation_expanded');
             router.push({ pathname: '/recommendations/[id]', params: { id: recId } });
           }}
           className="h-[38px] items-center justify-center rounded-pill px-5"

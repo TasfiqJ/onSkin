@@ -232,7 +232,7 @@ Design tokens (docs/00 §8, D-005): Instrument Serif (section headers), Hanken G
 - **The catalog dependency:** recommendations are only as good as the catalog (docs/02 — Open Beauty Facts + the curated top ~2,000 products); the FIT score **ranks curated, well-attributed products above sparse volunteer entries**, and the engine degrades gracefully (type-first guidance even when specific-product coverage is thin).
 - **The "church and state" boundary in code (D-038):** the ranking module imports **no commerce module**; doc #10's affiliate/attribution code can only **consume** the ranked `recommendations` output and attach links *after* ranking. Enforce with module boundaries and review.
 - **Recompute triggers:** profile change (re-quiz), shelf change (add/finish/expire), routine change, conflict change, preference change.
-- **PostHog instrumentation** (docs/01 §7): `recommendation_shown` (trigger, type), `recommendation_expanded` (the how), `recommendation_accepted` / `_dismissed`, `youre_set_shown`, `preference_set`. (Measure the "how"-expansion and accept/dismiss to tune relevance — **never** to bias toward commission.) Tie into retention analysis.
+- **PostHog instrumentation** (docs/01 §7): `recommendation_shown` (count only), `recommendation_expanded`, `recommendation_accepted` / `_dismissed`, `youre_set_shown`, `preference_set`. Do **not** send trigger or product-type props to vendor analytics; those categories can reveal the user's need. Measure the "how"-expansion and accept/dismiss to tune relevance — **never** to bias toward commission.
 - **Performance:** scoring the curated catalog against a profile is cheap; cache and recompute on triggers; keep it pure and idempotent.
 
 ---

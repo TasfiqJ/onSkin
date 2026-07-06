@@ -10,6 +10,8 @@ type AnalyticsProps = Parameters<PostHog['capture']>[1];
 
 export const SENSITIVE_ANALYTICS_KEY =
   /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
+export const SENSITIVE_ANALYTICS_VALUE =
+  /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|(?:^|[_\W])spf(?:$|[_\W])|peptide|dspt|fitzpatrick|monk|axis|step|score|slug|acne|rosacea|eczema|psoriasis|dermatitis|melasma|hyperpigmentation|irritation|procedure|medical|concern|conflict|product_fit|replenish|routine_q|conflict_q)/i;
 const APPROVED_BUCKET_KEYS = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
 
 function bytesToHex(bytes: ArrayBuffer): string {
@@ -65,7 +67,7 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
       clean[key] = value;
     } else if (typeof value === 'string') {
       const trimmed = value.trim();
-      if (!trimmed || trimmed.includes('@') || SENSITIVE_ANALYTICS_KEY.test(trimmed)) continue;
+      if (!trimmed || trimmed.includes('@') || SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
       clean[key] = trimmed.slice(0, 160);
     } else if (value instanceof Date) {
       clean[key] = value.toISOString();

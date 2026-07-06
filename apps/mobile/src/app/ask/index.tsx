@@ -233,7 +233,7 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
         onPress={() => {
           if (reported) return;
           setReported(true);
-          track('ask_reported_problem', { intent: answer.intent, kind: answer.kind });
+          track('ask_reported_problem', { kind: answer.kind });
         }}
         hitSlop={12}
         className="mt-2 self-start py-1"

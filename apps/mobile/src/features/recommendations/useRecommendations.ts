@@ -7,6 +7,7 @@ import type { ShelfProduct } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
 
 import { recommend, type RecResult, type RecShelfItem } from './engine';
+import { isRecommendationDataLoading } from './loading';
 import { DEFAULT_PREFERENCES } from './preferences';
 import { loadDismissed, loadPreferences } from './store';
 
@@ -51,6 +52,10 @@ export function useRecommendations() {
 
   return {
     result,
-    isLoading: shelf.isLoading || profile.isLoading,
+    isLoading: isRecommendationDataLoading({
+      shelfLoading: shelf.isLoading,
+      profileLoading: profile.isLoading,
+      prefsLoading: prefsQ.isLoading,
+    }),
   };
 }

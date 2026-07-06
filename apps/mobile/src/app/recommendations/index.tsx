@@ -45,7 +45,7 @@ function grouped(
 
 function openRec(rec: Recommendation) {
   haptics.select();
-  track('recommendation_expanded', { trigger: rec.trigger, type: rec.productType });
+  track('recommendation_expanded');
   // Replacement reuses the existing replenishment sheet (docs/04 §6); the rest open
   // the what/why/how card.
   if (rec.trigger === 'replacement' && rec.relatedProductId) {
@@ -101,21 +101,31 @@ function RecCard({ rec }: { rec: Recommendation }) {
         </View>
       </View>
       <View
-        className="mt-3 flex-row items-center justify-between pt-3"
+        className="mt-3 flex-row items-start justify-between gap-3 pt-3"
         style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}
       >
-        <View className="flex-row items-center gap-1.5">
+        <View className="min-w-0 flex-1 flex-row items-start gap-1.5">
           {rec.footIsEvidence && evidenceGood ? (
-            <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.sage }} />
+            <View
+              className="mt-1.5 h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: colors.sage }}
+            />
           ) : null}
           <Text
-            className="font-mono text-[10.5px]"
-            style={{ color: rec.footIsEvidence && evidenceGood ? colors.sage : colors.muted }}
+            className="flex-1 font-mono text-[10.5px]"
+            style={{
+              color: rec.footIsEvidence && evidenceGood ? colors.sage : colors.muted,
+              flexShrink: 1,
+              lineHeight: 15,
+            }}
           >
             {rec.footLabel}
           </Text>
         </View>
-        <Text className="font-sans-semibold text-[12.5px]" style={{ color: colors.clay }}>
+        <Text
+          className="font-sans-semibold text-[12.5px]"
+          style={{ color: colors.clay, flexShrink: 0, textAlign: 'right' }}
+        >
           {REC_COPY.card.seeHow} →
         </Text>
       </View>

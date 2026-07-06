@@ -120,6 +120,10 @@
   - Proves Trend insight consent grant/revoke successes refresh visible consent state.
   - Proves failed consent save or withdrawal attempts surface stable copy and still refresh stale consent state.
   - Proves consent-query refresh failure does not turn a saved local choice into a failed user action.
+- `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`
+  - Proves first-use photo capture consent is saved before the capture gate opens or camera permission is requested.
+  - Proves photo capture consent persistence failure fails closed with stable copy and keeps camera permission unrequested.
+  - Proves a failed OS permission prompt does not undo a successfully saved local photo consent choice.
 - `apps/mobile/src/lib/env.test.ts`
   - Proves missing, copied-placeholder, and invalid Supabase public env values leave the app bootable but unconfigured.
   - Proves missing or invalid app-environment values default to production outside the dev runtime.
@@ -170,6 +174,9 @@
   - Proves conflict detail and share-card route exits recover direct-entry users to Shelf, including deferred share-card states.
 - `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`
   - Proves the For You hub returns direct-entry users to You, while nested recommendation detail/preference routes return to the recommendations hub.
+  - Proves recommendation card footers keep long evidence labels in a wrapping flex region and keep `See how` visible on narrow phone widths.
+- `apps/mobile/src/features/recommendations/useRecommendations.test.ts`
+  - Proves recommendation UI remains in a loading state until local private preferences and dismissed suggestion IDs have loaded, preventing stale dismissed cards from flashing.
 - `apps/mobile/src/features/settings/settingsRoutes.test.ts`
   - Proves subscription, notification, and timing settings exits recover direct-entry users to the You tab.
 - `apps/mobile/src/features/trend/trendRoutes.test.ts`
@@ -305,6 +312,7 @@
   - Verifies malformed percent-encoded public-link query values are ignored instead of throwing.
 - `apps/mobile/src/lib/analytics/track.test.ts`
   - Verifies sensitive analytics keys/values are dropped.
+  - Verifies SPF/category, irritation, conflict-check, recommendation, commerce, and Ask-intent style values do not survive sanitization.
   - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.
 - `apps/mobile/src/lib/navigation/externalUrl.test.ts`
   - Verifies external handoffs allow only normalized HTTPS URLs, reject custom schemes, plaintext HTTP, embedded credentials, malformed strings, and control characters, and strip fragments before opening.
@@ -340,6 +348,7 @@
 - `scripts/phase9/privacy-payload-audit.mjs`
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
   - Ignores code comments inside `track()` object literals so audit warnings reflect real payload keys.
+  - Fails if recommendation trigger/type, commerce product type, or Ask intent props are re-allowlisted or reintroduced in analytics payloads.
   - Fails if analytics, Sentry, or RevenueCat setup warnings reintroduce raw exception-object console logging.
   - Fails if analytics tracking reintroduces development console logging for event names or sanitized props.
   - Fails if Sentry capture stops sanitizing the captured throwable or sends the raw exception object to Sentry.

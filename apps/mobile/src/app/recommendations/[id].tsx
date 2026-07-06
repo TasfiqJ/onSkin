@@ -56,7 +56,7 @@ function Body({ rec }: { rec: Recommendation }) {
 
   const dismiss = async () => {
     haptics.select();
-    track('recommendation_dismissed', { trigger: rec.trigger, type: rec.productType });
+    track('recommendation_dismissed');
     await dismissRecommendation(rec.id);
     await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
     backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
@@ -68,7 +68,7 @@ function Body({ rec }: { rec: Recommendation }) {
 
   const accept = () => {
     haptics.success();
-    track('recommendation_accepted', { trigger: rec.trigger, type: rec.productType });
+    track('recommendation_accepted');
     if (isConflict && rec.relatedRuleId) {
       router.push({ pathname: '/conflict/[ruleId]', params: { ruleId: rec.relatedRuleId } });
       return;

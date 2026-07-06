@@ -536,3 +536,31 @@
 - Change: Trend insight opt-in/revocation now runs through a tested consent-choice helper. The helper surfaces stable "Choice not saved" copy on grant/revoke failure, always refreshes the visible consent query, and keeps query-refresh failures from turning a saved choice into a failed user action. The opt-in switch is disabled while saving.
 - Why safe: `photo_trend_insights` is a separate health-data consent. A failed save or withdrawal must not look like an inert toggle or silently leave stale consent state on screen.
 - Regression: `applyConsentChoice.test.ts` covers success, save failure, withdrawal failure, and refresh failure; `trendRoutes.test.ts` locks the route to the helper and disabled saving state.
+
+## Analytics payload category minimization
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/eventRegistry.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`, `apps/mobile/src/app/recommendations/index.tsx`, `apps/mobile/src/app/recommendations/[id].tsx`, `apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx`, `apps/mobile/src/features/commerce/WhereToBuy.tsx`, `apps/mobile/src/app/commerce/stack/[slug].tsx`, `apps/mobile/src/features/ask/useAsk.ts`, `apps/mobile/src/app/ask/index.tsx`.
+- Change: Analytics sanitization now checks string values against a health-adjacent denylist, including SPF/category terms, irritation/procedure reasons, disease terms, conflict/concern buckets, and Ask intent-style values. Recommendation trigger/type, commerce product type, and Ask intent props were removed from mobile PostHog payloads and retired from the allowed prop registry.
+- Why safe: Even without raw text, photos, or product names, short category values can disclose sensitive health-adjacent context. The funnel still records coarse event occurrence, counts, safe sources, and safe answer kind without sending the user's need, product category, or question intent to the analytics vendor.
+- Regression: `track.test.ts` proves sensitive allowed-key values are dropped. `phase9:privacy-payload-audit` now fails if retired category/intent props are re-allowlisted or reintroduced in `track()` payloads.
+
+## Recommendation dismissed-state loading gate
+
+- Files: `apps/mobile/src/features/recommendations/loading.ts`, `apps/mobile/src/features/recommendations/useRecommendations.ts`, `apps/mobile/src/features/recommendations/useRecommendations.test.ts`, `docs/USER_FLOW_TREE.md`.
+- Change: The recommendation hook now includes the local private preferences/dismissals query in its loading state. The For You hub and recommendation details do not render from an empty dismissed set while private state is still loading.
+- Why safe: A user who taps "Not for me" has explicitly rejected that suggestion. Reloading the app should not briefly show the dismissed card again before AsyncStorage/private storage finishes reading.
+- Regression: `useRecommendations.test.ts` proves preferences/dismissals loading keeps recommendation UI in loading state until all local recommendation inputs are ready.
+
+## Recommendation mobile card footer wrap
+
+- Files: `apps/mobile/src/app/recommendations/index.tsx`, `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts`, `docs/USER_FLOW_TREE.md`.
+- Change: Recommendation card footers now give the evidence label a wrapping `min-w-0` flex region and keep the `See how` action non-shrinking and right-aligned.
+- Why safe: Long evidence labels must fit on iOS and Android phones without clipping the card or hiding the action that opens the explanation.
+- Regression: `recommendationRoutes.test.ts` locks the footer layout contract for the wrapping evidence label and non-shrinking action.
+
+## Photo capture consent fail-closed gate
+
+- Files: `apps/mobile/src/features/photos/applyCaptureConsent.ts`, `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`, `apps/mobile/src/app/progress/capture.tsx`, `apps/mobile/src/features/photos/copy.ts`.
+- Change: First-use Progress photo capture now saves the local `photo_capture` consent flag before marking the consent gate as passed or requesting camera permission. The CTA is disabled while saving, and local persistence failure shows stable "Photo choice not saved" copy while keeping the camera blocked and retryable.
+- Why safe: Facial/skin photos are the app's most sensitive data. Camera access must not start from a UI state that merely assumes consent was saved.
+- Regression: `applyCaptureConsent.test.ts` covers save-before-open sequencing, fail-closed persistence errors, OS permission prompt failure after a saved consent, and the capture route contract.

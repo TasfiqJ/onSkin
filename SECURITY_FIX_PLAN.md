@@ -53,6 +53,10 @@
 - SEC-P2-060: App-wide and photo-timeline biometric lock prompts now surface native prompt failures with stable copy while keeping user cancellations quiet and retryable.
 - SEC-P2-061: App-lock settings and Progress lock copy now use device-neutral wording that fits iOS and Android local-auth methods.
 - SEC-P2-062: Trend insight opt-in/revocation now surfaces consent save failures, refreshes stale consent state after failures, and disables the toggle while saving.
+- SEC-P2-063: Progress photo capture now saves first-use `photo_capture` consent before opening camera/permission flow, fails closed on persistence errors, and keeps the consent CTA retryable.
+- SEC-P2-064: Mobile analytics now blocks sensitive category values and no longer sends recommendation trigger/type, commerce product type, or Ask intent props to PostHog.
+- SEC-P2-065: Recommendations now wait for local private preferences/dismissals before rendering, so dismissed "Not for me" suggestions do not flash during cold-start loading.
+- SEC-P2-066: Recommendation card footers now wrap long evidence labels on phone-width screens while keeping the `See how` action visible.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

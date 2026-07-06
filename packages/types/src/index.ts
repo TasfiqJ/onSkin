@@ -304,7 +304,7 @@ export type AskAnswerKind = 'deterministic' | 'grounded' | 'escalate' | 'refuse'
  *  text; instrument for TRUST / RETENTION / COST, never engagement maximisation. */
 export const ASK_EVENTS = [
   'ask_opened',
-  'ask_turn', // carries intent + answerKind + grounded?/refused?/escalated?, NEVER content
+  'ask_turn', // carries answer kind + grounded?/refused? only, NEVER content or intent
   'ask_consent_granted',
   'ask_consent_revoked',
   'ask_escalated_to_clinician',

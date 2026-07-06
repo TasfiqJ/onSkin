@@ -9,6 +9,7 @@ import { Text } from '@/components/ui';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { useGuidedCaptureSignals } from '@/features/native/camera/guidedSignals';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
+import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
@@ -26,7 +27,15 @@ const BG = '#16130F';
 const GUIDE = '#9DB18A';
 const READY = '#9DB18A';
 
-function ConsentGate({ onGrant, onCancel }: { onGrant: () => void; onCancel: () => void }) {
+function ConsentGate({
+  granting,
+  onGrant,
+  onCancel,
+}: {
+  granting: boolean;
+  onGrant: () => void;
+  onCancel: () => void;
+}) {
   return (
     <View
       style={{
@@ -100,6 +109,7 @@ function ConsentGate({ onGrant, onCancel }: { onGrant: () => void; onCancel: () 
       </View>
       <Pressable
         accessibilityRole="button"
+        disabled={granting}
         onPress={onGrant}
         style={{
           height: 56,
@@ -107,10 +117,11 @@ function ConsentGate({ onGrant, onCancel }: { onGrant: () => void; onCancel: () 
           backgroundColor: '#F4EFE7',
           alignItems: 'center',
           justifyContent: 'center',
+          opacity: granting ? 0.6 : 1,
         }}
       >
         <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
-          Take photos. On device only
+          {granting ? 'Saving choice' : 'Take photos. On device only'}
         </Text>
       </Pressable>
       <Pressable
@@ -293,6 +304,7 @@ function CaptureScreenContent() {
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const [grantingConsent, setGrantingConsent] = useState(false);
   const { data } = usePhotos('front');
 
   useEffect(() => {
@@ -340,6 +352,22 @@ function CaptureScreenContent() {
     } catch {
       setCapturing(false);
       Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle, CAMERA_FAILURE_COPY.progressCaptureBody);
+    }
+  }
+
+  async function grantCaptureConsent() {
+    if (grantingConsent) return;
+    setGrantingConsent(true);
+    try {
+      await applyPhotoCaptureConsent({
+        grant: grantPhotoCaptureConsent,
+        requestPermission: requestPermission as () => Promise<unknown>,
+        onSaved: () => setConsented(true),
+        onFailure: () =>
+          Alert.alert(PHOTO_COPY.capture.consentFailedTitle, PHOTO_COPY.capture.consentFailedBody),
+      });
+    } finally {
+      setGrantingConsent(false);
     }
   }
 
@@ -601,11 +629,8 @@ function CaptureScreenContent() {
 
       {consented === false ? (
         <ConsentGate
-          onGrant={() => {
-            void grantPhotoCaptureConsent();
-            setConsented(true);
-            if (!permission?.granted) void requestPermission();
-          }}
+          granting={grantingConsent}
+          onGrant={() => void grantCaptureConsent()}
           onCancel={closeToProgress}
         />
       ) : consented === null ? (

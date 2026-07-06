@@ -275,6 +275,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Deny camera or photo permission.
   - Expected result: User sees a clear recovery path and no broken UI, including a visible alert if the OS Settings handoff fails.
   - Evidence: Screenshot, alert text, and permission state.
+- Branch: first-use photo consent save failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open Progress capture without prior `photo_capture` consent and force local private consent persistence to fail.
+  - Expected result: The camera does not open, the app shows stable photo-choice-not-saved copy, the consent CTA is retryable, and no camera permission prompt appears before consent is saved.
+  - Evidence: Alert text, disabled saving CTA state, local consent state, and permission prompt log.
 - Branch: camera start or photo capture failure
   - Priority: Critical
   - Automate later: Yes
@@ -482,6 +488,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a real recommendation detail, dismiss it, then open another and accept it into manual add or conflict detail.
   - Expected result: Dismissal persists, acceptance goes to the correct next step, and copy remains independent and claim-safe.
   - Evidence: Screenshot sequence and local recommendation state.
+- Branch: dismissed recommendation cold-start state
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Dismiss a recommendation, close or reload the app, then return to `/recommendations` while private recommendation preferences/dismissals are still loading.
+  - Expected result: The dismissed card does not flash or reappear before local private state is loaded.
+  - Evidence: Visible loading/result state and local dismissed recommendation state.
+- Branch: mobile recommendation card width
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/recommendations` on a 390 px or narrower phone viewport with long evidence labels.
+  - Expected result: Evidence/footer labels wrap within the card and the `See how` action remains visible and tappable.
+  - Evidence: Phone-width screenshot and visible-text snapshot.
 
 ## Flow: Commerce Trust And Shoppable Routines
 

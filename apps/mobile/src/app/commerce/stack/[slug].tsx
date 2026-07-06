@@ -35,7 +35,7 @@ export default function StackDetailScreen() {
       await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
       return;
     }
-    track('where_to_buy_clicked', { product_type: item.productType, source: 'stack' });
+    track('where_to_buy_clicked', { source: 'stack' });
     const token = buildClickToken();
     await recordClick({
       clickToken: token,

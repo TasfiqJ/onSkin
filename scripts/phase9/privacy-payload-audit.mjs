@@ -12,6 +12,7 @@ const safeLogSource = read('apps/mobile/src/lib/observability/safeLog.ts');
 const authProviderSource = read('apps/mobile/src/lib/auth/AuthProvider.tsx');
 const shareCardSource = read('apps/mobile/src/features/growth/shareCard.ts');
 const encryptedPhotoSource = read('apps/mobile/src/features/photos/encryptedStorage.ts');
+const sharePhotoSource = read('apps/mobile/src/features/photos/sharePhoto.ts');
 const photoMetadataSource = read('apps/mobile/src/features/photos/metadata.ts');
 const photoDetailSource = read('apps/mobile/src/app/progress/[id].tsx');
 const photoCopySource = read('apps/mobile/src/features/photos/copy.ts');
@@ -25,11 +26,14 @@ const registryBody = registrySource.match(/ANALYTICS_ALLOWED_PROP_KEYS\s*=\s*\[(
 const allowed = new Set([...registryBody.matchAll(/'([^']+)'/g)].map((match) => match[1]));
 const sensitiveKey =
   /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|question_id|id$|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
+const retiredAnalyticsProps = new Set(['intent', 'product_type', 'trigger']);
 const approvedBucketExceptions = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
 
 block(errors, allowed.size > 0, 'Analytics event registry is empty or missing.');
 block(errors, /isAllowedAnalyticsPropKey/.test(trackSource), 'Analytics sanitizer must call isAllowedAnalyticsPropKey.');
 block(errors, /SENSITIVE_ANALYTICS_KEY/.test(trackSource), 'Analytics sanitizer is missing sensitive-key guard.');
+block(errors, /SENSITIVE_ANALYTICS_VALUE/.test(trackSource), 'Analytics sanitizer is missing sensitive-value guard.');
+block(errors, /SENSITIVE_ANALYTICS_VALUE\.test\(trimmed\)/.test(trackSource), 'Analytics sanitizer must check trimmed string values against the sensitive-value guard.');
 block(errors, /pseudonymousUserId/.test(trackSource), 'Analytics identify must pseudonymize raw user IDs before vendor calls.');
 block(errors, /posthog\?\.identify\(pseudonymousId/.test(trackSource), 'PostHog identify must use a pseudonymous user ID.');
 block(errors, /sanitizeObservabilityContext/.test(sentrySource), 'Sentry captureException must sanitize context.');
@@ -84,9 +88,9 @@ block(
 );
 block(
   errors,
-  /deletePhotoShareFile/.test(photoDetailSource) &&
+  /sharePhotoImageOnly/.test(photoDetailSource) &&
     /try\s*\{[\s\S]*createPhotoShareFile\(photo\.localUri,\s*photo\.id\)[\s\S]*Sharing\.shareAsync\(shareUri\)[\s\S]*\}\s*finally\s*\{[\s\S]*deletePhotoShareFile\(shareUri,\s*photo\.localUri\)/.test(
-      photoDetailSource,
+      sharePhotoSource,
     ),
   'Photo detail share must delete generated decrypted share files without deleting the source photo URI.',
 );
@@ -144,6 +148,7 @@ block(
 
 for (const key of allowed) {
   block(errors, !sensitiveKey.test(key) || approvedBucketExceptions.has(key), `Sensitive analytics prop is allowlisted: ${key}.`);
+  block(errors, !retiredAnalyticsProps.has(key), `Retired sensitive analytics prop is allowlisted: ${key}.`);
 }
 
 const seenDropped = new Set();
@@ -241,7 +246,9 @@ for (const file of listFiles('apps/mobile/src').filter((item) => /\.(ts|tsx)$/.t
     if (!objectLiteral) continue;
     for (const keyMatch of objectLiteral.matchAll(/([A-Za-z_$][A-Za-z0-9_$]*)\s*:/g)) {
       const key = keyMatch[1];
-      if (!allowed.has(key)) {
+      if (retiredAnalyticsProps.has(key)) {
+        block(errors, false, `Retired sensitive analytics prop used in track payload: ${file.replace(abs('.'), '.')} -> ${key}.`);
+      } else if (!allowed.has(key)) {
         seenDropped.add(`${file.replace(abs('.'), '.')} -> ${key}`);
       } else if (sensitiveKey.test(key) && !approvedBucketExceptions.has(key)) {
         seenDropped.add(`${file.replace(abs('.'), '.')} -> sensitive ${key}`);

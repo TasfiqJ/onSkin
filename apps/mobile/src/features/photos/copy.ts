@@ -43,6 +43,8 @@ export const PHOTO_COPY = {
     autoReady: 'auto ready',
     lightingLabel: 'Lighting',
     skinPrep: 'Clean skin, no makeup, hair back. Same time of day as last week.',
+    consentFailedTitle: 'Photo choice not saved',
+    consentFailedBody: "We couldn't save your photo choice. Please try again before opening the camera.",
   },
   // Review & retake (design screen 02). Quality is FLAGGED, never blocked (D-029).
   review: {
