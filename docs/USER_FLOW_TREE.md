@@ -488,6 +488,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open onboarding and contextual paywalls before RevenueCat pricing is available, or with the local development fallback.
   - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; it must never render `Unavailable` as if it were the billed amount.
   - Evidence: Screenshot and visible-text snapshot.
+- Branch: purchase success compact-phone confirmation
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/paywall/success` after a trial start or paid purchase on a 320 px wide phone viewport.
+  - Expected result: The success badge renders a clean checkmark, the title and renewal terms are readable, the renewal metadata does not orphan `yr` onto its own line, and the Today CTA remains visible.
+  - Evidence: 320 px screenshot, visible-text snapshot, and metadata row geometry.
 - Branch: policy and billing link handoff failure
   - Priority: Important
   - Automate later: Yes
