@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-04T06:43:48.934Z",
+  "generatedAt": "2026-07-06T20:47:29.035Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
   "buildEvidence": {
     "iosBuildId": "",
@@ -59,50 +59,50 @@
     {
       "path": "apps/mobile/app.base.json",
       "exists": true,
-      "bytes": 2595,
-      "sha256": "01fae725a66f53e7e65c1af688face7886ad94d08410c8bb1f78b71fa70f8f06"
+      "bytes": 2623,
+      "sha256": "7a27df897bd3ec6a56f640d6948339783db61fc9521b76c1ef3b7a08e6cb585f"
     },
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 2213,
-      "sha256": "4e8efe4a635f9384c8a1b330810d68ef4b3d10ef8d4da4839ef90e003769c018"
+      "bytes": 3468,
+      "sha256": "a61fa8ca0d36efcecb37a870a732f0d0fe0bd97a7da2f677d685363bbd5a0c46"
     },
     {
       "path": "apps/mobile/eas.json",
       "exists": true,
-      "bytes": 1209,
-      "sha256": "5aba9dfec9bc3530449b536736bde35a296750d1ecf2b2942933cecf17e05e43"
+      "bytes": 1240,
+      "sha256": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51"
     },
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2489,
-      "sha256": "5ace059afd7b43319bcfb5b4971ec6e9c27e34080c954f27112e42bb16e5231b"
+      "bytes": 2525,
+      "sha256": "ce90e60fc0949b44b5a6d4fff0dcfbf155332f3e0ac2bff9063f5794dde15b22"
     },
     {
       "path": "apps/mobile/src/app/shelf/scan.tsx",
       "exists": true,
-      "bytes": 13412,
-      "sha256": "ca527bb81da3b709888eaa7d2677eda6eaa81386f9ef4015f5ffc7a8020c2566"
+      "bytes": 15468,
+      "sha256": "ed0c54f4f818a78625de13d39106d84f788c47d4efdbaaed83f2fc8a903b0039"
     },
     {
       "path": "apps/mobile/src/app/shelf/ocr.tsx",
       "exists": true,
-      "bytes": 9046,
-      "sha256": "66d6df5a0ab976fbfca9b620b4ea102db2f0908a869a07ced970a7e30ad50a41"
+      "bytes": 10465,
+      "sha256": "3046a3cd34b6369975ecf5a1f9acfbaec4a015c8c93b95ca5606190619c3639a"
     },
     {
       "path": "apps/mobile/src/app/progress/capture.tsx",
       "exists": true,
-      "bytes": 12269,
-      "sha256": "127722a73a3159842d201d6d28a36f575e4aa50ccd9a270f8bdd4e3cb7a2c8ae"
+      "bytes": 19785,
+      "sha256": "e3e843f8c1377c34c95aaeff5e9a7e7dc251b13ca56fd8b7d23c3cf871dbf47a"
     },
     {
       "path": "apps/mobile/src/app/progress/review.tsx",
       "exists": true,
-      "bytes": 6086,
-      "sha256": "c34509d76af40e62cbd9f358a5199590d566fe80ae3fb1d97943f4360fb44eec"
+      "bytes": 7998,
+      "sha256": "39863d0022ffffb3b4455f2ca5bd34e95f61d5a64936f97d9c8615fcc098b0a3"
     },
     {
       "path": "apps/mobile/src/features/native/camera/barcode.ts",
@@ -113,26 +113,26 @@
     {
       "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
       "exists": true,
-      "bytes": 5436,
-      "sha256": "dd79c1474a742b945ce9cd5e47b1b4e224f4eed09120ca31576cd7d9c0427f76"
+      "bytes": 6526,
+      "sha256": "f4fc9c0c17952bb54c052d0ce771c723b746e1dbfecfbf273698ace77391c681"
     },
     {
       "path": "apps/mobile/src/features/photos/store.ts",
       "exists": true,
-      "bytes": 6880,
-      "sha256": "8d48beeac281d60c1f91f6dbfcf1e32df6ca8f8c170c62d15e5cdcda05e89ae7"
+      "bytes": 6968,
+      "sha256": "182e64ebfa333a8ffa6fb2d66b6c0c03b0da33fda38734e05742318dd8012679"
     },
     {
       "path": "apps/mobile/src/features/notifications/deliver.ts",
       "exists": true,
-      "bytes": 10170,
-      "sha256": "c96669cd88f19428b385822ef2dacd0cd2c31d581e2f232364631eed6b4c70fb"
+      "bytes": 9978,
+      "sha256": "aab03c4399664df16c89b17cb83814bb7a2e81a2aeaa7ca06dafb2b5e2477fd1"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 4744,
-      "sha256": "33ce9c45f920b4ac219c05fc9315143819392687344f634af12508b9ab74b164"
+      "bytes": 17966,
+      "sha256": "90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",

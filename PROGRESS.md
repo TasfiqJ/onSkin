@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Re-ran Phase 5 native readiness after the phone UI sweeps. This Windows
+  workspace has no `adb`, Android emulator, or `xcodebuild` available, so real
+  iOS/Android simulator/device execution remains device-gated. The non-strict
+  native config baseline passed; strict native config correctly fails on the
+  intentionally disabled OCR warnings, and strict device QA correctly fails on
+  missing iOS/Android build IDs, device names, QA signoff, and signer. Refreshed
+  the generated Phase 5 device QA packet with current file hashes while keeping
+  physical-device QA blocked until installable builds exist.
 - Ran a 59-route compact-phone regression sweep at 320 x 568 after the
   onboarding pass and fixed the remaining You-tab hidden hit-area issue: the
   `Streak & adherence` row could begin behind the floating tab bar while a
