@@ -30,15 +30,15 @@ function useExpiryReoffer() {
 
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';
 
-const ICON_SIZE = 22;
-const FLOATING_TAB_BAR_HEIGHT = 78;
+const ICON_SIZE = 21;
+const FLOATING_TAB_BAR_HEIGHT = 76;
 const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 14, android: 10, default: 10 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
 const FLOATING_TAB_BAR_GAP = 20;
 const FLOATING_TAB_BAR_SIDE_MARGIN = 12;
 const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 4;
 const MIN_TAB_TOUCH_TARGET = 56;
-const TAB_ITEM_HEIGHT = 62;
+const TAB_ITEM_HEIGHT = 60;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -138,7 +138,7 @@ function YouIcon({ color }: { color: string }) {
 }
 
 function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) {
-  const iconColor = focused ? colors.clayDeep : colors.inkSoft;
+  const iconColor = focused ? colors.paper : colors.inkSoft;
   const Icon =
     name === 'today'
       ? TodayIcon
@@ -331,13 +331,13 @@ const styles = StyleSheet.create({
   },
   iconShell: {
     alignItems: 'center',
-    borderRadius: 14,
-    height: 27,
+    borderRadius: 16,
+    height: 31,
     justifyContent: 'center',
-    width: 36,
+    width: 38,
   },
   iconShellActive: {
-    backgroundColor: 'rgba(255,255,255,0.74)',
+    backgroundColor: colors.ink,
   },
   progressBar: {
     borderRadius: 2,
@@ -361,29 +361,29 @@ const styles = StyleSheet.create({
   },
   floatingTabBar: {
     alignItems: 'center',
-    backgroundColor: colors.paperRaised,
+    backgroundColor: colors.paper,
     borderColor: colors.hairlineStrong,
-    borderRadius: 28,
+    borderRadius: 30,
     borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     height: FLOATING_TAB_BAR_HEIGHT,
     justifyContent: 'center',
     left: FLOATING_TAB_BAR_SIDE_MARGIN,
-    paddingBottom: 7,
+    paddingBottom: 6,
     paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
-    paddingTop: 7,
+    paddingTop: 6,
     position: 'absolute',
     right: FLOATING_TAB_BAR_SIDE_MARGIN,
   },
   tabLabel: {
     flexShrink: 1,
     fontFamily: 'HankenGrotesk_600SemiBold',
-    fontSize: 12,
+    fontSize: 12.5,
     includeFontPadding: false,
     letterSpacing: 0,
-    lineHeight: 16,
-    marginTop: 2,
-    minHeight: 18,
+    lineHeight: 18,
+    marginTop: 3,
+    minHeight: 20,
     minWidth: 0,
     overflow: 'visible',
     textAlign: 'center',
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   tabItem: {
     alignItems: 'center',
     borderColor: 'transparent',
-    borderRadius: 23,
+    borderRadius: 24,
     borderWidth: StyleSheet.hairlineWidth,
     flex: 1,
     flexBasis: 0,
@@ -408,8 +408,8 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   tabItemActive: {
-    backgroundColor: colors.clayTint,
-    borderColor: 'rgba(165,105,75,0.20)',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
   },
   tabItemPressed: {
     opacity: 0.72,
@@ -417,9 +417,9 @@ const styles = StyleSheet.create({
   tabActiveRail: {
     backgroundColor: 'transparent',
     borderRadius: 2,
-    height: 3,
-    marginTop: 3,
-    width: 18,
+    height: 2,
+    marginTop: 2,
+    width: 16,
   },
   tabActiveRailVisible: {
     backgroundColor: colors.clayDeep,

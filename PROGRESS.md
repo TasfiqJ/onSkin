@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Tightened the floating bottom tab bar to a cleaner Wealthsimple-style capsule
+  after 320 px E2E review showed the selected tab treatment still felt bulky and
+  label geometry was operating at the edge. The active state now uses a compact
+  dark icon chip with larger readable labels, and Expo web E2E verified 60 px
+  targets plus Today, Progress, Shelf, and You switching at 320 px and 390 px.
 - Fixed the Shelf scan no-camera fallback after 320x568 E2E showed the camera
   permission card squeezed behind the route header with a scan reticle over
   fallback copy. Short phones now use a compact scan card, hide the reticle when

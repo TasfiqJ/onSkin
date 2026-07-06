@@ -19,10 +19,10 @@ function readNumericConstant(source: string, name: string): number {
 }
 
 describe('tab bar treatment', () => {
-  it('uses a legible floating app-style tab bar instead of the old dot marker', () => {
+  it('uses a legible Wealthsimple-style floating app tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 78');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 76');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
@@ -46,16 +46,16 @@ describe('tab bar treatment', () => {
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
-    expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source).toContain('focused ? colors.clayDeep : colors.inkSoft');
+    expect(source).toContain('backgroundColor: colors.paper');
+    expect(source).toContain('focused ? colors.paper : colors.inkSoft');
     expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
-    expect(source).toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
-    expect(source).toContain('backgroundColor: colors.clayTint');
-    expect(source).toContain("borderColor: 'rgba(165,105,75,0.20)'");
+    expect(source).toContain('backgroundColor: colors.ink');
+    expect(source).toContain("backgroundColor: 'transparent'");
+    expect(source).toContain("borderColor: 'transparent'");
     expect(source).toContain('tabActiveRail');
     expect(source).toContain('tabActiveRailVisible');
     expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderRadius: 28');
+    expect(source).toContain('borderRadius: 30');
     expect(source).toContain("position: 'absolute'");
     expect(source).toContain('left: FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('right: FLOATING_TAB_BAR_SIDE_MARGIN');
@@ -66,13 +66,13 @@ describe('tab bar treatment', () => {
     expect(source).toContain('aria-selected={focused}');
     expect(source).toContain("type: 'tabPress'");
     expect(source).toContain("type: 'tabLongPress'");
-    expect(source).toContain('fontSize: 12');
-    expect(source).toContain('lineHeight: 16');
-    expect(source).toContain('minHeight: 18');
+    expect(source).toContain('fontSize: 12.5');
+    expect(source).toContain('lineHeight: 18');
+    expect(source).toContain('minHeight: 20');
     expect(source).toContain('minHeight: MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP');
-    expect(source).toContain('width: 36');
+    expect(source).toContain('width: 38');
     expect(source).toContain("outlineStyle: 'none'");
     expect(source).toContain('boxShadow: ');
     expect(source).toContain('onFocus={() => setFocusRingRouteKey(route.key)}');
@@ -80,6 +80,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain('setFocusRingRouteKey((currentKey)');
     expect(source).not.toContain('function Dot');
     expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
+    expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
+    expect(source).not.toContain('backgroundColor: colors.clayTint');
+    expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
   });
 
   it('renders tab labels directly inside protected one-line phone geometry', () => {
@@ -107,6 +110,7 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain("tabBarLabelPosition: 'below-icon'");
     expect(source).not.toContain('lineHeight: 15');
     expect(source).not.toContain('fontSize: 11');
+    expect(source).not.toContain('fontSize: 12,\n    includeFontPadding: false');
     expect(source).not.toContain('minWidth: 56');
   });
 
