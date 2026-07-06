@@ -32,15 +32,28 @@ export default function SuccessScreen() {
   const price = data?.priceLabel ?? offering.data?.annual?.priceLabel ?? 'the store price';
   const endDate = fmt(data?.expiresAt ?? null, inTrial ? PLANS.annual.trialDays : 365);
   const body = inTrial ? PAYWALL_COPY.success.bodyFor(price) : PAYWALL_COPY.success.bodyForPaid(price);
-  const meta = inTrial
-    ? PAYWALL_COPY.success.metaFor(endDate, price)
-    : PAYWALL_COPY.success.metaForPaid(endDate, price);
+  const metaRows = inTrial
+    ? PAYWALL_COPY.success.metaRowsFor(endDate, price)
+    : PAYWALL_COPY.success.metaRowsForPaid(endDate, price);
 
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-1 items-center justify-center">
-        <View className="mb-7 h-[72px] w-[72px] items-center justify-center rounded-full" style={{ backgroundColor: colors.clay }}>
-          <Text style={{ color: colors.paper, fontSize: 34 }}>✓</Text>
+        <View
+          className="mb-7 h-[72px] w-[72px] items-center justify-center rounded-full"
+          style={{ backgroundColor: colors.clay }}
+        >
+          <Text
+            style={{
+              color: colors.paper,
+              fontSize: 34,
+              includeFontPadding: false,
+              lineHeight: 38,
+              textAlign: 'center',
+            }}
+          >
+            {'\u2713'}
+          </Text>
         </View>
         <Text variant="display" className="text-center" style={{ fontSize: 42, lineHeight: 45 }}>
           {PAYWALL_COPY.success.titleFor(firstName)}
@@ -48,9 +61,22 @@ export default function SuccessScreen() {
         <Text variant="body" tone="muted" className="mt-3.5 text-center" style={{ lineHeight: 25, maxWidth: 320 }}>
           {body}
         </Text>
-        <Text variant="label" tone="muted" className="mt-3.5">
-          {meta}
-        </Text>
+        <View
+          className="mt-4 w-full max-w-[272px] rounded-card px-4 py-3"
+          style={{ backgroundColor: colors.greige, borderColor: colors.hairline, borderWidth: 1 }}
+        >
+          {metaRows.map((row) => (
+            <Text
+              key={row}
+              variant="label"
+              tone="muted"
+              className="text-center"
+              style={{ lineHeight: 18 }}
+            >
+              {row}
+            </Text>
+          ))}
+        </View>
       </View>
       <Button label={PAYWALL_COPY.success.cta} onPress={() => router.replace('/(tabs)/today')} />
     </Screen>

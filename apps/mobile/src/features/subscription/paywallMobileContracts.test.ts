@@ -132,4 +132,23 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain("compact={compactPaywall}");
     expect(source).not.toContain('contentContainerClassName="pb-8"');
   });
+
+  it('keeps purchase success metadata readable on compact phones', () => {
+    const source = readAppRoute('paywall/success.tsx');
+    const copy = readSource('features/subscription/copy.ts');
+
+    expect(copy).toContain('metaRowsFor:');
+    expect(copy).toContain('metaRowsForPaid:');
+    expect(source).toContain('const metaRows = inTrial');
+    expect(source).toContain('PAYWALL_COPY.success.metaRowsFor(endDate, price)');
+    expect(source).toContain('PAYWALL_COPY.success.metaRowsForPaid(endDate, price)');
+    expect(source).toContain('metaRows.map((row)');
+    expect(source).toContain('max-w-[272px]');
+    expect(source).toContain('lineHeight: 18');
+    expect(source).toContain('includeFontPadding: false');
+    expect(source).toContain('\\u2713');
+    expect(source).not.toContain('{meta}');
+    expect(source).not.toContain(`>${String.fromCharCode(0x2713)}</Text>`);
+    expect(source).not.toContain(`>${String.fromCharCode(0x00e2, 0x0153, 0x201c)}</Text>`);
+  });
 });
