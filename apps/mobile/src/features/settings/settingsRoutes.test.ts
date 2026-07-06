@@ -66,9 +66,7 @@ describe('Settings route contracts', () => {
     expect(timing).toContain('min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px]');
     expect(timing).toContain('accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}');
     expect(timing).toContain('accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}');
-    expect(timing).toContain(
-      'accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}',
-    );
+    expect(timing).toContain('accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}');
     expect(timing).toContain('accessibilityLabel={`Quiet hours end, ${quietEndTimeLabel}`}');
     expect(timing).toContain('accessibilityHint="Opens time picker"');
     expect(timing).toContain("flexWrap: 'wrap'");
@@ -85,7 +83,9 @@ describe('Settings route contracts', () => {
 
     expect(source).toContain('accessibilityLabel="Dismiss time picker"');
     expect(source).toContain('accessibilityRole="button"');
-    expect(source).toContain('className="flex-1"\n          accessibilityLabel="Dismiss time picker"');
+    expect(source).toContain(
+      'className="flex-1"\n          accessibilityLabel="Dismiss time picker"',
+    );
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain('accessibilityLabel={`${title}, ${formattedTime}`}');
     expect(source).toContain(
@@ -144,15 +144,34 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain("className={compactPhone ? 'mt-4 p-4' : 'mt-6'}");
     expect(source).not.toContain("className={compactPhone ? 'mt-3 p-4' : 'mt-4'}");
     expect(source).toContain('const accountLabel = isAnonymous ?');
-    expect(source).toContain('className="mt-1 min-h-[48px] flex-row items-center justify-between gap-3"');
-    expect(source).toContain('className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"');
-    expect(source).toContain('const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;');
-    expect(source).toContain('const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];');
+    expect(source).toContain(
+      'className="mt-1 min-h-[48px] flex-row items-center justify-between gap-3"',
+    );
+    expect(source).toContain(
+      'className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"',
+    );
+    expect(source).toContain(
+      'const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;',
+    );
+    expect(source).toContain(
+      'const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];',
+    );
     expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
     expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
     expect(source).toContain('<Card className="mt-12 p-3">');
     expect(source).toContain('MORE ROUTINE');
-    expect(source).toContain("compact={compactPhone}");
+    expect(source).toContain('const COMPACT_FOR_YOU_TOP_MARGIN = 240');
+    expect(source).toContain("className={compactPhone ? undefined : 'mt-4'}");
+    expect(source).toContain(
+      'style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}',
+    );
+    expect(source.indexOf('COMPACT_FOR_YOU_TOP_MARGIN')).toBeLessThan(
+      source.indexOf('function Row'),
+    );
+    expect(source.indexOf("className={compactPhone ? undefined : 'mt-4'}")).toBeGreaterThan(
+      source.indexOf('MORE ROUTINE'),
+    );
+    expect(source).toContain('compact={compactPhone}');
   });
 
   it('keeps secondary subscription exits buffered above 44px on phones', () => {

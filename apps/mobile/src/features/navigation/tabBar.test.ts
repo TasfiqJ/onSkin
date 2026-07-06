@@ -30,6 +30,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('TAB_ITEM_HEIGHT');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RESET');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
+    expect(source).toContain('ACTIVE_TAB_SHADOW');
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');
@@ -47,15 +48,12 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
     expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source.match(/focused \? colors\.ink : colors\.mutedStrong/g)).toHaveLength(2);
-    expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
-    expect(source).toContain('transform: [{ translateY: -1 }]');
-    expect(source).toContain("backgroundColor: 'transparent'");
-    expect(source).toContain("borderColor: 'transparent'");
-    expect(source).toContain('tabActiveRail');
-    expect(source).toContain('tabActiveRailVisible');
+    expect(source).toContain('focused ? colors.paperRaised : colors.mutedStrong');
+    expect(source).toContain('transform: [{ translateY: -0.5 }]');
+    expect(source).toContain('backgroundColor: colors.ink');
+    expect(source).toContain("borderColor: 'rgba(32,27,21,0.20)'");
     expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderRadius: 26');
+    expect(source).toContain('borderRadius: 28');
     expect(source).toContain("position: 'absolute'");
     expect(source).toContain('left: FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('right: FLOATING_TAB_BAR_SIDE_MARGIN');
@@ -80,7 +78,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain('onBlur={() =>');
     expect(source).toContain('setFocusRingRouteKey((currentKey)');
     expect(source).not.toContain('function Dot');
-    expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
+    expect(source).toContain('testID={`bottom-tab-${route.name}`}');
+    expect(source).not.toContain('tabActiveRail');
+    expect(source).not.toContain('tabActiveRailVisible');
     expect(source).not.toContain('iconShellActive: {\n    backgroundColor: colors.ink');
     expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
     expect(source).not.toContain('backgroundColor: colors.clayTint');
@@ -92,8 +92,9 @@ describe('tab bar treatment', () => {
 
     expect(source).toContain('function FloatingTabBar');
     expect(source).toContain('adjustsFontSizeToFit');
-    expect(source).toContain('maxFontSizeMultiplier={1.12}');
-    expect(source).toContain('minimumFontScale={0.9}');
+    expect(source).toContain('ellipsizeMode="tail"');
+    expect(source).toContain('maxFontSizeMultiplier={1.08}');
+    expect(source).toContain('minimumFontScale={0.86}');
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('{displayLabel}');
     expect(source).toContain('TAB_ICON_BY_ROUTE');
@@ -108,7 +109,6 @@ describe('tab bar treatment', () => {
     expect(source).toContain("textAlignVertical: 'center'");
     expect(source).toContain('hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}');
     expect(source).toContain("borderColor: 'transparent'");
-    expect(source).toContain('accessible={false}');
     expect(source).not.toContain('function renderTabBarLabel');
     expect(source).not.toContain('tabLabelFrame');
     expect(source).not.toContain('tabBarLabel: renderTabBarLabel');
@@ -132,7 +132,7 @@ describe('tab bar treatment', () => {
     expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
     expect(minTouchTarget).toBeGreaterThanOrEqual(52);
     expect(usableWidth / 4).toBeGreaterThanOrEqual(74);
-    expect(source).toContain('minimumFontScale={0.9}');
-    expect(source).toContain('maxFontSizeMultiplier={1.12}');
+    expect(source).toContain('minimumFontScale={0.86}');
+    expect(source).toContain('maxFontSizeMultiplier={1.08}');
   });
 });

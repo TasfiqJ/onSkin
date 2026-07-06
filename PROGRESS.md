@@ -76,6 +76,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   card-creation failures. Added focused unit coverage for unavailable sharing,
   rejected share sheets, probe failures, cleanup, and capture errors. Native
   share-sheet device QA remains outstanding.
+- Refined the bottom navigation into a stronger premium floating control. The
+  selected tab now uses a dark rounded pill with white icon/label contrast,
+  stable one-line label fitting, and per-tab test IDs; the old tiny active rail
+  was removed. Expo web human-simulated E2E rechecked Today, Progress, Shelf,
+  and You at 320x568 plus Today at 390x844 with zero horizontal overflow and
+  53.99 px tab hit targets. The same pass found and fixed a You-tab `FOR YOU`
+  row overlap at 390x844; `Recommendations` now starts below the first viewport
+  instead of under the floating bar. Evidence is under
+  `test-results/human-e2e/2026-07-06/navigation-tabbar-floating-refresh/`;
+  native iOS/Android Dynamic Type QA remains outstanding.
 - Added a value-before-paywall path to contextual Pro gates. First-time free
   users who direct-open `/routine/plan` now see the full-routine paywall with a
   no-card `Explore first` reverse-trial action, while expired/lapsed entitlement

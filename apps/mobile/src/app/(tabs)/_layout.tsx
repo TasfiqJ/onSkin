@@ -35,8 +35,8 @@ const FLOATING_TAB_BAR_HEIGHT = 68;
 const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 10, android: 8, default: 8 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 34;
 const FLOATING_TAB_BAR_GAP = 24;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 8;
-const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 4;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 10;
+const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 2;
 const MIN_TAB_TOUCH_TARGET = 52;
 const TAB_ITEM_HEIGHT = 54;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
@@ -58,6 +58,22 @@ const TAB_BAR_SHADOW = Platform.select({
   },
   web: {
     boxShadow: '0px 14px 30px rgba(32, 27, 21, 0.12), 0px 3px 10px rgba(32, 27, 21, 0.05)',
+  } as ViewStyle,
+  default: {},
+}) as ViewStyle;
+
+const ACTIVE_TAB_SHADOW = Platform.select({
+  android: {
+    elevation: 1,
+  },
+  ios: {
+    shadowColor: colors.ink,
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+  },
+  web: {
+    boxShadow: '0px 6px 14px rgba(32, 27, 21, 0.16)',
   } as ViewStyle,
   default: {},
 }) as ViewStyle;
@@ -138,7 +154,7 @@ function YouIcon({ color }: { color: string }) {
 }
 
 function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) {
-  const iconColor = focused ? colors.ink : colors.mutedStrong;
+  const iconColor = focused ? colors.paperRaised : colors.mutedStrong;
   const Icon =
     name === 'today'
       ? TodayIcon
@@ -191,7 +207,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-        const labelColor = focused ? colors.ink : colors.mutedStrong;
+        const labelColor = focused ? colors.paperRaised : colors.mutedStrong;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -230,15 +246,18 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
               styles.tabItem,
               WEB_TAB_ITEM_FOCUS_RESET,
               focused ? styles.tabItemActive : null,
+              focused ? ACTIVE_TAB_SHADOW : null,
               focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
               pressed ? styles.tabItemPressed : null,
             ]}
+            testID={`bottom-tab-${route.name}`}
           >
             <TabBarIcon focused={focused} name={iconName} />
             <Text
+              ellipsizeMode="tail"
               adjustsFontSizeToFit
-              maxFontSizeMultiplier={1.12}
-              minimumFontScale={0.9}
+              maxFontSizeMultiplier={1.08}
+              minimumFontScale={0.86}
               numberOfLines={1}
               style={[
                 styles.tabLabel,
@@ -248,10 +267,6 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
             >
               {displayLabel}
             </Text>
-            <View
-              accessible={false}
-              style={[styles.tabActiveRail, focused ? styles.tabActiveRailVisible : null]}
-            />
           </Pressable>
         );
       })}
@@ -337,7 +352,7 @@ const styles = StyleSheet.create({
     width: 38,
   },
   iconShellActive: {
-    transform: [{ translateY: -1 }],
+    transform: [{ translateY: -0.5 }],
   },
   progressBar: {
     borderRadius: 2,
@@ -363,7 +378,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.paperRaised,
     borderColor: colors.hairlineStrong,
-    borderRadius: 26,
+    borderRadius: 28,
     borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     height: FLOATING_TAB_BAR_HEIGHT,
@@ -410,21 +425,11 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   tabItemActive: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
+    backgroundColor: colors.ink,
+    borderColor: 'rgba(32,27,21,0.20)',
   },
   tabItemPressed: {
     opacity: 0.72,
-  },
-  tabActiveRail: {
-    backgroundColor: 'transparent',
-    borderRadius: 2,
-    height: 3,
-    marginTop: 1,
-    width: 18,
-  },
-  tabActiveRailVisible: {
-    backgroundColor: colors.ink,
   },
   tabScene: {
     paddingBottom: FLOATING_TAB_BAR_CLEARANCE,

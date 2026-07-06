@@ -49,6 +49,7 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
 
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
+const COMPACT_FOR_YOU_TOP_MARGIN = 240;
 
 type StaticRouteHref = Extract<Href, string>;
 
@@ -448,7 +449,10 @@ export default function YouScreen() {
           </Card>
         ) : null}
 
-        <Card className="mt-4">
+        <Card
+          className={compactPhone ? undefined : 'mt-4'}
+          style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}
+        >
           <Text variant="label" tone="muted" className="mb-1">
             FOR YOU
           </Text>
