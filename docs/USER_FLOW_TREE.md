@@ -230,6 +230,39 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan` directly and use the visible Back control.
   - Expected result: The user returns to the You tab instead of staying trapped on the plan route.
   - Evidence: Screenshot sequence and route snapshot.
+- Branch: compact fixed-footer clearance
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/routine/plan` through the no-card `Explore first` path at 320 px wide, inspect the evening card, scroll to the lower note, then tap `Start today`.
+  - Expected result: The first viewport ends on complete plan content above the fixed CTA, lower notes are reachable by deliberate scroll, and `Start today` routes to Today.
+  - Evidence: First-viewport screenshot, scrolled-bottom screenshot, route snapshot, and CTA geometry.
+
+## Flow: Runtime Brand Identity Smoke
+
+- Goal: A user sees one coherent public app identity across high-visibility runtime surfaces.
+- Persona: New or returning user using a build configured with the working rebrand candidate.
+- Entry state: Local Expo web build with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` and `EXPO_PUBLIC_APP_SCHEME=routinekind`.
+- Start screen/URL/window: Direct routes `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`.
+- Success state: High-visibility Ask, Pro, subscription, and public-card copy use `RoutineKind` through runtime configuration; old public `OnSkin` copy is absent from the checked surfaces.
+- Priority: Critical
+- Automate later: Yes
+- Surface: Expo web smoke; iOS and Android after final native identifiers are cleared.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/runtime-brand-identity/`
+
+### Path A: Configured Runtime Copy
+
+1. Action: Start Expo web with the working public display name, open `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`, then inspect visible page copy.
+   Expected result: `/ask` renders `Ask RoutineKind`; the paywall/subscription surfaces render `RoutineKind Pro`; no checked surface displays old public `OnSkin` labels.
+   Evidence: Screenshots, visible-text snapshots, and browser console logs.
+
+### Branches
+
+- Branch: share-card placeholder identity
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Inspect the runtime share-card constants without a final brand domain.
+  - Expected result: The card watermark uses `RoutineKind`, the URL fallback uses a reserved `.example` domain, and the deep link uses the configured public scheme.
+  - Evidence: Unit test output and source snapshot.
 
 ## Flow: Today Routine Completion
 

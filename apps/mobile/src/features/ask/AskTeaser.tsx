@@ -2,25 +2,30 @@ import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { BRAND } from '@/lib/brand';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 import { ASK_COPY } from './copy';
 
-// A calm Today entry into Ask OnSkin (docs/13 §9. The first-session moat taste). Routes
+// A calm Today entry into Ask (docs/13 §9. The first-session moat taste). Routes
 // into the DETERMINISTIC, on-device, $0 advisor (the free moat taste); never "AI" hype.
 export function AskTeaser() {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="Open Ask OnSkin"
+      accessibilityLabel={`Open ${BRAND.askName}`}
       onPress={() => {
         haptics.select();
         router.push('/ask');
       }}
       className="mt-4 flex-row items-center gap-4 rounded-card bg-paper-raised p-5"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
-      <View className="h-[38px] w-[38px] items-center justify-center rounded-[11px]" style={{ backgroundColor: colors.ink }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
+      <View
+        className="h-[38px] w-[38px] items-center justify-center rounded-[11px]"
+        style={{ backgroundColor: colors.ink }}
+      >
         <Text style={{ color: colors.clayBright, fontSize: 16 }}>✦</Text>
       </View>
       <View className="flex-1">

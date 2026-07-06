@@ -1,6 +1,10 @@
+import { BRAND } from '@/lib/brand';
+
 import type { CatalogQualityGrade } from './quality';
 
-export function catalogQualityLabel(grade: CatalogQualityGrade | string | null | undefined): string {
+export function catalogQualityLabel(
+  grade: CatalogQualityGrade | string | null | undefined,
+): string {
   switch (grade) {
     case 'verified':
       return 'Verified';
@@ -41,13 +45,13 @@ export function sourceDisplayName(source: string | null | undefined): string {
     case 'cosing':
       return 'CosIng';
     case 'curated':
-      return 'OnSkin curated';
+      return BRAND.catalogCuratedSource;
     case 'brand_label':
       return 'Product label';
     case 'user_local':
       return 'Added by you';
     case 'internal_derived':
-      return 'OnSkin parser';
+      return BRAND.catalogParserSource;
     default:
       return 'Unknown source';
   }

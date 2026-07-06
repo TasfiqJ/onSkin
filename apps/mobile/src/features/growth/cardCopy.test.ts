@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { BRAND } from '@/lib/brand';
+
 import { CARD_COPY } from './cardCopy';
 
 // Claim-safety + no-dark-pattern regression guard for the shareable Conflict Card
@@ -8,7 +10,8 @@ import { CARD_COPY } from './cardCopy';
 // may slip a drug claim, a disease name, or a fear/urgency hook onto the card.
 const DRUG_VERBS = /\b(treats?|cures?|heals?|prevents?|reverses?|repairs?|stimulates?)\b/i;
 const DISEASE = /\b(acne|rosacea|eczema|melasma|dermatitis|psoriasis)\b/i;
-const DARK_PATTERN = /\b(hurry|now only|don'?t miss|act fast|limited time|last chance|selling fast)\b/i;
+const DARK_PATTERN =
+  /\b(hurry|now only|don'?t miss|act fast|limited time|last chance|selling fast)\b/i;
 
 describe('Shelf Conflict Card copy (docs/14 §3) is claim-safe and calm', () => {
   const strings = Object.values(CARD_COPY);
@@ -28,6 +31,6 @@ describe('Shelf Conflict Card copy (docs/14 §3) is claim-safe and calm', () => 
   it('carries the not-medical-advice footnote and a brand watermark', () => {
     expect(CARD_COPY.footnote.toLowerCase()).toContain('not medical advice');
     expect(CARD_COPY.handle).toBeTruthy();
-    expect(CARD_COPY.brand).toBe('OnSkin');
+    expect(CARD_COPY.brand).toBe(BRAND.appName);
   });
 });

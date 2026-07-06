@@ -1,4 +1,5 @@
 import type { DetectedConflict } from '@/features/intelligence/engine';
+import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 
 export type DeferredSurfaceKind =
@@ -70,7 +71,7 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
     cta: 'Back',
   },
   cloudAsk: {
-    title: 'Ask OnSkin is not in this beta',
+    title: `${BRAND.askName} is not in this beta`,
     body: 'The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls.',
     detail:
       'A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship.',

@@ -16,6 +16,7 @@ import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { BRAND } from '@/lib/brand';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import {
   appLockUserMessage,
@@ -38,7 +39,7 @@ const POLICY_ROWS = policyLinkRows([
 ]);
 
 const POLICY_HINTS: Record<PolicyLinkKey, string> = {
-  terms: 'Rules for using OnSkin and subscription terms.',
+  terms: `Rules for using ${BRAND.appName} and subscription terms.`,
   privacy: 'What data we collect, use, and share.',
   consumerHealthPrivacy: 'Consumer health data notice and rights.',
   support: 'Help with accounts, billing, deletion, or export.',
@@ -184,7 +185,7 @@ export default function YouScreen() {
     : ent?.inTrial
       ? 'Free trial · Pro'
       : ent?.isPro
-        ? 'OnSkin Pro · active'
+        ? `${BRAND.proName} · active`
         : 'Free plan';
   const compactPhone = height < 640 || width < 430;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
@@ -207,7 +208,7 @@ export default function YouScreen() {
     { label: 'Skin Notes. Myth vs evidence', href: '/community' },
   ];
   if (phase7Flags.cloudAsk) {
-    forYouRows.unshift({ label: 'Ask OnSkin. Your evidence-grounded advisor', href: '/ask' });
+    forYouRows.unshift({ label: `${BRAND.askName}. Your evidence-grounded advisor`, href: '/ask' });
   }
   if (phase7Flags.commerce) {
     forYouRows.push({ label: 'Shoppable routines', href: '/commerce/stacks' });
@@ -370,9 +371,7 @@ export default function YouScreen() {
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={isAnonymous ? 'Create an account' : 'Sign out'}
-                onPress={() =>
-                  isAnonymous ? router.push('/onboarding/account') : void signOut()
-                }
+                onPress={() => (isAnonymous ? router.push('/onboarding/account') : void signOut())}
                 className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
                 style={({ pressed }) => [
                   { backgroundColor: colors.greige },
@@ -424,7 +423,12 @@ export default function YouScreen() {
             YOUR ROUTINE
           </Text>
           {primaryRoutineRows.map(({ label, href }) => (
-            <Row key={href} label={label} compact={compactPhone} onPress={() => router.push(href)} />
+            <Row
+              key={href}
+              label={label}
+              compact={compactPhone}
+              onPress={() => router.push(href)}
+            />
           ))}
         </Card>
 
@@ -555,7 +559,7 @@ export default function YouScreen() {
           ) : null}
           {phase7Flags.cloudAsk ? (
             <Row
-              label="Ask OnSkin. Private advisor"
+              label={`${BRAND.askName}. Private advisor`}
               hint="Optional · the deeper cloud advisor · off by default. The on-device answers about your own shelf are always free."
               onPress={() => router.push('/ask/consent')}
             />

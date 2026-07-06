@@ -1,5 +1,7 @@
 import type { NotificationKind } from '@onskin/types';
 
+import { BRAND } from '@/lib/brand';
+
 /**
  * Centralised, calm + claim-safe copy for the engagement layer (docs/07 §3.3/§4,
  * the Slice-11/20 guard pattern). Voice: gentle nudges, never noise. NO guilt
@@ -19,7 +21,7 @@ export type ReminderCopy = {
   discreet: string;
 };
 
-export const LOCK_SCREEN_NOTIFICATION_TITLE = 'OnSkin';
+export const LOCK_SCREEN_NOTIFICATION_TITLE = BRAND.appName;
 
 export const REMINDER_COPY: Record<NotificationKind, ReminderCopy> = {
   am_reminder: {
@@ -59,7 +61,10 @@ export const REMINDER_COPY: Record<NotificationKind, ReminderCopy> = {
   },
 };
 
-export function notificationContentForLockScreen(kind: NotificationKind): { title: string; body: string } {
+export function notificationContentForLockScreen(kind: NotificationKind): {
+  title: string;
+  body: string;
+} {
   const c = REMINDER_COPY[kind];
   return { title: LOCK_SCREEN_NOTIFICATION_TITLE, body: c.discreet };
 }

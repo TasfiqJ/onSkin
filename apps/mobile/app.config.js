@@ -17,6 +17,7 @@ function withVariant(baseValue, suffix) {
 
 function displayName(baseName) {
   if (process.env.APP_DISPLAY_NAME) return process.env.APP_DISPLAY_NAME;
+  if (process.env.EXPO_PUBLIC_APP_DISPLAY_NAME) return process.env.EXPO_PUBLIC_APP_DISPLAY_NAME;
   if (isProduction || !variantSuffix) return baseName;
   return `${baseName} ${variantSuffix}`;
 }
@@ -120,7 +121,10 @@ module.exports = () => {
       `${appName} uses Face ID to keep your private photo timeline for your eyes only.`,
   };
   expo.slug = process.env.APP_SLUG ?? expo.slug;
-  expo.scheme = process.env.APP_SCHEME ?? (isProduction ? baseScheme : `${baseScheme}-${variant}`);
+  expo.scheme =
+    process.env.APP_SCHEME ??
+    process.env.EXPO_PUBLIC_APP_SCHEME ??
+    (isProduction ? baseScheme : `${baseScheme}-${variant}`);
   expo.ios.bundleIdentifier =
     process.env.APP_IOS_BUNDLE_IDENTIFIER ?? withVariant(baseIosBundle, variant);
   expo.android.package =

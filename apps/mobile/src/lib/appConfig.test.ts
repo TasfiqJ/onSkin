@@ -8,8 +8,10 @@ const APP_ENV_KEYS = [
   'APP_VARIANT',
   'EXPO_PUBLIC_APP_ENV',
   'APP_DISPLAY_NAME',
+  'EXPO_PUBLIC_APP_DISPLAY_NAME',
   'APP_SLUG',
   'APP_SCHEME',
+  'EXPO_PUBLIC_APP_SCHEME',
   'APP_IOS_BUNDLE_IDENTIFIER',
   'APP_ANDROID_PACKAGE',
   'APP_CAMERA_USAGE_DESCRIPTION',
@@ -74,5 +76,17 @@ describe('Expo app identity config', () => {
     expect(expo.android.package).toBe('com.routinekind.app');
     expect(expo.extra.appVariant).toBe('production');
     expect(expo.extra.appEnvironment).toBe('production');
+  });
+
+  it('allows public runtime identity env to drive native display and scheme fallbacks', () => {
+    const expo = buildExpoConfig({
+      EXPO_PUBLIC_APP_DISPLAY_NAME: 'RoutineKind',
+      EXPO_PUBLIC_APP_SCHEME: 'routinekind',
+    });
+
+    expect(expo.name).toBe('RoutineKind');
+    expect(expo.scheme).toBe('routinekind');
+    expect(expo.ios.bundleIdentifier).toBe('com.onskin.app.development');
+    expect(expo.android.package).toBe('com.onskin.app.development');
   });
 });

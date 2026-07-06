@@ -9,7 +9,7 @@ export const SHARE_CARD_EXPORT_SIZE = { width: 1080, height: 1920 } as const;
 // One-tap watermarked export of the Shelf Conflict Card. Captures the branded card
 // View to a 1080x1920 PNG and hands it to the OS share sheet. The watermark, CTA,
 // and public link label are baked into the image, so a screenshot or re-share still
-// credits OnSkin and points back to the funnel. Returns false when the device can't
+// credits the app and points back to the funnel. Returns false when the device can't
 // share or the card isn't mounted yet.
 export async function shareConflictCard(ref: RefObject<View | null>): Promise<boolean> {
   if (!ref.current) return false;

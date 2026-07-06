@@ -8,6 +8,7 @@ import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
+import { BRAND } from '@/lib/brand';
 import {
   MANAGE_SUBSCRIPTION_URL_ANDROID,
   MANAGE_SUBSCRIPTION_URL_IOS,
@@ -84,7 +85,7 @@ export default function SubscriptionScreen() {
     ? 'Reverse trial'
     : data?.inTrial
       ? 'Free trial'
-      : `OnSkin Pro${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
+      : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
   const manageLabel =
     data?.store === 'play_store'
       ? 'Manage in Google Play'
@@ -110,7 +111,7 @@ export default function SubscriptionScreen() {
             <View className="mb-4 rounded-card p-5" style={{ backgroundColor: colors.ink }}>
               <View className="mb-3 flex-row items-center justify-between">
                 <Text variant="titleSm" style={{ color: colors.cream, fontSize: 22 }}>
-                  OnSkin Pro
+                  {BRAND.proName}
                 </Text>
                 <View
                   className="rounded-pill px-2.5 py-1"

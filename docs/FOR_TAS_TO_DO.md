@@ -10,7 +10,7 @@ Status: launch-blocked
 
 - Decide whether to keep `OnSkin` only with written trademark counsel clearance. Default path is rebrand.
 - Treat `RoutineKind` as the current working candidate, not final clearance.
-- A web-indexed spot check on 2026-07-06 did not find an exact App Store or Google Play listing for `RoutineKind`, but that is not trademark clearance and not a store-console reservation.
+- Web-indexed App Store/Google Play spot checks on 2026-07-06 did not surface an exact app listing for `RoutineKind`, but that is not trademark clearance and not a store-console reservation.
 - Run formal trademark, App Store, Google Play, domain, social handle, and paid-search checks for the final candidate.
 - Choose final app name, legal entity display, domain, support email, bundle ID, Android package ID, URL scheme, policy URL root, and share-card watermark.
 - Record the decision in `docs/brand-decision-memo.md`.

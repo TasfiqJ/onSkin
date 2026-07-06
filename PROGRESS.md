@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Added a runtime brand identity module for the working `RoutineKind` rebrand and
+  moved high-visibility app copy through it: Pro/paywall labels, Ask labels,
+  app-lock prompts and shields, lock-screen notification title, share-card
+  watermark/deep link fallback, catalog provenance, commerce paid-link
+  disclosures, RevenueCat fallback titles, and Phase 8 public identity. Native
+  config now accepts `EXPO_PUBLIC_APP_DISPLAY_NAME` and
+  `EXPO_PUBLIC_APP_SCHEME` as fallbacks so runtime and build identity can be
+  switched together after final clearance. Product IDs, storage keys, Supabase
+  config, and native bundle identifiers intentionally remain for a later
+  cleared-identity migration. `npm run brand:audit` now reports 74 public
+  launch-risk references, down from 144 before the runtime-copy slice.
 - Fixed routine-plan profile-label honesty for the first-value loop. The
   generated routine screen now labels empty-shelf output as `EXAMPLE ROUTINE`,
   derives real plan labels from saved `oily_dry` and `sensitive_resistant`
@@ -17,6 +28,12 @@ Value` branch to `docs/USER_FLOW_TREE.md`. Human-simulated E2E covered
   `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`. Direct free
   `/routine/plan` still shows the existing `full_routine` contextual paywall;
   that is recorded as a product-gating note for a future pay-after-value slice.
+- Fixed a compact-phone footer overlap on `/routine/plan`: the first 320x568
+  viewport now ends on a complete evening card above `Start today`, the SPF gap
+  note is reachable by deliberate scroll, and the CTA still routes to Today.
+  Evidence and bug report are in
+  `test-results/human-e2e/2026-07-06/routine-plan-footer-overlap/` and
+  `docs/e2e-bug-reports/2026-07-06-routine-plan-footer-overlap.md`.
 - Fixed the compact-phone purchase-success confirmation after E2E found the
   renewal metadata could orphan `yr` on 320 px screens. Success metadata now
   renders as two stable rows inside a constrained container, with an escaped
