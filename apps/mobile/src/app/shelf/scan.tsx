@@ -1,7 +1,7 @@
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -55,6 +55,7 @@ function activeIngredients(product: CatalogProductSummary): {
 
 export default function ScanScreen() {
   const isFocused = useIsFocused();
+  const { height } = useWindowDimensions();
   const [permission, requestPermission] = useCameraPermissions();
   const { reset } = useIntake();
   const [torch, setTorch] = useState(false);
@@ -65,6 +66,7 @@ export default function ScanScreen() {
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
   const permissionGranted = Boolean(permission?.granted);
   const canShowCamera = cameraEnabled && permissionGranted;
+  const compactScanSurface = height < 640;
 
   const goManual = () => {
     haptics.select();
@@ -203,7 +205,13 @@ export default function ScanScreen() {
         </View>
 
         <View className="flex-1 items-center justify-center">
-          <View className="h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated">
+          <View
+            className={
+              compactScanSurface
+                ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+            }
+          >
             {canShowCamera ? (
               <CameraView
                 active={isFocused}
@@ -247,28 +255,44 @@ export default function ScanScreen() {
                 ) : null}
               </View>
             )}
-            <View
-              className="absolute left-8 right-8 top-[118px] h-28 rounded-[18px]"
-              style={{
-                pointerEvents: 'none',
-                borderWidth: 2,
-                borderColor: cameraReady ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.45)',
-              }}
-            />
+            {canShowCamera ? (
+              <View
+                className={
+                  compactScanSurface
+                    ? 'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'
+                    : 'absolute left-8 right-8 top-[118px] h-28 rounded-[18px]'
+                }
+                style={{
+                  pointerEvents: 'none',
+                  borderWidth: 2,
+                  borderColor: cameraReady ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.45)',
+                }}
+              />
+            ) : null}
           </View>
-          <Text variant="body" tone="inverseMuted" className="mt-5">
-            Line up the barcode
-          </Text>
-          <View className="mt-3 flex-row items-center gap-2">
-            <View className="h-1.5 w-1.5 rounded-full bg-clay-bright" />
-            <Text variant="label" tone="inverseMuted">
-              Decoding happens on your device
-            </Text>
-          </View>
+          {!compactScanSurface ? (
+            <>
+              <Text variant="body" tone="inverseMuted" className="mt-5">
+                Line up the barcode
+              </Text>
+              <View className="mt-3 flex-row items-center gap-2">
+                <View className="h-1.5 w-1.5 rounded-full bg-clay-bright" />
+                <Text variant="label" tone="inverseMuted">
+                  Decoding happens on your device
+                </Text>
+              </View>
+            </>
+          ) : null}
         </View>
       </View>
 
-      <View className="rounded-t-sheet bg-night-surface px-7 pb-10 pt-6">
+      <View
+        className={
+          compactScanSurface
+            ? 'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'
+            : 'rounded-t-sheet bg-night-surface px-7 pb-10 pt-6'
+        }
+      >
         {state.kind === 'looking_up' ? (
           <View className="mb-4 flex-row items-center gap-3">
             <ActivityIndicator />
@@ -324,20 +348,20 @@ export default function ScanScreen() {
         <View className="gap-2.5">
           <FallbackRow
             icon="="
-            title="Capture the ingredient label"
-            subtitle="Editable low-confidence label flow"
+            title="Scan ingredient label"
+            subtitle="Review editable OCR"
             onPress={goOcr}
           />
           <FallbackRow
             icon="S"
-            title="Search the catalog"
-            subtitle="Use the reviewed catalog search path"
+            title="Search catalog"
+            subtitle="Use reviewed matches"
             onPress={goSearch}
           />
           <FallbackRow
             icon="+"
             title="Add it by hand"
-            subtitle="Always works, even offline"
+            subtitle="Always works offline"
             onPress={goManual}
           />
         </View>

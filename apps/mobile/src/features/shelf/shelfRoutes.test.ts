@@ -118,6 +118,24 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('min-h-[44px] min-w-[44px] items-center justify-center px-2');
   });
 
+  it('keeps the Shelf scan fallback readable on short phones without a fake reticle', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactScanSurface = height < 640');
+    expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
+    expect(source).toContain('{canShowCamera ? (');
+    expect(source).toContain("'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'");
+    expect(source).toContain('!compactScanSurface ? (');
+    expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'");
+    expect(source).toContain('title="Scan ingredient label"');
+    expect(source).toContain('subtitle="Review editable OCR"');
+    expect(source).toContain('title="Search catalog"');
+    expect(source).toContain('subtitle="Use reviewed matches"');
+    expect(source).not.toContain('title="Capture the ingredient label"');
+    expect(source).not.toContain('<View\n              className="absolute left-8 right-8 top-[118px] h-28 rounded-[18px]"');
+  });
+
   it('keeps the Shelf catalog search row inside narrow phones', () => {
     const source = readAppRoute('shelf/search.tsx');
 

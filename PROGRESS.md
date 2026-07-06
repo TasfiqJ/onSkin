@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf scan no-camera fallback after 320x568 E2E showed the camera
+  permission card squeezed behind the route header with a scan reticle over
+  fallback copy. Short phones now use a compact scan card, hide the reticle when
+  no camera is visible, and keep OCR/search/manual fallback actions reachable.
 - Fixed the onboarding health-data consent screen after 320x568 E2E showed the
   fixed action stack covering legal copy. Consent copy now scrolls above the
   buffered agreement actions, with all three action targets staying at 48 px or
