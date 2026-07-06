@@ -75,6 +75,10 @@ describe('cycle week route scheduler notes', () => {
 
     expect(source).toContain('Scheduled');
     expect(source).toContain('Variant changes recalculate your active nights');
+    expect(source).toContain('balanced rest');
+    expect(source).toContain('`${cycle.lengthNights} nights generated`');
+    expect(source).toContain('accessibilityLabel={`${v.label}. ${sub}`}');
+    expect(source).not.toContain("{ id: 'classic', label: 'Classic', sub: '4 nights' }");
     expect(source).not.toContain('Drag-to-reassign');
     expect(source).not.toContain('arrives with the reorder gesture');
     expect(source).not.toContain('B-DRAG-DND');

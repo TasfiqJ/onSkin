@@ -15,7 +15,7 @@ import { haptics } from '@/theme/haptics';
 // the harm-relevant retinoid×exfoliant separation, which we hold firm.
 const VARIANTS: { id: CycleVariant; label: string; sub: string }[] = [
   { id: 'gentle', label: 'Gentle', sub: 'more recovery' },
-  { id: 'classic', label: 'Classic', sub: '4 nights' },
+  { id: 'classic', label: 'Classic', sub: 'balanced rest' },
   { id: 'advanced', label: 'Advanced', sub: 'fewer rest' },
 ];
 
@@ -53,10 +53,12 @@ export default function CycleSettingsScreen() {
         <View className="flex-row gap-2">
           {VARIANTS.map((v) => {
             const isSel = selected === v.id;
+            const sub = isSel && cycle ? `${cycle.lengthNights} nights generated` : v.sub;
             return (
               <Pressable
                 key={v.id}
                 accessibilityRole="button"
+                accessibilityLabel={`${v.label}. ${sub}`}
                 accessibilityState={{ selected: isSel }}
                 onPress={() => {
                   haptics.select();
@@ -71,7 +73,7 @@ export default function CycleSettingsScreen() {
                   {v.label}
                 </Text>
                 <Text variant="label" tone="muted" className="mt-0.5">
-                  {v.sub}
+                  {sub}
                 </Text>
               </Pressable>
             );

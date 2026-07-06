@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the cycle settings variant copy after a 320x568 E2E pass with real
+  retinol and glycolic shelf actives showed `/cycle/week` honestly generated a
+  `classic, 6 nights` schedule while `/cycle/settings` still advertised the
+  Classic option as `4 nights`. The selected variant card now reports the
+  generated cycle length, unselected cards use non-fixed descriptors, and the
+  variant buttons expose matching accessibility labels. E2E rechecked the
+  two-active manual shelf setup, cycle settings, tapping a future week row into
+  the selected-night explanation, scrolling to `Got it`, and returning to the
+  week view with no horizontal overflow.
 - Fixed subscription settings free-state policy access after 320x568 E2E showed
   `/settings/subscription` exposed Restore only for free users, even though the
   settings branch and subscription spec require Terms and Privacy access from the
