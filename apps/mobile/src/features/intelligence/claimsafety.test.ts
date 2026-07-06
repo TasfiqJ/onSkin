@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { STARTER_RULES } from './rules';
+import { STARTER_RULES, shippableRules } from './rules';
 
 // Claim-safety + calm-copy regression guard (docs/02 §7.7, §9). In-app rule copy
 // is a "claims surface" under the FD&C Act / FTC. It must stay COSMETIC and CALM.
@@ -22,16 +22,25 @@ const DRUG_CLAIMS = [
 // "no exclamation, no 'warning/danger/avoid'"). Safety copy defers calmly too.
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\bwarning\b/i, /\bavoid\b/i, /!/];
 
-const PLACEMENT_OVERCLAIMS = [
-  /\bwe('ve| have)?\s+(set|placed)\b/i,
-  /\balready reflected\b/i,
-];
+const PLACEMENT_OVERCLAIMS = [/\bwe('ve| have)?\s+(set|placed)\b/i, /\balready reflected\b/i];
 
 function offenders(text: string, patterns: RegExp[]): string[] {
   return patterns.flatMap((re) => {
     const m = text.match(re);
     return m ? [m[0]] : [];
   });
+}
+
+function withDevFlag<T>(value: boolean, run: () => T): T {
+  const runtime = globalThis as { __DEV__?: boolean };
+  const previous = runtime.__DEV__;
+  runtime.__DEV__ = value;
+  try {
+    return run();
+  } finally {
+    if (previous === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = previous;
+  }
 }
 
 describe('claim-safety: no drug/disease verbs in rule copy (§9)', () => {
@@ -81,5 +90,28 @@ describe('rule-set invariants', () => {
     for (const r of STARTER_RULES.filter((x) => x.interactionType === 'safety')) {
       expect(r.evidenceLabel).not.toBe('established');
     }
+  });
+});
+
+describe('B-DERM-REVIEW production rule gate', () => {
+  it('withholds all starter rules in production until a reviewer is recorded', () => {
+    withDevFlag(false, () => {
+      expect(shippableRules()).toEqual([]);
+    });
+  });
+
+  it('ships only reviewed rules in production', () => {
+    const reviewed = { ...STARTER_RULES[0]!, reviewedBy: 'B-DERM-REVIEW' };
+    const unreviewed = STARTER_RULES[1]!;
+
+    withDevFlag(false, () => {
+      expect(shippableRules([reviewed, unreviewed])).toEqual([reviewed]);
+    });
+  });
+
+  it('keeps the full starter set available for development fixtures', () => {
+    withDevFlag(true, () => {
+      expect(shippableRules()).toHaveLength(STARTER_RULES.length);
+    });
   });
 });

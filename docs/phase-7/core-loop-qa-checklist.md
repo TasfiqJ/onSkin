@@ -72,3 +72,11 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
 - Requires `conflict.rule.reviewedBy`.
 - Does not include sensitive notes, product IDs, local paths, or raw ingredient text.
 - Export/share events do not include product names.
+
+## Local regression evidence
+
+- 2026-07-06: Vitest covers `shippableRules()` production withholding/reviewed
+  pass-through and `generatePlan()` default production behavior for an unreviewed
+  retinoid × glycolic routine. This supports the "unreviewed rules do not
+  surface in production" checklist item; it does not replace real iOS/Android
+  beta-device QA or named reviewer sign-off.

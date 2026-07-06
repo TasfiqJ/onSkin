@@ -56,6 +56,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `test-results/human-e2e/2026-07-06/routine-plan-profile-label/`. Direct free
   `/routine/plan` still shows the existing `full_routine` contextual paywall;
   that is recorded as a product-gating note for a future pay-after-value slice.
+- Fixed the first-session front-label product-name tagging path after E2E found
+  onboarding-entered `Glycolic 7% Toner` was treated as a generic morning toner
+  instead of a PM exfoliant. The offline tag layer now recognizes conservative
+  label shorthand for common acids, Vitamin C, and SPF before catalog seed.
+  Added tag and routine-generation regression tests, then rechecked the
+  onboarding product shelf -> `Explore first` -> `/routine/plan` -> Today PM
+  check-off path at 320x568. Evidence and bug report are in
+  `test-results/human-e2e/2026-07-06/front-label-product-tags/` and
+  `docs/e2e-bug-reports/2026-07-06-front-label-product-tags.md`.
+- Added production-mode B-DERM-REVIEW regressions for the core routine loop:
+  `shippableRules()` now has explicit tests for production withholding, reviewed
+  rule pass-through, and dev fixtures; `generatePlan()` now proves its default
+  production path does not surface unreviewed retinoid × glycolic guidance while
+  still surfacing a reviewed fixture rule. This is a local code gate only; final
+  public distribution still needs real reviewer identity and device QA evidence.
 - Fixed a compact-phone footer overlap on `/routine/plan`: the first 320x568
   viewport now ends on a complete evening card above `Start today`, the SPF gap
   note is reachable by deliberate scroll, and the CTA still routes to Today.
