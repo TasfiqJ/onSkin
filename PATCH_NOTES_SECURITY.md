@@ -655,3 +655,10 @@
 - Change: Account onboarding now records Terms/Privacy acceptance through `recordAccountConsent()` and stays on the account screen with stable retry copy if the ledger write fails. `account_created` analytics, PostHog/Sentry identity, and paywall navigation happen only after that row saves.
 - Why safe: Account creation can already have succeeded at the auth provider, but the product must not claim completed account onboarding or advance the user without durable acceptance evidence for the copy/version shown.
 - Regression: `accountConsent.test.ts` proves account acceptance rows are written and failures propagate. `onboardingRoutes.test.ts` locks the route ordering and prevents the old best-effort catch from returning.
+
+## You-tab partner-sharing consent fail-closed grant
+
+- Files: `apps/mobile/src/app/(tabs)/you.tsx`, `apps/mobile/src/features/settings/applyPrivacyChoice.test.ts`.
+- Change: The You-tab `data_sharing` privacy toggle now rolls local commerce consent back off and rethrows when the immutable consent ledger write fails.
+- Why safe: The You tab bypasses the feature-level commerce consent helper. Without the rollback, a failed MHMDA third-party-sharing ledger write could leave where-to-buy/partner-sharing affordances locally enabled.
+- Regression: `applyPrivacyChoice.test.ts` locks the route to the rollback and rejects the old `if (type !== 'data_sharing') throw error` swallow.

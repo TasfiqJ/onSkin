@@ -46,7 +46,7 @@ describe('settings privacy choice application', () => {
     expect(deps.onSettled).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps You-tab privacy toggles on the persistence-first helper', () => {
+  it('keeps You-tab privacy toggles on the persistence-first helper with local-first commerce', () => {
     const source = readSource('app/(tabs)/you.tsx');
     const saveCloudIndex = source.indexOf('await setCloudBackupEnabled(enabled);');
     const cloudQueryIndex = source.indexOf("qc.setQueryData(['photo_cloud_backup'], enabled);");
@@ -56,9 +56,14 @@ describe('settings privacy choice application', () => {
     expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
     expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
     expect(source).toContain("disabled={savingPrivacy === 'photo_cloud_backup'}");
+    expect(source).toContain("if (type === 'data_sharing' && granted)");
+    expect(source).toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
+    expect(source).not.toContain("if (type !== 'data_sharing') throw error;");
     expect(saveCloudIndex).toBeGreaterThanOrEqual(0);
     expect(cloudQueryIndex).toBeGreaterThan(saveCloudIndex);
     expect(cloudAnalyticsIndex).toBeGreaterThan(saveCloudIndex);
-    expect(source).not.toContain("qc.setQueryData(['photo_cloud_backup'], enabled);\n    if (enabled) {");
+    expect(source).not.toContain(
+      "qc.setQueryData(['photo_cloud_backup'], enabled);\n    if (enabled) {",
+    );
   });
 });

@@ -181,7 +181,10 @@ export default function YouScreen() {
               consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
             });
           } catch (error) {
-            if (type !== 'data_sharing') throw error;
+            if (type === 'data_sharing' && granted) {
+              await setCommerceConsentLocal(false).catch(() => undefined);
+            }
+            throw error;
           }
         },
         onSaved: () => {

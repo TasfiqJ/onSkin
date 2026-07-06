@@ -193,6 +193,7 @@
 - `apps/mobile/src/features/settings/applyPrivacyChoice.test.ts`
   - Proves You-tab privacy choices save before visible/query state or cloud-backup analytics are applied.
   - Proves failed privacy-choice persistence surfaces stable copy, leaves visible state unapplied, refreshes stale state, and keeps marketing, partner-sharing, and cloud-backup toggles disabled while saving.
+  - Proves partner-sharing grants roll local commerce consent back off and surface failure when the third-party-sharing ledger write fails.
 - `apps/mobile/src/features/ask/applyConsentChoice.test.ts`
   - Proves Cloud Ask consent grants and revocations save before visible toggle state is applied.
   - Proves failed Ask consent persistence surfaces stable copy, leaves visible state unapplied, and refreshes stale consent state.

@@ -23,6 +23,7 @@
 - SEC-P1-017: Onboarding health-data collection consent now fails closed; the quiz stays locked and stable retry copy appears if the immutable consent ledger write fails.
 - SEC-P1-018: Photo capture and encrypted-cloud-backup consent grants now fail closed; local private flags roll back and retry UI stays locked if the immutable consent ledger write fails.
 - SEC-P1-019: Account onboarding now waits for the Terms/Privacy consent ledger row before account-created analytics or paywall navigation.
+- SEC-P1-020: You-tab partner-sharing grants now roll local commerce consent back off and surface retry UI when the third-party-sharing consent ledger write fails.
 - SEC-P2-002: Public waitlist/growth endpoints now require Turnstile in production or when public-form protection is explicitly enabled.
 - SEC-P2-003: Phase 9 now has an explicit live Supabase two-user/storage adversarial harness.
 - SEC-P2-004: Security scanner coverage is now represented by a checked GitHub Actions workflow.
