@@ -14,6 +14,10 @@ describe('Today route mobile contracts', () => {
 
     expect(source).toContain('accessibilityLabel="View your streak and adherence"');
     expect(source).toContain("router.push('/routine/streak')");
+    expect(source).toContain('function streakLabel(days: number): string');
+    expect(source).toContain("days === 1 ? 'day' : 'days'");
+    expect(source).toContain('{streakLabel(progress.streak)}');
+    expect(source).not.toContain('{progress.streak} days');
     expect(source).toContain('min-h-[48px]');
     expect(source).not.toContain('min-h-[44px]');
     expect(source).toContain('px-4 py-2.5');

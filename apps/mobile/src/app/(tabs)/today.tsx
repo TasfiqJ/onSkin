@@ -52,6 +52,10 @@ function pmDisplaySub(step: { role?: string; instruction?: string }): string | u
   return step.instruction;
 }
 
+function streakLabel(days: number): string {
+  return `${days} ${days === 1 ? 'day' : 'days'}`;
+}
+
 // Geometric checkmark (two rotated bars). No react-native-svg, per house rule.
 function Check({ color = colors.paper }: { color?: string }) {
   return (
@@ -227,7 +231,7 @@ export default function TodayScreen() {
               >
                 <View className="h-1.5 w-1.5 rounded-full bg-clay" />
                 <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
-                  {progress.streak} days
+                  {streakLabel(progress.streak)}
                 </Text>
               </Pressable>
             ) : null}

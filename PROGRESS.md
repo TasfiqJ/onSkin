@@ -6,6 +6,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Today streak/adherence pill grammar so a one-day streak reads
+  `1 day` instead of `1 days`, while keeping the 48 px phone target and
+  local-first streak path.
 - Buffered the Today header streak/adherence pill to a 48 px phone target while
   keeping the calm chip treatment, and made progress loading fail-soft when
   Supabase is not configured so local check-offs still surface the streak. The
