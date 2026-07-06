@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the progress review short-phone action clip after 320x568 E2E showed
+  `/progress/review` pushing `Retake` and `Save to my phone` below the viewport.
+  The review hero now scales down on compact phones, the quality note spacing
+  tightens, and the 56 px actions stay fully visible; E2E also rechecked
+  Progress capture, no-score, missing-photo, and deferred Trend exits.
 - Fixed the routine plan direct-entry trap after 320x568 E2E showed
   `/routine/plan` had no visible escape when opened from You, leaving only
   `Start today`. The plan screen now uses the shared 48 px Back control with a

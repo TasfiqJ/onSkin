@@ -49,12 +49,28 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });
 
+  it('keeps review actions above the short-phone fold', () => {
+    const source = readAppRoute('progress/review.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compact = height < 640');
+    expect(source).toContain('Math.round(height * 0.54)');
+    expect(source).toContain('height: photoHeight');
+    expect(source).toContain('marginBottom: compact ? 12 : 18');
+    expect(source).toContain('marginVertical: compact ? 12 : 18');
+    expect(source).toContain('paddingVertical: compact ? 12 : 14');
+    expect(source).toContain('paddingBottom: insets.bottom + (compact ? 16 : 24)');
+    expect(source).not.toContain('height: 380, borderRadius: 24');
+  });
+
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
 
     expect(source).toContain('accessibilityLabel="Dismiss photo picker"');
     expect(source).toContain('accessibilityRole="button"');
-    expect(source).toContain('className="flex-1"\n          accessibilityLabel="Dismiss photo picker"');
+    expect(source).toContain(
+      'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
+    );
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).not.toContain('onPress={() => {}}');
   });
@@ -80,7 +96,9 @@ describe('Progress route mobile contracts', () => {
       'className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"',
     );
     expect(source).not.toContain('className="rounded-pill px-[18px] py-2.5"');
-    expect(source).not.toContain('className="mt-3 flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"');
+    expect(source).not.toContain(
+      'className="mt-3 flex-row items-center gap-1.5 rounded-pill px-3.5 py-2"',
+    );
     expect(source).not.toContain('className="rounded-pill px-3.5 py-2"');
 
     expect(slider).toContain(

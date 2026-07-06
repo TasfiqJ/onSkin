@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 import * as FileSystem from 'expo-file-system/legacy';
-import { Pressable, View } from 'react-native';
+import { Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -50,6 +50,9 @@ function Chip({ label, ok }: { label: string; ok: boolean }) {
 
 function ReviewScreenContent() {
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const compact = height < 640;
+  const photoHeight = compact ? Math.max(286, Math.min(330, Math.round(height * 0.54))) : 380;
   const params = useLocalSearchParams<{
     alignment?: string;
     lighting?: string;
@@ -109,7 +112,11 @@ function ReviewScreenContent() {
     >
       <Text
         variant="label"
-        style={{ color: 'rgba(244,239,231,0.45)', textAlign: 'center', marginBottom: 18 }}
+        style={{
+          color: 'rgba(244,239,231,0.45)',
+          textAlign: 'center',
+          marginBottom: compact ? 12 : 18,
+        }}
       >
         {`${PHOTO_COPY.review.eyebrow} · ${fmt(takenLocalDate)}`}
       </Text>
@@ -131,7 +138,12 @@ function ReviewScreenContent() {
 
       {/* captured photo */}
       <View
-        style={{ height: 380, borderRadius: 24, overflow: 'hidden', backgroundColor: '#2A251E' }}
+        style={{
+          height: photoHeight,
+          borderRadius: 24,
+          overflow: 'hidden',
+          backgroundColor: '#2A251E',
+        }}
       >
         {capturedUri ? (
           <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
@@ -154,8 +166,8 @@ function ReviewScreenContent() {
           flexDirection: 'row',
           alignItems: 'center',
           gap: 11,
-          marginVertical: 18,
-          paddingVertical: 14,
+          marginVertical: compact ? 12 : 18,
+          paddingVertical: compact ? 12 : 14,
           paddingHorizontal: 18,
           borderRadius: 16,
           backgroundColor: 'rgba(157,177,138,0.12)',
@@ -188,7 +200,13 @@ function ReviewScreenContent() {
 
       <View style={{ flex: 1 }} />
 
-      <View style={{ flexDirection: 'row', gap: 12, paddingBottom: insets.bottom + 24 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 12,
+          paddingBottom: insets.bottom + (compact ? 16 : 24),
+        }}
+      >
         <Pressable
           accessibilityRole="button"
           onPress={() => {
