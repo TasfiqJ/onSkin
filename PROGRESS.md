@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Ran a 59-route compact-phone regression sweep at 320 x 568 after the
+  onboarding pass and fixed the remaining You-tab hidden hit-area issue: the
+  `Streak & adherence` row could begin behind the floating tab bar while a
+  sliver of its touch area remained topmost. Compact You now shows the first
+  three routine rows as complete first-viewport actions and moves secondary
+  routine links into a lower section that requires deliberate scroll. Final
+  human-simulated E2E passed 59/59 direct routes with no horizontal overflow,
+  visible small controls, topmost tab-bar overlaps, or filtered console
+  warn/error logs in
+  `test-results/human-e2e/2026-07-06/compact-phone-route-sweep-final-pass/`.
 - Fixed the fresh-phone onboarding path after 320x568 E2E exposed multiple
   short-phone blockers: goals and quiz answers could sit under fixed footers,
   consent copy could bleed behind actions or become unscrollable when clipped

@@ -198,6 +198,8 @@ export default function YouScreen() {
   if (phase7Flags.widgets) {
     routineRows.push({ label: 'Widgets & Live Activity', href: '/routine/widgets' });
   }
+  const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;
+  const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];
 
   const forYouRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Recommendations', href: '/recommendations' },
@@ -421,10 +423,26 @@ export default function YouScreen() {
           <Text variant="label" tone="muted" className="mb-1">
             YOUR ROUTINE
           </Text>
-          {routineRows.map(({ label, href }) => (
+          {primaryRoutineRows.map(({ label, href }) => (
             <Row key={href} label={label} compact={compactPhone} onPress={() => router.push(href)} />
           ))}
         </Card>
+
+        {secondaryRoutineRows.length > 0 ? (
+          <Card className="mt-12 p-3">
+            <Text variant="label" tone="muted" className="mb-1">
+              MORE ROUTINE
+            </Text>
+            {secondaryRoutineRows.map(({ label, href }) => (
+              <Row
+                key={href}
+                label={label}
+                compact={compactPhone}
+                onPress={() => router.push(href)}
+              />
+            ))}
+          </Card>
+        ) : null}
 
         <Card className="mt-4">
           <Text variant="label" tone="muted" className="mb-1">

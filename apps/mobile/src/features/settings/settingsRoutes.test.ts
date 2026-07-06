@@ -139,6 +139,12 @@ describe('Settings route contracts', () => {
     expect(source).toContain('const accountLabel = isAnonymous ?');
     expect(source).toContain('className="mt-1 min-h-[48px] flex-row items-center justify-between gap-3"');
     expect(source).toContain('className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"');
+    expect(source).toContain('const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;');
+    expect(source).toContain('const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];');
+    expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
+    expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
+    expect(source).toContain('<Card className="mt-12 p-3">');
+    expect(source).toContain('MORE ROUTINE');
     expect(source).toContain("compact={compactPhone}");
   });
 
