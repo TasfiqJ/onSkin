@@ -698,6 +698,13 @@
 - Why safe: Event names are vendor-visible. A future dynamic event string built from a routine state, concern, product, or prompt could leak sensitive context even when props are sanitized.
 - Regression: `track.test.ts` proves unapproved event names are dropped, and `phase9:privacy-payload-audit` proves vendor capture uses `safeEvent` plus literal allowlisted app call sites.
 
+## Analytics numeric prop minimization
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: `sanitizeAnalyticsProps()` now keeps only finite safe integers between `-10000` and `10000`. Large numbers, non-finite numbers, and precise decimal values are dropped even when the prop key is allowlisted.
+- Why safe: Approved analytics keys such as `count`, `days`, `result`, `variant`, or `surface` must remain coarse buckets and counters. Modified or future call sites should not be able to send numeric barcodes, database IDs, or derived photo/skin scores to PostHog under safe-looking keys.
+- Regression: `track.test.ts` covers small counters, large identifiers, decimals, and infinities. `phase9:privacy-payload-audit` now fails if the analytics numeric cap or non-integer rejection is removed.
+
 ## PostHog automatic capture disabled
 
 - Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.

@@ -82,6 +82,7 @@
 - SEC-P2-081: Sentry before-send scrubbing now redacts automatic/unhandled error events and drops request, breadcrumb, and context fields before upload.
 - SEC-P2-082: Sentry before-send scrubbing now also drops top-level log entries, thread traces, spans, modules, measurements, debug metadata, server names, and SDK processing metadata before upload.
 - SEC-P2-083: Sentry/observability context now drops large or non-integer numeric values, so barcodes, identifiers, or precise derived scores cannot pass through otherwise safe keys.
+- SEC-P2-084: Analytics props now drop large or non-integer numeric values, so PostHog receives only small integer counters from approved prop keys.
 - SEC-P2-011: Supabase Edge Functions now have a frozen-lock Deno type/syntax check wired into Phase 9 verification and CI.
 - SEC-P2-012: Catalog correction reports now sanitize and allowlist support payload/context JSON before persistence.
 - SEC-P2-013: Phase 9 now has an explicit live Edge auth negative-test harness for deployed user-JWT functions.

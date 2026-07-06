@@ -62,6 +62,25 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsProps({ result: 'error' })).toEqual({ result: 'error' });
   });
 
+  it('keeps only small integer analytics counters', () => {
+    expect(
+      sanitizeAnalyticsProps({
+        count: 2,
+        days: 10_000,
+        streak: -1,
+        matched: true,
+        result: 12_345_678_901,
+        variant: 0.91,
+        surface: Number.POSITIVE_INFINITY,
+      }),
+    ).toEqual({
+      count: 2,
+      days: 10_000,
+      streak: -1,
+      matched: true,
+    });
+  });
+
   it('allows the privacy-safe scan activation event and metadata buckets', () => {
     expect(sanitizeAnalyticsEventName('product_scanned')).toBe('product_scanned');
     expect(

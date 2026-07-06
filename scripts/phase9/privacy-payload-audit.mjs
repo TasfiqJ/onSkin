@@ -43,6 +43,8 @@ block(errors, /isAllowedAnalyticsPropKey/.test(trackSource), 'Analytics sanitize
 block(errors, /SENSITIVE_ANALYTICS_KEY/.test(trackSource), 'Analytics sanitizer is missing sensitive-key guard.');
 block(errors, /SENSITIVE_ANALYTICS_VALUE/.test(trackSource), 'Analytics sanitizer is missing sensitive-value guard.');
 block(errors, /SENSITIVE_ANALYTICS_VALUE\.test\(trimmed\)/.test(trackSource), 'Analytics sanitizer must check trimmed string values against the sensitive-value guard.');
+block(errors, /MAX_SAFE_ANALYTICS_INTEGER/.test(trackSource), 'Analytics sanitizer must cap numeric prop values.');
+block(errors, /Number\.isSafeInteger\(value\)/.test(trackSource), 'Analytics sanitizer must drop non-integer numeric prop values.');
 block(errors, /pseudonymousUserId/.test(trackSource), 'Analytics identify must pseudonymize raw user IDs before vendor calls.');
 block(errors, /posthog\?\.identify\(pseudonymousId/.test(trackSource), 'PostHog identify must use a pseudonymous user ID.');
 block(errors, /captureAppLifecycleEvents:\s*false/.test(trackSource), 'PostHog automatic lifecycle capture must stay disabled.');

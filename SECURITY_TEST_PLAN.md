@@ -363,6 +363,7 @@
   - Verifies sensitive analytics keys/values are dropped.
   - Verifies SPF/category, irritation, conflict-check, recommendation, commerce, and Ask-intent style values do not survive sanitization.
   - Verifies photo-quality result labels are dropped from the generic `result` prop while non-sensitive result buckets remain available.
+  - Verifies PostHog props keep only small integer counters and drop large numeric identifiers, non-finite numbers, and precise decimal values.
   - Verifies `change_state` is no longer an accepted analytics prop key.
   - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.
   - Verifies the PostHog account-boundary reset wrapper remains present.
@@ -421,6 +422,7 @@
   - Fails if recommendation trigger/type, commerce product type, or Ask intent props are re-allowlisted or reintroduced in analytics payloads.
   - Fails if analytics, Sentry, or RevenueCat setup warnings reintroduce raw exception-object console logging.
   - Fails if analytics tracking reintroduces development console logging for event names or sanitized props.
+  - Fails if analytics props stop capping numeric values or allow non-integer numeric props.
   - Fails if Sentry capture stops sanitizing the captured throwable or sends the raw exception object to Sentry.
   - Fails if observability context stops capping numeric values or allows non-integer numeric context.
   - Fails if PostHog/RevenueCat client identity reset wrappers or local private-data wipe calls disappear.

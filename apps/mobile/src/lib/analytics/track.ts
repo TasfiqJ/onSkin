@@ -15,6 +15,7 @@ export const SENSITIVE_ANALYTICS_VALUE =
   /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|(?:^|[_\W])spf(?:$|[_\W])|peptide|dspt|fitzpatrick|monk|axis|step|score|slug|acne|rosacea|eczema|psoriasis|dermatitis|melasma|hyperpigmentation|irritation|procedure|medical|concern|conflict|product_fit|replenish|routine_q|conflict_q)/i;
 const APPROVED_BUCKET_KEYS = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
 const PHOTO_QUALITY_RESULT_VALUES = new Set(['matched', 'misaligned', 'darker', 'low']);
+const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
 
 function bytesToHex(bytes: ArrayBuffer): string {
   return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
@@ -35,6 +36,11 @@ export async function pseudonymousUserId(userId: string): Promise<string> {
 
 function canUsePostHog(): boolean {
   return env.posthogKey.length > 0 && env.posthogHost.length > 0;
+}
+
+function sanitizeAnalyticsNumber(value: number): number | undefined {
+  if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_ANALYTICS_INTEGER) return undefined;
+  return value;
 }
 
 async function getPostHog(): Promise<PostHog | null> {
@@ -65,8 +71,11 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
     if (!isAllowedAnalyticsPropKey(key)) continue;
     if (!APPROVED_BUCKET_KEYS.has(key) && SENSITIVE_ANALYTICS_KEY.test(key)) continue;
     if (value === undefined) continue;
-    if (value === null || typeof value === 'number' || typeof value === 'boolean') {
+    if (value === null || typeof value === 'boolean') {
       clean[key] = value;
+    } else if (typeof value === 'number') {
+      const safeNumber = sanitizeAnalyticsNumber(value);
+      if (safeNumber !== undefined) clean[key] = safeNumber;
     } else if (typeof value === 'string') {
       const trimmed = value.trim();
       if (!trimmed || trimmed.includes('@') || SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
