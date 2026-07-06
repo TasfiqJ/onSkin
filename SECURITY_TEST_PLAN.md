@@ -131,6 +131,8 @@
   - Proves consent-query refresh failure does not turn a saved local choice into a failed user action.
 - `apps/mobile/src/features/trend/claimsafety.test.ts`
   - Proves TrendInsight analytics remain generic and do not send computed trend states as props or state-specific events.
+- `apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts`
+  - Proves scheduler pause and recovery analytics do not send irritation reason, recovery duration, or irritation-specific event names.
 - `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`
   - Proves first-use photo capture consent is saved before the capture gate opens or camera permission is requested.
   - Proves photo capture consent persistence failure fails closed with stable copy and keeps camera permission unrequested.

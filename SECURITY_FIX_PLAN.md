@@ -26,6 +26,7 @@
 - SEC-P1-020: You-tab partner-sharing grants now roll local commerce consent back off and surface retry UI when the third-party-sharing consent ledger write fails.
 - SEC-P1-021: Analytics sanitization now drops photo-quality result labels so guided-capture quality metadata cannot reach PostHog through the generic `result` prop.
 - SEC-P1-022: Trend analytics now sends only a generic shown event and no longer exports computed trend state labels or state-specific event names.
+- SEC-P1-023: Scheduler pause/recovery analytics now stay generic and no longer export irritation reason or recovery-duration context.
 - SEC-P2-002: Public waitlist/growth endpoints now require Turnstile in production or when public-form protection is explicitly enabled.
 - SEC-P2-003: Phase 9 now has an explicit live Supabase two-user/storage adversarial harness.
 - SEC-P2-004: Security scanner coverage is now represented by a checked GitHub Actions workflow.

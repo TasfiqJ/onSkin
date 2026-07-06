@@ -127,7 +127,7 @@ export function useCycleMutations() {
     },
     async pause(reason: DisruptionReason) {
       await pauseCycle(reason);
-      track('cycle_paused', { reason });
+      track('cycle_paused');
       await invalidate();
     },
     async resume() {
@@ -147,8 +147,7 @@ export function useCycleMutations() {
     },
     async beginRecovery(days: number, reason: DisruptionReason) {
       await startRecovery(days, reason);
-      // Irritation-triggered recovery is the docs/05 §7 de-escalation event.
-      track(reason === 'irritation' ? 'cycle_deescalated' : 'cycle_recovery_started', { reason, days });
+      track('cycle_recovery_started');
       await invalidate();
     },
     async finishRecovery() {

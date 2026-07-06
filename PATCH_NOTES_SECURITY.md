@@ -676,3 +676,10 @@
 - Change: Trend insights now emit only `trend_shown` after consent. The app no longer sends `change_state` values or state-specific trend events, and `change_state` is no longer an allowed analytics prop key.
 - Why safe: Trend states are computed from a user's private progress-photo series. Even coarse labels such as consistent, change observed, or inconclusive lighting are sensitive health-adjacent inferences and should not be sent to analytics vendors.
 - Regression: `claimsafety.test.ts` locks `TrendInsight` to generic instrumentation only, and `track.test.ts` proves `change_state` is no longer accepted by the sanitizer.
+
+## Scheduler recovery analytics minimization
+
+- Files: `apps/mobile/src/features/scheduler/useCycle.ts`, `apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts`.
+- Change: Scheduler pause and recovery analytics now emit generic events without `reason` or `days`, and irritation-triggered recovery no longer emits the distinct `cycle_deescalated` event.
+- Why safe: Irritation and recovery duration are health-adjacent routine-disruption details. Aggregate event counts are enough for product telemetry without exporting the reason or duration.
+- Regression: `useCycleAnalytics.test.ts` locks pause/recovery analytics to generic event names and rejects reason/duration payloads plus the old de-escalation event name.
