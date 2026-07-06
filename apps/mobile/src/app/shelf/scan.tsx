@@ -15,6 +15,7 @@ import {
 } from '@/features/native/camera/barcode';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
+import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
@@ -130,6 +131,13 @@ export default function ScanScreen() {
     track('barcode_decode_success', { barcode_type: normalized.type });
     void lookupBarcode(normalized.lookupValue)
       .then((response) => {
+        const scanResult = shelfScanResultFromLookup(response.result);
+        void recordShelfScan({
+          barcode: normalized.lookupValue,
+          result: scanResult,
+          matchedProductId: 'product' in response ? response.product.id : null,
+        });
+
         if (response.result === 'matched' || response.result === 'external_candidate') {
           setState({
             kind: 'matched',
@@ -154,6 +162,10 @@ export default function ScanScreen() {
         });
       })
       .catch(() => {
+        void recordShelfScan({
+          barcode: normalized.lookupValue,
+          result: shelfScanResultFromLookup('lookup_error'),
+        });
         setState({
           kind: 'error',
           barcode: normalized.lookupValue,
@@ -225,9 +237,7 @@ export default function ScanScreen() {
                 {cameraEnabled && permission && !permission.granted ? (
                   <Pressable
                     accessibilityRole="button"
-                    onPress={
-                      permission.canAskAgain ? requestCamera : () => void openAppSettings()
-                    }
+                    onPress={permission.canAskAgain ? requestCamera : () => void openAppSettings()}
                     className="mt-5 rounded-pill bg-paper px-5 py-3"
                   >
                     <Text className="font-sans-semibold text-night">

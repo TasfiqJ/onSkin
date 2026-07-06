@@ -116,6 +116,17 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('min-h-[44px] min-w-[44px] items-center justify-center px-2');
   });
 
+  it('keeps barcode lookup outcomes wired to the owner-scoped shelf scan log', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain(
+      "import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';",
+    );
+    expect(source).toContain('const scanResult = shelfScanResultFromLookup(response.result)');
+    expect(source).toContain('void recordShelfScan({');
+    expect(source).toContain("result: shelfScanResultFromLookup('lookup_error')");
+  });
+
   it('keeps opened-date and PAO chips buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/opened.tsx');
 
@@ -140,9 +151,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"',
     );
-    expect(source).toContain(
-      'className="min-h-[56px] flex-row items-center justify-between"',
-    );
+    expect(source).toContain('className="min-h-[56px] flex-row items-center justify-between"');
     expect(source).toContain(
       'className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"',
     );

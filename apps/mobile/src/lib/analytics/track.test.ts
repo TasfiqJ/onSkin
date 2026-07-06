@@ -62,6 +62,23 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsProps({ result: 'error' })).toEqual({ result: 'error' });
   });
 
+  it('allows the privacy-safe scan activation event and metadata buckets', () => {
+    expect(sanitizeAnalyticsEventName('product_scanned')).toBe('product_scanned');
+    expect(
+      sanitizeAnalyticsProps({
+        source: 'scan',
+        matched: false,
+        result: 'ambiguous',
+        barcode: '1234567890123',
+        product_id: 'product-1',
+      }),
+    ).toEqual({
+      source: 'scan',
+      matched: false,
+      result: 'ambiguous',
+    });
+  });
+
   it('drops unapproved or user-derived event names', () => {
     expect(sanitizeAnalyticsEventName('photo_captured')).toBe('photo_captured');
     expect(sanitizeAnalyticsEventName('routine_step_irritation')).toBeNull();

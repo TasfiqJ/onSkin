@@ -257,6 +257,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Search for a product that should not match.
   - Expected result: No-match state offers manual add or safe next steps.
   - Evidence: Screenshot.
+- Branch: barcode no-match or offline lookup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Scan a barcode that returns no catalog match, an external candidate, or an offline/failed lookup.
+  - Expected result: The scan sheet never dead-ends; it shows a matched candidate, no-match copy, or manual/search/OCR fallbacks, logs the owner-scoped `shelf_scans` outcome when Supabase is available, and tracks only privacy-safe scan-funnel metadata.
+  - Evidence: Screenshot, console/network or Supabase/mock insert evidence, and analytics payload assertion.
 - Branch: camera permission denied
   - Priority: Important
   - Automate later: Yes

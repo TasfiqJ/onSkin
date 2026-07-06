@@ -18,6 +18,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Human-simulated E2E reproduced the Shelf scan torch switch at 43.99 px tall
   on a 320 px phone viewport. Buffered the switch target to 48 px and updated
   the Shelf route contract test.
+- Wired barcode scan lookup outcomes to the owner-scoped `shelf_scans` intake
+  log and added privacy-safe `product_scanned` analytics metadata. Expo web
+  320 px verification covered the scan fallback surface and manual fallback
+  path; native camera barcode decode still needs device QA.
 
 Legend: done / partial / not started / launch-blocked. Use the readiness
 statuses in `LAUNCH_READINESS.md` for current production state:
@@ -1151,8 +1155,9 @@ checkmark + per-screen radii/copy across the routine builder. All claim-safe, em
 
 - Smart Shelf: ✅ cold-load skeleton (commit 4e69e9d); ✅ proactive "Replace ->" affordance on countdown/
   expired cards (4e69e9d); ✅ `added_via='onboarding'` seed path now live (inline quick-add, commit 99d7fee).
-  Still open: contribute-back copy asserts a `shelf_scans` write that never runs (soften or write the row);
-  scan-funnel events absent (blocked on the scan engine).
+  Scan lookup outcomes now write the best-effort `shelf_scans` row when Supabase/auth are available and
+  track the documented scan funnel with privacy-safe metadata only. Still open: authenticated Open Beauty
+  Facts contribution-back POST/job and native camera barcode decode need live-source/device QA.
 - Routine Builder: ✅ ramp/tolerance now persist (local-first rampStore + useRamp; the offer gates on
   shouldOfferStepUp; tolerance persists applyTolerance, commit 99d7fee). Adaptation/reorder hardcoded-data
   follow-ups were closed in the 2026-07-06 generated-plan surface pass.
