@@ -145,8 +145,12 @@ describe('Shelf route mobile contracts', () => {
   it('keeps opened-date and PAO chips buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/opened.tsx');
 
+    expect(source).toContain(
+      '<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
+    );
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2'");
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-4 py-2'");
+    expect(source).not.toContain('<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>');
     expect(source).not.toContain(
       "'min-h-[44px] items-center justify-center rounded-pill px-3.5 py-2'",
     );

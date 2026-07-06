@@ -140,7 +140,7 @@ export default function OpenedDateScreen() {
   };
 
   return (
-    <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>
+    <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>
       <View className="mb-4 flex-row items-start justify-between">
         <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
           <Text className="text-[18px] text-clay">◴</Text>

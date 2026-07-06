@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Fixed the Shelf opened-date intake sheet after 320 px E2E showed the third
+  opened-state choice cut off on initial load. The sheet now uses the visible
+  Close control instead of reserving a large backdrop strip, keeping all three
+  core choices visible on short phones.
 - Fixed the Shelf catalog search row after 320 px E2E showed the Search action
   clipping past the right edge. The input now shrinks correctly and the Search
   action keeps a 50 px buffered target inside the viewport.

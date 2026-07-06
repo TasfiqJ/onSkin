@@ -279,7 +279,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Set an opened date or replenish state at a boundary date.
-  - Expected result: The app explains expiration/replenish status clearly.
+  - Expected result: The app explains expiration/replenish status clearly, and the opened-date sheet shows all three core opened-state choices without clipping on short phones before the user scrolls to PAO or save actions.
   - Evidence: Screenshot.
 - Branch: direct-entry back or close navigation
   - Priority: Important
