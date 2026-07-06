@@ -698,6 +698,13 @@
 - Why safe: Automatic SDK events bypass the explicit `track()` path where event names and props are allowlisted. Keeping PostHog on explicit capture only makes vendor telemetry auditable.
 - Regression: `track.test.ts` locks the PostHog config to disabled lifecycle capture and session replay, and `phase9:privacy-payload-audit` enforces both settings.
 
+## Sentry automatic tracing disabled
+
+- Files: `apps/mobile/src/lib/observability/sentry.ts`, `apps/mobile/src/lib/observability/sentry.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: Set `tracesSampleRate: 0` and added source-level tests/audit checks that keep default PII, failed-request capture, screenshot attachments, and view hierarchy attachments disabled.
+- Why safe: Performance traces and automatic native attachments can include screen, route, network, or UI context outside `captureException()` and its sanitizer. This keeps Sentry limited to explicit sanitized exception reports.
+- Regression: `sentry.test.ts` locks the privacy-sensitive Sentry init options, and `phase9:privacy-payload-audit` fails if those automatic capture surfaces are re-enabled.
+
 ## Client SDK identity reset on local wipe
 
 - Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `apps/mobile/src/features/settings/localPrivateData.test.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, `apps/mobile/src/lib/iap/revenuecat.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`, `scripts/phase9/build-release-qa-packet.mjs`.

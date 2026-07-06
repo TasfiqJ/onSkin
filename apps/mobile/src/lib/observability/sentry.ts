@@ -20,7 +20,7 @@ export function initSentry(): void {
     dsn: env.sentryDsn,
     environment: env.appEnvironment,
     sendDefaultPii: false,
-    tracesSampleRate: env.appEnvironment === 'production' ? 0.05 : 0.1,
+    tracesSampleRate: 0,
     enableNative: Platform.OS !== 'web',
     enableCaptureFailedRequests: false,
     attachScreenshot: false,

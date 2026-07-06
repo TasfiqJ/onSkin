@@ -51,6 +51,11 @@ block(errors, /sanitizeObservabilityContext/.test(sentrySource), 'Sentry capture
 block(errors, /sanitizeCapturedException/.test(sentrySource), 'Sentry captureException must sanitize the captured throwable.');
 block(errors, !/Sentry\.captureException\(error/.test(sentrySource), 'Sentry captureException must not send the raw throwable to Sentry.');
 block(errors, /pseudonymousUserId/.test(sentrySource), 'Sentry setUser must pseudonymize raw user IDs before vendor calls.');
+block(errors, /sendDefaultPii:\s*false/.test(sentrySource), 'Sentry default PII capture must stay disabled.');
+block(errors, /tracesSampleRate:\s*0/.test(sentrySource), 'Sentry performance tracing must stay disabled.');
+block(errors, /enableCaptureFailedRequests:\s*false/.test(sentrySource), 'Sentry failed-request capture must stay disabled.');
+block(errors, /attachScreenshot:\s*false/.test(sentrySource), 'Sentry screenshot attachments must stay disabled.');
+block(errors, /attachViewHierarchy:\s*false/.test(sentrySource), 'Sentry view hierarchy attachments must stay disabled.');
 block(errors, /SENSITIVE_CONTEXT_KEY/.test(scrubSource), 'Sentry scrubber is missing sensitive-key guard.');
 block(errors, /SENSITIVE_VALUE/.test(scrubSource), 'Sentry scrubber is missing sensitive-value guard.');
 block(errors, /sanitizeCapturedException/.test(scrubSource), 'Sentry scrubber must expose a captured-exception sanitizer.');

@@ -403,6 +403,8 @@
 - `apps/mobile/src/lib/observability/scrub.test.ts`
   - Verifies Sentry/observability context drops route, URL, query, product, barcode, OCR, note, photo, receipt, profile, and free-text fields.
   - Verifies captured exceptions are replaced with a generic redacted error before vendor capture, preserving only a safe error name.
+- `apps/mobile/src/lib/observability/sentry.test.ts`
+  - Verifies Sentry default PII, performance tracing, failed-request capture, screenshot attachments, and view hierarchy attachments remain disabled.
 - `apps/mobile/src/features/commerce/attribution.test.ts` and `apps/mobile/src/features/commerce/commerce.test.ts`
   - Verify where-to-buy URLs fail closed for unsafe schemes or embedded credentials.
   - Verify unsafe affiliate rows are filtered before rendering and that outbound commerce URLs still append only the opaque `oref` token.
@@ -410,6 +412,7 @@
   - Proves analytics/Sentry identity paths use pseudonymous IDs.
   - Fails if analytics event names bypass the event-name allowlist, vendor capture uses the raw event name, or app call sites use non-literal/unapproved event names.
   - Fails if PostHog automatic lifecycle capture or session replay is re-enabled.
+  - Fails if Sentry default PII, performance tracing, failed-request capture, screenshots, or view hierarchy attachments are re-enabled.
   - Ignores code comments inside `track()` object literals so audit warnings reflect real payload keys.
   - Extracts shorthand object props such as `{ goals }`, then fails if sensitive analytics prop keys are attempted in source, even if the runtime sanitizer would drop them.
   - Fails if recommendation trigger/type, commerce product type, or Ask intent props are re-allowlisted or reintroduced in analytics payloads.
