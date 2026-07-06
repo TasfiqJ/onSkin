@@ -3,7 +3,6 @@ export const ANALYTICS_ALLOWED_PROP_KEYS = [
   'added_via',
   'answerKind',
   'barcode_type',
-  'change_state',
   'context',
   'consented',
   'correction_type',

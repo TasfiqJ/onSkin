@@ -129,6 +129,8 @@
   - Proves Trend insight consent grant/revoke successes refresh visible consent state.
   - Proves failed consent save or withdrawal attempts surface stable copy and still refresh stale consent state.
   - Proves consent-query refresh failure does not turn a saved local choice into a failed user action.
+- `apps/mobile/src/features/trend/claimsafety.test.ts`
+  - Proves TrendInsight analytics remain generic and do not send computed trend states as props or state-specific events.
 - `apps/mobile/src/features/photos/applyCaptureConsent.test.ts`
   - Proves first-use photo capture consent is saved before the capture gate opens or camera permission is requested.
   - Proves photo capture consent persistence failure fails closed with stable copy and keeps camera permission unrequested.
@@ -350,6 +352,7 @@
   - Verifies sensitive analytics keys/values are dropped.
   - Verifies SPF/category, irritation, conflict-check, recommendation, commerce, and Ask-intent style values do not survive sanitization.
   - Verifies photo-quality result labels are dropped from the generic `result` prop while non-sensitive result buckets remain available.
+  - Verifies `change_state` is no longer an accepted analytics prop key.
   - Verifies raw Supabase user IDs are converted to stable pseudonymous IDs before vendor identity calls.
 - `apps/mobile/src/lib/navigation/externalUrl.test.ts`
   - Verifies external handoffs allow only normalized HTTPS URLs, reject custom schemes, plaintext HTTP, embedded credentials, malformed strings, and control characters, and strip fragments before opening.

@@ -1,7 +1,15 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import type { TrendChangeState } from '@onskin/types';
 import { describe, expect, it } from 'vitest';
 
 import { TREND_COPY, trendNarrative } from './copy';
+
+const FEATURE_DIR = fileURLToPath(new URL('./', import.meta.url));
+
+function readFeatureSource(path: string): string {
+  return readFileSync(`${FEATURE_DIR}/${path}`, 'utf8');
+}
 
 // Claim-safety guard EXTENDED to trend strings (docs/12 §6/§9, D-070). The copy is the
 // regulated surface. Forbidden: any number-as-score/grade/%/skin-age/skin-health/star/
@@ -92,6 +100,17 @@ describe('the required stances are present (the no-score/no-upload/off-by-defaul
   it('the fairness floor states higher threshold for darker tones + redness-not-the-metric', () => {
     expect(TREND_COPY.fairness.monkNote.toLowerCase()).toContain('darker tones');
     expect(TREND_COPY.fairness.rednessTitle.toLowerCase()).toContain('redness is never');
+  });
+});
+
+describe('trend analytics stays content-minimized', () => {
+  it('does not send computed trend states as analytics props or state-specific events', () => {
+    const source = readFeatureSource('TrendInsight.tsx');
+
+    expect(source).toContain("track('trend_shown')");
+    expect(source).not.toContain('change_state');
+    expect(source).not.toContain('trend_inconclusive_lighting');
+    expect(source).not.toContain('trend_consistency_celebrated');
   });
 });
 

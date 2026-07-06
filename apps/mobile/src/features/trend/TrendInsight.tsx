@@ -19,9 +19,7 @@ export function TrendInsight() {
 
   useEffect(() => {
     if (!consented || !insight) return;
-    track('trend_shown', { change_state: insight.changeState }); // NEVER a value
-    if (insight.changeState === 'inconclusive_lighting') track('trend_inconclusive_lighting');
-    if (isCelebratedState(insight.changeState)) track('trend_consistency_celebrated');
+    track('trend_shown');
   }, [consented, insight]);
 
   if (!consented || !insight) return null;

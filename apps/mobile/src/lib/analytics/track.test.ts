@@ -23,6 +23,7 @@ describe('analytics sanitizer', () => {
         intent: 'medical',
         email: 'person@example.com',
         nested: { unsafe: true },
+        change_state: 'consistent',
       }),
     ).toEqual({
       creative_variant: 'story-v1',

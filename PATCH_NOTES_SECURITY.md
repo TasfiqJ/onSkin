@@ -669,3 +669,10 @@
 - Change: The analytics sanitizer now drops photo-quality result labels (`matched`, `misaligned`, `darker`, `low`) when they arrive through the generic `result` prop.
 - Why safe: Guided-capture quality verdicts are derived from face/photo alignment and lighting signals. They should stay on-device and not become vendor analytics payloads.
 - Regression: `track.test.ts` proves photo-quality result labels are removed while generic result buckets such as `error` remain available for non-sensitive service telemetry.
+
+## Trend state analytics minimization
+
+- Files: `apps/mobile/src/features/trend/TrendInsight.tsx`, `apps/mobile/src/features/trend/claimsafety.test.ts`, `apps/mobile/src/lib/analytics/eventRegistry.ts`, `apps/mobile/src/lib/analytics/track.test.ts`.
+- Change: Trend insights now emit only `trend_shown` after consent. The app no longer sends `change_state` values or state-specific trend events, and `change_state` is no longer an allowed analytics prop key.
+- Why safe: Trend states are computed from a user's private progress-photo series. Even coarse labels such as consistent, change observed, or inconclusive lighting are sensitive health-adjacent inferences and should not be sent to analytics vendors.
+- Regression: `claimsafety.test.ts` locks `TrendInsight` to generic instrumentation only, and `track.test.ts` proves `change_state` is no longer accepted by the sanitizer.
