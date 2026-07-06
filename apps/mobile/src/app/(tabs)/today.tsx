@@ -497,7 +497,7 @@ export default function TodayScreen() {
               Week ahead ›
             </Text>
           </View>
-          <View className="flex-row gap-2">
+          <View className="flex-row gap-1">
             {(cycle ? cycle.nights.map((n) => slotLabel(n.slot)) : FALLBACK_SLOTS).map(
               (label, i) => {
                 const active = cTonight ? i === cTonight.index : i + 1 === nightNumber;
@@ -510,11 +510,17 @@ export default function TodayScreen() {
                       }}
                     />
                     <Text
+                      adjustsFontSizeToFit
+                      maxFontSizeMultiplier={1.12}
+                      minimumFontScale={0.85}
                       numberOfLines={1}
-                      className="mt-2 text-center text-[10.5px]"
                       style={{
                         color: active ? colors.clayBright : 'rgba(244,239,231,0.45)',
+                        fontSize: 12,
                         fontWeight: active ? '700' : '400',
+                        lineHeight: 15,
+                        marginTop: 8,
+                        textAlign: 'center',
                       }}
                     >
                       {label}

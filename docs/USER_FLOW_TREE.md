@@ -230,6 +230,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Complete a step, relaunch the app, and return to Today.
   - Expected result: The state remains correct.
   - Evidence: Video or screenshot sequence.
+- Branch: compact PM cycle strip labels
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open the PM Today tab at a 320 px phone width with the skin-cycling strip visible.
+  - Expected result: Exfoliate, Retinoid, and Recover phase labels remain readable without ellipses or clipped glyphs while the active phase still has a clear visual state.
+  - Evidence: Phone-width screenshot and cycle-label geometry snapshot.
 - Branch: local date and clock display
   - Priority: Important
   - Automate later: Yes

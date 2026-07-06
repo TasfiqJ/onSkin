@@ -58,4 +58,20 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
     expect(source).toContain('{compactPhone ? null : (');
   });
+
+  it('keeps PM cycle strip labels legible on compact phones', () => {
+    const source = readAppRoute('(tabs)/today.tsx');
+
+    expect(source).toContain('FALLBACK_SLOTS');
+    expect(source).toContain('slotLabel(n.slot)');
+    expect(source).toContain('adjustsFontSizeToFit');
+    expect(source).toContain('maxFontSizeMultiplier={1.12}');
+    expect(source).toContain('minimumFontScale={0.85}');
+    expect(source).toContain('<View className="flex-row gap-1">');
+    expect(source).toContain('fontSize: 12');
+    expect(source).toContain('lineHeight: 15');
+    expect(source).toContain('marginTop: 8');
+    expect(source).toContain("textAlign: 'center'");
+    expect(source).not.toContain('className="mt-2 text-center text-[10.5px]"');
+  });
 });
