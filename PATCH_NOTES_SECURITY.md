@@ -691,6 +691,13 @@
 - Why safe: Event names are vendor-visible. A future dynamic event string built from a routine state, concern, product, or prompt could leak sensitive context even when props are sanitized.
 - Regression: `track.test.ts` proves unapproved event names are dropped, and `phase9:privacy-payload-audit` proves vendor capture uses `safeEvent` plus literal allowlisted app call sites.
 
+## PostHog automatic capture disabled
+
+- Files: `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`.
+- Change: Set `captureAppLifecycleEvents: false` in the PostHog client config and extended the Phase 9 privacy audit to fail if automatic lifecycle capture or session replay is re-enabled.
+- Why safe: Automatic SDK events bypass the explicit `track()` path where event names and props are allowlisted. Keeping PostHog on explicit capture only makes vendor telemetry auditable.
+- Regression: `track.test.ts` locks the PostHog config to disabled lifecycle capture and session replay, and `phase9:privacy-payload-audit` enforces both settings.
+
 ## Client SDK identity reset on local wipe
 
 - Files: `apps/mobile/src/features/settings/localPrivateData.ts`, `apps/mobile/src/features/settings/localPrivateData.test.ts`, `apps/mobile/src/lib/analytics/track.ts`, `apps/mobile/src/lib/analytics/track.test.ts`, `apps/mobile/src/lib/iap/revenuecat.ts`, `apps/mobile/src/lib/iap/revenuecat.test.ts`, `scripts/phase9/privacy-payload-audit.mjs`, `scripts/phase9/build-release-qa-packet.mjs`.

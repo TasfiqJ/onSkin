@@ -83,6 +83,8 @@ describe('analytics sanitizer', () => {
 
     expect(source).toContain('sanitizeAnalyticsEventName(event)');
     expect(source).toContain('posthog?.capture(safeEvent, safeProps)');
+    expect(source).toContain('captureAppLifecycleEvents: false');
+    expect(source).toContain('enableSessionReplay: false');
     expect(source).toContain('export async function resetAnalyticsIdentity');
     expect(source).toContain('posthog?.reset()');
   });

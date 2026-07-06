@@ -45,6 +45,8 @@ block(errors, /SENSITIVE_ANALYTICS_VALUE/.test(trackSource), 'Analytics sanitize
 block(errors, /SENSITIVE_ANALYTICS_VALUE\.test\(trimmed\)/.test(trackSource), 'Analytics sanitizer must check trimmed string values against the sensitive-value guard.');
 block(errors, /pseudonymousUserId/.test(trackSource), 'Analytics identify must pseudonymize raw user IDs before vendor calls.');
 block(errors, /posthog\?\.identify\(pseudonymousId/.test(trackSource), 'PostHog identify must use a pseudonymous user ID.');
+block(errors, /captureAppLifecycleEvents:\s*false/.test(trackSource), 'PostHog automatic lifecycle capture must stay disabled.');
+block(errors, /enableSessionReplay:\s*false/.test(trackSource), 'PostHog session replay must stay disabled.');
 block(errors, /sanitizeObservabilityContext/.test(sentrySource), 'Sentry captureException must sanitize context.');
 block(errors, /sanitizeCapturedException/.test(sentrySource), 'Sentry captureException must sanitize the captured throwable.');
 block(errors, !/Sentry\.captureException\(error/.test(sentrySource), 'Sentry captureException must not send the raw throwable to Sentry.');

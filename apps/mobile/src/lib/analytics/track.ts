@@ -44,7 +44,7 @@ async function getPostHog(): Promise<PostHog | null> {
     .then(({ default: PostHogClient }) => {
       return new PostHogClient(env.posthogKey, {
         host: env.posthogHost,
-        captureAppLifecycleEvents: true,
+        captureAppLifecycleEvents: false,
         enableSessionReplay: false,
         persistence: 'file',
       });
