@@ -339,6 +339,7 @@
   - Proves `runtimeVersion.policy` remains `fingerprint` for native-compatible OTA targeting.
 - `scripts/phase9/release-smoke.mjs`
   - Proves claimed Phase 9 evidence/signoff requires `PHASE9_RELEASE_CANDIDATE_DIR`.
+  - Proves claimed Phase 9 evidence/signoff fails from a dirty Git worktree.
   - Proves claimed evidence points to a non-template RC folder with required review files, no `TBD`/`BLOCKED` placeholders in core manifest/review/signoff docs, and a manifest `Git SHA` that matches the current commit.
 - `apps/mobile/package.json` / `package-lock.json`
   - Upgrades Vitest to the Vite 8 toolchain so the vulnerable transitive `esbuild@0.27.7` dev-server dependency is no longer present.

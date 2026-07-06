@@ -308,6 +308,18 @@ const claimedPhase9EvidenceKeys = requiredPhase9EvidenceKeys().filter((key) => e
 const claimedPhase9Signoff = Boolean(env.PHASE9_SIGNED_OFF_BY?.trim());
 const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '').replace(/\\/g, '/').replace(/\/+$/g, '');
 if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
+  let gitStatus = '';
+  try {
+    gitStatus = command('git', ['status', '--short']).trim();
+  } catch {
+    block(errors, false, 'Current Git status could not be read for release-candidate verification.');
+  }
+  block(
+    errors,
+    gitStatus.length === 0,
+    'Phase 9 evidence/signoff claims require a clean Git worktree.',
+  );
+
   block(
     errors,
     !placeholder(releaseCandidateDir),
