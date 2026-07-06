@@ -11,9 +11,7 @@ function readAppRoute(path: string): string {
 function expectRouteEscapeButton(route: string): void {
   const source = readAppRoute(route);
 
-  expect(source, `${route} should use the shared 44pt route button`).toContain(
-    'RouteIconButton',
-  );
+  expect(source, `${route} should use the shared 44pt route button`).toContain('RouteIconButton');
   expect(source, `${route} should not keep 34px route controls`).not.toContain('width: 34');
   expect(source, `${route} should not keep 34px route controls`).not.toContain('height: 34');
   expect(source, `${route} should not keep 36px route controls`).not.toContain('width: 36');
@@ -39,7 +37,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('<ScrollView');
     expect(source).toContain("justifyContent: compact ? 'flex-start' : 'center'");
     expect(source).toContain('useWindowDimensions().height < 640');
-    expect(source.match(/height: 48/g)).toHaveLength(3);
+    expect(source.match(/height: 48/g)).toHaveLength(4);
+    expect(source).toContain('width: 48,\n            height: 48,');
+    expect(source).not.toContain('width: 44,\n            height: 44,');
     expect(source).not.toContain('height: 44, marginTop: 8');
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });

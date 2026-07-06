@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Removed the fake inactive circular control from the Progress capture header by
+  replacing it with a transparent 48 px spacer that balances the real Close
+  button. Expo web E2E at 320 px verified direct `/progress/capture` geometry
+  and the Not now escape path back to Progress.
 - Audited the floating bottom tab bar on Expo web at 320 px and 390 px; labels
   and tab switching passed. Buffered the notification settings editable reminder
   row text targets from exact 44 px to 48 px and verified `/settings/notifications`

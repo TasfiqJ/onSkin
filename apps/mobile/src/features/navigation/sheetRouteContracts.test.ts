@@ -61,9 +61,10 @@ describe('Permission recovery contracts', () => {
     for (const route of ['progress/capture.tsx', 'shelf/ocr.tsx', 'shelf/scan.tsx']) {
       const source = readAppRoute(route);
 
-      expect(source, `${route} should not call native settings without failure handling`).not.toContain(
-        'Linking.openSettings()',
-      );
+      expect(
+        source,
+        `${route} should not call native settings without failure handling`,
+      ).not.toContain('Linking.openSettings()');
       expect(source, `${route} should use the shared app settings helper`).toContain(
         'openAppSettings',
       );
@@ -79,7 +80,9 @@ describe('Permission recovery contracts', () => {
     expect(copy).toContain('labelCaptureTitle');
     expect(progressCapture).toContain('CameraUnavailableGate');
     expect(progressCapture).toContain('setCameraUnavailable(true)');
-    expect(progressCapture).toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
+    expect(progressCapture).toContain('Alert.alert(');
+    expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureTitle');
+    expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureBody');
     expect(progressCapture).toContain('disabled={!canShowCamera || !cameraReady || capturing}');
     expect(shelfOcr).toContain('setCameraUnavailable(true)');
     expect(shelfOcr).toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');

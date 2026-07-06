@@ -360,7 +360,10 @@ function CaptureScreenContent() {
       });
     } catch {
       setCapturing(false);
-      Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle, CAMERA_FAILURE_COPY.progressCaptureBody);
+      Alert.alert(
+        CAMERA_FAILURE_COPY.progressCaptureTitle,
+        CAMERA_FAILURE_COPY.progressCaptureBody,
+      );
     }
   }
 
@@ -398,10 +401,8 @@ function CaptureScreenContent() {
         </Text>
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 22,
-            backgroundColor: 'rgba(244,239,231,0.12)',
+            width: 48,
+            height: 48,
           }}
         />
       </View>
