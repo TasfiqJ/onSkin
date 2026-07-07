@@ -93,5 +93,11 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   the remaining cleanser card, reload, and poll 25 startup samples without the
   dismissed card flashing or resurfacing. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendation-dismissal-cold-start/`; it
-  does not replace recommendation acceptance QA or real iOS/Android beta-device
-  QA.
+  does not replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers recommendation acceptance
+  into shelf intake: open the remaining `A gentle cleanser` detail, tap
+  `Add to shelf`, and verify `/shelf/manual?presetCategory=cleanser` with the
+  `Cleanser` category prefilled, visible controls at least 48 px tall, and zero
+  horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`; it does
+  not replace real iOS/Android beta-device QA.

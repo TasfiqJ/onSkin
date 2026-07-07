@@ -677,6 +677,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: Expo web for route recovery; iOS and Android for native commerce/share surfaces.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/recommendations/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-dismissal-cold-start/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`
 
 ### Path A: For You Hub
 
@@ -710,7 +711,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a real recommendation detail, dismiss it, then open another and accept it into manual add or conflict detail.
   - Expected result: Dismissal persists, acceptance goes to the correct next step, and copy remains independent and claim-safe.
   - Evidence: Screenshot sequence and local recommendation state.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 dismisses `A ceramide moisturiser` from `/recommendations/gap:ceramide_moisturiser`; the hub returns with only the remaining cleanser card and zero horizontal overflow. Acceptance into manual add still needs native/web follow-up.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 dismisses `A ceramide moisturiser` from `/recommendations/gap:ceramide_moisturiser`; the hub returns with only the remaining cleanser card and zero horizontal overflow. The remaining `A gentle cleanser` recommendation accepts into `/shelf/manual?presetCategory=cleanser`, with the category control prefilled as `Cleanser`, visible controls at least 48 px tall, and zero horizontal overflow.
 - Branch: dismissed recommendation cold-start state
   - Priority: Important
   - Automate later: Yes
