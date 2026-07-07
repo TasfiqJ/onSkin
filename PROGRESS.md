@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Polished the first-use Progress photo consent gate after a 320 x 568
+  human-simulated E2E sweep showed dense privacy copy competing with the capture
+  guide behind the translucent overlay. The gate now uses an opaque night
+  surface with stronger disclosure contrast while preserving 48 px+ actions.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/direct-entry-compact-sweep/`; the tracked
+  bug report is
+  `docs/e2e-bug-reports/2026-07-07-progress-capture-consent-contrast.md`.
+
 - Hardened the remaining Phase 9/10 evidence sub-gates so RLS, Edge auth,
   data export/delete, consent withdrawal, observability payload, dependency
   audit, store-build, and beta analytics proof flags all share the normalized

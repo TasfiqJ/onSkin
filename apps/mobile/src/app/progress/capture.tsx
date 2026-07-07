@@ -28,7 +28,8 @@ const GUIDE = '#9DB18A';
 const READY = '#9DB18A';
 const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)';
 const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)';
-const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)';
+const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)';
+const NIGHT_CONSENT_OVERLAY_BG = '#100D0A';
 
 function CaptureOverlay({
   backgroundColor = 'rgba(10,8,6,0.9)',
@@ -68,7 +69,7 @@ function ConsentGate({
   const compact = useWindowDimensions().height < 640;
 
   return (
-    <CaptureOverlay backgroundColor="rgba(10,8,6,0.92)" compact={compact}>
+    <CaptureOverlay backgroundColor={NIGHT_CONSENT_OVERLAY_BG} compact={compact}>
       <Text
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
@@ -95,7 +96,7 @@ function ConsentGate({
             style={{
               fontFamily: 'HankenGrotesk_400Regular',
               fontSize: compact ? 14 : 14.5,
-              color: 'rgba(244,239,231,0.85)',
+              color: 'rgba(244,239,231,0.9)',
               lineHeight: compact ? 19 : 21,
             }}
           >
@@ -128,7 +129,7 @@ function ConsentGate({
           style={{
             fontFamily: 'HankenGrotesk_500Medium',
             fontSize: compact ? 12 : 12.5,
-            color: 'rgba(244,239,231,0.82)',
+            color: 'rgba(244,239,231,0.88)',
             flex: 1,
             lineHeight: compact ? 16 : 17,
           }}
