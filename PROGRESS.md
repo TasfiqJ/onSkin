@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Locked down the Today routine completion persistence requirement from the V1
+  loop docs. Added a regression test proving a normal check-off survives fresh
+  Today store reads, then ran human-simulated Expo web E2E at 320 x 568:
+  open Today -> check the next routine item -> navigate to Shelf -> return to
+  Today -> browser reload. The checked item stayed checked after both navigation
+  and reload. Evidence is in
+  `test-results/human-e2e/2026-07-07/today-persistence/`.
+
 - Strengthened the first-session Shelf to routine handoff so any non-empty
   real-product Shelf now surfaces a clear `Build my routine` path into
   `/routine/plan`, with conflict-aware copy that turns timing notes into the
