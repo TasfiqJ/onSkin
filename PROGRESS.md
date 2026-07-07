@@ -2345,6 +2345,13 @@ Hardened `phase2:rls-smoke` so Supabase URL/key placeholders are rejected case-i
 can start. The Phase 2 smoke runner now covers this with cased Supabase placeholders in an isolated no-network failure
 case. Real staging/production RLS evidence remains blocked on Tas-created Supabase projects and credentials.
 
+### Share-card public domain normalization (2026-07-07)
+
+Switched the Shelf Conflict Card public handle/share URL to the shared Phase 8 public-domain normalizer. The card now
+falls back to the local brand placeholder for `example.com`, localhost, credential-style hosts, or malformed domains
+instead of composing a public-looking share URL from them. Focused growth card-copy tests pin valid first-party domains,
+malformed host fallback, and share URL consistency. This was non-UI logic hardening, so no human E2E was required.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

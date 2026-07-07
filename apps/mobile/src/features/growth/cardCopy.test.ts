@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { BRAND } from '@/lib/brand';
 
-import { CARD_COPY } from './cardCopy';
+import { CARD_COPY, CARD_SHARE_URL, resolveCardPublicDomain } from './cardCopy';
 
 // Claim-safety + no-dark-pattern regression guard for the shareable Conflict Card
 // (docs/14 §3). The card is a public, screenshot-worthy artifact, so its copy is a
@@ -32,5 +32,13 @@ describe('Shelf Conflict Card copy (docs/14 §3) is claim-safe and calm', () => 
     expect(CARD_COPY.footnote.toLowerCase()).toContain('not medical advice');
     expect(CARD_COPY.handle).toBeTruthy();
     expect(CARD_COPY.brand).toBe(BRAND.appName);
+  });
+
+  it('uses only a normalized first-party public domain for share-card URLs', () => {
+    expect(resolveCardPublicDomain('https://RoutineKind.app/share')).toBe('routinekind.app');
+    expect(resolveCardPublicDomain('https://example.com')).toBe('routinekind.example');
+    expect(resolveCardPublicDomain('http://localhost:19006')).toBe('routinekind.example');
+    expect(resolveCardPublicDomain('routinekind.app@evil.com')).toBe('routinekind.example');
+    expect(CARD_SHARE_URL).toBe(`https://${CARD_COPY.handle}`);
   });
 });

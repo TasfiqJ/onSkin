@@ -1,20 +1,16 @@
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
+import { normalizePublicDomain } from '@/lib/growth/attribution';
 
 function brandSlug(): string {
   return BRAND.appName.toLowerCase().replace(/[^a-z0-9]+/g, '') || 'routinekind';
 }
 
-function publicDomainFallback(): string {
-  const domain = env.finalBrandDomain
-    .trim()
-    .replace(/^https?:\/\//i, '')
-    .replace(/\/.*$/, '')
-    .toLowerCase();
-  return domain && !domain.includes('example.com') ? domain : `${brandSlug()}.example`;
+export function resolveCardPublicDomain(domain: string = env.finalBrandDomain): string {
+  return normalizePublicDomain(domain) ?? `${brandSlug()}.example`;
 }
 
-const publicDomain = publicDomainFallback();
+const publicDomain = resolveCardPublicDomain();
 
 // Copy + brand constants for the shareable Shelf Conflict Card. Claim-safe:
 // cosmetic framing only, never a drug claim, fear hook, or urgency hook.
