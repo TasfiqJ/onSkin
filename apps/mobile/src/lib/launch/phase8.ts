@@ -1,9 +1,16 @@
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { normalizePublicDomain } from '@/lib/growth/attribution';
+import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
-function productionUrl(value: string): boolean {
-  return value.trim().length > 0 && !/example\.com/i.test(value);
+const PUBLIC_PRODUCTION_HOSTNAME =
+  /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+
+export function productionUrlReady(value: string): boolean {
+  const safeUrl = safeExternalHttpsUrl(value);
+  if (!safeUrl) return false;
+  const hostname = new URL(safeUrl).hostname.toLowerCase();
+  return PUBLIC_PRODUCTION_HOSTNAME.test(hostname) && !hostname.includes('example.com');
 }
 
 function supportEmailReady(value: string): boolean {
@@ -15,9 +22,9 @@ const finalDomain = normalizePublicDomain(env.finalBrandDomain);
 export const phase8PublicIdentity = {
   brandName: BRAND.appName,
   finalDomain,
-  marketingUrlReady: productionUrl(env.marketingUrl),
-  appStoreUrlReady: productionUrl(env.appStoreUrl),
-  playStoreUrlReady: productionUrl(env.playStoreUrl),
+  marketingUrlReady: productionUrlReady(env.marketingUrl),
+  appStoreUrlReady: productionUrlReady(env.appStoreUrl),
+  playStoreUrlReady: productionUrlReady(env.playStoreUrl),
   supportEmailReady: supportEmailReady(env.supportEmail),
 } as const;
 
