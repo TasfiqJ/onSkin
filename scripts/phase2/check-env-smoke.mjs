@@ -177,6 +177,73 @@ const cases = [
     },
   },
   {
+    name: 'strict env rejects reserved policy hosts',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.localhost/support',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_SUPPORT_URL must be a real production HTTPS URL/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict env rejects credentialed policy URLs',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_TERMS_URL: 'https://user:pass@routinekind.app/terms',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_TERMS_URL must be a real production HTTPS URL/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict env rejects non-Supabase client hosts',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_SUPABASE_URL: 'https://routinekind.app',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_SUPABASE_URL must point to a production Supabase project host/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'strict env rejects local PostHog hosts',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_POSTHOG_HOST: 'http://localhost:8000',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_POSTHOG_HOST must be a real production HTTPS URL/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict env rejects non-production Sentry DSNs',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_SENTRY_DSN: 'http://abc@localhost:9000/123',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_SENTRY_DSN must be a real production HTTPS Sentry DSN/.test(result.stderr)
+      );
+    },
+  },
+  {
     name: 'strict env fails unsupported public app environments',
     result: runCheck({
       ...completeEnv,

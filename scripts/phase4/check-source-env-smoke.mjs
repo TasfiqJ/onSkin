@@ -72,6 +72,47 @@ const cases = [
     },
   },
   {
+    name: 'strict catalog source env rejects reserved attribution hosts',
+    result: runCheck({
+      ...completeEnv,
+      CATALOG_ATTRIBUTION_URL: 'https://routinekind.local/catalog-sources',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /CATALOG_ATTRIBUTION_URL must be a production HTTPS URL/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict catalog source env rejects placeholder contact emails',
+    result: runCheck({
+      ...completeEnv,
+      CATALOG_CONTACT_EMAIL: 'catalog@example.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /CATALOG_CONTACT_EMAIL is missing, a placeholder, or still uses an uncleared brand/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'strict catalog source env rejects local OBF user-agent contacts',
+    result: runCheck({
+      ...completeEnv,
+      OBF_USER_AGENT: 'RoutineKind/0.1.0 (catalog@routinekind.test)',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /OBF_USER_AGENT must include a production contact email address/.test(result.stderr)
+      );
+    },
+  },
+  {
     name: 'strict catalog source env rejects legacy brand casing variants',
     result: runCheck({
       ...completeEnv,

@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened early infrastructure/catalog env gates against production-shaped
+  impostors. Phase 2 now reuses the shared placeholder parser and rejects
+  credentialed, reserved, plaintext, non-Supabase, local PostHog, and
+  non-production Sentry public values before strict env readiness can pass.
+  Phase 4 catalog source identity now requires a production attribution URL,
+  production contact email, and production contact inside the Open Beauty Facts
+  User-Agent. Focused Phase 2/4 smoke cases cover these regressions.
+
 - Hardened Phase 9 live harness placeholder detection so every live Supabase,
   Edge, public-form, catalog, order-report, RevenueCat, data-rights, and
   consent-withdrawal probe uses the shared placeholder parser. Release smoke now

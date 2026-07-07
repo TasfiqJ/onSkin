@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import {
+  normalizeProductionSupportEmail,
+  normalizeProductionUrl,
+  placeholderEnvValue,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -36,27 +41,14 @@ const required = [
   'OBF_USER_AGENT',
 ];
 
-const placeholderFragments = [
-  'example.com',
-  'YOUR-',
-  'YOUR_',
-  'xxxxxxxx',
-  'replace-with',
-  'OnSkin',
-  '__BLOCKED',
-];
-
 function valueFor(name) {
   return process.env[name]?.trim() ?? '';
 }
 
 function isUsable(name) {
   const value = valueFor(name);
-  const normalized = value.toLowerCase();
-  return (
-    value.length > 0 &&
-    !placeholderFragments.some((fragment) => normalized.includes(fragment.toLowerCase()))
-  );
+  if (/onskin/i.test(value)) return false;
+  return value.length > 0 && !placeholderEnvValue(value);
 }
 
 const errors = [];
@@ -67,13 +59,27 @@ for (const name of required) {
 }
 
 const email = valueFor('CATALOG_CONTACT_EMAIL');
-if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-  errors.push('CATALOG_CONTACT_EMAIL must be a reachable email address.');
+if (email && !normalizeProductionSupportEmail(email)) {
+  errors.push('CATALOG_CONTACT_EMAIL must be a production contact email address.');
+}
+
+const attributionUrl = valueFor('CATALOG_ATTRIBUTION_URL');
+if (attributionUrl && !normalizeProductionUrl(attributionUrl)) {
+  errors.push('CATALOG_ATTRIBUTION_URL must be a production HTTPS URL.');
 }
 
 const ua = valueFor('OBF_USER_AGENT');
-if (ua && !/^[^/\s]+\/[^\s]+\s+\([^)@]+@[^)@]+\.[^)]+\)$/.test(ua)) {
+const uaMatch = ua.match(/^([^/\s]+)\/([^\s]+)\s+\(([^)]+)\)$/);
+if (ua && !uaMatch) {
   errors.push('OBF_USER_AGENT must look like AppName/Version (contact@example.com).');
+} else if (uaMatch) {
+  const [, appName, version, contactEmail] = uaMatch;
+  if (!isUsable('OBF_USER_AGENT') || /onskin/i.test(appName) || placeholderEnvValue(version)) {
+    errors.push('OBF_USER_AGENT must use final source identity values.');
+  }
+  if (!normalizeProductionSupportEmail(contactEmail)) {
+    errors.push('OBF_USER_AGENT must include a production contact email address.');
+  }
 }
 
 if (valueFor('OBF_API_ENABLED') === 'true' && !isUsable('OBF_USER_AGENT')) {

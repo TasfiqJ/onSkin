@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import {
+  normalizeProductionUrl,
+  placeholderEnvValue,
+  productionHostname,
+  productionUrl,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -111,19 +117,17 @@ const groups = [
   },
 ];
 
-const placeholderFragments = [
-  'YOUR-',
-  'YOUR_',
-  'xxxxxxxx',
-  'XXXXXX',
-  'replace-with',
-  'example.com',
-  '...',
-];
-
 const forbiddenPublicName = /(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i;
 const forbiddenPublicValue =
   /(sb_secret_|service_role|whsec_|sk_(?:live|test|prod|secret)|sntrys_|phx_|-----BEGIN|PRIVATE KEY)/i;
+const policyUrlKeys = [
+  'EXPO_PUBLIC_PRIVACY_URL',
+  'EXPO_PUBLIC_TERMS_URL',
+  'EXPO_PUBLIC_SUPPORT_URL',
+  'EXPO_PUBLIC_ACCOUNT_DELETION_URL',
+  'EXPO_PUBLIC_DATA_EXPORT_URL',
+  'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
+];
 
 function valueFor(name) {
   return process.env[name]?.trim() ?? '';
@@ -135,11 +139,8 @@ function normalizedAppStage(name) {
 
 function isUsable(name) {
   const value = valueFor(name);
-  const normalized = value.toLowerCase();
-  return (
-    value.length > 0 &&
-    !placeholderFragments.some((fragment) => normalized.includes(fragment.toLowerCase()))
-  );
+  if (name === 'BRAND_LEGAL_CLEARANCE' && value.toLowerCase() === 'pending') return true;
+  return value.length > 0 && !placeholderEnvValue(value);
 }
 
 function isAnyUsable(names) {
@@ -158,6 +159,48 @@ for (const group of groups) {
   const missing = group.required.filter((name) => !isUsable(name));
   if (missing.length > 0)
     errors.push(`${group.name}: missing or placeholder values: ${missing.join(', ')}`);
+}
+
+for (const key of policyUrlKeys) {
+  if (valueFor(key) && !productionUrl(valueFor(key))) {
+    errors.push(`${key} must be a real production HTTPS URL.`);
+  }
+}
+
+const supabaseUrl = valueFor('EXPO_PUBLIC_SUPABASE_URL');
+if (supabaseUrl) {
+  const normalizedSupabaseUrl = normalizeProductionUrl(supabaseUrl);
+  if (!normalizedSupabaseUrl) {
+    errors.push('EXPO_PUBLIC_SUPABASE_URL must be a real production HTTPS URL.');
+  } else {
+    const hostname = new URL(normalizedSupabaseUrl).hostname;
+    if (!productionHostname(hostname) || !hostname.endsWith('.supabase.co')) {
+      errors.push('EXPO_PUBLIC_SUPABASE_URL must point to a production Supabase project host.');
+    }
+  }
+}
+
+const posthogHost = valueFor('EXPO_PUBLIC_POSTHOG_HOST');
+if (posthogHost && !productionUrl(posthogHost)) {
+  errors.push('EXPO_PUBLIC_POSTHOG_HOST must be a real production HTTPS URL.');
+}
+
+const sentryDsn = valueFor('EXPO_PUBLIC_SENTRY_DSN');
+if (sentryDsn) {
+  let parsedSentryDsn;
+  try {
+    parsedSentryDsn = new URL(sentryDsn);
+  } catch {
+    parsedSentryDsn = null;
+  }
+  if (
+    !parsedSentryDsn ||
+    parsedSentryDsn.protocol !== 'https:' ||
+    !productionHostname(parsedSentryDsn.hostname) ||
+    Boolean(parsedSentryDsn.password)
+  ) {
+    errors.push('EXPO_PUBLIC_SENTRY_DSN must be a real production HTTPS Sentry DSN.');
+  }
 }
 
 const appVariant = normalizedAppStage('APP_VARIANT');

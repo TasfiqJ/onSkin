@@ -121,7 +121,12 @@ function isGuardRail(relPath, line) {
   ) {
     return true;
   }
-  if (relPath === 'scripts/phase4/check-source-env.mjs' && /'OnSkin'/.test(line)) return true;
+  if (
+    relPath === 'scripts/phase4/check-source-env.mjs' &&
+    (/\/onskin\/i\.test\(value\)/.test(line) || /\/onskin\/i\.test\(appName\)/.test(line))
+  ) {
+    return true;
+  }
   return false;
 }
 
