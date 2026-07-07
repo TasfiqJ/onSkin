@@ -136,7 +136,7 @@ export default function ReofferScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-4'}
+        contentContainerClassName={compactPaywall ? 'pb-56' : 'pb-4'}
       >
         <View
           className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2"

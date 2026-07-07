@@ -2,7 +2,7 @@
 
 Severity: High
 Surface: Expo web phone viewport
-Environment: Expo web at `http://localhost:19133`, 320 x 568 viewport
+Environment: Expo web at `http://127.0.0.1:8123`, 320 x 568 and 390 x 568 compact viewports
 Feature: Settings subscription management / reverse-trial keep options
 Date: 2026-07-07
 Tester: Codex
@@ -26,7 +26,7 @@ The keep-options screen opened with the fixed footer CTA visible before the annu
 - Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/02-keep-options-initial-320.png`
 - Video: N/A
 - Trace: N/A
-- Logs: Expo web session on port `19133`
+- Logs: Expo web session on port `8123`
 - UI snapshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/02-keep-options-initial-320-state.json`
 - Terminal transcript: Focused source inspection of `apps/mobile/src/app/paywall/reoffer.tsx`
 
@@ -47,7 +47,7 @@ The keep-options screen opened with the fixed footer CTA visible before the annu
 
 ## Minimal Fix Recommendation
 
-Move the annual price summary and store-unavailable reason into the compact footer above the purchase CTA, while keeping the taller-screen layout unchanged and preserving scroll access to Terms, Privacy, and Restore.
+Move the annual price summary and store-unavailable reason into the compact footer above the purchase CTA, keep the taller-screen layout unchanged, and reserve enough compact scroll body space for Terms, Privacy, and Restore to scroll fully above the taller footer.
 
 ## Verification Flow After Fix
 
@@ -61,13 +61,21 @@ Move the annual price summary and store-unavailable reason into the compact foot
 - Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/05-keep-options-fixed-after-scroll-320.png`
 - Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/06-settings-postfix-320.png`
 - Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/07-settings-to-keep-options-fixed-320.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/12-keep-options-fixed-reload-320.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/13-keep-options-fixed-after-scroll-320.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/14-keep-options-fixed-reload-390.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/15-keep-options-fixed-after-scroll-390.png`
 - Video: N/A
 - Trace: N/A
-- Logs: Expo web session on port `19133`
+- Logs: Expo web session on port `8123`
 - UI snapshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/04-keep-options-fixed-initial-320-state.json`
 - UI snapshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/05-keep-options-fixed-after-scroll-320-state.json`
 - UI snapshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/07-settings-to-keep-options-fixed-320-state.json`
-- Terminal transcript: `npm --workspace apps/mobile run test -- paywallMobileContracts`
+- UI snapshot: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/summary.json`
+- UI geometry: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/13-keep-options-fixed-after-scroll-320-geometry.json`
+- UI geometry: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/15-keep-options-fixed-after-scroll-390-geometry.json`
+- Logs: `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/browser-warn-error-logs-current.json`
+- Terminal transcript: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts`
 
 ## Remaining Risk
 

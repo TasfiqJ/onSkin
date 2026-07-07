@@ -11,12 +11,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   week` from `/settings/subscription` showed the fixed CTA before the annual
   price, store-unavailable reason, and compliance row. The active reverse-trial
   keep/options screen now keeps the annual price and preview checkout reason in
-  the compact footer above the purchase CTA while preserving scroll access to
-  Terms, Privacy, and Restore. Post-fix Expo web E2E at 320 x 568 verifies the
-  settings row opens `/paywall/reoffer`, active no-card copy is used, expired
-  copy is absent, the annual price and store-unavailable reason appear before
-  the CTA, horizontal overflow is zero, and visible controls are 48 px+ with no
-  clipping. Evidence is in
+  the compact footer above the purchase CTA and restores enough compact scroll
+  reserve for Terms, Privacy, and Restore to sit above that footer after a normal
+  scroll. Post-fix Expo web E2E at 320 x 568 and 390 x 568 verifies the settings
+  row opens `/paywall/reoffer`, active no-card copy is used, expired copy is
+  absent, the annual price and store-unavailable reason appear before the CTA,
+  horizontal overflow is zero, and scrolled compliance controls are 48 px+ with
+  no overlap or clipping. Evidence is in
   `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/`, with
   the tracked report in
   `docs/e2e-bug-reports/2026-07-07-reverse-trial-keep-options-compact-footer.md`.

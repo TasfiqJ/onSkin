@@ -256,7 +256,7 @@ describe('paywall mobile contracts', () => {
     const compactReason = reoffer.indexOf('{compactPaywall && unavailableReason ? (');
     const purchaseCta = reoffer.indexOf('onPress={onStartTrial}');
 
-    expect(reoffer).toContain("contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-4'}");
+    expect(reoffer).toContain("contentContainerClassName={compactPaywall ? 'pb-56' : 'pb-4'}");
     expect(reoffer).toContain('adjustsFontSizeToFit');
     expect(reoffer).toContain('numberOfLines={1}');
     expect(compactPrice).toBeGreaterThan(-1);
