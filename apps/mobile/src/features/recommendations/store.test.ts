@@ -51,9 +51,9 @@ describe('recommendation local store recovery', () => {
     mocks.storage.set(
       PREF_KEY,
       JSON.stringify({
-        values: ['fragrance_free', 'bad-value', 'fragrance_free', 'vegan'],
+        values: [' fragrance_free ', 'bad-value', 'fragrance_free', 'vegan'],
         budget: 'luxury',
-        formats: ['cream', '', 'gel', 'cream', false],
+        formats: [' cream ', '', 'gel', 'cream', false],
       }),
     );
 
@@ -91,7 +91,7 @@ describe('recommendation local store recovery', () => {
   });
 
   it('normalizes duplicate and invalid dismissed ids', async () => {
-    mocks.storage.set(DISMISSED_KEY, JSON.stringify(['gap:spf', '', 'gap:spf', false]));
+    mocks.storage.set(DISMISSED_KEY, JSON.stringify([' gap:spf ', '', 'gap:spf', false]));
 
     await expect(loadDismissed()).resolves.toEqual(['gap:spf']);
     expect(JSON.parse(mocks.storage.get(DISMISSED_KEY) ?? '[]')).toEqual(['gap:spf']);
@@ -100,7 +100,7 @@ describe('recommendation local store recovery', () => {
   it('writes clean dismissed state after malformed storage', async () => {
     mocks.storage.set(DISMISSED_KEY, JSON.stringify({ id: 'gap:spf' }));
 
-    await dismissRecommendation('gap:spf');
+    await dismissRecommendation(' gap:spf ');
 
     expect(JSON.parse(mocks.storage.get(DISMISSED_KEY) ?? '[]')).toEqual(['gap:spf']);
   });

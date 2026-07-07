@@ -1,7 +1,12 @@
 import { env, isSupabaseConfigured } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateItem, multiRemovePrivateItems, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  getPrivateItem,
+  multiRemovePrivateItems,
+  removePrivateItem,
+  setPrivateItem,
+} from '@/lib/storage/privateKV';
 
 import type { StoredEntitlement } from './entitlement';
 
@@ -98,6 +103,93 @@ function asEnvironment(value: string | null | undefined): StoredEntitlement['env
   return null;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function stringOrNull(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  return text.length > 0 ? text : null;
+}
+
+function booleanOrNull(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null;
+}
+
+function isoOrNull(value: unknown): string | null {
+  const text = stringOrNull(value);
+  return text && !Number.isNaN(Date.parse(text)) ? text : null;
+}
+
+function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
+  if (!isRecord(value)) return null;
+
+  const tier = asTier(stringOrNull(value.tier));
+  if (!tier) return null;
+
+  const periodType = asPeriod(stringOrNull(value.periodType));
+  const store = asStore(stringOrNull(value.store));
+  const source = asSource(stringOrNull(value.source));
+  const environment = asEnvironment(stringOrNull(value.environment));
+  const verifiedAt = isoOrNull(value.verifiedAt);
+  const grantedAt = isoOrNull(value.grantedAt);
+  const rawActive = booleanOrNull(value.isActive) ?? false;
+  const activeHasVerifiedSource = Boolean(source && verifiedAt);
+  const devGrantedInNonDev =
+    source === 'app_granted' &&
+    environment === 'development' &&
+    env.appEnvironment !== 'development';
+
+  return {
+    tier,
+    isActive: rawActive && activeHasVerifiedSource && !devGrantedInNonDev,
+    periodType,
+    store,
+    productId: stringOrNull(value.productId),
+    expiresAt: isoOrNull(value.expiresAt),
+    willRenew: booleanOrNull(value.willRenew),
+    grantedAt,
+    source,
+    environment,
+    managementUrl: safeExternalHttpsUrl(stringOrNull(value.managementUrl)),
+    verifiedAt,
+    offeringId: stringOrNull(value.offeringId),
+    packageId: stringOrNull(value.packageId),
+    storeUserId: stringOrNull(value.storeUserId),
+    priceLabel: stringOrNull(value.priceLabel),
+  };
+}
+
+type EntitlementRead =
+  | { status: 'missing' | 'invalid'; entitlement: null }
+  | { status: 'valid'; entitlement: StoredEntitlement };
+
+async function readEntitlementKey(key: string): Promise<EntitlementRead> {
+  let raw: string | null = null;
+  try {
+    raw = await getPrivateItem(key);
+  } catch {
+    return { status: 'missing', entitlement: null };
+  }
+  if (!raw) return { status: 'missing', entitlement: null };
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeStoredEntitlement(parsed);
+    if (!normalized) {
+      await removePrivateItem(key).catch(() => undefined);
+      return { status: 'invalid', entitlement: null };
+    }
+    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+      await setPrivateItem(key, JSON.stringify(normalized)).catch(() => undefined);
+    }
+    return { status: 'valid', entitlement: normalized };
+  } catch {
+    await removePrivateItem(key).catch(() => undefined);
+    return { status: 'invalid', entitlement: null };
+  }
+}
+
 export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
   return {
     tier: asTier(row.entitlement),
@@ -119,12 +211,15 @@ export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
 }
 
 export async function loadEntitlement(): Promise<StoredEntitlement | null> {
-  try {
-    const raw = (await getPrivateItem(KEY)) ?? (await getPrivateItem(LEGACY_KEY));
-    return raw ? (JSON.parse(raw) as StoredEntitlement) : null;
-  } catch {
-    return null;
+  const current = await readEntitlementKey(KEY);
+  if (current.status === 'valid') return current.entitlement;
+
+  const legacy = await readEntitlementKey(LEGACY_KEY);
+  if (legacy.status === 'valid') {
+    await persist(legacy.entitlement).catch(() => undefined);
+    return legacy.entitlement;
   }
+  return null;
 }
 
 async function persist(e: StoredEntitlement | null): Promise<void> {
@@ -136,10 +231,11 @@ async function persist(e: StoredEntitlement | null): Promise<void> {
 }
 
 export async function saveVerifiedEntitlement(e: StoredEntitlement): Promise<StoredEntitlement> {
-  const verified: StoredEntitlement = {
+  const verified = normalizeStoredEntitlement({
     ...e,
     verifiedAt: e.verifiedAt ?? nowISO(),
-  };
+  });
+  if (!verified) throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
   await persist(verified);
   return verified;
 }

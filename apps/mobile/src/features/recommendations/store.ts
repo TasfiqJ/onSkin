@@ -34,7 +34,10 @@ function uniqueStrings(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return [
     ...new Set(
-      value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0),
+      value
+        .filter((item): item is string => typeof item === 'string')
+        .map((item) => item.trim())
+        .filter((item) => item.length > 0),
     ),
   ];
 }
@@ -145,10 +148,11 @@ export async function loadDismissed(): Promise<string[]> {
 }
 
 export async function dismissRecommendation(id: string): Promise<void> {
-  if (id.trim().length === 0) return;
+  const normalizedId = id.trim();
+  if (normalizedId.length === 0) return;
   const cur = await loadDismissed();
-  if (cur.includes(id)) return;
-  await setPrivateItem(DISMISSED_KEY, JSON.stringify([...cur, id]));
+  if (cur.includes(normalizedId)) return;
+  await setPrivateItem(DISMISSED_KEY, JSON.stringify([...cur, normalizedId]));
 }
 
 /** Test/seed reset. */
