@@ -1,15 +1,15 @@
 # Phase 10 Tester Brief
 
-Status: TEMPLATE. Send only after final brand, support address, privacy policy, terms, beta build, and support desk are live.
+Status: TEMPLATE. Send only after final brand, support address, privacy policy, terms, beta build, and support desk are live. Uses `RoutineKind` as the current working brand candidate; replace it if the final brand memo chooses a different cleared name.
 
 ## What You Are Testing
 
-You are testing a pre-release version of OnSkin focused on routine organization, product shelf setup, reviewed product-order conflict guidance, progress capture, reminders, and Pro subscription flows. The beta is meant to find confusing, broken, unsafe, or untrusted parts of the experience before public launch.
+You are testing a pre-release version of RoutineKind focused on routine organization, product shelf setup, reviewed product-order conflict guidance, progress capture, reminders, and Pro subscription flows. The beta is meant to find confusing, broken, unsafe, or untrusted parts of the experience before public launch.
 
 ## Important Boundaries
 
-- OnSkin is not medical advice.
-- OnSkin does not diagnose, treat, cure, prevent, or detect skin conditions.
+- RoutineKind is not medical advice.
+- RoutineKind does not diagnose, treat, cure, prevent, or detect skin conditions.
 - Do not use beta feedback channels for urgent health concerns.
 - Do not upload or type sensitive medical, prescription, pregnancy, or identity details unless the app explicitly asks and the policy explains why.
 - Photo features are optional. You can test the app without sharing photos.
@@ -58,4 +58,3 @@ If any of those paths fail, report it as a beta blocker.
 ## Reviews And Testimonials
 
 Do not leave public store reviews for beta builds. Do not post testimonial claims unless you have separate written permission and required disclosures. Honest private feedback is more useful than praise.
-

@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Replaced legacy `OnSkin` wording in Phase 10 beta-facing tester templates
+  with the working `RoutineKind` candidate while keeping the final-brand
+  clearance caveat. The tester brief and Day 14 survey no longer train beta
+  operations around the conflicted public identity.
 - Fixed the compact Recommendation preferences budget row after a 320x568 route
   audit found `Premium` half-clipped at the bottom of the viewport. Budget
   options now render as equal-width 48 px compact chips with readable one-line
