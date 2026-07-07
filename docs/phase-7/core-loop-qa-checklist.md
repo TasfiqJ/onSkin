@@ -80,6 +80,14 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   retinoid × glycolic routine. This supports the "unreviewed rules do not
   surface in production" checklist item; it does not replace real iOS/Android
   beta-device QA or named reviewer sign-off.
+- 2026-07-07: Chrome CDP Expo web E2E at 320 x 568 and 390 x 568 covers bottom
+  tab navigation: `/today` starts selected, Progress/Shelf/You are reached by
+  clicking the floating tab bar, exactly one tab is selected after each switch,
+  all four labels stay one-line inside their tab bounds, tab targets are at least
+  54 px tall, center hit-tests land inside each tab, horizontal overflow is zero,
+  and no non-tab controls intersect the floating-bar zone. Evidence is in
+  `test-results/human-e2e/2026-07-07/navigation-current/`; it does not replace
+  native simulator/device keyboard-hide or platform text-scale QA.
 - 2026-07-07: Expo web E2E at 320 x 568 plus focused onboarding consent tests
   cover direct quiz-entry privacy gating: `/onboarding/quiz` without a local
   health-data collection grant redirects to `/onboarding/consent`, does not

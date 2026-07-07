@@ -3590,6 +3590,19 @@ RevenueCat purchase/restore/native store-sheet QA, conflict-check quota gating,
 loading-state no-flash tracing, policy/billing link handoff failure QA, or native
 iOS/Android scheduler/widget QA.
 
+### Bottom tab navigation evidence (2026-07-07)
+
+Verified the primary floating tab bar without changing app code. Chrome CDP Expo
+web evidence at 320 x 568 and 390 x 568 starts on `/today`, clicks Progress,
+Shelf, and You through the real tab bar, and confirms exactly one selected tab
+after each switch, all four labels visible inside their tab bounds, 54 px tab
+targets, center hit-tests inside each tab, zero horizontal overflow, no visible
+non-tab controls intersecting the floating-bar zone, and zero browser console
+errors. Evidence is in
+`test-results/human-e2e/2026-07-07/navigation-current/`. Desktop Chrome cannot
+prove native React Native keyboard-hide or platform text-scale behavior, so those
+remain iOS/Android simulator/device QA follow-ups.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

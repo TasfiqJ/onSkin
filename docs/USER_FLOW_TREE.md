@@ -34,12 +34,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: iOS and Android first; Expo web for responsive visual checks.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/navigation/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/navigation-current/`
 
 ### Path A: Main Tab Switching
 
 1. Action: Open the app on a small phone viewport, inspect the floating tab bar, then switch between Today, Progress, Shelf, and You.
    Expected result: Each tab remains reachable and visibly selected when active.
    Evidence: Screenshot and tab geometry snapshot.
+   Current local evidence: 2026-07-07 Chrome CDP Expo web run at 320 x 568 and 390 x 568 starts on `/today`, clicks Progress, Shelf, and You through the floating tab bar, and verifies exactly one selected tab after each switch, all four visible labels, 54 px tab targets, center hit-tests inside each tab, zero horizontal overflow, no non-tab controls in the floating-bar zone, and zero browser console errors.
 
 ### Branches
 
@@ -49,18 +51,21 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Render the tab bar at 320 px and 390 px wide phone viewports.
   - Expected result: Today, Progress, Shelf, and You labels render on one line inside the floating bar, with no clipped glyphs, no text overlap, and at least 44 pt tap targets.
   - Evidence: Phone-width screenshots and DOM/native geometry snapshot.
+  - Current local evidence: 2026-07-07 Chrome CDP Expo web screenshots and geometry snapshots at 320 x 568 and 390 x 568 show Today, Progress, Shelf, and You labels inside their tab bounds, all tab targets at least 54 px tall, tab widths 75.5 px at 320 and 93 px at 390, and no horizontal overflow.
 - Branch: content clearance beneath floating tab bar
   - Priority: Critical
   - Automate later: Yes
   - Action: Open Today at 320 px and 390 px phone viewports with the contextual SPF prompt visible.
   - Expected result: No visible CTA, prompt control, or inactive locked-paywall compliance control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view.
   - Evidence: Phone-width screenshots, hit-test snapshot, and control geometry.
+  - Current local evidence: 2026-07-07 Chrome CDP Expo web checked `/today`, `/progress`, `/shelf`, and `/you` at 320 x 568 and 390 x 568; the DOM geometry snapshot found no non-tab visible controls intersecting the floating tab-bar zone.
 - Branch: keyboard or text-scale pressure
   - Priority: Important
   - Automate later: Yes
   - Action: Open a screen with keyboard input or increased platform text scale where the harness supports it.
   - Expected result: The tab bar hides when the keyboard is open and labels keep readable geometry when visible again.
   - Evidence: Screenshot or simulator UI snapshot.
+  - Current local status: Not locally verified in desktop Chrome because it does not emit native React Native `Keyboard` show/hide events for the floating tab bar. Source contracts still cover `Keyboard.addListener` and `tabBarHideOnKeyboard`; native simulator/device keyboard and text-scale QA remain open.
 
 ## Flow Template
 
