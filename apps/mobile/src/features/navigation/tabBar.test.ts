@@ -100,6 +100,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('function FloatingTabBar');
     expect(source).toContain('adjustsFontSizeToFit');
     expect(source).toContain('ellipsizeMode="tail"');
+    expect(source).toContain('<View style={styles.tabItemContent}>');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
     expect(source).toContain('minimumFontScale={0.86}');
     expect(source).toContain('numberOfLines={1}');
@@ -111,6 +112,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('lineHeight: 16');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('minWidth: 0');
+    expect(source).toContain("pointerEvents: 'none'");
     expect(source).toContain("width: '100%'");
     expect(source).toContain("textAlign: 'center'");
     expect(source).toContain("textAlignVertical: 'center'");

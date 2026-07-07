@@ -53,7 +53,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open Today at 320 px and 390 px phone viewports with the contextual SPF prompt visible.
-  - Expected result: No visible CTA or prompt control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view.
+  - Expected result: No visible CTA, prompt control, or inactive locked-paywall compliance control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view.
   - Evidence: Phone-width screenshots, hit-test snapshot, and control geometry.
 - Branch: keyboard or text-scale pressure
   - Priority: Important

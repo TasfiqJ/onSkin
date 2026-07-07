@@ -250,21 +250,23 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
             ]}
             testID={`bottom-tab-${route.name}`}
           >
-            <TabBarIcon focused={focused} name={iconName} />
-            <Text
-              ellipsizeMode="tail"
-              adjustsFontSizeToFit
-              maxFontSizeMultiplier={1.08}
-              minimumFontScale={0.86}
-              numberOfLines={1}
-              style={[
-                styles.tabLabel,
-                focused ? styles.tabLabelActive : null,
-                { color: labelColor },
-              ]}
-            >
-              {displayLabel}
-            </Text>
+            <View style={styles.tabItemContent}>
+              <TabBarIcon focused={focused} name={iconName} />
+              <Text
+                ellipsizeMode="tail"
+                adjustsFontSizeToFit
+                maxFontSizeMultiplier={1.08}
+                minimumFontScale={0.86}
+                numberOfLines={1}
+                style={[
+                  styles.tabLabel,
+                  focused ? styles.tabLabelActive : null,
+                  { color: labelColor },
+                ]}
+              >
+                {displayLabel}
+              </Text>
+            </View>
           </Pressable>
         );
       })}
@@ -415,6 +417,12 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     paddingHorizontal: 1,
     paddingTop: 0,
+  },
+  tabItemContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+    width: '100%',
   },
   tabItemActive: {
     backgroundColor: colors.ink,

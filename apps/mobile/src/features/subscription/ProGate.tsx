@@ -1,4 +1,4 @@
-import { router, usePathname } from 'expo-router';
+import { router, useIsFocused, usePathname } from 'expo-router';
 import { useEffect, type ReactNode } from 'react';
 import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
@@ -21,6 +21,7 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
   const { height } = useWindowDimensions();
+  const isFocused = useIsFocused();
   const pathname = usePathname();
   const { data, isLoading } = useEntitlement();
   const { startReverseTrial, startTrial } = useEntitlementActions();
@@ -33,8 +34,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const paywallDismissFallback = paywallDismissFallbackForFeature(feature);
 
   useEffect(() => {
-    if (locked) track('contextual_paywall_shown', { feature });
-  }, [locked, feature]);
+    if (isFocused && locked) track('contextual_paywall_shown', { feature });
+  }, [isFocused, locked, feature]);
+
+  if (!isFocused) return null;
 
   if (isLoading || !data) {
     return (

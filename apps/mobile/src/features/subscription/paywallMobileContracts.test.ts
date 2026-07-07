@@ -92,7 +92,13 @@ describe('paywall mobile contracts', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const flowTree = readFileSync(`${REPO_DIR}/docs/USER_FLOW_TREE.md`, 'utf8');
 
-    expect(proGate).toContain("import { router, usePathname } from 'expo-router';");
+    expect(proGate).toContain("import { router, useIsFocused, usePathname } from 'expo-router';");
+    expect(proGate).toContain('const isFocused = useIsFocused();');
+    expect(proGate).toContain("if (isFocused && locked) track('contextual_paywall_shown', { feature });");
+    expect(proGate.indexOf('if (!isFocused) return null;')).toBeLessThan(
+      proGate.indexOf('if (isLoading || !data)'),
+    );
+    expect(proGate).toContain('if (!isFocused) return null;');
     expect(proGate).toContain('const pathname = usePathname();');
     expect(proGate).toContain(
       "const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';",

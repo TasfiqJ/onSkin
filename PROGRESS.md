@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed compact floating-tab navigation after a 320 x 568 human E2E pass showed
+  the first `Progress` tap staying on Today and a locked Progress paywall leaving
+  hidden compliance controls over the tab bar after switching away. Tab icon/text
+  visuals now opt out of hit testing so the semantic tab target owns the full
+  tap area, locked contextual paywalls render nothing while their route is
+  unfocused, and contextual paywall impressions only track for focused locked
+  routes. Expo web E2E at 320 and 390 px verified Today, Progress, Shelf, and
+  You selection, one-line readable labels, 54 px tab targets, no horizontal
+  overflow, and no controls overlapping the floating bar; supplemental 320 x 568
+  metrics also confirmed `pointer-events: none` on the inner tab content.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/navigation-tabbar-compact/` and
+  `test-results/human-e2e/2026-07-07/navigation-tab-pointer-events/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-navigation-tabbar-compact-hit-targets.md`.
+
 - Fixed a stale Phase 7 smoke-check blocker after `/ask/consent` gained its
   route-specific `Back to Ask` deferred CTA. The launch checker now validates
   the gated Cloud Ask deferred surface by required JSX props instead of one
