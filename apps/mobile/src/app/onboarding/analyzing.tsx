@@ -17,7 +17,7 @@ function devProfileSaveFailureMode(): 'once' | null {
 // Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
 // hero (BLOCKED: B-VERIFY-RIVE-LOTTIE). Persists the skin profile, then reveals.
 export default function AnalyzingScreen() {
-  const { persistSkinProfile, quizAnswers } = useOnboarding();
+  const { goals, persistSkinProfile, quizAnswers } = useOnboarding();
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const [pulse] = useState(() => new Animated.Value(0));
   const [saveError, setSaveError] = useState(false);
@@ -28,6 +28,10 @@ export default function AnalyzingScreen() {
   useEffect(() => {
     if (!quizCompletion.complete) {
       router.replace('/onboarding/quiz');
+      return;
+    }
+    if (goals.length === 0) {
+      router.replace('/onboarding/goals');
       return;
     }
 
@@ -70,7 +74,7 @@ export default function AnalyzingScreen() {
       loop.stop();
       if (revealTimer) clearTimeout(revealTimer);
     };
-  }, [persistSkinProfile, profileSaveFailureMode, pulse, quizCompletion.complete, retryKey]);
+  }, [goals.length, persistSkinProfile, profileSaveFailureMode, pulse, quizCompletion.complete, retryKey]);
 
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });

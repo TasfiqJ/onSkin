@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened and verified onboarding privacy/quiz resilience. Direct health-consent
+  decline now has current Expo web evidence showing the quiz stays locked and
+  direct `/onboarding/quiz` recovers to consent. The sensitivities quiz chips
+  were verified as mutually exclusive (`None that I know of` replaces concrete
+  sensitivities and vice versa) with 48 px controls and no overflow. The
+  profile-save-failure fixture also verifies that the first failed local profile
+  save does not reveal a profile, preserves answers, and retries into Reveal.
+  During that pass, a direct consent/quiz entry with no selected goals exposed a
+  recovery gap; Products and Analyzing now route missing-goal sessions back to
+  Goals, and Goals returns completed-quiz users to Products instead of inventing
+  a goal or forcing a full quiz restart. Evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-consent-quiz-resilience/`,
+  `test-results/human-e2e/2026-07-07/onboarding-profile-save-failure/`, and
+  `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`, with
+  the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-onboarding-direct-entry-missing-goals.md`.
+
 - Fixed compact recommendation preferences after current 390 x 568 E2E showed
   the Texture chip row clipping below the viewport. The preferences route now
   uses height-aware compact section spacing, extra scroll bottom padding, and

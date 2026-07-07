@@ -157,6 +157,26 @@ describe('onboarding route contracts', () => {
     );
   });
 
+  it('recovers direct quiz completion without inventing missing goals', () => {
+    const goals = readAppRoute('onboarding/goals.tsx');
+    const products = readAppRoute('onboarding/products.tsx');
+    const analyzing = readAppRoute('onboarding/analyzing.tsx');
+
+    expect(goals).toContain('getQuizCompletionState');
+    expect(goals).toContain('const { goals, quizAnswers, toggleGoal } = useOnboarding();');
+    expect(goals).toContain('const quizCompletion = getQuizCompletionState(quizAnswers);');
+    expect(goals).toContain(
+      "router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/consent')",
+    );
+    expect(products).toContain('const { goals } = useOnboarding();');
+    expect(products).toContain('if (goals.length === 0)');
+    expect(products).toContain("router.replace('/onboarding/goals')");
+    expect(analyzing).toContain('const { goals, persistSkinProfile, quizAnswers } = useOnboarding();');
+    expect(analyzing).toContain('if (goals.length === 0)');
+    expect(analyzing).toContain("router.replace('/onboarding/goals')");
+    expect(analyzing).toContain('goals.length');
+  });
+
   it('keeps health-data consent copy scrollable above buffered phone actions', () => {
     const source = readAppRoute('onboarding/consent.tsx');
 

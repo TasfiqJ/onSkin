@@ -4,6 +4,7 @@ import { Modal, Pressable, ScrollView, TextInput, View, useWindowDimensions } fr
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
+import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { ONBOARDING_PRODUCT_CATEGORIES } from '@/features/onboarding/productCategories';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useShelfMutations } from '@/features/shelf/mutations';
@@ -91,6 +92,7 @@ export default function ProductsScreen() {
   const { height } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
+  const { goals } = useOnboarding();
   const { data } = useShelf();
   const m = useShelfMutations();
   const [name, setName] = useState('');
@@ -158,6 +160,10 @@ export default function ProductsScreen() {
   }
 
   function go() {
+    if (goals.length === 0) {
+      router.replace('/onboarding/goals');
+      return;
+    }
     track('screen_viewed', { screen_name: 'products_intake', count: added.length });
     router.push('/onboarding/analyzing');
   }

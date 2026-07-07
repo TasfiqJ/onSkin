@@ -94,6 +94,20 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   zero horizontal overflow with no visible sub-44 px controls. Evidence is in
   `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/`; it does
   not replace native keyboard/device QA or final counsel review of the age floor.
+- 2026-07-07: Expo web E2E at 320 x 568 plus focused onboarding tests cover
+  health-consent decline, sensitivities exclusivity, profile-save failure, and
+  direct-entry missing-goal recovery. Declining health-data collection keeps the
+  quiz locked and direct quiz entry recovers to consent; `None that I know of`
+  and `Fragrance` clear each other on the sensitivities step; the dev-only
+  `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once` fixture stops on
+  `We could not save your profile.` before reveal and retries into Reveal; and a
+  direct consent/quiz path without goals recovers to Goals, then resumes Products
+  after a goal is selected. Evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-consent-quiz-resilience/`,
+  `test-results/human-e2e/2026-07-07/onboarding-profile-save-failure/`, and
+  `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`; it
+  does not replace native keyboard/accessibility QA or final legal quiz-copy
+  review.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

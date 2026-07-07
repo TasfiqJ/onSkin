@@ -136,6 +136,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/onboarding/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-consent-quiz-resilience/`, `test-results/human-e2e/2026-07-07/onboarding-profile-save-failure/`, and `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`
 
 ### Path A: Happy Path
 
@@ -165,6 +166,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Decline health-data collection consent before the quiz.
   - Expected result: Consent remains unbundled and voluntary; the app does not enter the health-data quiz, records the decline best-effort, and explains that the personalized quiz stays locked unless the user agrees.
   - Evidence: Screenshot and state notes.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 opens `/onboarding/consent`, taps `I don't agree`, shows `No consent recorded` plus the personalized-quiz-locked explanation, keeps the route on consent, and direct `/onboarding/quiz` after the decline recovers to consent without rendering quiz questions.
 - Branch: direct quiz entry without health-data consent
   - Priority: Critical
   - Automate later: Yes
@@ -184,12 +186,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Agree to health-data collection, enter the quiz, and continue to the profile reveal.
   - Expected result: User-facing quiz and reveal copy contains no placeholder/scaffolding markers, stays claim-safe, and keeps B-QUIZ-COPY/legal-review caveats in source comments/tests rather than visible UI.
   - Evidence: Screenshot and text snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 completes the consent-to-quiz path, reaches the forced profile-save-failure state, retries, and renders `YOUR SKIN PROFILE`/`Type ...` reveal copy with no visible placeholder, scaffolding, `B-QUIZ-COPY`, or `B-PRIVACY-COPY` markers.
 - Branch: sensitivities multi-select exclusivity
   - Priority: Important
   - Automate later: Yes
   - Action: On the sensitivities/allergies quiz step, select `None that I know of`, then select a concrete sensitivity such as `Fragrance`; repeat in the opposite order.
   - Expected result: `None that I know of` behaves as an exclusive option and cannot remain selected with concrete sensitivities. Multi-select chips meet the 44 pt phone touch target.
   - Evidence: Screenshot, UI state snapshot, and small-phone chip-geometry snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 walks to the sensitivities step, verifies `None that I know of` selects alone, `Fragrance` clears `None`, `None that I know of` clears `Fragrance`, the step can advance to pregnancy, visible controls stay 44 px or taller, and horizontal overflow is zero.
 - Branch: product intake category metadata
   - Priority: Important
   - Automate later: Yes
@@ -202,12 +206,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Navigate back, background/relaunch, refresh on Expo web, or directly open `/onboarding/reveal` or `/onboarding/analyzing` without completed quiz answers.
   - Expected result: Progress is preserved or reset intentionally with no broken state; reveal/analyzing must not fabricate a default skin profile and must recover to the quiz path.
   - Evidence: Video or before/after screenshots.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 covers a direct consent/quiz completion with no selected goals. Product skip recovers to `/onboarding/goals`, selecting a goal returns the already-completed quiz context to `/onboarding/products`, and the user can continue to the profile-save-failure retry/reveal path without a fabricated default goal or a dead end.
 - Branch: profile save failure before reveal
   - Priority: Critical
   - Automate later: Yes
   - Action: In a dev build started with `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once`, complete the quiz, enter analyzing, and let the first local skin-profile save fail.
   - Expected result: The app does not advance to reveal as if onboarding were saved; it shows a retry path while preserving the quiz answers in memory. Tapping Try again consumes the one-shot failure and reaches reveal with the same quiz-derived profile.
   - Evidence: Error-state screenshot and retry/reveal route snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 with `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once` selects a goal, grants consent, completes the quiz, skips product intake, shows `We could not save your profile.` on `/onboarding/analyzing` without revealing a profile, then `Try again` reaches `/onboarding/reveal` with `YOUR SKIN PROFILE`.
 
 ## Flow: Routine Plan First Value
 

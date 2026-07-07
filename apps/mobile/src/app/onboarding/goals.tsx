@@ -4,13 +4,15 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
 // 02 · Goals. Large tappable cards, multi-select up to two (design spec p.3).
 export default function GoalsScreen() {
   const { height } = useWindowDimensions();
-  const { goals, toggleGoal } = useOnboarding();
+  const { goals, quizAnswers, toggleGoal } = useOnboarding();
   const compactPhone = height < 640;
+  const quizCompletion = getQuizCompletionState(quizAnswers);
 
   return (
     <Screen>
@@ -50,7 +52,7 @@ export default function GoalsScreen() {
           disabled={goals.length === 0}
           onPress={() => {
             track('screen_viewed', { screen_name: 'goals' });
-            router.push('/onboarding/consent');
+            router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/consent');
           }}
         />
       </View>
