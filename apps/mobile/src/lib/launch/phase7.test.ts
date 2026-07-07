@@ -106,6 +106,28 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.cloudAsk).toBe(false);
   });
 
+  it('rejects reserved or malformed final domains in production', async () => {
+    const invalidDomains = [
+      'https://routinekind.localhost',
+      'https://user:pass@routinekind.app',
+      'routinekind.app?redirect=https://evil.example',
+      'routinekind',
+      'http://127.0.0.1',
+    ];
+
+    for (const domain of invalidDomains) {
+      const { phase7Flags } = await loadPhase7With({
+        EXPO_PUBLIC_APP_ENV: 'production',
+        EXPO_PUBLIC_FINAL_BRAND_DOMAIN: domain,
+        ...enableAllPhase7Flags(),
+      });
+
+      expect(phase7Flags.finalDomainReady).toBe(false);
+      expect(phase7Flags.productionSurfaceReady).toBe(false);
+      expect(phase7Flags.shareCard).toBe(false);
+    }
+  });
+
   it('allows staging to exercise deferred surfaces without a final domain', async () => {
     const { phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'staging',
@@ -126,7 +148,7 @@ describe('Phase 7 launch flags', () => {
   it('enables production surfaces only when public identity is ready', async () => {
     const { phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://onskin.com',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
       ...enableAllPhase7Flags(),
     });
 
@@ -146,7 +168,7 @@ describe('Phase 7 share-card eligibility', () => {
   it('requires reviewed, non-safety, non-pregnancy owned-product conflicts', async () => {
     const { canShareConflictCard } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
-      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://onskin.com',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
       ...enableAllPhase7Flags(),
     });
 

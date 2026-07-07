@@ -1,6 +1,7 @@
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
+import { normalizePublicDomain } from '@/lib/growth/attribution';
 
 export type DeferredSurfaceKind =
   | 'commerce'
@@ -18,8 +19,7 @@ export type DeferredSurfaceCopy = {
   cta: string;
 };
 
-const finalDomain = env.finalBrandDomain.trim();
-const finalDomainReady = finalDomain.length > 0 && !/example\.com/i.test(finalDomain);
+const finalDomainReady = Boolean(normalizePublicDomain(env.finalBrandDomain));
 const productionSurfaceReady = env.appEnvironment !== 'production' || finalDomainReady;
 
 export const phase7Flags = {

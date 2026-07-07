@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Aligned the mobile Phase 7 runtime gate with the stricter public-domain rules.
+  Production deferred surfaces now require a normalized first-party domain, so
+  reserved hosts, credentialed domains, query injection, bare labels, and local
+  IP URLs cannot unlock share cards, cloud Ask, trend, community, widgets, or
+  goal-active recommendations. Focused Phase 7/growth tests cover the runtime
+  domain rejection path.
+
 - Hardened Phase 7 core-loop readiness so final brand domain and policy URLs use
   the shared production validators instead of raw truthiness/example checks. The
   gate now honors process-env overrides, rejects reserved or credentialed public
