@@ -135,7 +135,11 @@ function normalizedAppStage(name) {
 
 function isUsable(name) {
   const value = valueFor(name);
-  return value.length > 0 && !placeholderFragments.some((fragment) => value.includes(fragment));
+  const normalized = value.toLowerCase();
+  return (
+    value.length > 0 &&
+    !placeholderFragments.some((fragment) => normalized.includes(fragment.toLowerCase()))
+  );
 }
 
 function isAnyUsable(names) {
@@ -163,7 +167,11 @@ if (appVariant && !['development', 'staging', 'production'].includes(appVariant)
 
 const appEnv = normalizedAppStage('EXPO_PUBLIC_APP_ENV');
 if (appEnv && !['development', 'staging', 'production'].includes(appEnv)) {
-  warnings.push(`EXPO_PUBLIC_APP_ENV is non-standard: ${valueFor('EXPO_PUBLIC_APP_ENV')}`);
+  errors.push(
+    `EXPO_PUBLIC_APP_ENV must be development, staging, or production; got ${valueFor(
+      'EXPO_PUBLIC_APP_ENV',
+    )}`,
+  );
 }
 
 const finalIdentityEnv = [

@@ -2331,6 +2331,14 @@ query before future cloud Ask can rely on the trial cap. No current code path re
 B-AI-ASSISTANT-VENDOR, so this is behavior-neutral today, but it removes the dropped-wire risk when the cloud layer
 ships. Focused Ask contract/store/gate tests and the full mobile suite pin the counter path.
 
+### Env placeholder detection hardening (2026-07-07)
+
+Hardened Phase 2 and Phase 4 env gates so copied placeholder values are detected case-insensitively. Strict Phase 2 now
+fails unsupported `EXPO_PUBLIC_APP_ENV` values instead of warning, and strict Phase 4 rejects uppercase placeholder URLs
+and legacy-brand casing variants in catalog source identity values. Added Phase 2 and Phase 4 smoke coverage for those
+cases, and wired the Phase 4 smoke into `phase4:verify`. The real final policy URLs, catalog attribution URL, source
+contact email, and app/source identity values remain external blockers for Tas.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

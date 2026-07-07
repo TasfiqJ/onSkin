@@ -52,7 +52,11 @@ function valueFor(name) {
 
 function isUsable(name) {
   const value = valueFor(name);
-  return value.length > 0 && !placeholderFragments.some((fragment) => value.includes(fragment));
+  const normalized = value.toLowerCase();
+  return (
+    value.length > 0 &&
+    !placeholderFragments.some((fragment) => normalized.includes(fragment.toLowerCase()))
+  );
 }
 
 const errors = [];
@@ -90,4 +94,3 @@ if (errors.length > 0) {
 } else {
   console.log('\nPhase 4 source env contract is complete.');
 }
-

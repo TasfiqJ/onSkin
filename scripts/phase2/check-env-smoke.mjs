@@ -148,6 +148,36 @@ const cases = [
     },
   },
   {
+    name: 'strict env fails when copied placeholders only change casing',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_PRIVACY_URL: 'https://EXAMPLE.COM/privacy',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Store listing URLs: missing or placeholder values: EXPO_PUBLIC_PRIVACY_URL/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'strict env fails unsupported public app environments',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_APP_ENV: 'preview',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_APP_ENV must be development, staging, or production; got preview/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
     name: 'development strict env does not require final native identity',
     result: runCheck({
       ...withoutKeys(completeEnv, finalIdentityKeys),
