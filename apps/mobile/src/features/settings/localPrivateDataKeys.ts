@@ -22,6 +22,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.notifPrefs.v1',
   'onskin.notiflog.v1',
   'onskin.photos.captureConsent',
+  'onskin.photos.captureConsent.v1',
   'onskin.photos.cloudBackup',
   'onskin.photos.v1',
   'onskin.ramp.v1',

@@ -54,6 +54,10 @@ Evidence needed:
 Status: launch-blocked
 
 - Supabase staging and production projects.
+- Supabase anonymous auth and consent-ledger QA for the local-first
+  `photo_capture` path: attach evidence that first-use photo capture can save
+  a local proof offline/pre-account and that staging/production sessions insert
+  immutable `photo_capture` consent rows with the shown version/hash under RLS.
 - Apple Developer and App Store Connect app under cleared bundle ID.
 - Google Play Console app and OAuth clients under cleared package ID.
 - RevenueCat project, products, offerings, entitlements, and webhook secret.
@@ -105,6 +109,10 @@ Status: needs-device-verification
   like `iPhone model / iOS version`, local build notes, pending IDs, and
   placeholder signoff names are rejected by `phase5:qa-packet:strict`.
 - Verify barcode scan, label capture/manual fallback, progress photo capture, encrypted photo save/restart/delete, notifications, share sheet, RevenueCat sandbox smoke, Sentry native smoke, and Supabase catalog calls.
+- Verify first-use Progress photo consent failure/retry sequencing on native:
+  failed local save does not open the camera or permission prompt, retry saves
+  consent before permission, and the app remains past the consent gate after
+  restart.
 - Verify RevenueCat win-back eligible and ineligible states on native builds, including the fallback to the current Pro plan when no native offer exists.
 - Decide whether native OCR is in V1. Default is hidden unless real OCR passes device QA.
 

@@ -31,6 +31,11 @@ const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)';
 const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)';
 const NIGHT_CONSENT_OVERLAY_BG = '#100D0A';
 
+function devPhotoConsentFailureMode(): 'once' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE === 'once' ? 'once' : null;
+}
+
 function CaptureOverlay({
   backgroundColor = 'rgba(10,8,6,0.9)',
   compact = false,
@@ -59,14 +64,17 @@ function CaptureOverlay({
 
 function ConsentGate({
   granting,
+  saveFailed,
   onGrant,
   onCancel,
 }: {
   granting: boolean;
+  saveFailed: boolean;
   onGrant: () => void;
   onCancel: () => void;
 }) {
   const compact = useWindowDimensions().height < 640;
+  const showPrepReminder = !(compact && saveFailed);
 
   return (
     <CaptureOverlay backgroundColor={NIGHT_CONSENT_OVERLAY_BG} compact={compact}>
@@ -116,27 +124,68 @@ function ConsentGate({
       >
         {PHOTO_CAPTURE_CONSENT.footnote}
       </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 8,
-          marginBottom: compact ? 14 : 22,
-        }}
-      >
-        <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
-        <Text
+      {showPrepReminder ? (
+        <View
           style={{
-            fontFamily: 'HankenGrotesk_500Medium',
-            fontSize: compact ? 12 : 12.5,
-            color: 'rgba(244,239,231,0.88)',
-            flex: 1,
-            lineHeight: compact ? 16 : 17,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            marginBottom: compact ? 14 : 22,
           }}
         >
-          {PHOTO_COPY.capture.skinPrep}
-        </Text>
-      </View>
+          <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_500Medium',
+              fontSize: compact ? 12 : 12.5,
+              color: 'rgba(244,239,231,0.88)',
+              flex: 1,
+              lineHeight: compact ? 16 : 17,
+            }}
+          >
+            {PHOTO_COPY.capture.skinPrep}
+          </Text>
+        </View>
+      ) : null}
+      {saveFailed ? (
+        <View
+          accessibilityRole="alert"
+          style={{
+            borderRadius: compact ? 12 : 14,
+            backgroundColor: 'rgba(217,161,131,0.13)',
+            borderWidth: 1,
+            borderColor: 'rgba(217,161,131,0.36)',
+            paddingHorizontal: compact ? 12 : 14,
+            paddingVertical: compact ? 7 : 10,
+            marginBottom: compact ? 7 : 12,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontSize: compact ? 12.5 : 13.5,
+              color: '#F4EFE7',
+              marginBottom: compact ? 0 : 2,
+            }}
+          >
+            {compact
+              ? `${PHOTO_COPY.capture.consentFailedTitle}. ${PHOTO_COPY.capture.consentFailedBody}`
+              : PHOTO_COPY.capture.consentFailedTitle}
+          </Text>
+          {compact ? null : (
+            <Text
+              style={{
+                fontFamily: 'HankenGrotesk_400Regular',
+                fontSize: 13,
+                color: 'rgba(244,239,231,0.86)',
+                lineHeight: 18,
+              }}
+            >
+              {PHOTO_COPY.capture.consentFailedBody}
+            </Text>
+          )}
+        </View>
+      ) : null}
       <Pressable
         accessibilityRole="button"
         disabled={granting}
@@ -334,6 +383,9 @@ function CaptureScreenContent() {
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [grantingConsent, setGrantingConsent] = useState(false);
+  const [consentSaveFailed, setConsentSaveFailed] = useState(false);
+  const simulatedPhotoConsentFailureUsed = useRef(false);
+  const photoConsentFailureMode = devPhotoConsentFailureMode();
   const { data } = usePhotos('front');
 
   useEffect(() => {
@@ -390,14 +442,27 @@ function CaptureScreenContent() {
 
   async function grantCaptureConsent() {
     if (grantingConsent) return;
+    setConsentSaveFailed(false);
     setGrantingConsent(true);
+    const grant =
+      photoConsentFailureMode === 'once' && !simulatedPhotoConsentFailureUsed.current
+        ? async () => {
+            simulatedPhotoConsentFailureUsed.current = true;
+            throw new Error('E2E_PHOTO_CONSENT_FAILURE');
+          }
+        : grantPhotoCaptureConsent;
     try {
       await applyPhotoCaptureConsent({
-        grant: grantPhotoCaptureConsent,
+        grant,
         requestPermission: requestPermission as () => Promise<unknown>,
-        onSaved: () => setConsented(true),
-        onFailure: () =>
-          Alert.alert(PHOTO_COPY.capture.consentFailedTitle, PHOTO_COPY.capture.consentFailedBody),
+        onSaved: () => {
+          setConsentSaveFailed(false);
+          setConsented(true);
+        },
+        onFailure: () => {
+          setConsentSaveFailed(true);
+          Alert.alert(PHOTO_COPY.capture.consentFailedTitle, PHOTO_COPY.capture.consentFailedBody);
+        },
       });
     } finally {
       setGrantingConsent(false);
@@ -415,6 +480,7 @@ function CaptureScreenContent() {
         {consented === false ? (
           <ConsentGate
             granting={grantingConsent}
+            saveFailed={consentSaveFailed}
             onGrant={() => void grantCaptureConsent()}
             onCancel={closeToProgress}
           />

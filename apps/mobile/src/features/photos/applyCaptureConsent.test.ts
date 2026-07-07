@@ -61,10 +61,26 @@ describe('photo capture consent application', () => {
 
     expect(PHOTO_COPY.capture.consentFailedTitle).toBe('Photo choice not saved');
     expect(source).toContain('applyPhotoCaptureConsent');
+    expect(source).toContain('EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE');
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain('simulatedPhotoConsentFailureUsed.current = true');
+    expect(source).toContain("new Error('E2E_PHOTO_CONSENT_FAILURE')");
+    expect(source).toContain('const [consentSaveFailed, setConsentSaveFailed] = useState(false)');
+    expect(source).toContain('saveFailed={consentSaveFailed}');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('const showPrepReminder = !(compact && saveFailed)');
+    expect(source).toContain('{showPrepReminder ? (');
+    expect(source).toContain('PHOTO_COPY.capture.consentFailedTitle');
+    expect(source).toContain('PHOTO_COPY.capture.consentFailedBody');
+    expect(source).toContain('setConsentSaveFailed(true)');
+    expect(source).toContain('setConsentSaveFailed(false)');
     expect(source).toContain('disabled={granting}');
     expect(source).toContain('Saving choice');
     expect(source).toContain('Alert.alert(PHOTO_COPY.capture.consentFailedTitle');
     expect(source).not.toContain('void grantPhotoCaptureConsent();');
     expect(source).not.toContain('setConsented(true);\n            if (!permission?.granted)');
+    expect(source.indexOf('simulatedPhotoConsentFailureUsed.current = true')).toBeLessThan(
+      source.indexOf("new Error('E2E_PHOTO_CONSENT_FAILURE')"),
+    );
   });
 });

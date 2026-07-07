@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the first-use Progress photo consent failure branch. The capture
+  route now has a dev-only one-shot
+  `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once` fixture, persistent
+  `Photo choice not saved` copy with `role="alert"`, and a retryable CTA that
+  does not open the camera before consent saves. Photo capture consent now
+  stores a local proof with version, text hash, and timestamp before camera
+  access and treats the remote ledger as best-effort for local-only capture;
+  cloud backup remains fail-closed because it moves images off device. Expo web
+  E2E at 320 x 568 verified failure copy, no pre-consent camera path, retry
+  into the normal permission gate, and reload past the consent gate; evidence is
+  in
+  `test-results/human-e2e/2026-07-07/progress-photo-consent-save-failure/`,
+  with the tracked bug report in
+  `docs/e2e-bug-reports/2026-07-07-progress-photo-consent-save-failure.md`.
+
 - Tightened the compact Ask first-prompt answer state after human-simulated E2E
   at 320 x 568 showed the post-answer `What should I do tonight?` suggestion
   peeking underneath the fixed composer. Empty-state suggested prompts now keep
