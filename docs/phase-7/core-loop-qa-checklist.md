@@ -283,7 +283,9 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   escalates safely and does not show fit-engine, SPF, or vitamin-C
   recommendation text. Focused Ask intent, answer, and route-contract tests
   pass. Evidence is in
-  `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`; native
+  `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`, with
+  additional Node REPL Playwright/system Chrome evidence in
+  `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/`; native
   keyboard/screen-reader QA remains device follow-up.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Skin Notes expert
   library happy path: `/community` shows topic groups, evidence labels, and

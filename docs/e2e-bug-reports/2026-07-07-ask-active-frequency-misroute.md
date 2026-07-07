@@ -62,6 +62,8 @@ Treat active-frequency wording for retinol, acids, exfoliants, and benzoyl perox
 
 - Screenshot: `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/ask-typed-question-after-320-fixed.png`
 - UI snapshot: `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/ask-typed-question-after-320-fixed.json`
+- Additional Playwright screenshot: `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/03-active-frequency-escalation.png`
+- Additional Playwright summary: `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/summary.json`
 - Focused test command: `npm --workspace apps/mobile run test -- src/features/ask/intent.test.ts src/features/ask/answer.test.ts src/features/ask/routeContract.test.ts`
 
 ## Remaining Risk

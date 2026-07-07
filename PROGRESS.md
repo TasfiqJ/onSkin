@@ -13,11 +13,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   wording for retinol, acids, exfoliants, and benzoyl peroxide as the existing
   medical/escalation bucket, and broad product-fit matching no longer catches
   generic `should I use` phrasing. Focused Ask intent/answer/route-contract
-  tests pass, and the post-fix in-app browser E2E rerun at 320 x 568 shows the
-  typed question escalating with zero horizontal overflow, no sub-44 px
-  controls, no fit-engine copy, and no SPF/vitamin-C recommendation. Evidence is
-  in
-  `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`, with
+  tests pass, and post-fix Expo web E2E at 320 x 568 shows the typed question
+  escalating with zero horizontal overflow, no sub-44 px controls, no fit-engine
+  copy, and no SPF/vitamin-C recommendation. Evidence is in
+  `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/` and
+  `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/`, with
   the tracked report in
   `docs/e2e-bug-reports/2026-07-07-ask-active-frequency-misroute.md`.
 
