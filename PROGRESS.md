@@ -15,9 +15,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Fixed compact Today routine rows so normal shelf product names can wrap to two
   lines instead of truncating beside `NEXT`. A 320x568 human-simulated Expo web
-  pass reproduced `Final Sweep Clean...` on the PM routine row, then verified the
-  full `Final Sweep Cleanser` label, zero horizontal overflow, and clear spacing
-  above the floating tab bar.
+  pass reproduced `Final Sweep Clean...` on the PM routine row, then used the
+  app's manual shelf flow on the current 8095 bundle to verify the full
+  `Final Sweep Cleanser` label, zero horizontal overflow, check-off completion,
+  and persistence after navigating away and back.
 
 - Aligned beta/core-loop analytics evidence with emitted app events. Today now
   emits privacy-safe `routine_checkoff_completed` for every completed AM/PM
