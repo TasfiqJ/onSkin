@@ -5,11 +5,23 @@ import type { NotifPrefs } from './store';
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(async () => {}),
   cancelScheduledNotificationAsync: vi.fn(async () => {}),
+  getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
+  insertNotificationLog: vi.fn(async () => ({ error: null })),
+  loadNotifPrefs: vi.fn(),
   loadEntitlement: vi.fn(async () => null),
+  notificationLogGte: vi.fn(async () => ({ count: 0 })),
+  recordSentLocal: vi.fn(async () => {}),
   scheduleNotificationAsync: vi.fn(async () => 'notification-id'),
+  selectNotificationLog: vi.fn(),
   setNotificationChannelAsync: vi.fn(async () => {}),
   setNotificationHandler: vi.fn(),
+  sentThisWeekForTierLocal: vi.fn(async () => 0),
 }));
+
+mocks.selectNotificationLog.mockReturnValue({
+  eq: vi.fn().mockReturnThis(),
+  gte: mocks.notificationLogGte,
+});
 
 vi.mock('expo-notifications', () => ({
   AndroidImportance: { DEFAULT: 3 },
@@ -60,23 +72,20 @@ vi.mock('@/features/subscription/store', () => ({
 }));
 
 vi.mock('./sentStore', () => ({
-  recordSentLocal: vi.fn(async () => {}),
-  sentThisWeekForTierLocal: vi.fn(async () => 0),
+  recordSentLocal: mocks.recordSentLocal,
+  sentThisWeekForTierLocal: mocks.sentThisWeekForTierLocal,
 }));
 
 vi.mock('./store', () => ({
-  loadNotifPrefs: vi.fn(async () => prefs),
+  loadNotifPrefs: mocks.loadNotifPrefs,
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
-    auth: { getUser: vi.fn(async () => ({ data: { user: null } })) },
+    auth: { getUser: mocks.getUser },
     from: vi.fn(() => ({
-      insert: vi.fn(async () => ({ error: null })),
-      select: vi.fn(() => ({
-        eq: vi.fn().mockReturnThis(),
-        gte: vi.fn(async () => ({ count: 0 })),
-      })),
+      insert: mocks.insertNotificationLog,
+      select: mocks.selectNotificationLog,
     })),
   },
 }));
@@ -103,7 +112,24 @@ describe('rescheduleReminders', () => {
     mocks.cancelScheduledNotificationAsync.mockClear();
     mocks.loadEntitlement.mockClear();
     mocks.loadEntitlement.mockResolvedValue(null);
+    mocks.getUser.mockClear();
+    mocks.getUser.mockResolvedValue({ data: { user: null } });
+    mocks.insertNotificationLog.mockClear();
+    mocks.insertNotificationLog.mockResolvedValue({ error: null });
+    mocks.loadNotifPrefs.mockClear();
+    mocks.loadNotifPrefs.mockResolvedValue(prefs);
+    mocks.notificationLogGte.mockClear();
+    mocks.notificationLogGte.mockResolvedValue({ count: 0 });
+    mocks.recordSentLocal.mockClear();
+    mocks.recordSentLocal.mockResolvedValue(undefined);
     mocks.scheduleNotificationAsync.mockClear();
+    mocks.selectNotificationLog.mockClear();
+    mocks.selectNotificationLog.mockReturnValue({
+      eq: vi.fn().mockReturnThis(),
+      gte: mocks.notificationLogGte,
+    });
+    mocks.sentThisWeekForTierLocal.mockClear();
+    mocks.sentThisWeekForTierLocal.mockResolvedValue(0);
   });
 
   it('shifts scheduled reminders inside quiet hours to the quiet-hours end', async () => {
@@ -143,5 +169,99 @@ describe('rescheduleReminders', () => {
         }),
       }),
     );
+  });
+});
+
+describe('notifyBehavioural', () => {
+  beforeEach(() => {
+    mocks.cancelAllScheduledNotificationsAsync.mockClear();
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.getUser.mockClear();
+    mocks.getUser.mockResolvedValue({ data: { user: null } });
+    mocks.insertNotificationLog.mockClear();
+    mocks.insertNotificationLog.mockResolvedValue({ error: null });
+    mocks.loadEntitlement.mockClear();
+    mocks.loadNotifPrefs.mockClear();
+    mocks.loadNotifPrefs.mockResolvedValue(prefs);
+    mocks.notificationLogGte.mockClear();
+    mocks.notificationLogGte.mockResolvedValue({ count: 0 });
+    mocks.recordSentLocal.mockClear();
+    mocks.recordSentLocal.mockResolvedValue(undefined);
+    mocks.scheduleNotificationAsync.mockClear();
+    mocks.selectNotificationLog.mockClear();
+    mocks.selectNotificationLog.mockReturnValue({
+      eq: vi.fn().mockReturnThis(),
+      gte: mocks.notificationLogGte,
+    });
+    mocks.sentThisWeekForTierLocal.mockClear();
+    mocks.sentThisWeekForTierLocal.mockResolvedValue(0);
+  });
+
+  it('sends an allowed behavioural notification and records the local cap ledger', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
+
+    expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith({
+      content: { body: 'body:replenishment', title: 'RoutineKind' },
+      trigger: null,
+    });
+    expect(mocks.recordSentLocal).toHaveBeenCalledWith('replenishment', expect.any(Number));
+  });
+
+  it('does not send when the kind-specific user toggle is off', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.loadNotifPrefs.mockResolvedValueOnce({ ...prefs, replenishmentAlerts: false });
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+  });
+
+  it('does not send inside quiet hours', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+
+    await expect(notifyBehavioural('replenishment', '23:30')).resolves.toBe(false);
+
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+  });
+
+  it('enforces the local behavioural weekly cap before sending', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.sentThisWeekForTierLocal.mockResolvedValueOnce(3);
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+  });
+
+  it('unions the server cap count when a signed-in user exists', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'user-1' } } });
+    mocks.notificationLogGte.mockResolvedValueOnce({ count: 3 });
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+  });
+
+  it('still reports sent when the best-effort server log write fails after local delivery', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'user-1' } } });
+    mocks.insertNotificationLog.mockRejectedValueOnce(new Error('offline'));
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
+
+    expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.recordSentLocal).toHaveBeenCalledWith('replenishment', expect.any(Number));
+    expect(mocks.insertNotificationLog).toHaveBeenCalledWith({
+      user_id: 'user-1',
+      tier: 'behavioural',
+      kind: 'replenishment',
+    });
   });
 });

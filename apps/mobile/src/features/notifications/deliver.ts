@@ -237,10 +237,15 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
       trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
     });
     await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
-    if (userId)
-      await supabase.from('notification_log').insert({ user_id: userId, tier: tierOf(kind), kind });
   } catch {
     return false;
+  }
+  if (userId) {
+    try {
+      await supabase.from('notification_log').insert({ user_id: userId, tier: tierOf(kind), kind });
+    } catch {
+      /* best-effort backend mirror; local delivery already succeeded */
+    }
   }
   return true;
 }

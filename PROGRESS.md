@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened behavioural notification delivery so a successful local notification
+  is not reported as failed just because the best-effort Supabase metadata log
+  insert is offline or unavailable. The local cap ledger remains the v1 source of
+  truth, and focused notification tests cover opt-outs, quiet hours, weekly caps,
+  signed-in server cap unioning, and metadata-log failure after local delivery.
+
 - Hardened settings privacy actions so account deletion and health-data consent
   withdrawal fail fast when the Supabase data-rights backend is still a
   placeholder, leaving local data intact instead of implying a completed legal
