@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-07T00:16:12.777Z",
+  "generatedAt": "2026-07-07T00:17:49.489Z",
   "status": "blocked",
-  "gitSha": "fd2c694cbb5ae64126260d0e09a1eba93827e8f2",
-  "gitStatus": "M .env.example\n M PROGRESS.md\n M apps/mobile/app.config.js\n M apps/mobile/src/lib/appConfig.test.ts\n M docs/FOR_TAS_TO_DO.md\n M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md\n M docs/phase-9/generated/store-build-inspection.json\n M scripts/phase5/check-native-config.mjs",
+  "gitSha": "7d34302c46fe99c8909c80c7db10cac452eb356c",
+  "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
     "finalBrandDomain": "",
@@ -101,7 +101,6 @@
   },
   "blockers": [],
   "warnings": [
-    "Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.",
     "External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.",
     "External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.",
     "External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.",
