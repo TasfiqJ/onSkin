@@ -35,8 +35,8 @@ describe('Settings route contracts', () => {
     expect(you).toContain("if (params.section !== 'privacy' || !privacyCardReady) return;");
     expect(you).toContain('scrollRef.current?.scrollTo');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -200;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -132;');
     expect(you).toContain('const narrowPhone = compactPhone && width < 360;');
     expect(you).toContain('const privacyDirectEntryScrollNudge = narrowPhone');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE');

@@ -56,11 +56,11 @@ Nudge the compact-phone direct-entry scroll target down enough that the policy r
 
 ## Post-Fix Evidence
 
-- After screenshot: `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/11-settings-privacy-final-320-nudge.png`
-- After screenshot: `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/12-settings-privacy-final-390-nudge.png`
+- After screenshot: `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/17-settings-privacy-final-320-calibrated.png`
+- After screenshot: `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/18-settings-privacy-final-390-calibrated.png`
 - Geometry summary: `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/geometry-summary.json`
 
-The focused rerun passed at 320 x 568 and 390 x 568. No non-tab control crosses the floating tab-bar bounding box, the route lands on `/you?section=privacy`, horizontal overflow is zero, and visible controls are at least 44 px.
+The focused rerun passed at 320 x 568 and 390 x 568 after breakpoint-specific scroll calibration. No non-tab control crosses the floating tab-bar bounding box, the route lands on `/you?section=privacy`, horizontal overflow is zero, and visible controls are at least 44 px.
 
 ## Remaining Risk
 

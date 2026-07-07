@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Calibrated the `/settings/privacy` direct-entry scroll target across compact
+  phone widths after a 320/390 px rerun showed the policy rows still becoming
+  partially tappable under the floating tab bar with a single positive nudge.
+  The You tab now uses separate narrow-phone and compact-phone privacy scroll
+  offsets, and the settings route contract pins both constants. Expo web E2E at
+  320 x 568 and 390 x 568 now verifies `/settings/privacy` resolves to
+  `/you?section=privacy`, horizontal overflow is zero, visible controls are at
+  least 44 px, and no non-tab privacy control crosses the floating tab-bar
+  bounding box. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-settings-privacy-direct-tabbar-underlap.md`.
+
 - Fixed compact floating-tab navigation after a 320 x 568 human E2E pass showed
   the first `Progress` tap staying on Today and a locked Progress paywall leaving
   hidden compliance controls over the tab bar after switching away. Tab icon/text
