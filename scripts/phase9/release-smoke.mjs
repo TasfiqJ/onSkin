@@ -248,6 +248,16 @@ for (const file of liveHarnessFiles) {
     !/\?\?\s*'development'/.test(source),
     `${file} must not default live app environment to development.`,
   );
+  block(
+    errors,
+    /placeholderEnvValue/.test(source),
+    `${file} must use the shared placeholderEnvValue helper.`,
+  );
+  block(
+    errors,
+    !/function\s+placeholder\s*\(/.test(source),
+    `${file} must not carry a local placeholder regex.`,
+  );
   if (/cleanup warning/i.test(source)) {
     block(
       errors,

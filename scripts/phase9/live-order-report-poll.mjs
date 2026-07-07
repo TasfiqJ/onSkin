@@ -2,7 +2,14 @@
 import { randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-import { block, envSnapshot, printResult, readScriptAppEnvironment, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  placeholderEnvValue,
+  printResult,
+  readScriptAppEnvironment,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -38,12 +45,7 @@ function safeHost(value) {
   }
 }
 
-function placeholder(value) {
-  return (
-    !value ||
-    /YOUR-|replace-with|xxxxxxxx|example\.com|\.\.\.|__BLOCKED_PLACEHOLDER__/i.test(String(value))
-  );
-}
+const placeholder = placeholderEnvValue;
 
 function resultError(error) {
   return error instanceof Error ? error.message : String(error);

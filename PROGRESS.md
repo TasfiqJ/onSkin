@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 9 live harness placeholder detection so every live Supabase,
+  Edge, public-form, catalog, order-report, RevenueCat, data-rights, and
+  consent-withdrawal probe uses the shared placeholder parser. Release smoke now
+  blocks local placeholder regexes so pending, mixed-case, and newer placeholder
+  values cannot accidentally pass live-evidence preflight checks.
+
 - Regenerated Phase 8, Phase 9, Phase 10, and Phase 11 generated readiness
   packets after the public-identity packet builders began normalizing final
   domains, support emails, marketing URLs, and store URLs. The packets remain

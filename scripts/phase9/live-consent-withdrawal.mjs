@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import {
   block,
   envSnapshot,
+  placeholderEnvValue,
   printResult,
   readScriptAppEnvironment,
   redactedErrorKind,
@@ -42,12 +43,7 @@ function safeHost(value) {
   }
 }
 
-function placeholder(value) {
-  return (
-    !value ||
-    /YOUR-|replace-with|xxxxxxxx|example\.com|\.\.\.|__BLOCKED_PLACEHOLDER__/i.test(String(value))
-  );
-}
+const placeholder = placeholderEnvValue;
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
