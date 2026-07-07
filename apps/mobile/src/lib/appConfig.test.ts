@@ -80,16 +80,7 @@ describe('Expo app identity config', () => {
     expect(expo.extra.appEnvironment).toBe('production');
   });
 
-  it('blocks uncleared production builds that would resolve legacy identity values', () => {
-    expect(() =>
-      buildExpoConfig({
-        APP_VARIANT: 'production',
-        EXPO_PUBLIC_APP_ENV: 'production',
-      }),
-    ).toThrow(/Production app identity still resolves legacy OnSkin values/);
-  });
-
-  it('blocks partial rebrand production builds that still inherit legacy package IDs', () => {
+  it('requires brand clearance before resolving production native config', () => {
     expect(() =>
       buildExpoConfig({
         APP_VARIANT: 'production',
@@ -97,8 +88,52 @@ describe('Expo app identity config', () => {
         APP_DISPLAY_NAME: 'RoutineKind',
         APP_SLUG: 'routinekind',
         APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+      }),
+    ).toThrow(/requires BRAND_LEGAL_CLEARANCE=cleared/);
+  });
+
+  it('blocks cleared production builds that inherit base identity defaults', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+      }),
+    ).toThrow(/APP_DISPLAY_NAME or EXPO_PUBLIC_APP_DISPLAY_NAME/);
+  });
+
+  it('blocks partial rebrand production builds that still inherit legacy package IDs', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
       }),
     ).toThrow(/APP_IOS_BUNDLE_IDENTIFIER/);
+  });
+
+  it('allows counsel-cleared legacy identity only when explicitly supplied', () => {
+    const expo = buildExpoConfig({
+      APP_VARIANT: 'production',
+      EXPO_PUBLIC_APP_ENV: 'production',
+      BRAND_LEGAL_CLEARANCE: 'cleared',
+      APP_DISPLAY_NAME: 'OnSkin',
+      APP_SLUG: 'onskin',
+      APP_SCHEME: 'onskin',
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.onskin.app',
+      APP_ANDROID_PACKAGE: 'com.onskin.app',
+    });
+
+    expect(expo.name).toBe('OnSkin');
+    expect(expo.slug).toBe('onskin');
+    expect(expo.scheme).toBe('onskin');
+    expect(expo.ios.bundleIdentifier).toBe('com.onskin.app');
+    expect(expo.android.package).toBe('com.onskin.app');
   });
 
   it('allows public runtime identity env to drive native display and scheme fallbacks', () => {

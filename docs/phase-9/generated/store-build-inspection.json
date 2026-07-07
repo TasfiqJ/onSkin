@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T00:05:43.934Z",
+  "generatedAt": "2026-07-07T00:15:59.895Z",
   "app": {
     "name": "OnSkin",
     "slug": "onskin",
@@ -11,10 +11,7 @@
     "iosBundleIdentifier": "com.onskin.app",
     "androidPackage": "com.onskin.app",
     "androidAllowBackup": false,
-    "androidPermissions": [
-      "android.permission.CAMERA",
-      "android.permission.POST_NOTIFICATIONS"
-    ]
+    "androidPermissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"]
   },
   "easBuildProfiles": {
     "development": {
@@ -59,12 +56,12 @@
       "appEnvironment": "staging"
     },
     "production": {
-      "error": "Production app identity still resolves legacy OnSkin values without BRAND_LEGAL_CLEARANCE=cleared: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION. Set final brand env values before building production."
+      "error": "Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve. Current resolved legacy keys: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION."
     }
   },
   "artifacts": {},
   "blockers": [
-    "Resolved production app config failed: Production app identity still resolves legacy OnSkin values without BRAND_LEGAL_CLEARANCE=cleared: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION. Set final brand env values before building production."
+    "Resolved production app config failed: Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve. Current resolved legacy keys: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION."
   ],
   "warnings": [
     "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",

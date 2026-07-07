@@ -96,8 +96,12 @@ function productionUrl(value) {
   return url;
 }
 
+function hasValue(value) {
+  return String(value ?? '').trim().length > 0;
+}
+
 function assertProductionIdentity(expo, permissionCopy) {
-  if (!isProduction || process.env.BRAND_LEGAL_CLEARANCE === 'cleared') return;
+  if (!isProduction) return;
 
   const identityValues = {
     APP_DISPLAY_NAME: expo.name,
@@ -114,11 +118,32 @@ function assertProductionIdentity(expo, permissionCopy) {
     .filter(([, value]) => legacyIdentityPattern.test(String(value ?? '')))
     .map(([key]) => key);
 
-  if (legacyKeys.length > 0) {
+  if (process.env.BRAND_LEGAL_CLEARANCE !== 'cleared') {
     throw new Error(
-      `Production app identity still resolves legacy OnSkin values without BRAND_LEGAL_CLEARANCE=cleared: ${legacyKeys.join(
+      `Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve.${
+        legacyKeys.length > 0 ? ` Current resolved legacy keys: ${legacyKeys.join(', ')}.` : ''
+      }`,
+    );
+  }
+
+  const finalIdentityEnv = {
+    'APP_DISPLAY_NAME or EXPO_PUBLIC_APP_DISPLAY_NAME':
+      process.env.APP_DISPLAY_NAME ?? process.env.EXPO_PUBLIC_APP_DISPLAY_NAME,
+    APP_SLUG: process.env.APP_SLUG,
+    'APP_SCHEME or EXPO_PUBLIC_APP_SCHEME':
+      process.env.APP_SCHEME ?? process.env.EXPO_PUBLIC_APP_SCHEME,
+    APP_IOS_BUNDLE_IDENTIFIER: process.env.APP_IOS_BUNDLE_IDENTIFIER,
+    APP_ANDROID_PACKAGE: process.env.APP_ANDROID_PACKAGE,
+  };
+  const missingFinalIdentityKeys = Object.entries(finalIdentityEnv)
+    .filter(([, value]) => !hasValue(value))
+    .map(([key]) => key);
+
+  if (missingFinalIdentityKeys.length > 0) {
+    throw new Error(
+      `Production app identity requires explicit final native identity env values after brand clearance: ${missingFinalIdentityKeys.join(
         ', ',
-      )}. Set final brand env values before building production.`,
+      )}. Set them in EAS env/secrets before building production.`,
     );
   }
 }

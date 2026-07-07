@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Tightened the production native identity gate so `APP_VARIANT=production`
+  requires both recorded brand clearance and explicit final display/slug/scheme
+  bundle/package env values before Expo config can resolve. This prevents an
+  uncleared working-candidate identity from slipping through simply because it
+  no longer matches the legacy `OnSkin` audit pattern.
+
 - Updated the Phase 9 privacy payload audit and data inventory to match the
   runtime-branded privacy posture. Lock-screen notification titles are now
   audited against `BRAND.appName`, and the app-switcher shield is documented as

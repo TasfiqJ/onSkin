@@ -76,6 +76,7 @@ for (const profile of ['development', 'staging', 'production']) {
 
 const productionEnv = eas.build?.production?.env ?? {};
 const productionIdentityKeys = [
+  'BRAND_LEGAL_CLEARANCE',
   'APP_DISPLAY_NAME',
   'APP_SLUG',
   'APP_SCHEME',

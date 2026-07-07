@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T21:25:56.334Z",
+  "generatedAt": "2026-07-07T00:16:12.676Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
   "buildEvidence": {
     "iosBuildId": "",
@@ -65,8 +65,8 @@
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 5085,
-      "sha256": "88067c0bb39ea844a41278cef1c1c21f1f8808a11353ca1a609f2b2d80b19f30"
+      "bytes": 7355,
+      "sha256": "0e89d94b0e51e96d84d5f4aa79ab4e4cd627ebdebeb0092e948856c1f463d949"
     },
     {
       "path": "apps/mobile/eas.json",
@@ -113,8 +113,8 @@
     {
       "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
       "exists": true,
-      "bytes": 6526,
-      "sha256": "f4fc9c0c17952bb54c052d0ce771c723b746e1dbfecfbf273698ace77391c681"
+      "bytes": 6582,
+      "sha256": "e3ed4dbda2b7036f772d5dd0b40d41b0ef0f0ec8ad13624df95916c6855c506c"
     },
     {
       "path": "apps/mobile/src/features/photos/store.ts",
@@ -131,8 +131,8 @@
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 17966,
-      "sha256": "90fc6ee273159a09923f12454a287e0ccc0e4bc7fb270c5bbb0eb800a21f753a"
+      "bytes": 18270,
+      "sha256": "95465c77ee182a66526ee39710ce8664e8f3c2dced4fa6bb772627318160bef8"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
