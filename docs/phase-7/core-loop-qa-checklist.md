@@ -108,6 +108,15 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`; it
   does not replace native keyboard/accessibility QA or final legal quiz-copy
   review.
+- 2026-07-07: Expo web E2E at 320 x 568 covers runtime brand identity on
+  `/ask`, `/paywall/upsell?feature=full_routine`, and
+  `/settings/subscription`: the checked surfaces render `Ask RoutineKind` and
+  `RoutineKind Pro`, no visible `OnSkin` labels appear, and browser console
+  errors are empty. `npm run brand:audit:strict` also reports zero
+  public-launch-risk and zero review-needed references. Evidence is in
+  `test-results/human-e2e/2026-07-07/runtime-brand-identity/`; it does not
+  replace final brand/legal clearance, native identifier QA, store listing QA, or
+  final-domain/share-card QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

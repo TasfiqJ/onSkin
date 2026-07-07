@@ -3452,6 +3452,20 @@ detail/stale replenish recovery paths. Evidence is in
 `docs/e2e-bug-reports/2026-07-07-bottom-edge-action-buffer.md`. Native iOS/Android gesture-area rendering remains a
 device QA follow-up.
 
+### Runtime brand identity smoke (2026-07-07)
+
+Verified the working `RoutineKind` runtime identity on high-visibility app
+surfaces without changing app code. Expo web human E2E at 320 x 568 opened
+`/ask`, `/paywall/upsell?feature=full_routine`, and
+`/settings/subscription`; visible copy rendered `Ask RoutineKind`,
+`Part of RoutineKind Pro.`, and `RoutineKind Pro`, with no visible `OnSkin`
+labels and no browser console errors. `npm run brand:audit:strict` reports zero
+public-launch-risk and zero review-needed references. Evidence is in
+`test-results/human-e2e/2026-07-07/runtime-brand-identity/`. This closes only
+the local runtime-copy smoke for the working identity; final brand/legal
+clearance, native identifiers, store listings, final domain, and share-card
+device QA remain founder/vendor/legal launch blockers.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

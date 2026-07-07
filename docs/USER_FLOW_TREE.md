@@ -292,12 +292,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web smoke; iOS and Android after final native identifiers are cleared.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/runtime-brand-identity/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/runtime-brand-identity/`
 
 ### Path A: Configured Runtime Copy
 
 1. Action: Start Expo web with the working public display name, open `/ask`, `/paywall/upsell?feature=full_routine`, and `/settings/subscription`, then inspect visible page copy.
    Expected result: `/ask` renders `Ask RoutineKind`; the paywall/subscription surfaces render `RoutineKind Pro`; no checked surface displays old public `OnSkin` labels.
-   Evidence: Screenshots, visible-text snapshots, and browser console logs.
+   Evidence: Screenshots, visible-text snapshots, and browser console logs. Current local evidence: 2026-07-07 Expo web at 320 x 568 renders `Ask RoutineKind`, `Part of RoutineKind Pro.`, and `RoutineKind Pro` in subscription settings, with zero visible `OnSkin` labels and no browser console errors. This does not close final brand/legal clearance or native identifier QA.
 
 ### Branches
 
