@@ -59,6 +59,10 @@ Wrap each bottom action in a small footer buffer, preserving the existing 56 px 
 
 ## Post-Fix Evidence
 
+- Screenshot: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/320-search.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/320-search-manual-fallback-after-click.png`
+- UI snapshot: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/shelf-direct-entry-current-summary.json`
+- Shelf direct-entry sweep: `/shelf/search` keeps `Add by hand` 32 px above the bottom edge at 320 x 568 and 390 x 568, and routes to `/shelf/manual`.
 - Screenshot: `test-results/human-e2e/2026-07-07/direct-entry-bottom-actions/01-shelf-search-320.png`
 - Screenshot: `test-results/human-e2e/2026-07-07/direct-entry-bottom-actions/03-welcome-back-320.png`
 - UI snapshot: `test-results/human-e2e/2026-07-07/direct-entry-bottom-actions/01-shelf-search-320.json`

@@ -170,3 +170,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   with zero horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/community-missing-note-current-check/`; it
   does not replace native-device QA.
+- 2026-07-07: Expo web E2E at 320 x 568 and 390 x 568 covers Shelf direct-entry
+  recovery after the search fallback buffer fix: `/shelf/add`, `/shelf/manual`,
+  `/shelf/search`, `/shelf/ocr`, `/shelf/scan`, `/shelf/no-match`,
+  `/shelf/opened`, `/shelf/archive`, stale `/shelf/[id]`, and stale
+  `/shelf/replenish` render with zero horizontal overflow; `/shelf/search`
+  keeps `Add by hand` 32 px above the bottom edge and routes to `/shelf/manual`;
+  stale detail and replenish recover to `/shelf` or `/shelf/manual`. Evidence is
+  in
+  `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`; it
+  does not replace native-device QA.

@@ -264,7 +264,7 @@ describe('Shelf route mobile contracts', () => {
   it('keeps the Shelf catalog manual fallback buffered above the phone bottom edge', () => {
     const source = readAppRoute('shelf/search.tsx');
 
-    expect(source).toContain('<View className="pb-4 pt-2">');
+    expect(source).toContain('<View className="pb-8 pt-2">');
     expect(source).toContain('<Button label="Add by hand" variant="ghost" onPress={goManual} />');
     expect(source).toContain(
       "Couldn't reach the product catalog. Add this product by hand for now.",
@@ -273,6 +273,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain(
       '\n      <Button label="Add by hand" variant="ghost" onPress={goManual} />\n    </Screen>',
     );
+    expect(source).not.toContain('<View className="pb-4 pt-2">');
   });
 
   it('keeps Shelf manual add picker options clear of the fixed footer on short phones', () => {

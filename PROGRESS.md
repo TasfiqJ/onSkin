@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Re-buffered the `/shelf/search` direct-entry manual fallback after the local
+  Shelf route contract was tightened from `pb-4` to `pb-8`. Expo web E2E at
+  320 x 568 verifies `Add by hand` is a 56 px control with a 32 px bottom buffer,
+  no visible sub-44 px controls, zero horizontal overflow, and a working route to
+  `/shelf/manual`. Focused Shelf route contracts pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`, with
+  the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-bottom-edge-action-buffer.md`.
+
 - Added a compact direct-entry-only policy spacer for `/settings/privacy` after
   the current 320/390 px phone sweep showed the next `POLICIES` rows becoming
   partially visible and tappable under the floating tab bar even after the
@@ -3356,6 +3365,18 @@ compact and narrow nudge values plus the retry. Expo web E2E also verified direc
 in `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/`; tracked in
 `docs/e2e-bug-reports/2026-07-07-settings-privacy-direct-tabbar-underlap.md`. Native screen-reader/device rendering
 remains a Phase 5 QA follow-up.
+
+### Shelf search manual fallback buffer (2026-07-07)
+
+Buffered the direct `/shelf/search` manual fallback farther above compact phone bottom chrome after Expo web E2E showed
+`Add by hand` had only a 16 px bottom gap on a 320 x 568 viewport. The footer now uses a 32 px bottom cushion, and the
+Shelf route contract pins that spacing. Post-fix Expo web E2E at 320 x 568 and 390 x 568 verified `/shelf/search`
+renders with zero horizontal overflow, keeps `Add by hand` 32 px above the bottom edge, and routes the fallback to
+`/shelf/manual`; the broader Shelf direct-entry sweep also verified add/manual/OCR/scan/no-match/opened/archive/stale
+detail/stale replenish recovery paths. Evidence is in
+`test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`; tracked in
+`docs/e2e-bug-reports/2026-07-07-bottom-edge-action-buffer.md`. Native iOS/Android gesture-area rendering remains a
+device QA follow-up.
 
 ## Open questions for the founder
 

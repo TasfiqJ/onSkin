@@ -173,7 +173,7 @@ export default function CatalogSearchScreen() {
         </View>
       </ScrollView>
 
-      <View className="pb-4 pt-2">
+      <View className="pb-8 pt-2">
         <Button label="Add by hand" variant="ghost" onPress={goManual} />
       </View>
     </Screen>

@@ -373,6 +373,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: iOS and Android first because camera/OCR may be native-only.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/shelf/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`
 
 ### Path A: Happy Path
 
@@ -444,6 +445,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/shelf/add` (compatibility alias to `/shelf/manual`), `/shelf/search`, `/shelf/ocr`, `/shelf/no-match`, `/shelf/opened`, `/shelf/archive`, `/shelf/[id]`, and `/shelf/replenish` directly, including stale `/shelf/replenish?id=[missing]`, then use the visible Back, Close, Cancel, Not now, Back to Shelf, Add a product, or backdrop Dismiss control.
   - Expected result: The user returns to the Shelf tab instead of getting stuck on a direct-entry screen or modal sheet with no navigation history. `/shelf/add` must open the manual-add intake instead of being captured by the dynamic product-detail route. Stale `/shelf/[id]` entries must explain that the product is unavailable and provide `Back to Shelf` plus `Add a product` recovery actions. Stale `/shelf/replenish` entries must explain that the replacement prompt is no longer active, avoid reusing freshness or shopping prompts, and provide `Back to Shelf` plus `Add a product`. Direct `/shelf/opened` without an intake draft must recover to manual add instead of saving a generic product. Visible route exits meet the 44 pt phone touch target, `/shelf/search` keeps its manual fallback buffered above the phone bottom edge, add/replenish sheets keep their actions reachable by scrolling on short phones, and sheets that can fill the viewport expose a visible Close control and dialog semantics instead of relying on a tiny backdrop.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone touch target measurements.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 and 390 x 568 covers direct `/shelf/add`, `/shelf/manual`, `/shelf/search`, `/shelf/ocr`, `/shelf/scan`, `/shelf/no-match`, `/shelf/opened`, `/shelf/archive`, stale `/shelf/[id]`, and stale `/shelf/replenish`. `/shelf/search` keeps the 56 px `Add by hand` fallback 32 px above the bottom edge, recovery clicks route to `/shelf/manual` or `/shelf`, every checked route has zero horizontal overflow, and focused `shelfRoutes.test.ts` route contracts pass.
 
 ## Flow: Photo Progress
 
