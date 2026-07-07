@@ -1,6 +1,6 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-07T02:49:49.418Z
+Generated at: 2026-07-07T04:30:59.652Z
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -39,11 +39,11 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | --- | --- | --- | --- |
 | apps/mobile/src/lib/launch/phase7.ts | present | 4843 | 95ce1ebeaee6e103015528bb190b82bd4c1ce2defb2163815484fa0fdf4aafd7 |
 | apps/mobile/src/lib/launch/phase7.test.ts | present | 6238 | 72e76ea593d1fb753544313ee4a3cef8ebfd66441c59a04550928e4b7c70402a |
-| apps/mobile/src/components/launch/DeferredSurface.tsx | present | 1968 | c40d077116101ea43a532306a91e731a3b123fe72cd0300574c84aba71ec74c1 |
+| apps/mobile/src/components/launch/DeferredSurface.tsx | present | 2028 | 235a3fcdab2164c06c8677417a2ab5756779e0a53d1dd8b0d7485e6eba619f87 |
 | apps/mobile/src/app/(tabs)/today.tsx | present | 23649 | e745dc05f52a0ce12cfb17a2118541dfe03faa51971c9ab10053444f0c848a79 |
 | apps/mobile/src/app/(tabs)/progress.tsx | present | 20591 | 3075e77c30545b3c9adc40f8427d4b31456b77342e3c6a4bceb0d0d805715748 |
-| apps/mobile/src/app/(tabs)/you.tsx | present | 22032 | 9a03a5e4092c5c0e136be524f48c43fb3b46e200469886361e8e71ae50df71d1 |
-| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 4636 | 8876a0cf56ea71c145786a7f1f4a7ad86105f80057ae3cb8b62eb729114ff8bb |
+| apps/mobile/src/app/(tabs)/you.tsx | present | 22761 | 6acf12797328fa40f9803713440781efc128958af5346fb389138ccba1bb1f05 |
+| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 4710 | 096fa24edb685bb08d08a4868fedef42a0b3b208e375335d8d96a094717a7cf7 |
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 21906 | e925404c8d566d0f516b724a4d70d8dc7370a29f19aca936daca27e7b369b7ac |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 7673 | 5b1f5216efc5ec76c6554dda4b8cf253fb47d51ac7910eb4e8dca131627ab0dc |
 | docs/phase-7/surface-inventory.md | present | 7793 | ae733b1a87a8cf785ee9fc0fb0bfabf5b2ad6515c064320d89d6c4a58dd956ae |

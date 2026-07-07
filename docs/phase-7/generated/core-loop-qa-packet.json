@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T02:49:49.418Z",
+  "generatedAt": "2026-07-07T04:30:59.652Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -78,8 +78,8 @@
     {
       "path": "apps/mobile/src/components/launch/DeferredSurface.tsx",
       "exists": true,
-      "bytes": 1968,
-      "sha256": "c40d077116101ea43a532306a91e731a3b123fe72cd0300574c84aba71ec74c1"
+      "bytes": 2028,
+      "sha256": "235a3fcdab2164c06c8677417a2ab5756779e0a53d1dd8b0d7485e6eba619f87"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/today.tsx",
@@ -96,14 +96,14 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 22032,
-      "sha256": "9a03a5e4092c5c0e136be524f48c43fb3b46e200469886361e8e71ae50df71d1"
+      "bytes": 22761,
+      "sha256": "6acf12797328fa40f9803713440781efc128958af5346fb389138ccba1bb1f05"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 4636,
-      "sha256": "8876a0cf56ea71c145786a7f1f4a7ad86105f80057ae3cb8b62eb729114ff8bb"
+      "bytes": 4710,
+      "sha256": "096fa24edb685bb08d08a4868fedef42a0b3b208e375335d8d96a094717a7cf7"
     },
     {
       "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
