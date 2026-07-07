@@ -196,6 +196,10 @@ export const STARTER_RULES: ConflictRule[] = [
   },
 ];
 
+export function isReviewedRule(rule: Pick<ConflictRule, 'reviewedBy'>): boolean {
+  return typeof rule.reviewedBy === 'string' && rule.reviewedBy.trim().length > 0;
+}
+
 /**
  * Rules safe to surface to real users. B-DERM-REVIEW launch gate: in production
  * builds only rules with a recorded clinical sign-off (`reviewedBy`) are shown;
@@ -203,5 +207,5 @@ export const STARTER_RULES: ConflictRule[] = [
  */
 export function shippableRules(rules: ConflictRule[] = STARTER_RULES): ConflictRule[] {
   const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-  return isDev ? rules : rules.filter((r) => r.reviewedBy != null);
+  return isDev ? rules : rules.filter(isReviewedRule);
 }

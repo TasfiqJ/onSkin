@@ -2843,6 +2843,12 @@ Fixed `/ask` answer triad labels on 320px phones so `WHAT`, `WHY`, and `HOW` sta
 stacked letters. Added route-contract coverage for the compact label sizing and captured Expo web evidence at 320x568
 and 390x844 under `test-results/human-e2e/2026-07-07/ask-compact-composer/`.
 
+### Reviewed-rule gate hardening (2026-07-07)
+
+Tightened the B-DERM-REVIEW production gate so blank or whitespace-only reviewer metadata cannot unlock conflict rules
+or share-card eligibility. The same reviewed-rule predicate now backs `shippableRules()` and Phase 7 conflict-card
+eligibility, with focused tests covering whitespace reviewer rows.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

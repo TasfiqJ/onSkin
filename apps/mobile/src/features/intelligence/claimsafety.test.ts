@@ -109,6 +109,14 @@ describe('B-DERM-REVIEW production rule gate', () => {
     });
   });
 
+  it('rejects blank reviewer metadata in production', () => {
+    const blankReviewer = { ...STARTER_RULES[0]!, reviewedBy: '   ' };
+
+    withDevFlag(false, () => {
+      expect(shippableRules([blankReviewer])).toEqual([]);
+    });
+  });
+
   it('keeps the full starter set available for development fixtures', () => {
     withDevFlag(true, () => {
       expect(shippableRules()).toHaveLength(STARTER_RULES.length);

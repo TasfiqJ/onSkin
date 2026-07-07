@@ -1,4 +1,5 @@
 import type { DetectedConflict } from '@/features/intelligence/engine';
+import { isReviewedRule } from '@/features/intelligence/rules';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import { normalizePublicDomain } from '@/lib/growth/attribution';
@@ -103,7 +104,7 @@ export function isPhase7SurfaceEnabled(surface: DeferredSurfaceKind): boolean {
 }
 
 export function isReviewedConflict(conflict: DetectedConflict | null | undefined): boolean {
-  return Boolean(conflict?.rule.reviewedBy);
+  return conflict ? isReviewedRule(conflict.rule) : false;
 }
 
 export function canShareConflictCard(

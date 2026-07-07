@@ -180,6 +180,11 @@ describe('Phase 7 share-card eligibility', () => {
     ).toBe(false);
     expect(
       canShareConflictCard(
+        reviewedConflict({ rule: { ...reviewedConflict().rule, reviewedBy: '   ' } }),
+      ),
+    ).toBe(false);
+    expect(
+      canShareConflictCard(
         reviewedConflict({ rule: { ...reviewedConflict().rule, interactionType: 'safety' } }),
       ),
     ).toBe(false);
