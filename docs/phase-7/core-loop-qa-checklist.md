@@ -127,6 +127,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`; it
   does not replace native photo/toggle QA, live authenticated consent-ledger/RLS
   evidence, fairness validation, or final legal consent-copy review.
+- 2026-07-07: Expo web E2E at 320 x 568 covers conflict/share direct-entry
+  recovery for missing and unshareable states. `/conflict/missing-rule-e2e`
+  shows the stale timing-note explanation, warns that stale routine advice is
+  never reused, returns `Back to Shelf` to `/shelf`, and opens `Add a product` to
+  `/shelf/manual`. Default `/share/conflict/missing-rule-e2e` shows the
+  launch-gated fallback and returns to `/shelf`; a share-card-enabled local
+  server shows the unshareable reviewed-card state, disables `Share to Stories`,
+  and returns `Done` to `/shelf`, with no private product names, zero horizontal
+  overflow, and no browser errors. Evidence is in
+  `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`; it does
+  not replace real reviewed conflict persistence QA, native share-sheet export
+  QA, public-link final domain QA, or reviewed conflict-rule content approval.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

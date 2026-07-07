@@ -3493,6 +3493,24 @@ Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`. Native
 photo/toggle QA, live authenticated consent-ledger/RLS proof, fairness
 validation, and final legal consent-copy review remain external launch blockers.
 
+### Conflict/share route recovery evidence (2026-07-07)
+
+Verified missing conflict and unshareable share-card recovery without changing
+app code. Expo web human E2E at 320 x 568 opened
+`/conflict/missing-rule-e2e`, confirmed the stale timing-note copy and stale
+routine-advice warning, returned `Back to Shelf` to `/shelf`, and opened the
+`Add a product` escape hatch to `/shelf/manual`. Default
+`/share/conflict/missing-rule-e2e` showed the launch-gated share-card fallback,
+returned to `/shelf`, and exposed no private shelf details. A temporary
+share-card-enabled web server on port 8126 verified the unshareable reviewed-card
+state, disabled `Share to Stories`, and returned `Done` to `/shelf`, again with
+no private product names, no horizontal overflow, and no browser console errors.
+Evidence is in
+`test-results/human-e2e/2026-07-07/conflict-share-routes-current/`. This covers
+direct-entry missing/unshareable recovery only; real reviewed conflict choice
+persistence, native share-sheet export, public-link domain QA, and reviewed rule
+content remain launch blockers.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
