@@ -589,7 +589,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open onboarding and contextual paywalls before RevenueCat pricing is available, or with the local development fallback.
-  - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; it must never render `Unavailable` as if it were the billed amount.
+  - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; it must never render `Unavailable` as if it were the billed amount, and visible fallback copy must not expose infrastructure names, package setup detail, or production-build diagnostics.
   - Evidence: Screenshot and visible-text snapshot.
 - Branch: purchase success compact-phone confirmation
   - Priority: Important

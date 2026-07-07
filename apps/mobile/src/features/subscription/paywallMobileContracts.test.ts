@@ -156,9 +156,8 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('const compactPaywall = height < 640');
     expect(source).toContain("contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-8'}");
     expect(source).toContain("className={compactPaywall ? 'mt-2.5 gap-1' : 'mt-5 gap-2.5'}");
-    expect(source).toContain(
-      "className={compactPaywall ? 'mt-2 h-[48px] items-center justify-center rounded-pill' : 'mt-5 h-[54px] items-center justify-center rounded-pill'}",
-    );
+    expect(source).toContain("'mt-2 h-[48px] items-center justify-center rounded-pill'");
+    expect(source).toContain("'mt-5 h-[54px] items-center justify-center rounded-pill'");
     expect(source).toContain('compact={compactPaywall}');
     expect(source).not.toContain('contentContainerClassName="pb-8"');
   });

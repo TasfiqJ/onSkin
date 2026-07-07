@@ -86,10 +86,10 @@ export default function UpsellSheet() {
       </View>
       {offering.data?.status && offering.data.status !== 'available' ? (
         <Text
-          variant="label"
+          variant="bodySm"
           tone="muted"
-          className="mt-2 text-center"
-          style={{ fontSize: 11.5, lineHeight: 16 }}
+          className="mt-2 px-3 text-center"
+          style={{ fontSize: 12, lineHeight: 17 }}
         >
           {offering.data.reason}
         </Text>

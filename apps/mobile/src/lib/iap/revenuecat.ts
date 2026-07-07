@@ -84,6 +84,10 @@ let configurePromise: Promise<void> | null = null;
 let cachedOfferings: PurchasesOfferings | null = null;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const STORE_CHECKOUT_UNAVAILABLE_REASON =
+  'Store checkout is unavailable right now. Please try again later.';
+const PREVIEW_CHECKOUT_DISABLED_REASON =
+  'Store checkout is unavailable in this preview. You can keep exploring.';
 
 function revenueCatKey(): string {
   if (env.appEnvironment === 'development' && env.revenueCatTestStoreKey.length > 0) {
@@ -392,7 +396,7 @@ export async function resetRevenueCatIdentity(): Promise<void> {
 export async function getSubscriptionOffering(): Promise<SubscriptionOfferingView> {
   if (!canUseRevenueCat()) {
     if (env.appEnvironment === 'production') {
-      return unavailableOffering('Store pricing is unavailable in this production build.');
+      return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
     }
     return {
       status: 'development_fallback',
@@ -400,7 +404,7 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
       annual: developmentFallbackPackage('annual'),
       monthly: developmentFallbackPackage('monthly'),
       winBack: null,
-      reason: 'RevenueCat is not configured. Prices are disabled development previews.',
+      reason: PREVIEW_CHECKOUT_DISABLED_REASON,
     };
   }
 
@@ -408,7 +412,7 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
   try {
     offerings = await fetchOfferings();
   } catch {
-    return unavailableOffering('Store pricing is unavailable right now.');
+    return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
   }
 
   const current = offerings?.current ?? null;
@@ -416,9 +420,7 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
   const monthly = offerings ? findPackage(offerings, 'monthly') : null;
 
   if (!current || !annual || !monthly) {
-    return unavailableOffering(
-      `The current RevenueCat offering is missing the annual or monthly ${BRAND.proName} package.`,
-    );
+    return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
   }
 
   return {

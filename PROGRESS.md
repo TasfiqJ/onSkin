@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Reworked unavailable-store copy on subscription paywalls so checkout fallback
+  states stay user-facing and polished instead of exposing RevenueCat/setup
+  diagnostics. Onboarding, contextual upsells, reverse-trial reoffers, and
+  reusable Pro gates now render the message as calm body copy, and the paywall
+  flow tree tracks infrastructure-copy leakage as a compact-phone acceptance
+  concern.
+
 - Fixed the routine-plan `Start today` handoff so it updates the scheduler cycle
   store before routing to Today, instead of writing only the legacy anchor. The
   CTA now re-anchors an existing cycle to today, clears pause state, removes a

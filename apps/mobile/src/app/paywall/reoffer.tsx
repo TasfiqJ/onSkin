@@ -28,9 +28,14 @@ export default function ReofferScreen() {
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (!result.cancelled)
+          Alert.alert('Purchase not active', 'No active subscription was found for this account.');
       },
-      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+      onError: () =>
+        Alert.alert(
+          'Purchase unavailable',
+          'We could not open the store purchase sheet. Please try again.',
+        ),
     });
   }
 
@@ -45,7 +50,10 @@ export default function ReofferScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerClassName="pb-4"
       >
-        <View className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2" style={{ backgroundColor: colors.greige }}>
+        <View
+          className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2"
+          style={{ backgroundColor: colors.greige }}
+        >
           <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clay }} />
           <Text variant="label" className="font-sans-bold" tone="muted" style={{ fontSize: 12.5 }}>
             {PAYWALL_COPY.reoffer.pill}
@@ -57,14 +65,28 @@ export default function ReofferScreen() {
         <Text variant="body" tone="muted" className="mt-2.5" style={{ lineHeight: 24 }}>
           {PAYWALL_COPY.reoffer.body}
         </Text>
-        <View className="mt-5 rounded-card bg-paper-raised px-[18px]" style={{ borderWidth: 1, borderColor: colors.hairline }}>
+        <View
+          className="mt-5 rounded-card bg-paper-raised px-[18px]"
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
           {PAYWALL_COPY.reoffer.continues.map((c, i) => (
             <View
               key={c}
               className="flex-row items-center gap-3 py-3"
-              style={i < PAYWALL_COPY.reoffer.continues.length - 1 ? { borderBottomWidth: 1, borderBottomColor: colors.hairline } : undefined}>
-              <View className="h-[18px] w-[18px] items-center justify-center rounded-full" style={{ backgroundColor: colors.clayTint }}>
-                <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+              style={
+                i < PAYWALL_COPY.reoffer.continues.length - 1
+                  ? { borderBottomWidth: 1, borderBottomColor: colors.hairline }
+                  : undefined
+              }
+            >
+              <View
+                className="h-[18px] w-[18px] items-center justify-center rounded-full"
+                style={{ backgroundColor: colors.clayTint }}
+              >
+                <View
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: colors.clay }}
+                />
               </View>
               <Text variant="bodySm" style={{ color: colors.inkSoft }}>
                 {c}
@@ -72,7 +94,10 @@ export default function ReofferScreen() {
             </View>
           ))}
         </View>
-        <View className="mt-4 flex-row items-center justify-between rounded-card p-4" style={{ backgroundColor: colors.clayTint }}>
+        <View
+          className="mt-4 flex-row items-center justify-between rounded-card p-4"
+          style={{ backgroundColor: colors.clayTint }}
+        >
           <Text variant="bodySm" style={{ color: colors.clayDeep }}>
             {annualDisplay.introLabel}
           </Text>
@@ -86,7 +111,12 @@ export default function ReofferScreen() {
           </Text>
         </View>
         {offering.data?.status && offering.data.status !== 'available' ? (
-          <Text variant="label" tone="muted" className="mt-2 text-center" style={{ fontSize: 11.5, lineHeight: 16 }}>
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className="mt-2 px-2 text-center"
+            style={{ fontSize: 12, lineHeight: 17 }}
+          >
             {offering.data.reason}
           </Text>
         ) : null}
@@ -98,15 +128,19 @@ export default function ReofferScreen() {
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className="h-[54px] items-center justify-center rounded-pill"
-          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}>
+          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
+        >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
             {PAYWALL_COPY.reoffer.keepCta}
           </Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() => downgrade.mutate(undefined, { onSettled: () => router.replace('/(tabs)/today') })}
-          className="h-[48px] items-center justify-center">
+          onPress={() =>
+            downgrade.mutate(undefined, { onSettled: () => router.replace('/(tabs)/today') })
+          }
+          className="h-[48px] items-center justify-center"
+        >
           <Text className="font-sans-semibold" tone="muted" variant="body">
             {PAYWALL_COPY.reoffer.declineCta}
           </Text>

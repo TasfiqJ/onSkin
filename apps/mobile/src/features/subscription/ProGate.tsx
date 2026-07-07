@@ -162,10 +162,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         </View>
         {offering.data?.status && offering.data.status !== 'available' ? (
           <Text
-            variant="label"
+            variant="bodySm"
             tone="muted"
             className={compactPaywall ? 'mt-1 text-center' : 'mt-2 text-center'}
-            style={{ fontSize: compactPaywall ? 10.5 : 11.5, lineHeight: compactPaywall ? 14 : 16 }}
+            style={{ fontSize: compactPaywall ? 11 : 12, lineHeight: compactPaywall ? 15 : 17 }}
           >
             {offering.data.reason}
           </Text>

@@ -50,7 +50,7 @@ describe('subscription price display', () => {
     expect(planLineLabel(display)).toBe('$59.99/year');
   });
 
-  it('keeps development fallback pricing but returns the disabled-store reason', () => {
+  it('keeps development fallback pricing with a user-facing disabled-store reason', () => {
     const offering: SubscriptionOfferingView = {
       status: 'development_fallback',
       offeringId: 'development-fallback',
@@ -66,13 +66,16 @@ describe('subscription price display', () => {
         canPurchase: false,
       }),
       winBack: null,
-      reason: 'RevenueCat is not configured. Prices are disabled development previews.',
+      reason: 'Store checkout is unavailable in this preview. You can keep exploring.',
     };
 
     const display = planPriceDisplay('annual', offering);
 
     expect(display.priceLabel).toBe('$49.99');
-    expect(display.reason).toContain('RevenueCat is not configured');
+    expect(display.reason).toBe(
+      'Store checkout is unavailable in this preview. You can keep exploring.',
+    );
+    expect(display.reason).not.toContain('RevenueCat');
     expect(display.canShowPurchasePrice).toBe(true);
   });
 
@@ -83,7 +86,7 @@ describe('subscription price display', () => {
       annual: null,
       monthly: null,
       winBack: null,
-      reason: 'Store pricing is unavailable in this production build.',
+      reason: 'Store checkout is unavailable right now. Please try again later.',
     };
 
     const display = planPriceDisplay('annual', offering);
