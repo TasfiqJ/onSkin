@@ -70,10 +70,23 @@ describe('today completion persistence', () => {
       }),
     );
 
-    await expect(getCompletedSteps(DAY)).resolves.toEqual(
-      new Set(['AM:cleanser', 'PM:retinol']),
+    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser', 'PM:retinol']));
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      [DAY]: ['AM:cleanser', 'PM:retinol'],
+    });
+  });
+
+  it('merges completion rows when padded legacy dates normalize to the same day', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        [` ${DAY} `]: ['AM:cleanser'],
+        [DAY]: ['PM:retinol'],
+      }),
     );
 
+    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser', 'PM:retinol']));
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
       [DAY]: ['AM:cleanser', 'PM:retinol'],
     });

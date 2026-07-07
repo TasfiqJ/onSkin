@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Repaired a Today completion-log migration edge so padded legacy date keys and
+  canonical date keys that normalize to the same local day are merged instead of
+  overwriting each other. This preserves valid check-off history for the streak
+  and heat-map surfaces during local store repair.
+
 - Hardened the local-first cycle scheduler store so direct config patches are
   normalized before persistence. Malformed anchors or invalid recovery windows
   now preserve the current valid cycle instead of writing corrupt state that is
