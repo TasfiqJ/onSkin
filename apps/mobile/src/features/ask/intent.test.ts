@@ -12,6 +12,12 @@ describe('medical / severe / dosing / diagnosis always routes to medical (escala
     'I have a painful cystic breakout',
     'do I have rosacea',
     'how much tretinoin should I use',
+    'should I use retinol every night',
+    'how often should I apply retinol',
+    'should I use glycolic daily',
+    'can I use retinol every other night',
+    'should I exfoliate twice a week',
+    'can I apply benzoyl peroxide twice weekly',
     'is this mole changing shape',
     'should I see a dermatologist about this',
     'can I use my retinol with a prescription antibiotic', // medical wins over conflict

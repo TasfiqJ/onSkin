@@ -12,6 +12,9 @@ import type { AskIntent } from '@onskin/types';
 const MEDICAL = [
   /\b(antibiotic|prescri\w*|accutane|isotretinoin|tretinoin|hydrocortisone|steroid|prednisone)\b/i,
   /\b(dose|dosage|how much should i|how many mg|mg\b|ml\b)\b/i,
+  /\b(how often|how frequently|how many (nights|times|days) (a|per) week)\b.*\b(use|apply|start|increase|retinol|retinoid|acid|exfoliat\w*|aha|bha|glycolic|lactic|mandelic|salicylic|benzoyl peroxide)\b/i,
+  /\b(use|apply|start|increase)\b.*\b(retinol|retinoid|acid|exfoliat\w*|aha|bha|glycolic|lactic|mandelic|salicylic|benzoyl peroxide)\b.*\b(every (other )?(night|day|morning)|daily|nightly|weekly|twice (a|per) week|twice weekly|[1-7]x( a| per)? week|per week)\b/i,
+  /\bexfoliat\w*\b.*\b(every (other )?(night|day|morning)|daily|nightly|weekly|twice (a|per) week|twice weekly|[1-7]x( a| per)? week|per week)\b/i,
   /\b(diagnos\w*|do i have|is this (a sign of|cancer|a tumou?r|infected)|melanoma|skin cancer|tumou?r)\b/i,
   /\b(cyst|cystic|abscess|boil|infected|infection|pus|bleeding|oozing|painful|severe|spreading rash|won.?t heal)\b/i,
   /\b(mole|lesion|growth) (chang|grow|bleed|new)/i,
@@ -41,7 +44,7 @@ const REPLENISH = [
 
 const PRODUCT_FIT = [
   /\b(fit for me|right for me|good for me|work for me|suit me)\b/i,
-  /\b(worth it|worth buying|should i (buy|get|add|try|use))\b/i,
+  /\b(worth it|worth buying|should i (buy|get|add|try))\b/i,
   /\bis this (product |serum |cream |one )?(a fit|right|good|worth)/i,
   /\bshould i add\b/i,
 ];

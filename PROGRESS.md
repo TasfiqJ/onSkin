@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed Ask active-frequency routing after a 320 x 568 human E2E pass showed
+  `Should I use retinol every night?` misrouting to the product-fit engine and
+  recommending a mineral SPF instead of refusing/escalating a frequency-style
+  active-use question. The Ask intent router now treats common active-frequency
+  wording for retinol, acids, exfoliants, and benzoyl peroxide as the existing
+  medical/escalation bucket, and broad product-fit matching no longer catches
+  generic `should I use` phrasing. Focused Ask intent/answer/route-contract
+  tests pass, and the post-fix in-app browser E2E rerun at 320 x 568 shows the
+  typed question escalating with zero horizontal overflow, no sub-44 px
+  controls, no fit-engine copy, and no SPF/vitamin-C recommendation. Evidence is
+  in
+  `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`, with
+  the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-ask-active-frequency-misroute.md`.
+
 - Fixed the compact paywall monthly-equivalent price label after 320 x 568 E2E
   screenshots showed the secondary `$4.16 /mo` copy squeezed into a cramped
   two-line block on contextual Progress and Routine paywalls. Contextual

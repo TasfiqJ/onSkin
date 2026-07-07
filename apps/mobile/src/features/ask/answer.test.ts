@@ -127,6 +127,15 @@ describe('refuse-over-guess and escalation', () => {
     expect(a.cta).toBeNull(); // no in-app derm finder exists. Verbal escalation only (docs/13 §9)
     expect(a.footnote).toBe(ASK_COPY.escalate.footnote);
   });
+  it('active-frequency questions escalate instead of misrouting to product fit', () => {
+    const a = answerQuestion('Should I use retinol every night?', CTX);
+
+    expect(a.kind).toBe('escalate');
+    expect(a.intent).toBe('medical');
+    expect(a.claim).toBe(ASK_COPY.escalate.body);
+    expect(a.claim).not.toContain('vitamin C serum');
+    expect(a.badge).toBe(ASK_COPY.escalate.eyebrow);
+  });
   it('a grounded concern question refuses with the Pro-locked message for free users', () => {
     const a = answerQuestion('what is niacinamide', CTX);
     expect(a.kind).toBe('refuse');

@@ -1028,6 +1028,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/ask` at 320 x 568 with an empty shelf, tap `Is there a conflict on my shelf?`, and inspect the first conversation state without manually scrolling.
   - Expected result: The user question, deterministic badge, empty-shelf answer, report control, fixed composer, and disclosure footer remain readable; the first user message is not auto-scrolled under the header, and no follow-up prompt peeks partially underneath the fixed composer on compact phones.
   - Evidence: Screenshot, scroll-position snapshot, and small-phone control-geometry snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 taps `Is there a conflict on my shelf?`, keeps the user question, deterministic `$0` badge, empty-shelf answer, report control, composer, and disclosure footer readable with zero horizontal overflow and no sub-44 px controls. The same pass typed `Should I use retinol every night?`; before the fix it misrouted to product-fit recommendation copy, and after the fix it escalates safely with no fit-engine, SPF, or vitamin-C recommendation text. Evidence is in `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
