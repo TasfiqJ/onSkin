@@ -19,10 +19,10 @@ Fresh verification on 2026-07-07:
 
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 165 mobile test files, 1626 tests.
+- `npm test` passed: 166 mobile test files, 1633 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 165 test files, 1626 tests.
+- `npm --workspace apps/mobile run test` passed: 166 test files, 1633 tests.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
 
