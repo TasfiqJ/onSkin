@@ -9,12 +9,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Repaired stale commerce stack detail source so an unavailable
   `/commerce/stack/[slug]` route has a real recovery state when commerce is
   enabled: `Stack unavailable` copy, disclosure/product-availability review
-  explanation, `Back to stacks`, and `How paid links work`. The current beta
-  runtime still correctly defers commerce behind Phase 7 flags; Expo web E2E at
-  320 x 568 verified the reachable deferred direct-entry route has one 56 px
-  `Back to You` action, no horizontal overflow, and lands on `/you`. Evidence is
-  in `test-results/human-e2e/2026-07-07/commerce-missing-stack-recovery/`; the
-  hidden stack body remains source-contract verified until commerce is enabled.
+  explanation, `Back to stacks`, and `How paid links work`. Expo web E2E at
+  320 x 568 with the commerce flag and final-domain fixture enabled verified the
+  missing-stack state, no horizontal overflow, no clipped/sub-44 px controls,
+  `Back to stacks` routing to `/commerce/stacks`, and `How paid links work`
+  routing to `/commerce/transparency`. Evidence is in
+  `test-results/human-e2e/2026-07-07/commerce-missing-stack-recovery/`; default
+  beta runtime still correctly defers commerce behind Phase 7 flags.
 
 - Repaired stale Skin Note direct entries so a missing
   `/community/note/[id]` no longer presents a muted one-line unavailable state
@@ -3149,11 +3150,11 @@ Supabase/web-notification warnings under
 
 Recovered the commerce-enabled `/commerce/stack/[slug]` missing-stack branch as a real route body instead of a one-line
 empty state. The hidden route body now uses compact-phone sizing, a visual placeholder, `Stack unavailable` copy,
-disclosure/product-availability review context, `Back to stacks`, and `How paid links work`. Because
-`phase7Flags.commerce` is still false without final-domain and commerce evidence, Expo web human E2E at 320 x 568
-verified the currently reachable deferred commerce direct-entry route instead: one 56 px `Back to You` action, no
-horizontal overflow, and safe return to `/you`. Tracked in
-`docs/e2e-bug-reports/2026-07-07-commerce-missing-stack-recovery.md`; evidence is in
+disclosure/product-availability review context, `Back to stacks`, and `How paid links work`. Expo web human E2E at
+320 x 568 with `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` and a final-domain fixture verified the missing-stack state,
+no horizontal overflow, no clipped/sub-44 px controls, `Back to stacks` routing to `/commerce/stacks`, and
+`How paid links work` routing to `/commerce/transparency`. Default beta runtime still defers commerce without those
+flags. Tracked in `docs/e2e-bug-reports/2026-07-07-commerce-missing-stack-recovery.md`; evidence is in
 `test-results/human-e2e/2026-07-07/commerce-missing-stack-recovery/`.
 
 ## Open questions for the founder
