@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -31,14 +32,15 @@ function useExpiryReoffer() {
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';
 
 const ICON_SIZE = 21;
-const FLOATING_TAB_BAR_HEIGHT = 70;
-const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 10, web: 14, default: 10 });
+const FLOATING_TAB_BAR_HEIGHT = 66;
+const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 12, web: 14, default: 12 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
 const FLOATING_TAB_BAR_GAP = 24;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 8;
-const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 2;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 12;
+const FLOATING_TAB_BAR_MAX_WIDTH = 430;
+const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 0;
 const MIN_TAB_TOUCH_TARGET = 52;
-const TAB_ITEM_HEIGHT = 56;
+const TAB_ITEM_HEIGHT = 54;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -48,32 +50,16 @@ const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
 
 const TAB_BAR_SHADOW = Platform.select({
   android: {
-    elevation: 8,
+    elevation: 10,
   },
   ios: {
     shadowColor: colors.ink,
-    shadowOffset: { height: 12, width: 0 },
-    shadowOpacity: 0.11,
-    shadowRadius: 24,
+    shadowOffset: { height: 10, width: 0 },
+    shadowOpacity: 0.13,
+    shadowRadius: 22,
   },
   web: {
-    boxShadow: '0px 14px 30px rgba(32, 27, 21, 0.12), 0px 3px 10px rgba(32, 27, 21, 0.05)',
-  } as ViewStyle,
-  default: {},
-}) as ViewStyle;
-
-const ACTIVE_TAB_SHADOW = Platform.select({
-  android: {
-    elevation: 1,
-  },
-  ios: {
-    shadowColor: colors.ink,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.14,
-    shadowRadius: 8,
-  },
-  web: {
-    boxShadow: '0px 6px 14px rgba(32, 27, 21, 0.16)',
+    boxShadow: '0px 16px 32px rgba(32, 27, 21, 0.14), 0px 2px 8px rgba(32, 27, 21, 0.06)',
   } as ViewStyle,
   default: {},
 }) as ViewStyle;
@@ -165,7 +151,7 @@ function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) 
           : YouIcon;
 
   return (
-    <View style={[styles.iconShell, focused ? styles.iconShellActive : null]}>
+    <View style={styles.iconShell}>
       <Icon color={iconColor} />
     </View>
   );
@@ -191,6 +177,15 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
   const keyboardVisible = useKeyboardVisible();
   const [focusRingRouteKey, setFocusRingRouteKey] = useState<string | null>(null);
   const tabBarBottom = Math.max(insets.bottom, FLOATING_TAB_BAR_BOTTOM);
+  const { width: viewportWidth } = useWindowDimensions();
+  const tabBarWidth = Math.min(
+    viewportWidth - FLOATING_TAB_BAR_SIDE_MARGIN * 2,
+    FLOATING_TAB_BAR_MAX_WIDTH,
+  );
+  const tabBarHorizontalInset = Math.max(
+    FLOATING_TAB_BAR_SIDE_MARGIN,
+    (viewportWidth - tabBarWidth) / 2,
+  );
 
   if (keyboardVisible) {
     return null;
@@ -199,7 +194,11 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
   return (
     <View
       accessibilityRole="tablist"
-      style={[styles.floatingTabBar, { bottom: tabBarBottom }, TAB_BAR_SHADOW]}
+      style={[
+        styles.floatingTabBar,
+        { bottom: tabBarBottom, left: tabBarHorizontalInset, right: tabBarHorizontalInset },
+        TAB_BAR_SHADOW,
+      ]}
     >
       {state.routes.map((route, index) => {
         const focused = state.index === index;
@@ -246,7 +245,6 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
               styles.tabItem,
               WEB_TAB_ITEM_FOCUS_RESET,
               focused ? styles.tabItemActive : null,
-              focused ? ACTIVE_TAB_SHADOW : null,
               focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
               pressed ? styles.tabItemPressed : null,
             ]}
@@ -289,8 +287,8 @@ export default function TabsLayout() {
         screenOptions={{
           headerShown: false,
           sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }],
-          tabBarActiveTintColor: colors.clayDeep,
-          tabBarInactiveTintColor: colors.ink,
+          tabBarActiveTintColor: colors.ink,
+          tabBarInactiveTintColor: colors.mutedStrong,
           tabBarHideOnKeyboard: true,
           tabBarShowLabel: false,
         }}
@@ -346,16 +344,9 @@ const styles = StyleSheet.create({
   },
   iconShell: {
     alignItems: 'center',
-    borderRadius: 15,
-    height: 30,
+    height: 28,
     justifyContent: 'center',
     width: 42,
-  },
-  iconShellActive: {
-    backgroundColor: colors.paperRaised,
-    borderColor: colors.hairlineStrong,
-    borderWidth: StyleSheet.hairlineWidth,
-    transform: [{ translateY: -0.75 }],
   },
   progressBar: {
     borderRadius: 2,
@@ -381,17 +372,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.paperRaised,
     borderColor: colors.hairlineStrong,
-    borderRadius: 28,
+    borderRadius: 33,
     borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     height: FLOATING_TAB_BAR_HEIGHT,
     justifyContent: 'center',
-    left: FLOATING_TAB_BAR_SIDE_MARGIN,
-    paddingBottom: 7,
+    paddingBottom: 6,
     paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
-    paddingTop: 7,
+    paddingTop: 6,
     position: 'absolute',
-    right: FLOATING_TAB_BAR_SIDE_MARGIN,
     zIndex: 50,
   },
   tabLabel: {
@@ -428,8 +417,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   tabItemActive: {
-    backgroundColor: colors.greigeChip,
-    borderColor: colors.hairlineStrong,
+    borderColor: 'transparent',
   },
   tabItemPressed: {
     opacity: 0.72,

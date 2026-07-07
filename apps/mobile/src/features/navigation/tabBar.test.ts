@@ -22,15 +22,17 @@ describe('tab bar treatment', () => {
   it('uses a legible Wealthsimple-style floating app tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 70');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 66');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
+    expect(source).toContain('FLOATING_TAB_BAR_MAX_WIDTH');
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
     expect(source).toContain('MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('TAB_ITEM_HEIGHT');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RESET');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
-    expect(source).toContain('ACTIVE_TAB_SHADOW');
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('tabBarHorizontalInset');
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');
@@ -42,22 +44,20 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabBarShowLabel: false');
     expect(source).toContain('useKeyboardVisible');
     expect(source).toContain('Keyboard.addListener');
-    expect(source).toContain('tabBarActiveTintColor: colors.clayDeep');
-    expect(source).toContain('tabBarInactiveTintColor: colors.ink');
+    expect(source).toContain('tabBarActiveTintColor: colors.ink');
+    expect(source).toContain('tabBarInactiveTintColor: colors.mutedStrong');
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
     expect(source).toContain('backgroundColor: colors.paperRaised');
     expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
-    expect(source).toContain('transform: [{ translateY: -0.75 }]');
-    expect(source).toContain('backgroundColor: colors.greigeChip');
     expect(source).toContain('backgroundColor: colors.paperRaised');
     expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderColor: colors.hairlineStrong');
-    expect(source).toContain('borderRadius: 28');
+    expect(source).toContain('borderRadius: 33');
     expect(source).toContain("position: 'absolute'");
-    expect(source).toContain('left: FLOATING_TAB_BAR_SIDE_MARGIN');
-    expect(source).toContain('right: FLOATING_TAB_BAR_SIDE_MARGIN');
+    expect(source).toContain('left: tabBarHorizontalInset');
+    expect(source).toContain('right: tabBarHorizontalInset');
     expect(source).toContain('zIndex: 50');
     expect(source).toContain('height: FLOATING_TAB_BAR_HEIGHT');
     expect(source).toContain('accessibilityRole="tablist"');
@@ -82,12 +82,15 @@ describe('tab bar treatment', () => {
     expect(source).toContain('testID={`bottom-tab-${route.name}`}');
     expect(source).not.toContain('tabActiveRail');
     expect(source).not.toContain('tabActiveRailVisible');
+    expect(source).not.toContain('ACTIVE_TAB_SHADOW');
+    expect(source).not.toContain('iconShellActive');
     expect(source).not.toContain('iconShellActive: {\n    backgroundColor: colors.ink');
     expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
     expect(source).not.toContain('focused ? colors.paperRaised : colors.mutedStrong');
     expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
+    expect(source).not.toContain('backgroundColor: colors.greigeChip');
   });
 
   it('renders tab labels directly inside protected one-line phone geometry', () => {
