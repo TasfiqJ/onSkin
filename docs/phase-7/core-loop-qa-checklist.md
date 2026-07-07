@@ -135,6 +135,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`; it
   does not replace native photo/toggle QA, live authenticated consent-ledger/RLS
   evidence, fairness validation, or final legal consent-copy review.
+- 2026-07-07: Codex in-app browser Expo web E2E at 320 x 568 covers the
+  first-use `/progress/capture` local-only consent gate after the safe-area
+  overlay hardening. The gate renders complete on-device/no-faceprint/cloud-
+  separate/lost-phone-tradeoff copy, keeps `Take photos. On device only` at
+  52 px and `Not now` at 48 px, has zero horizontal overflow, and tapping
+  `Not now` returns to `/progress` with the first-photo CTA and bottom tabs
+  still tappable. Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`; it does not
+  replace native iOS/Android notch, home-indicator, camera-permission, or real
+  camera-start QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers conflict/share direct-entry
   recovery for missing and unshareable states. `/conflict/missing-rule-e2e`
   shows the stale timing-note explanation, warns that stale routine advice is

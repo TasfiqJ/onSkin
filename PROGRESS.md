@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the first-use `/progress/capture` consent and recovery overlays so
+  their scroll padding includes safe-area insets. Live Codex in-app browser
+  Expo web evidence at 320 x 568 on the current branch verifies the local-only
+  consent gate keeps complete privacy copy visible, exposes `Take photos. On
+  device only` as a 52 px control and `Not now` as a 48 px control, has zero
+  horizontal overflow, and routes `Not now` back to `/progress` with the
+  first-photo CTA and tab bar targets still 54 px+. Focused
+  `progressRoutes.test.ts` passes. Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`; native
+  notch/home-indicator device confirmation remains in `docs/FOR_TAS_TO_DO.md`.
+
 - Verified the realistic shelf-label routine branches in the Codex in-app
   browser at 320 x 568. From `/onboarding/products`, adding `Retinol 0.3%
   Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` produces a

@@ -122,6 +122,11 @@ Status: needs-device-verification
   failed local save does not open the camera or permission prompt, retry saves
   consent before permission, and the app remains past the consent gate after
   restart.
+- Verify first-use Progress photo consent, camera-unavailable, and permission
+  recovery overlays on physical iOS and Android devices with real safe-area
+  insets: notch/status bar, home indicator/gesture nav, and short-screen
+  layouts must keep the primary action and `Not now` exit fully visible and
+  tappable.
 - Verify RevenueCat win-back eligible and ineligible states on native builds, including the fallback to the current Pro plan when no native offer exists.
 - Decide whether native OCR is in V1. Default is hidden unless real OCR passes device QA.
 

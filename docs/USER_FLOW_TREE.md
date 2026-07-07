@@ -481,6 +481,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: iOS and Android; Expo web for consent-copy and layout route checks.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/progress/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-current-compact-check/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`
 
 ### Path A: Happy Path
 
@@ -509,6 +510,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/progress/capture` without prior `photo_capture` consent and inspect the consent gate at a compact phone size.
   - Expected result: The consent gate says photos stay on-device, no faceprint or biometric template is stored, cloud backup is a separate choice, and backup-off/lost-phone tradeoff is visible before the first capture. Capture-frame labels, shutter copy, and camera preview chrome are not rendered until photo consent is saved. The Take photos and Not now controls remain readable and tappable on a 320 x 568 phone viewport.
   - Evidence: Phone screenshot, visible-text snapshot, and 320 px button-geometry snapshot.
+  - Current local evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 verifies direct `/progress/capture` renders the complete local-only consent gate with no pre-consent capture chrome, 52 px `Take photos. On device only`, 48 px `Not now`, zero horizontal overflow, and safe recovery to `/progress` after tapping `Not now`. The overlay source now adds top and bottom safe-area insets to its scroll padding; native notch/home-indicator verification remains device QA.
 - Branch: camera start or photo capture failure
   - Priority: Critical
   - Automate later: Yes
