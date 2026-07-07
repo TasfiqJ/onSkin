@@ -14,6 +14,12 @@ import { localDateString } from '@/features/today/useToday';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
+import {
+  normalizeProgressCompletionDate,
+  normalizeProgressCount,
+  normalizeProgressLongestStreak,
+} from './progressSanitizers';
+
 // Calm, forgiving progress data (docs/03 §6 + docs/07 §4): weekly adherence, a
 // month heat-map, and the freeze-aware streak. The streak/freeze logic lives in the
 // pure, tested `features/streak/streak.ts`; this hook loads the completion log and
@@ -59,10 +65,10 @@ export function useProgress() {
             .from('routine_completions')
             .select('completed_date')
             .gte('completed_date', localDateString(lookback));
-          completions = (data ?? []).filter(
-            (completion): completion is ServerCompletion =>
-              typeof completion.completed_date === 'string',
-          );
+          completions = (data ?? [])
+            .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
+            .filter((completedDate): completedDate is string => Boolean(completedDate))
+            .map((completedDate) => ({ completed_date: completedDate }));
         } catch {
           completions = [];
         }
@@ -73,7 +79,7 @@ export function useProgress() {
             .select('longest_streak')
             .limit(1)
             .maybeSingle();
-          serverLongest = profile?.longest_streak ?? 0;
+          serverLongest = normalizeProgressLongestStreak(profile?.longest_streak);
         } catch {
           serverLongest = 0;
         }
@@ -82,16 +88,27 @@ export function useProgress() {
       const countByDate = new Map<string, number>();
       const completed = new Set<string>();
       for (const c of completions) {
-        completed.add(c.completed_date);
-        countByDate.set(c.completed_date, (countByDate.get(c.completed_date) ?? 0) + 1);
+        const completedDate = normalizeProgressCompletionDate(c.completed_date);
+        if (!completedDate) continue;
+        completed.add(completedDate);
+        countByDate.set(completedDate, (countByDate.get(completedDate) ?? 0) + 1);
       }
       // Union the local-first store (the v1 source of truth) so on-device check-offs
       // drive the streak/heat-map even before the backend exists. Same date in both
       // sources represents the same completions, so take the max (never double-count).
       const localDates = await getCompletedDates();
       const localCounts = await getCountByDate();
-      for (const d of localDates) completed.add(d);
-      for (const [d, n] of localCounts) countByDate.set(d, Math.max(countByDate.get(d) ?? 0, n));
+      for (const d of localDates) {
+        const completedDate = normalizeProgressCompletionDate(d);
+        if (completedDate) completed.add(completedDate);
+      }
+      for (const [d, n] of localCounts) {
+        const completedDate = normalizeProgressCompletionDate(d);
+        const count = normalizeProgressCount(n);
+        if (completedDate && count > 0) {
+          countByDate.set(completedDate, Math.max(countByDate.get(completedDate) ?? 0, count));
+        }
+      }
 
       // The freeze state is computed deterministically from the completion gaps
       // (streak.ts), which is the v1 source of truth and recomputes identically on

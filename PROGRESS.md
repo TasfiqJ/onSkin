@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened progress/streak aggregation so malformed server completion dates,
+  unsafe local heat-map counts, and invalid server personal-best streak values
+  are ignored before they can distort adherence, heat-map, streak, milestone, or
+  review-prompt surfaces.
+
 - Hardened the Today completion loop and offline completion queue so impossible
   calendar dates, blank step IDs, duplicate local check-offs, malformed queue
   rows, and invalid enqueue timestamps are normalized or dropped before they can
