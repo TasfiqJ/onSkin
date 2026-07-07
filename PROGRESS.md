@@ -10,10 +10,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   The quiz now verifies a granted local health-data collection consent before
   rendering any quiz questions and redirects missing, declined, or malformed
   consent state back to `/onboarding/consent`. Updated the onboarding route
-  contract and the flow tree. Human-simulated Expo web E2E at 320 x 568 verified
-  consent decline -> direct quiz route -> consent redirect -> refresh remains on
-  consent, with evidence in
-  `test-results/human-e2e/2026-07-07/onboarding-quiz-consent-guard/`.
+  contract and the flow tree, and replaced the transient blank guard screen with
+  a visible privacy-check state. Human-simulated Expo web E2E at 320 x 568
+  verified direct quiz route -> consent redirect, refresh recovery, and the
+  explicit agree -> quiz path, with evidence in
+  `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`.
 
 - Hardened behavioural notification delivery so a successful local notification
   is not reported as failed just because the best-effort Supabase metadata log
