@@ -130,6 +130,9 @@ function CheckRow({
 }) {
   const accent = dark ? colors.clayBright : colors.clay;
   const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;
+  const nameLineCount = compact ? 2 : undefined;
+  const subLineCount = compact ? 1 : undefined;
+
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -169,20 +172,23 @@ function CheckRow({
       </View>
       <View className="flex-1">
         <Text
-          numberOfLines={compact ? 1 : undefined}
+          numberOfLines={nameLineCount}
           variant="body"
           className={cn(
             'font-sans-medium',
             compact ? 'text-[15px]' : 'text-[15.5px]',
             state === 'done' && 'line-through',
           )}
-          style={{ color: state === 'done' ? colors.mutedLight : dark ? colors.cream : colors.ink }}
+          style={{
+            color: state === 'done' ? colors.mutedLight : dark ? colors.cream : colors.ink,
+            lineHeight: compact ? 18 : undefined,
+          }}
         >
           {name}
         </Text>
         {displaySub ? (
           <Text
-            numberOfLines={compact ? 1 : undefined}
+            numberOfLines={subLineCount}
             className="mt-0.5 text-[12.5px]"
             style={{
               color: dark ? 'rgba(244,239,231,0.45)' : colors.muted,
