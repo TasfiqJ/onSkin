@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-06
 
+- Updated the Phase 9 privacy payload audit and data inventory to match the
+  runtime-branded privacy posture. Lock-screen notification titles are now
+  audited against `BRAND.appName`, and the app-switcher shield is documented as
+  a neutral app privacy shield instead of a hardcoded legacy brand surface.
+
 - Replaced legacy `OnSkin` wording in Phase 10 beta-facing tester templates
   with the working `RoutineKind` candidate while keeping the final-brand
   clearance caveat. The tester brief and Day 14 survey no longer train beta

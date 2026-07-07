@@ -176,10 +176,11 @@ block(
 );
 block(
   errors,
-  /LOCK_SCREEN_NOTIFICATION_TITLE\s*=\s*'OnSkin'/.test(notificationCopySource) &&
+  /import\s+\{\s*BRAND\s*\}\s+from\s+'@\/lib\/brand'/.test(notificationCopySource) &&
+    /LOCK_SCREEN_NOTIFICATION_TITLE\s*=\s*BRAND\.appName/.test(notificationCopySource) &&
     /function notificationContentForLockScreen/.test(notificationCopySource) &&
     /body:\s*c\.discreet/.test(notificationCopySource),
-  'Notification lock-screen content must use the generic title and discreet body helper.',
+  'Notification lock-screen content must use the runtime app brand and discreet body helper.',
 );
 block(
   errors,

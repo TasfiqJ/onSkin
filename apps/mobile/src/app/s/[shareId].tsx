@@ -12,10 +12,8 @@ export default function PublicShareLinkScreen() {
   const safeShareId = shareId && isSafeOpaqueId(shareId) ? shareId : null;
 
   useEffect(() => {
-    track(
-      'share_link_opened',
-      safeShareId ? { share_id: safeShareId } : { reason: 'invalid_share_id' },
-    );
+    const props = safeShareId ? { share_id: safeShareId } : { reason: 'invalid_share_id' };
+    track('share_link_opened', props);
   }, [safeShareId]);
 
   return (
