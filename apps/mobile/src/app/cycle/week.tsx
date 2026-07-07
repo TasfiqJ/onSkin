@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { withProGate } from '@/features/subscription/ProGate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle, type CycleData } from '@/features/scheduler/useCycle';
@@ -16,10 +17,15 @@ import { colors } from '@/theme/tokens';
 function WeekScreen() {
   const { data } = useCycle();
 
-  const cycle = data?.cycle ?? null;
-  const variantLabel = cycle ? `${cycle.variant}, ${cycle.lengthNights} nights` : 'simple daily';
-  const resolution = data ? resolutionNote(data) : null;
-  const schedulerNote = data?.notes[0] ?? null;
+  const cadenceReady = canUseRoutineCadence();
+  const cycle = cadenceReady ? (data?.cycle ?? null) : null;
+  const variantLabel = !cadenceReady
+    ? 'review gate'
+    : cycle
+      ? `${cycle.variant}, ${cycle.lengthNights} nights`
+      : 'simple daily';
+  const resolution = cadenceReady && data ? resolutionNote(data) : null;
+  const schedulerNote = cadenceReady ? (data?.notes[0] ?? null) : null;
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
@@ -30,19 +36,23 @@ function WeekScreen() {
             tone="night"
             onPress={() => backOrReplace(router)}
           />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Cycle settings"
-            onPress={() => {
-              haptics.select();
-              router.push('/cycle/settings');
-            }}
-            className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
-          >
-            <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
-              Settings
-            </Text>
-          </Pressable>
+          {cadenceReady ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Cycle settings"
+              onPress={() => {
+                haptics.select();
+                router.push('/cycle/settings');
+              }}
+              className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
+            >
+              <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayBright }}>
+                Settings
+              </Text>
+            </Pressable>
+          ) : (
+            <View className="min-h-[48px] min-w-[48px]" />
+          )}
         </View>
 
         <Text variant="label" tone="inverseMuted" className="mt-1 uppercase">
@@ -57,12 +67,12 @@ function WeekScreen() {
           This week, by night.
         </Text>
 
-        {data?.paused ? (
+        {cadenceReady && data?.paused ? (
           <Banner
             text="Your cycle is paused. Resume whenever you're ready."
             onPress={() => router.push('/cycle/disruption')}
           />
-        ) : data?.recovery.active ? (
+        ) : cadenceReady && data?.recovery.active ? (
           <Banner
             text={`Recovery mode · day ${data.recovery.day} of ${data.recovery.days}. Barrier support only.`}
             onPress={() => router.push('/cycle/recovery')}
@@ -85,7 +95,9 @@ function WeekScreen() {
           </Text>
         </View>
 
-        {cycle ? (
+        {!cadenceReady ? (
+          <ReviewGateEmptyState />
+        ) : cycle ? (
           <>
             <Text variant="label" tone="inverseMuted" className="mb-2.5 mt-5">
               EVENINGS
@@ -225,6 +237,23 @@ function WeekScreen() {
         )}
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function ReviewGateEmptyState() {
+  return (
+    <View className="mt-6 rounded-2xl px-5 py-6" style={{ backgroundColor: colors.nightSurface }}>
+      <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
+        Cycle guidance is under review.
+      </Text>
+      <Text
+        className="mt-2 text-[13px]"
+        style={{ color: 'rgba(244,239,231,0.55)', lineHeight: 19 }}
+      >
+        Your AM/PM routine still works. We publish skin-cycling cadence only after dermatologist and
+        cosmetic-chemist review.
+      </Text>
+    </View>
   );
 }
 

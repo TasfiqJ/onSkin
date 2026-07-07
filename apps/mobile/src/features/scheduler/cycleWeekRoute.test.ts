@@ -31,7 +31,7 @@ describe('cycle week route scheduler notes', () => {
     expect(whyTonight).toContain('useLocalSearchParams');
     expect(whyTonight).toContain('DATE_PARAM_RE');
     expect(whyTonight).toContain('const selectedDate = params.date');
-    expect(whyTonight).toContain('data.weekAhead.find((p) => p.dateISO === selectedDate)');
+    expect(whyTonight).toContain('weekAhead.find((p) => p.dateISO === selectedDate)');
     expect(whyTonight).toContain("isTonight ? 'WHY THIS, TONIGHT?' : 'WHY THIS NIGHT?'");
     expect(whyTonight).toContain(
       'slotTitle(selectedNight.night.slot, isTonight, selectedNight.weekday)',
@@ -97,10 +97,52 @@ describe('cycle week route scheduler notes', () => {
     const source = readAppRoute('cycle/week.tsx');
     const noteRenderCount = source.match(/<SchedulerNote note=\{schedulerNote\} \/>/g) ?? [];
 
-    expect(source).toContain('const schedulerNote = data?.notes[0] ?? null;');
+    expect(source).toContain(
+      'const schedulerNote = cadenceReady ? (data?.notes[0] ?? null) : null;',
+    );
     expect(noteRenderCount).toHaveLength(2);
     expect(source.indexOf('No actives to cycle yet.')).toBeLessThan(
       source.lastIndexOf('<SchedulerNote note={schedulerNote} />'),
     );
+  });
+
+  it('keeps production cycle surfaces honest while cadence is review-gated', () => {
+    const week = readAppRoute('cycle/week.tsx');
+    const settings = readAppRoute('cycle/settings.tsx');
+    const whyTonight = readAppRoute('cycle/why-tonight.tsx');
+
+    expect(week).toContain("import { canUseRoutineCadence } from '@/features/routine/reviewGate';");
+    expect(week).toContain('const cadenceReady = canUseRoutineCadence();');
+    expect(week).toContain("!cadenceReady\n    ? 'review gate'");
+    expect(week).toContain('cadenceReady && data?.paused ? (');
+    expect(week).toContain(') : cadenceReady && data?.recovery.active ? (');
+    expect(week).toContain('!cadenceReady ? (');
+    expect(week).toContain('<ReviewGateEmptyState />');
+    expect(week).toContain('cadenceReady && data?.paused');
+    expect(week).toContain('cadenceReady && data?.recovery.active');
+    expect(week).toContain('Cycle guidance is under review.');
+    expect(week).toContain('We publish skin-cycling cadence only after dermatologist');
+    expect(week).toContain('{cadenceReady ? (');
+
+    expect(settings).toContain(
+      "import { canUseRoutineCadence } from '@/features/routine/reviewGate';",
+    );
+    expect(settings).toContain('const cadenceReady = canUseRoutineCadence();');
+    expect(settings).toContain('{!cadenceReady ? (');
+    expect(settings).toContain('Cycle settings open after review.');
+    expect(settings).toContain(
+      'hidden in production until clinical and cosmetic-chemistry review closes.',
+    );
+
+    expect(whyTonight).toContain(
+      "import { canUseRoutineCadence } from '@/features/routine/reviewGate';",
+    );
+    expect(whyTonight).toContain('const cadenceReady = canUseRoutineCadence();');
+    expect(whyTonight).toContain('const cycle = cadenceReady ? (data?.cycle ?? null) : null;');
+    expect(whyTonight).toContain('const tonight = cadenceReady ? (data?.tonight ?? null) : null;');
+    expect(whyTonight).not.toContain('const cycle = data?.cycle;');
+    expect(whyTonight).not.toContain('const tonight = data?.tonight;');
+    expect(whyTonight).toContain('Cycle guidance is under review.');
+    expect(whyTonight).toContain('Your daily AM/PM routine is still available.');
   });
 });

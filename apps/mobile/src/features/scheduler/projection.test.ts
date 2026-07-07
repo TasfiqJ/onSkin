@@ -1,9 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 
 import { orchestrate, type SchedulerProfile } from './orchestrate';
 import { addDays, nextSlotDate, nightFor, nightIndex, weekAhead } from './projection';
 
 // The projection algorithm (docs/05 §3): pure, local-day aware, safe modulo.
+// The cycle fixture uses unreviewed cadence rules, which are dev-only until B-DERM-REVIEW.
+(globalThis as { __DEV__?: boolean }).__DEV__ = true;
+
 const base: SchedulerProfile = { sensitivity: 'neutral', pregnancy: false, goals: [] };
 const cycle = orchestrate(
   [
@@ -12,6 +15,10 @@ const cycle = orchestrate(
   ],
   base,
 ).cycle!;
+
+afterAll(() => {
+  delete (globalThis as { __DEV__?: boolean }).__DEV__;
+});
 
 describe('projection (docs/05 §3)', () => {
   it('night_index wraps with the cycle length', () => {

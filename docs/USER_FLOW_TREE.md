@@ -615,6 +615,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open the same routes with an active Pro or reverse-trial entitlement.
   - Expected result: The intended Pro surface renders and remains usable.
   - Evidence: Screenshot of at least one unlocked route per feature group.
+- Branch: unreviewed cycle-cadence production gate
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With an active Pro or reverse-trial entitlement in a non-dev build while routine cadence review is still closed, open `/cycle/week`, `/cycle/settings`, and `/cycle/why-tonight` directly.
+  - Expected result: Cycle week, settings, and explainability surfaces show review-gate copy, keep the daily AM/PM routine available, hide cadence-specific controls or pause/recovery banners, and do not promise that adding an active will build a cycle until dermatologist and cosmetic-chemist review opens the gate.
+  - Evidence: Route screenshots or UI snapshots plus the cadence-gate contract test output.
 - Branch: Pro direct-entry route exits
   - Priority: Important
   - Automate later: Yes

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -46,8 +47,9 @@ function TraceRow({ tag, children, last }: { tag: string; children: string; last
 export default function WhyTonightScreen() {
   const { data } = useCycle();
   const params = useLocalSearchParams<{ date?: string }>();
-  const cycle = data?.cycle;
-  const tonight = data?.tonight;
+  const cadenceReady = canUseRoutineCadence();
+  const cycle = cadenceReady ? (data?.cycle ?? null) : null;
+  const tonight = cadenceReady ? (data?.tonight ?? null) : null;
   const selectedDate = params.date && DATE_PARAM_RE.test(params.date) ? params.date : null;
 
   useEffect(() => {
@@ -58,16 +60,19 @@ export default function WhyTonightScreen() {
     return (
       <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
         <Text variant="body" tone="inverseMuted" className="py-6 text-center">
-          No cycle is running yet. Add an active to get started.
+          {cadenceReady
+            ? 'No cycle is running yet. Add an active to get started.'
+            : 'Cycle guidance is under review. Your daily AM/PM routine is still available.'}
         </Text>
         <Button label="Got it" variant="inverse" onPress={() => backOrReplace(router)} />
       </Sheet>
     );
   }
 
-  const todayProjection = data.weekAhead[0] ?? null;
+  const weekAhead = data?.weekAhead ?? [];
+  const todayProjection = weekAhead[0] ?? null;
   const selectedProjection = selectedDate
-    ? data.weekAhead.find((p) => p.dateISO === selectedDate)
+    ? weekAhead.find((p) => p.dateISO === selectedDate)
     : todayProjection;
   const selectedNight = selectedProjection
     ? {

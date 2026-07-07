@@ -2099,7 +2099,9 @@ instead of `0 of 0`. Human E2E verified the Expo web flow with only `Mineral SPF
 Added a shared `B-DERM-REVIEW` gate for cycle cadence and ramp-frequency guidance. Development builds still exercise the
 cycle/ramp fixtures, but production builds now withhold unreviewed cycle templates, cycling-night assignments, scheduler
 cycles, and initial ramp states until the routine cadence rules are reviewed. Focused routine, scheduler, and conflict
-claim-safety tests pin the production default.
+claim-safety tests pin the production default. Follow-up route hardening now gates the cycle week, settings, and
+why-tonight surfaces themselves in non-dev builds; production-mode Expo web E2E evidence is in
+`test-results/human-e2e/2026-07-07/cycle-cadence-review-gate/`.
 
 ## Open questions for the founder
 
