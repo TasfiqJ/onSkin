@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the encrypted local private KV reader so a corrupt encrypted envelope
+  is removed and treated as missing instead of throwing through shelf, routine,
+  completion, or offline-queue callers. Legacy plaintext migration remains
+  readable, encrypted roundtrips still hide values, and focused storage/core-loop
+  tests cover the corrupt-envelope cleanup path.
+
 - Fixed onboarding Products category chips on 320 x 568 phones. The optional
   category selector now uses a compact horizontal rail, preserving 48 px chip
   targets while keeping the last category from clipping under the fixed footer.

@@ -59,10 +59,15 @@ export async function getPrivateItem(key: string): Promise<string | null> {
   if (!envelope) return raw;
 
   const contentKey = await getContentKey();
-  const plaintext = xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
-    hexToBytes(envelope.ciphertextHex),
-  );
-  return bytesToUtf8(plaintext);
+  try {
+    const plaintext = xchacha20poly1305(contentKey, hexToBytes(envelope.nonceHex)).decrypt(
+      hexToBytes(envelope.ciphertextHex),
+    );
+    return bytesToUtf8(plaintext);
+  } catch {
+    await AsyncStorage.removeItem(key).catch(() => undefined);
+    return null;
+  }
 }
 
 export async function setPrivateItem(key: string, value: string): Promise<void> {
