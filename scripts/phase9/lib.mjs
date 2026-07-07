@@ -91,7 +91,8 @@ export function warn(warnings, condition, message) {
   if (!condition) warnings.push(message);
 }
 
-const PLACEHOLDER_ENV_VALUE = /example\.com|your-project|x{4,}|\.{3,}|pending/i;
+const PLACEHOLDER_ENV_VALUE =
+  /example\.com|your-project|replace-with|__blocked_placeholder__|x{4,}|\.{3,}|pending/i;
 const PUBLIC_PRODUCTION_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
 const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;

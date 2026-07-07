@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 6 payment readiness so RevenueCat public keys, product IDs,
+  webhook auth/signing/secret keys, and policy URLs must be production-shaped
+  values before strict payment gates can pass. Added a no-network payments env
+  smoke that exercises the strict pass case plus placeholder keys, local product
+  IDs, blocked webhook secrets, and malformed policy URLs.
+
 - Hardened Phase 8 public growth domain normalization so reserved pseudo-public
   hostnames like `.localhost`, `.local`, `.test`, `.invalid`, and `.example`
   cannot produce first-party share links or Conflict Card domains. Focused
@@ -2388,6 +2394,15 @@ Aligned runtime public growth-domain normalization with the stricter launch gate
 card handles now reject reserved `.local`, `.test`, `.invalid`, and `.example` hostnames instead of composing public
 links from local or documentation-only domains. Focused growth attribution/card-copy tests and the Phase 8 readiness
 check pass; final production domain and app-link evidence remain external blockers for Tas.
+
+### Phase 6 payment env readiness hardening (2026-07-07)
+
+Hardened the payments/entitlements readiness gate so strict production payment exit cannot pass with copied RevenueCat
+placeholders, local `routinekind_*_dev` product IDs, blocked webhook secrets, or malformed policy/support URLs. The
+checker now accepts process-env overrides for CI/staging evidence, validates `appl_` and `goog_` RevenueCat public keys,
+requires final product-ID shape, and reuses the shared production HTTPS URL guard. Added a no-network
+`phase6:check-payments-env-smoke` and wired it into `phase6:verify`; real RevenueCat dashboard keys, products, webhook
+secrets, store restore evidence, finance signoff, and named signoff remain Tas-owned blockers.
 
 ## Open questions for the founder
 

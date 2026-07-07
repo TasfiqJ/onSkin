@@ -2,6 +2,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+import { placeholderEnvValue, productionUrl } from '../phase9/lib.mjs';
+
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
 const errors = [];
@@ -43,8 +45,18 @@ function has(path, pattern) {
   return pattern.test(read(path));
 }
 
-function isLocalProductId(value) {
-  return !value || /_dev$|_local$|placeholder|example/i.test(value);
+function revenueCatPublicKey(value, prefix) {
+  const trimmed = String(value ?? '').trim();
+  return !placeholderEnvValue(trimmed) && new RegExp(`^${prefix}_[A-Za-z0-9]{8,}$`).test(trimmed);
+}
+
+function finalProductId(value) {
+  const trimmed = String(value ?? '').trim();
+  return (
+    !placeholderEnvValue(trimmed) &&
+    /^[A-Za-z0-9][A-Za-z0-9._-]{2,119}$/.test(trimmed) &&
+    !/(^|[._-])(dev|local|placeholder|example)([._-]|$)/i.test(trimmed)
+  );
 }
 
 const pkg = readJson('apps/mobile/package.json');
@@ -53,7 +65,7 @@ const eas = readJson('apps/mobile/eas.json');
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile();
 const productionEasEnv = eas.build?.production?.env ?? {};
-const prodEnv = { ...exampleEnv, ...localEnv, ...productionEasEnv };
+const prodEnv = { ...exampleEnv, ...localEnv, ...productionEasEnv, ...process.env };
 
 require(Boolean(
   pkg.dependencies?.['react-native-purchases'],
@@ -133,23 +145,23 @@ warn(
   'Production RevenueCat entitlement id should be `pro`.',
 );
 warn(
-  Boolean(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY),
+  revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY, 'appl'),
   'Missing EXPO_PUBLIC_REVENUECAT_IOS_KEY for production.',
 );
 warn(
-  Boolean(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY),
+  revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY, 'goog'),
   'Missing EXPO_PUBLIC_REVENUECAT_ANDROID_KEY for production.',
 );
 warn(
-  !isLocalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
+  finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
   'Production annual RevenueCat product id must be a final App Store/Play product id.',
 );
 warn(
-  !isLocalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
+  finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
   'Production monthly RevenueCat product id must be a final App Store/Play product id.',
 );
 warn(
-  !isLocalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID),
+  finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID),
   'Production reverse-trial RevenueCat product id must be final or intentionally app-granted in the dashboard/runbook.',
 );
 warn(
@@ -161,14 +173,26 @@ warn(
   '.env.example must document REVENUECAT_SECRET_API_KEY.',
 );
 warn(
+  !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_AUTH),
+  'Missing production RevenueCat webhook shared auth.',
+);
+warn(
+  !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
+  'Missing production RevenueCat webhook signing secret.',
+);
+warn(
+  !placeholderEnvValue(prodEnv.REVENUECAT_SECRET_API_KEY),
+  'Missing production RevenueCat secret API key.',
+);
+warn(
   prodEnv.BRAND_LEGAL_CLEARANCE === 'cleared',
   'BRAND_LEGAL_CLEARANCE is not cleared for production.',
 );
 
 for (const key of ['EXPO_PUBLIC_PRIVACY_URL', 'EXPO_PUBLIC_TERMS_URL', 'EXPO_PUBLIC_SUPPORT_URL']) {
   warn(
-    Boolean(prodEnv[key]) && !/example\.com/i.test(prodEnv[key]),
-    `${key} must be a real production URL.`,
+    productionUrl(prodEnv[key]),
+    `${key} must be a real production HTTPS URL.`,
   );
 }
 
