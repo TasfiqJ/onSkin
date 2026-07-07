@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { Modal, Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
@@ -12,6 +12,75 @@ import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
 const ONBOARDING_PRODUCT_TARGET = 3;
+
+function CategoryPickerSheet({
+  visible,
+  selectedCategory,
+  sheetMaxHeight,
+  onSelect,
+  onClose,
+}: {
+  visible: boolean;
+  selectedCategory: string | null;
+  sheetMaxHeight: number;
+  onSelect: (category: string | null) => void;
+  onClose: () => void;
+}) {
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      accessibilityLabel="Choose product category"
+      onRequestClose={onClose}
+    >
+      <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
+        <Pressable
+          className="flex-1"
+          accessibilityLabel="Dismiss category picker"
+          accessibilityRole="button"
+          onPress={onClose}
+        />
+        <View
+          accessibilityViewIsModal
+          className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
+          style={{ maxHeight: sheetMaxHeight }}
+        >
+          <View
+            className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
+            style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+          />
+          <View className="mb-4 flex-row items-center justify-between gap-3">
+            <Text variant="titleSm" className="flex-1">
+              Product category
+            </Text>
+            <Pressable
+              accessibilityLabel="Close category picker"
+              accessibilityRole="button"
+              className="min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3"
+              onPress={onClose}
+            >
+              <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clay }}>
+                Close
+              </Text>
+            </Pressable>
+          </View>
+          <View className="flex-row flex-wrap gap-2">
+            {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
+              <Chip
+                key={c.id}
+                label={c.label}
+                selected={selectedCategory === c.id}
+                className="px-4"
+                onPress={() => onSelect(selectedCategory === c.id ? null : c.id)}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
 
 // 06 · Current products intake (docs/01 §2 step 6, docs/04 §4.7). Seeds the shelf with
 // addedVia:'onboarding' so the reveal and the first routine/conflict pass are built
@@ -26,8 +95,10 @@ export default function ProductsScreen() {
   const m = useShelfMutations();
   const [name, setName] = useState('');
   const [category, setCategory] = useState<string | null>(null);
+  const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
   const added = data?.items ?? [];
   const compactPhone = height < 640;
+  const pickerSheetMaxHeight = Math.max(280, height - 48);
   const compactFooterAdds = compactPhone && name.trim().length > 0;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
   const hasTargetProducts = remainingToTarget === 0;
@@ -48,6 +119,8 @@ export default function ProductsScreen() {
     : added.length > 0
       ? `${remainingToTarget} more ${remainingProductNoun} gives your first insight more to work with.`
       : 'Three products gives your first routine enough context to spot useful gaps or timing notes.';
+  const selectedCategoryLabel =
+    ONBOARDING_PRODUCT_CATEGORIES.find((c) => c.id === category)?.label ?? null;
 
   useEffect(() => {
     trackProductAddStarted('onboarding');
@@ -60,6 +133,11 @@ export default function ProductsScreen() {
   function focusNextProduct() {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
     requestAnimationFrame(() => inputRef.current?.focus());
+  }
+
+  function selectCategory(nextCategory: string | null) {
+    setCategory(nextCategory);
+    setCategoryPickerOpen(false);
   }
 
   async function add() {
@@ -75,6 +153,7 @@ export default function ProductsScreen() {
     });
     setName('');
     setCategory(null);
+    setCategoryPickerOpen(false);
     if (compactPhone) scrollToShelfList();
   }
 
@@ -147,20 +226,33 @@ export default function ProductsScreen() {
               CATEGORY · OPTIONAL
             </Text>
             {compactPhone ? (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 4, paddingRight: 8 }}
-              >
-                {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
-                  <Chip
-                    key={c.id}
-                    label={c.label}
-                    selected={category === c.id}
-                    onPress={() => setCategory(category === c.id ? null : c.id)}
-                  />
-                ))}
-              </ScrollView>
+              <>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    selectedCategoryLabel
+                      ? `Category, ${selectedCategoryLabel}`
+                      : 'Choose product category'
+                  }
+                  onPress={() => setCategoryPickerOpen((open) => !open)}
+                  className="min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
+                  style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
+                >
+                  <Text variant="body" className="font-sans-medium">
+                    {selectedCategoryLabel ?? 'Choose category'}
+                  </Text>
+                  <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
+                    &gt;
+                  </Text>
+                </Pressable>
+                <CategoryPickerSheet
+                  visible={categoryPickerOpen}
+                  selectedCategory={category}
+                  sheetMaxHeight={pickerSheetMaxHeight}
+                  onSelect={selectCategory}
+                  onClose={() => setCategoryPickerOpen(false)}
+                />
+              </>
             ) : (
               <View className="flex-row flex-wrap gap-2">
                 {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
