@@ -2149,6 +2149,15 @@ recovering through `APP_SHELF_ROUTE`. Expo web E2E verified the 320 x 568 route 
 button, zero horizontal overflow, and lands on `/shelf` after tap. Evidence is in
 `test-results/human-e2e/2026-07-07/conflict-routes/`.
 
+### Recommendation detail compact explanation table (2026-07-07)
+
+Fixed `/recommendations/[id]` after the compact phone E2E pass showed the `HOW WE DECIDED` key column wrapping
+`evidence` into a broken two-line label. The recommendation detail key column is now non-shrinking, wide enough for the
+longest shipped key, and pinned to one line while explanation values still wrap. Expo web E2E verified the direct For
+You hub, preferences, stale detail recovery, and the fixed `gap:mineral_spf` detail at 320 x 568 with no horizontal
+overflow, no small targets, and unique `Add to shelf` / `Not for me` actions. Evidence is in
+`test-results/human-e2e/2026-07-07/recommendations-direct-entry/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

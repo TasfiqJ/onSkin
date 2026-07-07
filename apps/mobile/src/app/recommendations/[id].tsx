@@ -37,7 +37,12 @@ const ROLE_TO_CATEGORY: Partial<Record<SequencingRole, ProductCategory>> = {
 function HowRow({ k, value, accent }: { k: string; value: string; accent?: string }) {
   return (
     <View className="flex-row gap-2.5">
-      <Text className="font-mono text-[10px]" tone="muted" style={{ width: 64 }}>
+      <Text
+        className="font-mono text-[10px]"
+        tone="muted"
+        numberOfLines={1}
+        style={{ width: 72, flexShrink: 0 }}
+      >
         {k}
       </Text>
       <Text
