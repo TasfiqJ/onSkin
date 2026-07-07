@@ -223,12 +223,12 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`; it does
   not replace native notification permission, OS scheduling, or device timezone/DST
   QA.
-- 2026-07-07: In-app browser E2E at 320 x 568 plus the paywall mobile contract
+- 2026-07-07: In-app browser E2E at 320 x 568 and 390 x 568 plus the paywall mobile contract
   covers lifecycle paywall compact footer buffers: `/paywall/reoffer` and
   `/paywall/downgrade` keep fixed footer actions outside the scroll body, expose
   Terms/Privacy/Restore after a normal scroll with 48 px controls above the fixed
   footer, keep the decline actions 48 px tall with a 32 px bottom buffer, render
-  unavailable-store copy calmly, and have zero horizontal overflow. Evidence is
+  unavailable-store copy calmly, route the decline actions to `/today`, and have zero horizontal overflow. Evidence is
   in
-  `test-results/human-e2e/2026-07-07/paywall-lifecycle-compact-footer-buffer/`;
+  `test-results/human-e2e/2026-07-07/paywall-lifecycle-bottom-buffer/`;
   it does not replace native RevenueCat lifecycle purchase/restore QA.
