@@ -19,10 +19,10 @@ Fresh verification on 2026-07-07:
 
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 160 mobile test files, 1567 tests.
+- `npm test` passed: 165 mobile test files, 1626 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 160 test files, 1567 tests.
+- `npm --workspace apps/mobile run test` passed: 165 test files, 1626 tests.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
 
@@ -67,7 +67,7 @@ Re-run all three after any production-readiness change.
 | Barcode/OCR shelf intake       | needs-device-verification | Live barcode camera path and editable label-capture path exist; native OCR is intentionally disabled until ML Kit/Vision QA | Engineering                                     | Run barcode device matrix, then add/review on-device OCR if it remains a launch claim                                   | Barcode match rate tracked; OCR claim hidden unless real OCR passes beta labels                       |
 | Product catalog                | launch-blocked            | Phase 4 schema/API/parser/source disclosure exists, but no source-cleared launch catalog or beta coverage yet               | Engineering + founder + counsel                 | Clear OBF/CosIng/ODbL posture, run export-based imports, curate beta-driven launch batch, review QA                     | Meaningful beta scan match rate, attribution obligations satisfied, only eligible products drive recs |
 | Routine builder and scheduler  | implemented               | Local deterministic generation exists; V1 uses tap-based reorder controls and does not claim cross-device routine sync      | Engineering + clinical reviewers                | Review rules; keep true drag gestures and server persistence deferred unless they become launch claims                  | Users can generate, follow, adapt, and recover routines without fake claims                           |
-| Today check-off and streaks    | implemented               | Local-first loop exists; device notification and server sync need QA                                                        | Engineering                                     | Verify offline/online completion persistence                                                                            | Day-level check-off and streak behavior remain correct across reinstall/upgrade                       |
+| Today check-off and streaks    | implemented               | Local-first loop exists; Expo web reload persistence evidence exists; device notification and server sync still need QA     | Engineering                                     | Verify native-device persistence, notification opens, and eventual server sync                                          | Day-level check-off and streak behavior remain correct across reinstall/upgrade                       |
 | Guided photo progress          | needs-device-verification | Front-camera still capture and encrypted local file storage exist; face/pose signals are coarse preview estimates           | Engineering + privacy counsel                   | Run physical-device capture/encryption/restart/delete QA; add reviewed face/pose module before precise framing claims   | Physical-device capture passes lighting/framing/local-only tests                                      |
 | Reminders                      | needs-device-verification | Scheduling code exists; physical iOS/Android delivery not verified                                                          | Engineering                                     | Device QA on iOS latest, older iOS, Android latest, Android 14+                                                         | Quiet hours, timezone changes, reinstall, and notification copy pass                                  |
 | Widgets and live activities    | inert                     | In-app previews exist; native WidgetKit/Glance/ActivityKit not built                                                        | Engineering                                     | Keep post-launch unless native build is funded                                                                          | Removed from launch claims or implemented and device-verified                                         |

@@ -19,7 +19,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   comma instead of relying on a cramped single line. Focused route contracts and
   Expo web human-simulated E2E at 320 x 568 and 390 x 844 pass, including
   Preferences navigation and return. Evidence is in
-  `test-results/human-e2e/2026-07-07/recommendations-hub-intro-final/`.
+  `test-results/human-e2e/2026-07-07/recommendations-hub-intro-final/`, with
+  resumed compact-phone geometry and screenshots in
+  `test-results/human-e2e/2026-07-07/recommendations-preferences/`.
+
+- Verified the Today check-off persistence launch criterion on Expo web. At
+  320 x 568, a real morning step toggled from unchecked to checked, the routine
+  count moved from `0 of 3` to `1 of 3`, and a full page reload preserved both
+  the checked row and the count. Evidence is in
+  `test-results/human-e2e/2026-07-07/today-checkoff-reload-persistence/`.
 
 - Clarified the routine reorder launch gate after the docs/03 / blockers pass.
   The route comment and route-contract test now make the V1 behavior explicit:
