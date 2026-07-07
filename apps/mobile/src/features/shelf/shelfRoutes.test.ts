@@ -166,6 +166,24 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('className="mt-3 min-h-[52px] py-3"');
   });
 
+  it('recovers stale product-detail direct entries without a dead empty state', () => {
+    const source = readAppRoute('shelf/[id].tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactMissingDetail = height < 640');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('Product unavailable');
+    expect(source).toContain('This product is no longer on your shelf.');
+    expect(source).toContain('It may have been removed or archived on this device.');
+    expect(source).toContain('Your Shelf is still safe.');
+    expect(source).toContain('label="Back to Shelf"');
+    expect(source).toContain('router.replace(APP_SHELF_ROUTE)');
+    expect(source).toContain('label="Add a product"');
+    expect(source).toContain('className="min-h-[52px] py-3"');
+    expect(source).toContain("router.replace('/shelf/manual')");
+    expect(source).not.toContain('<View className="flex-1 items-center justify-center">');
+  });
+
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 

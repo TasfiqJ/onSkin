@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Repaired stale Shelf product-detail direct entries so a missing `/shelf/[id]`
+  no longer presents a muted one-line empty state with only the top Back icon.
+  The route now shows clear `Product unavailable` copy, keeps the state
+  scrollable on short phones, and provides explicit `Back to Shelf` and
+  `Add a product` recovery actions. Expo web E2E at 320 x 568 verified the
+  recovery state, no horizontal overflow, the Shelf escape, and the manual-add
+  recovery path. Evidence is in
+  `test-results/human-e2e/2026-07-07/shelf-missing-product-recovery/`; the
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-shelf-missing-product-recovery.md`.
+
 - Tightened onboarding product intake around the documented three-product
   first-insight target without blocking users who only have one or two products.
   `/onboarding/products` now shows a 0-3 progress cue, keeps the primary footer

@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
@@ -103,11 +103,13 @@ function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { height } = useWindowDimensions();
   const { data } = useShelf();
   const plan = usePlan();
   const m = useShelfMutations();
   const [editOpen, setEditOpen] = useState(false);
   const [bestOpen, setBestOpen] = useState(false);
+  const compactMissingDetail = height < 640;
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
   const closeToShelf = () => backOrReplace(router, APP_SHELF_ROUTE);
@@ -118,11 +120,43 @@ export default function ProductDetailScreen() {
         <View className="mt-2 flex-row items-center">
           <RouteIconButton accessibilityLabel="Back" onPress={closeToShelf} />
         </View>
-        <View className="flex-1 items-center justify-center">
-          <Text variant="body" tone="muted">
-            This product is no longer on your shelf.
-          </Text>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingBottom: compactMissingDetail ? 20 : 34,
+          }}
+        >
+          <View className="items-center">
+            <StripedThumb size={compactMissingDetail ? 68 : 76} radius={20} faded />
+            <Text variant="label" tone="clay" className="mt-5 font-mono uppercase">
+              Product unavailable
+            </Text>
+            <Text
+              variant="titleSm"
+              className="mt-2 text-center"
+              style={{
+                fontSize: compactMissingDetail ? 24 : 27,
+                lineHeight: compactMissingDetail ? 28 : 31,
+              }}
+            >
+              This product is no longer on your shelf.
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-2 max-w-[280px] text-center">
+              It may have been removed or archived on this device. Your Shelf is still safe.
+            </Text>
+          </View>
+          <View className="mt-6 gap-2">
+            <Button label="Back to Shelf" onPress={() => router.replace(APP_SHELF_ROUTE)} />
+            <Button
+              label="Add a product"
+              variant="ghost"
+              className="min-h-[52px] py-3"
+              onPress={() => router.replace('/shelf/manual')}
+            />
+          </View>
+        </ScrollView>
       </Screen>
     );
   }
