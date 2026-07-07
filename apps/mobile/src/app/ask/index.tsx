@@ -392,15 +392,27 @@ export default function AskScreen() {
             <View className="gap-2">
               <SuggestedPrompt
                 label={ASK_COPY.home.prompts.conflict}
-                onPress={() => pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'))}
+                onPress={() =>
+                  pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), {
+                    scrollToEnd: false,
+                  })
+                }
               />
               <SuggestedPrompt
                 label={ASK_COPY.home.prompts.tonight}
-                onPress={() => pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'))}
+                onPress={() =>
+                  pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'), {
+                    scrollToEnd: false,
+                  })
+                }
               />
               <SuggestedPrompt
                 label={ASK_COPY.home.prompts.fit}
-                onPress={() => pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'))}
+                onPress={() =>
+                  pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'), {
+                    scrollToEnd: false,
+                  })
+                }
               />
             </View>
           </View>
@@ -414,18 +426,18 @@ export default function AskScreen() {
               ),
             )}
             {/* Suggested prompts kept as a follow-up affordance after the lead. */}
-            <View className="mt-2 gap-2.5">
-              <SuggestedPrompt
-                label={ASK_COPY.home.prompts.tonight}
-                onPress={() => pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'))}
-              />
-              {!compactPhone ? (
+            {!compactPhone ? (
+              <View className="mt-2 gap-2.5">
+                <SuggestedPrompt
+                  label={ASK_COPY.home.prompts.tonight}
+                  onPress={() => pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'))}
+                />
                 <SuggestedPrompt
                   label={ASK_COPY.home.prompts.fit}
                   onPress={() => pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'))}
                 />
-              ) : null}
-            </View>
+              </View>
+            ) : null}
           </View>
         )}
       </ScrollView>

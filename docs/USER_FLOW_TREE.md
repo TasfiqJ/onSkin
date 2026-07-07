@@ -958,6 +958,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/ask` with no shelf products stored.
   - Expected result: The advisor still renders with honest empty-state guidance and safe suggested prompts.
   - Evidence: Screenshot.
+- Branch: first suggested prompt on a short phone
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/ask` at 320 x 568 with an empty shelf, tap `Is there a conflict on my shelf?`, and inspect the first conversation state without manually scrolling.
+  - Expected result: The user question, deterministic badge, empty-shelf answer, report control, fixed composer, and disclosure footer remain readable; the first user message is not auto-scrolled under the header, and no follow-up prompt peeks partially underneath the fixed composer on compact phones.
+  - Evidence: Screenshot, scroll-position snapshot, and small-phone control-geometry snapshot.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes

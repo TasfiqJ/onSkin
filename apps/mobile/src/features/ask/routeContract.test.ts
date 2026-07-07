@@ -104,7 +104,7 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('{ASK_COPY.home.disclosureFooter}');
   });
 
-  it('does not auto-scroll the proactive first answer under the header on short phones', () => {
+  it('does not auto-scroll the first answer under the header on short phones', () => {
     const home = readAppRoute('ask/index.tsx');
 
     expect(home).toContain('useWindowDimensions');
@@ -114,7 +114,28 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain(
       "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
     );
+    expect(home).toContain(
+      "pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'), {\n                    scrollToEnd: false,",
+    );
+    expect(home).toContain(
+      "pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'), {\n                    scrollToEnd: false,",
+    );
     expect(home).toContain('{!compactPhone ? (');
+  });
+
+  it('hides post-answer suggested prompts on compact phones so they do not peek under the composer', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const followUpStart = home.indexOf('Suggested prompts kept as a follow-up affordance');
+    const followUpEnd = home.indexOf('</ScrollView>', followUpStart);
+    const followUpBlock = home.slice(followUpStart, followUpEnd);
+
+    expect(followUpStart).toBeGreaterThan(0);
+    expect(followUpEnd).toBeGreaterThan(followUpStart);
+    expect(followUpBlock.indexOf('{!compactPhone ? (')).toBeLessThan(
+      followUpBlock.indexOf('<SuggestedPrompt'),
+    );
+    expect(followUpBlock).toContain('label={ASK_COPY.home.prompts.tonight}');
+    expect(followUpBlock).toContain('label={ASK_COPY.home.prompts.fit}');
   });
 
   it('records actual grounded cloud turns before relying on the trial cap gate', () => {

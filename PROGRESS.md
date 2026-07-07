@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the compact Ask first-prompt answer state after human-simulated E2E
+  at 320 x 568 showed the post-answer `What should I do tonight?` suggestion
+  peeking underneath the fixed composer. Empty-state suggested prompts now keep
+  the first answer anchored, and compact phones hide post-answer suggestion
+  rows so the composer is the follow-up path. The Ask route contract pins the
+  behavior; Expo web E2E verified no horizontal overflow, no clipped/sub-44 px
+  controls, no partial follow-up prompt under the composer, and no browser
+  errors. Evidence is in
+  `test-results/human-e2e/2026-07-07/ask-first-prompt-short-phone-fix/`; the
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-ask-first-prompt-compact-composer-overlap.md`.
+
 - Made the critical onboarding profile-save failure branch testable through the
   real app surface. `/onboarding/analyzing` now supports a dev-only one-shot
   `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once` fixture that rejects the first
