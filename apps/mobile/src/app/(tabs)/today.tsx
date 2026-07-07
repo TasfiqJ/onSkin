@@ -24,9 +24,8 @@ import { colors } from '@/theme/tokens';
 // PERSISTS to the local-first completions store (completionsStore.ts) and feeds the
 // streak/heat-map via useProgress. The server routine_completions table is the
 // deferred sync target (B-ROUTINE-PERSIST / B-SUPABASE). AM is paper, PM is night
-// with the skin-cycling strip + the Doc-2 auto-resolution banner ("next acid night").
-// Fallback strip labels when no cycle is running yet (the classic rhythm).
-const FALLBACK_SLOTS = ['Exfoliate', 'Retinoid', 'Recover', 'Recover'];
+// with the skin-cycling strip when a real cycle exists + the Doc-2 auto-resolution
+// banner ("next acid night").
 const ROUTINE_CARD_SHADOW =
   Platform.OS === 'web'
     ? { boxShadow: '0 1px 2px rgba(32, 27, 21, 0.04)' }
@@ -342,7 +341,7 @@ export default function TodayScreen() {
           {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
-          {compactPhone ? null : (
+          {compactPhone || !cycle ? null : (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="See your cycle week ahead"
@@ -395,8 +394,8 @@ export default function TodayScreen() {
   }
 
   // ---- PM (dark). Driven by the orchestrated, profile-aware cycle ----
-  const nightNumber = cTonight ? cTonight.index + 1 : 2;
-  const nightTotal = cycle?.lengthNights ?? FALLBACK_SLOTS.length;
+  const nightNumber = cTonight ? cTonight.index + 1 : 0;
+  const nightTotal = cycle?.lengthNights ?? 0;
   // Tonight's cycled active comes from the engine (suppressed correctly for
   // pregnancy etc.). Not from a hardcoded literal. Skipped, recovery, AND
   // paused/travel nights all drop the potent active so the evening trims to the
@@ -491,31 +490,32 @@ export default function TodayScreen() {
         ) : null}
 
         {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="See your cycle week ahead"
-          className="mt-4 rounded-card p-5"
-          style={{ backgroundColor: colors.nightSurface }}
-          onPress={() => {
-            haptics.select();
-            router.push('/cycle/week');
-          }}
-        >
-          <View className="mb-4 flex-row items-center justify-between">
-            <Text
-              className="font-sans-bold text-[13px] uppercase tracking-[1px]"
-              style={{ color: 'rgba(244,239,231,0.5)' }}
-            >
-              Skin cycling · night {nightNumber} of {nightTotal}
-            </Text>
-            <Text className="text-[12px]" style={{ color: colors.clayBright }}>
-              Week ahead ›
-            </Text>
-          </View>
-          <View className="flex-row gap-1">
-            {(cycle ? cycle.nights.map((n) => slotLabel(n.slot)) : FALLBACK_SLOTS).map(
-              (label, i) => {
-                const active = cTonight ? i === cTonight.index : i + 1 === nightNumber;
+        {cycle ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="See your cycle week ahead"
+            className="mt-4 rounded-card p-5"
+            style={{ backgroundColor: colors.nightSurface }}
+            onPress={() => {
+              haptics.select();
+              router.push('/cycle/week');
+            }}
+          >
+            <View className="mb-4 flex-row items-center justify-between">
+              <Text
+                className="font-sans-bold text-[13px] uppercase tracking-[1px]"
+                style={{ color: 'rgba(244,239,231,0.5)' }}
+              >
+                Skin cycling · night {nightNumber} of {nightTotal}
+              </Text>
+              <Text className="text-[12px]" style={{ color: colors.clayBright }}>
+                Week ahead ›
+              </Text>
+            </View>
+            <View className="flex-row gap-1">
+              {cycle.nights.map((n, i) => {
+                const label = slotLabel(n.slot);
+                const active = cTonight ? i === cTonight.index : false;
                 return (
                   <View key={i} className="flex-1">
                     <View
@@ -542,10 +542,10 @@ export default function TodayScreen() {
                     </Text>
                   </View>
                 );
-              },
-            )}
-          </View>
-        </Pressable>
+              })}
+            </View>
+          </Pressable>
+        ) : null}
 
         {/* Evening routine */}
         <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
@@ -553,25 +553,38 @@ export default function TodayScreen() {
             <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
               Evening routine
             </Text>
-            <Text className="font-mono text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
-              {donePm} of {pmSteps.length}
-            </Text>
+            {pmSteps.length ? (
+              <Text className="font-mono text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
+                {donePm} of {pmSteps.length}
+              </Text>
+            ) : null}
           </View>
-          {pmSteps.map((s, i) => {
-            const k = stepKey('PM', s.productId);
-            return (
-              <CheckRow
-                key={k}
-                name={s.name}
-                sub={pmDisplaySub(s)}
-                state={rowState(k, firstUndonePm)}
-                dark
-                compact={compactPhone}
-                first={i === 0}
-                onPress={() => void toggle(k)}
-              />
-            );
-          })}
+          {pmSteps.length ? (
+            pmSteps.map((s, i) => {
+              const k = stepKey('PM', s.productId);
+              return (
+                <CheckRow
+                  key={k}
+                  name={s.name}
+                  sub={pmDisplaySub(s)}
+                  state={rowState(k, firstUndonePm)}
+                  dark
+                  compact={compactPhone}
+                  first={i === 0}
+                  onPress={() => void toggle(k)}
+                />
+              );
+            })
+          ) : (
+            <View className={compactPhone ? 'py-2.5' : 'py-3'}>
+              <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
+                No evening steps yet.
+              </Text>
+              <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
+                Add a cleanser, moisturiser, or night product to build this out.
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}

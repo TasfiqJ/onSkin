@@ -2085,6 +2085,15 @@ variant now removes decorative chrome, tightens spacing, keeps 48 px primary and
 extra scroll room for Terms, Privacy, and Restore. Human E2E verified the first viewport and scrolled compliance branch
 with no horizontal overflow.
 
+### Routine sparse shelf honesty (2026-07-07)
+
+Fixed `/routine/plan` and Today PM for a one-product daytime shelf after the generated plan correctly had no PM cycle
+but the UI still presented skin-cycling/recovery copy. The plan now labels evening as plain `Evening` unless a real
+cycle exists, renders real PM steps or an explicit no-night-steps state, and avoids fake `Recover` / `ceramide only`
+guidance. Today hides cycle week affordances when `useCycle()` has no cycle and shows the same empty evening state
+instead of `0 of 0`. Human E2E verified the Expo web flow with only `Mineral SPF 50`; the captured run artifacts are in
+`test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/`, with native phone visual verification still outstanding.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

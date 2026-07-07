@@ -123,8 +123,17 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('useWindowDimensions');
     expect(plan).toContain('const compactPlan = height < 640');
     expect(plan).toContain('const planScrollBottomPadding = compactPlan ? 144 : 112');
+    expect(plan).toContain('const hasCycle = plan?.cycle != null');
+    expect(plan).toContain("const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser')");
+    expect(plan).toContain("{hasCycle ? 'Evening · skin cycling' : 'Evening'}");
+    expect(plan).toContain('{hasCycle ? (');
+    expect(plan).toContain("{hasBarrierStep ? 'moisturiser only' : 'keep it simple'}");
+    expect(plan).toContain('No night steps yet.');
+    expect(plan).not.toContain('suffix="ceramide only"');
     expect(plan).toContain('style={{ overflow:');
-    expect(plan).toContain('contentContainerStyle={{ flexGrow: 1, paddingBottom: planScrollBottomPadding }}');
+    expect(plan).toContain(
+      'contentContainerStyle={{ flexGrow: 1, paddingBottom: planScrollBottomPadding }}',
+    );
     expect(plan).toContain('backgroundColor: colors.paper');
     expect(plan).toContain('marginHorizontal: -24');
     expect(plan).toContain('paddingHorizontal: 24');

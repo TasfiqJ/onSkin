@@ -138,6 +138,19 @@ describe('front-label shelf names', () => {
       true,
     );
   });
+
+  it('does not fabricate a night cycle for a sparse daytime-only shelf', () => {
+    const plan = generatePlan(
+      [shelfNameProduct('s', 'Mineral SPF 50')],
+      { sensitivity: 'neutral', pregnancy: false, goals: [] },
+      STARTER_RULES,
+    );
+
+    expect(plan.am.map((s) => s.name)).toEqual(['Mineral SPF 50']);
+    expect(plan.pm).toEqual([]);
+    expect(plan.cycle).toBeNull();
+    expect(plan.ramp).toEqual([]);
+  });
 });
 
 describe('B-DERM-REVIEW routine launch gate', () => {
