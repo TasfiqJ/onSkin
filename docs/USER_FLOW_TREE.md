@@ -232,6 +232,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: iOS and Android first; Expo web for profile-label and compact-layout checks.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/routine-plan/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`
 
 ### Path A: Generated Plan Review
 
@@ -279,12 +280,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Add `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` from the onboarding products surface, unlock with the no-card `Explore first` path, inspect `/routine/plan`, tap `Start today`, and complete the generated Today PM check-off.
   - Expected result: Common product-name shorthand is enough before catalog seed: Morning shows SPF and not glycolic, Evening shows glycolic as the exfoliant and retinol as the retinoid, Today PM opens to the matching Glycolic check-off, and the first check-off reaches `1 of 1`.
   - Evidence: Pre/post visible-text snapshots, phone screenshots, browser logs, and check-off state.
+  - Current local evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 adds `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` through `/onboarding/products`, opens `/routine/plan`, and verifies `BUILT FROM YOUR SHELF`, `Timing handled`, Morning `Mineral SPF 50`, Night 1 `Glycolic 7%`, and Night 2 `Retinol 0.3% Night Serum`. `Start today` opens Today PM on the Glycolic check-off and tapping it reaches `1 of 1` with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`.
 - Branch: sparse shelf without night actives
   - Priority: Critical
   - Automate later: Yes
   - Action: Add only a daytime product such as `Mineral SPF 50`, open `/routine/plan`, inspect the evening card, tap `Start today`, and inspect Today if the local clock lands on PM.
   - Expected result: The plan remains labeled as built from the user's shelf, the morning card includes the daytime product, and the plan/Today PM evening states do not claim `skin cycling`, `Recover`, or `ceramide only` until a real night active or barrier product exists.
   - Evidence: Phone screenshot, visible-text snapshot, local shelf state, and Today route snapshot when tested in PM.
+  - Current local evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 removes the night actives from the same onboarding shelf so only `Mineral SPF 50` remains, then verifies `/routine/plan` stays labeled `BUILT FROM YOUR SHELF`, shows Morning `Mineral SPF 50`, renders `EVENING` with `No night steps yet.`, and contains no skin-cycling, `Recover`, retinol, or glycolic copy. `Start today` lands on the PM Today empty evening state without stale cycle or night-active copy and with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`.
 
 ## Flow: Runtime Brand Identity Smoke
 

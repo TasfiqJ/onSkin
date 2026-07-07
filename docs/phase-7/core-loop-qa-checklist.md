@@ -277,6 +277,19 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `Start today` CTA, then tap it and confirm `/today` opens. Evidence is in
   `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`; it
   does not replace real iOS/Android beta-device QA.
+- 2026-07-07: Codex in-app browser E2E at 320 x 568 covers realistic routine
+  generation from front-label shelf products and the sparse daytime-only shelf.
+  Adding `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50`
+  from `/onboarding/products` produces a `BUILT FROM YOUR SHELF` plan with SPF
+  in Morning, Glycolic on Night 1, Retinol on Night 2, and `Timing handled`; the
+  PM Today handoff opens the Glycolic check-off and reaches `1 of 1`. Removing
+  night actives so only `Mineral SPF 50` remains keeps `/routine/plan` and Today
+  PM honest with `No night steps yet.` and no stale skin-cycling, retinol,
+  glycolic, or recover copy. Focused routine generation, plan, cycle-anchor, and
+  scheduler-cycle tests pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`; it
+  does not replace native iOS/Android beta-device QA or reviewer signoff for
+  cadence/conflict guidance.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Shelf product-detail
   routine handoff: open `Mineral SPF 50` from Shelf, verify the `ROUTINE ROLE`
   card says it is used in the Morning routine, tap `Review routine placement`,

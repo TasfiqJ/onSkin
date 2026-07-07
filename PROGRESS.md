@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Verified the realistic shelf-label routine branches in the Codex in-app
+  browser at 320 x 568. From `/onboarding/products`, adding `Retinol 0.3%
+  Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` produces a
+  `BUILT FROM YOUR SHELF` routine plan with SPF in Morning, Glycolic on Night
+  1, Retinol on Night 2, and `Timing handled` as the first insight; `Start
+  today` opens the PM Glycolic check-off and completion reaches `1 of 1`.
+  Removing the night actives to leave only `Mineral SPF 50` keeps the plan
+  honest with `No night steps yet.` and Today PM shows no stale skin-cycling,
+  retinol, glycolic, or recover copy. Focused routine generation, plan,
+  cycle-anchor, and scheduler-cycle tests pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`.
+
 - Replaced the compact `/shelf/manual` category picker with a bottom sheet after
   320 x 568 E2E showed the prior inline nested list still let the fixed
   Continue footer intercept visible category-row hit tests. The picker now opens
