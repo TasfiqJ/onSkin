@@ -14,6 +14,7 @@ describe('ToggleSwitch', () => {
     expect(source).toContain('width: 52');
     expect(source).toContain('height: 48');
     expect(source).toContain("'h-12 min-h-[44px] w-[52px] items-center justify-center'");
+    expect(source.match(/pointerEvents: 'none'/g)).toHaveLength(2);
     expect(source).toContain('className="h-[24px] w-[42px] justify-center rounded-pill px-0.5"');
     expect(source).toContain('translateX: value ? 18 : 0');
   });

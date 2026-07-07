@@ -57,12 +57,16 @@ export function ToggleSwitch({
     >
       <View
         className="h-[24px] w-[42px] justify-center rounded-pill px-0.5"
-        style={{ backgroundColor: value ? activeTrackColor : inactiveTrackColor }}
+        style={{
+          backgroundColor: value ? activeTrackColor : inactiveTrackColor,
+          pointerEvents: 'none',
+        }}
       >
         <View
           className="h-[20px] w-[20px] rounded-full"
           style={{
             backgroundColor: thumbColor,
+            pointerEvents: 'none',
             transform: [{ translateX: value ? 18 : 0 }],
           }}
         />

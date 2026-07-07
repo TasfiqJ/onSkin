@@ -556,7 +556,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, `EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only`, open `/trend/optin`, toggle the opt-in on, retry the grant, toggle it off, then retry the withdrawal.
-  - Expected result: The switch is disabled while saving, keeps a usable 44 pt touch target, failed grant/revoke attempts show stable "choice not saved" copy with a persistent alert region, the visible consent state refreshes after each attempt, no raw backend/provider error appears, and successful retries clear the failure state.
+  - Expected result: The switch is disabled while saving, keeps a usable 44 pt touch target, failed grant/revoke attempts show stable "choice not saved" copy with a persistent alert region, the compact failure state does not expose clipped secondary controls, the visible consent state refreshes after each attempt, no raw backend/provider error appears, and successful retries clear the failure state.
   - Evidence: Failure/success screenshots, `role="alert"` copy, switch geometry, visible route state after each retry, and browser warn/error logs.
 - Branch: fairness floor copy
   - Priority: Critical

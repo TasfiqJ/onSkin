@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the feature-flagged `/trend/optin` compact layout after the forced
+  consent failure path showed the secondary fairness row clipped at the bottom
+  of a 320 x 568 viewport. The opt-in card and failure alert now use short-phone
+  density, and compact failure states hide secondary fairness/footer links until
+  a retry succeeds. Expo web E2E with
+  `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`,
+  `EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE=grant_once,revoke_once`, and
+  `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` verified grant failure,
+  grant retry success, revoke failure, and revoke retry success with no
+  horizontal overflow or sub-44 px controls; evidence is in
+  `test-results/human-e2e/2026-07-07/trend-optin-compact-layout/`, with the
+  tracked bug report in
+  `docs/e2e-bug-reports/2026-07-07-trend-optin-compact-failure-density.md`.
+
 - Fixed `/paywall/success` after a compact route audit found the primary
   `See tonight's routine` CTA sitting flush with the 320 x 568 viewport bottom.
   The success screen now adds an explicit short-phone bottom action buffer while

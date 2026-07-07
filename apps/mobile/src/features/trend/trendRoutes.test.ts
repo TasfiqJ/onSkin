@@ -32,6 +32,17 @@ describe('Trend route contracts', () => {
     const source = readAppRoute('trend/optin.tsx');
 
     expect(source).toContain('applyTrendConsentChoice');
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compact = height < 640');
+    expect(source).toContain('const showSecondaryLinks = !(compact && saveFailed)');
+    expect(source).toContain('contentContainerStyle={{ paddingBottom: compact ? 24 : 40 }}');
+    expect(source).toContain("? 'mt-1 rounded-[20px] bg-paper-raised p-4'");
+    expect(source).toContain("? 'mt-2.5 flex-row items-center justify-between rounded-2xl bg-paper-raised p-3.5'");
+    expect(source).toContain("? 'mt-2 min-h-[48px] flex-row items-center justify-between rounded-2xl bg-paper-raised px-3.5 py-1.5'");
+    expect(source).toContain(
+      "compact ? 'mt-2 rounded-2xl px-3.5 py-2.5' : 'mt-2.5 rounded-2xl px-4 py-3'",
+    );
+    expect(source).toContain('{showSecondaryLinks ? (');
     expect(source).toContain('EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE');
     expect(source).toContain('EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER');
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER === 'local_only'");

@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyTrendConsentChoice } from '@/features/trend/applyConsentChoice';
@@ -39,21 +39,25 @@ function devTrendConsentFailureModes(): TrendConsentFailureModes {
 // disclosure, a SEPARATE photo_trend_insights consent. The honest engine is classical
 // computer vision ("your phone comparing your own photos"), not marketed as AI. Never
 // default-on; the installed base is re-consented here, never silently enrolled.
-function Bullet({ children }: { children: React.ReactNode }) {
+function Bullet({ children, compact }: { children: React.ReactNode; compact: boolean }) {
   return (
-    <View className="flex-row items-start gap-2.5">
+    <View className={compact ? 'flex-row items-start gap-2' : 'flex-row items-start gap-2.5'}>
       <View
-        className="mt-0.5 h-[18px] w-[18px] items-center justify-center rounded-full"
+        className={
+          compact
+            ? 'mt-0.5 h-[16px] w-[16px] items-center justify-center rounded-full'
+            : 'mt-0.5 h-[18px] w-[18px] items-center justify-center rounded-full'
+        }
         style={{ backgroundColor: colors.sageTint }}
       >
-        <Text className="text-[10px]" style={{ color: colors.sage }}>
+        <Text className={compact ? 'text-[9px]' : 'text-[10px]'} style={{ color: colors.sage }}>
           ✓
         </Text>
       </View>
       <Text
         variant="bodySm"
-        className="flex-1 text-[12.5px]"
-        style={{ color: colors.inkSoft, lineHeight: 18 }}
+        className={compact ? 'flex-1 text-[12px]' : 'flex-1 text-[12.5px]'}
+        style={{ color: colors.inkSoft, lineHeight: compact ? 16 : 18 }}
       >
         {children}
       </Text>
@@ -62,6 +66,8 @@ function Bullet({ children }: { children: React.ReactNode }) {
 }
 
 export default function TrendOptInScreen() {
+  const { height } = useWindowDimensions();
+  const compact = height < 640;
   const qc = useQueryClient();
   const { data: consented } = useTrendConsent();
   const [saving, setSaving] = useState(false);
@@ -71,6 +77,7 @@ export default function TrendOptInScreen() {
     revoke: false,
   });
   const failureModes = devTrendConsentFailureModes();
+  const showSecondaryLinks = !(compact && saveFailed);
 
   const grant = async () => {
     if (failureModes.grantOnce && !trendConsentFailureUsed.grant) {
@@ -123,7 +130,13 @@ export default function TrendOptInScreen() {
 
   return (
     <Screen edges={['top']}>
-      <View className="flex-row items-center gap-3 pb-2 pt-1">
+      <View
+        className={
+          compact
+            ? 'flex-row items-center gap-3 pb-1 pt-0.5'
+            : 'flex-row items-center gap-3 pb-2 pt-1'
+        }
+      >
         <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
@@ -133,33 +146,54 @@ export default function TrendOptInScreen() {
         </Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: compact ? 24 : 40 }}
+      >
         <View
-          className="mt-2 rounded-[22px] bg-paper-raised p-5"
+          className={
+            compact
+              ? 'mt-1 rounded-[20px] bg-paper-raised p-4'
+              : 'mt-2 rounded-[22px] bg-paper-raised p-5'
+          }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
-          <Text variant="title" className="text-[25px] leading-[29px]" accessibilityRole="header">
+          <Text
+            variant="title"
+            className={compact ? 'text-[23px] leading-[26px]' : 'text-[25px] leading-[29px]'}
+            accessibilityRole="header"
+          >
             {TREND_COPY.optIn.heading}
           </Text>
           <Text
             variant="bodySm"
             tone="muted"
-            className="mt-3 text-[13px]"
-            style={{ lineHeight: 20 }}
+            className={compact ? 'mt-2 text-[12.5px]' : 'mt-3 text-[13px]'}
+            style={{ lineHeight: compact ? 18 : 20 }}
           >
             {TREND_COPY.optIn.body}
           </Text>
-          <View className="mt-4 gap-2.5">
+          <View className={compact ? 'mt-3 gap-2' : 'mt-4 gap-2.5'}>
             {TREND_COPY.optIn.bullets.map((b) => (
-              <Bullet key={b}>{b}</Bullet>
+              <Bullet key={b} compact={compact}>
+                {b}
+              </Bullet>
             ))}
           </View>
           <View
-            className="mt-4 flex-row items-center gap-2 pt-3.5"
+            className={
+              compact
+                ? 'mt-3 flex-row items-center gap-2 pt-2.5'
+                : 'mt-4 flex-row items-center gap-2 pt-3.5'
+            }
             style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}
           >
             <Text style={{ color: colors.clay, fontSize: 12 }}>✦</Text>
-            <Text className="flex-1 text-[11px]" tone="muted" style={{ lineHeight: 15 }}>
+            <Text
+              className={compact ? 'flex-1 text-[10.5px]' : 'flex-1 text-[11px]'}
+              tone="muted"
+              style={{ lineHeight: compact ? 14 : 15 }}
+            >
               {TREND_COPY.optIn.consentLine}
             </Text>
           </View>
@@ -167,7 +201,11 @@ export default function TrendOptInScreen() {
 
         {/* the toggle. OFF by default */}
         <View
-          className="mt-3.5 flex-row items-center justify-between rounded-2xl bg-paper-raised p-4"
+          className={
+            compact
+              ? 'mt-2.5 flex-row items-center justify-between rounded-2xl bg-paper-raised p-3.5'
+              : 'mt-3.5 flex-row items-center justify-between rounded-2xl bg-paper-raised p-4'
+          }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
           <View>
@@ -190,42 +228,63 @@ export default function TrendOptInScreen() {
         {saveFailed ? (
           <View
             accessibilityRole="alert"
-            className="mt-2.5 rounded-2xl px-4 py-3"
+            className={
+              compact ? 'mt-2 rounded-2xl px-3.5 py-2.5' : 'mt-2.5 rounded-2xl px-4 py-3'
+            }
             style={{
               backgroundColor: 'rgba(165,105,75,0.10)',
               borderWidth: 1,
               borderColor: 'rgba(165,105,75,0.22)',
             }}
           >
-            <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayDeep }}>
+            <Text
+              className={
+                compact
+                  ? 'font-sans-semibold text-[12.5px]'
+                  : 'font-sans-semibold text-[13px]'
+              }
+              style={{ color: colors.clayDeep }}
+            >
               {TREND_COPY.optIn.saveFailedTitle}
             </Text>
-            <Text className="mt-1 text-[12px]" tone="muted" style={{ lineHeight: 17 }}>
+            <Text
+              className={compact ? 'mt-0.5 text-[11.5px]' : 'mt-1 text-[12px]'}
+              tone="muted"
+              style={{ lineHeight: compact ? 16 : 17 }}
+            >
               {TREND_COPY.optIn.saveFailedBody}
             </Text>
           </View>
         ) : null}
 
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push('/trend/fairness')}
-          className="mt-3 flex-row items-center justify-between rounded-2xl bg-paper-raised p-4"
-          style={{ borderWidth: 1, borderColor: colors.hairline }}
-        >
-          <Text variant="bodySm" className="font-sans-medium text-[13px]">
-            How it stays fair across skin tones
-          </Text>
-          <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
-        </Pressable>
+        {showSecondaryLinks ? (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/trend/fairness')}
+            className={
+              compact
+                ? 'mt-2 min-h-[48px] flex-row items-center justify-between rounded-2xl bg-paper-raised px-3.5 py-1.5'
+                : 'mt-3 flex-row items-center justify-between rounded-2xl bg-paper-raised p-4'
+            }
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text variant="bodySm" className="font-sans-medium text-[13px]">
+              How it stays fair across skin tones
+            </Text>
+            <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
+          </Pressable>
+        ) : null}
 
-        <Text
-          variant="label"
-          tone="muted"
-          className="mt-5 px-2 text-center"
-          style={{ lineHeight: 17 }}
-        >
-          {TREND_COPY.optIn.footer}
-        </Text>
+        {showSecondaryLinks ? (
+          <Text
+            variant="label"
+            tone="muted"
+            className={compact ? 'mt-4 px-2 text-center' : 'mt-5 px-2 text-center'}
+            style={{ lineHeight: compact ? 16 : 17 }}
+          >
+            {TREND_COPY.optIn.footer}
+          </Text>
+        ) : null}
       </ScrollView>
     </Screen>
   );
