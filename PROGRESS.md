@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Repaired stale commerce stack detail source so an unavailable
+  `/commerce/stack/[slug]` route has a real recovery state when commerce is
+  enabled: `Stack unavailable` copy, disclosure/product-availability review
+  explanation, `Back to stacks`, and `How paid links work`. The current beta
+  runtime still correctly defers commerce behind Phase 7 flags; Expo web E2E at
+  320 x 568 verified the reachable deferred direct-entry route has one 56 px
+  `Back to You` action, no horizontal overflow, and lands on `/you`. Evidence is
+  in `test-results/human-e2e/2026-07-07/commerce-missing-stack-recovery/`; the
+  hidden stack body remains source-contract verified until commerce is enabled.
+
 - Repaired stale Skin Note direct entries so a missing
   `/community/note/[id]` no longer presents a muted one-line unavailable state
   with only the top Back icon. The route now shows explicit `Note unavailable`
@@ -3134,6 +3144,17 @@ stale state, Back to Shelf, Add a product, no horizontal overflow, 56 px recover
 Supabase/web-notification warnings under
 `test-results/human-e2e/2026-07-07/shelf-replenish-missing-product-recovery/`. Tracked in
 `docs/e2e-bug-reports/2026-07-07-shelf-replenish-missing-product-recovery.md`.
+
+### Commerce missing-stack recovery source (2026-07-07)
+
+Recovered the commerce-enabled `/commerce/stack/[slug]` missing-stack branch as a real route body instead of a one-line
+empty state. The hidden route body now uses compact-phone sizing, a visual placeholder, `Stack unavailable` copy,
+disclosure/product-availability review context, `Back to stacks`, and `How paid links work`. Because
+`phase7Flags.commerce` is still false without final-domain and commerce evidence, Expo web human E2E at 320 x 568
+verified the currently reachable deferred commerce direct-entry route instead: one 56 px `Back to You` action, no
+horizontal overflow, and safe return to `/you`. Tracked in
+`docs/e2e-bug-reports/2026-07-07-commerce-missing-stack-recovery.md`; evidence is in
+`test-results/human-e2e/2026-07-07/commerce-missing-stack-recovery/`.
 
 ## Open questions for the founder
 

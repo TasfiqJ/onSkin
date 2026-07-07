@@ -1,9 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { RouteIconButton, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
@@ -20,9 +20,11 @@ import { colors } from '@/theme/tokens';
 // changed the list.
 export default function StackDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
+  const { height } = useWindowDimensions();
   const qc = useQueryClient();
   const stack = slug ? stackBySlug(slug) : undefined;
   const { data: consented } = useCommerceConsent();
+  const compactMissingStack = height < 640;
 
   useEffect(() => {
     if (stack) track('stack_viewed', { source: 'stack' });
@@ -60,11 +62,47 @@ export default function StackDetailScreen() {
       </View>
 
       {!stack ? (
-        <View className="flex-1 items-center justify-center px-6">
-          <Text variant="body" tone="muted" className="text-center">
-            This routine isn’t available right now.
-          </Text>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingBottom: compactMissingStack ? 24 : 38,
+          }}
+        >
+          <View className="items-center px-2">
+            <StripedThumb size={compactMissingStack ? 66 : 74} radius={20} faded />
+            <Text variant="label" tone="clay" className="mt-5 font-mono uppercase">
+              Stack unavailable
+            </Text>
+            <Text
+              variant="titleSm"
+              className="mt-2 text-center"
+              style={{
+                fontSize: compactMissingStack ? 24 : 27,
+                lineHeight: compactMissingStack ? 28 : 31,
+              }}
+              accessibilityRole="header"
+            >
+              This routine is not available right now.
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-2 max-w-[284px] text-center">
+              It may have been updated while we review disclosures or product availability. Current
+              stacks are still available in the stack library.
+            </Text>
+          </View>
+          <View className="mt-6 gap-2">
+            <Button
+              label="Back to stacks"
+              onPress={() => router.replace(APP_COMMERCE_STACKS_ROUTE)}
+            />
+            <Button
+              label="How paid links work"
+              variant="ghost"
+              onPress={() => router.replace('/commerce/transparency')}
+            />
+          </View>
+        </ScrollView>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 pt-2">
           <View

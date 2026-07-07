@@ -52,6 +52,25 @@ describe('Commerce route contracts', () => {
     expect(source).toContain('backOrReplace(router, APP_COMMERCE_STACKS_ROUTE)');
   });
 
+  it('recovers unavailable stack details without a dead empty state', () => {
+    const source = readAppRoute('commerce/stack/[slug].tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactMissingStack = height < 640');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('Stack unavailable');
+    expect(source).toContain('This routine is not available right now.');
+    expect(source).toContain('review disclosures or product availability');
+    expect(source).toContain('Current');
+    expect(source).toContain('stacks are still available');
+    expect(source).toContain('label="Back to stacks"');
+    expect(source).toContain('router.replace(APP_COMMERCE_STACKS_ROUTE)');
+    expect(source).toContain('label="How paid links work"');
+    expect(source).toContain("router.replace('/commerce/transparency')");
+    expect(source).not.toContain('This routine isn’t available right now.');
+    expect(source).not.toContain('<View className="flex-1 items-center justify-center px-6">');
+  });
+
   it('returns deferred commerce direct entries to You', () => {
     const source = readAppRoute('commerce/_layout.tsx');
 

@@ -769,7 +769,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/commerce/stack/[slug]` for a slug that is not currently shippable.
-  - Expected result: The app shows a calm unavailable state and a working Back path to `/commerce/stacks`.
+  - Expected result: The app shows a calm unavailable state, explains the stack may have been updated while disclosures or product availability are reviewed, provides a visible `Back to stacks` path to `/commerce/stacks`, and keeps `How paid links work` available without exposing retailer links.
   - Evidence: Screenshot and route snapshot.
 - Branch: no commerce consent
   - Priority: Critical
