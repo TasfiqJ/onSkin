@@ -75,6 +75,12 @@ export default function SubscriptionScreen() {
         'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.',
     });
   }
+  function openReverseTrialOptions() {
+    router.push('/paywall/reoffer');
+  }
+  function openAppGrantedProOptions() {
+    router.push('/paywall/upsell?feature=full_routine');
+  }
   function onRestore() {
     restore.mutate(undefined, {
       onSuccess: (result) =>
@@ -94,12 +100,27 @@ export default function SubscriptionScreen() {
     : data?.inTrial
       ? 'Free trial'
       : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
+  const isAppGrantedAccess = data?.store === 'app_granted';
+  const isReverseTrialAccess = isAppGrantedAccess && data?.inReverseTrial === true;
   const manageLabel =
     data?.store === 'play_store'
       ? 'Manage in Google Play'
-      : data?.store === 'app_granted'
-        ? 'Review Pro options'
-        : PAYWALL_COPY.manage.manageRow;
+      : isReverseTrialAccess
+        ? PAYWALL_COPY.reverseTrial.keepCta
+        : isAppGrantedAccess
+          ? 'Review Pro options'
+          : PAYWALL_COPY.manage.manageRow;
+  const manageAction = isAppGrantedAccess
+    ? isReverseTrialAccess
+      ? openReverseTrialOptions
+      : openAppGrantedProOptions
+    : openStore;
+  const endDateLabel = fmtDate(data?.expiresAt ?? null);
+  const supportNote = isReverseTrialAccess
+    ? PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)
+    : isAppGrantedAccess
+      ? PAYWALL_COPY.manage.appGrantedNote(endDateLabel)
+      : PAYWALL_COPY.manage.cancelNote(endDateLabel);
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -160,13 +181,13 @@ export default function SubscriptionScreen() {
                   className="font-sans-semibold"
                   style={{ color: colors.cream }}
                 >
-                  {fmtDate(data?.expiresAt ?? null)}
+                  {endDateLabel}
                 </Text>
               </View>
             </View>
 
             <View className="mb-4 rounded-[18px] bg-paper-raised px-[18px]">
-              <Row label={manageLabel} onPress={openStore} />
+              <Row label={manageLabel} onPress={manageAction} />
               <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
               <Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />
               <Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />
@@ -185,7 +206,7 @@ export default function SubscriptionScreen() {
                 className="flex-1"
                 style={{ color: colors.mutedStrong, lineHeight: 19 }}
               >
-                {PAYWALL_COPY.manage.cancelNote(fmtDate(data?.expiresAt ?? null))}
+                {supportNote}
               </Text>
             </View>
           </>

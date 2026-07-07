@@ -29,7 +29,7 @@ describe('Settings route contracts', () => {
     expect(privacyAlias).toContain("pathname: '/(tabs)/you'");
     expect(privacyAlias).toContain("params: { section: 'privacy' }");
     expect(you).toContain('useLocalSearchParams');
-    expect(you).toContain("useLocalSearchParams<{ section?: string }>()");
+    expect(you).toContain('useLocalSearchParams<{ section?: string }>()');
     expect(you).toContain('const scrollRef = useRef<ScrollView>(null);');
     expect(you).toContain('const privacyCardY = useRef(0);');
     expect(you).toContain("if (params.section !== 'privacy' || !privacyCardReady) return;");
@@ -165,14 +165,10 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       'className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"',
     );
-    expect(source).toContain(
-      'const primaryRoutineRows = shortPhone',
-    );
+    expect(source).toContain('const primaryRoutineRows = shortPhone');
     expect(source).toContain('? routineRows.slice(0, 2)');
     expect(source).toContain('? routineRows.slice(0, 3)');
-    expect(source).toContain(
-      'const secondaryRoutineRows = shortPhone',
-    );
+    expect(source).toContain('const secondaryRoutineRows = shortPhone');
     expect(source).toContain('? routineRows.slice(2)');
     expect(source).toContain('? routineRows.slice(3)');
     expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
@@ -231,5 +227,24 @@ describe('Settings route contracts', () => {
     expect(source).toContain("track('subscription_cancel_intent'");
     expect(source).toContain("source: 'subscription_settings'");
     expect(source).toContain('period_type: entitlementState.periodType');
+  });
+
+  it('keeps app-granted reverse trials out of OS subscription management', () => {
+    const source = readAppRoute('settings/subscription.tsx');
+
+    expect(source).toContain("const isAppGrantedAccess = data?.store === 'app_granted';");
+    expect(source).toContain(
+      'const isReverseTrialAccess = isAppGrantedAccess && data?.inReverseTrial === true;',
+    );
+    expect(source).toContain("router.push('/paywall/reoffer')");
+    expect(source).toContain("router.push('/paywall/upsell?feature=full_routine')");
+    expect(source).toContain('PAYWALL_COPY.reverseTrial.keepCta');
+    expect(source).toContain('PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)');
+    expect(source).toContain('PAYWALL_COPY.manage.appGrantedNote(endDateLabel)');
+    expect(source).toContain('PAYWALL_COPY.manage.cancelNote(endDateLabel)');
+    expect(source).toContain('const manageAction = isAppGrantedAccess');
+    expect(source).toContain('const supportNote = isReverseTrialAccess');
+    expect(source).toContain('<Row label={manageLabel} onPress={manageAction} />');
+    expect(source).not.toContain('<Row label={manageLabel} onPress={openStore} />');
   });
 });

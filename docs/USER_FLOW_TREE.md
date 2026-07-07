@@ -900,6 +900,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/settings/subscription`, `/settings/notifications`, `/settings/timing`, and `/settings/privacy` directly, then use the visible Back control where the route has its own screen.
   - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. `/settings/privacy` lands inside the You tab privacy-control surface instead of showing an unmatched-route page. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target. On compact phones, the You tab first viewport ends on complete rows with a clear buffer above the floating tab bar, and covered lower rows do not receive accidental hits until the user scrolls them into view.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
+- Branch: active reverse-trial subscription options
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Seed an active app-granted reverse-trial entitlement, open `/settings/subscription`, then tap the Pro options row.
+  - Expected result: The screen shows the reverse-trial/free-until state and a keep-Pro options row that opens the Pro keep-options paywall. It must not open App Store or Google Play subscription management, must not imply there is a card on file, and must not show expired-trial copy while the reverse trial is still active.
+  - Evidence: Screenshot sequence, visible route snapshot, and local entitlement fixture snapshot.
 - Branch: policy link handoff failure
   - Priority: Important
   - Automate later: Yes

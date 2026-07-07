@@ -5,20 +5,40 @@ import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { dismissPaywall } from '@/features/subscription/dismissPaywall';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
-import { useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
+import { APP_YOU_ROUTE } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// Reverse-trial expired → honest loss-aversion re-offer (design 03, docs/08 §3.2/§6).
-// Earned by real use, data preserved, an easy "no". Never a data-deleting lock.
+// Reverse-trial keep/re-offer surface (design 02/03, docs/08 §3.2/§6).
+// Active trials can choose a plan without store-management confusion; expired
+// trials get the honest loss-aversion re-offer. Never a data-deleting lock.
 export default function ReofferScreen() {
+  const { data, isLoading } = useEntitlement();
   const { startTrial, downgrade } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
+  const activeReverseTrial = data?.inReverseTrial === true;
+  const screenCopy = activeReverseTrial
+    ? {
+        pill: PAYWALL_COPY.reverseTrial.keepPill,
+        title: PAYWALL_COPY.reverseTrial.keepTitle,
+        body: PAYWALL_COPY.reverseTrial.keepBody,
+        cta: PAYWALL_COPY.reverseTrial.keepCta,
+        declineCta: PAYWALL_COPY.reverseTrial.keepDeclineCta,
+      }
+    : {
+        pill: PAYWALL_COPY.reoffer.pill,
+        title: PAYWALL_COPY.reoffer.title,
+        body: PAYWALL_COPY.reoffer.body,
+        cta: PAYWALL_COPY.reoffer.keepCta,
+        declineCta: PAYWALL_COPY.reoffer.declineCta,
+      };
 
   function onStartTrial() {
     if (!canPurchase) {
@@ -39,9 +59,29 @@ export default function ReofferScreen() {
     });
   }
 
+  function onDecline() {
+    if (activeReverseTrial) {
+      dismissPaywall(router, APP_YOU_ROUTE);
+      return;
+    }
+
+    downgrade.mutate(undefined, { onSettled: () => router.replace('/(tabs)/today') });
+  }
+
   useEffect(() => {
-    track('paywall_shown', { context: 'reverse_trial_reoffer' });
-  }, []);
+    if (isLoading) return;
+    track('paywall_shown', {
+      context: activeReverseTrial ? 'reverse_trial_keep_options' : 'reverse_trial_reoffer',
+    });
+  }, [activeReverseTrial, isLoading]);
+
+  if (isLoading) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View />
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -56,14 +96,14 @@ export default function ReofferScreen() {
         >
           <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.clay }} />
           <Text variant="label" className="font-sans-bold" tone="muted" style={{ fontSize: 12.5 }}>
-            {PAYWALL_COPY.reoffer.pill}
+            {screenCopy.pill}
           </Text>
         </View>
         <Text variant="title" className="mt-5" style={{ fontSize: 32, lineHeight: 36 }}>
-          {PAYWALL_COPY.reoffer.title}
+          {screenCopy.title}
         </Text>
         <Text variant="body" tone="muted" className="mt-2.5" style={{ lineHeight: 24 }}>
-          {PAYWALL_COPY.reoffer.body}
+          {screenCopy.body}
         </Text>
         <View
           className="mt-5 rounded-card bg-paper-raised px-[18px]"
@@ -131,18 +171,16 @@ export default function ReofferScreen() {
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
-            {PAYWALL_COPY.reoffer.keepCta}
+            {screenCopy.cta}
           </Text>
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() =>
-            downgrade.mutate(undefined, { onSettled: () => router.replace('/(tabs)/today') })
-          }
+          onPress={onDecline}
           className="h-[48px] items-center justify-center"
         >
           <Text className="font-sans-semibold" tone="muted" variant="body">
-            {PAYWALL_COPY.reoffer.declineCta}
+            {screenCopy.declineCta}
           </Text>
         </Pressable>
       </View>

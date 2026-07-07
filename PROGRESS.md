@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the active reverse-trial subscription-options path. App-granted
+  no-card reverse trials now route the Settings subscription row to an in-app
+  keep-Pro options paywall instead of OS subscription management, and active
+  reverse-trial/settings copy no longer implies App Store cancellation or a card
+  on file. The expired reverse-trial re-offer still keeps its downgrade path.
+  Focused settings/paywall/cancel-intent contracts pass, and Expo web E2E at
+  390 x 844 and 320 x 568 verified Settings -> keep options uses active
+  no-card copy in
+  `test-results/human-e2e/2026-07-07/settings-subscription-reverse-trial/`.
+
 - Hardened the RevenueCat webhook idempotency path so failed entitlement mirror
   writes can recover on RevenueCat retry. Event IDs with a completed or ignored
   audit row still dedupe, but rows stuck in `processing_status='error'` now
@@ -2716,6 +2726,15 @@ checker now accepts process-env overrides for CI/staging evidence, validates `ap
 requires final product-ID shape, and reuses the shared production HTTPS URL guard. Added a no-network
 `phase6:check-payments-env-smoke` and wired it into `phase6:verify`; real RevenueCat dashboard keys, products, webhook
 secrets, store restore evidence, finance signoff, and named signoff remain Tas-owned blockers.
+
+### Reverse-trial subscription settings trust fix (2026-07-07)
+
+Fixed active app-granted reverse-trial subscription settings so the keep-Pro row stays inside the app instead of opening
+OS subscription management. The settings note now states that no card is on file and avoids App Store cancellation copy
+for the no-card trial. The keep-options paywall now renders active reverse-trial copy separately from the expired
+re-offer. Added settings/paywall contract tests and ran Expo web human E2E at 390x844 and 320x568 with evidence under
+`test-results/human-e2e/2026-07-07/settings-subscription-reverse-trial/`. Native iOS/Android billing handoff QA remains
+required before store submission.
 
 ## Open questions for the founder
 

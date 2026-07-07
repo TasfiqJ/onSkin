@@ -43,7 +43,14 @@ export const PAYWALL_COPY = {
     bannerTitle: (daysLeft: number) =>
       `You’re exploring Pro. ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left`,
     bannerBody: 'Everything’s unlocked, no card on file. Keep it after your week?',
+    keepPill: 'No card on file',
+    keepTitle: 'Keep Pro after your week.',
+    keepBody:
+      'You are exploring Pro now. Nothing renews unless you choose a plan. Selecting a plan keeps your routine, checks, photos, and reminders unlocked after the free week.',
     keepCta: 'Keep Pro after your week',
+    keepDeclineCta: 'Keep exploring for now',
+    settingsNote: (date: string) =>
+      `No card is on file. You have Pro until ${date}. Choose a plan only if you want to keep Pro after your week.`,
   },
   // Reverse-trial expired re-offer (design 03, docs/08 §3.2/§6).
   reoffer: {
@@ -88,6 +95,8 @@ export const PAYWALL_COPY = {
     termsRow: 'Terms & Privacy',
     cancelNote: (date: string) =>
       `Cancelling is one tap in your App Store settings, and you keep Pro until ${date}. No maze, no calls.`,
+    appGrantedNote: (date: string) =>
+      `No card is on file for this access. You keep Pro until ${date}; choose a plan only if you want Pro to continue after that.`,
     freeTitle: 'You’re on the free plan',
     freeBody:
       'The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.',

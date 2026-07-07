@@ -108,9 +108,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'paddingBottom: compactTabbedPhotoPaywall ? 144 : compactPaywall ? 112 : 24,',
     );
-    expect(proGate).toContain(
-      '{compactTabbedPhotoPaywall ? null : (',
-    );
+    expect(proGate).toContain('{compactTabbedPhotoPaywall ? null : (');
     expect(proGate).toContain(
       "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
@@ -163,6 +161,21 @@ describe('paywall mobile contracts', () => {
     expect(winback, 'dark win-back paywall should render readable compliance controls').toContain(
       '<ComplianceRow tone="dark" />',
     );
+  });
+
+  it('keeps active reverse-trial keep options distinct from the expired re-offer', () => {
+    const reoffer = readAppRoute('paywall/reoffer.tsx');
+    const copy = readSource('features/subscription/copy.ts');
+
+    expect(reoffer).toContain('const activeReverseTrial = data?.inReverseTrial === true;');
+    expect(reoffer).toContain(
+      "context: activeReverseTrial ? 'reverse_trial_keep_options' : 'reverse_trial_reoffer'",
+    );
+    expect(reoffer).toContain('PAYWALL_COPY.reverseTrial.keepTitle');
+    expect(reoffer).toContain('PAYWALL_COPY.reoffer.title');
+    expect(reoffer).toContain('dismissPaywall(router, APP_YOU_ROUTE)');
+    expect(copy).toContain("keepPill: 'No card on file'");
+    expect(copy).toContain("keepDeclineCta: 'Keep exploring for now'");
   });
 
   it('keeps the onboarding paywall actions visible sooner on short phones', () => {
