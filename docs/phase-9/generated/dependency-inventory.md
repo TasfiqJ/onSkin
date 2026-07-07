@@ -1,6 +1,6 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-06T21:21:03.006Z
+Generated: 2026-07-07T01:52:58.061Z
 Package count: 1071
 Lockfile version: 3
 
@@ -14,11 +14,11 @@ Lockfile version: 3
 
 ## Install Scripts
 
-| Package | Dev | Optional | Allowed | Reason | Path |
-| --- | --- | --- | --- | --- | --- |
-| `@sentry/cli@2.58.4` | no | no | yes | Sentry native CLI binary installer used by @sentry/react-native tooling. | node_modules/@sentry/cli |
-| `fsevents@2.3.3` | yes | yes | yes | Optional Darwin file-watcher native package; not installed on non-Darwin CI runners. | node_modules/fsevents |
-| `unrs-resolver@1.12.2` | yes | no | yes | ESLint resolver native binding installer used by lint tooling. | node_modules/unrs-resolver |
+| Package                | Dev | Optional | Allowed | Reason                                                                               | Path                       |
+| ---------------------- | --- | -------- | ------- | ------------------------------------------------------------------------------------ | -------------------------- |
+| `@sentry/cli@2.58.4`   | no  | no       | yes     | Sentry native CLI binary installer used by @sentry/react-native tooling.             | node_modules/@sentry/cli   |
+| `fsevents@2.3.3`       | yes | yes      | yes     | Optional Darwin file-watcher native package; not installed on non-Darwin CI runners. | node_modules/fsevents      |
+| `unrs-resolver@1.12.2` | yes | no       | yes     | ESLint resolver native binding installer used by lint tooling.                       | node_modules/unrs-resolver |
 
 ## Blockers
 

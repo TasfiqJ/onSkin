@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T01:17:12.170Z",
+  "generatedAt": "2026-07-07T01:52:57.579Z",
   "app": {
     "name": "RoutineKind",
     "slug": "routinekind",
@@ -60,10 +60,9 @@
     }
   },
   "artifacts": {},
-  "blockers": [
-    "Resolved production app config failed: Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve."
-  ],
+  "blockers": [],
   "warnings": [
+    "Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.",
     "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",
     "Android artifact not supplied for hashing: set PHASE9_ANDROID_ARTIFACT=path.",
     "Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.",

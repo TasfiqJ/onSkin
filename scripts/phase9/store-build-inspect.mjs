@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 import { createRequire } from 'node:module';
 
-import { block, envSnapshot, exists, hash, printResult, read, warn, write } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  exists,
+  hash,
+  printResult,
+  read,
+  strict,
+  warn,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -12,6 +22,10 @@ const artifacts = {};
 const require = createRequire(import.meta.url);
 const appConfigPath = require.resolve('../../apps/mobile/app.config.js');
 const variants = ['development', 'staging', 'production'];
+const productionIdentityConfigErrorPatterns = [
+  /BRAND_LEGAL_CLEARANCE=cleared/,
+  /explicit final native identity env values/,
+];
 
 function appConfigForVariant(variant) {
   const previousVariant = process.env.APP_VARIANT;
@@ -38,6 +52,13 @@ function appConfigForVariant(variant) {
 
 function expectedVariantValue(baseValue, variant) {
   return variant === 'production' ? baseValue : `${baseValue}.${variant}`;
+}
+
+function isProductionIdentityConfigBlock(variant, error) {
+  return (
+    variant === 'production' &&
+    productionIdentityConfigErrorPatterns.some((pattern) => pattern.test(error ?? ''))
+  );
 }
 
 block(errors, Boolean(app.version), 'App version is missing.');
@@ -134,12 +155,19 @@ const variantConfigs = Object.fromEntries(
 );
 for (const variant of variants) {
   const config = variantConfigs[variant];
-  block(
-    errors,
-    Boolean(config),
-    `Resolved ${variant} app config failed: ${variantResults[variant].error}`,
-  );
-  if (!config) continue;
+  if (!config) {
+    const message = `Resolved ${variant} app config failed: ${variantResults[variant].error}`;
+    if (!strict && isProductionIdentityConfigBlock(variant, variantResults[variant].error)) {
+      warn(
+        warnings,
+        false,
+        'Resolved production app config blocked until BRAND_LEGAL_CLEARANCE=cleared and explicit final native identity env values are supplied.',
+      );
+    } else {
+      block(errors, false, message);
+    }
+    continue;
+  }
   block(
     errors,
     config.extra?.appVariant === variant,
