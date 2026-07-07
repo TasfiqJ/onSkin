@@ -904,7 +904,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Seed an active app-granted reverse-trial entitlement, open `/settings/subscription`, then tap the Pro options row.
-  - Expected result: The screen shows the reverse-trial/free-until state and a keep-Pro options row that opens the Pro keep-options paywall. It must not open App Store or Google Play subscription management, must not imply there is a card on file, and must not show expired-trial copy while the reverse trial is still active.
+  - Expected result: The screen shows the reverse-trial/free-until state, a no-card status label, and a keep-Pro options row that opens the Pro keep-options paywall. It must not open App Store or Google Play subscription management, must not imply there is a card on file, and must not show expired-trial copy while the reverse trial is still active.
   - Evidence: Screenshot sequence, visible route snapshot, and local entitlement fixture snapshot.
 - Branch: policy link handoff failure
   - Priority: Important

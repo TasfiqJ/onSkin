@@ -259,6 +259,9 @@ describe('Settings route contracts', () => {
     expect(source).toContain('PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)');
     expect(source).toContain('PAYWALL_COPY.manage.appGrantedNote(endDateLabel)');
     expect(source).toContain('PAYWALL_COPY.manage.cancelNote(endDateLabel)');
+    expect(source).toContain("const statusPillLabel = data?.inReverseTrial");
+    expect(source).toContain("? 'No card'");
+    expect(source).toContain("? 'Store trial'");
     expect(source).toContain('const manageAction = isAppGrantedAccess');
     expect(source).toContain('const supportNote = isReverseTrialAccess');
     expect(source).toContain('<Row label={manageLabel} onPress={manageAction} />');

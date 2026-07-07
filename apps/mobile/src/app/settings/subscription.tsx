@@ -121,6 +121,11 @@ export default function SubscriptionScreen() {
     : isAppGrantedAccess
       ? PAYWALL_COPY.manage.appGrantedNote(endDateLabel)
       : PAYWALL_COPY.manage.cancelNote(endDateLabel);
+  const statusPillLabel = data?.inReverseTrial
+    ? 'No card'
+    : data?.inTrial
+      ? 'Store trial'
+      : PAYWALL_COPY.manage.activeLabel;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -151,9 +156,7 @@ export default function SubscriptionScreen() {
                     className="font-sans-bold"
                     style={{ color: '#9DB18A', fontSize: 11 }}
                   >
-                    {data?.inReverseTrial || data?.inTrial
-                      ? 'Trial'
-                      : PAYWALL_COPY.manage.activeLabel}
+                    {statusPillLabel}
                   </Text>
                 </View>
               </View>
