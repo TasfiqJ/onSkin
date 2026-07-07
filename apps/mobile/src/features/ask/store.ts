@@ -4,6 +4,7 @@ import {
   removePrivateItem,
   setPrivateItem,
 } from '@/lib/storage/privateKV';
+import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 
@@ -19,15 +20,11 @@ const TURNS_KEY = 'onskin.ask.groundedTurns.v1'; // { period: 'YYYY-MM', count: 
 const PERIOD = /^\d{4}-(0[1-9]|1[0-2])$/;
 
 export async function getAskConsentLocal(): Promise<boolean> {
-  try {
-    return (await getPrivateItem(CONSENT_KEY)) === 'true';
-  } catch {
-    return false;
-  }
+  return getPrivateBoolean(CONSENT_KEY);
 }
 
 export async function setAskConsentLocal(enabled: boolean): Promise<void> {
-  await setPrivateItem(CONSENT_KEY, enabled ? 'true' : 'false');
+  await setPrivateBoolean(CONSENT_KEY, enabled);
 }
 
 type TurnRecord = { period: string; count: number };

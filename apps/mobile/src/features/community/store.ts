@@ -1,4 +1,5 @@
-import { getPrivateItem, multiRemovePrivateItems, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import { multiRemovePrivateItems } from '@/lib/storage/privateKV';
 
 // Local-first community state (docs/11 §6/§8, the D-029 pattern). The
 // community_participation consent flag + the 16+ age confirmation are the v1 source of
@@ -9,25 +10,17 @@ const CONSENT_KEY = 'onskin.communityConsent.v1';
 const AGE_KEY = 'onskin.communityAge16.v1';
 
 export async function getCommunityConsentLocal(): Promise<boolean> {
-  try {
-    return (await getPrivateItem(CONSENT_KEY)) === 'true';
-  } catch {
-    return false;
-  }
+  return getPrivateBoolean(CONSENT_KEY);
 }
 export async function setCommunityConsentLocal(granted: boolean): Promise<void> {
-  await setPrivateItem(CONSENT_KEY, granted ? 'true' : 'false');
+  await setPrivateBoolean(CONSENT_KEY, granted);
 }
 
 export async function getAgeConfirmedLocal(): Promise<boolean> {
-  try {
-    return (await getPrivateItem(AGE_KEY)) === 'true';
-  } catch {
-    return false;
-  }
+  return getPrivateBoolean(AGE_KEY);
 }
 export async function setAgeConfirmedLocal(confirmed: boolean): Promise<void> {
-  await setPrivateItem(AGE_KEY, confirmed ? 'true' : 'false');
+  await setPrivateBoolean(AGE_KEY, confirmed);
 }
 
 /** Test/seed reset. */

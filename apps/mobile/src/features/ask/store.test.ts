@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
-import { getGroundedTurns, recordGroundedTurn } from './store';
+import { getAskConsentLocal, getGroundedTurns, recordGroundedTurn, setAskConsentLocal } from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -21,6 +21,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 const TURNS_KEY = 'onskin.ask.groundedTurns.v1';
+const CONSENT_KEY = 'onskin.ask.consent.v1';
 
 describe('Ask grounded-turn store', () => {
   beforeEach(() => {
@@ -69,5 +70,29 @@ describe('Ask grounded-turn store', () => {
     await recordGroundedTurn('2026-99');
 
     expect(mocks.storage.has(TURNS_KEY)).toBe(false);
+  });
+});
+
+describe('Ask consent store', () => {
+  beforeEach(() => {
+    mocks.storage.clear();
+  });
+
+  it('normalizes legacy consent grants and writes compact canonical flags', async () => {
+    mocks.storage.set(CONSENT_KEY, 'true');
+
+    await expect(getAskConsentLocal()).resolves.toBe(true);
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
+
+    await setAskConsentLocal(false);
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+  });
+
+  it('fails closed and repairs malformed ask consent values', async () => {
+    mocks.storage.set(CONSENT_KEY, 'yes');
+
+    await expect(getAskConsentLocal()).resolves.toBe(false);
+
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
   });
 });

@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened local Ask, Commerce, Community, and Trend private boolean gates with a
+  shared encrypted-storage helper. Existing legacy `true`/`false` consent and
+  age-confirmation flags migrate to compact canonical values, malformed flags
+  fail closed and repair to off, and repair-write failures do not override an
+  already-read local grant/denial decision. Focused store tests cover Ask
+  consent, commerce data-sharing consent, community participation/16+ gates,
+  and photo-trend-insights consent.
+
 - Hardened public growth/share-card attribution URLs so final-brand domains are
   parsed through URL rules, malformed domains with query/userinfo/protocol tricks
   are rejected, and public growth paths cannot inject query strings or external

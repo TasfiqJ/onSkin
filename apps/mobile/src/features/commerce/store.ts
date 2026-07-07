@@ -1,7 +1,8 @@
 import { randomUUID } from 'expo-crypto';
 
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import { removePrivateItem } from '@/lib/storage/privateKV';
 
 import { isHealthSafePayload, type ClickPayload } from './attribution';
 
@@ -15,15 +16,11 @@ import { isHealthSafePayload, type ClickPayload } from './attribution';
 const CONSENT_KEY = 'onskin.commerceConsent.v1';
 
 export async function getCommerceConsentLocal(): Promise<boolean> {
-  try {
-    return (await getPrivateItem(CONSENT_KEY)) === 'true';
-  } catch {
-    return false;
-  }
+  return getPrivateBoolean(CONSENT_KEY);
 }
 
 export async function setCommerceConsentLocal(granted: boolean): Promise<void> {
-  await setPrivateItem(CONSENT_KEY, granted ? 'true' : 'false');
+  await setPrivateBoolean(CONSENT_KEY, granted);
 }
 
 /** An opaque, random click token. Carries no profile/concern/photo (docs/10 §5). */
