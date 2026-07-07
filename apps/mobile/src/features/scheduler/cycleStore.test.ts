@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { localDateString } from '@/features/today/useToday';
 
-import { loadCycleConfig, startCycleToday } from './cycleStore';
+import { loadCycleConfig, startRecovery, startCycleToday, updateCycleConfig } from './cycleStore';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -141,6 +141,57 @@ describe('cycle store first-session handoff', () => {
     expect(JSON.parse(mocks.storage.get(CYCLE_KEY) ?? '{}')).toMatchObject({
       anchorISO: '2026-01-01',
       skips: ['2026-01-02'],
+    });
+  });
+
+  it('does not persist malformed direct config patches', async () => {
+    mocks.storage.set(
+      CYCLE_KEY,
+      JSON.stringify({
+        variant: 'classic',
+        anchorISO: '2026-01-01',
+        pausedFrom: null,
+        pauseReason: null,
+        recovery: null,
+        skips: [],
+        stagingOverrides: ['retinol'],
+      }),
+    );
+
+    await expect(updateCycleConfig({ anchorISO: 'tomorrow' })).resolves.toMatchObject({
+      variant: 'classic',
+      anchorISO: '2026-01-01',
+      stagingOverrides: ['retinol'],
+    });
+
+    expect(JSON.parse(mocks.storage.get(CYCLE_KEY) ?? '{}')).toMatchObject({
+      variant: 'classic',
+      anchorISO: '2026-01-01',
+      recovery: null,
+      stagingOverrides: ['retinol'],
+    });
+  });
+
+  it('keeps the current cycle when recovery input is invalid', async () => {
+    mocks.storage.set(
+      CYCLE_KEY,
+      JSON.stringify({
+        variant: 'gentle',
+        anchorISO: '2026-01-01',
+        pausedFrom: null,
+        pauseReason: null,
+        recovery: null,
+        skips: [],
+        stagingOverrides: [],
+      }),
+    );
+
+    await startRecovery(0, 'irritation');
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      variant: 'gentle',
+      anchorISO: '2026-01-01',
+      recovery: null,
     });
   });
 });

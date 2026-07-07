@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the local-first cycle scheduler store so direct config patches are
+  normalized before persistence. Malformed anchors or invalid recovery windows
+  now preserve the current valid cycle instead of writing corrupt state that is
+  only repaired on the next read. Added scheduler store regressions for malformed
+  anchors and invalid recovery input.
+
 - Added notification timezone persistence for the local-first reminder
   preferences. Mobile now normalizes the current device/runtime timezone into
   `NotifPrefs`, repairs malformed legacy timezone values, and mirrors
