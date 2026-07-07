@@ -177,7 +177,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Add a first-run shelf product with a category such as Moisturiser or Oil / balm, then continue to the shelf/reveal path.
-  - Expected result: The product is added once, the selected category uses a canonical shelf ID, PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category, category chips meet the 44 pt phone touch target, and the visible remove-product control is at least 44 x 44.
+  - Expected result: The product is added once, the selected category uses a canonical shelf ID, PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category, category chips meet the 44 pt phone touch target without clipping under the fixed footer on 320 x 568 phones, and the visible remove-product control is at least 44 x 44.
   - Evidence: Screenshot, local shelf state or product metadata snapshot, and small-phone control-geometry snapshot.
 - Branch: back/relaunch during onboarding
   - Priority: Important

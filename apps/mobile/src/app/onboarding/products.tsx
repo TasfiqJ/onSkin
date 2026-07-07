@@ -85,18 +85,33 @@ export default function ProductsScreen() {
             <Text variant="label" tone="muted" className="mb-2 mt-4">
               CATEGORY · OPTIONAL
             </Text>
-            <View
-              className={compactPhone ? 'flex-row flex-wrap gap-1' : 'flex-row flex-wrap gap-2'}
-            >
-              {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
-                <Chip
-                  key={c.id}
-                  label={c.label}
-                  selected={category === c.id}
-                  onPress={() => setCategory(category === c.id ? null : c.id)}
-                />
-              ))}
-            </View>
+            {compactPhone ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 4, paddingRight: 8 }}
+              >
+                {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
+                  <Chip
+                    key={c.id}
+                    label={c.label}
+                    selected={category === c.id}
+                    onPress={() => setCategory(category === c.id ? null : c.id)}
+                  />
+                ))}
+              </ScrollView>
+            ) : (
+              <View className="flex-row flex-wrap gap-2">
+                {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
+                  <Chip
+                    key={c.id}
+                    label={c.label}
+                    selected={category === c.id}
+                    onPress={() => setCategory(category === c.id ? null : c.id)}
+                  />
+                ))}
+              </View>
+            )}
             {!compactPhone ? (
               <Button
                 className="mt-4"

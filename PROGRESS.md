@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed onboarding Products category chips on 320 x 568 phones. The optional
+  category selector now uses a compact horizontal rail, preserving 48 px chip
+  targets while keeping the last category from clipping under the fixed footer.
+  Expo web evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-products-category-rail/`.
+
 - Aligned the top-level launch/blocker docs with the current RoutineKind
   identity state. `BLOCKERS.md` and `LAUNCH_READINESS.md` now say the app has
   moved off legacy OnSkin defaults locally while production remains blocked

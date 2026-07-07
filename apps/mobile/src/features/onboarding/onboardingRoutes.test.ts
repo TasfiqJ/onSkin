@@ -49,9 +49,11 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain("className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}");
     expect(products).toContain("className={compactPhone ? 'mt-4' : 'mt-6'}");
     expect(products).toContain("className={compactPhone ? 'mt-4 p-4' : 'mt-6'}");
-    expect(products).toContain(
-      "className={compactPhone ? 'flex-row flex-wrap gap-1' : 'flex-row flex-wrap gap-2'}",
-    );
+    expect(products).toContain('{compactPhone ? (');
+    expect(products).toContain('<ScrollView');
+    expect(products).toContain('horizontal');
+    expect(products).toContain('contentContainerStyle={{ gap: 4, paddingRight: 8 }}');
+    expect(products).toContain('<View className="flex-row flex-wrap gap-2">');
     expect(goals).toContain('compact={compactPhone}');
     expect(quiz).toContain('compact={compactPhone}');
     expect(goals).toContain('tight={compactPhone}');
