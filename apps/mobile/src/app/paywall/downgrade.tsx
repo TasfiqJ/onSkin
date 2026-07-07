@@ -70,6 +70,16 @@ export default function DowngradeScreen() {
         <ComplianceRow />
       </ScrollView>
       <View className="gap-3 pb-2">
+        {offering.data?.status && offering.data.status !== 'available' ? (
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className="px-2 text-center"
+            style={{ fontSize: 12, lineHeight: 17 }}
+          >
+            {offering.data.reason}
+          </Text>
+        ) : null}
         <Pressable
           accessibilityRole="button"
           disabled={!canPurchase || startTrial.isPending}

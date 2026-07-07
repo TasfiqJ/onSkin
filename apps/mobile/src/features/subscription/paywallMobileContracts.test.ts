@@ -163,6 +163,21 @@ describe('paywall mobile contracts', () => {
     );
   });
 
+  it('keeps lifecycle paywalls explicit when store pricing disables purchase', () => {
+    for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx']) {
+      const source = readAppRoute(route);
+
+      expect(
+        source,
+        `${route} should only show the store-unavailable reason in unavailable states`,
+      ).toContain("offering.data?.status && offering.data.status !== 'available'");
+      expect(
+        source,
+        `${route} should explain why the purchase action is disabled`,
+      ).toContain('{offering.data.reason}');
+    }
+  });
+
   it('keeps active reverse-trial keep options distinct from the expired re-offer', () => {
     const reoffer = readAppRoute('paywall/reoffer.tsx');
     const copy = readSource('features/subscription/copy.ts');

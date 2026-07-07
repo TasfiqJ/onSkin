@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the paid-expiry downgrade paywall's unavailable-store state so a disabled
+  `Renew Pro` action now explains the local store-checkout reason instead of
+  looking inert. The lifecycle paywall contract now requires unavailable-store
+  reasons on re-offer and downgrade surfaces, and Expo web E2E at 320 x 568
+  verified the reason, scroll-reachable compliance controls, 48 px targets, and
+  zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-downgrade-unavailable-reason/`;
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-paywall-downgrade-unavailable-reason.md`.
+
 - Tightened deferred Community posting direct entries so `/community/ask` and
   `/community/people-like-you` now use `Back to Skin Notes` instead of a generic
   `Back` CTA while community posting is gated. Expo web E2E at 320 x 568 verified
