@@ -11,6 +11,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   consent-withdrawal probe uses the shared placeholder parser. Release smoke now
   blocks local placeholder regexes so pending, mixed-case, and newer placeholder
   values cannot accidentally pass live-evidence preflight checks.
+  The RevenueCat live webhook harness also now initializes the shared placeholder
+  guard before deriving webhook secret readiness.
 
 - Regenerated Phase 8, Phase 9, Phase 10, and Phase 11 generated readiness
   packets after the public-identity packet builders began normalizing final

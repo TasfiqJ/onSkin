@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-07T06:44:05.775Z
+Generated: 2026-07-07T06:48:45.452Z
 Status: blocked
-Git SHA: 4990eaade601ab66b5a964e30b968b441e0fdc12
+Git SHA: 46f7b48de80b47384ad897a9ff932fddcb443bed
 Git status: DIRTY
 
 ## Release Identity
@@ -110,16 +110,16 @@ Git status: DIRTY
 - `supabase/functions/revenuecat-webhook/index.ts`: `7899144905d1966dccc526e106dfb1ace848c6f492383a97699d5859a7a49fa5`
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
 - `scripts/phase9/lib.mjs`: `fa0c07392f3609134afcfbc2bd58597a31b779ef6d3812c716f835595027be95`
-- `scripts/phase9/release-smoke.mjs`: `c7536caabf848db39426902e630e5551898171d80707ec1eb7069497c3033fa2`
+- `scripts/phase9/release-smoke.mjs`: `0c7d55a6de31c7123599db48752f2e8e93d5403d38629a96681a5ed80f34c707`
 - `scripts/phase9/build-release-qa-packet.mjs`: `27b7ed648f445636b654059b0d9246b998f5bf26da60a9d608977badcb716f62`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `0661ae154be6aae795b15bba994a3fa7352682bdbb8a943a970f31fe0cb5c034`
-- `scripts/phase9/live-edge-auth.mjs`: `6ea5dcc2e54f47f817a7357a0ae0aa0e5f4bb1d222562177abbd6e5634b92271`
-- `scripts/phase9/live-data-rights.mjs`: `f4dd3f441061260b8dc4f4a2bf0c39bd5cf99e6f22c4b641c4c1e66c94b276ba`
-- `scripts/phase9/live-consent-withdrawal.mjs`: `7b729cf09202d6475cbfbf6fb6ada62eca0eba1d1fc464b531425d982f6c1cde`
-- `scripts/phase9/live-public-forms.mjs`: `d4504017adb1a9889cde021af9eb2d766c9f464efc4c59075081b4730ddb6114`
-- `scripts/phase9/live-catalog-rate-limit.mjs`: `d8a52b05b7995d27c1e92e4bb8dd2814a46bb95bdabedc24c64319f39daf6663`
-- `scripts/phase9/live-order-report-poll.mjs`: `438113a48e0b1baff4312a5f71873cdd28ac1a8de98e6f75fcc4f792bcc15093`
-- `scripts/phase9/live-revenuecat-webhook.mjs`: `9f73f3ad255a76abcf9c82ffef882a11d48492412415817b131aff88d13b6d2a`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `98c836d4dd6494c3ac6bf24719e97afd7f7cb4f8d542162deebbe1e15beed7ef`
+- `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
+- `scripts/phase9/live-data-rights.mjs`: `987f92e64ae380e5f9e6e641117ef7a85e89a40749b278ecede19fa2f5417b65`
+- `scripts/phase9/live-consent-withdrawal.mjs`: `baf9d94d3034bdf53c7bc7c2960eb7342aacf3c09b9b65f1c35bcb99806fe97b`
+- `scripts/phase9/live-public-forms.mjs`: `6bd8c49e0caa2c7dcb10f57998abf38622e30cf4dce3182420d3137edc6fe04a`
+- `scripts/phase9/live-catalog-rate-limit.mjs`: `9325b416192733bd81da59811b9b08f2e1c58dcfa7c2aa43dd08ca9038046da6`
+- `scripts/phase9/live-order-report-poll.mjs`: `1e5176ff563695bed27f63fcc8a51a7fdc77c05b523b9dfd4616070ad89c3206`
+- `scripts/phase9/live-revenuecat-webhook.mjs`: `b135d21cc68f67fc0a1ca7f90f6ef00fcc84fad925001df6e0f828a80611b1ac`
 - `scripts/phase9/edge-auth-smoke.mjs`: `a5da3372de530aa4faf1781a020422bd63eb3fa238e21873263b6c80487558be`
 - `scripts/phase9/data-rights-smoke.mjs`: `b2fff6b199e1adc5b994a4113ebb9f27a7d07b4050452e02128e423ad1033d31`
 - `scripts/phase9/supabase-policy-lint.mjs`: `153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183`
