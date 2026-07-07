@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T00:01:42.788Z",
+  "generatedAt": "2026-07-07T00:05:43.934Z",
   "app": {
     "name": "OnSkin",
     "slug": "onskin",
@@ -11,7 +11,10 @@
     "iosBundleIdentifier": "com.onskin.app",
     "androidPackage": "com.onskin.app",
     "androidAllowBackup": false,
-    "androidPermissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"]
+    "androidPermissions": [
+      "android.permission.CAMERA",
+      "android.permission.POST_NOTIFICATIONS"
+    ]
   },
   "easBuildProfiles": {
     "development": {
