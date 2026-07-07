@@ -12,6 +12,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "phase2:check-env": "node scripts/phase2/check-env.mjs",
+    "phase2:check-env-smoke": "node scripts/phase2/check-env-smoke.mjs",
     "phase2:check-env:strict": "node scripts/phase2/check-env.mjs --strict",
     "phase2:rls-smoke": "node scripts/phase2/supabase-rls-smoke.mjs",
     "phase3:audit-copy": "node scripts/phase3/audit-copy.mjs",

@@ -4,6 +4,15 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-07
+
+- Added a dated `RoutineKind` candidate spot-check to the brand evidence packet:
+  Apple public app search, Google Play public search, web-indexed App
+  Store/Play queries, and DNS did not surface an exact app listing or active
+  domain record on 2026-07-07. The docs keep this correctly scoped as screening
+  evidence only, not trademark clearance, registrar availability, or store
+  reservation.
+
 ## 2026-07-06
 
 - Tightened the production native identity gate so `APP_VARIANT=production`
@@ -12,7 +21,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   uncleared working-candidate identity from slipping through simply because it
   no longer matches the legacy `OnSkin` audit pattern. The Phase 2 environment
   checker now mirrors the same final native identity requirement for staging and
-  production readiness.
+  production readiness, with a repeatable `phase2:check-env-smoke` regression
+  command for the missing-identity and explicit-identity boundary.
 
 - Updated the Phase 9 privacy payload audit and data inventory to match the
   runtime-branded privacy posture. Lock-screen notification titles are now

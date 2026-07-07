@@ -102,6 +102,7 @@
 - `npm run phase9:verify`
 - `$env:PHASE9_RUN_NPM_AUDIT='true'; npm run phase9:verify`
 - `$env:EXPO_PUBLIC_APP_ENV='production'; $env:EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED='true'; node scripts/phase9/release-smoke.mjs` (expected failure probe for production Phase 7 evidence blockers)
+- `npm run phase2:check-env-smoke` (proves staging/production strict envs fail without final native identity, pass with explicit final identity, and development remains usable without final native identifiers)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase2/check-env.mjs --strict` (expected failure probe for private-looking public env values)
 - `$env:EXPO_PUBLIC_PERSONAL_TOKEN='blocked'; node scripts/phase2/check-env.mjs --strict` (expected failure probe for secret-looking public env key names)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase10/beta-readiness.mjs` (expected failure probe for private-looking public env values)
