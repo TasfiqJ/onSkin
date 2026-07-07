@@ -2912,12 +2912,6 @@ the visible UI. Expo web human E2E at 320 x 568 reproduced the pre-fix shell tex
 set after the fix under `test-results/human-e2e/2026-07-07/progress-capture-preconsent-shell-leak/`; native camera
 permission sequencing remains a device-harness follow-up.
 
-### Shelf catalog error copy (2026-07-07)
-
-Replaced backend-facing Shelf catalog search failure copy with a product-catalog message and applied it to both offline
-and error outcomes. Expo web human E2E at 320 x 568 verified the fallback copy, absence of backend jargon, and reachable
-Add by hand action under `test-results/human-e2e/2026-07-07/shelf-search-offline-copy/`.
-
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
