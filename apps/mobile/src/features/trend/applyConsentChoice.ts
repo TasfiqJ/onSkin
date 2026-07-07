@@ -17,6 +17,6 @@ export async function applyTrendConsentChoice(
     deps.onFailure();
     return false;
   } finally {
-    await deps.invalidate().catch(() => undefined);
+    void deps.invalidate().catch(() => undefined);
   }
 }

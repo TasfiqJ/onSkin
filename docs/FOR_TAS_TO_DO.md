@@ -58,6 +58,10 @@ Status: launch-blocked
   `photo_capture` path: attach evidence that first-use photo capture can save
   a local proof offline/pre-account and that staging/production sessions insert
   immutable `photo_capture` consent rows with the shown version/hash under RLS.
+  Repeat the same live-auth/RLS evidence for `photo_trend_insights` grant and
+  withdrawal rows; Codex can verify the Trend UI recovery branch locally with
+  `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only`, but cannot prove the live
+  ledger without Tas-owned Supabase/auth credentials.
 - Apple Developer and App Store Connect app under cleared bundle ID.
 - Google Play Console app and OAuth clients under cleared package ID.
 - RevenueCat project, products, offerings, entitlements, and webhook secret.

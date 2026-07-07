@@ -54,4 +54,23 @@ describe('trend consent choice application', () => {
 
     expect(deps.onFailure).not.toHaveBeenCalled();
   });
+
+  it('does not block retry controls on a slow visible state refresh', async () => {
+    let resolveInvalidate!: (value: unknown) => void;
+    deps.invalidate.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveInvalidate = resolve;
+      }),
+    );
+
+    const result = applyTrendConsentChoice(true, deps);
+
+    await expect(
+      Promise.race([result, new Promise((resolve) => setTimeout(() => resolve('blocked'), 0))]),
+    ).resolves.toBe(true);
+    expect(deps.invalidate).toHaveBeenCalledTimes(1);
+
+    resolveInvalidate(undefined);
+    await expect(result).resolves.toBe(true);
+  });
 });

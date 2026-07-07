@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Trend opt-in consent failure recovery. `/trend/optin` now has
+  dev-only one-shot grant/revoke failure fixtures plus a dev-only
+  `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` ledger mode so the recovery
+  UI can be proven without Tas-owned Supabase credentials. Failed grant and
+  withdrawal attempts now show persistent `Choice not saved` copy with
+  `role="alert"`, keep the switch on the last saved value, and re-enable the
+  control even when the consent refresh is slow. Successful retries update the
+  visible consent query immediately and clear the alert while the ledger refresh
+  continues in the background. Expo web E2E at 320 x 568 verified grant failure,
+  grant retry, withdrawal failure, and withdrawal retry with no raw dev errors
+  visible and no horizontal overflow; evidence is in
+  `test-results/human-e2e/2026-07-07/trend-consent-failure/`, with the tracked
+  bug report in
+  `docs/e2e-bug-reports/2026-07-07-trend-consent-failure-recovery.md`.
+
 - Hardened the first-use Progress photo consent failure branch. The capture
   route now has a dev-only one-shot
   `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once` fixture, persistent

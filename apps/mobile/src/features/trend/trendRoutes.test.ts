@@ -32,6 +32,24 @@ describe('Trend route contracts', () => {
     const source = readAppRoute('trend/optin.tsx');
 
     expect(source).toContain('applyTrendConsentChoice');
+    expect(source).toContain('EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE');
+    expect(source).toContain('EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER');
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER === 'local_only'");
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain("modes.has('grant_once') || modes.has('all_once')");
+    expect(source).toContain("modes.has('revoke_once') || modes.has('all_once')");
+    expect(source).toContain('setTrendInsightsLocal(true)');
+    expect(source).toContain('setTrendInsightsLocal(false)');
+    expect(source).toContain('deleteTrendState()');
+    expect(source).toContain("new Error('E2E_TREND_CONSENT_GRANT_FAILURE')");
+    expect(source).toContain("new Error('E2E_TREND_CONSENT_REVOKE_FAILURE')");
+    expect(source).toContain('const [saveFailed, setSaveFailed] = useState(false)');
+    expect(source).toContain('setSaveFailed(false)');
+    expect(source).toContain('setSaveFailed(true)');
+    expect(source).toContain("qc.setQueryData(['trendConsent'], on)");
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('TREND_COPY.optIn.saveFailedTitle');
+    expect(source).toContain('TREND_COPY.optIn.saveFailedBody');
     expect(source).toContain('Alert.alert(TREND_COPY.optIn.saveFailedTitle');
     expect(source).toContain(
       "invalidate: () => qc.invalidateQueries({ queryKey: ['trendConsent'] })",
