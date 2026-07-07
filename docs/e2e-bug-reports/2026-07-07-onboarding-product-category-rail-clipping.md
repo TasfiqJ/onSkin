@@ -2,7 +2,7 @@
 
 Severity: Medium
 Surface: Expo web
-Environment: Expo web on localhost, 320 x 568 and 390 x 568 compact phone viewports
+Environment: Expo web in-app browser on localhost, 320 x 568 and 390 x 568 compact phone viewports
 Feature: Onboarding product intake
 Date: 2026-07-07
 Tester: Codex human-simulated E2E
@@ -65,9 +65,14 @@ Replace the compact horizontal rail with a single collapsed selector that opens 
 - After screenshot: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/390-onboarding-products-category-open.png`
 - After screenshot: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/390-onboarding-products-spf-selected.png`
 - Geometry summary: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/geometry-summary.json`
-- Terminal transcript: focused verifier confirmed 320 and 390 px chooser, expanded-chip, and selected-state geometry.
+- In-app browser screenshot: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/320-iab-category-open.png`
+- In-app browser screenshot: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/320-iab-product-added.png`
+- In-app browser screenshot: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/390-iab-category-open.png`
+- In-app browser screenshot: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/390-iab-product-added.png`
+- In-app browser geometry summary: `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/iab-flow-summary.json`
+- Terminal transcript: focused verifier and in-app browser run confirmed 320 and 390 px chooser, expanded-chip, selected-state, and product-added geometry.
 
-The rerun passed at 320 x 568 and 390 x 568. The collapsed selector measured 50 px tall, all expanded chips measured 48 px tall, and selecting `SPF` collapsed the sheet back into a full-width selected field without horizontal overflow or footer collision.
+The rerun passed at 320 x 568 and 390 x 568. The collapsed selector measured 50 px tall, all expanded chips measured 48 px tall, selecting `SPF` collapsed the sheet back into a full-width selected field, and adding the product preserved the 44 px touch-target floor without horizontal overflow or footer collision.
 
 ## Remaining Risk
 

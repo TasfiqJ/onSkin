@@ -10,11 +10,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   phone-width audit showed the horizontal category rail clipping offscreen chips
   and feeling inconsistent with the rest of the mobile shell. Compact phones now
   show a single collapsed selector that opens a dimmed bottom sheet with 48 px
-  category chips; tablet/desktop widths keep the wrapped chip set. Expo web E2E
-  at 320 x 568 and 390 x 568 verified the collapsed selector, expanded sheet,
-  `SPF` selection, no footer collision, and no sub-44 px controls. Evidence is
-  in `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/`,
-  with the tracked report in
+  category chips; tablet/desktop widths keep the wrapped chip set. In-app
+  browser E2E at 320 x 568 and 390 x 568 verified the collapsed selector,
+  expanded sheet, `SPF` selection, product add path, no footer collision, no
+  horizontal overflow, and no sub-44 px controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-product-category-sheet/`, with
+  the tracked report in
   `docs/e2e-bug-reports/2026-07-07-onboarding-product-category-rail-clipping.md`.
 
 - Made the recommendation preference save-failure branch provable through the
