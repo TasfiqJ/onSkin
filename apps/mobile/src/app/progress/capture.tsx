@@ -26,6 +26,9 @@ import { haptics } from '@/theme/haptics';
 const BG = '#16130F';
 const GUIDE = '#9DB18A';
 const READY = '#9DB18A';
+const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)';
+const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)';
+const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)';
 
 function CaptureOverlay({
   backgroundColor = 'rgba(10,8,6,0.9)',
@@ -104,7 +107,7 @@ function ConsentGate({
         style={{
           fontFamily: 'IBMPlexMono_400Regular',
           fontSize: compact ? 10.5 : 11,
-          color: 'rgba(244,239,231,0.45)',
+          color: NIGHT_FOOTNOTE_TEXT,
           lineHeight: compact ? 15 : undefined,
           marginTop: compact ? 2 : 6,
           marginBottom: compact ? 8 : 14,
@@ -125,7 +128,7 @@ function ConsentGate({
           style={{
             fontFamily: 'HankenGrotesk_500Medium',
             fontSize: compact ? 12 : 12.5,
-            color: 'rgba(244,239,231,0.7)',
+            color: 'rgba(244,239,231,0.82)',
             flex: 1,
             lineHeight: compact ? 16 : 17,
           }}
@@ -156,6 +159,8 @@ function ConsentGate({
         style={{
           height: 48,
           marginTop: compact ? 4 : 8,
+          borderRadius: 999,
+          backgroundColor: NIGHT_SECONDARY_ACTION_BG,
           alignItems: 'center',
           justifyContent: 'center',
         }}
@@ -164,7 +169,7 @@ function ConsentGate({
           style={{
             fontFamily: 'HankenGrotesk_500Medium',
             fontSize: 15,
-            color: 'rgba(244,239,231,0.6)',
+            color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
         >
           Not now
@@ -222,13 +227,20 @@ function CameraUnavailableGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ height: 48, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
+        style={{
+          height: 48,
+          marginTop: 8,
+          borderRadius: 999,
+          backgroundColor: NIGHT_SECONDARY_ACTION_BG,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         <Text
           style={{
             fontFamily: 'HankenGrotesk_500Medium',
             fontSize: 15,
-            color: 'rgba(244,239,231,0.6)',
+            color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
         >
           Not now
@@ -288,13 +300,20 @@ function PermissionGate({
       <Pressable
         accessibilityRole="button"
         onPress={onCancel}
-        style={{ height: 48, marginTop: 8, alignItems: 'center', justifyContent: 'center' }}
+        style={{
+          height: 48,
+          marginTop: 8,
+          borderRadius: 999,
+          backgroundColor: NIGHT_SECONDARY_ACTION_BG,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         <Text
           style={{
             fontFamily: 'HankenGrotesk_500Medium',
             fontSize: 15,
-            color: 'rgba(244,239,231,0.6)',
+            color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
         >
           Not now

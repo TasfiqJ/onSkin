@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Improved first-use Progress photo consent legibility on compact dark capture
+  screens. The `Not now` escape now reads as a clear secondary action on the
+  320 px surface, and the privacy footnote/skin-prep guidance no longer use
+  near-invisible low-opacity text.
+
 - Reworked unavailable-store copy on subscription paywalls so checkout fallback
   states stay user-facing and polished instead of exposing RevenueCat/setup
   diagnostics. Onboarding, contextual upsells, reverse-trial reoffers, and

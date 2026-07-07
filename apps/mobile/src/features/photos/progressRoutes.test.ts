@@ -56,6 +56,11 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("justifyContent: compact ? 'flex-start' : 'center'");
     expect(source).toContain('useWindowDimensions().height < 640');
     expect(source.match(/height: 48/g)).toHaveLength(4);
+    expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");
+    expect(source).toContain("const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)'");
+    expect(source).toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)'");
+    expect(source).not.toContain("fontSize: 15,\n            color: 'rgba(244,239,231,0.6)'");
+    expect(source).not.toContain("color: 'rgba(244,239,231,0.45)'");
     expect(source).toContain('width: 48,\n            height: 48,');
     expect(source).not.toContain('width: 44,\n            height: 44,');
     expect(source).not.toContain('height: 44, marginTop: 8');

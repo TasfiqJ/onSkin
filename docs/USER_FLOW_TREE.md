@@ -475,7 +475,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/progress/capture`, `/progress/review`, `/progress/about`, and a missing `/progress/[id]` detail directly, then use the visible Close, Back, or Not now control. Repeat legacy `/photos/capture`, `/photos/review`, and `/photos/[id]` direct entries.
-  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Legacy `/photos/*` entries must recover into the matching Progress photo surface instead of showing an unmatched-route page. Visible route exits and Not now controls meet the 44 pt phone touch target, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a named dismiss action without unlabeled inert sheet-body controls.
+  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Legacy `/photos/*` entries must recover into the matching Progress photo surface instead of showing an unmatched-route page. Visible route exits and Not now controls meet the 44 pt phone touch target with readable dark-surface contrast, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a named dismiss action without unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence and 320 px button-geometry snapshot.
 - Branch: single-photo share unavailable or rejected
   - Priority: Important
