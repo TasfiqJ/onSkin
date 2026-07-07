@@ -73,6 +73,20 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });
 
+  it('does not render capture chrome until photo consent is saved', () => {
+    const source = readAppRoute('progress/capture.tsx');
+    const consentGateIndex = source.indexOf('if (consented !== true) {');
+    const captureHeaderIndex = source.indexOf(
+      '<View className="flex-row items-center justify-between px-6">',
+    );
+
+    expect(consentGateIndex).toBeGreaterThan(-1);
+    expect(captureHeaderIndex).toBeGreaterThan(consentGateIndex);
+    expect(source).toContain(
+      'const canShowCamera =\n    consented === true &&\n    env.nativeCameraEnabled',
+    );
+  });
+
   it('keeps review actions above the short-phone fold', () => {
     const source = readAppRoute('progress/review.tsx');
 

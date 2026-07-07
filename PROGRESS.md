@@ -2895,6 +2895,29 @@ E2E at 320 x 568 covered the no-match sheet and all three fallback routes under
 `test-results/human-e2e/2026-07-07/shelf-no-match-search-fallback/`; native camera barcode-miss verification remains a
 device-harness follow-up.
 
+### Shelf search offline copy cleanup (2026-07-07)
+
+Replaced implementation-facing `backend` wording in the `/shelf/search` unavailable-catalog state with product-catalog
+copy that a user can understand. Expo web human E2E at 320 x 568 verified a `retinol` search shows the catalog message,
+does not expose `backend`, keeps Add by hand visible, and has no horizontal overflow. Evidence is in
+`test-results/human-e2e/2026-07-07/shelf-search-offline-copy/`; live catalog error behavior still needs staging
+Supabase/catalog evidence.
+
+### Progress capture pre-consent gating (2026-07-07)
+
+Stopped `/progress/capture` from rendering capture-frame labels, shutter copy, or camera-preview chrome before
+`photo_capture` consent is saved. The route now returns the consent/loading gate before the capture shell and keeps
+`canShowCamera` behind `consented === true`, preserving the local-only privacy promise for DOM/a11y users as well as
+the visible UI. Expo web human E2E at 320 x 568 reproduced the pre-fix shell text leak and verified an empty leaked-term
+set after the fix under `test-results/human-e2e/2026-07-07/progress-capture-preconsent-shell-leak/`; native camera
+permission sequencing remains a device-harness follow-up.
+
+### Shelf catalog error copy (2026-07-07)
+
+Replaced backend-facing Shelf catalog search failure copy with a product-catalog message and applied it to both offline
+and error outcomes. Expo web human E2E at 320 x 568 verified the fallback copy, absence of backend jargon, and reachable
+Add by hand action under `test-results/human-e2e/2026-07-07/shelf-search-offline-copy/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

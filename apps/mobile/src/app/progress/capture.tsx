@@ -341,6 +341,7 @@ function CaptureScreenContent() {
   }, []);
 
   const canShowCamera =
+    consented === true &&
     env.nativeCameraEnabled &&
     Platform.OS !== 'web' &&
     Boolean(permission?.granted) &&
@@ -401,6 +402,36 @@ function CaptureScreenContent() {
     } finally {
       setGrantingConsent(false);
     }
+  }
+
+  if (consented !== true) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: consented === false ? NIGHT_CONSENT_OVERLAY_BG : BG,
+        }}
+      >
+        {consented === false ? (
+          <ConsentGate
+            granting={grantingConsent}
+            onGrant={() => void grantCaptureConsent()}
+            onCancel={closeToProgress}
+          />
+        ) : (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: BG,
+            }}
+          />
+        )}
+      </View>
+    );
   }
 
   return (
@@ -652,24 +683,7 @@ function CaptureScreenContent() {
         </View>
       </View>
 
-      {consented === false ? (
-        <ConsentGate
-          granting={grantingConsent}
-          onGrant={() => void grantCaptureConsent()}
-          onCancel={closeToProgress}
-        />
-      ) : consented === null ? (
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: BG,
-          }}
-        />
-      ) : cameraUnavailable ? (
+      {cameraUnavailable ? (
         <CameraUnavailableGate
           onRetry={() => {
             setCameraUnavailable(false);

@@ -263,7 +263,7 @@ The shelf's deepest screen and the place product management happens. Top to bott
 
 #### 5.8 Empty, sparse, loading & error states
 
-**Empty shelf** — a warm illustration-light prompt: "Add your first product — scan a barcode, or add it by hand." **Sparse** (1–2 products) — the same calm tone, plus a gentle nudge toward completing the routine's missing roles (claim-safe, e.g. "A daily SPF would round out your mornings"). **Loading** — skeleton cards. **Errors** — OBF/network errors degrade to the manual path, never a hard wall; a quiet "Couldn't reach the product database — you can still add it by hand."
+**Empty shelf** — a warm illustration-light prompt: "Add your first product — scan a barcode, or add it by hand." **Sparse** (1–2 products) — the same calm tone, plus a gentle nudge toward completing the routine's missing roles (claim-safe, e.g. "A daily SPF would round out your mornings"). **Loading** — skeleton cards. **Errors** — OBF/network errors degrade to the manual path, never a hard wall; a quiet "Couldn't reach the product catalog — you can still add it by hand."
 
 #### 5.9 Microcopy, motion, haptics, accessibility, localisation (extends docs/02 §7.7)
 

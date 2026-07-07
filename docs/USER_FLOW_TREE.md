@@ -475,7 +475,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/progress/capture` without prior `photo_capture` consent and inspect the consent gate at a compact phone size.
-  - Expected result: The consent gate says photos stay on-device, no faceprint or biometric template is stored, cloud backup is a separate choice, and backup-off/lost-phone tradeoff is visible before the first capture. The Take photos and Not now controls remain readable and tappable on a 320 x 568 phone viewport.
+  - Expected result: The consent gate says photos stay on-device, no faceprint or biometric template is stored, cloud backup is a separate choice, and backup-off/lost-phone tradeoff is visible before the first capture. Capture-frame labels, shutter copy, and camera preview chrome are not rendered until photo consent is saved. The Take photos and Not now controls remain readable and tappable on a 320 x 568 phone viewport.
   - Evidence: Phone screenshot, visible-text snapshot, and 320 px button-geometry snapshot.
 - Branch: camera start or photo capture failure
   - Priority: Critical

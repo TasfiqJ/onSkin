@@ -43,8 +43,8 @@ export default function CatalogSearchScreen() {
     const response = await searchCatalog(cleaned);
     setResults(response.products ?? []);
     setMessage(
-      response.result === 'offline'
-        ? 'Catalog search needs the backend. Add this product by hand for now.'
+      response.result === 'offline' || response.result === 'error'
+        ? "Couldn't reach the product catalog. Add this product by hand for now."
         : response.products?.length
           ? null
           : 'No catalog match yet. Add it by hand for now.',

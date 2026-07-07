@@ -232,6 +232,8 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('<View className="pb-4 pt-2">');
     expect(source).toContain('<Button label="Add by hand" variant="ghost" onPress={goManual} />');
+    expect(source).toContain("Couldn't reach the product catalog. Add this product by hand for now.");
+    expect(source).not.toContain('backend');
     expect(source).not.toContain(
       '\n      <Button label="Add by hand" variant="ghost" onPress={goManual} />\n    </Screen>',
     );
