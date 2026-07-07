@@ -155,6 +155,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Decline health-data collection consent before the quiz.
   - Expected result: Consent remains unbundled and voluntary; the app does not enter the health-data quiz, records the decline best-effort, and explains that the personalized quiz stays locked unless the user agrees.
   - Evidence: Screenshot and state notes.
+- Branch: direct quiz entry without health-data consent
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/onboarding/quiz` directly with no local health-data collection grant, then refresh the route.
+  - Expected result: The quiz questions do not render; the app recovers to `/onboarding/consent` so health-data collection remains unbundled and explicit before quiz access.
+  - Evidence: Screenshot, route snapshot, and browser console logs.
 - Branch: notification permission denied
   - Priority: Important
   - Automate later: Yes

@@ -81,6 +81,7 @@ describe('onboarding route contracts', () => {
 
   it('keeps health-data consent fail-closed before quiz access', () => {
     const source = readAppRoute('onboarding/consent.tsx');
+    const quiz = readAppRoute('onboarding/quiz.tsx');
 
     expect(source).not.toContain('Non-fatal until the backend is configured');
     expect(source).toContain('setConsentSaveError(true)');
@@ -91,6 +92,17 @@ describe('onboarding route contracts', () => {
     );
     expect(source.indexOf('declineHealthDataCollectionConsent()')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
+    );
+    expect(quiz).toContain('getHealthDataCollectionConsentLocal');
+    expect(quiz).toContain('consent?.granted === true');
+    expect(quiz).toContain("router.replace('/onboarding/consent')");
+    expect(quiz).toContain('if (!consentChecked)');
+    expect(quiz).toContain('Privacy check');
+    expect(quiz).toContain('Checking your privacy choice');
+    expect(quiz).toContain('One moment while we confirm the quiz can start.');
+    expect(quiz).not.toContain('<View className="flex-1" />');
+    expect(quiz.indexOf('getHealthDataCollectionConsentLocal()')).toBeLessThan(
+      quiz.indexOf('const total = ONBOARDING_QUIZ.length'),
     );
   });
 

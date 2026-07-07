@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Closed the direct-entry health-data consent bypass on `/onboarding/quiz`.
+  The quiz now verifies a granted local health-data collection consent before
+  rendering any quiz questions and redirects missing, declined, or malformed
+  consent state back to `/onboarding/consent`. Updated the onboarding route
+  contract and the flow tree. Human-simulated Expo web E2E at 320 x 568 verified
+  consent decline -> direct quiz route -> consent redirect -> refresh remains on
+  consent, with evidence in
+  `test-results/human-e2e/2026-07-07/onboarding-quiz-consent-guard/`.
+
 - Hardened behavioural notification delivery so a successful local notification
   is not reported as failed just because the best-effort Supabase metadata log
   insert is offline or unavailable. The local cap ledger remains the v1 source of

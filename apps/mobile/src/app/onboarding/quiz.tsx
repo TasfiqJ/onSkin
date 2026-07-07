@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { getHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
 import { ONBOARDING_QUIZ, toggleExclusiveNoneSelection } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 
@@ -14,7 +15,45 @@ export default function QuizScreen() {
   const { height } = useWindowDimensions();
   const { quizAnswers, setAnswer } = useOnboarding();
   const [index, setIndex] = useState(0);
+  const [consentChecked, setConsentChecked] = useState(false);
   const compactPhone = height < 640;
+
+  useEffect(() => {
+    let active = true;
+    void getHealthDataCollectionConsentLocal()
+      .then((consent) => {
+        if (!active) return;
+        if (consent?.granted === true) {
+          setConsentChecked(true);
+          return;
+        }
+        router.replace('/onboarding/consent');
+      })
+      .catch(() => {
+        if (active) router.replace('/onboarding/consent');
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!consentChecked) {
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <Text variant="eyebrow" tone="clay" className="text-center">
+            Privacy check
+          </Text>
+          <Text variant="title" className="mt-2 text-center">
+            Checking your privacy choice
+          </Text>
+          <Text variant="body" tone="muted" className="mt-3 text-center">
+            One moment while we confirm the quiz can start.
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
 
   const total = ONBOARDING_QUIZ.length;
   const question = ONBOARDING_QUIZ[index]!;
