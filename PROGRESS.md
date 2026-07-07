@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Verified conflict-check quota direct-route gating in a fresh 320 x 568 Chrome
+  context seeded with real retinol/glycolic and retinol/BHA shelf conflicts. The
+  first free direct conflict route rendered the AHA detail and recorded the free
+  quota use, the second distinct direct conflict route rendered the
+  `conflict_checks` contextual paywall with zero sampled locked-detail flashes,
+  and the no-card reverse-trial path unlocked then reloaded the BHA detail as
+  Pro. Focused `conflictQuota` and gated-route contract tests pass. Evidence is
+  in
+  `test-results/human-e2e/2026-07-07/conflict-quota-direct-routes-current/`.
+
 - Fixed compact scheduler cycle-night labels after 320 x 568 E2E with a
   reverse-trial entitlement and two shelf actives showed `/cycle/week` and
   `/cycle/settings` using terse `N1`, `N2`, etc. labels on customer-facing rows.

@@ -638,7 +638,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: As a fresh free user, open one conflict detail, then open a different `/conflict/[ruleId]` route directly. Repeat the route as a Pro or reverse-trial user.
   - Expected result: The first free conflict check renders the conflict detail. A second distinct conflict check shows the conflict-checks contextual paywall with no conflict-detail flash. Pro users can open the full conflict detail.
-  - Evidence: Screenshots or UI snapshots.
+  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 seeded real retinol/glycolic and retinol/BHA conflicts. The first free direct `/conflict/00000000-0000-4000-8000-000000000001` rendered the AHA detail, the second direct `/conflict/00000000-0000-4000-8000-000000000002` showed the `conflict_checks` paywall with zero sampled detail-flash frames, tapping `Explore first. 7 days of Pro` unlocked the BHA detail, and reloading the same direct route as reverse-trial Pro kept the detail visible instead of the paywall. Evidence is in `test-results/human-e2e/2026-07-07/conflict-quota-direct-routes-current/`.
 - Branch: loading or slow entitlement state
   - Priority: Critical
   - Automate later: Yes

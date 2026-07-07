@@ -178,9 +178,21 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `/paywall/upsell?feature=full_routine` dismisses with `Maybe later` to
   `/today`. Evidence is in
   `test-results/human-e2e/2026-07-07/pro-gating-current/`; it does not replace
-  RevenueCat purchase/restore/native store-sheet QA, conflict-check quota UI QA,
-  loading-state no-flash tracing, policy/billing link handoff failure QA, lapsed
-  paid entitlement QA, or native scheduler/widget QA.
+  RevenueCat purchase/restore/native store-sheet QA, loading-state no-flash
+  tracing, policy/billing link handoff failure QA, lapsed paid entitlement QA,
+  or native scheduler/widget QA.
+- 2026-07-07: Fresh Chrome E2E at 320 x 568 covers conflict-check quota direct
+  routes with a seeded retinol/glycolic plus retinol/BHA shelf. The first free
+  direct conflict detail renders the retinoid/AHA explanation and resolution,
+  the second distinct direct conflict route renders the conflict-checks
+  contextual paywall with `Explore first. 7 days of Pro`, and a 50 ms sampler
+  saw zero locked-detail flash samples before the paywall settled. Starting the
+  no-card reverse trial unlocks the retinoid/BHA detail, and reloading that same
+  direct route as reverse-trial Pro keeps the full detail visible. Focused
+  `conflictQuota` and gated-route contract tests pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/conflict-quota-direct-routes-current/`; it
+  does not replace native billing, RevenueCat restore, or dermatologist review of
+  the starter conflict matrix.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers scheduler cycle-night
   labels with a local reverse-trial entitlement and two shelf actives. Before
   the fix, `/cycle/week` and `/cycle/settings` rendered customer-facing `N1`,
