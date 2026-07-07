@@ -25,6 +25,9 @@ describe('Sheet route contracts', () => {
     expect(source).toContain('fallbackRoute = APP_HOME_ROUTE');
     expect(source).toContain('onClose ?? (() => backOrReplace(router, fallbackRoute))');
     expect(source).toContain('backOrReplace(router, fallbackRoute)');
+    expect(source).toContain('aria-modal');
+    expect(source).toContain('role="dialog"');
+    expect(source).toContain('accessibilityViewIsModal');
   });
 
   it('returns Shelf sheet backdrops to Shelf on direct entry', () => {

@@ -45,6 +45,9 @@ export function Sheet({
         onPress={close}
       />
       <View
+        aria-modal
+        role="dialog"
+        accessibilityViewIsModal
         className={cn(
           'overflow-hidden rounded-t-sheet px-7 pb-10 pt-4',
           tone === 'night' ? 'bg-night-surface' : 'bg-paper',

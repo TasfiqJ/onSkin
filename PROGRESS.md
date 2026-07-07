@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added shared Sheet dialog semantics after the route-surface accessibility
+  sweep found the modal body had visual sheet behavior without a dialog role.
+  The shared sheet now exposes `role="dialog"` / `aria-modal` plus native
+  modal semantics, and the navigation route contract pins the behavior. Expo web
+  E2E at 320 x 568 verified `/shelf/no-match` exposes one dialog, keeps Close
+  at 48 x 48, has no horizontal overflow or sub-44 px visible controls, and
+  returns to `/shelf` after Close. Evidence is in
+  `test-results/human-e2e/2026-07-07/shared-sheet-dialog-semantics/`; the
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-shared-sheet-missing-dialog-semantics.md`.
+
 - Fixed the compact Shelf manual-add category picker after human-simulated
   Expo web E2E at 320 x 568 showed the full list could run into the fixed
   Continue footer. The picker now has a capped internal scroll area while each
@@ -2930,6 +2941,15 @@ overlap, verified the picker/footer gap and inner scroll to `Something else`, th
 the opened-date sheet. Evidence is in
 `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-footer-overlap/`; native nested-scroll feel remains a
 Phase 5 device-QA follow-up.
+
+### Shared sheet modal semantics (2026-07-07)
+
+Added explicit modal semantics to the shared `Sheet` component: native `accessibilityViewIsModal`, web
+`role="dialog"`, and `aria-modal`. Expo web human E2E at 320 x 568 verified `/shelf/no-match` still exposes the compact
+Close, Search catalog, OCR, and manual fallback actions, the sheet container renders as a modal dialog, and Close returns
+to `/shelf` with no lingering dialog. Evidence is in
+`test-results/human-e2e/2026-07-07/shared-sheet-dialog-semantics/`; physical screen-reader traversal remains a Phase 5
+device-QA follow-up.
 
 ## Open questions for the founder
 
