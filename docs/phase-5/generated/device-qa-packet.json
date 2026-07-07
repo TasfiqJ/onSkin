@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T05:15:31.840Z",
+  "generatedAt": "2026-07-07T07:16:22.999Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
   "buildEvidence": {
     "iosBuildId": "",
@@ -65,8 +65,8 @@
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 7355,
-      "sha256": "0e89d94b0e51e96d84d5f4aa79ab4e4cd627ebdebeb0092e948856c1f463d949"
+      "bytes": 9553,
+      "sha256": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c"
     },
     {
       "path": "apps/mobile/eas.json",
@@ -137,8 +137,8 @@
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 1967,
-      "sha256": "ae18016b44edd447ced8b2c96cb042889d5839a58c4217403db7b0108eba6831"
+      "bytes": 1966,
+      "sha256": "8477b2140b9f35814cf134b4ef52a26c9eaf68e23f52aaf2658a11a9fc336eef"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",

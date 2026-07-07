@@ -31,10 +31,10 @@ Generate the evidence packet after installing on devices:
 ```bash
 PHASE5_IOS_BUILD_ID=... \
 PHASE5_ANDROID_BUILD_ID=... \
-PHASE5_IOS_DEVICE="iPhone model / iOS version" \
-PHASE5_ANDROID_DEVICE="Android model / OS version" \
+PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 18.5" \
+PHASE5_ANDROID_DEVICE="Pixel 8 / Android 15" \
 PHASE5_QA_SIGNOFF=true \
-PHASE5_SIGNED_OFF_BY="name" \
+PHASE5_SIGNED_OFF_BY="Tester Name" \
 npm run phase5:qa-packet:strict
 ```
 

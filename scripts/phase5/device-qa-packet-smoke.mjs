@@ -1,0 +1,131 @@
+#!/usr/bin/env node
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
+
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const root = resolve(scriptDir, '..', '..');
+const packetPath = resolve(scriptDir, 'build-device-qa-packet.mjs');
+
+const passthroughKeys = [
+  'ComSpec',
+  'HOME',
+  'Path',
+  'PATH',
+  'PATHEXT',
+  'SystemRoot',
+  'TEMP',
+  'TMP',
+  'USERPROFILE',
+  'WINDIR',
+];
+
+const processBaseEnv = Object.fromEntries(
+  passthroughKeys
+    .map((key) => [key, process.env[key]])
+    .filter(([, value]) => typeof value === 'string' && value.length > 0),
+);
+
+const validEvidence = {
+  PHASE5_IOS_BUILD_ID: '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5',
+  PHASE5_ANDROID_BUILD_ID:
+    'https://expo.dev/accounts/routinekind/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64',
+  PHASE5_IOS_DEVICE: 'iPhone 15 Pro / iOS 18.5',
+  PHASE5_ANDROID_DEVICE: 'Pixel 8 / Android 15',
+  PHASE5_QA_SIGNOFF: 'true',
+  PHASE5_SIGNED_OFF_BY: 'Tas Mohammed',
+};
+
+function run(extraEnv) {
+  const outDir = mkdtempSync(join(tmpdir(), 'onskin-phase5-qa-'));
+  return spawnSync(process.execPath, [packetPath, '--strict'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: {
+      ...processBaseEnv,
+      ...validEvidence,
+      ...extraEnv,
+      PHASE5_QA_PACKET_OUT_DIR: outDir,
+    },
+  });
+}
+
+function output(result) {
+  return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+}
+
+const cases = [
+  {
+    name: 'strict Phase 5 QA packet accepts real-looking EAS and device evidence',
+    result: run({}),
+    expect(result) {
+      const text = output(result);
+      return result.status === 0 && /device-qa-packet\.json/.test(text) && !/^FAIL /m.test(text);
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects placeholder iOS build evidence',
+    result: run({ PHASE5_IOS_BUILD_ID: 'pending-ios-build' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_IOS_BUILD_ID must be a real EAS build UUID or expo\.dev build URL/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects generic iOS device labels',
+    result: run({ PHASE5_IOS_DEVICE: 'iPhone model / iOS version' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_IOS_DEVICE must name a physical iPhone\/iPad model and iOS\/iPadOS version/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects Android device labels without OS versions',
+    result: run({ PHASE5_ANDROID_DEVICE: 'Pixel 8' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_ANDROID_DEVICE must name a physical Android model and Android OS version/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects placeholder signoff names',
+    result: run({ PHASE5_SIGNED_OFF_BY: 'name' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_SIGNED_OFF_BY must name a real tester\/reviewer, not a placeholder/.test(
+          output(result),
+        )
+      );
+    },
+  },
+];
+
+let failed = false;
+for (const testCase of cases) {
+  if (testCase.expect(testCase.result)) {
+    console.log(`OK ${testCase.name}`);
+    continue;
+  }
+
+  failed = true;
+  console.error(`FAIL ${testCase.name}`);
+  const text = output(testCase.result).trim();
+  if (text) console.error(text);
+}
+
+if (failed) process.exit(1);

@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the Phase 5 device QA packet so strict native-device completion
+  requires real-looking EAS build UUIDs or `expo.dev` build URLs, physical
+  iPhone/iPad and Android device labels with OS versions, and a non-placeholder
+  named signoff. Added `phase5:qa-packet-smoke` and wired it into
+  `phase5:verify` so placeholder build IDs, generic device labels, and dummy
+  signoff names cannot unlock device QA.
+
 - Aligned the Phase 2 live RLS smoke preflight with the shared placeholder
   parser so `pending`, newer blocked placeholders, cased copied examples, and
   `YOUR_*` style Supabase values are rejected before any live connection can
