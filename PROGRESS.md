@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the compact win-back paywall fallback after 320 x 568 E2E showed the
+  unavailable native-offer reason colliding with the fixed action area. The
+  win-back surface now uses compact-height spacing, clips the scroll body behind
+  an opaque footer, and keeps the current-plan fallback reason directly above
+  `See current Pro plan`. Expo web E2E verified the repaired layout, the fallback
+  CTA to `/paywall/upsell?feature=full_routine`, and the direct-entry `No thanks`
+  escape to Today. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-winback-current-plan-fallback/`;
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-paywall-winback-fallback-overlap.md`.
+
 - Fixed the paid-expiry downgrade paywall's unavailable-store state so a disabled
   `Renew Pro` action now explains the local store-checkout reason instead of
   looking inert. The lifecycle paywall contract now requires unavailable-store

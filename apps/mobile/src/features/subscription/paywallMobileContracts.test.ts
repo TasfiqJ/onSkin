@@ -178,6 +178,21 @@ describe('paywall mobile contracts', () => {
     }
   });
 
+  it('keeps unavailable win-back offer copy next to the fallback action', () => {
+    const winback = readAppRoute('paywall/winback.tsx');
+
+    expect(winback).toContain('useWindowDimensions');
+    expect(winback).toContain('const compactPaywall = height < 640');
+    expect(winback).toContain("style={{ overflow: 'hidden' }}");
+    expect(winback).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
+    expect(winback).toContain('const unavailableOfferCopy =');
+    expect(winback).toContain('className="gap-2.5"');
+    expect(winback).toContain('style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}');
+    expect(winback).toContain('className="px-2 text-center"');
+    expect(winback).toContain('{unavailableOfferCopy}');
+    expect(winback).toContain("{canWinBack ? PAYWALL_COPY.winback.cta : 'See current Pro plan'}");
+  });
+
   it('keeps active reverse-trial keep options distinct from the expired re-offer', () => {
     const reoffer = readAppRoute('paywall/reoffer.tsx');
     const copy = readSource('features/subscription/copy.ts');

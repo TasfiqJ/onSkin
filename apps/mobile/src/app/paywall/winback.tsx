@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
@@ -19,11 +19,15 @@ const BG = '#1B1813';
 
 export default function WinbackScreen() {
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   const { winback } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const offer = offering.data?.winBack ?? null;
   const canWinBack = offering.data?.status === 'available' && offer?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
+  const unavailableOfferCopy =
+    'A native welcome-back offer is not available on this account. You can still choose the current Pro plan.';
+  const compactPaywall = height < 640;
 
   function onComeBack() {
     if (!canWinBack) {
@@ -58,7 +62,7 @@ export default function WinbackScreen() {
       style={{
         flex: 1,
         backgroundColor: BG,
-        paddingTop: insets.top + 40,
+        paddingTop: insets.top + (compactPaywall ? 24 : 40),
         paddingBottom: insets.bottom + 16,
         paddingHorizontal: 30,
       }}
@@ -66,26 +70,42 @@ export default function WinbackScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 16 }}
+        style={{ overflow: 'hidden' }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: compactPaywall ? 'flex-start' : 'center',
+          paddingBottom: compactPaywall ? 10 : 16,
+        }}
       >
         <Text variant="label" style={{ color: 'rgba(244,239,231,0.5)', letterSpacing: 2 }}>
           {PAYWALL_COPY.winback.eyebrow.toUpperCase()}
         </Text>
         <Text
           variant="display"
-          className="mt-3.5"
-          style={{ color: colors.cream, fontSize: 40, lineHeight: 43 }}
+          className={compactPaywall ? 'mt-2.5' : 'mt-3.5'}
+          style={{
+            color: colors.cream,
+            fontSize: compactPaywall ? 34 : 40,
+            lineHeight: compactPaywall ? 37 : 43,
+          }}
         >
           {PAYWALL_COPY.winback.title}
         </Text>
         <Text
           variant="body"
-          className="mt-4"
-          style={{ color: 'rgba(244,239,231,0.7)', lineHeight: 25 }}
+          className={compactPaywall ? 'mt-3' : 'mt-4'}
+          style={{
+            color: 'rgba(244,239,231,0.7)',
+            lineHeight: compactPaywall ? 22 : 25,
+            fontSize: compactPaywall ? 15 : undefined,
+          }}
         >
           {PAYWALL_COPY.winback.body}
         </Text>
-        <View className="mt-6 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
+        <View
+          className={compactPaywall ? 'mt-4 rounded-card p-4' : 'mt-6 rounded-card p-5'}
+          style={{ backgroundColor: colors.nightSurface }}
+        >
           <View className="flex-row items-center justify-between">
             <View>
               <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.55)' }}>
@@ -128,19 +148,22 @@ export default function WinbackScreen() {
             ) : null}
           </View>
         </View>
+        <ComplianceRow tone="dark" />
+      </ScrollView>
+      <View className="gap-2.5" style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}>
         {!canWinBack ? (
           <Text
             variant="label"
-            className="mt-3"
-            style={{ color: 'rgba(244,239,231,0.55)', fontSize: 11.5, lineHeight: 16 }}
+            className="px-2 text-center"
+            style={{
+              color: 'rgba(244,239,231,0.6)',
+              fontSize: compactPaywall ? 11 : 11.5,
+              lineHeight: compactPaywall ? 15 : 16,
+            }}
           >
-            A native welcome-back offer is not available on this account. You can still choose the
-            current Pro plan.
+            {unavailableOfferCopy}
           </Text>
         ) : null}
-        <ComplianceRow tone="dark" />
-      </ScrollView>
-      <View className="gap-3">
         <Pressable
           accessibilityRole="button"
           disabled={winback.isPending}
