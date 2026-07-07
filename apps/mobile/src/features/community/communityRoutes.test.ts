@@ -76,6 +76,22 @@ describe('Community route contracts', () => {
     }
   });
 
+  it('recovers missing Skin Note details without a dead empty state', () => {
+    const source = readAppRoute('community/note/[id].tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactMissingNote = height < 640');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('Note unavailable');
+    expect(source).toContain('This Skin Note is not available right now.');
+    expect(source).toContain('It may have been updated or removed during expert review.');
+    expect(source).toContain('Current Skin Notes are still');
+    expect(source).toContain('label="Back to Skin Notes"');
+    expect(source).toContain('router.replace(APP_COMMUNITY_ROUTE)');
+    expect(source).not.toContain('This note isn’t available right now.');
+    expect(source).not.toContain('<View className="flex-1 items-center justify-center px-6">');
+  });
+
   it('keeps community consent text exits at least 44px tall', () => {
     const source = readAppRoute('community/ask.tsx');
 

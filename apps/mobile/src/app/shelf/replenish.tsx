@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
-import { ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
+import { Button, ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
@@ -30,19 +30,35 @@ export default function ReplenishScreen() {
 
   if (!item) {
     return (
-      <Sheet fallbackRoute={APP_SHELF_ROUTE}>
-        <Text variant="body" tone="muted" className="py-6 text-center">
-          This product is no longer on your shelf.
-        </Text>
-        <Pressable
-          accessibilityRole="button"
-          className="min-h-[48px] items-center justify-center py-2"
-          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
-        >
-          <Text className="font-sans-semibold" tone="muted">
-            Close
-          </Text>
-        </Pressable>
+      <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>
+        <View className="gap-3">
+          <View>
+            <Text variant="label" tone="muted" className="font-mono uppercase">
+              Shelf updated
+            </Text>
+            <Text
+              variant="title"
+              className="mt-3 text-[27px] leading-[31px]"
+              accessibilityRole="header"
+            >
+              This replacement prompt is no longer active.
+            </Text>
+            <Text variant="body" tone="muted" className="mt-2.5 text-[14px] leading-[22px]">
+              That product was removed or archived on this device, so we won&apos;t reuse its
+              freshness or shopping prompt. Review your current shelf, or add the product again if
+              it still belongs in your routine.
+            </Text>
+          </View>
+
+          <View className="mt-1 gap-2">
+            <Button label="Back to Shelf" onPress={() => router.replace(APP_SHELF_ROUTE)} />
+            <Button
+              label="Add a product"
+              variant="ghost"
+              onPress={() => router.replace('/shelf/manual')}
+            />
+          </View>
+        </View>
       </Sheet>
     );
   }

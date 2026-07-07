@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { RouteIconButton, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
 import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionStore';
@@ -19,8 +19,10 @@ import { colors } from '@/theme/tokens';
 // helped" (the docs/09 flywheel signal). No like count, no author to follow.
 export default function NoteDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { height } = useWindowDimensions();
   const qc = useQueryClient();
   const note = id ? noteById(id) : undefined;
+  const compactMissingNote = height < 640;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
     queryKey: ['noteHelped', id],
@@ -61,11 +63,39 @@ export default function NoteDetail() {
       </View>
 
       {!note || !pill ? (
-        <View className="flex-1 items-center justify-center px-6">
-          <Text variant="body" tone="muted" className="text-center">
-            This note isn’t available right now.
-          </Text>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingBottom: compactMissingNote ? 24 : 38,
+          }}
+        >
+          <View className="items-center px-2">
+            <StripedThumb size={compactMissingNote ? 66 : 74} radius={20} faded />
+            <Text variant="label" tone="clay" className="mt-5 font-mono uppercase">
+              Note unavailable
+            </Text>
+            <Text
+              variant="titleSm"
+              className="mt-2 text-center"
+              style={{
+                fontSize: compactMissingNote ? 24 : 27,
+                lineHeight: compactMissingNote ? 28 : 31,
+              }}
+              accessibilityRole="header"
+            >
+              This Skin Note is not available right now.
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-2 max-w-[284px] text-center">
+              It may have been updated or removed during expert review. Current Skin Notes are still
+              available in the library.
+            </Text>
+          </View>
+          <View className="mt-6">
+            <Button label="Back to Skin Notes" onPress={() => router.replace(APP_COMMUNITY_ROUTE)} />
+          </View>
+        </ScrollView>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
           <View

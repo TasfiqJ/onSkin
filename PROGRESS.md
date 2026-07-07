@@ -6,6 +6,30 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Repaired stale Skin Note direct entries so a missing
+  `/community/note/[id]` no longer presents a muted one-line unavailable state
+  with only the top Back icon. The route now shows explicit `Note unavailable`
+  copy, explains that the note may have been updated or removed during expert
+  review, and provides a 56 px `Back to Skin Notes` recovery action into
+  `/community`. Expo web E2E at 320 x 568 verified the recovery state, no
+  horizontal overflow, no clipped controls, and the Skin Notes escape. Evidence
+  is in
+  `test-results/human-e2e/2026-07-07/community-missing-note-recovery/`; the
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-community-missing-note-recovery.md`.
+
+- Repaired stale Shelf replenishment direct entries so a missing
+  `/shelf/replenish?id=...` no longer presents a generic one-line missing state
+  with only `Close`. The route now explains that the replacement prompt is no
+  longer active, avoids reusing stale freshness or shopping prompts, and offers
+  explicit `Back to Shelf` and `Add a product` recovery actions. The Shelf route
+  contract now pins the unavailable copy and destinations; Expo web E2E at
+  320 x 568 verified no horizontal overflow, 56 px recovery buttons, the Shelf
+  escape, and the manual-add recovery path. Evidence is in
+  `test-results/human-e2e/2026-07-07/shelf-replenish-missing-product-recovery/`;
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-shelf-replenish-missing-product-recovery.md`.
+
 - Repaired stale conflict-detail direct entries so a missing `/conflict/[ruleId]`
   no longer presents a generic one-line missing state with only a `Close`
   action. The route now explains that the timing note is no longer active,
@@ -3099,6 +3123,17 @@ coverage pins the copy and destinations. Expo web human E2E at 320 x 568 verifie
 Add a product, no horizontal overflow, and only known local Supabase/web-notification warnings under
 `test-results/human-e2e/2026-07-07/conflict-missing-detail-recovery/`. Tracked in
 `docs/e2e-bug-reports/2026-07-07-conflict-missing-detail-recovery.md`.
+
+### Shelf replenish missing-route recovery (2026-07-07)
+
+Recovered stale `/shelf/replenish?id=...` direct-entry routes as a real Shelf recovery state instead of a close-only
+fallback. The sheet now says the replacement prompt is no longer active, avoids reusing stale freshness or shopping
+prompts for a removed product, routes Back to Shelf via `APP_SHELF_ROUTE`, and offers Add a product into
+`/shelf/manual`. Route-contract coverage pins the copy and destinations. Expo web human E2E at 320 x 568 verified the
+stale state, Back to Shelf, Add a product, no horizontal overflow, 56 px recovery buttons, and only known local
+Supabase/web-notification warnings under
+`test-results/human-e2e/2026-07-07/shelf-replenish-missing-product-recovery/`. Tracked in
+`docs/e2e-bug-reports/2026-07-07-shelf-replenish-missing-product-recovery.md`.
 
 ## Open questions for the founder
 

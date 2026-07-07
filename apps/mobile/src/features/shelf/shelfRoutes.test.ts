@@ -157,7 +157,9 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
     expect(source).toContain('function RoutineHandoffCard');
-    expect(source).toContain('<RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />');
+    expect(source).toContain(
+      '<RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />',
+    );
     expect(source).toContain('First routine');
     expect(source).toContain('Build my routine');
     expect(source).toContain("router.push('/routine/plan')");
@@ -182,6 +184,20 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('className="min-h-[52px] py-3"');
     expect(source).toContain("router.replace('/shelf/manual')");
     expect(source).not.toContain('<View className="flex-1 items-center justify-center">');
+  });
+
+  it('recovers stale replenishment direct entries without a close-only dead end', () => {
+    const source = readAppRoute('shelf/replenish.tsx');
+
+    expect(source).toContain('<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>');
+    expect(source).toContain('This replacement prompt is no longer active.');
+    expect(source).toContain('we won&apos;t reuse its');
+    expect(source).toContain('Back to Shelf');
+    expect(source).toContain('router.replace(APP_SHELF_ROUTE)');
+    expect(source).toContain('Add a product');
+    expect(source).toContain("router.replace('/shelf/manual')");
+    expect(source).not.toContain('This product is no longer on your shelf.');
+    expect(source).not.toContain('Close');
   });
 
   it('keeps archived products reachable when the active Shelf is empty', () => {
@@ -250,7 +266,9 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('<View className="pb-4 pt-2">');
     expect(source).toContain('<Button label="Add by hand" variant="ghost" onPress={goManual} />');
-    expect(source).toContain("Couldn't reach the product catalog. Add this product by hand for now.");
+    expect(source).toContain(
+      "Couldn't reach the product catalog. Add this product by hand for now.",
+    );
     expect(source).not.toContain('backend');
     expect(source).not.toContain(
       '\n      <Button label="Add by hand" variant="ghost" onPress={goManual} />\n    </Screen>',
@@ -263,7 +281,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('className="flex-1"');
     expect(source).toContain("contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}");
     expect(source).toContain('<View className="pb-3 pt-1">');
-    expect(source).toContain("return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');");
+    expect(source).toContain(
+      "return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');",
+    );
     expect(source).toContain('{categoryFieldLabel(category)}');
     expect(source).toContain('<View className="flex-1">');
     expect(source).toContain('<View className="flex-[1.1]">');
@@ -278,9 +298,7 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('ellipsizeMode="tail"');
-    expect(source).toContain(
-      "'min-h-[48px] flex-row items-center justify-between px-4 py-3'",
-    );
+    expect(source).toContain("'min-h-[48px] flex-row items-center justify-between px-4 py-3'");
     expect(source).not.toContain('<View className="flex-[1.3]">');
     expect(source).not.toContain(
       "className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}",
