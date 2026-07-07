@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Refreshed the generated Phase 7 core-loop QA packet after the current shared
+  sheet, progress-capture, conflict, routine, Today, Progress, and You route
+  hashes changed. Non-strict `phase7:check-core-loop` passes with code gates
+  present and only external evidence warnings; `phase7:qa-packet` regenerated
+  `docs/phase-7/generated/core-loop-qa-packet.{md,json}`. Repository-level
+  `npm run typecheck`, `npm run lint`, and `npm test` pass, with the mobile
+  suite at 166 files / 1,676 tests. Strict Phase 7 still waits on founder/legal,
+  Supabase RLS, clinical review, catalog beta import, device QA, RevenueCat,
+  privacy export/delete, beta dashboard, and named signoff evidence already
+  tracked in `docs/FOR_TAS_TO_DO.md`.
+
 - Hardened the shared `Sheet` component for native safe areas and inaccessible
   backdrop strips. `Sheet` now applies bottom safe-area padding only when a real
   bottom inset exists, preserving existing compact web `pb-6`/`pb-8` density,
