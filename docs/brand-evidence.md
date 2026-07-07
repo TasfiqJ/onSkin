@@ -7,24 +7,24 @@ whether this product can launch as `OnSkin`. This is evidence, not legal advice.
 
 ## Existing Public OnSkin Evidence
 
-| Evidence | What it shows | Source |
-| --- | --- | --- |
-| Existing website at `onskin.com` | Existing skincare/cosmetic ingredient scanner branded `OnSkin`; public claims include 2M+ products, 8M+ users, and 4.7 rating | [onskin.com](https://onskin.com/) |
-| Apple App Store listing | App name `OnSkin: Beauty Product Scanner`; claims over 8M users and 2M-product database | [Apple App Store](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985) |
-| Google Play listing | App name `OnSkin - Skincare Scanner`; describes barcode/product scanning, cosmetics checker, face scanner, routine personalization, and product alternatives | [Google Play](https://play.google.com/store/apps/details?id=skin.care.product.scanner.skincare.cosmetic.ingredient.checker&hl=en_US) |
-| Social handle | Public Instagram handle appears to use `@onskin.app` | [Instagram search result](https://www.instagram.com/onskin.app/) |
-| Recent App Store activity | Store listing has recent release notes, including shelf scanning and expanded product scope | [Apple App Store listing](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985) |
+| Evidence                         | What it shows                                                                                                                                                | Source                                                                                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Existing website at `onskin.com` | Existing skincare/cosmetic ingredient scanner branded `OnSkin`; public claims include 2M+ products, 8M+ users, and 4.7 rating                                | [onskin.com](https://onskin.com/)                                                                                                    |
+| Apple App Store listing          | App name `OnSkin: Beauty Product Scanner`; claims over 8M users and 2M-product database                                                                      | [Apple App Store](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985)                                          |
+| Google Play listing              | App name `OnSkin - Skincare Scanner`; describes barcode/product scanning, cosmetics checker, face scanner, routine personalization, and product alternatives | [Google Play](https://play.google.com/store/apps/details?id=skin.care.product.scanner.skincare.cosmetic.ingredient.checker&hl=en_US) |
+| Social handle                    | Public Instagram handle appears to use `@onskin.app`                                                                                                         | [Instagram search result](https://www.instagram.com/onskin.app/)                                                                     |
+| Recent App Store activity        | Store listing has recent release notes, including shelf scanning and expanded product scope                                                                  | [Apple App Store listing](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985)                                  |
 
 ## Current Code Identity
 
-Current identifiers in `apps/mobile/app.json`:
+Current identifiers in `apps/mobile/app.base.json`:
 
-| Field | Current value |
-| --- | --- |
-| Display name | `OnSkin` |
-| Slug | `onskin` |
-| URL scheme | `onskin` |
-| iOS bundle ID | `com.onskin.app` |
+| Field           | Current value    |
+| --------------- | ---------------- |
+| Display name    | `OnSkin`         |
+| Slug            | `onskin`         |
+| URL scheme      | `onskin`         |
+| iOS bundle ID   | `com.onskin.app` |
 | Android package | `com.onskin.app` |
 
 These are too close to the existing public app to treat as a routine naming
@@ -35,27 +35,40 @@ trademark risk, domain strategy, and user trust.
 
 Local DNS checks on 2026-07-04:
 
-| Domain | DNS result | Interpretation |
-| --- | --- | --- |
-| `onskin.com` | Resolves to Cloudflare IPs | Existing public web property is active |
-| `onskin.app` | DNS NXDOMAIN | No DNS record found, but this is not proof that the domain is available to register |
-| `routinekind.com` | DNS NXDOMAIN | Candidate domain target needs registrar check and legal clearance |
-| `routinekind.app` | DNS NXDOMAIN | Candidate app domain target needs registrar check and legal clearance |
+| Domain            | DNS result                 | Interpretation                                                                      |
+| ----------------- | -------------------------- | ----------------------------------------------------------------------------------- |
+| `onskin.com`      | Resolves to Cloudflare IPs | Existing public web property is active                                              |
+| `onskin.app`      | DNS NXDOMAIN               | No DNS record found, but this is not proof that the domain is available to register |
+| `routinekind.com` | DNS NXDOMAIN               | Candidate domain target needs registrar check and legal clearance                   |
+| `routinekind.app` | DNS NXDOMAIN               | Candidate app domain target needs registrar check and legal clearance               |
 
 DNS NXDOMAIN only means no current DNS record was found. It does not prove domain
 availability, trademark availability, or social handle availability.
 
+## RoutineKind Candidate Spot Checks
+
+These checks are useful screening evidence only. They do not replace trademark
+counsel, registrar checkout, App Store Connect name reservation, Google Play
+package creation, social-handle checks, or paid-search/common-law review.
+
+| Date       | Surface                                    | Result                                                                                                                                                                                             | Source                                                                                                                             |
+| ---------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-07 | Apple public app search API                | Query for `RoutineKind` returned routine-related apps but no exact `RoutineKind` `trackName` in the first 20 US software results.                                                                  | [Apple Search API](https://itunes.apple.com/search?term=RoutineKind&entity=software&country=us&limit=20)                           |
+| 2026-07-07 | Google Play public search page             | Exact quoted query responded successfully; page inspection found no exact `>RoutineKind<` rendered-title marker. Google Play search HTML is not a reservation or authoritative availability proof. | [Google Play search](https://play.google.com/store/search?q=%22RoutineKind%22&c=apps&hl=en_US&gl=US)                               |
+| 2026-07-07 | Web-indexed App Store / Google Play search | Search over App Store, Google Play, and broad web results did not surface an exact `RoutineKind` app listing.                                                                                      | Search queries: `site:apps.apple.com RoutineKind app`, `site:play.google.com/store/apps RoutineKind`, `"RoutineKind" skincare app` |
+| 2026-07-07 | DNS                                        | `routinekind.app` and `routinekind.com` returned NXDOMAIN or no DNS answer from local DNS resolution. This is not registrar availability.                                                          | Local `Resolve-DnsName`                                                                                                            |
+
 ## Similarity Assessment
 
-| Dimension | Risk |
-| --- | --- |
-| Exact brand string | High: same `OnSkin` name |
-| Category | High: skincare/cosmetic app |
-| Core action | High: product scan, ingredient analysis, routine guidance |
-| Keywords | High: scanner, skincare, cosmetic checker, ingredient analysis, routine |
+| Dimension              | Risk                                                                                         |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| Exact brand string     | High: same `OnSkin` name                                                                     |
+| Category               | High: skincare/cosmetic app                                                                  |
+| Core action            | High: product scan, ingredient analysis, routine guidance                                    |
+| Keywords               | High: scanner, skincare, cosmetic checker, ingredient analysis, routine                      |
 | Domain/customer memory | High: incumbent controls `onskin.com`; `onskin.app` is close to existing social handle usage |
-| Store confusion | High: users could search for one app and install/support the other |
-| Paid search/ASO | High: exact-brand search would be contested from day one |
+| Store confusion        | High: users could search for one app and install/support the other                           |
+| Paid search/ASO        | High: exact-brand search would be contested from day one                                     |
 
 ## Initial Trademark Search Notes
 
