@@ -11,7 +11,10 @@ import {
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
-import { saveVerifiedEntitlement } from '@/features/subscription/store';
+import {
+  clearStoreEntitlementIfRevenueCatVerifiedEmpty,
+  saveVerifiedEntitlement,
+} from '@/features/subscription/store';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE } from '@/lib/errors/userFacing';
 import {
@@ -132,10 +135,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const current = await getCustomerInfo();
       const entitlement = current ? customerInfoToStoredEntitlement(current) : null;
       if (entitlement) await saveVerifiedEntitlement(entitlement);
+      else if (current) await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
 
       cleanup = await subscribeToCustomerInfoUpdates((customerInfo) => {
         const next = customerInfoToStoredEntitlement(customerInfo);
         if (next) void saveVerifiedEntitlement(next);
+        else void clearStoreEntitlementIfRevenueCatVerifiedEmpty();
       });
       if (cancelled && cleanup) cleanup();
     })().catch((error: unknown) => {

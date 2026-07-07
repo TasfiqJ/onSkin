@@ -252,6 +252,27 @@ export async function saveVerifiedEntitlement(e: StoredEntitlement): Promise<Sto
   return verified;
 }
 
+function isStoreBackedEntitlement(e: StoredEntitlement | null): boolean {
+  if (!e) return false;
+  return (
+    e.source === 'revenuecat' ||
+    e.store === 'app_store' ||
+    e.store === 'play_store' ||
+    e.store === 'test_store' ||
+    e.store === 'web'
+  );
+}
+
+/**
+ * A configured RevenueCat sync with no entitlement is a verified empty store
+ * state. Clear only store-backed access; app-granted reverse trials are not
+ * store purchases and must survive a user tapping Restore.
+ */
+export async function clearStoreEntitlementIfRevenueCatVerifiedEmpty(): Promise<void> {
+  const cur = await loadEntitlement();
+  if (isStoreBackedEntitlement(cur)) await persist(null);
+}
+
 /** Graceful local dismissal for expired/app-granted records only. Never cancels a store subscription. */
 export async function downgradeToFree(): Promise<void> {
   const cur = await loadEntitlement();

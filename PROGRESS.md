@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened RevenueCat entitlement sync so a verified empty CustomerInfo no
+  longer leaves stale store-backed Pro access cached locally. Auth startup,
+  CustomerInfo listeners, restore, and purchase sync now clear only
+  store-backed paid records when RevenueCat reports no entitlement, while
+  preserving app-granted reverse trials that are not store purchases. This was
+  non-UI lifecycle hardening, so human E2E was not required.
+
 - Added the docs/08 `paywall_dismissed` funnel event at the shared paywall
   dismiss helper. Onboarding, contextual, lifecycle, and win-back paywall exits
   now emit a privacy-safe dismissal event before returning through the existing

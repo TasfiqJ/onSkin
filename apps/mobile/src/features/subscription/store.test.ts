@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { deriveState } from './entitlement';
-import { clearEntitlement, loadEntitlement, startReverseTrialOnServer } from './store';
+import { deriveState, type StoredEntitlement } from './entitlement';
+import {
+  clearEntitlement,
+  clearStoreEntitlementIfRevenueCatVerifiedEmpty,
+  loadEntitlement,
+  saveVerifiedEntitlement,
+  startReverseTrialOnServer,
+} from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -114,6 +120,32 @@ describe('subscription store reverse trial', () => {
     await clearEntitlement();
 
     await expect(loadEntitlement()).resolves.toBeNull();
+  });
+
+  it('clears store-backed access when RevenueCat verifies no entitlement', async () => {
+    await saveVerifiedEntitlement(
+      cachedEntitlement({
+        periodType: 'normal',
+        store: 'app_store',
+        productId: 'routinekind_pro_annual',
+        expiresAt: null,
+        willRenew: true,
+        source: 'revenuecat',
+        environment: 'sandbox',
+      }) as StoredEntitlement,
+    );
+
+    await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+
+    await expect(loadEntitlement()).resolves.toBeNull();
+  });
+
+  it('preserves app-granted reverse trials when RevenueCat restore finds no store purchase', async () => {
+    const entitlement = await startReverseTrialOnServer();
+
+    await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+
+    await expect(loadEntitlement()).resolves.toMatchObject(entitlement);
   });
 
   it('removes malformed primary cache and migrates a valid legacy cache', async () => {

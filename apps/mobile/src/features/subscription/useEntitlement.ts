@@ -11,6 +11,7 @@ import {
 
 import { deriveState, type StoredEntitlement, type SubscriptionState } from './entitlement';
 import {
+  clearStoreEntitlementIfRevenueCatVerifiedEmpty,
   downgradeToFree,
   fetchServerEntitlement,
   loadEntitlement,
@@ -43,7 +44,10 @@ async function persistRevenueCatResult(input: {
 }): Promise<StoredEntitlement | null> {
   if (!input.customerInfo) return null;
   const entitlement = customerInfoToStoredEntitlement(input.customerInfo);
-  if (!entitlement) return null;
+  if (!entitlement) {
+    await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+    return null;
+  }
 
   const withAttribution: StoredEntitlement = {
     ...entitlement,
