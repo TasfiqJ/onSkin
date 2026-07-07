@@ -75,6 +75,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('function CaptureOverlay');
     expect(source).toContain('<ScrollView');
     expect(source).toContain("justifyContent: compact ? 'flex-start' : 'center'");
+    expect(source).toContain('const insets = useSafeAreaInsets();');
+    expect(source).toContain('paddingTop: insets.top + (compact ? 16 : 28)');
+    expect(source).toContain('paddingBottom: insets.bottom + (compact ? 20 : 28)');
     expect(source).toContain('useWindowDimensions().height < 640');
     expect(source.match(/height: 48/g)).toHaveLength(4);
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");

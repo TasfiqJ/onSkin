@@ -45,6 +45,8 @@ function CaptureOverlay({
   compact?: boolean;
   children: ReactNode;
 }) {
+  const insets = useSafeAreaInsets();
+
   return (
     <ScrollView
       style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor }}
@@ -52,8 +54,8 @@ function CaptureOverlay({
         flexGrow: 1,
         justifyContent: compact ? 'flex-start' : 'center',
         paddingHorizontal: 28,
-        paddingTop: compact ? 16 : 28,
-        paddingBottom: compact ? 20 : 28,
+        paddingTop: insets.top + (compact ? 16 : 28),
+        paddingBottom: insets.bottom + (compact ? 20 : 28),
       }}
       showsVerticalScrollIndicator={false}
     >
