@@ -20,6 +20,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   product-add, first-insight, routine, check-off, photo, paywall, reverse-trial,
   and purchase event coverage.
 
+- Tightened the lighter floating tab-bar active treatment so the smallest 320 px
+  phone viewport keeps a real label-width buffer. The active state now uses a
+  calmer raised chip instead of the heavy dark pill, while source contracts and
+  Expo web E2E verify one selected tab, zero horizontal overflow, 56 px tab
+  height, and about 74.6 px per tab at 320 px.
+
 - Added a dated `RoutineKind` candidate spot-check to the brand evidence packet:
   Apple public app search, Google Play public search, web-indexed App
   Store/Play queries, and DNS did not surface an exact app listing or active
