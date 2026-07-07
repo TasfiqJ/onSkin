@@ -194,3 +194,12 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `/shelf/manual`. Evidence is in
   `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`; it
   does not replace native-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the reminders/widgets
+  contextual paywall compact route: direct-open
+  `/paywall/upsell?feature=reminders_widgets`, verify the long title, fallback
+  store-copy, Terms/Privacy/Restore row, `Start free trial`, and `Maybe later`
+  are readable with zero horizontal overflow, no clipped elements, and visible
+  controls at least 48 px tall, then tap `Maybe later` and confirm the route
+  recovers to `/today`. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-upsell-reminders-compact/`; it does
+  not replace native RevenueCat purchase, restore, or device rendering QA.

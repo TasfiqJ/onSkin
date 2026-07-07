@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the compact contextual reminders/widgets paywall so the long
+  `Reminders, streaks & home-screen widgets.` title and fallback store-copy stay
+  readable on a 320 x 568 phone without crowding the compliance or dismiss
+  controls. The upsell now uses short-phone spacing and a narrower title size for
+  that long compact title while preserving the visible `Maybe later` exit.
+  Focused paywall mobile contracts pass, and in-app browser E2E verifies zero
+  horizontal overflow, no clipped elements, visible controls at least 48 px tall,
+  and dismiss recovery to `/today`. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-upsell-reminders-compact/`.
+
 - Re-buffered the `/shelf/search` direct-entry manual fallback after the local
   Shelf route contract was tightened from `pb-4` to `pb-8`. Expo web E2E at
   320 x 568 verifies `Add by hand` is a 56 px control with a 32 px bottom buffer,

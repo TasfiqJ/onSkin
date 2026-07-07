@@ -73,7 +73,17 @@ describe('paywall mobile contracts', () => {
     expect(sheet).toContain('overflow-hidden rounded-t-sheet');
     expect(sheet).toContain('style: { flexShrink: 1 }');
     expect(sheet).toContain('backdropAccessible?: boolean');
-    expect(upsell).toContain('<Sheet scroll backdropAccessible={false}');
+    expect(upsell).toContain('useWindowDimensions');
+    expect(upsell).toContain('const compactPaywall = height < 640;');
+    expect(upsell).toContain(
+      "const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';",
+    );
+    expect(upsell).toContain('className={compactPaywall ? \'px-7 pb-8 pt-4\' : undefined}');
+    expect(upsell).toContain("fontSize: longCompactTitle ? 24 : 30");
+    expect(upsell).toContain(
+      "compactPaywall\n            ? 'mt-2 h-[54px] items-center justify-center rounded-pill'",
+    );
+    expect(upsell).toContain('backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');
     expect(proGate).toContain('className="h-[48px] justify-center px-2"');
     expect(proGate).toContain('paywallDismissFallbackForFeature(feature)');

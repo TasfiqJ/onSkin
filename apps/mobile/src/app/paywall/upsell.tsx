@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Alert, Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
@@ -18,10 +18,13 @@ import type { GatedFeature } from '@onskin/types';
 // expired-reverse-trial user taps a Pro action mid-flow.
 export default function UpsellSheet() {
   const { feature } = useLocalSearchParams<{ feature?: string }>();
+  const { height, width } = useWindowDimensions();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
+  const compactPaywall = height < 640;
+  const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
@@ -50,28 +53,52 @@ export default function UpsellSheet() {
   }, [key]);
 
   return (
-    <Sheet scroll backdropAccessible={false} onClose={() => dismissPaywall(router)}>
+    <Sheet
+      scroll
+      backdropAccessible={false}
+      className={compactPaywall ? 'px-7 pb-8 pt-4' : undefined}
+      onClose={() => dismissPaywall(router)}
+    >
       <View
-        className="mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]"
+        className={
+          compactPaywall
+            ? 'mb-2 h-[48px] w-[48px] items-center justify-center rounded-[14px]'
+            : 'mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]'
+        }
         style={{ backgroundColor: colors.clayTint }}
       >
         <View className="h-4 w-4 rounded-[5px]" style={{ backgroundColor: colors.clay }} />
       </View>
-      <Text variant="title" style={{ fontSize: 30, lineHeight: 34 }}>
+      <Text
+        variant="title"
+        style={{ fontSize: longCompactTitle ? 24 : 30, lineHeight: longCompactTitle ? 27 : 34 }}
+      >
         {copy.title}
       </Text>
-      <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 24 }}>
+      <Text
+        variant="body"
+        tone="muted"
+        className={compactPaywall ? 'mt-2' : 'mt-3'}
+        style={{ lineHeight: compactPaywall ? 20 : 24 }}
+      >
         {copy.body}
       </Text>
       <View
-        className="mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4"
+        className={
+          compactPaywall
+            ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised p-3'
+            : 'mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+        }
         style={{ borderWidth: 1, borderColor: colors.hairline }}
       >
         <View>
           <Text variant="bodySm" tone="muted">
             {annualDisplay.introLabel}
           </Text>
-          <Text variant="title" style={{ fontSize: 26, lineHeight: 30 }}>
+          <Text
+            variant="title"
+            style={{ fontSize: compactPaywall ? 24 : 26, lineHeight: compactPaywall ? 28 : 30 }}
+          >
             {annualDisplay.priceLabel}
             {annualDisplay.periodLabel ? (
               <Text variant="bodySm" tone="muted">
@@ -88,8 +115,8 @@ export default function UpsellSheet() {
         <Text
           variant="bodySm"
           tone="muted"
-          className="mt-2 px-3 text-center"
-          style={{ fontSize: 12, lineHeight: 17 }}
+          className={compactPaywall ? 'mt-1.5 px-3 text-center' : 'mt-2 px-3 text-center'}
+          style={{ fontSize: 12, lineHeight: compactPaywall ? 16 : 17 }}
         >
           {offering.data.reason}
         </Text>
@@ -98,7 +125,11 @@ export default function UpsellSheet() {
         accessibilityRole="button"
         disabled={!canPurchase || startTrial.isPending}
         onPress={onStartTrial}
-        className="mt-4 h-[54px] items-center justify-center rounded-pill"
+        className={
+          compactPaywall
+            ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
+            : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+        }
         style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
       >
         <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
