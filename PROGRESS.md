@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added the master-plan `subscription_cancel_intent` analytics event for the
+  revenue dashboard. Opening subscription management still emits the generic
+  manage event, but active store-backed entitlements now also emit a
+  privacy-safe cancellation-intent bucket from settings; app-granted reverse
+  trials are excluded so no-card exploration is not miscounted as churn. This
+  was non-UI instrumentation, so human E2E was not required.
+
 - Hardened RevenueCat entitlement sync so a verified empty CustomerInfo no
   longer leaves stale store-backed Pro access cached locally. Auth startup,
   CustomerInfo listeners, restore, and purchase sync now clear only

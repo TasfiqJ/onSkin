@@ -76,6 +76,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'screen_viewed',
   'scan_matched',
   'scan_no_match',
+  'subscription_cancel_intent',
   'share_card_export_failed',
   'share_card_export_started',
   'share_card_export_succeeded',

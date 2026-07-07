@@ -135,6 +135,9 @@ describe('analytics sanitizer', () => {
       'routine_checkoff_completed',
     );
     expect(sanitizeAnalyticsEventName('paywall_dismissed')).toBe('paywall_dismissed');
+    expect(sanitizeAnalyticsEventName('subscription_cancel_intent')).toBe(
+      'subscription_cancel_intent',
+    );
 
     expect(
       sanitizeAnalyticsProps({

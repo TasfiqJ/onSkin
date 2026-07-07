@@ -47,6 +47,12 @@ function Row({ label, last, onPress }: { label: string; last?: boolean; onPress:
   );
 }
 
+function isStoreBackedBilling(store: string | null | undefined): boolean {
+  return (
+    store === 'app_store' || store === 'play_store' || store === 'web' || store === 'test_store'
+  );
+}
+
 export default function SubscriptionScreen() {
   const { data } = useEntitlement();
   const { restore } = useEntitlementActions();
@@ -55,6 +61,12 @@ export default function SubscriptionScreen() {
 
   async function openStore() {
     track('manage_subscription_opened');
+    if (data?.isPro && isStoreBackedBilling(data.store)) {
+      track('subscription_cancel_intent', {
+        source: 'subscription_settings',
+        period_type: data.periodType,
+      });
+    }
     const openedNative = await showNativeManageSubscriptions();
     if (openedNative) return;
     const fallbackUrl =

@@ -218,4 +218,15 @@ describe('Settings route contracts', () => {
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',
     );
   });
+
+  it('tracks store-backed cancel intent separately from generic subscription management', () => {
+    const source = readAppRoute('settings/subscription.tsx');
+
+    expect(source).toContain("track('manage_subscription_opened')");
+    expect(source).toContain('function isStoreBackedBilling');
+    expect(source).toContain('data?.isPro && isStoreBackedBilling(data.store)');
+    expect(source).toContain("track('subscription_cancel_intent'");
+    expect(source).toContain("source: 'subscription_settings'");
+    expect(source).toContain('period_type: data.periodType');
+  });
 });
