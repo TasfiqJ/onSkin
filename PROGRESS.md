@@ -2886,6 +2886,15 @@ Aligned the master plan and Codex implementation prompt with the emitted/guarded
 This avoids future duplicate analytics work around the previous mismatched name while preserving the existing Phase 7
 and Phase 10 beta funnel taxonomy.
 
+### Shelf barcode no-match recovery (2026-07-07)
+
+Added Search catalog as a first-class recovery action on `/shelf/no-match`, alongside OCR and manual add, so a barcode
+miss does not force users into the slower manual path when a name or brand search is more natural. The recovery tracks
+the new privacy-safe `miss_search` source and routes through the existing catalog search intake draft. Expo web human
+E2E at 320 x 568 covered the no-match sheet and all three fallback routes under
+`test-results/human-e2e/2026-07-07/shelf-no-match-search-fallback/`; native camera barcode-miss verification remains a
+device-harness follow-up.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

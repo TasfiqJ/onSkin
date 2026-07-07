@@ -19,6 +19,12 @@ export default function NoMatchScreen() {
     reset({ addedVia: 'ocr' });
     router.replace('/shelf/ocr');
   };
+  const goSearch = () => {
+    haptics.select();
+    trackProductAddStarted('miss_search');
+    reset({ addedVia: 'search' });
+    router.replace('/shelf/search');
+  };
   const goManual = () => {
     haptics.select();
     trackProductAddStarted('miss_manual');
@@ -27,7 +33,7 @@ export default function NoMatchScreen() {
   };
 
   return (
-    <Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE} scroll>
+    <Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>
       <View className="mb-4 flex-row items-start justify-between">
         <View
           className="h-12 w-12 items-center justify-center rounded-full"
@@ -57,11 +63,29 @@ export default function NoMatchScreen() {
         wrong details from the product page.
       </Text>
 
-      <View className="mt-6 gap-2.5">
+      <View className="mt-4 gap-2">
+        <Pressable
+          accessibilityRole="button"
+          onPress={goSearch}
+          className="flex-row items-center gap-3.5 rounded-[18px] p-3"
+          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+        >
+          <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">
+            <Text className="font-sans-bold text-clay-bright">S</Text>
+          </View>
+          <View className="flex-1">
+            <Text variant="body" tone="inverse" className="font-sans-semibold">
+              Search catalog
+            </Text>
+            <Text variant="bodySm" tone="inverseMuted">
+              Try name or brand instead
+            </Text>
+          </View>
+        </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={goOcr}
-          className="flex-row items-center gap-3.5 rounded-[18px] p-4"
+          className="flex-row items-center gap-3.5 rounded-[18px] p-3"
           style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
         >
           <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">
@@ -79,7 +103,7 @@ export default function NoMatchScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={goManual}
-          className="flex-row items-center gap-3.5 rounded-[18px] p-4"
+          className="flex-row items-center gap-3.5 rounded-[18px] p-3"
           style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
         >
           <View className="h-[34px] w-[34px] items-center justify-center rounded-[10px] bg-clay-bright/20">

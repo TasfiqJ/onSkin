@@ -174,7 +174,7 @@ Intake is the most important *how-it-works* surface in this document. There is *
 5. **Opened-date (§4.5)** → confirm/adjust PAO → **save** to `user_products` (`added_via='barcode'`, `catalog_product_id` set) and log a `shelf_scans` row.
 
 **Edge cases (all handled, calmly):**
-- **No catalog match** → "We don't have this one yet" → offer **Scan the ingredient list (OCR)** or **Add manually**, and queue a **contribute-back** (§4.6). Never a dead end.
+- **No catalog match** → "We don't have this one yet" → offer **Search catalog**, **Scan the ingredient list (OCR)**, or **Add manually**, and queue a **contribute-back** (§4.6). Never a dead end.
 - **Ambiguous / multiple matches** → a short disambiguation list (name + brand + size) to pick from.
 - **Unreadable barcode** → "Can't read it? Enter the numbers" (manual barcode) or jump to OCR/manual.
 - **No barcode on the product** (common for unboxed minis/samples) → straight to OCR/manual.

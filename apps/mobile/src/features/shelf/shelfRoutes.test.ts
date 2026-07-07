@@ -8,6 +8,10 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
+function readFeatureFile(path: string): string {
+  return readFileSync(fileURLToPath(new URL(`./${path}`, import.meta.url)), 'utf8');
+}
+
 function expectShelfFallback(route: string): void {
   const source = readAppRoute(route);
 
@@ -91,6 +95,25 @@ describe('Shelf route mobile contracts', () => {
         'backOrReplace(router, APP_SHELF_ROUTE)',
       );
     }
+
+    expect(readAppRoute('shelf/no-match.tsx')).toContain(
+      '<Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
+    );
+  });
+
+  it('keeps barcode no-match recovery from dead-ending before manual add', () => {
+    const source = readAppRoute('shelf/no-match.tsx');
+
+    expect(source).toContain("trackProductAddStarted('miss_search')");
+    expect(source).toContain("reset({ addedVia: 'search' })");
+    expect(source).toContain("router.replace('/shelf/search')");
+    expect(source).toContain('Search catalog');
+    expect(source).toContain('Scan the ingredient list');
+    expect(source).toContain('Add it by hand');
+
+    const analytics = readFeatureFile('analytics.ts');
+
+    expect(analytics).toContain("'miss_search'");
   });
 
   it('keeps text exits buffered above 44px when a label is clearer than an icon', () => {

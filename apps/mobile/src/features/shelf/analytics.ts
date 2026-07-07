@@ -10,6 +10,7 @@ export const PRODUCT_ADD_START_SOURCES = [
   'scan_search',
   'scan_manual',
   'miss_label',
+  'miss_search',
   'miss_manual',
   'catalog_manual',
   'opened_recovery',
