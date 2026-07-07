@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 7 core-loop readiness so final brand domain and policy URLs use
+  the shared production validators instead of raw truthiness/example checks. The
+  gate now honors process-env overrides, rejects reserved or credentialed public
+  identity values, and includes the Consumer Health Data Privacy URL in the
+  strict public-policy evidence set. Added `phase7:check-core-loop-smoke` and
+  wired it into `phase7:verify`.
+
 - Hardened early infrastructure/catalog env gates against production-shaped
   impostors. Phase 2 now reuses the shared placeholder parser and rejects
   credentialed, reserved, plaintext, non-Supabase, local PostHog, and

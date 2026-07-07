@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { productionDomain, productionUrl } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -44,7 +45,7 @@ function has(path, pattern) {
 
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile('.env');
-const launchEnv = { ...exampleEnv, ...localEnv };
+const launchEnv = { ...exampleEnv, ...localEnv, ...process.env };
 
 const requiredFiles = [
   'apps/mobile/src/lib/launch/phase7.ts',
@@ -221,8 +222,7 @@ require(!/shelf_product_added|conflict_opened/.test(
 ), 'Phase 7 beta dashboard contains stale non-emitted core-loop event names.');
 
 warn(
-  Boolean(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN) &&
-    !/example\.com/i.test(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
+  productionDomain(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
   'Missing final brand domain: EXPO_PUBLIC_FINAL_BRAND_DOMAIN.',
 );
 for (const key of [
@@ -231,9 +231,10 @@ for (const key of [
   'EXPO_PUBLIC_SUPPORT_URL',
   'EXPO_PUBLIC_ACCOUNT_DELETION_URL',
   'EXPO_PUBLIC_DATA_EXPORT_URL',
+  'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
 ]) {
   warn(
-    Boolean(launchEnv[key]) && !/example\.com/i.test(launchEnv[key]),
+    productionUrl(launchEnv[key]),
     `${key} must be a real production URL.`,
   );
 }
