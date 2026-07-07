@@ -2367,6 +2367,15 @@ identity before free conflict-check quota or `use together anyway` decisions rea
 and focused quota/override tests pin padded legacy rows, duplicate repair, and clean persisted state. This was
 non-visual local storage hardening, so human E2E was not required.
 
+### Phase 10/11 public contact gate hardening (2026-07-07)
+
+Hardened late beta and public launch readiness checks so final policy URLs, marketing URLs, store URLs, final domain,
+and support email must be production-shaped public values rather than merely non-placeholder strings. Added a no-network
+Phase 10/11 public-contact smoke that exercises the real readiness scripts against valid production contacts,
+reserved domains, embedded credentials, plaintext store URLs, and placeholder/local support emails. Strict beta/public
+launch remains blocked on Tas-owned final URLs, store links, support inbox, evidence, generated packet readiness, and
+named signoff.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

@@ -8,6 +8,9 @@ import {
   has,
   phase10RequiredDocs,
   printResult,
+  productionDomain,
+  productionSupportEmail,
+  productionUrl,
   read,
   requiredPhase10EvidenceKeys,
   warn,
@@ -58,19 +61,18 @@ if (exists('docs/phase-9/generated/release-engineering-qa-packet.json')) {
   }
 }
 
-const placeholder = (value) => !value || /example\.com|YOUR-PROJECT|xxxxxxxx|XXXXXXXX|\.\.\.|pending/i.test(String(value));
-for (const key of [
-  'EXPO_PUBLIC_PRIVACY_URL',
-  'EXPO_PUBLIC_TERMS_URL',
-  'EXPO_PUBLIC_SUPPORT_URL',
-  'EXPO_PUBLIC_ACCOUNT_DELETION_URL',
-  'EXPO_PUBLIC_DATA_EXPORT_URL',
-  'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
-  'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
-  'EXPO_PUBLIC_MARKETING_URL',
-  'EXPO_PUBLIC_SUPPORT_EMAIL',
+for (const [key, validate] of [
+  ['EXPO_PUBLIC_PRIVACY_URL', productionUrl],
+  ['EXPO_PUBLIC_TERMS_URL', productionUrl],
+  ['EXPO_PUBLIC_SUPPORT_URL', productionUrl],
+  ['EXPO_PUBLIC_ACCOUNT_DELETION_URL', productionUrl],
+  ['EXPO_PUBLIC_DATA_EXPORT_URL', productionUrl],
+  ['EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL', productionUrl],
+  ['EXPO_PUBLIC_FINAL_BRAND_DOMAIN', productionDomain],
+  ['EXPO_PUBLIC_MARKETING_URL', productionUrl],
+  ['EXPO_PUBLIC_SUPPORT_EMAIL', productionSupportEmail],
 ]) {
-  warn(warnings, !placeholder(env[key]), `Missing final beta identity/policy value: ${key}.`);
+  warn(warnings, validate(env[key]), `Missing or non-production final beta identity/policy value: ${key}.`);
 }
 
 for (const key of requiredPhase10EvidenceKeys()) {

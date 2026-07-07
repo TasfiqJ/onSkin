@@ -91,6 +91,66 @@ export function warn(warnings, condition, message) {
   if (!condition) warnings.push(message);
 }
 
+const PLACEHOLDER_ENV_VALUE = /example\.com|your-project|x{4,}|\.{3,}|pending/i;
+const PUBLIC_PRODUCTION_HOSTNAME =
+  /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
+
+export function placeholderEnvValue(value) {
+  const trimmed = String(value ?? '').trim();
+  return !trimmed || PLACEHOLDER_ENV_VALUE.test(trimmed);
+}
+
+export function productionHostname(hostname) {
+  const normalized = String(hostname ?? '').trim().toLowerCase();
+  return (
+    PUBLIC_PRODUCTION_HOSTNAME.test(normalized) &&
+    !RESERVED_PRODUCTION_HOSTNAME.test(normalized) &&
+    !normalized.includes('example.com') &&
+    !placeholderEnvValue(normalized)
+  );
+}
+
+export function productionUrl(value) {
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed)) return false;
+  let url;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    return false;
+  }
+  return url.protocol === 'https:' && !url.username && !url.password && productionHostname(url.hostname);
+}
+
+export function productionDomain(value) {
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed)) return false;
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  let url;
+  try {
+    url = new URL(candidate);
+  } catch {
+    return false;
+  }
+  return (
+    (url.protocol === 'https:' || url.protocol === 'http:') &&
+    !url.username &&
+    !url.password &&
+    !url.search &&
+    !url.hash &&
+    !url.port &&
+    productionHostname(url.hostname)
+  );
+}
+
+export function productionSupportEmail(value) {
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
+  const domain = trimmed.split('@').pop()?.toLowerCase() ?? '';
+  return productionHostname(domain);
+}
+
 export function redactedErrorKind(error) {
   if (error instanceof Error) return error.name || 'Error';
   if (error && typeof error === 'object') {
