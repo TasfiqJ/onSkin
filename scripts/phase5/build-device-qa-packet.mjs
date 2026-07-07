@@ -73,10 +73,7 @@ function envValue(name) {
 
 function looksLikeEasBuildEvidence(value) {
   const trimmed = String(value ?? '').trim();
-  if (
-    placeholderEnvValue(trimmed) ||
-    /\b(local|simulator|emulator|test|fake|mock)\b/i.test(trimmed)
-  ) {
+  if (placeholderEnvValue(trimmed) || /\b(local|simulator|emulator|fake|mock)\b/i.test(trimmed)) {
     return false;
   }
   const easBuildId = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -87,18 +84,27 @@ function looksLikeEasBuildEvidence(value) {
 
 function looksLikePhysicalIosDevice(value) {
   const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed) || /\b(simulator|emulator|model\s*\/\s*ios)\b/i.test(trimmed)) {
+  if (
+    placeholderEnvValue(trimmed) ||
+    /\b(simulator|emulator)\b/i.test(trimmed) ||
+    /\bmodel\s*\//i.test(trimmed)
+  ) {
     return false;
   }
   return (
-    /\biP(?:hone|ad|od)\b/i.test(trimmed) &&
+    /\biP(?:hone|ad|od)\s+(?!\/|(?:iOS|iPadOS)\b)\S+/i.test(trimmed) &&
     /\b(?:iOS|iPadOS)\s+\d{1,2}(?:\.\d+){0,2}\b/i.test(trimmed)
   );
 }
 
 function looksLikePhysicalAndroidDevice(value) {
   const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed) || /\b(simulator|emulator|model\s*\/\s*os)\b/i.test(trimmed)) {
+  if (
+    placeholderEnvValue(trimmed) ||
+    /\b(simulator|emulator)\b/i.test(trimmed) ||
+    /\bmodel\s*\//i.test(trimmed) ||
+    /^(?:android|phone|device)(?:\s+(?:model|phone|device))?\s*(?:\/|$)/i.test(trimmed)
+  ) {
     return false;
   }
   return /\bAndroid(?:\s+OS)?\s+\d{1,2}(?:\.\d+){0,2}\b/i.test(trimmed);
@@ -107,7 +113,13 @@ function looksLikePhysicalAndroidDevice(value) {
 function looksLikeNamedSignoff(value) {
   const trimmed = String(value ?? '').trim();
   if (placeholderEnvValue(trimmed)) return false;
-  if (/^(?:name|tester|qa|reviewer|signoff|signed off|tbd|n\/a)$/i.test(trimmed)) return false;
+  if (
+    /^(?:name|tester|qa|reviewer|signoff|signed off|tbd|n\/a)$/i.test(trimmed) ||
+    /\b(?:tester|reviewer|your|full|actual|first|last)\s+name\b/i.test(trimmed) ||
+    /\b(?:john|jane)\s+doe\b/i.test(trimmed)
+  ) {
+    return false;
+  }
   return /[a-z]/i.test(trimmed) && trimmed.length >= 3;
 }
 
@@ -116,7 +128,7 @@ const buildEvidence = {
   androidBuildId: envValue('PHASE5_ANDROID_BUILD_ID'),
   iosDevice: envValue('PHASE5_IOS_DEVICE'),
   androidDevice: envValue('PHASE5_ANDROID_DEVICE'),
-  qaSignedOff: process.env.PHASE5_QA_SIGNOFF === 'true',
+  qaSignedOff: envValue('PHASE5_QA_SIGNOFF').toLowerCase() === 'true',
   signedOffBy: envValue('PHASE5_SIGNED_OFF_BY'),
 };
 

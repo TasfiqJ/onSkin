@@ -90,8 +90,32 @@ const cases = [
     },
   },
   {
+    name: 'strict Phase 5 QA packet rejects iOS labels without a physical model',
+    result: run({ PHASE5_IOS_DEVICE: 'iPhone / iOS 18.5' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_IOS_DEVICE must name a physical iPhone\/iPad model and iOS\/iPadOS version/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
     name: 'strict Phase 5 QA packet rejects Android device labels without OS versions',
     result: run({ PHASE5_ANDROID_DEVICE: 'Pixel 8' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_ANDROID_DEVICE must name a physical Android model and Android OS version/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects generic Android device labels',
+    result: run({ PHASE5_ANDROID_DEVICE: 'Android model / Android 15' }),
     expect(result) {
       return (
         result.status === 1 &&
@@ -111,6 +135,26 @@ const cases = [
           output(result),
         )
       );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects generic tester-name signoffs',
+    result: run({ PHASE5_SIGNED_OFF_BY: 'Tester Name' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PHASE5_SIGNED_OFF_BY must name a real tester\/reviewer, not a placeholder/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet accepts case-insensitive signoff truth',
+    result: run({ PHASE5_QA_SIGNOFF: ' TRUE ' }),
+    expect(result) {
+      const text = output(result);
+      return result.status === 0 && /device-qa-packet\.json/.test(text) && !/^FAIL /m.test(text);
     },
   },
 ];

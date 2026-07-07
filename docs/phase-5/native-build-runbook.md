@@ -34,7 +34,7 @@ PHASE5_ANDROID_BUILD_ID=... \
 PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 18.5" \
 PHASE5_ANDROID_DEVICE="Pixel 8 / Android 15" \
 PHASE5_QA_SIGNOFF=true \
-PHASE5_SIGNED_OFF_BY="Tester Name" \
+PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
 
