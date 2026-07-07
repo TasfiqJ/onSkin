@@ -285,12 +285,57 @@ function ConflictFrame({
           keyboardShouldPersistTaps="handled"
         >
           {!conflict ? (
-            <>
-              <Text variant="body" tone="muted" className="py-6 text-center">
-                This conflict is no longer on your shelf.
-              </Text>
-              <Button label="Close" variant="ghost" onPress={onDismiss} />
-            </>
+            <View className="gap-3">
+              <View>
+                <Chip label="Shelf updated" bg={colors.greige} fg={colors.mutedStrong} />
+                <Text
+                  variant="title"
+                  className="mt-3 text-[27px] leading-[31px]"
+                  accessibilityRole="header"
+                >
+                  This timing note is no longer active.
+                </Text>
+                <Text
+                  variant="body"
+                  tone="muted"
+                  className="mt-2.5 text-[14px] leading-[22px]"
+                  style={{ color: colors.inkSoft }}
+                >
+                  Your shelf no longer has the product pair that created this note. Review your
+                  current shelf, or add the product again if it still belongs in your routine.
+                </Text>
+              </View>
+
+              <View
+                className="rounded-[16px]"
+                style={{
+                  backgroundColor: colors.greigeChip,
+                  paddingHorizontal: 18,
+                  paddingVertical: 12,
+                }}
+              >
+                <Text
+                  className="text-[12.5px] leading-[18px]"
+                  style={{ color: colors.mutedStrong }}
+                >
+                  We only show conflict guidance for products currently on your shelf, so old links
+                  never reuse stale routine advice.
+                </Text>
+              </View>
+
+              <View className="mt-1 gap-2">
+                <Button label="Back to Shelf" onPress={() => router.replace(APP_SHELF_ROUTE)} />
+                <Pressable
+                  accessibilityRole="button"
+                  className="min-h-[48px] items-center justify-center py-2"
+                  onPress={() => router.replace('/shelf/manual')}
+                >
+                  <Text variant="body" tone="muted" className="font-sans-semibold">
+                    Add a product
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
           ) : (
             <ConflictBody conflict={conflict} onDismiss={onDismiss} />
           )}

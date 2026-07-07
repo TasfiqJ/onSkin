@@ -864,8 +864,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: missing or unshareable conflict
   - Priority: Important
   - Automate later: Yes
-  - Action: Open conflict and share-card routes for a rule that is not present in the current shelf.
-  - Expected result: The app shows a calm unavailable state and a working escape path.
+  - Action: Open `/conflict/[ruleId]` and `/share/conflict/[ruleId]` for a rule that is not present in the current shelf; use Back to Shelf from the missing detail state and the add-product escape hatch.
+  - Expected result: The missing conflict detail explains that the timing note is no longer active, never reuses stale routine advice, Back to Shelf returns to `/shelf`, Add a product opens `/shelf/manual`, and the share-card fallback still returns to Shelf without exposing private shelf details.
   - Evidence: Screenshot and route snapshot.
 - Branch: native share unavailable
   - Priority: Important

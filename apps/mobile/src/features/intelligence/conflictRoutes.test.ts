@@ -33,6 +33,19 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('fallbackLabel="Back to Shelf"');
   });
 
+  it('recovers missing conflict-detail routes without stale guidance', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain('This timing note is no longer active.');
+    expect(source).toContain('old links');
+    expect(source).toContain('Back to Shelf');
+    expect(source).toContain('Add a product');
+    expect(source).toContain('router.replace(APP_SHELF_ROUTE)');
+    expect(source).toContain("router.replace('/shelf/manual')");
+    expect(source).not.toContain('This conflict is no longer on your shelf.');
+    expect(source).not.toContain('<Button label="Close" variant="ghost" onPress={onDismiss} />');
+  });
+
   it('does not claim conflict-detail placement without scheduler output', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 

@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Repaired stale conflict-detail direct entries so a missing `/conflict/[ruleId]`
+  no longer presents a generic one-line missing state with only a `Close`
+  action. The route now explains that the timing note is no longer active,
+  avoids reusing stale routine advice, and provides explicit `Back to Shelf`
+  and `Add a product` recovery actions that stay fully visible on 320 x 568
+  phones. Expo web E2E verified no horizontal overflow, no clipped controls,
+  the Shelf escape, and the manual-add recovery path. Evidence is in
+  `test-results/human-e2e/2026-07-07/conflict-missing-detail-recovery/`; the
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-conflict-missing-detail-recovery.md`.
+
 - Repaired stale Shelf product-detail direct entries so a missing `/shelf/[id]`
   no longer presents a muted one-line empty state with only the top Back icon.
   The route now shows clear `Product unavailable` copy, keeps the state
@@ -3078,6 +3089,16 @@ Close, Search catalog, OCR, and manual fallback actions, the sheet container ren
 to `/shelf` with no lingering dialog. Evidence is in
 `test-results/human-e2e/2026-07-07/shared-sheet-dialog-semantics/`; physical screen-reader traversal remains a Phase 5
 device-QA follow-up.
+
+### Conflict missing-route recovery (2026-07-07)
+
+Recovered stale `/conflict/[ruleId]` direct-entry routes as a real core-loop recovery state instead of a close-only
+fallback. The detail sheet now says the timing note is no longer active, explains that old links never reuse stale
+routine advice, routes Back to Shelf via `APP_SHELF_ROUTE`, and offers Add a product into `/shelf/manual`. Route-contract
+coverage pins the copy and destinations. Expo web human E2E at 320 x 568 verified the stale state, Back to Shelf,
+Add a product, no horizontal overflow, and only known local Supabase/web-notification warnings under
+`test-results/human-e2e/2026-07-07/conflict-missing-detail-recovery/`. Tracked in
+`docs/e2e-bug-reports/2026-07-07-conflict-missing-detail-recovery.md`.
 
 ## Open questions for the founder
 
