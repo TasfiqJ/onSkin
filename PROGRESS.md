@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added the docs/08 `paywall_dismissed` funnel event at the shared paywall
+  dismiss helper. Onboarding, contextual, lifecycle, and win-back paywall exits
+  now emit a privacy-safe dismissal event before returning through the existing
+  safe-back fallback logic, giving beta economics a measurable shown-to-dismissed
+  denominator. This was non-UI instrumentation hardening, so human E2E was not
+  required.
+
 - Hardened the satisfaction-timed review prompt so native StoreReview failures
   remain best-effort. Platform availability errors now track an unavailable
   prompt instead of throwing, native request failures are swallowed, and a local

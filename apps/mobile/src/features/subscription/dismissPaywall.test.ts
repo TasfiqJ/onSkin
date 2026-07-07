@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { APP_PROGRESS_ROUTE, APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
 
@@ -9,6 +9,14 @@ import {
   type PaywallDismissRouter,
 } from './dismissPaywall';
 
+const mocks = vi.hoisted(() => ({
+  track: vi.fn(),
+}));
+
+vi.mock('@/lib/analytics/track', () => ({
+  track: mocks.track,
+}));
+
 function routerWithHistory(canGoBack: boolean): PaywallDismissRouter {
   return {
     canGoBack: vi.fn(() => canGoBack),
@@ -18,11 +26,16 @@ function routerWithHistory(canGoBack: boolean): PaywallDismissRouter {
 }
 
 describe('paywall dismissal', () => {
+  beforeEach(() => {
+    mocks.track.mockClear();
+  });
+
   it('returns to the previous route when paywall history exists', () => {
     const router = routerWithHistory(true);
 
     dismissPaywall(router);
 
+    expect(mocks.track).toHaveBeenCalledWith('paywall_dismissed', { surface: 'paywall' });
     expect(router.back).toHaveBeenCalledOnce();
     expect(router.replace).not.toHaveBeenCalled();
   });
@@ -32,6 +45,7 @@ describe('paywall dismissal', () => {
 
     dismissPaywall(router);
 
+    expect(mocks.track).toHaveBeenCalledWith('paywall_dismissed', { surface: 'paywall' });
     expect(router.back).not.toHaveBeenCalled();
     expect(router.replace).toHaveBeenCalledWith(PAYWALL_DISMISS_FALLBACK_ROUTE);
   });

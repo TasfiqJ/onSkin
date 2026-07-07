@@ -6,6 +6,7 @@ import {
   type AppFallbackRoute,
   type BackOrReplaceRouter,
 } from '@/lib/navigation/safeBack';
+import { track } from '@/lib/analytics/track';
 import type { GatedFeature } from '@onskin/types';
 
 export const PAYWALL_DISMISS_FALLBACK_ROUTE = APP_HOME_ROUTE;
@@ -23,5 +24,6 @@ export function dismissPaywall(
   router: PaywallDismissRouter,
   fallbackRoute: AppFallbackRoute = PAYWALL_DISMISS_FALLBACK_ROUTE,
 ) {
+  track('paywall_dismissed', { surface: 'paywall' });
   backOrReplace(router, fallbackRoute);
 }

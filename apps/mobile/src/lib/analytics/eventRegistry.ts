@@ -41,6 +41,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'notification_prompt_shown',
   'onboarding_started',
   'opened_date_set',
+  'paywall_dismissed',
   'paywall_shown',
   'personalization_shown',
   'phase7_deferred_surface_viewed',
