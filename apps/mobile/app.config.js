@@ -16,6 +16,13 @@ const appEnvironment =
     : readVariantEnv('EXPO_PUBLIC_APP_ENV', process.env.EXPO_PUBLIC_APP_ENV);
 const isProduction = variant === 'production';
 const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
+const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
+const MAX_EXTERNAL_URL_LENGTH = 2048;
+const PLACEHOLDER_ENV_VALUE =
+  /example\.com|your-project|replace-with|__blocked_placeholder__|x{4,}|\.{3,}|pending/i;
+const PUBLIC_PRODUCTION_HOSTNAME =
+  /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 
 const variantSuffix =
   {
@@ -94,23 +101,72 @@ function buildPlugins(plugins, permissionCopy) {
 }
 
 function normalizeDomain(value) {
-  const domain = (value ?? '')
-    .trim()
-    .replace(/^https?:\/\//i, '')
-    .replace(/\/.*$/, '')
-    .toLowerCase();
-  if (!domain || domain.includes('example.com') || domain === 'localhost') return '';
-  return domain;
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed) || CONTROL_CHAR_RE.test(trimmed)) return '';
+
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  let url;
+  try {
+    url = new URL(candidate);
+  } catch {
+    return '';
+  }
+
+  if (
+    (url.protocol !== 'https:' && url.protocol !== 'http:') ||
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash ||
+    url.port
+  ) {
+    return '';
+  }
+
+  const hostname = url.hostname.toLowerCase();
+  return productionHostname(hostname) ? hostname : '';
 }
 
 function productionUrl(value) {
-  const url = (value ?? '').trim();
-  if (!url || /example\.com/i.test(url)) return '';
-  return url;
+  const trimmed = String(value ?? '').trim();
+  if (
+    placeholderEnvValue(trimmed) ||
+    CONTROL_CHAR_RE.test(trimmed) ||
+    trimmed.length > MAX_EXTERNAL_URL_LENGTH
+  ) {
+    return '';
+  }
+
+  let url;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    return '';
+  }
+
+  if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) return '';
+  if (!productionHostname(url.hostname)) return '';
+  url.hash = '';
+  return url.toString();
 }
 
 function hasValue(value) {
   return String(value ?? '').trim().length > 0;
+}
+
+function placeholderEnvValue(value) {
+  const trimmed = String(value ?? '').trim();
+  return !trimmed || PLACEHOLDER_ENV_VALUE.test(trimmed);
+}
+
+function productionHostname(hostname) {
+  const normalized = String(hostname ?? '').trim().toLowerCase();
+  return (
+    PUBLIC_PRODUCTION_HOSTNAME.test(normalized) &&
+    !RESERVED_PRODUCTION_HOSTNAME.test(normalized) &&
+    !normalized.includes('example.com') &&
+    !placeholderEnvValue(normalized)
+  );
 }
 
 function assertProductionIdentity(expo, permissionCopy) {

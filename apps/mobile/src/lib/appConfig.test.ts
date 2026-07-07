@@ -20,6 +20,8 @@ const APP_ENV_KEYS = [
   'APP_CAMERA_PERMISSION',
   'APP_FACE_ID_PERMISSION',
   'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
+  'EXPO_PUBLIC_APP_STORE_URL',
+  'EXPO_PUBLIC_PLAY_STORE_URL',
 ] as const;
 
 function buildExpoConfig(env: Partial<Record<(typeof APP_ENV_KEYS)[number], string>>) {
@@ -44,6 +46,10 @@ function buildExpoConfig(env: Partial<Record<(typeof APP_ENV_KEYS)[number], stri
       }
     }
   }
+}
+
+function intentFilterText(expo: ReturnType<typeof buildExpoConfig>): string {
+  return JSON.stringify(expo.android?.intentFilters ?? []);
 }
 
 describe('Expo app identity config', () => {
@@ -182,5 +188,78 @@ describe('Expo app identity config', () => {
     expect(expo.scheme).toBe('routinekind');
     expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app.development');
     expect(expo.android.package).toBe('com.routinekind.app.development');
+  });
+
+  it('configures native app links only for normalized production domains', () => {
+    const expo = buildExpoConfig({
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: ' https://RoutineKind.app/share ',
+    });
+
+    expect(expo.extra.publicLinkDomain).toBe('routinekind.app');
+    expect(expo.ios.associatedDomains).toContain('applinks:routinekind.app');
+    expect(intentFilterText(expo)).toContain('"host":"routinekind.app"');
+  });
+
+  it('keeps native app links inert for malformed, reserved, or placeholder domains', () => {
+    const badDomains = [
+      'https://example.com',
+      'https://routinekind.local',
+      'https://routinekind.localhost',
+      'https://routinekind.test',
+      'https://routinekind.invalid',
+      'https://routinekind.example',
+      'https://routinekind.app?redirect=https://evil.example',
+      'https://routinekind.app:444',
+      'https://user:pass@routinekind.app',
+      'routinekind.app@evil.com',
+      'javascript://routinekind.app',
+      'routinekind',
+    ];
+
+    for (const badDomain of badDomains) {
+      const expo = buildExpoConfig({ EXPO_PUBLIC_FINAL_BRAND_DOMAIN: badDomain });
+      expect(expo.extra.publicLinkDomain).toBe('');
+      expect(expo.ios.associatedDomains ?? []).toEqual([]);
+      expect(intentFilterText(expo)).not.toContain('"host":');
+    }
+  });
+
+  it('exposes only production HTTPS store URLs in native config and extra metadata', () => {
+    const expo = buildExpoConfig({
+      EXPO_PUBLIC_APP_STORE_URL: ' https://apps.apple.com/app/id123456789#token ',
+      EXPO_PUBLIC_PLAY_STORE_URL:
+        'https://play.google.com/store/apps/details?id=com.routinekind.app#token',
+    });
+
+    expect(expo.ios.appStoreUrl).toBe('https://apps.apple.com/app/id123456789');
+    expect(expo.android.playStoreUrl).toBe(
+      'https://play.google.com/store/apps/details?id=com.routinekind.app',
+    );
+    expect(expo.extra.appStoreUrl).toBe('https://apps.apple.com/app/id123456789');
+    expect(expo.extra.playStoreUrl).toBe(
+      'https://play.google.com/store/apps/details?id=com.routinekind.app',
+    );
+  });
+
+  it('omits malformed, local, credentialed, or placeholder store URLs from native config', () => {
+    const expo = buildExpoConfig({
+      EXPO_PUBLIC_APP_STORE_URL: 'http://apps.apple.com/app/id123456789',
+      EXPO_PUBLIC_PLAY_STORE_URL:
+        'https://user:pass@play.google.com/store/apps/details?id=com.routinekind.app',
+    });
+
+    expect(expo.ios.appStoreUrl).toBeUndefined();
+    expect(expo.android.playStoreUrl).toBeUndefined();
+    expect(expo.extra.appStoreUrl).toBe('');
+    expect(expo.extra.playStoreUrl).toBe('');
+
+    const placeholder = buildExpoConfig({
+      EXPO_PUBLIC_APP_STORE_URL: 'https://example.com/app',
+      EXPO_PUBLIC_PLAY_STORE_URL: 'https://routinekind.test/store',
+    });
+    expect(placeholder.ios.appStoreUrl).toBeUndefined();
+    expect(placeholder.android.playStoreUrl).toBeUndefined();
+    expect(placeholder.extra.appStoreUrl).toBe('');
+    expect(placeholder.extra.playStoreUrl).toBe('');
   });
 });

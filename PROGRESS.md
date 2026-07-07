@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Expo native launch config so `EXPO_PUBLIC_FINAL_BRAND_DOMAIN` and
+  store URL env values use production URL semantics before they reach native
+  metadata. Malformed domains with credentials, query/hash, explicit ports,
+  reserved pseudo-domains, placeholders, or unsupported schemes now stay out of
+  iOS associated domains, Android App Links, native store URLs, and Expo
+  `extra`.
+
+- Hardened Phase 9 release smoke final-contact checks so privacy/terms/support,
+  final domain, marketing, support email, and store URLs must be production
+  shaped values instead of merely non-placeholder strings. Added a local
+  no-network release-contact smoke harness that proves good final contacts pass
+  and credentialed, reserved, placeholder, or production-gated public values are
+  still rejected.
+
 - Hardened Phase 6 payment readiness so RevenueCat public keys, product IDs,
   webhook auth/signing/secret keys, and policy URLs must be production-shaped
   values before strict payment gates can pass. Added a no-network payments env
