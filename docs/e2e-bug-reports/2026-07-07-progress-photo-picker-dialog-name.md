@@ -26,6 +26,7 @@ The picker used React Native `Modal`, but the route contract did not require a s
 
 - Source review: `apps/mobile/src/app/(tabs)/progress.tsx`
 - User-flow branch: `docs/USER_FLOW_TREE.md` Progress Photos / direct-entry back, close, and permission escape
+- App-surface evidence folder: `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/`
 
 ## Frequency
 
@@ -57,19 +58,28 @@ Pass the visible picker title to the `Modal` wrapper as its accessible label, ke
 
 ## Post-Fix Evidence
 
-- Screenshot:
+- Populated picker screenshots:
   - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-progress-ready-320x568.png`
   - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-photo-picker-dialog-320x568.png`
   - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-photo-picker-dismissed-320x568.png`
-- UI snapshot:
+- Populated picker UI snapshots:
   - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-progress-ready-state.json`
   - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-photo-picker-dialog-state.json`
   - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-photo-picker-dismissed-state.json`
+- Data-URI save limitation screenshots:
+  - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/capture-consent-320x568.png`
+  - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/review-direct-data-uri-320x568.png`
+  - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/progress-after-web-save-attempt-320x568.png`
+- Data-URI save limitation UI snapshots:
+  - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/review-visible-dom.txt`
+  - `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/progress-after-web-save-visible-dom.txt`
+- Run report: `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/report.md`
 - Logs: `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-browser-warn-error-logs.json`
 - Focused route contract: `npm --workspace apps/mobile run test -- src/features/photos/progressRoutes.test.ts`
+- Expo web limitation: direct review renders and exposes Save, but data-URI photo saves return to `/progress` without creating a persisted encrypted photo record because the production photo store depends on native file persistence. The populated picker check used synthetic local encrypted-photo URI metadata to verify the modal/tile semantics; native real-image traversal remains required.
 
 ## Remaining Risk
 
 - Untested branches: Native VoiceOver/TalkBack announcement timing and real encrypted photo thumbnail rendering.
 - Missing fixtures: Physical-device photo series with real image bytes.
-- Follow-up needed: Include comparison picker traversal in Phase 5 device QA.
+- Follow-up needed: Include comparison picker traversal in Phase 5 device QA, or add a sanctioned local metadata fixture command before promoting this picker path to durable web E2E.
