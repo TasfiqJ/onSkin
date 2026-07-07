@@ -23,14 +23,15 @@ function packageView(overrides: Partial<SubscriptionPackageView> = {}): Subscrip
 }
 
 describe('subscription price display', () => {
-  it('uses approved fallback labels while the offering is still loading', () => {
+  it('withholds fallback labels while the offering is still loading', () => {
     const display = planPriceDisplay('annual', undefined);
 
-    expect(display.priceLabel).toBe('$49.99');
-    expect(display.periodLabel).toBe('year');
-    expect(display.pricePerMonthLabel).toBe('$4.16');
-    expect(display.canShowPurchasePrice).toBe(true);
-    expect(planLineLabel(display)).toBe('$49.99/year');
+    expect(display.introLabel).toBe('Store pricing');
+    expect(display.priceLabel).toBe('Checking price');
+    expect(display.periodLabel).toBeNull();
+    expect(display.pricePerMonthLabel).toBeNull();
+    expect(display.canShowPurchasePrice).toBe(false);
+    expect(planLineLabel(display)).toBe('Checking price');
   });
 
   it('uses RevenueCat package labels when available', () => {

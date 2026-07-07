@@ -2,8 +2,6 @@ import type { PlanId } from '@onskin/types';
 
 import type { SubscriptionOfferingView, SubscriptionPackageView } from '@/lib/iap/revenuecat';
 
-import { monthlyEquivalent, PLANS } from './plans';
-
 export type PlanPriceDisplay = {
   introLabel: string;
   priceLabel: string;
@@ -24,15 +22,14 @@ function packageDisplay(pack: SubscriptionPackageView, reason: string | null): P
   };
 }
 
-function fallbackDisplay(plan: PlanId, reason: string | null = null): PlanPriceDisplay {
-  const fallback = PLANS[plan];
+function checkingDisplay(): PlanPriceDisplay {
   return {
-    introLabel: fallback.trialDays ? `Start ${fallback.trialDays} days free, then` : 'Subscribe for',
-    priceLabel: fallback.priceLabel,
-    periodLabel: fallback.unit,
-    pricePerMonthLabel: plan === 'annual' ? monthlyEquivalent(fallback.priceLabel) : null,
-    reason,
-    canShowPurchasePrice: true,
+    introLabel: 'Store pricing',
+    priceLabel: 'Checking price',
+    periodLabel: null,
+    pricePerMonthLabel: null,
+    reason: null,
+    canShowPurchasePrice: false,
   };
 }
 
@@ -51,7 +48,7 @@ export function planPriceDisplay(
   plan: PlanId,
   offering: SubscriptionOfferingView | undefined,
 ): PlanPriceDisplay {
-  if (!offering) return fallbackDisplay(plan);
+  if (!offering) return checkingDisplay();
   const pack = offering[plan];
   if (pack) {
     return packageDisplay(pack, offering.status === 'available' ? null : offering.reason);

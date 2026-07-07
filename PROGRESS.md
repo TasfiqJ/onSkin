@@ -2863,6 +2863,14 @@ dark high-contrast pill with white active icon/label colors, and compact phone s
 more breathing room at 320 px. Updated navigation contract coverage and captured Expo web human E2E screenshots/geometry
 at 320x568 and 390x844 under `test-results/human-e2e/2026-07-07/navigation-tabbar-wealthsimple-refresh/`.
 
+### Paywall loading-price fail-closed hardening (2026-07-07)
+
+Hardened subscription price display so purchase-capable paywalls do not show hardcoded annual/monthly fallback prices
+while RevenueCat offerings are still unresolved. The UI now withholds slash-period pricing until an explicit available
+or development-fallback offering exists, preserving preview pricing only with the disabled-store reason. Focused
+subscription price/paywall/RevenueCat tests pass. Real store pricing, purchase, restore, and billing evidence remain
+blocked on RevenueCat/store setup.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

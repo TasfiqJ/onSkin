@@ -18,8 +18,9 @@ import { colors } from '@/theme/tokens';
 // trial" (the committed path → carded 14-day trial) AND a visible "Explore first"
 // (→ the app-granted 7-day reverse trial, no card). Annual pre-selected, the billed
 // amount most conspicuous, no trial toggle, Terms/Privacy/Restore present, trust
-// block below the plans (Apple 3.1.2). Purchase is STUBBED (B-REVENUECAT); the v1
-// trial/reverse-trial are granted via the local-first entitlement store.
+// block below the plans (Apple 3.1.2). Store purchase opens RevenueCat when an
+// offering is available; previews fail closed while the no-card reverse trial remains
+// a server/app-granted entitlement.
 function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
   return (
     <View className={cn('flex-row items-center', compact ? 'gap-2' : 'gap-3')}>
