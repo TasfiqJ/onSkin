@@ -87,3 +87,11 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in
   `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; it does not
   replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers recommendation dismissal
+  persistence and the dismissed-card cold-start branch: open `/recommendations`,
+  open `A ceramide moisturiser`, tap `Not for me`, confirm the hub recomputes to
+  the remaining cleanser card, reload, and poll 25 startup samples without the
+  dismissed card flashing or resurfacing. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendation-dismissal-cold-start/`; it
+  does not replace recommendation acceptance QA or real iOS/Android beta-device
+  QA.

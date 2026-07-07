@@ -676,6 +676,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native commerce/share surfaces.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/recommendations/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-dismissal-cold-start/`
 
 ### Path A: For You Hub
 
@@ -709,12 +710,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a real recommendation detail, dismiss it, then open another and accept it into manual add or conflict detail.
   - Expected result: Dismissal persists, acceptance goes to the correct next step, and copy remains independent and claim-safe.
   - Evidence: Screenshot sequence and local recommendation state.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 dismisses `A ceramide moisturiser` from `/recommendations/gap:ceramide_moisturiser`; the hub returns with only the remaining cleanser card and zero horizontal overflow. Acceptance into manual add still needs native/web follow-up.
 - Branch: dismissed recommendation cold-start state
   - Priority: Important
   - Automate later: Yes
   - Action: Dismiss a recommendation, close or reload the app, then return to `/recommendations` while private recommendation preferences/dismissals are still loading.
   - Expected result: The dismissed card does not flash or reappear before local private state is loaded.
   - Evidence: Visible loading/result state and local dismissed recommendation state.
+  - Current local evidence: 2026-07-07 Expo web reload poll captured 25 startup samples after dismissal; the dismissed moisturiser card never reappeared, the remaining cleanser card stayed visible, and `scrollWidth` equaled `clientWidth` throughout.
 - Branch: mobile recommendation card width
   - Priority: Important
   - Automate later: Yes
