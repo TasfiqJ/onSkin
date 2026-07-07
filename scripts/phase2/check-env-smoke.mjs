@@ -127,6 +127,27 @@ const cases = [
     },
   },
   {
+    name: 'staging strict env normalizes case and whitespace before identity checks',
+    result: runCheck(
+      withoutKeys(
+        {
+          ...completeEnv,
+          APP_VARIANT: ' Staging ',
+          EXPO_PUBLIC_APP_ENV: ' STAGING ',
+        },
+        finalIdentityKeys,
+      ),
+    ),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Staging\/production identity: missing final native identity values/.test(result.stderr) &&
+        /APP_IOS_BUNDLE_IDENTIFIER/.test(result.stderr) &&
+        /APP_ANDROID_PACKAGE/.test(result.stderr)
+      );
+    },
+  },
+  {
     name: 'development strict env does not require final native identity',
     result: runCheck({
       ...withoutKeys(completeEnv, finalIdentityKeys),

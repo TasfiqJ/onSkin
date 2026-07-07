@@ -80,6 +80,42 @@ describe('Expo app identity config', () => {
     expect(expo.extra.appEnvironment).toBe('production');
   });
 
+  it('normalizes supported app variant and environment values before resolving identity', () => {
+    const expo = buildExpoConfig({
+      APP_VARIANT: ' Production ',
+      EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
+      BRAND_LEGAL_CLEARANCE: 'cleared',
+      APP_DISPLAY_NAME: 'RoutineKind',
+      APP_SLUG: 'routinekind',
+      APP_SCHEME: 'routinekind',
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+      APP_ANDROID_PACKAGE: 'com.routinekind.app',
+    });
+
+    expect(expo.name).toBe('RoutineKind');
+    expect(expo.scheme).toBe('routinekind');
+    expect(expo.extra.appVariant).toBe('production');
+    expect(expo.extra.appEnvironment).toBe('production');
+  });
+
+  it('rejects blank or unsupported app variants instead of falling back to base identity', () => {
+    expect(() => buildExpoConfig({ APP_VARIANT: '' })).toThrow(
+      /APP_VARIANT must be development, staging, or production/,
+    );
+    expect(() => buildExpoConfig({ APP_VARIANT: 'prod' })).toThrow(
+      /APP_VARIANT must be development, staging, or production/,
+    );
+  });
+
+  it('rejects unsupported public app environments in native config', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'staging',
+        EXPO_PUBLIC_APP_ENV: 'preview',
+      }),
+    ).toThrow(/EXPO_PUBLIC_APP_ENV must be development, staging, or production/);
+  });
+
   it('requires brand clearance before resolving production native config', () => {
     expect(() =>
       buildExpoConfig({

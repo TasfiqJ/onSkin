@@ -188,6 +188,13 @@ block(
 );
 block(
   errors,
+  has('apps/mobile/app.config.js', /function readVariantEnv/) &&
+    has('apps/mobile/app.config.js', /trim\(\)\.toLowerCase\(\)/) &&
+    has('apps/mobile/app.config.js', /must be development, staging, or production/),
+  'app.config.js must normalize and validate APP_VARIANT before resolving native identity.',
+);
+block(
+  errors,
   !/^production$/i.test(env.EXPO_PUBLIC_APP_ENV ?? '') ||
     !env.EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY,
   'Production builds must not include RevenueCat Test Store key.',

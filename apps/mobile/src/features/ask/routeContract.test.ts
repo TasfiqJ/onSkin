@@ -3,9 +3,14 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
+const ASK_FEATURE_DIR = fileURLToPath(new URL('./', import.meta.url));
 
 function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
+}
+
+function readAskFeature(path: string): string {
+  return readFileSync(`${ASK_FEATURE_DIR}/${path}`, 'utf8');
 }
 
 describe('Ask route launch contracts', () => {
@@ -100,5 +105,25 @@ describe('Ask route launch contracts', () => {
       "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
     );
     expect(home).toContain('{!compactPhone ? (');
+  });
+
+  it('records actual grounded cloud turns before relying on the trial cap gate', () => {
+    const source = readAskFeature('useAsk.ts');
+
+    expect(source).toContain("import { useQuery, useQueryClient } from '@tanstack/react-query';");
+    expect(source).toContain("import { getGroundedTurns, recordGroundedTurn } from './store';");
+    expect(source).toContain('const qc = useQueryClient();');
+    expect(source).toContain("if (final.kind === 'grounded') {");
+    expect(source).toContain('void recordGroundedTurn(period)');
+    expect(source).toContain(
+      "qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] })",
+    );
+    expect(source).toContain('[ctx.groundedReason, period, qc]');
+    expect(source).not.toContain(
+      'TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period)',
+    );
+    expect(source.indexOf("if (final.kind === 'grounded')")).toBeLessThan(
+      source.indexOf("if (final.kind === 'escalate')"),
+    );
   });
 });

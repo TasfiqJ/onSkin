@@ -34,11 +34,13 @@ Status: launch-blocked
   with neutral local placeholders; replace them only after the final identity is
   cleared and matching Apple, Google, RevenueCat, Supabase, domain, and OAuth
   console changes are ready.
-- Production native config now fails fast unless `APP_VARIANT=production` has
-  `BRAND_LEGAL_CLEARANCE=cleared` and explicit final native identity env values
-  for display name, slug, scheme, iOS bundle ID, and Android package. Tas still
-  needs to provide legally cleared final values and account evidence; Codex did
-  not reserve the name, domain, store app, or package IDs.
+- Production native config now normalizes `APP_VARIANT` casing/whitespace,
+  rejects blank or unknown variants, and fails fast unless
+  `APP_VARIANT=production` has `BRAND_LEGAL_CLEARANCE=cleared` plus explicit
+  final native identity env values for display name, slug, scheme, iOS bundle
+  ID, and Android package. Tas still needs to provide legally cleared final
+  values and account evidence; Codex did not reserve the name, domain, store
+  app, or package IDs.
 
 Evidence needed:
 

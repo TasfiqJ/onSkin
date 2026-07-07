@@ -1,6 +1,19 @@
 const base = require('./app.base.json');
 
-const variant = process.env.APP_VARIANT ?? 'development';
+const APP_VARIANTS = new Set(['development', 'staging', 'production']);
+
+function readVariantEnv(name, value, defaultValue) {
+  const rawValue = value === undefined ? defaultValue : value;
+  const candidate = typeof rawValue === 'string' ? rawValue.trim().toLowerCase() : '';
+  if (candidate && APP_VARIANTS.has(candidate)) return candidate;
+  throw new Error(`${name} must be development, staging, or production; got ${value ?? '<unset>'}.`);
+}
+
+const variant = readVariantEnv('APP_VARIANT', process.env.APP_VARIANT, 'development');
+const appEnvironment =
+  process.env.EXPO_PUBLIC_APP_ENV === undefined
+    ? variant
+    : readVariantEnv('EXPO_PUBLIC_APP_ENV', process.env.EXPO_PUBLIC_APP_ENV);
 const isProduction = variant === 'production';
 const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
 
@@ -208,7 +221,7 @@ module.exports = () => {
   expo.extra = {
     ...(expo.extra ?? {}),
     appVariant: variant,
-    appEnvironment: process.env.EXPO_PUBLIC_APP_ENV ?? variant,
+    appEnvironment,
     publicLinkDomain: finalDomain,
     appStoreUrl,
     playStoreUrl,

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
 import { goalConcern } from '@/features/recommendations/copy';
@@ -13,7 +13,7 @@ import { track } from '@/lib/analytics/track';
 import { answerPrompt, answerQuestion, pickFitRec, safetyRefusal, type AskAnswer, type AskContext } from './answer';
 import { askGate } from './gate';
 import { guardClaim } from './guard';
-import { getGroundedTurns } from './store';
+import { getGroundedTurns, recordGroundedTurn } from './store';
 
 // The Ask data layer (docs/13). Assembles the deterministic AskContext from the user's
 // REAL state. The live shelf + its launch-gated conflicts (useShelf), tonight's plan
@@ -33,6 +33,7 @@ export function useAsk() {
   const recs = useRecommendations();
   const profile = useProfileBits();
   const { data: ent } = useEntitlement();
+  const qc = useQueryClient();
   const period = billingPeriod();
   const turns = useQuery({ queryKey: ['askGroundedTurns', period], queryFn: () => getGroundedTurns(period), retry: 0 });
 
@@ -73,13 +74,15 @@ export function useAsk() {
         grounded: final.kind === 'grounded',
         refused: final.kind === 'refuse',
       });
-      // DEAD WRITER until B-AI-ASSISTANT-VENDOR: when a real grounded (cloud) answer
-      // ships, it MUST call recordGroundedTurn(period) here and invalidate
-      // ['askGroundedTurns', period] so the hard per-period trial cap (gate.ts) can
-      // engage. The cap is dormant by design today (no grounded turn is produced),
-      // NOT a dropped wire. Note docs/13 §8 / D-060 also requires server-side
-      // enforcement at the Edge Function; this AsyncStorage counter is client-only.
-      // TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period) on a grounded answer.
+      // Dormant until B-AI-ASSISTANT-VENDOR: no current code path produces a
+      // grounded answer, but this branch is wired so the trial counter engages as
+      // soon as the cloud layer ships. Server-side Edge enforcement is still
+      // mandatory; this is the local UX gate.
+      if (final.kind === 'grounded') {
+        void recordGroundedTurn(period)
+          .then(() => qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] }))
+          .catch(() => undefined);
+      }
       if (final.kind === 'escalate') track('ask_escalated_to_clinician');
       // The grounded (cloud) layer was gated. The Pro / trial-cap upsell funnel (docs/13 §15).
       if (final.kind === 'refuse' && final.intent === 'concern_q' && ctx.groundedReason) {
@@ -87,7 +90,7 @@ export function useAsk() {
       }
       return final;
     },
-    [ctx.groundedReason],
+    [ctx.groundedReason, period, qc],
   );
 
   const ask = useCallback(

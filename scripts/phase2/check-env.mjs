@@ -129,6 +129,10 @@ function valueFor(name) {
   return process.env[name]?.trim() ?? '';
 }
 
+function normalizedAppStage(name) {
+  return valueFor(name).toLowerCase();
+}
+
 function isUsable(name) {
   const value = valueFor(name);
   return value.length > 0 && !placeholderFragments.some((fragment) => value.includes(fragment));
@@ -152,14 +156,14 @@ for (const group of groups) {
     errors.push(`${group.name}: missing or placeholder values: ${missing.join(', ')}`);
 }
 
-const appVariant = valueFor('APP_VARIANT');
+const appVariant = normalizedAppStage('APP_VARIANT');
 if (appVariant && !['development', 'staging', 'production'].includes(appVariant)) {
-  errors.push(`APP_VARIANT must be development, staging, or production; got ${appVariant}`);
+  errors.push(`APP_VARIANT must be development, staging, or production; got ${valueFor('APP_VARIANT')}`);
 }
 
-const appEnv = valueFor('EXPO_PUBLIC_APP_ENV');
+const appEnv = normalizedAppStage('EXPO_PUBLIC_APP_ENV');
 if (appEnv && !['development', 'staging', 'production'].includes(appEnv)) {
-  warnings.push(`EXPO_PUBLIC_APP_ENV is non-standard: ${appEnv}`);
+  warnings.push(`EXPO_PUBLIC_APP_ENV is non-standard: ${valueFor('EXPO_PUBLIC_APP_ENV')}`);
 }
 
 const finalIdentityEnv = [

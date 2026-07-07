@@ -2316,6 +2316,21 @@ surface while preserving `APP_YOU_ROUTE`. Expo web E2E verified the direct route
 button, has no small/clipped controls or horizontal overflow, and lands on `/you` after tap. Evidence is in
 `test-results/human-e2e/2026-07-07/commerce-routes/`.
 
+### Native identity env parsing hardening (2026-07-07)
+
+Hardened `apps/mobile/app.config.js` so `APP_VARIANT` and `EXPO_PUBLIC_APP_ENV` are trimmed, lowercased, and validated
+before native identity is resolved. Blank or unknown variants now fail fast instead of accidentally inheriting the base
+identity, and whitespace/case around `production` still triggers the production brand-clearance and final-identity
+requirements. Phase 2 env smoke now normalizes case/whitespace before staging/production identity checks, and Phase 9
+release smoke pins the app-config parser. This was a non-UI launch-gate slice, so human E2E was not required.
+
+### Ask grounded-turn counter hardening (2026-07-07)
+
+Wired the dormant cloud-grounded Ask answer branch to record a grounded turn and invalidate the local per-period gate
+query before future cloud Ask can rely on the trial cap. No current code path returns a grounded answer before
+B-AI-ASSISTANT-VENDOR, so this is behavior-neutral today, but it removes the dropped-wire risk when the cloud layer
+ships. Focused Ask contract/store/gate tests and the full mobile suite pin the counter path.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
