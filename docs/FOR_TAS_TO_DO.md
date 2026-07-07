@@ -23,6 +23,10 @@ Status: launch-blocked
   placeholders; replace them only after the final identity is cleared and
   matching Apple, Google, RevenueCat, Supabase, domain, and OAuth console
   changes are ready.
+- Production native config now fails fast if `APP_VARIANT=production` resolves
+  legacy `OnSkin` display, slug, scheme, permission-copy, bundle, or package
+  values without `BRAND_LEGAL_CLEARANCE=cleared`. Tas still needs to provide the
+  final values; Codex did not choose or reserve them.
 
 Evidence needed:
 

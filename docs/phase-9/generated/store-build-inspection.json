@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T21:23:38.326Z",
+  "generatedAt": "2026-07-07T00:01:42.788Z",
   "app": {
     "name": "OnSkin",
     "slug": "onskin",
@@ -11,10 +11,7 @@
     "iosBundleIdentifier": "com.onskin.app",
     "androidPackage": "com.onskin.app",
     "androidAllowBackup": false,
-    "androidPermissions": [
-      "android.permission.CAMERA",
-      "android.permission.POST_NOTIFICATIONS"
-    ]
+    "androidPermissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"]
   },
   "easBuildProfiles": {
     "development": {
@@ -59,17 +56,13 @@
       "appEnvironment": "staging"
     },
     "production": {
-      "name": "OnSkin",
-      "scheme": "onskin",
-      "iosBundleIdentifier": "com.onskin.app",
-      "androidPackage": "com.onskin.app",
-      "androidAllowBackup": false,
-      "appVariant": "production",
-      "appEnvironment": "production"
+      "error": "Production app identity still resolves legacy OnSkin values without BRAND_LEGAL_CLEARANCE=cleared: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION. Set final brand env values before building production."
     }
   },
   "artifacts": {},
-  "blockers": [],
+  "blockers": [
+    "Resolved production app config failed: Production app identity still resolves legacy OnSkin values without BRAND_LEGAL_CLEARANCE=cleared: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION. Set final brand env values before building production."
+  ],
   "warnings": [
     "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",
     "Android artifact not supplied for hashing: set PHASE9_ANDROID_ARTIFACT=path.",

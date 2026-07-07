@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T21:20:45.243Z",
+  "generatedAt": "2026-07-07T00:01:42.830Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -66,8 +66,8 @@
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
       "exists": true,
-      "bytes": 4800,
-      "sha256": "7cb9b0fe7fdab1baad5bb7f11f2e49c806fd31e9466a5c9697a472558706e4c3"
+      "bytes": 4843,
+      "sha256": "95ce1ebeaee6e103015528bb190b82bd4c1ce2defb2163815484fa0fdf4aafd7"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.test.ts",
@@ -84,8 +84,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/today.tsx",
       "exists": true,
-      "bytes": 22782,
-      "sha256": "810e9aace00946fb501d6bfdf5fcd9970d90b2f59b80212028090f2a2c780a45"
+      "bytes": 22916,
+      "sha256": "89f2e5ff03b1c0b1bae269baa89bfd0af55c18f8d52ec8c979079673c1693840"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
@@ -96,8 +96,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 21755,
-      "sha256": "005e03a3dd804f50a362c6b306f3a0ca26beb4f7ba088ff0fc826b8ed703c203"
+      "bytes": 22032,
+      "sha256": "9a03a5e4092c5c0e136be524f48c43fb3b46e200469886361e8e71ae50df71d1"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
@@ -108,8 +108,8 @@
     {
       "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 21852,
-      "sha256": "165acde7fc3c1afb6010d0652a4e7f141e4724fb70c957d669dd313e5c3f904d"
+      "bytes": 21906,
+      "sha256": "e925404c8d566d0f516b724a4d70d8dc7370a29f19aca936daca27e7b369b7ac"
     },
     {
       "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
@@ -138,8 +138,8 @@
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",
       "exists": true,
-      "bytes": 3036,
-      "sha256": "1892307113c2723102bd6597ac13ca659ec81d8eaabce311a003c995c841c6df"
+      "bytes": 3426,
+      "sha256": "2a69c08f6650713b9a64480c4ef3fd6383df0f7d402b2df89f88fa823a15fba6"
     },
     {
       "path": "docs/phase-7/phase-7-exit-review.md",
