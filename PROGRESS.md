@@ -2130,6 +2130,15 @@ to Progress, conflict-check paywalls recover to Shelf, and generic paywalls stil
 fallback mapping, and Expo web E2E verified `/progress/capture` at 320 x 568 dismisses to `/progress` with the Progress
 tab selected. Evidence is in `test-results/human-e2e/2026-07-07/navigation-next-audit/`.
 
+### Share conflict deferred CTA destination (2026-07-07)
+
+Fixed the launch-gated `/share/conflict/[ruleId]` direct-entry state after the compact phone E2E pass showed the
+deferred share-card escape action used generic `Back` copy even though the no-history fallback is Shelf. Deferred
+surfaces now allow a route-specific fallback label, and the share-conflict route says `Back to Shelf` while still
+recovering through `APP_SHELF_ROUTE`. Expo web E2E verified the 320 x 568 route has one accessible `Back to Shelf`
+button, zero horizontal overflow, and lands on `/shelf` after tap. Evidence is in
+`test-results/human-e2e/2026-07-07/conflict-routes/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

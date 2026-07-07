@@ -11,9 +11,11 @@ import { colors } from '@/theme/tokens';
 export function DeferredSurface({
   surface,
   fallbackRoute,
+  fallbackLabel,
 }: {
   surface: DeferredSurfaceKind;
   fallbackRoute?: AppFallbackRoute;
+  fallbackLabel?: string;
 }) {
   const copy = deferredSurfaceCopy[surface];
 
@@ -53,7 +55,7 @@ export function DeferredSurface({
       </ScrollView>
       <View className="pb-3 pt-2">
         <Button
-          label={copy.cta}
+          label={fallbackLabel ?? copy.cta}
           variant="ghost"
           className="mb-6"
           onPress={() => backOrReplace(router, fallbackRoute)}

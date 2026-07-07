@@ -31,7 +31,13 @@ export default function ShareConflictScreen() {
   const conflict = data?.conflicts.find((c) => c.rule.id === ruleId) ?? null;
 
   if (!phase7Flags.shareCard) {
-    return <DeferredSurface surface="shareCard" fallbackRoute={APP_SHELF_ROUTE} />;
+    return (
+      <DeferredSurface
+        surface="shareCard"
+        fallbackRoute={APP_SHELF_ROUTE}
+        fallbackLabel="Back to Shelf"
+      />
+    );
   }
 
   async function onShare() {

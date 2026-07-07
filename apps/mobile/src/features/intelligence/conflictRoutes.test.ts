@@ -28,9 +28,9 @@ describe('Conflict route contracts', () => {
   it('returns deferred share-card direct entries to Shelf', () => {
     const source = readAppRoute('share/conflict/[ruleId].tsx');
 
-    expect(source).toContain(
-      '<DeferredSurface surface="shareCard" fallbackRoute={APP_SHELF_ROUTE} />',
-    );
+    expect(source).toContain('surface="shareCard"');
+    expect(source).toContain('fallbackRoute={APP_SHELF_ROUTE}');
+    expect(source).toContain('fallbackLabel="Back to Shelf"');
   });
 
   it('does not claim conflict-detail placement without scheduler output', () => {
