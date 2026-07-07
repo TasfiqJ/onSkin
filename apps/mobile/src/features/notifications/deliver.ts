@@ -9,7 +9,7 @@ import { loadEntitlement } from '@/features/subscription/store';
 import { supabase } from '@/lib/supabase/client';
 
 import { notificationContentForLockScreen } from './copy';
-import { canSend, tierEnabled, tierOf, toMinutes, withinQuietHours } from './policy';
+import { canSend, reminderTimeOutsideQuietHours, tierEnabled, tierOf, toMinutes } from './policy';
 import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
 
@@ -76,8 +76,9 @@ export async function requestPermission(): Promise<boolean> {
 
 /**
  * Cancel + reschedule the utility AM/PM reminders from the user's prefs. A reminder
- * whose time falls inside quiet hours is skipped ("nothing fires" there). Idempotent
- * and safe to call on every prefs change.
+ * whose chosen time falls inside quiet hours is shifted to the quiet-hours end so
+ * nothing fires inside the window and the reminder still arrives. Idempotent and
+ * safe to call on every prefs change.
  */
 export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
   const p = prefs ?? (await loadNotifPrefs());
@@ -85,8 +86,8 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
     await Notifications.cancelAllScheduledNotificationsAsync();
     const channelId = Platform.OS === 'android' ? 'routine' : undefined;
     const schedule = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
-      if (withinQuietHours(hm, p.quietStart, p.quietEnd)) return; // suppressed in quiet hours
-      const mins = toMinutes(hm);
+      const deliveryTime = reminderTimeOutsideQuietHours(hm, p.quietStart, p.quietEnd);
+      const mins = toMinutes(deliveryTime);
       if (mins == null) return;
       await Notifications.scheduleNotificationAsync({
         content: notificationContentForLockScreen(kind),
@@ -105,9 +106,9 @@ export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
 
     // Weekly progress-photo capture nudge (docs/07 §3.3 / docs/06 §5): a recurring
     // WEEKLY local notification when opted in, the weekly cadence being its own
-    // frequency control. Skipped if its time lands in quiet hours.
-    if (p.captureReminders && !withinQuietHours(p.amTime, p.quietStart, p.quietEnd)) {
-      const mins = toMinutes(p.amTime);
+    // frequency control. If the usual AM time is quiet, it waits until quiet ends.
+    if (p.captureReminders) {
+      const mins = toMinutes(reminderTimeOutsideQuietHours(p.amTime, p.quietStart, p.quietEnd));
       if (mins != null) {
         await Notifications.scheduleNotificationAsync({
           content: notificationContentForLockScreen('capture'),
@@ -154,7 +155,10 @@ export async function scheduleTrialReminder(): Promise<void> {
       identifier: TRIAL_REMINDER_ID,
       content: {
         title: PAYWALL_COPY.trialReminder.title,
-        body: PAYWALL_COPY.trialReminder.bodyFor(fmtShortDate(e.expiresAt), PLANS.annual.priceLabel),
+        body: PAYWALL_COPY.trialReminder.bodyFor(
+          fmtShortDate(e.expiresAt),
+          PLANS.annual.priceLabel,
+        ),
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.DATE,

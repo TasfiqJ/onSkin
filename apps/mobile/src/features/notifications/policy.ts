@@ -4,9 +4,9 @@ import type { NotificationKind, NotificationTier } from '@onskin/types';
  * Pure notification policy (docs/07 §3.1/§3.4, D-031): which tier a kind belongs
  * to, the per-tier weekly frequency caps that stop behavioural triggers stacking
  * into fatigue, and the quiet-hours window check. The utility tier is bounded by
- * the user's own schedule (no cap) but still suppressed inside quiet hours , 
- * "nothing fires" there (§3.4). Deterministic + unit-tested; consumed by the
- * delivery layer's frequency-cap engine (§9).
+ * the user's own schedule (no cap); immediate sends are suppressed inside quiet
+ * hours, while recurring reminders are shifted to quiet-hours end. Deterministic
+ * + unit-tested; consumed by the delivery layer's frequency-cap engine (§9).
  */
 
 export const TIER_OF: Record<NotificationKind, NotificationTier> = {
@@ -79,6 +79,23 @@ export function withinQuietHours(now: string, start: string | null, end: string 
   if (n == null || s == null || e == null) return false;
   if (s === e) return false; // zero-length window
   return s < e ? n >= s && n < e : n >= s || n < e; // same-day vs overnight
+}
+
+/**
+ * Scheduled reminders should not disappear when their chosen time is inside
+ * quiet hours. Move them to quiet-hours end so the settings promise ("wait until
+ * morning") matches the actual Expo trigger.
+ */
+export function reminderTimeOutsideQuietHours(
+  hm: string,
+  quietStart: string | null,
+  quietEnd: string | null,
+): string {
+  return quietEnd !== null &&
+    withinQuietHours(hm, quietStart, quietEnd) &&
+    toMinutes(quietEnd) != null
+    ? quietEnd
+    : hm;
 }
 
 export type SendDecision = { allowed: boolean; reason?: 'quiet_hours' | 'frequency_cap' };

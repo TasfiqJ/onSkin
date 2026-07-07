@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { canSend, tierEnabled, tierOf, toMinutes, WEEKLY_CAP, withinQuietHours } from './policy';
+import {
+  canSend,
+  reminderTimeOutsideQuietHours,
+  tierEnabled,
+  tierOf,
+  toMinutes,
+  WEEKLY_CAP,
+  withinQuietHours,
+} from './policy';
 
 const ALL_ON = {
   amEnabled: true,
@@ -59,6 +67,12 @@ describe('quiet hours (docs/07 §3.4)', () => {
   it('parses HH:MM:SS too (DB time)', () => {
     expect(toMinutes('09:30:00')).toBe(570);
   });
+  it('moves scheduled reminders inside quiet hours to the quiet-hours end', () => {
+    expect(reminderTimeOutsideQuietHours('06:30', '22:00', '07:00')).toBe('07:00');
+    expect(reminderTimeOutsideQuietHours('23:30', '22:00', '07:00')).toBe('07:00');
+    expect(reminderTimeOutsideQuietHours('21:30', '22:00', '07:00')).toBe('21:30');
+    expect(reminderTimeOutsideQuietHours('13:30', '13:00', '14:00')).toBe('14:00');
+  });
 });
 
 describe('canSend. Frequency cap + quiet hours (docs/07 §3.4/§9)', () => {
@@ -74,12 +88,22 @@ describe('canSend. Frequency cap + quiet hours (docs/07 §3.4/§9)', () => {
     });
   });
   it('suppresses everything inside quiet hours, even utility', () => {
-    expect(canSend({ kind: 'pm_step', sentThisWeekForTier: 0, now: '23:30', quietStart: '22:00', quietEnd: '07:00' })).toEqual({
+    expect(
+      canSend({
+        kind: 'pm_step',
+        sentThisWeekForTier: 0,
+        now: '23:30',
+        quietStart: '22:00',
+        quietEnd: '07:00',
+      }),
+    ).toEqual({
       allowed: false,
       reason: 'quiet_hours',
     });
   });
   it('caps the promotional tier at 1/week', () => {
-    expect(canSend({ kind: 'winback', sentThisWeekForTier: 1, ...base }).reason).toBe('frequency_cap');
+    expect(canSend({ kind: 'winback', sentThisWeekForTier: 1, ...base }).reason).toBe(
+      'frequency_cap',
+    );
   });
 });

@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed local reminder scheduling so AM/PM routine reminders and the weekly
+  progress-photo nudge no longer disappear when their chosen time is inside
+  quiet hours. Recurring notifications now shift to the quiet-hours end, matching
+  the settings promise that reminders wait until morning while still keeping
+  immediate behavioural sends suppressed inside quiet hours. Added policy and
+  Expo-trigger boundary tests. Physical iOS/Android delivery remains a Tas device
+  QA blocker in `docs/FOR_TAS_TO_DO.md`.
+
 - Fixed the offline completion sync refresh path so a successful pending
   check-off flush invalidates the `completions` and `progress` queries Today
   actually reads, instead of a non-existent `today` query key. Added a contract
