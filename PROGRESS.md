@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Refreshed the Phase 11 public-launch packet after the Phase 9 packet cleanup.
+  It now records a clean git status, the current Phase 9/10 generated-packet
+  hashes, and the current package hash while still correctly blocking on
+  Tas-owned Phase 10 exit, store approval, production env, RevenueCat,
+  monitoring/support, ring, creator, finance, week-1, and launch signoff proof.
+
 - Refreshed the Phase 9 release-engineering QA packet from a clean worktree.
   The packet no longer carries the stale dirty-worktree warning and now hashes
   the current analytics registry, settings actions, RevenueCat webhook, and live
