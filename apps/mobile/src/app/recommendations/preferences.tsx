@@ -2,7 +2,7 @@ import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@onskin/type
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { applyRecommendationPreferences } from '@/features/recommendations/applyPreferences';
@@ -39,12 +39,14 @@ function Toggle({
   label,
   active,
   disabled,
+  dense = false,
   fill = false,
   onPress,
 }: {
   label: string;
   active: boolean;
   disabled: boolean;
+  dense?: boolean;
   fill?: boolean;
   onPress: () => void;
 }) {
@@ -61,9 +63,9 @@ function Toggle({
         borderColor: active ? colors.ink : colors.hairlineStrong,
         flexBasis: fill ? 0 : undefined,
         flexGrow: fill ? 1 : undefined,
-        minWidth: fill ? 0 : undefined,
+        minWidth: fill ? 0 : dense ? 48 : undefined,
         opacity: disabled ? 0.58 : 1,
-        paddingHorizontal: fill ? 8 : undefined,
+        paddingHorizontal: fill ? 8 : dense ? 12 : undefined,
       }}
     >
       <Text
@@ -71,8 +73,8 @@ function Toggle({
         numberOfLines={1}
         style={{
           color: active ? colors.paper : colors.inkSoft,
-          fontSize: fill ? 12 : undefined,
-          lineHeight: fill ? 16 : undefined,
+          fontSize: fill ? 12 : dense ? 13 : undefined,
+          lineHeight: fill || dense ? 16 : undefined,
         }}
       >
         {label}
@@ -82,6 +84,7 @@ function Toggle({
 }
 
 export default function PreferencesScreen() {
+  const { height } = useWindowDimensions();
   const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -93,6 +96,8 @@ export default function PreferencesScreen() {
   const p = prefs ?? DEFAULT_PREFERENCES;
   const controlsDisabled = isLoading || saving;
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
+  const compactPreferences = height < 640;
+  const sectionLabelClassName = compactPreferences ? 'mb-2 mt-5' : 'mb-3 mt-7';
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
     if (preferenceFailureMode === 'once' && !simulatedPreferenceFailureUsed.current) {
@@ -151,7 +156,10 @@ export default function PreferencesScreen() {
         </Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactPreferences ? 'pb-24' : 'pb-10'}
+      >
         <Text variant="title" className="mt-2">
           {REC_COPY.preferences.title}
         </Text>
@@ -173,7 +181,7 @@ export default function PreferencesScreen() {
           </View>
         ) : null}
 
-        <Text variant="label" tone="muted" className="mb-3 mt-7">
+        <Text variant="label" tone="muted" className={sectionLabelClassName}>
           {REC_COPY.preferences.valuesLabel.toUpperCase()}
         </Text>
         <View className="flex-row flex-wrap gap-2">
@@ -188,7 +196,7 @@ export default function PreferencesScreen() {
           ))}
         </View>
 
-        <Text variant="label" tone="muted" className="mb-3 mt-7">
+        <Text variant="label" tone="muted" className={sectionLabelClassName}>
           {REC_COPY.preferences.budgetLabel.toUpperCase()}
         </Text>
         <View className="flex-row flex-wrap gap-2">
@@ -204,13 +212,14 @@ export default function PreferencesScreen() {
           ))}
         </View>
 
-        <Text variant="label" tone="muted" className="mb-3 mt-7">
+        <Text variant="label" tone="muted" className={sectionLabelClassName}>
           {REC_COPY.preferences.formatLabel.toUpperCase()}
         </Text>
         <View className="flex-row flex-wrap gap-2">
           {FORMATS.map((f) => (
             <Toggle
               key={f}
+              dense={compactPreferences}
               label={FORMAT_LABEL[f] ?? f}
               active={p.formats.includes(f)}
               disabled={controlsDisabled}
@@ -219,7 +228,7 @@ export default function PreferencesScreen() {
           ))}
         </View>
 
-        <View className="mt-9 flex-row items-center justify-center gap-2">
+        <View className={compactPreferences ? 'mt-7 flex-row items-center justify-center gap-2' : 'mt-9 flex-row items-center justify-center gap-2'}>
           <Text tone="muted" className="text-[12px]">
             ✦
           </Text>

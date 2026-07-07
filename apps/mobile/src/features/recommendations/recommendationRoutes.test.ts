@@ -95,11 +95,20 @@ describe('Recommendation route contracts', () => {
   it('keeps recommendation budget preferences fully visible on compact phones', () => {
     const source = readAppRoute('recommendations/preferences.tsx');
 
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactPreferences = height < 640');
+    expect(source).toContain(
+      "const sectionLabelClassName = compactPreferences ? 'mb-2 mt-5' : 'mb-3 mt-7';",
+    );
+    expect(source).toContain("contentContainerClassName={compactPreferences ? 'pb-24' : 'pb-10'}");
     expect(source).toContain('fill?: boolean');
+    expect(source).toContain('dense?: boolean');
     expect(source).toContain('numberOfLines={1}');
+    expect(source).toContain('paddingHorizontal: fill ? 8 : dense ? 12 : undefined');
+    expect(source).toContain('fontSize: fill ? 12 : dense ? 13 : undefined');
     expect(source).toContain('flexGrow: fill ? 1 : undefined');
-    expect(source).toContain('paddingHorizontal: fill ? 8 : undefined');
-    expect(source).toContain('fontSize: fill ? 12 : undefined');
+    expect(source).toContain('minWidth: fill ? 0 : dense ? 48 : undefined');
+    expect(source).toContain('dense={compactPreferences}');
     expect(source).toContain('<Toggle\n              key={b}\n              fill');
   });
 

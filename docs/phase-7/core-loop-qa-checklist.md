@@ -115,11 +115,14 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`; it does
   not replace real iOS/Android beta-device QA.
-- 2026-07-07: In-app browser E2E at 320 x 568 covers compact recommendation
-  preferences: open `/recommendations/preferences` and verify the `Drugstore`,
-  `Mid-range`, and `Premium` budget chips remain on one row, 48 px tall, fully
-  visible within the viewport, and without horizontal overflow. Evidence is in
-  `test-results/human-e2e/2026-07-07/recommendation-preferences-compact-current/`;
+- 2026-07-07: Expo web E2E at 320 x 568 and 390 x 568 plus focused route
+  contracts cover compact recommendation preferences: open
+  `/recommendations/preferences`, verify `Drugstore`, `Mid-range`, and `Premium`
+  keep a readable one-row budget layout, verify `Gel`, `Cream`, `Fluid`, `Balm`,
+  and `Oil` stay fully visible as 48 px texture chips on 390 px phones, then tap
+  `Oil` and confirm the compact chips remain reachable without horizontal
+  overflow or sub-44 px controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendation-preferences-texture-clearance/`;
   it does not replace real iOS/Android beta-device QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers stale recommendation detail
   recovery: direct-open `/recommendations/stale-local-rec`, verify the stale

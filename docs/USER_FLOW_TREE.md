@@ -744,13 +744,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/recommendations` on a 390 px or narrower phone viewport with long evidence labels.
   - Expected result: Evidence/footer labels wrap within the card and the `See how` action remains visible and tappable.
   - Evidence: Phone-width screenshot and visible-text snapshot.
-- Branch: compact recommendation budget preferences
+- Branch: compact recommendation budget and texture preferences
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/recommendations/preferences` on a 320 px phone viewport and inspect the Drugstore, Mid-range, and Premium budget chips.
-  - Expected result: All budget chips remain on one row, labels are fully visible without clipping or overflow, and each chip remains at least 44 pt tall.
-  - Evidence: Phone-width screenshot, budget-chip geometry snapshot, and visible-text snapshot.
-  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Drugstore`, `Mid-range`, and `Premium` on one row; each chip is 48 px tall, fully visible within the 320 px viewport, and horizontal overflow is zero.
+  - Action: Open `/recommendations/preferences` on 320 x 568 and 390 x 568 phone viewports and inspect the Drugstore, Mid-range, Premium, Gel, Cream, Fluid, Balm, and Oil chips.
+  - Expected result: Budget chips remain on one row, texture chips do not peek or clip at the viewport edge, labels are fully visible without clipping or overflow, and each chip remains at least 44 pt in both dimensions.
+  - Evidence: Phone-width screenshots, chip geometry snapshots, and visible-text snapshots.
+  - Current local evidence: 2026-07-07 Expo web in `test-results/human-e2e/2026-07-07/recommendation-preferences-texture-clearance/` shows `Drugstore`, `Mid-range`, and `Premium` on one row at 320 x 568 with a 34 px bottom buffer, shows all five texture chips fully visible in one row at 390 x 568 with a 32 px bottom buffer, keeps all checked chips 48 px or taller/wider, and has zero horizontal overflow.
 - Branch: recommendation preference save failure
   - Priority: Important
   - Automate later: Yes

@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed compact recommendation preferences after current 390 x 568 E2E showed
+  the Texture chip row clipping below the viewport. The preferences route now
+  uses height-aware compact section spacing, extra scroll bottom padding, and
+  compact-only dense texture chips that still keep a 48 px minimum touch width.
+  Expo web E2E at 320 x 568 and 390 x 568 verifies the budget row has a 34 px
+  bottom buffer, all five texture chips fit in one fully visible 390 px row with
+  a 32 px bottom buffer, `Oil` remains a 48 px target, and horizontal overflow is
+  zero. Focused recommendation route contracts pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendation-preferences-texture-clearance/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-recommendation-preferences-texture-chip-clip.md`.
+
 - Fixed compact lifecycle paywall footer clearance for `/paywall/reoffer` and
   `/paywall/downgrade`. Short-phone layouts now reserve enough scroll-body space
   for Terms/Privacy/Restore above the fixed action footer and give fixed footer
