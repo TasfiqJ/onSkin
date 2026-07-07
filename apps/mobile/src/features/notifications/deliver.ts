@@ -157,7 +157,7 @@ export async function scheduleTrialReminder(): Promise<void> {
         title: PAYWALL_COPY.trialReminder.title,
         body: PAYWALL_COPY.trialReminder.bodyFor(
           fmtShortDate(e.expiresAt),
-          PLANS.annual.priceLabel,
+          e.priceLabel ?? PLANS.annual.priceLabel,
         ),
       },
       trigger: {

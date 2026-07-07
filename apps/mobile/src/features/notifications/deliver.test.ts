@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
   insertNotificationLog: vi.fn(async () => ({ error: null })),
   loadNotifPrefs: vi.fn(),
-  loadEntitlement: vi.fn(async () => null),
+  loadEntitlement: vi.fn(async (): Promise<unknown> => null),
   notificationLogGte: vi.fn(async () => ({ count: 0 })),
   recordSentLocal: vi.fn(async () => {}),
   scheduleNotificationAsync: vi.fn(async () => 'notification-id'),
@@ -169,6 +169,43 @@ describe('rescheduleReminders', () => {
         }),
       }),
     );
+  });
+});
+
+describe('scheduleTrialReminder', () => {
+  beforeEach(() => {
+    mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.loadEntitlement.mockClear();
+    mocks.loadEntitlement.mockResolvedValue(null);
+    mocks.scheduleNotificationAsync.mockClear();
+  });
+
+  it('uses the localized RevenueCat price stored on the trial entitlement', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-05T12:00:00.000Z'));
+
+    try {
+      const { scheduleTrialReminder } = await import('./deliver');
+      mocks.loadEntitlement.mockResolvedValueOnce({
+        isActive: true,
+        periodType: 'trial',
+        expiresAt: '2026-07-12T12:00:00.000Z',
+        priceLabel: 'CA$69.99',
+      });
+
+      await scheduleTrialReminder();
+
+      expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith(
+        expect.objectContaining({
+          content: {
+            body: 'Trial ends Jul 12 at CA$69.99',
+            title: 'Your free trial ends in 2 days',
+          },
+        }),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

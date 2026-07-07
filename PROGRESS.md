@@ -6,12 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Aligned the 2-day carded-trial reminder with RevenueCat localized pricing.
+  Trial reminder notifications now use the verified entitlement price label when
+  RevenueCat supplied one, falling back to the local plan label only when no
+  store price is cached. This keeps the pre-charge reminder consistent with the
+  actual store offer without adding any external dependency. This was non-UI
+  notification copy logic, so human E2E was not required.
+
 - Added the master-plan `subscription_cancel_intent` analytics event for the
   revenue dashboard. Opening subscription management still emits the generic
-  manage event, but active store-backed entitlements now also emit a
-  privacy-safe cancellation-intent bucket from settings; app-granted reverse
-  trials are excluded so no-card exploration is not miscounted as churn. This
-  was non-UI instrumentation, so human E2E was not required.
+  manage event, but renewing store-backed entitlements now also emit a
+  privacy-safe cancellation-intent bucket from settings. App-granted reverse
+  trials and already non-renewing paid access are excluded so no-card
+  exploration or already-cancelled subscriptions are not miscounted as churn.
+  This was non-UI instrumentation, so human E2E was not required.
 
 - Hardened RevenueCat entitlement sync so a verified empty CustomerInfo no
   longer leaves stale store-backed Pro access cached locally. Auth startup,

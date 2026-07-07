@@ -223,10 +223,13 @@ describe('Settings route contracts', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
     expect(source).toContain("track('manage_subscription_opened')");
-    expect(source).toContain('function isStoreBackedBilling');
-    expect(source).toContain('data?.isPro && isStoreBackedBilling(data.store)');
+    expect(source).toContain('shouldTrackSubscriptionCancelIntent');
+    expect(source).toContain('const entitlementState = data;');
+    expect(source).toContain(
+      'if (entitlementState && shouldTrackSubscriptionCancelIntent(entitlementState))',
+    );
     expect(source).toContain("track('subscription_cancel_intent'");
     expect(source).toContain("source: 'subscription_settings'");
-    expect(source).toContain('period_type: data.periodType');
+    expect(source).toContain('period_type: entitlementState.periodType');
   });
 });

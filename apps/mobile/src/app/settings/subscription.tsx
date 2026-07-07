@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
+import { shouldTrackSubscriptionCancelIntent } from '@/features/subscription/cancelIntent';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
@@ -47,12 +48,6 @@ function Row({ label, last, onPress }: { label: string; last?: boolean; onPress:
   );
 }
 
-function isStoreBackedBilling(store: string | null | undefined): boolean {
-  return (
-    store === 'app_store' || store === 'play_store' || store === 'web' || store === 'test_store'
-  );
-}
-
 export default function SubscriptionScreen() {
   const { data } = useEntitlement();
   const { restore } = useEntitlementActions();
@@ -61,10 +56,11 @@ export default function SubscriptionScreen() {
 
   async function openStore() {
     track('manage_subscription_opened');
-    if (data?.isPro && isStoreBackedBilling(data.store)) {
+    const entitlementState = data;
+    if (entitlementState && shouldTrackSubscriptionCancelIntent(entitlementState)) {
       track('subscription_cancel_intent', {
         source: 'subscription_settings',
-        period_type: data.periodType,
+        period_type: entitlementState.periodType,
       });
     }
     const openedNative = await showNativeManageSubscriptions();
