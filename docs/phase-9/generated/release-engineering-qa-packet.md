@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-07T01:56:37.952Z
+Generated: 2026-07-07T05:07:58.925Z
 Status: blocked
-Git SHA: 9dc4dc362471d706704361fd5aa934998e0e2354
+Git SHA: e5d8297ba6b8ea3f617ab746fe57a22123b70c3f
 Git status: clean
 
 ## Release Identity
@@ -102,7 +102,7 @@ Git status: clean
 - `supabase/functions/_shared/fetch.ts`: `d8ff37a96a965d3826d3d7df14a69eb00f35dddbc119d3a2f4cc92d778226a25`
 - `supabase/functions/data-export/index.ts`: `613170a95c01697505bdf17a4b83dbdafd6e6823f041161059bd1d79dc107e93`
 - `supabase/functions/consent-withdrawal/index.ts`: `fa5f9949677e076c648ce90da97c631b67e53ea72ad94e0daa27199d68f14521`
-- `supabase/functions/subscription-grants/index.ts`: `e146744807f42d221bc26771728efa6360da03b586a91e1d77c01d3b2c624d7f`
+- `supabase/functions/subscription-grants/index.ts`: `2922047f3ca942aa406785a00ee8175ac3f1899f6b97502f49393a6b204baa02`
 - `supabase/functions/catalog-search/index.ts`: `6469ad3fb88b6eba7e09bdc00a211618a2b25d36123ec6775bdb120c05c5c44d`
 - `supabase/functions/catalog-lookup/index.ts`: `943138cd87be526acaea5c84acff7250967670bfe964805f315c8eb71a9f474c`
 - `supabase/functions/catalog-report/index.ts`: `5a063bb6db5e1a5194e17b498b61ed0e9abbaef1d62c7cb80f09be9da429c621`
@@ -119,9 +119,9 @@ Git status: clean
 - `scripts/phase9/live-catalog-rate-limit.mjs`: `d8a52b05b7995d27c1e92e4bb8dd2814a46bb95bdabedc24c64319f39daf6663`
 - `scripts/phase9/live-order-report-poll.mjs`: `438113a48e0b1baff4312a5f71873cdd28ac1a8de98e6f75fcc4f792bcc15093`
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `9f73f3ad255a76abcf9c82ffef882a11d48492412415817b131aff88d13b6d2a`
-- `scripts/phase9/edge-auth-smoke.mjs`: `844dcf393c0b838be46806540895cc0480bc3c75e7dcc5839bae4f71cf77caa3`
+- `scripts/phase9/edge-auth-smoke.mjs`: `c0ae0b16a2eaa643c1da3128cbdd7012ac852eddea4079a748fd0a910ad62185`
 - `scripts/phase9/data-rights-smoke.mjs`: `b2fff6b199e1adc5b994a4113ebb9f27a7d07b4050452e02128e423ad1033d31`
-- `scripts/phase9/supabase-policy-lint.mjs`: `d6bf674a96a19922c83b053c3667e573c775a10b418a8af69c03e479d192a551`
+- `scripts/phase9/supabase-policy-lint.mjs`: `153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183`
 - `scripts/phase9/security-ci-smoke.mjs`: `f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9`
 - `scripts/phase9/privacy-payload-audit.mjs`: `c1740569aa49f7293897bea740fe600fead6a927d5f56dfbb3204912a8f914c5`
 - `scripts/phase9/dependency-sbom.mjs`: `8f2358b22445dd93b6537c388bf7718c93f0730f93b5f0cfb607f57dccaa8d17`
