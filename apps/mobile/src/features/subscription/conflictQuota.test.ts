@@ -37,7 +37,7 @@ describe('free conflict-check quota', () => {
 
   it('allows revisiting the already-used free conflict check', () => {
     expect(
-      conflictCheckAccess({ isPro: false, ruleId: 'rule-a', seenRuleIds: ['rule-a'] }),
+      conflictCheckAccess({ isPro: false, ruleId: ' rule-a ', seenRuleIds: ['rule-a'] }),
     ).toEqual({
       allowed: true,
       reason: 'already_viewed',
@@ -66,7 +66,7 @@ describe('free conflict-check quota', () => {
   });
 
   it('persists rule ids once', async () => {
-    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual(['rule-a']);
+    await expect(recordFreeConflictCheckRuleId(' rule-a ')).resolves.toEqual(['rule-a']);
     await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual(['rule-a']);
 
     await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual(['rule-a']);
@@ -80,9 +80,14 @@ describe('free conflict-check quota', () => {
   });
 
   it('normalizes duplicate and invalid persisted rule ids', async () => {
-    mocks.storage.set(KEY, JSON.stringify(['rule-a', '', 'rule-a', 42, 'rule-b']));
+    mocks.storage.set(KEY, JSON.stringify([' rule-a ', '', 'rule-a', 42, ' rule-b ']));
 
     await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual(['rule-a', 'rule-b']);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toEqual(['rule-a', 'rule-b']);
+  });
+
+  it('does not write blank rule ids into quota history', async () => {
+    await expect(recordFreeConflictCheckRuleId('   ')).resolves.toEqual([]);
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

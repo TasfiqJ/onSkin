@@ -31,7 +31,7 @@ describe('conflict override persistence', () => {
   });
 
   it('normalizes duplicate and invalid override keys', async () => {
-    mocks.storage.set(KEY, JSON.stringify(['rule-a', '', 'rule-a', false, 'rule-b']));
+    mocks.storage.set(KEY, JSON.stringify([' rule-a ', '', 'rule-a', false, ' rule-b ']));
 
     await expect(getOverriddenKeys()).resolves.toEqual(new Set(['rule-a', 'rule-b']));
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toEqual(['rule-a', 'rule-b']);
@@ -40,8 +40,14 @@ describe('conflict override persistence', () => {
   it('writes clean override state after malformed storage', async () => {
     mocks.storage.set(KEY, JSON.stringify({ key: 'rule-a' }));
 
-    await setConflictOverride('rule-a', true);
+    await setConflictOverride(' rule-a ', true);
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toEqual(['rule-a']);
+  });
+
+  it('ignores blank override keys', async () => {
+    await setConflictOverride('   ', true);
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

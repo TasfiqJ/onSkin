@@ -12,7 +12,12 @@ const KEY = 'onskin.conflict.overrides';
 function normalizeKeys(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return [
-    ...new Set(value.filter((key): key is string => typeof key === 'string' && key.length > 0)),
+    ...new Set(
+      value
+        .filter((key): key is string => typeof key === 'string')
+        .map((key) => key.trim())
+        .filter((key) => key.length > 0),
+    ),
   ];
 }
 
@@ -48,8 +53,10 @@ export async function getOverriddenKeys(): Promise<Set<string>> {
 }
 
 export async function setConflictOverride(key: string, overridden: boolean): Promise<void> {
+  const normalizedKey = key.trim();
+  if (!normalizedKey) return;
   const keys = await getOverriddenKeys();
-  if (overridden) keys.add(key);
-  else keys.delete(key);
+  if (overridden) keys.add(normalizedKey);
+  else keys.delete(normalizedKey);
   await setPrivateItem(KEY, JSON.stringify([...keys]));
 }

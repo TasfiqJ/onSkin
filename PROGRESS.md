@@ -2360,6 +2360,13 @@ embedded credentials, plaintext HTTP, and malformed strings now fail closed. Sup
 placeholder and local domains, so `support@example.com` cannot unlock creator-link readiness. Added focused Phase 8
 public contact readiness tests; external final-domain/store/support evidence remains blocked for Tas.
 
+### Conflict-choice local key normalization (2026-07-07)
+
+Hardened local conflict-choice storage so padded persisted rule IDs/override keys normalize to the canonical conflict
+identity before free conflict-check quota or `use together anyway` decisions read them. Blank direct writes are ignored,
+and focused quota/override tests pin padded legacy rows, duplicate repair, and clean persisted state. This was
+non-visual local storage hardening, so human E2E was not required.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

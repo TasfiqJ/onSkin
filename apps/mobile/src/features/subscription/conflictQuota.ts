@@ -12,7 +12,14 @@ export type ConflictCheckAccess = {
 
 function normalizeRuleIds(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
-  return [...new Set(value.filter((id): id is string => typeof id === 'string' && id.length > 0))];
+  return [
+    ...new Set(
+      value
+        .filter((id): id is string => typeof id === 'string')
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0),
+    ),
+  ];
 }
 
 function didNormalizeRuleIds(value: unknown, normalized: readonly string[]): boolean {
@@ -30,11 +37,13 @@ export function conflictCheckAccess(input: {
   limit?: number;
 }): ConflictCheckAccess {
   const limit = input.limit ?? FREE_CONFLICT_CHECK_LIMIT;
+  const ruleId = input.ruleId.trim();
+  const seenRuleIds = normalizeRuleIds(input.seenRuleIds);
   if (input.isPro) return { allowed: true, reason: 'pro', shouldRecord: false };
-  if (input.seenRuleIds.includes(input.ruleId)) {
+  if (seenRuleIds.includes(ruleId)) {
     return { allowed: true, reason: 'already_viewed', shouldRecord: false };
   }
-  if (input.seenRuleIds.length < limit) {
+  if (seenRuleIds.length < limit) {
     return { allowed: true, reason: 'free_available', shouldRecord: true };
   }
   return { allowed: false, reason: 'quota_exhausted', shouldRecord: false };
@@ -64,8 +73,10 @@ export async function loadFreeConflictCheckRuleIds(): Promise<string[]> {
 }
 
 export async function recordFreeConflictCheckRuleId(ruleId: string): Promise<string[]> {
+  const normalizedRuleId = ruleId.trim();
   const seen = await loadFreeConflictCheckRuleIds();
-  const next = seen.includes(ruleId) ? seen : [...seen, ruleId];
+  if (!normalizedRuleId) return seen;
+  const next = seen.includes(normalizedRuleId) ? seen : [...seen, normalizedRuleId];
   await setPrivateItem(KEY, JSON.stringify(next));
   return next;
 }
