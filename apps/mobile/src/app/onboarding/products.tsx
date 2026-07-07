@@ -1,10 +1,11 @@
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { ONBOARDING_PRODUCT_CATEGORIES } from '@/features/onboarding/productCategories';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
@@ -25,6 +26,10 @@ export default function ProductsScreen() {
   const added = data?.items ?? [];
   const compactPhone = height < 640;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
+
+  useEffect(() => {
+    trackProductAddStarted('onboarding');
+  }, []);
 
   function scrollToShelfList() {
     requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));

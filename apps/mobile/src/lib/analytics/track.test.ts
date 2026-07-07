@@ -129,6 +129,7 @@ describe('analytics sanitizer', () => {
 
   it('allows V1 activation events without sensitive payload details', () => {
     expect(sanitizeAnalyticsEventName('first_useful_insight')).toBe('first_useful_insight');
+    expect(sanitizeAnalyticsEventName('product_add_started')).toBe('product_add_started');
     expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
     expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
     expect(sanitizeAnalyticsEventName('routine_checkoff_completed')).toBe(

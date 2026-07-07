@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { paoSourceLabel } from '@/features/shelf/labels';
 import { useShelfMutations } from '@/features/shelf/mutations';
@@ -168,6 +169,7 @@ export default function OpenedDateScreen() {
           className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"
           onPress={() => {
             haptics.select();
+            trackProductAddStarted('opened_recovery');
             router.replace('/shelf/manual');
           }}
         >

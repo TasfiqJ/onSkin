@@ -13,6 +13,7 @@ import {
   shouldSuppressDuplicate,
   type DuplicateBarcodeGate,
 } from '@/features/native/camera/barcode';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';
@@ -70,16 +71,19 @@ export default function ScanScreen() {
 
   const goManual = () => {
     haptics.select();
+    trackProductAddStarted('scan_manual');
     reset({ addedVia: 'manual' });
     router.push('/shelf/manual');
   };
   const goOcr = () => {
     haptics.select();
+    trackProductAddStarted('scan_label');
     reset({ addedVia: 'ocr' });
     router.push('/shelf/ocr');
   };
   const goSearch = () => {
     haptics.select();
+    trackProductAddStarted('scan_search');
     reset({ addedVia: 'search' });
     router.push('/shelf/search');
   };

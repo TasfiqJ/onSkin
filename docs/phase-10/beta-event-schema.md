@@ -17,7 +17,7 @@ The beta schema is frozen to answer whether real users reach value, return, trus
 | Dashboard                  | Required views                                                                                                           |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Enrollment and install     | invited, accepted, installed, first app open by platform/build/wave                                                      |
-| Onboarding and first value | onboarding_started, account_created, product intake, first-value proxy, drop-off                                         |
+| Onboarding and first value | onboarding_started, account_created, product_add_started, product_added, first-value proxy, drop-off                     |
 | Shelf and catalog          | barcode/search/manual mix, no-match, corrections, manual fallback completion                                             |
 | Routine loop               | plan view, routine_created, first_useful_insight, first_checkoff_completed, routine_checkoff_completed, streak milestone |
 | Photo and reminder         | permission prompt, capture, trend/progress usage, reminder opt-in/denial                                                 |
@@ -43,6 +43,7 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `onboarding_started`
 - `screen_viewed`
 - `account_created`
+- `product_add_started`
 - `product_added`
 - `catalog_barcode_lookup`
 - `catalog_search`

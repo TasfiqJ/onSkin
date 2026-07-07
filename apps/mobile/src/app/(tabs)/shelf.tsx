@@ -12,6 +12,7 @@ import {
   Text,
 } from '@/components/ui';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
+import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -39,12 +40,19 @@ const SUBHEAD: Record<Filter, string> = {
   expiring: 'Soonest first. The honest reasons to replace something.',
 };
 
-function ScanShelfButton({ floating }: { floating: boolean }) {
+function ScanShelfButton({
+  floating,
+  source,
+}: {
+  floating: boolean;
+  source: ProductAddStartSource;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
       onPress={() => {
         haptics.select();
+        trackProductAddStarted(source);
         router.push('/shelf/scan');
       }}
       style={({ pressed }) => [
@@ -153,6 +161,7 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
           accessibilityRole="button"
           onPress={() => {
             haptics.select();
+            trackProductAddStarted('empty_scan');
             router.push('/shelf/scan');
           }}
           className="h-14 items-center justify-center rounded-pill bg-ink"
@@ -163,6 +172,7 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
           accessibilityRole="button"
           onPress={() => {
             haptics.select();
+            trackProductAddStarted('empty_manual');
             router.push('/shelf/manual');
           }}
           className="h-[50px] items-center justify-center"
@@ -376,7 +386,7 @@ export default function ShelfScreen() {
 
           {compactShelf ? (
             <View className="mt-6 items-center pb-2">
-              <ScanShelfButton floating={false} />
+              <ScanShelfButton floating={false} source="scan_inline" />
             </View>
           ) : null}
         </ScrollView>
@@ -384,7 +394,7 @@ export default function ShelfScreen() {
 
       {!isEmpty && !showLoading && !compactShelf ? (
         <View className="absolute inset-x-0 bottom-4 items-center">
-          <ScanShelfButton floating />
+          <ScanShelfButton floating source="scan_fab" />
         </View>
       ) : null}
     </Screen>

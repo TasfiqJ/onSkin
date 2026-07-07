@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
 import { RouteIconButton, Sheet, Text } from '@/components/ui';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -14,11 +15,13 @@ export default function NoMatchScreen() {
 
   const goOcr = () => {
     haptics.select();
+    trackProductAddStarted('miss_label');
     reset({ addedVia: 'ocr' });
     router.replace('/shelf/ocr');
   };
   const goManual = () => {
     haptics.select();
+    trackProductAddStarted('miss_manual');
     reset({ addedVia: 'manual' });
     router.replace('/shelf/manual');
   };

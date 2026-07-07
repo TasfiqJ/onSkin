@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added the master-plan `product_add_started` event to close the Shelf
+  add-start drop-off gap before beta dashboards. Onboarding product intake,
+  empty Shelf scan/manual starts, scan/search/no-match fallbacks,
+  recommendation detail, commerce "already own" handoff, and public share-link
+  add starts now emit only compact source buckets before routing to the existing
+  intake surfaces. Phase 7 and Phase 10 beta evidence docs plus the Phase 7
+  core-loop checker now require the start-to-added funnel, and focused
+  analytics/shelf contracts plus mobile typecheck/lint/test pass. This was
+  non-visual analytics instrumentation, so human E2E was not required.
+
 - Fixed the active reverse-trial subscription-options path. App-granted
   no-card reverse trials now route the Settings subscription row to an in-app
   keep-Pro options paywall instead of OS subscription management, and active

@@ -124,9 +124,9 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactShelf = height < 640');
-    expect(source).toContain('<ScanShelfButton floating={false} />');
+    expect(source).toContain('<ScanShelfButton floating={false} source="scan_inline" />');
     expect(source).toContain('!isEmpty && !showLoading && !compactShelf');
-    expect(source).toContain('<ScanShelfButton floating />');
+    expect(source).toContain('<ScanShelfButton floating source="scan_fab" />');
     expect(source).not.toContain('!isEmpty && !showLoading ? (');
   });
 

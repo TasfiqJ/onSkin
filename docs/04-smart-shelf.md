@@ -303,7 +303,7 @@ The shelf must work in a bathroom with no signal (docs/01 §6): **view** the cac
 - **OCR:** on-device ML Kit Text Recognition / Apple Vision → tokenise → match `ingredients`/`ingredient_synonyms` (docs/02); always confirmable/editable (INCI OCR is error-prone).
 - **Contribute-back:** an authenticated OBF POST (`code` + credentials + fields), queued and offline-tolerant, with a validation gate; ODbL source attribution shown on catalog data.
 - **New schema summary:** the `user_products` additive columns + `shelf_scans`; suggested DECISIONS **D-022/023/024**; BLOCKER ties — **B-DERM-REVIEW** (PAO category defaults) and **B-PRIVACY** (data-sharing consent for replenishment).
-- **PostHog instrumentation** (docs/01 §7): `product_added` (with `added_via`), `barcode_scanned`, `scan_matched` / `scan_no_match`, `opened_date_set`, `product_finished` / `_discarded`, `replenishment_nudge_shown` / `_tapped`, `affiliate_link_tapped`. Wire the **scan→add** funnel as a shelf activation metric.
+- **PostHog instrumentation** (docs/01 §7): `product_add_started` (safe `source` bucket), `product_added` (with `added_via`), `barcode_scanned`, `scan_matched` / `scan_no_match`, `opened_date_set`, `product_finished` / `_discarded`, `replenishment_nudge_shown` / `_tapped`, `affiliate_link_tapped`. Wire the **scan→add** funnel as a shelf activation metric.
 - **Performance:** the `(user_id, status, expiry_computed)` index powers the Expiring filter/sort; recompute conflicts (`detect_conflicts`, docs/02) on any shelf change so the banner and "paired" badges stay current; the badge computation is pure and client-cached for offline.
 
 ---

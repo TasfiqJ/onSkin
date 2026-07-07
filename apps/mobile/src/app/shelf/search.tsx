@@ -7,6 +7,7 @@ import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import { searchCatalog, type CatalogProductSummary } from '@/features/catalog/client';
 import { catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { track } from '@/lib/analytics/track';
@@ -54,6 +55,7 @@ export default function CatalogSearchScreen() {
 
   const goManual = () => {
     haptics.select();
+    trackProductAddStarted('catalog_manual');
     reset({ addedVia: 'manual', name: query.trim() });
     router.replace('/shelf/manual');
   };

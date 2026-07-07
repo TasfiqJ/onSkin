@@ -6,7 +6,7 @@ Purpose: prove whether the V1 loop is valuable enough to keep funding. This is t
 
 | Metric                   | Event(s)                                                           | Target                                                  |
 | ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------- |
-| Product shelf activation | `product_added` by unique product count                            | 60% of users add 3+ products within 48 hours            |
+| Product shelf activation | `product_add_started` to `product_added` by unique product count   | 60% of users add 3+ products within 48 hours            |
 | First value moment       | `first_useful_insight`, `conflict_detected`, and `routine_created` | 50% reach useful guidance/no-issue within first session |
 | Routine activation       | `first_checkoff_completed` and `routine_checkoff_completed`        | 45% complete at least one check-off within 48 hours     |
 | Photo activation         | `photo_captured`                                                   | 25% capture a baseline photo within 7 days              |

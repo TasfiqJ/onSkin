@@ -49,6 +49,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'photo_capture_still_taken',
   'photo_captured',
   'preference_set',
+  'product_add_started',
   'product_added',
   'product_scanned',
   'product_discarded',

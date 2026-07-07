@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 import { isSafeOpaqueId } from '@/lib/growth/attribution';
@@ -32,11 +33,20 @@ export default function PublicShareLinkScreen() {
           </Text>
         </View>
         <View className="gap-3">
-          <Button label="Scan a product" onPress={() => router.replace('/shelf/scan')} />
+          <Button
+            label="Scan a product"
+            onPress={() => {
+              trackProductAddStarted('share_scan');
+              router.replace('/shelf/scan');
+            }}
+          />
           <Button
             label="Add manually"
             variant="ghost"
-            onPress={() => router.replace('/shelf/manual')}
+            onPress={() => {
+              trackProductAddStarted('share_manual');
+              router.replace('/shelf/manual');
+            }}
           />
         </View>
       </View>

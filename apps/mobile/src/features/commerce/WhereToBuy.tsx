@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Alert, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
@@ -180,7 +181,10 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
 
       <Pressable
         accessibilityRole="button"
-        onPress={() => router.push('/shelf/manual')}
+        onPress={() => {
+          trackProductAddStarted('commerce');
+          router.push('/shelf/manual');
+        }}
         accessibilityLabel="Add this product to your shelf instead"
         className="mt-3.5 min-h-[48px] items-center justify-center rounded-pill px-4"
         style={{ minHeight: 48, borderWidth: 1, borderColor: colors.hairline }}

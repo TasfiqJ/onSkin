@@ -11,6 +11,7 @@ import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { dismissRecommendation } from '@/features/recommendations/store';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
+import { trackProductAddStarted } from '@/features/shelf/analytics';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -83,6 +84,7 @@ function Body({ rec }: { rec: Recommendation }) {
     // the recommended type's category so the form is pre-filled, not blank/stale.
     const recType = recTypeByKey(rec.productType);
     const presetCategory = recType ? ROLE_TO_CATEGORY[recType.role] : undefined;
+    trackProductAddStarted('recommendation');
     router.push(
       presetCategory ? { pathname: '/shelf/manual', params: { presetCategory } } : '/shelf/manual',
     );

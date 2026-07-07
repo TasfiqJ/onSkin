@@ -184,11 +184,15 @@ require(has(
 ), 'Conflict sheet must hide share launcher unless share card is eligible.');
 
 const analyticsRegistry = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
+const shelfTab = read('apps/mobile/src/app/(tabs)/shelf.tsx');
+const onboardingProducts = read('apps/mobile/src/app/onboarding/products.tsx');
 const routinePlan = read('apps/mobile/src/app/routine/plan.tsx');
+const routineActivationAnalytics = read('apps/mobile/src/features/routine/activationAnalytics.ts');
 const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
 const shelfMutations = read('apps/mobile/src/features/shelf/mutations.ts');
 const betaDashboard = read('docs/phase-7/beta-evidence-dashboard.md');
 const coreLoopEvents = [
+  'product_add_started',
   'product_added',
   'routine_created',
   'first_useful_insight',
@@ -213,8 +217,13 @@ for (const event of coreLoopEvents) {
 require(/track\('product_added'/.test(
   shelfMutations,
 ), 'Shelf add flow must emit product_added for product-add activation.');
-require(/track\('routine_created'/.test(routinePlan) &&
-  /track\('first_useful_insight'/.test(routinePlan) &&
+require(/trackProductAddStarted/.test(shelfTab) &&
+  /trackProductAddStarted/.test(
+    onboardingProducts,
+  ), 'Shelf and onboarding entry points must emit product_add_started for product-add drop-off analysis.');
+require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
+  /track\('routine_created'/.test(routineActivationAnalytics) &&
+  /track\('first_useful_insight'/.test(routineActivationAnalytics) &&
   /track\('conflict_detected'/.test(
     routinePlan,
   ), 'Routine plan must emit routine_created, first_useful_insight, and conflict_detected.');
