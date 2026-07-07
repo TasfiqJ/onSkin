@@ -107,7 +107,9 @@ function stringOrNull(value: unknown): string | null {
 
 function stringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
-  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+  return value
+    .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+    .map((item) => item.trim());
 }
 
 function localDateOrNull(value: unknown): string | null {
@@ -165,6 +167,7 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
     catalogQualityOrNull(value.catalogMatchQuality) ?? (addedVia === 'manual' ? 'manual' : null);
   const status = enumValue(value.status, PRODUCT_STATUSES, 'active');
   const createdAt = isoStringOrFallback(value.createdAt, fallbackISO);
+  const isOpened = typeof value.isOpened === 'boolean' ? value.isOpened : true;
 
   return {
     id,
@@ -186,8 +189,8 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
     parserVersion: stringOrNull(value.parserVersion),
     sourceDisclosureAckAt: isoStringOrNull(value.sourceDisclosureAckAt),
     ingredients: stringArray(value.ingredients),
-    openedAt: localDateOrNull(value.openedAt),
-    isOpened: typeof value.isOpened === 'boolean' ? value.isOpened : true,
+    openedAt: isOpened ? localDateOrNull(value.openedAt) : null,
+    isOpened,
     paoMonths: positiveIntegerOrNull(value.paoMonths),
     paoSource: enumValue(value.paoSource, PAO_SOURCES, 'unknown'),
     expiryDate: localDateOrNull(value.expiryDate),
@@ -250,6 +253,14 @@ async function persist(items: ShelfProduct[]): Promise<void> {
   await setPrivateItem(KEY, JSON.stringify(items));
 }
 
+function normalizeProductForWrite(
+  value: ShelfProduct,
+  fallbackISO: string,
+  fallback: ShelfProduct,
+): ShelfProduct {
+  return normalizeShelfProduct(value, fallbackISO) ?? { ...fallback, updatedAt: fallbackISO };
+}
+
 export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
   const items = await loadShelf();
   const ts = nowISO();
@@ -297,7 +308,18 @@ export async function updateProduct(
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
 ): Promise<void> {
   const items = await loadShelf();
-  await persist(items.map((p) => (p.id === id ? { ...p, ...patch, updatedAt: nowISO() } : p)));
+  const ts = nowISO();
+  await persist(
+    items.map((p) =>
+      p.id === id
+        ? normalizeProductForWrite(
+            { ...p, ...patch, id: p.id, createdAt: p.createdAt, updatedAt: ts },
+            ts,
+            p,
+          )
+        : p,
+    ),
+  );
 }
 
 export async function removeProduct(id: string): Promise<void> {

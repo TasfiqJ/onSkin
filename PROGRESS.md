@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the Smart Shelf local store so direct product update patches are
+  normalized before persistence. Malformed lifecycle/status/PAO/opened-date
+  values now write back as clean shelf rows instead of relying on the next read
+  repair, unopened rows cannot keep an opened-date clock, and a blank direct
+  name patch preserves the existing product identity. This is non-UI data-layer
+  hardening, so human E2E was not required.
+
 - Closed the direct-entry health-data consent bypass on `/onboarding/quiz`.
   The quiz now verifies a granted local health-data collection consent before
   rendering any quiz questions and redirects missing, declined, or malformed
