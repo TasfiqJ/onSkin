@@ -56,10 +56,10 @@ Use ASCII punctuation for this user-facing sentence and add a route-contract reg
 
 - Screenshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/01-postfix-initial.png`
 - Screenshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/02-postfix-impossible-date.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/03-postfix-underage-after-submit.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-age-copy/age-gate-copy-320x568.png`
-- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-copy-fix/postfix-summary.json`
-- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-age-copy/age-gate-copy-state.json`
+- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/03-postfix-future-date.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/04-postfix-underage-after-submit.png`
+- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/postfix-summary.json`
+- Focused tests: `npm --workspace apps/mobile run test -- src/features/onboarding/ageGate.test.ts src/features/onboarding/ageGateStore.test.ts src/features/onboarding/onboardingRoutes.test.ts`
 
 ## Remaining Risk
 

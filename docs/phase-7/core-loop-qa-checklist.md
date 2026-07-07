@@ -87,6 +87,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   opens the first quiz question only after `I agree. Continue`. Evidence is in
   `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`; it does
   not replace native secure-storage timing QA or final legal consent-copy review.
+- 2026-07-07: Expo web E2E at 320 x 568 plus focused age-gate tests cover the
+  first-run DOB gate: the visible copy says `We don't store your birth date.`,
+  impossible and future DOBs show invalid-date recovery, a valid underage DOB
+  stays on `/onboarding/age` with the 16+ block copy, and all checked states have
+  zero horizontal overflow with no visible sub-44 px controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/`; it does
+  not replace native keyboard/device QA or final counsel review of the age floor.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

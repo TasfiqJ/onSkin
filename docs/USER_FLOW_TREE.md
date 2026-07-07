@@ -134,6 +134,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: iOS and Android first; Expo web if route parity is confirmed.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/onboarding/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`
 
 ### Path A: Happy Path
@@ -150,12 +151,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Enter an impossible date such as February 30, a future date, and a valid DOB below the minimum age.
   - Expected result: Impossible or future dates keep Continue disabled with clear recovery copy; valid underage DOBs block progression with compliant age copy.
   - Evidence: Screenshot and reproduction notes.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 covers impossible date, future date, and valid underage DOB states. Invalid/future dates show `Enter a real birth date that is not in the future.`, underage valid DOB stays on `/onboarding/age` with the 16+ block copy, and all checked states have zero horizontal overflow and no visible sub-44 px controls.
 - Branch: age-gate privacy copy punctuation
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/onboarding/age` on a compact phone viewport and inspect the age-gate privacy sentence.
   - Expected result: The copy says `We don't store your birth date.` with no mojibake punctuation, no clipped text, and the date fields plus Continue action remain visible and usable.
   - Evidence: Screenshot and text snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `We don't store your birth date.` with no mojibake, complete day/month/year fields, a visible Continue control, zero horizontal overflow, and no visible sub-44 px controls.
 - Branch: consent declined
   - Priority: Critical
   - Automate later: Yes
