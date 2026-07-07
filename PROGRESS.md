@@ -20,8 +20,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   longer lands on a dead one-line `Photo not found.` state. The route now shows
   calm photo-unavailable recovery copy, a 56 px `Take a new photo` primary
   action, and a 56 px `Back to Progress` escape inside a short-phone scroll
-  container. The Progress route contract guards the recovery state; the tracked
-  bug report is
+  container. Expo web E2E at 320 x 568 verified the visible recovery state,
+  no horizontal overflow, the capture recovery path, and the Progress escape.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-missing-photo-recovery/`; the
+  tracked bug report is
   `docs/e2e-bug-reports/2026-07-07-progress-missing-photo-recovery.md`.
 
 - Expanded the `/routine/plan` skin-cycling row labels from shorthand `N1` /

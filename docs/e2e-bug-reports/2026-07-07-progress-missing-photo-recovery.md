@@ -55,12 +55,12 @@ Use the central photo copy module for a polished missing-detail state, keep a di
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-07/progress-missing-photo-recovery-320x568.png`
-- UI snapshot: Browser-visible text showed `Photo unavailable`, `This photo is no longer on this phone.`, `Take a new photo`, and `Back to Progress`.
-- Route action: `Take a new photo` routed to `/progress/capture`.
-- Route action: `Back to Progress` routed to `/progress`.
+- Screenshot: `test-results/human-e2e/2026-07-07/progress-missing-photo-recovery/progress-missing-photo-320x568.png`
+- Geometry audit: `test-results/human-e2e/2026-07-07/progress-missing-photo-recovery/progress-missing-photo-audit.json`
+- Click evidence: `test-results/human-e2e/2026-07-07/progress-missing-photo-recovery/progress-missing-photo-clicks.json`
 - Focused route contract: `npm.cmd --workspace apps/mobile run test -- src/features/photos/progressRoutes.test.ts`
 
 ## Remaining Risk
 
 - Native iOS and Android device rendering still need the final release-device pass.
+- Live cloud-backed photo detail recovery remains out of scope for this local-only missing-photo fixture.
