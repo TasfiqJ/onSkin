@@ -37,6 +37,17 @@ function readAppEnvironment(value: string | undefined): AppEnvironment {
   return isDevRuntime() ? 'development' : 'production';
 }
 
+function readBooleanEnv(
+  value: string | undefined,
+  { defaultValue = false, invalidValue = false }: { defaultValue?: boolean; invalidValue?: boolean } = {},
+): boolean {
+  const candidate = value?.trim().toLowerCase();
+  if (!candidate) return defaultValue;
+  if (candidate === 'true') return true;
+  if (candidate === 'false') return false;
+  return invalidValue;
+}
+
 function isKnownPlaceholder(value: string): boolean {
   return (
     value === PLACEHOLDER ||
@@ -80,23 +91,29 @@ export const env = {
   marketingUrl: process.env.EXPO_PUBLIC_MARKETING_URL ?? '',
   supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? '',
   cameraStack: process.env.EXPO_PUBLIC_CAMERA_STACK ?? 'expo-camera',
-  nativeCameraEnabled: process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED !== 'false',
-  nativeOcrEnabled: process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED === 'true',
-  phase7CommerceEnabled: process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED === 'true',
-  phase7CommunityPostingEnabled:
-    process.env.EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED === 'true',
-  phase7TrendEnabled: process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED === 'true',
-  phase7CloudAskEnabled: process.env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED === 'true',
-  phase7WidgetsEnabled: process.env.EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED === 'true',
-  phase7ShareCardEnabled: process.env.EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED === 'true',
+  nativeCameraEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED, {
+    defaultValue: true,
+    invalidValue: false,
+  }),
+  nativeOcrEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
+  phase7CommerceEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED),
+  phase7CommunityPostingEnabled: readBooleanEnv(
+    process.env.EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED,
+  ),
+  phase7TrendEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED),
+  phase7CloudAskEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED),
+  phase7WidgetsEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED),
+  phase7ShareCardEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED),
   phase7ReviewedConflictSharingEnabled:
-    process.env.EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED === 'true',
+    readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED),
   phase7GoalActiveRecommendationsEnabled:
-    process.env.EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED === 'true',
-  phase8PublicLinksEnabled: process.env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED === 'true',
-  phase8ReviewPromptEnabled: process.env.EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED === 'true',
-  phase8CreatorLinksEnabled: process.env.EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED === 'true',
-  phase8PaidMeasurementEnabled: process.env.EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED === 'true',
+    readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED),
+  phase8PublicLinksEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED),
+  phase8ReviewPromptEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED),
+  phase8CreatorLinksEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED),
+  phase8PaidMeasurementEnabled: readBooleanEnv(
+    process.env.EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED,
+  ),
   // BLOCKED: B-SUPABASE
   supabaseUrl: readSupabaseUrlEnv(
     'EXPO_PUBLIC_SUPABASE_URL',

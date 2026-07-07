@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened client env boolean parsing for native camera, OCR, Phase 7 deferred
+  surfaces, and Phase 8 growth toggles. Supported `true`/`false` values now
+  tolerate case and whitespace, malformed explicit values fail closed, and the
+  documented missing-value default still keeps native camera on for dev/staging
+  builds while leaving OCR and deferred launch surfaces off.
+
 - Hardened local Ask, Commerce, Community, and Trend private boolean gates with a
   shared encrypted-storage helper. Existing legacy `true`/`false` consent and
   age-confirmation flags migrate to compact canonical values, malformed flags

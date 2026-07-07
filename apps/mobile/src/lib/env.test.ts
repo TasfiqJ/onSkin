@@ -3,18 +3,33 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 const ORIGINAL_SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const ORIGINAL_SUPABASE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const ORIGINAL_APP_ENV = process.env.EXPO_PUBLIC_APP_ENV;
+const ORIGINAL_NATIVE_CAMERA_ENABLED = process.env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED;
+const ORIGINAL_NATIVE_OCR_ENABLED = process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED;
+const ORIGINAL_PHASE7_COMMERCE_ENABLED = process.env.EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED;
+const ORIGINAL_PHASE7_TREND_ENABLED = process.env.EXPO_PUBLIC_PHASE7_TREND_ENABLED;
+const ORIGINAL_PHASE8_PUBLIC_LINKS_ENABLED = process.env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED;
 const ORIGINAL_DEV = (globalThis as { __DEV__?: boolean }).__DEV__;
 
 async function loadEnvWith(overrides: {
   supabaseUrl?: string;
   supabaseKey?: string;
   appEnv?: string;
+  nativeCameraEnabled?: string;
+  nativeOcrEnabled?: string;
+  phase7CommerceEnabled?: string;
+  phase7TrendEnabled?: string;
+  phase8PublicLinksEnabled?: string;
   dev?: boolean;
 }) {
   vi.resetModules();
   setEnv('EXPO_PUBLIC_SUPABASE_URL', overrides.supabaseUrl);
   setEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', overrides.supabaseKey);
   setEnv('EXPO_PUBLIC_APP_ENV', overrides.appEnv);
+  setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', overrides.nativeCameraEnabled);
+  setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', overrides.nativeOcrEnabled);
+  setEnv('EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED', overrides.phase7CommerceEnabled);
+  setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', overrides.phase7TrendEnabled);
+  setEnv('EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED', overrides.phase8PublicLinksEnabled);
   if (overrides.dev === undefined) delete (globalThis as { __DEV__?: boolean }).__DEV__;
   else (globalThis as { __DEV__?: boolean }).__DEV__ = overrides.dev;
   return import('./env');
@@ -30,6 +45,11 @@ afterEach(() => {
   setEnv('EXPO_PUBLIC_SUPABASE_URL', ORIGINAL_SUPABASE_URL);
   setEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', ORIGINAL_SUPABASE_PUBLISHABLE_KEY);
   setEnv('EXPO_PUBLIC_APP_ENV', ORIGINAL_APP_ENV);
+  setEnv('EXPO_PUBLIC_NATIVE_CAMERA_ENABLED', ORIGINAL_NATIVE_CAMERA_ENABLED);
+  setEnv('EXPO_PUBLIC_NATIVE_OCR_ENABLED', ORIGINAL_NATIVE_OCR_ENABLED);
+  setEnv('EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED', ORIGINAL_PHASE7_COMMERCE_ENABLED);
+  setEnv('EXPO_PUBLIC_PHASE7_TREND_ENABLED', ORIGINAL_PHASE7_TREND_ENABLED);
+  setEnv('EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED', ORIGINAL_PHASE8_PUBLIC_LINKS_ENABLED);
   if (ORIGINAL_DEV === undefined) delete (globalThis as { __DEV__?: boolean }).__DEV__;
   else (globalThis as { __DEV__?: boolean }).__DEV__ = ORIGINAL_DEV;
 });
@@ -102,5 +122,46 @@ describe('env appEnvironment fail-closed behavior', () => {
     const mod = await loadEnvWith({ appEnv: 'Staging', dev: false });
 
     expect(mod.env.appEnvironment).toBe('staging');
+  });
+});
+
+describe('env boolean flags', () => {
+  it('normalizes case and whitespace for explicit boolean flags', async () => {
+    const mod = await loadEnvWith({
+      nativeCameraEnabled: ' TRUE ',
+      nativeOcrEnabled: ' True ',
+      phase7CommerceEnabled: ' true ',
+      phase7TrendEnabled: 'FALSE',
+      phase8PublicLinksEnabled: ' true ',
+    });
+
+    expect(mod.env.nativeCameraEnabled).toBe(true);
+    expect(mod.env.nativeOcrEnabled).toBe(true);
+    expect(mod.env.phase7CommerceEnabled).toBe(true);
+    expect(mod.env.phase7TrendEnabled).toBe(false);
+    expect(mod.env.phase8PublicLinksEnabled).toBe(true);
+  });
+
+  it('keeps native camera enabled when unset but honors explicit false', async () => {
+    await expect(loadEnvWith({})).resolves.toMatchObject({
+      env: expect.objectContaining({ nativeCameraEnabled: true }),
+    });
+    await expect(loadEnvWith({ nativeCameraEnabled: ' false ' })).resolves.toMatchObject({
+      env: expect.objectContaining({ nativeCameraEnabled: false }),
+    });
+  });
+
+  it('fails closed for malformed native and deferred-surface flags', async () => {
+    const mod = await loadEnvWith({
+      nativeCameraEnabled: 'yes',
+      nativeOcrEnabled: '1',
+      phase7CommerceEnabled: 'enabled',
+      phase8PublicLinksEnabled: 'on',
+    });
+
+    expect(mod.env.nativeCameraEnabled).toBe(false);
+    expect(mod.env.nativeOcrEnabled).toBe(false);
+    expect(mod.env.phase7CommerceEnabled).toBe(false);
+    expect(mod.env.phase8PublicLinksEnabled).toBe(false);
   });
 });
