@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { productionDomain, productionSupportEmail, productionUrl } from '../phase9/lib.mjs';
+import {
+  evidenceFlagEnabled,
+  normalizeAndroidSha256Fingerprints,
+  normalizeAppleTeamId,
+  normalizeNamedSignoff,
+  productionDomain,
+  productionSupportEmail,
+  productionUrl,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -131,23 +139,63 @@ for (const file of requiredFiles) {
   fail(exists(file), `${file} is missing.`);
 }
 
-fail(has('apps/mobile/app.config.js', /associatedDomains/), 'app.config.js must configure iOS associated domains.');
-fail(has('apps/mobile/app.config.js', /intentFilters/), 'app.config.js must configure Android App Links intent filters.');
-fail(has('apps/mobile/app.config.js', /appStoreUrl/), 'app.config.js must expose the App Store URL for native review fallback.');
-fail(has('apps/mobile/app.config.js', /playStoreUrl/), 'app.config.js must expose the Play Store URL for native review fallback.');
+fail(
+  has('apps/mobile/app.config.js', /associatedDomains/),
+  'app.config.js must configure iOS associated domains.',
+);
+fail(
+  has('apps/mobile/app.config.js', /intentFilters/),
+  'app.config.js must configure Android App Links intent filters.',
+);
+fail(
+  has('apps/mobile/app.config.js', /appStoreUrl/),
+  'app.config.js must expose the App Store URL for native review fallback.',
+);
+fail(
+  has('apps/mobile/app.config.js', /playStoreUrl/),
+  'app.config.js must expose the Play Store URL for native review fallback.',
+);
 
-fail(has('apps/mobile/src/lib/env.ts', /phase8PublicLinksEnabled/), 'env.ts is missing Phase 8 public link flag.');
-fail(has('apps/mobile/src/lib/env.ts', /phase8ReviewPromptEnabled/), 'env.ts is missing Phase 8 review prompt flag.');
+fail(
+  has('apps/mobile/src/lib/env.ts', /phase8PublicLinksEnabled/),
+  'env.ts is missing Phase 8 public link flag.',
+);
+fail(
+  has('apps/mobile/src/lib/env.ts', /phase8ReviewPromptEnabled/),
+  'env.ts is missing Phase 8 review prompt flag.',
+);
 fail(has('apps/mobile/src/lib/env.ts', /appStoreUrl/), 'env.ts is missing store URLs.');
 
-fail(has('apps/mobile/src/lib/growth/attribution.ts', /SENSITIVE_GROWTH_KEY/), 'growth attribution must declare a sensitive-key guard.');
-fail(has('apps/mobile/src/lib/growth/attribution.ts', /share_id/), 'growth attribution must allow opaque share_id only.');
-fail(has('apps/mobile/src/features/growth/shareLinks.ts', /createShareId/), 'share link helper must create opaque share IDs.');
-fail(!has('apps/mobile/src/features/growth/shareLinks.ts', /product(Name|Id)|rule_id|pregnan/i), 'share link helper must not carry product, rule, or pregnancy data.');
-fail(has('apps/mobile/src/app/s/[shareId].tsx', /share_link_opened/), 'Installed app must handle /s/:shareId links.');
-fail(has('apps/mobile/src/app/s/[shareId].tsx', /isSafeOpaqueId/), 'Installed share route must validate opaque share IDs.');
+fail(
+  has('apps/mobile/src/lib/growth/attribution.ts', /SENSITIVE_GROWTH_KEY/),
+  'growth attribution must declare a sensitive-key guard.',
+);
+fail(
+  has('apps/mobile/src/lib/growth/attribution.ts', /share_id/),
+  'growth attribution must allow opaque share_id only.',
+);
+fail(
+  has('apps/mobile/src/features/growth/shareLinks.ts', /createShareId/),
+  'share link helper must create opaque share IDs.',
+);
+fail(
+  !has('apps/mobile/src/features/growth/shareLinks.ts', /product(Name|Id)|rule_id|pregnan/i),
+  'share link helper must not carry product, rule, or pregnancy data.',
+);
+fail(
+  has('apps/mobile/src/app/s/[shareId].tsx', /share_link_opened/),
+  'Installed app must handle /s/:shareId links.',
+);
+fail(
+  has('apps/mobile/src/app/s/[shareId].tsx', /isSafeOpaqueId/),
+  'Installed share route must validate opaque share IDs.',
+);
 
-fail(has('apps/mobile/src/features/growth/shareCard.ts', /width:\s*1080/) && has('apps/mobile/src/features/growth/shareCard.ts', /height:\s*1920/), 'Share card export must be fixed at 1080x1920.');
+fail(
+  has('apps/mobile/src/features/growth/shareCard.ts', /width:\s*1080/) &&
+    has('apps/mobile/src/features/growth/shareCard.ts', /height:\s*1920/),
+  'Share card export must be fixed at 1080x1920.',
+);
 const shareRoute = read('apps/mobile/src/app/share/conflict/[ruleId].tsx');
 for (const event of [
   'share_card_export_started',
@@ -160,19 +208,52 @@ for (const event of [
   fail(shareRoute.includes(event), `Share route must track ${event}.`);
 }
 fail(!/rule_id/.test(shareRoute), 'Share route must not send rule_id in public growth telemetry.');
-fail(has('apps/mobile/src/lib/launch/phase7.ts', /interactionType\s*!==\s*'safety'/), 'Share eligibility must exclude safety conflicts.');
-fail(has('apps/mobile/src/lib/launch/phase7.ts', /tagA\s*!==\s*'pregnancy'/), 'Share eligibility must exclude pregnancy pseudo-conflicts.');
+fail(
+  has('apps/mobile/src/lib/launch/phase7.ts', /interactionType\s*!==\s*'safety'/),
+  'Share eligibility must exclude safety conflicts.',
+);
+fail(
+  has('apps/mobile/src/lib/launch/phase7.ts', /tagA\s*!==\s*'pregnancy'/),
+  'Share eligibility must exclude pregnancy pseudo-conflicts.',
+);
 
-fail(has('apps/mobile/src/features/review/prompt.ts', /expo-store-review/), 'Review prompt must use expo-store-review.');
-fail(has('apps/mobile/src/features/review/policy.ts', /maxAttemptsPer365Days:\s*3/), 'Review prompt policy must cap annual attempts.');
-fail(!has('apps/mobile/src/features/review/prompt.ts', /5\s*star|five\s*star|positive\s*review/i), 'Review prompt must not ask for positive reviews.');
+fail(
+  has('apps/mobile/src/features/review/prompt.ts', /expo-store-review/),
+  'Review prompt must use expo-store-review.',
+);
+fail(
+  has('apps/mobile/src/features/review/policy.ts', /maxAttemptsPer365Days:\s*3/),
+  'Review prompt policy must cap annual attempts.',
+);
+fail(
+  !has('apps/mobile/src/features/review/prompt.ts', /5\s*star|five\s*star|positive\s*review/i),
+  'Review prompt must not ask for positive reviews.',
+);
 
-fail(has('apps/mobile/src/lib/legal/storeMetadata.ts', /PHASE8_STORE_METADATA_PACKET/), 'Store metadata packet is missing.');
-fail(has('apps/mobile/src/lib/legal/storeMetadata.ts', /validateStoreMetadataPacket/), 'Store metadata validator is missing.');
-fail(has('supabase/migrations/20260616000028_phase8_growth.sql', /growth_events/), 'Phase 8 migration must create growth_events.');
-fail(has('supabase/migrations/20260616000028_phase8_growth.sql', /waitlist_signups/), 'Phase 8 migration must create waitlist_signups.');
-fail(has('supabase/functions/growth-event/index.ts', /allowedEvents/), 'growth-event function must allowlist event names.');
-fail(has('supabase/functions/waitlist/index.ts', /invalid email/), 'waitlist function must validate email.');
+fail(
+  has('apps/mobile/src/lib/legal/storeMetadata.ts', /PHASE8_STORE_METADATA_PACKET/),
+  'Store metadata packet is missing.',
+);
+fail(
+  has('apps/mobile/src/lib/legal/storeMetadata.ts', /validateStoreMetadataPacket/),
+  'Store metadata validator is missing.',
+);
+fail(
+  has('supabase/migrations/20260616000028_phase8_growth.sql', /growth_events/),
+  'Phase 8 migration must create growth_events.',
+);
+fail(
+  has('supabase/migrations/20260616000028_phase8_growth.sql', /waitlist_signups/),
+  'Phase 8 migration must create waitlist_signups.',
+);
+fail(
+  has('supabase/functions/growth-event/index.ts', /allowedEvents/),
+  'growth-event function must allowlist event names.',
+);
+fail(
+  has('supabase/functions/waitlist/index.ts', /invalid email/),
+  'waitlist function must validate email.',
+);
 
 const allText = listFiles('.')
   .filter((file) => !file.includes(`${join('node_modules', '')}`))
@@ -181,11 +262,19 @@ const allText = listFiles('.')
   .filter((file) => /\.(ts|tsx|js|mjs|json|md|html)$/.test(file))
   .map((file) => readFileSync(file, 'utf8'))
   .join('\n');
-fail(!/dynamiclinks\.page\.link|@react-native-firebase\/dynamic-links|expo-firebase-dynamic-links/i.test(allText), 'Firebase Dynamic Links must not be used.');
+fail(
+  !/dynamiclinks\.page\.link|@react-native-firebase\/dynamic-links|expo-firebase-dynamic-links/i.test(
+    allText,
+  ),
+  'Firebase Dynamic Links must not be used.',
+);
 
 warn(productionDomain(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN), 'Missing final brand domain.');
 warn(productionUrl(launchEnv.EXPO_PUBLIC_MARKETING_URL), 'Missing production marketing URL.');
-warn(productionSupportEmail(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL), 'Missing production support email.');
+warn(
+  productionSupportEmail(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL),
+  'Missing production support email.',
+);
 warn(productionUrl(launchEnv.EXPO_PUBLIC_APP_STORE_URL), 'Missing App Store URL.');
 warn(productionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL), 'Missing Play Store URL.');
 
@@ -204,24 +293,39 @@ const externalEvidence = [
   'PHASE8_DRY_RUN_PASS',
 ];
 for (const key of externalEvidence) {
-  warn(process.env[key] === 'true', `Missing external Phase 8 evidence: ${key}=true.`);
+  warn(evidenceFlagEnabled(process.env[key]), `Missing external Phase 8 evidence: ${key}=true.`);
 }
-warn(Boolean(process.env.PHASE8_SIGNED_OFF_BY), 'Missing external Phase 8 evidence: PHASE8_SIGNED_OFF_BY.');
-warn(Boolean(process.env.APPLE_TEAM_ID) && !/^X+$/i.test(process.env.APPLE_TEAM_ID), 'Missing Apple Team ID evidence for AASA.');
-warn(Boolean(process.env.ANDROID_CERT_SHA256_FINGERPRINTS), 'Missing Android release certificate fingerprint evidence.');
+warn(
+  Boolean(normalizeNamedSignoff(process.env.PHASE8_SIGNED_OFF_BY)),
+  'Missing external Phase 8 evidence: PHASE8_SIGNED_OFF_BY.',
+);
+warn(
+  Boolean(normalizeAppleTeamId(process.env.APPLE_TEAM_ID)),
+  'Missing Apple Team ID evidence for AASA.',
+);
+warn(
+  normalizeAndroidSha256Fingerprints(process.env.ANDROID_CERT_SHA256_FINGERPRINTS).length > 0,
+  'Missing Android release certificate fingerprint evidence.',
+);
 
 console.log('Phase 8 growth/store readiness check');
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 
 if (errors.length > 0) {
-  console.error(`\nPhase 8 growth/store readiness has ${errors.length} blocker${errors.length === 1 ? '' : 's'}.`);
+  console.error(
+    `\nPhase 8 growth/store readiness has ${errors.length} blocker${errors.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }
 
 if (warnings.length > 0 && strict) {
-  console.error(`\nPhase 8 strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`);
+  console.error(
+    `\nPhase 8 strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }
 
-console.log('\nPhase 8 code gates are present. Strict launch still requires warning-free evidence.');
+console.log(
+  '\nPhase 8 code gates are present. Strict launch still requires warning-free evidence.',
+);

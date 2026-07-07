@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { productionDomain, productionUrl } from '../phase9/lib.mjs';
+import {
+  evidenceFlagEnabled,
+  normalizeNamedSignoff,
+  productionDomain,
+  productionUrl,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -233,10 +238,7 @@ for (const key of [
   'EXPO_PUBLIC_DATA_EXPORT_URL',
   'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
 ]) {
-  warn(
-    productionUrl(launchEnv[key]),
-    `${key} must be a real production URL.`,
-  );
+  warn(productionUrl(launchEnv[key]), `${key} must be a real production URL.`);
 }
 
 const placeholderFiles = [
@@ -274,10 +276,10 @@ const externalEvidence = [
   'PHASE7_BETA_DASHBOARD_READY',
 ];
 for (const key of externalEvidence) {
-  warn(process.env[key] === 'true', `Missing external Phase 7 evidence: ${key}=true.`);
+  warn(evidenceFlagEnabled(process.env[key]), `Missing external Phase 7 evidence: ${key}=true.`);
 }
 warn(
-  Boolean(process.env.PHASE7_SIGNED_OFF_BY),
+  Boolean(normalizeNamedSignoff(process.env.PHASE7_SIGNED_OFF_BY)),
   'Missing external Phase 7 evidence: PHASE7_SIGNED_OFF_BY.',
 );
 

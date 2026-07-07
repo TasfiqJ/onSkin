@@ -4,10 +4,12 @@ import {
   abs,
   command,
   envSnapshot,
+  evidenceFlagEnabled,
   exists,
   hash,
   listFiles,
   markdownList,
+  normalizeNamedSignoff,
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
@@ -96,14 +98,14 @@ warn(
 );
 
 const evidence = Object.fromEntries(
-  requiredPhase9EvidenceKeys().map((key) => [key, env[key] === 'true']),
+  requiredPhase9EvidenceKeys().map((key) => [key, evidenceFlagEnabled(env[key])]),
 );
 for (const [key, passed] of Object.entries(evidence)) {
   warn(warnings, passed, `External RC evidence missing: ${key}=true.`);
 }
 warn(
   warnings,
-  Boolean(env.PHASE9_SIGNED_OFF_BY),
+  Boolean(normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY)),
   'External RC evidence missing: PHASE9_SIGNED_OFF_BY.',
 );
 
@@ -135,7 +137,7 @@ const packet = {
     files: releaseCandidateFiles,
   },
   evidence,
-  signedOffBy: env.PHASE9_SIGNED_OFF_BY ?? '',
+  signedOffBy: normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY) ?? '',
   sourceHashes: Object.fromEntries(
     [...sourceFiles, ...releaseCandidateFiles].filter(exists).map((file) => [file, hash(file)]),
   ),

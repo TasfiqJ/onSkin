@@ -398,7 +398,9 @@ block(
 block(
   errors,
   /normalizeNotifPrefs/.test(notificationStoreSource) &&
-    /\.\.\.prefs,\s*lockscreenDiscreet:\s*true/.test(notificationStoreSource) &&
+    /export function normalizeNotifPrefs\([\s\S]*lockscreenDiscreet:\s*true,\s*\n\s*\};\s*\n\}/.test(
+      notificationStoreSource,
+    ) &&
     /normalizeNotifPatch/.test(notificationStoreSource) &&
     /patch\.lockscreenDiscreet\s*===\s*false/.test(notificationStoreSource),
   'Notification preferences must coerce legacy discretion-off values back to true.',

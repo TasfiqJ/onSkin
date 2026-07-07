@@ -2,10 +2,11 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { evidenceFlagEnabled, normalizeNamedSignoff } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
-const outDir = resolve(root, 'docs/phase-7/generated');
+const outDir = resolve(root, process.env.PHASE7_PACKET_OUT_DIR ?? 'docs/phase-7/generated');
 
 const requiredFiles = [
   'apps/mobile/src/lib/launch/phase7.ts',
@@ -61,15 +62,15 @@ const scenarios = [
 ];
 
 const evidence = {
-  brandReady: process.env.PHASE7_BRAND_READY === 'true',
-  supabaseRlsPass: process.env.PHASE7_SUPABASE_RLS_PASS === 'true',
-  clinicalReviewPass: process.env.PHASE7_CLINICAL_REVIEW_PASS === 'true',
-  catalogBetaImportPass: process.env.PHASE7_CATALOG_BETA_IMPORT_PASS === 'true',
-  deviceQaPass: process.env.PHASE7_DEVICE_QA_PASS === 'true',
-  revenueCatQaPass: process.env.PHASE7_REVENUECAT_QA_PASS === 'true',
-  privacyExportDeletePass: process.env.PHASE7_PRIVACY_EXPORT_DELETE_PASS === 'true',
-  betaDashboardReady: process.env.PHASE7_BETA_DASHBOARD_READY === 'true',
-  signedOffBy: process.env.PHASE7_SIGNED_OFF_BY ?? '',
+  brandReady: evidenceFlagEnabled(process.env.PHASE7_BRAND_READY),
+  supabaseRlsPass: evidenceFlagEnabled(process.env.PHASE7_SUPABASE_RLS_PASS),
+  clinicalReviewPass: evidenceFlagEnabled(process.env.PHASE7_CLINICAL_REVIEW_PASS),
+  catalogBetaImportPass: evidenceFlagEnabled(process.env.PHASE7_CATALOG_BETA_IMPORT_PASS),
+  deviceQaPass: evidenceFlagEnabled(process.env.PHASE7_DEVICE_QA_PASS),
+  revenueCatQaPass: evidenceFlagEnabled(process.env.PHASE7_REVENUECAT_QA_PASS),
+  privacyExportDeletePass: evidenceFlagEnabled(process.env.PHASE7_PRIVACY_EXPORT_DELETE_PASS),
+  betaDashboardReady: evidenceFlagEnabled(process.env.PHASE7_BETA_DASHBOARD_READY),
+  signedOffBy: normalizeNamedSignoff(process.env.PHASE7_SIGNED_OFF_BY) ?? '',
 };
 
 function hashFile(path) {

@@ -40,6 +40,13 @@ const finalContactEnv = {
   EXPO_PUBLIC_PLAY_STORE_URL: 'https://play.google.com/store/apps/details?id=com.routinekind.app',
 };
 
+const validPhase7ShareEvidence = {
+  PHASE7_BRAND_READY: ' TRUE ',
+  PHASE7_CLINICAL_REVIEW_PASS: 'true',
+  PHASE7_DEVICE_QA_PASS: ' True ',
+  PHASE7_SIGNED_OFF_BY: ' Tas Mohammed ',
+};
+
 function run(extraEnv) {
   return spawnSync(process.execPath, [releaseSmokePath], {
     cwd: root,
@@ -57,7 +64,9 @@ const cases = [
     name: 'Phase 9 accepts production final contacts without final-value warnings',
     result: run({}),
     expect(result) {
-      return result.status === 0 && !output(result).includes('Missing or non-production final value');
+      return (
+        result.status === 0 && !output(result).includes('Missing or non-production final value')
+      );
     },
   },
   {
@@ -109,6 +118,39 @@ const cases = [
         output(result).includes(
           'Production Share cards cannot be enabled before EXPO_PUBLIC_FINAL_BRAND_DOMAIN is final.',
         )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 accepts normalized Phase 7 production surface evidence',
+    result: run({
+      ...validPhase7ShareEvidence,
+      EXPO_PUBLIC_APP_ENV: 'production',
+      EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED: ' TRUE ',
+    }),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 0 &&
+        !text.includes('Production Share cards requires PHASE7_BRAND_READY=true.') &&
+        !text.includes('Production Share cards requires PHASE7_CLINICAL_REVIEW_PASS=true.') &&
+        !text.includes('Production Share cards requires PHASE7_DEVICE_QA_PASS=true.') &&
+        !text.includes('Production Share cards requires PHASE7_SIGNED_OFF_BY.')
+      );
+    },
+  },
+  {
+    name: 'Phase 9 blocks placeholder Phase 7 production surface signoffs',
+    result: run({
+      ...validPhase7ShareEvidence,
+      EXPO_PUBLIC_APP_ENV: 'production',
+      EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED: 'true',
+      PHASE7_SIGNED_OFF_BY: 'Tester Name',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes('Production Share cards requires PHASE7_SIGNED_OFF_BY.')
       );
     },
   },

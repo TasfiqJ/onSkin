@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 7/8/9 release evidence gates so external proof flags are
+  trimmed/case-normalized while only `true` passes, generated packets strip
+  placeholder signoffs, Phase 8 requires real-shaped Apple Team ID and Android
+  SHA-256 certificate evidence, and Phase 9 production Phase 7 surface checks
+  reject placeholder signoffs. Focused smoke now covers readiness and packet
+  normalization, and `phase7:verify`, `phase8:verify`, and `phase9:verify`
+  pass with only Tas-owned external-evidence warnings.
+
 - Fixed the last compact-phone You tab underlap found in the 320 x 568
   human-simulated E2E sweep. The secondary routine block now uses
   short-phone-aware top spacing, keeping the `Retinoid ramp` button out of the

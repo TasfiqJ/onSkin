@@ -4,6 +4,10 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import {
+  evidenceFlagEnabled,
+  normalizeAndroidSha256Fingerprints,
+  normalizeAppleTeamId,
+  normalizeNamedSignoff,
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
@@ -11,7 +15,7 @@ import {
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
-const outDir = resolve(root, 'docs/phase-8/generated');
+const outDir = resolve(root, process.env.PHASE8_PACKET_OUT_DIR ?? 'docs/phase-8/generated');
 const blockers = [];
 const warnings = [];
 
@@ -59,21 +63,22 @@ const localEnv = envFile('.env');
 const launchEnv = { ...exampleEnv, ...localEnv, ...process.env };
 
 const evidence = {
-  brandSourceOfTruth: process.env.PHASE8_BRAND_SOURCE_OF_TRUTH_PASS === 'true',
-  domainDns: process.env.PHASE8_DOMAIN_DNS_PASS === 'true',
-  iosUniversalLinks: process.env.PHASE8_IOS_UNIVERSAL_LINKS_PASS === 'true',
-  androidAppLinks: process.env.PHASE8_ANDROID_APP_LINKS_PASS === 'true',
-  shareCardDeviceQa: process.env.PHASE8_SHARE_CARD_DEVICE_QA_PASS === 'true',
-  attributionPrivacy: process.env.PHASE8_ATTRIBUTION_PRIVACY_PASS === 'true',
-  appStorePacket: process.env.PHASE8_APP_STORE_PACKET_PASS === 'true',
-  playStorePacket: process.env.PHASE8_PLAY_STORE_PACKET_PASS === 'true',
-  creatorCompliance: process.env.PHASE8_CREATOR_COMPLIANCE_PASS === 'true',
-  supportResponse: process.env.PHASE8_SUPPORT_RESPONSE_PASS === 'true',
-  launchDashboard: process.env.PHASE8_LAUNCH_DASHBOARD_READY === 'true',
-  dryRun: process.env.PHASE8_DRY_RUN_PASS === 'true',
-  appleTeamId: Boolean(process.env.APPLE_TEAM_ID) && !/^X+$/i.test(process.env.APPLE_TEAM_ID),
-  androidCertificateFingerprints: Boolean(process.env.ANDROID_CERT_SHA256_FINGERPRINTS),
-  signedOffBy: process.env.PHASE8_SIGNED_OFF_BY ?? '',
+  brandSourceOfTruth: evidenceFlagEnabled(process.env.PHASE8_BRAND_SOURCE_OF_TRUTH_PASS),
+  domainDns: evidenceFlagEnabled(process.env.PHASE8_DOMAIN_DNS_PASS),
+  iosUniversalLinks: evidenceFlagEnabled(process.env.PHASE8_IOS_UNIVERSAL_LINKS_PASS),
+  androidAppLinks: evidenceFlagEnabled(process.env.PHASE8_ANDROID_APP_LINKS_PASS),
+  shareCardDeviceQa: evidenceFlagEnabled(process.env.PHASE8_SHARE_CARD_DEVICE_QA_PASS),
+  attributionPrivacy: evidenceFlagEnabled(process.env.PHASE8_ATTRIBUTION_PRIVACY_PASS),
+  appStorePacket: evidenceFlagEnabled(process.env.PHASE8_APP_STORE_PACKET_PASS),
+  playStorePacket: evidenceFlagEnabled(process.env.PHASE8_PLAY_STORE_PACKET_PASS),
+  creatorCompliance: evidenceFlagEnabled(process.env.PHASE8_CREATOR_COMPLIANCE_PASS),
+  supportResponse: evidenceFlagEnabled(process.env.PHASE8_SUPPORT_RESPONSE_PASS),
+  launchDashboard: evidenceFlagEnabled(process.env.PHASE8_LAUNCH_DASHBOARD_READY),
+  dryRun: evidenceFlagEnabled(process.env.PHASE8_DRY_RUN_PASS),
+  appleTeamId: Boolean(normalizeAppleTeamId(process.env.APPLE_TEAM_ID)),
+  androidCertificateFingerprints:
+    normalizeAndroidSha256Fingerprints(process.env.ANDROID_CERT_SHA256_FINGERPRINTS).length > 0,
+  signedOffBy: normalizeNamedSignoff(process.env.PHASE8_SIGNED_OFF_BY) ?? '',
 };
 
 const sourceFiles = [
@@ -165,7 +170,10 @@ const packet = {
 };
 
 mkdirSync(outDir, { recursive: true });
-writeFileSync(resolve(outDir, 'growth-store-qa-packet.json'), `${JSON.stringify(packet, null, 2)}\n`);
+writeFileSync(
+  resolve(outDir, 'growth-store-qa-packet.json'),
+  `${JSON.stringify(packet, null, 2)}\n`,
+);
 
 const markdown = [
   '# Phase 8 Growth Store QA Packet',
@@ -209,11 +217,15 @@ console.log(`Wrote ${resolve(outDir, 'growth-store-qa-packet.md')}`);
 console.log(`Wrote ${resolve(outDir, 'growth-store-qa-packet.json')}`);
 
 if (blockers.length > 0) {
-  console.error(`Phase 8 QA packet has ${blockers.length} blocker${blockers.length === 1 ? '' : 's'}.`);
+  console.error(
+    `Phase 8 QA packet has ${blockers.length} blocker${blockers.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }
 
 if (warnings.length > 0 && strict) {
-  console.error(`Phase 8 QA packet strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`);
+  console.error(
+    `Phase 8 QA packet strict mode failed on ${warnings.length} warning${warnings.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }

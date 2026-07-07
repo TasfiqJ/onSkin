@@ -5,8 +5,10 @@ import {
   command,
   envFile,
   envSnapshot,
+  evidenceFlagEnabled,
   exists,
   has,
+  normalizeNamedSignoff,
   placeholderEnvValue,
   printResult,
   productionDomain,
@@ -338,23 +340,31 @@ for (const [key, validate] of [
 }
 
 for (const key of requiredPhase9EvidenceKeys()) {
-  warn(warnings, env[key] === 'true', `Missing Phase 9 release evidence: ${key}=true.`);
+  warn(warnings, evidenceFlagEnabled(env[key]), `Missing Phase 9 release evidence: ${key}=true.`);
 }
 warn(
   warnings,
-  Boolean(env.PHASE9_SIGNED_OFF_BY),
+  Boolean(normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY)),
   'Missing Phase 9 named signoff: PHASE9_SIGNED_OFF_BY.',
 );
 
-const claimedPhase9EvidenceKeys = requiredPhase9EvidenceKeys().filter((key) => env[key] === 'true');
-const claimedPhase9Signoff = Boolean(env.PHASE9_SIGNED_OFF_BY?.trim());
-const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '').replace(/\\/g, '/').replace(/\/+$/g, '');
+const claimedPhase9EvidenceKeys = requiredPhase9EvidenceKeys().filter((key) =>
+  evidenceFlagEnabled(env[key]),
+);
+const claimedPhase9Signoff = Boolean(normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY));
+const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '')
+  .replace(/\\/g, '/')
+  .replace(/\/+$/g, '');
 if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
   let gitStatus = '';
   try {
     gitStatus = command('git', ['status', '--short']).trim();
   } catch {
-    block(errors, false, 'Current Git status could not be read for release-candidate verification.');
+    block(
+      errors,
+      false,
+      'Current Git status could not be read for release-candidate verification.',
+    );
   }
   block(
     errors,
@@ -370,9 +380,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
   if (!placeholder(releaseCandidateDir)) {
     block(
       errors,
-      /^docs\/phase-9\/release-candidates\/(?!_template(?:\/|$))[^/]+$/.test(
-        releaseCandidateDir,
-      ),
+      /^docs\/phase-9\/release-candidates\/(?!_template(?:\/|$))[^/]+$/.test(releaseCandidateDir),
       'PHASE9_RELEASE_CANDIDATE_DIR must point to one immutable non-template folder under docs/phase-9/release-candidates/.',
     );
 
@@ -391,7 +399,8 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
       'signoff.md',
     ].map((file) => `${releaseCandidateDir}/${file}`);
 
-    for (const file of rcFiles) block(errors, exists(file), `${file} is missing from claimed release-candidate evidence.`);
+    for (const file of rcFiles)
+      block(errors, exists(file), `${file} is missing from claimed release-candidate evidence.`);
 
     for (const file of [
       'manifest.md',
@@ -419,7 +428,11 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
       try {
         currentSha = command('git', ['rev-parse', 'HEAD']).trim();
       } catch {
-        block(errors, false, 'Current Git SHA could not be read for release-candidate verification.');
+        block(
+          errors,
+          false,
+          'Current Git SHA could not be read for release-candidate verification.',
+        );
       }
       block(
         errors,
@@ -437,7 +450,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
   }
 }
 
-if (env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED === 'true') {
+if (evidenceFlagEnabled(env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED)) {
   warn(
     warnings,
     productionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
@@ -502,34 +515,38 @@ const productionPhase7SurfaceEvidence = [
 
 if (/^production$/i.test(env.EXPO_PUBLIC_APP_ENV ?? '')) {
   for (const surface of productionPhase7SurfaceEvidence) {
-    if (env[surface.flag] !== 'true') continue;
+    if (!evidenceFlagEnabled(env[surface.flag])) continue;
     block(
       errors,
       productionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
       `Production ${surface.label} cannot be enabled before EXPO_PUBLIC_FINAL_BRAND_DOMAIN is final.`,
     );
     for (const key of surface.evidence) {
-      block(errors, env[key] === 'true', `Production ${surface.label} requires ${key}=true.`);
+      block(
+        errors,
+        evidenceFlagEnabled(env[key]),
+        `Production ${surface.label} requires ${key}=true.`,
+      );
     }
     block(
       errors,
-      Boolean(env.PHASE7_SIGNED_OFF_BY),
+      Boolean(normalizeNamedSignoff(env.PHASE7_SIGNED_OFF_BY)),
       `Production ${surface.label} requires PHASE7_SIGNED_OFF_BY.`,
     );
   }
 }
 
-if (env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED === 'true') {
+if (evidenceFlagEnabled(env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED)) {
   warn(
     warnings,
-    env.PHASE7_CLINICAL_REVIEW_PASS === 'true',
+    evidenceFlagEnabled(env.PHASE7_CLINICAL_REVIEW_PASS),
     'Cloud Ask is enabled without clinical/legal release evidence.',
   );
 }
-if (env.EXPO_PUBLIC_NATIVE_OCR_ENABLED === 'true') {
+if (evidenceFlagEnabled(env.EXPO_PUBLIC_NATIVE_OCR_ENABLED)) {
   warn(
     warnings,
-    env.PHASE5_DEVICE_QA_PASS === 'true',
+    evidenceFlagEnabled(env.PHASE5_DEVICE_QA_PASS),
     'Native OCR is enabled without native device QA evidence.',
   );
 }

@@ -95,15 +95,71 @@ const PLACEHOLDER_ENV_VALUE =
   /example\.com|your[-_][a-z0-9_-]*|replace-with|__blocked_placeholder__|x{4,}|\.{3,}|pending/i;
 const PUBLIC_PRODUCTION_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
-const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
+const RESERVED_PRODUCTION_HOSTNAME =
+  /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 
 export function placeholderEnvValue(value) {
   const trimmed = String(value ?? '').trim();
   return !trimmed || PLACEHOLDER_ENV_VALUE.test(trimmed);
 }
 
+export function evidenceFlagEnabled(value) {
+  return (
+    String(value ?? '')
+      .trim()
+      .toLowerCase() === 'true'
+  );
+}
+
+export function normalizeLaunchDecision(value) {
+  const normalized = String(value ?? '')
+    .trim()
+    .toLowerCase();
+  return ['go', 'limited'].includes(normalized) ? normalized : null;
+}
+
+export function normalizeNamedSignoff(value) {
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed)) return null;
+  if (/^(?:name|tester|qa|reviewer|signoff|signed off|tbd|n\/a)$/i.test(trimmed)) return null;
+  if (/\b(?:tester|reviewer|your|full|actual|first|last)\s+name\b/i.test(trimmed)) return null;
+  if (/\b(?:john|jane)\s+doe\b/i.test(trimmed)) return null;
+  return /[a-z]/i.test(trimmed) && trimmed.length >= 3 ? trimmed : null;
+}
+
+export function normalizeAppleTeamId(value) {
+  const normalized = String(value ?? '')
+    .trim()
+    .toUpperCase();
+  if (placeholderEnvValue(normalized)) return null;
+  if (/^(?:TEAMID\d*|APPLETEAM|APPLETEAMID)$/i.test(normalized)) return null;
+  return /^[A-Z0-9]{10}$/.test(normalized) ? normalized : null;
+}
+
+export function normalizeAndroidSha256Fingerprints(value) {
+  const raw = String(value ?? '').trim();
+  if (placeholderEnvValue(raw)) return [];
+
+  const fingerprints = raw
+    .split(/[,;\r\n]+/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  const normalized = [];
+  for (const fingerprint of fingerprints) {
+    if (placeholderEnvValue(fingerprint)) return [];
+    const compact = fingerprint.replace(/:/g, '').toUpperCase();
+    if (!/^[A-F0-9]{64}$/.test(compact) || /^0+$/.test(compact)) return [];
+    normalized.push(compact.match(/.{2}/g).join(':'));
+  }
+
+  return [...new Set(normalized)];
+}
+
 export function productionHostname(hostname) {
-  const normalized = String(hostname ?? '').trim().toLowerCase();
+  const normalized = String(hostname ?? '')
+    .trim()
+    .toLowerCase();
   return (
     PUBLIC_PRODUCTION_HOSTNAME.test(normalized) &&
     !RESERVED_PRODUCTION_HOSTNAME.test(normalized) &&
@@ -178,7 +234,9 @@ const PUBLIC_SECRET_VALUE =
 
 export function blockPublicEnvSecrets(errors, env, exampleEnv = {}) {
   const publicEnvKeys = new Set(
-    [...Object.keys(exampleEnv), ...Object.keys(env)].filter((name) => name.startsWith('EXPO_PUBLIC_')),
+    [...Object.keys(exampleEnv), ...Object.keys(env)].filter((name) =>
+      name.startsWith('EXPO_PUBLIC_'),
+    ),
   );
 
   for (const key of publicEnvKeys) {

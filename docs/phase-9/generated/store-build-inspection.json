@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T01:52:57.579Z",
+  "generatedAt": "2026-07-07T07:36:13.797Z",
   "app": {
     "name": "RoutineKind",
     "slug": "routinekind",
@@ -11,7 +11,10 @@
     "iosBundleIdentifier": "com.routinekind.app",
     "androidPackage": "com.routinekind.app",
     "androidAllowBackup": false,
-    "androidPermissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"]
+    "androidPermissions": [
+      "android.permission.CAMERA",
+      "android.permission.POST_NOTIFICATIONS"
+    ]
   },
   "easBuildProfiles": {
     "development": {
