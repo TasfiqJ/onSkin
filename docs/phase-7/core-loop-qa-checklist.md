@@ -156,3 +156,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   disclaimer context, and Back returns to `/community`. Evidence is in
   `test-results/human-e2e/2026-07-07/community-current-compact-check/`; it does
   not replace native-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers stale Skin Note recovery:
+  direct `/community/note/[id]` for a missing note shows the unavailable-state
+  copy, explains that the note may have been updated or removed during expert
+  review, exposes a 56 px `Back to Skin Notes` CTA, and returns to `/community`
+  with zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/community-missing-note-current-check/`; it
+  does not replace native-device QA.

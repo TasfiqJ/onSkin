@@ -812,6 +812,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: Expo web for route recovery; iOS and Android for native consent and moderation behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/community-routes/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/community-current-compact-check/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/community-missing-note-current-check/`
 
 ### Path A: Expert Skin Notes
 
@@ -840,6 +841,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a stale `/community/note/[id]` route that is no longer present.
   - Expected result: The app explains the Skin Note is unavailable, says the note may have been updated or removed during expert review, and provides a visible `Back to Skin Notes` action that returns to `/community` without relying on navigation history.
   - Evidence: Screenshot and route snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 opens a stale note route, shows `NOTE UNAVAILABLE`, explains the note may have been updated or removed during expert review, exposes a 56 px `Back to Skin Notes` CTA, and returns to `/community` with zero horizontal overflow.
 - Branch: expert note share failure and outbound context
   - Priority: Important
   - Automate later: Yes
