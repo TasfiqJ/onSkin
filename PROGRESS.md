@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Regenerated Phase 8, Phase 9, Phase 10, and Phase 11 generated readiness
+  packets after the public-identity packet builders began normalizing final
+  domains, support emails, marketing URLs, and store URLs. The packets remain
+  blocked/supporting evidence only until external launch evidence and named
+  signoffs are supplied.
+
 - Hardened Sign in with Apple helpers so provider identity tokens, emails,
   Apple subjects, and revocation authorization codes are trimmed and must be
   non-empty before use. Account deletion can no longer try to refresh an Apple

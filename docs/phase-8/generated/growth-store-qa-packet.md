@@ -1,6 +1,6 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-07T01:48:17.848Z
+Generated: 2026-07-07T06:44:05.667Z
 Status: blocked
 
 ## Public Identity
@@ -74,16 +74,16 @@ Status: blocked
 
 ## Source Hashes
 
-- `apps/mobile/app.config.js`: `0e89d94b0e51e96d84d5f4aa79ab4e4cd627ebdebeb0092e948856c1f463d949`
-- `apps/mobile/src/lib/env.ts`: `1bebbcf633cfe83e7efbc9080b7d6626df76239f84bf9511e3bf14d6413692fd`
-- `apps/mobile/src/lib/launch/phase8.ts`: `ca019f68421def806ae07917643a3a1a46a69705b3c89a89c4a69717871d3064`
-- `apps/mobile/src/lib/growth/attribution.ts`: `2be10bc88371a9e80f06b2074e1b10396571b941e847f92bec09d8616f72b315`
+- `apps/mobile/app.config.js`: `5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c`
+- `apps/mobile/src/lib/env.ts`: `2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321`
+- `apps/mobile/src/lib/launch/phase8.ts`: `94ac42c54e192d2f3c641de05609846ff3de9892646d5cc6ad41a098acbdac70`
+- `apps/mobile/src/lib/growth/attribution.ts`: `ad7a471633455bcdf45c95f8ce41ef4a7275c108786b06ba5f63d424d272208f`
 - `apps/mobile/src/features/growth/shareLinks.ts`: `0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d`
 - `apps/mobile/src/app/s/[shareId].tsx`: `8fa9d7a806ad27c0948c98e055128356c8d9cb129d3b7ff3f7bd5a4d162be24a`
 - `apps/mobile/src/features/growth/shareCard.ts`: `11996ad492cfd76a744a3ae45b50ffacae111721119b222b31bcafc1f9d59b3d`
-- `apps/mobile/src/app/share/conflict/[ruleId].tsx`: `8876a0cf56ea71c145786a7f1f4a7ad86105f80057ae3cb8b62eb729114ff8bb`
+- `apps/mobile/src/app/share/conflict/[ruleId].tsx`: `096fa24edb685bb08d08a4868fedef42a0b3b208e375335d8d96a094717a7cf7`
 - `apps/mobile/src/features/review/policy.ts`: `cd8ccb30d06e9ef1e44f45693609dfecea5860582695cb18e5f6ac8e1a458d05`
-- `apps/mobile/src/features/review/prompt.ts`: `90e8dac6a9fb16a93c8821118a3f3993d626d5a3627d0015804ba854de01d269`
+- `apps/mobile/src/features/review/prompt.ts`: `7bf14c14240b3dfb2a50dc179b4b25de7ee9df9b5dfb2c653d9add085c8a8546`
 - `apps/mobile/src/lib/legal/storeMetadata.ts`: `1708605207ee343e401eb71ed07c38af193232841ac35f1fbf7c0459aa5ffa68`
 - `docs/phase-8/source-of-truth.md`: `5d8dafa07759bbddccc928bb47ca6eeb262bc0e46f08e9e84c3344d6406b85d1`
 - `docs/phase-8/link-routing-runbook.md`: `43b789dd31a1dc3bbef6cc351935fbfcd8c852678c5954429ff71bf469b91e90`
@@ -92,5 +92,5 @@ Status: blocked
 - `docs/phase-8/acquisition-dashboard.md`: `444868fad465a28a1732161b2a3d3c177854f9589e48ac137f7c3658452b2877`
 - `docs/phase-8/launch-dry-run-checklist.md`: `3d357c7e4a8d4adc1d018da0d646d81944b7c30d0f2c357eac4264e14f76b798`
 - `supabase/migrations/20260616000028_phase8_growth.sql`: `629bcda19f7f227679b8202a6d0234392dba62d4cf602023d0c2b976c576f14e`
-- `supabase/functions/growth-event/index.ts`: `275265232344a5e0df3212c85938ed412268c25f1d91a2ea93a361db36dc51f4`
-- `supabase/functions/waitlist/index.ts`: `b00947fd8ece97bc8d0abb8709348bafb07253652a846033558b4d460d1a2e43`
+- `supabase/functions/growth-event/index.ts`: `a7945cfe8706fffeec0bb733aac5a9a19a47545c2dfa021c9807db907b6261ae`
+- `supabase/functions/waitlist/index.ts`: `828be1876b1aa1de84e33267a912b957a05a018b42d9207ade2be7d34157d256`

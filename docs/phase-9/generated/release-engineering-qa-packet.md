@@ -1,9 +1,9 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-07T05:07:58.925Z
+Generated: 2026-07-07T06:44:05.775Z
 Status: blocked
-Git SHA: e5d8297ba6b8ea3f617ab746fe57a22123b70c3f
-Git status: clean
+Git SHA: 4990eaade601ab66b5a964e30b968b441e0fdc12
+Git status: DIRTY
 
 ## Release Identity
 
@@ -22,6 +22,7 @@ Git status: clean
 
 ## Warnings
 
+- Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.
 - External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.
 - External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.
 - External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.
@@ -79,14 +80,14 @@ Git status: clean
 
 ## Source Hashes
 
-- `package.json`: `41d301e0fa38cb1d3fbe503726faabadcb656723e85dbee43f0bd3ae9a41d123`
+- `package.json`: `58cc24f8eafb77278dcb3ab93b7c0eb8e926421fb7c68f10f3268dc082676d75`
 - `package-lock.json`: `1c13e399c5f12e19fc9c540a774bec9674f0c0f33db5e2cac0d569d65962ead4`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `6b2d2b08e8c0092c04126228a9683cfb918c17f827a66ea8c181e73f6a366fd6`
-- `apps/mobile/app.config.js`: `0e89d94b0e51e96d84d5f4aa79ab4e4cd627ebdebeb0092e948856c1f463d949`
+- `apps/mobile/app.config.js`: `5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
-- `apps/mobile/src/lib/env.ts`: `1bebbcf633cfe83e7efbc9080b7d6626df76239f84bf9511e3bf14d6413692fd`
-- `apps/mobile/src/lib/env.test.ts`: `e503b97e2a5759822a11001a3227fd42d0fc7e7bbf24db85b49e89ad49536d83`
+- `apps/mobile/src/lib/env.ts`: `2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321`
+- `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
 - `apps/mobile/src/lib/launch/phase7.ts`: `95ce1ebeaee6e103015528bb190b82bd4c1ce2defb2163815484fa0fdf4aafd7`
 - `apps/mobile/src/lib/launch/phase7.test.ts`: `72e76ea593d1fb753544313ee4a3cef8ebfd66441c59a04550928e4b7c70402a`
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `0d47943e5a722f0e5f97427a919e50c0aaa9e2dbaa43d50f7ec98207ab8f85cb`
@@ -96,7 +97,7 @@ Git status: clean
 - `apps/mobile/src/lib/observability/sentry.ts`: `d228827c369b9119584b2b75bab2b067debca9b5bc5510f58c8233da931c3230`
 - `apps/mobile/src/features/settings/actions.ts`: `5ce8b0eece14b2dbd9a6b0378ea7ad71c53cdd6f718a6d9e1246fb61c717b6bd`
 - `apps/mobile/src/features/settings/localPrivateData.ts`: `ec22645356726c6cc23a250317869035c0ee0c0bba868bf1cafd2953680c053f`
-- `apps/mobile/src/lib/auth/apple.ts`: `fe416a59b89867f4bccdec38ba6b7f97a30e5ad7f18c5b93ec6f79181519de64`
+- `apps/mobile/src/lib/auth/apple.ts`: `2c61d825f40abde9f55e0bfb11ba32e345ee642f7d79de5002f0e1c404eb1ff8`
 - `supabase/functions/account-deletion/index.ts`: `d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
 - `supabase/functions/_shared/fetch.ts`: `d8ff37a96a965d3826d3d7df14a69eb00f35dddbc119d3a2f4cc92d778226a25`
@@ -108,9 +109,9 @@ Git status: clean
 - `supabase/functions/catalog-report/index.ts`: `5a063bb6db5e1a5194e17b498b61ed0e9abbaef1d62c7cb80f09be9da429c621`
 - `supabase/functions/revenuecat-webhook/index.ts`: `7899144905d1966dccc526e106dfb1ace848c6f492383a97699d5859a7a49fa5`
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
-- `scripts/phase9/lib.mjs`: `c13d3b4ce8f1257dd5bfb2d6919829204b49e245f3881548c528c9a33118916b`
-- `scripts/phase9/release-smoke.mjs`: `302aa3a997bd91d9b6695b6fb88dc0dbd0de3b9f0ba560d940b613f6937f71c3`
-- `scripts/phase9/build-release-qa-packet.mjs`: `053f13ac8e4faf718b371668a6c0bf6a56020bd792aca356d5961b388dbf2e98`
+- `scripts/phase9/lib.mjs`: `fa0c07392f3609134afcfbc2bd58597a31b779ef6d3812c716f835595027be95`
+- `scripts/phase9/release-smoke.mjs`: `c7536caabf848db39426902e630e5551898171d80707ec1eb7069497c3033fa2`
+- `scripts/phase9/build-release-qa-packet.mjs`: `27b7ed648f445636b654059b0d9246b998f5bf26da60a9d608977badcb716f62`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `0661ae154be6aae795b15bba994a3fa7352682bdbb8a943a970f31fe0cb5c034`
 - `scripts/phase9/live-edge-auth.mjs`: `6ea5dcc2e54f47f817a7357a0ae0aa0e5f4bb1d222562177abbd6e5634b92271`
 - `scripts/phase9/live-data-rights.mjs`: `f4dd3f441061260b8dc4f4a2bf0c39bd5cf99e6f22c4b641c4c1e66c94b276ba`
@@ -119,7 +120,7 @@ Git status: clean
 - `scripts/phase9/live-catalog-rate-limit.mjs`: `d8a52b05b7995d27c1e92e4bb8dd2814a46bb95bdabedc24c64319f39daf6663`
 - `scripts/phase9/live-order-report-poll.mjs`: `438113a48e0b1baff4312a5f71873cdd28ac1a8de98e6f75fcc4f792bcc15093`
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `9f73f3ad255a76abcf9c82ffef882a11d48492412415817b131aff88d13b6d2a`
-- `scripts/phase9/edge-auth-smoke.mjs`: `c0ae0b16a2eaa643c1da3128cbdd7012ac852eddea4079a748fd0a910ad62185`
+- `scripts/phase9/edge-auth-smoke.mjs`: `a5da3372de530aa4faf1781a020422bd63eb3fa238e21873263b6c80487558be`
 - `scripts/phase9/data-rights-smoke.mjs`: `b2fff6b199e1adc5b994a4113ebb9f27a7d07b4050452e02128e423ad1033d31`
 - `scripts/phase9/supabase-policy-lint.mjs`: `153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183`
 - `scripts/phase9/security-ci-smoke.mjs`: `f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9`
