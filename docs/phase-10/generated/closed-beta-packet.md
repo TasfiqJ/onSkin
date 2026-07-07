@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-07T00:06:31.905Z
+Generated: 2026-07-07T00:43:44.784Z
 Status: blocked
-Git SHA: 216934ddd49f314be007b501cb697e30da1fbbdf
+Git SHA: b29425067dbce3f5fd5ea6e49cfa1dd210c42e9e
 Phase 9 packet status: blocked
 
 ## Beta Identity
@@ -55,21 +55,21 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `a79be42f3dce0668beceeb7b3f78e76284d53aff74ddb2eadb240b56e37e1d3f`
+- `package.json`: `3354724c5f46e4c1426b56be56c503fa311e4257732107ef4d4e8f517b6ef5f8`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
-- `.env.example`: `c28d395a3546685ae326c4c11b8775a3e1916bdfba65e58cdcbf012e9de79b59`
+- `.env.example`: `08289db78a4388aed718466d895fe090f87f707c9752169fa9696df3c924c92b`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
-- `apps/mobile/app.config.js`: `e55eb53b2eff878b6addec8bb1aa51a3269b8dca8c393565075c5aa2ddf89a96`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `14bbf32c07a042e2ebbc7118824fb6ef15907036a7ff22ac84b156ad430aaca0`
+- `apps/mobile/app.config.js`: `0e89d94b0e51e96d84d5f4aa79ab4e4cd627ebdebeb0092e948856c1f463d949`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `0d47943e5a722f0e5f97427a919e50c0aaa9e2dbaa43d50f7ec98207ab8f85cb`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `f35569af88e458506e0fe65bb0bbb142f20a538cfc9365000282768d3069003c`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `4e5e9b65ee32fe3d2a30156f6b216d69ae618d7a4d26e3e6e5d9762c95c958b4`
 - `docs/phase-10/beta-source-of-truth.md`: `08f67b31423e9b19d3bd3d9458801241638713bcdcb5b951ae1b71ec2561d766`
 - `docs/phase-10/tester-recruitment-sheet.md`: `ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
 - `docs/phase-10/testflight-packet.md`: `ff94ad4bebe828ee607ccb0dd1b6455d2102aebf2acf0e541f435aede887225c`
 - `docs/phase-10/google-closed-testing-packet.md`: `bad9d0c5424dbba40c9d4231dc5e16cd7118200e30935d52903a7450a928a5d6`
-- `docs/phase-10/beta-event-schema.md`: `2738a9a06ef6aed24a4ecfa6334535867743581cea4441254f0dc81ffd5e8d6e`
+- `docs/phase-10/beta-event-schema.md`: `ca0ac8674adbc771dc5ce4d11a0cd30d659d1e9d73a0ff26afea4b7182af8850`
 - `docs/phase-10/support-operations.md`: `2dedf1baab29c8e3bd0e1dcc9c248ffc1ade2e9d7cdbf05d217094208a87245d`
 - `docs/phase-10/surveys.md`: `7500508e1ddd2f449ad8ab06584e990ba936869dae70f3db519a9a1efc474276`
 - `docs/phase-10/interview-script.md`: `bd9972d0f0379ba3392b8edefe5a11f8ccbde6d601213efa0834c54da065d8ae`
