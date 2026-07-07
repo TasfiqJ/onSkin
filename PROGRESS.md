@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Aligned the top-level launch/blocker docs with the current RoutineKind
+  identity state. `BLOCKERS.md` and `LAUNCH_READINESS.md` now say the app has
+  moved off legacy OnSkin defaults locally while production remains blocked
+  until counsel, domain/store reservation, and final identity evidence exist.
+
 - Fixed the Ask advisor compact-phone footer so the AI/privacy disclosure no
   longer clips against the bottom edge under the composer on 320 x 568 screens.
   The composer now reserves short-phone bottom spacing, the chat scroll area has

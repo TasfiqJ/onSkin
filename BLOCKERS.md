@@ -1,6 +1,6 @@
 # Blockers - Founder Do-Not-Guess List
 
-Date: 2026-07-04
+Date: 2026-07-07
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -56,14 +56,16 @@ Read this with:
 
 ## Current Launch Gates
 
-1. Brand/legal identity unresolved.
+1. RoutineKind working identity is implemented locally, but legal/store/domain
+   clearance and production identity evidence are unresolved.
 2. Supabase project not live.
 3. RevenueCat not live.
 4. Apple/Google accounts and store records not verified.
 5. Clinical review not complete.
 6. Legal/privacy copy not final.
 7. Real catalog seed not imported and source/license review not complete.
-8. Native camera/barcode/OCR/photo capture not implemented.
+8. Native camera/barcode/photo capture are implemented but not physical-device
+   verified; native OCR remains intentionally gated off.
 9. Native notification/device verification incomplete.
 10. Closed beta not run.
 
@@ -82,9 +84,11 @@ The `04_repo_docs` strategy packet has also been copied into active docs as
 privacy, or architecture changes should use the master-plan patch process
 instead of silently editing implementation around the plan.
 
-Fresh verification on 2026-07-04: `npm run typecheck`, `npm run lint`, and
-`npm test` pass, with 38 test files and 986 tests. Re-run all three after any
-readiness-changing work.
+Fresh verification on 2026-07-07: `npm run typecheck`, `npm run lint`,
+`npm test`, `npm --workspace apps/mobile run typecheck`,
+`npm --workspace apps/mobile run lint`, and
+`npm --workspace apps/mobile run test` pass. Re-run the relevant checks after
+any readiness-changing work.
 
 The previous `docs/design-spec.pdf` reference is obsolete. The available design
 handoff source in this workspace is the local `dx*` folders and `.dc.html`
@@ -97,31 +101,45 @@ metadata packets, `scripts/phase3/audit-copy.mjs`,
 claim tests, and production gate tests. The strict Phase 3 audit must remain
 blocking until counsel, dermatologist, and cosmetic-chemist signoffs are real.
 
-## B-BRAND - OnSkin brand conflict and launch identity
+## B-BRAND - RoutineKind candidate clearance and launch identity
 
 Status: `launch-blocked`
 
 There is already a public skincare/cosmetic scanner branded `OnSkin` at
-`onskin.com`, with App Store and Google Play presence. This repo currently uses
-`OnSkin`, `onskin`, `onskin://`, `com.onskin.app`, and placeholder `onskin.app`
-references.
+`onskin.com`, with App Store and Google Play presence. This repo no longer uses
+the legacy identity for local/native launch defaults: the current working
+candidate is `RoutineKind`, with `routinekind://` and `com.routinekind.app`
+development/staging defaults. `npm run brand:audit:strict` passes with zero
+public launch-risk and zero review-needed legacy-brand hits; remaining legacy
+hits are deliberate guard rails, internal namespaces, fixtures, or historical
+context.
+
+This is not legal clearance, trademark clearance, domain registration, App
+Store name reservation, Google Play package reservation, or final production
+identity evidence. Production native config still fails closed unless
+`BRAND_LEGAL_CLEARANCE=cleared` and explicit final identity env values are set.
 
 Risk:
 
-- trademark/customer-confusion exposure
-- users downloading or contacting the wrong app
-- App Store / Play review confusion
+- trademark/customer-confusion exposure if the app reverts to `OnSkin` or uses
+  a confusingly similar identity
+- users downloading or contacting the wrong app if public surfaces are created
+  before final reservation
+- App Store / Play review confusion if bundle/package/name records are created
+  under an uncleared identity
 - paid-search and ASO conflict
 - support/domain/policy URL confusion
 - rework if Apple, Google, RevenueCat, Supabase, policy URLs, or beta users are
-  created under a name that later changes
+  created under a candidate that later changes
 
 Next action:
 
 - Give counsel `docs/brand-evidence.md`.
-- Ask counsel whether this app can safely launch as `OnSkin`.
-- Use `docs/brand-decision-memo.md` to record keep, modify, acquire/coordinate,
-  or rebrand.
+- Ask counsel to clear or reject `RoutineKind` as the final app identity; do not
+  revert to `OnSkin` unless counsel explicitly clears it.
+- Run registrar, App Store Connect, Google Play Console, social-handle, paid
+  search, and common-law checks for the final candidate.
+- Use `docs/brand-decision-memo.md` to record the final identity decision.
 
 Exit criteria:
 
@@ -129,11 +147,13 @@ Exit criteria:
 - founder decision is recorded;
 - final app name, domain, bundle ID, Android package, scheme, support URL, and
   policy URLs are chosen;
-- if rebranding, code/copy/share-card/policy/env references are migrated and
+- store-console and domain reservation evidence is attached;
+- code/copy/share-card/policy/env references match the final identity and
   typecheck/lint/tests pass.
 
-Default until cleared: do not launch as `OnSkin`; prepare Phase 2 around a
-rebrand. Working candidate for clearance: `RoutineKind`.
+Default until cleared: do not launch as `OnSkin`, and do not treat
+`RoutineKind` as final until counsel and store/domain reservation evidence are
+attached.
 
 ## B-SUPABASE - Live backend
 
@@ -168,8 +188,8 @@ Exit criteria:
 
 Status: `stubbed`
 
-Apple account and App Store records should not be created under `OnSkin` unless
-`B-BRAND` clears.
+Apple account and App Store records should be created only under the
+counsel-cleared final identity. Do not use legacy `OnSkin` identifiers.
 
 Next action:
 
@@ -189,8 +209,8 @@ Exit criteria:
 
 Status: `stubbed`
 
-Play package should not be created under `com.onskin.app` unless `B-BRAND`
-clears.
+Play package and OAuth records should be created only under the counsel-cleared
+final identity. Do not use legacy `com.onskin.app` identifiers.
 
 Next action:
 
