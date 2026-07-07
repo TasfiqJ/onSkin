@@ -32,4 +32,20 @@ describe('visible consent copy', () => {
   it('does not expose placeholder markers in user-facing consent screens', () => {
     expect(visibleConsentCopy).not.toContainEqual(expect.stringMatching(/placeholder/i));
   });
+
+  it('keeps photo capture consent honest about local-only backup tradeoffs', () => {
+    const visibleCaptureCopy = [
+      PHOTO_CAPTURE_CONSENT.what,
+      PHOTO_CAPTURE_CONSENT.why,
+      PHOTO_CAPTURE_CONSENT.never,
+      PHOTO_CAPTURE_CONSENT.footnote,
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    expect(visibleCaptureCopy).toContain('cloud backup is a separate choice');
+    expect(visibleCaptureCopy).toContain('backup off');
+    expect(visibleCaptureCopy).toContain('lost phone');
+    expect(PHOTO_CAPTURE_CONSENT.fullText.toLowerCase()).toContain('device loss');
+  });
 });

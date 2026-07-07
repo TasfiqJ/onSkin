@@ -58,11 +58,12 @@ export const PHOTO_CAPTURE_CONSENT = {
   why: 'To build your private progress timeline on this device.',
   never:
     'Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice.',
-  footnote: 'No faceprint or biometric template is stored. You can withdraw anytime in Settings.',
+  footnote:
+    'No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings.',
   fullText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Photo CAPTURE consent. Covers ' +
     'on-device capture and on-device storage only; cloud backup is requested separately. ' +
-    'No biometric faceprint/template is computed or stored.',
+    'No biometric faceprint/template is computed or stored. With cloud backup off, device loss can mean photo loss.',
 } as const;
 
 /**

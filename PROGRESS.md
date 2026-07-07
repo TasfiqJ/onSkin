@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened first-use Progress photo consent so the local-only privacy promise
+  also states the backup-off tradeoff before capture. The visible gate and
+  hashed consent text now explain that cloud backup is separate and a lost phone
+  can mean lost photos when backup is off. Expo web E2E verified the compact
+  320x568 consent gate and Not now escape in
+  `test-results/human-e2e/2026-07-07/photo-consent-backup-tradeoff/`.
+
 - Hardened encrypted Progress photo storage so malformed content keys are
   rotated, malformed note envelopes return `null`, and malformed photo/share
   envelopes fail with a stable storage error instead of trusting arbitrary JSON
@@ -132,6 +139,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   more end padding, and the route contract guards disclosure visibility. Expo
   web evidence is in
   `test-results/human-e2e/2026-07-07/ask-disclosure-footer-clearance/`.
+
+- Tightened the Ask advisor compact-phone disclosure footer after the direct
+  route audit still looked visually cramped. The footer now uses an explicit
+  rendered 10 px mono size and a larger short-phone bottom buffer, with post-fix
+  Expo web evidence in
+  `test-results/human-e2e/2026-07-07/ask-disclosure-footer-polish/`.
 
 - Completed the RoutineKind public identity sweep for local/native launch
   surfaces. Expo defaults, root package identity, Supabase local auth

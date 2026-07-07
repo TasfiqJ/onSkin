@@ -430,7 +430,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Success state: Photo capture/review works locally and privacy expectations are explicit.
 - Priority: Critical
 - Automate later: Yes, after native harness is selected.
-- Surface: iOS and Android.
+- Surface: iOS and Android; Expo web for consent-copy and layout route checks.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/progress/`
 
 ### Path A: Happy Path
@@ -453,6 +453,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress capture without prior `photo_capture` consent and force local private consent persistence to fail.
   - Expected result: The camera does not open, the app shows stable photo-choice-not-saved copy, the consent CTA is retryable, and no camera permission prompt appears before consent is saved.
   - Evidence: Alert text, disabled saving CTA state, local consent state, and permission prompt log.
+- Branch: first-use local-only backup tradeoff
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/progress/capture` without prior `photo_capture` consent and inspect the consent gate at a compact phone size.
+  - Expected result: The consent gate says photos stay on-device, no faceprint or biometric template is stored, cloud backup is a separate choice, and backup-off/lost-phone tradeoff is visible before the first capture. The Take photos and Not now controls remain readable and tappable on a 320 x 568 phone viewport.
+  - Evidence: Phone screenshot, visible-text snapshot, and 320 px button-geometry snapshot.
 - Branch: camera start or photo capture failure
   - Priority: Critical
   - Automate later: Yes
