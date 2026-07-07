@@ -113,3 +113,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   app returns to `/recommendations` with zero horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendation-stale-detail-recovery/`; it
   does not replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the direct routine-plan
+  no-card path: direct-open `/routine/plan`, verify the contextual paywall
+  controls are at least 48 px with zero horizontal overflow, tap `Explore first.
+  7 days of Pro`, verify a `BUILT FROM YOUR SHELF` plan and a visible 56 px
+  `Start today` CTA, then tap it and confirm `/today` opens. Evidence is in
+  `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`; it
+  does not replace real iOS/Android beta-device QA.

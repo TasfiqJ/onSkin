@@ -215,6 +215,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: iOS and Android first; Expo web for profile-label and compact-layout checks.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/routine-plan/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`
 
 ### Path A: Generated Plan Review
 
@@ -248,12 +249,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan` directly as a first-time free user, choose the visible no-card `Explore first` path, then inspect the generated plan.
   - Expected result: The contextual full-routine paywall offers a value-first reverse-trial path before hard payment, `Explore first` unlocks the current route, and the generated AM/PM plan appears without requiring store pricing.
   - Evidence: Paywall screenshot, post-unlock plan screenshot, route snapshot, and entitlement state.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 direct `/routine/plan` renders the no-card paywall with 48 px+ visible controls and zero horizontal overflow; tapping `Explore first. 7 days of Pro` unlocks the `BUILT FROM YOUR SHELF` plan without store checkout.
 - Branch: compact fixed-footer clearance
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/routine/plan` through the no-card `Explore first` path at 320 px wide, inspect the evening card, scroll to the lower note, then tap `Start today`.
   - Expected result: The first viewport ends on complete plan content above the fixed CTA, lower notes are reachable by deliberate scroll, and `Start today` routes to Today.
   - Evidence: First-viewport screenshot, scrolled-bottom screenshot, route snapshot, and CTA geometry.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows the generated plan content above a visible 56 px `Start today` CTA, with zero horizontal overflow; tapping `Start today` routes to `/today`.
 - Branch: manual front-label shelf products
   - Priority: Critical
   - Automate later: Yes
