@@ -79,7 +79,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('useWindowDimensions');
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
-    expect(proGate).toContain('paddingBottom: compactPaywall ? 112 : 24');
+    expect(proGate).toContain(
+      'paddingBottom: compactTabbedPhotoPaywall ? 144 : compactPaywall ? 112 : 24',
+    );
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
@@ -94,7 +96,22 @@ describe('paywall mobile contracts', () => {
       "const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';",
     );
     expect(proGate).toContain(
-      'const compactComplianceSpacer = compactPaywall && insideTabbedPhotoPaywall ? 96 : 0;',
+      'const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;',
+    );
+    expect(proGate).toContain(
+      'const compactComplianceSpacer = compactTabbedPhotoPaywall ? 112 : 0;',
+    );
+    expect(proGate).toContain(
+      'paddingTop: compactTabbedPhotoPaywall ? 0 : compactPaywall ? 4 : 0,',
+    );
+    expect(proGate).toContain(
+      'paddingBottom: compactTabbedPhotoPaywall ? 144 : compactPaywall ? 112 : 24,',
+    );
+    expect(proGate).toContain(
+      '{compactTabbedPhotoPaywall ? null : (',
+    );
+    expect(proGate).toContain(
+      "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
     expect(proGate).toContain(
       'compactComplianceSpacer > 0 ? <View style={{ height: compactComplianceSpacer }} /> : null',

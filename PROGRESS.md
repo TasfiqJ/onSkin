@@ -2077,6 +2077,14 @@ draft and then save a generic `Product` row. The route now shows a recovery shee
 visible Close control when product details are missing, and the save path refuses blank draft names before writing to
 the shelf. The Shelf route contract now guards against restoring the generic fallback name.
 
+### Progress paywall Explore first clearance (2026-07-07)
+
+Fixed the compact `/progress` contextual photo-timeline paywall after a 320 x 568 phone E2E pass showed the no-card
+`Explore first` reverse-trial card partially hidden under the floating tab bar. The Progress-specific compact paywall
+variant now removes decorative chrome, tightens spacing, keeps 48 px primary and reverse-trial actions, and preserves
+extra scroll room for Terms, Privacy, and Restore. Human E2E verified the first viewport and scrolled compliance branch
+with no horizontal overflow.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

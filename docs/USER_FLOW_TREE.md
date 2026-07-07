@@ -463,7 +463,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Progress as a free user in a 320 px wide phone viewport.
-  - Expected result: The contextual photo-timeline paywall keeps the annual price, Start free trial CTA, Terms, Privacy, Restore, Maybe later, and floating tab bar readable and tappable with no overlaps or clipped text, including when store pricing is unavailable and the disabled-pricing reason is visible.
+  - Expected result: The contextual photo-timeline paywall keeps the annual price, Start free trial CTA, no-card `Explore first` CTA, Terms, Privacy, Restore, Maybe later, and floating tab bar readable and tappable with no overlaps or clipped text, including when store pricing is unavailable and the disabled-pricing reason is visible.
   - Evidence: Screenshot and 320 px geometry snapshot.
 - Branch: relaunch after adding photo
   - Priority: Important

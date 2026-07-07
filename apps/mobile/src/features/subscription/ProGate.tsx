@@ -28,7 +28,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
   const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';
-  const compactComplianceSpacer = compactPaywall && insideTabbedPhotoPaywall ? 96 : 0;
+  const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;
+  const compactComplianceSpacer = compactTabbedPhotoPaywall ? 112 : 0;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
 
   useEffect(() => {
@@ -98,26 +99,33 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: compactPaywall ? 'flex-start' : 'center',
-          paddingTop: compactPaywall ? 4 : 0,
-          paddingBottom: compactPaywall ? 112 : 24,
+          paddingTop: compactTabbedPhotoPaywall ? 0 : compactPaywall ? 4 : 0,
+          paddingBottom: compactTabbedPhotoPaywall ? 144 : compactPaywall ? 112 : 24,
         }}
       >
-        <View
-          className={
-            compactPaywall
-              ? 'mb-2 h-10 w-10 self-start items-center justify-center rounded-[12px]'
-              : 'mb-5 h-[52px] w-[52px] items-center justify-center rounded-[14px]'
-          }
-          style={{ backgroundColor: colors.clayTint }}
-        >
+        {compactTabbedPhotoPaywall ? null : (
           <View
-            className={compactPaywall ? 'h-2.5 w-2.5 rounded-full' : 'h-3.5 w-3.5 rounded-full'}
-            style={{ backgroundColor: colors.clay }}
-          />
-        </View>
+            className={
+              compactPaywall
+                ? 'mb-2 h-10 w-10 self-start items-center justify-center rounded-[12px]'
+                : 'mb-5 h-[52px] w-[52px] items-center justify-center rounded-[14px]'
+            }
+            style={{ backgroundColor: colors.clayTint }}
+          >
+            <View
+              className={
+                compactPaywall ? 'h-2.5 w-2.5 rounded-full' : 'h-3.5 w-3.5 rounded-full'
+              }
+              style={{ backgroundColor: colors.clay }}
+            />
+          </View>
+        )}
         <Text
           variant="title"
-          style={{ fontSize: compactPaywall ? 28 : 32, lineHeight: compactPaywall ? 32 : 36 }}
+          style={{
+            fontSize: compactTabbedPhotoPaywall ? 26 : compactPaywall ? 28 : 32,
+            lineHeight: compactTabbedPhotoPaywall ? 29 : compactPaywall ? 32 : 36,
+          }}
         >
           {copy.title}
         </Text>
@@ -126,17 +134,19 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           tone="muted"
           className={compactPaywall ? 'mt-2' : 'mt-3'}
           style={{
-            fontSize: compactPaywall ? 15 : undefined,
-            lineHeight: compactPaywall ? 21 : 24,
+            fontSize: compactTabbedPhotoPaywall ? 14 : compactPaywall ? 15 : undefined,
+            lineHeight: compactTabbedPhotoPaywall ? 19 : compactPaywall ? 21 : 24,
           }}
         >
           {copy.body}
         </Text>
         <View
           className={
-            compactPaywall
-              ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
-              : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+            compactTabbedPhotoPaywall
+              ? 'mt-2.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2.5'
+              : compactPaywall
+                ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
+                : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
           }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
@@ -146,7 +156,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             </Text>
             <Text
               variant="title"
-              style={{ fontSize: compactPaywall ? 24 : 26, lineHeight: compactPaywall ? 28 : 30 }}
+              style={{
+                fontSize: compactTabbedPhotoPaywall ? 22 : compactPaywall ? 24 : 26,
+                lineHeight: compactTabbedPhotoPaywall ? 25 : compactPaywall ? 28 : 30,
+              }}
             >
               {annualDisplay.priceLabel}
               {annualDisplay.periodLabel ? (
@@ -165,7 +178,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             variant="bodySm"
             tone="muted"
             className={compactPaywall ? 'mt-1 text-center' : 'mt-2 text-center'}
-            style={{ fontSize: compactPaywall ? 11 : 12, lineHeight: compactPaywall ? 15 : 17 }}
+            style={{
+              fontSize: compactTabbedPhotoPaywall ? 10.5 : compactPaywall ? 11 : 12,
+              lineHeight: compactTabbedPhotoPaywall ? 14 : compactPaywall ? 15 : 17,
+            }}
           >
             {offering.data.reason}
           </Text>
@@ -175,9 +191,11 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className={
-            compactPaywall
-              ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
-              : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+            compactTabbedPhotoPaywall
+              ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
+              : compactPaywall
+                ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
+                : 'mt-4 h-[54px] items-center justify-center rounded-pill'
           }
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
@@ -191,9 +209,11 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             disabled={startReverseTrial.isPending}
             onPress={onStartReverseTrial}
             className={
-              compactPaywall
-                ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
-                : 'mt-3 min-h-[52px] flex-row items-center gap-3 rounded-card px-3.5 py-3'
+              compactTabbedPhotoPaywall
+                ? 'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
+                : compactPaywall
+                  ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
+                  : 'mt-3 min-h-[52px] flex-row items-center gap-3 rounded-card px-3.5 py-3'
             }
             style={{
               backgroundColor: colors.clayTint,
