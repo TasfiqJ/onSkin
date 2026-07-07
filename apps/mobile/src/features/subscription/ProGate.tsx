@@ -29,7 +29,6 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const compactPaywall = height < 640;
   const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';
   const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;
-  const compactComplianceSpacer = compactTabbedPhotoPaywall ? 112 : 0;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
   const paywallDismissFallback = paywallDismissFallbackForFeature(feature);
 
@@ -261,7 +260,6 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
           </Pressable>
         ) : null}
-        {compactComplianceSpacer > 0 ? <View style={{ height: compactComplianceSpacer }} /> : null}
         <ComplianceRow />
       </ScrollView>
     </Screen>

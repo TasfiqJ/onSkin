@@ -100,9 +100,8 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;',
     );
-    expect(proGate).toContain(
-      'const compactComplianceSpacer = compactTabbedPhotoPaywall ? 112 : 0;',
-    );
+    expect(proGate).not.toContain('compactComplianceSpacer');
+    expect(proGate).not.toContain('height: compactComplianceSpacer');
     expect(proGate).toContain(
       'paddingTop: compactTabbedPhotoPaywall ? 0 : compactPaywall ? 4 : 0,',
     );
@@ -115,9 +114,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
-    expect(proGate).toContain(
-      'compactComplianceSpacer > 0 ? <View style={{ height: compactComplianceSpacer }} /> : null',
-    );
+    expect(proGate).toContain('<ComplianceRow />');
     expect(flowTree).toContain(
       'including when store pricing is unavailable and the disabled-pricing reason is visible.',
     );

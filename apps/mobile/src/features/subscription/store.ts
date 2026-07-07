@@ -119,7 +119,9 @@ function booleanOrNull(value: unknown): boolean | null {
 
 function isoOrNull(value: unknown): string | null {
   const text = stringOrNull(value);
-  return text && !Number.isNaN(Date.parse(text)) ? text : null;
+  if (!text) return null;
+  const time = Date.parse(text);
+  return Number.isFinite(time) ? new Date(time).toISOString() : null;
 }
 
 function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
@@ -134,8 +136,17 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
   const environment = asEnvironment(stringOrNull(value.environment));
   const verifiedAt = isoOrNull(value.verifiedAt);
   const grantedAt = isoOrNull(value.grantedAt);
+  const expiresAt = isoOrNull(value.expiresAt);
   const rawActive = booleanOrNull(value.isActive) ?? false;
   const activeHasVerifiedSource = Boolean(source && verifiedAt);
+  const timeBoxed =
+    periodType === 'reverse_trial' ||
+    periodType === 'trial' ||
+    periodType === 'intro' ||
+    periodType === 'prepaid' ||
+    source === 'app_granted' ||
+    store === 'app_granted';
+  const activeHasRequiredExpiry = !timeBoxed || Boolean(expiresAt);
   const devGrantedInNonDev =
     source === 'app_granted' &&
     environment === 'development' &&
@@ -143,11 +154,12 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
 
   return {
     tier,
-    isActive: rawActive && activeHasVerifiedSource && !devGrantedInNonDev,
+    isActive:
+      rawActive && activeHasVerifiedSource && activeHasRequiredExpiry && !devGrantedInNonDev,
     periodType,
     store,
     productId: stringOrNull(value.productId),
-    expiresAt: isoOrNull(value.expiresAt),
+    expiresAt,
     willRenew: booleanOrNull(value.willRenew),
     grantedAt,
     source,
@@ -257,8 +269,7 @@ export async function fetchServerEntitlement(): Promise<StoredEntitlement | null
     const { data, error } = await supabase.from('entitlements').select('*').limit(1).maybeSingle();
     if (error || !data) return null;
     const entitlement = rowToStoredEntitlement(data as EntitlementRow);
-    await saveVerifiedEntitlement(entitlement);
-    return entitlement;
+    return saveVerifiedEntitlement(entitlement);
   } catch {
     return null;
   }
@@ -299,8 +310,7 @@ export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
   if (!row) throw new Error('Reverse trial grant did not return an entitlement.');
 
   const entitlement = rowToStoredEntitlement(row);
-  await saveVerifiedEntitlement(entitlement);
-  return entitlement;
+  return saveVerifiedEntitlement(entitlement);
 }
 
 /** Test/seed reset. */

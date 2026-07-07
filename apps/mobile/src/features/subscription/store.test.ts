@@ -158,6 +158,20 @@ describe('subscription store reverse trial', () => {
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ isActive: false });
   });
 
+  it('does not honor a time-boxed entitlement cache without a valid expiry', async () => {
+    mocks.storage.set(KEY, JSON.stringify(cachedEntitlement({ expiresAt: 'not-a-date' })));
+
+    await expect(loadEntitlement()).resolves.toMatchObject({
+      periodType: 'reverse_trial',
+      expiresAt: null,
+      isActive: false,
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      expiresAt: null,
+      isActive: false,
+    });
+  });
+
   it('trims cache string fields before validation and persistence', async () => {
     mocks.storage.set(
       KEY,
@@ -199,5 +213,37 @@ describe('subscription store reverse trial', () => {
       environment: 'development',
       isActive: false,
     });
+  });
+
+  it('returns the normalized server grant instead of a raw fail-open entitlement', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.env.appEnvironment = 'production';
+    mocks.invoke.mockResolvedValue({
+      data: {
+        entitlement: {
+          entitlement: 'pro',
+          is_active: true,
+          period_type: 'reverse_trial',
+          store: 'app_granted',
+          product_id: 'routinekind_pro_reverse_trial_server',
+          expires_at: null,
+          will_renew: false,
+          original_purchase_at: '2026-07-05T12:00:00.000Z',
+          source: 'server',
+          environment: 'production',
+          verified_at: '2026-07-05T12:00:00.000Z',
+        },
+      },
+      error: null,
+    });
+
+    await expect(startReverseTrialOnServer()).resolves.toMatchObject({
+      source: 'server',
+      environment: 'production',
+      periodType: 'reverse_trial',
+      expiresAt: null,
+      isActive: false,
+    });
+    await expect(loadEntitlement()).resolves.toMatchObject({ isActive: false });
   });
 });

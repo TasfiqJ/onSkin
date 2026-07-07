@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened subscription entitlement caching so time-boxed trial, intro,
+  prepaid, reverse-trial, and app-granted access cannot unlock Pro without a
+  valid expiry, and server reverse-trial grants now return the normalized cached
+  entitlement.
+
+- Removed the compact Progress photo-paywall compliance spacer that pushed
+  `Terms`, `Privacy`, and `Restore` under the floating tab bar at 320x568.
+  Human-simulated Expo web evidence now shows those controls clear of the tab
+  bar with no non-tab overlap.
+
 - Hardened progress/streak aggregation so malformed server completion dates,
   unsafe local heat-map counts, and invalid server personal-best streak values
   are ignored before they can distort adherence, heat-map, streak, milestone, or
