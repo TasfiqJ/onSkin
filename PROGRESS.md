@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added a compact direct-entry-only policy spacer for `/settings/privacy` after
+  the current 320/390 px phone sweep showed the next `POLICIES` rows becoming
+  partially visible and tappable under the floating tab bar even after the
+  privacy controls themselves were clear. The You tab now keeps the privacy card
+  anchored while pushing policy links below the first viewport on compact direct
+  entry, and the settings route contract pins the buffer. Expo web E2E at
+  320 x 568 and 390 x 568 verifies `/settings/privacy` resolves to
+  `/you?section=privacy`, `Withdraw health-data consent` remains above the tab
+  bar, `POLICIES` starts below the viewport, there are no non-tab controls in
+  the tab-bar zone, and horizontal overflow is zero. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-settings-privacy-policy-buffer.md`.
+
 - Shortened the compact Today SPF instruction after the 320 x 568 check-off
   evidence showed the completed `Mineral SPF 50` row still using the full
   reapplication sentence while other compact routine rows used concise display

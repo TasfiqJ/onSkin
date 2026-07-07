@@ -55,6 +55,7 @@ const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
 const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
+const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 
 type StaticRouteHref = Extract<Href, string>;
 
@@ -198,6 +199,7 @@ export default function YouScreen() {
         ? `${BRAND.proName} · active`
         : 'Free plan';
   const compactPhone = height < 640 || width < 430;
+  const privacyDirectEntry = params.section === 'privacy';
   const narrowPhone = compactPhone && width < 360;
   const privacyDirectEntryScrollNudge = narrowPhone
     ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
@@ -228,7 +230,7 @@ export default function YouScreen() {
       : [];
 
   useEffect(() => {
-    if (params.section !== 'privacy' || !privacyCardReady) return;
+    if (!privacyDirectEntry || !privacyCardReady) return;
 
     const scrollToPrivacyCard = () => {
       scrollRef.current?.scrollTo({
@@ -246,7 +248,7 @@ export default function YouScreen() {
       cancelAnimationFrame(frame);
       clearTimeout(retry);
     };
-  }, [params.section, privacyCardReady, privacyDirectEntryScrollNudge]);
+  }, [privacyDirectEntry, privacyCardReady, privacyDirectEntryScrollNudge]);
 
   const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [
     { label: 'Recommendations', href: '/recommendations' },
@@ -642,7 +644,14 @@ export default function YouScreen() {
           />
         </Card>
 
-        <Card className="mt-4">
+        <Card
+          className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}
+          style={
+            compactPhone && privacyDirectEntry
+              ? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }
+              : undefined
+          }
+        >
           <Text variant="label" tone="muted" className="mb-1">
             POLICIES
           </Text>

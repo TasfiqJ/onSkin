@@ -32,13 +32,15 @@ describe('Settings route contracts', () => {
     expect(you).toContain('useLocalSearchParams<{ section?: string }>()');
     expect(you).toContain('const scrollRef = useRef<ScrollView>(null);');
     expect(you).toContain('const privacyCardY = useRef(0);');
-    expect(you).toContain("if (params.section !== 'privacy' || !privacyCardReady) return;");
+    expect(you).toContain('if (!privacyDirectEntry || !privacyCardReady) return;');
     expect(you).toContain('scrollRef.current?.scrollTo');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
+    expect(you).toContain("const privacyDirectEntry = params.section === 'privacy';");
     expect(you).toContain('const narrowPhone = compactPhone && width < 360;');
     expect(you).toContain('const privacyDirectEntryScrollNudge = narrowPhone');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE');
@@ -51,9 +53,11 @@ describe('Settings route contracts', () => {
     expect(you).toContain('cancelAnimationFrame(frame);');
     expect(you).toContain('clearTimeout(retry);');
     expect(you).toContain(
-      '}, [params.section, privacyCardReady, privacyDirectEntryScrollNudge]);',
+      '}, [privacyDirectEntry, privacyCardReady, privacyDirectEntryScrollNudge]);',
     );
     expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
+    expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
+    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
 
     const privacyAnchorIndex = you.indexOf('privacyCardY.current = event.nativeEvent.layout.y;');
     expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('SECURITY'));

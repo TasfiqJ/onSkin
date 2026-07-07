@@ -127,3 +127,11 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   in
   `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`;
   it does not replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E plus focused contracts cover compact privacy
+  direct entry after the policy-buffer calibration: `/settings/privacy` redirects
+  to `/you?section=privacy` at 320 x 568 and 390 x 568, lands on complete privacy
+  controls, keeps `POLICIES` below the first viewport, has zero horizontal
+  overflow, and has no non-tab controls in the floating tab-bar zone. Focused
+  route contract, full typecheck, lint, and test suite passed. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/`. Native
+  iOS/Android rendering still needs device QA.

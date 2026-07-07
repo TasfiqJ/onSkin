@@ -899,6 +899,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native subscription and notification settings behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/settings/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/`
 
 ### Path A: Subscription Settings
 
@@ -914,6 +915,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/settings/subscription`, `/settings/notifications`, `/settings/timing`, and `/settings/privacy` directly, then use the visible Back control where the route has its own screen.
   - Expected result: The user returns to the You tab instead of remaining on a direct-entry settings screen with no navigation history. `/settings/privacy` lands inside the You tab privacy-control surface instead of showing an unmatched-route page. Visible Back controls, You tab navigation rows and privacy/security switches, reminder timing pills/list rows, notification edit rows, and secondary subscription exits meet the 44 pt phone touch target. On compact phones, the You tab first viewport ends on complete rows with a clear buffer above the floating tab bar, and covered lower rows do not receive accidental hits until the user scrolls them into view.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
+  - Current local evidence: 2026-07-07 Expo web verifies `/settings/privacy` redirects to `/you?section=privacy` at 320 x 568 and 390 x 568. The direct entry lands on complete privacy controls, leaves the `POLICIES` rows below the first viewport, has zero horizontal overflow, and has no non-tab controls in the floating tab-bar zone. Native iOS/Android rendering remains a device QA follow-up.
 - Branch: active reverse-trial subscription options
   - Priority: Critical
   - Automate later: Yes
