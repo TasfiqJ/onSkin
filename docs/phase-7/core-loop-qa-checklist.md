@@ -156,6 +156,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   disclaimer context, and Back returns to `/community`. Evidence is in
   `test-results/human-e2e/2026-07-07/community-current-compact-check/`; it does
   not replace native-device QA.
+- 2026-07-07: Expo web E2E at 320 x 568 plus focused route contracts cover
+  Community posting-deferred direct entries: `/community/ask` and
+  `/community/people-like-you` explain peer posting is not in beta, use a
+  destination-specific `Back to Skin Notes` CTA, route back to `/community`, keep
+  the fallback CTA 100 px tall, and have zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/community-deferred-routes/`; it does not
+  replace native-device QA or the posting-enabled consent/moderation gate.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers stale Skin Note recovery:
   direct `/community/note/[id]` for a missing note shows the unavailable-state
   copy, explains that the note may have been updated or removed during expert

@@ -812,6 +812,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: Expo web for route recovery; iOS and Android for native consent and moderation behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/community-routes/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/community-current-compact-check/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/community-deferred-routes/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/community-missing-note-current-check/`
 
 ### Path A: Expert Skin Notes
@@ -826,6 +827,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 1. Action: Open `/community/ask` with posting deferred, then repeat with posting enabled but no age or consent state.
    Expected result: Deferred posting returns to the Skin Notes hub; enabled posting shows separate 16+ and consent controls, and Not now exits to the hub.
    Evidence: Screenshot sequence and local gate state.
+   Current local evidence: 2026-07-07 Expo web 320 x 568 covers the default posting-deferred state for `/community/ask` and `/community/people-like-you`: both routes explain peer posting is not in beta, expose `Back to Skin Notes`, return to `/community`, and have zero horizontal overflow.
 
 ### Branches
 
@@ -835,6 +837,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/community`, `/community/note/[id]`, `/community/ask`, and `/community/people-like-you` directly, then use Back or Not now.
   - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`. Deferred posting routes use a destination-specific `Back to Skin Notes` CTA instead of generic Back copy. Visible hub Back/Ask controls, nested-route Back controls, the 16+ consent checkbox, and Not now meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
+  - Current local evidence: 2026-07-07 focused `communityRoutes.test.ts` route contracts pass, and Expo web 320 x 568 verifies direct `/community/ask` plus `/community/people-like-you` fallback CTAs are 100 px tall, use `Back to Skin Notes`, and route to `/community` with zero horizontal overflow.
 - Branch: missing note detail
   - Priority: Important
   - Automate later: Yes
