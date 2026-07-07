@@ -107,3 +107,9 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   visible within the viewport, and without horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendation-preferences-compact-current/`;
   it does not replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers stale recommendation detail
+  recovery: direct-open `/recommendations/stale-local-rec`, verify the stale
+  suggestion copy and 48 px `Back to For you` action, tap it, and confirm the
+  app returns to `/recommendations` with zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendation-stale-detail-recovery/`; it
+  does not replace real iOS/Android beta-device QA.

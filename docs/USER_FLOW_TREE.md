@@ -679,6 +679,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-dismissal-cold-start/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-preferences-compact-current/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-stale-detail-recovery/`
 
 ### Path A: For You Hub
 
@@ -706,6 +707,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a recommendation detail ID that is no longer present after shelf/profile changes.
   - Expected result: The app explains the suggestion is no longer current and provides a working Back to For you path.
   - Evidence: Screenshot and route snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 direct `/recommendations/stale-local-rec` shows the stale suggestion copy, exposes a 48 px `Back to For you` action, returns to `/recommendations`, and has zero horizontal overflow.
 - Branch: recommendation accept and dismiss
   - Priority: Critical
   - Automate later: Yes
