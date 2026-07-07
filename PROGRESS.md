@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the Phase 5 device QA evidence validator after smoke testing found
+  that slash-only iPhone labels and `Tester Name` style placeholders could
+  still pass. Added negative smoke cases for missing physical iOS models,
+  generic Android model labels, generic tester signoffs, and case-insensitive
+  `PHASE5_QA_SIGNOFF=true` handling.
+
 - Hardened the Phase 5 device QA packet so strict native-device completion
   requires real-looking EAS build UUIDs or `expo.dev` build URLs, physical
   iPhone/iPad and Android device labels with OS versions, and a non-placeholder
