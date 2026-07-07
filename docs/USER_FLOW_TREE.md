@@ -625,7 +625,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/paywall/success` after a trial start or paid purchase on a 320 px wide phone viewport.
-  - Expected result: The success badge renders a clean checkmark, the title and renewal terms are readable, the renewal metadata does not orphan `yr` onto its own line, and the Today CTA remains visible.
+  - Expected result: The success badge renders a clean checkmark, the title and renewal terms are readable, the renewal metadata does not orphan `yr` onto its own line, and the Today CTA remains visible with a clear bottom buffer.
   - Evidence: 320 px screenshot, visible-text snapshot, and metadata row geometry.
 - Branch: policy and billing link handoff failure
   - Priority: Important

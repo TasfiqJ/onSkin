@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed `/paywall/success` after a compact route audit found the primary
+  `See tonight's routine` CTA sitting flush with the 320 x 568 viewport bottom.
+  The success screen now adds an explicit short-phone bottom action buffer while
+  preserving the existing clean checkmark, renewal terms, and split metadata
+  rows. The flow tree and paywall contract test now pin the bottom-buffer
+  requirement; native purchase-success rendering remains part of RevenueCat and
+  physical-device QA.
+
 - Hardened Trend opt-in consent failure recovery. `/trend/optin` now has
   dev-only one-shot grant/revoke failure fixtures plus a dev-only
   `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` ledger mode so the recovery

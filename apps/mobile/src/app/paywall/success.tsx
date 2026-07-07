@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
@@ -20,9 +20,11 @@ function fmt(iso: string | null, fallbackDays: number): string {
 }
 
 export default function SuccessScreen() {
+  const { height } = useWindowDimensions();
   const { user } = useAuth();
   const { data } = useEntitlement();
   const offering = useSubscriptionOffering();
+  const compactPhone = height < 640;
   const firstName =
     (user?.user_metadata?.display_name as string | undefined)?.split(' ')[0] ??
     (user?.user_metadata?.full_name as string | undefined)?.split(' ')[0] ??
@@ -85,7 +87,9 @@ export default function SuccessScreen() {
           ))}
         </View>
       </View>
-      <Button label={PAYWALL_COPY.success.cta} onPress={() => router.replace('/(tabs)/today')} />
+      <View className={compactPhone ? 'pb-4' : 'pb-2'}>
+        <Button label={PAYWALL_COPY.success.cta} onPress={() => router.replace('/(tabs)/today')} />
+      </View>
     </Screen>
   );
 }

@@ -225,6 +225,8 @@ describe('paywall mobile contracts', () => {
     const source = readAppRoute('paywall/success.tsx');
     const copy = readSource('features/subscription/copy.ts');
 
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactPhone = height < 640');
     expect(copy).toContain('metaRowsFor:');
     expect(copy).toContain('metaRowsForPaid:');
     expect(source).toContain('const metaRows = inTrial');
@@ -235,6 +237,7 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('lineHeight: 18');
     expect(source).toContain('includeFontPadding: false');
     expect(source).toContain('\\u2713');
+    expect(source).toContain("className={compactPhone ? 'pb-4' : 'pb-2'}");
     expect(source).not.toContain('{meta}');
     expect(source).not.toContain(`>${String.fromCharCode(0x2713)}</Text>`);
     expect(source).not.toContain(`>${String.fromCharCode(0x00e2, 0x0153, 0x201c)}</Text>`);
