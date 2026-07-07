@@ -96,18 +96,18 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(true);
 
     expect(mocks.writeAsStringAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       JSON.stringify({ account: { id: 'user-1' } }, null, 2),
     );
     expect(mocks.shareAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       {
         mimeType: 'application/json',
         dialogTitle: `Export your ${BRAND.appName} data`,
       },
     );
     expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       {
         idempotent: true,
       },
@@ -121,7 +121,7 @@ describe('settings data export', () => {
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
     expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       {
         idempotent: true,
       },
@@ -135,7 +135,7 @@ describe('settings data export', () => {
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
     expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       {
         idempotent: true,
       },
@@ -149,14 +149,14 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(false);
 
     expect(mocks.shareAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       {
         mimeType: 'application/json',
         dialogTitle: `Export your ${BRAND.appName} data`,
       },
     );
     expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/onskin-export-\d+\.json$/),
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       {
         idempotent: true,
       },

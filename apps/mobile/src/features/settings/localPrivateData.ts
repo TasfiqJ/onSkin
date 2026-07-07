@@ -9,8 +9,8 @@ import { clearPrivateKVContentKey } from '@/lib/storage/privateKV';
 
 import {
   LOCAL_PRIVATE_CACHE_FILENAMES,
-  LOCAL_PRIVATE_CACHE_PREFIXES,
   LOCAL_PRIVATE_DATA_KEYS,
+  localPrivateCachePrefixes,
 } from './localPrivateDataKeys';
 
 async function clearGeneratedCacheFiles(): Promise<void> {
@@ -18,10 +18,11 @@ async function clearGeneratedCacheFiles(): Promise<void> {
   if (!cacheDirectory) return;
 
   const entries = await FileSystem.readDirectoryAsync(cacheDirectory).catch(() => []);
+  const cachePrefixes = localPrivateCachePrefixes();
   const targets = entries.filter(
     (name) =>
       LOCAL_PRIVATE_CACHE_FILENAMES.includes(name as (typeof LOCAL_PRIVATE_CACHE_FILENAMES)[number]) ||
-      LOCAL_PRIVATE_CACHE_PREFIXES.some((prefix) => name.startsWith(prefix)),
+      cachePrefixes.some((prefix) => name.startsWith(prefix)),
   );
 
   await Promise.all(

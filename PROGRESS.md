@@ -2871,6 +2871,15 @@ or development-fallback offering exists, preserving preview pricing only with th
 subscription price/paywall/RevenueCat tests pass. Real store pricing, purchase, restore, and billing evidence remain
 blocked on RevenueCat/store setup.
 
+### Brand-safe privacy cache filenames (2026-07-07)
+
+Moved generated data-export JSON files and decrypted photo-share cache files off legacy `onskin-*` names to runtime
+brand-safe prefixes while preserving cleanup for both current `routinekind-*` and legacy `onskin-*` cache files.
+Updated Phase 9 data-rights and privacy-payload smoke checks so generated plaintext/share artifacts must use current
+brand prefixes and old cache files are only retained as cleanup targets. Focused data-rights, local-cleanup, photo
+encryption, and Phase 9 smoke/audit checks pass; live data export/delete and observability payload evidence remain
+Tas-owned external blockers.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

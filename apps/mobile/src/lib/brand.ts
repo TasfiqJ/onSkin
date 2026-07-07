@@ -5,6 +5,8 @@ function normalizeName(value: string | undefined, fallback: string): string {
   return candidate && candidate.length > 0 ? candidate : fallback;
 }
 
+export type BrandCacheFileKind = 'export' | 'share';
+
 export type BrandIdentity = {
   appName: string;
   proName: string;
@@ -24,6 +26,22 @@ export function buildBrandIdentity(appNameInput?: string): BrandIdentity {
     catalogCuratedSource: `${appName} curated`,
     catalogParserSource: `${appName} parser`,
   };
+}
+
+export function brandFileSlug(appNameInput?: string): string {
+  const appName = normalizeName(appNameInput ?? BRAND.appName, WORKING_APP_NAME);
+  const slug = appName
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 48);
+  return slug.length > 0 ? slug : WORKING_APP_NAME.toLowerCase();
+}
+
+export function brandCachePrefix(kind: BrandCacheFileKind, appNameInput?: string): string {
+  return `${brandFileSlug(appNameInput)}-${kind}-`;
 }
 
 export const BRAND = buildBrandIdentity(

@@ -62,6 +62,8 @@ describe('local private data cleanup', () => {
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.multiRemove.mockResolvedValue(undefined);
     mocks.readDirectoryAsync.mockResolvedValue([
+      'routinekind-export-456.json',
+      'routinekind-share-card.png',
       'onskin-export-123.json',
       'onskin-share-card.png',
       'public-cache.json',
@@ -83,6 +85,12 @@ describe('local private data cleanup', () => {
       idempotent: true,
     });
     expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/onskin-share-card.png', {
+      idempotent: true,
+    });
+    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/routinekind-export-456.json', {
+      idempotent: true,
+    });
+    expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/routinekind-share-card.png', {
       idempotent: true,
     });
     expect(mocks.deleteAsync).not.toHaveBeenCalledWith('file://cache/public-cache.json', {

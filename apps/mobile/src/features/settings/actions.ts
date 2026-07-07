@@ -4,7 +4,7 @@ import * as Sharing from 'expo-sharing';
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
-import { BRAND } from '@/lib/brand';
+import { BRAND, brandCachePrefix } from '@/lib/brand';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -71,7 +71,8 @@ export async function exportData(): Promise<boolean> {
   const json = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory) throw new Error('DATA_EXPORT_CACHE_UNAVAILABLE');
-  const uri = `${cacheDirectory}onskin-export-${Date.now()}.json`;
+  const exportCachePrefix = brandCachePrefix('export');
+  const uri = `${cacheDirectory}${exportCachePrefix}${Date.now()}.json`;
   try {
     await FileSystem.writeAsStringAsync(uri, json);
     if (!(await Sharing.isAvailableAsync().catch(() => false))) return false;

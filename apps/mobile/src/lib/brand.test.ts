@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { buildBrandIdentity } from './brand';
+import { brandCachePrefix, brandFileSlug, buildBrandIdentity } from './brand';
 
 const ORIGINAL_PUBLIC_NAME = process.env.EXPO_PUBLIC_APP_DISPLAY_NAME;
 const ORIGINAL_NATIVE_NAME = process.env.APP_DISPLAY_NAME;
@@ -34,6 +34,13 @@ describe('brand identity', () => {
   it('normalizes configured names before composing product labels', () => {
     expect(buildBrandIdentity('  Layer   Wise  ').proName).toBe('Layer Wise Pro');
     expect(buildBrandIdentity('  Layer   Wise  ').askName).toBe('Ask Layer Wise');
+  });
+
+  it('builds filesystem-safe cache prefixes from runtime brand names', () => {
+    expect(brandFileSlug()).toBe('routinekind');
+    expect(brandFileSlug('  Layer   Wise!  ')).toBe('layer-wise');
+    expect(brandCachePrefix('export', 'Layer Wise')).toBe('layer-wise-export-');
+    expect(brandCachePrefix('share', '   ')).toBe('routinekind-share-');
   });
 
   it('prefers the public Expo display name at module load', async () => {

@@ -135,7 +135,7 @@ describe('encrypted photo storage', () => {
     const encrypted = await encryptCapturedPhoto('file://capture/photo.png', 'photo-1');
     const shareUri = await createPhotoShareFile(encrypted.encryptedLocalUri, 'photo:1/../');
 
-    expect(shareUri).toBe('file://cache/onskin-share-photo1-1234.png');
+    expect(shareUri).toBe('file://cache/routinekind-share-photo1-1234.png');
     expect(mocks.files.get(shareUri)).toBe(Buffer.from('png bytes').toString('base64'));
 
     mocks.files.set('file://cache/not-owned.png', 'external');

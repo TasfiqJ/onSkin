@@ -172,8 +172,18 @@ block(errors, !/return json\(\{ deleted: false, error: publicError\(error\) \}/.
 block(errors, /console\.error\('\[data-export\]', 'DATA_EXPORT_FAILED'\)/.test(exportSource), 'data-export must log only a stable failure code.');
 block(errors, !/console\.error\('\[data-export\]', error\)/.test(exportSource), 'data-export must not log raw export errors.');
 block(errors, /DATA_EXPORT_CACHE_UNAVAILABLE/.test(settingsActionsSource), 'Mobile data export must fail closed when cacheDirectory is unavailable.');
-block(errors, /onskin-export-\$\{Date\.now\(\)\}\.json/.test(settingsActionsSource), 'Mobile data export must use a unique one-time export cache filename.');
-block(errors, !/onskin-export\.json/.test(settingsActionsSource), 'Mobile data export must not reuse the legacy stable plaintext cache filename.');
+block(
+  errors,
+  /brandCachePrefix\('export'\)/.test(settingsActionsSource) &&
+    /\$\{exportCachePrefix\}\$\{Date\.now\(\)\}\.json/.test(settingsActionsSource),
+  'Mobile data export must use a runtime-brand, unique one-time export cache filename.',
+);
+block(
+  errors,
+  !/onskin-export-\$\{Date\.now\(\)\}/.test(settingsActionsSource) &&
+    !/onskin-export\.json/.test(settingsActionsSource),
+  'Mobile data export must not generate legacy plaintext cache filenames.',
+);
 block(
   errors,
   settingsActionsSource.indexOf('try {') !== -1 &&
@@ -192,10 +202,15 @@ block(
 );
 block(
   errors,
-  /LOCAL_PRIVATE_CACHE_PREFIXES\s*=\s*\[[^\]]*'onskin-export-'[^\]]*'onskin-share-'[^\]]*\]/.test(
+  /CURRENT_LOCAL_PRIVATE_CACHE_PREFIXES\s*=\s*\[[^\]]*'routinekind-export-'[^\]]*'routinekind-share-'[^\]]*\]/.test(
     localPrivateDataKeysSource,
-  ),
-  'Local private data cleanup must include one-time export cache files and photo share cache files.',
+  ) &&
+    /LEGACY_LOCAL_PRIVATE_CACHE_PREFIXES\s*=\s*\[[^\]]*'onskin-export-'[^\]]*'onskin-share-'[^\]]*\]/.test(
+      localPrivateDataKeysSource,
+    ) &&
+    /brandCachePrefix\('export'\)/.test(localPrivateDataKeysSource) &&
+    /brandCachePrefix\('share'\)/.test(localPrivateDataKeysSource),
+  'Local private data cleanup must include current, runtime-brand, and legacy export/share cache files.',
 );
 for (const [label, source, handlerSource, firstSensitiveMarkers] of [
   ['account-deletion', deletionSource, deletionHandlerSource, ['auth.getUser(token)', 'readLimitedJson(req']],

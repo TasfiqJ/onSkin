@@ -11,6 +11,8 @@ import {
 import * as FileSystem from 'expo-file-system/legacy';
 import * as SecureStore from 'expo-secure-store';
 
+import { brandCachePrefix } from '@/lib/brand';
+
 import { stripImageMetadataFromBase64 } from './metadata';
 
 const PHOTO_DIR = `${FileSystem.documentDirectory ?? ''}photos/v1/`;
@@ -209,7 +211,8 @@ export async function createPhotoShareFile(
   const extension = envelope.mimeType === 'image/png' ? 'png' : 'jpg';
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory) throw new Error('PHOTO_SHARE_CACHE_UNAVAILABLE');
-  const exportUri = `${cacheDirectory}onskin-share-${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
+  const shareCachePrefix = brandCachePrefix('share');
+  const exportUri = `${cacheDirectory}${shareCachePrefix}${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
   await FileSystem.writeAsStringAsync(exportUri, strippedBase64, {
     encoding: FileSystem.EncodingType.Base64,
   });
@@ -222,7 +225,7 @@ export async function deletePhotoShareFile(
 ): Promise<void> {
   if (!uri || uri === sourceUri) return;
   const cacheDirectory = FileSystem.cacheDirectory;
-  if (!cacheDirectory || !uri.startsWith(`${cacheDirectory}onskin-share-`)) return;
+  if (!cacheDirectory || !uri.startsWith(`${cacheDirectory}${brandCachePrefix('share')}`)) return;
   await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
 }
 

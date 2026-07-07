@@ -314,8 +314,11 @@ block(
 );
 block(
   errors,
-  /onskin-share-\$\{safePhotoShareId\(photoId\)\}-\$\{Date\.now\(\)\}/.test(encryptedPhotoSource),
-  'Photo share export must use a unique generated cache filename.',
+  /brandCachePrefix\('share'\)/.test(encryptedPhotoSource) &&
+    /\$\{shareCachePrefix\}\$\{safePhotoShareId\(photoId\)\}-\$\{Date\.now\(\)\}/.test(
+      encryptedPhotoSource,
+    ),
+  'Photo share export must use a runtime-brand, unique generated cache filename.',
 );
 block(
   errors,
@@ -340,7 +343,9 @@ block(
 block(
   errors,
   /export async function deletePhotoShareFile/.test(encryptedPhotoSource) &&
-    /uri\.startsWith\(`\$\{cacheDirectory\}onskin-share-`\)/.test(encryptedPhotoSource) &&
+    /uri\.startsWith\(`\$\{cacheDirectory\}\$\{brandCachePrefix\('share'\)\}`\)/.test(
+      encryptedPhotoSource,
+    ) &&
     /FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
       encryptedPhotoSource,
     ),
