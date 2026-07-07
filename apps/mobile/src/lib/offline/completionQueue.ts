@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
 
@@ -20,13 +20,34 @@ export type { PendingCompletion } from './completionQueue.pure';
 // logic (completionQueue.pure.ts) is unit-tested and ready.
 const KEY = 'onskin.completions.pending';
 
+function isPendingCompletion(value: unknown): value is PendingCompletion {
+  if (!value || Array.isArray(value) || typeof value !== 'object') return false;
+  const rec = value as Record<string, unknown>;
+  return (
+    typeof rec.userId === 'string' &&
+    typeof rec.routineId === 'string' &&
+    (typeof rec.stepId === 'string' || rec.stepId === null) &&
+    typeof rec.completedDate === 'string' &&
+    typeof rec.enqueuedAt === 'string'
+  );
+}
+
 export async function getPendingCompletions(): Promise<PendingCompletion[]> {
+  let raw: string | null;
   try {
-    const raw = await getPrivateItem(KEY);
-    return raw ? (JSON.parse(raw) as PendingCompletion[]) : [];
+    raw = await getPrivateItem(KEY);
   } catch {
     return [];
   }
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.every(isPendingCompletion)) return parsed;
+  } catch {
+    /* malformed legacy/local state */
+  }
+  await removePrivateItem(KEY).catch(() => undefined);
+  return [];
 }
 
 async function savePending(list: PendingCompletion[]): Promise<void> {
@@ -75,7 +96,8 @@ export async function flushCompletions(
         step_id: rec.stepId,
         completed_date: rec.completedDate,
       });
-      if (!error || error.code === '23505') flushed += 1; // landed, or already recorded (dedup)
+      if (!error || error.code === '23505')
+        flushed += 1; // landed, or already recorded (dedup)
       else remaining.push(rec); // transient backend error; keep for the next flush
     } catch {
       remaining.push(rec); // network failure; keep for the next flush

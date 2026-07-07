@@ -1,6 +1,32 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { enqueueCompletion, getPendingCompletions } from './completionQueue';
 import { completionKey, isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
+
+const mocks = vi.hoisted(() => ({
+  storage: new Map<string, string>(),
+}));
+
+vi.mock('@/lib/storage/privateKV', () => ({
+  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  setPrivateItem: vi.fn(async (key: string, value: string) => {
+    mocks.storage.set(key, value);
+  }),
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.storage.delete(key);
+  }),
+}));
+
+vi.mock('@/lib/supabase/client', () => ({
+  supabase: {
+    auth: {
+      getUser: vi.fn(async () => ({ data: { user: null } })),
+    },
+    from: vi.fn(),
+  },
+}));
+
+const KEY = 'onskin.completions.pending';
 
 const base: PendingCompletion = {
   userId: 'u1',
@@ -11,6 +37,10 @@ const base: PendingCompletion = {
 };
 
 describe('offline completion queue (docs/01 §6)', () => {
+  beforeEach(() => {
+    mocks.storage.clear();
+  });
+
   it('dedups an identical completion by (user, routine, step, day)', () => {
     const once = withQueued([], base);
     const twice = withQueued(once, { ...base, enqueuedAt: 'later' });
@@ -36,5 +66,20 @@ describe('offline completion queue (docs/01 §6)', () => {
     expect(isStale('2026-06-24', now)).toBe(false); // -1d, within the cap
     expect(isStale('2026-06-23', now)).toBe(false); // -2d, the boundary (server allows >= today-2)
     expect(isStale('2026-06-22', now)).toBe(true); // -3d, past the cap → drop
+  });
+
+  it('clears malformed persisted queues and returns no pending completions', async () => {
+    mocks.storage.set(KEY, '{not-json');
+
+    await expect(getPendingCompletions()).resolves.toEqual([]);
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('replaces wrong-shaped persisted queues on enqueue', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ pending: [base] }));
+
+    await enqueueCompletion(base);
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toEqual([base]);
   });
 });

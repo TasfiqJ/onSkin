@@ -14,6 +14,16 @@ const KEY = 'onskin.completions.v1';
 
 type Log = Record<string, string[]>; // localDate -> stepKeys done that day
 
+function isCompletionLog(value: unknown): value is Log {
+  if (!value || Array.isArray(value) || typeof value !== 'object') return false;
+  return Object.entries(value).every(
+    ([date, keys]) =>
+      /^\d{4}-\d{2}-\d{2}$/.test(date) &&
+      Array.isArray(keys) &&
+      keys.every((key) => typeof key === 'string'),
+  );
+}
+
 /** Stable per-step key. Phase-scoped so an AM and a PM step for the same product
  *  never collide. */
 export function stepKey(phase: 'AM' | 'PM', productId: string): string {
@@ -21,13 +31,21 @@ export function stepKey(phase: 'AM' | 'PM', productId: string): string {
 }
 
 async function load(): Promise<Log> {
+  let raw: string | null;
   try {
-    const raw = await getPrivateItem(KEY);
-    const parsed = raw ? (JSON.parse(raw) as Log) : {};
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    raw = await getPrivateItem(KEY);
   } catch {
     return {};
   }
+  if (!raw) return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (isCompletionLog(parsed)) return parsed;
+  } catch {
+    /* malformed legacy/local state */
+  }
+  await removePrivateItem(KEY).catch(() => undefined);
+  return {};
 }
 
 async function save(log: Log): Promise<void> {

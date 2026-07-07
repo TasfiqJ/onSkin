@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Today completion persistence and the offline completion sync queue
+  against malformed local JSON. Wrong-shaped or unreadable completion records are
+  now cleared and treated as empty, then replaced by clean state on the next
+  check-off/enqueue. Focused tests cover both recovery paths.
+
 - Hardened the encrypted local private KV reader so a corrupt encrypted envelope
   is removed and treated as missing instead of throwing through shelf, routine,
   completion, or offline-queue callers. Legacy plaintext migration remains
