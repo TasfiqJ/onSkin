@@ -177,7 +177,12 @@ describe('Settings route contracts', () => {
     expect(source).toContain('? routineRows.slice(3)');
     expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
     expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
-    expect(source).toContain('<Card className="mt-12 p-3">');
+    expect(source).toContain('const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;');
+    expect(source).toContain('const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;');
+    expect(source).toContain('<Card\n            className="p-3"');
+    expect(source).toContain('marginTop: shortPhone');
+    expect(source).toContain('? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN');
+    expect(source).toContain(': COMPACT_SECONDARY_ROUTINE_TOP_MARGIN');
     expect(source).toContain('MORE ROUTINE');
     expect(source).toContain('const COMPACT_FOR_YOU_TOP_MARGIN = 240');
     expect(source).toContain("className={compactPhone ? undefined : 'mt-4'}");

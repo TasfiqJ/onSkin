@@ -50,6 +50,8 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
+const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;
+const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
 
 type StaticRouteHref = Extract<Href, string>;
 
@@ -459,7 +461,14 @@ export default function YouScreen() {
         </Card>
 
         {secondaryRoutineRows.length > 0 ? (
-          <Card className="mt-12 p-3">
+          <Card
+            className="p-3"
+            style={{
+              marginTop: shortPhone
+                ? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN
+                : COMPACT_SECONDARY_ROUTINE_TOP_MARGIN,
+            }}
+          >
             <Text variant="label" tone="muted" className="mb-1">
               MORE ROUTINE
             </Text>

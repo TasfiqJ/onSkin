@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the last compact-phone You tab underlap found in the 320 x 568
+  human-simulated E2E sweep. The secondary routine block now uses
+  short-phone-aware top spacing, keeping the `Retinoid ramp` button out of the
+  floating tab bar touch zone on very short screens. Evidence is in
+  `test-results/human-e2e/2026-07-07/compact-ui-sweep-3/`; the tracked bug
+  report is
+  `docs/e2e-bug-reports/2026-07-07-you-tabbar-underlap.md`.
+
 - Hardened Phase 10/11 beta and public-launch evidence parsing so proof flags
   are trimmed/case-normalized while non-`true` values remain blocked, launch
   decisions are normalized to `go`/`limited`, and generic signoff placeholders
