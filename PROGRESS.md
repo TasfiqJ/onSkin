@@ -2162,6 +2162,14 @@ You hub, preferences, stale detail recovery, and the fixed `gap:mineral_spf` det
 overflow, no small targets, and unique `Add to shelf` / `Not for me` actions. Evidence is in
 `test-results/human-e2e/2026-07-07/recommendations-direct-entry/`.
 
+### Commerce deferred direct-entry CTA destination (2026-07-07)
+
+Fixed launch-gated commerce direct entry after `/commerce/stacks` at 320 x 568 showed a generic `Back` CTA even though
+the safe no-history fallback is the You tab. The commerce layout now passes `Back to You` into the shared deferred
+surface while preserving `APP_YOU_ROUTE`. Expo web E2E verified the direct route exposes one accessible `Back to You`
+button, has no small/clipped controls or horizontal overflow, and lands on `/you` after tap. Evidence is in
+`test-results/human-e2e/2026-07-07/commerce-routes/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

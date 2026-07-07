@@ -55,9 +55,9 @@ describe('Commerce route contracts', () => {
   it('returns deferred commerce direct entries to You', () => {
     const source = readAppRoute('commerce/_layout.tsx');
 
-    expect(source).toContain(
-      '<DeferredSurface surface="commerce" fallbackRoute={APP_YOU_ROUTE} />',
-    );
+    expect(source).toContain('surface="commerce"');
+    expect(source).toContain('fallbackRoute={APP_YOU_ROUTE}');
+    expect(source).toContain('fallbackLabel="Back to You"');
   });
 
   it('keeps commerce route escape controls touchable on phones', () => {

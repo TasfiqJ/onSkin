@@ -8,7 +8,13 @@ import { APP_YOU_ROUTE } from '@/lib/navigation/safeBack';
 // a dimmed bottom sheet; the transparency page + stacks are normal pushed screens.
 export default function CommerceLayout() {
   if (!phase7Flags.commerce)
-    return <DeferredSurface surface="commerce" fallbackRoute={APP_YOU_ROUTE} />;
+    return (
+      <DeferredSurface
+        surface="commerce"
+        fallbackRoute={APP_YOU_ROUTE}
+        fallbackLabel="Back to You"
+      />
+    );
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
