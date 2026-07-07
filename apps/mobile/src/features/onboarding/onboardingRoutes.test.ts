@@ -40,6 +40,8 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
+    expect(products).toContain('placeholder="e.g. Retinol serum"');
+    expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
     expect(products).toContain('if (compactPhone) scrollToShelfList()');

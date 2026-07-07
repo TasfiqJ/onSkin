@@ -76,7 +76,7 @@ export default function ProductsScreen() {
               accessibilityLabel="Product name"
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Retinol 0.3% Night Serum"
+              placeholder="e.g. Retinol serum"
               placeholderTextColor={colors.mutedLight}
               className="rounded-card border border-hairline bg-paper px-4 py-3.5 font-sans text-base text-ink"
               returnKeyType="done"

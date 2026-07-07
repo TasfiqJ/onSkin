@@ -2063,6 +2063,13 @@ phase8:verify` passes with no code blockers. Strict Phase 8 intentionally still 
 final brand/domain, marketing and store URLs, device App Link/Universal Link proof, share-card QA, privacy attribution
 review, creator/support approvals, launch dashboard readiness, release certificate fingerprints, and named signoff.
 
+### Onboarding product input compact copy (2026-07-06)
+
+Fixed `/onboarding/products` after a 320 x 568 phone E2E pass showed the product-name placeholder truncating inside the
+input. The placeholder now uses shorter front-label copy that fits on compact iOS/Android phone widths while still
+communicating the expected product-name entry. The onboarding route contract now guards against restoring the longer
+compact-breaking placeholder.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
