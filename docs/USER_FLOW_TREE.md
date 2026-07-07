@@ -811,12 +811,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native consent and moderation behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/community-routes/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/community-current-compact-check/`
 
 ### Path A: Expert Skin Notes
 
 1. Action: Open `/community`, inspect topic groups, open a note detail, and return.
    Expected result: Notes are topic-structured and evidence-labeled, not ranked by popularity or author following; note detail returns to the Skin Notes hub.
    Evidence: Screenshot sequence and visible route snapshot.
+   Current local evidence: 2026-07-07 Expo web 320 x 568 shows topic groups and evidence labels, includes `a library, not a feed. No likes, no authors to follow, no ranking by popularity`, opens the niacinamide/vitamin C note with claim/evidence/reviewer context, and Back returns to `/community` with zero horizontal overflow.
 
 ### Path B: Posting Gate
 

@@ -149,3 +149,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   CTA that returns to `/ask`. Evidence is in
   `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`; it does not
   replace native-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the Skin Notes expert
+  library happy path: `/community` shows topic groups, evidence labels, and
+  explicit library-not-feed copy with zero horizontal overflow; opening the
+  niacinamide/vitamin C note shows claim, evidence, reviewer, and cosmetic-info
+  disclaimer context, and Back returns to `/community`. Evidence is in
+  `test-results/human-e2e/2026-07-07/community-current-compact-check/`; it does
+  not replace native-device QA.
