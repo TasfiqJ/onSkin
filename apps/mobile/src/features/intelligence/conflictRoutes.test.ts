@@ -42,6 +42,17 @@ describe('Conflict route contracts', () => {
     expect(source).not.toContain("We've left both in your AM routine");
   });
 
+  it('keeps direct conflict details behind the launch-gated shelf conflict source', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain("import { useShelf } from '@/features/shelf/useShelf';");
+    expect(source).toContain('const { data } = useShelf();');
+    expect(source).toContain('data?.conflicts.find((c) => c.rule.id === ruleId)');
+    expect(source).not.toContain('STARTER_RULES');
+    expect(source).not.toContain('detectConflicts(');
+    expect(source).not.toContain('shippableRules(');
+  });
+
   it('keeps dense conflict sheets scrollable and actions touchable on short phones', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 
