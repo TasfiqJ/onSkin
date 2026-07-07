@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the offline completion sync refresh path so a successful pending
+  check-off flush invalidates the `completions` and `progress` queries Today
+  actually reads, instead of a non-existent `today` query key. Added a contract
+  test to keep the local-first check-off and streak surfaces wired after sync.
+
 - Hardened first-session routine funnel analytics so repeat routine-plan views
   still record `routine_created`, but `first_routine_created` and
   `first_useful_insight` only fire once for real shelf-backed plans, not example

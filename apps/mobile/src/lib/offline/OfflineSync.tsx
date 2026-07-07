@@ -6,7 +6,8 @@ import { flushCompletions } from './completionQueue';
 
 // Drains the offline check-off queue (docs/01 §6) on mount and whenever the app
 // returns to the foreground: a dependency-free "queue-and-retry". On a successful
-// flush we refresh Today so the synced server state replaces the optimistic one.
+// flush we refresh the Today completion and progress queries so synced server state
+// replaces the optimistic local state.
 // Renders nothing; mounted once at the app root inside the query + auth providers.
 //
 // The live v1 check-off path is the local-first log in completionsStore; this
@@ -17,7 +18,10 @@ export function OfflineSync() {
   useEffect(() => {
     const run = () => {
       void flushCompletions().then(({ flushed }) => {
-        if (flushed > 0) void qc.invalidateQueries({ queryKey: ['today'] });
+        if (flushed > 0) {
+          void qc.invalidateQueries({ queryKey: ['completions'] });
+          void qc.invalidateQueries({ queryKey: ['progress'] });
+        }
       });
     };
     run();
