@@ -856,7 +856,7 @@ RoutineKind Pro:
 - `routine_created`
 - `first_checkoff_completed`
 - `photo_baseline_added`
-- `paywall_viewed`
+- `paywall_shown`
 - `reverse_trial_started`
 - `trial_started`
 - `purchase_completed`

@@ -128,7 +128,7 @@ Phase H: Beta Readiness
   routine_created
   first_checkoff_completed
   photo_baseline_added
-  paywall_viewed
+  paywall_shown
   reverse_trial_started
   purchase_completed
 - Confirm beta kill criteria are documented:

@@ -2880,6 +2880,12 @@ brand prefixes and old cache files are only retained as cleanup targets. Focused
 encryption, and Phase 9 smoke/audit checks pass; live data export/delete and observability payload evidence remain
 Tas-owned external blockers.
 
+### Paywall event taxonomy docs alignment (2026-07-07)
+
+Aligned the master plan and Codex implementation prompt with the emitted/guarded paywall event name `paywall_shown`.
+This avoids future duplicate analytics work around the previous mismatched name while preserving the existing Phase 7
+and Phase 10 beta funnel taxonomy.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
