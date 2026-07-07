@@ -139,6 +139,24 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`; it does
   not replace real reviewed conflict persistence QA, native share-sheet export
   QA, public-link final domain QA, or reviewed conflict-rule content approval.
+- 2026-07-07: Expo web E2E at 320 x 568 covers commerce trust route recovery in
+  default deferred and enabled local modes. Default `/commerce/stacks`,
+  `/commerce/transparency`, `/commerce/consent`, and
+  `/commerce/stack/sensitive-skin-starter-set` show the deferred beta surface and
+  return `Back to You` to `/you`. With `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true`
+  and `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, direct
+  transparency/stacks/consent recover to `/you`, direct stack detail recovers to
+  `/commerce/stacks`, stack hierarchy keeps paid-link disclosure and 48 px
+  transparency control visible, unavailable stack recovery exposes no retailer
+  links, recommendation where-to-buy is locked without commerce consent, Allow
+  returns to the originating recommendation, consented state remains
+  catalog-blocked until approved links exist, the shelf alternative routes to
+  `/shelf/manual`, and stack items open the separate consent sheet with zero
+  horizontal overflow and no browser errors. Evidence is in
+  `test-results/human-e2e/2026-07-07/commerce-routes-current/`; it does not
+  replace real retailer link handoff/failure QA, native modal/outbound-link QA,
+  ShopMy or fallback partner approval, source-cleared catalog QA, final legal
+  paid-link consent copy, or production domain verification.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

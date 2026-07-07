@@ -781,18 +781,19 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native outbound-link and modal behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/commerce-routes/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/commerce-routes-current/`
 
 ### Path A: Transparency And Consent
 
 1. Action: Open the You tab commerce rows, open "How we stay honest", then return. Open a recommendation where-to-buy consent gate and choose Allow or Not now.
    Expected result: The transparency page explains church-and-state commerce clearly; the consent gate is separate, calm, and dismisses back to the originating surface when there is navigation history.
-   Evidence: Screenshot sequence, route snapshot, and commerce-consent state.
+   Evidence: 2026-07-07 Expo web at 320 x 568 verified direct `/commerce/transparency` recovery, recommendation where-to-buy locked state with consent off, separate `/commerce/consent` sheet entry, `Not now`, `Dismiss`, `Allow where-to-buy links`, return to the originating recommendation after Allow, and catalog-blocked empty state while live links remain unavailable.
 
 ### Path B: Shoppable Routines
 
 1. Action: Open `/commerce/stacks`, open an available stack in development, tap "How this works", and return through the visible Back controls.
    Expected result: The stack remains ordered by routine sequence, paid-link disclosure stays visible, transparency remains reachable through a 44 pt phone target, and Back returns through the stack hierarchy.
-   Evidence: Screenshot sequence, visible route snapshot, and small-phone control-geometry snapshot.
+   Evidence: 2026-07-07 Expo web at 320 x 568 verified `/commerce/stacks` to `/commerce/stack/sensitive-skin-starter-set`, visible paid-link disclosure, 48 px `How stack paid links work`, `/commerce/transparency`, Back to stack detail, and Back to `/commerce/stacks` with zero horizontal overflow.
 
 ### Branches
 
@@ -801,25 +802,25 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/[slug]` directly, then use the visible Back, Dismiss, Allow, Not now, or scrim control.
   - Expected result: Top-level commerce direct entries return to the You tab; stack details return to `/commerce/stacks`; deferred commerce routes also return to the You tab instead of a no-history dead end. Visible Back and Dismiss controls meet the 44 pt phone touch target, and the consent sheet keeps Dismiss reachable while its content scrolls on short phones.
-  - Evidence: Screenshot sequence and visible route snapshot.
+  - Evidence: 2026-07-07 Expo web at 320 x 568 verified default deferred `/commerce/stacks`, `/commerce/transparency`, `/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` return to `/you`; commerce-enabled direct `/commerce/transparency`, `/commerce/stacks`, `/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` recover to `/you` or `/commerce/stacks` as appropriate, with 44+ px visible controls and no browser errors.
 - Branch: unavailable stack
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/commerce/stack/[slug]` for a slug that is not currently shippable.
   - Expected result: The app shows a calm unavailable state, explains the stack may have been updated while disclosures or product availability are reviewed, provides a visible `Back to stacks` path to `/commerce/stacks`, and keeps `How paid links work` available without exposing retailer links.
-  - Evidence: Screenshot and route snapshot.
+  - Evidence: 2026-07-07 Expo web at 320 x 568 verified `/commerce/stack/missing-stack-e2e` unavailable copy, no retailer links, 56 px `Back to stacks`, 56 px `How paid links work`, recovery to `/commerce/stacks`, and transparency recovery.
 - Branch: no commerce consent
   - Priority: Critical
   - Automate later: Yes
   - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
   - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state, and the Allow where-to-buy plus shelf alternative controls meet the 44 pt phone touch target.
-  - Evidence: Screenshot, local consent state, and small-phone control-geometry snapshot.
+  - Evidence: 2026-07-07 Expo web at 320 x 568 verified the recommendation where-to-buy block shows locked copy with no retailer rows, no paid-link disclosure, 48 px `Allow where-to-buy`, 50 px shelf alternative to `/shelf/manual`, and stack item taps open the separate consent sheet instead of retailer links.
 - Branch: retailer link handoff failure
   - Priority: Important
   - Automate later: Yes
   - Action: With commerce consent on and a real HTTPS retailer URL available, simulate the OS refusing to open the external URL.
   - Expected result: The app shows a calm Link unavailable message, does not appear inert, and the user remains in the recommendation context.
-  - Evidence: Alert text, route snapshot, and telemetry/state notes.
+  - Evidence: Open. The 2026-07-07 local run reaches the consent-allowed catalog-blocked empty state because source-cleared retailer links and affiliate partner rails are not approved yet.
 
 ## Flow: Skin Notes Community Trust Layer
 

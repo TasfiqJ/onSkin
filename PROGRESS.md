@@ -3537,6 +3537,26 @@ direct-entry missing/unshareable recovery only; real reviewed conflict choice
 persistence, native share-sheet export, public-link domain QA, and reviewed rule
 content remain launch blockers.
 
+### Commerce route and consent recovery evidence (2026-07-07)
+
+Verified commerce trust surfaces without changing app code. Default Expo web at
+320 x 568 opened `/commerce/stacks`, `/commerce/transparency`,
+`/commerce/consent`, and `/commerce/stack/sensitive-skin-starter-set` to the
+deferred commerce beta surface; every direct entry showed `Back to You`, returned
+to `/you`, had zero horizontal overflow, and logged no browser errors. A
+temporary commerce-enabled web server on port 8127 with
+`EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app` verified direct
+transparency/stacks/consent recovery, stack-detail recovery to
+`/commerce/stacks`, stack-list to detail to transparency hierarchy, unavailable
+stack recovery, recommendation where-to-buy locking with commerce consent off,
+separate consent-sheet entry, `Allow` returning to the originating
+recommendation, the catalog-blocked empty state after consent, the shelf
+alternative to `/shelf/manual`, and stack-item consent gating. Evidence is in
+`test-results/human-e2e/2026-07-07/commerce-routes-current/`. Real retailer link
+handoff/failure QA, native modal/outbound-link QA, ShopMy or fallback affiliate
+partner approval, source-cleared catalog links, final paid-link consent/legal
+copy, and production domain verification remain launch blockers.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

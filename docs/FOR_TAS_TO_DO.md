@@ -91,6 +91,11 @@ Status: launch-blocked
 - Subscription and cancellation copy.
 - Store metadata and privacy labels.
 - Photo, health data, analytics, commerce, community, and Ask consent copy.
+- Commerce paid-link launch packet: approve ShopMy or a fallback affiliate rail,
+  confirm whether RoutineKind can mint first-party recommendation links under the
+  chosen account model, source-clear the retailer/catalog links, approve the
+  final `Paid link` disclosure and separate commerce data-sharing consent copy,
+  and provide real HTTPS retailer URLs for native handoff/failure QA.
 - ODbL/Open Beauty Facts and CosIng source posture.
 - Onboarding quiz FTO review.
 - Clinical review for conflict rules, routine sequencing, pregnancy cautions, PAO defaults, recommendations, Skin Notes, and Ask corpus.
