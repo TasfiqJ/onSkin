@@ -20,11 +20,14 @@ Status: launch-blocked
 - Record the decision in `docs/brand-decision-memo.md`.
 - After the 2026-07-07 native-default migration, `apps/mobile/app.base.json`
   and development/staging resolved Expo config now use `RoutineKind`,
-  `routinekind`, and `com.routinekind.app` defaults. `npm run brand:audit`
-  reports 6 remaining public launch-risk references, all in
-  `supabase/config.toml` (`project_id`, `site_url`, and auth redirect URLs).
-  Replace them only when the final Supabase project, auth callback scheme, and
-  matching Apple/Google OAuth settings exist under the cleared identity.
+  `routinekind`, and `com.routinekind.app` defaults. `supabase/config.toml` now
+  uses `routinekind` and `routinekind://auth/callback` for local/project
+  placeholders. `npm run brand:audit` reports 0 remaining public launch-risk
+  references; the remaining hits are review-needed legacy guards, migration
+  labels, internal namespaces, and historical/context docs.
+- Final Supabase project refs, auth callback allow-lists, Apple/Google OAuth
+  settings, and hosted URLs still need to be recreated under the cleared
+  identity before staging/production evidence can pass.
 - Annual, monthly, and local reverse-trial RevenueCat product IDs are env-driven
   with neutral local placeholders; replace them only after the final identity is
   cleared and matching Apple, Google, RevenueCat, Supabase, domain, and OAuth

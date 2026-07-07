@@ -1,8 +1,8 @@
 # Supabase local config. The CLI (`supabase init`) normally generates a much
 # larger file; this is a hand-authored minimal config documenting the settings
-# OnSkin's auth flow requires. Provider secrets live in the dashboard / env, not
+# RoutineKind's auth flow requires. Provider secrets live in the dashboard / env, not
 # here. BLOCKED: B-SUPABASE (project ref + keys).
-project_id = "onskin"
+project_id = "routinekind"
 
 [api]
 enabled = true
@@ -27,8 +27,8 @@ file_size_limit = "10MiB"
 [auth]
 enabled = true
 # Deep-link scheme for OAuth / OTP redirects (docs/01 §5).
-site_url = "onskin://"
-additional_redirect_urls = ["onskin://auth/callback"]
+site_url = "routinekind://"
+additional_redirect_urls = ["routinekind://auth/callback"]
 jwt_expiry = 3600
 enable_refresh_token_rotation = true
 # Guest-first: anonymous sessions are the default entry (docs/01 §1).

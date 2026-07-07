@@ -43,9 +43,10 @@ values plus `BRAND_LEGAL_CLEARANCE=cleared`.
   treat the name as already occupied.
 - This repo historically used `OnSkin`, `onskin`, `onskin://`,
   `com.onskin.app`, and placeholder `onskin.app` references. The native
-  development/staging defaults now use RoutineKind, but Supabase redirect config,
-  internal namespaces, historical docs, and reviewed placeholder blockers still
-  need final clearance or deliberate migration.
+  development/staging defaults and local Supabase redirect placeholders now use
+  RoutineKind, but internal namespaces, historical docs, migration labels, and
+  reviewed placeholder blockers still need final clearance or deliberate
+  migration.
 
 ## Required Counsel Output
 

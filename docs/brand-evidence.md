@@ -35,10 +35,11 @@ clearance, domain registration, App Store name reservation, or Google Play
 package reservation.
 
 Legacy `OnSkin`, `onskin`, `onskin://`, `com.onskin.app`, and placeholder
-`onskin.app` references remain high risk where they are still present in public
-launch config, especially Supabase project and redirect settings. They affect
-App Store search, paid search, app review, support confusion, trademark risk,
-domain strategy, and user trust.
+`onskin.app` references remain high risk where they are still present in
+review-needed code, internal namespaces, migration labels, or historical
+context. Public launch config now avoids the conflicted native and Supabase
+redirect defaults, but the final production app name, project refs, domains,
+store records, and OAuth allow-lists still need real clearance and reservation.
 
 ## DNS Checks
 
