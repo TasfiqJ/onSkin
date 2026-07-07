@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Verified the local reminder settings/timing slice. Expo web E2E at 320 x 568
+  opens `/settings/notifications`, confirms tier switches and routine rows are
+  readable with 48 px visible controls and zero horizontal overflow, opens
+  `/settings/timing` from the Morning row, changes the AM reminder from 7:30 AM
+  to 8:00 AM through the named time-picker sheet, and confirms the updated time
+  appears back on the notifications hub. The same pass verifies quiet-hours copy
+  and the generic lock-screen preview. Focused settings/notification policy,
+  store, delivery, preference, and claims-safety tests pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`; native
+  notification permission, scheduling, timezone, and DST QA remain device gates.
+
 - Verified the local settings privacy/data-rights recovery slice. Expo web E2E
   at 320 x 568 direct-opens `/settings/privacy`, confirms it resolves to
   `/you?section=privacy`, triggers the local backend-unavailable export path,

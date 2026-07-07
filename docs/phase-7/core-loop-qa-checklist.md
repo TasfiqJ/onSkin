@@ -213,3 +213,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`; it
   does not replace live Supabase export/delete/withdrawal QA or native share
   sheet QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 plus focused notification tests
+  cover local reminder settings and timing: open `/settings/notifications`, verify
+  tier switches, row labels, zero horizontal overflow, and 48 px visible controls,
+  open `/settings/timing` from the Morning row, change the AM reminder from
+  7:30 AM to 8:00 AM through the named time-picker sheet, and confirm the updated
+  time returns to the notifications hub. The timing screen also shows quiet-hours
+  copy and the generic lock-screen preview. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`; it does
+  not replace native notification permission, OS scheduling, or device timezone/DST
+  QA.

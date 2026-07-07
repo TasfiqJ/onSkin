@@ -917,6 +917,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: Expo web for route recovery; iOS and Android for native subscription and notification settings behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/settings/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/` and `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`
+- Current reminder evidence: `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`
 
 ### Path A: Subscription Settings
 
@@ -958,6 +959,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open notification settings, toggle reminder tiers, edit AM/PM timing and quiet hours, then return to settings.
   - Expected result: User-set times, contextual timing-control and picker-row labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a single named modal dialog, a named dismiss action, and no unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence, local preference snapshot, and small-phone accessibility/geometry snapshot.
+  - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies `/settings/notifications` tier rows and switches, `/settings/timing` time pills, the Morning reminder time-picker sheet, AM time update from 7:30 AM to 8:00 AM, return to the notifications hub with the updated time, quiet-hours copy, generic lock-screen preview, zero horizontal overflow, and 48 px visible controls. Focused notification tests cover quiet-hours scheduling, delivery caps, lock-screen discreet copy, preference persistence, and route/touch-target contracts; native OS permission/scheduling QA remains external.
 
 ## Flow: Ask RoutineKind Deterministic Advisor
 
