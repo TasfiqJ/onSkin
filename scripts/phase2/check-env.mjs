@@ -134,6 +134,10 @@ function isUsable(name) {
   return value.length > 0 && !placeholderFragments.some((fragment) => value.includes(fragment));
 }
 
+function isAnyUsable(names) {
+  return names.some(isUsable);
+}
+
 function isIntegerInRange(name, min, max) {
   const parsed = Number(valueFor(name));
   return Number.isInteger(parsed) && parsed >= min && parsed <= max;
@@ -158,6 +162,35 @@ if (appEnv && !['development', 'staging', 'production'].includes(appEnv)) {
   warnings.push(`EXPO_PUBLIC_APP_ENV is non-standard: ${appEnv}`);
 }
 
+const finalIdentityEnv = [
+  {
+    label: 'APP_DISPLAY_NAME or EXPO_PUBLIC_APP_DISPLAY_NAME',
+    names: ['APP_DISPLAY_NAME', 'EXPO_PUBLIC_APP_DISPLAY_NAME'],
+  },
+  { label: 'APP_SLUG', names: ['APP_SLUG'] },
+  {
+    label: 'APP_SCHEME or EXPO_PUBLIC_APP_SCHEME',
+    names: ['APP_SCHEME', 'EXPO_PUBLIC_APP_SCHEME'],
+  },
+  { label: 'APP_IOS_BUNDLE_IDENTIFIER', names: ['APP_IOS_BUNDLE_IDENTIFIER'] },
+  { label: 'APP_ANDROID_PACKAGE', names: ['APP_ANDROID_PACKAGE'] },
+];
+const needsFinalNativeIdentity = [appVariant, appEnv].some((value) =>
+  ['staging', 'production'].includes(value),
+);
+if (needsFinalNativeIdentity) {
+  const missingFinalIdentity = finalIdentityEnv
+    .filter(({ names }) => !isAnyUsable(names))
+    .map(({ label }) => label);
+  if (missingFinalIdentity.length > 0) {
+    errors.push(
+      `Staging/production identity: missing final native identity values: ${missingFinalIdentity.join(
+        ', ',
+      )}`,
+    );
+  }
+}
+
 const publicSecretKeys = Object.keys(process.env)
   .filter((name) => name.startsWith('EXPO_PUBLIC_'))
   .filter((name) => forbiddenPublicName.test(name));
@@ -171,7 +204,8 @@ if (publicSecretValues.length > 0) {
   errors.push(`Secret-looking values must not use EXPO_PUBLIC_: ${publicSecretValues.join(', ')}`);
 }
 
-const displayName = valueFor('APP_DISPLAY_NAME') || 'OnSkin';
+const displayName =
+  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'OnSkin';
 if (
   (appVariant === 'production' || appEnv === 'production') &&
   /onskin/i.test(displayName) &&
