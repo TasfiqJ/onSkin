@@ -950,7 +950,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/ask/consent` directly with cloud Ask disabled.
-  - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its deferred CTA returns to `/ask` on direct entry.
+  - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its `Back to Ask` deferred CTA returns to `/ask` on direct entry.
   - Evidence: Screenshot and visible-text snapshot.
 - Branch: empty shelf state
   - Priority: Important

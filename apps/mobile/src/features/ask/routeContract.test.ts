@@ -26,9 +26,9 @@ describe('Ask route launch contracts', () => {
     const consent = readAppRoute('ask/consent.tsx');
 
     expect(consent).toContain('phase7Flags.cloudAsk');
-    expect(consent).toContain(
-      '<DeferredSurface surface="cloudAsk" fallbackRoute={APP_ASK_ROUTE} />',
-    );
+    expect(consent).toContain('surface="cloudAsk"');
+    expect(consent).toContain('fallbackRoute={APP_ASK_ROUTE}');
+    expect(consent).toContain('fallbackLabel="Back to Ask"');
   });
 
   it('saves cloud Ask consent before applying visible toggle state', () => {

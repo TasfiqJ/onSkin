@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the direct-entry `/ask/consent` deferred route so unavailable cloud
+  Ask now uses `Back to Ask` instead of a generic `Back` CTA. Expo web E2E at
+  320 x 568 verified the CTA is 56 px tall, no horizontal overflow appears, and
+  tapping it renders the deterministic `/ask` advisor. Evidence is in
+  `test-results/human-e2e/2026-07-07/ask-consent-deferred-cta/`; the tracked bug
+  report is
+  `docs/e2e-bug-reports/2026-07-07-ask-consent-deferred-cta.md`.
+
 - Added a single named dialog contract to the populated Progress comparison
   photo picker. The picker now labels the React Native web `Modal` wrapper with
   `Choose the first/second photo`, keeps the named dismiss control, and labels

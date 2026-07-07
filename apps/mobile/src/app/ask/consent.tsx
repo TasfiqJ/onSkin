@@ -49,7 +49,13 @@ export default function AskConsentScreen() {
   });
 
   if (!phase7Flags.cloudAsk)
-    return <DeferredSurface surface="cloudAsk" fallbackRoute={APP_ASK_ROUTE} />;
+    return (
+      <DeferredSurface
+        surface="cloudAsk"
+        fallbackRoute={APP_ASK_ROUTE}
+        fallbackLabel="Back to Ask"
+      />
+    );
 
   const onToggle = async (enabled: boolean) => {
     if (savingRef.current) return;
