@@ -48,11 +48,14 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
+    expect(products).toContain('const inputRef = useRef<TextInput>(null)');
     expect(products).toContain('placeholder="e.g. Retinol serum"');
     expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
     expect(products).toContain('if (compactPhone) scrollToShelfList()');
+    expect(products).toContain("scrollRef.current?.scrollTo({ y: 0, animated: true })");
+    expect(products).toContain('inputRef.current?.focus()');
     expect(goals).toContain("className={compactPhone ? 'mt-5' : 'mt-8'}");
     expect(goals).toContain("className={compactPhone ? 'mt-4 gap-1' : 'mt-6 gap-3'}");
     expect(quiz).toContain("className={compactPhone ? 'mt-5' : 'mt-7'}");
@@ -70,14 +73,23 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain('tight={compactPhone}');
     expect(goals).toContain('contentContainerClassName="pb-28"');
     expect(quiz).toContain('contentContainerClassName="pb-28"');
-    expect(products).toContain('contentContainerClassName="pb-28"');
+    expect(products).toContain(
+      "contentContainerClassName={showContinueAnyway ? 'pb-36' : 'pb-28'}",
+    );
     expect(goals).toContain('className="bg-paper pb-4 pt-2"');
     expect(quiz).toContain('className="bg-paper pb-4 pt-2"');
     expect(products).toContain('className="bg-paper pb-4 pt-2"');
-    expect(products).toContain(
+    expect(products).toContain('const footerPrimaryLabel = compactFooterAdds');
+    expect(products).toContain('? `Add ${remainingToTarget} more`');
+    expect(products).toContain('label={footerPrimaryLabel}');
+    expect(products).toContain('onPress={footerAction}');
+    expect(products).toContain('label={continueAnywayLabel}');
+    expect(products).toContain('variant="ghost"');
+    expect(products).toContain('className="mt-1 min-h-[48px] py-2"');
+    expect(products).not.toContain(
       "compactFooterAdds ? 'Add to shelf' : added.length > 0 ? 'Continue' : 'Skip for now'",
     );
-    expect(products).toContain('onPress={compactFooterAdds ? () => void add() : go}');
+    expect(products).not.toContain('onPress={compactFooterAdds ? () => void add() : go}');
     expect(products).toContain('{!compactPhone ? (');
     expect(goals).not.toContain('contentContainerClassName="pb-4"');
     expect(quiz).not.toContain('contentContainerClassName="pb-4"');
@@ -85,6 +97,25 @@ describe('onboarding route contracts', () => {
     expect(goals).not.toContain('<View className="pb-4">');
     expect(quiz).not.toContain('<View className="pb-4">');
     expect(products).not.toContain('<View className="pb-4">');
+  });
+
+  it('nudges onboarding product intake toward the three-product first-insight target', () => {
+    const products = readAppRoute('onboarding/products.tsx');
+
+    expect(products).toContain('const ONBOARDING_PRODUCT_TARGET = 3');
+    expect(products).toContain('const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0)');
+    expect(products).toContain('const hasTargetProducts = remainingToTarget === 0');
+    expect(products).toContain(
+      'const showContinueAnyway = added.length > 0 && !hasTargetProducts && !compactFooterAdds',
+    );
+    expect(products).toContain('Three products gives your first routine enough context');
+    expect(products).toContain('gives your first insight more to work with.');
+    expect(products).toContain('{Math.min(added.length, ONBOARDING_PRODUCT_TARGET)} OF');
+    expect(products).toContain('{ONBOARDING_PRODUCT_TARGET}{');
+    expect(products).toContain('PRODUCTS');
+    expect(products).toContain('function footerAction()');
+    expect(products).toContain('focusNextProduct();');
+    expect(products).toContain("label={continueAnywayLabel}");
   });
 
   it('keeps health-data consent fail-closed before quiz access', () => {

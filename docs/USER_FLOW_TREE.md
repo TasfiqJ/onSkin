@@ -188,9 +188,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: product intake category metadata
   - Priority: Important
   - Automate later: Yes
-  - Action: Add a first-run shelf product with a category such as Moisturiser or Oil / balm, then continue to the shelf/reveal path.
-  - Expected result: The product is added once, the product-name placeholder fits without truncation on compact phones, the selected category uses a canonical shelf ID, PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category, category chips meet the 44 pt phone touch target without clipping under the fixed footer on 320 x 568 phones, and the visible remove-product control is at least 44 x 44.
-  - Evidence: Screenshot, local shelf state or product metadata snapshot, and small-phone control-geometry snapshot.
+  - Action: Add first-run shelf products with categories such as Moisturiser, Oil / balm, Retinoid, and SPF, inspect the product-count cue after each add, then continue to the shelf/reveal path.
+  - Expected result: Products are added once, the product-name placeholder fits without truncation on compact phones, the selected category uses a canonical shelf ID, PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category, category chips meet the 44 pt phone touch target without clipping under the fixed footer on 320 x 568 phones, the visible remove-product control is at least 44 x 44, the primary footer nudges toward the documented three-product first-insight target until three products are added, and a secondary continue path remains visible for users who choose to proceed with fewer products.
+  - Evidence: Screenshot sequence, local shelf state or product metadata snapshot, and small-phone control-geometry snapshot.
 - Branch: back/relaunch during onboarding
   - Priority: Important
   - Automate later: Yes
@@ -505,7 +505,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/progress/capture`, `/progress/review`, `/progress/about`, and a missing `/progress/[id]` detail directly, then use the visible Close, Back, or Not now control. Repeat legacy `/photos/capture`, `/photos/review`, and `/photos/[id]` direct entries.
-  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Direct `/progress/review` without a captured photo shows photo-not-captured recovery copy and never shows a fake preview or `Save to my phone`. Legacy `/photos/*` entries must recover into the matching Progress photo surface instead of showing an unmatched-route page. Visible route exits and Not now controls meet the 44 pt phone touch target with readable dark-surface contrast, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a single named modal dialog, a named dismiss action, and contextual photo-tile labels without unlabeled inert sheet-body controls.
+  - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Direct `/progress/review` without a captured photo shows photo-not-captured recovery copy and never shows a fake preview or `Save to my phone`. Missing `/progress/[id]` detail entries show clear photo-unavailable copy plus `Take a new photo` and `Back to Progress` recovery actions instead of a dead one-line empty state. Legacy `/photos/*` entries must recover into the matching Progress photo surface instead of showing an unmatched-route page. Visible route exits and Not now controls meet the 44 pt phone touch target with readable dark-surface contrast, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a single named modal dialog, a named dismiss action, and contextual photo-tile labels without unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence and 320 px button-geometry snapshot.
 - Branch: single-photo share unavailable or rejected
   - Priority: Important

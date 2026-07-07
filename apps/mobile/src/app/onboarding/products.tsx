@@ -11,6 +11,8 @@ import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
+const ONBOARDING_PRODUCT_TARGET = 3;
+
 // 06 · Current products intake (docs/01 §2 step 6, docs/04 §4.7). Seeds the shelf with
 // addedVia:'onboarding' so the reveal and the first routine/conflict pass are built
 // from the user's REAL products (the conflict engine tags off the name). Skip stays
@@ -19,6 +21,7 @@ import { colors } from '@/theme/tokens';
 export default function ProductsScreen() {
   const { height } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
+  const inputRef = useRef<TextInput>(null);
   const { data } = useShelf();
   const m = useShelfMutations();
   const [name, setName] = useState('');
@@ -26,6 +29,25 @@ export default function ProductsScreen() {
   const added = data?.items ?? [];
   const compactPhone = height < 640;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
+  const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
+  const hasTargetProducts = remainingToTarget === 0;
+  const showContinueAnyway = added.length > 0 && !hasTargetProducts && !compactFooterAdds;
+  const remainingProductNoun = remainingToTarget === 1 ? 'product' : 'products';
+  const continueAnywayLabel = `Continue with ${added.length} ${
+    added.length === 1 ? 'product' : 'products'
+  }`;
+  const footerPrimaryLabel = compactFooterAdds
+    ? 'Add to shelf'
+    : hasTargetProducts
+      ? 'Continue'
+      : added.length > 0
+        ? `Add ${remainingToTarget} more`
+        : 'Skip for now';
+  const progressBody = hasTargetProducts
+    ? 'Good. That is enough for a stronger first routine, and you can still add more later.'
+    : added.length > 0
+      ? `${remainingToTarget} more ${remainingProductNoun} gives your first insight more to work with.`
+      : 'Three products gives your first routine enough context to spot useful gaps or timing notes.';
 
   useEffect(() => {
     trackProductAddStarted('onboarding');
@@ -33,6 +55,11 @@ export default function ProductsScreen() {
 
   function scrollToShelfList() {
     requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
+  }
+
+  function focusNextProduct() {
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   async function add() {
@@ -56,6 +83,18 @@ export default function ProductsScreen() {
     router.push('/onboarding/analyzing');
   }
 
+  function footerAction() {
+    if (compactFooterAdds) {
+      void add();
+      return;
+    }
+    if (added.length === 0 || hasTargetProducts) {
+      go();
+      return;
+    }
+    focusNextProduct();
+  }
+
   return (
     <Screen>
       <View className="flex-1 overflow-hidden">
@@ -63,7 +102,7 @@ export default function ProductsScreen() {
           ref={scrollRef}
           className="flex-1"
           showsVerticalScrollIndicator={false}
-          contentContainerClassName="pb-28"
+          contentContainerClassName={showContinueAnyway ? 'pb-36' : 'pb-28'}
         >
           <Text variant="title" className={compactPhone ? 'mt-4' : 'mt-6'}>
             What&apos;s on your shelf?
@@ -72,12 +111,29 @@ export default function ProductsScreen() {
             Add the products you already use so we build around them. Even just the name helps us
             spot conflicts. You can add more anytime from your Shelf.
           </Text>
+          <View
+            className={
+              compactPhone
+                ? 'mt-3 rounded-2xl bg-greige-chip px-4 py-3'
+                : 'mt-4 rounded-2xl bg-greige-chip px-4 py-3'
+            }
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text variant="label" tone="clay">
+              {Math.min(added.length, ONBOARDING_PRODUCT_TARGET)} OF {ONBOARDING_PRODUCT_TARGET}{' '}
+              PRODUCTS
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {progressBody}
+            </Text>
+          </View>
 
           <Card className={compactPhone ? 'mt-4 p-4' : 'mt-6'}>
             <Text variant="label" tone="muted" className="mb-2">
               PRODUCT NAME
             </Text>
             <TextInput
+              ref={inputRef}
               accessibilityLabel="Product name"
               value={name}
               onChangeText={setName}
@@ -163,12 +219,15 @@ export default function ProductsScreen() {
       </View>
 
       <View className="bg-paper pb-4 pt-2">
-        <Button
-          label={
-            compactFooterAdds ? 'Add to shelf' : added.length > 0 ? 'Continue' : 'Skip for now'
-          }
-          onPress={compactFooterAdds ? () => void add() : go}
-        />
+        <Button label={footerPrimaryLabel} onPress={footerAction} />
+        {showContinueAnyway ? (
+          <Button
+            label={continueAnywayLabel}
+            variant="ghost"
+            className="mt-1 min-h-[48px] py-2"
+            onPress={go}
+          />
+        ) : null}
       </View>
     </Screen>
   );

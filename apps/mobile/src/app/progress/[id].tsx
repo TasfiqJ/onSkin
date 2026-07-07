@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, TextInput, View } from 'react-native';
+import { Alert, Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -22,6 +22,8 @@ const SAGE = '#9DB18A';
 
 function PhotoDetailScreenContent() {
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const compact = height < 640;
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data } = usePhotos('front');
   const { reference, remove, note } = usePhotoActions();
@@ -48,9 +50,91 @@ function PhotoDetailScreenContent() {
             borderColor: 'transparent',
           }}
         />
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: '#F4EFE7' }}>Photo not found.</Text>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingTop: compact ? 56 : 72,
+            paddingBottom: insets.bottom + (compact ? 18 : 28),
+          }}
+        >
+          <View style={{ gap: compact ? 12 : 14, paddingVertical: compact ? 18 : 24 }}>
+            <Text
+              variant="label"
+              style={{ color: 'rgba(244,239,231,0.48)', textAlign: 'center' }}
+            >
+              {PHOTO_COPY.detail.missingEyebrow}
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'HankenGrotesk_600SemiBold',
+                fontSize: compact ? 23 : 26,
+                lineHeight: compact ? 29 : 32,
+                color: '#F4EFE7',
+                textAlign: 'center',
+              }}
+            >
+              {PHOTO_COPY.detail.missingTitle}
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'HankenGrotesk_400Regular',
+                fontSize: 15,
+                lineHeight: 22,
+                color: 'rgba(244,239,231,0.76)',
+                textAlign: 'center',
+              }}
+            >
+              {PHOTO_COPY.detail.missingBody}
+            </Text>
+          </View>
+
+          <View style={{ gap: 12, marginTop: compact ? 8 : 16 }}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.replace('/progress/capture')}
+              style={{
+                minHeight: 56,
+                borderRadius: 999,
+                backgroundColor: '#F4EFE7',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingHorizontal: 18,
+                paddingVertical: 12,
+              }}
+            >
+              <Text
+                style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}
+              >
+                {PHOTO_COPY.detail.missingCapture}
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              onPress={closeToProgress}
+              style={{
+                minHeight: 56,
+                borderRadius: 999,
+                backgroundColor: 'rgba(244,239,231,0.1)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingHorizontal: 18,
+                paddingVertical: 12,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontSize: 16,
+                  color: '#F4EFE7',
+                }}
+              >
+                {PHOTO_COPY.detail.missingBack}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
       </View>
     );
   }

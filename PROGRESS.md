@@ -6,6 +6,24 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened onboarding product intake around the documented three-product
+  first-insight target without blocking users who only have one or two products.
+  `/onboarding/products` now shows a 0-3 progress cue, keeps the primary footer
+  nudging toward the next product until three are added, and preserves a
+  secondary `Continue with N products` escape before the target. Expo web E2E
+  verified the 2-of-3, 3-of-3, and Continue paths; evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-products-three-target.png`, and
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-onboarding-products-three-target.md`.
+
+- Repaired stale `/progress/[id]` direct entries so a missing local photo no
+  longer lands on a dead one-line `Photo not found.` state. The route now shows
+  calm photo-unavailable recovery copy, a 56 px `Take a new photo` primary
+  action, and a 56 px `Back to Progress` escape inside a short-phone scroll
+  container. The Progress route contract guards the recovery state; the tracked
+  bug report is
+  `docs/e2e-bug-reports/2026-07-07-progress-missing-photo-recovery.md`.
+
 - Expanded the `/routine/plan` skin-cycling row labels from shorthand `N1` /
   `N2` / `N3-4` and `x/week` cadence copy into phone-readable `Night 1`,
   `Night 2`, `Nights 3-4`, and `times/week to start`. The Pro-gated route

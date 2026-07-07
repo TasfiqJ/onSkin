@@ -48,6 +48,27 @@ describe('Progress route mobile contracts', () => {
     }
   });
 
+  it('recovers stale direct photo-detail entries without a dead empty state', () => {
+    const source = readAppRoute('progress/[id].tsx');
+    const copy = readSource('features/photos/copy.ts');
+
+    expect(copy).toContain("missingEyebrow: 'Photo unavailable'");
+    expect(copy).toContain("missingTitle: 'This photo is no longer on this phone.'");
+    expect(copy).toContain("missingCapture: 'Take a new photo'");
+    expect(copy).toContain("missingBack: 'Back to Progress'");
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compact = height < 640');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('PHOTO_COPY.detail.missingEyebrow');
+    expect(source).toContain('PHOTO_COPY.detail.missingTitle');
+    expect(source).toContain('PHOTO_COPY.detail.missingBody');
+    expect(source).toContain('PHOTO_COPY.detail.missingCapture');
+    expect(source).toContain('PHOTO_COPY.detail.missingBack');
+    expect(source).toContain("router.replace('/progress/capture')");
+    expect(source).toContain('minHeight: 56');
+    expect(source).not.toContain('Photo not found.');
+  });
+
   it('keeps capture permission and recovery gates scrollable on short phones', () => {
     const source = readAppRoute('progress/capture.tsx');
 

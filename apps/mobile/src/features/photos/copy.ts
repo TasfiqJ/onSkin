@@ -61,6 +61,12 @@ export const PHOTO_COPY = {
   detail: {
     noteLabel: 'Your note',
     setReference: 'Set as reference',
+    missingEyebrow: 'Photo unavailable',
+    missingTitle: 'This photo is no longer on this phone.',
+    missingBody:
+      'It may have been deleted or belong to another local timeline. Your Progress tab is still safe.',
+    missingCapture: 'Take a new photo',
+    missingBack: 'Back to Progress',
     shareLabel: 'Share photo',
     shareTitle: 'Share this photo?',
     shareBody: 'This sends the photo image you choose. It is not blurred, and your notes are not included.',
