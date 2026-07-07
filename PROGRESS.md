@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the deferred `/routine/widgets` route so unavailable native widgets
+  now use `Back to Today` with an explicit Today fallback instead of generic
+  `Back` copy. The regression is covered by the Pro-gated route contract and
+  tracked in `docs/e2e-bug-reports/2026-07-07-widgets-deferred-cta.md`. App
+  surface automation remains a follow-up for this slice because the bundled
+  Browser plugin is missing its documented runtime script and Playwright is not
+  installed in the repo.
+
+- Fixed the Today check-off activation metric so `first_checkoff_completed`
+  cannot re-fire after a user checks off a step, undoes it, and checks it off
+  again. The local completion store now keeps a durable first-completion marker
+  and backfills that marker for legacy completion logs before future toggles.
+  Focused completion-store tests cover normal persistence, undo/recheck, and
+  legacy-log behavior; the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-today-first-checkoff-refire.md`.
+
 - Fixed the compact win-back paywall fallback after 320 x 568 E2E showed the
   unavailable native-offer reason colliding with the fixed action area. The
   win-back surface now uses compact-height spacing, clips the scroll body behind

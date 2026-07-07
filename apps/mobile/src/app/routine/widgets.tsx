@@ -8,7 +8,7 @@ import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/use
 import { withProGate } from '@/features/subscription/ProGate';
 import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
-import { backOrReplace } from '@/lib/navigation/safeBack';
+import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // Widgets & Live Activity (docs/07 §5/§6, design screens 05/06/07). These are the
@@ -46,7 +46,14 @@ function WidgetsScreen() {
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
 
-  if (!phase7Flags.widgets) return <DeferredSurface surface="widgets" />;
+  if (!phase7Flags.widgets)
+    return (
+      <DeferredSurface
+        surface="widgets"
+        fallbackRoute={APP_HOME_ROUTE}
+        fallbackLabel="Back to Today"
+      />
+    );
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>

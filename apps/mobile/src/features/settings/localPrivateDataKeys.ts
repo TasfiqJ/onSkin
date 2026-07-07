@@ -9,6 +9,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.community.reactions.v1',
   'onskin.communityAge16.v1',
   'onskin.communityConsent.v1',
+  'onskin.completions.firstCompletion.v1',
   'onskin.completions.pending',
   'onskin.completions.v1',
   'onskin.conflict.overrides',

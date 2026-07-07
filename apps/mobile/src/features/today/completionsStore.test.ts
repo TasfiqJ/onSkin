@@ -22,6 +22,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 const KEY = 'onskin.completions.v1';
+const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
 const DAY = '2026-07-07';
 
 describe('today completion persistence', () => {
@@ -58,6 +59,38 @@ describe('today completion persistence', () => {
     await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser']));
     await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser']));
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
+  });
+
+  it('does not re-fire first-ever activation after the user undoes every completion', async () => {
+    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      done: true,
+      firstEver: true,
+    });
+    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      done: false,
+      firstEver: false,
+    });
+    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      done: true,
+      firstEver: false,
+    });
+
+    expect(mocks.storage.get(FIRST_COMPLETION_KEY)).toBe('true');
+  });
+
+  it('marks legacy completion logs as already activated before future toggles', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ [DAY]: ['AM:cleanser'] }));
+
+    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      done: false,
+      firstEver: false,
+    });
+    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      done: true,
+      firstEver: false,
+    });
+
+    expect(mocks.storage.get(FIRST_COMPLETION_KEY)).toBe('true');
   });
 
   it('normalizes padded and duplicate step keys before Today reads them', async () => {

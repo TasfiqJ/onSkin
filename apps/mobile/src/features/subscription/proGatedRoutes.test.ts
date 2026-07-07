@@ -255,4 +255,12 @@ describe('Pro-gated route contracts', () => {
     expect(source).not.toContain('<Switch');
     expect(source).not.toContain('onValueChange');
   });
+
+  it('returns deferred widgets direct entries to Today with explicit copy', () => {
+    const source = readAppRoute('routine/widgets.tsx');
+
+    expect(source).toContain('surface="widgets"');
+    expect(source).toContain('fallbackRoute={APP_HOME_ROUTE}');
+    expect(source).toContain('fallbackLabel="Back to Today"');
+  });
 });

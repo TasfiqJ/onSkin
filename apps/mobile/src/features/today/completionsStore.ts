@@ -11,6 +11,7 @@ import { localDateString } from './useToday';
 // definition the streak evidence rewards). Replaces the old local-useState check-off
 // in today.tsx that never persisted (it broke activation + every streak surface).
 const KEY = 'onskin.completions.v1';
+const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
 
 type Log = Record<string, string[]>; // localDate -> stepKeys done that day
 
@@ -92,6 +93,14 @@ async function save(log: Log): Promise<void> {
   await setPrivateItem(KEY, JSON.stringify(log));
 }
 
+async function hasFirstCompletionMarker(): Promise<boolean> {
+  return (await getPrivateItem(FIRST_COMPLETION_KEY).catch(() => null)) === 'true';
+}
+
+async function markFirstCompletion(): Promise<void> {
+  await setPrivateItem(FIRST_COMPLETION_KEY, 'true').catch(() => undefined);
+}
+
 /** The step keys checked off on `date`. */
 export async function getCompletedSteps(date: string = localDateString()): Promise<Set<string>> {
   const normalizedDate = normalizeLocalDateISO(date);
@@ -128,6 +137,8 @@ export async function toggleCompletion(
   }
   const log = await load();
   const hadAny = Object.values(log).some((a) => a.length > 0);
+  const firstCompletionAlreadyMarked = await hasFirstCompletionMarker();
+  if (hadAny && !firstCompletionAlreadyMarked) await markFirstCompletion();
   const day = new Set(log[normalizedDate] ?? []);
   let done: boolean;
   if (day.has(normalizedKey)) {
@@ -140,7 +151,9 @@ export async function toggleCompletion(
   if (day.size > 0) log[normalizedDate] = [...day];
   else delete log[normalizedDate];
   await save(log);
-  return { done, firstEver: done && !hadAny };
+  const firstEver = done && !hadAny && !firstCompletionAlreadyMarked;
+  if (firstEver) await markFirstCompletion();
+  return { done, firstEver };
 }
 
 /** Dates with at least one completion (the streak's "completion days"). */
@@ -160,4 +173,5 @@ export async function getCountByDate(): Promise<Map<string, number>> {
 /** Test/seed reset. */
 export async function clearCompletions(): Promise<void> {
   await removePrivateItem(KEY);
+  await removePrivateItem(FIRST_COMPLETION_KEY);
 }
