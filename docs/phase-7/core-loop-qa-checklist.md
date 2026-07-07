@@ -167,6 +167,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `See how` row, a 169 px card height, and a 34 px bottom gap. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`; it
   does not replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 and 390 x 568 plus focused
+  Community route contracts cover compact Skin Notes hub card fit: `/community`
+  renders the first three note cards fully at 320 x 568 and the first four note
+  cards fully at 390 x 568, with zero horizontal overflow and no visible
+  sub-44 px controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/community-hub-compact-card-fit/`; it does
+  not replace real iOS/Android beta-device QA or native Dynamic Type QA.
 - 2026-07-07: Expo web E2E at 320 x 568 and 390 x 568 plus focused route
   contracts cover compact recommendation preferences: open
   `/recommendations/preferences`, verify `Drugstore`, `Mid-range`, and `Premium`

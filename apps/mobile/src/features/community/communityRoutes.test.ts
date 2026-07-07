@@ -23,6 +23,9 @@ describe('Community route contracts', () => {
   it('keeps the community hub safe for direct entry', () => {
     const source = readAppRoute('community/index.tsx');
 
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactCommunity = height < 640');
+    expect(source).toContain('const narrowCompactCommunity = compactCommunity && width < 360');
     expect(source).not.toContain('router.back()');
     expect(source).toContain('APP_YOU_ROUTE');
     expect(source).toContain('backOrReplace(router, APP_YOU_ROUTE)');
@@ -34,6 +37,31 @@ describe('Community route contracts', () => {
     expect(source).not.toContain(
       'className="min-h-[44px] min-w-[44px] items-center justify-center px-2"',
     );
+  });
+
+  it('keeps the Skin Notes hub cards compact on short phones', () => {
+    const source = readAppRoute('community/index.tsx');
+
+    expect(source).toContain(
+      "contentContainerClassName={compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'}",
+    );
+    expect(source).toContain(
+      "className={compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'}",
+    );
+    expect(source).toContain(
+      "className={compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'}",
+    );
+    expect(source).toContain(
+      "<NoteCard key={note.id} note={note} compact={compactCommunity} />",
+    );
+    expect(source).toContain('const keepNextSectionBelowFold =');
+    expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
+    expect(source).toContain(
+      'style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}',
+    );
+    expect(source).toContain("'mb-1.5 rounded-[16px] bg-paper-raised p-2.5'");
+    expect(source).toContain("style={{ lineHeight: compact ? 16 : 19 }}");
+    expect(source).toContain("style={{ lineHeight: compact ? 14 : 18 }}");
   });
 
   it('keeps nested community routes safe for direct entry', () => {

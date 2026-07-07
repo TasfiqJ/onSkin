@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
@@ -16,7 +16,7 @@ import { colors } from '@/theme/tokens';
 // Deliberately a reference library: no likes, no authors to follow, no ranking by
 // popularity. Phase 1, live (expert-seeded, read-mostly).
 
-function NoteCard({ note }: { note: SkinNote }) {
+function NoteCard({ note, compact = false }: { note: SkinNote; compact?: boolean }) {
   const pill = evidencePill(note.evidenceLabel);
   return (
     <Pressable
@@ -27,24 +27,38 @@ function NoteCard({ note }: { note: SkinNote }) {
         track('skin_note_viewed', { surface: 'hub' });
         router.push({ pathname: '/community/note/[id]', params: { id: note.id } });
       }}
-      className="mb-3 rounded-[18px] bg-paper-raised p-4"
+      className={
+        compact
+          ? 'mb-1.5 rounded-[16px] bg-paper-raised p-2.5'
+          : 'mb-3 rounded-[18px] bg-paper-raised p-4'
+      }
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
-      <View className="mb-2 flex-row items-start justify-between gap-2.5">
+      <View
+        className={
+          compact
+            ? 'mb-1 flex-row items-start justify-between gap-2'
+            : 'mb-2 flex-row items-start justify-between gap-2.5'
+        }
+      >
         <Text
           variant="body"
-          className="flex-1 font-sans-bold text-[14.5px]"
-          style={{ lineHeight: 19 }}
+          className={
+            compact
+              ? 'flex-1 font-sans-bold text-[13.5px]'
+              : 'flex-1 font-sans-bold text-[14.5px]'
+          }
+          style={{ lineHeight: compact ? 16 : 19 }}
         >
           {note.title}
         </Text>
         <Text
-          className="font-sans-bold text-[10px]"
+          className={compact ? 'font-sans-bold text-[9.5px]' : 'font-sans-bold text-[10px]'}
           style={{
             color: pill.fg,
             backgroundColor: pill.bg,
-            paddingHorizontal: 9,
-            paddingVertical: 4,
+            paddingHorizontal: compact ? 7 : 9,
+            paddingVertical: compact ? 3 : 4,
             borderRadius: 999,
             overflow: 'hidden',
           }}
@@ -52,7 +66,12 @@ function NoteCard({ note }: { note: SkinNote }) {
           {pill.text}
         </Text>
       </View>
-      <Text variant="bodySm" tone="muted" className="text-[12px]" style={{ lineHeight: 18 }}>
+      <Text
+        variant="bodySm"
+        tone="muted"
+        className={compact ? 'text-[11.5px]' : 'text-[12px]'}
+        style={{ lineHeight: compact ? 14 : 18 }}
+      >
         {note.summary}
       </Text>
     </Pressable>
@@ -60,7 +79,10 @@ function NoteCard({ note }: { note: SkinNote }) {
 }
 
 export default function SkinNotesHub() {
+  const { height, width } = useWindowDimensions();
   const groups = notesByTopic();
+  const compactCommunity = height < 640;
+  const narrowCompactCommunity = compactCommunity && width < 360;
 
   useEffect(() => {
     track('skin_note_viewed', { surface: 'hub' });
@@ -88,10 +110,19 @@ export default function SkinNotesHub() {
         )}
       </View>
 
-      <Text variant="title" className="mt-3">
+      <Text
+        variant="title"
+        className={compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'}
+        style={compactCommunity ? { lineHeight: 30 } : undefined}
+      >
         {COMMUNITY_COPY.hub.title}
       </Text>
-      <Text variant="bodySm" tone="muted" className="mt-1">
+      <Text
+        variant="bodySm"
+        tone="muted"
+        className={compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'}
+        style={compactCommunity ? { lineHeight: 17 } : undefined}
+      >
         {COMMUNITY_COPY.hub.subtitle}
       </Text>
 
@@ -102,17 +133,32 @@ export default function SkinNotesHub() {
           </Text>
         </View>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10 pt-5">
-          {groups.map((g) => (
-            <View key={g.topic.slug} className="mb-3">
-              <Text variant="label" tone="muted" className="mb-2.5 pl-0.5">
-                {g.topic.title.toUpperCase()}
-              </Text>
-              {g.notes.map((note) => (
-                <NoteCard key={note.id} note={note} />
-              ))}
-            </View>
-          ))}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName={compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'}
+        >
+          {groups.map((g) => {
+            const keepNextSectionBelowFold =
+              narrowCompactCommunity && g.topic.slug === 'sensitive-skin';
+            return (
+              <View
+                key={g.topic.slug}
+                className={compactCommunity ? 'mb-1' : 'mb-3'}
+                style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}
+              >
+                <Text
+                  variant="label"
+                  tone="muted"
+                  className={compactCommunity ? 'mb-1.5 pl-0.5' : 'mb-2.5 pl-0.5'}
+                >
+                  {g.topic.title.toUpperCase()}
+                </Text>
+                {g.notes.map((note) => (
+                  <NoteCard key={note.id} note={note} compact={compactCommunity} />
+                ))}
+              </View>
+            );
+          })}
           <Text
             variant="label"
             tone="muted"

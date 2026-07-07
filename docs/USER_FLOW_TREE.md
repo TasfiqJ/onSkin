@@ -834,6 +834,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/community-current-compact-check/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/community-deferred-routes/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/community-missing-note-current-check/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/community-hub-compact-card-fit/`
 
 ### Path A: Expert Skin Notes
 
@@ -841,6 +842,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: Notes are topic-structured and evidence-labeled, not ranked by popularity or author following; note detail returns to the Skin Notes hub.
    Evidence: Screenshot sequence and visible route snapshot.
    Current local evidence: 2026-07-07 Expo web 320 x 568 shows topic groups and evidence labels, includes `a library, not a feed. No likes, no authors to follow, no ranking by popularity`, opens the niacinamide/vitamin C note with claim/evidence/reviewer context, and Back returns to `/community` with zero horizontal overflow.
+   Current local evidence: 2026-07-07 in-app browser verifies compact `/community` at 320 x 568 and 390 x 568 with zero horizontal overflow and no sub-44 px controls. The 320 x 568 viewport renders the first three Skin Notes fully, while the 390 x 568 viewport renders the first four note cards fully.
 
 ### Path B: Posting Gate
 

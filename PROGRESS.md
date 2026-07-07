@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the compact Skin Notes hub after the current 320 x 568 and
+  390 x 568 route audit showed the next Community card clipping into the first
+  viewport. The hub now applies a height-aware compact card density, heading
+  spacing, and section rhythm on short phones while preserving the expert
+  library behavior and full-card tap targets. In-app browser E2E verifies
+  `/community` has zero horizontal overflow and no sub-44 px controls at
+  320 x 568 and 390 x 568; at 320 the first three Skin Notes are fully readable,
+  and at 390 the first four note cards fit in viewport. Focused Community route
+  contracts pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/community-hub-compact-card-fit/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-community-hub-compact-card-clip.md`.
+
 - Tightened the compact For You recommendation hub after the current 320 x 568
   route audit showed the second recommendation card clipped before its
   evidence/`See how` row. The hub now applies a compact-only card density and
