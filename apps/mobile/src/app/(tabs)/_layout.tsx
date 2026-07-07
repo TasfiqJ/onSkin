@@ -36,7 +36,7 @@ const FLOATING_TAB_BAR_HEIGHT = 66;
 const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 12, web: 14, default: 12 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
 const FLOATING_TAB_BAR_GAP = 24;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 12;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 8;
 const FLOATING_TAB_BAR_MAX_WIDTH = 430;
 const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 0;
 const MIN_TAB_TOUCH_TARGET = 52;
@@ -140,7 +140,7 @@ function YouIcon({ color }: { color: string }) {
 }
 
 function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) {
-  const iconColor = focused ? colors.ink : colors.mutedStrong;
+  const iconColor = focused ? colors.paperRaised : colors.mutedStrong;
   const Icon =
     name === 'today'
       ? TodayIcon
@@ -206,7 +206,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-        const labelColor = focused ? colors.ink : colors.mutedStrong;
+        const labelColor = focused ? colors.paperRaised : colors.mutedStrong;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -417,8 +417,8 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   tabItemActive: {
-    backgroundColor: colors.greige,
-    borderColor: colors.hairline,
+    backgroundColor: colors.ink,
+    borderColor: colors.ink,
   },
   tabItemPressed: {
     opacity: 0.72,

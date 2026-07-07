@@ -2849,6 +2849,20 @@ Tightened the B-DERM-REVIEW production gate so blank or whitespace-only reviewer
 or share-card eligibility. The same reviewed-rule predicate now backs `shippableRules()` and Phase 7 conflict-card
 eligibility, with focused tests covering whitespace reviewer rows.
 
+### Test Store entitlement cache hardening (2026-07-07)
+
+Hardened the subscription entitlement cache so a RevenueCat Test Store entitlement cannot remain active when the app
+environment is production. This complements the existing production guard against Test Store keys and prevents a stale
+local test entitlement from unlocking Pro in a release build. Added a subscription store regression test; real RevenueCat
+sandbox/production restore evidence remains blocked on store products and credentials.
+
+### Floating tab bar premium refresh (2026-07-07)
+
+Refined the primary bottom tab bar toward the requested Wealthsimple-like floating treatment: the selected tab now uses a
+dark high-contrast pill with white active icon/label colors, and compact phone side margins are tighter so each tab has
+more breathing room at 320 px. Updated navigation contract coverage and captured Expo web human E2E screenshots/geometry
+at 320x568 and 390x844 under `test-results/human-e2e/2026-07-07/navigation-tabbar-wealthsimple-refresh/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

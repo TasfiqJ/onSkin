@@ -151,11 +151,17 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
     source === 'app_granted' &&
     environment === 'development' &&
     env.appEnvironment !== 'development';
+  const testStoreInProduction =
+    env.appEnvironment === 'production' && (store === 'test_store' || environment === 'test_store');
 
   return {
     tier,
     isActive:
-      rawActive && activeHasVerifiedSource && activeHasRequiredExpiry && !devGrantedInNonDev,
+      rawActive &&
+      activeHasVerifiedSource &&
+      activeHasRequiredExpiry &&
+      !devGrantedInNonDev &&
+      !testStoreInProduction,
     periodType,
     store,
     productId: stringOrNull(value.productId),

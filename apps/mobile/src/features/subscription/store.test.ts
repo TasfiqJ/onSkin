@@ -247,6 +247,37 @@ describe('subscription store reverse trial', () => {
     });
   });
 
+  it('does not honor a Test Store entitlement cache in production', async () => {
+    mocks.env.appEnvironment = 'production';
+    mocks.storage.set(
+      KEY,
+      JSON.stringify(
+        cachedEntitlement({
+          periodType: 'normal',
+          store: 'test_store',
+          productId: 'routinekind_pro_annual',
+          expiresAt: '2026-08-05T12:00:00.000Z',
+          willRenew: true,
+          source: 'revenuecat',
+          environment: 'test_store',
+          verifiedAt: '2026-07-05T12:00:00.000Z',
+        }),
+      ),
+    );
+
+    await expect(loadEntitlement()).resolves.toMatchObject({
+      source: 'revenuecat',
+      store: 'test_store',
+      environment: 'test_store',
+      isActive: false,
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      store: 'test_store',
+      environment: 'test_store',
+      isActive: false,
+    });
+  });
+
   it('returns the normalized server grant instead of a raw fail-open entitlement', async () => {
     mocks.isSupabaseConfigured = true;
     mocks.env.appEnvironment = 'production';

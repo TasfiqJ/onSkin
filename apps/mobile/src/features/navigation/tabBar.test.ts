@@ -50,7 +50,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
     expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
+    expect(source).toContain('focused ? colors.paperRaised : colors.mutedStrong');
     expect(source).toContain('backgroundColor: colors.paperRaised');
     expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderColor: colors.hairlineStrong');
@@ -61,8 +61,8 @@ describe('tab bar treatment', () => {
     expect(source).toContain('zIndex: 50');
     expect(source).toContain('height: FLOATING_TAB_BAR_HEIGHT');
     expect(source).toContain('tabItemActive: {');
-    expect(source).toContain('backgroundColor: colors.greige');
-    expect(source).toContain('borderColor: colors.hairline');
+    expect(source).toContain('backgroundColor: colors.ink');
+    expect(source).toContain('borderColor: colors.ink');
     expect(source).toContain('accessibilityRole="tablist"');
     expect(source).toContain('accessibilityRole="tab"');
     expect(source).toContain('accessibilityState={{ selected: focused }}');
@@ -91,8 +91,6 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
-    expect(source).not.toContain('focused ? colors.paperRaised : colors.mutedStrong');
-    expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
     expect(source).not.toContain('backgroundColor: colors.greigeChip');
   });
 
@@ -137,6 +135,7 @@ describe('tab bar treatment', () => {
     const tabItemHeight = readNumericConstant(source, 'TAB_ITEM_HEIGHT');
     const usableWidth = 320 - sideMargin * 2 - horizontalPadding * 2;
 
+    expect(sideMargin).toBeLessThanOrEqual(8);
     expect(tabBarHeight).toBeGreaterThanOrEqual(tabItemHeight + 12);
     expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
     expect(minTouchTarget).toBeGreaterThanOrEqual(52);
