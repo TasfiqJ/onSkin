@@ -57,6 +57,39 @@ describe('health-data local consent store', () => {
     );
 
     await expect(getHealthDataCollectionConsentLocal()).resolves.toBeNull();
+    expect(mocks.privateStore.has('onskin.healthDataCollectionConsent.v1')).toBe(false);
+  });
+
+  it('trims local consent fields before returning a persisted choice', async () => {
+    mocks.privateStore.set(
+      'onskin.healthDataCollectionConsent.v1',
+      JSON.stringify({
+        type: ' health_data_collection ',
+        granted: false,
+        version: ' draft-v1 ',
+        consentTextHash: ' hash ',
+        recordedAt: ' 2026-07-07T00:00:00.000Z ',
+      }),
+    );
+
+    await expect(getHealthDataCollectionConsentLocal()).resolves.toMatchObject({
+      type: 'health_data_collection',
+      granted: false,
+      version: 'draft-v1',
+      consentTextHash: 'hash',
+      recordedAt: '2026-07-07T00:00:00.000Z',
+    });
+    expect(JSON.parse(mocks.privateStore.get('onskin.healthDataCollectionConsent.v1') ?? '{}')).toMatchObject({
+      version: 'draft-v1',
+      consentTextHash: 'hash',
+    });
+  });
+
+  it('removes unreadable local consent JSON', async () => {
+    mocks.privateStore.set('onskin.healthDataCollectionConsent.v1', '{not-json');
+
+    await expect(getHealthDataCollectionConsentLocal()).resolves.toBeNull();
+    expect(mocks.privateStore.has('onskin.healthDataCollectionConsent.v1')).toBe(false);
   });
 
   it('clears the local consent record for test and reset flows', async () => {

@@ -13,6 +13,45 @@ export type LocalHealthDataConsent = {
   recordedAt: string;
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function nonEmptyString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  return text.length > 0 ? text : null;
+}
+
+function isoString(value: unknown): string | null {
+  const text = nonEmptyString(value);
+  return text && !Number.isNaN(Date.parse(text)) ? text : null;
+}
+
+function normalizeConsent(value: unknown): LocalHealthDataConsent | null {
+  if (!isRecord(value)) return null;
+  const version = nonEmptyString(value.version);
+  const consentTextHash = nonEmptyString(value.consentTextHash);
+  const recordedAt = isoString(value.recordedAt);
+  const type = nonEmptyString(value.type);
+  if (
+    type !== 'health_data_collection' ||
+    typeof value.granted !== 'boolean' ||
+    !version ||
+    !consentTextHash ||
+    !recordedAt
+  ) {
+    return null;
+  }
+  return {
+    type: 'health_data_collection',
+    granted: value.granted,
+    version,
+    consentTextHash,
+    recordedAt,
+  };
+}
+
 export async function setHealthDataCollectionConsentLocal(params: {
   granted: boolean;
   version: string;
@@ -36,21 +75,28 @@ export async function setHealthDataCollectionConsentLocal(params: {
 }
 
 export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealthDataConsent | null> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<LocalHealthDataConsent>;
-    if (
-      parsed.type !== 'health_data_collection' ||
-      typeof parsed.granted !== 'boolean' ||
-      typeof parsed.version !== 'string' ||
-      typeof parsed.consentTextHash !== 'string' ||
-      typeof parsed.recordedAt !== 'string'
-    ) {
+    raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
+  } catch {
+    return null;
+  }
+  if (!raw) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeConsent(parsed);
+    if (!normalized) {
+      await removePrivateItem(HEALTH_DATA_CONSENT_KEY).catch(() => undefined);
       return null;
     }
-    return parsed as LocalHealthDataConsent;
+    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+      await setPrivateItem(HEALTH_DATA_CONSENT_KEY, JSON.stringify(normalized)).catch(
+        () => undefined,
+      );
+    }
+    return normalized;
   } catch {
+    await removePrivateItem(HEALTH_DATA_CONSENT_KEY).catch(() => undefined);
     return null;
   }
 }

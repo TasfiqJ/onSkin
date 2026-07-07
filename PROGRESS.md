@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened local onboarding gate state. Health-data consent records now remove
+  unreadable or malformed local JSON, and the skin-profile completion gate now
+  validates quiz result shape, approved goals, and completion timestamps before
+  treating a returning user as onboarded.
+
 - Hardened the local photo metadata store so unreadable photo JSON is removed,
   malformed rows are dropped, valid legacy rows regain safe defaults, and
   encrypted note metadata is re-persisted cleanly before Progress reads it.
