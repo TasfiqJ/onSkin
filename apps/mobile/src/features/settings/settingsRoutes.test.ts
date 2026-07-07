@@ -151,6 +151,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const compactPhone = height < 640 || width < 430');
+    expect(source).toContain('const shortPhone = compactPhone && height < 600;');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}");
     expect(source).toContain("className={compactPhone ? 'mt-1' : 'mt-2'}");
     expect(source).toContain("className={compactPhone ? 'mt-3 p-3' : 'mt-6'}");
@@ -165,11 +166,15 @@ describe('Settings route contracts', () => {
       'className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"',
     );
     expect(source).toContain(
-      'const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;',
+      'const primaryRoutineRows = shortPhone',
     );
+    expect(source).toContain('? routineRows.slice(0, 2)');
+    expect(source).toContain('? routineRows.slice(0, 3)');
     expect(source).toContain(
-      'const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];',
+      'const secondaryRoutineRows = shortPhone',
     );
+    expect(source).toContain('? routineRows.slice(2)');
+    expect(source).toContain('? routineRows.slice(3)');
     expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
     expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
     expect(source).toContain('<Card className="mt-12 p-3">');

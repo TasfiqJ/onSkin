@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed compact phone polish around the floating bottom tab bar after 320 x 568
+  E2E showed the empty Shelf subtitle colliding with its illustration and the
+  You tab's third routine row entering the tab-bar zone. The empty Shelf state
+  now uses short-screen top spacing, and very short You screens defer lower
+  routine rows below the first viewport while 390 px phones still show Retinoid
+  ramp above the bar. Evidence is in
+  `test-results/human-e2e/2026-07-07/navigation-tabbar/`.
+
+- Hardened Phase 8 growth/store readiness so the check and generated QA packet
+  both evaluate process-env public identity values and share the release-grade
+  production domain, URL, and support-email validators. Added
+  `phase8:check-growth-store-smoke` and wired it into `phase8:verify` to prove
+  final-domain, support-email, and store-link impostors stay blocked.
+
 - Aligned the mobile Phase 7 runtime gate with the stricter public-domain rules.
   Production deferred surfaces now require a normalized first-party domain, so
   reserved hosts, credentialed domains, query injection, bare labels, and local

@@ -204,8 +204,17 @@ export default function YouScreen() {
   if (phase7Flags.widgets) {
     routineRows.push({ label: 'Widgets & Live Activity', href: '/routine/widgets' });
   }
-  const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;
-  const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];
+  const shortPhone = compactPhone && height < 600;
+  const primaryRoutineRows = shortPhone
+    ? routineRows.slice(0, 2)
+    : compactPhone
+      ? routineRows.slice(0, 3)
+      : routineRows;
+  const secondaryRoutineRows = shortPhone
+    ? routineRows.slice(2)
+    : compactPhone
+      ? routineRows.slice(3)
+      : [];
 
   useEffect(() => {
     if (params.section !== 'privacy' || !privacyCardReady) return;

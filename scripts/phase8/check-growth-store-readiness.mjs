@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { productionDomain, productionSupportEmail, productionUrl } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -46,59 +47,6 @@ function has(path, pattern) {
   return pattern.test(read(path));
 }
 
-const PUBLIC_PRODUCTION_HOSTNAME =
-  /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
-const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
-
-function productionHostname(hostname) {
-  const normalized = String(hostname ?? '').trim().toLowerCase();
-  return (
-    PUBLIC_PRODUCTION_HOSTNAME.test(normalized) &&
-    !RESERVED_PRODUCTION_HOSTNAME.test(normalized) &&
-    !normalized.includes('example.com')
-  );
-}
-
-function productionUrl(value) {
-  const trimmed = String(value ?? '').trim();
-  if (!trimmed) return false;
-  let url;
-  try {
-    url = new URL(trimmed);
-  } catch {
-    return false;
-  }
-  return url.protocol === 'https:' && !url.username && !url.password && productionHostname(url.hostname);
-}
-
-function productionDomain(value) {
-  const trimmed = String(value ?? '').trim();
-  if (!trimmed) return false;
-  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-  let url;
-  try {
-    url = new URL(candidate);
-  } catch {
-    return false;
-  }
-  return (
-    (url.protocol === 'https:' || url.protocol === 'http:') &&
-    !url.username &&
-    !url.password &&
-    !url.search &&
-    !url.hash &&
-    !url.port &&
-    productionHostname(url.hostname)
-  );
-}
-
-function productionSupportEmail(value) {
-  const trimmed = String(value ?? '').trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
-  const domain = trimmed.split('@').pop()?.toLowerCase() ?? '';
-  return productionHostname(domain);
-}
-
 function listFiles(dir) {
   const base = abs(dir);
   if (!existsSync(base)) return [];
@@ -116,7 +64,7 @@ function listFiles(dir) {
 }
 
 const exampleEnv = parseEnv(read('.env.example'));
-const launchEnv = { ...exampleEnv, ...envFile('.env') };
+const launchEnv = { ...exampleEnv, ...envFile('.env'), ...process.env };
 
 const requiredEnv = [
   'EXPO_PUBLIC_MARKETING_URL',

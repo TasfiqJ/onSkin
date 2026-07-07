@@ -133,8 +133,12 @@ describe('Shelf route mobile contracts', () => {
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
-    expect(source).toContain('function EmptyShelf({ archiveCount }: { archiveCount: number })');
-    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} />');
+    expect(source).toContain(
+      'function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: boolean })',
+    );
+    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
+    expect(source).toContain("? 'items-center px-2 pb-24 pt-7'");
+    expect(source).toContain(": 'flex-1 items-center justify-center px-2 pb-16'");
     expect(source).toContain('{archiveCount > 0 ? (');
     expect(source).toContain('accessibilityLabel={`View archive, ${archiveCount} archived ${');
     expect(source).toContain("archiveCount === 1 ? 'product' : 'products'");
@@ -143,6 +147,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('className="mt-6 min-h-[48px] items-center justify-center py-2"');
     expect(source).not.toContain('function EmptyShelf()');
     expect(source).not.toContain('<EmptyShelf />');
+    expect(source).not.toContain('<EmptyShelf archiveCount={archiveCount} />');
     expect(source).not.toContain('className="mt-6 items-center py-2"');
   });
 

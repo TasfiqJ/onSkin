@@ -122,9 +122,15 @@ function ProductCard({ item }: { item: ShelfItem }) {
   );
 }
 
-function EmptyShelf({ archiveCount }: { archiveCount: number }) {
+function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: boolean }) {
   return (
-    <View className="flex-1 items-center justify-center px-2 pb-16">
+    <View
+      className={
+        compact
+          ? 'items-center px-2 pb-24 pt-7'
+          : 'flex-1 items-center justify-center px-2 pb-16'
+      }
+    >
       <View className="mb-7 flex-row items-end gap-2.5">
         <View className="-rotate-6">
           <StripedThumb light width={46} height={60} radius={10} />
@@ -259,7 +265,7 @@ export default function ShelfScreen() {
               empty for now
             </Text>
           </View>
-          <EmptyShelf archiveCount={archiveCount} />
+          <EmptyShelf archiveCount={archiveCount} compact={compactShelf} />
         </>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">

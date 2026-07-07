@@ -56,7 +56,7 @@ function block(condition, message) {
 
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile('.env');
-const launchEnv = { ...exampleEnv, ...localEnv };
+const launchEnv = { ...exampleEnv, ...localEnv, ...process.env };
 
 const evidence = {
   brandSourceOfTruth: process.env.PHASE8_BRAND_SOURCE_OF_TRUTH_PASS === 'true',
