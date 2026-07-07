@@ -9,6 +9,23 @@ function readRepo(path: string): string {
 }
 
 describe('subscription server contracts', () => {
+  it('retries RevenueCat entitlement mirroring when a prior event row failed', () => {
+    const edgeFunction = readRepo('supabase/functions/revenuecat-webhook/index.ts');
+    const liveHarness = readRepo('scripts/phase9/live-revenuecat-webhook.mjs');
+
+    expect(edgeFunction).toContain(".select('id, processing_status')");
+    expect(edgeFunction).toContain("const retryFailedEvent = seen?.processing_status === 'error';");
+    expect(edgeFunction).toContain('if (seen && !retryFailedEvent) return json');
+    expect(edgeFunction).toContain('processing_status: eventProcessingStatus');
+    expect(edgeFunction).toContain('processed_at: null');
+
+    expect(liveHarness).toContain(
+      "revenuecat-webhook retries entitlement mirroring after a failed event row",
+    );
+    expect(liveHarness).toContain("processing_status: 'error'");
+    expect(liveHarness).toContain('eventIds.retryAfterError');
+  });
+
   it('keeps app-granted reverse trial audit and entitlement writes atomic', () => {
     const migration = readRepo(
       'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',

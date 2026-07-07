@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the RevenueCat webhook idempotency path so failed entitlement mirror
+  writes can recover on RevenueCat retry. Event IDs with a completed or ignored
+  audit row still dedupe, but rows stuck in `processing_status='error'` now
+  reset to `processing`, reuse the existing `subscriptions_events` row, and
+  retry the entitlement upsert. The Phase 9 live webhook harness now seeds this
+  failed-row state and verifies the retry updates entitlement state without a
+  second audit row. This was non-UI Edge Function reliability hardening, so
+  human E2E was not required.
+
 - Aligned the 2-day carded-trial reminder with RevenueCat localized pricing.
   Trial reminder notifications now use the verified entitlement price label when
   RevenueCat supplied one, falling back to the local plan label only when no

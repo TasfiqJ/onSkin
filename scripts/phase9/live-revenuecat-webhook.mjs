@@ -340,6 +340,7 @@ async function main() {
     staleSignature: `phase9-rc-stale-signature-${randomUUID()}`,
     oversized: `phase9-rc-oversized-${randomUUID()}`,
     initial: `phase9-rc-initial-${randomUUID()}`,
+    retryAfterError: `phase9-rc-retry-error-${randomUUID()}`,
     renewal: `phase9-rc-renewal-${randomUUID()}`,
     cancellation: `phase9-rc-cancellation-${randomUUID()}`,
     billingIssue: `phase9-rc-billing-issue-${randomUUID()}`,
@@ -578,6 +579,61 @@ async function main() {
         'duplicate event inserted more than one subscriptions_events row.',
       );
     });
+
+    await runCheck(
+      'revenuecat-webhook retries entitlement mirroring after a failed event row',
+      async () => {
+        const { error: seedError } = await admin.from('subscriptions_events').insert({
+          rc_event_id: eventIds.retryAfterError,
+          user_id: user.id,
+          event_type: 'INITIAL_PURCHASE',
+          resolved_user_id: user.id,
+          processing_status: 'error',
+          error: 'ENTITLEMENT_WRITE_FAILED',
+          payload: {
+            event: {
+              id: eventIds.retryAfterError,
+              type: 'INITIAL_PURCHASE',
+            },
+          },
+        });
+        if (seedError) throw seedError;
+
+        const response = await postWebhook(
+          eventBody(eventIds.retryAfterError, 'INITIAL_PURCHASE', user.id),
+          validOptions(),
+        );
+        assertStatus(response.status, 200, 'retry failed initial purchase', response.text);
+        assert(
+          /^ok$/i.test(response.text),
+          `retry failed event returned unexpected body: ${response.text}`,
+        );
+        assert(
+          (await eventCount(admin, eventIds.retryAfterError)) === 1,
+          'failed-row retry inserted more than one subscriptions_events row.',
+        );
+
+        const event = await oneEvent(admin, eventIds.retryAfterError);
+        assert(event.resolved_user_id === user.id, 'failed-row retry did not resolve app user id.');
+        assert(
+          event.processing_status === 'processed',
+          `failed-row retry processing_status=${event.processing_status}.`,
+        );
+        assert(event.store === 'test_store', `failed-row retry store=${event.store}.`);
+        assert(
+          event.environment === 'test_store',
+          `failed-row retry environment=${event.environment}.`,
+        );
+
+        const row = await entitlement(admin, user.id);
+        assert(row.is_active === true, 'failed-row retry did not activate entitlement.');
+        assert(
+          row.rc_event_id === eventIds.retryAfterError,
+          'failed-row retry entitlement did not record event id.',
+        );
+        assert(row.will_renew === true, 'failed-row retry did not mark will_renew=true.');
+      },
+    );
 
     await runCheck('revenuecat-webhook keeps entitlement active on renewal', async () => {
       const response = await postWebhook(

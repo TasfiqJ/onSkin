@@ -260,10 +260,11 @@ Deno.serve(async (req) => {
 
   const { data: seen } = await supabase
     .from('subscriptions_events')
-    .select('id')
+    .select('id, processing_status')
     .eq('rc_event_id', event.id)
     .maybeSingle();
-  if (seen) return json('ok (duplicate)', 200);
+  const retryFailedEvent = seen?.processing_status === 'error';
+  if (seen && !retryFailedEvent) return json('ok (duplicate)', 200);
 
   const resolvedUserId = await resolveUserId(supabase, event);
   const store = mapStore(event.store);
@@ -292,11 +293,24 @@ Deno.serve(async (req) => {
   const revoke = REVOKE_TYPES.has(event.type);
   const stopRenew = STOP_RENEW_TYPES.has(event.type);
   const shouldMirror = Boolean(resolvedUserId && (grant || revoke || stopRenew));
+  const eventProcessingStatus = shouldMirror ? 'processing' : resolvedUserId ? 'ignored_event_type' : 'unresolved_user';
 
-  await supabase.from('subscriptions_events').insert({
-    ...eventBase,
-    processing_status: shouldMirror ? 'processing' : resolvedUserId ? 'ignored_event_type' : 'unresolved_user',
-  });
+  if (retryFailedEvent) {
+    await supabase
+      .from('subscriptions_events')
+      .update({
+        ...eventBase,
+        processed_at: null,
+        processing_status: eventProcessingStatus,
+        error: null,
+      })
+      .eq('rc_event_id', event.id);
+  } else {
+    await supabase.from('subscriptions_events').insert({
+      ...eventBase,
+      processing_status: eventProcessingStatus,
+    });
+  }
 
   if (shouldMirror && resolvedUserId) {
     const now = new Date().toISOString();
