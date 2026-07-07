@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Aligned the Phase 2 live RLS smoke preflight with the shared placeholder
+  parser so `pending`, newer blocked placeholders, cased copied examples, and
+  `YOUR_*` style Supabase values are rejected before any live connection can
+  start. Phase 2 env smoke now covers pending Supabase placeholders explicitly.
+
 - Fixed compact phone polish around the floating bottom tab bar after 320 x 568
   E2E showed the empty Shelf subtitle colliding with its illustration and the
   You tab's third routine row entering the tab-bar zone. The empty Shelf state

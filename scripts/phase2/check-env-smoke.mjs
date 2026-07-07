@@ -285,6 +285,21 @@ const cases = [
       );
     },
   },
+  {
+    name: 'RLS smoke rejects pending Supabase placeholders before live connections',
+    result: runRlsSmoke({
+      EXPO_PUBLIC_SUPABASE_URL: 'pending',
+      EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'pending',
+      SUPABASE_SECRET_KEY: 'pending',
+      EXPO_PUBLIC_APP_ENV: 'staging',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_SUPABASE_URL is missing or still a placeholder/.test(result.stderr)
+      );
+    },
+  },
 ];
 
 let failed = false;

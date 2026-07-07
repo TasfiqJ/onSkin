@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
+import { placeholderEnvValue } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 
@@ -58,17 +59,8 @@ function redactedErrorKind(error) {
   return typeof error;
 }
 
-function placeholder(value) {
-  return (
-    !value ||
-    /YOUR-|YOUR_|replace-with|xxxxxxxx|example\.com|\.\.\.|__BLOCKED_PLACEHOLDER__/i.test(
-      String(value),
-    )
-  );
-}
-
 function assertEnv(name, value) {
-  assert(!placeholder(value), `${name} is missing or still a placeholder`);
+  assert(!placeholderEnvValue(value), `${name} is missing or still a placeholder`);
 }
 
 assertEnv('EXPO_PUBLIC_SUPABASE_URL', supabaseUrl);
