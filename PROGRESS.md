@@ -6,12 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened first-session routine funnel analytics so repeat routine-plan views
+  still record `routine_created`, but `first_routine_created` and
+  `first_useful_insight` only fire once for real shelf-backed plans, not example
+  plans or repeated route visits. Added a local-first activation marker and
+  focused tests for repeat views, example plans, and malformed marker repair.
+
 - Buffered compact direct-entry bottom actions on Shelf catalog search and the
   routine welcome-back earn-back screen. Both primary actions now sit in a small
   bottom wrapper instead of touching the phone edge, with route contract tests.
   Human-simulated Expo web E2E at 320 x 568 verified `Add by hand` routes to
   `/shelf/manual` and `Tonight's step` routes to `/today`; evidence is in
-  `test-results/human-e2e/2026-07-07/direct-entry-bottom-actions/`.
+  `test-results/human-e2e/2026-07-07/direct-entry-bottom-actions/`. The tracked
+  bug report is
+  `docs/e2e-bug-reports/2026-07-07-bottom-edge-action-buffer.md`.
 
 - Clarified the product-detail management hub so every active product now has a
   visible routine role card: placed products explain the generated AM/PM usage,

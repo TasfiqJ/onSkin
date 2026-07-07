@@ -5,6 +5,7 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { startCycleToday } from '@/features/scheduler/cycleStore';
+import { recordRoutinePlanAnalytics } from '@/features/routine/activationAnalytics';
 import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -136,12 +137,11 @@ export default function PlanScreen() {
     const source = data.isExample ? 'example' : 'routine_plan';
     const insightCount = data.plan.conflicts.length + data.plan.gaps.length + 1;
 
-    track('routine_created', { source });
-    track('first_routine_created', { source });
-
-    if (!data.isExample) {
-      track('first_useful_insight', { count: insightCount, source: 'routine_plan' });
-    }
+    void recordRoutinePlanAnalytics({
+      insightCount,
+      isExample: data.isExample,
+      source,
+    });
 
     if (data.plan.conflicts.length > 0) {
       track('conflict_detected', { count: data.plan.conflicts.length });

@@ -73,7 +73,9 @@ describe('local private data cleanup', () => {
   it('clears local stores, cache files, notifications, and client vendor identities', async () => {
     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
 
-    expect(mocks.multiRemove).toHaveBeenCalledWith(expect.arrayContaining(['onskin.skinprofile.v1']));
+    expect(mocks.multiRemove).toHaveBeenCalledWith(
+      expect.arrayContaining(['onskin.routineActivation.v1', 'onskin.skinprofile.v1']),
+    );
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);
