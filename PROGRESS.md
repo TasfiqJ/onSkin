@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Regenerated the Phase 7 core-loop QA packet after the latest route/storage
+  changes and added the missing Tas-owned Phase 7 strict-evidence row to
+  `docs/FOR_TAS_TO_DO.md`. Non-strict Phase 7 code gates pass; strict launch
+  remains blocked on brand, legal/privacy, review, device, RevenueCat, Supabase,
+  catalog, beta dashboard, and named signoff evidence.
+
 - Hardened scheduler cycle date storage so cycle anchors and cycle configs reject
   impossible calendar dates, trim padded local dates, de-duplicate skipped nights,
   and persist normalized scheduler state before projection reads it.
