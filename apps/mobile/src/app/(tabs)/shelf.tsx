@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import {
+  Button,
   ConflictBanner,
   ExpiryBadge,
   Screen,
@@ -192,6 +193,40 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
   );
 }
 
+function RoutineHandoffCard({
+  hasConflict,
+  productCount,
+}: {
+  hasConflict: boolean;
+  productCount: number;
+}) {
+  return (
+    <View
+      className="mt-4 rounded-[18px] bg-greige-chip p-4"
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
+      <Text variant="label" tone="clay" className="font-mono uppercase">
+        First routine
+      </Text>
+      <Text variant="body" className="mt-1 font-sans-semibold">
+        {hasConflict ? 'Turn this insight into a routine.' : 'Your routine is ready to draft.'}
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-1.5">
+        {hasConflict
+          ? 'We will place your products around the timing note instead of making you remember it.'
+          : productCount === 1
+            ? 'Even one product can start an honest AM/PM draft. Missing steps stay visible, not invented.'
+            : 'Uses the products you added, and keeps missing steps visible instead of inventing them.'}
+      </Text>
+      <Button
+        label="Build my routine"
+        className="mt-3 min-h-[52px] py-3"
+        onPress={() => router.push('/routine/plan')}
+      />
+    </View>
+  );
+}
+
 function SkeletonCard() {
   return (
     <View
@@ -305,6 +340,8 @@ export default function ShelfScreen() {
               }}
             />
           ) : null}
+
+          <RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />
 
           <View className="mt-4 gap-2.5">
             {filtered.map((item) => (

@@ -130,6 +130,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('!isEmpty && !showLoading ? (');
   });
 
+  it('surfaces a first-routine handoff once the shelf has real products', () => {
+    const source = readAppRoute('(tabs)/shelf.tsx');
+
+    expect(source).toContain('function RoutineHandoffCard');
+    expect(source).toContain('<RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />');
+    expect(source).toContain('First routine');
+    expect(source).toContain('Build my routine');
+    expect(source).toContain("router.push('/routine/plan')");
+    expect(source).toContain('Missing steps stay visible, not invented.');
+    expect(source).toContain('instead of making you remember it');
+    expect(source).toContain('className="mt-3 min-h-[52px] py-3"');
+  });
+
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 

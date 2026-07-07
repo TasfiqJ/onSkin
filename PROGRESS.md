@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Strengthened the first-session Shelf to routine handoff so any non-empty
+  real-product Shelf now surfaces a clear `Build my routine` path into
+  `/routine/plan`, with conflict-aware copy that turns timing notes into the
+  next routine step instead of leaving the user at a passive list. Updated the
+  Shelf flow tree before testing and added a route contract test. Human-simulated
+  Expo web E2E covered manual product add -> Shelf handoff -> routine plan ->
+  Start today -> first Today check-off at 320 x 568 in
+  `test-results/human-e2e/2026-07-07/shelf-routine-handoff/`. The browser store
+  already contained prior local E2E products, so the evidence records that
+  persistence explicitly while still proving the handoff and check-off path.
+
 - Polished the first-use Progress photo consent gate after a 320 x 568
   human-simulated E2E sweep showed dense privacy copy competing with the capture
   guide behind the translucent overlay. The gate now uses an opaque night

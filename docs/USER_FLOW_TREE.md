@@ -360,7 +360,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Happy Path
 
 1. Action: Open Shelf, search for a known fixture product, select it, and confirm the detail/shelf state.
-   Expected result: Search results are understandable, the catalog search input and Search action stay inside narrow phone viewports, and the shelf state updates without unsafe recommendation claims.
+   Expected result: Search results are understandable, the catalog search input and Search action stay inside narrow phone viewports, the shelf state updates without unsafe recommendation claims, and a real-product shelf exposes a clear Build my routine handoff into `/routine/plan`.
    Evidence: Screenshots of search, selection, and final shelf state.
 
 ### Branches
