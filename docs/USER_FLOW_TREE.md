@@ -317,12 +317,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: iOS and Android first; Expo web if route parity is confirmed.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/today/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`
 
 ### Path A: Happy Path
 
 1. Action: Open Today, review routine steps, complete a step, undo it, complete it again, and verify the completed state.
    Expected result: Completion is responsive, visually clear, and persists after navigation away and back. The first check-off activation event can fire only once, including after undo/recheck or legacy completion logs. Routine product names remain readable without visual ellipses for normal shelf names, and routine instruction lines remain complete or use concise display copy on compact phones. When a streak is visible, the Today streak/adherence pill shows singular/plural copy correctly, remains a buffered 48 px phone target, and opens the adherence surface, or its contextual Pro gate for free users.
-   Evidence: Screenshot before completion, after completion, and after navigation.
+   Evidence: Screenshot before completion, after completion, after undo, after re-completion, and after navigation or reload.
 
 ### Branches
 

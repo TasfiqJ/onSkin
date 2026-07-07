@@ -18,6 +18,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   with the tracked report in
   `docs/e2e-bug-reports/2026-07-07-settings-privacy-negative-nudge-regression.md`.
 
+- Verified the critical Today AM check-off loop through the in-app browser at
+  320 x 568 using the local shelf routine. The flow completed `Mineral SPF 50`,
+  undid it back to `0 of 1`, completed it again, reloaded Today, and preserved
+  the `1 of 1` checked state. Visible controls stayed at least 48 px high with
+  zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; native
+  iOS/Android verification remains part of Phase 5 device QA.
+
 - Reworked the compact `/onboarding/products` category picker after the
   phone-width audit showed the horizontal category rail clipping offscreen chips
   and feeling inconsistent with the rest of the mobile shell. Compact phones now

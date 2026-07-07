@@ -80,3 +80,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   retinoid × glycolic routine. This supports the "unreviewed rules do not
   surface in production" checklist item; it does not replace real iOS/Android
   beta-device QA or named reviewer sign-off.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
+  loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
+  `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state
+  persists with zero horizontal overflow and no sub-44 px visible controls.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; it does not
+  replace real iOS/Android beta-device QA.
