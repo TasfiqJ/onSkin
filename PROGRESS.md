@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Refreshed the Phase 7 core-loop QA packet and Phase 10 closed-beta packet
+  after the latest analytics and commerce-source changes. The generated
+  artifacts now carry current source hashes for `WhereToBuy`, the beta evidence
+  dashboard, the analytics event registry, and the beta event schema, and the
+  Phase 10 packet records a clean git status. External evidence remains blocked
+  for Tas-provided beta, store, legal, account, and signoff proof.
+
 - Cleared the remaining strict brand-audit launch-risk hits. The routine
   activation analytics marker now uses the working `RoutineKind` namespace, the
   local private-data registry test covers both legacy internal and current

@@ -1,6 +1,6 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-07T07:34:04.539Z
+Generated at: 2026-07-07T10:42:22.447Z
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -45,10 +45,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/(tabs)/you.tsx | present | 23234 | 5fd733b5be10d6b61d339ec7b806101b196e22c5c8190e6d35bc3322550652f5 |
 | apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 4710 | 096fa24edb685bb08d08a4868fedef42a0b3b208e375335d8d96a094717a7cf7 |
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 21906 | e925404c8d566d0f516b724a4d70d8dc7370a29f19aca936daca27e7b369b7ac |
-| apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 7673 | 5b1f5216efc5ec76c6554dda4b8cf253fb47d51ac7910eb4e8dca131627ab0dc |
+| apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 7811 | 36f4fd40476fa553dde281bbbd42a560b5c4fe35a86483837bee23e9092ebe3c |
 | docs/phase-7/surface-inventory.md | present | 7793 | ae733b1a87a8cf785ee9fc0fb0bfabf5b2ad6515c064320d89d6c4a58dd956ae |
 | docs/phase-7/launch-claim-matrix.md | present | 3069 | 52d9d1f1f368fab32c4664f6e04b8c360aef035f2550d88de2722937286a4597 |
-| docs/phase-7/beta-evidence-dashboard.md | present | 4152 | 36b614fcdb943ba9126ada582298a7a9d7f524e0ea85444d9e163086c14d4297 |
+| docs/phase-7/beta-evidence-dashboard.md | present | 4164 | 1bb706d9cdab272dc302acf7c8e70141ffa16675f5e4d6ea3edad118575588ab |
 | docs/phase-7/core-loop-qa-checklist.md | present | 3426 | 2a69c08f6650713b9a64480c4ef3fd6383df0f7d402b2df89f88fa823a15fba6 |
 | docs/phase-7/phase-7-exit-review.md | present | 2670 | a18a08606b4c7130fe149594d126de66739af77ea5728d95ec82a5cf5f7896c5 |
 
