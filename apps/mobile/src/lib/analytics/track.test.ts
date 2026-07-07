@@ -129,16 +129,20 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('first_useful_insight')).toBe('first_useful_insight');
     expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
     expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
+    expect(sanitizeAnalyticsEventName('routine_checkoff_completed')).toBe(
+      'routine_checkoff_completed',
+    );
 
     expect(
       sanitizeAnalyticsProps({
         source: 'routine_plan',
         count: 3,
+        moment: 'pm',
         rule_id: '00000000-0000-4000-8000-000000000001',
         product_name: 'Retinol 0.3%',
         goal: 'barrier_repair',
       }),
-    ).toEqual({ source: 'routine_plan', count: 3 });
+    ).toEqual({ source: 'routine_plan', count: 3, moment: 'pm' });
   });
 
   it('drops unapproved or user-derived event names', () => {

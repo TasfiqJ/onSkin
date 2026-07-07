@@ -13,6 +13,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   human-simulated Expo web pass through onboarding product add -> routine plan
   -> Today PM -> first check-off.
 
+- Aligned beta/core-loop analytics evidence with emitted app events. Today now
+  emits privacy-safe `routine_checkoff_completed` for every completed AM/PM
+  step and keeps `first_checkoff_completed` for the first-ever completion. The
+  Phase 7 gate now rejects stale dashboard event names and asserts the V1
+  product-add, first-insight, routine, check-off, photo, paywall, reverse-trial,
+  and purchase event coverage.
+
 - Added a dated `RoutineKind` candidate spot-check to the brand evidence packet:
   Apple public app search, Google Play public search, web-indexed App
   Store/Play queries, and DNS did not surface an exact app listing or active

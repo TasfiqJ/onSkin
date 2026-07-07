@@ -4,38 +4,38 @@ Purpose: prove whether the V1 loop is valuable enough to keep funding. This is t
 
 ## Activation
 
-| Metric | Event(s) | Target |
-| --- | --- | --- |
-| Product shelf activation | `shelf_product_added` by unique product count | 60% of users add 3+ products within 48 hours |
-| First value moment | `conflict_opened`, `youre_set_shown`, or reviewed no-issue state | 50% reach useful guidance/no-issue within first session |
-| Routine activation | `first_checkoff_completed` | 45% complete at least one check-off within 48 hours |
-| Photo activation | `photo_captured` | 25% capture a baseline photo within 7 days |
+| Metric                   | Event(s)                                                           | Target                                                  |
+| ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------- |
+| Product shelf activation | `product_added` by unique product count                            | 60% of users add 3+ products within 48 hours            |
+| First value moment       | `first_useful_insight`, `conflict_detected`, and `routine_created` | 50% reach useful guidance/no-issue within first session |
+| Routine activation       | `first_checkoff_completed` and `routine_checkoff_completed`        | 45% complete at least one check-off within 48 hours     |
+| Photo activation         | `photo_captured`                                                   | 25% capture a baseline photo within 7 days              |
 
 ## Retention
 
-| Metric | Event(s) | Target |
-| --- | --- | --- |
-| D7 routine return | `routine_checkoff_completed` | 25% D7 active |
-| D14 habit cohort | `routine_checkoff_completed`, `timeline_viewed` | 15% D14 active |
-| Reminder usefulness | notification open/check-off after reminder | Positive lift versus no-reminder users |
-| Privacy trust | export/delete/withdraw support tickets | No pattern of confusion or panic |
+| Metric              | Event(s)                                        | Target                                 |
+| ------------------- | ----------------------------------------------- | -------------------------------------- |
+| D7 routine return   | `routine_checkoff_completed`                    | 25% D7 active                          |
+| D14 habit cohort    | `routine_checkoff_completed`, `timeline_viewed` | 15% D14 active                         |
+| Reminder usefulness | notification open/check-off after reminder      | Positive lift versus no-reminder users |
+| Privacy trust       | export/delete/withdraw support tickets          | No pattern of confusion or panic       |
 
 ## Monetization
 
-| Metric | Event(s) | Target |
-| --- | --- | --- |
-| Paywall after value | paywall shown after shelf/routine/photo value | 80% of paywalls after value moment |
-| Trial start | RevenueCat purchase/customer info events | Benchmark in beta cohort, no entitlement leakage |
-| Restore success | restore events and support tickets | Restore succeeds in iOS/Android QA and no beta blockers |
-| Churn reason | downgrade/cancel survey | Product-value reasons separated from billing/confusion |
+| Metric              | Event(s)                                                                      | Target                                                  |
+| ------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Paywall after value | `paywall_shown` or `contextual_paywall_shown` after shelf/routine/photo value | 80% of paywalls after value moment                      |
+| Trial start         | `reverse_trial_started`, `trial_started`, and `purchase_completed`            | Benchmark in beta cohort, no entitlement leakage        |
+| Restore success     | restore events and support tickets                                            | Restore succeeds in iOS/Android QA and no beta blockers |
+| Churn reason        | downgrade/cancel survey                                                       | Product-value reasons separated from billing/confusion  |
 
 ## Trust and safety
 
-| Metric | Event(s) | Target |
-| --- | --- | --- |
-| Unreviewed surface exposure | `phase7_deferred_surface_viewed`, route inventory | Zero unreviewed guidance exported/shared |
-| Sensitive data in analytics | analytics sanitizer audits | Zero product names, notes, local paths, receipt data |
-| Support ambiguity | support tickets tagged policy/payment/privacy | No repeated unclear-copy class before public launch |
+| Metric                      | Event(s)                                          | Target                                               |
+| --------------------------- | ------------------------------------------------- | ---------------------------------------------------- |
+| Unreviewed surface exposure | `phase7_deferred_surface_viewed`, route inventory | Zero unreviewed guidance exported/shared             |
+| Sensitive data in analytics | analytics sanitizer audits                        | Zero product names, notes, local paths, receipt data |
+| Support ambiguity           | support tickets tagged policy/payment/privacy     | No repeated unclear-copy class before public launch  |
 
 ## Kill criteria
 

@@ -231,7 +231,11 @@ export default function TodayScreen() {
   // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
   async function toggle(key: string) {
     const { done, firstEver } = await toggleCompletion(key, today);
-    if (firstEver) track('first_checkoff_completed', { moment: type.toLowerCase() });
+    if (done) {
+      const moment = type.toLowerCase();
+      track('routine_checkoff_completed', { moment });
+      if (firstEver) track('first_checkoff_completed', { moment });
+    }
     if (done && (progress?.streak ?? 0) >= 6) void requestReviewAfterValue('seven_checkoff_days');
     await qc.invalidateQueries({ queryKey: ['completions', today] });
     await qc.invalidateQueries({ queryKey: ['progress'] });

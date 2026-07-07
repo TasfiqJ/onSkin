@@ -127,20 +127,16 @@ for (const [path, pattern, label] of gatedRoutes) {
 }
 
 const askLayout = read('apps/mobile/src/app/ask/_layout.tsx');
-require(
-  /<Stack screenOptions=\{\{ headerShown: false \}\} \/>/.test(askLayout) &&
-    !/phase7Flags\.cloudAsk|DeferredSurface/.test(askLayout),
-  'Deterministic Ask route group must stay reachable while cloud Ask is deferred.',
-);
-require(
-  has('apps/mobile/src/app/ask/consent.tsx', /DeferredSurface/) &&
-    has('apps/mobile/src/app/ask/consent.tsx', /phase7Flags\.cloudAsk/) &&
-    has(
-      'apps/mobile/src/app/ask/consent.tsx',
-      /<DeferredSurface surface="cloudAsk" fallbackRoute=\{APP_ASK_ROUTE\} \/>/,
-    ),
-  'Cloud Ask consent route must render DeferredSurface when gated.',
-);
+require(/<Stack screenOptions=\{\{ headerShown: false \}\} \/>/.test(askLayout) &&
+  !/phase7Flags\.cloudAsk|DeferredSurface/.test(
+    askLayout,
+  ), 'Deterministic Ask route group must stay reachable while cloud Ask is deferred.');
+require(has('apps/mobile/src/app/ask/consent.tsx', /DeferredSurface/) &&
+  has('apps/mobile/src/app/ask/consent.tsx', /phase7Flags\.cloudAsk/) &&
+  has(
+    'apps/mobile/src/app/ask/consent.tsx',
+    /<DeferredSurface surface="cloudAsk" fallbackRoute=\{APP_ASK_ROUTE\} \/>/,
+  ), 'Cloud Ask consent route must render DeferredSurface when gated.');
 require(has(
   'apps/mobile/src/app/(tabs)/today.tsx',
   /phase7Flags\.cloudAsk[\s\S]{0,120}<AskTeaser/,
@@ -180,6 +176,49 @@ require(has(
   'apps/mobile/src/app/conflict/[ruleId].tsx',
   /canShareConflictCard/,
 ), 'Conflict sheet must hide share launcher unless share card is eligible.');
+
+const analyticsRegistry = read('apps/mobile/src/lib/analytics/eventRegistry.ts');
+const routinePlan = read('apps/mobile/src/app/routine/plan.tsx');
+const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
+const shelfMutations = read('apps/mobile/src/features/shelf/mutations.ts');
+const betaDashboard = read('docs/phase-7/beta-evidence-dashboard.md');
+const coreLoopEvents = [
+  'product_added',
+  'routine_created',
+  'first_useful_insight',
+  'conflict_detected',
+  'routine_checkoff_completed',
+  'first_checkoff_completed',
+  'photo_captured',
+  'paywall_shown',
+  'reverse_trial_started',
+  'purchase_completed',
+];
+
+for (const event of coreLoopEvents) {
+  require(analyticsRegistry.includes(
+    `'${event}'`,
+  ), `Analytics registry is missing V1 core-loop event: ${event}.`);
+  require(betaDashboard.includes(
+    `\`${event}\``,
+  ), `Phase 7 beta dashboard must reference emitted event: ${event}.`);
+}
+
+require(/track\('product_added'/.test(
+  shelfMutations,
+), 'Shelf add flow must emit product_added for product-add activation.');
+require(/track\('routine_created'/.test(routinePlan) &&
+  /track\('first_useful_insight'/.test(routinePlan) &&
+  /track\('conflict_detected'/.test(
+    routinePlan,
+  ), 'Routine plan must emit routine_created, first_useful_insight, and conflict_detected.');
+require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
+  /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
+    todayTab,
+  ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
+require(!/shelf_product_added|conflict_opened/.test(
+  betaDashboard,
+), 'Phase 7 beta dashboard contains stale non-emitted core-loop event names.');
 
 warn(
   Boolean(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN) &&

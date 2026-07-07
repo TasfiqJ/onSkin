@@ -69,6 +69,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'review_prompt_unavailable',
   'reverse_trial_expired',
   'reverse_trial_started',
+  'routine_checkoff_completed',
   'routine_created',
   'screen_viewed',
   'share_card_export_failed',
