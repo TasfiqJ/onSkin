@@ -203,3 +203,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   recovers to `/today`. Evidence is in
   `test-results/human-e2e/2026-07-07/paywall-upsell-reminders-compact/`; it does
   not replace native RevenueCat purchase, restore, or device rendering QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 plus focused settings contracts
+  cover local privacy/data-rights recovery: direct-open `/settings/privacy`,
+  verify it resolves to `/you?section=privacy`, tap `Export my data` with the
+  local backend unavailable, confirm the visible privacy-request failure copy,
+  zero horizontal overflow, and 56 px visible data-rights controls, then dismiss
+  destructive Delete/Withdraw prompt attempts and confirm the app stays on the
+  privacy surface. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`; it
+  does not replace live Supabase export/delete/withdrawal QA or native share
+  sheet QA.

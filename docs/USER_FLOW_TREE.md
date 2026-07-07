@@ -916,7 +916,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native subscription and notification settings behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/settings/`
-- Current local evidence: `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/` and `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`
 
 ### Path A: Subscription Settings
 
@@ -951,6 +951,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Tap Export my data while the OS share sheet is unavailable, cannot be detected, or rejects after the temporary JSON export is created.
   - Expected result: The app shows a clear export-unavailable alert, does not treat the export as completed for review prompting, and deletes the temporary plaintext export file.
   - Evidence: Alert text, mutation state, and cache cleanup assertion.
+  - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies `/settings/privacy` resolves to `/you?section=privacy`, `Export my data` is unique, the local backend-unavailable failure renders the visible privacy-request recovery copy, visible data-rights controls are 56 px tall, horizontal overflow is zero, and focused settings action tests cover unavailable share/cache cleanup plus destructive delete/withdraw fallback behavior. Live Supabase and native share-sheet evidence remain external QA.
 - Branch: reminder timing and discretion
   - Priority: Important
   - Automate later: Yes

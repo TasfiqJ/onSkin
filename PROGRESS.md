@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Verified the local settings privacy/data-rights recovery slice. Expo web E2E
+  at 320 x 568 direct-opens `/settings/privacy`, confirms it resolves to
+  `/you?section=privacy`, triggers the local backend-unavailable export path,
+  shows the visible privacy-request failure copy, keeps data-rights controls at
+  56 px with zero horizontal overflow, and dismisses destructive Delete/Withdraw
+  prompt attempts without leaving the privacy surface. Focused settings action,
+  settings route, and external-link tests pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`;
+  live Supabase export/delete/withdraw and native share-sheet QA remain
+  founder-owned launch evidence.
+
 - Tightened the compact contextual reminders/widgets paywall so the long
   `Reminders, streaks & home-screen widgets.` title and fallback store-copy stay
   readable on a 320 x 568 phone without crowding the compliance or dismiss
