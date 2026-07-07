@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -7,6 +7,11 @@ import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
+
+function devProfileSaveFailureMode(): 'once' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE === 'once' ? 'once' : null;
+}
 
 // 07a · Personalization theater. "Analyzing your skin profile…" (docs/01 §2/§8).
 // Uses a lightweight RN Animated pulse as a PLACEHOLDER for the recommended Rive
@@ -17,6 +22,8 @@ export default function AnalyzingScreen() {
   const [pulse] = useState(() => new Animated.Value(0));
   const [saveError, setSaveError] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
+  const simulatedProfileSaveFailureUsed = useRef(false);
+  const profileSaveFailureMode = devProfileSaveFailureMode();
 
   useEffect(() => {
     if (!quizCompletion.complete) {
@@ -38,7 +45,15 @@ export default function AnalyzingScreen() {
 
     // Persist the local completion record before reveal. Without that durable
     // signal, a cold start can force the user back through onboarding.
-    void persistSkinProfile()
+    const profileSave =
+      profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
+        ? (() => {
+            simulatedProfileSaveFailureUsed.current = true;
+            return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
+          })()
+        : persistSkinProfile();
+
+    void profileSave
       .then(() => {
         if (cancelled) return;
         revealTimer = setTimeout(() => router.replace('/onboarding/reveal'), 2600);
@@ -55,7 +70,7 @@ export default function AnalyzingScreen() {
       loop.stop();
       if (revealTimer) clearTimeout(revealTimer);
     };
-  }, [persistSkinProfile, pulse, quizCompletion.complete, retryKey]);
+  }, [persistSkinProfile, profileSaveFailureMode, pulse, quizCompletion.complete, retryKey]);
 
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });

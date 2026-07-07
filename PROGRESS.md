@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Made the critical onboarding profile-save failure branch testable through the
+  real app surface. `/onboarding/analyzing` now supports a dev-only one-shot
+  `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once` fixture that rejects the first
+  local profile save, shows the existing retry state without advancing to
+  reveal, then lets `Try again` call the real persistence path. The onboarding
+  route contract pins the dev-only guard and fail-closed ordering. Expo web E2E
+  at 320 x 568 completed age, goals, consent, quiz, product skip, forced save
+  failure, and retry to reveal; evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-profile-save-failure/`, with
+  the tracked testability bug report in
+  `docs/e2e-bug-reports/2026-07-07-onboarding-profile-save-failure-e2e-hook.md`.
+
 - Repaired stale commerce stack detail source so an unavailable
   `/commerce/stack/[slug]` route has a real recovery state when commerce is
   enabled: `Stack unavailable` copy, disclosure/product-availability review

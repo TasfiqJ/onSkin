@@ -200,8 +200,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: profile save failure before reveal
   - Priority: Critical
   - Automate later: Yes
-  - Action: Complete the quiz, enter analyzing, and force the local skin-profile save to fail.
-  - Expected result: The app does not advance to reveal as if onboarding were saved; it shows a retry path while preserving the quiz answers in memory.
+  - Action: In a dev build started with `EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE=once`, complete the quiz, enter analyzing, and let the first local skin-profile save fail.
+  - Expected result: The app does not advance to reveal as if onboarding were saved; it shows a retry path while preserving the quiz answers in memory. Tapping Try again consumes the one-shot failure and reaches reveal with the same quiz-derived profile.
   - Evidence: Error-state screenshot and retry/reveal route snapshot.
 
 ## Flow: Routine Plan First Value

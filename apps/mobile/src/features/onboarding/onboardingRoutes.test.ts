@@ -191,11 +191,18 @@ describe('onboarding route contracts', () => {
     const source = readAppRoute('onboarding/analyzing.tsx');
 
     expect(source).not.toContain('persistSkinProfile().catch(() => {})');
+    expect(source).toContain('EXPO_PUBLIC_E2E_PROFILE_SAVE_FAILURE');
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain('simulatedProfileSaveFailureUsed.current = true');
+    expect(source).toContain("new Error('E2E_PROFILE_SAVE_FAILURE')");
     expect(source).toContain('setSaveError(true)');
     expect(source).toContain('We could not save your profile.');
     expect(source).toContain("router.replace('/onboarding/reveal')");
     expect(source.indexOf('persistSkinProfile()')).toBeLessThan(
       source.indexOf("router.replace('/onboarding/reveal')"),
+    );
+    expect(source.indexOf('simulatedProfileSaveFailureUsed.current = true')).toBeLessThan(
+      source.indexOf("new Error('E2E_PROFILE_SAVE_FAILURE')"),
     );
   });
 });
