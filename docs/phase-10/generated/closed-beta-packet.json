@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-07T00:04:30.914Z",
+  "generatedAt": "2026-07-07T00:06:31.905Z",
   "status": "blocked",
-  "gitSha": "6d1889b0f1466b5932bbcea44ec55fbb8f97fa17",
-  "gitStatus": "M PROGRESS.md\n M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md\n M docs/phase-10/surveys.md\n M docs/phase-10/tester-brief.md",
+  "gitSha": "216934ddd49f314be007b501cb697e30da1fbbdf",
+  "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",
@@ -30,9 +30,9 @@
   "sourceHashes": {
     "package.json": "a79be42f3dce0668beceeb7b3f78e76284d53aff74ddb2eadb240b56e37e1d3f",
     "turbo.json": "66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57",
-    ".env.example": "386f92419feb28f38167650bf65e34c62499f28b0bff7c1177da68a2bac59b99",
+    ".env.example": "c28d395a3546685ae326c4c11b8775a3e1916bdfba65e58cdcbf012e9de79b59",
     "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",
-    "apps/mobile/app.config.js": "95da4fe1150262c907bece35053881d181a2a29fb0ffff0b0023f2a3c45a7ac8",
+    "apps/mobile/app.config.js": "e55eb53b2eff878b6addec8bb1aa51a3269b8dca8c393565075c5aa2ddf89a96",
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "14bbf32c07a042e2ebbc7118824fb6ef15907036a7ff22ac84b156ad430aaca0",
     "apps/mobile/src/lib/analytics/track.ts": "7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45",
     "apps/mobile/src/lib/observability/scrub.ts": "222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e",
