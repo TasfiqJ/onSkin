@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened lightweight local engagement stores. Ask grounded-turn counters now
+  remove malformed records, validate billing periods, and clamp trial counts;
+  community reactions, streak milestones, and review-prompt history now remove
+  unreadable JSON, normalize duplicates/whitespace, and drop invalid local rows
+  before user-facing gates read them.
+
 - Hardened notification preference and sent-ledger storage so unreadable local
   JSON is removed, invalid reminder times/booleans fall back to safe defaults,
   lock-screen discretion remains forced on, and behavioural notification caps
