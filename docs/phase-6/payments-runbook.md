@@ -57,6 +57,9 @@ Rules:
 - 7 days of Pro
 - `will_renew=false`
 - Never creates a store transaction
+- The audit row and `entitlements` mirror write commit atomically through
+  `grant_app_granted_reverse_trial()`; a partial failure must not burn the
+  user's only no-card trial
 - Server expiry via `expire_app_granted_reverse_trials()`
 
 ## Webhook Verification

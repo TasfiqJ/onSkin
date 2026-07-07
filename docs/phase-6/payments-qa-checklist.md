@@ -29,6 +29,8 @@
 - Reverse trial uses `store='app_granted'`, `period_type='reverse_trial'`, `will_renew=false`.
 - A user with an active paid subscription cannot start a reverse trial.
 - A second reverse trial attempt returns a conflict.
+- `reverse_trial_grants` and `entitlements` are written atomically; partial
+  entitlement failures cannot consume the one-time grant.
 - `expire_app_granted_reverse_trials()` deactivates expired reverse trials.
 
 ## Webhook

@@ -53,6 +53,7 @@ const clientCallableDefiners = new Set([
 const serviceCallableDefiners = new Set([
   'consume_edge_rate_limit(text, text, integer, integer)',
   'expire_app_granted_reverse_trials()',
+  'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
 ]);
 
 const revokePattern = (name) => new RegExp(`revoke\\s+all\\s+on\\s+function\\s+public\\.${escapeRegExp(name)}\\s*\\(([^)]*)\\)\\s+from\\s+([^;]+);`, 'gi');

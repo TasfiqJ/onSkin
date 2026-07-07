@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T02:01:07.085Z",
+  "generatedAt": "2026-07-07T05:05:37.561Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "evidence": {
     "rcOfferingReviewed": false,
@@ -40,7 +40,7 @@
     },
     {
       "surface": "Reverse trial",
-      "scenario": "authenticated Edge Function grants exactly once, server expiry RPC deactivates after 7 days"
+      "scenario": "authenticated Edge Function atomically grants exactly once, server expiry RPC deactivates after 7 days"
     },
     {
       "surface": "Win-back",
@@ -69,8 +69,8 @@
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
       "exists": true,
-      "bytes": 6487,
-      "sha256": "5a905346a58231713ccfb0725011a96c8d12b2607adcb5503732d4c79c97dc19"
+      "bytes": 10075,
+      "sha256": "5109941c5dcc316425039ffa3e45c0419c9c66c819926357b504c7035089bf28"
     },
     {
       "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
@@ -117,8 +117,8 @@
     {
       "path": "supabase/functions/subscription-grants/index.ts",
       "exists": true,
-      "bytes": 4492,
-      "sha256": "e146744807f42d221bc26771728efa6360da03b586a91e1d77c01d3b2c624d7f"
+      "bytes": 3457,
+      "sha256": "2922047f3ca942aa406785a00ee8175ac3f1899f6b97502f49393a6b204baa02"
     },
     {
       "path": "supabase/functions/account-deletion/index.ts",
@@ -133,22 +133,34 @@
       "sha256": "ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865"
     },
     {
+      "path": "supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql",
+      "exists": true,
+      "bytes": 3947,
+      "sha256": "a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/serverContracts.test.ts",
+      "exists": true,
+      "bytes": 2112,
+      "sha256": "ed0e06dc615d5d112c8c7afa00092d702902e0385325d1542208c4684ecea258"
+    },
+    {
       "path": "docs/phase-6/payments-runbook.md",
       "exists": true,
-      "bytes": 3263,
-      "sha256": "1279bccdb7f786516d1c5c466bed0b4012e779e8086aaa9f7486111f010f4a15"
+      "bytes": 3440,
+      "sha256": "3bf75f926a13e79638bf1e9168942bc83854c6f08d14cead42fe6837765c38a7"
     },
     {
       "path": "docs/phase-6/payments-qa-checklist.md",
       "exists": true,
-      "bytes": 2599,
-      "sha256": "2262a8a44e0d98349b7d4fda5d7350631be6dbd43e185047440f296e178142fb"
+      "bytes": 2733,
+      "sha256": "664871116854097e887c4e76d40d2872e199fdb0df68f57caf76667f603c1bf6"
     },
     {
       "path": "docs/phase-6/phase-6-exit-review.md",
       "exists": true,
-      "bytes": 2228,
-      "sha256": "acbfe0d63607f4aa448a3d0c6e1a06fa5062afeb7085eadb820cd86f14e1f6b2"
+      "bytes": 2367,
+      "sha256": "6702047baf4028eab3e49d23bc145afbf689f1f3262263b43020cdffcc720cac"
     }
   ],
   "blockers": [

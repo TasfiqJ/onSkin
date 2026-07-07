@@ -133,7 +133,8 @@ for (const fn of bodyLimitedUserJwtFunctions) {
 const subscriptionGrants = read('supabase/functions/subscription-grants/index.ts');
 block(errors, !/error:\s*(grantErr|error)\.message/.test(subscriptionGrants), 'subscription-grants must not return raw database errors.');
 block(errors, /reverse_trial_grant_failed/.test(subscriptionGrants), 'subscription-grants must return a stable reverse-trial grant failure code.');
-block(errors, /entitlement_write_failed/.test(subscriptionGrants), 'subscription-grants must return a stable entitlement write failure code.');
+block(errors, /active_subscription_exists/.test(subscriptionGrants), 'subscription-grants must return a stable active-subscription conflict code.');
+block(errors, /reverse_trial_already_used/.test(subscriptionGrants), 'subscription-grants must return a stable already-used reverse-trial conflict code.');
 
 const catalogReport = read('supabase/functions/catalog-report/index.ts');
 block(errors, /allowedTopLevelKeys/.test(catalogReport), 'catalog-report must reject unknown top-level request fields.');

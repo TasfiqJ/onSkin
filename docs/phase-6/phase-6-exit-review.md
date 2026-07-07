@@ -6,6 +6,8 @@
 - Paywalls render RevenueCat offering prices and disable purchase when the offering is unavailable.
 - Purchase, restore, and win-back actions grant Pro only from RevenueCat `CustomerInfo`.
 - Reverse trial moved to a service-role Supabase Edge Function.
+- Reverse-trial grant writes are atomic, so the one-time grant ledger and
+  entitlement mirror cannot diverge on a partial server failure.
 - Entitlements migration adds verified source, environment, management URL, package, store user id, and raw status metadata.
 - RevenueCat webhook verifies HMAC over the raw request body, dedupes events, resolves aliases, and mirrors cancellation versus expiration correctly.
 - Account deletion calls RevenueCat customer deletion with a secret server key.

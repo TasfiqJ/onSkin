@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened server reverse-trial grants so the one-time grant ledger and Pro
+  entitlement mirror are written through a single service-role RPC. A partial
+  server failure can no longer consume the user's no-card trial without also
+  returning the entitlement, and Phase 6/9 contract checks now pin the atomic
+  grant path.
+
 - Hardened subscription entitlement caching so time-boxed trial, intro,
   prepaid, reverse-trial, and app-granted access cannot unlock Pro without a
   valid expiry, and server reverse-trial grants now return the normalized cached
