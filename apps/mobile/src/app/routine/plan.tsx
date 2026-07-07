@@ -15,7 +15,7 @@ import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// 01 · Plan built. "Start today" (design screen 01, docs/03 §2). The deterministic
+// Plan built. "Start today" (design screen 01, docs/03). The deterministic
 // generator's output: sequenced AM, skin-cycling PM with the ramp default, and an
 // honest gap note (never fabricates a product). CTA begins the daily loop.
 
@@ -82,7 +82,7 @@ function EveningRow({
       }
     >
       <Text
-        className="w-9 font-mono text-[11px]"
+        className="w-[68px] font-mono text-[11px]"
         style={{ color: accent ? colors.clayBright : 'rgba(244,239,231,0.4)' }}
       >
         {nightLabel}
@@ -288,7 +288,7 @@ export default function PlanScreen() {
                   className="font-mono text-[13px] uppercase tracking-[1px]"
                   style={{ color: colors.clayBright }}
                 >
-                  {hasCycle ? 'Evening · skin cycling' : 'Evening'}
+                  {hasCycle ? 'Evening skin cycling' : 'Evening'}
                 </Text>
               </View>
               {hasCycle ? (
@@ -296,7 +296,7 @@ export default function PlanScreen() {
                   {exfoliant ? (
                     <EveningRow
                       compact={compactPlan}
-                      nightLabel="N1"
+                      nightLabel="Night 1"
                       name={exfoliant.name.replace(/\s*Toner$/i, '')}
                       suffix="exfoliate"
                       accent={false}
@@ -305,15 +305,17 @@ export default function PlanScreen() {
                   {retinoid ? (
                     <EveningRow
                       compact={compactPlan}
-                      nightLabel="N2"
+                      nightLabel="Night 2"
                       name={retinoid.name}
-                      suffix={retRamp ? `${retRamp.state.freqPerWeek}×/week to start` : 'tonight'}
+                      suffix={
+                        retRamp ? `${retRamp.state.freqPerWeek} times/week to start` : 'tonight'
+                      }
                       accent
                     />
                   ) : null}
                   <EveningRow
                     compact={compactPlan}
-                    nightLabel="N3–4"
+                    nightLabel="Nights 3-4"
                     name="Recover"
                     suffix={hasBarrierStep ? 'moisturiser only' : 'keep it simple'}
                     accent={false}

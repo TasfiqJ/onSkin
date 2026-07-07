@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Expanded the `/routine/plan` skin-cycling row labels from shorthand `N1` /
+  `N2` / `N3-4` and `x/week` cadence copy into phone-readable `Night 1`,
+  `Night 2`, `Nights 3-4`, and `times/week to start`. The Pro-gated route
+  contract now guards those labels and the wider cycle-label column. Expo web
+  E2E at 390 x 844 verified the first-insight handoff, PM card labels, and
+  visible `Start today` CTA. Evidence is in
+  `test-results/human-e2e/2026-07-07/routine-plan-ascii-copy.png`; the tracked
+  bug report is
+  `docs/e2e-bug-reports/2026-07-07-routine-plan-cycle-labels.md`.
+
 - Tightened the deferred `/routine/widgets` route so unavailable native widgets
   now use `Back to Today` with an explicit Today fallback instead of generic
   `Back` copy. The regression is covered by the Pro-gated route contract and
