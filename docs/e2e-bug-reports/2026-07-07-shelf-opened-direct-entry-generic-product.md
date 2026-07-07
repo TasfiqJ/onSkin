@@ -58,9 +58,18 @@ Guard the route when no draft product exists, show a clear manual-add recovery a
 
 ## Post-Fix Evidence
 
-- Human-simulated E2E: Expo web at `http://localhost:8100/shelf/opened`, viewport 320 x 568.
-- Recovery branch: `/shelf/opened` showed `Add product details first.` with an `Add by hand` recovery action and no horizontal overflow.
-- Navigation branch: tapping `Add by hand` navigated to `/shelf/manual` with blank Product name, Brand, and Ingredients fields.
+- Human-simulated E2E: Expo web at `http://localhost:8098/shelf/opened`, viewport 320 x
+  568 target.
+- Browser proof: `test-results/human-e2e/2026-07-07/shelf-opened-direct-entry/opened-recovery-320x568.png`
+  and `opened-recovery-state.json`.
+- Recovery branch: `/shelf/opened` showed `Add product details first.` with one `Add by hand`
+  recovery action measured at 264 x 48, one visible `Close` control measured at 48 x 48, and no
+  `Add to shelf` action.
+- Navigation branch: tapping `Add by hand` navigated to `/shelf/manual` with blank Product name,
+  Brand, and Ingredients fields.
+- Close fallback branch: reopening `/shelf/opened` and tapping `Close` navigated to `/shelf`.
+- Browser logs: only known local Supabase placeholder warnings and the Expo web notifications
+  warning.
 - Automated contract passed: `npm --workspace apps/mobile run test -- src/features/shelf/shelfRoutes.test.ts`
 
 ## Remaining Risk
