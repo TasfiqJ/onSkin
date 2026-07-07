@@ -15,7 +15,12 @@ vi.mock('@/lib/storage/privateKV', () => ({
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.storage.delete(key);
+  }),
 }));
+
+const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
 
 describe('free conflict-check quota', () => {
   beforeEach(() => {
@@ -65,5 +70,19 @@ describe('free conflict-check quota', () => {
     await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual(['rule-a']);
 
     await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual(['rule-a']);
+  });
+
+  it('removes malformed persisted quota state', async () => {
+    mocks.storage.set(KEY, '{not-json');
+
+    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual([]);
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('normalizes duplicate and invalid persisted rule ids', async () => {
+    mocks.storage.set(KEY, JSON.stringify(['rule-a', '', 'rule-a', 42, 'rule-b']));
+
+    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual(['rule-a', 'rule-b']);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toEqual(['rule-a', 'rule-b']);
   });
 });

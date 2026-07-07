@@ -1,4 +1,4 @@
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 export { conflictKey } from './conflictIdentity';
 
@@ -9,11 +9,40 @@ export { conflictKey } from './conflictIdentity';
 // ("your choice is saved, we won't re-nag"). Mirrors the app's other local stores.
 const KEY = 'onskin.conflict.overrides';
 
+function normalizeKeys(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [
+    ...new Set(value.filter((key): key is string => typeof key === 'string' && key.length > 0)),
+  ];
+}
+
+function didNormalizeKeys(value: unknown, normalized: readonly string[]): boolean {
+  return (
+    !Array.isArray(value) ||
+    value.length !== normalized.length ||
+    normalized.some((key, index) => value[index] !== key)
+  );
+}
+
 export async function getOverriddenKeys(): Promise<Set<string>> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(KEY);
-    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+    raw = await getPrivateItem(KEY);
   } catch {
+    return new Set();
+  }
+  if (!raw) return new Set();
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeKeys(parsed);
+    if (didNormalizeKeys(parsed, normalized)) {
+      if (normalized.length > 0)
+        await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+      else await removePrivateItem(KEY).catch(() => undefined);
+    }
+    return new Set(normalized);
+  } catch {
+    await removePrivateItem(KEY).catch(() => undefined);
     return new Set();
   }
 }

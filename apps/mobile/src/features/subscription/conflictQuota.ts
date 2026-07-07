@@ -1,4 +1,4 @@
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
 
@@ -13,6 +13,14 @@ export type ConflictCheckAccess = {
 function normalizeRuleIds(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return [...new Set(value.filter((id): id is string => typeof id === 'string' && id.length > 0))];
+}
+
+function didNormalizeRuleIds(value: unknown, normalized: readonly string[]): boolean {
+  return (
+    !Array.isArray(value) ||
+    value.length !== normalized.length ||
+    normalized.some((id, index) => value[index] !== id)
+  );
 }
 
 export function conflictCheckAccess(input: {
@@ -33,10 +41,24 @@ export function conflictCheckAccess(input: {
 }
 
 export async function loadFreeConflictCheckRuleIds(): Promise<string[]> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(KEY);
-    return normalizeRuleIds(raw ? JSON.parse(raw) : []);
+    raw = await getPrivateItem(KEY);
   } catch {
+    return [];
+  }
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeRuleIds(parsed);
+    if (didNormalizeRuleIds(parsed, normalized)) {
+      if (normalized.length > 0)
+        await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+      else await removePrivateItem(KEY).catch(() => undefined);
+    }
+    return normalized;
+  } catch {
+    await removePrivateItem(KEY).catch(() => undefined);
     return [];
   }
 }

@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened local conflict-choice state. Free conflict-check quota records and
+  `use together anyway` overrides now remove unreadable JSON, normalize duplicate
+  or invalid arrays, and persist clean keys before quota/override decisions run.
+
 - Hardened the local active-ramp store so unreadable ramp JSON is removed and
   mixed-validity ramp logs keep valid product entries while dropping malformed
   ones. A bad ramp record can no longer leak impossible frequencies into the
