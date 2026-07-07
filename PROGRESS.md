@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Sign in with Apple helpers so provider identity tokens, emails,
+  Apple subjects, and revocation authorization codes are trimmed and must be
+  non-empty before use. Account deletion can no longer try to refresh an Apple
+  revocation code for whitespace-only provider identity data, and focused auth
+  tests cover malformed provider subjects and blank native return values.
+
 - Hardened Expo native launch config so `EXPO_PUBLIC_FINAL_BRAND_DOMAIN` and
   store URL env values use production URL semantics before they reach native
   metadata. Malformed domains with credentials, query/hash, explicit ports,
