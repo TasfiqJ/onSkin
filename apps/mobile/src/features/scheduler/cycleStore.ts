@@ -92,7 +92,14 @@ export async function resumeCycle(): Promise<void> {
 
 /** Start (or restart) the cycle today. Re-anchors to night 0 today. */
 export async function startCycleToday(): Promise<void> {
-  await updateCycleConfig({ anchorISO: localDateString(), pausedFrom: null, pauseReason: null });
+  const today = localDateString();
+  const current = await loadCycleConfig();
+  await updateCycleConfig({
+    anchorISO: today,
+    pausedFrom: null,
+    pauseReason: null,
+    skips: current.skips.filter((date) => date !== today),
+  });
 }
 
 /** Skip a single night. The cycle continues, nothing resets (docs/05 §7). */

@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
-import { setCycleAnchor } from '@/features/routine/cycleAnchor';
+import { startCycleToday } from '@/features/scheduler/cycleStore';
 import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -95,6 +95,12 @@ export default function PlanScreen() {
   const plan = data?.plan;
   const trackedPlanView = useRef(false);
   const compactPlan = height < 640;
+  const planScrollBottomPadding = compactPlan ? 144 : 112;
+
+  async function startToday() {
+    await startCycleToday();
+    router.replace('/today');
+  }
 
   const exfoliant = plan?.pm.find((s) => s.role === 'exfoliant');
   const retinoid = plan?.pm.find((s) => s.role === 'treatment');
@@ -133,7 +139,7 @@ export default function PlanScreen() {
         <ScrollView
           className="flex-1"
           showsVerticalScrollIndicator={false}
-          contentContainerClassName="pb-[112px]"
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: planScrollBottomPadding }}
         >
           <View className={compactPlan ? 'flex-row items-center' : 'flex-row items-center pt-1'}>
             <RouteIconButton
@@ -260,7 +266,7 @@ export default function PlanScreen() {
               <View
                 className={
                   compactPlan
-                    ? 'mt-8 flex-row gap-2.5 rounded-2xl bg-greige-chip px-4 py-3'
+                    ? 'mt-3.5 flex-row gap-2.5 rounded-2xl bg-greige-chip px-4 py-3'
                     : 'mt-3.5 flex-row gap-2.5 rounded-2xl bg-greige-chip px-4 py-3'
                 }
               >
@@ -286,14 +292,7 @@ export default function PlanScreen() {
           zIndex: 10,
         }}
       >
-        <Button
-          label="Start today"
-          variant="accent"
-          onPress={() => {
-            void setCycleAnchor(); // anchor the skin cycle to today
-            router.replace('/today');
-          }}
-        />
+        <Button label="Start today" variant="accent" onPress={() => void startToday()} />
       </View>
     </Screen>
   );

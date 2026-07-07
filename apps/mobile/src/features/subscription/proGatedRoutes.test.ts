@@ -113,17 +113,25 @@ describe('Pro-gated route contracts', () => {
     const plan = readAppRoute('routine/plan.tsx');
     expect(plan).toContain('APP_YOU_ROUTE');
     expect(plan).toContain('backOrReplace(router, APP_YOU_ROUTE)');
+    expect(plan).toContain("import { startCycleToday } from '@/features/scheduler/cycleStore';");
+    expect(plan).toContain('async function startToday()');
+    expect(plan).toContain('await startCycleToday();');
+    expect(plan).not.toContain("import { setCycleAnchor } from '@/features/routine/cycleAnchor';");
+    expect(plan).not.toContain('void setCycleAnchor();');
     expect(plan).toContain('RouteIconButton');
     expect(plan).toContain('ScrollView');
     expect(plan).toContain('useWindowDimensions');
     expect(plan).toContain('const compactPlan = height < 640');
+    expect(plan).toContain('const planScrollBottomPadding = compactPlan ? 144 : 112');
     expect(plan).toContain('style={{ overflow:');
-    expect(plan).toContain('contentContainerClassName="pb-[112px]"');
+    expect(plan).toContain('contentContainerStyle={{ flexGrow: 1, paddingBottom: planScrollBottomPadding }}');
     expect(plan).toContain('backgroundColor: colors.paper');
     expect(plan).toContain('marginHorizontal: -24');
     expect(plan).toContain('paddingHorizontal: 24');
-    expect(plan).toContain("'mt-8 flex-row gap-2.5 rounded-2xl");
+    expect(plan).toContain("'mt-3.5 flex-row gap-2.5 rounded-2xl");
     expect(plan).not.toContain('contentContainerClassName="pb-6"');
+    expect(plan).not.toContain('contentContainerClassName="pb-[112px]"');
+    expect(plan).not.toContain("'mt-8 flex-row gap-2.5 rounded-2xl");
     expect(plan).not.toContain('className="pb-9"');
 
     const adaptation = readAppRoute('routine/adaptation.tsx');
@@ -174,7 +182,7 @@ describe('Pro-gated route contracts', () => {
     expect(phasedIntro).toContain("className={compactSheet ? 'pb-6' : undefined}");
     expect(phasedIntro).toContain("className={compactSheet ? 'mt-4' : 'mt-6'}");
     expect(phasedIntro).toContain("className={compactSheet ? 'min-h-[48px] py-3' : undefined}");
-    expect(phasedIntro).toContain("compact={compactSheet}");
+    expect(phasedIntro).toContain('compact={compactSheet}');
     expect(phasedIntro).toContain('min-h-[48px] items-center justify-center');
     expect(phasedIntro).not.toContain('min-h-[44px] items-center justify-center');
     expect(phasedIntro).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
@@ -182,9 +190,7 @@ describe('Pro-gated route contracts', () => {
     const recovery = readAppRoute('cycle/recovery.tsx');
     expect(recovery).toContain('useWindowDimensions');
     expect(recovery).toContain('const compactScreen = height < 640');
-    expect(recovery).toContain(
-      "contentContainerClassName={compactScreen ? 'pb-5' : 'pb-6'}",
-    );
+    expect(recovery).toContain("contentContainerClassName={compactScreen ? 'pb-5' : 'pb-6'}");
     expect(recovery).toContain("className={compactScreen ? 'mt-4' : 'mt-6'}");
 
     const tolerance = readAppRoute('routine/tolerance.tsx');

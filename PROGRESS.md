@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the routine-plan `Start today` handoff so it updates the scheduler cycle
+  store before routing to Today, instead of writing only the legacy anchor. The
+  CTA now re-anchors an existing cycle to today, clears pause state, removes a
+  same-day skip, and preserves older cycle choices. Verified with a 320x568
+  human-simulated Expo web pass through onboarding product add -> routine plan
+  -> Today PM -> first check-off.
+
 - Added a dated `RoutineKind` candidate spot-check to the brand evidence packet:
   Apple public app search, Google Play public search, web-indexed App
   Store/Play queries, and DNS did not surface an exact app listing or active
