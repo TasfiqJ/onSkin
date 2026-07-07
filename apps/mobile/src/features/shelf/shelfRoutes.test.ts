@@ -279,8 +279,18 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf manual add picker options clear of the fixed footer on short phones', () => {
     const source = readAppRoute('shelf/manual.tsx');
 
+    expect(source).toContain('function CategoryPickerSheet');
+    expect(source).toContain('if (!visible) return null;');
+    expect(source).toContain('className="absolute inset-0 justify-end"');
+    expect(source).toContain(
+      "style={{ backgroundColor: 'rgba(32,27,21,0.4)', zIndex: 20, elevation: 20 }}",
+    );
+    expect(source).toContain('accessibilityLabel="Choose product category"');
+    expect(source).toContain('accessibilityLabel="Dismiss category picker"');
+    expect(source).toContain('accessibilityLabel="Close category picker"');
+    expect(source).toContain('const pickerSheetMaxHeight = Math.max(320, height - 48);');
     expect(source).toContain('className="flex-1"');
-    expect(source).toContain("contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}");
+    expect(source).toContain('contentContainerClassName="pb-24"');
     expect(source).toContain('<View className="pb-3 pt-1">');
     expect(source).toContain(
       "return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');",
@@ -291,21 +301,33 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'className="h-[50px] flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3"',
     );
-    expect(source).toContain('nestedScrollEnabled');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
-    expect(source).toContain('style={{ maxHeight: 192 }}');
+    expect(source).toContain(
+      'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
+    );
+    expect(source).toContain('style={{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }}');
     expect(source).toContain(
       'className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"',
     );
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('ellipsizeMode="tail"');
-    expect(source).toContain("'min-h-[48px] flex-row items-center justify-between px-4 py-3'");
+    expect(source).toContain(
+      'className="min-h-[52px] flex-row items-center justify-between rounded-[14px] border border-hairline bg-paper-raised px-4 py-3"',
+    );
+    expect(source).toContain('<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>');
+    expect(source).toContain('<CategoryPickerSheet');
     expect(source).not.toContain('<View className="flex-[1.3]">');
     expect(source).not.toContain(
       "className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}",
     );
     expect(source).not.toContain('className="font-sans-medium text-[15px]"');
     expect(source).not.toContain('contentContainerClassName="pb-4"');
+    expect(source).not.toContain('import { Modal');
+    expect(source).not.toContain('<Modal');
+    expect(source).not.toContain('animationType="slide"');
+    expect(source).not.toContain("contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}");
+    expect(source).not.toContain('nestedScrollEnabled');
+    expect(source).not.toContain('style={{ maxHeight: 192 }}');
     expect(source).not.toContain("'flex-row items-center justify-between px-4 py-3'");
   });
 

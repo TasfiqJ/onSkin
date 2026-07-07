@@ -349,6 +349,15 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `/shelf/manual`. Evidence is in
   `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`; it
   does not replace native-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the compact Shelf manual
+  category picker follow-up: the prior inline nested list let the fixed Continue
+  footer intercept lower visible row hit tests, so `/shelf/manual` now opens the
+  category list as a dimmed bottom sheet with a visible Close action and 52 px
+  rows. The rerun scrolls to `Something else`, verifies that row is visible and
+  center-tappable, selects it so the collapsed field reads `Other`, and
+  continues to `/shelf/opened` with zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`; it
+  does not replace native iOS/Android gesture and Dynamic Type QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the reminders/widgets
   contextual paywall compact route: direct-open
   `/paywall/upsell?feature=reminders_widgets`, verify the long title, fallback

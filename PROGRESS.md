@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Replaced the compact `/shelf/manual` category picker with a bottom sheet after
+  320 x 568 E2E showed the prior inline nested list still let the fixed
+  Continue footer intercept visible category-row hit tests. The picker now opens
+  as a dimmed modal sheet with a visible Close action, 52 px category rows, and
+  a height-aware scroll area; the form footer stays separate. Post-fix E2E at
+  320 x 568 verifies `Something else` is visible and center-tappable after a
+  normal user scroll, the collapsed field reads `Other`, Continue remains a
+  56 px target, horizontal overflow is zero, and Continue advances to
+  `/shelf/opened`. Evidence is in
+  `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-shelf-manual-category-picker-sheet.md`.
+
 - Verified the real conflict-detail choice path in a fresh 320 x 568 Chrome
   context seeded with a retinol/glycolic Shelf conflict. The Shelf banner opened
   the detail through `Review conflict`, the detail showed calm evidence and

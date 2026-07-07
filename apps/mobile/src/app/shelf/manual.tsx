@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
@@ -35,7 +35,88 @@ function categoryFieldLabel(category: ProductCategory | null): string {
 const inputClass =
   'rounded-[14px] border border-hairline bg-paper-raised px-4 text-[15px] text-ink font-sans-medium';
 
+function CategoryPickerSheet({
+  visible,
+  selectedCategory,
+  sheetMaxHeight,
+  onSelect,
+  onClose,
+}: {
+  visible: boolean;
+  selectedCategory: ProductCategory | null;
+  sheetMaxHeight: number;
+  onSelect: (category: ProductCategory) => void;
+  onClose: () => void;
+}) {
+  if (!visible) return null;
+
+  return (
+    <View
+      className="absolute inset-0 justify-end"
+      style={{ backgroundColor: 'rgba(32,27,21,0.4)', zIndex: 20, elevation: 20 }}
+      accessibilityLabel="Choose product category"
+    >
+      <View className="flex-1 justify-end">
+        <Pressable
+          className="flex-1"
+          accessibilityLabel="Dismiss category picker"
+          accessibilityRole="button"
+          onPress={onClose}
+        />
+        <View
+          accessibilityViewIsModal
+          className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"
+          style={{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }}
+        >
+          <View
+            className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
+            style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+          />
+          <View className="mb-3 flex-row items-center justify-between gap-3">
+            <Text variant="titleSm" className="flex-1">
+              Product category
+            </Text>
+            <Pressable
+              accessibilityLabel="Close category picker"
+              accessibilityRole="button"
+              className="min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3"
+              onPress={onClose}
+            >
+              <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clay }}>
+                Close
+              </Text>
+            </Pressable>
+          </View>
+          <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+            <View className="gap-2">
+              {PRODUCT_CATEGORIES.map((c) => {
+                const selected = selectedCategory === c.id;
+                return (
+                  <Pressable
+                    key={c.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Category, ${c.label}`}
+                    accessibilityState={{ selected }}
+                    onPress={() => onSelect(c.id)}
+                    className="min-h-[52px] flex-row items-center justify-between rounded-[14px] border border-hairline bg-paper-raised px-4 py-3"
+                  >
+                    <Text variant="bodySm" className="flex-1 font-sans-semibold">
+                      {c.label}
+                    </Text>
+                    {selected ? <Text tone="clay">✓</Text> : null}
+                  </Pressable>
+                );
+              })}
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 export default function ManualAddScreen() {
+  const { height } = useWindowDimensions();
   const { draft, update } = useIntake();
   // Arriving from an accepted recommendation (docs/09 §11): the rec passes the
   // category so the form is pre-filled. With a preset we start the other fields
@@ -56,8 +137,14 @@ export default function ManualAddScreen() {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const paoFromCategory = reviewedCategoryPao(category);
+  const pickerSheetMaxHeight = Math.max(320, height - 48);
 
   const canContinue = name.trim().length > 0;
+
+  const selectCategory = (nextCategory: ProductCategory) => {
+    setCategory(nextCategory);
+    setPickerOpen(false);
+  };
 
   const onContinue = () => {
     const parsed = ingredients.trim() ? parseIngredientText(ingredients) : null;
@@ -100,7 +187,7 @@ export default function ManualAddScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}
+        contentContainerClassName="pb-24"
         keyboardShouldPersistTaps="handled"
       >
         <Text variant="bodySm" tone="muted" className="mb-4 mt-3">
@@ -156,37 +243,6 @@ export default function ManualAddScreen() {
             </View>
           </View>
 
-          {pickerOpen ? (
-            <View className="rounded-[14px] border border-hairline bg-paper-raised">
-              <ScrollView
-                nestedScrollEnabled
-                keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={false}
-                style={{ maxHeight: 192 }}
-              >
-                {PRODUCT_CATEGORIES.map((c, i) => (
-                  <Pressable
-                    key={c.id}
-                    accessibilityRole="button"
-                    onPress={() => {
-                      setCategory(c.id);
-                      setPickerOpen(false);
-                    }}
-                    className={cn(
-                      'min-h-[48px] flex-row items-center justify-between px-4 py-3',
-                      i > 0 && 'border-t border-hairline',
-                    )}
-                  >
-                    <Text variant="bodySm" className="font-sans-medium">
-                      {c.label}
-                    </Text>
-                    {category === c.id ? <Text tone="clay">✓</Text> : null}
-                  </Pressable>
-                ))}
-              </ScrollView>
-            </View>
-          ) : null}
-
           <View>
             <Text variant="label" tone="muted" className="mb-1.5 uppercase">
               Ingredients
@@ -234,6 +290,13 @@ export default function ManualAddScreen() {
       <View className="pb-3 pt-1">
         <Button label="Continue" variant="accent" disabled={!canContinue} onPress={onContinue} />
       </View>
+      <CategoryPickerSheet
+        visible={pickerOpen}
+        selectedCategory={category}
+        sheetMaxHeight={pickerSheetMaxHeight}
+        onSelect={selectCategory}
+        onClose={() => setPickerOpen(false)}
+      />
     </Screen>
   );
 }

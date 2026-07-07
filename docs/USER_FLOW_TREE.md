@@ -391,6 +391,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/shelf/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/shelf-search-manual-fallback-buffer/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`
 
 ### Path A: Happy Path
 
@@ -424,8 +425,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open Shelf manual add in a 320 px phone viewport, enter product and brand, open the category picker, scroll through all category options, and select the lower "Something else" option.
-  - Expected result: Category rows remain at least 48 px targets, lower options are reachable by scroll, visible option taps are not intercepted by the fixed Continue footer, and the collapsed category field stays polished on compact phones.
+  - Expected result: The category picker opens as a named bottom sheet instead of an inline list, category rows remain at least 48 px targets, lower options are reachable by scroll, visible option taps are not intercepted by the fixed Continue footer, and the collapsed category field stays polished on compact phones.
   - Evidence: Screenshot sequence and hit-test geometry.
+  - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 opens `/shelf/manual`, enters `Barrier Balm` / `RoutineKind Test`, opens the category picker, scrolls the modal sheet to `Something else`, verifies the row is visible and center-tappable, selects it, confirms the collapsed field reads `Other`, and continues to `/shelf/opened` with zero horizontal overflow and no clipped or sub-44 px visible controls.
 - Branch: barcode no-match or offline lookup
   - Priority: Critical
   - Automate later: Yes
