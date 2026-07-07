@@ -48,6 +48,10 @@ function Chip({ label, ok }: { label: string; ok: boolean }) {
   );
 }
 
+function isNonBlank(value: string | null): value is string {
+  return value != null && value.trim().length > 0;
+}
+
 function ReviewScreenContent() {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -70,6 +74,7 @@ function ReviewScreenContent() {
   const headYaw = params.headYaw != null ? Number(params.headYaw) : null;
   const headPitch = params.headPitch != null ? Number(params.headPitch) : null;
   const capturedUri = params.capturedUri ?? null;
+  const hasCapturedPhoto = isNonBlank(capturedUri);
   const timeOfDay = (params.timeOfDay as TimeOfDay) ?? null;
   const takenLocalDate = params.takenLocalDate ?? localDay();
 
@@ -83,6 +88,8 @@ function ReviewScreenContent() {
   };
 
   function save() {
+    if (!hasCapturedPhoto || add.isPending) return;
+
     const wasEmpty = (data?.count ?? 0) === 0;
     add.mutate(
       {
@@ -106,6 +113,90 @@ function ReviewScreenContent() {
           router.replace(APP_PROGRESS_ROUTE);
         },
       },
+    );
+  }
+
+  if (!hasCapturedPhoto) {
+    return (
+      <View
+        style={{ flex: 1, backgroundColor: BG, paddingTop: insets.top + 16, paddingHorizontal: 24 }}
+      >
+        <RouteIconButton
+          accessibilityLabel="Close"
+          glyph="x"
+          onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
+          tone="night"
+          style={{
+            position: 'absolute',
+            left: 24,
+            top: insets.top + 8,
+            zIndex: 5,
+            backgroundColor: 'rgba(244,239,231,0.12)',
+            borderColor: 'transparent',
+          }}
+        />
+
+        <View style={{ flex: 1, justifyContent: 'center', gap: 14 }}>
+          <Text variant="label" style={{ color: 'rgba(244,239,231,0.48)', textAlign: 'center' }}>
+            {PHOTO_COPY.review.missingEyebrow}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontSize: 24,
+              lineHeight: 30,
+              color: '#F4EFE7',
+              textAlign: 'center',
+            }}
+          >
+            {PHOTO_COPY.review.missingTitle}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 15,
+              lineHeight: 22,
+              color: 'rgba(244,239,231,0.76)',
+              textAlign: 'center',
+            }}
+          >
+            {PHOTO_COPY.review.missingBody}
+          </Text>
+        </View>
+
+        <View style={{ gap: 12, paddingBottom: insets.bottom + (compact ? 16 : 24) }}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.replace('/progress/capture')}
+            style={{
+              height: 56,
+              borderRadius: 999,
+              backgroundColor: '#F4EFE7',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+              {PHOTO_COPY.review.missingCapture}
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
+            style={{
+              height: 56,
+              borderRadius: 999,
+              backgroundColor: 'rgba(244,239,231,0.1)',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: '#F4EFE7' }}>
+              {PHOTO_COPY.review.missingBack}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
     );
   }
 
@@ -148,15 +239,7 @@ function ReviewScreenContent() {
           backgroundColor: '#2A251E',
         }}
       >
-        {capturedUri ? (
-          <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
-        ) : (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>
-              your photo
-            </Text>
-          </View>
-        )}
+        <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
         <View style={{ position: 'absolute', left: 14, bottom: 14, flexDirection: 'row', gap: 8 }}>
           <Chip label="Aligned" ok={verdict.aligned} />
           <Chip label="Well-lit" ok={verdict.wellLit} />

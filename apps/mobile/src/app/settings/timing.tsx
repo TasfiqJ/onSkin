@@ -43,7 +43,13 @@ function TimePickerModal({
           ? 'Quiet hours start'
           : 'Quiet hours end';
   return (
-    <Modal visible={field !== null} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={field !== null}
+      transparent
+      animationType="slide"
+      accessibilityLabel={title}
+      onRequestClose={onClose}
+    >
       <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
         <Pressable
           className="flex-1"

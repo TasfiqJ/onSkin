@@ -51,6 +51,11 @@ export const PHOTO_COPY = {
     eyebrow: 'Review',
     retake: 'Retake',
     save: 'Save to my phone',
+    missingEyebrow: 'Photo not captured',
+    missingTitle: 'No photo to review yet.',
+    missingBody: 'Take a new progress photo to open review. Nothing was saved.',
+    missingCapture: 'Take photo',
+    missingBack: 'Back to Progress',
   },
   // Single-photo detail (design screen 06).
   detail: {

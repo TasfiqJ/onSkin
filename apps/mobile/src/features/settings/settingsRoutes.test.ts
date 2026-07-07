@@ -100,7 +100,10 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       'className="flex-1"\n          accessibilityLabel="Dismiss time picker"',
     );
+    expect(source).toContain('accessibilityLabel={title}');
     expect(source).toContain('accessibilityViewIsModal');
+    expect(source).not.toContain('role="dialog"');
+    expect(source).not.toContain('aria-modal');
     expect(source).toContain('accessibilityLabel={`${title}, ${formattedTime}`}');
     expect(source).toContain(
       'accessibilityHint={`Sets ${title.toLowerCase()} to ${formattedTime}`}',

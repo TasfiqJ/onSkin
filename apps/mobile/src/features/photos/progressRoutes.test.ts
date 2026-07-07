@@ -101,6 +101,23 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('height: 380, borderRadius: 24');
   });
 
+  it('recovers direct review entries without a captured photo', () => {
+    const source = readAppRoute('progress/review.tsx');
+    const copy = readSource('features/photos/copy.ts');
+
+    expect(copy).toContain("missingEyebrow: 'Photo not captured'");
+    expect(copy).toContain("missingTitle: 'No photo to review yet.'");
+    expect(source).toContain('function isNonBlank(value: string | null): value is string');
+    expect(source).toContain('const hasCapturedPhoto = isNonBlank(capturedUri);');
+    expect(source).toContain('if (!hasCapturedPhoto || add.isPending) return;');
+    expect(source).toContain('if (!hasCapturedPhoto) {');
+    expect(source).toContain('PHOTO_COPY.review.missingEyebrow');
+    expect(source).toContain('PHOTO_COPY.review.missingCapture');
+    expect(source).toContain('PHOTO_COPY.review.missingBack');
+    expect(source).toContain("router.replace('/progress/capture')");
+    expect(source).not.toContain('your photo');
+  });
+
   it('keeps the first saved photo wired to both baseline analytics names', () => {
     const source = readAppRoute('progress/review.tsx');
 

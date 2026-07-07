@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added a stable dialog name to the custom Settings time picker after the
+  shared-sheet accessibility pass found this Modal-backed picker needed its own
+  contract. `/settings/timing` now passes the picker title to the Modal wrapper
+  without adding duplicate nested dialog roles, while keeping native modal
+  semantics, named dismiss, and 48 px time rows. Expo web E2E at 320 x 568
+  verified one `Morning reminder` dialog, one named dismiss, no sub-44 px
+  controls, and no horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-time-picker-dialog-semantics/`;
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-settings-time-picker-dialog-semantics.md`.
+
+- Fixed direct `/progress/review` entries without a captured photo. The review
+  route now requires a non-blank `capturedUri` before showing the captured-photo
+  review UI or allowing save; stale/direct entries show `Photo not captured`
+  recovery with `Take photo`, `Back to Progress`, and Close. Expo web E2E at
+  320 x 568 verified no fake `your photo` placeholder, no `Save to my phone`
+  leak, no sub-44 px controls, Take photo routes to `/progress/capture`, and
+  Back/Close recover to `/progress`. Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-review-direct-entry-recovery/`;
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-progress-review-direct-entry-fake-photo.md`.
+
 - Added shared Sheet dialog semantics after the route-surface accessibility
   sweep found the modal body had visual sheet behavior without a dialog role.
   The shared sheet now exposes `role="dialog"` / `aria-modal` plus native
