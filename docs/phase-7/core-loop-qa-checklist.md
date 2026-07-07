@@ -142,3 +142,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in
   `test-results/human-e2e/2026-07-07/progress-current-compact-check/`; it does
   not replace native camera/capture QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers Ask route parity: `/ask`
+  renders the free deterministic `Ask RoutineKind` advisor, a 48 px composer
+  and Send control, and the disclosure footer with zero horizontal overflow;
+  `/ask/consent` renders cloud-Ask deferred beta copy plus a 56 px `Back to Ask`
+  CTA that returns to `/ask`. Evidence is in
+  `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`; it does not
+  replace native-device QA.

@@ -954,6 +954,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route parity; iOS and Android for native app confirmation.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/ask-deterministic/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`
 
 ### Path A: Deterministic Ask Opens
 
@@ -961,6 +962,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: The Ask RoutineKind advisor renders with deterministic/free copy and suggested prompts. It must not show the cloud Ask deferred beta screen.
    The composer disclosure footer stays fully visible and legible above the bottom edge on a 320 x 568 phone.
    Evidence: Screenshot and visible-text snapshot.
+   Current local evidence: 2026-07-07 Expo web 320 x 568 renders `Ask RoutineKind`, the deterministic shelf answer, a visible 48 px composer input plus 48 px Send control, the disclosure footer, and zero horizontal overflow.
 
 ### Branches
 
@@ -970,6 +972,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/ask/consent` directly with cloud Ask disabled.
   - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its `Back to Ask` deferred CTA returns to `/ask` on direct entry.
   - Evidence: Screenshot and visible-text snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask RoutineKind is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
 - Branch: empty shelf state
   - Priority: Important
   - Automate later: Yes
