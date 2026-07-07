@@ -79,7 +79,9 @@ describe('health-data local consent store', () => {
       consentTextHash: 'hash',
       recordedAt: '2026-07-07T00:00:00.000Z',
     });
-    expect(JSON.parse(mocks.privateStore.get('onskin.healthDataCollectionConsent.v1') ?? '{}')).toMatchObject({
+    expect(
+      JSON.parse(mocks.privateStore.get('onskin.healthDataCollectionConsent.v1') ?? '{}'),
+    ).toMatchObject({
       version: 'draft-v1',
       consentTextHash: 'hash',
     });

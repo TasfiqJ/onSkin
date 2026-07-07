@@ -64,7 +64,9 @@ describe('skin profile local onboarding gate store', () => {
       JSON.stringify({
         result: {
           ...RESULT,
+          dspt: ' dsnt ',
           sensitivities: [' fragrance ', '', 'fragrance', false],
+          pregnancyStatus: ' none ',
         },
         goals: [' clear_skin ', 'bad-goal', 'clear_skin', 'hydration'],
         completedAt: '2026-07-07T00:00:00.000Z',
@@ -72,15 +74,45 @@ describe('skin profile local onboarding gate store', () => {
     );
 
     await expect(getStoredSkinProfile()).resolves.toMatchObject({
-      result: { sensitivities: ['fragrance'] },
+      result: { dspt: 'DSNT', sensitivities: ['fragrance'], pregnancyStatus: 'none' },
       goals: ['clear_skin', 'hydration'],
       completedAt: '2026-07-07T00:00:00.000Z',
     });
     await expect(isOnboardedLocal()).resolves.toBe(true);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      result: { sensitivities: ['fragrance'] },
+      result: { dspt: 'DSNT', sensitivities: ['fragrance'], pregnancyStatus: 'none' },
       goals: ['clear_skin', 'hydration'],
     });
+  });
+
+  it('rejects invalid DSPT codes instead of inventing a profile', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        result: { ...RESULT, dspt: 'XXXX' },
+        goals: ['clear_skin'],
+        completedAt: '2026-07-07T00:00:00.000Z',
+      }),
+    );
+
+    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(isOnboardedLocal()).resolves.toBe(false);
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('rejects records with no approved onboarding goals', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        result: RESULT,
+        goals: ['bad-goal'],
+        completedAt: '2026-07-07T00:00:00.000Z',
+      }),
+    );
+
+    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(isOnboardedLocal()).resolves.toBe(false);
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
   it('saves only valid skin profile records', async () => {
