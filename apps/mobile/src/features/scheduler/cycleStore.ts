@@ -2,7 +2,7 @@ import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import { addDays } from './projection';
 
@@ -46,13 +46,105 @@ function defaults(anchorISO: string): CycleConfig {
   };
 }
 
-export async function loadCycleConfig(): Promise<CycleConfig> {
-  try {
-    const raw = await getPrivateItem(KEY);
-    if (raw) return { ...defaults(localDateString()), ...(JSON.parse(raw) as CycleConfig) };
-  } catch {
-    /* fall through */
+const CYCLE_VARIANTS = new Set<CycleConfig['variant']>([
+  'auto',
+  'gentle',
+  'classic',
+  'advanced',
+  'custom',
+]);
+const DISRUPTION_REASONS = new Set<DisruptionReason>([
+  'procedure',
+  'irritation',
+  'travel',
+  'break',
+]);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && !Array.isArray(value) && typeof value === 'object';
+}
+
+function isLocalDateISO(value: unknown): value is string {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+function isDateArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(isLocalDateISO);
+}
+
+function isDisruptionReason(value: unknown): value is DisruptionReason {
+  return typeof value === 'string' && DISRUPTION_REASONS.has(value as DisruptionReason);
+}
+
+function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
+  if (value === null || value === undefined) return null;
+  if (!isRecord(value)) return undefined;
+  const days = value.days;
+  if (
+    !isLocalDateISO(value.startISO) ||
+    typeof days !== 'number' ||
+    !Number.isInteger(days) ||
+    days <= 0 ||
+    !isDisruptionReason(value.reason)
+  ) {
+    return undefined;
   }
+  return { startISO: value.startISO, days, reason: value.reason };
+}
+
+function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): CycleConfig | null {
+  if (!isRecord(value)) return null;
+  const base = defaults(fallbackAnchorISO);
+  const variant = value.variant ?? base.variant;
+  const anchorISO = value.anchorISO ?? base.anchorISO;
+  const pausedFrom = value.pausedFrom ?? base.pausedFrom;
+  const pauseReason = value.pauseReason ?? base.pauseReason;
+  const recovery = normalizeRecovery(value.recovery);
+  const skips = value.skips ?? base.skips;
+  const stagingOverrides = value.stagingOverrides ?? base.stagingOverrides;
+
+  if (!CYCLE_VARIANTS.has(variant as CycleConfig['variant'])) return null;
+  if (!isLocalDateISO(anchorISO)) return null;
+  if (!(pausedFrom === null || isLocalDateISO(pausedFrom))) return null;
+  if (!(pauseReason === null || isDisruptionReason(pauseReason))) return null;
+  if (recovery === undefined) return null;
+  if (!isDateArray(skips)) return null;
+  if (!isStringArray(stagingOverrides)) return null;
+
+  return {
+    variant: variant as CycleConfig['variant'],
+    anchorISO,
+    pausedFrom,
+    pauseReason,
+    recovery,
+    skips,
+    stagingOverrides,
+  };
+}
+
+export async function loadCycleConfig(): Promise<CycleConfig> {
+  let raw: string | null = null;
+  try {
+    raw = await getPrivateItem(KEY);
+  } catch {
+    raw = null;
+  }
+
+  if (raw) {
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      const normalized = normalizeStoredConfig(parsed, localDateString());
+      if (normalized) return normalized;
+    } catch {
+      /* malformed legacy/local state */
+    }
+    await removePrivateItem(KEY).catch(() => undefined);
+  }
+
   // Continuity with the legacy "Start today" anchor (cycleAnchor.ts).
   const anchor = await getCycleAnchor();
   return defaults(anchor);

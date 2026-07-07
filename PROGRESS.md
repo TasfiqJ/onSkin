@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the local scheduler cycle config reader so malformed or wrong-shaped
+  stored cycle state is cleared instead of being spread into runtime scheduling.
+  Valid legacy partial configs still normalize with default pause/recovery/staging
+  fields, preserving first-session handoff compatibility.
+
 - Hardened Today completion persistence and the offline completion sync queue
   against malformed local JSON. Wrong-shaped or unreadable completion records are
   now cleared and treated as empty, then replaced by clean state on the next

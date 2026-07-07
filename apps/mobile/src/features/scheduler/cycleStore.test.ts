@@ -13,9 +13,13 @@ vi.mock('@/lib/storage/privateKV', () => ({
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.storage.delete(key);
+  }),
 }));
 
 const CYCLE_KEY = 'onskin.cycle.v1';
+const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
 
 describe('cycle store first-session handoff', () => {
   beforeEach(() => {
@@ -49,5 +53,43 @@ describe('cycle store first-session handoff', () => {
       skips: [oldSkip],
       stagingOverrides: ['retinol'],
     });
+  });
+
+  it('clears malformed cycle config and falls back to the legacy anchor', async () => {
+    mocks.storage.set(CYCLE_KEY, JSON.stringify({ variant: 'fast', anchorISO: 'tomorrow' }));
+    mocks.storage.set(LEGACY_ANCHOR_KEY, '2026-01-10');
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      variant: 'auto',
+      anchorISO: '2026-01-10',
+      pausedFrom: null,
+      pauseReason: null,
+      recovery: null,
+      skips: [],
+      stagingOverrides: [],
+    });
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+  });
+
+  it('normalizes valid legacy partial cycle config with new default fields', async () => {
+    mocks.storage.set(
+      CYCLE_KEY,
+      JSON.stringify({
+        variant: 'gentle',
+        anchorISO: '2026-01-01',
+        skips: ['2026-01-02'],
+      }),
+    );
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      variant: 'gentle',
+      anchorISO: '2026-01-01',
+      pausedFrom: null,
+      pauseReason: null,
+      recovery: null,
+      skips: ['2026-01-02'],
+      stagingOverrides: [],
+    });
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(true);
   });
 });
