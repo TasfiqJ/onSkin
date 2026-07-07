@@ -12,7 +12,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   bar while preserving 52+ px touch targets and readable labels at 320 px and
   390 px phone widths. Focused navigation tests, mobile typecheck/lint/test,
   and repo typecheck/lint/test pass. Evidence is in
-  `test-results/human-e2e/2026-07-07/navigation/`.
+  `test-results/human-e2e/2026-07-07/navigation/` and
+  `test-results/human-e2e/2026-07-07/navigation-active-tab-pill/`.
 
 - Refreshed the Phase 7 core-loop QA packet and Phase 10 closed-beta packet
   after the latest analytics and commerce-source changes. The generated
