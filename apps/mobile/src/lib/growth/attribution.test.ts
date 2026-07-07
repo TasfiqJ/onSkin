@@ -13,6 +13,11 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
   it('normalizes only real production domains', () => {
     expect(normalizePublicDomain('https://RoutineKind.app/share')).toBe('routinekind.app');
     expect(normalizePublicDomain('https://example.com')).toBeNull();
+    expect(normalizePublicDomain('https://routinekind.local')).toBeNull();
+    expect(normalizePublicDomain('https://routinekind.localhost')).toBeNull();
+    expect(normalizePublicDomain('https://routinekind.test')).toBeNull();
+    expect(normalizePublicDomain('https://routinekind.invalid')).toBeNull();
+    expect(normalizePublicDomain('https://routinekind.example')).toBeNull();
     expect(normalizePublicDomain('routinekind.app?redirect=https://evil.example')).toBeNull();
     expect(normalizePublicDomain('routinekind.app@evil.com')).toBeNull();
     expect(normalizePublicDomain('javascript://routinekind.app')).toBeNull();
@@ -83,6 +88,11 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
     expect(
       buildPublicGrowthUrl('//evil.com/s/abcDEF_123456', { source: 'share_card' }, {
         domain: 'routinekind.app',
+      }),
+    ).toBeNull();
+    expect(
+      buildPublicGrowthUrl('/s/abcDEF_123456', { source: 'share_card' }, {
+        domain: 'routinekind.local',
       }),
     ).toBeNull();
   });

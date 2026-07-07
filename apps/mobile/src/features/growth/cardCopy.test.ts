@@ -38,6 +38,9 @@ describe('Shelf Conflict Card copy (docs/14 §3) is claim-safe and calm', () => 
     expect(resolveCardPublicDomain('https://RoutineKind.app/share')).toBe('routinekind.app');
     expect(resolveCardPublicDomain('https://example.com')).toBe('routinekind.example');
     expect(resolveCardPublicDomain('http://localhost:19006')).toBe('routinekind.example');
+    expect(resolveCardPublicDomain('https://routinekind.local')).toBe('routinekind.example');
+    expect(resolveCardPublicDomain('https://routinekind.localhost')).toBe('routinekind.example');
+    expect(resolveCardPublicDomain('https://routinekind.test')).toBe('routinekind.example');
     expect(resolveCardPublicDomain('routinekind.app@evil.com')).toBe('routinekind.example');
     expect(CARD_SHARE_URL).toBe(`https://${CARD_COPY.handle}`);
   });

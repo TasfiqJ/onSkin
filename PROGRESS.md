@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 8 public growth domain normalization so reserved pseudo-public
+  hostnames like `.localhost`, `.local`, `.test`, `.invalid`, and `.example`
+  cannot produce first-party share links or Conflict Card domains. Focused
+  growth tests now cover both direct public link creation and card-copy
+  fallbacks.
+
 - Hardened public Edge Function environment parsing for the waitlist and growth
   event endpoints. Shared Edge env parsing now normalizes `APP_ENV` /
   `EXPO_PUBLIC_APP_ENV`, fails unknown app environments closed to production,
@@ -2375,6 +2381,13 @@ Phase 10/11 public-contact smoke that exercises the real readiness scripts again
 reserved domains, embedded credentials, plaintext store URLs, and placeholder/local support emails. Strict beta/public
 launch remains blocked on Tas-owned final URLs, store links, support inbox, evidence, generated packet readiness, and
 named signoff.
+
+### Public growth domain reserve-suffix hardening (2026-07-07)
+
+Aligned runtime public growth-domain normalization with the stricter launch gates. Share/deep-link URLs and conflict
+card handles now reject reserved `.local`, `.test`, `.invalid`, and `.example` hostnames instead of composing public
+links from local or documentation-only domains. Focused growth attribution/card-copy tests and the Phase 8 readiness
+check pass; final production domain and app-link evidence remain external blockers for Tas.
 
 ## Open questions for the founder
 

@@ -40,6 +40,8 @@ const OPAQUE_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const ATTRIBUTION_VALUE = /^[A-Za-z0-9._~-]{1,120}$/;
 const PUBLIC_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const RESERVED_PUBLIC_HOSTNAME =
+  /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 const PUBLIC_PATH = /^\/[A-Za-z0-9/_~-]*$/;
 
 export function normalizePublicDomain(domain: string = env.finalBrandDomain): string | null {
@@ -60,6 +62,7 @@ export function normalizePublicDomain(domain: string = env.finalBrandDomain): st
   const hostname = parsed.hostname.toLowerCase();
   if (
     !PUBLIC_HOSTNAME.test(hostname) ||
+    RESERVED_PUBLIC_HOSTNAME.test(hostname) ||
     hostname.includes('example.com') ||
     hostname === 'localhost'
   ) {
