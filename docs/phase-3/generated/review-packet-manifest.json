@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T21:20:32.934Z",
+  "generatedAt": "2026-07-07T02:00:34.425Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
   "files": [
     {
@@ -62,8 +62,8 @@
       "packet": "legalRegulatory",
       "path": "apps/mobile/src/lib/legal/disclaimer.ts",
       "exists": true,
-      "bytes": 880,
-      "sha256": "f6166ac9447d9fbe565daeeb53f99d608cf4a0326661635ed4338cfe2f522413"
+      "bytes": 926,
+      "sha256": "b9cc550cb5802a61fbc0c782585b4fcc388719d2475e5f7d476005da4f26e174"
     },
     {
       "packet": "legalRegulatory",
@@ -76,8 +76,8 @@
       "packet": "legalRegulatory",
       "path": "apps/mobile/src/lib/legal/storeMetadata.ts",
       "exists": true,
-      "bytes": 7683,
-      "sha256": "071bd7fb89b37b3294ef716a49798f20724e762498bf80795f7d7cab7e4ced13"
+      "bytes": 7823,
+      "sha256": "1708605207ee343e401eb71ed07c38af193232841ac35f1fbf7c0459aa5ffa68"
     },
     {
       "packet": "clinical",
@@ -125,8 +125,8 @@
       "packet": "clinical",
       "path": "apps/mobile/src/features/ask/copy.ts",
       "exists": true,
-      "bytes": 8431,
-      "sha256": "d87160bd778cce0a6f1538781ec4e27f59f2bbc5eb9f0cbade317eadbcb119ff"
+      "bytes": 8488,
+      "sha256": "06cc6c48b71dcad944ea8e218810466aec3764e06df78c8552edf3bc998a034b"
     },
     {
       "packet": "cosmeticChemistry",
@@ -139,8 +139,8 @@
       "packet": "cosmeticChemistry",
       "path": "apps/mobile/src/features/intelligence/tags.ts",
       "exists": true,
-      "bytes": 3500,
-      "sha256": "8f99ebcfda27428a6431f8ae16da2d2bdc6a63febae06879f1814cf8498bf8b6"
+      "bytes": 4875,
+      "sha256": "22f498caa0ef0e95a2e4820ea7f2b384ae519f1cbfd76d47288f2f77c591c7d2"
     },
     {
       "packet": "cosmeticChemistry",
@@ -160,8 +160,8 @@
       "packet": "cosmeticChemistry",
       "path": "apps/mobile/src/features/commerce/stacks.ts",
       "exists": true,
-      "bytes": 2947,
-      "sha256": "1315c0e4301299b02ea3cde46ff15d80eeb921938c6f91b125b7b17b8451f701"
+      "bytes": 3159,
+      "sha256": "eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f"
     },
     {
       "packet": "cosmeticChemistry",
@@ -181,8 +181,8 @@
       "packet": "ipFto",
       "path": "apps/mobile/src/features/onboarding/quiz.ts",
       "exists": true,
-      "bytes": 10961,
-      "sha256": "e8d64237d094c4d292f8510bf17e300062be4fded86da7a1afd4665c65ed2fda"
+      "bytes": 11021,
+      "sha256": "e467bfb1e6605e41cb2e62e764ff33cefbed98a936c94150de1a704654d23527"
     },
     {
       "packet": "ipFto",
@@ -237,8 +237,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase2/check-env.mjs",
       "exists": true,
-      "bytes": 7355,
-      "sha256": "0333382b98b429e2065d4d8d6551e5e349ffc2c683156496ab6eddd3f6907fb5"
+      "bytes": 8611,
+      "sha256": "9171b89306751709ab012f9d4e60fbab2ce802a71c7a9fd8edbe587391b1d214"
     },
     {
       "packet": "privacyPlatform",
