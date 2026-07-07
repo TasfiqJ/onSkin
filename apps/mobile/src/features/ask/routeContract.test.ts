@@ -69,6 +69,16 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('mt-3 min-h-[48px] self-start items-center justify-center');
   });
 
+  it('keeps Ask answer what/why/how labels readable on 320px phones', () => {
+    const home = readAppRoute('ask/index.tsx');
+
+    expect(home).toContain('numberOfLines={1}');
+    expect(home).toContain(
+      'style={{ color: colors.clay, marginTop: 2, width: 40, flexShrink: 0 }}',
+    );
+    expect(home).not.toContain('className="w-8 font-mono text-[9px] uppercase"');
+  });
+
   it('keeps suggested prompts clear of the fixed Ask composer on short phones', () => {
     const home = readAppRoute('ask/index.tsx');
 
@@ -115,13 +125,9 @@ describe('Ask route launch contracts', () => {
     expect(source).toContain('const qc = useQueryClient();');
     expect(source).toContain("if (final.kind === 'grounded') {");
     expect(source).toContain('void recordGroundedTurn(period)');
-    expect(source).toContain(
-      "qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] })",
-    );
+    expect(source).toContain("qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] })");
     expect(source).toContain('[ctx.groundedReason, period, qc]');
-    expect(source).not.toContain(
-      'TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period)',
-    );
+    expect(source).not.toContain('TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period)');
     expect(source.indexOf("if (final.kind === 'grounded')")).toBeLessThan(
       source.indexOf("if (final.kind === 'escalate')"),
     );

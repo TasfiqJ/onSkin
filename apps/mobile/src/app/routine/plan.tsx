@@ -6,6 +6,10 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { startCycleToday } from '@/features/scheduler/cycleStore';
 import { recordRoutinePlanAnalytics } from '@/features/routine/activationAnalytics';
+import {
+  routineFirstInsightCopy,
+  type RoutineFirstInsightCopy,
+} from '@/features/routine/firstInsight';
 import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -103,6 +107,41 @@ function EveningRow({
   );
 }
 
+function FirstInsightCard({
+  compact,
+  copy,
+}: {
+  compact: boolean;
+  copy: RoutineFirstInsightCopy;
+}) {
+  return (
+    <View
+      className={compact ? 'mt-3 rounded-[18px] bg-clay-tint px-4 py-3' : 'mt-4 rounded-[18px] bg-clay-tint px-4 py-3.5'}
+      style={{ borderWidth: 1, borderColor: 'rgba(172,116,84,0.16)' }}
+    >
+      <Text
+        className="font-mono text-[11px] uppercase tracking-[1px]"
+        style={{ color: colors.clayDeep }}
+      >
+        {copy.eyebrow}
+      </Text>
+      <Text
+        className={compact ? 'mt-1 font-sans-semibold text-[16px]' : 'mt-1 font-sans-semibold text-[17px]'}
+        style={{ color: colors.ink }}
+      >
+        {copy.title}
+      </Text>
+      <Text
+        variant="bodySm"
+        tone="muted"
+        className={compact ? 'mt-1 text-[12.5px]' : 'mt-1.5 text-[13px]'}
+      >
+        {copy.body}
+      </Text>
+    </View>
+  );
+}
+
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
   const { data } = usePlan();
@@ -126,6 +165,7 @@ export default function PlanScreen() {
       c.rule.interactionType === 'synergy' &&
       (c.rule.tagA === 'vitamin_c' || c.rule.tagB === 'vitamin_c'),
   );
+  const firstInsight = plan ? routineFirstInsightCopy(plan, data?.isExample ?? true) : null;
 
   useEffect(() => {
     if (!data || trackedPlanView.current) {
@@ -174,6 +214,8 @@ export default function PlanScreen() {
             >
               Your routine, in order.
             </Text>
+
+            {firstInsight ? <FirstInsightCard copy={firstInsight} compact={compactPlan} /> : null}
 
             {/* Morning card */}
             <View

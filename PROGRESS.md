@@ -2827,6 +2827,22 @@ re-offer. Added settings/paywall contract tests and ran Expo web human E2E at 39
 `test-results/human-e2e/2026-07-07/settings-subscription-reverse-trial/`. Native iOS/Android billing handoff QA remains
 required before store submission.
 
+### Routine plan first insight (2026-07-07)
+
+Added a generated-plan first insight block near the top of `/routine/plan` so the first-session value moment is visible,
+not only tracked in analytics. The copy helper prioritizes example-state disclosure, actionable timing conflicts,
+reassuring compatible pairings, missing-step gaps, cadence, then start-ready fallback without exposing product names or
+rule IDs. Focused unit and route-contract coverage pins the claim-safe copy order. Expo web human E2E at 320 x 568
+covered empty-shelf example disclosure, onboarding product add for retinol/glycolic/SPF, the real-shelf `Timing handled`
+plan insight, Start Today, and first check-off under
+`test-results/human-e2e/2026-07-07/routine-plan-first-insight/`.
+
+### Ask compact answer labels (2026-07-07)
+
+Fixed `/ask` answer triad labels on 320px phones so `WHAT`, `WHY`, and `HOW` stay readable instead of wrapping into
+stacked letters. Added route-contract coverage for the compact label sizing and captured Expo web evidence at 320x568
+and 390x844 under `test-results/human-e2e/2026-07-07/ask-compact-composer/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

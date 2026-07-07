@@ -62,8 +62,9 @@ function TriadRow({ label, text }: { label: string; text: string }) {
   return (
     <View className="flex-row gap-2.5">
       <Text
-        className="w-8 font-mono text-[9px] uppercase"
-        style={{ color: colors.clay, marginTop: 2 }}
+        numberOfLines={1}
+        className="font-mono text-[9px] uppercase"
+        style={{ color: colors.clay, marginTop: 2, width: 40, flexShrink: 0 }}
       >
         {label}
       </Text>

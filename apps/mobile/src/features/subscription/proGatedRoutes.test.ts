@@ -135,6 +135,14 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('useWindowDimensions');
     expect(plan).toContain('const compactPlan = height < 640');
     expect(plan).toContain('const planScrollBottomPadding = compactPlan ? 144 : 112');
+    expect(plan).toContain("import {\n  routineFirstInsightCopy,");
+    expect(plan).toContain('function FirstInsightCard');
+    expect(plan).toContain(
+      'const firstInsight = plan ? routineFirstInsightCopy(plan, data?.isExample ?? true) : null;',
+    );
+    expect(plan).toContain(
+      '{firstInsight ? <FirstInsightCard copy={firstInsight} compact={compactPlan} /> : null}',
+    );
     expect(plan).toContain('const hasCycle = plan?.cycle != null');
     expect(plan).toContain("const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser')");
     expect(plan).toContain("{hasCycle ? 'Evening · skin cycling' : 'Evening'}");

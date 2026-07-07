@@ -210,7 +210,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Persona: New or returning user reaching the first routine plan from onboarding or direct routine entry.
 - Entry state: User has either a real shelf/profile or the documented empty-shelf example state.
 - Start screen/URL/window: `/routine/plan`.
-- Success state: The plan explains whether it is using the user's profile or an example, shows no hardcoded mismatched skin profile, keeps a visible escape path, and lets the user start Today.
+- Success state: The plan explains whether it is using the user's profile or an example, surfaces an explicit first insight from generated plan data, shows no hardcoded mismatched skin profile, keeps a visible escape path, and lets the user start Today.
 - Priority: Critical
 - Automate later: Yes
 - Surface: iOS and Android first; Expo web for profile-label and compact-layout checks.
@@ -219,7 +219,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Generated Plan Review
 
 1. Action: Open `/routine/plan`, inspect the profile label, review AM and PM cards, then tap Start today.
-   Expected result: The profile label reflects the actual plan context, the routine cards fit the viewport, and Start today routes to Today without a dead end.
+   Expected result: The profile label reflects the actual plan context, the first insight is visible and claim-safe, the routine cards fit the viewport, and Start today routes to Today without a dead end.
    Evidence: Screenshot, visible-text snapshot, and route snapshot.
 
 ### Branches
