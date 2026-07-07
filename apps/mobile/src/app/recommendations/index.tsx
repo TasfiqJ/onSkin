@@ -246,10 +246,11 @@ function HubIntro() {
 }
 
 export default function ForYouScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const { result, isLoading } = useRecommendations();
   const groups = grouped(result.recommendations);
   const compactHub = height < 640;
+  const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
     if (isLoading) return;
@@ -295,9 +296,17 @@ export default function ForYouScreen() {
               <Text variant="label" tone="muted" className="mb-2.5 pl-0.5">
                 {g.group.toUpperCase()}
               </Text>
-              {g.items.map((rec) => (
-                <RecCard key={rec.id} rec={rec} compact={compactHub} />
-              ))}
+              {g.items.map((rec, recIndex) => {
+                const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;
+                return (
+                  <View
+                    key={rec.id}
+                    style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}
+                  >
+                    <RecCard rec={rec} compact={compactHub} />
+                  </View>
+                );
+              })}
             </View>
           ))}
         </ScrollView>

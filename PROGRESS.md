@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the compact For You recommendation hub continuation after the current
+  320 x 568 route sweep showed the third recommendation card peeking into the
+  first viewport as a 19 px tappable sliver. Short-phone recommendation hubs now
+  keep cards after the first two below the fold on narrow compact viewports,
+  preserving the complete first two cards and avoiding an unfinished scroll
+  boundary. Expo web E2E at 320 x 568 and 390 x 568 verifies zero horizontal
+  overflow, no sub-44 px controls, no partial small visible controls, and only
+  the first two recommendation cards visible in the initial viewport. Evidence
+  is in
+  `test-results/human-e2e/2026-07-07/recommendations-hub-narrow-scroll-continuation/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-recommendations-hub-third-card-sliver.md`.
+
 - Tightened the compact Skin Notes hub after the current 320 x 568 and
   390 x 568 route audit showed the next Community card clipping into the first
   viewport. The hub now applies a height-aware compact card density, heading

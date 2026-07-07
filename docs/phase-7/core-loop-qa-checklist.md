@@ -167,6 +167,14 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `See how` row, a 169 px card height, and a 34 px bottom gap. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`; it
   does not replace real iOS/Android beta-device QA.
+- 2026-07-07: Follow-up in-app browser E2E at 320 x 568 and 390 x 568 covers the
+  compact For You hub scroll continuation after a route sweep found the third
+  recommendation card entering the first viewport as a 19 px tappable sliver.
+  `/recommendations` now keeps only the first two recommendation cards visible
+  in the initial compact viewport, with zero horizontal overflow, no visible
+  sub-44 px controls, and no partial small visible controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendations-hub-narrow-scroll-continuation/`;
+  it does not replace real iOS/Android beta-device QA or native Dynamic Type QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 and 390 x 568 plus focused
   Community route contracts cover compact Skin Notes hub card fit: `/community`
   renders the first three note cards fully at 320 x 568 and the first four note

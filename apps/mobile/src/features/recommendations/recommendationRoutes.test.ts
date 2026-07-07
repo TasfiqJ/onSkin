@@ -57,9 +57,14 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain("REC_COPY.hub.subtitle.split(', ')");
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactHub = height < 640;');
+    expect(source).toContain('const narrowCompactHub = compactHub && width <= 430;');
     expect(source).toContain("contentContainerClassName={compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'}");
     expect(source).toContain('<HubIntro />');
-    expect(source).toContain('<RecCard key={rec.id} rec={rec} compact={compactHub} />');
+    expect(source).toContain('const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;');
+    expect(source).toContain(
+      'style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}',
+    );
+    expect(source).toContain('<RecCard rec={rec} compact={compactHub} />');
     expect(source).toContain(
       "compact\n          ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'",
     );
