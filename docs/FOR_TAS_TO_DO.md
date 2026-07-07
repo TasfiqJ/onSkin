@@ -127,6 +127,11 @@ Status: needs-device-verification
   insets: notch/status bar, home indicator/gesture nav, and short-screen
   layouts must keep the primary action and `Not now` exit fully visible and
   tappable.
+- Verify shared bottom sheets on physical iOS and Android devices with real
+  safe-area insets and screen readers: no-match, opened-date, replenish,
+  cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets
+  must keep visible exits/choices tappable and must not expose tiny hidden
+  backdrop strips to VoiceOver/TalkBack or keyboard focus.
 - Verify RevenueCat win-back eligible and ineligible states on native builds, including the fallback to the current Pro plan when no native offer exists.
 - Decide whether native OCR is in V1. Default is hidden unless real OCR passes device QA.
 

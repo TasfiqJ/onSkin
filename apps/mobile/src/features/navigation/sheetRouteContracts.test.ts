@@ -20,11 +20,25 @@ describe('Sheet route contracts', () => {
     expect(source).not.toContain('router.back()');
     expect(source).not.toContain('className="absolute inset-0"');
     expect(source).toContain('className="flex-1"');
+    expect(source).toContain('aria-hidden={!backdropAccessible}');
+    expect(source).toContain('accessibilityElementsHidden={!backdropAccessible}');
+    expect(source).toContain('focusable={backdropAccessible}');
+    expect(source).toContain("importantForAccessibility={backdropAccessible ? 'auto' : 'no'}");
+    expect(source).toContain('tabIndex={backdropAccessible ? 0 : -1}');
     expect(source).toContain('type AppFallbackRoute');
     expect(source).toContain('fallbackRoute?: AppFallbackRoute');
     expect(source).toContain('fallbackRoute = APP_HOME_ROUTE');
     expect(source).toContain('onClose ?? (() => backOrReplace(router, fallbackRoute))');
     expect(source).toContain('backOrReplace(router, fallbackRoute)');
+    expect(source).toContain("import { useSafeAreaInsets } from 'react-native-safe-area-context';");
+    expect(source).toContain('const insets = useSafeAreaInsets();');
+    expect(source).toContain(
+      'insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;',
+    );
+    expect(source).toContain("'overflow-hidden rounded-t-sheet px-7 pb-10 pt-4'");
+    expect(source).toContain(
+      '...(sheetPaddingBottom === undefined ? {} : { paddingBottom: sheetPaddingBottom })',
+    );
     expect(source).toContain('aria-modal');
     expect(source).toContain('role="dialog"');
     expect(source).toContain('accessibilityViewIsModal');

@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the shared `Sheet` component for native safe areas and inaccessible
+  backdrop strips. `Sheet` now applies bottom safe-area padding only when a real
+  bottom inset exists, preserving existing compact web `pb-6`/`pb-8` density,
+  and non-accessible backdrops are explicitly `aria-hidden` with `tabIndex=-1`
+  instead of creating tiny unlabeled focus targets. In-app browser E2E at
+  320 x 568 verifies `/shelf/no-match` exposes one dialog, a 48 px Close action,
+  zero horizontal overflow, no sub-44 exposed controls, and Close recovers to
+  `/shelf`; `/cycle/disruption` exposes one compact dialog, all four disruption
+  choices, no sub-44 exposed controls, a non-focusable hidden backdrop, and the
+  intended 24 px web bottom padding. Evidence is in
+  `test-results/human-e2e/2026-07-07/shared-sheet-safe-area-current/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-shared-sheet-backdrop-focus-target.md`.
+
 - Hardened the first-use `/progress/capture` consent and recovery overlays so
   their scroll padding includes safe-area insets. Live Codex in-app browser
   Expo web evidence at 320 x 568 on the current branch verifies the local-only

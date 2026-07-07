@@ -381,6 +381,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   continues to `/shelf/opened` with zero horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`; it
   does not replace native iOS/Android gesture and Dynamic Type QA.
+- 2026-07-07: Codex in-app browser E2E at 320 x 568 covers shared `Sheet`
+  safe-area and hidden-backdrop behavior. `/shelf/no-match` exposes one modal
+  dialog, a 48 px Close action, no sub-44 exposed controls, a hidden 12 px
+  backdrop strip with `aria-hidden=true` and `tabIndex=-1`, zero horizontal
+  overflow, and Close returns to `/shelf`. `/cycle/disruption` keeps all four
+  compact disruption choices visible with no sub-44 exposed controls, a
+  non-focusable hidden backdrop, zero horizontal overflow, and the intended
+  24 px web bottom padding after the native safe-area hardening. Evidence is in
+  `test-results/human-e2e/2026-07-07/shared-sheet-safe-area-current/`; it does
+  not replace native iOS/Android safe-area, VoiceOver/TalkBack, or gesture-nav
+  QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the reminders/widgets
   contextual paywall compact route: direct-open
   `/paywall/upsell?feature=reminders_widgets`, verify the long title, fallback

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace, type AppFallbackRoute } from '@/lib/navigation/safeBack';
@@ -31,14 +32,22 @@ export function Sheet({
   const close = onClose ?? (() => backOrReplace(router, fallbackRoute));
   const Body = scroll ? ScrollView : View;
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const backdropReserve = backdropAccessible ? 48 : 12;
   const sheetMaxHeight = Math.max(280, height - backdropReserve);
+  const sheetPaddingBottom =
+    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
   return (
     <View className="flex-1" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
       <Pressable
         className="flex-1"
+        aria-hidden={!backdropAccessible}
         accessible={backdropAccessible}
+        accessibilityElementsHidden={!backdropAccessible}
+        focusable={backdropAccessible}
+        importantForAccessibility={backdropAccessible ? 'auto' : 'no'}
+        tabIndex={backdropAccessible ? 0 : -1}
         {...(backdropAccessible
           ? { accessibilityRole: 'button' as const, accessibilityLabel: 'Dismiss' }
           : {})}
@@ -53,7 +62,10 @@ export function Sheet({
           tone === 'night' ? 'bg-night-surface' : 'bg-paper',
           className,
         )}
-        style={{ maxHeight: sheetMaxHeight }}
+        style={{
+          maxHeight: sheetMaxHeight,
+          ...(sheetPaddingBottom === undefined ? {} : { paddingBottom: sheetPaddingBottom }),
+        }}
       >
         <View
           className="mx-auto mb-5 h-[5px] w-10 rounded-[3px]"
