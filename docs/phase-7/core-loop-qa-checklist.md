@@ -336,3 +336,12 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   in
   `test-results/human-e2e/2026-07-07/paywall-lifecycle-bottom-buffer/`;
   it does not replace native RevenueCat lifecycle purchase/restore QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 plus the paywall mobile contract
+  covers compact monthly-equivalent price labels: Progress, `/routine/plan`,
+  `/onboarding/paywall`, and `/paywall/upsell?feature=full_routine` now render
+  the secondary monthly equivalent as one readable `$4.16/mo` line instead of a
+  cramped `$4.16 /mo` split, while preserving the annual billed amount as the
+  dominant price. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-monthly-equivalent-compact-line/`;
+  it does not replace native RevenueCat price localization, purchase, or restore
+  QA.

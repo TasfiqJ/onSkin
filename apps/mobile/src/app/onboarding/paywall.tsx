@@ -175,8 +175,11 @@ export default function PaywallScreen() {
             {monthlyEquivalent ? (
               <Text
                 variant="bodySm"
+                adjustsFontSizeToFit
+                minimumFontScale={0.86}
+                numberOfLines={1}
                 style={{ color: 'rgba(250,247,242,0.55)', textAlign: 'right' }}
-              >{`just\n${monthlyEquivalent}/mo`}</Text>
+              >{`${monthlyEquivalent}/mo`}</Text>
             ) : null}
           </View>
         </View>

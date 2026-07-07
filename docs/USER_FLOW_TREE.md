@@ -646,6 +646,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open onboarding, contextual, and lifecycle paywalls before RevenueCat pricing is available, or with the local development fallback.
   - Expected result: The price area uses approved fallback labels while loading and a clear unavailable state when pricing truly fails; lifecycle purchase actions such as paid-expiry renewal explain why the action is disabled; it must never render `Unavailable` as if it were the billed amount, and visible fallback copy must not expose infrastructure names, package setup detail, or production-build diagnostics.
   - Evidence: Screenshot and visible-text snapshot.
+  - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 verifies Progress, `/routine/plan`, `/onboarding/paywall`, and `/paywall/upsell?feature=full_routine` keep the monthly equivalent on a one-line `$4.16/mo` label instead of a cramped `$4.16 /mo` split, preserve the annual amount as the most conspicuous price, keep zero horizontal overflow, and expose no sub-44 px visible controls. Evidence is in `test-results/human-e2e/2026-07-07/paywall-monthly-equivalent-compact-line/`.
 - Branch: purchase success compact-phone confirmation
   - Priority: Important
   - Automate later: Yes
@@ -683,6 +684,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Gating stays stable and dismissing a direct-entry paywall returns to a safe app surface, not a blank or dead-end history state. On short phones, paywall bodies scroll above fixed actions, Terms/Privacy/Restore and decline controls meet the 44 pt touch target with a rendered buffer, the win-back fallback reason stays readable above its current-plan CTA when a native offer is unavailable, and the contextual upsell exposes a real visible dismiss action instead of relying on a tiny scrim-only target.
   - Evidence: Screenshot sequence plus 320 px button-geometry snapshot.
   - Current evidence (2026-07-07): `/paywall/upsell?feature=reminders_widgets` at 320 x 568 in `test-results/human-e2e/2026-07-07/paywall-upsell-reminders-compact/` verifies zero horizontal overflow, no clipped elements, 48 px+ visible controls, readable fallback store copy, and `Maybe later` recovery to `/today`.
+  - Current monthly-price evidence (2026-07-07): `/paywall/upsell?feature=full_routine` at 320 x 568 in `test-results/human-e2e/2026-07-07/paywall-monthly-equivalent-compact-line/` verifies the upsell sheet renders `$4.16/mo` on one readable line, with zero horizontal overflow and no sub-44 px visible controls.
   - Current lifecycle evidence (2026-07-07): `/paywall/reoffer` and `/paywall/downgrade` at 320 x 568 and 390 x 568 in `test-results/human-e2e/2026-07-07/paywall-lifecycle-bottom-buffer/` verify Terms/Privacy/Restore can scroll above fixed footer actions with 48 px controls, the decline actions keep a 32 px bottom buffer, unavailable-store copy stays readable, no visible controls clip or fall below 44 px, and `Continue on free` / `Keep using free` recover to `/today`.
 - Branch: accessibility and keyboard
   - Priority: Important

@@ -154,6 +154,34 @@ describe('paywall mobile contracts', () => {
     );
   });
 
+  it('keeps compact monthly equivalent labels on one readable line', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const upsell = readAppRoute('paywall/upsell.tsx');
+    const onboardingPaywall = readAppRoute('onboarding/paywall.tsx');
+
+    for (const [name, source] of [
+      ['ProGate', proGate],
+      ['paywall/upsell', upsell],
+      ['onboarding/paywall', onboardingPaywall],
+    ] as const) {
+      expect(source, `${name} should not force /mo onto its own cramped line`).not.toContain(
+        '\\n/mo',
+      );
+      expect(source, `${name} should keep monthly equivalent text to one line`).toContain(
+        'numberOfLines={1}',
+      );
+      expect(source, `${name} should allow compact text to shrink before wrapping`).toContain(
+        'minimumFontScale={0.86}',
+      );
+    }
+
+    expect(proGate).toContain('>{`${annualDisplay.pricePerMonthLabel}/mo`}</Text>');
+    expect(upsell).toContain('>{`${annualDisplay.pricePerMonthLabel}/mo`}</Text>');
+    expect(onboardingPaywall).toContain('>{`${monthlyEquivalent}/mo`}</Text>');
+    expect(proGate).toContain("style={{ letterSpacing: 0, textAlign: 'right' }}");
+    expect(upsell).toContain("style={{ letterSpacing: 0, textAlign: 'right' }}");
+  });
+
   it('keeps contextual routine paywalls value-first for first-time free users', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const entitlement = readSource('features/subscription/entitlement.ts');

@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the compact paywall monthly-equivalent price label after 320 x 568 E2E
+  screenshots showed the secondary `$4.16 /mo` copy squeezed into a cramped
+  two-line block on contextual Progress and Routine paywalls. Contextual
+  `ProGate`, direct upsell sheets, and onboarding paywall pricing now keep the
+  monthly equivalent on one shrinkable `$4.16/mo` line while preserving the
+  annual billed amount as the dominant price. In-app browser E2E at 320 x 568
+  verifies Progress, `/routine/plan`, `/onboarding/paywall`, and
+  `/paywall/upsell?feature=full_routine` have zero horizontal overflow, no
+  sub-44 px controls, and no split monthly price label. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-monthly-equivalent-compact-line/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-paywall-monthly-equivalent-wrap.md`.
+
 - Fixed the compact For You recommendation hub continuation after the current
   320 x 568 route sweep showed the third recommendation card peeking into the
   first viewport as a 19 px tappable sliver. Short-phone recommendation hubs now

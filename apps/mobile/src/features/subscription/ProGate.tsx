@@ -173,7 +173,14 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             </Text>
           </View>
           {annualDisplay.pricePerMonthLabel ? (
-            <Text variant="label" tone="muted">{`${annualDisplay.pricePerMonthLabel}\n/mo`}</Text>
+            <Text
+              adjustsFontSizeToFit
+              minimumFontScale={0.86}
+              numberOfLines={1}
+              variant="label"
+              tone="muted"
+              style={{ letterSpacing: 0, textAlign: 'right' }}
+            >{`${annualDisplay.pricePerMonthLabel}/mo`}</Text>
           ) : null}
         </View>
         {offering.data?.status && offering.data.status !== 'available' ? (
