@@ -134,7 +134,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain("'min-h-[56px] flex-row items-center justify-between py-2'");
     expect(source).toContain("'min-h-[48px] flex-row items-center justify-between py-0.5'");
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
-    expect(source).toContain('accessibilityLabel={label}');
+    expect(source).toContain('accessibilityLabel={hint ? `${label}. ${hint}` : label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
     expect(source).toContain('onPress={() => openPolicyUrl(row.url)}');
     expect(source).not.toContain(
@@ -143,6 +143,23 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain(
       'onPress={() => openPolicyUrl(row.url)}\n                accessibilityRole="button"',
     );
+  });
+
+  it('keeps You tab For You rows polished and accessible', () => {
+    const source = readAppRoute('(tabs)/you.tsx');
+
+    expect(source).toContain(
+      "const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [",
+    );
+    expect(source).toContain("label: 'Skin Notes'");
+    expect(source).toContain("hint: 'Myth vs evidence, reviewed and claim-safe.'");
+    expect(source).toContain("label: BRAND.askName");
+    expect(source).toContain("hint: 'Your evidence-grounded advisor.'");
+    expect(source).toContain(
+      '<Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />',
+    );
+    expect(source).not.toContain('Skin Notes. Myth vs evidence');
+    expect(source).not.toContain('Your evidence-grounded advisor`, href');
   });
 
   it('keeps You tab first-viewport rows clear of the floating tab bar on short phones', () => {

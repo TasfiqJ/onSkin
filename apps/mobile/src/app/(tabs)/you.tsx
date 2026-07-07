@@ -96,7 +96,7 @@ function Row({
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={label}
+        accessibilityLabel={hint ? `${label}. ${hint}` : label}
         onPress={onPress}
         className={
           compact
@@ -229,13 +229,21 @@ export default function YouScreen() {
     });
   }, [params.section, privacyCardReady]);
 
-  const forYouRows: { label: string; href: StaticRouteHref }[] = [
+  const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [
     { label: 'Recommendations', href: '/recommendations' },
     { label: 'Recommendation preferences', href: '/recommendations/preferences' },
-    { label: 'Skin Notes. Myth vs evidence', href: '/community' },
+    {
+      label: 'Skin Notes',
+      href: '/community',
+      hint: 'Myth vs evidence, reviewed and claim-safe.',
+    },
   ];
   if (phase7Flags.cloudAsk) {
-    forYouRows.unshift({ label: `${BRAND.askName}. Your evidence-grounded advisor`, href: '/ask' });
+    forYouRows.unshift({
+      label: BRAND.askName,
+      href: '/ask',
+      hint: 'Your evidence-grounded advisor.',
+    });
   }
   if (phase7Flags.commerce) {
     forYouRows.push({ label: 'Shoppable routines', href: '/commerce/stacks' });
@@ -490,8 +498,8 @@ export default function YouScreen() {
           <Text variant="label" tone="muted" className="mb-1">
             FOR YOU
           </Text>
-          {forYouRows.map(({ label, href }) => (
-            <Row key={href} label={label} onPress={() => router.push(href)} />
+          {forYouRows.map(({ label, href, hint }) => (
+            <Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />
           ))}
         </Card>
 

@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Polished the You tab For You navigation row after the settings-route E2E
+  sweep found `Skin Notes. Myth vs evidence` compressed into one awkward label.
+  The row now uses `Skin Notes` with a separate reviewed/claim-safe hint, and
+  hinted navigation rows expose the hint in their accessibility label. Focused
+  settings route contracts and Expo web E2E at 320 x 568 pass, with evidence in
+  `test-results/human-e2e/2026-07-07/settings-copy-polish/`.
+
 - Refreshed the Phase 11 public-launch packet after the Phase 9 packet cleanup.
   It now records a clean git status, the current Phase 9/10 generated-packet
   hashes, and the current package hash while still correctly blocking on
