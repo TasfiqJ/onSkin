@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-07T00:15:59.895Z",
+  "generatedAt": "2026-07-07T01:17:12.170Z",
   "app": {
-    "name": "OnSkin",
-    "slug": "onskin",
+    "name": "RoutineKind",
+    "slug": "routinekind",
     "version": "0.1.0",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
-    "scheme": "onskin",
-    "iosBundleIdentifier": "com.onskin.app",
-    "androidPackage": "com.onskin.app",
+    "scheme": "routinekind",
+    "iosBundleIdentifier": "com.routinekind.app",
+    "androidPackage": "com.routinekind.app",
     "androidAllowBackup": false,
     "androidPermissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"]
   },
@@ -38,30 +38,30 @@
   },
   "resolvedVariants": {
     "development": {
-      "name": "OnSkin Dev",
-      "scheme": "onskin-development",
-      "iosBundleIdentifier": "com.onskin.app.development",
-      "androidPackage": "com.onskin.app.development",
+      "name": "RoutineKind Dev",
+      "scheme": "routinekind-development",
+      "iosBundleIdentifier": "com.routinekind.app.development",
+      "androidPackage": "com.routinekind.app.development",
       "androidAllowBackup": false,
       "appVariant": "development",
       "appEnvironment": "development"
     },
     "staging": {
-      "name": "OnSkin Staging",
-      "scheme": "onskin-staging",
-      "iosBundleIdentifier": "com.onskin.app.staging",
-      "androidPackage": "com.onskin.app.staging",
+      "name": "RoutineKind Staging",
+      "scheme": "routinekind-staging",
+      "iosBundleIdentifier": "com.routinekind.app.staging",
+      "androidPackage": "com.routinekind.app.staging",
       "androidAllowBackup": false,
       "appVariant": "staging",
       "appEnvironment": "staging"
     },
     "production": {
-      "error": "Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve. Current resolved legacy keys: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION."
+      "error": "Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve."
     }
   },
   "artifacts": {},
   "blockers": [
-    "Resolved production app config failed: Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve. Current resolved legacy keys: APP_DISPLAY_NAME, APP_SLUG, APP_SCHEME, APP_IOS_BUNDLE_IDENTIFIER, APP_ANDROID_PACKAGE, APP_CAMERA_USAGE_DESCRIPTION, APP_FACE_ID_USAGE_DESCRIPTION, APP_CAMERA_PERMISSION, APP_FACE_ID_PERMISSION."
+    "Resolved production app config failed: Production app identity requires BRAND_LEGAL_CLEARANCE=cleared before native config can resolve."
   ],
   "warnings": [
     "iOS artifact not supplied for hashing: set PHASE9_IOS_ARTIFACT=path.",

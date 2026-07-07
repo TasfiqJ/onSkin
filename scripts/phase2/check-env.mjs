@@ -205,7 +205,7 @@ if (publicSecretValues.length > 0) {
 }
 
 const displayName =
-  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'OnSkin';
+  valueFor('APP_DISPLAY_NAME') || valueFor('EXPO_PUBLIC_APP_DISPLAY_NAME') || 'RoutineKind';
 if (
   (appVariant === 'production' || appEnv === 'production') &&
   /onskin/i.test(displayName) &&

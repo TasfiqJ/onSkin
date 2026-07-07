@@ -50,11 +50,11 @@ describe('Expo app identity config', () => {
   it('defaults unset local config reads to the development install identity', () => {
     const expo = buildExpoConfig({});
 
-    expect(expo.name).toBe('OnSkin Dev');
-    expect(expo.slug).toBe('onskin');
-    expect(expo.scheme).toBe('onskin-development');
-    expect(expo.ios.bundleIdentifier).toBe('com.onskin.app.development');
-    expect(expo.android.package).toBe('com.onskin.app.development');
+    expect(expo.name).toBe('RoutineKind Dev');
+    expect(expo.slug).toBe('routinekind');
+    expect(expo.scheme).toBe('routinekind-development');
+    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app.development');
+    expect(expo.android.package).toBe('com.routinekind.app.development');
     expect(expo.extra.appVariant).toBe('development');
     expect(expo.extra.appEnvironment).toBe('development');
   });
@@ -144,7 +144,7 @@ describe('Expo app identity config', () => {
 
     expect(expo.name).toBe('RoutineKind');
     expect(expo.scheme).toBe('routinekind');
-    expect(expo.ios.bundleIdentifier).toBe('com.onskin.app.development');
-    expect(expo.android.package).toBe('com.onskin.app.development');
+    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app.development');
+    expect(expo.android.package).toBe('com.routinekind.app.development');
   });
 });

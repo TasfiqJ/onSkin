@@ -18,21 +18,22 @@ Status: launch-blocked
 - Run formal trademark, App Store, Google Play, domain, social handle, and paid-search checks for the final candidate.
 - Choose final app name, legal entity display, domain, support email, bundle ID, Android package ID, URL scheme, policy URL root, and share-card watermark.
 - Record the decision in `docs/brand-decision-memo.md`.
-- After the 2026-07-06 runtime, Phase 8 public-copy, and RevenueCat product-ID
-  config sweeps, `npm run brand:audit` reports 18 remaining public launch-risk
-  references. They are intentionally limited to native app config
-  (`apps/mobile/app.base.json` display/slug/scheme/bundle/package/permission
-  strings) and Supabase redirect/project config. Annual, monthly, and local
-  reverse-trial RevenueCat product IDs are now env-driven with neutral local
-  placeholders; replace them only after the final identity is cleared and
-  matching Apple, Google, RevenueCat, Supabase, domain, and OAuth console
-  changes are ready.
+- After the 2026-07-07 native-default migration, `apps/mobile/app.base.json`
+  and development/staging resolved Expo config now use `RoutineKind`,
+  `routinekind`, and `com.routinekind.app` defaults. `npm run brand:audit`
+  reports 6 remaining public launch-risk references, all in
+  `supabase/config.toml` (`project_id`, `site_url`, and auth redirect URLs).
+  Replace them only when the final Supabase project, auth callback scheme, and
+  matching Apple/Google OAuth settings exist under the cleared identity.
+- Annual, monthly, and local reverse-trial RevenueCat product IDs are env-driven
+  with neutral local placeholders; replace them only after the final identity is
+  cleared and matching Apple, Google, RevenueCat, Supabase, domain, and OAuth
+  console changes are ready.
 - Production native config now fails fast unless `APP_VARIANT=production` has
   `BRAND_LEGAL_CLEARANCE=cleared` and explicit final native identity env values
-  for display name, slug, scheme, iOS bundle ID, and Android package. If the
-  unresolved config still inherits legacy `OnSkin` values, the failure reports
-  those keys. Tas still needs to provide the final values; Codex did not choose
-  or reserve them.
+  for display name, slug, scheme, iOS bundle ID, and Android package. Tas still
+  needs to provide legally cleared final values and account evidence; Codex did
+  not reserve the name, domain, store app, or package IDs.
 
 Evidence needed:
 

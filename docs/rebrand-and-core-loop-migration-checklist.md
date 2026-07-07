@@ -6,8 +6,9 @@ Purpose: turn the master plan into executable engineering slices without weakeni
 
 ## Current Strategic Position
 
-- Working brand candidate: `RoutineKind`.
-- Final brand status: not cleared.
+- Working brand candidate and engineering default: `RoutineKind`.
+- Final brand status: not legally cleared; production builds still require
+  explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`.
 - Public position: private skincare shelf and routine tracker, not generic scanner, AI beauty analyzer, or shopping marketplace.
 - Launch loop: add owned products -> get useful reviewed insight -> see AM/PM routine -> complete Today check-off -> understand private progress -> pay after value.
 
@@ -31,7 +32,9 @@ Do not create production accounts or store records until final brand clearance e
    - Share-card/deep-link asset.
    - Internal package name or historical doc.
 
-3. Make identity values config-driven where safe.
+3. Make identity values config-driven where safe. Status: native
+   development/staging defaults now use RoutineKind; production still fails
+   closed without final identity evidence.
 
    - Display name.
    - URL scheme.
@@ -43,11 +46,12 @@ Do not create production accounts or store records until final brand clearance e
    - Default local config reads must resolve to a development install identity;
      production identity must require `APP_VARIANT=production`.
 
-4. Prepare, but do not execute, final migration.
+4. Prepare, but do not execute, final account/domain migration.
 
-   - Replace public `OnSkin` references after final decision.
+   - Replace remaining public `OnSkin` references after final decision.
    - Keep historical docs honest if they refer to past state.
-   - Update `app.config.js`, `app.base.json`, policy-link registry, store metadata source, share-link helpers, and public-site pages.
+   - Update Supabase config, policy-link registry, store metadata source,
+     share-link helpers, and public-site pages.
    - Re-run typecheck, lint, tests, and any affected phase checkers.
 
 5. Exit criteria.

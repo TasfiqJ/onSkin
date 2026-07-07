@@ -1,31 +1,28 @@
 {
   "expo": {
-    "name": "OnSkin",
-    "slug": "onskin",
+    "name": "RoutineKind",
+    "slug": "routinekind",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "onskin",
+    "scheme": "routinekind",
     "userInterfaceStyle": "automatic",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
     "ios": {
-      "bundleIdentifier": "com.onskin.app",
+      "bundleIdentifier": "com.routinekind.app",
       "supportsTablet": false,
       "icon": "./assets/expo.icon",
       "infoPlist": {
-        "NSCameraUsageDescription": "OnSkin uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
-        "NSFaceIDUsageDescription": "OnSkin uses Face ID to keep your private photo timeline for your eyes only."
+        "NSCameraUsageDescription": "RoutineKind uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
+        "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
       }
     },
     "android": {
-      "package": "com.onskin.app",
+      "package": "com.routinekind.app",
       "allowBackup": false,
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.POST_NOTIFICATIONS"
-      ],
+      "permissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"],
       "adaptiveIcon": {
         "backgroundColor": "#F5F1EA",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -74,7 +71,7 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "OnSkin uses Face ID to keep your private photo timeline for your eyes only."
+          "faceIDPermission": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
         }
       ],
       "expo-localization",

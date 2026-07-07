@@ -17,19 +17,28 @@ whether this product can launch as `OnSkin`. This is evidence, not legal advice.
 
 ## Current Code Identity
 
-Current identifiers in `apps/mobile/app.base.json`:
+Current engineering defaults in `apps/mobile/app.base.json` after the
+2026-07-07 native-default migration:
 
-| Field           | Current value    |
-| --------------- | ---------------- |
-| Display name    | `OnSkin`         |
-| Slug            | `onskin`         |
-| URL scheme      | `onskin`         |
-| iOS bundle ID   | `com.onskin.app` |
-| Android package | `com.onskin.app` |
+| Field           | Current default       |
+| --------------- | --------------------- |
+| Display name    | `RoutineKind`         |
+| Slug            | `routinekind`         |
+| URL scheme      | `routinekind`         |
+| iOS bundle ID   | `com.routinekind.app` |
+| Android package | `com.routinekind.app` |
 
-These are too close to the existing public app to treat as a routine naming
-issue. They affect App Store search, paid search, app review, support confusion,
-trademark risk, domain strategy, and user trust.
+Production builds still require explicit final identity environment values and
+`BRAND_LEGAL_CLEARANCE=cleared`. These defaults reduce accidental use of the
+conflicted `OnSkin` identity in dev/staging, but they are not trademark
+clearance, domain registration, App Store name reservation, or Google Play
+package reservation.
+
+Legacy `OnSkin`, `onskin`, `onskin://`, `com.onskin.app`, and placeholder
+`onskin.app` references remain high risk where they are still present in public
+launch config, especially Supabase project and redirect settings. They affect
+App Store search, paid search, app review, support confusion, trademark risk,
+domain strategy, and user trust.
 
 ## DNS Checks
 

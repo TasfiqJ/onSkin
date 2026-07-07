@@ -1,8 +1,8 @@
 {
-  "name": "onskin",
+  "name": "routinekind",
   "version": "0.1.0",
   "private": true,
-  "description": "RoutineKind — cross-platform skincare routine app (Expo + Supabase)",
+  "description": "RoutineKind - cross-platform skincare routine app (Expo + Supabase)",
   "workspaces": [
     "apps/*",
     "packages/*"
