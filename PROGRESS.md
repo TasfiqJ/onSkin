@@ -8,10 +8,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Fixed mojibake punctuation on the first-run age gate. The DOB screen now shows
   `We don't store your birth date.` instead of a broken apostrophe sequence.
-  Added a route-contract regression and reran human-simulated Expo web E2E at
-  320 x 568 through the initial, impossible-date, and underage states, with
-  evidence in
-  `test-results/human-e2e/2026-07-07/onboarding-age-gate-copy-fix/`.
+  Added a route-contract regression and a user-flow branch, then verified Expo
+  web at 320 x 568 through the initial, impossible-date, and underage states;
+  the resumed compact pass also rechecked the title, privacy sentence,
+  day/month/year fields, and Continue action. Evidence is in
+  `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/`,
+  `test-results/human-e2e/2026-07-07/onboarding-age-gate-copy-fix/`, and
+  `test-results/human-e2e/2026-07-07/onboarding-age-copy/`.
 
 - Aligned Shelf scan analytics with the master-plan/docs/04 activation funnel.
   Valid barcode scans now emit the privacy-safe `barcode_scanned` event, exact
