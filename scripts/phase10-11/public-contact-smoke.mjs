@@ -100,7 +100,7 @@ function combinedOutput(result) {
 }
 
 function runPacket(scriptPath, extraEnv, packetFileName, outDirEnvName) {
-  const outDir = mkdtempSync(join(tmpdir(), 'onskin-phase10-11-packet-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase10-11-packet-'));
   const result = run(scriptPath, {
     ...extraEnv,
     [outDirEnvName]: outDir,

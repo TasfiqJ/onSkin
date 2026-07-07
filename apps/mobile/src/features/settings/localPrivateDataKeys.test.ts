@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { LOCAL_PRIVATE_DATA_KEYS, LOCAL_PRIVATE_SECURE_STORE_KEYS } from './localPrivateDataKeys';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
-const STORAGE_KEY_RE = /['"`](onskin\.[^'"`]+)['"`]/g;
+const STORAGE_KEY_RE = /['"`]((?:onskin|routinekind)\.[^'"`]+)['"`]/g;
 
 function walk(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -17,7 +17,7 @@ function walk(dir: string): string[] {
 }
 
 describe('local private data registry', () => {
-  it('covers every on-device OnSkin storage key', () => {
+  it('covers every on-device private storage key', () => {
     const registered = new Set([...LOCAL_PRIVATE_DATA_KEYS, ...LOCAL_PRIVATE_SECURE_STORE_KEYS]);
     const discovered = new Set<string>();
 

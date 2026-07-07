@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Cleared the remaining strict brand-audit launch-risk hits. The routine
+  activation analytics marker now uses the working `RoutineKind` namespace, the
+  local private-data registry test covers both legacy internal and current
+  private storage namespaces, and Phase 5 / Phase 10-11 smoke temp directories
+  no longer use the legacy brand prefix. `brand:audit:strict`, focused storage
+  tests, Phase 5/10-11 smokes, mobile typecheck, and mobile lint pass. This was
+  non-visual brand/QA infrastructure cleanup, so human E2E was not required.
+
 - Reconciled the master-plan `photo_baseline_added` event with the existing
   photo-progress instrumentation. The first saved local Progress photo now emits
   both `first_photo_captured` and `photo_baseline_added` with metadata-only,

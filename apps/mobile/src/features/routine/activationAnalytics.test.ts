@@ -21,7 +21,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const KEY = 'onskin.routineActivation.v1';
+const KEY = 'routinekind.routineActivation.v1';
 
 describe('routine activation analytics', () => {
   beforeEach(() => {

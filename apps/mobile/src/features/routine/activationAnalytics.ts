@@ -1,7 +1,7 @@
 import { track } from '@/lib/analytics/track';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
-const KEY = 'onskin.routineActivation.v1';
+const KEY = 'routinekind.routineActivation.v1';
 
 type ActivationFlags = {
   firstRoutineCreated: boolean;

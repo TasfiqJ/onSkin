@@ -39,7 +39,7 @@ const validEvidence = {
 };
 
 function run(extraEnv) {
-  const outDir = mkdtempSync(join(tmpdir(), 'onskin-phase5-qa-'));
+  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase5-qa-'));
   return spawnSync(process.execPath, [packetPath, '--strict'], {
     cwd: root,
     encoding: 'utf8',
