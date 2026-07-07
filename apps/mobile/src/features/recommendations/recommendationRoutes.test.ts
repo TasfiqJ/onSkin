@@ -42,7 +42,8 @@ describe('Recommendation route contracts', () => {
     const source = readAppRoute('recommendations/index.tsx');
 
     expect(source).toContain('min-w-0 flex-1 flex-row items-start');
-    expect(source).toContain('className="flex-1 font-mono text-[10.5px]"');
+    expect(source).toContain("compact ? 'flex-1 font-mono text-[10px]'");
+    expect(source).toContain("'flex-1 font-mono text-[10.5px]'");
     expect(source).toContain('flexShrink: 1');
     expect(source).toContain("flexShrink: 0, textAlign: 'right'");
   });
@@ -54,8 +55,16 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('accessibilityRole="header"');
     expect(source).toContain("style={{ alignSelf: 'flex-start' }}");
     expect(source).toContain("REC_COPY.hub.subtitle.split(', ')");
-    expect(source).toContain('contentContainerClassName="pb-10 pt-5"');
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const compactHub = height < 640;');
+    expect(source).toContain("contentContainerClassName={compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'}");
     expect(source).toContain('<HubIntro />');
+    expect(source).toContain('<RecCard key={rec.id} rec={rec} compact={compactHub} />');
+    expect(source).toContain(
+      "compact\n          ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'",
+    );
+    expect(source).toContain('style={{ lineHeight: compact ? 16 : 18 }}');
+    expect(source).toContain('lineHeight: compact ? 13 : 15');
   });
 
   it('keeps recommendation preferences fail-closed on local save failure', () => {

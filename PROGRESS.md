@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened the compact For You recommendation hub after the current 320 x 568
+  route audit showed the second recommendation card clipped before its
+  evidence/`See how` row. The hub now applies a compact-only card density and
+  shorter scroll start on short phones while preserving full-card tap targets.
+  Expo web E2E at 320 x 568 and 390 x 568 verifies three recommendation cards
+  render with zero horizontal overflow and no sub-44 px controls; the second
+  card is fully visible at 320 x 568 with a 34 px bottom gap and a visible
+  evidence/CTA row. Focused recommendation route contracts pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-recommendations-hub-compact-card-clip.md`.
+
 - Hardened and verified onboarding privacy/quiz resilience. Direct health-consent
   decline now has current Expo web evidence showing the quiz stays locked and
   direct `/onboarding/quiz` recovers to consent. The sensitivities quiz chips

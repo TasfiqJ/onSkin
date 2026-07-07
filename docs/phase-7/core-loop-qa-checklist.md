@@ -139,6 +139,13 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`; it does
   not replace real iOS/Android beta-device QA.
 - 2026-07-07: Expo web E2E at 320 x 568 and 390 x 568 plus focused route
+  contracts cover compact For You hub card fit: `/recommendations` renders three
+  recommendation cards with zero horizontal overflow and no visible sub-44 px
+  controls; at 320 x 568 the second card is fully visible with its evidence and
+  `See how` row, a 169 px card height, and a 34 px bottom gap. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`; it
+  does not replace real iOS/Android beta-device QA.
+- 2026-07-07: Expo web E2E at 320 x 568 and 390 x 568 plus focused route
   contracts cover compact recommendation preferences: open
   `/recommendations/preferences`, verify `Drugstore`, `Mid-range`, and `Premium`
   keep a readable one-row budget layout, verify `Gel`, `Cream`, `Fluid`, `Balm`,

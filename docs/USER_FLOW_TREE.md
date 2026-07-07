@@ -703,6 +703,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-preferences-compact-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-stale-detail-recovery/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`
 
 ### Path A: For You Hub
 
@@ -749,8 +750,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/recommendations` on a 390 px or narrower phone viewport with long evidence labels.
-  - Expected result: Evidence/footer labels wrap within the card and the `See how` action remains visible and tappable.
+  - Expected result: Evidence/footer labels wrap within the card, the `See how` action remains visible and tappable, and compact phones do not cut a visible recommendation card before its evidence/CTA row.
   - Evidence: Phone-width screenshot and visible-text snapshot.
+  - Current local evidence: 2026-07-07 Expo web at 320 x 568 and 390 x 568 verifies the For You hub has zero horizontal overflow and no sub-44 px controls. At 320 x 568 the second card (`A ceramide moisturiser`) is fully visible with its evidence and `See how` row, a 169 px card height, and a 34 px bottom gap.
 - Branch: compact recommendation budget and texture preferences
   - Priority: Important
   - Automate later: Yes
