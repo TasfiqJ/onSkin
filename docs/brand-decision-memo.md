@@ -44,9 +44,10 @@ values plus `BRAND_LEGAL_CLEARANCE=cleared`.
 - This repo historically used `OnSkin`, `onskin`, `onskin://`,
   `com.onskin.app`, and placeholder `onskin.app` references. The native
   development/staging defaults and local Supabase redirect placeholders now use
-  RoutineKind. Remaining reportable audit hits are deliberate legacy-brand guard
-  strings in config/check scripts; internal namespaces and historical docs still
-  need final clearance or a deliberate migration decision.
+  RoutineKind. `npm run brand:audit:strict` now passes; remaining audit hits are
+  classified as deliberate legacy-brand guard rails, internal namespaces, or
+  historical docs that still need final clearance or a deliberate migration
+  decision.
 
 ## Required Counsel Output
 

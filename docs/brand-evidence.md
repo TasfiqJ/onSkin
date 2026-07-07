@@ -36,10 +36,11 @@ package reservation.
 
 Legacy `OnSkin`, `onskin`, `onskin://`, `com.onskin.app`, and placeholder
 `onskin.app` references remain high risk where they are still present in
-review-needed guards, internal namespaces, or historical context. Public launch
-config now avoids the conflicted native and Supabase redirect defaults, but the
-final production app name, project refs, domains, store records, and OAuth
-allow-lists still need real clearance and reservation.
+public launch config. `npm run brand:audit:strict` now passes because those
+public/review-needed launch references are gone; remaining hits are classified
+as guard rails, internal namespaces, or historical context. The final production
+app name, project refs, domains, store records, and OAuth allow-lists still need
+real clearance and reservation.
 
 ## DNS Checks
 

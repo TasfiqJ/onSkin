@@ -112,6 +112,19 @@ const testOrScriptFixturePatterns = [
   /^scripts\/phase9\/live-revenuecat-webhook\.mjs$/,
 ];
 
+function isGuardRail(relPath, line) {
+  if (relPath === 'apps/mobile/app.config.js' && /legacyIdentityPattern/.test(line)) return true;
+  if (
+    relPath === 'scripts/phase2/check-env.mjs' &&
+    (/\/onskin\/i\.test\(displayName\)/.test(line) ||
+      /Production identity still uses OnSkin without BRAND_LEGAL_CLEARANCE=cleared/.test(line))
+  ) {
+    return true;
+  }
+  if (relPath === 'scripts/phase4/check-source-env.mjs' && /'OnSkin'/.test(line)) return true;
+  return false;
+}
+
 function normalizePath(filePath) {
   return path.relative(repoRoot, filePath).split(path.sep).join('/');
 }
@@ -144,6 +157,7 @@ function isMatch(patterns, relPath) {
 
 function classify(relPath, line) {
   if (isMatch(contextDocs, relPath)) return 'context-doc';
+  if (isGuardRail(relPath, line)) return 'guard-rail';
   if (internalNamespacePatterns.some((pattern) => pattern.test(line))) return 'internal-namespace';
   if (isMatch(testOrScriptFixturePatterns, relPath)) return 'test-or-fixture';
   if (isMatch(publicAssetPatterns, relPath)) return 'public-launch-risk';
@@ -198,6 +212,7 @@ console.log('');
 for (const category of [
   'public-launch-risk',
   'review-needed',
+  'guard-rail',
   'internal-namespace',
   'test-or-fixture',
   'context-doc',
