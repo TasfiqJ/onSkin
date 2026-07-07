@@ -158,25 +158,32 @@ export default function ManualAddScreen() {
 
           {pickerOpen ? (
             <View className="rounded-[14px] border border-hairline bg-paper-raised">
-              {PRODUCT_CATEGORIES.map((c, i) => (
-                <Pressable
-                  key={c.id}
-                  accessibilityRole="button"
-                  onPress={() => {
-                    setCategory(c.id);
-                    setPickerOpen(false);
-                  }}
-                  className={cn(
-                    'min-h-[48px] flex-row items-center justify-between px-4 py-3',
-                    i > 0 && 'border-t border-hairline',
-                  )}
-                >
-                  <Text variant="bodySm" className="font-sans-medium">
-                    {c.label}
-                  </Text>
-                  {category === c.id ? <Text tone="clay">✓</Text> : null}
-                </Pressable>
-              ))}
+              <ScrollView
+                nestedScrollEnabled
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+                style={{ maxHeight: 192 }}
+              >
+                {PRODUCT_CATEGORIES.map((c, i) => (
+                  <Pressable
+                    key={c.id}
+                    accessibilityRole="button"
+                    onPress={() => {
+                      setCategory(c.id);
+                      setPickerOpen(false);
+                    }}
+                    className={cn(
+                      'min-h-[48px] flex-row items-center justify-between px-4 py-3',
+                      i > 0 && 'border-t border-hairline',
+                    )}
+                  >
+                    <Text variant="bodySm" className="font-sans-medium">
+                      {c.label}
+                    </Text>
+                    {category === c.id ? <Text tone="clay">✓</Text> : null}
+                  </Pressable>
+                ))}
+              </ScrollView>
             </View>
           ) : null}
 

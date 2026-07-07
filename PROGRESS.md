@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the compact Shelf manual-add category picker after human-simulated
+  Expo web E2E at 320 x 568 showed the full list could run into the fixed
+  Continue footer. The picker now has a capped internal scroll area while each
+  category row keeps a 48 px target; rerun evidence verified no horizontal
+  overflow, no sub-44 px controls, the footer owns its hit zone, and
+  `Something else` remains reachable and selectable. Evidence is in
+  `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-footer-overlap/`;
+  the tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-shelf-manual-category-picker-footer-overlap.md`.
+
 - Added the missing privacy-safe routine-depth analytics from docs/03 / docs/05
   where the local actions already exist: routine reorder moves emit
   `step_reordered` and `routine_edited`, ramp offers/acceptance emit
@@ -2911,6 +2921,15 @@ Stopped `/progress/capture` from rendering capture-frame labels, shutter copy, o
 the visible UI. Expo web human E2E at 320 x 568 reproduced the pre-fix shell text leak and verified an empty leaked-term
 set after the fix under `test-results/human-e2e/2026-07-07/progress-capture-preconsent-shell-leak/`; native camera
 permission sequencing remains a device-harness follow-up.
+
+### Shelf manual category picker footer clearance (2026-07-07)
+
+Capped the `/shelf/manual` category picker to four 48 px rows and made the category list internally scrollable, so the
+fixed Continue footer no longer covers picker options on 320 x 568 phones. Expo web human E2E reproduced the pre-fix
+overlap, verified the picker/footer gap and inner scroll to `Something else`, then confirmed Continue still advances to
+the opened-date sheet. Evidence is in
+`test-results/human-e2e/2026-07-07/shelf-manual-category-picker-footer-overlap/`; native nested-scroll feel remains a
+Phase 5 device-QA follow-up.
 
 ## Open questions for the founder
 

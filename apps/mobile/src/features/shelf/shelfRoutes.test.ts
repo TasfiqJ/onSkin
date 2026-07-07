@@ -252,6 +252,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'className="h-[50px] flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3"',
     );
+    expect(source).toContain('nestedScrollEnabled');
+    expect(source).toContain('keyboardShouldPersistTaps="handled"');
+    expect(source).toContain('style={{ maxHeight: 192 }}');
     expect(source).toContain(
       'className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"',
     );
