@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
@@ -11,10 +11,12 @@ import { colors } from '@/theme/tokens';
 // Graceful downgrade after a PAID expiry (design 08, docs/08 §6). Never a
 // data-deleting hard lock; data preserved, Pro re-offered calmly.
 export default function DowngradeScreen() {
+  const { height } = useWindowDimensions();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const compactPaywall = height < 640;
 
   function onRenew() {
     if (!canPurchase) {
@@ -35,7 +37,7 @@ export default function DowngradeScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-4"
+        contentContainerClassName={compactPaywall ? 'pb-44' : 'pb-4'}
       >
         <View className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2" style={{ backgroundColor: colors.greige }}>
           <View className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.muted }} />
@@ -69,7 +71,7 @@ export default function DowngradeScreen() {
         </Text>
         <ComplianceRow />
       </ScrollView>
-      <View className="gap-3 pb-2">
+      <View className={compactPaywall ? 'gap-2.5 pb-8' : 'gap-3 pb-2'}>
         {offering.data?.status && offering.data.status !== 'available' ? (
           <Text
             variant="bodySm"

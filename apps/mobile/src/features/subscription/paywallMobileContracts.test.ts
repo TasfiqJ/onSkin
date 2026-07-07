@@ -20,8 +20,28 @@ describe('paywall mobile contracts', () => {
       const source = readAppRoute(route);
 
       expect(source, `${route} should support short phone viewports`).toContain('<ScrollView');
-      expect(source, `${route} should keep bottom actions outside the scroll body`).toContain(
-        'className="gap-',
+      expect(source, `${route} should keep bottom actions outside the scroll body`).toMatch(
+        /<View className=(?:"gap-|\{compactPaywall \? 'gap-)/,
+      );
+    }
+
+    for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx']) {
+      const source = readAppRoute(route);
+
+      expect(source, `${route} should read phone height for compact footer spacing`).toContain(
+        'useWindowDimensions',
+      );
+      expect(source, `${route} should define the compact paywall breakpoint`).toContain(
+        'const compactPaywall = height < 640',
+      );
+      expect(source, `${route} should reserve scroll space above fixed footer actions`).toContain(
+        "contentContainerClassName={compactPaywall ? 'pb-",
+      );
+      expect(source, `${route} should give compact decline actions a 32px bottom buffer`).toContain(
+        "className={compactPaywall ? 'gap-2.5 pb-8'",
+      );
+      expect(source, `${route} should not keep compact footer actions at an 8px bottom edge`).not.toContain(
+        'className="gap-2.5 pb-2"',
       );
     }
   });

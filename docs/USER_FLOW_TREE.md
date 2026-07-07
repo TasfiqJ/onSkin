@@ -673,6 +673,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Gating stays stable and dismissing a direct-entry paywall returns to a safe app surface, not a blank or dead-end history state. On short phones, paywall bodies scroll above fixed actions, Terms/Privacy/Restore and decline controls meet the 44 pt touch target with a rendered buffer, the win-back fallback reason stays readable above its current-plan CTA when a native offer is unavailable, and the contextual upsell exposes a real visible dismiss action instead of relying on a tiny scrim-only target.
   - Evidence: Screenshot sequence plus 320 px button-geometry snapshot.
   - Current evidence (2026-07-07): `/paywall/upsell?feature=reminders_widgets` at 320 x 568 in `test-results/human-e2e/2026-07-07/paywall-upsell-reminders-compact/` verifies zero horizontal overflow, no clipped elements, 48 px+ visible controls, readable fallback store copy, and `Maybe later` recovery to `/today`.
+  - Current lifecycle evidence (2026-07-07): `/paywall/reoffer` and `/paywall/downgrade` at 320 x 568 in `test-results/human-e2e/2026-07-07/paywall-lifecycle-compact-footer-buffer/` verify Terms/Privacy/Restore can scroll above fixed footer actions with 48 px controls, the decline actions keep a 32 px bottom buffer, unavailable-store copy stays readable, and horizontal overflow is zero.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes

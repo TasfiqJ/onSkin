@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed compact lifecycle paywall footer clearance for `/paywall/reoffer` and
+  `/paywall/downgrade`. Short-phone layouts now reserve enough scroll-body space
+  for Terms/Privacy/Restore above the fixed action footer and give fixed footer
+  decline actions a 32 px bottom buffer instead of sitting against the viewport
+  edge. The paywall mobile contract pins the compact breakpoint, scroll padding,
+  and footer buffer. Expo web E2E at 320 x 568 verifies reoffer and downgrade
+  scrolled compliance controls are 48 px, fixed footer actions keep a 32 px
+  bottom buffer, unavailable-store copy remains readable, and horizontal overflow
+  is zero. Evidence is in
+  `test-results/human-e2e/2026-07-07/paywall-lifecycle-compact-footer-buffer/`.
+
 - Verified the local reminder settings/timing slice. Expo web E2E at 320 x 568
   opens `/settings/notifications`, confirms tier switches and routine rows are
   readable with 48 px visible controls and zero horizontal overflow, opens

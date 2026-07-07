@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
@@ -17,6 +17,7 @@ import { colors } from '@/theme/tokens';
 // Active trials can choose a plan without store-management confusion; expired
 // trials get the honest loss-aversion re-offer. Never a data-deleting lock.
 export default function ReofferScreen() {
+  const { height } = useWindowDimensions();
   const { data, isLoading } = useEntitlement();
   const { startTrial, downgrade } = useEntitlementActions();
   const offering = useSubscriptionOffering();
@@ -24,6 +25,7 @@ export default function ReofferScreen() {
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const activeReverseTrial = data?.inReverseTrial === true;
+  const compactPaywall = height < 640;
   const screenCopy = activeReverseTrial
     ? {
         pill: PAYWALL_COPY.reverseTrial.keepPill,
@@ -88,7 +90,7 @@ export default function ReofferScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-4"
+        contentContainerClassName={compactPaywall ? 'pb-40' : 'pb-4'}
       >
         <View
           className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2"
@@ -162,7 +164,7 @@ export default function ReofferScreen() {
         ) : null}
         <ComplianceRow />
       </ScrollView>
-      <View className="gap-2.5 pb-2">
+      <View className={compactPaywall ? 'gap-2.5 pb-8' : 'gap-2.5 pb-2'}>
         <Pressable
           accessibilityRole="button"
           disabled={!canPurchase || startTrial.isPending}
