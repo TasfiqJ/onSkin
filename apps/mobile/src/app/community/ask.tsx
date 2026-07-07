@@ -270,7 +270,13 @@ export default function AskScreen() {
   const { data: gate } = useCommunityGate();
 
   if (!phase7Flags.communityPosting)
-    return <DeferredSurface surface="communityPosting" fallbackRoute={APP_COMMUNITY_ROUTE} />;
+    return (
+      <DeferredSurface
+        surface="communityPosting"
+        fallbackRoute={APP_COMMUNITY_ROUTE}
+        fallbackLabel="Back to Skin Notes"
+      />
+    );
 
   return (
     <Screen edges={['top']}>

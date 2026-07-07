@@ -15,7 +15,13 @@ import { colors } from '@/theme/tokens';
 // shown is an illustrative placeholder until peer density exists (B-COMMUNITY-MOD).
 export default function PeopleLikeYouScreen() {
   if (!phase7Flags.communityPosting)
-    return <DeferredSurface surface="communityPosting" fallbackRoute={APP_COMMUNITY_ROUTE} />;
+    return (
+      <DeferredSurface
+        surface="communityPosting"
+        fallbackRoute={APP_COMMUNITY_ROUTE}
+        fallbackLabel="Back to Skin Notes"
+      />
+    );
 
   return (
     <Screen edges={['top']}>

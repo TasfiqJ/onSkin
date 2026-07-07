@@ -814,7 +814,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/community`, `/community/note/[id]`, `/community/ask`, and `/community/people-like-you` directly, then use Back or Not now.
-  - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`. Visible hub Back/Ask controls, nested-route Back controls, the 16+ consent checkbox, and Not now meet the 44 pt phone touch target.
+  - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`. Deferred posting routes use a destination-specific `Back to Skin Notes` CTA instead of generic Back copy. Visible hub Back/Ask controls, nested-route Back controls, the 16+ consent checkbox, and Not now meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
 - Branch: missing note detail
   - Priority: Important

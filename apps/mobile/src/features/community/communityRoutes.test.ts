@@ -60,9 +60,9 @@ describe('Community route contracts', () => {
     for (const route of ['community/ask.tsx', 'community/people-like-you.tsx']) {
       const source = readAppRoute(route);
 
-      expect(source).toContain(
-        '<DeferredSurface surface="communityPosting" fallbackRoute={APP_COMMUNITY_ROUTE} />',
-      );
+      expect(source).toContain('surface="communityPosting"');
+      expect(source).toContain('fallbackRoute={APP_COMMUNITY_ROUTE}');
+      expect(source).toContain('fallbackLabel="Back to Skin Notes"');
     }
   });
 

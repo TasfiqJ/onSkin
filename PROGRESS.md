@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Tightened deferred Community posting direct entries so `/community/ask` and
+  `/community/people-like-you` now use `Back to Skin Notes` instead of a generic
+  `Back` CTA while community posting is gated. Expo web E2E at 320 x 568 verified
+  both CTAs route back to `/community`, remain 56 px tall, and do not horizontally
+  overflow. Evidence is in
+  `test-results/human-e2e/2026-07-07/community-deferred-cta/`; the branch is
+  tracked in `docs/e2e-bug-reports/2026-07-07-community-deferred-cta.md`.
+
 - Tightened the direct-entry `/ask/consent` deferred route so unavailable cloud
   Ask now uses `Back to Ask` instead of a generic `Back` CTA. Expo web E2E at
   320 x 568 verified the CTA is 56 px tall, no horizontal overflow appears, and
