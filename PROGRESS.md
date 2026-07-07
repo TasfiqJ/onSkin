@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the local photo metadata store so unreadable photo JSON is removed,
+  malformed rows are dropped, valid legacy rows regain safe defaults, and
+  encrypted note metadata is re-persisted cleanly before Progress reads it.
+
 - Hardened the local entitlement cache so malformed primary records are removed,
   valid legacy records migrate forward, active access requires a verified source,
   and development-only app-granted trials cannot stay active outside development.

@@ -1,6 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 
 import type { PhotoSeries, TimeOfDay } from '@onskin/types';
+import { PHOTO_SERIES } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
@@ -22,6 +23,8 @@ import type { PhotoMeta } from './timeline';
  * inside the encrypted metadata envelope for legacy migration safety.
  */
 const KEY = 'onskin.photos.v1';
+const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
+const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 
 export type PhotoRecord = PhotoMeta & {
   takenAt: string;
@@ -59,29 +62,136 @@ export type NewPhoto = {
   notes?: string | null;
 };
 
-async function normalizeStoredRecord(item: PhotoRecord & { notesCiphertext?: string | null }): Promise<PhotoRecord> {
-  const encryptedLocalUri = item.encryptedLocalUri ?? (isEncryptedPhotoUri(item.localUri) ? item.localUri : null);
-  const notes = item.notesCiphertext ? await decryptPhotoNote(item.notesCiphertext).catch(() => null) : item.notes ?? null;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function stringOrNull(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  return text.length > 0 ? text : null;
+}
+
+function localDateOrNull(value: unknown): string | null {
+  const text = stringOrNull(value);
+  return text && /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : null;
+}
+
+function isoOrFallback(value: unknown, fallback: string): string {
+  const text = stringOrNull(value);
+  return text && !Number.isNaN(Date.parse(text)) ? text : fallback;
+}
+
+function finiteNumberOrNull(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function scoreOrNull(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
+    ? value
+    : null;
+}
+
+function booleanOr(value: unknown, fallback: boolean): boolean {
+  return typeof value === 'boolean' ? value : fallback;
+}
+
+function seriesOrFront(value: unknown): PhotoSeries {
+  const text = stringOrNull(value);
+  return text && PHOTO_SERIES_SET.has(text as PhotoSeries)
+    ? (text as PhotoSeries)
+    : 'front';
+}
+
+function timeOfDayOrNull(value: unknown): TimeOfDay | null {
+  const text = stringOrNull(value);
+  return text && TIME_OF_DAY.has(text as TimeOfDay) ? (text as TimeOfDay) : null;
+}
+
+async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null> {
+  if (!isRecord(value)) return null;
+  const id = stringOrNull(value.id);
+  const takenLocalDate = localDateOrNull(value.takenLocalDate);
+  if (!id || !takenLocalDate) return null;
+
+  const localUri = stringOrNull(value.localUri);
+  const explicitEncryptedUri = stringOrNull(value.encryptedLocalUri);
+  const encryptedLocalUri =
+    explicitEncryptedUri ?? (localUri && isEncryptedPhotoUri(localUri) ? localUri : null);
+  const notesCiphertext = stringOrNull(value.notesCiphertext);
+  const notes = notesCiphertext
+    ? await decryptPhotoNote(notesCiphertext).catch(() => null)
+    : stringOrNull(value.notes);
+  const encrypted = encryptedLocalUri != null;
+  const isEncrypted = encrypted || booleanOr(value.isEncrypted, false);
+
   return {
-    ...item,
+    id,
+    series: seriesOrFront(value.series),
+    takenLocalDate,
+    takenAt: isoOrFallback(value.takenAt, `${takenLocalDate}T12:00:00.000Z`),
+    timeOfDay: timeOfDayOrNull(value.timeOfDay),
+    alignmentScore: scoreOrNull(value.alignmentScore),
+    lightingScore: scoreOrNull(value.lightingScore),
+    isReference: booleanOr(value.isReference, false),
+    referencePhotoId: stringOrNull(value.referencePhotoId),
+    localUri: localUri ?? encryptedLocalUri,
     notes,
+    captureSessionId: stringOrNull(value.captureSessionId),
+    headRoll: finiteNumberOrNull(value.headRoll),
+    headYaw: finiteNumberOrNull(value.headYaw),
+    headPitch: finiteNumberOrNull(value.headPitch),
+    localOnly: booleanOr(value.localOnly, true),
+    storagePath: stringOrNull(value.storagePath),
+    faceRegionRedacted: booleanOr(value.faceRegionRedacted, false),
+    isEncrypted,
     encryptedLocalUri,
-    thumbnailLocalUri: item.thumbnailLocalUri ?? null,
-    encryptionVersion: item.encryptionVersion ?? (encryptedLocalUri ? photoEncryptionInfo.version : 'none'),
-    keyId: item.keyId ?? (encryptedLocalUri ? photoEncryptionInfo.keyId : null),
-    localUri: item.localUri ?? encryptedLocalUri ?? null,
-    isEncrypted: item.isEncrypted ?? Boolean(encryptedLocalUri),
+    thumbnailLocalUri: stringOrNull(value.thumbnailLocalUri),
+    encryptionVersion:
+      stringOrNull(value.encryptionVersion) ?? (encrypted ? photoEncryptionInfo.version : 'none'),
+    keyId: stringOrNull(value.keyId) ?? (encrypted ? photoEncryptionInfo.keyId : null),
   };
 }
 
+async function normalizeStoredRecords(
+  value: unknown,
+): Promise<{ items: PhotoRecord[]; changed: boolean } | null> {
+  if (!Array.isArray(value)) return null;
+  const items: PhotoRecord[] = [];
+  let changed = false;
+  for (const row of value) {
+    const photo = await normalizeStoredRecord(row);
+    if (!photo) {
+      changed = true;
+      continue;
+    }
+    items.push(photo);
+    changed ||= JSON.stringify(photo) !== JSON.stringify(row);
+  }
+  return { items, changed };
+}
+
 export async function loadPhotos(): Promise<PhotoRecord[]> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as PhotoRecord[];
-    if (!Array.isArray(parsed)) return [];
-    return Promise.all(parsed.map(normalizeStoredRecord));
+    raw = await getPrivateItem(KEY);
   } catch {
+    return [];
+  }
+  if (!raw) return [];
+  try {
+    const normalized = await normalizeStoredRecords(JSON.parse(raw) as unknown);
+    if (!normalized) {
+      await removePrivateItem(KEY).catch(() => undefined);
+      return [];
+    }
+    if (normalized.changed) {
+      if (normalized.items.length > 0) await persist(normalized.items).catch(() => undefined);
+      else await removePrivateItem(KEY).catch(() => undefined);
+    }
+    return normalized.items;
+  } catch {
+    await removePrivateItem(KEY).catch(() => undefined);
     return [];
   }
 }
@@ -198,12 +308,19 @@ export async function setReference(id: string): Promise<void> {
   const items = await loadPhotos();
   const target = items.find((p) => p.id === id);
   if (!target) return;
-  await persist(items.map((p) => (p.series === target.series ? { ...p, isReference: p.id === id } : p)));
+  await persist(
+    items.map((p) => (p.series === target.series ? { ...p, isReference: p.id === id } : p)),
+  );
 }
 
 /** Test/seed reset. */
 export async function clearPhotos(): Promise<void> {
   const items = await loadPhotos();
-  await Promise.all(items.map((p) => deleteEncryptedPhoto(p.encryptedLocalUri ?? p.localUri)));
+  await Promise.all(
+    items.flatMap((p) => [
+      deleteEncryptedPhoto(p.encryptedLocalUri ?? p.localUri),
+      deleteEncryptedPhoto(p.thumbnailLocalUri),
+    ]),
+  );
   await removePrivateItem(KEY);
 }
