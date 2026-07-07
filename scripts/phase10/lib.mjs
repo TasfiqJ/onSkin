@@ -1,3 +1,5 @@
+import { placeholderEnvValue } from '../phase9/lib.mjs';
+
 export {
   abs,
   block,
@@ -26,6 +28,30 @@ export {
   warn,
   write,
 } from '../phase9/lib.mjs';
+
+export function evidenceFlagEnabled(value) {
+  return (
+    String(value ?? '')
+      .trim()
+      .toLowerCase() === 'true'
+  );
+}
+
+export function normalizeLaunchDecision(value) {
+  const normalized = String(value ?? '')
+    .trim()
+    .toLowerCase();
+  return ['go', 'limited'].includes(normalized) ? normalized : null;
+}
+
+export function normalizeNamedSignoff(value) {
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed)) return null;
+  if (/^(?:name|tester|qa|reviewer|signoff|signed off|tbd|n\/a)$/i.test(trimmed)) return null;
+  if (/\b(?:tester|reviewer|your|full|actual|first|last)\s+name\b/i.test(trimmed)) return null;
+  if (/\b(?:john|jane)\s+doe\b/i.test(trimmed)) return null;
+  return /[a-z]/i.test(trimmed) && trimmed.length >= 3 ? trimmed : null;
+}
 
 export function requiredPhase10EvidenceKeys() {
   return [

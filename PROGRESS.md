@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 10/11 beta and public-launch evidence parsing so proof flags
+  are trimmed/case-normalized while non-`true` values remain blocked, launch
+  decisions are normalized to `go`/`limited`, and generic signoff placeholders
+  like `Tester Name`, `TBD`, or `example.com` emails no longer satisfy named
+  signoff gates. The existing Phase 10/11 public-contact smoke now covers
+  malformed evidence flags and placeholder signoffs.
+
 - Tightened the Phase 5 device QA evidence validator after smoke testing found
   that slash-only iPhone labels and `Tester Name` style placeholders could
   still pass. Added negative smoke cases for missing physical iOS models,

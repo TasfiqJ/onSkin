@@ -2,10 +2,13 @@
 import {
   block,
   command,
+  evidenceFlagEnabled,
   envSnapshot,
   exists,
   hash,
   markdownList,
+  normalizeLaunchDecision,
+  normalizeNamedSignoff,
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
@@ -22,7 +25,8 @@ const warnings = [];
 const env = envSnapshot();
 const sourceFiles = phase10SourceFiles();
 
-for (const file of sourceFiles) block(errors, exists(file), `${file} is missing from closed beta packet inputs.`);
+for (const file of sourceFiles)
+  block(errors, exists(file), `${file} is missing from closed beta packet inputs.`);
 
 let gitSha = 'unknown';
 let gitStatus = 'unknown';
@@ -36,20 +40,29 @@ try {
 let phase9PacketStatus = 'missing';
 if (exists('docs/phase-9/generated/release-engineering-qa-packet.json')) {
   try {
-    phase9PacketStatus = JSON.parse(read('docs/phase-9/generated/release-engineering-qa-packet.json')).status ?? 'unknown';
+    phase9PacketStatus =
+      JSON.parse(read('docs/phase-9/generated/release-engineering-qa-packet.json')).status ??
+      'unknown';
   } catch {
     phase9PacketStatus = 'unparseable';
   }
 }
 warn(warnings, phase9PacketStatus === 'ready', `Phase 9 packet status is ${phase9PacketStatus}.`);
 
-const evidence = Object.fromEntries(requiredPhase10EvidenceKeys().map((key) => [key, env[key] === 'true']));
-for (const [key, passed] of Object.entries(evidence)) warn(warnings, passed, `External closed beta evidence missing: ${key}=true.`);
+const evidence = Object.fromEntries(
+  requiredPhase10EvidenceKeys().map((key) => [key, evidenceFlagEnabled(env[key])]),
+);
+for (const [key, passed] of Object.entries(evidence))
+  warn(warnings, passed, `External closed beta evidence missing: ${key}=true.`);
 
-const decision = String(env.PHASE10_PUBLIC_LAUNCH_DECISION ?? '').toLowerCase();
-const decisionReady = ['go', 'limited'].includes(decision);
-warn(warnings, decisionReady, 'Closed beta public-launch decision missing: PHASE10_PUBLIC_LAUNCH_DECISION=go or limited.');
-warn(warnings, Boolean(env.PHASE10_SIGNED_OFF_BY), 'Closed beta named signoff missing: PHASE10_SIGNED_OFF_BY.');
+const publicLaunchDecision = normalizeLaunchDecision(env.PHASE10_PUBLIC_LAUNCH_DECISION);
+const signedOffBy = normalizeNamedSignoff(env.PHASE10_SIGNED_OFF_BY);
+warn(
+  warnings,
+  Boolean(publicLaunchDecision),
+  'Closed beta public-launch decision missing: PHASE10_PUBLIC_LAUNCH_DECISION=go or limited.',
+);
+warn(warnings, Boolean(signedOffBy), 'Closed beta named signoff missing: PHASE10_SIGNED_OFF_BY.');
 
 const packet = {
   generatedAt: new Date().toISOString(),
@@ -64,8 +77,8 @@ const packet = {
     supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
   evidence,
-  publicLaunchDecision: env.PHASE10_PUBLIC_LAUNCH_DECISION ?? '',
-  signedOffBy: env.PHASE10_SIGNED_OFF_BY ?? '',
+  publicLaunchDecision: publicLaunchDecision ?? '',
+  signedOffBy: signedOffBy ?? '',
   sourceHashes: Object.fromEntries(sourceFiles.filter(exists).map((file) => [file, hash(file)])),
   blockers: errors,
   warnings,

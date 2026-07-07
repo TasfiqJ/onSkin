@@ -26,6 +26,12 @@ export {
   write,
 } from '../phase9/lib.mjs';
 
+export {
+  evidenceFlagEnabled,
+  normalizeLaunchDecision,
+  normalizeNamedSignoff,
+} from '../phase10/lib.mjs';
+
 export function requiredPhase11EvidenceKeys() {
   return [
     'PHASE11_PHASE10_EXIT_PASS',

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-07T06:49:57.912Z",
+  "generatedAt": "2026-07-07T07:22:38.000Z",
   "status": "blocked",
-  "gitSha": "06524828bb71ae85708c74db868f6f27898e28ec",
-  "gitStatus": "M docs/phase-9/generated/release-engineering-qa-packet.json\n M docs/phase-9/generated/release-engineering-qa-packet.md",
+  "gitSha": "dd77b31d849cc113e556e71aa65fe96112763a1f",
+  "gitStatus": "M PROGRESS.md\n M docs/FOR_TAS_TO_DO.md\n M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md\n M scripts/phase10-11/public-contact-smoke.mjs\n M scripts/phase10/beta-readiness.mjs\n M scripts/phase10/build-beta-packet.mjs\n M scripts/phase10/lib.mjs\n M scripts/phase11/build-launch-packet.mjs\n M scripts/phase11/launch-readiness.mjs\n M scripts/phase11/lib.mjs",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",
@@ -25,10 +25,10 @@
     "PHASE10_CATALOG_BETA_PASS": false,
     "PHASE10_RETENTION_REPORT_PASS": false
   },
-  "publicLaunchDecision": "blocked",
+  "publicLaunchDecision": "",
   "signedOffBy": "",
   "sourceHashes": {
-    "package.json": "58cc24f8eafb77278dcb3ab93b7c0eb8e926421fb7c68f10f3268dc082676d75",
+    "package.json": "e40603ffe4af231c437cd64f3fe5a0fed26bdd3bf4f522e2ec31d658262611e8",
     "turbo.json": "66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57",
     ".env.example": "08289db78a4388aed718466d895fe090f87f707c9752169fa9696df3c924c92b",
     "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",

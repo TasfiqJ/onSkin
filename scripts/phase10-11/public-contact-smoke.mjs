@@ -56,7 +56,7 @@ const phase10EvidenceEnv = {
   PHASE10_CATALOG_BETA_PASS: 'true',
   PHASE10_RETENTION_REPORT_PASS: 'true',
   PHASE10_PUBLIC_LAUNCH_DECISION: 'go',
-  PHASE10_SIGNED_OFF_BY: 'tas@example.com',
+  PHASE10_SIGNED_OFF_BY: 'Tas Mohammed',
 };
 
 const phase11EvidenceEnv = {
@@ -74,7 +74,7 @@ const phase11EvidenceEnv = {
   PHASE11_CREATOR_DISCLOSURE_PASS: 'true',
   PHASE11_REVENUE_RECON_PASS: 'true',
   PHASE11_WEEK1_DECISION_PASS: 'true',
-  PHASE11_SIGNED_OFF_BY: 'tas@example.com',
+  PHASE11_SIGNED_OFF_BY: 'Tas Mohammed',
 };
 
 function run(scriptPath, extraEnv) {
@@ -150,6 +150,49 @@ const cases = [
     },
   },
   {
+    name: 'Phase 10 accepts trimmed evidence flags, launch decisions, and signoffs',
+    result: run(phase10ReadinessPath, {
+      PHASE10_PAYMENT_QA_PASS: ' TRUE ',
+      PHASE10_PUBLIC_LAUNCH_DECISION: ' LIMITED ',
+      PHASE10_SIGNED_OFF_BY: ' Tas Mohammed ',
+    }),
+    expect(result) {
+      const text = combinedOutput(result);
+      return (
+        result.status === 0 &&
+        !text.includes('Missing Phase 10 evidence: PHASE10_PAYMENT_QA_PASS=true.') &&
+        !text.includes(
+          'Missing Phase 10 public launch decision: PHASE10_PUBLIC_LAUNCH_DECISION=go or limited.',
+        ) &&
+        !text.includes('Missing Phase 10 named signoff: PHASE10_SIGNED_OFF_BY.')
+      );
+    },
+  },
+  {
+    name: 'Phase 10 rejects non-true evidence flags',
+    result: run(phase10ReadinessPath, {
+      PHASE10_PAYMENT_QA_PASS: 'yes',
+    }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        combinedOutput(result).includes('Missing Phase 10 evidence: PHASE10_PAYMENT_QA_PASS=true.')
+      );
+    },
+  },
+  {
+    name: 'Phase 10 rejects generic signoff names',
+    result: run(phase10ReadinessPath, {
+      PHASE10_SIGNED_OFF_BY: 'Tester Name',
+    }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        combinedOutput(result).includes('Missing Phase 10 named signoff: PHASE10_SIGNED_OFF_BY.')
+      );
+    },
+  },
+  {
     name: 'Phase 11 accepts production contact values without final public warnings',
     result: run(phase11ReadinessPath, {}),
     expect(result) {
@@ -181,6 +224,45 @@ const cases = [
         combinedOutput(result).includes(
           'Missing or non-production final public launch value: EXPO_PUBLIC_SUPPORT_EMAIL.',
         )
+      );
+    },
+  },
+  {
+    name: 'Phase 11 accepts trimmed evidence flags and signoffs',
+    result: run(phase11ReadinessPath, {
+      PHASE11_MONITORING_PASS: ' TRUE ',
+      PHASE11_SIGNED_OFF_BY: ' Tas Mohammed ',
+    }),
+    expect(result) {
+      const text = combinedOutput(result);
+      return (
+        result.status === 0 &&
+        !text.includes('Missing Phase 11 evidence: PHASE11_MONITORING_PASS=true.') &&
+        !text.includes('Missing Phase 11 named signoff: PHASE11_SIGNED_OFF_BY.')
+      );
+    },
+  },
+  {
+    name: 'Phase 11 rejects non-true evidence flags',
+    result: run(phase11ReadinessPath, {
+      PHASE11_MONITORING_PASS: 'yes',
+    }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        combinedOutput(result).includes('Missing Phase 11 evidence: PHASE11_MONITORING_PASS=true.')
+      );
+    },
+  },
+  {
+    name: 'Phase 11 rejects placeholder signoffs',
+    result: run(phase11ReadinessPath, {
+      PHASE11_SIGNED_OFF_BY: 'TBD',
+    }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        combinedOutput(result).includes('Missing Phase 11 named signoff: PHASE11_SIGNED_OFF_BY.')
       );
     },
   },

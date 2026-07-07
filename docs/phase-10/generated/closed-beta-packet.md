@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-07T06:49:57.912Z
+Generated: 2026-07-07T07:22:38.000Z
 Status: blocked
-Git SHA: 06524828bb71ae85708c74db868f6f27898e28ec
+Git SHA: dd77b31d849cc113e556e71aa65fe96112763a1f
 Phase 9 packet status: blocked
 
 ## Beta Identity
@@ -11,7 +11,7 @@ Phase 9 packet status: blocked
 - Final domain: BLOCKED
 - Marketing URL: BLOCKED
 - Support email: BLOCKED
-- Public launch decision: blocked
+- Public launch decision: BLOCKED
 - Signed off by: BLOCKED
 
 ## Blockers
@@ -55,7 +55,7 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `58cc24f8eafb77278dcb3ab93b7c0eb8e926421fb7c68f10f3268dc082676d75`
+- `package.json`: `e40603ffe4af231c437cd64f3fe5a0fed26bdd3bf4f522e2ec31d658262611e8`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
 - `.env.example`: `08289db78a4388aed718466d895fe090f87f707c9752169fa9696df3c924c92b`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
