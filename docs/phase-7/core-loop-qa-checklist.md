@@ -120,3 +120,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `Start today` CTA, then tap it and confirm `/today` opens. Evidence is in
   `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`; it
   does not replace real iOS/Android beta-device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the Shelf product-detail
+  routine handoff: open `Mineral SPF 50` from Shelf, verify the `ROUTINE ROLE`
+  card says it is used in the Morning routine, tap `Review routine placement`,
+  and confirm `/routine/plan` renders with zero horizontal overflow. Evidence is
+  in
+  `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`;
+  it does not replace real iOS/Android beta-device QA.

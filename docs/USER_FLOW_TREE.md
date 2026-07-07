@@ -372,6 +372,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: iOS and Android first because camera/OCR may be native-only.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/shelf/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/shelf-product-detail-routine-role-current/`
 
 ### Path A: Happy Path
 
@@ -387,6 +388,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a real product detail from Shelf, inspect the routine role card, and tap its routine action.
   - Expected result: The detail hub explains whether the product is already used in the generated routine or is not placed yet, and the routine action routes to `/routine/plan` without leaving the user at an inventory dead end.
   - Evidence: Product detail screenshot, visible-text snapshot, and routine-plan destination snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 opens `Mineral SPF 50` from Shelf, shows `ROUTINE ROLE` with `Used in your Morning routine`, exposes the `Review routine placement` action, and routes to `/routine/plan` with zero horizontal overflow.
 - Branch: no search result
   - Priority: Critical
   - Automate later: Yes
