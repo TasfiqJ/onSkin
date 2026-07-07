@@ -102,15 +102,27 @@ describe('Settings route contracts', () => {
     expect(timing).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
     expect(timing).toContain('min-h-[48px] min-w-[72px] items-center justify-center rounded-[8px]');
     expect(timing).toContain(
+      "import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
+    );
+    expect(timing).toContain(
       "import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';",
+    );
+    expect(timing).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(timing).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
+    expect(timing).toContain(
+      'const listMaxHeight = Math.min(340, Math.max(160, sheetMaxHeight - 115));',
     );
     expect(timing).toContain('const insets = useSafeAreaInsets();');
     expect(timing).toContain(
       'insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;',
     );
     expect(timing).toContain(
-      'sheetPaddingBottom === undefined ? undefined : { paddingBottom: sheetPaddingBottom }',
+      'sheetPaddingBottom === undefined\n              ? { maxHeight: sheetMaxHeight }',
     );
+    expect(timing).toContain(
+      ': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }',
+    );
+    expect(timing).toContain('style={{ maxHeight: listMaxHeight }}');
     expect(timing).toContain('accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}');
     expect(timing).toContain('accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}');
     expect(timing).toContain('accessibilityLabel={`Quiet hours start, ${quietStartTimeLabel}`}');

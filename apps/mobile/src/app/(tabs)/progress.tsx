@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Modal, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, Screen, Text } from '@/components/ui';
@@ -104,6 +104,10 @@ function PairPicker({
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
+  const { height: viewportHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';
   const target = which === 'before' ? 'first' : 'second';
 
@@ -122,7 +126,15 @@ function PairPicker({
           accessibilityRole="button"
           onPress={onClose}
         />
-        <View accessibilityViewIsModal className="rounded-t-sheet bg-paper px-6 pb-10 pt-4">
+        <View
+          accessibilityViewIsModal
+          className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
+          style={
+            sheetPaddingBottom === undefined
+              ? { maxHeight: sheetMaxHeight }
+              : { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }
+          }
+        >
           <View className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
           <Text variant="titleSm" className="mb-1">
             {title}

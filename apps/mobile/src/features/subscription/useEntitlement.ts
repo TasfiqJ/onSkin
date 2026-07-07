@@ -36,6 +36,34 @@ function activeResult(
   return { active, entitlement, ...extras };
 }
 
+function e2eEntitlementState(): SubscriptionState | null {
+  if (process.env.EXPO_PUBLIC_E2E_ENTITLEMENT !== 'pro') return null;
+
+  const now = new Date();
+  const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  return deriveState(
+    {
+      tier: 'pro',
+      isActive: true,
+      periodType: 'reverse_trial',
+      store: 'app_granted',
+      productId: 'routinekind_pro_reverse_trial_local',
+      expiresAt,
+      willRenew: false,
+      grantedAt: now.toISOString(),
+      source: 'app_granted',
+      environment: 'development',
+      managementUrl: null,
+      verifiedAt: now.toISOString(),
+      offeringId: 'local_reverse_trial',
+      packageId: 'reverse_trial_7d',
+      storeUserId: null,
+      priceLabel: null,
+    },
+    now.toISOString(),
+  );
+}
+
 async function persistRevenueCatResult(input: {
   customerInfo?: Parameters<typeof customerInfoToStoredEntitlement>[0];
   packageId?: string;
@@ -71,6 +99,9 @@ export function useEntitlement() {
     queryKey: KEY,
     retry: 0,
     queryFn: async () => {
+      const e2e = e2eEntitlementState();
+      if (e2e) return e2e;
+
       const local = await loadEntitlement();
       const server = await fetchServerEntitlement();
       return deriveState(server ?? local, new Date().toISOString());

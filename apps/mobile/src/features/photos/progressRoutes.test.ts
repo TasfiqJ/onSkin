@@ -152,6 +152,19 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("track('photo_baseline_added', { on_device: true })");
   });
 
+  it('keeps the populated progress fixture gated to explicit E2E runs', () => {
+    const source = readSource('features/photos/usePhotos.ts');
+    const entitlement = readSource('features/subscription/useEntitlement.ts');
+
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated'");
+    expect(source).toContain('e2e-front-2026-04-01');
+    expect(source).toContain('e2e-front-2026-05-12');
+    expect(source).toContain('e2e-front-2026-06-24');
+    expect(source).toContain('const photos = e2eProgressPhotoFixture() ?? (await loadPhotos());');
+    expect(entitlement).toContain("process.env.EXPO_PUBLIC_E2E_ENTITLEMENT !== 'pro'");
+    expect(entitlement).toContain('function e2eEntitlementState(): SubscriptionState | null');
+  });
+
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
 
@@ -163,6 +176,19 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('accessibilityRole="button"');
     expect(source).toContain(
       'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
+    );
+    expect(source).toContain(
+      "import { Alert, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
+    );
+    expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
+    expect(source).toContain('const insets = useSafeAreaInsets();');
+    expect(source).toContain('const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;');
+    expect(source).toContain(
+      'sheetPaddingBottom === undefined\n              ? { maxHeight: sheetMaxHeight }',
+    );
+    expect(source).toContain(
+      ': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }',
     );
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain(

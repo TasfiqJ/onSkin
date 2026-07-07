@@ -483,6 +483,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/progress/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-current-compact-check/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/`
+- Current compare-picker evidence: `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area/`
 
 ### Path A: Happy Path
 
@@ -490,6 +492,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: The photo flow is clear, private by default, and does not imply diagnosis or guaranteed improvement. When the comparison surface is populated, the Photo CTA, Compare/Timeline tabs, No scores link, Side-by-side toggle, and date-change chips meet the 44 pt phone touch target without clipping on small phones.
    Evidence: Screenshots or simulator video.
    Current local evidence: 2026-07-07 Expo web 320 x 568 covers the first-photo entry and non-destructive capture-consent branch: `/progress` shows a 56 px `Take my first photo` CTA with zero horizontal overflow, `/progress/capture` shows complete local-only consent copy plus 52 px `Take photos. On device only` and 48 px `Not now` controls, and `Not now` returns to `/progress`.
+   Current populated evidence: 2026-07-07 Codex in-app browser Expo web with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` verifies the populated Compare view after the local Pro preview, including `12 weeks · 3 photos · all on this phone`, Compare/Timeline/No scores controls, zero horizontal overflow, no sub-44 controls, one named `Choose the first photo` dialog, a named dismiss target, three contextual photo-tile labels, dismiss recovery, and a successful first-photo update to `May 12`.
 
 ### Branches
 
@@ -542,6 +545,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/progress/capture`, `/progress/review`, `/progress/about`, and a missing `/progress/[id]` detail directly, then use the visible Close, Back, or Not now control. Repeat legacy `/photos/capture`, `/photos/review`, and `/photos/[id]` direct entries.
   - Expected result: The user returns to the Progress tab instead of being trapped on a camera, review, permission, consent, or missing-photo screen with no navigation history. Direct `/progress/review` without a captured photo shows photo-not-captured recovery copy and never shows a fake preview or `Save to my phone`. Missing `/progress/[id]` detail entries show clear photo-unavailable copy plus `Take a new photo` and `Back to Progress` recovery actions instead of a dead one-line empty state. Legacy `/photos/*` entries must recover into the matching Progress photo surface instead of showing an unmatched-route page. Visible route exits and Not now controls meet the 44 pt phone touch target with readable dark-surface contrast, capture permission/recovery gates scroll on short phones, and comparison photo-picker sheets expose a single named modal dialog, a named dismiss action, and contextual photo-tile labels without unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence and 320 px button-geometry snapshot.
+  - Current local evidence: 2026-07-07 populated Progress fixture verifies the comparison photo-picker dismiss and selection branches in `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/`. Native real-image rendering and screen-reader traversal remain device QA.
+  - Current compare-picker evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` and `EXPO_PUBLIC_E2E_ENTITLEMENT=pro` verifies the populated `/progress` Compare surface, a 72 x 48 `Apr 1` date chip, a named `Choose the first photo` picker with named dismiss backdrop, three 92 x 123 contextual photo-tile controls, zero horizontal overflow, and selection of `May 12` dismissing the picker and updating the comparison chip. Source contracts verify the sheet keeps 40 px compact web padding and adds native bottom-inset padding when present; native home-indicator device QA remains open.
 - Branch: single-photo share unavailable or rejected
   - Priority: Important
   - Automate later: Yes
@@ -996,7 +1001,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: User-set times, contextual timing-control and picker-row labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a single named modal dialog, a named dismiss action, and no unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence, local preference snapshot, and small-phone accessibility/geometry snapshot.
   - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies `/settings/notifications` tier rows and switches, `/settings/timing` time pills, the Morning reminder time-picker sheet, AM time update from 7:30 AM to 8:00 AM, return to the notifications hub with the updated time, quiet-hours copy, generic lock-screen preview, zero horizontal overflow, and 48 px visible controls. Focused notification tests cover quiet-hours scheduling, delivery caps, lock-screen discreet copy, preference persistence, and route/touch-target contracts; native OS permission/scheduling QA remains external.
-  - Current safe-area evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 verifies the hand-built `/settings/timing` Morning picker keeps 40 px zero-inset web bottom padding, zero horizontal overflow, 48 px visible picker rows, a 114 px named dismiss backdrop, and can scroll to/select `6:00 AM`; selecting the row closes the modal and updates the Morning pill. Native iOS/Android home-indicator verification remains device QA.
+  - Current safe-area evidence: 2026-07-07 Codex in-app browser Expo web verifies the hand-built `/settings/timing` Morning picker keeps 40 px zero-inset web bottom padding, zero horizontal overflow, 48 px visible picker rows, one named dialog, and a 44 px named dismiss target in the compact observed viewport after sheet-height capping; selecting `8:00 AM` closes the modal and updates the Morning pill. Evidence is in `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area-current/`. Native iOS/Android home-indicator and screen-reader verification remains device QA.
 
 ## Flow: Ask RoutineKind Deterministic Advisor
 

@@ -145,6 +145,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`; it does not
   replace native iOS/Android notch, home-indicator, camera-permission, or real
   camera-start QA.
+- 2026-07-07: Codex in-app browser Expo web E2E with
+  `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` covers the populated Progress
+  comparison picker after safe-area and compact-dismiss hardening. The local
+  Pro preview opens a three-photo timeline, the Compare view shows the no-score
+  framing, the first date chip opens one named `Choose the first photo` dialog,
+  all visible controls remain at least 44 px, the picker exposes three
+  contextual photo-tile labels, Dismiss closes the dialog, and selecting
+  `May 12` updates the first comparison chip with zero horizontal overflow.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/`;
+  it does not replace native iOS/Android home-indicator, real encrypted image,
+  biometric app-lock, or VoiceOver/TalkBack QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers conflict/share direct-entry
   recovery for missing and unshareable states. `/conflict/missing-rule-e2e`
   shows the stale timing-note explanation, warns that stale routine advice is
@@ -421,15 +433,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`; it does
   not replace native notification permission, OS scheduling, or device timezone/DST
   QA.
-- 2026-07-07: Codex in-app browser E2E at 320 x 568 covers the hand-built
-  `/settings/timing` time-picker sheet after native safe-area hardening. The
+- 2026-07-07: Codex in-app browser E2E covers the hand-built `/settings/timing`
+  time-picker sheet after native safe-area and compact-dismiss hardening. The
   Morning picker keeps 40 px bottom padding on the zero-inset web surface, has
-  zero horizontal overflow, exposes 48 px visible picker rows and a named
-  dismiss backdrop, scrolls to a later time, and selecting `6:00 AM` closes the
-  modal and updates the Morning pill. Evidence is in
-  `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area/`; it does
-  not replace native iOS/Android home-indicator, VoiceOver/TalkBack, or OS
-  scheduling QA.
+  zero horizontal overflow, exposes one named dialog, 48 px visible picker rows,
+  and a named dismiss target that remains 44 px in the compact observed
+  viewport after sheet-height capping. Selecting `8:00 AM` closes the modal and
+  updates the Morning pill. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area-current/`;
+  it does not replace native iOS/Android home-indicator, VoiceOver/TalkBack, or
+  OS scheduling QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 and 390 x 568 plus the paywall mobile contract
   covers lifecycle paywall compact footer buffers: `/paywall/reoffer` and
   `/paywall/downgrade` keep fixed footer actions outside the scroll body, expose

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Modal, Pressable, ScrollView, View } from 'react-native';
+import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -34,7 +34,10 @@ function TimePickerModal({
   onSelect: (hm: string) => void;
   onClose: () => void;
 }) {
+  const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const listMaxHeight = Math.min(340, Math.max(160, sheetMaxHeight - 115));
   const sheetPaddingBottom =
     insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title =
@@ -64,7 +67,9 @@ function TimePickerModal({
           accessibilityViewIsModal
           className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
           style={
-            sheetPaddingBottom === undefined ? undefined : { paddingBottom: sheetPaddingBottom }
+            sheetPaddingBottom === undefined
+              ? { maxHeight: sheetMaxHeight }
+              : { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }
           }
         >
           <View
@@ -74,7 +79,7 @@ function TimePickerModal({
           <Text variant="titleSm" className="mb-3">
             {title}
           </Text>
-          <ScrollView style={{ maxHeight: 340 }} showsVerticalScrollIndicator={false}>
+          <ScrollView style={{ maxHeight: listMaxHeight }} showsVerticalScrollIndicator={false}>
             {TIMES.map((t) => {
               const formattedTime = fmtTime(t);
               const sel = t === value;

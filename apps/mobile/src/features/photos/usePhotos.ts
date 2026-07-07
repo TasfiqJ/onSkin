@@ -19,12 +19,68 @@ import { addPhoto, loadPhotos, removePhoto, setReference, updatePhoto, type NewP
 
 const KEY = ['photos'] as const;
 
+function e2eProgressPhotoFixture(): PhotoRecord[] | null {
+  if (process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated') return null;
+
+  const base = {
+    series: 'front' as const,
+    timeOfDay: 'morning' as const,
+    notes: null,
+    captureSessionId: 'e2e-progress-compare-picker',
+    headRoll: null,
+    headYaw: null,
+    headPitch: null,
+    localOnly: true,
+    storagePath: null,
+    faceRegionRedacted: false,
+    isEncrypted: false,
+    encryptedLocalUri: null,
+    thumbnailLocalUri: null,
+    encryptionVersion: 'none',
+    keyId: null,
+    localUri: null,
+  };
+
+  return [
+    {
+      ...base,
+      id: 'e2e-front-2026-04-01',
+      takenLocalDate: '2026-04-01',
+      takenAt: '2026-04-01T12:00:00.000Z',
+      alignmentScore: 0.92,
+      lightingScore: 0.88,
+      isReference: true,
+      referencePhotoId: null,
+    },
+    {
+      ...base,
+      id: 'e2e-front-2026-05-12',
+      takenLocalDate: '2026-05-12',
+      takenAt: '2026-05-12T12:00:00.000Z',
+      alignmentScore: 0.9,
+      lightingScore: 0.9,
+      isReference: false,
+      referencePhotoId: 'e2e-front-2026-04-01',
+    },
+    {
+      ...base,
+      id: 'e2e-front-2026-06-24',
+      takenLocalDate: '2026-06-24',
+      takenAt: '2026-06-24T12:00:00.000Z',
+      alignmentScore: 0.94,
+      lightingScore: 0.91,
+      isReference: false,
+      referencePhotoId: 'e2e-front-2026-04-01',
+    },
+  ];
+}
+
 export function usePhotos(series: PhotoSeries = 'front') {
   const todayYmd = localDay();
   return useQuery({
     queryKey: [...KEY, series, todayYmd],
     queryFn: async () => {
-      const photos = await loadPhotos();
+      const photos = e2eProgressPhotoFixture() ?? (await loadPhotos());
       const inSeries = forSeries(photos, series);
       return {
         all: photos,

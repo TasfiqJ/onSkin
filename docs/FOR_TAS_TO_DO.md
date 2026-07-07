@@ -118,6 +118,11 @@ Status: needs-device-verification
   like `iPhone model / iOS version`, local build notes, pending IDs, and
   placeholder signoff names are rejected by `phase5:qa-packet:strict`.
 - Verify barcode scan, label capture/manual fallback, progress photo capture, encrypted photo save/restart/delete, notifications, share sheet, RevenueCat sandbox smoke, Sentry native smoke, and Supabase catalog calls.
+- Verify populated Progress comparison on physical iOS and Android devices with
+  real encrypted photo thumbnails: Compare/Timeline, No scores, Side-by-side,
+  date-change chips, comparison photo-picker dismiss/selection, app-lock, and
+  VoiceOver/TalkBack traversal must remain readable, private, and tappable on
+  short screens.
 - Verify first-use Progress photo consent failure/retry sequencing on native:
   failed local save does not open the camera or permission prompt, retry saves
   consent before permission, and the app remains past the consent gate after
@@ -132,6 +137,10 @@ Status: needs-device-verification
   cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets
   must keep visible exits/choices tappable and must not expose tiny hidden
   backdrop strips to VoiceOver/TalkBack or keyboard focus.
+- Verify the custom Settings reminder time-picker sheet on physical iOS and
+  Android devices with real safe-area insets and screen readers: AM/PM and quiet
+  hours pickers must keep the outside dismiss target, 48 px time rows, bottom
+  safe-area clearance, and VoiceOver/TalkBack traversal intact on short screens.
 - Verify RevenueCat win-back eligible and ineligible states on native builds, including the fallback to the current Pro plan when no native offer exists.
 - Decide whether native OCR is in V1. Default is hidden unless real OCR passes device QA.
 

@@ -76,10 +76,11 @@ Pass the visible picker title to the `Modal` wrapper as its accessible label, ke
 - Run report: `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/report.md`
 - Logs: `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/post-fix-browser-warn-error-logs.json`
 - Focused route contract: `npm --workspace apps/mobile run test -- src/features/photos/progressRoutes.test.ts`
-- Expo web limitation: direct review renders and exposes Save, but data-URI photo saves return to `/progress` without creating a persisted encrypted photo record because the production photo store depends on native file persistence. The populated picker check used synthetic local encrypted-photo URI metadata to verify the modal/tile semantics; native real-image traversal remains required.
+- Expo web limitation: direct review renders and exposes Save, but data-URI photo saves return to `/progress` without creating a persisted encrypted photo record because the production photo store depends on native file persistence. The populated picker check now has a gated `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` metadata fixture for durable web traversal; native real-image traversal remains required.
+- Safe-area follow-up: `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/` verifies the fixture-backed picker after native safe-area and compact-dismiss hardening.
 
 ## Remaining Risk
 
 - Untested branches: Native VoiceOver/TalkBack announcement timing and real encrypted photo thumbnail rendering.
 - Missing fixtures: Physical-device photo series with real image bytes.
-- Follow-up needed: Include comparison picker traversal in Phase 5 device QA, or add a sanctioned local metadata fixture command before promoting this picker path to durable web E2E.
+- Follow-up needed: Include comparison picker traversal with real encrypted thumbnails in Phase 5 device QA.

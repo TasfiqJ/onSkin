@@ -6,16 +6,34 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the populated Progress comparison photo picker for native bottom
+  safe areas and compact dismiss targets. The `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS`
+  `populated` mode now supplies three local metadata-only photo records, with an
+  optional `EXPO_PUBLIC_E2E_ENTITLEMENT=pro` gate for deterministic Pro-route
+  E2E, and the hand-built picker preserves the 40 px compact web baseline,
+  adds `insets.bottom + 24` when a real bottom inset exists, and caps the sheet
+  at viewport height minus a 44 px outside dismiss target. Focused
+  `progressRoutes.test.ts` passes with contracts for the fixture gate,
+  safe-area cap, modal labels, and contextual photo-tile labels. Codex in-app
+  browser E2E verifies `/progress` opens with three local-only photos after the
+  local Pro preview, the picker exposes one named `Choose the first photo`
+  dialog, no sub-44 controls, three 92 x 123 photo tiles, dismiss recovery, and
+  selecting `May 12` updates the comparison chip. Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-progress-compare-picker-safe-area.md`.
+
 - Hardened the hand-built `/settings/timing` reminder time-picker sheet for
-  native bottom safe areas. The modal now uses `useSafeAreaInsets()` and only
-  overrides bottom padding when a real bottom inset exists, preserving compact
-  zero-inset web density while adding home-indicator clearance on iOS/Android.
-  Focused `settingsRoutes.test.ts` passes, and Codex in-app browser E2E at
-  320 x 568 verifies the Morning picker opens with 40 px web bottom padding,
-  zero horizontal overflow, 48 px visible rows, scrolls to a later time, and
-  selecting `6:00 AM` closes the sheet and updates the pill. Evidence is in
-  `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area/`, with the
-  tracked report in
+  native bottom safe areas and compact dismiss targets. The modal now uses
+  `useSafeAreaInsets()` only when a real bottom inset exists, caps the sheet at
+  viewport height minus a 44 px outside dismiss target, and shrinks the internal
+  time list before the backdrop collapses. Focused `settingsRoutes.test.ts`
+  passes, and Codex in-app browser E2E verifies the Morning picker has one named
+  dialog, 40 px zero-inset web bottom padding, zero horizontal overflow, 48 px
+  picker rows, a 44 px named dismiss target in the compact observed viewport,
+  and a successful update to `8:00 AM`. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area-current/`,
+  with the tracked report in
   `docs/e2e-bug-reports/2026-07-07-settings-time-picker-safe-area.md`.
 
 - Refreshed the generated Phase 7 core-loop QA packet after the current shared
