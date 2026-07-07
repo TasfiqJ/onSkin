@@ -46,6 +46,59 @@ function has(path, pattern) {
   return pattern.test(read(path));
 }
 
+const PUBLIC_PRODUCTION_HOSTNAME =
+  /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
+
+function productionHostname(hostname) {
+  const normalized = String(hostname ?? '').trim().toLowerCase();
+  return (
+    PUBLIC_PRODUCTION_HOSTNAME.test(normalized) &&
+    !RESERVED_PRODUCTION_HOSTNAME.test(normalized) &&
+    !normalized.includes('example.com')
+  );
+}
+
+function productionUrl(value) {
+  const trimmed = String(value ?? '').trim();
+  if (!trimmed) return false;
+  let url;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    return false;
+  }
+  return url.protocol === 'https:' && !url.username && !url.password && productionHostname(url.hostname);
+}
+
+function productionDomain(value) {
+  const trimmed = String(value ?? '').trim();
+  if (!trimmed) return false;
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  let url;
+  try {
+    url = new URL(candidate);
+  } catch {
+    return false;
+  }
+  return (
+    (url.protocol === 'https:' || url.protocol === 'http:') &&
+    !url.username &&
+    !url.password &&
+    !url.search &&
+    !url.hash &&
+    !url.port &&
+    productionHostname(url.hostname)
+  );
+}
+
+function productionSupportEmail(value) {
+  const trimmed = String(value ?? '').trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
+  const domain = trimmed.split('@').pop()?.toLowerCase() ?? '';
+  return productionHostname(domain);
+}
+
 function listFiles(dir) {
   const base = abs(dir);
   if (!existsSync(base)) return [];
@@ -182,11 +235,11 @@ const allText = listFiles('.')
   .join('\n');
 fail(!/dynamiclinks\.page\.link|@react-native-firebase\/dynamic-links|expo-firebase-dynamic-links/i.test(allText), 'Firebase Dynamic Links must not be used.');
 
-warn(Boolean(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN) && !/example\.com/i.test(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN), 'Missing final brand domain.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_MARKETING_URL) && !/example\.com/i.test(launchEnv.EXPO_PUBLIC_MARKETING_URL), 'Missing production marketing URL.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL), 'Missing production support email.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_APP_STORE_URL) && !/example\.com/i.test(launchEnv.EXPO_PUBLIC_APP_STORE_URL), 'Missing App Store URL.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL) && !/example\.com/i.test(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL), 'Missing Play Store URL.');
+warn(productionDomain(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN), 'Missing final brand domain.');
+warn(productionUrl(launchEnv.EXPO_PUBLIC_MARKETING_URL), 'Missing production marketing URL.');
+warn(productionSupportEmail(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL), 'Missing production support email.');
+warn(productionUrl(launchEnv.EXPO_PUBLIC_APP_STORE_URL), 'Missing App Store URL.');
+warn(productionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL), 'Missing Play Store URL.');
 
 const externalEvidence = [
   'PHASE8_BRAND_SOURCE_OF_TRUTH_PASS',

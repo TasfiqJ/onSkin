@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { productionUrlReady } from './phase8';
+import { productionUrlReady, supportEmailReady } from './phase8';
 
 describe('Phase 8 production URL readiness', () => {
   it('accepts real HTTPS production URLs', () => {
@@ -16,9 +16,23 @@ describe('Phase 8 production URL readiness', () => {
     expect(productionUrlReady('https://127.0.0.1/support')).toBe(false);
     expect(productionUrlReady('https://10.0.0.1/support')).toBe(false);
     expect(productionUrlReady('https://routinekind.local/support')).toBe(false);
+    expect(productionUrlReady('https://routinekind.test/support')).toBe(false);
+    expect(productionUrlReady('https://routinekind.invalid/support')).toBe(false);
     expect(productionUrlReady('https://user:pass@routinekind.app/support')).toBe(false);
     expect(productionUrlReady('http://routinekind.app/support')).toBe(false);
     expect(productionUrlReady('not a url')).toBe(false);
     expect(productionUrlReady('')).toBe(false);
+  });
+
+  it('accepts only real production support emails', () => {
+    expect(supportEmailReady('support@routinekind.app')).toBe(true);
+    expect(supportEmailReady(' support@routinekind.app ')).toBe(true);
+    expect(supportEmailReady('support@example.com')).toBe(false);
+    expect(supportEmailReady('support@EXAMPLE.COM')).toBe(false);
+    expect(supportEmailReady('support@localhost')).toBe(false);
+    expect(supportEmailReady('support@routinekind.local')).toBe(false);
+    expect(supportEmailReady('support@routinekind.test')).toBe(false);
+    expect(supportEmailReady('support@routinekind.invalid')).toBe(false);
+    expect(supportEmailReady('not an email')).toBe(false);
   });
 });

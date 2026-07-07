@@ -5,16 +5,28 @@ import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
 const PUBLIC_PRODUCTION_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 
 export function productionUrlReady(value: string): boolean {
   const safeUrl = safeExternalHttpsUrl(value);
   if (!safeUrl) return false;
   const hostname = new URL(safeUrl).hostname.toLowerCase();
-  return PUBLIC_PRODUCTION_HOSTNAME.test(hostname) && !hostname.includes('example.com');
+  return (
+    PUBLIC_PRODUCTION_HOSTNAME.test(hostname) &&
+    !RESERVED_PRODUCTION_HOSTNAME.test(hostname) &&
+    !hostname.includes('example.com')
+  );
 }
 
-function supportEmailReady(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+export function supportEmailReady(value: string): boolean {
+  const trimmed = value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
+  const domain = trimmed.split('@').pop()?.toLowerCase() ?? '';
+  return (
+    PUBLIC_PRODUCTION_HOSTNAME.test(domain) &&
+    !RESERVED_PRODUCTION_HOSTNAME.test(domain) &&
+    !domain.includes('example.com')
+  );
 }
 
 const finalDomain = normalizePublicDomain(env.finalBrandDomain);

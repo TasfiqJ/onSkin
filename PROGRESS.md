@@ -2352,12 +2352,13 @@ falls back to the local brand placeholder for `example.com`, localhost, credenti
 instead of composing a public-looking share URL from them. Focused growth card-copy tests pin valid first-party domains,
 malformed host fallback, and share URL consistency. This was non-UI logic hardening, so no human E2E was required.
 
-### Phase 8 production URL readiness hardening (2026-07-07)
+### Phase 8 public contact readiness hardening (2026-07-07)
 
 Hardened Phase 8 marketing, App Store, and Play Store URL readiness so public links/review/paid-measurement gates only
 treat safe HTTPS URLs on public hostnames as production-ready. Placeholder domains, localhost/private-style hosts,
-embedded credentials, plaintext HTTP, and malformed strings now fail closed. Added focused Phase 8 URL readiness tests;
-external final-domain/store evidence remains blocked for Tas.
+embedded credentials, plaintext HTTP, and malformed strings now fail closed. Support email readiness now also rejects
+placeholder and local domains, so `support@example.com` cannot unlock creator-link readiness. Added focused Phase 8
+public contact readiness tests; external final-domain/store/support evidence remains blocked for Tas.
 
 ## Open questions for the founder
 
