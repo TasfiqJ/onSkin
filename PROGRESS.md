@@ -2094,6 +2094,13 @@ guidance. Today hides cycle week affordances when `useCycle()` has no cycle and 
 instead of `0 of 0`. Human E2E verified the Expo web flow with only `Mineral SPF 50`; the captured run artifacts are in
 `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/`, with native phone visual verification still outstanding.
 
+### Routine cadence production review gate (2026-07-07)
+
+Added a shared `B-DERM-REVIEW` gate for cycle cadence and ramp-frequency guidance. Development builds still exercise the
+cycle/ramp fixtures, but production builds now withhold unreviewed cycle templates, cycling-night assignments, scheduler
+cycles, and initial ramp states until the routine cadence rules are reviewed. Focused routine, scheduler, and conflict
+claim-safety tests pin the production default.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

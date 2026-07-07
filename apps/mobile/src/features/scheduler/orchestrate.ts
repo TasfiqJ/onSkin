@@ -1,6 +1,7 @@
 import type { CycleVariant, FunctionalTag, GoalId } from '@onskin/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 
 import { classifyActiveClass, defaultPhase, isPotent, reviewedFrequencyCap, type ActiveClass } from './classes';
 
@@ -125,6 +126,8 @@ export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfil
   }));
 
   const notes: string[] = [];
+
+  if (!canUseRoutineCadence()) return { cycle: null, notes };
 
   // AM / daily block (stable morning): vitamin C, BP, flexible niacinamide.
   const amDaily: AmItem[] = classified

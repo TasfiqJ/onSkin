@@ -10,6 +10,7 @@ import { shippableRules, type ConflictRule } from '@/features/intelligence/rules
 import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler';
 
 import { initRamp, type RampState } from './ramp';
+import { canUseRoutineCadence } from './reviewGate';
 import { classifyRole, sequencePhase, type ClassifiableProduct, type SequencedStep } from './sequencing';
 
 // The deterministic generation pipeline (docs/03 §2): classify → allocate AM/PM →
@@ -56,7 +57,8 @@ export function generatePlan(
   // Cycling: assign nights to PM actives (exfoliant=1, retinoid=2) when a cycle
   // applies. The retinoid × acid alternate_nights resolution is satisfied by
   // placing them on different nights.
-  const hasActives = pm.some((s) => s.role === 'treatment' || s.role === 'exfoliant');
+  const allowCadence = canUseRoutineCadence();
+  const hasActives = allowCadence && pm.some((s) => s.role === 'treatment' || s.role === 'exfoliant');
   const cycle = pickCycle({ sensitivity: profile.sensitivity, goals: profile.goals as GoalId[], hasActives });
   if (cycle) {
     for (const step of pm) {
@@ -66,13 +68,15 @@ export function generatePlan(
   }
 
   // Ramp: initialise for each exfoliating/retinoid active.
-  const ramp = pm
-    .filter((s) => s.role === 'treatment' || s.role === 'exfoliant')
-    .map((s) => ({
-      productId: s.productId,
-      name: s.name,
-      state: initRamp(s.role === 'treatment' ? 'retinoid' : 'aha', profile.sensitivity),
-    }));
+  const ramp = allowCadence
+    ? pm
+        .filter((s) => s.role === 'treatment' || s.role === 'exfoliant')
+        .map((s) => ({
+          productId: s.productId,
+          name: s.name,
+          state: initRamp(s.role === 'treatment' ? 'retinoid' : 'aha', profile.sensitivity),
+        }))
+    : [];
 
   // Gaps: roles the user doesn't own that would round out the routine.
   const ownedRoles = new Set(products.map(classifyRole));

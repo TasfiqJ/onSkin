@@ -1,5 +1,7 @@
 import type { FunctionalTag } from '@onskin/types';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
+import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
 
 import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
 import { orchestrate, type Cycle, type SchedulerActive, type SchedulerProfile } from './orchestrate';
@@ -14,6 +16,30 @@ function active(id: string, name: string, tags: FunctionalTag[], isNew = false):
 }
 const base: SchedulerProfile = { sensitivity: 'neutral', pregnancy: false, goals: [] };
 const run = (actives: SchedulerActive[], profile: SchedulerProfile = base) => orchestrate(actives, profile);
+
+const runtime = globalThis as { __DEV__?: boolean };
+let previousDev: boolean | undefined;
+
+beforeEach(() => {
+  previousDev = runtime.__DEV__;
+  runtime.__DEV__ = true;
+});
+
+afterEach(() => {
+  if (previousDev === undefined) delete runtime.__DEV__;
+  else runtime.__DEV__ = previousDev;
+});
+
+function withDevFlag<T>(value: boolean, fn: () => T): T {
+  const before = runtime.__DEV__;
+  runtime.__DEV__ = value;
+  try {
+    return fn();
+  } finally {
+    if (before === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = before;
+  }
+}
 
 function potentNights(cycle: Cycle) {
   return cycle.nights.filter((n) => n.slot === 'retinoid' || n.slot === 'exfoliate');
@@ -121,6 +147,19 @@ describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => 
     expect(frequencyCap('bha', 'resistant')).toBe(7);
     // B-DERM-REVIEW: the per-type numbers are not authoritative until sign-off.
     expect(CAPS_REVIEWED).toBe(false);
+    expect(ROUTINE_CADENCE_REVIEWED).toBe(false);
+  });
+
+  it('withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes', () => {
+    withDevFlag(false, () => {
+      const { cycle, notes } = run([
+        active('r', 'Retinol 0.3%', ['retinoid']),
+        active('g', 'Glycolic 7%', ['aha']),
+      ]);
+
+      expect(cycle).toBeNull();
+      expect(notes).toEqual([]);
+    });
   });
 
   it('caps AHA at 1×/week for sensitive skin', () => {

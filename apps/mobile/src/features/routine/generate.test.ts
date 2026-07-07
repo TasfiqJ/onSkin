@@ -59,7 +59,7 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
 });
 
 describe('Maya plan generation (docs/03 §2 worked example)', () => {
-  const plan = generatePlan(maya, mayaProfile, STARTER_RULES);
+  const plan = withDevFlag(true, () => generatePlan(maya, mayaProfile, STARTER_RULES));
 
   it('AM is sequenced thin→thick: cleanser → vitamin C → moisturiser → SPF', () => {
     expect(plan.am.map((s) => s.name)).toEqual([
@@ -170,6 +170,9 @@ describe('B-DERM-REVIEW routine launch gate', () => {
       const plan = generatePlan(launchShelf, launchProfile);
 
       expect(plan.pm.map((s) => s.name)).toEqual(['Retinol 0.3% Night Serum', 'Glycolic 7% Toner']);
+      expect(plan.cycle).toBeNull();
+      expect(plan.ramp).toEqual([]);
+      expect(plan.pm.every((s) => s.cyclingNight == null)).toBe(true);
       expect(plan.conflicts).toEqual([]);
     });
   });
