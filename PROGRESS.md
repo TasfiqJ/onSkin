@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added notification timezone persistence for the local-first reminder
+  preferences. Mobile now normalizes the current device/runtime timezone into
+  `NotifPrefs`, repairs malformed legacy timezone values, and mirrors
+  `notification_preferences.timezone` to Supabase with the AM/PM times and quiet
+  hours, matching docs/07's timezone-aware reminder model.
+
 - Fixed local reminder scheduling so AM/PM routine reminders and the weekly
   progress-photo nudge no longer disappear when their chosen time is inside
   quiet hours. Recurring notifications now shift to the quiet-hours end, matching

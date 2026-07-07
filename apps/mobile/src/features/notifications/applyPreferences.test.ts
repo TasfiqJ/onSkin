@@ -21,6 +21,7 @@ const next: NotifPrefs = {
   captureReminders: false,
   quietStart: '22:00',
   quietEnd: '07:00',
+  timezone: 'UTC',
   liveActivityEnabled: false,
   promotionalOptIn: false,
   lockscreenDiscreet: true,

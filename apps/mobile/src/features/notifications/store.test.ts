@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_PREFS, loadNotifPrefs, saveNotifPrefs } from './store';
+import { currentDeviceTimezone, DEFAULT_PREFS, loadNotifPrefs, saveNotifPrefs } from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -61,6 +61,8 @@ describe('notification lock-screen privacy preference', () => {
   });
 
   it('normalizes stored booleans and reminder times before scheduling reads them', async () => {
+    const timezone = currentDeviceTimezone();
+
     mocks.storage.set(
       KEY,
       JSON.stringify({
@@ -70,6 +72,7 @@ describe('notification lock-screen privacy preference', () => {
         pmTime: '99:99',
         quietStart: null,
         quietEnd: ' 06:30 ',
+        timezone: 'bad timezone',
         liveActivityEnabled: true,
         promotionalOptIn: 'true',
         lockscreenDiscreet: false,
@@ -83,6 +86,7 @@ describe('notification lock-screen privacy preference', () => {
       pmTime: DEFAULT_PREFS.pmTime,
       quietStart: null,
       quietEnd: '06:30',
+      timezone,
       liveActivityEnabled: true,
       promotionalOptIn: false,
       lockscreenDiscreet: true,
@@ -91,6 +95,7 @@ describe('notification lock-screen privacy preference', () => {
       amTime: '08:15',
       pmTime: DEFAULT_PREFS.pmTime,
       quietEnd: '06:30',
+      timezone,
       lockscreenDiscreet: true,
     });
   });
@@ -100,11 +105,21 @@ describe('notification lock-screen privacy preference', () => {
     await Promise.resolve();
     await Promise.resolve();
 
-    expect(prefs).toMatchObject({ amEnabled: false, lockscreenDiscreet: true });
+    expect(prefs).toMatchObject({
+      amEnabled: false,
+      lockscreenDiscreet: true,
+      timezone: currentDeviceTimezone(),
+    });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
       amEnabled: false,
       lockscreenDiscreet: true,
+      timezone: currentDeviceTimezone(),
     });
-    expect(mocks.upsert).toHaveBeenCalledWith(expect.objectContaining({ lockscreen_discreet: true }));
+    expect(mocks.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        lockscreen_discreet: true,
+        timezone: currentDeviceTimezone(),
+      }),
+    );
   });
 });

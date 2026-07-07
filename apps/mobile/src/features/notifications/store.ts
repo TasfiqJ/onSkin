@@ -6,12 +6,14 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
  * AsyncStorage is the v1 source of truth so the settings + scheduling work offline
  * and before the backend exists (B-SUPABASE); a best-effort `notification_preferences`
  * mirror keeps the row ready to reconcile. Times are "HH:MM" (24h) locally and
- * mapped to the DB `time` columns on mirror. This is the single source of truth for
- * the AM/PM reminder schedule, the tier toggles, quiet hours, and discretion. It
+ * mapped to the DB `time` columns on mirror, with the current device timezone
+ * carried in the DB `timezone` field. This is the single source of truth for the
+ * AM/PM reminder schedule, the tier toggles, quiet hours, and discretion. It
  * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
  */
 const KEY = 'onskin.notifPrefs.v1';
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
+const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 
 export type NotifPrefs = {
   amEnabled: boolean;
@@ -23,6 +25,7 @@ export type NotifPrefs = {
   captureReminders: boolean; // weekly progress-photo nudge (opt-in, off by default)
   quietStart: string | null; // "HH:MM" | null
   quietEnd: string | null;
+  timezone: string;
   liveActivityEnabled: boolean;
   promotionalOptIn: boolean;
   lockscreenDiscreet: boolean;
@@ -38,6 +41,7 @@ export const DEFAULT_PREFS: NotifPrefs = {
   captureReminders: false,
   quietStart: '22:00',
   quietEnd: '07:00',
+  timezone: currentDeviceTimezone(),
   liveActivityEnabled: false,
   promotionalOptIn: false,
   lockscreenDiscreet: true,
@@ -70,12 +74,27 @@ function optionalTimeOr(
   return HH_MM.test(text) ? text : fallback;
 }
 
+function timezoneOr(value: unknown, fallback: string): string {
+  if (typeof value !== 'string') return fallback;
+  const text = value.trim();
+  return text.length > 0 && text.length <= 128 && TIMEZONE_TEXT.test(text) ? text : fallback;
+}
+
+export function currentDeviceTimezone(): string {
+  try {
+    return timezoneOr(Intl.DateTimeFormat().resolvedOptions().timeZone, 'UTC');
+  } catch {
+    return 'UTC';
+  }
+}
+
 export function normalizeNotifPatch(patch: Partial<NotifPrefs>): Partial<NotifPrefs> {
   return patch.lockscreenDiscreet === false ? { ...patch, lockscreenDiscreet: true } : patch;
 }
 
 export function normalizeNotifPrefs(prefs: Partial<NotifPrefs> = {}): NotifPrefs {
   const source = isRecord(prefs) ? prefs : {};
+  const timezone = currentDeviceTimezone();
   return {
     amEnabled: booleanOr(source.amEnabled, DEFAULT_PREFS.amEnabled),
     pmEnabled: booleanOr(source.pmEnabled, DEFAULT_PREFS.pmEnabled),
@@ -86,6 +105,7 @@ export function normalizeNotifPrefs(prefs: Partial<NotifPrefs> = {}): NotifPrefs
     captureReminders: booleanOr(source.captureReminders, DEFAULT_PREFS.captureReminders),
     quietStart: optionalTimeOr(source, 'quietStart', DEFAULT_PREFS.quietStart),
     quietEnd: optionalTimeOr(source, 'quietEnd', DEFAULT_PREFS.quietEnd),
+    timezone: timezoneOr(timezone, DEFAULT_PREFS.timezone),
     liveActivityEnabled: booleanOr(source.liveActivityEnabled, DEFAULT_PREFS.liveActivityEnabled),
     promotionalOptIn: booleanOr(source.promotionalOptIn, DEFAULT_PREFS.promotionalOptIn),
     lockscreenDiscreet: true,
@@ -137,6 +157,7 @@ async function mirror(p: NotifPrefs): Promise<void> {
       capture_reminders: p.captureReminders,
       quiet_hours_start: toDbTime(p.quietStart),
       quiet_hours_end: toDbTime(p.quietEnd),
+      timezone: p.timezone,
       live_activity_enabled: p.liveActivityEnabled,
       promotional_opt_in: p.promotionalOptIn,
       lockscreen_discreet: p.lockscreenDiscreet,

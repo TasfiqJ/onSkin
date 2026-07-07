@@ -14,11 +14,15 @@ const mocks = vi.hoisted(() => ({
     captureReminders: false,
     quietStart: '22:00',
     quietEnd: '07:00',
+    timezone: 'UTC',
     liveActivityEnabled: false,
     promotionalOptIn: false,
     lockscreenDiscreet: true,
   },
-  saveNotifPrefs: vi.fn(async (patch: Partial<NotifPrefs>) => ({ ...mocks.defaultPrefs, ...patch })),
+  saveNotifPrefs: vi.fn(async (patch: Partial<NotifPrefs>) => ({
+    ...mocks.defaultPrefs,
+    ...patch,
+  })),
 }));
 
 vi.mock('./deliver', () => ({
@@ -32,7 +36,10 @@ vi.mock('./store', () => ({
 }));
 
 function deps(requestGranted: boolean) {
-  const saveNotifPrefs = vi.fn(async (patch: Partial<NotifPrefs>) => ({ ...DEFAULT_PREFS, ...patch }));
+  const saveNotifPrefs = vi.fn(async (patch: Partial<NotifPrefs>) => ({
+    ...DEFAULT_PREFS,
+    ...patch,
+  }));
   return {
     requestPermission: vi.fn(async () => requestGranted),
     saveNotifPrefs,
@@ -48,7 +55,9 @@ describe('notification onboarding choice', () => {
 
     expect(d.requestPermission).toHaveBeenCalledTimes(1);
     expect(d.saveNotifPrefs).toHaveBeenCalledWith({ amEnabled: true, pmEnabled: true });
-    expect(d.rescheduleReminders).toHaveBeenCalledWith(expect.objectContaining({ amEnabled: true, pmEnabled: true }));
+    expect(d.rescheduleReminders).toHaveBeenCalledWith(
+      expect.objectContaining({ amEnabled: true, pmEnabled: true }),
+    );
   });
 
   it('persists routine reminders off when the OS prompt is denied', async () => {
@@ -57,7 +66,9 @@ describe('notification onboarding choice', () => {
     await expect(acceptRoutineReminderSoftAsk(d)).resolves.toBe(false);
 
     expect(d.saveNotifPrefs).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
-    expect(d.rescheduleReminders).toHaveBeenCalledWith(expect.objectContaining({ amEnabled: false, pmEnabled: false }));
+    expect(d.rescheduleReminders).toHaveBeenCalledWith(
+      expect.objectContaining({ amEnabled: false, pmEnabled: false }),
+    );
   });
 
   it('persists routine reminders off when the soft ask is skipped', async () => {
@@ -67,6 +78,8 @@ describe('notification onboarding choice', () => {
 
     expect(d.requestPermission).not.toHaveBeenCalled();
     expect(d.saveNotifPrefs).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
-    expect(d.rescheduleReminders).toHaveBeenCalledWith(expect.objectContaining({ amEnabled: false, pmEnabled: false }));
+    expect(d.rescheduleReminders).toHaveBeenCalledWith(
+      expect.objectContaining({ amEnabled: false, pmEnabled: false }),
+    );
   });
 });
