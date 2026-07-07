@@ -3265,7 +3265,7 @@ flags. Tracked in `docs/e2e-bug-reports/2026-07-07-commerce-missing-stack-recove
 
 Fixed `/settings/privacy` on compact phones after Expo web E2E showed the route correctly redirected to
 `/you?section=privacy` but left policy rows straddling the floating tab bar at 320 x 568 and 390 x 568. The You-tab
-privacy direct entry now uses width-aware negative scroll nudges plus a retry after layout settles, preserving visible
+privacy direct entry now uses width-aware positive scroll nudges plus a retry after layout settles, preserving visible
 privacy controls while keeping lower policy rows from crossing the tab-bar touch zone. Route-contract coverage pins the
 compact and narrow nudge values plus the retry. Expo web E2E also verified direct-entry Back recovery for
 `/settings/subscription`, `/settings/notifications`, and `/settings/timing`. Final 320 x 568 and 390 x 568 evidence is
