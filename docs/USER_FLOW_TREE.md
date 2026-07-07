@@ -365,6 +365,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: product detail routine role
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open a real product detail from Shelf, inspect the routine role card, and tap its routine action.
+  - Expected result: The detail hub explains whether the product is already used in the generated routine or is not placed yet, and the routine action routes to `/routine/plan` without leaving the user at an inventory dead end.
+  - Evidence: Product detail screenshot, visible-text snapshot, and routine-plan destination snapshot.
 - Branch: no search result
   - Priority: Critical
   - Automate later: Yes

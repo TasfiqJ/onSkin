@@ -52,12 +52,54 @@ const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
   { label: 'in 2 yr', monthsAhead: 24 },
 ];
 
+type RoutineUsage = { phase: string; night?: number };
+
 function shiftMonthsISO(months: number): string {
   const d = new Date();
   d.setMonth(d.getMonth() + months);
   return localDateString(d);
 }
 const monthsAgoISO = (m: number) => shiftMonthsISO(-m);
+
+function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
+  const placed = Boolean(usage);
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={placed ? 'Review routine placement' : 'Build routine from shelf'}
+      onPress={() => {
+        haptics.select();
+        router.push('/routine/plan');
+      }}
+      className="mt-2.5 min-h-[64px] flex-row gap-3 rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5"
+    >
+      <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
+      <View className="flex-1">
+        <Text variant="label" tone="clay" className="font-mono uppercase">
+          Routine role
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-1">
+          {usage ? (
+            <>
+              Used in your{' '}
+              <Text variant="bodySm" className="font-sans-semibold">
+                {usage.phase}
+              </Text>
+              {usage.night ? `. Cycling night ${usage.night}.` : '.'}
+            </>
+          ) : (
+            'Not placed in a routine yet.'
+          )}
+        </Text>
+        <Text variant="bodySm" tone="clay" className="mt-1 font-sans-semibold">
+          {usage
+            ? 'Review the AM/PM plan before you check it off.'
+            : 'Build an AM/PM draft from your shelf.'}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -103,7 +145,7 @@ export default function ProductDetailScreen() {
   );
 
   // Where it's used. From the live plan (skipped for the example fallback).
-  let usage: { phase: string; night?: number } | null = null;
+  let usage: RoutineUsage | null = null;
   if (plan.data && !plan.data.isExample) {
     const pm = plan.data.plan.pm.find((s) => s.productId === id);
     if (pm) usage = { phase: 'Evening routine', night: pm.cyclingNight };
@@ -452,18 +494,7 @@ export default function ProductDetailScreen() {
         })}
 
         {/* Where it's used */}
-        {usage ? (
-          <View className="mt-2.5 flex-row gap-3 rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5">
-            <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-muted" />
-            <Text variant="bodySm" tone="muted" className="flex-1">
-              Used in your{' '}
-              <Text variant="bodySm" className="font-sans-semibold">
-                {usage.phase}
-              </Text>
-              {usage.night ? `. Cycling night ${usage.night}.` : '.'}
-            </Text>
-          </View>
-        ) : null}
+        {!archived ? <RoutineUsageCard usage={usage} /> : null}
       </ScrollView>
 
       {/* Lifecycle actions */}

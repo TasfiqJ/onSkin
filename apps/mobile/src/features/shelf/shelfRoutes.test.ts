@@ -308,6 +308,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("'Paired with '");
   });
 
+  it('keeps product-detail routine placement explicit and actionable', () => {
+    const source = readAppRoute('shelf/[id].tsx');
+
+    expect(source).toContain('function RoutineUsageCard');
+    expect(source).toContain('Routine role');
+    expect(source).toContain('Review routine placement');
+    expect(source).toContain('Build routine from shelf');
+    expect(source).toContain('Not placed in a routine yet.');
+    expect(source).toContain('Build an AM/PM draft from your shelf.');
+    expect(source).toContain("router.push('/routine/plan')");
+    expect(source).toContain('{!archived ? <RoutineUsageCard usage={usage} /> : null}');
+  });
+
   it('keys repeated product-detail conflict rows by rule and product pair', () => {
     const source = readAppRoute('shelf/[id].tsx');
 

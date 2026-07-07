@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Clarified the product-detail management hub so every active product now has a
+  visible routine role card: placed products explain the generated AM/PM usage,
+  and unplaced products send users to build the routine instead of leaving detail
+  as a passive inventory screen. Updated the Shelf flow tree and added a route
+  contract test. Human-simulated Expo web E2E covered Shelf -> product detail ->
+  routine role card -> `/routine/plan` at 320 x 568 in
+  `test-results/human-e2e/2026-07-07/product-detail-routine-role/`.
+
 - Locked down the Today routine completion persistence requirement from the V1
   loop docs. Added a regression test proving a normal check-off survives fresh
   Today store reads, then ran human-simulated Expo web E2E at 320 x 568:
