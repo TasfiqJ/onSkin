@@ -2,70 +2,71 @@
 
 Severity: High
 Surface: Expo web
-Environment: Expo web on localhost:8102, 320 x 568 viewport, PM local clock
-Feature: Routine plan / Today PM
+Environment: Local Expo web on `http://localhost:8113`, desktop browser surface, PM local clock
+Feature: Routine plan first value / Today PM routine
 Date: 2026-07-07
 Tester: Codex
 
 ## Reproduction Steps
 
-1. Add only `Mineral SPF 50` through `/shelf/manual` and `/shelf/opened`.
-2. Open `/routine/plan` and unlock through the contextual no-card `Explore first` path.
-3. Inspect the evening card, tap `Start today`, and inspect Today PM.
+1. Start from a clean local app state.
+2. Open `/onboarding/products` and add only `Mineral SPF 50`.
+3. Unlock through the no-card Explore path and open `/routine/plan`.
+4. Inspect the evening card, tap `Start today`, and inspect Today during PM.
 
 ## Expected Result
 
-The routine stays honest to the user's shelf. Morning shows `Mineral SPF 50`; evening does not claim skin cycling, recovery nights, or ceramide-only guidance until a real night active or barrier product exists.
+The plan remains built from the user's shelf, the morning card includes `Mineral SPF 50`, and the plan plus Today PM do not claim `skin cycling`, `Recover`, or `ceramide only` until the generated plan has a real night active or barrier product.
 
 ## Actual Result
 
-Pre-fix, `/routine/plan` always rendered `Evening · skin cycling`, a `Recover` row, and `ceramide only` copy even when the generated plan had no PM steps and no cycle. Today also kept fallback cycle UI for a missing cycle.
+The routine plan always labeled the evening card as `Evening · skin cycling` and rendered a `Recover` row with `ceramide only`. Today PM also rendered a fallback skin-cycling strip with Exfoliate / Retinoid / Recover / Recover even though the generated plan had no cycle and no PM steps.
 
 ## Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-viewport-320x568.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-pm-viewport-320x568.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/shelf-viewport-320x568.png`
-- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-visible-text.txt`
-- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-pm-visible-text.txt`
-- Logs: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/browser-console-warnings.json`
+- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-sparse-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-after-start-320x568.png`
+- Logs: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/browser-warnings-errors.json`
+- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-sparse-state.json`
+- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-after-start-state.json`
+- Terminal transcript: focused Vitest runs for routine generation, Pro route contracts, and Today route contracts
 
 ## Frequency
 
-- Always for a sparse daytime-only shelf.
+- Always for a sparse daytime-only shelf during PM.
 
 ## Scope
 
-- Affected route/screen: `/routine/plan`, `/today` PM
-- Affected account or fixture: one local shelf product, `Mineral SPF 50`
+- Affected route/screen: `/routine/plan`, `/today`
+- Affected account or fixture: local-first onboarding shelf with only SPF
 - External service involved: none
 - Destructive action involved: none
 
 ## Suspected Cause
 
-The generator correctly returned `cycle: null`, empty PM steps, and no ramp for the SPF-only shelf, but the presentation layer still had hardcoded cycle/recovery copy and fallback PM cycle labels.
+The generator correctly returned an AM-only plan with `cycle: null`, but `/routine/plan` and `/today` rendered hardcoded fallback skin-cycling UI instead of gating that UI on the generated cycle.
 
 ## Minimal Fix Recommendation
 
-Gate cycle copy on `plan.cycle`, render real PM steps only when they exist, show an explicit no-night-steps empty state for sparse shelves, and hide Today cycle affordances when `useCycle()` has no cycle.
+Render the plan's skin-cycling rows only when `plan.cycle` exists, render Today's skin-cycling strip only when a cycle exists, and show an honest empty evening state for generated plans with no PM steps.
 
 ## Verification Flow After Fix
 
-1. Add only `Mineral SPF 50` through the real shelf intake.
-2. Unlock `/routine/plan` through `Explore first`.
-3. Confirm the plan text includes `BUILT FROM YOUR SHELF`, `Mineral SPF 50`, and `No night steps yet.`
-4. Confirm the plan and Today PM text do not include `skin cycling`, `Recover`, `ceramide`, or `Week ahead`.
+1. Add only `Mineral SPF 50` from `/onboarding/products`.
+2. Open `/routine/plan` and verify the evening card says `No night steps yet.` with no skin-cycling, Recover, or ceramide-only copy.
+3. Tap `Start today` and verify Today PM says `No evening steps yet.` with no skin-cycling strip.
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-viewport-320x568.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-pm-viewport-320x568.png`
-- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-checks.json`
-- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-pm-checks.json`
+- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-sparse-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-after-start-320x568.png`
+- Logs: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/browser-warnings-errors.json`
+- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/routine-plan-sparse-state.json`
+- UI snapshot: `test-results/human-e2e/2026-07-07/routine-plan-sparse-shelf/today-after-start-state.json`
 - Terminal transcript: `npm --workspace apps/mobile run test -- src/features/routine/generate.test.ts src/features/subscription/proGatedRoutes.test.ts src/features/today/todayRoute.test.ts`
 
 ## Remaining Risk
 
 - Untested branches: native iOS/Android visual pass for the same sparse-shelf state.
-- Missing fixtures: catalog-backed SPF product with richer metadata.
+- Missing fixtures: none for the deterministic local generator.
 - Follow-up needed: automate the sparse shelf branch after the human-simulated E2E harness is formalized.
