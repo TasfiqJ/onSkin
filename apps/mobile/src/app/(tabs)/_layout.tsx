@@ -417,7 +417,8 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   tabItemActive: {
-    borderColor: 'transparent',
+    backgroundColor: colors.greige,
+    borderColor: colors.hairline,
   },
   tabItemPressed: {
     opacity: 0.72,

@@ -60,6 +60,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain('right: tabBarHorizontalInset');
     expect(source).toContain('zIndex: 50');
     expect(source).toContain('height: FLOATING_TAB_BAR_HEIGHT');
+    expect(source).toContain('tabItemActive: {');
+    expect(source).toContain('backgroundColor: colors.greige');
+    expect(source).toContain('borderColor: colors.hairline');
     expect(source).toContain('accessibilityRole="tablist"');
     expect(source).toContain('accessibilityRole="tab"');
     expect(source).toContain('accessibilityState={{ selected: focused }}');

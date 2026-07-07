@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Strengthened the floating bottom tab bar active state after human-simulated
+  Expo web E2E showed the selected destination had a transparent background and
+  border. The active tab now renders as a subtle filled pill inside the floating
+  bar while preserving 52+ px touch targets and readable labels at 320 px and
+  390 px phone widths. Focused navigation tests, mobile typecheck/lint/test,
+  and repo typecheck/lint/test pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/navigation/`.
+
 - Refreshed the Phase 7 core-loop QA packet and Phase 10 closed-beta packet
   after the latest analytics and commerce-source changes. The generated
   artifacts now carry current source hashes for `WhereToBuy`, the beta evidence
