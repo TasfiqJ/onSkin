@@ -2117,6 +2117,14 @@ card before scrolling it into view. The settings route contract now guards again
 mistake. Expo web E2E verified direct entry, visible privacy controls, a privacy row tap, and browser Back recovery in
 `test-results/human-e2e/2026-07-07/settings-privacy-direct-entry/`.
 
+### Progress direct paywall dismissal fallback (2026-07-07)
+
+Fixed direct-entry contextual paywall dismissal after the Progress photo route audit found generic no-history paywalls
+fell back to Today. Contextual Pro gates now keep feature-specific no-history fallbacks: photo timeline paywalls recover
+to Progress, conflict-check paywalls recover to Shelf, and generic paywalls still recover to Today. Focused tests pin the
+fallback mapping, and Expo web E2E verified `/progress/capture` at 320 x 568 dismisses to `/progress` with the Progress
+tab selected. Evidence is in `test-results/human-e2e/2026-07-07/navigation-next-audit/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

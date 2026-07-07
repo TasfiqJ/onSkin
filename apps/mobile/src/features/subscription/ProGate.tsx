@@ -9,7 +9,7 @@ import type { GatedFeature } from '@onskin/types';
 
 import { ComplianceRow } from './ComplianceRow';
 import { PAYWALL_COPY, UPSELL_COPY } from './copy';
-import { dismissPaywall } from './dismissPaywall';
+import { dismissPaywall, paywallDismissFallbackForFeature } from './dismissPaywall';
 import { canStartContextualReverseTrial } from './entitlement';
 import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
@@ -31,6 +31,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;
   const compactComplianceSpacer = compactTabbedPhotoPaywall ? 112 : 0;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
+  const paywallDismissFallback = paywallDismissFallbackForFeature(feature);
 
   useEffect(() => {
     if (locked) track('contextual_paywall_shown', { feature });
@@ -85,7 +86,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       <View className="flex-row justify-end pt-1">
         <Pressable
           accessibilityRole="button"
-          onPress={() => dismissPaywall(router)}
+          onPress={() => dismissPaywall(router, paywallDismissFallback)}
           className="h-[48px] justify-center px-2"
         >
           <Text variant="body" tone="muted" className="font-sans-medium">

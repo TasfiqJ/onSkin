@@ -76,6 +76,8 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('<Sheet scroll backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');
     expect(proGate).toContain('className="h-[48px] justify-center px-2"');
+    expect(proGate).toContain('paywallDismissFallbackForFeature(feature)');
+    expect(proGate).toContain('dismissPaywall(router, paywallDismissFallback)');
     expect(proGate).toContain('useWindowDimensions');
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");

@@ -1,9 +1,27 @@
-import { APP_HOME_ROUTE, backOrReplace, type BackOrReplaceRouter } from '@/lib/navigation/safeBack';
+import {
+  APP_HOME_ROUTE,
+  APP_PROGRESS_ROUTE,
+  APP_SHELF_ROUTE,
+  backOrReplace,
+  type AppFallbackRoute,
+  type BackOrReplaceRouter,
+} from '@/lib/navigation/safeBack';
+import type { GatedFeature } from '@onskin/types';
 
 export const PAYWALL_DISMISS_FALLBACK_ROUTE = APP_HOME_ROUTE;
 
 export type PaywallDismissRouter = BackOrReplaceRouter;
 
-export function dismissPaywall(router: PaywallDismissRouter) {
-  backOrReplace(router);
+export function paywallDismissFallbackForFeature(feature: GatedFeature): AppFallbackRoute {
+  if (feature === 'photo_timeline') return APP_PROGRESS_ROUTE;
+  if (feature === 'conflict_checks') return APP_SHELF_ROUTE;
+
+  return PAYWALL_DISMISS_FALLBACK_ROUTE;
+}
+
+export function dismissPaywall(
+  router: PaywallDismissRouter,
+  fallbackRoute: AppFallbackRoute = PAYWALL_DISMISS_FALLBACK_ROUTE,
+) {
+  backOrReplace(router, fallbackRoute);
 }
