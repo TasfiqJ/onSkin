@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { abs, block, listFiles, printResult, read, warn } from './lib.mjs';
+import { abs, block, evidenceFlagEnabled, listFiles, printResult, read, warn } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -628,7 +628,7 @@ for (const item of [...seenDropped].sort()) {
 
 warn(
   warnings,
-  process.env.PHASE9_OBSERVABILITY_PAYLOAD_PASS === 'true',
+  evidenceFlagEnabled(process.env.PHASE9_OBSERVABILITY_PAYLOAD_PASS),
   'Missing live Sentry/PostHog payload sample approval: PHASE9_OBSERVABILITY_PAYLOAD_PASS=true.',
 );
 

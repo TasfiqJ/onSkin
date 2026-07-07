@@ -2,6 +2,7 @@
 import {
   block,
   envSnapshot,
+  evidenceFlagEnabled,
   exists,
   has,
   listFiles,
@@ -116,12 +117,12 @@ for (const file of codeFiles) {
 
 warn(
   warnings,
-  env.PHASE10_DASHBOARDS_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE10_DASHBOARDS_PASS),
   'Missing dashboard evidence: PHASE10_DASHBOARDS_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE10_PRIVACY_PAYLOAD_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE10_PRIVACY_PAYLOAD_PASS),
   'Missing privacy payload evidence: PHASE10_PRIVACY_PAYLOAD_PASS=true.',
 );
 

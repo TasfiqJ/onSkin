@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { block, listFiles, printResult, read, warn } from './lib.mjs';
+import { block, evidenceFlagEnabled, listFiles, printResult, read, warn } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -248,7 +248,7 @@ for (const check of requiredLiveHarnessChecks) {
   block(errors, liveHarness.includes(check), `Live Supabase adversarial harness is missing: ${check}.`);
 }
 
-warn(warnings, process.env.PHASE9_RLS_STAGING_PASS === 'true', 'Missing live staging RLS adversarial evidence: PHASE9_RLS_STAGING_PASS=true.');
-warn(warnings, process.env.PHASE9_RLS_PRODUCTION_PASS === 'true', 'Missing live production RLS adversarial evidence: PHASE9_RLS_PRODUCTION_PASS=true.');
+warn(warnings, evidenceFlagEnabled(process.env.PHASE9_RLS_STAGING_PASS), 'Missing live staging RLS adversarial evidence: PHASE9_RLS_STAGING_PASS=true.');
+warn(warnings, evidenceFlagEnabled(process.env.PHASE9_RLS_PRODUCTION_PASS), 'Missing live production RLS adversarial evidence: PHASE9_RLS_PRODUCTION_PASS=true.');
 
 printResult('Phase 9 RLS adversarial', errors, warnings);

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { block, printResult, read, warn } from './lib.mjs';
+import { block, evidenceFlagEnabled, printResult, read, warn } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -114,6 +114,6 @@ for (const [type, policy] of [
   );
 }
 
-warn(warnings, process.env.PHASE9_CONSENT_WITHDRAWAL_PASS === 'true', 'Missing live consent-withdrawal evidence: PHASE9_CONSENT_WITHDRAWAL_PASS=true.');
+warn(warnings, evidenceFlagEnabled(process.env.PHASE9_CONSENT_WITHDRAWAL_PASS), 'Missing live consent-withdrawal evidence: PHASE9_CONSENT_WITHDRAWAL_PASS=true.');
 
 printResult('Phase 9 consent withdrawal smoke', errors, warnings);

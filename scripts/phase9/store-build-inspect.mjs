@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import {
   block,
   envSnapshot,
+  evidenceFlagEnabled,
   exists,
   hash,
   printResult,
@@ -220,37 +221,37 @@ for (const [key, label] of [
 
 warn(
   warnings,
-  env.PHASE9_IOS_TESTFLIGHT_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_IOS_TESTFLIGHT_PASS),
   'Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE9_ANDROID_CLOSED_TEST_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_ANDROID_CLOSED_TEST_PASS),
   'Missing Play internal/closed testing evidence: PHASE9_ANDROID_CLOSED_TEST_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE9_ANDROID_TARGET_API_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_ANDROID_TARGET_API_PASS),
   'Missing Android target API proof from built artifact: PHASE9_ANDROID_TARGET_API_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE9_ANDROID_16KB_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_ANDROID_16KB_PASS),
   'Missing Android 16 KB page-size proof: PHASE9_ANDROID_16KB_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE9_IOS_PRIVACY_REPORT_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_IOS_PRIVACY_REPORT_PASS),
   'Missing iOS privacy report/privacy manifest evidence: PHASE9_IOS_PRIVACY_REPORT_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE9_APP_STORE_PACKET_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_APP_STORE_PACKET_PASS),
   'Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true.',
 );
 warn(
   warnings,
-  env.PHASE9_PLAY_PACKET_PASS === 'true',
+  evidenceFlagEnabled(env.PHASE9_PLAY_PACKET_PASS),
   'Missing Google Play review packet evidence: PHASE9_PLAY_PACKET_PASS=true.',
 );
 

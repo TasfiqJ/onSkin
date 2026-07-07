@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the remaining Phase 9/10 evidence sub-gates so RLS, Edge auth,
+  data export/delete, consent withdrawal, observability payload, dependency
+  audit, store-build, and beta analytics proof flags all share the normalized
+  evidence parser: whitespace/case are tolerated, but only `true` passes.
+  Added `phase9:evidence-normalization-smoke`, wired it into Phase 9/10
+  verification, and re-ran `phase9:verify` plus `phase10:verify` successfully.
+
 - Hardened Phase 6 payments evidence gates so RevenueCat, restore, webhook, and
   finance proof flags are trimmed/case-normalized while only `true` passes, and
   placeholder signoffs such as `Tester Name` or `example.com` emails no longer

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { block, printResult, read, warn } from './lib.mjs';
+import { block, evidenceFlagEnabled, printResult, read, warn } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -486,6 +486,6 @@ block(
   'Live order-report-poll harness must not read/send the real scheduler secret and must support activated-env expectations.',
 );
 
-warn(warnings, process.env.PHASE9_EDGE_AUTH_PASS === 'true', 'Missing live Edge auth negative-test evidence: PHASE9_EDGE_AUTH_PASS=true.');
+warn(warnings, evidenceFlagEnabled(process.env.PHASE9_EDGE_AUTH_PASS), 'Missing live Edge auth negative-test evidence: PHASE9_EDGE_AUTH_PASS=true.');
 
 printResult('Phase 9 Edge auth smoke', errors, warnings);

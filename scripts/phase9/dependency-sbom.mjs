@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { block, command, envSnapshot, exists, markdownList, printResult, read, warn, write } from './lib.mjs';
+import { block, command, envSnapshot, evidenceFlagEnabled, exists, markdownList, printResult, read, warn, write } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -126,7 +126,7 @@ const markdownCell = (value) => {
   return text.replace(/\|/g, '\\|') || '-';
 };
 
-warn(warnings, env.PHASE9_DEPENDENCY_AUDIT_PASS === 'true', 'Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.');
+warn(warnings, evidenceFlagEnabled(env.PHASE9_DEPENDENCY_AUDIT_PASS), 'Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.');
 
 const packet = {
   generatedAt: new Date().toISOString(),

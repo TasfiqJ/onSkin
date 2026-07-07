@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { block, has, printResult, read, warn } from './lib.mjs';
+import { block, evidenceFlagEnabled, has, printResult, read, warn } from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -243,6 +243,6 @@ block(
 const migrationText = read('supabase/migrations/20260614000026_phase4_catalog.sql');
 warn(warnings, /obf_contribution_queue[\s\S]*on delete set null/.test(migrationText), 'OBF contribution queue user link is not documented as set-null on account deletion.');
 
-warn(warnings, process.env.PHASE9_DATA_EXPORT_DELETE_PASS === 'true', 'Missing live data export/delete evidence: PHASE9_DATA_EXPORT_DELETE_PASS=true.');
+warn(warnings, evidenceFlagEnabled(process.env.PHASE9_DATA_EXPORT_DELETE_PASS), 'Missing live data export/delete evidence: PHASE9_DATA_EXPORT_DELETE_PASS=true.');
 
 printResult('Phase 9 data rights smoke', errors, warnings);
