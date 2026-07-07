@@ -6,11 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the neutral age-gate pass flag so known legacy boolean strings migrate
+  to canonical encrypted values while malformed local private records are
+  rewritten to a failed gate. Failed repair writes no longer override the
+  locally read pass/fail decision, and the store still persists only the pass
+  flag, never the date of birth, preserving the docs/01 data-minimization
+  posture.
+
 - Hardened biometric app-lock preference storage so known legacy boolean strings
   migrate to canonical encrypted values and malformed local private records are
   rewritten to the disabled state instead of being re-read indefinitely. Focused
-  app-lock/private-KV tests cover migration, malformed values, read failures, and
-  existing authentication/privacy-shield behavior.
+  app-lock/private-KV tests cover migration, malformed values, repair-write
+  failures, read failures, and existing authentication/privacy-shield behavior.
 
 - Hardened first-use Progress photo consent so the local-only privacy promise
   also states the backup-off tradeoff before capture. The visible gate and

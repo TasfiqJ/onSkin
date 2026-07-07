@@ -5,9 +5,34 @@ import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 // of the app-lock store convention (lib/applock/store.ts).
 const KEY = 'onskin.ageVerified';
 
+async function repairStoredValue(value: '0' | '1'): Promise<void> {
+  try {
+    await setPrivateItem(KEY, value);
+  } catch {
+    // Keep the locally read age-gate decision authoritative if repair is unavailable.
+  }
+}
+
+async function normalizeStoredValue(value: string): Promise<boolean> {
+  const normalized = value.trim().toLowerCase();
+  if (normalized === '1' || normalized === 'true') {
+    if (value !== '1') await repairStoredValue('1');
+    return true;
+  }
+  if (normalized === '0' || normalized === 'false') {
+    if (value !== '0') await repairStoredValue('0');
+    return false;
+  }
+
+  await repairStoredValue('0');
+  return false;
+}
+
 export async function getAgeVerified(): Promise<boolean> {
   try {
-    return (await getPrivateItem(KEY)) === '1';
+    const value = await getPrivateItem(KEY);
+    if (value == null) return false;
+    return normalizeStoredValue(value);
   } catch {
     return false;
   }

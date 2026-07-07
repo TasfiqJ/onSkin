@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppLockEnabled, setAppLockEnabledStored } from './store';
+import { getAgeVerified, setAgeVerified } from './ageGateStore';
 
 const mocks = vi.hoisted(() => ({
   privateKV: new Map<string, string>(),
@@ -13,66 +13,65 @@ vi.mock('@/lib/storage/privateKV', () => ({
   }),
 }));
 
-const KEY = 'onskin.appLock.enabled';
+const KEY = 'onskin.ageVerified';
 
-describe('app lock preference storage', () => {
+describe('age-gate local pass flag', () => {
   beforeEach(() => {
     mocks.privateKV.clear();
     vi.clearAllMocks();
   });
 
-  it('roundtrips the stored app-lock setting', async () => {
-    await setAppLockEnabledStored(true);
-    await expect(getAppLockEnabled()).resolves.toBe(true);
+  it('stores a minimized pass flag without birth-date data', async () => {
+    await setAgeVerified();
 
-    await setAppLockEnabledStored(false);
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(getAgeVerified()).resolves.toBe(true);
+    expect(mocks.privateKV.get(KEY)).toBe('1');
   });
 
   it('migrates known legacy boolean strings to canonical values', async () => {
     mocks.privateKV.set(KEY, 'true');
-    await expect(getAppLockEnabled()).resolves.toBe(true);
+    await expect(getAgeVerified()).resolves.toBe(true);
     expect(mocks.privateKV.get(KEY)).toBe('1');
 
     mocks.privateKV.set(KEY, 'FALSE');
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(getAgeVerified()).resolves.toBe(false);
     expect(mocks.privateKV.get(KEY)).toBe('0');
   });
 
-  it('clears malformed stored values to the disabled state', async () => {
-    mocks.privateKV.set(KEY, 'enabled');
+  it('rewrites malformed stored values to a failed age gate', async () => {
+    mocks.privateKV.set(KEY, 'verified');
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(getAgeVerified()).resolves.toBe(false);
     expect(mocks.privateKV.get(KEY)).toBe('0');
   });
 
-  it('keeps a legacy enabled value active if canonical repair fails', async () => {
+  it('keeps a legacy passed gate active if canonical repair fails', async () => {
     const privateKV = await import('@/lib/storage/privateKV');
     mocks.privateKV.set(KEY, 'true');
     vi.mocked(privateKV.setPrivateItem).mockRejectedValueOnce(
       new Error('encrypted preference write unavailable'),
     );
 
-    await expect(getAppLockEnabled()).resolves.toBe(true);
+    await expect(getAgeVerified()).resolves.toBe(true);
     expect(mocks.privateKV.get(KEY)).toBe('true');
   });
 
-  it('still returns disabled for malformed values if cleanup repair fails', async () => {
+  it('still fails closed for malformed values if cleanup repair fails', async () => {
     const privateKV = await import('@/lib/storage/privateKV');
-    mocks.privateKV.set(KEY, 'enabled');
+    mocks.privateKV.set(KEY, 'verified');
     vi.mocked(privateKV.setPrivateItem).mockRejectedValueOnce(
       new Error('encrypted preference write unavailable'),
     );
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('enabled');
+    await expect(getAgeVerified()).resolves.toBe(false);
+    expect(mocks.privateKV.get(KEY)).toBe('verified');
   });
 
-  it('fails open without rewriting when private storage cannot be read', async () => {
+  it('fails closed without rewriting when private storage cannot be read', async () => {
     const privateKV = await import('@/lib/storage/privateKV');
     vi.mocked(privateKV.getPrivateItem).mockRejectedValueOnce(new Error('private kv unavailable'));
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(getAgeVerified()).resolves.toBe(false);
     expect(mocks.privateKV.get(KEY)).toBeUndefined();
   });
 });

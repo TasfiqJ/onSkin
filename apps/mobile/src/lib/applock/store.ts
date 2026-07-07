@@ -4,18 +4,26 @@ import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 // the lock state itself is in-memory in AppLockProvider.
 const KEY = 'onskin.appLock.enabled';
 
+async function repairStoredValue(value: '0' | '1'): Promise<void> {
+  try {
+    await setPrivateItem(KEY, value);
+  } catch {
+    // Keep reads authoritative even when encrypted preference repair is unavailable.
+  }
+}
+
 async function normalizeStoredValue(value: string): Promise<boolean> {
   const normalized = value.trim().toLowerCase();
   if (normalized === '1' || normalized === 'true') {
-    if (value !== '1') await setPrivateItem(KEY, '1');
+    if (value !== '1') await repairStoredValue('1');
     return true;
   }
   if (normalized === '0' || normalized === 'false') {
-    if (value !== '0') await setPrivateItem(KEY, '0');
+    if (value !== '0') await repairStoredValue('0');
     return false;
   }
 
-  await setPrivateItem(KEY, '0');
+  await repairStoredValue('0');
   return false;
 }
 
