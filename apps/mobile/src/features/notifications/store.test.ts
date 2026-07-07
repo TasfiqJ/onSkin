@@ -44,6 +44,57 @@ describe('notification lock-screen privacy preference', () => {
     await expect(loadNotifPrefs()).resolves.toMatchObject({ lockscreenDiscreet: true });
   });
 
+  it('removes unreadable local prefs and falls back to defaults', async () => {
+    mocks.storage.set(KEY, '{not-json');
+
+    await expect(loadNotifPrefs()).resolves.toEqual(DEFAULT_PREFS);
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('removes wrong-shaped local prefs and falls back to defaults', async () => {
+    mocks.storage.set(KEY, JSON.stringify(['amEnabled']));
+
+    await expect(loadNotifPrefs()).resolves.toEqual(DEFAULT_PREFS);
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('normalizes stored booleans and reminder times before scheduling reads them', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        amEnabled: 'yes',
+        pmEnabled: false,
+        amTime: ' 08:15 ',
+        pmTime: '99:99',
+        quietStart: null,
+        quietEnd: ' 06:30 ',
+        liveActivityEnabled: true,
+        promotionalOptIn: 'true',
+        lockscreenDiscreet: false,
+      }),
+    );
+
+    await expect(loadNotifPrefs()).resolves.toMatchObject({
+      amEnabled: true,
+      pmEnabled: false,
+      amTime: '08:15',
+      pmTime: DEFAULT_PREFS.pmTime,
+      quietStart: null,
+      quietEnd: '06:30',
+      liveActivityEnabled: true,
+      promotionalOptIn: false,
+      lockscreenDiscreet: true,
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      amTime: '08:15',
+      pmTime: DEFAULT_PREFS.pmTime,
+      quietEnd: '06:30',
+      lockscreenDiscreet: true,
+    });
+  });
+
   it('refuses to persist or mirror a false lock-screen discretion value', async () => {
     const prefs = await saveNotifPrefs({ amEnabled: false, lockscreenDiscreet: false });
     await Promise.resolve();

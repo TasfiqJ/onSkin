@@ -11,6 +11,7 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
  * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
  */
 const KEY = 'onskin.notifPrefs.v1';
+const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 export type NotifPrefs = {
   amEnabled: boolean;
@@ -42,20 +43,76 @@ export const DEFAULT_PREFS: NotifPrefs = {
   lockscreenDiscreet: true,
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function booleanOr(value: unknown, fallback: boolean): boolean {
+  return typeof value === 'boolean' ? value : fallback;
+}
+
+function timeOr(value: unknown, fallback: string): string {
+  if (typeof value !== 'string') return fallback;
+  const text = value.trim();
+  return HH_MM.test(text) ? text : fallback;
+}
+
+function optionalTimeOr(
+  source: Record<string, unknown>,
+  key: keyof Pick<NotifPrefs, 'quietStart' | 'quietEnd'>,
+  fallback: string | null,
+): string | null {
+  if (!(key in source)) return fallback;
+  const value = source[key];
+  if (value === null) return null;
+  if (typeof value !== 'string') return fallback;
+  const text = value.trim();
+  return HH_MM.test(text) ? text : fallback;
+}
+
 export function normalizeNotifPatch(patch: Partial<NotifPrefs>): Partial<NotifPrefs> {
   return patch.lockscreenDiscreet === false ? { ...patch, lockscreenDiscreet: true } : patch;
 }
 
 export function normalizeNotifPrefs(prefs: Partial<NotifPrefs> = {}): NotifPrefs {
-  return { ...DEFAULT_PREFS, ...prefs, lockscreenDiscreet: true };
+  const source = isRecord(prefs) ? prefs : {};
+  return {
+    amEnabled: booleanOr(source.amEnabled, DEFAULT_PREFS.amEnabled),
+    pmEnabled: booleanOr(source.pmEnabled, DEFAULT_PREFS.pmEnabled),
+    amTime: timeOr(source.amTime, DEFAULT_PREFS.amTime),
+    pmTime: timeOr(source.pmTime, DEFAULT_PREFS.pmTime),
+    streakNudges: booleanOr(source.streakNudges, DEFAULT_PREFS.streakNudges),
+    replenishmentAlerts: booleanOr(source.replenishmentAlerts, DEFAULT_PREFS.replenishmentAlerts),
+    captureReminders: booleanOr(source.captureReminders, DEFAULT_PREFS.captureReminders),
+    quietStart: optionalTimeOr(source, 'quietStart', DEFAULT_PREFS.quietStart),
+    quietEnd: optionalTimeOr(source, 'quietEnd', DEFAULT_PREFS.quietEnd),
+    liveActivityEnabled: booleanOr(source.liveActivityEnabled, DEFAULT_PREFS.liveActivityEnabled),
+    promotionalOptIn: booleanOr(source.promotionalOptIn, DEFAULT_PREFS.promotionalOptIn),
+    lockscreenDiscreet: true,
+  };
 }
 
 export async function loadNotifPrefs(): Promise<NotifPrefs> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(KEY);
-    if (!raw) return DEFAULT_PREFS;
-    return normalizeNotifPrefs(JSON.parse(raw) as Partial<NotifPrefs>);
+    raw = await getPrivateItem(KEY);
   } catch {
+    return DEFAULT_PREFS;
+  }
+  if (!raw) return DEFAULT_PREFS;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!isRecord(parsed)) {
+      await removePrivateItem(KEY).catch(() => undefined);
+      return DEFAULT_PREFS;
+    }
+    const normalized = normalizeNotifPrefs(parsed);
+    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+      await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+    }
+    return normalized;
+  } catch {
+    await removePrivateItem(KEY).catch(() => undefined);
     return DEFAULT_PREFS;
   }
 }

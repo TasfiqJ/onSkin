@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened notification preference and sent-ledger storage so unreadable local
+  JSON is removed, invalid reminder times/booleans fall back to safe defaults,
+  lock-screen discretion remains forced on, and behavioural notification caps
+  only count valid notification kinds with finite, non-future timestamps.
+
 - Hardened local onboarding gate state. Health-data consent records now remove
   unreadable or malformed local JSON, and the skin-profile completion gate now
   validates quiz result shape, approved goals, and completion timestamps before
