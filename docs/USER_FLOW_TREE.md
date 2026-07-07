@@ -456,12 +456,14 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes, after native harness is selected.
 - Surface: iOS and Android; Expo web for consent-copy and layout route checks.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/progress/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/progress-current-compact-check/`
 
 ### Path A: Happy Path
 
 1. Action: Open Progress, add or view a progress photo using safe local fixture behavior.
    Expected result: The photo flow is clear, private by default, and does not imply diagnosis or guaranteed improvement. When the comparison surface is populated, the Photo CTA, Compare/Timeline tabs, No scores link, Side-by-side toggle, and date-change chips meet the 44 pt phone touch target without clipping on small phones.
    Evidence: Screenshots or simulator video.
+   Current local evidence: 2026-07-07 Expo web 320 x 568 covers the first-photo entry and non-destructive capture-consent branch: `/progress` shows a 56 px `Take my first photo` CTA with zero horizontal overflow, `/progress/capture` shows complete local-only consent copy plus 52 px `Take photos. On device only` and 48 px `Not now` controls, and `Not now` returns to `/progress`.
 
 ### Branches
 

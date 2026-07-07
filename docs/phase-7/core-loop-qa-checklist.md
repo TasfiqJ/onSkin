@@ -135,3 +135,10 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   route contract, full typecheck, lint, and test suite passed. Evidence is in
   `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/`. Native
   iOS/Android rendering still needs device QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers the Progress first-photo
+  non-destructive branch: open `/progress`, tap `Take my first photo`, verify
+  `/progress/capture` local-only consent copy and 48 px+ visible controls, tap
+  `Not now`, and confirm `/progress` returns with zero horizontal overflow.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-current-compact-check/`; it does
+  not replace native camera/capture QA.
