@@ -2339,6 +2339,12 @@ and legacy-brand casing variants in catalog source identity values. Added Phase 
 cases, and wired the Phase 4 smoke into `phase4:verify`. The real final policy URLs, catalog attribution URL, source
 contact email, and app/source identity values remain external blockers for Tas.
 
+### Supabase RLS smoke env guard hardening (2026-07-07)
+
+Hardened `phase2:rls-smoke` so Supabase URL/key placeholders are rejected case-insensitively before any live client work
+can start. The Phase 2 smoke runner now covers this with cased Supabase placeholders in an isolated no-network failure
+case. Real staging/production RLS evidence remains blocked on Tas-created Supabase projects and credentials.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const checkEnvPath = resolve(scriptDir, 'check-env.mjs');
+const rlsSmokePath = resolve(scriptDir, 'supabase-rls-smoke.mjs');
 
 const passthroughKeys = [
   'ComSpec',
@@ -106,6 +107,19 @@ function runCheck(extraEnv) {
   }
 }
 
+function runRlsSmoke(extraEnv) {
+  const cwd = mkdtempSync(join(tmpdir(), 'routinekind-phase2-rls-smoke-'));
+  try {
+    return spawnSync(process.execPath, [rlsSmokePath], {
+      cwd,
+      encoding: 'utf8',
+      env: { ...processBaseEnv, ...extraEnv },
+    });
+  } finally {
+    rmSync(cwd, { force: true, recursive: true });
+  }
+}
+
 const cases = [
   {
     name: 'staging strict env passes when final native identity is explicit',
@@ -187,6 +201,21 @@ const cases = [
     }),
     expect(result) {
       return result.status === 0 && /Phase 2 env contract is complete/.test(result.stdout);
+    },
+  },
+  {
+    name: 'RLS smoke rejects cased Supabase placeholders before live connections',
+    result: runRlsSmoke({
+      EXPO_PUBLIC_SUPABASE_URL: 'https://your-project-ref.supabase.co',
+      EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_XXXXXXXX',
+      SUPABASE_SECRET_KEY: 'sb_secret_XXXXXXXX',
+      EXPO_PUBLIC_APP_ENV: 'staging',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_SUPABASE_URL is missing or still a placeholder/.test(result.stderr)
+      );
     },
   },
 ];

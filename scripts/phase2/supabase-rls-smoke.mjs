@@ -58,8 +58,17 @@ function redactedErrorKind(error) {
   return typeof error;
 }
 
+function placeholder(value) {
+  return (
+    !value ||
+    /YOUR-|YOUR_|replace-with|xxxxxxxx|example\.com|\.\.\.|__BLOCKED_PLACEHOLDER__/i.test(
+      String(value),
+    )
+  );
+}
+
 function assertEnv(name, value) {
-  assert(value && !value.includes('YOUR-') && !value.includes('xxxxxxxx'), `${name} is missing or still a placeholder`);
+  assert(!placeholder(value), `${name} is missing or still a placeholder`);
 }
 
 assertEnv('EXPO_PUBLIC_SUPABASE_URL', supabaseUrl);
