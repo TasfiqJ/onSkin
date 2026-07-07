@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added the missing privacy-safe routine-depth analytics from docs/03 / docs/05
+  where the local actions already exist: routine reorder moves emit
+  `step_reordered` and `routine_edited`, ramp offers/acceptance emit
+  `ramp_step_up_offered` / `ramp_step_up_accepted`, and conflict decisions emit
+  `conflict_resolution_chosen` plus `conflict_overridden` only for the
+  use-together override. Payloads stay bucket-only with no product, rule, or
+  step identifiers.
+
+- Kept the For You recommendation hub intro readable on phone-width web by
+  extracting a reusable intro block and splitting the disclosure subtitle at the
+  comma instead of relying on a cramped single line. Focused route contracts and
+  Expo web human-simulated E2E at 320 x 568 and 390 x 844 pass, including
+  Preferences navigation and return. Evidence is in
+  `test-results/human-e2e/2026-07-07/recommendations-hub-intro-final/`.
+
 - Clarified the routine reorder launch gate after the docs/03 / blockers pass.
   The route comment and route-contract test now make the V1 behavior explicit:
   tap a step, use `Earlier` / `Later`, and show a non-blocking sequencing nudge.

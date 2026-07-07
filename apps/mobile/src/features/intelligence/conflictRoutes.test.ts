@@ -53,6 +53,17 @@ describe('Conflict route contracts', () => {
     expect(source).not.toContain('shippableRules(');
   });
 
+  it('tracks conflict choices without sending rule or product identifiers', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain("track('conflict_resolution_chosen', { action, source: 'detail' })");
+    expect(source).toContain("track('conflict_overridden', { source: 'detail' })");
+    expect(source).not.toContain("track('conflict_resolution_chosen', { rule");
+    expect(source).not.toContain("track('conflict_overridden', { rule");
+    expect(source).not.toContain("track('conflict_resolution_chosen', { product");
+    expect(source).not.toContain("track('conflict_overridden', { product");
+  });
+
   it('keeps dense conflict sheets scrollable and actions touchable on short phones', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 

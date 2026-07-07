@@ -47,6 +47,17 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain("flexShrink: 0, textAlign: 'right'");
   });
 
+  it('keeps the For You hub heading readable on phone-width web', () => {
+    const source = readAppRoute('recommendations/index.tsx');
+
+    expect(source).toContain('function HubIntro()');
+    expect(source).toContain('accessibilityRole="header"');
+    expect(source).toContain("style={{ alignSelf: 'flex-start' }}");
+    expect(source).toContain("REC_COPY.hub.subtitle.split(', ')");
+    expect(source).toContain('contentContainerClassName="pb-10 pt-5"');
+    expect(source).toContain('<HubIntro />');
+  });
+
   it('keeps recommendation preferences fail-closed on local save failure', () => {
     const source = readAppRoute('recommendations/preferences.tsx');
 

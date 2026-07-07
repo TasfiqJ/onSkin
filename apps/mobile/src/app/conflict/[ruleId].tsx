@@ -23,6 +23,7 @@ import {
 } from '@/features/subscription/conflictQuota';
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
+import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
@@ -133,6 +134,9 @@ function CheckGlyph({ color, size = 22 }: { color: string; size?: number }) {
 async function recordChoice(c: DetectedConflict, choice: 'keep' | 'use_together') {
   // Local-first so the choice sticks offline and the app stops re-nagging
   // immediately (docs/03 §7); the server mirror below is best-effort.
+  const action = choice === 'use_together' ? 'use_together' : 'keep_alternate_nights';
+  track('conflict_resolution_chosen', { action, source: 'detail' });
+  if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
   await setConflictOverride(conflictKey(c), choice === 'use_together');
   try {
     const { data } = await supabase.auth.getUser();

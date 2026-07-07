@@ -1,13 +1,15 @@
 import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { useRamp } from '@/features/routine/useRamp';
+import { track } from '@/lib/analytics/track';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// 03 · Retinoid ramp. Offer-only step-up (design screen 03, docs/03 §4). The app only
-// ever OFFERS a step-up (never auto-escalates) and de-escalates on reported irritation.
+// Retinoid ramp offer flow (docs/03 section 4). The app only ever offers a
+// step-up, never auto-escalates, and de-escalates on reported irritation.
 // Now driven by the persisted ramp state (useRamp): the target, the offer gate
 // (shouldOfferStepUp), and the accept action are real; the chart is the design's
 // illustrative nights-per-week ramp.
@@ -25,6 +27,10 @@ export default function RampScreen() {
   const item = items[0] ?? null;
   const state = item?.state ?? null;
   const paused = state?.toleranceState === 'paused_irritation';
+
+  useEffect(() => {
+    if (item?.offerStepUp) track('ramp_step_up_offered', { source: 'routine_ramp' });
+  }, [item?.offerStepUp, item?.productId]);
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -117,6 +123,7 @@ export default function RampScreen() {
                     className="h-[46px] flex-1 items-center justify-center rounded-xl"
                     style={{ backgroundColor: colors.clay }}
                     onPress={async () => {
+                      track('ramp_step_up_accepted', { source: 'routine_ramp' });
                       await acceptStepUp(item.productId);
                       backOrReplace(router);
                     }}

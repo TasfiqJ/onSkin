@@ -187,6 +187,29 @@ function YoureSet() {
   );
 }
 
+function HubIntro() {
+  const [subtitleLead, ...subtitleRest] = REC_COPY.hub.subtitle.split(', ');
+  const subtitleTail = subtitleRest.join(', ');
+
+  return (
+    <View className="mt-3">
+      <Text variant="title" accessibilityRole="header" style={{ alignSelf: 'flex-start' }}>
+        {REC_COPY.hub.title}
+      </Text>
+      <View className="mt-1">
+        <Text variant="bodySm" tone="muted" style={{ alignSelf: 'flex-start' }}>
+          {subtitleTail ? `${subtitleLead},` : REC_COPY.hub.subtitle}
+        </Text>
+        {subtitleTail ? (
+          <Text variant="bodySm" tone="muted" style={{ alignSelf: 'flex-start' }}>
+            {subtitleTail}
+          </Text>
+        ) : null}
+      </View>
+    </View>
+  );
+}
+
 export default function ForYouScreen() {
   const { result, isLoading } = useRecommendations();
   const groups = grouped(result.recommendations);
@@ -215,12 +238,7 @@ export default function ForYouScreen() {
         </Pressable>
       </View>
 
-      <Text variant="title" className="mt-3">
-        {REC_COPY.hub.title}
-      </Text>
-      <Text variant="bodySm" tone="muted" className="mt-1">
-        {REC_COPY.hub.subtitle}
-      </Text>
+      <HubIntro />
 
       {isLoading ? (
         <View className="flex-1 items-center justify-center">

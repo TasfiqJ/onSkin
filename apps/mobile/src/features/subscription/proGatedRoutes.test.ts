@@ -168,7 +168,15 @@ describe('Pro-gated route contracts', () => {
     expect(reorder).not.toContain('Vitamin C serum');
     expect(reorder).toContain('Tap a step, then move it earlier or later.');
     expect(reorder).toContain('Full drag gestures are deferred');
+    expect(reorder).toContain("track('step_reordered'");
+    expect(reorder).toContain("track('routine_edited'");
     expect(reorder).not.toContain('Drag reorder');
+
+    const ramp = readAppRoute('routine/ramp.tsx');
+    expect(ramp).toContain("track('ramp_step_up_offered'");
+    expect(ramp).toContain("track('ramp_step_up_accepted'");
+    expect(ramp).not.toContain("track('ramp_step_up_offered', { productId");
+    expect(ramp).not.toContain("track('ramp_step_up_accepted', { productId");
 
     expect(adaptation).toContain('ScrollView');
   });

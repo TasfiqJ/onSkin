@@ -4,6 +4,7 @@ import { Platform, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { usePlan } from '@/features/routine/usePlan';
+import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -69,6 +70,7 @@ function ReorderEditor({
     if (selectedIndex == null) return;
     const nextIndex = selectedIndex + direction;
     if (nextIndex < 0 || nextIndex >= order.length) return;
+    const source = isExample ? 'example' : 'routine_reorder';
 
     setOrder((current) => {
       const next = [...current];
@@ -79,6 +81,8 @@ function ReorderEditor({
     });
     setSelectedIndex(nextIndex);
     setNudgeDismissed(false);
+    track('step_reordered', { action: direction < 0 ? 'earlier' : 'later', source });
+    track('routine_edited', { action: 'reordered', source });
   }
 
   return (

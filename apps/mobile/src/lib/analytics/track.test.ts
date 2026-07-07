@@ -132,6 +132,14 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('product_add_started')).toBe('product_add_started');
     expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
     expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
+    expect(sanitizeAnalyticsEventName('routine_edited')).toBe('routine_edited');
+    expect(sanitizeAnalyticsEventName('step_reordered')).toBe('step_reordered');
+    expect(sanitizeAnalyticsEventName('ramp_step_up_offered')).toBe('ramp_step_up_offered');
+    expect(sanitizeAnalyticsEventName('ramp_step_up_accepted')).toBe('ramp_step_up_accepted');
+    expect(sanitizeAnalyticsEventName('conflict_resolution_chosen')).toBe(
+      'conflict_resolution_chosen',
+    );
+    expect(sanitizeAnalyticsEventName('conflict_overridden')).toBe('conflict_overridden');
     expect(sanitizeAnalyticsEventName('routine_checkoff_completed')).toBe(
       'routine_checkoff_completed',
     );
@@ -143,13 +151,14 @@ describe('analytics sanitizer', () => {
     expect(
       sanitizeAnalyticsProps({
         source: 'routine_plan',
+        action: 'reordered',
         count: 3,
         moment: 'pm',
         rule_id: '00000000-0000-4000-8000-000000000001',
         product_name: 'Retinol 0.3%',
         goal: 'barrier_repair',
       }),
-    ).toEqual({ source: 'routine_plan', count: 3, moment: 'pm' });
+    ).toEqual({ source: 'routine_plan', action: 'reordered', count: 3, moment: 'pm' });
   });
 
   it('drops unapproved or user-derived event names', () => {
