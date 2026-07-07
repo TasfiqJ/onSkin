@@ -149,6 +149,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Enter an impossible date such as February 30, a future date, and a valid DOB below the minimum age.
   - Expected result: Impossible or future dates keep Continue disabled with clear recovery copy; valid underage DOBs block progression with compliant age copy.
   - Evidence: Screenshot and reproduction notes.
+- Branch: age-gate privacy copy punctuation
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/onboarding/age` on a compact phone viewport and inspect the age-gate privacy sentence.
+  - Expected result: The copy says `We don't store your birth date.` with no mojibake punctuation, no clipped text, and the date fields plus Continue action remain visible and usable.
+  - Evidence: Screenshot and text snapshot.
 - Branch: consent declined
   - Priority: Critical
   - Automate later: Yes

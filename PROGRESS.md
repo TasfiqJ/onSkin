@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed mojibake punctuation on the first-run age gate. The DOB screen now shows
+  `We don't store your birth date.` instead of a broken apostrophe sequence.
+  Added a route-contract regression and reran human-simulated Expo web E2E at
+  320 x 568 through the initial, impossible-date, and underage states, with
+  evidence in
+  `test-results/human-e2e/2026-07-07/onboarding-age-gate-copy-fix/`.
+
+- Aligned Shelf scan analytics with the master-plan/docs/04 activation funnel.
+  Valid barcode scans now emit the privacy-safe `barcode_scanned` event, exact
+  catalog matches emit `scan_matched`, true no-matches emit `scan_no_match`, and
+  ambiguous or offline outcomes stay as bucketed scan results instead of being
+  over-counted. Raw barcodes and product IDs remain out of analytics payloads.
+  This was non-UI instrumentation hardening, so human E2E was not required.
+
 - Hardened the Smart Shelf local store so direct product update patches are
   normalized before persistence. Malformed lifecycle/status/PAO/opened-date
   values now write back as clean shelf rows instead of relying on the next read

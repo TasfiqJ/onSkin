@@ -109,8 +109,8 @@ export default function AgeGateScreen() {
           </Text>
         </Text>
         <Text variant="body" tone="muted" className="mt-3">
-          {BRAND.appName} handles skin-health information, so we confirm your age before we begin.
-          We don’t store your birth date.
+          {BRAND.appName} handles skin-health information, so we confirm your age before we begin.{' '}
+          {"We don't store your birth date."}
         </Text>
 
         <View className="mt-8 flex-row gap-3">

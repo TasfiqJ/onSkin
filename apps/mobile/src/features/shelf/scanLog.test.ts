@@ -62,18 +62,23 @@ describe('shelf scan intake log', () => {
     expect(shelfScanResultFromLookup('lookup_error')).toBe('offline_queued');
   });
 
-  it('records a matched scan without leaking the barcode to analytics', async () => {
+  it('records a matched scan with master-plan funnel events and no barcode analytics leak', async () => {
     await recordShelfScan({
       barcode: ' 1234567890123 ',
       result: 'matched',
       matchedProductId: 'product-1',
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('product_scanned', {
+    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
       source: 'scan',
       matched: true,
       result: 'matched',
     });
+    expect(mocks.track).toHaveBeenCalledWith('scan_matched', {
+      source: 'scan',
+      result: 'matched',
+    });
+    expect(mocks.track).not.toHaveBeenCalledWith('product_scanned', expect.anything());
     expect(mocks.from).toHaveBeenCalledWith('shelf_scans');
     expect(mocks.insert).toHaveBeenCalledWith({
       user_id: 'user-1',
@@ -92,9 +97,13 @@ describe('shelf scan intake log', () => {
       result: 'no_match',
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('product_scanned', {
+    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
       source: 'scan',
       matched: false,
+      result: 'no_match',
+    });
+    expect(mocks.track).toHaveBeenCalledWith('scan_no_match', {
+      source: 'scan',
       result: 'no_match',
     });
     expect(mocks.getUser).not.toHaveBeenCalled();
@@ -109,11 +118,29 @@ describe('shelf scan intake log', () => {
       result: 'offline_queued',
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('product_scanned', {
+    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
       source: 'scan',
       matched: false,
       result: 'offline_queued',
     });
+    expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
+    expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
     expect(mocks.insert).not.toHaveBeenCalled();
+  });
+
+  it('does not over-count ambiguous external candidates as matches or no-matches', async () => {
+    await recordShelfScan({
+      barcode: '1234567890123',
+      result: 'ambiguous',
+      matchedProductId: 'external-product',
+    });
+
+    expect(mocks.track).toHaveBeenCalledWith('barcode_scanned', {
+      source: 'scan',
+      matched: false,
+      result: 'ambiguous',
+    });
+    expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
+    expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
   });
 });

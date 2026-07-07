@@ -9,6 +9,14 @@ function readAppRoute(path: string): string {
 }
 
 describe('onboarding route contracts', () => {
+  it('keeps first-run age gate copy free of mojibake punctuation', () => {
+    const source = readAppRoute('onboarding/age.tsx');
+
+    expect(source).toContain("We don't store your birth date.");
+    expect(source).not.toContain('donâ');
+    expect(source).not.toContain('â€™');
+  });
+
   it('keeps onboarding chip and product-remove controls touchable on phones', () => {
     const quiz = readAppRoute('onboarding/quiz.tsx');
     const products = readAppRoute('onboarding/products.tsx');

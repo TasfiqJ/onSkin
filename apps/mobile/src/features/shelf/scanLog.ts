@@ -23,6 +23,19 @@ export function shelfScanResultFromLookup(result: ShelfScanLookupResult): ShelfS
   }
 }
 
+function trackScanFunnel(result: ShelfScanResult): void {
+  track('barcode_scanned', {
+    source: 'scan',
+    matched: result === 'matched',
+    result,
+  });
+  if (result === 'matched') {
+    track('scan_matched', { source: 'scan', result });
+  } else if (result === 'no_match') {
+    track('scan_no_match', { source: 'scan', result });
+  }
+}
+
 export async function recordShelfScan(input: {
   barcode: string;
   result: ShelfScanResult;
@@ -32,11 +45,7 @@ export async function recordShelfScan(input: {
   const barcode = input.barcode.trim();
   if (!barcode) return;
 
-  track('product_scanned', {
-    source: 'scan',
-    matched: input.result === 'matched',
-    result: input.result,
-  });
+  trackScanFunnel(input.result);
 
   if (!isSupabaseConfigured) return;
 

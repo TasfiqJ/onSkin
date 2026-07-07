@@ -108,8 +108,10 @@ describe('analytics sanitizer', () => {
     });
   });
 
-  it('allows the privacy-safe scan activation event and metadata buckets', () => {
-    expect(sanitizeAnalyticsEventName('product_scanned')).toBe('product_scanned');
+  it('allows the privacy-safe scan activation events and metadata buckets', () => {
+    expect(sanitizeAnalyticsEventName('barcode_scanned')).toBe('barcode_scanned');
+    expect(sanitizeAnalyticsEventName('scan_matched')).toBe('scan_matched');
+    expect(sanitizeAnalyticsEventName('scan_no_match')).toBe('scan_no_match');
     expect(
       sanitizeAnalyticsProps({
         source: 'scan',
