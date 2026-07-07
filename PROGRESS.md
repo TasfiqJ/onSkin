@@ -38,17 +38,6 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; native
   iOS/Android verification remains part of Phase 5 device QA.
 
-- Tightened the compact Today SPF instruction after the check-off evidence
-  screenshot showed the canonical `Always the last morning step...` text
-  truncating in the 320 px routine row. Compact phones now render the equivalent
-  one-line copy `Last step. Reapply later.` while larger layouts keep the full
-  sequencing rule. In-app browser E2E at 320 x 568 verified the new copy, no
-  old long copy, matching text client/scroll width, zero horizontal overflow,
-  and no sub-44 px controls. Evidence is in
-  `test-results/human-e2e/2026-07-07/today-spf-compact-instruction/`, with the
-  tracked report in
-  `docs/e2e-bug-reports/2026-07-07-today-spf-compact-instruction-copy.md`.
-
 - Reworked the compact `/onboarding/products` category picker after the
   phone-width audit showed the horizontal category rail clipping offscreen chips
   and feeling inconsistent with the rest of the mobile shell. Compact phones now
