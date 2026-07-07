@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Shortened the compact Today SPF instruction after the 320 x 568 check-off
+  evidence showed the completed `Mineral SPF 50` row still using the full
+  reapplication sentence while other compact routine rows used concise display
+  copy. Compact phones now render `Last step. Reapply later.` for the SPF
+  instruction without changing the routine step or completion key, and the Today
+  route contract pins the mapping. Expo web evidence confirms the new copy is
+  present, the old copy is absent, horizontal overflow is zero, and visible
+  controls are at least 48 px tall. Evidence is in
+  `test-results/human-e2e/2026-07-07/today-spf-compact-instruction/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-today-spf-compact-instruction-copy.md`.
+
 - Restored the compact `/settings/privacy` direct-entry scroll calibration after
   the current phone-width sweep found the positive privacy nudges had regressed
   to negative values, landing `Withdraw health-data consent` under the floating
@@ -25,6 +37,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   zero horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; native
   iOS/Android verification remains part of Phase 5 device QA.
+
+- Tightened the compact Today SPF instruction after the check-off evidence
+  screenshot showed the canonical `Always the last morning step...` text
+  truncating in the 320 px routine row. Compact phones now render the equivalent
+  one-line copy `Last step. Reapply later.` while larger layouts keep the full
+  sequencing rule. In-app browser E2E at 320 x 568 verified the new copy, no
+  old long copy, matching text client/scroll width, zero horizontal overflow,
+  and no sub-44 px controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/today-spf-compact-instruction/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-today-spf-compact-instruction-copy.md`.
 
 - Reworked the compact `/onboarding/products` category picker after the
   phone-width audit showed the horizontal category rail clipping offscreen chips

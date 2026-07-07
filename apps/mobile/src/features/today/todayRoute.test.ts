@@ -41,6 +41,8 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('function compactRoutineInstruction(instruction: string): string');
     expect(source).toContain("case 'Vitamin C in the morning, under your SPF.':");
     expect(source).toContain("return 'Under your SPF.';");
+    expect(source).toContain("case 'Always the last morning step. Reapply through the day.':");
+    expect(source).toContain("return 'Last step. Reapply later.';");
     expect(source).toContain(
       'const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;',
     );

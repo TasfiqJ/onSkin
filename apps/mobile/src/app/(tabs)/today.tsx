@@ -57,6 +57,8 @@ function compactRoutineInstruction(instruction: string): string {
       return 'Clean base first.';
     case 'Vitamin C in the morning, under your SPF.':
       return 'Under your SPF.';
+    case 'Always the last morning step. Reapply through the day.':
+      return 'Last step. Reapply later.';
     case 'Seal everything in.':
       return 'Seal it in.';
     case 'Apply to dry skin · pea-sized · avoid the eye area.':
