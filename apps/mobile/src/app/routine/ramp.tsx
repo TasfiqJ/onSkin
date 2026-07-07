@@ -120,7 +120,7 @@ export default function RampScreen() {
                 <View className="mt-4 flex-row gap-2.5">
                   <Pressable
                     accessibilityRole="button"
-                    className="h-[46px] flex-1 items-center justify-center rounded-xl"
+                    className="min-h-[48px] flex-1 items-center justify-center rounded-xl"
                     style={{ backgroundColor: colors.clay }}
                     onPress={async () => {
                       track('ramp_step_up_accepted', { source: 'routine_ramp' });
@@ -137,7 +137,7 @@ export default function RampScreen() {
                   </Pressable>
                   <Pressable
                     accessibilityRole="button"
-                    className="h-[46px] flex-1 items-center justify-center rounded-xl"
+                    className="min-h-[48px] flex-1 items-center justify-center rounded-xl"
                     style={{ backgroundColor: 'rgba(250,247,242,0.1)' }}
                     onPress={() => backOrReplace(router)}
                   >

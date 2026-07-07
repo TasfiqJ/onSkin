@@ -107,6 +107,12 @@ describe('Pro-gated route contracts', () => {
     expect(tolerance).not.toContain(
       'className="mb-1 min-h-[44px] min-w-[44px] self-end items-center justify-center px-2"',
     );
+
+    const ramp = readAppRoute('routine/ramp.tsx');
+    expect(ramp, 'routine/ramp.tsx offer actions should stay above compact phone minimums').toContain(
+      'className="min-h-[48px] flex-1 items-center justify-center rounded-xl"',
+    );
+    expect(ramp).not.toContain('className="h-[46px] flex-1 items-center justify-center rounded-xl"');
   });
 
   it('keeps the welcome-back primary action buffered above the phone bottom edge', () => {
