@@ -14,9 +14,29 @@ import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
 const CLOUD_KEY = 'onskin.photos.cloudBackup';
 
+async function repairFlag(key: string, value: '0' | '1'): Promise<void> {
+  try {
+    await setPrivateItem(key, value);
+  } catch {
+    // Consent reads stay fail-closed even if local encrypted flag repair is unavailable.
+  }
+}
+
 async function getFlag(key: string): Promise<boolean> {
   try {
-    return (await getPrivateItem(key)) === '1';
+    const value = await getPrivateItem(key);
+    if (value == null) return false;
+    const normalized = value.trim();
+    if (normalized === '1') {
+      if (value !== '1') await repairFlag(key, '1');
+      return true;
+    }
+    if (normalized === '0') {
+      if (value !== '0') await repairFlag(key, '0');
+      return false;
+    }
+    await repairFlag(key, '0');
+    return false;
   } catch {
     return false;
   }

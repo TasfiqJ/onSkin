@@ -38,15 +38,34 @@ export const SENSITIVE_GROWTH_KEY =
 
 const OPAQUE_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const ATTRIBUTION_VALUE = /^[A-Za-z0-9._~-]{1,120}$/;
+const PUBLIC_HOSTNAME =
+  /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
+const PUBLIC_PATH = /^\/[A-Za-z0-9/_~-]*$/;
 
 export function normalizePublicDomain(domain: string = env.finalBrandDomain): string | null {
-  const normalized = domain
-    .trim()
-    .replace(/^https?:\/\//i, '')
-    .replace(/\/.*$/, '')
-    .toLowerCase();
-  if (!normalized || normalized.includes('example.com') || normalized === 'localhost') return null;
-  return normalized;
+  const trimmed = domain.trim();
+  if (!trimmed) return null;
+
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  let parsed: URL;
+  try {
+    parsed = new URL(candidate);
+  } catch {
+    return null;
+  }
+
+  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+  if (parsed.username || parsed.password || parsed.search || parsed.hash || parsed.port) return null;
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (
+    !PUBLIC_HOSTNAME.test(hostname) ||
+    hostname.includes('example.com') ||
+    hostname === 'localhost'
+  ) {
+    return null;
+  }
+  return hostname;
 }
 
 export function isSafeOpaqueId(value: string): boolean {
@@ -87,6 +106,12 @@ function encodeQuery(params: GrowthAttribution): string {
     .join('&');
 }
 
+function normalizePublicPath(path: string): string | null {
+  const safePath = path.startsWith('/') ? path : `/${path}`;
+  if (safePath.startsWith('//') || !PUBLIC_PATH.test(safePath)) return null;
+  return safePath;
+}
+
 export function buildPublicGrowthUrl(
   path: string,
   attribution: Record<string, unknown>,
@@ -94,7 +119,8 @@ export function buildPublicGrowthUrl(
 ): string | null {
   const domain = normalizePublicDomain(opts.domain ?? env.finalBrandDomain);
   if (!domain) return null;
-  const safePath = path.startsWith('/') ? path : `/${path}`;
+  const safePath = normalizePublicPath(path);
+  if (!safePath) return null;
   const query = encodeQuery(sanitizeAttribution(attribution));
   return `https://${domain}${safePath}${query ? `?${query}` : ''}`;
 }

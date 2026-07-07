@@ -21,6 +21,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
   setPrivateItem: mocks.setPrivateItem,
 }));
 
+const CAPTURE_KEY = 'onskin.photos.captureConsent';
+const CLOUD_KEY = 'onskin.photos.cloudBackup';
+
 describe('photo consent persistence', () => {
   beforeEach(() => {
     mocks.recordConsent.mockReset();
@@ -102,5 +105,26 @@ describe('photo consent persistence', () => {
     expect(mocks.setPrivateItem.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.withdrawConsent.mock.invocationCallOrder[0],
     );
+  });
+
+  it('normalizes padded canonical flags and fails closed for noncanonical consent values', async () => {
+    const { getCloudBackupEnabled, hasPhotoCaptureConsent } = await import('./consent');
+    mocks.storage.set(CAPTURE_KEY, ' 1 ');
+    mocks.storage.set(CLOUD_KEY, 'true');
+
+    await expect(hasPhotoCaptureConsent()).resolves.toBe(true);
+    await expect(getCloudBackupEnabled()).resolves.toBe(false);
+
+    expect(mocks.setPrivateItem).toHaveBeenCalledWith(CAPTURE_KEY, '1');
+    expect(mocks.setPrivateItem).toHaveBeenCalledWith(CLOUD_KEY, '0');
+  });
+
+  it('keeps canonical granted consent active if repair fails', async () => {
+    const { hasPhotoCaptureConsent } = await import('./consent');
+    mocks.storage.set(CAPTURE_KEY, ' 1 ');
+    mocks.setPrivateItem.mockRejectedValueOnce(new Error('encrypted flag repair unavailable'));
+
+    await expect(hasPhotoCaptureConsent()).resolves.toBe(true);
+    expect(mocks.storage.get(CAPTURE_KEY)).toBe(' 1 ');
   });
 });

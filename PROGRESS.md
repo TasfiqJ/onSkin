@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened public growth/share-card attribution URLs so final-brand domains are
+  parsed through URL rules, malformed domains with query/userinfo/protocol tricks
+  are rejected, and public growth paths cannot inject query strings or external
+  URLs. Focused growth tests cover domain/path rejection and still prove only
+  opaque, privacy-safe attribution survives.
+
 - Hardened the neutral age-gate pass flag so known legacy boolean strings migrate
   to canonical encrypted values while malformed local private records are
   rewritten to a failed gate. Failed repair writes no longer override the
@@ -18,6 +24,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   rewritten to the disabled state instead of being re-read indefinitely. Focused
   app-lock/private-KV tests cover migration, malformed values, repair-write
   failures, read failures, and existing authentication/privacy-shield behavior.
+
+- Hardened local photo consent flags so padded canonical capture/cloud-backup
+  values are repaired, noncanonical consent values fail closed, and failed
+  repair writes do not override an already-read canonical grant.
 
 - Hardened first-use Progress photo consent so the local-only privacy promise
   also states the backup-off tradeoff before capture. The visible gate and

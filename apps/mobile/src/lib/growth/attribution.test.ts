@@ -11,8 +11,12 @@ import {
 
 describe('Phase 8 growth attribution stays privacy-safe', () => {
   it('normalizes only real production domains', () => {
-    expect(normalizePublicDomain('https://OnSkin.app/share')).toBe('onskin.app');
+    expect(normalizePublicDomain('https://RoutineKind.app/share')).toBe('routinekind.app');
     expect(normalizePublicDomain('https://example.com')).toBeNull();
+    expect(normalizePublicDomain('routinekind.app?redirect=https://evil.example')).toBeNull();
+    expect(normalizePublicDomain('routinekind.app@evil.com')).toBeNull();
+    expect(normalizePublicDomain('javascript://routinekind.app')).toBeNull();
+    expect(normalizePublicDomain('routinekind')).toBeNull();
     expect(normalizePublicDomain('')).toBeNull();
   });
 
@@ -56,13 +60,31 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
         share_id: 'abcDEF_123456',
         skin_profile: 'DSPT',
       },
-      { domain: 'onskin.app' },
+      { domain: 'routinekind.app' },
     );
 
     expect(url).toBe(
-      'https://onskin.app/s/abcDEF_123456?source=share_card&medium=organic_share&campaign=shelf_conflict_card_v1&share_id=abcDEF_123456',
+      'https://routinekind.app/s/abcDEF_123456?source=share_card&medium=organic_share&campaign=shelf_conflict_card_v1&share_id=abcDEF_123456',
     );
     expect(SENSITIVE_GROWTH_KEY.test(url!.split('?')[1] ?? '')).toBe(false);
+  });
+
+  it('rejects malformed public growth paths instead of composing confusing links', () => {
+    expect(
+      buildPublicGrowthUrl('/s/abcDEF_123456?product_name=Retinol', { source: 'share_card' }, {
+        domain: 'routinekind.app',
+      }),
+    ).toBeNull();
+    expect(
+      buildPublicGrowthUrl('https://evil.com/s/abcDEF_123456', { source: 'share_card' }, {
+        domain: 'routinekind.app',
+      }),
+    ).toBeNull();
+    expect(
+      buildPublicGrowthUrl('//evil.com/s/abcDEF_123456', { source: 'share_card' }, {
+        domain: 'routinekind.app',
+      }),
+    ).toBeNull();
   });
 
   it('parses landing attribution through the same sanitizer', () => {
