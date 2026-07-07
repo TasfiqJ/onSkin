@@ -10,10 +10,18 @@ import { supabase } from '@/lib/supabase/client';
 
 import { clearLocalPrivateData } from './localPrivateData';
 
+const DATA_RIGHTS_BACKEND_UNAVAILABLE = 'DATA_RIGHTS_BACKEND_UNAVAILABLE';
+
+function assertDataRightsBackendAvailable(): void {
+  if (!isSupabaseConfigured) throw new Error(DATA_RIGHTS_BACKEND_UNAVAILABLE);
+}
+
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
 // tables), purges Storage, and removes the RC/PostHog records, then signs out.
 export async function deleteAccount(): Promise<void> {
+  assertDataRightsBackendAvailable();
+
   const { data } = await supabase.auth.getUser();
   const appleAuthorizationCode = data.user
     ? await getAppleAuthorizationCodeForRevocation(data.user).catch(() => null)
@@ -37,6 +45,8 @@ export async function deleteAccount(): Promise<void> {
 // deletes the account and all data via the same cascade as deleteAccount. The
 // You-tab copy that promises "your data is then deleted" is now backed by code.
 export async function withdrawHealthDataConsent(): Promise<void> {
+  assertDataRightsBackendAvailable();
+
   try {
     await recordConsent({
       type: 'health_data_collection',
@@ -45,8 +55,8 @@ export async function withdrawHealthDataConsent(): Promise<void> {
       consentText: HEALTH_DATA_WITHDRAWAL.fullText,
     });
   } catch {
-    // Best-effort ledger write until the backend is configured (B-SUPABASE).
-    // The deletion below is the substantive guarantee and runs regardless.
+    // The deletion below is the substantive guarantee and runs even if the
+    // consent-ledger write is temporarily unavailable.
   }
   await deleteAccount();
 }

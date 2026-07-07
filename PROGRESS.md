@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened settings privacy actions so account deletion and health-data consent
+  withdrawal fail fast when the Supabase data-rights backend is still a
+  placeholder, leaving local data intact instead of implying a completed legal
+  deletion. Added regression coverage for backend-success-before-local-cleanup,
+  backend failure, sign-out failure cleanup, Apple revocation-code fallback, and
+  withdrawal ledger failure. This was non-UI logic hardening, so human E2E was
+  not required.
+
 - Repaired a Today completion-log migration edge so padded legacy date keys and
   canonical date keys that normalize to the same local day are merged instead of
   overwriting each other. This preserves valid check-off history for the streak
