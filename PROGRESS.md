@@ -13,6 +13,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   web evidence is in
   `test-results/human-e2e/2026-07-07/ask-disclosure-footer-clearance/`.
 
+- Completed the RoutineKind public identity sweep for local/native launch
+  surfaces. Expo defaults, root package identity, Supabase local auth
+  placeholders, catalog/commerce/community labels, and brand evidence docs now
+  use RoutineKind; `npm run brand:audit:strict` passes with only deliberate
+  guard-rail, internal-namespace, and historical-context counts remaining.
+
 - Improved first-use Progress photo consent legibility on compact dark capture
   screens. The `Not now` escape now reads as a clear secondary action on the
   320 px surface, and the privacy footnote/skin-prep guidance no longer use

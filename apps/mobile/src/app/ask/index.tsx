@@ -20,7 +20,8 @@ import { colors } from '@/theme/tokens';
 // no re-engagement, ends cleanly. Disclosed honestly as AI, never marketed as "AI".
 
 type Msg =
-  { id: string; role: 'user'; text: string } | { id: string; role: 'assistant'; answer: AskAnswer };
+  | { id: string; role: 'user'; text: string }
+  | { id: string; role: 'assistant'; answer: AskAnswer };
 
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
   const bg = tone === 'deterministic' ? colors.sageTint : colors.clayTint;

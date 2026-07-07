@@ -2,7 +2,7 @@
 
 Severity: Medium
 Surface: Expo web
-Environment: Expo web at `http://localhost:8097`, browser viewport 320 x 568
+Environment: Expo web at `http://127.0.0.1:8096`, browser viewport 320 x 568
 Feature: Ask RoutineKind deterministic advisor
 Date: 2026-07-07
 Tester: Codex

@@ -883,13 +883,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: User-set times, contextual timing-control and picker-row labels for assistive tech, 44 pt reminder-tier switches, and discreet lock-screen copy remain clear and calm, with no notification-pressure copy. Time picker sheets expose a named dismiss action and do not create unlabeled inert sheet-body controls.
   - Evidence: Screenshot sequence, local preference snapshot, and small-phone accessibility/geometry snapshot.
 
-## Flow: Ask OnSkin Deterministic Advisor
+## Flow: Ask RoutineKind Deterministic Advisor
 
 - Goal: A user can open the free deterministic Ask advisor without cloud consent, while unavailable cloud Ask controls stay honestly deferred.
 - Persona: Free user exploring shelf/routine guidance.
 - Entry state: Fresh local app state or seeded shelf state; `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=false`.
 - Start screen/URL/window: Direct route `/ask`, or Today Ask teaser when available.
-- Success state: `/ask` renders the Ask OnSkin advisor surface; `/ask/consent` renders the cloud Ask deferred screen while the cloud flag is off.
+- Success state: `/ask` renders the Ask RoutineKind advisor surface; `/ask/consent` renders the cloud Ask deferred screen while the cloud flag is off.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route parity; iOS and Android for native app confirmation.
@@ -898,7 +898,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Deterministic Ask Opens
 
 1. Action: Open `/ask` directly with cloud Ask disabled.
-   Expected result: The Ask OnSkin advisor renders with deterministic/free copy and suggested prompts. It must not show the cloud Ask deferred beta screen.
+   Expected result: The Ask RoutineKind advisor renders with deterministic/free copy and suggested prompts. It must not show the cloud Ask deferred beta screen.
    The composer disclosure footer stays fully visible and legible above the bottom edge on a 320 x 568 phone.
    Evidence: Screenshot and visible-text snapshot.
 
