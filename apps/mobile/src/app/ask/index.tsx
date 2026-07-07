@@ -430,7 +430,7 @@ export default function AskScreen() {
       </ScrollView>
 
       {/* Input bar */}
-      <View className={compactPhone ? 'pb-4' : 'pb-5'}>
+      <View className={compactPhone ? 'pb-6' : 'pb-5'}>
         <View
           className="flex-row items-center gap-2.5 rounded-[16px] bg-paper-raised px-3.5 py-2.5"
           style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}
@@ -457,8 +457,8 @@ export default function AskScreen() {
           </Pressable>
         </View>
         <Text
-          className="mt-2 text-center font-mono text-[9.5px]"
-          style={{ color: colors.muted, lineHeight: 14 }}
+          className="mt-2 text-center font-mono"
+          style={{ color: colors.muted, fontSize: 10, lineHeight: 14 }}
         >
           {ASK_COPY.home.disclosureFooter}
         </Text>

@@ -83,8 +83,9 @@ describe('Ask route launch contracts', () => {
   it('keeps the Ask disclosure footer legible above compact-phone bottom edges', () => {
     const home = readAppRoute('ask/index.tsx');
 
-    expect(home).toContain("className={compactPhone ? 'pb-4' : 'pb-5'}");
-    expect(home).toContain('style={{ color: colors.muted, lineHeight: 14 }}');
+    expect(home).toContain("className={compactPhone ? 'pb-6' : 'pb-5'}");
+    expect(home).toContain('className="mt-2 text-center font-mono"');
+    expect(home).toContain('style={{ color: colors.muted, fontSize: 10, lineHeight: 14 }}');
     expect(home).toContain('{ASK_COPY.home.disclosureFooter}');
   });
 
