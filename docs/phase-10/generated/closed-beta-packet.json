@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-07T07:22:38.000Z",
+  "generatedAt": "2026-07-07T07:24:39.130Z",
   "status": "blocked",
-  "gitSha": "dd77b31d849cc113e556e71aa65fe96112763a1f",
-  "gitStatus": "M PROGRESS.md\n M docs/FOR_TAS_TO_DO.md\n M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md\n M scripts/phase10-11/public-contact-smoke.mjs\n M scripts/phase10/beta-readiness.mjs\n M scripts/phase10/build-beta-packet.mjs\n M scripts/phase10/lib.mjs\n M scripts/phase11/build-launch-packet.mjs\n M scripts/phase11/launch-readiness.mjs\n M scripts/phase11/lib.mjs",
+  "gitSha": "ec877b80ebe6723b4f1583f2fef797acdb8e2a99",
+  "gitStatus": "M PROGRESS.md\n M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md\n M docs/phase-11/generated/public-launch-packet.json\n M docs/phase-11/generated/public-launch-packet.md\n M scripts/phase10-11/public-contact-smoke.mjs\n M scripts/phase10/build-beta-packet.mjs\n M scripts/phase11/build-launch-packet.mjs",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",

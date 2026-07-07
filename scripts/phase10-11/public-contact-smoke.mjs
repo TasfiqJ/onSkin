@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
+import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const phase10ReadinessPath = resolve(root, 'scripts/phase10/beta-readiness.mjs');
+const phase10PacketPath = resolve(root, 'scripts/phase10/build-beta-packet.mjs');
 const phase11ReadinessPath = resolve(root, 'scripts/phase11/launch-readiness.mjs');
+const phase11PacketPath = resolve(root, 'scripts/phase11/build-launch-packet.mjs');
 
 const passthroughKeys = [
   'ComSpec',
@@ -93,6 +97,17 @@ function run(scriptPath, extraEnv) {
 
 function combinedOutput(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+}
+
+function runPacket(scriptPath, extraEnv, packetFileName, outDirEnvName) {
+  const outDir = mkdtempSync(join(tmpdir(), 'onskin-phase10-11-packet-'));
+  const result = run(scriptPath, {
+    ...extraEnv,
+    [outDirEnvName]: outDir,
+  });
+  const packetPath = join(outDir, packetFileName);
+  const packet = existsSync(packetPath) ? JSON.parse(readFileSync(packetPath, 'utf8')) : null;
+  return { result, packet };
 }
 
 function hasNoFinalContactWarning(result, wording) {
@@ -193,6 +208,39 @@ const cases = [
     },
   },
   {
+    name: 'Phase 10 packet normalizes evidence and launch signoff values',
+    packetCase: runPacket(
+      phase10PacketPath,
+      {
+        PHASE10_PAYMENT_QA_PASS: ' TRUE ',
+        PHASE10_PUBLIC_LAUNCH_DECISION: ' LIMITED ',
+        PHASE10_SIGNED_OFF_BY: ' Tas Mohammed ',
+      },
+      'closed-beta-packet.json',
+      'PHASE10_PACKET_OUT_DIR',
+    ),
+    expectPacket({ result, packet }) {
+      return (
+        result.status === 0 &&
+        packet?.evidence?.PHASE10_PAYMENT_QA_PASS === true &&
+        packet?.publicLaunchDecision === 'limited' &&
+        packet?.signedOffBy === 'Tas Mohammed'
+      );
+    },
+  },
+  {
+    name: 'Phase 10 packet strips placeholder signoffs from generated evidence',
+    packetCase: runPacket(
+      phase10PacketPath,
+      { PHASE10_SIGNED_OFF_BY: 'Tester Name' },
+      'closed-beta-packet.json',
+      'PHASE10_PACKET_OUT_DIR',
+    ),
+    expectPacket({ result, packet }) {
+      return result.status === 0 && packet?.signedOffBy === '';
+    },
+  },
+  {
     name: 'Phase 11 accepts production contact values without final public warnings',
     result: run(phase11ReadinessPath, {}),
     expect(result) {
@@ -266,19 +314,55 @@ const cases = [
       );
     },
   },
+  {
+    name: 'Phase 11 packet normalizes evidence and signoff values',
+    packetCase: runPacket(
+      phase11PacketPath,
+      {
+        PHASE11_MONITORING_PASS: ' TRUE ',
+        PHASE11_SIGNED_OFF_BY: ' Tas Mohammed ',
+      },
+      'public-launch-packet.json',
+      'PHASE11_PACKET_OUT_DIR',
+    ),
+    expectPacket({ result, packet }) {
+      return (
+        result.status === 0 &&
+        packet?.evidence?.PHASE11_MONITORING_PASS === true &&
+        packet?.signedOffBy === 'Tas Mohammed'
+      );
+    },
+  },
+  {
+    name: 'Phase 11 packet strips placeholder signoffs from generated evidence',
+    packetCase: runPacket(
+      phase11PacketPath,
+      { PHASE11_SIGNED_OFF_BY: 'TBD' },
+      'public-launch-packet.json',
+      'PHASE11_PACKET_OUT_DIR',
+    ),
+    expectPacket({ result, packet }) {
+      return result.status === 0 && packet?.signedOffBy === '';
+    },
+  },
 ];
 
 let failed = false;
 for (const testCase of cases) {
-  if (testCase.expect(testCase.result)) {
+  const passed = testCase.packetCase
+    ? testCase.expectPacket(testCase.packetCase)
+    : testCase.expect(testCase.result);
+  if (passed) {
     console.log(`OK ${testCase.name}`);
     continue;
   }
 
   failed = true;
   console.error(`FAIL ${testCase.name}`);
-  const output = combinedOutput(testCase.result).trim();
+  const output = combinedOutput(testCase.packetCase?.result ?? testCase.result).trim();
   if (output) console.error(output);
+  if (testCase.packetCase?.packet)
+    console.error(JSON.stringify(testCase.packetCase.packet, null, 2));
 }
 
 if (failed) process.exit(1);

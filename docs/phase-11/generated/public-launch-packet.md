@@ -1,8 +1,8 @@
 # Phase 11 Public Launch Packet
 
-Generated: 2026-07-07T07:22:39.454Z
+Generated: 2026-07-07T07:24:40.554Z
 Status: blocked
-Git SHA: dd77b31d849cc113e556e71aa65fe96112763a1f
+Git SHA: ec877b80ebe6723b4f1583f2fef797acdb8e2a99
 Phase 9 packet status: blocked
 Phase 10 packet status: blocked
 Phase 10 decision: BLOCKED
@@ -69,7 +69,7 @@ Phase 10 decision: BLOCKED
 - `apps/mobile/src/lib/env.ts`: `2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
 - `docs/phase-9/generated/release-engineering-qa-packet.json`: `713cc85269673a0cd351ff6a406bb1dc12d2bd9d8a8c21ca5f1dba76bf2b2ea3`
-- `docs/phase-10/generated/closed-beta-packet.json`: `bf23782a4b99cdcaeff916e1ef0a61120450acc889efe10abc49714abb73734d`
+- `docs/phase-10/generated/closed-beta-packet.json`: `e53e02d5340411555fd981cfbbd0ba56d2620e7409437816a2a7fd43ca013928`
 - `docs/phase-11/launch-command-center.md`: `1a63626d60342bb66a99b3d61f51622da062e77ced5949666e417b0877b81d92`
 - `docs/phase-11/phase-10-exit-review.md`: `2ca063c42e33c76f8244d778d8f72d3dff9b96db420f4241d2b7d52b5871fd0e`
 - `docs/phase-11/store-release-plan.md`: `dbd10e7753372f7a1ccc0ec28aed947423dc51c57977d359ca95efe951d4fbc8`

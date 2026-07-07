@@ -24,6 +24,8 @@ const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const sourceFiles = phase10SourceFiles();
+const packetOutDir = String(env.PHASE10_PACKET_OUT_DIR ?? '').trim();
+const outDir = packetOutDir || 'docs/phase-10/generated';
 
 for (const file of sourceFiles)
   block(errors, exists(file), `${file} is missing from closed beta packet inputs.`);
@@ -84,9 +86,9 @@ const packet = {
   warnings,
 };
 
-write('docs/phase-10/generated/closed-beta-packet.json', `${JSON.stringify(packet, null, 2)}\n`);
+write(`${outDir}/closed-beta-packet.json`, `${JSON.stringify(packet, null, 2)}\n`);
 write(
-  'docs/phase-10/generated/closed-beta-packet.md',
+  `${outDir}/closed-beta-packet.md`,
   [
     '# Phase 10 Closed Beta Packet',
     '',

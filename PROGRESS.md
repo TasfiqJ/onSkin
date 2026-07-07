@@ -13,6 +13,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   signoff gates. The existing Phase 10/11 public-contact smoke now covers
   malformed evidence flags and placeholder signoffs.
 
+- Extended the Phase 10/11 smoke harness to generate beta/public launch packets
+  into temporary directories and assert that normalized proof flags, launch
+  decisions, and signoffs are written into packet JSON while placeholder
+  signoffs are stripped.
+
 - Tightened the Phase 5 device QA evidence validator after smoke testing found
   that slash-only iPhone labels and `Tester Name` style placeholders could
   still pass. Added negative smoke cases for missing physical iOS models,

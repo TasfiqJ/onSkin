@@ -24,6 +24,8 @@ const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const sourceFiles = phase11SourceFiles();
+const packetOutDir = String(env.PHASE11_PACKET_OUT_DIR ?? '').trim();
+const outDir = packetOutDir || 'docs/phase-11/generated';
 
 for (const file of sourceFiles)
   block(errors, exists(file), `${file} is missing from public launch packet inputs.`);
@@ -103,9 +105,9 @@ const packet = {
   warnings,
 };
 
-write('docs/phase-11/generated/public-launch-packet.json', `${JSON.stringify(packet, null, 2)}\n`);
+write(`${outDir}/public-launch-packet.json`, `${JSON.stringify(packet, null, 2)}\n`);
 write(
-  'docs/phase-11/generated/public-launch-packet.md',
+  `${outDir}/public-launch-packet.md`,
   [
     '# Phase 11 Public Launch Packet',
     '',
