@@ -18,7 +18,7 @@ import { env } from '@/lib/env';
 export type Plan = {
   id: PlanId;
   productId: string;
-  /** Fallback price label until the offering loads (B-REVENUECAT). */
+  /** Local development display label only; live/loading paywalls use RevenueCat offering data. */
   priceLabel: string;
   unit: 'year' | 'month';
   trialDays: number;
