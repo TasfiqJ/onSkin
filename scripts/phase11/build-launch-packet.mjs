@@ -6,6 +6,9 @@ import {
   exists,
   hash,
   markdownList,
+  normalizeProductionDomain,
+  normalizeProductionSupportEmail,
+  normalizeProductionUrl,
   phase11SourceFiles,
   printResult,
   read,
@@ -69,11 +72,11 @@ const packet = {
   phase10Decision,
   launchIdentity: {
     appEnvironment: env.EXPO_PUBLIC_APP_ENV ?? null,
-    finalBrandDomain: env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN ?? null,
-    marketingUrl: env.EXPO_PUBLIC_MARKETING_URL ?? null,
-    appStoreUrl: env.EXPO_PUBLIC_APP_STORE_URL ?? null,
-    playStoreUrl: env.EXPO_PUBLIC_PLAY_STORE_URL ?? null,
-    supportEmail: env.EXPO_PUBLIC_SUPPORT_EMAIL ?? null,
+    finalBrandDomain: normalizeProductionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
+    marketingUrl: normalizeProductionUrl(env.EXPO_PUBLIC_MARKETING_URL),
+    appStoreUrl: normalizeProductionUrl(env.EXPO_PUBLIC_APP_STORE_URL),
+    playStoreUrl: normalizeProductionUrl(env.EXPO_PUBLIC_PLAY_STORE_URL),
+    supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
   evidence,
   signedOffBy: env.PHASE11_SIGNED_OFF_BY ?? '',
@@ -125,4 +128,3 @@ write(
 );
 
 printResult('Phase 11 public launch packet', errors, warnings);
-

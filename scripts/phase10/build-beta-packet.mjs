@@ -6,6 +6,9 @@ import {
   exists,
   hash,
   markdownList,
+  normalizeProductionDomain,
+  normalizeProductionSupportEmail,
+  normalizeProductionUrl,
   phase10SourceFiles,
   printResult,
   read,
@@ -56,9 +59,9 @@ const packet = {
   phase9PacketStatus,
   betaIdentity: {
     appEnvironment: env.EXPO_PUBLIC_APP_ENV ?? null,
-    finalBrandDomain: env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN ?? null,
-    marketingUrl: env.EXPO_PUBLIC_MARKETING_URL ?? null,
-    supportEmail: env.EXPO_PUBLIC_SUPPORT_EMAIL ?? null,
+    finalBrandDomain: normalizeProductionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
+    marketingUrl: normalizeProductionUrl(env.EXPO_PUBLIC_MARKETING_URL),
+    supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
   evidence,
   publicLaunchDecision: env.PHASE10_PUBLIC_LAUNCH_DECISION ?? '',
@@ -108,4 +111,3 @@ write(
 );
 
 printResult('Phase 10 closed beta packet', errors, warnings);
-

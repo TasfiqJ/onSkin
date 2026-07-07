@@ -112,44 +112,54 @@ export function productionHostname(hostname) {
   );
 }
 
-export function productionUrl(value) {
+export function normalizeProductionUrl(value) {
   const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed)) return false;
+  if (placeholderEnvValue(trimmed)) return null;
   let url;
   try {
     url = new URL(trimmed);
   } catch {
-    return false;
+    return null;
   }
-  return url.protocol === 'https:' && !url.username && !url.password && productionHostname(url.hostname);
+  if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) return null;
+  if (!productionHostname(url.hostname)) return null;
+  url.hash = '';
+  return url.toString();
 }
 
-export function productionDomain(value) {
+export function productionUrl(value) {
+  return Boolean(normalizeProductionUrl(value));
+}
+
+export function normalizeProductionDomain(value) {
   const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed)) return false;
+  if (placeholderEnvValue(trimmed)) return null;
   const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
   let url;
   try {
     url = new URL(candidate);
   } catch {
-    return false;
+    return null;
   }
-  return (
-    (url.protocol === 'https:' || url.protocol === 'http:') &&
-    !url.username &&
-    !url.password &&
-    !url.search &&
-    !url.hash &&
-    !url.port &&
-    productionHostname(url.hostname)
-  );
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+  if (url.username || url.password || url.search || url.hash || url.port) return null;
+  const hostname = url.hostname.toLowerCase();
+  return productionHostname(hostname) ? hostname : null;
+}
+
+export function productionDomain(value) {
+  return Boolean(normalizeProductionDomain(value));
+}
+
+export function normalizeProductionSupportEmail(value) {
+  const trimmed = String(value ?? '').trim();
+  if (placeholderEnvValue(trimmed) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return null;
+  const domain = trimmed.split('@').pop()?.toLowerCase() ?? '';
+  return productionHostname(domain) ? trimmed : null;
 }
 
 export function productionSupportEmail(value) {
-  const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
-  const domain = trimmed.split('@').pop()?.toLowerCase() ?? '';
-  return productionHostname(domain);
+  return Boolean(normalizeProductionSupportEmail(value));
 }
 
 export function redactedErrorKind(error) {

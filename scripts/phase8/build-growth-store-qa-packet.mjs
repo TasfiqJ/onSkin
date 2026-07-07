@@ -3,6 +3,12 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+import {
+  normalizeProductionDomain,
+  normalizeProductionSupportEmail,
+  normalizeProductionUrl,
+} from '../phase9/lib.mjs';
+
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
 const outDir = resolve(root, 'docs/phase-8/generated');
@@ -97,11 +103,19 @@ for (const file of sourceFiles) {
   block(exists(file), `${file} is missing from the QA packet inputs.`);
 }
 
-warn(Boolean(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN), 'Final brand domain is missing.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_MARKETING_URL), 'Marketing URL is missing.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL), 'Support email is missing.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_APP_STORE_URL), 'App Store URL is missing.');
-warn(Boolean(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL), 'Play Store URL is missing.');
+const publicIdentity = {
+  finalBrandDomain: normalizeProductionDomain(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
+  marketingUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_MARKETING_URL),
+  appStoreUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_APP_STORE_URL),
+  playStoreUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL),
+  supportEmail: normalizeProductionSupportEmail(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL),
+};
+
+warn(Boolean(publicIdentity.finalBrandDomain), 'Final brand domain is missing.');
+warn(Boolean(publicIdentity.marketingUrl), 'Marketing URL is missing.');
+warn(Boolean(publicIdentity.supportEmail), 'Support email is missing.');
+warn(Boolean(publicIdentity.appStoreUrl), 'App Store URL is missing.');
+warn(Boolean(publicIdentity.playStoreUrl), 'Play Store URL is missing.');
 
 for (const [key, passed] of Object.entries(evidence)) {
   if (key === 'signedOffBy') continue;
@@ -113,13 +127,7 @@ const packet = {
   generatedAt: new Date().toISOString(),
   objective: 'Phase 8 growth loop and store readiness',
   status: blockers.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
-  publicIdentity: {
-    finalBrandDomain: launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN || null,
-    marketingUrl: launchEnv.EXPO_PUBLIC_MARKETING_URL || null,
-    appStoreUrl: launchEnv.EXPO_PUBLIC_APP_STORE_URL || null,
-    playStoreUrl: launchEnv.EXPO_PUBLIC_PLAY_STORE_URL || null,
-    supportEmail: launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL || null,
-  },
+  publicIdentity,
   evidence,
   matrices: {
     linkRouting: [
