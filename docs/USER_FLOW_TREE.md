@@ -678,6 +678,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/recommendations/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-dismissal-cold-start/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-accept-manual-add/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-preferences-compact-current/`
 
 ### Path A: For You Hub
 
@@ -731,6 +732,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/recommendations/preferences` on a 320 px phone viewport and inspect the Drugstore, Mid-range, and Premium budget chips.
   - Expected result: All budget chips remain on one row, labels are fully visible without clipping or overflow, and each chip remains at least 44 pt tall.
   - Evidence: Phone-width screenshot, budget-chip geometry snapshot, and visible-text snapshot.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Drugstore`, `Mid-range`, and `Premium` on one row; each chip is 48 px tall, fully visible within the 320 px viewport, and horizontal overflow is zero.
 - Branch: recommendation preference save failure
   - Priority: Important
   - Automate later: Yes
