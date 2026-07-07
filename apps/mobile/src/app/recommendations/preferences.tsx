@@ -1,7 +1,7 @@
 import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@onskin/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
@@ -27,6 +27,13 @@ import { colors } from '@/theme/tokens';
 
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
 const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
+
+function devRecommendationPreferenceFailureMode(): 'once' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE === 'once'
+    ? 'once'
+    : null;
+}
 
 function Toggle({
   label,
@@ -77,28 +84,43 @@ function Toggle({
 export default function PreferencesScreen() {
   const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const simulatedPreferenceFailureUsed = useRef(false);
   const { data: prefs, isLoading } = useQuery({
     queryKey: ['recPreferences'],
     queryFn: loadPreferences,
   });
   const p = prefs ?? DEFAULT_PREFERENCES;
   const controlsDisabled = isLoading || saving;
+  const preferenceFailureMode = devRecommendationPreferenceFailureMode();
+
+  const savePreferenceWithFixture = async (next: RecPreferences) => {
+    if (preferenceFailureMode === 'once' && !simulatedPreferenceFailureUsed.current) {
+      simulatedPreferenceFailureUsed.current = true;
+      throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE');
+    }
+    await savePreferences(next);
+  };
 
   const commit = async (next: RecPreferences) => {
     if (controlsDisabled) return;
     haptics.select();
+    setSaveFailed(false);
     setSaving(true);
     try {
       await applyRecommendationPreferences(next, {
-        save: savePreferences,
+        save: savePreferenceWithFixture,
         onSaved: async () => {
           qc.setQueryData(['recPreferences'], next);
+          setSaveFailed(false);
           track('preference_set');
           // The For-you hub reads prefs+dismissals together. Refresh it too.
           await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
         },
-        onFailure: () =>
-          Alert.alert(REC_COPY.preferences.saveFailedTitle, REC_COPY.preferences.saveFailedBody),
+        onFailure: () => {
+          setSaveFailed(true);
+          Alert.alert(REC_COPY.preferences.saveFailedTitle, REC_COPY.preferences.saveFailedBody);
+        },
       });
     } finally {
       setSaving(false);
@@ -136,6 +158,20 @@ export default function PreferencesScreen() {
         <Text variant="bodySm" tone="muted" className="mt-1.5">
           {REC_COPY.preferences.subtitle}
         </Text>
+        {saveFailed ? (
+          <View
+            accessibilityRole="alert"
+            className="mt-4 rounded-xl bg-clay-tint px-3.5 py-3"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text className="font-sans-bold text-[13px]" style={{ color: colors.clay }}>
+              {REC_COPY.preferences.saveFailedTitle}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {REC_COPY.preferences.saveFailedBody}
+            </Text>
+          </View>
+        ) : null}
 
         <Text variant="label" tone="muted" className="mb-3 mt-7">
           {REC_COPY.preferences.valuesLabel.toUpperCase()}

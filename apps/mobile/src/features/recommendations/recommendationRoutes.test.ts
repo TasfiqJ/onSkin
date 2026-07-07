@@ -64,9 +64,18 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('applyRecommendationPreferences');
     expect(source).toContain('disabled={controlsDisabled}');
     expect(source).toContain('accessibilityState={{ selected: active, disabled }}');
+    expect(source).toContain('const [saveFailed, setSaveFailed] = useState(false);');
+    expect(source).toContain('setSaveFailed(false);');
+    expect(source).toContain('setSaveFailed(true);');
     expect(source).toContain('Alert.alert(REC_COPY.preferences.saveFailedTitle');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE');
+    expect(source).toContain(
+      "process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE === 'once'",
+    );
+    expect(source).toContain("throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE')");
     expect(source).toContain("track('preference_set')");
-    expect(source.indexOf('save: savePreferences')).toBeLessThan(
+    expect(source.indexOf('save: savePreferenceWithFixture')).toBeLessThan(
       source.indexOf("track('preference_set')"),
     );
   });

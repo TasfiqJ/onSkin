@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Made the recommendation preference save-failure branch provable through the
+  real app surface. `/recommendations/preferences` now supports a dev-only
+  one-shot `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE=once` fixture,
+  keeps the chip state fail-closed until local private persistence succeeds,
+  and shows persistent `Preference not saved` recovery copy with
+  `role="alert"` while preserving native `Alert.alert` for platforms that
+  display it. Expo web E2E at 320 x 568 verified forced failure, visible
+  recovery copy, retry success, zero horizontal overflow, and no sub-44 px
+  visible controls; evidence is in
+  `test-results/human-e2e/2026-07-07/recommendation-preference-save-failure/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-recommendation-preference-save-failure.md`.
+
 - Calibrated the `/settings/privacy` direct-entry scroll target across compact
   phone widths after a 320/390 px rerun showed the policy rows still becoming
   partially tappable under the floating tab bar with a single positive nudge.
