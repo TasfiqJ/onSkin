@@ -134,6 +134,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: iOS and Android first; Expo web if route parity is confirmed.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/onboarding/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`
 
 ### Path A: Happy Path
 
@@ -167,6 +168,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/onboarding/quiz` directly with no local health-data collection grant, then refresh the route.
   - Expected result: The quiz questions do not render; the app recovers to `/onboarding/consent` so health-data collection remains unbundled and explicit before quiz access.
   - Evidence: Screenshot, route snapshot, and browser console logs.
+  - Current local evidence: 2026-07-07 Expo web 320 x 568 direct `/onboarding/quiz` with a clean local context redirects to `/onboarding/consent`, does not render the first quiz question before consent, stays on consent after refresh, then opens `/onboarding/quiz` with the first question only after `I agree. Continue`; all checked states have zero horizontal overflow and no visible sub-44 px controls.
 - Branch: notification permission denied
   - Priority: Important
   - Automate later: Yes

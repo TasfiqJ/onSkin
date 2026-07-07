@@ -23,8 +23,8 @@ The quiz route could render quiz content when opened directly instead of enforci
 
 ## Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/direct-quiz-redirect-320x568.png`
-- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/direct-quiz-redirect-state.json`
+- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/01-direct-quiz-redirects-to-consent-320x568.png`
+- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/onboarding-direct-quiz-consent-summary.json`
 - Terminal transcript: `npm --workspace apps/mobile run web -- --port 8083 --host localhost`
 
 ## Frequency
@@ -55,12 +55,11 @@ Read the local health-data collection consent on quiz mount. Render only a short
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/direct-quiz-redirect-320x568.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/reload-consent-recovery-320x568.png`
-- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/agree-to-quiz-320x568.png`
-- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/direct-quiz-redirect-state.json`
-- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/reload-consent-recovery-state.json`
-- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/agree-to-quiz-state.json`
+- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/01-direct-quiz-redirects-to-consent-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/02-refresh-stays-on-consent-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/03-after-agree-quiz-renders-320x568.png`
+- UI snapshot: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/onboarding-direct-quiz-consent-summary.json`
+- Focused tests: `npm --workspace apps/mobile run test -- src/features/onboarding/onboardingRoutes.test.ts src/features/onboarding/healthConsent.test.ts src/features/onboarding/healthConsentStore.test.ts`
 
 ## Remaining Risk
 
