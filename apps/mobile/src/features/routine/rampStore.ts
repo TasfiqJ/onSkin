@@ -18,18 +18,110 @@ export type StoredRamp = RampState & {
 
 type Log = Record<string, StoredRamp>; // productId -> ramp
 
+const TOLERANCE_STATES = new Set<StoredRamp['toleranceState']>([
+  'building',
+  'steady',
+  'paused_irritation',
+]);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && !Array.isArray(value) && typeof value === 'object';
+}
+
+function isLocalDateISO(value: unknown): value is string {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isRampFrequency(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 1 && value <= 7;
+}
+
+function normalizeStoredRamp(value: unknown, fallbackStartedAt: string): StoredRamp | null {
+  if (!isRecord(value)) return null;
+  const { freqPerWeek, targetPerWeek, toleranceState } = value;
+  const startedAt = value.startedAt ?? fallbackStartedAt;
+  const lastStepUp = value.lastStepUp ?? null;
+
+  if (!isRampFrequency(freqPerWeek) || !isRampFrequency(targetPerWeek)) return null;
+  if (freqPerWeek > targetPerWeek) return null;
+  if (
+    typeof toleranceState !== 'string' ||
+    !TOLERANCE_STATES.has(toleranceState as StoredRamp['toleranceState'])
+  ) {
+    return null;
+  }
+  if (!isLocalDateISO(startedAt)) return null;
+  if (!(lastStepUp === null || isLocalDateISO(lastStepUp))) return null;
+
+  return {
+    freqPerWeek,
+    targetPerWeek,
+    toleranceState: toleranceState as StoredRamp['toleranceState'],
+    startedAt,
+    lastStepUp,
+  };
+}
+
+function normalizeLog(
+  value: unknown,
+  fallbackStartedAt: string,
+): { log: Log; changed: boolean } | null {
+  if (!isRecord(value)) return null;
+  const log: Log = {};
+  let changed = false;
+
+  for (const [productId, ramp] of Object.entries(value)) {
+    const normalized = normalizeStoredRamp(ramp, fallbackStartedAt);
+    if (!normalized) {
+      changed = true;
+      continue;
+    }
+    log[productId] = normalized;
+    changed =
+      changed ||
+      !isRecord(ramp) ||
+      normalized.freqPerWeek !== ramp.freqPerWeek ||
+      normalized.targetPerWeek !== ramp.targetPerWeek ||
+      normalized.toleranceState !== ramp.toleranceState ||
+      normalized.startedAt !== ramp.startedAt ||
+      normalized.lastStepUp !== (ramp.lastStepUp ?? null);
+  }
+
+  return { log, changed };
+}
+
 async function load(): Promise<Log> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(KEY);
-    const parsed = raw ? (JSON.parse(raw) as Log) : {};
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    raw = await getPrivateItem(KEY);
   } catch {
     return {};
   }
+  if (!raw) return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeLog(parsed, localDateString());
+    if (normalized) {
+      if (normalized.changed) await persistNormalized(normalized.log);
+      return normalized.log;
+    }
+  } catch {
+    /* malformed legacy/local state */
+  }
+  await removePrivateItem(KEY).catch(() => undefined);
+  return {};
+}
+
+async function persistNormalized(log: Log): Promise<void> {
+  if (Object.keys(log).length === 0) {
+    await removePrivateItem(KEY).catch(() => undefined);
+    return;
+  }
+  await setPrivateItem(KEY, JSON.stringify(log)).catch(() => undefined);
 }
 
 async function save(log: Log): Promise<void> {
-    await setPrivateItem(KEY, JSON.stringify(log));
+  await setPrivateItem(KEY, JSON.stringify(log));
 }
 
 export async function getStoredRamps(): Promise<Log> {

@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the local active-ramp store so unreadable ramp JSON is removed and
+  mixed-validity ramp logs keep valid product entries while dropping malformed
+  ones. A bad ramp record can no longer leak impossible frequencies into the
+  scheduler or block future clean seeding.
+
 - Hardened the local scheduler cycle config reader so malformed or wrong-shaped
   stored cycle state is cleared instead of being spread into runtime scheduling.
   Valid legacy partial configs still normalize with default pause/recovery/staging
