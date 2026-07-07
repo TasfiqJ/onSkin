@@ -235,11 +235,35 @@ describe('paywall mobile contracts', () => {
         source,
         `${route} should only show the store-unavailable reason in unavailable states`,
       ).toContain("offering.data?.status && offering.data.status !== 'available'");
-      expect(
-        source,
-        `${route} should explain why the purchase action is disabled`,
-      ).toContain('{offering.data.reason}');
+      if (route === 'paywall/reoffer.tsx') {
+        expect(source, `${route} should centralize the unavailable reason`).toContain(
+          'const unavailableReason =',
+        );
+        expect(source, `${route} should explain why the purchase action is disabled`).toContain(
+          '{unavailableReason}',
+        );
+      } else {
+        expect(source, `${route} should explain why the purchase action is disabled`).toContain(
+          '{offering.data.reason}',
+        );
+      }
     }
+  });
+
+  it('keeps compact reverse-trial keep options billing context above the CTA', () => {
+    const reoffer = readAppRoute('paywall/reoffer.tsx');
+    const compactPrice = reoffer.indexOf('{compactPaywall ? renderPriceSummary(true) : null}');
+    const compactReason = reoffer.indexOf('{compactPaywall && unavailableReason ? (');
+    const purchaseCta = reoffer.indexOf('onPress={onStartTrial}');
+
+    expect(reoffer).toContain("contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-4'}");
+    expect(reoffer).toContain('adjustsFontSizeToFit');
+    expect(reoffer).toContain('numberOfLines={1}');
+    expect(compactPrice).toBeGreaterThan(-1);
+    expect(compactReason).toBeGreaterThan(-1);
+    expect(purchaseCta).toBeGreaterThan(-1);
+    expect(compactPrice).toBeLessThan(purchaseCta);
+    expect(compactReason).toBeLessThan(purchaseCta);
   });
 
   it('keeps unavailable win-back offer copy next to the fallback action', () => {

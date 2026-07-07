@@ -963,8 +963,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Seed an active app-granted reverse-trial entitlement, open `/settings/subscription`, then tap the Pro options row.
-  - Expected result: The screen shows the reverse-trial/free-until state, a no-card status label, and a keep-Pro options row that opens the Pro keep-options paywall. It must not open App Store or Google Play subscription management, must not imply there is a card on file, and must not show expired-trial copy while the reverse trial is still active.
+  - Expected result: The screen shows the reverse-trial/free-until state, a no-card status label, and a keep-Pro options row that opens the Pro keep-options paywall. It must not open App Store or Google Play subscription management, must not imply there is a card on file, and must not show expired-trial copy while the reverse trial is still active. On compact phones, the annual price and store-unavailable reason must appear before the keep-Pro CTA, and Terms, Privacy, and Restore must remain reachable without clipped controls.
   - Evidence: Screenshot sequence, visible route snapshot, and local entitlement fixture snapshot.
+  - Current local evidence: 2026-07-07 Expo web at 320 x 568 reproduced the compact keep-options bug where the CTA appeared before the annual price/store-unavailable reason, then verified the fix through `/settings/subscription` -> `Keep Pro after your week` -> `/paywall/reoffer`. Post-fix state has active no-card copy, no expired-trial copy, annual price and preview-checkout reason before the CTA, zero horizontal overflow, no sub-44 px visible controls, no clipped controls, and scroll-reachable 48 px Terms/Privacy/Restore. Evidence is in `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/`.
 - Branch: policy link handoff failure
   - Priority: Important
   - Automate later: Yes

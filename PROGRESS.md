@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the compact reverse-trial keep-options paywall after 320 x 568 E2E
+  reproduced a billing-context ordering issue: tapping `Keep Pro after your
+  week` from `/settings/subscription` showed the fixed CTA before the annual
+  price, store-unavailable reason, and compliance row. The active reverse-trial
+  keep/options screen now keeps the annual price and preview checkout reason in
+  the compact footer above the purchase CTA while preserving scroll access to
+  Terms, Privacy, and Restore. Post-fix Expo web E2E at 320 x 568 verifies the
+  settings row opens `/paywall/reoffer`, active no-card copy is used, expired
+  copy is absent, the annual price and store-unavailable reason appear before
+  the CTA, horizontal overflow is zero, and visible controls are 48 px+ with no
+  clipping. Evidence is in
+  `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/`, with
+  the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-reverse-trial-keep-options-compact-footer.md`.
+
 - Fixed Ask active-frequency routing after a 320 x 568 human E2E pass showed
   `Should I use retinol every night?` misrouting to the product-fit engine and
   recommending a mineral SPF instead of refusing/escalating a frequency-style

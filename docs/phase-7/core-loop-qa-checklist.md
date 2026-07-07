@@ -357,6 +357,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/paywall-lifecycle-bottom-buffer/`;
   it does not replace native RevenueCat lifecycle purchase/restore QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 plus the paywall mobile contract
+  covers active reverse-trial subscription keep options: `/settings/subscription`
+  shows the no-card reverse-trial state, tapping `Keep Pro after your week`
+  opens `/paywall/reoffer`, the keep-options screen uses active no-card copy
+  instead of expired-trial copy, the annual price and store-unavailable reason
+  appear before the keep-Pro CTA on the compact viewport, Terms/Privacy/Restore
+  remain scroll-reachable as 48 px controls, and horizontal overflow is zero.
+  Evidence is in
+  `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/`;
+  it does not replace native RevenueCat purchase, restore, or billing-management
+  QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 plus the paywall mobile contract
   covers compact monthly-equivalent price labels: Progress, `/routine/plan`,
   `/onboarding/paywall`, and `/paywall/upsell?feature=full_routine` now render
   the secondary monthly equivalent as one readable `$4.16/mo` line instead of a

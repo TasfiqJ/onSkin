@@ -24,6 +24,8 @@ export default function ReofferScreen() {
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
+  const unavailableReason =
+    offering.data?.status && offering.data.status !== 'available' ? offering.data.reason : null;
   const activeReverseTrial = data?.inReverseTrial === true;
   const compactPaywall = height < 640;
   const screenCopy = activeReverseTrial
@@ -85,12 +87,56 @@ export default function ReofferScreen() {
     );
   }
 
+  function renderPriceSummary(compact: boolean) {
+    return (
+      <View
+        className={
+          compact
+            ? 'flex-row items-center justify-between rounded-card px-4 py-3'
+            : 'mt-4 flex-row items-center justify-between rounded-card p-4'
+        }
+        style={{ backgroundColor: colors.clayTint }}
+      >
+        <Text
+          variant="bodySm"
+          style={{
+            color: colors.clayDeep,
+            fontSize: compact ? 12.5 : undefined,
+            lineHeight: compact ? 17 : undefined,
+          }}
+        >
+          {annualDisplay.introLabel}
+        </Text>
+        <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.86}
+          numberOfLines={1}
+          variant="title"
+          style={{
+            color: colors.clayDeep,
+            fontSize: compact ? 22 : 24,
+            letterSpacing: 0,
+            maxWidth: compact ? 124 : undefined,
+            textAlign: 'right',
+          }}
+        >
+          {annualDisplay.priceLabel}
+          {annualDisplay.periodLabel ? (
+            <Text variant="bodySm" style={{ color: colors.clayDeep }}>
+              /{annualDisplay.periodLabel}
+            </Text>
+          ) : null}
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <Screen edges={['top', 'bottom']}>
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={compactPaywall ? 'pb-40' : 'pb-4'}
+        contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-4'}
       >
         <View
           className="mt-2 flex-row items-center gap-2 self-start rounded-pill px-4 py-2"
@@ -136,35 +182,31 @@ export default function ReofferScreen() {
             </View>
           ))}
         </View>
-        <View
-          className="mt-4 flex-row items-center justify-between rounded-card p-4"
-          style={{ backgroundColor: colors.clayTint }}
-        >
-          <Text variant="bodySm" style={{ color: colors.clayDeep }}>
-            {annualDisplay.introLabel}
-          </Text>
-          <Text variant="title" style={{ color: colors.clayDeep, fontSize: 24 }}>
-            {annualDisplay.priceLabel}
-            {annualDisplay.periodLabel ? (
-              <Text variant="bodySm" style={{ color: colors.clayDeep }}>
-                /{annualDisplay.periodLabel}
-              </Text>
-            ) : null}
-          </Text>
-        </View>
-        {offering.data?.status && offering.data.status !== 'available' ? (
+        {compactPaywall ? null : renderPriceSummary(false)}
+        {!compactPaywall && unavailableReason ? (
           <Text
             variant="bodySm"
             tone="muted"
             className="mt-2 px-2 text-center"
             style={{ fontSize: 12, lineHeight: 17 }}
           >
-            {offering.data.reason}
+            {unavailableReason}
           </Text>
         ) : null}
         <ComplianceRow />
       </ScrollView>
       <View className={compactPaywall ? 'gap-2.5 pb-8' : 'gap-2.5 pb-2'}>
+        {compactPaywall ? renderPriceSummary(true) : null}
+        {compactPaywall && unavailableReason ? (
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className="px-2 text-center"
+            style={{ fontSize: 11.5, lineHeight: 15 }}
+          >
+            {unavailableReason}
+          </Text>
+        ) : null}
         <Pressable
           accessibilityRole="button"
           disabled={!canPurchase || startTrial.isPending}
