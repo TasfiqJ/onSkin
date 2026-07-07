@@ -145,8 +145,19 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   and returns `Done` to `/shelf`, with no private product names, zero horizontal
   overflow, and no browser errors. Evidence is in
   `test-results/human-e2e/2026-07-07/conflict-share-routes-current/`; it does
-  not replace real reviewed conflict persistence QA, native share-sheet export
-  QA, public-link final domain QA, or reviewed conflict-rule content approval.
+  not replace native share-sheet export QA, public-link final domain QA, or
+  reviewed conflict-rule content approval.
+- 2026-07-07: Fresh Chrome E2E at 320 x 568 covers the real conflict-detail
+  choice path with a seeded retinol/glycolic Shelf conflict. The Shelf banner
+  opens the conflict detail through `Review conflict`, the detail shows calm
+  evidence/severity/resolution copy without claiming the products are already
+  cycle-placed, the compact saved-choice footer reads `saved · we won't ask
+  again`, and tapping `Use together anyway` returns to Shelf with the conflict
+  banner suppressed. The run decrypted local override storage and confirmed the
+  canonical conflict key persisted. Evidence is in
+  `test-results/human-e2e/2026-07-07/conflict-detail-choice-current/`; it does
+  not replace dermatologist/cosmetic-chemist approval of the starter conflict
+  matrix or native-device QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers commerce trust route recovery in
   default deferred and enabled local modes. Default `/commerce/stacks`,
   `/commerce/transparency`, `/commerce/consent`, and

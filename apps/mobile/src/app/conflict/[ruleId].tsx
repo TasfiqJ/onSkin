@@ -492,7 +492,7 @@ function StandardBody({
         <View className="mt-1 flex-row items-center justify-center gap-2">
           <View className="h-1 w-1 rounded-full" style={{ backgroundColor: colors.mutedFaint }} />
           <Text className="font-mono text-[10.5px]" style={{ color: colors.mutedLight }}>
-            your choice is saved · we won&apos;t re-nag
+            saved · we won&apos;t ask again
           </Text>
         </View>
       </View>

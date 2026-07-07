@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Verified the real conflict-detail choice path in a fresh 320 x 568 Chrome
+  context seeded with a retinol/glycolic Shelf conflict. The Shelf banner opened
+  the detail through `Review conflict`, the detail showed calm evidence and
+  resolution copy, the compact saved-choice footer now reads `saved · we won't
+  ask again`, and tapping `Use together anyway` returned to Shelf with the
+  conflict banner suppressed. The run decrypted the local override envelope and
+  confirmed the canonical conflict key persisted. Focused conflict route,
+  override, and Shelf tests pass. Evidence is in
+  `test-results/human-e2e/2026-07-07/conflict-detail-choice-current/`.
+
 - Verified conflict-check quota direct-route gating in a fresh 320 x 568 Chrome
   context seeded with real retinol/glycolic and retinol/BHA shelf conflicts. The
   first free direct conflict route rendered the AHA detail and recorded the free

@@ -908,7 +908,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 1. Action: Open a real `/conflict/[ruleId]` route from a shelf conflict, review evidence/severity copy, choose Keep alternate nights or Use together anyway, and return to Shelf.
    Expected result: The conflict copy is calm and claim-safe, shelf-only copy gives timing advice without claiming the products were already placed by a cycle, the user choice persists, and the app does not re-nag immediately.
-   Evidence: Screenshot sequence and local choice state. Open: current local browser state did not contain a real matching shelf conflict in the 2026-07-07 recovery sweep.
+   Evidence: 2026-07-07 fresh Chrome context at 320 x 568 seeded a real retinol/glycolic Shelf conflict, opened the detail via the Shelf `Review conflict` banner, verified calm evidence/severity/resolution copy, scrolled to the action area, tapped `Use together anyway`, returned to Shelf, and verified the conflict banner was suppressed while the products remained visible. The run decrypted local override storage and confirmed `00000000-0000-4000-8000-000000000001:e2e-glycolic+e2e-retinol` persisted. Evidence is in `test-results/human-e2e/2026-07-07/conflict-detail-choice-current/`.
 
 ### Branches
 
