@@ -16,6 +16,7 @@ const errors = [];
 const warnings = [];
 const checks = [];
 const env = envSnapshot();
+const placeholder = placeholderEnvValue;
 
 const runLive = env.PHASE9_RUN_LIVE_REVENUECAT_WEBHOOK === 'true';
 const appEnv = readScriptAppEnvironment();
@@ -45,8 +46,6 @@ function safeHost(value) {
     return 'invalid-url';
   }
 }
-
-const placeholder = placeholderEnvValue;
 
 function resultError(error) {
   return error instanceof Error ? error.message : String(error);
