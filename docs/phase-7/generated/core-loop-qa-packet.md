@@ -1,6 +1,6 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-07T04:31:39.169Z
+Generated at: 2026-07-07T05:14:35.100Z
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 

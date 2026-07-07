@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened encrypted Progress photo storage so malformed content keys are
+  rotated, malformed note envelopes return `null`, and malformed photo/share
+  envelopes fail with a stable storage error instead of trusting arbitrary JSON
+  or hex. Focused regression tests now cover encrypted notes, key rotation,
+  share-export ownership, and encrypted storage cleanup.
+
 - Hardened server reverse-trial grants so the one-time grant ledger and Pro
   entitlement mirror are written through a single service-role RPC. A partial
   server failure can no longer consume the user's no-card trial without also

@@ -46,11 +46,23 @@ async function ensureDir(): Promise<void> {
 
 async function getContentKey(): Promise<Uint8Array> {
   const existing = await SecureStore.getItemAsync(KEY_STORE_NAME);
-  if (existing) return hexToBytes(existing);
+  const existingKey = contentKeyFromHex(existing);
+  if (existingKey) return existingKey;
+  if (existing) await SecureStore.deleteItemAsync(KEY_STORE_NAME).catch(() => {});
 
   const key = randomBytes(32);
   await SecureStore.setItemAsync(KEY_STORE_NAME, bytesToHex(key));
   return key;
+}
+
+function contentKeyFromHex(value: string | null | undefined): Uint8Array | null {
+  if (!value || !/^[0-9a-f]{64}$/i.test(value)) return null;
+  try {
+    const key = hexToBytes(value);
+    return key.byteLength === 32 ? key : null;
+  } catch {
+    return null;
+  }
 }
 
 function encryptBytesWithKey(plaintext: Uint8Array, key: Uint8Array): EncryptedTextEnvelope {
@@ -79,6 +91,59 @@ function mimeForUri(uri: string): 'image/jpeg' | 'image/png' {
 
 function safePhotoShareId(photoId: string): string {
   return photoId.replace(/[^A-Za-z0-9_-]/g, '') || 'photo';
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function parseJsonRecord(raw: string): Record<string, unknown> | null {
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return isRecord(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function isHex(value: unknown, expectedBytes?: number): value is string {
+  if (typeof value !== 'string' || !/^[0-9a-f]+$/i.test(value) || value.length % 2 !== 0) {
+    return false;
+  }
+  return expectedBytes == null || value.length === expectedBytes * 2;
+}
+
+function textEnvelopeFromRecord(record: Record<string, unknown>): EncryptedTextEnvelope | null {
+  if (record.version !== ENCRYPTION_VERSION || record.keyId !== KEY_ID) return null;
+  if (!isHex(record.nonceHex, NONCE_BYTES) || !isHex(record.ciphertextHex)) return null;
+  return {
+    version: ENCRYPTION_VERSION,
+    keyId: KEY_ID,
+    nonceHex: record.nonceHex,
+    ciphertextHex: record.ciphertextHex,
+  };
+}
+
+function photoEnvelopeFromRaw(raw: string): EncryptedPhotoEnvelope | null {
+  const record = parseJsonRecord(raw);
+  if (!record) return null;
+  const textEnvelope = textEnvelopeFromRecord(record);
+  if (!textEnvelope) return null;
+  if (record.mimeType !== 'image/jpeg' && record.mimeType !== 'image/png') return null;
+  return { ...textEnvelope, mimeType: record.mimeType };
+}
+
+function encryptedTextEnvelopeFromRaw(raw: string): EncryptedTextEnvelope | null {
+  const record = parseJsonRecord(raw);
+  return record ? textEnvelopeFromRecord(record) : null;
+}
+
+function decryptEnvelopeToUtf8(envelope: EncryptedTextEnvelope, key: Uint8Array): string | null {
+  try {
+    return bytesToUtf8(decryptBytesWithKey(envelope, key));
+  } catch {
+    return null;
+  }
 }
 
 export function isEncryptedPhotoUri(uri?: string | null): boolean {
@@ -120,8 +185,10 @@ export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<
   const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
     encoding: FileSystem.EncodingType.UTF8,
   });
-  const envelope = JSON.parse(raw) as EncryptedPhotoEnvelope;
-  const base64 = bytesToUtf8(decryptBytesWithKey(envelope, key));
+  const envelope = photoEnvelopeFromRaw(raw);
+  if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+  const base64 = decryptEnvelopeToUtf8(envelope, key);
+  if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
   return `data:${envelope.mimeType};base64,${base64}`;
 }
 
@@ -134,8 +201,10 @@ export async function createPhotoShareFile(
   const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
     encoding: FileSystem.EncodingType.UTF8,
   });
-  const envelope = JSON.parse(raw) as EncryptedPhotoEnvelope;
-  const base64 = bytesToUtf8(decryptBytesWithKey(envelope, key));
+  const envelope = photoEnvelopeFromRaw(raw);
+  if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+  const base64 = decryptEnvelopeToUtf8(envelope, key);
+  if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
   const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
   const extension = envelope.mimeType === 'image/png' ? 'png' : 'jpg';
   const cacheDirectory = FileSystem.cacheDirectory;
@@ -178,8 +247,8 @@ export async function decryptPhotoNote(
 ): Promise<string | null> {
   if (!ciphertext) return null;
   const key = await getContentKey();
-  const envelope = JSON.parse(ciphertext) as EncryptedTextEnvelope;
-  return bytesToUtf8(decryptBytesWithKey(envelope, key));
+  const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
+  return envelope ? decryptEnvelopeToUtf8(envelope, key) : null;
 }
 
 export const photoEncryptionInfo = {
