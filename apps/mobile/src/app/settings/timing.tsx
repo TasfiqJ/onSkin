@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { REMINDER_COPY, SETTINGS_COPY } from '@/features/notifications/copy';
@@ -34,6 +34,9 @@ function TimePickerModal({
   onSelect: (hm: string) => void;
   onClose: () => void;
 }) {
+  const insets = useSafeAreaInsets();
+  const sheetPaddingBottom =
+    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title =
     field === 'am'
       ? 'Morning reminder'
@@ -57,7 +60,13 @@ function TimePickerModal({
           accessibilityRole="button"
           onPress={onClose}
         />
-        <View accessibilityViewIsModal className="rounded-t-sheet bg-paper px-6 pb-10 pt-4">
+        <View
+          accessibilityViewIsModal
+          className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
+          style={
+            sheetPaddingBottom === undefined ? undefined : { paddingBottom: sheetPaddingBottom }
+          }
+        >
           <View
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
             style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}

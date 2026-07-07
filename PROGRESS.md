@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the hand-built `/settings/timing` reminder time-picker sheet for
+  native bottom safe areas. The modal now uses `useSafeAreaInsets()` and only
+  overrides bottom padding when a real bottom inset exists, preserving compact
+  zero-inset web density while adding home-indicator clearance on iOS/Android.
+  Focused `settingsRoutes.test.ts` passes, and Codex in-app browser E2E at
+  320 x 568 verifies the Morning picker opens with 40 px web bottom padding,
+  zero horizontal overflow, 48 px visible rows, scrolls to a later time, and
+  selecting `6:00 AM` closes the sheet and updates the pill. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-settings-time-picker-safe-area.md`.
+
 - Refreshed the generated Phase 7 core-loop QA packet after the current shared
   sheet, progress-capture, conflict, routine, Today, Progress, and You route
   hashes changed. Non-strict `phase7:check-core-loop` passes with code gates

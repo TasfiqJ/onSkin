@@ -421,6 +421,15 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`; it does
   not replace native notification permission, OS scheduling, or device timezone/DST
   QA.
+- 2026-07-07: Codex in-app browser E2E at 320 x 568 covers the hand-built
+  `/settings/timing` time-picker sheet after native safe-area hardening. The
+  Morning picker keeps 40 px bottom padding on the zero-inset web surface, has
+  zero horizontal overflow, exposes 48 px visible picker rows and a named
+  dismiss backdrop, scrolls to a later time, and selecting `6:00 AM` closes the
+  modal and updates the Morning pill. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-time-picker-safe-area/`; it does
+  not replace native iOS/Android home-indicator, VoiceOver/TalkBack, or OS
+  scheduling QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 and 390 x 568 plus the paywall mobile contract
   covers lifecycle paywall compact footer buffers: `/paywall/reoffer` and
   `/paywall/downgrade` keep fixed footer actions outside the scroll body, expose
