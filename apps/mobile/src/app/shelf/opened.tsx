@@ -94,16 +94,19 @@ export default function OpenedDateScreen() {
   const [paoEditOpen, setPaoEditOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const hasProductDraft =
+    draft.name.trim().length > 0 || draft.catalogProductId != null || draft.barcode != null;
   const canSave = mode !== 'pick' || pickIso != null;
 
   const onSave = async () => {
-    if (!canSave || saving) return;
+    const productName = draft.name.trim();
+    if (!hasProductDraft || !productName || !canSave || saving) return;
     setSaving(true);
     const today = localDateString();
     const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
     const isOpened = mode !== 'unopened';
     await m.add({
-      name: draft.name || 'Product',
+      name: productName,
       brand: draft.brand,
       category: draft.category,
       barcode: draft.barcode,
@@ -138,6 +141,43 @@ export default function OpenedDateScreen() {
     reset();
     router.replace('/shelf');
   };
+
+  if (!hasProductDraft) {
+    return (
+      <Sheet fallbackRoute={APP_SHELF_ROUTE}>
+        <View className="mb-4 flex-row items-start justify-between">
+          <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
+            <Text className="text-[18px] text-clay">+</Text>
+          </View>
+          <RouteIconButton
+            accessibilityLabel="Close"
+            glyph="x"
+            onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+          />
+        </View>
+        <Text variant="title" className="text-[30px] leading-[33px]" accessibilityRole="header">
+          Add product details first.
+        </Text>
+        <Text variant="body" tone="muted" className="mt-2">
+          Freshness starts after we know which product you&apos;re adding. Start with the product
+          name, then we&apos;ll ask when you opened it.
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Add product by hand"
+          className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"
+          onPress={() => {
+            haptics.select();
+            router.replace('/shelf/manual');
+          }}
+        >
+          <Text className="font-sans-semibold" tone="inverse">
+            Add by hand
+          </Text>
+        </Pressable>
+      </Sheet>
+    );
+  }
 
   return (
     <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>

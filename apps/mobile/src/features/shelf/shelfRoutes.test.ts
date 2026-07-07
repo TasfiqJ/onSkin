@@ -239,6 +239,13 @@ describe('Shelf route mobile contracts', () => {
   it('keeps opened-date and PAO chips buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/opened.tsx');
 
+    expect(source).toContain('const hasProductDraft =');
+    expect(source).toContain('if (!hasProductDraft)');
+    expect(source).toContain('accessibilityLabel="Add product by hand"');
+    expect(source).toContain("router.replace('/shelf/manual')");
+    expect(source).toContain('if (!hasProductDraft || !productName || !canSave || saving) return;');
+    expect(source).toContain('name: productName');
+    expect(source).not.toContain("name: draft.name || 'Product'");
     expect(source).toContain(
       '<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
     );

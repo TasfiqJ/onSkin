@@ -2070,6 +2070,13 @@ input. The placeholder now uses shorter front-label copy that fits on compact iO
 communicating the expected product-name entry. The onboarding route contract now guards against restoring the longer
 compact-breaking placeholder.
 
+### Shelf opened-date direct-entry guard (2026-07-07)
+
+Fixed `/shelf/opened` after the direct-entry shelf audit found the opened-date sheet could be reached without an intake
+draft and then save a generic `Product` row. The route now shows a recovery sheet with a 48 px `Add by hand` action and
+visible Close control when product details are missing, and the save path refuses blank draft names before writing to
+the shelf. The Shelf route contract now guards against restoring the generic fallback name.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
