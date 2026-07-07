@@ -14,14 +14,46 @@ const KEY = 'onskin.completions.v1';
 
 type Log = Record<string, string[]>; // localDate -> stepKeys done that day
 
-function isCompletionLog(value: unknown): value is Log {
-  if (!value || Array.isArray(value) || typeof value !== 'object') return false;
-  return Object.entries(value).every(
-    ([date, keys]) =>
-      /^\d{4}-\d{2}-\d{2}$/.test(date) &&
-      Array.isArray(keys) &&
-      keys.every((key) => typeof key === 'string'),
-  );
+function normalizeLocalDateISO(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (!match) return null;
+  const [, y, m, d] = match;
+  const year = Number(y);
+  const month = Number(m);
+  const day = Number(d);
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+    ? text
+    : null;
+}
+
+function normalizeStepKey(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  return text.length > 0 ? text : null;
+}
+
+function shiftLocalDateISO(date: string, days: number): string {
+  const [year, month, day] = date.split('-').map(Number);
+  return localDateString(new Date(year, month - 1, day + days));
+}
+
+function normalizeCompletionLog(value: unknown): Log | null {
+  if (!value || Array.isArray(value) || typeof value !== 'object') return null;
+  const out: Log = {};
+  for (const [date, keys] of Object.entries(value)) {
+    const normalizedDate = normalizeLocalDateISO(date);
+    if (!normalizedDate || !Array.isArray(keys)) continue;
+    const normalizedKeys = [
+      ...new Set(keys.map(normalizeStepKey).filter((key): key is string => Boolean(key))),
+    ];
+    if (normalizedKeys.length > 0) out[normalizedDate] = normalizedKeys;
+  }
+  return out;
 }
 
 /** Stable per-step key. Phase-scoped so an AM and a PM step for the same product
@@ -40,7 +72,15 @@ async function load(): Promise<Log> {
   if (!raw) return {};
   try {
     const parsed: unknown = JSON.parse(raw);
-    if (isCompletionLog(parsed)) return parsed;
+    const normalized = normalizeCompletionLog(parsed);
+    if (normalized) {
+      if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+        if (Object.keys(normalized).length > 0)
+          await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+        else await removePrivateItem(KEY).catch(() => undefined);
+      }
+      return normalized;
+    }
   } catch {
     /* malformed legacy/local state */
   }
@@ -54,45 +94,51 @@ async function save(log: Log): Promise<void> {
 
 /** The step keys checked off on `date`. */
 export async function getCompletedSteps(date: string = localDateString()): Promise<Set<string>> {
+  const normalizedDate = normalizeLocalDateISO(date);
+  if (!normalizedDate) return new Set();
   const log = await load();
-  return new Set(log[date] ?? []);
+  return new Set(log[normalizedDate] ?? []);
 }
 
-/** Whether a completion date is older than the ~48h backfill cap (docs/07 §4.4):
- *  the server rejects backdating past today-2, so the local store must too, or a
- *  future "log an earlier day" surface could silently inflate the streak. Cutoff =
- *  today - 2 local days; dates on/after the cutoff are allowed. */
+/** Whether a completion date is outside the server validation window (docs/03 §6):
+ *  backfill is limited to today - 2 local days, and the future side is capped at
+ *  today + 1 for timezone tolerance. */
 export function isBeyondBackfillCap(date: string, today: string = localDateString()): boolean {
-  const t = new Date(`${today}T00:00:00`);
-  const cutoff = localDateString(new Date(t.getFullYear(), t.getMonth(), t.getDate() - 2));
-  return date < cutoff;
+  const normalizedDate = normalizeLocalDateISO(date);
+  const normalizedToday = normalizeLocalDateISO(today);
+  if (!normalizedDate || !normalizedToday) return true;
+  const cutoff = shiftLocalDateISO(normalizedToday, -2);
+  const maxFuture = shiftLocalDateISO(normalizedToday, 1);
+  return normalizedDate < cutoff || normalizedDate > maxFuture;
 }
 
 /** Toggle a step's completion for a day. Returns whether it is now done and whether
  *  this was the user's first-ever completion (the north-star activation moment).
- *  Backdating past the 48h cap (docs/07 §4.4) is rejected to prevent streak abuse. */
+ *  Dates outside the server completion window (docs/03 §6) are rejected. */
 export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
 ): Promise<{ done: boolean; firstEver: boolean }> {
-  if (isBeyondBackfillCap(date)) {
-    // Outside the 48h backfill window: do not record, report it as not-done.
-    const existing = await getCompletedSteps(date);
-    return { done: existing.has(key), firstEver: false };
+  const normalizedKey = normalizeStepKey(key);
+  const normalizedDate = normalizeLocalDateISO(date);
+  if (!normalizedKey || !normalizedDate || isBeyondBackfillCap(normalizedDate)) {
+    // Outside the server completion window: do not record, report it as not-done.
+    const existing = await getCompletedSteps(normalizedDate ?? date);
+    return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
   }
   const log = await load();
   const hadAny = Object.values(log).some((a) => a.length > 0);
-  const day = new Set(log[date] ?? []);
+  const day = new Set(log[normalizedDate] ?? []);
   let done: boolean;
-  if (day.has(key)) {
-    day.delete(key);
+  if (day.has(normalizedKey)) {
+    day.delete(normalizedKey);
     done = false;
   } else {
-    day.add(key);
+    day.add(normalizedKey);
     done = true;
   }
-  if (day.size > 0) log[date] = [...day];
-  else delete log[date];
+  if (day.size > 0) log[normalizedDate] = [...day];
+  else delete log[normalizedDate];
   await save(log);
   return { done, firstEver: done && !hadAny };
 }

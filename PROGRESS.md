@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the Today completion loop and offline completion queue so impossible
+  calendar dates, blank step IDs, duplicate local check-offs, malformed queue
+  rows, and invalid enqueue timestamps are normalized or dropped before they can
+  distort Today progress, heat-map counts, streak input, or server sync.
+  Human-simulated Expo web E2E for Routine Plan First Value also passed at
+  320x568: clean direct entry showed the contextual paywall, Explore first
+  revealed the example routine, Start today reached Today, and Back recovered to
+  You. Evidence is in `test-results/human-e2e/2026-07-07/routine-plan/`.
+
 - Regenerated the Phase 7 core-loop QA packet after the latest route/storage
   changes and added the missing Tas-owned Phase 7 strict-evidence row to
   `docs/FOR_TAS_TO_DO.md`. Non-strict Phase 7 code gates pass; strict launch

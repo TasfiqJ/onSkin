@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getCompletedSteps, toggleCompletion } from './completionsStore';
+import {
+  getCompletedSteps,
+  getCountByDate,
+  isBeyondBackfillCap,
+  toggleCompletion,
+} from './completionsStore';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -42,5 +47,60 @@ describe('today completion persistence', () => {
     });
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
+  });
+
+  it('normalizes padded and duplicate step keys before Today reads them', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        [` ${DAY} `]: [' AM:cleanser ', '', 'AM:cleanser', 7, 'PM:retinol'],
+        '2026-02-31': ['PM:bad-date'],
+        '2026-07-06': 'wrong-shape',
+      }),
+    );
+
+    await expect(getCompletedSteps(DAY)).resolves.toEqual(
+      new Set(['AM:cleanser', 'PM:retinol']),
+    );
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      [DAY]: ['AM:cleanser', 'PM:retinol'],
+    });
+  });
+
+  it('does not persist empty step keys or invalid completion dates', async () => {
+    await expect(toggleCompletion('   ', DAY)).resolves.toEqual({
+      done: false,
+      firstEver: false,
+    });
+    await expect(toggleCompletion('AM:cleanser', '2026-02-31')).resolves.toEqual({
+      done: false,
+      firstEver: false,
+    });
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('treats invalid dates as beyond the backfill cap', () => {
+    expect(isBeyondBackfillCap('2026-02-31', DAY)).toBe(true);
+    expect(isBeyondBackfillCap(DAY, 'not-a-day')).toBe(true);
+  });
+
+  it('rejects dates beyond the timezone-tolerant future window', () => {
+    expect(isBeyondBackfillCap('2026-07-08', DAY)).toBe(false);
+    expect(isBeyondBackfillCap('2026-07-09', DAY)).toBe(true);
+  });
+
+  it('uses normalized completion rows for heat-map counts', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        [DAY]: ['AM:cleanser', ' AM:cleanser ', 'PM:retinol'],
+      }),
+    );
+
+    const counts = await getCountByDate();
+
+    expect(counts.get(DAY)).toBe(2);
   });
 });

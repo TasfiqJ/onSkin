@@ -1,7 +1,13 @@
 import { supabase } from '@/lib/supabase/client';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
-import { isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
+import {
+  isStale,
+  normalizeLocalDay,
+  normalizePendingCompletion,
+  withQueued,
+  type PendingCompletion,
+} from './completionQueue.pure';
 
 export type { PendingCompletion } from './completionQueue.pure';
 
@@ -20,18 +26,6 @@ export type { PendingCompletion } from './completionQueue.pure';
 // logic (completionQueue.pure.ts) is unit-tested and ready.
 const KEY = 'onskin.completions.pending';
 
-function isPendingCompletion(value: unknown): value is PendingCompletion {
-  if (!value || Array.isArray(value) || typeof value !== 'object') return false;
-  const rec = value as Record<string, unknown>;
-  return (
-    typeof rec.userId === 'string' &&
-    typeof rec.routineId === 'string' &&
-    (typeof rec.stepId === 'string' || rec.stepId === null) &&
-    typeof rec.completedDate === 'string' &&
-    typeof rec.enqueuedAt === 'string'
-  );
-}
-
 export async function getPendingCompletions(): Promise<PendingCompletion[]> {
   let raw: string | null;
   try {
@@ -42,7 +36,17 @@ export async function getPendingCompletions(): Promise<PendingCompletion[]> {
   if (!raw) return [];
   try {
     const parsed: unknown = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.every(isPendingCompletion)) return parsed;
+    if (Array.isArray(parsed)) {
+      const normalized = parsed
+        .map(normalizePendingCompletion)
+        .filter((row): row is PendingCompletion => Boolean(row));
+      if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+        if (normalized.length > 0)
+          await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+        else await removePrivateItem(KEY).catch(() => undefined);
+      }
+      return normalized;
+    }
   } catch {
     /* malformed legacy/local state */
   }
@@ -60,9 +64,11 @@ export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {
 
 /** Step ids checked off but not yet synced, for a given local day (read merge). */
 export async function pendingStepIdsForDate(date: string): Promise<Set<string>> {
+  const normalizedDate = normalizeLocalDay(date);
+  if (!normalizedDate) return new Set();
   const out = new Set<string>();
   for (const c of await getPendingCompletions()) {
-    if (c.completedDate === date && c.stepId) out.add(c.stepId);
+    if (c.completedDate === normalizedDate && c.stepId) out.add(c.stepId);
   }
   return out;
 }
@@ -70,9 +76,9 @@ export async function pendingStepIdsForDate(date: string): Promise<Set<string>> 
 /**
  * Drain the queue to Supabase. Removes rows that land (or already exist; a 23505
  * dedup means it's recorded). Keeps rows that fail transiently (offline) for the
- * next attempt. Drops rows that are stale (past the ~48h server cap) or that belong
- * to a different signed-in user (they can't pass the current session's RLS). Safe
- * to call repeatedly; a no-op when the queue is empty or there's no session yet.
+ * next attempt. Drops rows outside the server completion window or that belong to
+ * a different signed-in user (they can't pass the current session's RLS). Safe to
+ * call repeatedly; a no-op when the queue is empty or there's no session yet.
  */
 export async function flushCompletions(
   now: Date = new Date(),
@@ -88,7 +94,7 @@ export async function flushCompletions(
   let flushed = 0;
   for (const rec of pending) {
     if (rec.userId !== userId) continue; // a prior account's row; drop
-    if (isStale(rec.completedDate, now)) continue; // past the server backfill cap; drop
+    if (isStale(rec.completedDate, now)) continue; // outside the server window; drop
     try {
       const { error } = await supabase.from('routine_completions').insert({
         user_id: userId,
