@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Refreshed the Phase 9 release-engineering QA packet from a clean worktree.
+  The packet no longer carries the stale dirty-worktree warning and now hashes
+  the current analytics registry, settings actions, RevenueCat webhook, and live
+  webhook harness sources. Strict Phase 9 remains blocked only by Tas-owned live
+  service, store, native QA, beta, and named-signoff evidence.
+
 - Strengthened the floating bottom tab bar active state after human-simulated
   Expo web E2E showed the selected destination had a transparent background and
   border. The active tab now renders as a subtle filled pill inside the floating
