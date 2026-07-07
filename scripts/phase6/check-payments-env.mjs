@@ -2,7 +2,12 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { placeholderEnvValue, productionUrl } from '../phase9/lib.mjs';
+import {
+  evidenceFlagEnabled,
+  normalizeNamedSignoff,
+  placeholderEnvValue,
+  productionUrl,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -190,24 +195,23 @@ warn(
 );
 
 for (const key of ['EXPO_PUBLIC_PRIVACY_URL', 'EXPO_PUBLIC_TERMS_URL', 'EXPO_PUBLIC_SUPPORT_URL']) {
-  warn(
-    productionUrl(prodEnv[key]),
-    `${key} must be a real production HTTPS URL.`,
-  );
+  warn(productionUrl(prodEnv[key]), `${key} must be a real production HTTPS URL.`);
 }
 
-const externalEvidence = {
-  PHASE6_RC_OFFERING_REVIEWED: process.env.PHASE6_RC_OFFERING_REVIEWED,
-  PHASE6_IOS_SANDBOX_RESTORE_PASS: process.env.PHASE6_IOS_SANDBOX_RESTORE_PASS,
-  PHASE6_ANDROID_LICENSE_TEST_PASS: process.env.PHASE6_ANDROID_LICENSE_TEST_PASS,
-  PHASE6_WEBHOOK_HMAC_TEST_PASS: process.env.PHASE6_WEBHOOK_HMAC_TEST_PASS,
-  PHASE6_FINANCE_SIGNOFF: process.env.PHASE6_FINANCE_SIGNOFF,
-  PHASE6_SIGNED_OFF_BY: process.env.PHASE6_SIGNED_OFF_BY,
-};
-
-for (const [key, value] of Object.entries(externalEvidence)) {
-  warn(Boolean(value) && value !== 'false', `Missing external Phase 6 evidence: ${key}.`);
+const externalEvidence = [
+  'PHASE6_RC_OFFERING_REVIEWED',
+  'PHASE6_IOS_SANDBOX_RESTORE_PASS',
+  'PHASE6_ANDROID_LICENSE_TEST_PASS',
+  'PHASE6_WEBHOOK_HMAC_TEST_PASS',
+  'PHASE6_FINANCE_SIGNOFF',
+];
+for (const key of externalEvidence) {
+  warn(evidenceFlagEnabled(process.env[key]), `Missing external Phase 6 evidence: ${key}.`);
 }
+warn(
+  Boolean(normalizeNamedSignoff(process.env.PHASE6_SIGNED_OFF_BY)),
+  'Missing external Phase 6 evidence: PHASE6_SIGNED_OFF_BY.',
+);
 
 console.log('Phase 6 payments/entitlements check');
 for (const warning of warnings) console.warn(`WARN ${warning}`);

@@ -2,10 +2,11 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { evidenceFlagEnabled, normalizeNamedSignoff } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
-const outDir = resolve(root, 'docs/phase-6/generated');
+const outDir = resolve(root, process.env.PHASE6_PACKET_OUT_DIR ?? 'docs/phase-6/generated');
 
 const requiredFiles = [
   'apps/mobile/src/lib/iap/revenuecat.ts',
@@ -28,20 +29,38 @@ const requiredFiles = [
 ];
 
 const scenarios = [
-  ['Offering load', 'current RevenueCat offering returns annual and monthly packages with localized prices'],
+  [
+    'Offering load',
+    'current RevenueCat offering returns annual and monthly packages with localized prices',
+  ],
   ['Missing offering', 'paywall disables purchase and shows unavailable state; no Pro grant'],
-  ['Trial purchase', 'eligible annual trial opens store sheet, grants Pro only from CustomerInfo, schedules reminder'],
-  ['Paid purchase', 'ineligible/no-trial annual purchase grants Pro only from CustomerInfo and cancels trial reminder'],
+  [
+    'Trial purchase',
+    'eligible annual trial opens store sheet, grants Pro only from CustomerInfo, schedules reminder',
+  ],
+  [
+    'Paid purchase',
+    'ineligible/no-trial annual purchase grants Pro only from CustomerInfo and cancels trial reminder',
+  ],
   ['Cancellation', 'webhook sets will_renew=false but keeps access until expiration'],
-  ['Expiration/refund', 'webhook deactivates entitlement and lifecycle screen downgrades gracefully'],
+  [
+    'Expiration/refund',
+    'webhook deactivates entitlement and lifecycle screen downgrades gracefully',
+  ],
   ['Restore', 'new install restores active subscription and writes verified local cache'],
   [
     'Reverse trial',
     'authenticated Edge Function atomically grants exactly once, server expiry RPC deactivates after 7 days',
   ],
-  ['Win-back', 'native eligible win-back offer purchases on iOS; unavailable offers are hidden/rerouted'],
+  [
+    'Win-back',
+    'native eligible win-back offer purchases on iOS; unavailable offers are hidden/rerouted',
+  ],
   ['Webhook auth', 'bad HMAC rejected, stale timestamp rejected, duplicate event id idempotent'],
-  ['Account deletion', 'mobile copy says deletion does not cancel store billing; server calls RevenueCat delete customer'],
+  [
+    'Account deletion',
+    'mobile copy says deletion does not cancel store billing; server calls RevenueCat delete customer',
+  ],
   ['Finance', '$49.99 annual model, refund/churn assumptions, entitlement denial/leakage reviewed'],
 ];
 
@@ -58,12 +77,12 @@ function hashFile(path) {
 }
 
 const evidence = {
-  rcOfferingReviewed: process.env.PHASE6_RC_OFFERING_REVIEWED === 'true',
-  iosSandboxRestorePass: process.env.PHASE6_IOS_SANDBOX_RESTORE_PASS === 'true',
-  androidLicenseTestPass: process.env.PHASE6_ANDROID_LICENSE_TEST_PASS === 'true',
-  webhookHmacTestPass: process.env.PHASE6_WEBHOOK_HMAC_TEST_PASS === 'true',
-  financeSignoff: process.env.PHASE6_FINANCE_SIGNOFF === 'true',
-  signedOffBy: process.env.PHASE6_SIGNED_OFF_BY ?? '',
+  rcOfferingReviewed: evidenceFlagEnabled(process.env.PHASE6_RC_OFFERING_REVIEWED),
+  iosSandboxRestorePass: evidenceFlagEnabled(process.env.PHASE6_IOS_SANDBOX_RESTORE_PASS),
+  androidLicenseTestPass: evidenceFlagEnabled(process.env.PHASE6_ANDROID_LICENSE_TEST_PASS),
+  webhookHmacTestPass: evidenceFlagEnabled(process.env.PHASE6_WEBHOOK_HMAC_TEST_PASS),
+  financeSignoff: evidenceFlagEnabled(process.env.PHASE6_FINANCE_SIGNOFF),
+  signedOffBy: normalizeNamedSignoff(process.env.PHASE6_SIGNED_OFF_BY) ?? '',
 };
 
 const files = requiredFiles.map(hashFile);
@@ -71,7 +90,8 @@ const blockers = [];
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
 if (!evidence.rcOfferingReviewed) blockers.push('Missing PHASE6_RC_OFFERING_REVIEWED=true.');
 if (!evidence.iosSandboxRestorePass) blockers.push('Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.');
-if (!evidence.androidLicenseTestPass) blockers.push('Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.');
+if (!evidence.androidLicenseTestPass)
+  blockers.push('Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.');
 if (!evidence.webhookHmacTestPass) blockers.push('Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.');
 if (!evidence.financeSignoff) blockers.push('Missing PHASE6_FINANCE_SIGNOFF=true.');
 if (!evidence.signedOffBy) blockers.push('Missing PHASE6_SIGNED_OFF_BY.');
@@ -89,7 +109,9 @@ mkdirSync(outDir, { recursive: true });
 const jsonPath = join(outDir, 'payments-qa-packet.json');
 writeFileSync(jsonPath, `${JSON.stringify(packet, null, 2)}\n`);
 
-const scenarioRows = scenarios.map(([surface, scenario]) => `| ${surface} | ${scenario} |`).join('\n');
+const scenarioRows = scenarios
+  .map(([surface, scenario]) => `| ${surface} | ${scenario} |`)
+  .join('\n');
 const fileRows = files
   .map((file) =>
     file.exists
@@ -139,6 +161,8 @@ console.log(`Wrote ${relative(root, jsonPath).replaceAll('\\', '/')}`);
 console.log(`Wrote ${relative(root, mdPath).replaceAll('\\', '/')}`);
 
 if (strict && blockers.length > 0) {
-  console.error(`\nPhase 6 strict QA packet has ${blockers.length} blocker${blockers.length === 1 ? '' : 's'}.`);
+  console.error(
+    `\nPhase 6 strict QA packet has ${blockers.length} blocker${blockers.length === 1 ? '' : 's'}.`,
+  );
   process.exit(1);
 }

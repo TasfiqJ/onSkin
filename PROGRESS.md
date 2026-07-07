@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened Phase 6 payments evidence gates so RevenueCat, restore, webhook, and
+  finance proof flags are trimmed/case-normalized while only `true` passes, and
+  placeholder signoffs such as `Tester Name` or `example.com` emails no longer
+  satisfy strict payments exit or generated QA packets. Phase 6 smoke now
+  covers non-true evidence flags plus packet signoff normalization, and
+  `phase6:verify` passes with only Tas-owned RevenueCat/payment evidence
+  warnings.
+
 - Hardened Phase 7/8/9 release evidence gates so external proof flags are
   trimmed/case-normalized while only `true` passes, generated packets strip
   placeholder signoffs, Phase 8 requires real-shaped Apple Team ID and Android

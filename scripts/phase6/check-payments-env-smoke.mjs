@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const checkEnvPath = resolve(scriptDir, 'check-payments-env.mjs');
+const packetPath = resolve(scriptDir, 'build-payments-qa-packet.mjs');
 
 const passthroughKeys = [
   'ComSpec',
@@ -40,12 +43,12 @@ const completeEnv = {
   EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
   EXPO_PUBLIC_TERMS_URL: 'https://routinekind.app/terms',
   EXPO_PUBLIC_SUPPORT_URL: 'https://routinekind.app/support',
-  PHASE6_RC_OFFERING_REVIEWED: 'true',
+  PHASE6_RC_OFFERING_REVIEWED: ' TRUE ',
   PHASE6_IOS_SANDBOX_RESTORE_PASS: 'true',
-  PHASE6_ANDROID_LICENSE_TEST_PASS: 'true',
-  PHASE6_WEBHOOK_HMAC_TEST_PASS: 'true',
-  PHASE6_FINANCE_SIGNOFF: 'true',
-  PHASE6_SIGNED_OFF_BY: 'tas@example.com',
+  PHASE6_ANDROID_LICENSE_TEST_PASS: 'True',
+  PHASE6_WEBHOOK_HMAC_TEST_PASS: ' true ',
+  PHASE6_FINANCE_SIGNOFF: 'TRUE',
+  PHASE6_SIGNED_OFF_BY: ' Tas Mohammed ',
 };
 
 function run(extraEnv) {
@@ -58,6 +61,21 @@ function run(extraEnv) {
 
 function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+}
+
+function runPacket(extraEnv) {
+  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase6-packet-'));
+  try {
+    const result = spawnSync(process.execPath, [packetPath], {
+      cwd: root,
+      encoding: 'utf8',
+      env: { ...processBaseEnv, ...completeEnv, PHASE6_PACKET_OUT_DIR: outDir, ...extraEnv },
+    });
+    const packet = JSON.parse(readFileSync(resolve(outDir, 'payments-qa-packet.json'), 'utf8'));
+    return { ...result, packet };
+  } finally {
+    rmSync(outDir, { force: true, recursive: true });
+  }
 }
 
 const cases = [
@@ -107,6 +125,61 @@ const cases = [
       return (
         result.status === 1 &&
         /EXPO_PUBLIC_SUPPORT_URL must be a real production HTTPS URL/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'strict payments env rejects non-true external evidence flags',
+    result: run({ PHASE6_WEBHOOK_HMAC_TEST_PASS: 'yes' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing external Phase 6 evidence: PHASE6_WEBHOOK_HMAC_TEST_PASS/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'strict payments env rejects placeholder signoffs',
+    result: run({ PHASE6_SIGNED_OFF_BY: 'Tester Name' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing external Phase 6 evidence: PHASE6_SIGNED_OFF_BY/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'Phase 6 packet writes normalized evidence and signoff',
+    result: runPacket({}),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.evidence.rcOfferingReviewed === true &&
+        result.packet.evidence.androidLicenseTestPass === true &&
+        result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
+        !result.packet.blockers.some((blocker) => /PHASE6_SIGNED_OFF_BY/.test(blocker))
+      );
+    },
+  },
+  {
+    name: 'Phase 6 packet strips placeholder signoffs',
+    result: runPacket({ PHASE6_SIGNED_OFF_BY: 'tester@example.com' }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.evidence.signedOffBy === '' &&
+        result.packet.blockers.includes('Missing PHASE6_SIGNED_OFF_BY.')
+      );
+    },
+  },
+  {
+    name: 'Phase 6 packet blocks non-true evidence flags',
+    result: runPacket({ PHASE6_FINANCE_SIGNOFF: 'approved' }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.evidence.financeSignoff === false &&
+        result.packet.blockers.includes('Missing PHASE6_FINANCE_SIGNOFF=true.')
       );
     },
   },
