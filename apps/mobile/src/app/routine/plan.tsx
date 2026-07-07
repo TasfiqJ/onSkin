@@ -36,7 +36,13 @@ function MorningRow({
       </Text>
       <Text
         variant="body"
-        className={compact ? 'font-sans-medium text-[14px]' : 'font-sans-medium text-[14.5px]'}
+        numberOfLines={compact ? 2 : 1}
+        className={
+          compact
+            ? 'min-w-0 flex-1 font-sans-medium text-[14px]'
+            : 'min-w-0 flex-1 font-sans-medium text-[14.5px]'
+        }
+        style={{ flexShrink: 1, minWidth: 0 }}
       >
         {name}
       </Text>
@@ -76,15 +82,22 @@ function EveningRow({
       >
         {nightLabel}
       </Text>
-      <Text
-        className={compact ? 'font-sans-medium text-[14px]' : 'font-sans-medium text-[14.5px]'}
-        style={{ color: colors.cream }}
-      >
-        {name}
-      </Text>
-      <Text className="flex-1 font-sans text-[11px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-        {suffix}
-      </Text>
+      <View className="min-w-0 flex-1">
+        <Text
+          numberOfLines={compact ? 2 : 1}
+          className={compact ? 'font-sans-medium text-[14px]' : 'font-sans-medium text-[14.5px]'}
+          style={{ color: colors.cream, flexShrink: 1, minWidth: 0 }}
+        >
+          {name}
+        </Text>
+        <Text
+          numberOfLines={compact ? 1 : 2}
+          className="mt-0.5 font-sans text-[11px]"
+          style={{ color: 'rgba(244,239,231,0.5)' }}
+        >
+          {suffix}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -105,6 +118,8 @@ export default function PlanScreen() {
   const exfoliant = plan?.pm.find((s) => s.role === 'exfoliant');
   const retinoid = plan?.pm.find((s) => s.role === 'treatment');
   const retRamp = plan?.ramp.find((r) => r.name === retinoid?.name);
+  const hasCycle = plan?.cycle != null;
+  const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser') ?? false;
   const hasVitCSynergy = plan?.conflicts.some(
     (c) =>
       c.rule.interactionType === 'synergy' &&
@@ -231,34 +246,58 @@ export default function PlanScreen() {
                   className="font-mono text-[13px] uppercase tracking-[1px]"
                   style={{ color: colors.clayBright }}
                 >
-                  Evening · skin cycling
+                  {hasCycle ? 'Evening · skin cycling' : 'Evening'}
                 </Text>
               </View>
-              {exfoliant ? (
-                <EveningRow
-                  compact={compactPlan}
-                  nightLabel="N1"
-                  name={exfoliant.name.replace(/\s*Toner$/i, '')}
-                  suffix="exfoliate"
-                  accent={false}
-                />
-              ) : null}
-              {retinoid ? (
-                <EveningRow
-                  compact={compactPlan}
-                  nightLabel="N2"
-                  name={retinoid.name}
-                  suffix={retRamp ? `${retRamp.state.freqPerWeek}×/week to start` : 'tonight'}
-                  accent
-                />
-              ) : null}
-              <EveningRow
-                compact={compactPlan}
-                nightLabel="N3–4"
-                name="Recover"
-                suffix="ceramide only"
-                accent={false}
-              />
+              {hasCycle ? (
+                <>
+                  {exfoliant ? (
+                    <EveningRow
+                      compact={compactPlan}
+                      nightLabel="N1"
+                      name={exfoliant.name.replace(/\s*Toner$/i, '')}
+                      suffix="exfoliate"
+                      accent={false}
+                    />
+                  ) : null}
+                  {retinoid ? (
+                    <EveningRow
+                      compact={compactPlan}
+                      nightLabel="N2"
+                      name={retinoid.name}
+                      suffix={retRamp ? `${retRamp.state.freqPerWeek}×/week to start` : 'tonight'}
+                      accent
+                    />
+                  ) : null}
+                  <EveningRow
+                    compact={compactPlan}
+                    nightLabel="N3–4"
+                    name="Recover"
+                    suffix={hasBarrierStep ? 'moisturiser only' : 'keep it simple'}
+                    accent={false}
+                  />
+                </>
+              ) : plan?.pm.length ? (
+                plan.pm.map((s, i) => (
+                  <EveningRow
+                    key={s.productId}
+                    compact={compactPlan}
+                    nightLabel={`${i + 1}`}
+                    name={s.name}
+                    suffix={s.instruction}
+                    accent={i === 0}
+                  />
+                ))
+              ) : (
+                <View className={compactPlan ? 'py-1' : 'py-1.5'}>
+                  <Text className="font-sans-medium text-[14px]" style={{ color: colors.cream }}>
+                    No night steps yet.
+                  </Text>
+                  <Text className="mt-1 text-[12px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
+                    Add a cleanser, moisturiser, or night product to build this out.
+                  </Text>
+                </View>
+              )}
             </View>
 
             {/* Honest gap note. Only when a category is missing */}

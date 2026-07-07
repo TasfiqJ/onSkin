@@ -62,14 +62,21 @@ describe('Today route mobile contracts', () => {
     );
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
-    expect(source).toContain('{compactPhone ? null : (');
+    expect(source).toContain('{compactPhone || !cycle ? null : (');
   });
 
-  it('keeps PM cycle strip labels legible on compact phones', () => {
+  it('keeps PM cycle strip labels legible only when a real cycle exists', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 
-    expect(source).toContain('FALLBACK_SLOTS');
+    expect(source).not.toContain('FALLBACK_SLOTS');
+    expect(source).toContain('const nightNumber = cTonight ? cTonight.index + 1 : 0');
+    expect(source).toContain('const nightTotal = cycle?.lengthNights ?? 0');
     expect(source).toContain('slotLabel(n.slot)');
+    expect(source).toContain('{cycle ? (');
+    expect(source).toContain('cycle.nights.map((n, i) =>');
+    expect(source).toContain('const active = cTonight ? i === cTonight.index : false;');
+    expect(source).toContain('No evening steps yet.');
+    expect(source).toContain('Add a cleanser, moisturiser, or night product to build this out.');
     expect(source).toContain('adjustsFontSizeToFit');
     expect(source).toContain('maxFontSizeMultiplier={1.12}');
     expect(source).toContain('minimumFontScale={0.85}');

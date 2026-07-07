@@ -248,6 +248,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Add `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` from the onboarding products surface, unlock with the no-card `Explore first` path, inspect `/routine/plan`, tap `Start today`, and complete the generated Today PM check-off.
   - Expected result: Common product-name shorthand is enough before catalog seed: Morning shows SPF and not glycolic, Evening shows glycolic as the exfoliant and retinol as the retinoid, Today PM opens to the matching Glycolic check-off, and the first check-off reaches `1 of 1`.
   - Evidence: Pre/post visible-text snapshots, phone screenshots, browser logs, and check-off state.
+- Branch: sparse shelf without night actives
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add only a daytime product such as `Mineral SPF 50`, open `/routine/plan`, inspect the evening card, tap `Start today`, and inspect Today if the local clock lands on PM.
+  - Expected result: The plan remains labeled as built from the user's shelf, the morning card includes the daytime product, and the plan/Today PM evening states do not claim `skin cycling`, `Recover`, or `ceramide only` until a real night active or barrier product exists.
+  - Evidence: Phone screenshot, visible-text snapshot, local shelf state, and Today route snapshot when tested in PM.
 
 ## Flow: Runtime Brand Identity Smoke
 
