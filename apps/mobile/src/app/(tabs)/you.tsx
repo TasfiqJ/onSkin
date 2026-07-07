@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type Href, router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { type Href, router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
@@ -154,6 +154,7 @@ function openPolicyUrl(url: string) {
 
 export default function YouScreen() {
   const { height, width } = useWindowDimensions();
+  const params = useLocalSearchParams<{ section?: string }>();
   const { user, isAnonymous, signOut } = useAuth();
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
@@ -162,6 +163,9 @@ export default function YouScreen() {
     'marketing' | 'data_sharing' | 'photo_cloud_backup' | null
   >(null);
   const [exportFeedback, setExportFeedback] = useState<string | null>(null);
+  const [privacyCardReady, setPrivacyCardReady] = useState(false);
+  const scrollRef = useRef<ScrollView>(null);
+  const privacyCardY = useRef(0);
   const savingPrivacyRef = useRef(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
@@ -202,6 +206,17 @@ export default function YouScreen() {
   }
   const primaryRoutineRows = compactPhone ? routineRows.slice(0, 3) : routineRows;
   const secondaryRoutineRows = compactPhone ? routineRows.slice(3) : [];
+
+  useEffect(() => {
+    if (params.section !== 'privacy' || !privacyCardReady) return;
+
+    requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo({
+        animated: false,
+        y: Math.max(privacyCardY.current - 16, 0),
+      });
+    });
+  }, [params.section, privacyCardReady]);
 
   const forYouRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Recommendations', href: '/recommendations' },
@@ -353,6 +368,7 @@ export default function YouScreen() {
   return (
     <Screen edges={['top']}>
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}
       >
@@ -525,7 +541,13 @@ export default function YouScreen() {
           />
         </Card>
 
-        <Card className="mt-4">
+        <Card
+          className="mt-4"
+          onLayout={(event) => {
+            privacyCardY.current = event.nativeEvent.layout.y;
+            setPrivacyCardReady(true);
+          }}
+        >
           <Text variant="label" tone="muted" className="mb-1">
             PRIVACY &amp; CONSENT
           </Text>

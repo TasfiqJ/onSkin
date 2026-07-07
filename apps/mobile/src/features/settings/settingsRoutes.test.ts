@@ -22,10 +22,24 @@ function expectTouchableRouteIcon(route: string): void {
 
 describe('Settings route contracts', () => {
   it('keeps privacy direct entries inside the You tab privacy controls surface', () => {
-    const source = readAppRoute('settings/privacy.tsx');
+    const privacyAlias = readAppRoute('settings/privacy.tsx');
+    const you = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain('Redirect');
-    expect(source).toContain('href="/(tabs)/you"');
+    expect(privacyAlias).toContain('Redirect');
+    expect(privacyAlias).toContain("pathname: '/(tabs)/you'");
+    expect(privacyAlias).toContain("params: { section: 'privacy' }");
+    expect(you).toContain('useLocalSearchParams');
+    expect(you).toContain("useLocalSearchParams<{ section?: string }>()");
+    expect(you).toContain('const scrollRef = useRef<ScrollView>(null);');
+    expect(you).toContain('const privacyCardY = useRef(0);');
+    expect(you).toContain("if (params.section !== 'privacy' || !privacyCardReady) return;");
+    expect(you).toContain('scrollRef.current?.scrollTo');
+    expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
+
+    const privacyAnchorIndex = you.indexOf('privacyCardY.current = event.nativeEvent.layout.y;');
+    expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('SECURITY'));
+    expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('REMINDERS'));
+    expect(you.indexOf('PRIVACY &amp; CONSENT')).toBeGreaterThan(privacyAnchorIndex);
   });
 
   it('keeps direct-entry exits safe for account and reminder settings', () => {

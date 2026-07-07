@@ -2103,6 +2103,14 @@ claim-safety tests pin the production default. Follow-up route hardening now gat
 why-tonight surfaces themselves in non-dev builds; production-mode Expo web E2E evidence is in
 `test-results/human-e2e/2026-07-07/cycle-cadence-review-gate/`.
 
+### Settings privacy direct-entry anchor (2026-07-07)
+
+Fixed `/settings/privacy` after a 320 x 568 phone E2E pass showed the direct privacy entry reaching the You tab above the
+privacy controls. The alias now redirects with `section=privacy`, and the You tab measures the real `PRIVACY & CONSENT`
+card before scrolling it into view. The settings route contract now guards against anchoring to Security or Reminders by
+mistake. Expo web E2E verified direct entry, visible privacy controls, a privacy row tap, and browser Back recovery in
+`test-results/human-e2e/2026-07-07/settings-privacy-direct-entry/`.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
