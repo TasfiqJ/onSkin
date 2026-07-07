@@ -1,5 +1,5 @@
 -- =============================================================================
--- 0025 · "Ask OnSkin" — the evidence-grounded conversational advisor (docs/13).
+-- 0025 · "Ask RoutineKind" — the evidence-grounded conversational advisor (docs/13).
 -- =============================================================================
 -- The deferred, chosen-not-lifted feature. The TRUTH SOURCE is the on-device
 -- deterministic engine (detectConflicts / generatePlan / recommend, docs/02/03/05/09)

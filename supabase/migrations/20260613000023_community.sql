@@ -214,5 +214,5 @@ create policy "community_blocks_delete_own" on public.community_blocks
 -- NOTE (data-subject rights, docs/11 §7): account deletion cascades from auth.users;
 -- community_participation consent withdrawal triggers an Edge Function that deletes the
 -- user's questions + reactions (MHMDA/GDPR Art. 17 — no retention exception). Expert
--- community_notes persist (OnSkin's content, not the user's). Deferred with the peer
+-- community_notes persist (RoutineKind's content, not the user's). Deferred with the peer
 -- phase (B-COMMUNITY-MOD).

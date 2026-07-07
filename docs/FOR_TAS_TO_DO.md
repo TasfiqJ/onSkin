@@ -23,8 +23,10 @@ Status: launch-blocked
   `routinekind`, and `com.routinekind.app` defaults. `supabase/config.toml` now
   uses `routinekind` and `routinekind://auth/callback` for local/project
   placeholders. `npm run brand:audit` reports 0 remaining public launch-risk
-  references; the remaining hits are review-needed legacy guards, migration
-  labels, internal namespaces, and historical/context docs.
+  references and 5 review-needed reportable references, all deliberate
+  legacy-brand guard patterns in `app.config.js`, `phase2:check-env`, and
+  `phase4:check-source-env`. Internal namespaces and historical/context docs are
+  still counted separately by the audit.
 - Final Supabase project refs, auth callback allow-lists, Apple/Google OAuth
   settings, and hosted URLs still need to be recreated under the cleared
   identity before staging/production evidence can pass.

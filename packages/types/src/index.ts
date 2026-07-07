@@ -28,7 +28,7 @@ export const CONSENT_TYPES = [
   // within-person photo trend insight (still a health inference; distinct from
   // photo_capture / photo_cloud_backup). Installed base is re-consented, never enrolled.
   'photo_trend_insights',
-  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask OnSkin". The
+  // docs/13 §7 / D-053: a NEW, separate, DEFAULT-OFF consent for "Ask RoutineKind". The
   // user's question is a health disclosure transmitted to a zero-retention cloud
   // language layer (MHMDA / GDPR Art. 9 attaches to the TRANSMISSION). Distinct from
   // every other consent; the deterministic on-device advisor needs no consent at all.
@@ -244,7 +244,7 @@ export type RecommendationEvent = (typeof RECOMMENDATION_EVENTS)[number];
 
 // --- Creator stacks + commerce (docs/10) -------------------------------------
 /** The affiliate rail a "where to buy" link resolves through. Rail-agnostic by
- *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on OnSkin's
+ *  design (docs/10 §5, the B-SHOPMY hedge): if ShopMy can't mint links on RoutineKind's
  *  own recommendations under a house account, swap rails without re-architecting. */
 export type AffiliateSource = 'shopmy' | 'skimlinks' | 'direct' | 'none';
 /** Who curated a shoppable stack. Expert/derm curation is the differentiator;
@@ -266,9 +266,13 @@ export const COMMERCE_EVENTS = [
 export type CommerceEvent = (typeof COMMERCE_EVENTS)[number];
 
 // --- AI trend analysis / "Changes in your own photos" (docs/12) --------------
-/** The on-device within-person change state (docs/12 §6/§10). NEVER a score/grade , 
+/** The on-device within-person change state (docs/12 §6/§10). NEVER a score/grade ,
  *  "consistent / no detectable change" is a CELEBRATED first-class output, never failure. */
-export type TrendChangeState = 'consistent' | 'change_observed' | 'inconclusive_lighting' | 'insufficient_data';
+export type TrendChangeState =
+  | 'consistent'
+  | 'change_observed'
+  | 'inconclusive_lighting'
+  | 'insufficient_data';
 /** PostHog trend events (docs/12 §13). Metadata only, never an image or skin value;
  *  instrument for OPT-IN / RETENTION, never toward a score or "improvement". */
 export const TREND_EVENTS = [
@@ -280,7 +284,7 @@ export const TREND_EVENTS = [
 ] as const;
 export type TrendEvent = (typeof TREND_EVENTS)[number];
 
-// --- "Ask OnSkin" conversational advisor (docs/13) ---------------------------
+// --- "Ask RoutineKind" conversational advisor (docs/13) ----------------------
 /** The deterministic intent router (docs/13 §4). The router runs FIRST, BEFORE any
  *  language model, so medical/dosing/diagnosis intent is caught at the door and
  *  escalated. Never narrated. Deterministic intents are answered on-device at $0;
@@ -344,7 +348,13 @@ export type CommunityEvent = (typeof COMMUNITY_EVENTS)[number];
 export type ConflictSeverity = 'none' | 'mild' | 'moderate' | 'high';
 
 /** The five interaction classes + the `myth` reassurance label (docs/02 §4.1). */
-export type InteractionType = 'irritation' | 'stability' | 'efficacy' | 'synergy' | 'safety' | 'myth';
+export type InteractionType =
+  | 'irritation'
+  | 'stability'
+  | 'efficacy'
+  | 'synergy'
+  | 'safety'
+  | 'myth';
 
 /** Internal SORT-anchored grade (Ebell et al., AFP 2004). Docs/02 §4.3. */
 export type EvidenceGrade = 'A' | 'B' | 'C';
