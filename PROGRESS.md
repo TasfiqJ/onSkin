@@ -15,7 +15,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Start today -> first Today check-off at 320 x 568 in
   `test-results/human-e2e/2026-07-07/shelf-routine-handoff/`. The browser store
   already contained prior local E2E products, so the evidence records that
-  persistence explicitly while still proving the handoff and check-off path.
+  persistence explicitly while still proving the handoff and check-off path. The
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-shelf-routine-handoff.md`.
 
 - Polished the first-use Progress photo consent gate after a 320 x 568
   human-simulated E2E sweep showed dense privacy copy competing with the capture

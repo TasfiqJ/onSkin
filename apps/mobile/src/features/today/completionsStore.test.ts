@@ -49,6 +49,17 @@ describe('today completion persistence', () => {
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
   });
 
+  it('persists a normal check-off across fresh Today reads', async () => {
+    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      done: true,
+      firstEver: true,
+    });
+
+    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser']));
+    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser']));
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
+  });
+
   it('normalizes padded and duplicate step keys before Today reads them', async () => {
     mocks.storage.set(
       KEY,
