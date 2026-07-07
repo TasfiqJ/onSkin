@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened public Edge Function environment parsing for the waitlist and growth
+  event endpoints. Shared Edge env parsing now normalizes `APP_ENV` /
+  `EXPO_PUBLIC_APP_ENV`, fails unknown app environments closed to production,
+  and treats malformed `PUBLIC_FORMS_TURNSTILE_REQUIRED` values as
+  Turnstile-required instead of silently disabling the public-form abuse gate.
+
 - Hardened client env boolean parsing for native camera, OCR, Phase 7 deferred
   surfaces, and Phase 8 growth toggles. Supported `true`/`false` values now
   tolerate case and whitespace, malformed explicit values fail closed, and the

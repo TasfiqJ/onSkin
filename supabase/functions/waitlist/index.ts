@@ -1,9 +1,10 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { booleanEnv, readEdgeAppEnvironment } from '../_shared/env.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const appEnvironment = Deno.env.get('APP_ENV') ?? Deno.env.get('EXPO_PUBLIC_APP_ENV') ?? 'unknown';
+const appEnvironment = readEdgeAppEnvironment();
 const turnstileSecret =
   Deno.env.get('TURNSTILE_SECRET_KEY') ?? Deno.env.get('CF_TURNSTILE_SECRET_KEY') ?? '';
 const publicFormsRateLimitMax = intEnv('PUBLIC_FORMS_RATE_LIMIT_MAX', 20, 1, 1000);
@@ -111,7 +112,10 @@ function sanitizeAttribution(input: Record<string, unknown>): Record<string, str
 }
 
 function turnstileRequired(): boolean {
-  return appEnvironment === 'production' || Deno.env.get('PUBLIC_FORMS_TURNSTILE_REQUIRED') === 'true';
+  return (
+    appEnvironment === 'production' ||
+    booleanEnv('PUBLIC_FORMS_TURNSTILE_REQUIRED', { invalidValue: true })
+  );
 }
 
 function clientAddress(req: Request): string {

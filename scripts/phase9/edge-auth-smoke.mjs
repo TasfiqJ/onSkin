@@ -11,6 +11,7 @@ const liveOrderReportPoll = read('scripts/phase9/live-order-report-poll.mjs');
 const liveRevenueCatWebhook = read('scripts/phase9/live-revenuecat-webhook.mjs');
 const userEdgeAuthHelper = read('supabase/functions/_shared/auth.ts');
 const userEdgeBodyHelper = read('supabase/functions/_shared/body.ts');
+const edgeEnvHelper = read('supabase/functions/_shared/env.ts');
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
 
 function orderedPublicFormChecks(source, scope) {
@@ -96,6 +97,22 @@ block(
     /readLimitedResponseJson/.test(externalFetchHelper) &&
     /reader\.cancel/.test(externalFetchHelper),
   'Shared external fetch helper must enforce timeouts and bounded response reads.',
+);
+block(
+  errors,
+  /readEdgeAppEnvironment/.test(edgeEnvHelper) &&
+    /APP_ENV/.test(edgeEnvHelper) &&
+    /EXPO_PUBLIC_APP_ENV/.test(edgeEnvHelper) &&
+    /trim\(\)\.toLowerCase\(\)/.test(edgeEnvHelper) &&
+    /return isEdgeAppEnvironment\(candidate\) \? candidate : 'production';/.test(edgeEnvHelper),
+  'Shared Edge env helper must normalize app env and fail closed to production.',
+);
+block(
+  errors,
+  /function booleanEnv/.test(edgeEnvHelper) &&
+    /trim\(\)\.toLowerCase\(\)/.test(edgeEnvHelper) &&
+    /invalidValue/.test(edgeEnvHelper),
+  'Shared Edge env helper must normalize boolean envs and support explicit invalid-value fail-closed behavior.',
 );
 
 for (const fn of userJwtFunctions) {
@@ -352,6 +369,14 @@ const growth = read('supabase/functions/growth-event/index.ts');
 block(errors, /allowedEvents/.test(growth), 'growth-event must allowlist event names.');
 block(errors, /allowedKeys/.test(growth), 'growth-event must allowlist payload keys.');
 block(errors, /sensitive/.test(growth), 'growth-event must drop sensitive payloads.');
+block(errors, /readEdgeAppEnvironment/.test(growth), 'growth-event must use normalized app env parsing.');
+block(
+  errors,
+  /booleanEnv\('PUBLIC_FORMS_TURNSTILE_REQUIRED',\s*\{\s*invalidValue:\s*true\s*\}\)/.test(
+    growth,
+  ),
+  'growth-event must require Turnstile on malformed PUBLIC_FORMS_TURNSTILE_REQUIRED values.',
+);
 block(errors, /verifyTurnstile/.test(growth), 'growth-event must verify Turnstile for production abuse control.');
 block(errors, /turnstile not configured/.test(growth), 'growth-event must fail closed when production Turnstile is not configured.');
 block(errors, /consume_edge_rate_limit/.test(growth), 'growth-event must use the shared Postgres rate-limit RPC.');
@@ -364,6 +389,14 @@ const waitlist = read('supabase/functions/waitlist/index.ts');
 block(errors, /invalid email/.test(waitlist), 'waitlist must validate email.');
 block(errors, /allowedAttributionKeys/.test(waitlist), 'waitlist attribution must be allowlisted.');
 block(errors, /sanitizeAttribution/.test(waitlist), 'waitlist attribution must be sanitized.');
+block(errors, /readEdgeAppEnvironment/.test(waitlist), 'waitlist must use normalized app env parsing.');
+block(
+  errors,
+  /booleanEnv\('PUBLIC_FORMS_TURNSTILE_REQUIRED',\s*\{\s*invalidValue:\s*true\s*\}\)/.test(
+    waitlist,
+  ),
+  'waitlist must require Turnstile on malformed PUBLIC_FORMS_TURNSTILE_REQUIRED values.',
+);
 block(errors, /verifyTurnstile/.test(waitlist), 'waitlist must verify Turnstile for production abuse control.');
 block(errors, /turnstile not configured/.test(waitlist), 'waitlist must fail closed when production Turnstile is not configured.');
 block(errors, /consume_edge_rate_limit/.test(waitlist), 'waitlist must use the shared Postgres rate-limit RPC.');
