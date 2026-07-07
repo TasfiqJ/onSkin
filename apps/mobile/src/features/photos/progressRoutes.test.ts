@@ -84,6 +84,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('backgroundColor={NIGHT_CONSENT_OVERLAY_BG}');
     expect(source).toContain("color: 'rgba(244,239,231,0.9)'");
     expect(source).toContain("color: 'rgba(244,239,231,0.88)'");
+    expect(source).toContain('height: compact ? 52 : 56');
     expect(source).not.toContain('backgroundColor="rgba(10,8,6,0.92)"');
     expect(source).not.toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)'");
     expect(source).not.toContain("fontSize: 15,\n            color: 'rgba(244,239,231,0.6)'");

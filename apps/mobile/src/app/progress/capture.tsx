@@ -191,7 +191,7 @@ function ConsentGate({
         disabled={granting}
         onPress={onGrant}
         style={{
-          height: compact ? 54 : 56,
+          height: compact ? 52 : 56,
           borderRadius: 999,
           backgroundColor: '#F4EFE7',
           alignItems: 'center',

@@ -13,11 +13,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   does not open the camera before consent saves. Photo capture consent now
   stores a local proof with version, text hash, and timestamp before camera
   access and treats the remote ledger as best-effort for local-only capture;
-  cloud backup remains fail-closed because it moves images off device. Expo web
-  E2E at 320 x 568 verified failure copy, no pre-consent camera path, retry
-  into the normal permission gate, and reload past the consent gate; evidence is
-  in
-  `test-results/human-e2e/2026-07-07/progress-photo-consent-save-failure/`,
+  cloud backup remains fail-closed because it moves images off device. Compact
+  failure recovery also drops the prep reminder after the failed save and uses a
+  52 px primary action so both `Take photos` and `Not now` stay fully reachable
+  on a 320 x 568 phone. Expo web E2E at 320 x 568 verified failure copy, no
+  pre-consent camera path, no clipped or sub-44 px controls, and retry into the
+  normal permission gate; evidence is in
+  `test-results/human-e2e/2026-07-07/progress-photo-consent-save-failure-fix/`,
   with the tracked bug report in
   `docs/e2e-bug-reports/2026-07-07-progress-photo-consent-save-failure.md`.
 

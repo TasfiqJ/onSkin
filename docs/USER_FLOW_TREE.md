@@ -469,8 +469,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: In a dev build started with `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once`, open Progress capture without prior `photo_capture` consent and tap the first-use photo consent CTA.
-  - Expected result: The camera does not open, the app shows stable photo-choice-not-saved copy, the consent CTA is retryable, no camera permission prompt appears before consent is saved, and the next CTA tap consumes the one-shot failure and opens the normal permission/capture path.
-  - Evidence: Failure screenshot/text, `role="alert"` copy, no pre-consent camera copy, retry into the normal permission/capture path, reload past the consent gate, and browser warn/error logs.
+  - Expected result: The camera does not open, the app shows stable photo-choice-not-saved copy, the consent CTA is retryable, `Not now` remains visible and tappable on a 320 x 568 phone, no camera permission prompt appears before consent is saved, and the next CTA tap consumes the one-shot failure and opens the normal permission/capture path.
+  - Evidence: Failure screenshot/text, `role="alert"` copy, no pre-consent camera copy, compact button-geometry snapshot, retry into the normal permission/capture path, and browser warn/error logs.
 - Branch: first-use local-only backup tradeoff
   - Priority: Critical
   - Automate later: Yes
