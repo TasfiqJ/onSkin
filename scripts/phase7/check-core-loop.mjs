@@ -48,6 +48,11 @@ function has(path, pattern) {
   return pattern.test(read(path));
 }
 
+function hasSelfClosingJsxWithProps(source, component, propPatterns) {
+  const tags = source.match(new RegExp(`<${component}\\b[\\s\\S]*?\\/\\s*>`, 'g')) ?? [];
+  return tags.some((tag) => propPatterns.every((pattern) => pattern.test(tag)));
+}
+
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile('.env');
 const launchEnv = { ...exampleEnv, ...localEnv, ...process.env };
@@ -133,16 +138,17 @@ for (const [path, pattern, label] of gatedRoutes) {
 }
 
 const askLayout = read('apps/mobile/src/app/ask/_layout.tsx');
+const askConsent = read('apps/mobile/src/app/ask/consent.tsx');
 require(/<Stack screenOptions=\{\{ headerShown: false \}\} \/>/.test(askLayout) &&
   !/phase7Flags\.cloudAsk|DeferredSurface/.test(
     askLayout,
   ), 'Deterministic Ask route group must stay reachable while cloud Ask is deferred.');
-require(has('apps/mobile/src/app/ask/consent.tsx', /DeferredSurface/) &&
-  has('apps/mobile/src/app/ask/consent.tsx', /phase7Flags\.cloudAsk/) &&
-  has(
-    'apps/mobile/src/app/ask/consent.tsx',
-    /<DeferredSurface surface="cloudAsk" fallbackRoute=\{APP_ASK_ROUTE\} \/>/,
-  ), 'Cloud Ask consent route must render DeferredSurface when gated.');
+require(/if \(!phase7Flags\.cloudAsk\)/.test(askConsent) &&
+  hasSelfClosingJsxWithProps(askConsent, 'DeferredSurface', [
+    /surface="cloudAsk"/,
+    /fallbackRoute=\{APP_ASK_ROUTE\}/,
+    /fallbackLabel="Back to Ask"/,
+  ]), 'Cloud Ask consent route must render DeferredSurface when gated.');
 require(has(
   'apps/mobile/src/app/(tabs)/today.tsx',
   /phase7Flags\.cloudAsk[\s\S]{0,120}<AskTeaser/,

@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed a stale Phase 7 smoke-check blocker after `/ask/consent` gained its
+  route-specific `Back to Ask` deferred CTA. The launch checker now validates
+  the gated Cloud Ask deferred surface by required JSX props instead of one
+  exact single-line JSX shape, so it accepts the safer route while still
+  requiring `surface="cloudAsk"`, `fallbackRoute={APP_ASK_ROUTE}`, and
+  `fallbackLabel="Back to Ask"`. `phase7:check-core-loop-smoke`,
+  `phase7:check-core-loop`, and the Ask route contract test pass; remaining
+  Phase 7 output is warning-only external evidence/final-copy work already
+  tracked in `docs/FOR_TAS_TO_DO.md`.
+
 - Tightened the feature-flagged `/trend/optin` compact layout after the forced
   consent failure path showed the secondary fairness row clipped at the bottom
   of a 320 x 568 viewport. The opt-in card and failure alert now use short-phone
