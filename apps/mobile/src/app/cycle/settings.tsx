@@ -102,6 +102,7 @@ export default function CycleSettingsScreen() {
                 <View className="gap-2">
                   {potentNights.map((n) => {
                     const cycleNightNumber = n.index + 1;
+                    const cycleNightLabel = formatCycleNightLabel(cycleNightNumber);
 
                     return (
                       <View
@@ -113,10 +114,10 @@ export default function CycleSettingsScreen() {
                           style={{ backgroundColor: n.slot === 'retinoid' ? '#A5694B' : '#F3E7DF' }}
                         >
                           <Text
-                            className="font-mono text-[11px]"
+                            className="font-sans-semibold text-[10.5px]"
                             style={{ color: n.slot === 'retinoid' ? '#FAF7F2' : '#8A5239' }}
                           >
-                            N{cycleNightNumber}
+                            {cycleNightLabel}
                           </Text>
                         </View>
                         <Text variant="bodySm" className="flex-1 font-sans-semibold">
@@ -165,4 +166,8 @@ export default function CycleSettingsScreen() {
       </ScrollView>
     </Screen>
   );
+}
+
+function formatCycleNightLabel(cycleNightNumber: number): string {
+  return `Night ${cycleNightNumber}`;
 }

@@ -181,6 +181,14 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   RevenueCat purchase/restore/native store-sheet QA, conflict-check quota UI QA,
   loading-state no-flash tracing, policy/billing link handoff failure QA, lapsed
   paid entitlement QA, or native scheduler/widget QA.
+- 2026-07-07: In-app browser E2E at 320 x 568 covers scheduler cycle-night
+  labels with a local reverse-trial entitlement and two shelf actives. Before
+  the fix, `/cycle/week` and `/cycle/settings` rendered customer-facing `N1`,
+  `N2`, etc. labels. Post-fix, both routes render `Night 1`, `Night 2`, etc.,
+  contain no `N#` visible labels, keep zero horizontal overflow, and expose no
+  clipped or sub-44 px visible controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/cycle-night-labels-current/`; it does not
+  replace real iOS/Android scheduler QA or native Dynamic Type QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

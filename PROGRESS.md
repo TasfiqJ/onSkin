@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed compact scheduler cycle-night labels after 320 x 568 E2E with a
+  reverse-trial entitlement and two shelf actives showed `/cycle/week` and
+  `/cycle/settings` using terse `N1`, `N2`, etc. labels on customer-facing rows.
+  The scheduler week overview and settings active-night rows now render
+  user-facing `Night 1`, `Night 2`, etc. labels with compact widths that keep
+  the phone layout free of horizontal overflow. Post-fix in-app browser E2E at
+  320 x 568 verifies `/cycle/week` and `/cycle/settings` show the full labels,
+  contain no `N#` labels, keep zero horizontal overflow, and expose no clipped
+  or sub-44 px visible controls. Evidence is in
+  `test-results/human-e2e/2026-07-07/cycle-night-labels-current/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-07-cycle-night-labels-terse-copy.md`.
+
 - Fixed the compact reverse-trial keep-options paywall after 320 x 568 E2E
   reproduced a billing-context ordering issue: tapping `Keep Pro after your
   week` from `/settings/subscription` showed the fixed CTA before the annual

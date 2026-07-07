@@ -106,7 +106,7 @@ function WeekScreen() {
               {data!.weekAhead.map((p, i) => {
                 const tonight = i === 0;
                 const cycleNightNumber = p.night.index + 1;
-                const cycleNightLabel = `N${cycleNightNumber}`;
+                const cycleNightLabel = formatCycleNightLabel(cycleNightNumber);
                 const isNextAcid =
                   p.dateISO === data!.nextAcidNight && p.night.slot === 'exfoliate';
                 return (
@@ -133,7 +133,7 @@ function WeekScreen() {
                     }
                   >
                     <Text
-                      className="w-[30px] font-mono text-[12px]"
+                      className="w-[56px] font-sans-semibold text-[11.5px]"
                       style={{ color: tonight ? colors.clayBright : 'rgba(244,239,231,0.45)' }}
                     >
                       {cycleNightLabel}
@@ -333,6 +333,10 @@ function nightSub(slot: string, productName: string | null): string {
   if (slot === 'recover')
     return productName ? `${productName} · barrier support` : 'Barrier support';
   return productName ?? '';
+}
+
+function formatCycleNightLabel(cycleNightNumber: number): string {
+  return `Night ${cycleNightNumber}`;
 }
 
 /** The frame-07 resolution note. Surfaced only when tonight is a retinoid night and

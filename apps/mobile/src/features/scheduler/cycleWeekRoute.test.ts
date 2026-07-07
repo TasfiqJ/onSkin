@@ -18,9 +18,12 @@ describe('cycle week route scheduler notes', () => {
     expect(source).toContain("pathname: '/cycle/why-tonight'");
     expect(source).toContain('params: { date: p.dateISO }');
     expect(source).toContain('const cycleNightNumber = p.night.index + 1;');
-    expect(source).toContain('const cycleNightLabel = `N${cycleNightNumber}`;');
+    expect(source).toContain('const cycleNightLabel = formatCycleNightLabel(cycleNightNumber);');
+    expect(source).toContain('function formatCycleNightLabel(cycleNightNumber: number): string');
+    expect(source).toContain('return `Night ${cycleNightNumber}`;');
     expect(source).toContain('cycle night ${cycleNightNumber} of ${cycle.lengthNights}');
     expect(source).toContain('{cycleNightLabel}');
+    expect(source).not.toContain('`N${cycleNightNumber}`');
     expect(source).not.toContain('N{i + 1}');
     expect(source).not.toContain('${p.weekday}: ${slotLabel(p.night.slot)} night${tonight');
     expect(source).not.toContain("if (tonight) router.push('/cycle/why-tonight');");
@@ -89,7 +92,10 @@ describe('cycle week route scheduler notes', () => {
     const source = readAppRoute('cycle/settings.tsx');
 
     expect(source).toContain('const cycleNightNumber = n.index + 1;');
-    expect(source).toContain('N{cycleNightNumber}');
+    expect(source).toContain('const cycleNightLabel = formatCycleNightLabel(cycleNightNumber);');
+    expect(source).toContain('{cycleNightLabel}');
+    expect(source).toContain('return `Night ${cycleNightNumber}`;');
+    expect(source).not.toContain('N{cycleNightNumber}');
     expect(source).not.toContain('N{n.index}');
   });
 
