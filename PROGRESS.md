@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the satisfaction-timed review prompt so native StoreReview failures
+  remain best-effort. Platform availability errors now track an unavailable
+  prompt instead of throwing, native request failures are swallowed, and a local
+  attempt is recorded whenever the app tries to prompt so cooldown/cap policy is
+  not bypassed by a transient platform failure. This was non-UI logic hardening,
+  so human E2E was not required.
+
 - Fixed mojibake punctuation on the first-run age gate. The DOB screen now shows
   `We don't store your birth date.` instead of a broken apostrophe sequence.
   Added a route-contract regression and a user-flow branch, then verified Expo

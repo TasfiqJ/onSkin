@@ -83,12 +83,22 @@ export async function requestReviewAfterValue(
     return;
   }
 
-  if (!(await StoreReview.hasAction())) {
+  let platformAvailable = false;
+  try {
+    platformAvailable = await StoreReview.hasAction();
+  } catch {
+    platformAvailable = false;
+  }
+  if (!platformAvailable) {
     track('review_prompt_unavailable', { moment });
     return;
   }
 
   track('review_prompt_attempted', { moment });
-  await StoreReview.requestReview();
-  await saveState(recordReviewAttempt(state, now));
+  try {
+    await StoreReview.requestReview();
+  } catch {
+    track('review_prompt_unavailable', { moment });
+  }
+  await saveState(recordReviewAttempt(state, now)).catch(() => undefined);
 }

@@ -6,12 +6,14 @@ const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   hasAction: vi.fn(async () => true),
   requestReview: vi.fn(async () => undefined),
+  setShouldReject: false,
   track: vi.fn(),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
+    if (mocks.setShouldReject) throw new Error('storage unavailable');
     mocks.storage.set(key, value);
   }),
   removePrivateItem: vi.fn(async (key: string) => {
@@ -41,6 +43,8 @@ describe('review prompt local history', () => {
     mocks.hasAction.mockClear();
     mocks.hasAction.mockResolvedValue(true);
     mocks.requestReview.mockClear();
+    mocks.requestReview.mockResolvedValue(undefined);
+    mocks.setShouldReject = false;
     mocks.track.mockClear();
   });
 
@@ -66,6 +70,46 @@ describe('review prompt local history', () => {
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
       moment: 'data_export_success',
     });
+  });
+
+  it('treats platform availability errors as unavailable instead of throwing', async () => {
+    mocks.hasAction.mockRejectedValueOnce(new Error('native module failed'));
+
+    await expect(requestReviewAfterValue('paid_conversion_success', NOW)).resolves.toBeUndefined();
+
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
+      moment: 'paid_conversion_success',
+    });
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('records a local attempt even when the native review request rejects', async () => {
+    mocks.requestReview.mockRejectedValueOnce(new Error('prompt failed'));
+
+    await expect(requestReviewAfterValue('paid_conversion_success', NOW)).resolves.toBeUndefined();
+
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_attempted', {
+      moment: 'paid_conversion_success',
+    });
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
+      moment: 'paid_conversion_success',
+    });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      attemptedAt: [NOW.toISOString()],
+    });
+  });
+
+  it('does not throw if local attempt history cannot be saved after a prompt attempt', async () => {
+    mocks.setShouldReject = true;
+
+    await expect(requestReviewAfterValue('paid_conversion_success', NOW)).resolves.toBeUndefined();
+
+    expect(mocks.requestReview).toHaveBeenCalledTimes(1);
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_attempted', {
+      moment: 'paid_conversion_success',
+    });
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
   it('drops invalid, duplicate, and future-dated attempts before policy reads them', async () => {
