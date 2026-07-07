@@ -899,6 +899,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 1. Action: Open `/ask` directly with cloud Ask disabled.
    Expected result: The Ask OnSkin advisor renders with deterministic/free copy and suggested prompts. It must not show the cloud Ask deferred beta screen.
+   The composer disclosure footer stays fully visible and legible above the bottom edge on a 320 x 568 phone.
    Evidence: Screenshot and visible-text snapshot.
 
 ### Branches
@@ -925,7 +926,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Tab through prompt chips, text input, and send controls.
-  - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, suggested prompts do not sit underneath the fixed composer on short phones, and keyboard focus does not trap the user.
+  - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, suggested prompts and the disclosure footer do not sit underneath or clip against the fixed composer on short phones, and keyboard focus does not trap the user.
   - Evidence: UI snapshot or accessibility notes.
 
 ## Open Questions

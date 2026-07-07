@@ -356,7 +356,7 @@ export default function AskScreen() {
         ref={scrollRef}
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-4"
+        contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}
       >
         {empty ? (
           <View className="pt-1">
@@ -429,7 +429,7 @@ export default function AskScreen() {
       </ScrollView>
 
       {/* Input bar */}
-      <View className="pb-1">
+      <View className={compactPhone ? 'pb-4' : 'pb-5'}>
         <View
           className="flex-row items-center gap-2.5 rounded-[16px] bg-paper-raised px-3.5 py-2.5"
           style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}
@@ -457,7 +457,7 @@ export default function AskScreen() {
         </View>
         <Text
           className="mt-2 text-center font-mono text-[9.5px]"
-          style={{ color: colors.mutedLight, lineHeight: 14 }}
+          style={{ color: colors.muted, lineHeight: 14 }}
         >
           {ASK_COPY.home.disclosureFooter}
         </Text>

@@ -67,6 +67,7 @@ describe('Ask route launch contracts', () => {
   it('keeps suggested prompts clear of the fixed Ask composer on short phones', () => {
     const home = readAppRoute('ask/index.tsx');
 
+    expect(home).toContain("contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}");
     expect(home).toContain(
       'className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"',
     );
@@ -77,6 +78,14 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('className="mb-2 font-mono text-[10px] uppercase"');
     expect(home).toContain('className="gap-2"');
     expect(home).not.toContain('py-3.5');
+  });
+
+  it('keeps the Ask disclosure footer legible above compact-phone bottom edges', () => {
+    const home = readAppRoute('ask/index.tsx');
+
+    expect(home).toContain("className={compactPhone ? 'pb-4' : 'pb-5'}");
+    expect(home).toContain('style={{ color: colors.muted, lineHeight: 14 }}');
+    expect(home).toContain('{ASK_COPY.home.disclosureFooter}');
   });
 
   it('does not auto-scroll the proactive first answer under the header on short phones', () => {

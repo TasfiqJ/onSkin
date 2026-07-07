@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Fixed the Ask advisor compact-phone footer so the AI/privacy disclosure no
+  longer clips against the bottom edge under the composer on 320 x 568 screens.
+  The composer now reserves short-phone bottom spacing, the chat scroll area has
+  more end padding, and the route contract guards disclosure visibility. Expo
+  web evidence is in
+  `test-results/human-e2e/2026-07-07/ask-disclosure-footer-clearance/`.
+
 - Improved first-use Progress photo consent legibility on compact dark capture
   screens. The `Not now` escape now reads as a clear secondary action on the
   320 px surface, and the privacy footnote/skin-prep guidance no longer use
