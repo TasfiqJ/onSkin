@@ -6,6 +6,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened recommendation preference and dismissal storage so unreadable JSON is
+  removed, invalid values are filtered to approved recommendation filters, and
+  duplicate `Not for me` records are normalized before first-insight ranking
+  reads them.
+
 - Hardened the local Shelf store so unreadable shelf JSON is removed, malformed
   product rows are dropped, and valid legacy rows are normalized before the
   shelf, conflict banner, routine builder, and Today loop read them.

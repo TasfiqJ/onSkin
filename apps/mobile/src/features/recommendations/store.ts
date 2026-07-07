@@ -1,7 +1,13 @@
 import type { BudgetBand, ValuesFilter } from '@onskin/types';
+import { VALUES_FILTERS } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateItem, multiRemovePrivateItems, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  getPrivateItem,
+  multiRemovePrivateItems,
+  removePrivateItem,
+  setPrivateItem,
+} from '@/lib/storage/privateKV';
 
 import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 
@@ -17,24 +23,82 @@ import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
 const PREF_KEY = 'onskin.recPrefs.v1';
 const DISMISSED_KEY = 'onskin.recDismissed.v1';
 
+const BUDGET_BANDS = new Set<BudgetBand>(['drugstore', 'mid', 'premium']);
+const VALUES = new Set<ValuesFilter>(VALUES_FILTERS);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function uniqueStrings(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return [
+    ...new Set(
+      value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0),
+    ),
+  ];
+}
+
+function normalizeValues(value: unknown): ValuesFilter[] {
+  return uniqueStrings(value).filter((item): item is ValuesFilter =>
+    VALUES.has(item as ValuesFilter),
+  );
+}
+
+function normalizeBudget(value: unknown): BudgetBand | null {
+  return typeof value === 'string' && BUDGET_BANDS.has(value as BudgetBand)
+    ? (value as BudgetBand)
+    : null;
+}
+
+function normalizePreferences(value: unknown): RecPreferences | null {
+  if (!isRecord(value)) return null;
+  return {
+    values: normalizeValues(value.values),
+    budget: normalizeBudget(value.budget),
+    formats: uniqueStrings(value.formats),
+  };
+}
+
+function isDefaultPreferences(prefs: RecPreferences): boolean {
+  return prefs.values.length === 0 && prefs.budget === null && prefs.formats.length === 0;
+}
+
+function normalizeDismissed(value: unknown): string[] | null {
+  return Array.isArray(value) ? uniqueStrings(value) : null;
+}
+
 // --- preferences --------------------------------------------------------------
 export async function loadPreferences(): Promise<RecPreferences> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(PREF_KEY);
-    if (!raw) return DEFAULT_PREFERENCES;
-    const parsed = JSON.parse(raw) as Partial<RecPreferences>;
-    return {
-      values: Array.isArray(parsed.values) ? (parsed.values as ValuesFilter[]) : [],
-      budget: (parsed.budget as BudgetBand | null) ?? null,
-      formats: Array.isArray(parsed.formats) ? parsed.formats : [],
-    };
+    raw = await getPrivateItem(PREF_KEY);
   } catch {
+    return DEFAULT_PREFERENCES;
+  }
+  if (!raw) return DEFAULT_PREFERENCES;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizePreferences(parsed);
+    if (!normalized) {
+      await removePrivateItem(PREF_KEY).catch(() => undefined);
+      return DEFAULT_PREFERENCES;
+    }
+    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+      if (isDefaultPreferences(normalized))
+        await removePrivateItem(PREF_KEY).catch(() => undefined);
+      else await setPrivateItem(PREF_KEY, JSON.stringify(normalized)).catch(() => undefined);
+    }
+    return normalized;
+  } catch {
+    await removePrivateItem(PREF_KEY).catch(() => undefined);
     return DEFAULT_PREFERENCES;
   }
 }
 
 export async function savePreferences(prefs: RecPreferences): Promise<void> {
-  await setPrivateItem(PREF_KEY, JSON.stringify(prefs));
+  const normalized = normalizePreferences(prefs) ?? DEFAULT_PREFERENCES;
+  await setPrivateItem(PREF_KEY, JSON.stringify(normalized));
   // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
   // own row. Guarded so the store works fully before the backend is configured.
   try {
@@ -42,9 +106,9 @@ export async function savePreferences(prefs: RecPreferences): Promise<void> {
     if (data.user?.id) {
       await supabase.from('recommendation_preferences').upsert({
         user_id: data.user.id,
-        values_filters: prefs.values,
-        budget_band: prefs.budget,
-        format_prefs: prefs.formats,
+        values_filters: normalized.values,
+        budget_band: normalized.budget,
+        format_prefs: normalized.formats,
       });
     }
   } catch {
@@ -54,17 +118,34 @@ export async function savePreferences(prefs: RecPreferences): Promise<void> {
 
 // --- dismissed suggestions ("not for me") -------------------------------------
 export async function loadDismissed(): Promise<string[]> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(DISMISSED_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as string[];
-    return Array.isArray(parsed) ? parsed : [];
+    raw = await getPrivateItem(DISMISSED_KEY);
   } catch {
+    return [];
+  }
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    const normalized = normalizeDismissed(parsed);
+    if (!normalized) {
+      await removePrivateItem(DISMISSED_KEY).catch(() => undefined);
+      return [];
+    }
+    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+      if (normalized.length > 0)
+        await setPrivateItem(DISMISSED_KEY, JSON.stringify(normalized)).catch(() => undefined);
+      else await removePrivateItem(DISMISSED_KEY).catch(() => undefined);
+    }
+    return normalized;
+  } catch {
+    await removePrivateItem(DISMISSED_KEY).catch(() => undefined);
     return [];
   }
 }
 
 export async function dismissRecommendation(id: string): Promise<void> {
+  if (id.trim().length === 0) return;
   const cur = await loadDismissed();
   if (cur.includes(id)) return;
   await setPrivateItem(DISMISSED_KEY, JSON.stringify([...cur, id]));
