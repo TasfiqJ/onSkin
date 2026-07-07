@@ -14,6 +14,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   withdrawal ledger failure. This was non-UI logic hardening, so human E2E was
   not required.
 
+- Buffered the `/cycle/procedure` post-procedure recovery CTA on compact phones.
+  The primary `Start recovery` action now sits in a paper bottom wrapper with
+  explicit bottom spacing, while the recovery checklist remains reachable by
+  scroll. Added a route contract and human-simulated Expo web evidence at
+  `test-results/human-e2e/2026-07-07/cycle-procedure-bottom-buffer/`.
+
 - Repaired a Today completion-log migration edge so padded legacy date keys and
   canonical date keys that normalize to the same local day are merged instead of
   overwriting each other. This preserves valid check-off history for the streak

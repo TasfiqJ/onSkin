@@ -20,7 +20,7 @@ export default function ProcedureScreen() {
 
   return (
     <Screen edges={['top', 'bottom']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
         <View className="mt-2">
           <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
         </View>
@@ -95,13 +95,15 @@ export default function ProcedureScreen() {
         </View>
       </ScrollView>
 
-      <Button
-        label="Start recovery"
-        onPress={async () => {
-          await m.beginRecovery(days, 'procedure');
-          router.replace('/cycle/recovery');
-        }}
-      />
+      <View className="bg-paper pb-4 pt-3">
+        <Button
+          label="Start recovery"
+          onPress={async () => {
+            await m.beginRecovery(days, 'procedure');
+            router.replace('/cycle/recovery');
+          }}
+        />
+      </View>
     </Screen>
   );
 }

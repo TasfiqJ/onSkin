@@ -93,6 +93,17 @@ describe('cycle week route scheduler notes', () => {
     expect(source).not.toContain('N{n.index}');
   });
 
+  it('keeps the procedure recovery CTA buffered on compact phones', () => {
+    const source = readAppRoute('cycle/procedure.tsx');
+
+    expect(source).toContain('contentContainerClassName="pb-10"');
+    expect(source).toContain('<View className="bg-paper pb-4 pt-3">');
+    expect(source).toContain('<Button');
+    expect(source.indexOf('<View className="bg-paper pb-4 pt-3">')).toBeLessThan(
+      source.indexOf('label="Start recovery"'),
+    );
+  });
+
   it('keeps scheduler safety notes visible when no cycle is formed', () => {
     const source = readAppRoute('cycle/week.tsx');
     const noteRenderCount = source.match(/<SchedulerNote note=\{schedulerNote\} \/>/g) ?? [];
