@@ -130,12 +130,21 @@ describe('Progress route mobile contracts', () => {
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
 
+    expect(source).toContain(
+      "const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';",
+    );
+    expect(source).toContain('accessibilityLabel={title}');
     expect(source).toContain('accessibilityLabel="Dismiss photo picker"');
     expect(source).toContain('accessibilityRole="button"');
     expect(source).toContain(
       'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
     );
     expect(source).toContain('accessibilityViewIsModal');
+    expect(source).toContain(
+      'accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}',
+    );
+    expect(source).not.toContain('role="dialog"');
+    expect(source).not.toContain('aria-modal');
     expect(source).not.toContain('onPress={() => {}}');
   });
 

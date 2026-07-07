@@ -104,8 +104,17 @@ function PairPicker({
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
+  const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';
+  const target = which === 'before' ? 'first' : 'second';
+
   return (
-    <Modal visible={which !== null} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal
+      visible={which !== null}
+      transparent
+      animationType="slide"
+      accessibilityLabel={title}
+      onRequestClose={onClose}
+    >
       <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
         <Pressable
           className="flex-1"
@@ -116,7 +125,7 @@ function PairPicker({
         <View accessibilityViewIsModal className="rounded-t-sheet bg-paper px-6 pb-10 pt-4">
           <View className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
           <Text variant="titleSm" className="mb-1">
-            Choose the {which === 'before' ? 'first' : 'second'} photo
+            {title}
           </Text>
           <Text variant="bodySm" tone="muted" className="mb-4">
             Any two captures. You decide what to compare.
@@ -131,6 +140,8 @@ function PairPicker({
                   <Pressable
                     key={p.id}
                     accessibilityRole="button"
+                    accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}
+                    accessibilityHint="Updates the side-by-side comparison pair"
                     accessibilityState={{ selected: sel }}
                     onPress={() => onSelect(p.id)}
                     style={{ width: 92, aspectRatio: 3 / 4 }}

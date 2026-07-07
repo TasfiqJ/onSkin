@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Added a single named dialog contract to the populated Progress comparison
+  photo picker. The picker now labels the React Native web `Modal` wrapper with
+  `Choose the first/second photo`, keeps the named dismiss control, and labels
+  each date tile with the comparison target. Expo web E2E at 320 x 568 used two
+  synthetic local photo records to verify one dialog, contextual photo-tile
+  labels, no sub-44 px controls, no horizontal overflow, and dismissal back to
+  `/progress`. Evidence is in
+  `test-results/human-e2e/2026-07-07/progress-photo-picker-dialog-name/`; the
+  tracked bug report is
+  `docs/e2e-bug-reports/2026-07-07-progress-photo-picker-dialog-name.md`.
+
 - Added a stable dialog name to the custom Settings time picker after the
   shared-sheet accessibility pass found this Modal-backed picker needed its own
   contract. `/settings/timing` now passes the picker title to the Modal wrapper
