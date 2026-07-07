@@ -42,7 +42,9 @@ export default function WelcomeBackScreen() {
           </View>
         ) : null}
       </View>
-      <Button label={WELCOME_BACK.cta} onPress={() => router.replace('/(tabs)/today')} />
+      <View className="pb-4 pt-2">
+        <Button label={WELCOME_BACK.cta} onPress={() => router.replace('/(tabs)/today')} />
+      </View>
     </Screen>
   );
 }

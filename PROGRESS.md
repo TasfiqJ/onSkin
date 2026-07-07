@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Buffered compact direct-entry bottom actions on Shelf catalog search and the
+  routine welcome-back earn-back screen. Both primary actions now sit in a small
+  bottom wrapper instead of touching the phone edge, with route contract tests.
+  Human-simulated Expo web E2E at 320 x 568 verified `Add by hand` routes to
+  `/shelf/manual` and `Tonight's step` routes to `/today`; evidence is in
+  `test-results/human-e2e/2026-07-07/direct-entry-bottom-actions/`.
+
 - Clarified the product-detail management hub so every active product now has a
   visible routine role card: placed products explain the generated AM/PM usage,
   and unplaced products send users to build the routine instead of leaving detail

@@ -109,6 +109,18 @@ describe('Pro-gated route contracts', () => {
     );
   });
 
+  it('keeps the welcome-back primary action buffered above the phone bottom edge', () => {
+    const source = readAppRoute('routine/welcome-back.tsx');
+
+    expect(source).toContain('<View className="pb-4 pt-2">');
+    expect(source).toContain(
+      "<Button label={WELCOME_BACK.cta} onPress={() => router.replace('/(tabs)/today')} />",
+    );
+    expect(source).not.toContain(
+      "\n      <Button label={WELCOME_BACK.cta} onPress={() => router.replace('/(tabs)/today')} />\n    </Screen>",
+    );
+  });
+
   it('keeps routine intelligence screens bound to generated plan data', () => {
     const plan = readAppRoute('routine/plan.tsx');
     expect(plan).toContain('APP_YOU_ROUTE');

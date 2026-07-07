@@ -204,6 +204,16 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("'h-[50px] items-center justify-center rounded-[14px] px-4'");
   });
 
+  it('keeps the Shelf catalog manual fallback buffered above the phone bottom edge', () => {
+    const source = readAppRoute('shelf/search.tsx');
+
+    expect(source).toContain('<View className="pb-4 pt-2">');
+    expect(source).toContain('<Button label="Add by hand" variant="ghost" onPress={goManual} />');
+    expect(source).not.toContain(
+      '\n      <Button label="Add by hand" variant="ghost" onPress={goManual} />\n    </Screen>',
+    );
+  });
+
   it('keeps Shelf manual add picker options clear of the fixed footer on short phones', () => {
     const source = readAppRoute('shelf/manual.tsx');
 
