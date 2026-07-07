@@ -9,7 +9,13 @@ import { APP_PROGRESS_ROUTE } from '@/lib/navigation/safeBack';
 // remains the default; this is the optional, on-device, no-number opt-in.
 export default function TrendLayout() {
   if (!phase7Flags.trend)
-    return <DeferredSurface surface="trend" fallbackRoute={APP_PROGRESS_ROUTE} />;
+    return (
+      <DeferredSurface
+        surface="trend"
+        fallbackRoute={APP_PROGRESS_ROUTE}
+        fallbackLabel="Back to Progress"
+      />
+    );
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

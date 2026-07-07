@@ -11,6 +11,19 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
 // reconcile via the persisted mutation queue (D-007) once the project exists.
 const KEY = 'onskin.shelf.v1';
 
+const PRODUCT_STATUSES = new Set<ProductStatus>(['active', 'finished', 'discarded']);
+const PAO_SOURCES = new Set<PaoSource>(['label', 'catalog', 'category_default', 'unknown']);
+const EXPIRY_SOURCES = new Set<ExpirySource>(['printed', 'pao_computed', 'estimated', 'unknown']);
+const ADDED_VIA = new Set<AddedVia>(['barcode', 'search', 'ocr', 'manual', 'onboarding']);
+const CATALOG_QUALITY_GRADES = new Set<CatalogQualityGrade | 'manual'>([
+  'verified',
+  'usable',
+  'limited',
+  'unverified',
+  'blocked',
+  'manual',
+]);
+
 export type ShelfProduct = {
   id: string;
   name: string;
@@ -80,13 +93,155 @@ function nowISO(): string {
   return new Date().toISOString();
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function nonEmptyString(value: unknown): string | null {
+  return typeof value === 'string' && value.trim().length > 0 ? value : null;
+}
+
+function stringOrNull(value: unknown): string | null {
+  return value === null || value === undefined ? null : nonEmptyString(value);
+}
+
+function stringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+}
+
+function localDateOrNull(value: unknown): string | null {
+  const text = nonEmptyString(value);
+  return text && /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : null;
+}
+
+function isoStringOrFallback(value: unknown, fallback: string): string {
+  const text = nonEmptyString(value);
+  return text && !Number.isNaN(Date.parse(text)) ? text : fallback;
+}
+
+function isoStringOrNull(value: unknown): string | null {
+  const text = nonEmptyString(value);
+  return text && !Number.isNaN(Date.parse(text)) ? text : null;
+}
+
+function positiveIntegerOrNull(value: unknown): number | null {
+  return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : null;
+}
+
+function zeroToOneOrNull(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
+    ? value
+    : null;
+}
+
+function zeroToHundredOrNull(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100
+    ? value
+    : null;
+}
+
+function enumValue<T extends string>(value: unknown, allowed: ReadonlySet<T>, fallback: T): T {
+  return typeof value === 'string' && allowed.has(value as T) ? (value as T) : fallback;
+}
+
+function catalogQualityOrNull(value: unknown): CatalogQualityGrade | 'manual' | null {
+  return typeof value === 'string' &&
+    CATALOG_QUALITY_GRADES.has(value as CatalogQualityGrade | 'manual')
+    ? (value as CatalogQualityGrade | 'manual')
+    : null;
+}
+
+function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduct | null {
+  if (!isRecord(value)) return null;
+  const id = nonEmptyString(value.id);
+  const name = nonEmptyString(value.name);
+  if (!id || !name) return null;
+
+  const addedVia = enumValue(value.addedVia, ADDED_VIA, 'manual');
+  const catalogSource =
+    stringOrNull(value.catalogSource) ?? (addedVia === 'manual' ? 'user_local' : null);
+  const catalogMatchQuality =
+    catalogQualityOrNull(value.catalogMatchQuality) ?? (addedVia === 'manual' ? 'manual' : null);
+  const status = enumValue(value.status, PRODUCT_STATUSES, 'active');
+  const createdAt = isoStringOrFallback(value.createdAt, fallbackISO);
+
+  return {
+    id,
+    name,
+    brand: stringOrNull(value.brand),
+    category: stringOrNull(value.category),
+    barcode: stringOrNull(value.barcode),
+    catalogProductId: stringOrNull(value.catalogProductId),
+    catalogSourceId: stringOrNull(value.catalogSourceId),
+    catalogSource,
+    catalogSourceName: stringOrNull(value.catalogSourceName),
+    catalogSourceRef: stringOrNull(value.catalogSourceRef),
+    catalogSourceUrl: stringOrNull(value.catalogSourceUrl),
+    catalogSourceSnapshotDate: localDateOrNull(value.catalogSourceSnapshotDate),
+    catalogMatchQuality,
+    dataQualityScore: zeroToHundredOrNull(value.dataQualityScore),
+    ingredientParseStatus: stringOrNull(value.ingredientParseStatus),
+    ingredientParseConfidence: zeroToOneOrNull(value.ingredientParseConfidence),
+    parserVersion: stringOrNull(value.parserVersion),
+    sourceDisclosureAckAt: isoStringOrNull(value.sourceDisclosureAckAt),
+    ingredients: stringArray(value.ingredients),
+    openedAt: localDateOrNull(value.openedAt),
+    isOpened: typeof value.isOpened === 'boolean' ? value.isOpened : true,
+    paoMonths: positiveIntegerOrNull(value.paoMonths),
+    paoSource: enumValue(value.paoSource, PAO_SOURCES, 'unknown'),
+    expiryDate: localDateOrNull(value.expiryDate),
+    expirySource: enumValue(value.expirySource, EXPIRY_SOURCES, 'unknown'),
+    status,
+    finishedAt: status === 'active' ? null : localDateOrNull(value.finishedAt),
+    addedVia,
+    repurchaseCount: positiveIntegerOrNull(value.repurchaseCount) ?? 1,
+    thumbnailPath: stringOrNull(value.thumbnailPath),
+    createdAt,
+    updatedAt: isoStringOrFallback(value.updatedAt, createdAt),
+  };
+}
+
+function normalizeShelfProducts(
+  value: unknown,
+  fallbackISO: string,
+): { items: ShelfProduct[]; changed: boolean } | null {
+  if (!Array.isArray(value)) return null;
+  const items: ShelfProduct[] = [];
+  let changed = false;
+  for (const row of value) {
+    const product = normalizeShelfProduct(row, fallbackISO);
+    if (!product) {
+      changed = true;
+      continue;
+    }
+    items.push(product);
+    changed ||= JSON.stringify(product) !== JSON.stringify(row);
+  }
+  return { items, changed };
+}
+
 export async function loadShelf(): Promise<ShelfProduct[]> {
+  let raw: string | null = null;
   try {
-    const raw = await getPrivateItem(KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as ShelfProduct[];
-    return Array.isArray(parsed) ? parsed : [];
+    raw = await getPrivateItem(KEY);
   } catch {
+    return [];
+  }
+  if (!raw) return [];
+  try {
+    const normalized = normalizeShelfProducts(JSON.parse(raw) as unknown, nowISO());
+    if (!normalized) {
+      await removePrivateItem(KEY).catch(() => undefined);
+      return [];
+    }
+    if (normalized.changed) {
+      if (normalized.items.length > 0) await persist(normalized.items).catch(() => undefined);
+      else await removePrivateItem(KEY).catch(() => undefined);
+    }
+    return normalized.items;
+  } catch {
+    await removePrivateItem(KEY).catch(() => undefined);
     return [];
   }
 }
@@ -111,7 +266,8 @@ export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> 
     catalogSourceRef: input.catalogSourceRef ?? null,
     catalogSourceUrl: input.catalogSourceUrl ?? null,
     catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
-    catalogMatchQuality: input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
+    catalogMatchQuality:
+      input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
     dataQualityScore: input.dataQualityScore ?? null,
     ingredientParseStatus: input.ingredientParseStatus ?? null,
     ingredientParseConfidence: input.ingredientParseConfidence ?? null,
@@ -159,7 +315,12 @@ export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
   const prev = items.find((p) => p.id === id);
   if (!prev) return null;
   const ts = nowISO();
-  const archived: ShelfProduct = { ...prev, status: 'finished', finishedAt: ts.slice(0, 10), updatedAt: ts };
+  const archived: ShelfProduct = {
+    ...prev,
+    status: 'finished',
+    finishedAt: ts.slice(0, 10),
+    updatedAt: ts,
+  };
   const fresh: ShelfProduct = {
     ...prev,
     id: randomUUID(),

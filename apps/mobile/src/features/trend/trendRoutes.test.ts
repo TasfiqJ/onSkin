@@ -61,9 +61,9 @@ describe('Trend route contracts', () => {
   it('returns deferred Trend direct entries to Progress', () => {
     const source = readAppRoute('trend/_layout.tsx');
 
-    expect(source).toContain(
-      '<DeferredSurface surface="trend" fallbackRoute={APP_PROGRESS_ROUTE} />',
-    );
+    expect(source).toContain('surface="trend"');
+    expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
+    expect(source).toContain('fallbackLabel="Back to Progress"');
   });
 
   it('keeps Trend route escape controls touchable on phones', () => {

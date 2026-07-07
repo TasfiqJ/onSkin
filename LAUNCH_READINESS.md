@@ -19,10 +19,10 @@ Fresh verification on 2026-07-07:
 
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 138 mobile test files, 1428 tests.
+- `npm test` passed: 139 mobile test files, 1432 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 138 test files, 1428 tests.
+- `npm --workspace apps/mobile run test` passed: 139 test files, 1432 tests.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
 
@@ -75,7 +75,7 @@ Re-run all three after any production-readiness change.
 | Recommendations                | launch-blocked            | Type-first engine exists; real products and goal-active recs need catalog/review                                            | Clinical reviewers + engineering                | Seed catalog and review goal-active recommendation types                                                                | Recommendation claims are reviewed and commerce-independent                                           |
 | Commerce/affiliate             | inert                     | Consent, disclosure, and attribution scaffolds exist; no live rail                                                          | Founder + counsel + engineering                 | Decide launch vs post-launch; resolve ShopMy or alternative                                                             | If launch: rail, consent, FTC disclosure, and order reports work; else hidden                         |
 | Community/Skin Notes           | launch-blocked            | Expert read-mostly scaffold exists; peer posting needs moderation and legal floor                                           | Founder + clinical reviewers + moderation owner | Recruit experts and define moderation operations                                                                        | No open UGC until report/block/contact/EULA/human moderation are live                                 |
-| Trend analysis                 | launch-blocked            | No-score posture is correct; real CV/fairness/legal review absent                                                           | Engineering + counsel + fairness reviewer       | Keep as post-launch unless validation is funded                                                                         | No score/age/percentage claims; fairness and legal signoff complete                                   |
+| Trend analysis                 | launch-blocked            | No-score posture and deferred route recovery are correct; real CV/fairness/legal review absent                               | Engineering + counsel + fairness reviewer       | Keep as post-launch unless validation is funded                                                                         | No score/age/percentage claims; fairness and legal signoff complete                                   |
 | Ask assistant                  | launch-blocked            | Deterministic local advisor exists; cloud Ask is deferred                                                                   | Engineering + counsel + clinical reviewers      | Keep deterministic; do not launch cloud RAG until vendor/safety/legal gates pass                                        | Grounded, bounded answers; no unreviewed medical claims                                               |
 | Growth share card              | needs-device-verification | Card and export path exist; final domain/store fallback/attribution blocked by final identity and device QA                 | Engineering + founder                           | Final identity/domain and universal link                                                                                | Shared card opens app or web fallback and tracks attribution                                          |
 | Analytics/crash reporting      | stubbed                   | PostHog/Sentry runtime wiring exists; projects, source maps, dashboards, deletion, and privacy review not live              | Engineering + founder                           | Configure after brand/account setup                                                                                     | Production dashboards, deletion, source maps, and crash privacy review pass                           |

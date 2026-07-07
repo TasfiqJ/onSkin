@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened the local Shelf store so unreadable shelf JSON is removed, malformed
+  product rows are dropped, and valid legacy rows are normalized before the
+  shelf, conflict banner, routine builder, and Today loop read them.
+
 - Hardened local conflict-choice state. Free conflict-check quota records and
   `use together anyway` overrides now remove unreadable JSON, normalize duplicate
   or invalid arrays, and persist clean keys before quota/override decisions run.
@@ -100,6 +104,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   domain record on 2026-07-07. The docs keep this correctly scoped as screening
   evidence only, not trademark clearance, registrar availability, or store
   reservation.
+
+- Fixed deferred Photo Trend direct-entry copy on 320 x 568 phones. Launch-gated
+  `/trend/*` routes still recover to Progress, but the escape CTA now says
+  `Back to Progress` instead of generic `Back`, matching the no-history route
+  destination. Expo web evidence is in
+  `test-results/human-e2e/2026-07-07/trend-routes/`.
 
 ## 2026-07-06
 
