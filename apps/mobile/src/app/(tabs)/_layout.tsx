@@ -31,14 +31,14 @@ function useExpiryReoffer() {
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';
 
 const ICON_SIZE = 21;
-const FLOATING_TAB_BAR_HEIGHT = 68;
-const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 10, android: 8, default: 8 });
-const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 34;
+const FLOATING_TAB_BAR_HEIGHT = 70;
+const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 10, web: 14, default: 10 });
+const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
 const FLOATING_TAB_BAR_GAP = 24;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 10;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 8;
 const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 2;
 const MIN_TAB_TOUCH_TARGET = 52;
-const TAB_ITEM_HEIGHT = 54;
+const TAB_ITEM_HEIGHT = 56;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -154,7 +154,7 @@ function YouIcon({ color }: { color: string }) {
 }
 
 function TabBarIcon({ focused, name }: { focused: boolean; name: TabIconName }) {
-  const iconColor = focused ? colors.paperRaised : colors.mutedStrong;
+  const iconColor = focused ? colors.ink : colors.mutedStrong;
   const Icon =
     name === 'today'
       ? TodayIcon
@@ -207,7 +207,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-        const labelColor = focused ? colors.paperRaised : colors.mutedStrong;
+        const labelColor = focused ? colors.ink : colors.mutedStrong;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -346,13 +346,16 @@ const styles = StyleSheet.create({
   },
   iconShell: {
     alignItems: 'center',
-    borderRadius: 14,
-    height: 28,
+    borderRadius: 15,
+    height: 30,
     justifyContent: 'center',
-    width: 38,
+    width: 42,
   },
   iconShellActive: {
-    transform: [{ translateY: -0.5 }],
+    backgroundColor: colors.paperRaised,
+    borderColor: colors.hairlineStrong,
+    borderWidth: StyleSheet.hairlineWidth,
+    transform: [{ translateY: -0.75 }],
   },
   progressBar: {
     borderRadius: 2,
@@ -384,9 +387,9 @@ const styles = StyleSheet.create({
     height: FLOATING_TAB_BAR_HEIGHT,
     justifyContent: 'center',
     left: FLOATING_TAB_BAR_SIDE_MARGIN,
-    paddingBottom: 6,
+    paddingBottom: 7,
     paddingHorizontal: FLOATING_TAB_BAR_HORIZONTAL_PADDING,
-    paddingTop: 6,
+    paddingTop: 7,
     position: 'absolute',
     right: FLOATING_TAB_BAR_SIDE_MARGIN,
     zIndex: 50,
@@ -425,8 +428,8 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   tabItemActive: {
-    backgroundColor: colors.ink,
-    borderColor: 'rgba(32,27,21,0.20)',
+    backgroundColor: colors.greigeChip,
+    borderColor: colors.hairlineStrong,
   },
   tabItemPressed: {
     opacity: 0.72,

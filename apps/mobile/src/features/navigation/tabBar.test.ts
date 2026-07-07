@@ -22,7 +22,7 @@ describe('tab bar treatment', () => {
   it('uses a legible Wealthsimple-style floating app tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
-    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 68');
+    expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 70');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
@@ -48,10 +48,11 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabSceneClearance');
     expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
     expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source).toContain('focused ? colors.paperRaised : colors.mutedStrong');
-    expect(source).toContain('transform: [{ translateY: -0.5 }]');
-    expect(source).toContain('backgroundColor: colors.ink');
-    expect(source).toContain("borderColor: 'rgba(32,27,21,0.20)'");
+    expect(source).toContain('focused ? colors.ink : colors.mutedStrong');
+    expect(source).toContain('transform: [{ translateY: -0.75 }]');
+    expect(source).toContain('backgroundColor: colors.greigeChip');
+    expect(source).toContain('backgroundColor: colors.paperRaised');
+    expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderRadius: 28');
     expect(source).toContain("position: 'absolute'");
@@ -71,7 +72,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('minHeight: MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP');
-    expect(source).toContain('width: 38');
+    expect(source).toContain('width: 42');
     expect(source).toContain("outlineStyle: 'none'");
     expect(source).toContain('boxShadow: ');
     expect(source).toContain('onFocus={() => setFocusRingRouteKey(route.key)}');
@@ -85,6 +86,8 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain("backgroundColor: 'rgba(255,255,255,0.74)'");
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
+    expect(source).not.toContain('focused ? colors.paperRaised : colors.mutedStrong');
+    expect(source).not.toContain('tabItemActive: {\n    backgroundColor: colors.ink');
   });
 
   it('renders tab labels directly inside protected one-line phone geometry', () => {
