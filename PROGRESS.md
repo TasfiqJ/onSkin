@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Restored the compact `/settings/privacy` direct-entry scroll calibration after
+  the current phone-width sweep found the positive privacy nudges had regressed
+  to negative values, landing `Withdraw health-data consent` under the floating
+  tab bar at 320 x 568 and 390 x 568. The You tab now pins positive compact and
+  narrow-phone nudges, and the settings route contract rejects negative privacy
+  nudge constants. Expo web E2E verified `/settings/privacy` resolves to
+  `/you?section=privacy`, visible privacy controls are 44 px or taller, and no
+  privacy control crosses the safe tab-bar boundary. Evidence is in
+  `test-results/human-e2e/2026-07-07/settings-privacy-positive-nudge-regression/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-07-settings-privacy-negative-nudge-regression.md`.
+
 - Reworked the compact `/onboarding/products` category picker after the
   phone-width audit showed the horizontal category rail clipping offscreen chips
   and feeling inconsistent with the rest of the mobile shell. Compact phones now
