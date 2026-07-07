@@ -34,6 +34,23 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const privacyCardY = useRef(0);');
     expect(you).toContain("if (params.section !== 'privacy' || !privacyCardReady) return;");
     expect(you).toContain('scrollRef.current?.scrollTo');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -140;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -140;');
+    expect(you).toContain('const narrowPhone = compactPhone && width < 360;');
+    expect(you).toContain('const privacyDirectEntryScrollNudge = narrowPhone');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE');
+    expect(you).toContain(
+      'privacyCardY.current - PRIVACY_DIRECT_ENTRY_TOP_OFFSET + privacyDirectEntryScrollNudge',
+    );
+    expect(you).toContain('const frame = requestAnimationFrame(scrollToPrivacyCard);');
+    expect(you).toContain('const retry = setTimeout(scrollToPrivacyCard, 180);');
+    expect(you).toContain('cancelAnimationFrame(frame);');
+    expect(you).toContain('clearTimeout(retry);');
+    expect(you).toContain(
+      '}, [params.section, privacyCardReady, privacyDirectEntryScrollNudge]);',
+    );
     expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
 
     const privacyAnchorIndex = you.indexOf('privacyCardY.current = event.nativeEvent.layout.y;');
@@ -139,6 +156,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
     expect(source).toContain('accessibilityLabel={hint ? `${label}. ${hint}` : label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
+    expect(source).toContain('compact={compactPhone}\n              onPress={() => openPolicyUrl(row.url)}');
     expect(source).toContain('onPress={() => openPolicyUrl(row.url)}');
     expect(source).not.toContain(
       'onPress={() => router.push(href)}\n                accessibilityRole="button"',

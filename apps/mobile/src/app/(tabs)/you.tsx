@@ -52,6 +52,9 @@ const EXPORT_UNAVAILABLE_MESSAGE =
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
 const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;
 const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
+const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
+const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -140;
+const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -140;
 
 type StaticRouteHref = Extract<Href, string>;
 
@@ -195,6 +198,12 @@ export default function YouScreen() {
         ? `${BRAND.proName} · active`
         : 'Free plan';
   const compactPhone = height < 640 || width < 430;
+  const narrowPhone = compactPhone && width < 360;
+  const privacyDirectEntryScrollNudge = narrowPhone
+    ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
+    : compactPhone
+      ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
+      : 0;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
@@ -221,13 +230,23 @@ export default function YouScreen() {
   useEffect(() => {
     if (params.section !== 'privacy' || !privacyCardReady) return;
 
-    requestAnimationFrame(() => {
+    const scrollToPrivacyCard = () => {
       scrollRef.current?.scrollTo({
         animated: false,
-        y: Math.max(privacyCardY.current - 16, 0),
+        y: Math.max(
+          privacyCardY.current - PRIVACY_DIRECT_ENTRY_TOP_OFFSET + privacyDirectEntryScrollNudge,
+          0,
+        ),
       });
-    });
-  }, [params.section, privacyCardReady]);
+    };
+    const frame = requestAnimationFrame(scrollToPrivacyCard);
+    const retry = setTimeout(scrollToPrivacyCard, 180);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(retry);
+    };
+  }, [params.section, privacyCardReady, privacyDirectEntryScrollNudge]);
 
   const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [
     { label: 'Recommendations', href: '/recommendations' },
@@ -632,6 +651,7 @@ export default function YouScreen() {
               key={row.key}
               label={row.label}
               hint={POLICY_HINTS[row.key]}
+              compact={compactPhone}
               onPress={() => openPolicyUrl(row.url)}
             />
           ))}

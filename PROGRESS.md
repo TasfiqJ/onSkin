@@ -3261,6 +3261,18 @@ no horizontal overflow, no clipped/sub-44 px controls, `Back to stacks` routing 
 flags. Tracked in `docs/e2e-bug-reports/2026-07-07-commerce-missing-stack-recovery.md`; evidence is in
 `test-results/human-e2e/2026-07-07/commerce-missing-stack-recovery/`.
 
+### Settings privacy direct-entry tab-bar overlap (2026-07-07)
+
+Fixed `/settings/privacy` on compact phones after Expo web E2E showed the route correctly redirected to
+`/you?section=privacy` but left policy rows straddling the floating tab bar at 320 x 568 and 390 x 568. The You-tab
+privacy direct entry now uses width-aware negative scroll nudges plus a retry after layout settles, preserving visible
+privacy controls while keeping lower policy rows from crossing the tab-bar touch zone. Route-contract coverage pins the
+compact and narrow nudge values plus the retry. Expo web E2E also verified direct-entry Back recovery for
+`/settings/subscription`, `/settings/notifications`, and `/settings/timing`. Final 320 x 568 and 390 x 568 evidence is
+in `test-results/human-e2e/2026-07-07/settings-direct-entry-privacy/`; tracked in
+`docs/e2e-bug-reports/2026-07-07-settings-privacy-direct-tabbar-underlap.md`. Native screen-reader/device rendering
+remains a Phase 5 QA follow-up.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
