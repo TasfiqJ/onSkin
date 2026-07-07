@@ -166,6 +166,9 @@ describe('Pro-gated route contracts', () => {
     expect(reorder).not.toContain("const CANONICAL = ['Cream cleanser'");
     expect(reorder).not.toContain("const REORDERED = ['Cream cleanser'");
     expect(reorder).not.toContain('Vitamin C serum');
+    expect(reorder).toContain('Tap a step, then move it earlier or later.');
+    expect(reorder).toContain('Full drag gestures are deferred');
+    expect(reorder).not.toContain('Drag reorder');
 
     expect(adaptation).toContain('ScrollView');
   });

@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Clarified the routine reorder launch gate after the docs/03 / blockers pass.
+  The route comment and route-contract test now make the V1 behavior explicit:
+  tap a step, use `Earlier` / `Later`, and show a non-blocking sequencing nudge.
+  `BLOCKERS.md` now treats true drag/drop as an inert future claim rather than
+  an active V1 launch blocker, and `LAUNCH_READINESS.md` matches that posture.
+
 - Polished the You tab For You navigation row after the settings-route E2E
   sweep found `Skin Notes. Myth vs evidence` compressed into one awkward label.
   The row now uses `Skin Notes` with a separate reviewed/claim-safe hint, and

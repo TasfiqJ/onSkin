@@ -571,6 +571,13 @@ Status: `stubbed`
 Local-first routine generation exists. Server authority and multi-device sync are
 not V1-critical unless the product claims cross-device persistence.
 
+Current implementation note:
+
+- V1 routine, cycle, ramp, and completion surfaces are intentionally
+  local-first. Active launch copy must keep that posture and must not promise
+  cross-device routine sync until Supabase routine authority is implemented and
+  tested.
+
 Exit criteria:
 
 - either V1 copy clearly states local-first behavior, or server persistence is
@@ -578,14 +585,24 @@ Exit criteria:
 
 ## B-DRAG-DND - Full routine drag/drop
 
-Status: `stubbed`
+Status: `inert`
 
-Some reorder/adaptation affordances are constrained or hardcoded by design.
+Full drag/drop is not a V1 launch claim. The routine reorder route now uses
+tap-to-select plus `Earlier` / `Later` controls over the generated plan, with
+the docs/03 non-blocking sequencing nudge. It no longer needs a drag gesture to
+be honest or usable.
+
+Current implementation note:
+
+- Keep public, paywall, store, and in-app copy from promising full
+  drag-and-drop routine editing.
+- If true drag gestures become a future claim, reopen this blocker for native
+  gesture implementation, accessibility review, and device QA.
 
 Exit criteria:
 
-- either implement real drag/drop, or remove/soften affordances that imply full
-  drag/drop control.
+- V1: keep the tap-based reorder surface and no drag/drop public claim.
+- Future true drag/drop: implement, test, and device-verify before marketing it.
 
 ## B-COMMERCE-RAIL - ShopMy or alternative commerce rail
 

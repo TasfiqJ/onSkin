@@ -8,12 +8,10 @@ import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
-// 02 · Sequencing. Drag reorder + non-blocking nudge (design screen 02, docs/03 §7).
-// We sort thinnest-to-thickest by default but never lock it. "guidance, not a
-// gate." When a serum sits below moisturiser, a calm nudge offers to fix it.
-// NOTE: full drag-and-drop needs react-native-draggable-flatlist (a follow-on);
-// the handles + the non-blocking nudge (the doc's actual point) stay functional
-// against the generated plan instead of fixed demo product names.
+// Sequencing controls + non-blocking nudge (docs/03 section 7).
+// We sort thinnest-to-thickest by default but never lock it. "Guidance, not a
+// gate." Full drag gestures are deferred; V1 uses tap-to-select and Earlier /
+// Later controls so the user-facing surface does not promise drag-and-drop.
 const MOVING_SHADOW =
   Platform.OS === 'web'
     ? { boxShadow: '0 12px 28px rgba(32, 27, 21, 0.18)' }
