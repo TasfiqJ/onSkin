@@ -7,7 +7,11 @@ import {
   envSnapshot,
   exists,
   has,
+  placeholderEnvValue,
   printResult,
+  productionDomain,
+  productionSupportEmail,
+  productionUrl,
   read,
   requiredPhase9EvidenceKeys,
   warn,
@@ -296,9 +300,7 @@ block(
 
 blockPublicEnvSecrets(errors, env, exampleEnv);
 
-const placeholder = (value) =>
-  !value ||
-  /example\.com|YOUR-PROJECT|xxxxxxxx|XXXXXXXX|\.\.\.|__BLOCKED_PLACEHOLDER__/i.test(String(value));
+const placeholder = placeholderEnvValue;
 
 function markdownTableValue(source, label) {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -309,20 +311,20 @@ function markdownTableValue(source, label) {
   );
 }
 
-for (const key of [
-  'EXPO_PUBLIC_PRIVACY_URL',
-  'EXPO_PUBLIC_TERMS_URL',
-  'EXPO_PUBLIC_SUPPORT_URL',
-  'EXPO_PUBLIC_ACCOUNT_DELETION_URL',
-  'EXPO_PUBLIC_DATA_EXPORT_URL',
-  'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
-  'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
-  'EXPO_PUBLIC_MARKETING_URL',
-  'EXPO_PUBLIC_SUPPORT_EMAIL',
-  'EXPO_PUBLIC_APP_STORE_URL',
-  'EXPO_PUBLIC_PLAY_STORE_URL',
+for (const [key, validate] of [
+  ['EXPO_PUBLIC_PRIVACY_URL', productionUrl],
+  ['EXPO_PUBLIC_TERMS_URL', productionUrl],
+  ['EXPO_PUBLIC_SUPPORT_URL', productionUrl],
+  ['EXPO_PUBLIC_ACCOUNT_DELETION_URL', productionUrl],
+  ['EXPO_PUBLIC_DATA_EXPORT_URL', productionUrl],
+  ['EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL', productionUrl],
+  ['EXPO_PUBLIC_FINAL_BRAND_DOMAIN', productionDomain],
+  ['EXPO_PUBLIC_MARKETING_URL', productionUrl],
+  ['EXPO_PUBLIC_SUPPORT_EMAIL', productionSupportEmail],
+  ['EXPO_PUBLIC_APP_STORE_URL', productionUrl],
+  ['EXPO_PUBLIC_PLAY_STORE_URL', productionUrl],
 ]) {
-  warn(warnings, !placeholder(env[key]), `Missing final value for ${key}.`);
+  warn(warnings, validate(env[key]), `Missing or non-production final value for ${key}.`);
 }
 
 for (const key of requiredPhase9EvidenceKeys()) {
@@ -428,7 +430,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
 if (env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED === 'true') {
   warn(
     warnings,
-    !placeholder(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
+    productionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
     'Public links are enabled before final domain evidence.',
   );
 }
@@ -493,7 +495,7 @@ if (/^production$/i.test(env.EXPO_PUBLIC_APP_ENV ?? '')) {
     if (env[surface.flag] !== 'true') continue;
     block(
       errors,
-      !placeholder(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
+      productionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
       `Production ${surface.label} cannot be enabled before EXPO_PUBLIC_FINAL_BRAND_DOMAIN is final.`,
     );
     for (const key of surface.evidence) {
