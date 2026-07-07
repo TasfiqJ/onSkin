@@ -154,6 +154,7 @@ describe('analytics sanitizer', () => {
 
   it('drops unapproved or user-derived event names', () => {
     expect(sanitizeAnalyticsEventName('photo_captured')).toBe('photo_captured');
+    expect(sanitizeAnalyticsEventName('photo_baseline_added')).toBe('photo_baseline_added');
     expect(sanitizeAnalyticsEventName('routine_step_irritation')).toBeNull();
     expect(sanitizeAnalyticsEventName('Acne concern: cheeks')).toBeNull();
   });

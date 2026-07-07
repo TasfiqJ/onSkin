@@ -489,6 +489,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress with no photos.
   - Expected result: Empty state gives a clear next action.
   - Evidence: Screenshot.
+- Branch: first baseline photo analytics
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Save the first progress photo from an empty local timeline.
+  - Expected result: The save still routes back to Progress and emits only metadata events: `photo_captured`, `first_photo_captured`, and `photo_baseline_added`; no photo path, image data, notes, user identifiers, or skin profile details are sent.
+  - Evidence: Route state, local photo count, and sanitized analytics assertion.
 - Branch: contextual photo-timeline paywall on short phones
   - Priority: Important
   - Automate later: Yes

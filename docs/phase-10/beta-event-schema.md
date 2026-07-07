@@ -56,6 +56,7 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `conflict_detected`
 - `first_checkoff_completed`
 - `routine_checkoff_completed`
+- `photo_baseline_added`
 - `photo_captured`
 - `first_photo_captured`
 - `notification_prompt_shown`

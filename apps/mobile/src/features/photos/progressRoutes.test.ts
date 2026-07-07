@@ -87,6 +87,15 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('height: 380, borderRadius: 24');
   });
 
+  it('keeps the first saved photo wired to both baseline analytics names', () => {
+    const source = readAppRoute('progress/review.tsx');
+
+    expect(source).toContain('const wasEmpty = (data?.count ?? 0) === 0;');
+    expect(source).toContain("track('photo_captured', { on_device: true, result: verdict.flag })");
+    expect(source).toContain("track('first_photo_captured')");
+    expect(source).toContain("track('photo_baseline_added', { on_device: true })");
+  });
+
   it('keeps the compare photo picker dismissible without inert sheet buttons', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
 

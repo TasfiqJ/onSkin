@@ -189,6 +189,7 @@ const onboardingProducts = read('apps/mobile/src/app/onboarding/products.tsx');
 const routinePlan = read('apps/mobile/src/app/routine/plan.tsx');
 const routineActivationAnalytics = read('apps/mobile/src/features/routine/activationAnalytics.ts');
 const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
+const progressReview = read('apps/mobile/src/app/progress/review.tsx');
 const shelfMutations = read('apps/mobile/src/features/shelf/mutations.ts');
 const betaDashboard = read('docs/phase-7/beta-evidence-dashboard.md');
 const coreLoopEvents = [
@@ -199,6 +200,7 @@ const coreLoopEvents = [
   'conflict_detected',
   'routine_checkoff_completed',
   'first_checkoff_completed',
+  'photo_baseline_added',
   'photo_captured',
   'paywall_shown',
   'reverse_trial_started',
@@ -231,6 +233,10 @@ require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
   /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
     todayTab,
   ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
+require(/wasEmpty[\s\S]{0,140}track\('first_photo_captured'/.test(progressReview) &&
+  /wasEmpty[\s\S]{0,180}track\('photo_baseline_added'/.test(
+    progressReview,
+  ), 'Progress baseline save must emit first_photo_captured and photo_baseline_added.');
 require(!/shelf_product_added|conflict_opened/.test(
   betaDashboard,
 ), 'Phase 7 beta dashboard contains stale non-emitted core-loop event names.');

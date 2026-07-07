@@ -99,7 +99,10 @@ function ReviewScreenContent() {
       {
         onSettled: () => {
           track('photo_captured', { on_device: true, result: verdict.flag });
-          if (wasEmpty) track('first_photo_captured');
+          if (wasEmpty) {
+            track('first_photo_captured');
+            track('photo_baseline_added', { on_device: true });
+          }
           router.replace(APP_PROGRESS_ROUTE);
         },
       },

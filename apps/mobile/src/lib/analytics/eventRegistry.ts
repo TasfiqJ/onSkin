@@ -47,6 +47,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'phase7_deferred_surface_viewed',
   'phased_intro_overridden',
   'photo_capture_still_taken',
+  'photo_baseline_added',
   'photo_captured',
   'preference_set',
   'product_add_started',

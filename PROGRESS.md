@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Reconciled the master-plan `photo_baseline_added` event with the existing
+  photo-progress instrumentation. The first saved local Progress photo now emits
+  both `first_photo_captured` and `photo_baseline_added` with metadata-only,
+  on-device-safe properties, preserving the active docs/06 beta event while
+  satisfying the master-plan core event taxonomy. Phase 7/10 beta evidence docs
+  and the Phase 7 core-loop checker now require the baseline-photo event. This
+  was non-visual analytics instrumentation, so human E2E was not required.
+
 - Added the master-plan `product_add_started` event to close the Shelf
   add-start drop-off gap before beta dashboards. Onboarding product intake,
   empty Shelf scan/manual starts, scan/search/no-match fallbacks,
