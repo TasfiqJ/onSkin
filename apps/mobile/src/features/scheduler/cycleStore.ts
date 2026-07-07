@@ -64,16 +64,36 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && !Array.isArray(value) && typeof value === 'object';
 }
 
-function isLocalDateISO(value: unknown): value is string {
-  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+function normalizeLocalDateISO(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = value.trim();
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (!match) return null;
+  const [, y, m, d] = match;
+  const year = Number(y);
+  const month = Number(m);
+  const day = Number(d);
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+    ? text
+    : null;
 }
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
 
-function isDateArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every(isLocalDateISO);
+function normalizeDateArray(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null;
+  const dates: string[] = [];
+  for (const item of value) {
+    const normalized = normalizeLocalDateISO(item);
+    if (!normalized) return null;
+    dates.push(normalized);
+  }
+  return [...new Set(dates)];
 }
 
 function isDisruptionReason(value: unknown): value is DisruptionReason {
@@ -84,8 +104,9 @@ function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
   if (value === null || value === undefined) return null;
   if (!isRecord(value)) return undefined;
   const days = value.days;
+  const startISO = normalizeLocalDateISO(value.startISO);
   if (
-    !isLocalDateISO(value.startISO) ||
+    !startISO ||
     typeof days !== 'number' ||
     !Number.isInteger(days) ||
     days <= 0 ||
@@ -93,7 +114,7 @@ function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
   ) {
     return undefined;
   }
-  return { startISO: value.startISO, days, reason: value.reason };
+  return { startISO, days, reason: value.reason };
 }
 
 function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): CycleConfig | null {
@@ -104,21 +125,23 @@ function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): Cycle
   const pausedFrom = value.pausedFrom ?? base.pausedFrom;
   const pauseReason = value.pauseReason ?? base.pauseReason;
   const recovery = normalizeRecovery(value.recovery);
-  const skips = value.skips ?? base.skips;
+  const skips = normalizeDateArray(value.skips ?? base.skips);
   const stagingOverrides = value.stagingOverrides ?? base.stagingOverrides;
+  const normalizedAnchorISO = normalizeLocalDateISO(anchorISO);
+  const normalizedPausedFrom = pausedFrom === null ? null : normalizeLocalDateISO(pausedFrom);
 
   if (!CYCLE_VARIANTS.has(variant as CycleConfig['variant'])) return null;
-  if (!isLocalDateISO(anchorISO)) return null;
-  if (!(pausedFrom === null || isLocalDateISO(pausedFrom))) return null;
+  if (!normalizedAnchorISO) return null;
+  if (normalizedPausedFrom === null && pausedFrom !== null) return null;
   if (!(pauseReason === null || isDisruptionReason(pauseReason))) return null;
   if (recovery === undefined) return null;
-  if (!isDateArray(skips)) return null;
+  if (!skips) return null;
   if (!isStringArray(stagingOverrides)) return null;
 
   return {
     variant: variant as CycleConfig['variant'],
-    anchorISO,
-    pausedFrom,
+    anchorISO: normalizedAnchorISO,
+    pausedFrom: normalizedPausedFrom,
     pauseReason,
     recovery,
     skips,
@@ -138,7 +161,12 @@ export async function loadCycleConfig(): Promise<CycleConfig> {
     try {
       const parsed: unknown = JSON.parse(raw);
       const normalized = normalizeStoredConfig(parsed, localDateString());
-      if (normalized) return normalized;
+      if (normalized) {
+        if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
+          await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+        }
+        return normalized;
+      }
     } catch {
       /* malformed legacy/local state */
     }

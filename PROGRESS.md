@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Hardened scheduler cycle date storage so cycle anchors and cycle configs reject
+  impossible calendar dates, trim padded local dates, de-duplicate skipped nights,
+  and persist normalized scheduler state before projection reads it.
+
+- Hardened the Supabase large secure-store wrapper so invalid SecureStore content
+  keys must be exactly 32 bytes, bad keys clear both SecureStore and the encrypted
+  AsyncStorage session envelope, tampered sessions fail closed, and legacy AES
+  sessions still migrate to authenticated storage.
+
 - Hardened lightweight local engagement stores. Ask grounded-turn counters now
   remove malformed records, validate billing periods, and clamp trial counts;
   community reactions, streak milestones, and review-prompt history now remove

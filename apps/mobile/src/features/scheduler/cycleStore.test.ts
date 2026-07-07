@@ -71,6 +71,28 @@ describe('cycle store first-session handoff', () => {
     expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
   });
 
+  it('rejects impossible calendar dates before projection reads the cycle', async () => {
+    mocks.storage.set(
+      CYCLE_KEY,
+      JSON.stringify({
+        variant: 'classic',
+        anchorISO: '2026-02-31',
+        pausedFrom: null,
+        pauseReason: null,
+        recovery: null,
+        skips: [],
+        stagingOverrides: [],
+      }),
+    );
+    mocks.storage.set(LEGACY_ANCHOR_KEY, '2026-01-10');
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      variant: 'auto',
+      anchorISO: '2026-01-10',
+    });
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+  });
+
   it('normalizes valid legacy partial cycle config with new default fields', async () => {
     mocks.storage.set(
       CYCLE_KEY,
@@ -90,6 +112,35 @@ describe('cycle store first-session handoff', () => {
       skips: ['2026-01-02'],
       stagingOverrides: [],
     });
-    expect(mocks.storage.has(CYCLE_KEY)).toBe(true);
+    expect(JSON.parse(mocks.storage.get(CYCLE_KEY) ?? '{}')).toMatchObject({
+      variant: 'gentle',
+      anchorISO: '2026-01-01',
+      pausedFrom: null,
+      pauseReason: null,
+      recovery: null,
+      skips: ['2026-01-02'],
+      stagingOverrides: [],
+    });
+  });
+
+  it('normalizes padded and duplicate skipped nights', async () => {
+    mocks.storage.set(
+      CYCLE_KEY,
+      JSON.stringify({
+        variant: 'gentle',
+        anchorISO: ' 2026-01-01 ',
+        skips: [' 2026-01-02 ', '2026-01-02'],
+      }),
+    );
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      variant: 'gentle',
+      anchorISO: '2026-01-01',
+      skips: ['2026-01-02'],
+    });
+    expect(JSON.parse(mocks.storage.get(CYCLE_KEY) ?? '{}')).toMatchObject({
+      anchorISO: '2026-01-01',
+      skips: ['2026-01-02'],
+    });
   });
 });

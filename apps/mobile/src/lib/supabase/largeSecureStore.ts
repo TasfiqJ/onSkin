@@ -8,12 +8,15 @@ import * as SecureStore from 'expo-secure-store';
 
 import { decryptLargeSecureStoreValue, encryptLargeSecureStoreValue } from './largeSecureStoreCrypto';
 
+const CONTENT_KEY_BYTES = 32;
+
 export class LargeSecureStore {
   private async getContentKey(key: string): Promise<Uint8Array | null> {
     const existing = await SecureStore.getItemAsync(key);
     if (!existing) return null;
     try {
-      return hexToBytes(existing);
+      const decoded = hexToBytes(existing);
+      return decoded.length === CONTENT_KEY_BYTES ? decoded : null;
     } catch {
       return null;
     }
@@ -22,7 +25,7 @@ export class LargeSecureStore {
   private async ensureContentKey(key: string): Promise<Uint8Array> {
     const existing = await this.getContentKey(key);
     if (existing) return existing;
-    const contentKey = randomBytes(32);
+    const contentKey = randomBytes(CONTENT_KEY_BYTES);
     await SecureStore.setItemAsync(key, bytesToHex(contentKey));
     return contentKey;
   }
@@ -32,7 +35,7 @@ export class LargeSecureStore {
     if (!encrypted) return null;
     const contentKey = await this.getContentKey(key);
     if (!contentKey) {
-      await AsyncStorage.removeItem(key);
+      await this.removeItem(key);
       return null;
     }
 
