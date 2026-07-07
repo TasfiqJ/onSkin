@@ -3557,6 +3557,26 @@ handoff/failure QA, native modal/outbound-link QA, ShopMy or fallback affiliate
 partner approval, source-cleared catalog links, final paid-link consent/legal
 copy, and production domain verification remain launch blockers.
 
+### Pro route gating evidence (2026-07-07)
+
+Verified representative Pro route locking and local reverse-trial unlocking in a
+fresh Chrome context at 320 x 568 without changing app code. Fresh free state
+opened `/routine/widgets`, `/cycle/settings`, and `/routine/plan` directly and
+showed the correct contextual paywalls with `Maybe later`, store-unavailable
+fallback copy, `Explore first. 7 days of Pro`, Terms/Privacy/Restore controls,
+zero horizontal overflow, and no browser console errors. Starting the no-card
+reverse trial from `/routine/plan` unlocked the routine plan, direct
+`/cycle/settings` rendered the scheduler settings surface instead of the
+scheduler paywall, and `/routine/widgets` reached the widget deferred surface
+with `Back to Today` instead of the reminders/widgets paywall. The compact
+`/paywall/success` route rendered the renewal metadata and `See tonight's
+routine` CTA cleanly; direct `/paywall/upsell?feature=full_routine` dismissed
+with `Maybe later` to `/today`. Evidence is in
+`test-results/human-e2e/2026-07-07/pro-gating-current/`. This does not replace
+RevenueCat purchase/restore/native store-sheet QA, conflict-check quota gating,
+loading-state no-flash tracing, policy/billing link handoff failure QA, or native
+iOS/Android scheduler/widget QA.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

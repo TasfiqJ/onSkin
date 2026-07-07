@@ -600,12 +600,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route-gating parity; iOS and Android for native camera/widget behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/pro-gating/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/pro-gating-current/`
 
 ### Path A: Direct-Link Lock
 
 1. Action: Open each Pro-only route directly as a fresh free user.
    Expected result: The app renders the matching contextual paywall or safe fallback, not the premium screen.
-   Evidence: Screenshot of each locked route and notes identifying the route.
+   Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified direct `/routine/widgets`, `/cycle/settings`, and `/routine/plan` render the correct contextual paywalls in free state, with no premium content, zero horizontal overflow, no browser errors, and visible 48 px+ controls.
 
 ### Branches
 
@@ -614,19 +615,19 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open `/cycle/settings`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/phased-intro`, and `/cycle/procedure` directly.
   - Expected result: Free users remain gated for the full scheduler route group. Reverse-trial or Pro users reach the intended scheduler surfaces; cycle settings rows read as scheduled outputs, not deferred drag-and-drop controls.
-  - Evidence: Screenshots or UI snapshots.
+  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified free `/cycle/settings` shows `Unlock your full skin-cycling scheduler.` and local reverse trial then renders `/cycle/settings` scheduler settings instead of the paywall. Other nested scheduler routes remain covered by route contracts, not fresh UI screenshots.
 - Branch: full routine intelligence routes
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/routine/plan`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, and `/routine/adaptation` directly.
   - Expected result: Free users see the full-routine contextual paywall, not the routine builder, sequencing, ramp, tolerance, or adaptation screen. First-time free users can choose the no-card `Explore first` path from that paywall; lapsed entitlement users remain on the paid re-offer path.
-  - Evidence: Screenshots or UI snapshots.
+  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified free `/routine/plan` shows `Unlock your full routine.`, `Explore first. 7 days of Pro`, and no routine-plan content; tapping Explore first starts the local reverse trial and renders the routine plan. Other routine intelligence routes remain covered by route contracts, not fresh UI screenshots.
 - Branch: reminders, streaks, and widgets routes
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets` directly.
   - Expected result: Free users see the reminders/widgets contextual paywall, not the streak or widget surface.
-  - Evidence: Screenshots or UI snapshots.
+  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified free `/routine/widgets` shows `Reminders, streaks & home-screen widgets.` contextual paywall; after local reverse trial, `/routine/widgets` reaches the widget deferred surface with `Back to Today` instead of the paywall. Streak/welcome-back remain covered by route contracts, not fresh UI screenshots.
 - Branch: conflict check quota and direct routes
   - Priority: Critical
   - Automate later: Yes
@@ -650,7 +651,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open `/paywall/success` after a trial start or paid purchase on a 320 px wide phone viewport.
   - Expected result: The success badge renders a clean checkmark, the title and renewal terms are readable, the renewal metadata does not orphan `yr` onto its own line, and the Today CTA remains visible with a clear bottom buffer.
-  - Evidence: 320 px screenshot, visible-text snapshot, and metadata row geometry.
+  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 after local reverse trial verified `/paywall/success` renders a clean checkmark, readable title/body, contained renewal metadata, and a visible 56 px `See tonight's routine` CTA with zero horizontal overflow.
 - Branch: policy and billing link handoff failure
   - Priority: Important
   - Automate later: Yes
@@ -662,7 +663,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open the same routes with an active Pro or reverse-trial entitlement.
   - Expected result: The intended Pro surface renders and remains usable.
-  - Evidence: Screenshot of at least one unlocked route per feature group.
+  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified local reverse-trial entitlement unlocks `/routine/plan`, unlocks `/cycle/settings`, and routes `/routine/widgets` to the widget deferred surface rather than the reminders/widgets paywall.
 - Branch: unreviewed cycle-cadence production gate
   - Priority: Critical
   - Automate later: Yes

@@ -157,6 +157,22 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   replace real retailer link handoff/failure QA, native modal/outbound-link QA,
   ShopMy or fallback partner approval, source-cleared catalog QA, final legal
   paid-link consent copy, or production domain verification.
+- 2026-07-07: Fresh Chrome E2E at 320 x 568 covers representative Pro route
+  locking and local reverse-trial unlocking. In fresh free state, direct
+  `/routine/widgets`, `/cycle/settings`, and `/routine/plan` render the correct
+  contextual paywalls with `Maybe later`, store-unavailable fallback copy,
+  `Explore first. 7 days of Pro`, Terms/Privacy/Restore controls, zero
+  horizontal overflow, and no browser errors. Starting the no-card reverse trial
+  from `/routine/plan` unlocks the routine plan, direct `/cycle/settings` renders
+  scheduler settings instead of the scheduler paywall, and `/routine/widgets`
+  reaches the widget deferred surface with `Back to Today`. `/paywall/success`
+  renders the compact success state cleanly, and direct
+  `/paywall/upsell?feature=full_routine` dismisses with `Maybe later` to
+  `/today`. Evidence is in
+  `test-results/human-e2e/2026-07-07/pro-gating-current/`; it does not replace
+  RevenueCat purchase/restore/native store-sheet QA, conflict-check quota UI QA,
+  loading-state no-flash tracing, policy/billing link handoff failure QA, lapsed
+  paid entitlement QA, or native scheduler/widget QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state
