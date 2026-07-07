@@ -117,6 +117,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/runtime-brand-identity/`; it does not
   replace final brand/legal clearance, native identifier QA, store listing QA, or
   final-domain/share-card QA.
+- 2026-07-07: Expo web E2E at 320 x 568 covers local Trend route recovery in
+  both launch-gated and enabled modes. Default `/trend/optin` and
+  `/trend/fairness` show the deferred Trend surface with `Back to Progress` and
+  return to `/progress`; the enabled local-only consent fixture starts the
+  `Read my progress` switch off, toggles on/off, opens fairness after a user-like
+  scroll, returns nested/direct fairness to `/trend/optin`, and returns direct
+  opt-in to `/progress`, with zero horizontal overflow and no browser errors.
+  Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`; it
+  does not replace native photo/toggle QA, live authenticated consent-ledger/RLS
+  evidence, fairness validation, or final legal consent-copy review.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

@@ -3478,6 +3478,21 @@ the local runtime-copy smoke for the working identity; final brand/legal
 clearance, native identifiers, store listings, final domain, and share-card
 device QA remain founder/vendor/legal launch blockers.
 
+### Trend route recovery evidence (2026-07-07)
+
+Verified the photo Trend route gate in both default-deferred and enabled local
+fixture modes without changing app code. Default Expo web at 320 x 568 opens
+`/trend/optin` and `/trend/fairness` to the deferred Trend surface, shows
+`Back to Progress`, and returns both direct entries to `/progress`. A temporary
+Trend-enabled web server on port 8125 with
+`EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` verified the opt-in switch
+starts off, toggles on and off, the fairness link is reachable after scroll as a
+48 px control, fairness opens with the redness/fairness guard copy, direct
+fairness returns to `/trend/optin`, and direct opt-in returns to `/progress`.
+Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`. Native
+photo/toggle QA, live authenticated consent-ledger/RLS proof, fairness
+validation, and final legal consent-copy review remain external launch blockers.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

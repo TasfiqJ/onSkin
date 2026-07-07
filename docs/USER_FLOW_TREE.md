@@ -553,12 +553,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native photo/toggle confirmation.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/trend-routes/`
+- Current local evidence: `test-results/human-e2e/2026-07-07/trend-routes-current/`
 
 ### Path A: Optional Opt-In
 
 1. Action: Open `/trend/optin`, read the consent framing, toggle the setting on and off, open the fairness explainer, then return.
    Expected result: Consent is separate and revocable, the feature is off by default, no photo is uploaded, the opt-in switch remains a 44 pt phone target, and fairness copy avoids score or diagnostic language.
-   Evidence: Screenshot sequence and local trend-consent state.
+   Evidence: Screenshot sequence and local trend-consent state. Current local evidence: 2026-07-07 Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true` and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` shows the opt-in switch starts off, toggles on, toggles off, exposes a reachable 48 px fairness-link row after scroll, opens `/trend/fairness`, and returns to `/trend/optin` with zero horizontal overflow and no browser errors.
 
 ### Branches
 
@@ -568,6 +569,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/trend/optin` and `/trend/fairness` directly, then use the visible Back control. Repeat while the Trend feature flag is deferred.
   - Expected result: Direct opt-in and deferred Trend routes return to the Progress tab; the nested fairness explainer returns to `/trend/optin` instead of a no-history dead end. Visible Back controls meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence and visible route snapshot.
+  - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies default-gated `/trend/optin` and `/trend/fairness` render the deferred Trend surface with `Back to Progress`, and both return to `/progress`. With Trend enabled, direct `/trend/fairness` returns to `/trend/optin`, direct `/trend/optin` returns to `/progress`, and Back controls are 48 px.
 - Branch: installed-base reconsent
   - Priority: Critical
   - Automate later: Yes
