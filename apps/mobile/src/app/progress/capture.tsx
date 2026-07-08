@@ -463,7 +463,6 @@ function CaptureScreenContent() {
         },
         onFailure: () => {
           setConsentSaveFailed(true);
-          Alert.alert(PHOTO_COPY.capture.consentFailedTitle, PHOTO_COPY.capture.consentFailedBody);
         },
       });
     } finally {

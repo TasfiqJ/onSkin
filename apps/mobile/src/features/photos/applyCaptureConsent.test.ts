@@ -76,7 +76,7 @@ describe('photo capture consent application', () => {
     expect(source).toContain('setConsentSaveFailed(false)');
     expect(source).toContain('disabled={granting}');
     expect(source).toContain('Saving choice');
-    expect(source).toContain('Alert.alert(PHOTO_COPY.capture.consentFailedTitle');
+    expect(source).not.toContain('Alert.alert(PHOTO_COPY.capture.consentFailedTitle');
     expect(source).not.toContain('void grantPhotoCaptureConsent();');
     expect(source).not.toContain('setConsented(true);\n            if (!permission?.granted)');
     expect(source.indexOf('simulatedPhotoConsentFailureUsed.current = true')).toBeLessThan(

@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened first-use Progress photo consent save failure recovery. The
+  `/progress/capture` failure path now relies on durable route-owned
+  `Photo choice not saved` feedback instead of also calling a native/system
+  alert for the same consent persistence failure; camera-capture failure alerts
+  remain unchanged. In-app browser Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once` and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies the failed save keeps the
+  camera and permission path closed, opens no JavaScript dialog, keeps retry and
+  `Not now` inside the compact viewport, shows no raw fixture error, and retry
+  reaches the normal web camera-permission gate. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/progress-photo-consent-failure-current/`,
+  `docs/e2e-bug-reports/2026-07-08-progress-photo-consent-native-alert.md`.
+
 - Fixed shared web switch activation and completed the Ask cloud-consent
   failure branch. The shared `ToggleSwitch` now uses React Native `onPress`
   across platforms, keeps web focus support, and handles the Space key on web

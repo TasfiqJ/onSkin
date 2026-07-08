@@ -166,6 +166,20 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`; it does not
   replace native iOS/Android notch, home-indicator, camera-permission, or real
   camera-start QA.
+- 2026-07-08: Codex in-app browser Expo web E2E at 320 x 568 covers first-use
+  `/progress/capture` photo consent save failure and retry with
+  `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once` and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. The forced failed save keeps the
+  camera and permission path closed, renders route-owned `Photo choice not
+  saved` feedback with `role="alert"`, opens no JavaScript dialog, keeps the
+  retry CTA at 52 px and `Not now` at 48 px inside the viewport, shows no raw
+  fixture error, has zero horizontal overflow, and retry reaches the normal web
+  camera-permission gate. The same slice removed the leftover native
+  `Alert.alert` call from the consent persistence failure path while preserving
+  the separate camera-capture failure alert. Evidence is in
+  `test-results/human-e2e/2026-07-08/progress-photo-consent-failure-current/`;
+  it does not replace native iOS/Android system-alert, camera-permission,
+  restart-persistence, safe-area, or real camera-start QA.
 - 2026-07-07: Codex in-app browser Expo web E2E with
   `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` covers the populated Progress
   comparison picker after safe-area and compact-dismiss hardening. The local

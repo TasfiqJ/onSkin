@@ -129,9 +129,9 @@ Status: needs-device-verification
   VoiceOver/TalkBack traversal must remain readable, private, and tappable on
   short screens.
 - Verify first-use Progress photo consent failure/retry sequencing on native:
-  failed local save does not open the camera or permission prompt, retry saves
-  consent before permission, and the app remains past the consent gate after
-  restart.
+  failed local save does not open a native/system alert, camera, or permission
+  prompt; retry saves consent before permission; and the app remains past the
+  consent gate after restart.
 - Verify first-use Progress photo consent, camera-unavailable, and permission
   recovery overlays on physical iOS and Android devices with real safe-area
   insets: notch/status bar, home indicator/gesture nav, and short-screen

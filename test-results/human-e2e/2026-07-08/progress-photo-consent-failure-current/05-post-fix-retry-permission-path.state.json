@@ -1,0 +1,82 @@
+{
+  "alerts": [],
+  "controls": [
+    {
+      "ariaDisabled": null,
+      "ariaLabel": "Close",
+      "disabled": false,
+      "rect": {
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 16
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "x",
+      "visible": true
+    },
+    {
+      "ariaDisabled": "true",
+      "ariaLabel": "Capture photo",
+      "disabled": true,
+      "rect": {
+        "height": 78,
+        "width": 78,
+        "x": 92,
+        "y": 467
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "auto ready",
+      "visible": true
+    },
+    {
+      "ariaDisabled": null,
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "height": 56,
+        "width": 264,
+        "x": 28,
+        "y": 301
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Allow camera",
+      "visible": true
+    },
+    {
+      "ariaDisabled": null,
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "height": 48,
+        "width": 264,
+        "x": 28,
+        "y": 365
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Not now",
+      "visible": true
+    }
+  ],
+  "overflowX": 0,
+  "text": "x\nFront · weekly\nalign to the ghost of last week\npreview quality estimate\nCenter your face in the guide\nLighting\nGood\nauto ready\non device · never uploaded · no faceprint\nCamera access is needed for progress photos.\nThe photo is captured on this device and saved into encrypted app-private storage.\nAllow camera\nNot now",
+  "textIncludes": {
+    "allowCamera": true,
+    "cameraPermission": true,
+    "captureChrome": true,
+    "consentTitle": false,
+    "localOnlyCta": false,
+    "notNow": true,
+    "photoChoiceNotSaved": false,
+    "rawFixtureError": false
+  },
+  "url": "http://localhost:8142/progress/capture",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}
