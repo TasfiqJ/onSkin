@@ -26,6 +26,7 @@ The 320 x 430 / 120% pass exposed ultra-short density gaps:
 - `/settings/privacy` direct entry kept secondary hint copy on rows that were already crowded by 120% text pressure.
 - `/ask` let the empty-state prompt stack collide with the fixed composer area.
 - `/shelf/no-match` kept three subtitle-heavy recovery rows in the first viewport, clipping the lower recovery action.
+- `/shelf/scan` allowed the fallback sheet to sit over the top header strip, blocking the `Close` button and `torch` switch hit centers.
 
 ## Evidence
 
@@ -39,7 +40,7 @@ The 320 x 430 / 120% pass exposed ultra-short density gaps:
 
 ## Scope
 
-- Affected route/screen: Shared contextual ProGate routes, `/settings/notifications`, `/settings/privacy`, `/ask`, `/shelf/no-match`.
+- Affected route/screen: Shared contextual ProGate routes, `/settings/notifications`, `/settings/privacy`, `/ask`, `/shelf/no-match`, `/shelf/scan`.
 - Affected account or fixture: Local Expo web fixtures used by `scripts/e2e/text-pressure-route-audit.mjs`.
 - External service involved: None.
 - Destructive action involved: No.
@@ -57,6 +58,7 @@ Add a shared sub-460 px density band where each affected route prioritizes core 
 - Hide secondary privacy hints on ultra-short direct-entry privacy screens.
 - Use the shortest Ask prompt order and hide nonessential intro copy below 460 px.
 - Hide Shelf no-match row subtitles below 460 px.
+- Reserve a Shelf scan header strip, omit the dead fallback preview below 460 px when the camera is unavailable, and compact fallback rows.
 
 ## Verification Flow After Fix
 
