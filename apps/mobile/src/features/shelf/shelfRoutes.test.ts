@@ -406,10 +406,11 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const insets = useSafeAreaInsets();');
-    expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
+    expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
     expect(source).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
     expect(source).toContain('aria-modal');
     expect(source).toContain('role="dialog"');
+    expect(source).toContain('accessibilityLabel="Choose product category"');
     expect(source).toContain('className="flex-1"');
     expect(source).toContain('contentContainerClassName="pb-24"');
     expect(source).toContain('<View className="pb-3 pt-1">');
@@ -417,6 +418,9 @@ describe('Shelf route mobile contracts', () => {
       "return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');",
     );
     expect(source).toContain('{categoryFieldLabel(category)}');
+    expect(source).toContain(
+      "accessibilityLabel={category ? `Category, ${categoryFieldLabel(category)}` : 'Category'}",
+    );
     expect(source).toContain('<View className="flex-1">');
     expect(source).toContain('<View className="flex-[1.1]">');
     expect(source).toContain(
@@ -436,7 +440,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'className="min-h-[52px] flex-row items-center justify-between rounded-[14px] border border-hairline bg-paper-raised px-4 py-3"',
     );
-    expect(source).toContain('<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>');
+    expect(source).toContain('contentContainerClassName="pb-6"');
+    expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain('<CategoryPickerSheet');
     expect(source).not.toContain('const pickerSheetMaxHeight = Math.max(320, height - 48);');
     expect(source).not.toContain('sheetMaxHeight={pickerSheetMaxHeight}');

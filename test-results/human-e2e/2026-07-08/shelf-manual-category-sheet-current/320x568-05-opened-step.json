@@ -1,0 +1,63 @@
+{
+  "url": "http://localhost:8221/shelf/opened",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "scrollWidth": 320,
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Other ▾ INGREDIENTS · optional, we’ll find the actives You can set the PAO on the next step. Straight from the label. Continue ◴ x When did you open it? This starts the freshness clock. Not sure? We'll estimate from when you added it. ✓ Just opened it Clock starts today Pick a date I opened it earlier Not opened yet No clock. We'll show shelf life PAO not set tap to set ✎ Add to shelf",
+  "dialog": {
+    "label": "◴xWhen did you open it?This starts the freshness clock. Not sure? We'll estimate",
+    "top": 12,
+    "bottom": 568,
+    "height": 556,
+    "width": 320
+  },
+  "visibleButtons": [
+    {
+      "label": "Cancel",
+      "role": "button",
+      "x": 24,
+      "y": 8,
+      "width": 48,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Category, Other",
+      "role": "button",
+      "x": 159.8125,
+      "y": 230,
+      "width": 136.1875,
+      "height": 50,
+      "visible": true
+    },
+    {
+      "label": "Continue",
+      "role": "button",
+      "x": 24,
+      "y": 500,
+      "width": 272,
+      "height": 56,
+      "visible": true
+    },
+    {
+      "label": "Close",
+      "role": "button",
+      "x": 244,
+      "y": 53,
+      "width": 48,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Edit period after opening",
+      "role": "button",
+      "x": 28,
+      "y": 531,
+      "width": 264,
+      "height": 70,
+      "visible": true
+    }
+  ]
+}

@@ -49,7 +49,7 @@ function CategoryPickerSheet({
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const sheetMaxHeight = Math.max(0, viewportHeight - 48);
   const sheetPaddingBottom =
     insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
@@ -59,7 +59,6 @@ function CategoryPickerSheet({
     <View
       className="absolute inset-0 justify-end"
       style={{ backgroundColor: 'rgba(32,27,21,0.4)', zIndex: 20, elevation: 20 }}
-      accessibilityLabel="Choose product category"
     >
       <View className="flex-1 justify-end">
         <Pressable
@@ -71,6 +70,7 @@ function CategoryPickerSheet({
         <View
           aria-modal
           role="dialog"
+          accessibilityLabel="Choose product category"
           accessibilityViewIsModal
           className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"
           style={
@@ -102,7 +102,12 @@ function CategoryPickerSheet({
               </Text>
             </Pressable>
           </View>
-          <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          <ScrollView
+            className="flex-1"
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="pb-6"
+            keyboardShouldPersistTaps="handled"
+          >
             <View className="gap-2">
               {PRODUCT_CATEGORIES.map((c) => {
                 const selected = selectedCategory === c.id;
@@ -235,7 +240,7 @@ export default function ManualAddScreen() {
             <View className="flex-[1.1]">
               <FieldLabel>Category</FieldLabel>
               <Pressable
-                accessibilityLabel={category ? `Category, ${categoryLabel(category)}` : 'Category'}
+                accessibilityLabel={category ? `Category, ${categoryFieldLabel(category)}` : 'Category'}
                 accessibilityHint="Choose product category"
                 accessibilityRole="button"
                 onPress={() => setPickerOpen((o) => !o)}

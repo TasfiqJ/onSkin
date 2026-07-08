@@ -1,0 +1,212 @@
+{
+  "controls": [
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Dismiss category picker",
+      "label": "Dismiss category picker",
+      "rect": {
+        "bottom": 47.58798599243164,
+        "height": 47.58798599243164,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 0,
+        "width": 320.38836669921875
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 47.58798599243164,
+        "height": 47.58798599243164,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Close category picker",
+      "label": "Close category picker",
+      "rect": {
+        "bottom": 132.55461883544922,
+        "height": 47.99757385253906,
+        "left": 232.40292358398438,
+        "right": 296.38957595825195,
+        "top": 84.55704498291016,
+        "width": 63.98665237426758
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 132.55461883544922,
+        "height": 47.99757385253906,
+        "left": 232.40292358398438,
+        "right": 296.38957595825195,
+        "top": 84.55704498291016,
+        "width": 63.98665237426758
+      }
+    },
+    {
+      "clipped": true,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Category, Mascara / liquid eye",
+      "label": "Category, Mascara / liquid eye",
+      "rect": {
+        "bottom": 177.15413665771484,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 125.16687774658203,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "under44": true,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 177.15413665771484,
+        "height": 32.600120544433594,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 144.55401611328125,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Category, Sunscreen (SPF)",
+      "label": "Category, Sunscreen (SPF)",
+      "rect": {
+        "bottom": 237.13592529296875,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 185.14866638183594,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 237.13592529296875,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 185.14866638183594,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Category, Oil / balm",
+      "label": "Category, Oil / balm",
+      "rect": {
+        "bottom": 297.11773681640625,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 245.13047790527344,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 297.11773681640625,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 245.13047790527344,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Category, Benzoyl peroxide product",
+      "label": "Category, Benzoyl peroxide product",
+      "rect": {
+        "bottom": 357.0995330810547,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 305.1122741699219,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 357.0995330810547,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 305.1122741699219,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Category, Something else",
+      "label": "Category, Something else",
+      "rect": {
+        "bottom": 417.0813446044922,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 365.0940856933594,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 417.0813446044922,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 365.0940856933594,
+        "width": 272.3907775878906
+      }
+    }
+  ],
+  "dialogs": [
+    {
+      "ariaModal": "true",
+      "label": "Choose product category",
+      "rect": {
+        "bottom": 480.5825538635254,
+        "height": 432.99456787109375,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 47.58798599243164,
+        "width": 320.38836669921875
+      },
+      "role": "dialog"
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issues": [
+    "[Circular]"
+  ],
+  "url": "http://localhost:8216/shelf/manual?e2e=shelf-manual-picker-postfix-2",
+  "viewport": {
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "xAdd by handThe floor under every other path. This always works, even fully offline.Product nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesPick a category and we'll estimate the PAO. You can change it next.ContinueProduct categoryCloseCleanserToner / essenceVitamin C serumRetinol / retinoid serumSerumMoisturiser (tube)Moisturiser (jar)Eye creamLash / brow serumMascara / liquid eyeSunscreen (SPF)Oil / balmBenzoyl peroxide productSomething else"
+}

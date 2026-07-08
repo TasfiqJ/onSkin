@@ -1,0 +1,54 @@
+{
+  "controls": [
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Close",
+      "label": "Close",
+      "rect": {
+        "bottom": 100.5612907409668,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 52.563716888427734,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 100.5612907409668,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.3998794555664,
+        "top": 52.563716888427734,
+        "width": 47.99756622314453
+      }
+    }
+  ],
+  "dialogs": [
+    {
+      "ariaModal": "true",
+      "label": "◴xWhen did you open it?This starts the freshness clock. Not sure? We'll estimate from when you added it.✓Just opened itClock starts todayPick a dateI opened it earlierNot opened yetNo clock. We'll show shelf lifePAO not settap to set✎Add to shelf",
+      "rect": {
+        "bottom": 480.5825433731079,
+        "height": 468.99273681640625,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 11.58980655670166,
+        "width": 320.38836669921875
+      },
+      "role": "dialog"
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issues": [],
+  "url": "http://localhost:8216/shelf/opened",
+  "viewport": {
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "xAdd by handThe floor under every other path. This always works, even fully offline.Product nameBrandCategoryOther▾Ingredients · optional, we’ll find the activesYou can set the PAO on the next step. Straight from the label.Continue◴xWhen did you open it?This starts the freshness clock. Not sure? We'll estimate from when you added it.✓Just opened itClock starts todayPick a dateI opened it earlierNot opened yetNo clock. We'll show shelf lifePAO not settap to set✎Add to shelf"
+}

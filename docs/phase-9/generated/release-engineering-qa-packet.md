@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-08T00:04:36.604Z
+Generated: 2026-07-08T13:57:30.019Z
 Status: blocked
-Git SHA: af8f3c095e09ca59344e9cdb4c1705a9c555593c
+Git SHA: c764ac603ed5757f4c839937f396dcc291b5e619
 Git status: DIRTY
 
 ## Release Identity
@@ -88,8 +88,8 @@ Git status: DIRTY
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
 - `apps/mobile/src/lib/env.ts`: `2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321`
 - `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
-- `apps/mobile/src/lib/launch/phase7.ts`: `70d4d223b9ffddfa750ffeebabff17739b4606035308aade52bf4fb438c46822`
-- `apps/mobile/src/lib/launch/phase7.test.ts`: `ffc5ad7730766e6ba9aa6f7ac7de5ad088d292aaa44172084524e9d1afb65c68`
+- `apps/mobile/src/lib/launch/phase7.ts`: `4369c73351a58fd6cad9c5d94917185fadb7e67bf219aa9f85814dea5055e663`
+- `apps/mobile/src/lib/launch/phase7.test.ts`: `d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815`
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `dd52814618b7f51915aa6d4428d533d490f257a8bf6a413f36ece71bd0c16218`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
@@ -124,7 +124,7 @@ Git status: DIRTY
 - `scripts/phase9/data-rights-smoke.mjs`: `ad243460c1784e19ff611398e3d22fc62f177823be2dcdd7dba7fed8aeea3e7f`
 - `scripts/phase9/supabase-policy-lint.mjs`: `153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183`
 - `scripts/phase9/security-ci-smoke.mjs`: `f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9`
-- `scripts/phase9/privacy-payload-audit.mjs`: `bf14f1709300da64824f89a8f78e6ce9a6d48689d0eb2382149e99fb9b2516b6`
+- `scripts/phase9/privacy-payload-audit.mjs`: `4e662826a00d001cfcc7b5f87230210132cfb5e1fcc518ba6c5403faeeec1ede`
 - `scripts/phase9/dependency-sbom.mjs`: `bc7aad0525237b1116698211196de85849bb5892266557bdc5da8fe8fa7723db`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `c8ff3e307284f90a71ff497b131e9309c7e3d9c2876fbc9f7490b239a90f154f`

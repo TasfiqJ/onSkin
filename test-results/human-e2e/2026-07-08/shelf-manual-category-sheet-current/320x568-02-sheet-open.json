@@ -1,0 +1,135 @@
+{
+  "url": "http://localhost:8221/shelf/manual",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "scrollWidth": 320,
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue Product category Close Cleanser Toner / essence Vitamin C serum Retinol / retinoid serum Serum Moisturiser (tube) Moisturiser (jar) Eye cream Lash / brow serum Mascara / liquid eye Sunscreen (SPF) Oil / balm Benzoyl peroxide product Something else",
+  "dialog": {
+    "label": "Choose product category",
+    "top": 48,
+    "bottom": 568,
+    "height": 520,
+    "width": 320
+  },
+  "visibleButtons": [
+    {
+      "label": "Cancel",
+      "role": "button",
+      "x": 24,
+      "y": 8,
+      "width": 48,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Category",
+      "role": "button",
+      "x": 159.8125,
+      "y": 230,
+      "width": 136.1875,
+      "height": 50,
+      "visible": true
+    },
+    {
+      "label": "Continue",
+      "role": "button",
+      "x": 24,
+      "y": 500,
+      "width": 272,
+      "height": 56,
+      "visible": true
+    },
+    {
+      "label": "Dismiss category picker",
+      "role": "button",
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Close category picker",
+      "role": "button",
+      "x": 232,
+      "y": 85,
+      "width": 64,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Category, Cleanser",
+      "role": "button",
+      "x": 24,
+      "y": 145,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Toner / essence",
+      "role": "button",
+      "x": 24,
+      "y": 205,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Vitamin C serum",
+      "role": "button",
+      "x": 24,
+      "y": 265,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Retinol / retinoid serum",
+      "role": "button",
+      "x": 24,
+      "y": 325,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Serum",
+      "role": "button",
+      "x": 24,
+      "y": 385,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Moisturiser (tube)",
+      "role": "button",
+      "x": 24,
+      "y": 445,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Moisturiser (jar)",
+      "role": "button",
+      "x": 24,
+      "y": 505,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Eye cream",
+      "role": "button",
+      "x": 24,
+      "y": 565,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    }
+  ]
+}

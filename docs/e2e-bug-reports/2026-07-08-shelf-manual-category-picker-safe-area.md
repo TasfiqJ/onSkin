@@ -2,7 +2,7 @@
 
 Severity: Medium
 Surface: Expo web source-verified; iOS / Android risk
-Environment: Codex in-app browser, Expo web at `/shelf/manual`, 320 x 568 compact viewport
+Environment: Codex in-app browser, Expo web at `/shelf/manual`, 320 x 568 and 320 x 480 compact viewports
 Feature: Shelf manual product intake
 Date: 2026-07-08
 Tester: Codex
@@ -15,18 +15,18 @@ Tester: Codex
 
 ## Expected Result
 
-The category picker keeps the existing compact bottom-sheet behavior while matching the native safe-area contract used by the hardened shared sheets: the sheet reserves an outside dismiss area, adds extra bottom padding only when a real iOS or Android bottom inset exists, exposes modal-dialog semantics on web, and keeps scrollable category rows away from gesture bars and fixed footers.
+The category picker keeps the existing compact bottom-sheet behavior while matching the native safe-area contract used by the hardened shared sheets: the sheet reserves an outside dismiss area, adds extra bottom padding only when a real iOS or Android bottom inset exists, exposes a stable named modal dialog on web, keeps scrollable category rows away from gesture bars and fixed footers, and keeps the collapsed field's accessible label aligned with the visible compact label.
 
 ## Actual Result
 
-The picker passed a parent-owned `sheetMaxHeight` value into the local sheet and kept a fixed `pb-10` bottom padding. That preserved the compact web baseline, but it did not add native home-indicator clearance and used `Math.max(320, height - 48)`, which can preserve a 320 px sheet even when a very short viewport needs more outside dismiss reserve. The sheet body also lacked web `role="dialog"` / `aria-modal` semantics.
+The picker originally passed a parent-owned `sheetMaxHeight` value into the local sheet and kept a fixed `pb-10` bottom padding. A follow-up 320 x 480 modal-open pass found the route-local sheet still needed a stricter shortest-phone reserve and accessible-name polish: the dialog's computed name fell back to concatenated sheet text, the outside dismiss strip could measure below 44 px on the actual 481 px browser viewport, and selecting the visible compact `Other` field still announced `Category, Something else`.
 
 ## Evidence
 
 - UI snapshot: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-safe-area/01-manual-screen-compact-state.json`
 - Run report: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-safe-area/report.md`
 - Terminal transcript: focused Shelf route test, mobile typecheck, and Expo web run in Codex terminal
-- Browser limitation: the in-app browser confirmed the collapsed `/shelf/manual` route at 320 px with zero horizontal overflow and visible 50+ px controls, but timed out on both role-locator and coordinate clicks before modal-open evidence could be captured. The final forced-click retry reset the browser control kernel.
+- Follow-up evidence: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-current-320x480/` captured the modal-open accessible-name and shortest-phone reserve issues before the follow-up fix.
 
 ## Frequency
 
@@ -45,7 +45,7 @@ The picker passed a parent-owned `sheetMaxHeight` value into the local sheet and
 
 ## Minimal Fix Recommendation
 
-Move the height and safe-area contract into `CategoryPickerSheet`: use `useWindowDimensions()` and `useSafeAreaInsets()` locally, cap the sheet at `viewportHeight - 44`, keep the existing 40 px compact web baseline when there is no bottom inset, add `insets.bottom + 24` only for real bottom insets, and expose `role="dialog"` plus `aria-modal` on the sheet body.
+Move the height and safe-area contract into `CategoryPickerSheet`: use `useWindowDimensions()` and `useSafeAreaInsets()` locally, cap the sheet at `viewportHeight - 48`, keep the existing 40 px compact web baseline when there is no bottom inset, add `insets.bottom + 24` only for real bottom insets, expose `role="dialog"` plus `aria-modal` and a stable dialog label on the sheet body, add bottom padding to the internal category list, and use the same compact category label for the collapsed field's visible and accessible text.
 
 ## Verification Flow After Fix
 
@@ -57,11 +57,13 @@ Move the height and safe-area contract into `CategoryPickerSheet`: use `useWindo
 
 ## Post-Fix Evidence
 
-- UI snapshot: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-safe-area/01-manual-screen-compact-state.json`
+- Modal-open and full-flow evidence: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-320x480-postfix/`
+- Summary: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-320x480-postfix/summary.json`
+- Report: `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-320x480-postfix/report.md`
+- Current two-viewport recheck:
+  `test-results/human-e2e/2026-07-08/shelf-manual-category-sheet-current/`
 - Focused regression: `npm --workspace apps/mobile run test -- shelfRoutes.test.ts`
-- Typecheck: `npm --workspace apps/mobile run typecheck`
 
 ## Remaining Risk
 
-- Modal-open browser evidence is incomplete because the in-app Browser plugin could observe the route but failed to dispatch input for this Expo web surface.
-- Native iOS/Android home-indicator, very short physical screens, Dynamic Type, VoiceOver, and TalkBack traversal still require device QA.
+- Native iOS/Android home-indicator, Dynamic Type, VoiceOver, and TalkBack traversal still require device QA.

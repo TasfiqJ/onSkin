@@ -25,6 +25,11 @@ Fresh verification on 2026-07-08:
 - `npm --workspace apps/mobile run test` passed: 170 test files, 1743 tests.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
+- `npm run phase9:verify` passed non-strict release-engineering code gates
+  after the privacy payload audit was aligned to the route-owned
+  progress-photo share confirmation. Strict Phase 9 remains blocked by missing
+  final identity, live Supabase/Edge/RevenueCat/store/native-build,
+  observability, dependency, beta, and named-signoff evidence.
 - `npm run phase10-11:verify` passed non-strict code gates. Strict closed-beta
   and public-launch readiness remain blocked by missing final identity URLs,
   TestFlight/Play evidence, RevenueCat production evidence, monitoring/support
@@ -34,6 +39,11 @@ Fresh verification on 2026-07-08:
   user-facing controls, zero blocked hit-tests, zero horizontal overflow, and
   zero disallowed browser logs. Evidence:
   `test-results/human-e2e/2026-07-08/current-main-short-phone-480-rerun/`.
+- Expo web Shelf manual category picker evidence at 320 x 480 and 320 x 568
+  passed the named bottom-sheet, lower-option scroll, 52 px category row,
+  `Other` selection, `/shelf/opened` continuation, horizontal-overflow, and
+  browser-log checks. Evidence:
+  `test-results/human-e2e/2026-07-08/shelf-manual-category-sheet-current/`.
 
 Re-run the relevant checks after any production-readiness change.
 

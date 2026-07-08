@@ -87,12 +87,17 @@ instead of silently editing implementation around the plan.
 Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
-`npm run brand:audit:strict`, and `npm run phase10-11:verify` pass non-strict
-code gates. The mobile suite currently covers 170 test files and 1743 tests.
-The 2026-07-08 Expo web shortest-phone rerun at 320 x 480 passed 49
-direct-entry routes with zero failed routes, visible clipped controls, sub-44
-user-facing controls, blocked hit-tests, horizontal overflow, or disallowed
-browser logs.
+`npm run brand:audit:strict`, `npm run phase9:verify`, and
+`npm run phase10-11:verify` pass non-strict code gates. The Phase 9 privacy
+payload audit now accepts the route-owned progress-photo share confirmation
+instead of requiring a native alert. The mobile suite currently covers 170 test
+files and 1743 tests. The 2026-07-08 Expo web shortest-phone rerun at 320 x 480
+passed 49 direct-entry routes with zero failed routes, visible clipped controls,
+sub-44 user-facing controls, blocked hit-tests, horizontal overflow, or
+disallowed browser logs. The Shelf manual category picker also passed fresh
+320 x 480 and 320 x 568 Expo web evidence for its named bottom sheet, scrollable
+lower category options, 52 px rows, `Other` selection, `/shelf/opened`
+continuation, and zero disallowed browser logs.
 Strict beta/public-launch gates still require the external evidence listed in
 `docs/FOR_TAS_TO_DO.md`. Re-run the relevant checks after any
 readiness-changing work.

@@ -1,0 +1,126 @@
+{
+  "url": "http://localhost:8221/shelf/manual",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "scrollWidth": 320,
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue Product category Close Cleanser Toner / essence Vitamin C serum Retinol / retinoid serum Serum Moisturiser (tube) Moisturiser (jar) Eye cream Lash / brow serum Mascara / liquid eye Sunscreen (SPF) Oil / balm Benzoyl peroxide product Something else",
+  "dialog": {
+    "label": "Choose product category",
+    "top": 48,
+    "bottom": 480,
+    "height": 432,
+    "width": 320
+  },
+  "visibleButtons": [
+    {
+      "label": "Cancel",
+      "role": "button",
+      "x": 24,
+      "y": 8,
+      "width": 48,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Category",
+      "role": "button",
+      "x": 159.8125,
+      "y": 230,
+      "width": 136.1875,
+      "height": 50,
+      "visible": true
+    },
+    {
+      "label": "Continue",
+      "role": "button",
+      "x": 24,
+      "y": 412,
+      "width": 272,
+      "height": 56,
+      "visible": true
+    },
+    {
+      "label": "Dismiss category picker",
+      "role": "button",
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Close category picker",
+      "role": "button",
+      "x": 232,
+      "y": 85,
+      "width": 64,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Category, Eye cream",
+      "role": "button",
+      "x": 24,
+      "y": 4,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Lash / brow serum",
+      "role": "button",
+      "x": 24,
+      "y": 64,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Mascara / liquid eye",
+      "role": "button",
+      "x": 24,
+      "y": 124,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Sunscreen (SPF)",
+      "role": "button",
+      "x": 24,
+      "y": 184,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Oil / balm",
+      "role": "button",
+      "x": 24,
+      "y": 244,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Benzoyl peroxide product",
+      "role": "button",
+      "x": 24,
+      "y": 304,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    },
+    {
+      "label": "Category, Something else",
+      "role": "button",
+      "x": 24,
+      "y": 364,
+      "width": 272,
+      "height": 52,
+      "visible": true
+    }
+  ]
+}

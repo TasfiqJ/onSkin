@@ -371,12 +371,25 @@ block(
 );
 block(
   errors,
-  /confirmShare/.test(photoDetailSource) &&
-    /Alert\.alert\(PHOTO_COPY\.detail\.shareTitle,\s*PHOTO_COPY\.detail\.shareBody/.test(
+  /const\s+\[\s*shareConfirmVisible,\s*setShareConfirmVisible\s*\]\s*=\s*useState\(false\)/.test(
+    photoDetailSource,
+  ) &&
+    /function\s+confirmShare\(\)\s*\{[\s\S]*setShareConfirmVisible\(true\);[\s\S]*\}/.test(
       photoDetailSource,
     ) &&
+    /onPress=\{confirmShare\}/.test(photoDetailSource) &&
+    /\{shareConfirmVisible\s*\?\s*\(/.test(photoDetailSource) &&
+    /PHOTO_COPY\.detail\.shareTitle/.test(photoDetailSource) &&
+    /PHOTO_COPY\.detail\.shareBody/.test(photoDetailSource) &&
     /PHOTO_COPY\.detail\.shareConfirm/.test(photoDetailSource),
-  'Photo detail share must require explicit confirmation before exporting a progress photo.',
+  'Photo detail share must show route-owned confirmation copy before exporting a progress photo.',
+);
+block(
+  errors,
+  /onPress=\{\(\)\s*=>\s*setShareConfirmVisible\(false\)\}/.test(photoDetailSource) &&
+    /onPress=\{\(\)\s*=>\s*void\s+shareCurrentPhoto\(\)\}/.test(photoDetailSource) &&
+    !/Alert\.alert\(PHOTO_COPY\.detail\.shareTitle/.test(photoDetailSource),
+  'Photo detail share confirmation must offer cancel/confirm actions without native alerts.',
 );
 block(
   errors,

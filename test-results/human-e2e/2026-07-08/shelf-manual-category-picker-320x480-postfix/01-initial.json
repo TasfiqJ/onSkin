@@ -1,0 +1,172 @@
+{
+  "controls": [
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Cancel",
+      "label": "Cancel",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Product name",
+      "label": "Product name",
+      "rect": {
+        "bottom": 195.96481704711914,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 145.96481323242188,
+        "width": 272.3907775878906
+      },
+      "role": "input",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 195.96481704711914,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 145.96481323242188,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Brand",
+      "label": "Brand",
+      "rect": {
+        "bottom": 279.96057510375977,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 229.9605712890625,
+        "width": 123.99879455566406
+      },
+      "role": "input",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 279.96057510375977,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 229.9605712890625,
+        "width": 123.99879455566406
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Category",
+      "label": "Category",
+      "rect": {
+        "bottom": 279.96057510375977,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38958740234375,
+        "top": 229.9605712890625,
+        "width": 136.39260864257812
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 279.96057510375977,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38956451416016,
+        "top": 229.9605712890625,
+        "width": 136.39258575439453
+      }
+    },
+    {
+      "clipped": true,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Ingredients",
+      "label": "Ingredients",
+      "rect": {
+        "bottom": 410.72513580322266,
+        "height": 64.7754898071289,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 345.94964599609375,
+        "width": 272.3907775878906
+      },
+      "role": "textarea",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 408.60136795043945,
+        "height": 62.6517219543457,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 345.94964599609375,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": true,
+      "hitBlocked": false,
+      "hitLabel": "Continue",
+      "label": "Continue",
+      "rect": {
+        "bottom": 468.5831489562988,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 412.5910339355469,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 468.5831489562988,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 412.5910339355469,
+        "width": 272.3907775878906
+      }
+    }
+  ],
+  "dialogs": [],
+  "horizontalOverflow": 0,
+  "issues": [
+    "[Circular]"
+  ],
+  "url": "http://localhost:8216/shelf/manual?e2e=shelf-manual-picker-postfix-2",
+  "viewport": {
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "xAdd by handThe floor under every other path. This always works, even fully offline.Product nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesPick a category and we'll estimate the PAO. You can change it next.Continue .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }"
+}

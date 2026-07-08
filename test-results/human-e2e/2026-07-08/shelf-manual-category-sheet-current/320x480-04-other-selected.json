@@ -1,0 +1,39 @@
+{
+  "url": "http://localhost:8221/shelf/manual",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "scrollWidth": 320,
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Other ▾ INGREDIENTS · optional, we’ll find the actives You can set the PAO on the next step. Straight from the label. Continue",
+  "dialog": null,
+  "visibleButtons": [
+    {
+      "label": "Cancel",
+      "role": "button",
+      "x": 24,
+      "y": 8,
+      "width": 48,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "label": "Category, Other",
+      "role": "button",
+      "x": 159.8125,
+      "y": 230,
+      "width": 136.1875,
+      "height": 50,
+      "visible": true
+    },
+    {
+      "label": "Continue",
+      "role": "button",
+      "x": 24,
+      "y": 412,
+      "width": 272,
+      "height": 56,
+      "visible": true
+    }
+  ]
+}

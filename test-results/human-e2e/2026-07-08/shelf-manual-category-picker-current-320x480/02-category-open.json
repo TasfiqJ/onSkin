@@ -1,0 +1,581 @@
+{
+  "body": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320
+  },
+  "controls": [
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Dismiss category picker",
+      "label": "Cancel",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Category, Cleanser",
+      "label": "Product name",
+      "rect": {
+        "bottom": 173.63471603393555,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 123.63471221923828,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "input",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 173.63471603393555,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 123.63471221923828,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Toner / essence",
+      "label": "Brand",
+      "rect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 207.63047790527344,
+        "width": 123.99879455566406
+      },
+      "role": null,
+      "tag": "input",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 207.63047790527344,
+        "width": 123.99879455566406
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Toner / essence",
+      "label": "Category",
+      "rect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38958740234375,
+        "top": 207.63047790527344,
+        "width": 136.39260864257812
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38958740234375,
+        "top": 207.63047790527344,
+        "width": 136.39260864257812
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Retinol / retinoid serum",
+      "label": "Ingredients",
+      "rect": {
+        "bottom": 388.39505767822266,
+        "height": 64.7754898071289,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 323.61956787109375,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "textarea",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 388.39505767822266,
+        "height": 64.7754898071289,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 323.61956787109375,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Category, Moisturiser (tube)",
+      "label": "Continue",
+      "rect": {
+        "bottom": 468.5831489562988,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 412.5910339355469,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 468.5831489562988,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 412.5910339355469,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": true,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Dismiss category picker",
+      "label": "Dismiss category picker",
+      "rect": {
+        "bottom": 43.583133697509766,
+        "height": 43.583133697509766,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 0,
+        "width": 320.38836669921875
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": true,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 43.583133697509766,
+        "height": 43.583133697509766,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Close",
+      "label": "Close category picker",
+      "rect": {
+        "bottom": 128.5497589111328,
+        "height": 47.99757385253906,
+        "left": 232.40292358398438,
+        "right": 296.38957595825195,
+        "top": 80.55218505859375,
+        "width": 63.98665237426758
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 128.5497589111328,
+        "height": 47.99757385253906,
+        "left": 232.40292358398438,
+        "right": 296.38957595825195,
+        "top": 80.55218505859375,
+        "width": 63.98665237426758
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Cleanser",
+      "label": "Category, Cleanser",
+      "rect": {
+        "bottom": 192.5364227294922,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 140.54916381835938,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 192.5364227294922,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 140.54916381835938,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Toner / essence",
+      "label": "Category, Toner / essence",
+      "rect": {
+        "bottom": 252.51821899414062,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 200.5309600830078,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 252.51821899414062,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 200.5309600830078,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Vitamin C serum",
+      "label": "Category, Vitamin C serum",
+      "rect": {
+        "bottom": 312.50001525878906,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 260.51275634765625,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 312.50001525878906,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 260.51275634765625,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Retinol / retinoid serum",
+      "label": "Category, Retinol / retinoid serum",
+      "rect": {
+        "bottom": 372.48182678222656,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 320.49456787109375,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 372.48182678222656,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 320.49456787109375,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": false,
+      "disabled": false,
+      "hitBlocked": false,
+      "hitLabel": "Serum",
+      "label": "Category, Serum",
+      "rect": {
+        "bottom": 432.46360778808594,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 380.4763488769531,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 432.46360778808594,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 380.4763488769531,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "clipped": true,
+      "disabled": false,
+      "hitBlocked": true,
+      "hitLabel": "Product categoryCloseCleanserToner / essenceVitamin C serumRetinol / retinoid serumSerumMoisturiser (tube)Moisturiser (jar)Eye creamLash / brow serumMascara / liquid eyeSunscreen (SPF)Oil / balmBenzoyl peroxide productSomething else",
+      "label": "Category, Moisturiser (tube)",
+      "rect": {
+        "bottom": 492.44541931152344,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 440.4581604003906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": true,
+      "visible": true,
+      "visibleRect": {
+        "bottom": 481,
+        "height": 40.541839599609375,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 440.4581604003906,
+        "width": 272.3907775878906
+      }
+    }
+  ],
+  "dialogs": [
+    {
+      "ariaModal": "true",
+      "label": "Product categoryCloseCleanserToner / essenceVitamin C serumRetinol / retinoid serumSerumMoisturiser (tube)Moisturiser (jar)Eye creamLash / brow serumMascara / l",
+      "rect": {
+        "bottom": 480.5825538635254,
+        "height": 436.9994201660156,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 43.583133697509766,
+        "width": 320.38836669921875
+      }
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issues": [
+    {
+      "hitLabel": "Dismiss category picker",
+      "label": "Cancel",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "type": "hit-blocked-control",
+      "visibleRect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "hitLabel": "Category, Cleanser",
+      "label": "Product name",
+      "rect": {
+        "bottom": 173.63471603393555,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 123.63471221923828,
+        "width": 272.3907775878906
+      },
+      "type": "hit-blocked-control",
+      "visibleRect": {
+        "bottom": 173.63471603393555,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 123.63471221923828,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "hitLabel": "Toner / essence",
+      "label": "Brand",
+      "rect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 207.63047790527344,
+        "width": 123.99879455566406
+      },
+      "type": "hit-blocked-control",
+      "visibleRect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 207.63047790527344,
+        "width": 123.99879455566406
+      }
+    },
+    {
+      "hitLabel": "Toner / essence",
+      "label": "Category",
+      "rect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38958740234375,
+        "top": 207.63047790527344,
+        "width": 136.39260864257812
+      },
+      "type": "hit-blocked-control",
+      "visibleRect": {
+        "bottom": 257.6304817199707,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38958740234375,
+        "top": 207.63047790527344,
+        "width": 136.39260864257812
+      }
+    },
+    {
+      "hitLabel": "Retinol / retinoid serum",
+      "label": "Ingredients",
+      "rect": {
+        "bottom": 388.39505767822266,
+        "height": 64.7754898071289,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 323.61956787109375,
+        "width": 272.3907775878906
+      },
+      "type": "hit-blocked-control",
+      "visibleRect": {
+        "bottom": 388.39505767822266,
+        "height": 64.7754898071289,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 323.61956787109375,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "hitLabel": "Category, Moisturiser (tube)",
+      "label": "Continue",
+      "rect": {
+        "bottom": 468.5831489562988,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 412.5910339355469,
+        "width": 272.3907775878906
+      },
+      "type": "hit-blocked-control",
+      "visibleRect": {
+        "bottom": 468.5831489562988,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 412.5910339355469,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "hitLabel": "Dismiss category picker",
+      "label": "Dismiss category picker",
+      "rect": {
+        "bottom": 43.583133697509766,
+        "height": 43.583133697509766,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 0,
+        "width": 320.38836669921875
+      },
+      "type": "sub-44-control",
+      "visibleRect": {
+        "bottom": 43.583133697509766,
+        "height": 43.583133697509766,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320
+      }
+    },
+    {
+      "hitLabel": "Product categoryCloseCleanserToner / essenceVitamin C serumRetinol / retinoid serumSerumMoisturiser (tube)Moisturiser (jar)Eye creamLash / brow serumMascara / liquid eyeSunscreen (SPF)Oil / balmBenzoyl peroxide productSomething else",
+      "label": "Category, Moisturiser (tube)",
+      "rect": {
+        "bottom": 492.44541931152344,
+        "height": 51.98725891113281,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 440.4581604003906,
+        "width": 272.3907775878906
+      },
+      "type": "sub-44-control",
+      "visibleRect": {
+        "bottom": 481,
+        "height": 40.541839599609375,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 440.4581604003906,
+        "width": 272.3907775878906
+      }
+    }
+  ],
+  "textStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue Product category Close Cleanser Toner / essence Vitamin C serum Retinol / retinoid serum Serum Moisturiser (tube) Moisturiser (jar) Eye cream Lash / brow serum Mascara / liquid eye Sunscreen (SPF) Oil / balm Benzoyl peroxide product Something else",
+  "url": "http://localhost:8207/shelf/manual",
+  "viewport": {
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 481,
+    "width": 320
+  },
+  "currentDialog": null
+}

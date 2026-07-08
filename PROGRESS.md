@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Repaired the Phase 9 privacy payload audit so it enforces the current
+  route-owned progress-photo share confirmation instead of requiring a native
+  `Alert.alert`. The audit now proves the photo detail route opens explicit
+  share title/body/confirm copy before export, offers Cancel and Share actions,
+  and keeps native alerts out of the sensitive photo-share path. Re-ran
+  `npm run phase9:privacy-payload-audit` and full `npm run phase9:verify`;
+  both pass non-strict code gates, including root typecheck, root lint, and
+  170 mobile test files / 1743 tests. Strict Phase 9 remains blocked on
+  Tas-owned live Supabase, RevenueCat, store/build, observability, dependency,
+  beta, and named-signoff evidence.
+
+- Tightened and reverified the current Shelf manual category picker after the
+  bottom-sheet safe-area/semantics hardening. Expo web in the Codex in-app
+  browser at 320 x 480 fills `/shelf/manual`, opens the named
+  `Choose product category` dialog, verifies the 48 px outside dismiss reserve
+  with no open-state control issues, scrolls to a fully visible
+  `Something else` row, selects it, confirms the collapsed field exposes
+  `Category, Other`, and continues to `/shelf/opened` with zero horizontal
+  overflow and zero unexpected warn/error logs. Evidence and report:
+  `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-320x480-postfix/`,
+  `docs/e2e-bug-reports/2026-07-08-shelf-manual-category-picker-safe-area.md`.
+
 - Re-ran the current `main` shortest-phone route sweep after the recent compact
   route fixes. Expo web at 320 x 480 checked 49 direct-entry routes across
   Today, Progress, routine, cycle, recommendations, community, commerce,

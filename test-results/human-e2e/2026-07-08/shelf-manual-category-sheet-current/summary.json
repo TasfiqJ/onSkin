@@ -1,0 +1,215 @@
+{
+  "baseUrl": "http://localhost:8221",
+  "verdict": "pass",
+  "results": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 480
+      },
+      "visibleCategoryButtons": [
+        {
+          "label": "Category, Cleanser",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Toner / essence",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Vitamin C serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Retinol / retinoid serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Moisturiser (tube)",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Moisturiser (jar)",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Eye cream",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Lash / brow serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Mascara / liquid eye",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Sunscreen (SPF)",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Oil / balm",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Benzoyl peroxide product",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Something else",
+          "width": 272,
+          "height": 52
+        }
+      ],
+      "logs": [
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+        },
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "visibleCategoryButtons": [
+        {
+          "label": "Category, Cleanser",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Toner / essence",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Vitamin C serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Retinol / retinoid serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Moisturiser (tube)",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Moisturiser (jar)",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Eye cream",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Lash / brow serum",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Mascara / liquid eye",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Sunscreen (SPF)",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Oil / balm",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Benzoyl peroxide product",
+          "width": 272,
+          "height": 52
+        },
+        {
+          "label": "Category, Something else",
+          "width": 272,
+          "height": 52
+        }
+      ],
+      "logs": [
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+        },
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+        },
+        {
+          "type": "warning",
+          "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+        }
+      ]
+    }
+  ],
+  "disallowedLogs": []
+}
