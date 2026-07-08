@@ -1,0 +1,58 @@
+{
+  "alerts": [
+    "Choice not savedWe could not save that Ask RoutineKind choice. Please try again."
+  ],
+  "bodyTextSnippet": "< Before you start Your context stays on your phone. To answer in your own words, an abstracted summary of your question reaches a private language model. Here’s exactly what does and doesn’t leave. ✓ Your shelf, routine and all conflict logic run on-device. ✓ The cloud model is zero-retention and no-training, and no transcript is kept beyond a short, encrypted safety window you consent to. ✕ Never a raw photo, never a faceprint, never sold or shared. A separate advisor consent. Distinct and revocable. Enable Ask RoutineKind Off by default Choice not saved We could not save that Ask RoutineKind choice. Please try again. Pro-gated · hard trial cap · the answers about your own shelf are always free Open Ask RoutineKind",
+  "controls": [
+    {
+      "checked": "",
+      "disabled": false,
+      "height": 48,
+      "label": "Back",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 4
+    },
+    {
+      "checked": "true",
+      "disabled": false,
+      "height": 48,
+      "label": "Enable Ask RoutineKind",
+      "role": "switch",
+      "tag": "DIV",
+      "visible": true,
+      "width": 52,
+      "x": 224,
+      "y": 185
+    },
+    {
+      "checked": "",
+      "disabled": false,
+      "height": 56,
+      "label": "Open Ask RoutineKind",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 481
+    }
+  ],
+  "dialogRoles": 0,
+  "hasRawFixtureError": false,
+  "href": "http://localhost:8139/ask/consent",
+  "overflowX": 0,
+  "scroll": {
+    "x": 0,
+    "y": 0
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "jsDialog": null,
+  "label": "04-revoke-failure-inline-alert"
+}

@@ -1,0 +1,6 @@
+{
+  "currentPort": 8139,
+  "currentRunWarnErrorLogs": [],
+  "allWarnErrorLogCount": 11,
+  "note": "Filtered to the Expo web run under test; unfiltered browser logs also included stale entries from previous localhost ports."
+}

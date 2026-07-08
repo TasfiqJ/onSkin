@@ -495,6 +495,21 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   zero horizontal overflow and no browser errors. Evidence is in
   `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`; it does not
   replace native keyboard, screen-reader, or OS back-swipe QA.
+- 2026-07-08: Codex in-app browser Expo web E2E at 320 x 568 covers the enabled
+  Ask cloud-consent save and withdrawal failure branch with
+  `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`,
+  `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and
+  `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`. The run found and fixed a
+  shared web `ToggleSwitch` activation bug where the switch exposed the correct
+  52 x 48 role/geometry but did not toggle because web disabled `onPress`.
+  Post-fix, failed grant keeps the switch off and renders route-owned
+  `Choice not saved`, grant retry turns it on and clears the alert, failed
+  withdrawal keeps it on, and withdrawal retry turns it off. No JavaScript
+  dialog appears, no raw fixture/provider error is visible, horizontal overflow
+  is zero, and current-run browser warn/error logs are empty. Evidence is in
+  `test-results/human-e2e/2026-07-08/ask-consent-failure-current/`; it does not
+  replace native iOS/Android switch, VoiceOver/TalkBack, or live Supabase
+  consent-ledger QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Ask first-prompt and
   typed active-frequency branch: tapping `Is there a conflict on my shelf?`
   keeps the empty-shelf deterministic answer, report control, fixed composer,

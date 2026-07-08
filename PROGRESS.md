@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed shared web switch activation and completed the Ask cloud-consent
+  failure branch. The shared `ToggleSwitch` now uses React Native `onPress`
+  across platforms, keeps web focus support, and handles the Space key on web
+  so Ask/Trend/settings privacy switches do not render as inert semantic
+  controls. In-app browser Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`,
+  `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and
+  `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only` verifies Ask consent failed
+  grant and withdrawal stay inline, retryable, state-authoritative, dialog-free,
+  and free of raw provider/fixture errors. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/ask-consent-failure-current/`,
+  `docs/e2e-bug-reports/2026-07-08-toggle-switch-web-inert.md`.
+
 - Hardened Shelf add recovery on compact phones. In-app browser Expo web E2E at
   320 x 568 now covers catalog search no-match to manual add, barcode offline
   fallback copy with search/OCR/manual options, the no-match sheet routes, and
