@@ -110,8 +110,7 @@ function Row({
             variant="bodySm"
             tone="muted"
             className="mt-0.5"
-            numberOfLines={compact ? 1 : undefined}
-            style={compact ? { fontSize: 12, lineHeight: 14 } : undefined}
+            style={compact ? { fontSize: 12, lineHeight: 16 } : undefined}
           >
             {hint}
           </Text>
@@ -324,10 +323,10 @@ export default function YouScreen() {
   const privacyDirectEntryScrollNudge = ultraShortPrivacyEntry
     ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
     : narrowPhone
-    ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
-    : compactPhone
-      ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
-      : 0;
+      ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
+      : compactPhone
+        ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
+        : 0;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
@@ -957,9 +956,7 @@ export default function YouScreen() {
           {dataRightsFeedback ? (
             <InlineNoticeCard notice={dataRightsFeedback} className="mt-3" />
           ) : null}
-          {exportFeedback ? (
-            <InlineNoticeCard notice={exportFeedback} className="mt-3" />
-          ) : null}
+          {exportFeedback ? <InlineNoticeCard notice={exportFeedback} className="mt-3" /> : null}
           <Text variant="bodySm" tone="muted" className="mt-3 text-center">
             Photos stay on your device by default. No ads, no data sales.
           </Text>

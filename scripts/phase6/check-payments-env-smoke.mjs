@@ -173,9 +173,39 @@ const cases = [
         /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
         typeof result.packet.gitStatus === 'string' &&
         Array.isArray(result.packet.warnings) &&
-        result.packet.files.some((file) => file.path === 'scripts/phase6/build-payments-qa-packet.mjs') &&
+        result.packet.files.some(
+          (file) => file.path === 'scripts/phase6/build-payments-qa-packet.mjs',
+        ) &&
         result.packet.files.some((file) => file.path === 'scripts/phase6/check-payments-env.mjs') &&
-        result.packet.files.some((file) => file.path === 'scripts/phase6/check-payments-env-smoke.mjs') &&
+        result.packet.files.some(
+          (file) => file.path === 'scripts/phase6/check-payments-env-smoke.mjs',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/app/paywall/reoffer.tsx',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/app/paywall/downgrade.tsx',
+        ) &&
+        result.packet.files.some(
+          (file) =>
+            file.path === 'apps/mobile/src/features/subscription/paywallMobileContracts.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/subscription/store.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/subscription/entitlement.test.ts',
+        ) &&
+        result.packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
+        result.packet.files.some((file) => file.path === 'docs/HUMAN_SIMULATED_E2E_TESTING.md') &&
+        result.packet.files.some((file) => file.path === 'docs/E2E_TESTING_CHECKLIST.md') &&
+        result.packet.files.some((file) => file.path === 'docs/USER_FLOW_TREE.md') &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/e2e/generated/human-e2e-manifest.json',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/e2e/generated/human-e2e-manifest.md',
+        ) &&
         !result.packet.blockers.some((blocker) => /PHASE6_SIGNED_OFF_BY/.test(blocker))
       );
     },

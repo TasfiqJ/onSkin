@@ -6,6 +6,34 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the 320 x 430 / 130% text-pressure ProGate header failure. Shared
+  contextual ProGate paywalls now stack compact compliance above `Maybe later`
+  on ultra-short phones and hide the monthly-equivalent label below 460 px, so
+  Terms, Privacy, Restore, Maybe later, annual price, store-unavailable reason,
+  and Start free trial remain complete and hit-testable. The focused
+  subscription contract test, mobile typecheck, mobile lint, and the 49-route
+  130% text-pressure sweep pass with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-130-short-phone-430-postfix/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-progate-text-pressure-130-header-overlap.md`.
+
+- Hardened Phase 6 payments QA packet provenance. The generated payments
+  packet now hashes lifecycle paywall routes, core subscription contract tests,
+  the human-simulated E2E rules/checklist, the user-flow tree, the manifest
+  generator, and generated human-E2E manifest alongside RevenueCat runtime,
+  Supabase payment functions, migrations, verifier scripts, and Phase 6 docs.
+  `phase6:check-payments-env` enforces those source-hash inputs, and the Phase
+  6 smoke proves they appear in packet output before strict payment signoff can
+  be trusted.
+
+- Cleared a `/settings/privacy` text-pressure regression found during the
+  current 320 x 568 / 120% route audit. Compact You-tab row hints no longer
+  force single-line no-wrap subtitles, so privacy and policy descriptions wrap
+  instead of overflowing under text pressure. Focused settings/paywall route
+  contract tests pass, and `npm run e2e:text-pressure` now reports zero failed
+  routes across all 49 checked routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-120-route-audit-current/`.
+
 - Fixed the split-short stale Skin Note fallback. Direct
   `/community/note/missing-note-e2e` now uses a sub-410 px density band that
   removes the decorative thumbnail, tightens note-unavailable copy, and keeps
@@ -48,7 +76,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   safe-area QA remain device follow-up.
 
 - Added the Phase 4 beta coverage report gate. `npm run
-  phase4:beta-coverage-report` now writes a generated blocked packet until real
+phase4:beta-coverage-report` now writes a generated blocked packet until real
   closed-beta evidence exists, and strict mode rejects placeholder signoffs,
   placeholder URLs, high wrong-match/parser-error rates, below-usable
   recommendation catalog usage, open P0/P1 support tickets, and stale source

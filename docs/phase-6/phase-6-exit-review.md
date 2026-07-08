@@ -13,6 +13,10 @@
 - Account deletion calls RevenueCat customer deletion with a secret server key.
 - Mobile deletion copy no longer implies account deletion cancels Apple or Google billing.
 - Phase 6 scripts generate a QA packet and block strict exit on missing external evidence.
+- The generated QA packet hashes payment lifecycle routes, subscription
+  contract tests, human-simulated E2E rules, user-flow tree, manifest
+  generator, and generated manifest before payment evidence can be reviewed as
+  current.
 
 ## Seven-Figure Readiness
 

@@ -105,11 +105,13 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain(": shortPaywall\n            ? 'px-7 pb-5 pt-3'");
     expect(upsell).toContain('{shortPaywall ? null : (');
     expect(upsell).toContain('<View className="mb-0 flex-row items-center justify-between">');
-    expect(upsell).toContain("className=\"h-[48px] justify-center pl-2\"");
+    expect(upsell).toContain('className="h-[48px] justify-center pl-2"');
     expect(upsell).toContain('fontSize: splitShortPaywall ? 24 : shortPaywall ? 27');
     expect(upsell).toContain('lineHeight: splitShortPaywall ? 27 : shortPaywall ? 30');
     expect(upsell).toContain('{!splitShortPaywall ? (');
-    expect(upsell).toContain("className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}");
+    expect(upsell).toContain(
+      "className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}",
+    );
     expect(upsell).toContain('fontSize: shortPaywall ? 14 : undefined');
     expect(upsell).toContain(
       "shortPaywall\n            ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'",
@@ -127,16 +129,20 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('{shortPaywall ? null : <ComplianceRow />}');
     expect(upsell).toContain('backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');
-    expect(proGate).toContain('className="h-[48px] justify-center px-2"');
+    expect(proGate).toContain(
+      "headerCompliancePaywall && ultraShortPaywall\n              ? 'h-[48px] self-end justify-center px-2'\n              : 'h-[48px] justify-center px-2'",
+    );
     expect(proGate).toContain('paywallDismissFallbackForFeature(feature)');
     expect(proGate).toContain('dismissPaywall(router, paywallDismissFallback)');
     expect(proGate).toContain('useWindowDimensions');
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain('const shortPaywall = height < 600');
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
-    expect(proGate).toContain("const storeUnavailableReason =");
+    expect(proGate).toContain('const storeUnavailableReason =');
     expect(proGate).toContain("? 'Store unavailable in this preview.'");
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
+    expect(proGate).toContain("? 'min-h-[96px] items-stretch pt-0'");
+    expect(proGate).toContain("? 'h-[48px] self-end justify-center px-2'");
     expect(proGate).toMatch(
       /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
@@ -153,6 +159,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "ultraShortPaywall\n              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'",
     );
+    expect(proGate).toContain('{annualDisplay.pricePerMonthLabel && !ultraShortPaywall ? (');
     expect(proGate).toContain(
       "ultraShortPaywall\n                ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
@@ -169,7 +176,9 @@ describe('paywall mobile contracts', () => {
       '{headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}',
     );
     const scrollBody = proGate.indexOf('<ScrollView');
-    const bottomCompliance = proGate.indexOf('{headerCompliancePaywall ? null : <ComplianceRow />}');
+    const bottomCompliance = proGate.indexOf(
+      '{headerCompliancePaywall ? null : <ComplianceRow />}',
+    );
     const feedback = proGate.indexOf('<PaywallFeedback');
 
     expect(proGate).toContain("import { router, useIsFocused, usePathname } from 'expo-router';");

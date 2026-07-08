@@ -29,12 +29,14 @@ Production environment:
 - `REVENUECAT_SECRET_API_KEY`
 - `EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY` blank
 
-Strict QA packets hash the payment runtime files, Supabase payment functions and
-migrations, Phase 6 verifier scripts, and shared evidence-normalization helper.
-Regenerate `docs/phase-6/generated/payments-qa-packet.md` after changing any of
-those inputs. The generated packet must show the source Git SHA and
-`Git status: clean`; treat `Git status: DIRTY` as investigation evidence only,
-not final payments signoff.
+Strict QA packets hash the payment runtime files, lifecycle paywall routes,
+subscription contract tests, Supabase payment functions and migrations, Phase 6
+verifier scripts, shared evidence-normalization helper, and the
+human-simulated E2E rules/tree/manifest. Regenerate
+`docs/phase-6/generated/payments-qa-packet.md` after changing any of those
+inputs. The generated packet must show the source Git SHA and `Git status:
+clean`; treat `Git status: DIRTY` as investigation evidence only, not final
+payments signoff.
 
 ## Entitlement Truth
 

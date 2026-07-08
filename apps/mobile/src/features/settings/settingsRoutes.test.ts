@@ -118,15 +118,11 @@ describe('Settings route contracts', () => {
       'const listMaxHeight = Math.min(340, Math.max(160, sheetMaxHeight - 115));',
     );
     expect(timing).toContain('const insets = useSafeAreaInsets();');
-    expect(timing).toContain(
-      'insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;',
-    );
+    expect(timing).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;');
     expect(timing).toContain(
       'sheetPaddingBottom === undefined\n              ? { maxHeight: sheetMaxHeight }',
     );
-    expect(timing).toContain(
-      ': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }',
-    );
+    expect(timing).toContain(': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }');
     expect(timing).toContain('style={{ maxHeight: listMaxHeight }}');
     expect(timing).toContain('accessibilityLabel={`Morning reminder time, ${amTimeLabel}`}');
     expect(timing).toContain('accessibilityLabel={`Evening reminder time, ${pmTimeLabel}`}');
@@ -145,7 +141,9 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain("className={compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}");
     expect(notifications).toContain('min-h-[48px] flex-row items-center justify-between py-0');
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-2.5');
-    expect(notifications).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
+    expect(notifications).toContain(
+      'style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}',
+    );
     expect(notifications).toContain('compact={compactNotifications}');
     expect(notifications).toContain(
       'style={ultraShortNotifications ? { marginTop: 56 } : undefined}',
@@ -215,7 +213,9 @@ describe('Settings route contracts', () => {
       'setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });',
     );
     expect(source).toContain('<Fragment key={row.key}>');
-    expect(source).toContain('compact={compactPhone}\n                onPress={() => void openPolicyRow(row)}');
+    expect(source).toContain(
+      'compact={compactPhone}\n                onPress={() => void openPolicyRow(row)}',
+    );
     expect(source).toContain('policyFeedback?.key === row.key');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain(
@@ -230,11 +230,11 @@ describe('Settings route contracts', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
     expect(source).toContain(
-      "const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [",
+      'const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [',
     );
     expect(source).toContain("label: 'Skin Notes'");
     expect(source).toContain("hint: 'Myth vs evidence, reviewed and claim-safe.'");
-    expect(source).toContain("label: BRAND.askName");
+    expect(source).toContain('label: BRAND.askName');
     expect(source).toContain("hint: 'Your evidence-grounded advisor.'");
     expect(source).toContain(
       '<Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />',
@@ -291,12 +291,16 @@ describe('Settings route contracts', () => {
     );
     expect(source).toContain('compact={compactPhone}');
     expect(source).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
-    expect(source).toContain('numberOfLines={compact ? 1 : undefined}');
-    expect(source).toContain('style={compact ? { fontSize: 12, lineHeight: 14 } : undefined}');
-    expect(source).toContain("hint={ultraShortPrivacyEntry ? undefined : 'Off by default. Opt in anytime.'}");
+    expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
+    expect(source).toContain('style={compact ? { fontSize: 12, lineHeight: 16 } : undefined}');
+    expect(source).toContain(
+      "hint={ultraShortPrivacyEntry ? undefined : 'Off by default. Opt in anytime.'}",
+    );
     expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
-    expect(source).toContain("ultraShortPrivacyEntry\n                ? undefined");
-    expect(source).toContain(": compactPhone\n                  ? 'Records withdrawal and deletes collected health data.'");
+    expect(source).toContain('ultraShortPrivacyEntry\n                ? undefined');
+    expect(source).toContain(
+      ": compactPhone\n                  ? 'Records withdrawal and deletes collected health data.'",
+    );
   });
 
   it('keeps secondary subscription exits buffered above 44px on phones', () => {
@@ -323,9 +327,13 @@ describe('Settings route contracts', () => {
     expect(source).toContain('const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE =');
     expect(source).toContain('const RESTORE_UNAVAILABLE_MESSAGE =');
     expect(source).toContain('const opened = await openExternalHttpsUrl(url, {');
-    expect(source).toContain('if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);');
+    expect(source).toContain(
+      'if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);',
+    );
     expect(source).toContain('async function onPolicy(url: string)');
-    expect(source).toContain('if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);');
+    expect(source).toContain(
+      'if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);',
+    );
     expect(source).toContain('const feedbackLabel = subscriptionFeedback ? (');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('label={PAYWALL_COPY.manage.restoreRow}');
@@ -364,7 +372,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)');
     expect(source).toContain('PAYWALL_COPY.manage.appGrantedNote(endDateLabel)');
     expect(source).toContain('PAYWALL_COPY.manage.cancelNote(endDateLabel)');
-    expect(source).toContain("const statusPillLabel = data?.inReverseTrial");
+    expect(source).toContain('const statusPillLabel = data?.inReverseTrial');
     expect(source).toContain("? 'No card'");
     expect(source).toContain("? 'Store trial'");
     expect(source).toContain('const manageAction = isAppGrantedAccess');

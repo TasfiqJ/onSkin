@@ -84,38 +84,53 @@ require(Boolean(
 require(Boolean(rootPkg.scripts?.['phase6:verify']), 'Root package is missing phase6:verify.');
 
 const qaPacketBuilder = read('scripts/phase6/build-payments-qa-packet.mjs');
-require(
-  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
-    /payments-qa-packet\.json/.test(qaPacketBuilder) &&
-    /payments-qa-packet\.md/.test(qaPacketBuilder) &&
-    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
-  'Phase 6 payments QA packet must ignore only its own generated outputs when recording Git status.',
-);
-require(
-  /Phase 6 payments QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
-    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
-  'Phase 6 payments QA packet must warn on dirty worktrees and expose Git status in Markdown.',
-);
+require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+  /payments-qa-packet\.json/.test(qaPacketBuilder) &&
+  /payments-qa-packet\.md/.test(qaPacketBuilder) &&
+  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+    qaPacketBuilder,
+  ), 'Phase 6 payments QA packet must ignore only its own generated outputs when recording Git status.');
+require(/Phase 6 payments QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+  /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
+    qaPacketBuilder,
+  ), 'Phase 6 payments QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/features/subscription/store.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
+  'apps/mobile/src/features/subscription/useSubscriptionOffering.ts',
+  'apps/mobile/src/app/onboarding/paywall.tsx',
+  'apps/mobile/src/app/paywall/upsell.tsx',
+  'apps/mobile/src/app/paywall/reoffer.tsx',
+  'apps/mobile/src/app/paywall/downgrade.tsx',
+  'apps/mobile/src/app/paywall/winback.tsx',
+  'apps/mobile/src/app/settings/subscription.tsx',
   'supabase/functions/revenuecat-webhook/index.ts',
   'supabase/functions/subscription-grants/index.ts',
   'supabase/functions/account-deletion/index.ts',
+  'supabase/migrations/20260615000027_phase6_payments.sql',
+  'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',
+  'apps/mobile/src/features/subscription/paywallMobileContracts.test.ts',
+  'apps/mobile/src/features/subscription/store.test.ts',
+  'apps/mobile/src/features/subscription/entitlement.test.ts',
+  'apps/mobile/src/features/subscription/serverContracts.test.ts',
   'scripts/phase6/build-payments-qa-packet.mjs',
   'scripts/phase6/check-payments-env.mjs',
   'scripts/phase6/check-payments-env-smoke.mjs',
+  'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
+  'docs/HUMAN_SIMULATED_E2E_TESTING.md',
+  'docs/E2E_TESTING_CHECKLIST.md',
+  'docs/USER_FLOW_TREE.md',
+  'docs/e2e/generated/human-e2e-manifest.json',
+  'docs/e2e/generated/human-e2e-manifest.md',
   'docs/phase-6/payments-runbook.md',
   'docs/phase-6/payments-qa-checklist.md',
   'docs/phase-6/phase-6-exit-review.md',
 ]) {
-  require(
-    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
-    `Phase 6 payments QA packet must hash ${file}.`,
-  );
+  require(qaPacketBuilder.includes(`'${file}'`) ||
+    qaPacketBuilder.includes(`"${file}"`), `Phase 6 payments QA packet must hash ${file}.`);
 }
 
 require(existsSync(

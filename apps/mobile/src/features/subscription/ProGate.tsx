@@ -120,7 +120,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       <View
         className={
           headerCompliancePaywall
-            ? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
+            ? ultraShortPaywall
+              ? 'min-h-[96px] items-stretch pt-0'
+              : 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
             : 'flex-row justify-end pt-1'
         }
       >
@@ -128,7 +130,11 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Pressable
           accessibilityRole="button"
           onPress={() => dismissPaywall(router, paywallDismissFallback)}
-          className="h-[48px] justify-center px-2"
+          className={
+            headerCompliancePaywall && ultraShortPaywall
+              ? 'h-[48px] self-end justify-center px-2'
+              : 'h-[48px] justify-center px-2'
+          }
         >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Maybe later
@@ -193,10 +199,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             ultraShortPaywall
               ? 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
               : shortPaywall
-              ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
-              : compactPaywall
-                ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
-                : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+                ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
+                : compactPaywall
+                  ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
+                  : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
           }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
@@ -219,7 +225,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               ) : null}
             </Text>
           </View>
-          {annualDisplay.pricePerMonthLabel ? (
+          {annualDisplay.pricePerMonthLabel && !ultraShortPaywall ? (
             <Text
               adjustsFontSizeToFit
               minimumFontScale={0.86}
@@ -238,10 +244,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               ultraShortPaywall
                 ? 'mt-0.5 text-center'
                 : shortPaywall
-                ? 'mt-1 text-center'
-                : compactPaywall
                   ? 'mt-1 text-center'
-                  : 'mt-2 text-center'
+                  : compactPaywall
+                    ? 'mt-1 text-center'
+                    : 'mt-2 text-center'
             }
             style={{
               fontSize: ultraShortPaywall ? 10 : shortPaywall ? 10.5 : compactPaywall ? 11 : 12,
@@ -259,10 +265,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             ultraShortPaywall
               ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
               : shortPaywall
-              ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
-              : compactPaywall
-                ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
-                : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+                ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
+                : compactPaywall
+                  ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
+                  : 'mt-4 h-[54px] items-center justify-center rounded-pill'
           }
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
@@ -279,10 +285,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               ultraShortPaywall
                 ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
                 : shortPaywall
-                ? 'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
-                : compactPaywall
-                  ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
-                  : 'mt-3 min-h-[52px] flex-row items-center gap-3 rounded-card px-3.5 py-3'
+                  ? 'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
+                  : compactPaywall
+                    ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
+                    : 'mt-3 min-h-[52px] flex-row items-center gap-3 rounded-card px-3.5 py-3'
             }
             style={{
               backgroundColor: colors.clayTint,
