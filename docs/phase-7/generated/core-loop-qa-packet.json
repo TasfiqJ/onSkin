@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T21:40:52.431Z",
+  "generatedAt": "2026-07-08T21:43:02.545Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "bc6ed3b2b56572a5f81b4e5d20c9caf5b478cc59",
-  "gitStatus": "M docs/e2e/generated/human-e2e-manifest.json\n M docs/e2e/generated/human-e2e-manifest.md",
+  "gitSha": "179c426bd5eedf30c860c1cfa29df5f9fdcaed23",
+  "gitStatus": "",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -218,20 +218,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 199227,
-      "sha256": "d2a47edfcec1130458755a885ddab610099483b022812e27625d13f2031a1aa0"
+      "bytes": 199421,
+      "sha256": "454f3d4fe180af2a0377e194ff20535375431ae3e9f3cd56ab5aacd5926f2f6c"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "e09006b366859bf664faefda9200d0c7cb0704fd2045c2167804926bc9562a3d"
+      "sha256": "d1661e03ecb10a6d33da6a6e7e96fd352845dfea65633bbe91cbadad29b2d290"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "dca25510772a73d00dd418b7ca4fde23405c842496ef4ab31e50ae03a6038d9f"
+      "sha256": "1a06c7721657a8a434fbea89d244ecdcc549052697784160194e623cf4f56a96"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
@@ -311,7 +311,5 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": [
-    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
-  ]
+  "warnings": []
 }
