@@ -607,6 +607,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   not replace native barcode camera/OCR QA, live Open Beauty Facts lookup,
   Supabase `shelf_scans` insert/RLS evidence, or real-device safe-area and
   screen-reader QA.
+- 2026-07-08: In-app browser Expo web E2E at 320 x 568 covers Shelf OCR label
+  capture failure recovery with `EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE=once`.
+  The route now avoids Shelf OCR native/system alert calls, shows inline
+  `Label wasn't captured` recovery copy, keeps a 48 px `Try label photo again`
+  action outside the bottom CTA zone, lets the user enter manual ingredient
+  text, and carries that text into `/shelf/manual`. Evidence and the bug report
+  are in
+  `test-results/human-e2e/2026-07-08/shelf-ocr-capture-failure-current/` and
+  `docs/e2e-bug-reports/2026-07-08-shelf-ocr-capture-failure-inline-recovery.md`;
+  this does not replace native iOS/Android camera mount, permission-denied, or
+  real `takePictureAsync` rejection QA.
 - 2026-07-07: Codex in-app browser E2E at 320 x 568 covers shared `Sheet`
   safe-area and hidden-backdrop behavior. `/shelf/no-match` exposes one modal
   dialog, a 48 px Close action, no sub-44 exposed controls, a hidden 12 px

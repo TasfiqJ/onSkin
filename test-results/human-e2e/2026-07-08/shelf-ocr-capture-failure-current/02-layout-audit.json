@@ -1,0 +1,94 @@
+{
+  "controls": [
+    {
+      "ariaLabel": "Back",
+      "disabled": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "<",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "bottom": 471.8446807861328,
+        "height": 153.8834991455078,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 317.961181640625,
+        "width": 272.3907775878906
+      },
+      "role": "alert",
+      "tag": "div",
+      "text": "Label wasn't captured Use manual text for now, or try the label photo again. Try label photo again",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "bottom": 456.8871612548828,
+        "height": 47.99757385253906,
+        "left": 38.95631408691406,
+        "right": 281.4320526123047,
+        "top": 408.88958740234375,
+        "width": 242.47573852539062
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Try label photo again",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Ingredient label text",
+      "disabled": false,
+      "rect": {
+        "bottom": 762.3331756591797,
+        "height": 131.9933319091797,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 630.33984375,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "textarea",
+      "text": "",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": true,
+      "rect": {
+        "bottom": 568.932056427002,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 512.93994140625,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Looks right. Continue",
+      "visible": true
+    }
+  ],
+  "href": "http://localhost:8143/shelf/ocr?e2e=final-state-fixture",
+  "overlaps": {
+    "alertFooter": false,
+    "retryFooter": false,
+    "textAreaFooter": false
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

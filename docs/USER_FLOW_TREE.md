@@ -469,6 +469,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Shelf OCR on a device where the camera cannot start, or force the label photo capture call to reject.
   - Expected result: The user sees stable camera-unavailable or label-not-captured copy and can continue with manual ingredient text instead of being returned to an unexplained camera state. On short phones, the manual review text area and final Continue action do not overlap.
   - Evidence: Alert text, visible fallback state, and route snapshot.
+  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE=once` to force `/shelf/ocr` label capture rejection. The route shows inline `Label wasn't captured` recovery copy with no dialog, exposes a visible 48 px `Try label photo again` action, keeps the manual text field and final `Looks right. Continue` action non-overlapping after scroll/focus, carries `Aqua, Glycerin, Niacinamide` into `/shelf/manual`, hides the raw fixture error, and logs no current-origin browser errors. Evidence and report are in `test-results/human-e2e/2026-07-08/shelf-ocr-capture-failure-current/`; physical iOS/Android camera mount, permission-denied, and real capture-rejection QA remain open.
 - Branch: opened date or replenish edge case
   - Priority: Important
   - Automate later: Yes

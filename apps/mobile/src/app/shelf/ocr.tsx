@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import { router, useIsFocused } from 'expo-router';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import {
@@ -22,6 +22,11 @@ import { colors } from '@/theme/tokens';
 
 type CaptureState = 'camera' | 'capturing' | 'review';
 
+function devShelfOcrCaptureFailureMode(): 'once' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE === 'once' ? 'once' : null;
+}
+
 function primaryTag(token: ParsedIngredientToken): string {
   return token.tags[0] ? tagLabel(token.tags[0]) : 'Review';
 }
@@ -32,23 +37,33 @@ export default function OcrScreen() {
   const cameraRef = useRef<CameraView | null>(null);
   const [state, setState] = useState<CaptureState>('camera');
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
+  const [labelCaptureFailed, setLabelCaptureFailed] = useState(false);
   const [capturedUri, setCapturedUri] = useState<string | null>(null);
   const [rawText, setRawText] = useState('');
+  const [simulateCaptureFailureOnce, setSimulateCaptureFailureOnce] = useState(
+    () => devShelfOcrCaptureFailureMode() === 'once',
+  );
   const { update } = useIntake();
 
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
   const canShowCamera = cameraEnabled && Boolean(permission?.granted) && !cameraUnavailable;
+  const canAttemptCapture = canShowCamera || simulateCaptureFailureOnce;
   const parsed = useMemo(() => parseIngredientText(rawText), [rawText]);
   const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
   const lowConfidence = parsed.tokens.find((token) => token.isUnmatched);
   const canContinue = rawText.trim().length > 0;
 
   const capture = async () => {
-    if (!cameraRef.current || state === 'capturing') return;
+    if ((!cameraRef.current && !simulateCaptureFailureOnce) || state === 'capturing') return;
     haptics.select();
     setState('capturing');
+    setLabelCaptureFailed(false);
     try {
-      const photo = await cameraRef.current.takePictureAsync({
+      if (simulateCaptureFailureOnce) {
+        setSimulateCaptureFailureOnce(false);
+        throw new Error('E2E_SHELF_OCR_CAPTURE_FAILURE');
+      }
+      const photo = await cameraRef.current!.takePictureAsync({
         quality: 0.72,
         base64: false,
         exif: false,
@@ -58,8 +73,9 @@ export default function OcrScreen() {
       setState('review');
       track('label_capture_photo_taken', { native_ocr_enabled: env.nativeOcrEnabled });
     } catch {
-      setState('camera');
-      Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle, CAMERA_FAILURE_COPY.labelCaptureBody);
+      setCapturedUri(null);
+      setLabelCaptureFailed(true);
+      setState('review');
     }
   };
 
@@ -101,8 +117,27 @@ export default function OcrScreen() {
         contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}
       >
         <View className="mt-4 h-[230px] overflow-hidden rounded-[18px] bg-night-elevated">
-          {state === 'review' && capturedUri ? (
-            <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+          {state === 'review' ? (
+            capturedUri ? (
+              <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+            ) : (
+              <View className="flex-1 items-center justify-center px-6">
+                <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                  {labelCaptureFailed
+                    ? CAMERA_FAILURE_COPY.labelCaptureTitle
+                    : cameraUnavailable
+                      ? CAMERA_FAILURE_COPY.labelUnavailableTitle
+                      : 'Capture the ingredient panel'}
+                </Text>
+                <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                  {labelCaptureFailed
+                    ? CAMERA_FAILURE_COPY.labelCaptureBody
+                    : cameraUnavailable
+                      ? CAMERA_FAILURE_COPY.labelUnavailableBody
+                      : 'Use the editable text below to keep adding this product.'}
+                </Text>
+              </View>
+            )
           ) : canShowCamera ? (
             <CameraView
               ref={cameraRef}
@@ -112,11 +147,9 @@ export default function OcrScreen() {
               mode="picture"
               onMountError={() => {
                 setCameraUnavailable(true);
+                setCapturedUri(null);
+                setLabelCaptureFailed(false);
                 setState('review');
-                Alert.alert(
-                  CAMERA_FAILURE_COPY.labelUnavailableTitle,
-                  CAMERA_FAILURE_COPY.labelUnavailableBody,
-                );
               }}
               style={{ flex: 1 }}
             />
@@ -155,6 +188,37 @@ export default function OcrScreen() {
           />
         </View>
 
+        {state === 'review' && (labelCaptureFailed || cameraUnavailable) ? (
+          <View
+            accessibilityRole="alert"
+            className="mt-4 rounded-[14px] border border-clay/30 bg-clay-tint p-3.5"
+          >
+            <Text variant="bodySm" className="font-sans-semibold">
+              {labelCaptureFailed
+                ? CAMERA_FAILURE_COPY.labelCaptureTitle
+                : CAMERA_FAILURE_COPY.labelUnavailableTitle}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              {labelCaptureFailed
+                ? CAMERA_FAILURE_COPY.labelCaptureBody
+                : CAMERA_FAILURE_COPY.labelUnavailableBody}
+            </Text>
+            {labelCaptureFailed ? (
+              <Pressable
+                accessibilityRole="button"
+                className="mt-3 min-h-[48px] items-center justify-center rounded-pill bg-paper-raised px-4 py-2"
+                onPress={() => {
+                  haptics.select();
+                  setState('camera');
+                  setLabelCaptureFailed(false);
+                }}
+              >
+                <Text className="font-sans-semibold text-ink">Try label photo again</Text>
+              </Pressable>
+            ) : null}
+          </View>
+        ) : null}
+
         <View className="mt-3 rounded-[14px] bg-greige-chip p-3.5">
           <Text variant="bodySm" tone="muted" style={{ lineHeight: 19 }}>
             {env.nativeOcrEnabled
@@ -168,11 +232,11 @@ export default function OcrScreen() {
             label={
               state === 'capturing'
                 ? 'Capturing...'
-                : canShowCamera
+                : canAttemptCapture
                   ? 'Capture label'
                   : 'Continue with manual text'
             }
-            onPress={canShowCamera ? () => void capture() : () => setState('review')}
+            onPress={canAttemptCapture ? () => void capture() : () => setState('review')}
           />
         ) : null}
 

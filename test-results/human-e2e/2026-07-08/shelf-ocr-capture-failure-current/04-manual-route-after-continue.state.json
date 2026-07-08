@@ -1,0 +1,112 @@
+{
+  "bodyTextExcerpt": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nPRODUCT NAME\nBRAND\nCATEGORY\nChoose\n▾\nINGREDIENTS · optional, we’ll find the actives\nPick a category and we'll estimate the PAO. You can change it next.\nContinue",
+  "controls": [
+    {
+      "ariaLabel": "Cancel",
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "x",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Product name",
+      "disabled": false,
+      "placeholder": "e.g. Gentle Retinol Night Serum",
+      "rect": {
+        "bottom": 196,
+        "height": 50,
+        "width": 272,
+        "x": 24,
+        "y": 146
+      },
+      "role": null,
+      "tag": "input",
+      "text": "",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Brand",
+      "disabled": false,
+      "placeholder": "Brand",
+      "rect": {
+        "bottom": 280,
+        "height": 50,
+        "width": 124,
+        "x": 24,
+        "y": 230
+      },
+      "role": null,
+      "tag": "input",
+      "text": "",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Category",
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 280,
+        "height": 50,
+        "width": 136,
+        "x": 160,
+        "y": 230
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Choose ▾",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Ingredients",
+      "disabled": false,
+      "placeholder": "Paste or type the INCI list…",
+      "rect": {
+        "bottom": 411,
+        "height": 65,
+        "width": 272,
+        "x": 24,
+        "y": 346
+      },
+      "role": null,
+      "tag": "textarea",
+      "text": "Aqua, Glycerin, Niacinamide",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": true,
+      "placeholder": null,
+      "rect": {
+        "bottom": 557,
+        "height": 56,
+        "width": 272,
+        "x": 24,
+        "y": 501
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Continue",
+      "visible": true
+    }
+  ],
+  "href": "http://localhost:8143/shelf/manual",
+  "textIncludes": {
+    "ingredientControlHasText": true,
+    "labelWasntCaptured": false,
+    "manualRoute": true,
+    "rawFixtureError": false
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

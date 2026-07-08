@@ -1,0 +1,112 @@
+{
+  "bodyTextExcerpt": "<\nRead the label\nLabel wasn't captured\nUse manual text for now, or try the label photo again.\nLabel wasn't captured\nUse manual text for now, or try the label photo again.\nTry label photo again\nOn-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.\nEDITABLE LABEL TEXT\nParser confidence: 83%. Low-confidence tokens stay visible for review.\nPARSED ACTIVES\n✓\nNiacinamide\nNiacinamide\nLooks right. Continue",
+  "controls": [
+    {
+      "ariaLabel": "Back",
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "<",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 127,
+        "height": 154,
+        "width": 272,
+        "x": 24,
+        "y": -27
+      },
+      "role": "alert",
+      "tag": "div",
+      "text": "Label wasn't captured Use manual text for now, or try the label photo again. Try label photo again",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 112,
+        "height": 48,
+        "width": 242,
+        "x": 39,
+        "y": 64
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Try label photo again",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Ingredient label text",
+      "disabled": false,
+      "placeholder": "Type or paste the INCI list from the label",
+      "rect": {
+        "bottom": 418,
+        "height": 132,
+        "width": 272,
+        "x": 24,
+        "y": 286
+      },
+      "role": null,
+      "tag": "textarea",
+      "text": "Aqua, Glycerin, Niacinamide",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 569,
+        "height": 56,
+        "width": 272,
+        "x": 24,
+        "y": 513
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Looks right. Continue",
+      "visible": true
+    }
+  ],
+  "documentSize": {
+    "height": 569,
+    "width": 320
+  },
+  "href": "http://localhost:8143/shelf/ocr?e2e=final-state-fixture",
+  "overflowX": false,
+  "scroll": {
+    "maxY": 0,
+    "x": 0,
+    "y": 0
+  },
+  "textIncludes": {
+    "captureLabel": false,
+    "continueManual": false,
+    "editableLabelText": false,
+    "labelWasntCaptured": true,
+    "looksRightContinue": true,
+    "placeholder": false,
+    "rawFixtureError": false,
+    "readTheLabel": true,
+    "tryLabelAgain": true,
+    "useManualText": true
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

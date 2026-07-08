@@ -102,7 +102,11 @@ describe('Permission recovery contracts', () => {
     expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureBody');
     expect(progressCapture).toContain('disabled={!canShowCamera || !cameraReady || capturing}');
     expect(shelfOcr).toContain('setCameraUnavailable(true)');
-    expect(shelfOcr).toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
+    expect(shelfOcr).toContain('setLabelCaptureFailed(true)');
+    expect(shelfOcr).toContain('accessibilityRole="alert"');
+    expect(shelfOcr).toContain('Try label photo again');
+    expect(shelfOcr).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
+    expect(shelfOcr).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelUnavailableTitle');
     expect(shelfOcr).toContain('CAMERA_FAILURE_COPY.labelUnavailableTitle');
   });
 });

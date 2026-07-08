@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Shelf OCR label-capture failure recovery. `/shelf/ocr` now keeps
+  capture rejection and camera-unavailable states in route-owned review/manual
+  fallback UI instead of relying on Shelf OCR native alert calls, exposes
+  inline `Label wasn't captured` copy plus a retry action, and keeps retry,
+  manual ingredient text, and the final Continue action clear on 320 px phones.
+  In-app browser Expo web E2E with
+  `EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE=once` verifies no dialog, no raw
+  fixture error, text entry of `Aqua, Glycerin, Niacinamide`, carry-forward to
+  `/shelf/manual`, clean layout audits, and zero current-origin browser logs.
+  Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/shelf-ocr-capture-failure-current/`,
+  `docs/e2e-bug-reports/2026-07-08-shelf-ocr-capture-failure-inline-recovery.md`.
+
 - Hardened first-use Progress photo consent save failure recovery. The
   `/progress/capture` failure path now relies on durable route-owned
   `Photo choice not saved` feedback instead of also calling a native/system

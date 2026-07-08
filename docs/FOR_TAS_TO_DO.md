@@ -123,6 +123,10 @@ Status: needs-device-verification
   like `iPhone model / iOS version`, local build notes, pending IDs, and
   placeholder signoff names are rejected by `phase5:qa-packet:strict`.
 - Verify barcode scan, label capture/manual fallback, progress photo capture, encrypted photo save/restart/delete, notifications, share sheet, RevenueCat sandbox smoke, Sentry native smoke, and Supabase catalog calls.
+- Verify Shelf OCR label capture recovery on physical iOS and Android:
+  permission denied, camera mount failure, real `takePictureAsync` rejection,
+  retry, and manual text continuation must stay inline/route-owned with no
+  duplicate native alert and no short-screen control overlap.
 - Verify populated Progress comparison on physical iOS and Android devices with
   real encrypted photo thumbnails: Compare/Timeline, No scores, Side-by-side,
   date-change chips, comparison photo-picker dismiss/selection, app-lock, and

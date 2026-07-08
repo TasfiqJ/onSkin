@@ -367,9 +367,19 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf OCR manual review controls from overlapping on short phones', () => {
     const source = readAppRoute('shelf/ocr.tsx');
 
+    expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE');
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain("new Error('E2E_SHELF_OCR_CAPTURE_FAILURE')");
+    expect(source).toContain('const [labelCaptureFailed, setLabelCaptureFailed] = useState(false)');
+    expect(source).toContain('setLabelCaptureFailed(true)');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('CAMERA_FAILURE_COPY.labelCaptureTitle');
+    expect(source).toContain('CAMERA_FAILURE_COPY.labelCaptureBody');
+    expect(source).toContain('Try label photo again');
     expect(source).toContain("contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}");
     expect(source).toContain("{state === 'review' ? (");
     expect(source).toMatch(/\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/);
+    expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
     expect(source).not.toContain('contentContainerClassName="pb-5"');
   });
 

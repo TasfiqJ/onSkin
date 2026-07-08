@@ -1,0 +1,64 @@
+{
+  "bodyTextExcerpt": "<\nRead the label\nCapture the ingredient panel\nCamera permission lets you keep the label beside the editable text. Manual entry still works.\nOn-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.\nCapture label",
+  "controls": [
+    {
+      "ariaLabel": "Back",
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "<",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "placeholder": null,
+      "rect": {
+        "bottom": 474,
+        "height": 56,
+        "width": 272,
+        "x": 24,
+        "y": 418
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Capture label",
+      "visible": true
+    }
+  ],
+  "documentSize": {
+    "height": 569,
+    "width": 320
+  },
+  "href": "http://localhost:8143/shelf/ocr?e2e=final-state-fixture",
+  "overflowX": false,
+  "scroll": {
+    "maxY": 0,
+    "x": 0,
+    "y": 0
+  },
+  "textIncludes": {
+    "captureLabel": true,
+    "continueManual": false,
+    "editableLabelText": false,
+    "labelWasntCaptured": false,
+    "looksRightContinue": false,
+    "placeholder": false,
+    "rawFixtureError": false,
+    "readTheLabel": true,
+    "tryLabelAgain": false,
+    "useManualText": false
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}
