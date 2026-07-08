@@ -2,6 +2,16 @@
 
 Run this checklist on real iOS and Android beta builds before enabling public production distribution.
 
+Strict Phase 7 packet completion requires one external evidence switch per
+scenario group. Do not set any switch to `true` until the matching iOS/Android
+or live-service evidence is captured, reviewed, and linked in the Phase 7 packet:
+`PHASE7_ONBOARDING_CONSENT_QA_PASS`, `PHASE7_SHELF_INTAKE_QA_PASS`,
+`PHASE7_REVIEWED_GUIDANCE_QA_PASS`, `PHASE7_ROUTINE_BUILDER_QA_PASS`,
+`PHASE7_TODAY_CHECKOFF_QA_PASS`, `PHASE7_PHOTOS_PRIVACY_QA_PASS`,
+`PHASE7_REMINDERS_QA_PASS`, `PHASE7_PAYMENTS_LIFECYCLE_QA_PASS`,
+`PHASE7_PRIVACY_CONTROLS_QA_PASS`, `PHASE7_SHARE_CARD_QA_PASS`,
+`PHASE7_DEFERRED_SURFACES_QA_PASS`, and `PHASE7_ANALYTICS_QA_PASS`.
+
 ## Onboarding and consent
 
 - Final brand/domain visible where applicable.

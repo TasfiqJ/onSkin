@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Phase 7 core-loop QA gates so strict completion requires
+  per-scenario evidence instead of only broad launch flags. The generated packet
+  now blocks independently on onboarding/consent, shelf intake, reviewed
+  guidance, routine builder, Today check-off, photos/privacy, reminders,
+  payments lifecycle, privacy controls, share card, deferred surfaces, and
+  analytics QA switches. `.env.example`, the Phase 7 checklist/exit review,
+  `FOR_TAS_TO_DO.md`, the smoke coverage, generated Phase 7 packet, and Tas
+  audit now reflect the new evidence requirements.
+
 - Fixed the `/routine/widgets` one-tap widget preview so tappable-looking rows
   are real 48 px checkbox controls instead of inert mockup content. The preview
   now updates from `2 of 4` to `4 of 4`, removes the fake `TAP` affordance, and

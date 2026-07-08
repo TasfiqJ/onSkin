@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T17:27:19.839Z",
+  "generatedAt": "2026-07-08T18:14:12.845Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -10,64 +10,112 @@
     "revenueCatQaPass": false,
     "privacyExportDeletePass": false,
     "betaDashboardReady": false,
-    "signedOffBy": ""
+    "signedOffBy": "",
+    "onboardingConsentQaPass": false,
+    "shelfIntakeQaPass": false,
+    "reviewedGuidanceQaPass": false,
+    "routineBuilderQaPass": false,
+    "todayCheckoffQaPass": false,
+    "photosPrivacyQaPass": false,
+    "remindersQaPass": false,
+    "paymentsLifecycleQaPass": false,
+    "privacyControlsQaPass": false,
+    "shareCardQaPass": false,
+    "deferredSurfacesQaPass": false,
+    "analyticsQaPass": false
   },
   "scenarios": [
     {
       "surface": "Onboarding",
-      "scenario": "final age/account/consent copy, policy links, and consent ledger verified"
+      "scenario": "final age/account/consent copy, policy links, and consent ledger verified",
+      "evidenceKey": "onboardingConsentQaPass",
+      "envKey": "PHASE7_ONBOARDING_CONSENT_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Shelf intake",
-      "scenario": "add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible"
+      "scenario": "add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible",
+      "evidenceKey": "shelfIntakeQaPass",
+      "envKey": "PHASE7_SHELF_INTAKE_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Reviewed guidance",
-      "scenario": "reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden"
+      "scenario": "reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden",
+      "evidenceKey": "reviewedGuidanceQaPass",
+      "envKey": "PHASE7_REVIEWED_GUIDANCE_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Routine builder",
-      "scenario": "AM/PM routine persists across restart, offline, timezone rollover"
+      "scenario": "AM/PM routine persists across restart, offline, timezone rollover",
+      "evidenceKey": "routineBuilderQaPass",
+      "envKey": "PHASE7_ROUTINE_BUILDER_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Today check-off",
-      "scenario": "offline/online check-off is idempotent and append-only"
+      "scenario": "offline/online check-off is idempotent and append-only",
+      "evidenceKey": "todayCheckoffQaPass",
+      "envKey": "PHASE7_TODAY_CHECKOFF_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Photos",
-      "scenario": "baseline capture renders locally; app lock gates timeline; cloud backup remains off by default"
+      "scenario": "baseline capture renders locally; app lock gates timeline; cloud backup remains off by default",
+      "evidenceKey": "photosPrivacyQaPass",
+      "envKey": "PHASE7_PHOTOS_PRIVACY_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Reminders",
-      "scenario": "permission, quiet hours, Android 13+ permission, timezone/DST behavior verified"
+      "scenario": "permission, quiet hours, Android 13+ permission, timezone/DST behavior verified",
+      "evidenceKey": "remindersQaPass",
+      "envKey": "PHASE7_REMINDERS_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Payments",
-      "scenario": "RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified"
+      "scenario": "RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified",
+      "evidenceKey": "paymentsLifecycleQaPass",
+      "envKey": "PHASE7_PAYMENTS_LIFECYCLE_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Privacy controls",
-      "scenario": "export, account deletion, health-data withdrawal, app lock, support links verified"
+      "scenario": "export, account deletion, health-data withdrawal, app lock, support links verified",
+      "evidenceKey": "privacyControlsQaPass",
+      "envKey": "PHASE7_PRIVACY_CONTROLS_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Share card",
-      "scenario": "exact owned reviewed conflict only; no fallback; no sensitive analytics payload"
+      "scenario": "exact owned reviewed conflict only; no fallback; no sensitive analytics payload",
+      "evidenceKey": "shareCardQaPass",
+      "envKey": "PHASE7_SHARE_CARD_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Deferred surfaces",
-      "scenario": "commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled"
+      "scenario": "commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled",
+      "evidenceKey": "deferredSurfacesQaPass",
+      "envKey": "PHASE7_DEFERRED_SURFACES_QA_PASS",
+      "evidencePass": false
     },
     {
       "surface": "Analytics",
-      "scenario": "activation, retention, payment, privacy, support, and deferred-surface events visible"
+      "scenario": "activation, retention, payment, privacy, support, and deferred-surface events visible",
+      "evidenceKey": "analyticsQaPass",
+      "envKey": "PHASE7_ANALYTICS_QA_PASS",
+      "evidencePass": false
     }
   ],
   "files": [
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 11324,
-      "sha256": "1eeae3e44ae91079c226bd7a7e9713aebc0fa812f7d4209077be63f1b54324f6"
+      "bytes": 11407,
+      "sha256": "68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -126,20 +174,20 @@
     {
       "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
       "exists": true,
-      "bytes": 6654,
-      "sha256": "df22bbe9b970a2567c719d4305fea12964647411ebbd0bbade7f363c93dd0b48"
+      "bytes": 8548,
+      "sha256": "4febe8e73c323cb16c738ce8512b6cedf117739eca5077064059a1bc0203f00b"
     },
     {
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
-      "bytes": 12382,
-      "sha256": "aaf2f41ef1826afab4dca88f79d2f70d84f6135b6791cdf4b3c6ccb8a19514cf"
+      "bytes": 12803,
+      "sha256": "382eb4015ebda261599d37f48526876ced603782560bc9e2d64097875c23bc50"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",
       "exists": true,
-      "bytes": 6955,
-      "sha256": "667899b5151eb18987a87e13c6d42589a1711f038414f94798eaba70e77ccb14"
+      "bytes": 7858,
+      "sha256": "6c3246a90a3d300117b68ab73f1b9b0b320ba8296e78262a76f41e253f25c943"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -168,14 +216,14 @@
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",
       "exists": true,
-      "bytes": 59069,
-      "sha256": "72d4a2ca908b7d626c2de415bb8cd02840e6dc88a4981983f11879e38fa0bcde"
+      "bytes": 59707,
+      "sha256": "ba957d8b4e43830af82a82e571034d9f39898f4d37016d784a91218306675ad7"
     },
     {
       "path": "docs/phase-7/phase-7-exit-review.md",
       "exists": true,
-      "bytes": 2844,
-      "sha256": "9d2195e36d9696484386f9d1abf5d59cd4853eda3ea36136c89a313a86b44fc0"
+      "bytes": 3218,
+      "sha256": "2b4f7601bd8165061ac3e8cb2e4c05726a865218dd1dd50867458dbdddfbed82"
     }
   ],
   "blockers": [
@@ -187,6 +235,18 @@
     "Missing revenueCatQaPass evidence.",
     "Missing privacyExportDeletePass evidence.",
     "Missing betaDashboardReady evidence.",
-    "Missing PHASE7_SIGNED_OFF_BY."
+    "Missing PHASE7_SIGNED_OFF_BY.",
+    "Missing onboardingConsentQaPass evidence.",
+    "Missing shelfIntakeQaPass evidence.",
+    "Missing reviewedGuidanceQaPass evidence.",
+    "Missing routineBuilderQaPass evidence.",
+    "Missing todayCheckoffQaPass evidence.",
+    "Missing photosPrivacyQaPass evidence.",
+    "Missing remindersQaPass evidence.",
+    "Missing paymentsLifecycleQaPass evidence.",
+    "Missing privacyControlsQaPass evidence.",
+    "Missing shareCardQaPass evidence.",
+    "Missing deferredSurfacesQaPass evidence.",
+    "Missing analyticsQaPass evidence."
   ]
 }

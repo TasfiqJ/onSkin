@@ -48,6 +48,18 @@ const validEvidence = {
   PHASE7_REVENUECAT_QA_PASS: 'true',
   PHASE7_PRIVACY_EXPORT_DELETE_PASS: ' True ',
   PHASE7_BETA_DASHBOARD_READY: 'true',
+  PHASE7_ONBOARDING_CONSENT_QA_PASS: 'true',
+  PHASE7_SHELF_INTAKE_QA_PASS: 'true',
+  PHASE7_REVIEWED_GUIDANCE_QA_PASS: 'true',
+  PHASE7_ROUTINE_BUILDER_QA_PASS: 'true',
+  PHASE7_TODAY_CHECKOFF_QA_PASS: 'true',
+  PHASE7_PHOTOS_PRIVACY_QA_PASS: 'true',
+  PHASE7_REMINDERS_QA_PASS: 'true',
+  PHASE7_PAYMENTS_LIFECYCLE_QA_PASS: 'true',
+  PHASE7_PRIVACY_CONTROLS_QA_PASS: 'true',
+  PHASE7_SHARE_CARD_QA_PASS: 'true',
+  PHASE7_DEFERRED_SURFACES_QA_PASS: 'true',
+  PHASE7_ANALYTICS_QA_PASS: 'true',
   PHASE7_SIGNED_OFF_BY: ' Tas Mohammed ',
 };
 
@@ -180,7 +192,10 @@ const cases = [
         result.status === 0 &&
         result.packet.evidence.brandReady === true &&
         result.packet.evidence.clinicalReviewPass === true &&
+        result.packet.evidence.onboardingConsentQaPass === true &&
+        result.packet.evidence.analyticsQaPass === true &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
+        result.packet.scenarios.every((scenario) => scenario.evidencePass === true) &&
         !result.packet.blockers.some((blocker) => /PHASE7_SIGNED_OFF_BY/.test(blocker))
       );
     },
@@ -205,13 +220,18 @@ const cases = [
     result: runPacket({
       ...validPublicIdentity,
       ...validEvidence,
-      PHASE7_REVENUECAT_QA_PASS: 'complete',
+      PHASE7_TODAY_CHECKOFF_QA_PASS: 'complete',
     }),
     expect(result) {
       return (
         result.status === 0 &&
-        result.packet.evidence.revenueCatQaPass === false &&
-        result.packet.blockers.includes('Missing revenueCatQaPass evidence.')
+        result.packet.evidence.todayCheckoffQaPass === false &&
+        result.packet.scenarios.some(
+          (scenario) =>
+            scenario.envKey === 'PHASE7_TODAY_CHECKOFF_QA_PASS' &&
+            scenario.evidencePass === false,
+        ) &&
+        result.packet.blockers.includes('Missing todayCheckoffQaPass evidence.')
       );
     },
   },

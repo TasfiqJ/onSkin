@@ -15,6 +15,10 @@
 - Generated QA packets hash the Phase 7 verifier scripts and shared
   evidence-normalization helper, so packet evidence is tied to the local gates
   that decided its status.
+- Strict QA packets now require granular scenario evidence for onboarding,
+  shelf intake, reviewed guidance, routine builder, Today check-off, photos,
+  reminders, payments, privacy controls, share cards, deferred surfaces, and
+  analytics instead of accepting only broad Phase 7 evidence flags.
 
 ## Seven-figure readiness assessment
 
@@ -38,6 +42,7 @@ The idea is not validated as a seven-figure business until a closed beta proves 
 - RevenueCat store QA evidence from Phase 6 strict gates.
 - Export/delete/withdraw QA evidence.
 - Beta evidence dashboard connected to real analytics.
+- Granular scenario QA evidence for every Phase 7 core-loop checklist group.
 
 ## Do-not-ship rule
 

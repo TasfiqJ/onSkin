@@ -31,39 +31,80 @@ const requiredFiles = [
 ];
 
 const scenarios = [
-  ['Onboarding', 'final age/account/consent copy, policy links, and consent ledger verified'],
-  [
-    'Shelf intake',
-    'add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible',
-  ],
-  [
-    'Reviewed guidance',
-    'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden',
-  ],
-  ['Routine builder', 'AM/PM routine persists across restart, offline, timezone rollover'],
-  ['Today check-off', 'offline/online check-off is idempotent and append-only'],
-  [
-    'Photos',
-    'baseline capture renders locally; app lock gates timeline; cloud backup remains off by default',
-  ],
-  ['Reminders', 'permission, quiet hours, Android 13+ permission, timezone/DST behavior verified'],
-  [
-    'Payments',
-    'RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified',
-  ],
-  [
-    'Privacy controls',
-    'export, account deletion, health-data withdrawal, app lock, support links verified',
-  ],
-  ['Share card', 'exact owned reviewed conflict only; no fallback; no sensitive analytics payload'],
-  [
-    'Deferred surfaces',
-    'commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled',
-  ],
-  [
-    'Analytics',
-    'activation, retention, payment, privacy, support, and deferred-surface events visible',
-  ],
+  {
+    surface: 'Onboarding',
+    scenario: 'final age/account/consent copy, policy links, and consent ledger verified',
+    evidenceKey: 'onboardingConsentQaPass',
+    envKey: 'PHASE7_ONBOARDING_CONSENT_QA_PASS',
+  },
+  {
+    surface: 'Shelf intake',
+    scenario:
+      'add 3 real owned products via manual/search/scan-or-OCR fallback; source/confidence visible',
+    evidenceKey: 'shelfIntakeQaPass',
+    envKey: 'PHASE7_SHELF_INTAKE_QA_PASS',
+  },
+  {
+    surface: 'Reviewed guidance',
+    scenario: 'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden',
+    evidenceKey: 'reviewedGuidanceQaPass',
+    envKey: 'PHASE7_REVIEWED_GUIDANCE_QA_PASS',
+  },
+  {
+    surface: 'Routine builder',
+    scenario: 'AM/PM routine persists across restart, offline, timezone rollover',
+    evidenceKey: 'routineBuilderQaPass',
+    envKey: 'PHASE7_ROUTINE_BUILDER_QA_PASS',
+  },
+  {
+    surface: 'Today check-off',
+    scenario: 'offline/online check-off is idempotent and append-only',
+    evidenceKey: 'todayCheckoffQaPass',
+    envKey: 'PHASE7_TODAY_CHECKOFF_QA_PASS',
+  },
+  {
+    surface: 'Photos',
+    scenario:
+      'baseline capture renders locally; app lock gates timeline; cloud backup remains off by default',
+    evidenceKey: 'photosPrivacyQaPass',
+    envKey: 'PHASE7_PHOTOS_PRIVACY_QA_PASS',
+  },
+  {
+    surface: 'Reminders',
+    scenario: 'permission, quiet hours, Android 13+ permission, timezone/DST behavior verified',
+    evidenceKey: 'remindersQaPass',
+    envKey: 'PHASE7_REMINDERS_QA_PASS',
+  },
+  {
+    surface: 'Payments',
+    scenario: 'RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified',
+    evidenceKey: 'paymentsLifecycleQaPass',
+    envKey: 'PHASE7_PAYMENTS_LIFECYCLE_QA_PASS',
+  },
+  {
+    surface: 'Privacy controls',
+    scenario: 'export, account deletion, health-data withdrawal, app lock, support links verified',
+    evidenceKey: 'privacyControlsQaPass',
+    envKey: 'PHASE7_PRIVACY_CONTROLS_QA_PASS',
+  },
+  {
+    surface: 'Share card',
+    scenario: 'exact owned reviewed conflict only; no fallback; no sensitive analytics payload',
+    evidenceKey: 'shareCardQaPass',
+    envKey: 'PHASE7_SHARE_CARD_QA_PASS',
+  },
+  {
+    surface: 'Deferred surfaces',
+    scenario: 'commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled',
+    evidenceKey: 'deferredSurfacesQaPass',
+    envKey: 'PHASE7_DEFERRED_SURFACES_QA_PASS',
+  },
+  {
+    surface: 'Analytics',
+    scenario: 'activation, retention, payment, privacy, support, and deferred-surface events visible',
+    evidenceKey: 'analyticsQaPass',
+    envKey: 'PHASE7_ANALYTICS_QA_PASS',
+  },
 ];
 
 const evidence = {
@@ -77,6 +118,9 @@ const evidence = {
   betaDashboardReady: evidenceFlagEnabled(process.env.PHASE7_BETA_DASHBOARD_READY),
   signedOffBy: normalizeNamedSignoff(process.env.PHASE7_SIGNED_OFF_BY) ?? '',
 };
+for (const scenario of scenarios) {
+  evidence[scenario.evidenceKey] = evidenceFlagEnabled(process.env[scenario.envKey]);
+}
 
 function hashFile(path) {
   const abs = resolve(root, path);
@@ -105,7 +149,13 @@ const packet = {
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 7 closed-beta core-loop launch QA packet.',
   evidence,
-  scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
+  scenarios: scenarios.map(({ surface, scenario, evidenceKey, envKey }) => ({
+    surface,
+    scenario,
+    evidenceKey,
+    envKey,
+    evidencePass: evidence[evidenceKey],
+  })),
   files,
   blockers,
 };
@@ -115,7 +165,10 @@ const jsonPath = join(outDir, 'core-loop-qa-packet.json');
 writeFileSync(jsonPath, `${JSON.stringify(packet, null, 2)}\n`);
 
 const scenarioRows = scenarios
-  .map(([surface, scenario]) => `| ${surface} | ${scenario} |`)
+  .map(
+    ({ surface, scenario, evidenceKey, envKey }) =>
+      `| ${surface} | ${scenario} | \`${envKey}\` | ${evidence[evidenceKey] ? 'yes' : 'BLOCKED'} |`,
+  )
   .join('\n');
 const fileRows = files
   .map((file) =>
@@ -146,10 +199,17 @@ writeFileSync(
     `- Beta dashboard ready: ${evidence.betaDashboardReady ? 'yes' : 'BLOCKED'}`,
     `- Signed off by: ${evidence.signedOffBy || 'BLOCKED'}`,
     '',
+    '## Scenario Evidence',
+    '',
+    ...scenarios.map(
+      ({ surface, evidenceKey, envKey }) =>
+        `- ${surface} (${envKey}): ${evidence[evidenceKey] ? 'yes' : 'BLOCKED'}`,
+    ),
+    '',
     '## Scenarios',
     '',
-    '| Surface | Required scenario set |',
-    '| --- | --- |',
+    '| Surface | Required scenario set | Evidence flag | Status |',
+    '| --- | --- | --- | --- |',
     scenarioRows,
     '',
     '## Files',

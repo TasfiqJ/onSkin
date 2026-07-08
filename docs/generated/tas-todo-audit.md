@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-08T17:56:24.237Z
+Generated: 2026-07-08T18:14:26.806Z
 Status: pass
 Strict mode: yes
 
@@ -15,8 +15,8 @@ canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 228
-- Keys named verbatim in FOR_TAS_TO_DO.md: 43
+- Extracted keys: 240
+- Keys named verbatim in FOR_TAS_TO_DO.md: 55
 - Keys only in generated inventory: 185
 - Blockers: 0
 - Warnings: 9
@@ -30,7 +30,7 @@ canonical machine-readable key list.
 | phase4  | yes              | phase4:check-source-env:strict                             | 9    | 4                                |
 | phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 21   | 1                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 19   | 15                               |
-| phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 18   | 17                               |
+| phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 30   | 17                               |
 | phase8  | yes              | phase8:check-growth-store:strict, phase8:qa-packet:strict  | 21   | 21                               |
 | phase9  | yes              | phase9:verify, phase9:release-smoke:strict                 | 55   | 55                               |
 | phase10 | yes              | phase10:verify, phase10:beta-readiness:strict              | 16   | 16                               |
@@ -188,16 +188,28 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED                  | no                        |
 | EXPO_PUBLIC_PHASE7_TREND_ENABLED                       | no                        |
 | EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED                     | no                        |
+| PHASE7_ANALYTICS_QA_PASS                               | yes                       |
 | PHASE7_BETA_DASHBOARD_READY                            | no                        |
 | PHASE7_BRAND_READY                                     | no                        |
 | PHASE7_CATALOG_BETA_IMPORT_PASS                        | no                        |
 | PHASE7_CLINICAL_REVIEW_PASS                            | no                        |
+| PHASE7_DEFERRED_SURFACES_QA_PASS                       | yes                       |
 | PHASE7_DEVICE_QA_PASS                                  | no                        |
+| PHASE7_ONBOARDING_CONSENT_QA_PASS                      | yes                       |
 | PHASE7_PACKET_OUT_DIR                                  | no                        |
+| PHASE7_PAYMENTS_LIFECYCLE_QA_PASS                      | yes                       |
+| PHASE7_PHOTOS_PRIVACY_QA_PASS                          | yes                       |
+| PHASE7_PRIVACY_CONTROLS_QA_PASS                        | yes                       |
 | PHASE7_PRIVACY_EXPORT_DELETE_PASS                      | no                        |
+| PHASE7_REMINDERS_QA_PASS                               | yes                       |
 | PHASE7_REVENUECAT_QA_PASS                              | no                        |
+| PHASE7_REVIEWED_GUIDANCE_QA_PASS                       | yes                       |
+| PHASE7_ROUTINE_BUILDER_QA_PASS                         | yes                       |
+| PHASE7_SHARE_CARD_QA_PASS                              | yes                       |
+| PHASE7_SHELF_INTAKE_QA_PASS                            | yes                       |
 | PHASE7_SIGNED_OFF_BY                                   | yes                       |
 | PHASE7_SUPABASE_RLS_PASS                               | no                        |
+| PHASE7_TODAY_CHECKOFF_QA_PASS                          | yes                       |
 
 ### Phase 8 growth and store readiness
 

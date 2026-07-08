@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T17:56:24.237Z",
+  "generatedAt": "2026-07-08T18:14:26.806Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,8 +11,8 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 228,
-    "keyMentionCount": 43,
+    "extractedKeyCount": 240,
+    "keyMentionCount": 55,
     "keyNotMentionedCount": 185,
     "blockerCount": 0,
     "warningCount": 9
@@ -370,19 +370,43 @@
         "EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED",
         "EXPO_PUBLIC_PHASE7_TREND_ENABLED",
         "EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED",
+        "PHASE7_ANALYTICS_QA_PASS",
         "PHASE7_BETA_DASHBOARD_READY",
         "PHASE7_BRAND_READY",
         "PHASE7_CATALOG_BETA_IMPORT_PASS",
         "PHASE7_CLINICAL_REVIEW_PASS",
+        "PHASE7_DEFERRED_SURFACES_QA_PASS",
         "PHASE7_DEVICE_QA_PASS",
+        "PHASE7_ONBOARDING_CONSENT_QA_PASS",
         "PHASE7_PACKET_OUT_DIR",
+        "PHASE7_PAYMENTS_LIFECYCLE_QA_PASS",
+        "PHASE7_PHOTOS_PRIVACY_QA_PASS",
+        "PHASE7_PRIVACY_CONTROLS_QA_PASS",
         "PHASE7_PRIVACY_EXPORT_DELETE_PASS",
+        "PHASE7_REMINDERS_QA_PASS",
         "PHASE7_REVENUECAT_QA_PASS",
+        "PHASE7_REVIEWED_GUIDANCE_QA_PASS",
+        "PHASE7_ROUTINE_BUILDER_QA_PASS",
+        "PHASE7_SHARE_CARD_QA_PASS",
+        "PHASE7_SHELF_INTAKE_QA_PASS",
         "PHASE7_SIGNED_OFF_BY",
-        "PHASE7_SUPABASE_RLS_PASS"
+        "PHASE7_SUPABASE_RLS_PASS",
+        "PHASE7_TODAY_CHECKOFF_QA_PASS"
       ],
       "keysMentionedInForTas": [
-        "PHASE7_SIGNED_OFF_BY"
+        "PHASE7_ANALYTICS_QA_PASS",
+        "PHASE7_DEFERRED_SURFACES_QA_PASS",
+        "PHASE7_ONBOARDING_CONSENT_QA_PASS",
+        "PHASE7_PAYMENTS_LIFECYCLE_QA_PASS",
+        "PHASE7_PHOTOS_PRIVACY_QA_PASS",
+        "PHASE7_PRIVACY_CONTROLS_QA_PASS",
+        "PHASE7_REMINDERS_QA_PASS",
+        "PHASE7_REVIEWED_GUIDANCE_QA_PASS",
+        "PHASE7_ROUTINE_BUILDER_QA_PASS",
+        "PHASE7_SHARE_CARD_QA_PASS",
+        "PHASE7_SHELF_INTAKE_QA_PASS",
+        "PHASE7_SIGNED_OFF_BY",
+        "PHASE7_TODAY_CHECKOFF_QA_PASS"
       ],
       "keysNotMentionedInForTas": [
         "EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED",
