@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T17:50:09.209Z",
+  "generatedAt": "2026-07-08T18:35:22.116Z",
   "status": "blocked",
-  "gitSha": "4bae6d1d65e14fbe851634a35ee91051487642d2",
+  "gitSha": "c3ff938ab54f9529cced3913b67c5d619e7d2b0d",
   "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
@@ -30,12 +30,12 @@
   "sourceHashes": {
     "package.json": "68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd",
     "turbo.json": "66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57",
-    ".env.example": "08289db78a4388aed718466d895fe090f87f707c9752169fa9696df3c924c92b",
+    ".env.example": "09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1",
     "scripts/phase9/lib.mjs": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752",
     "scripts/phase9/evidence-normalization-smoke.mjs": "e1b2895dabe89a004bd01844d6c705fbafe303c7ddab9cd28eee5b94a7c71f24",
     "scripts/phase10-11/public-contact-smoke.mjs": "630ad5c5ff818df209ef7bfa990f2bf64fb22a257ca22acb0fd09fad782801e4",
     "scripts/phase10/lib.mjs": "f7603dc439343586c1aa6b254dd6200ec49ee3348b4de259f15340f1ca2cca2a",
-    "scripts/phase10/beta-readiness.mjs": "85a4ccc8cb2323654f2cf2e43a3281b75327dbaef452d26a1cec28c2c5312008",
+    "scripts/phase10/beta-readiness.mjs": "668d11a55891008d5e87f30ff830bbe64cd974bd90189ff470087059a9c6c156",
     "scripts/phase10/beta-analytics-audit.mjs": "38e0ab4ac720d35035a83a6ee7120174aedd6afffc97f1228f69ec0f51f45201",
     "scripts/phase10/build-beta-packet.mjs": "7bb284fb30bba25e429c9cb15798fe887898157389c26e3bc9fa733b10225868",
     "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",
@@ -43,7 +43,7 @@
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d",
     "apps/mobile/src/lib/analytics/track.ts": "7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45",
     "apps/mobile/src/lib/observability/scrub.ts": "222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e",
-    "docs/phase-9/generated/release-engineering-qa-packet.json": "7f411ad68330545f5096bf8ef7abb3313a696176fd9ec75fc842cfd0997e0407",
+    "docs/phase-9/generated/release-engineering-qa-packet.json": "a3115f2adad9d48d6d43be417ae6072240e60de49a1045c41e32cebadc20f37f",
     "docs/phase-10/beta-source-of-truth.md": "d791b7e8893bb7a2f57fb858a1ddff7e9f89cf968ab9967fa97ae57a6962c03f",
     "docs/phase-10/tester-recruitment-sheet.md": "ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc",
     "docs/phase-10/tester-brief.md": "6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16",
