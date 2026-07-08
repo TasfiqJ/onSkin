@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T22:58:15.857Z",
+  "generatedAt": "2026-07-08T23:40:45.289Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "7820e237dd0a0de96898c12577fb9891b1cc27f3",
+  "gitSha": "b37e2be6f94bac7660a48e8f31c76386c2e5bd93",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -137,8 +137,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 12337,
-      "sha256": "bf030e5250bd594e49762bd3e759a7f027631747164234dadf096f5150b61fc7"
+      "bytes": 12625,
+      "sha256": "ff959da76f53d575ec4ddbc20cf77dc7680f2dd463330603e9711cf361812732"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -167,8 +167,8 @@
     {
       "path": "apps/mobile/src/app/shelf/scan.tsx",
       "exists": true,
-      "bytes": 21856,
-      "sha256": "320f9d05eb3053d7eec09e98de84c1c4694362001b872b78f1e313212beb99b0"
+      "bytes": 21885,
+      "sha256": "f2aae67220d7c21625946686330fa8b40edd5dba5f991536241900af7aaabcd0"
     },
     {
       "path": "apps/mobile/src/app/shelf/ocr.tsx",
@@ -263,20 +263,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 208941,
-      "sha256": "1a40e3bb65f8417860f617dcde6d3242eb96c54c16beaabc7c8391b0f5989870"
+      "bytes": 210112,
+      "sha256": "3cb2a003e1dec3217449acbe43d7b89bfcf57280afcd0b3fd8eac6f2b3796452"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "1143a2b4cd0f6f5004c270b8c58e3b0a36d65e354994730b24eb1cdc3507ed78"
+      "sha256": "e20c5fd7d69c71c895853416fcda9f8933ee101509f4eacc2548cf24c0bd94ad"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "20720bf0846a929353d5267d943a118d078d407af93e43c8ec17dafaafa7e345"
+      "sha256": "16504a0e93e270ca49e8194e6d7970670cb018fb9779bc39c6ff80f9815d4738"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
