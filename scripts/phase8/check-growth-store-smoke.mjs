@@ -206,6 +206,20 @@ const cases = [
         result.packet.evidence.appleTeamId === true &&
         result.packet.evidence.androidCertificateFingerprints === true &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
+        Boolean(result.packet.sourceHashes['.env.example']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-8/store-metadata-source-of-truth.md']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-8/support-review-response-playbook.md']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-8/public-site/index.html']) &&
+        Boolean(
+          result.packet.sourceHashes[
+            'docs/phase-8/public-site/.well-known/apple-app-site-association.template.json'
+          ],
+        ) &&
+        Boolean(
+          result.packet.sourceHashes[
+            'docs/phase-8/public-site/.well-known/assetlinks.template.json'
+          ],
+        ) &&
         !result.packet.warnings.some((warning) => /signedOffBy/.test(warning))
       );
     },

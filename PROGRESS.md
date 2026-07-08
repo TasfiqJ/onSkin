@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Phase 8 growth/store QA packet input set. The generated packet
+  now hashes the Phase 8 public-site fallback pages, Universal/App Links
+  templates, store metadata source of truth, support playbook, Apple Ads lab,
+  dry-run checklist, and `.env.example`, matching the readiness checker instead
+  of signing only a partial subset of growth/store artifacts. Smoke coverage now
+  asserts those packet hashes exist before strict external evidence can pass.
+
 - Hardened the Phase 7 core-loop QA gates so strict completion requires
   per-scenario evidence instead of only broad launch flags. The generated packet
   now blocks independently on onboarding/consent, shelf intake, reviewed

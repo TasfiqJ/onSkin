@@ -17,6 +17,10 @@ Status: not launch-ready.
 - Generated QA packets hash the Phase 8 verifier scripts and shared
   evidence-normalization helper, so public-growth evidence is tied to the local
   gates that decided its status.
+- Generated QA packets also hash the Phase 8 public-site fallback pages,
+  Universal/App Links templates, store metadata source of truth, support
+  playbook, Apple Ads lab, dry-run checklist, and `.env.example`, so the packet
+  cannot sign off a stale or partial growth/store source package.
 
 ## Still Blocked
 

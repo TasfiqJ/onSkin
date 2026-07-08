@@ -92,8 +92,26 @@
           your own shelf.
         </p>
         <div class="actions">
-          <a class="button primary" id="app-store" href="__APP_STORE_URL__">App Store</a>
-          <a class="button" id="play-store" href="__PLAY_STORE_URL__">Google Play</a>
+          <a
+            class="button primary"
+            id="app-store"
+            href="/waitlist.html"
+            data-store-url="__APP_STORE_URL__"
+            data-store-label="App Store"
+            data-store-name="app_store"
+            data-store-ready="false"
+            >App Store waitlist</a
+          >
+          <a
+            class="button"
+            id="play-store"
+            href="/waitlist.html"
+            data-store-url="__PLAY_STORE_URL__"
+            data-store-label="Google Play"
+            data-store-name="play_store"
+            data-store-ready="false"
+            >Google Play waitlist</a
+          >
           <a class="button" href="/waitlist.html">Join waitlist</a>
         </div>
         <small>General cosmetic information only, not medical advice.</small>
@@ -135,13 +153,39 @@
         const body = JSON.stringify({ event, ...attribution(), ...extra });
         navigator.sendBeacon && navigator.sendBeacon('/api/growth-event', body);
       }
+      function safeStoreUrl(value, label) {
+        if (!value || value.includes('__')) return null;
+        try {
+          const url = new URL(value);
+          if (url.protocol !== 'https:' || url.username || url.password) return null;
+          if (label === 'App Store' && url.hostname !== 'apps.apple.com') return null;
+          if (label === 'Google Play' && url.hostname !== 'play.google.com') return null;
+          return url.toString();
+        } catch {
+          return null;
+        }
+      }
+      function configureStoreLink(id) {
+        const link = document.getElementById(id);
+        const label = link.dataset.storeLabel || link.textContent.trim();
+        const storeUrl = safeStoreUrl(link.dataset.storeUrl, label);
+        if (!storeUrl) {
+          link.href = '/waitlist.html';
+          link.textContent = `${label} waitlist`;
+          link.setAttribute('aria-label', `${label} waitlist`);
+          link.dataset.storeReady = 'false';
+          return;
+        }
+        link.href = storeUrl;
+        link.textContent = label;
+        link.setAttribute('aria-label', label);
+        link.dataset.storeReady = 'true';
+        link.addEventListener('click', () => track('store_click', { store: link.dataset.storeName }));
+      }
+
       track('landing_viewed', {});
-      document
-        .getElementById('app-store')
-        .addEventListener('click', () => track('store_click', { store: 'app_store' }));
-      document
-        .getElementById('play-store')
-        .addEventListener('click', () => track('store_click', { store: 'play_store' }));
+      configureStoreLink('app-store');
+      configureStoreLink('play-store');
     </script>
   </body>
 </html>

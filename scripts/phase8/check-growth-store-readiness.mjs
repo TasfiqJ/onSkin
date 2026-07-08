@@ -139,6 +139,30 @@ for (const file of requiredFiles) {
   fail(exists(file), `${file} is missing.`);
 }
 
+const publicSiteFiles = [
+  'docs/phase-8/public-site/index.html',
+  'docs/phase-8/public-site/share.html',
+];
+for (const file of publicSiteFiles) {
+  const source = read(file);
+  fail(
+    !/href=["']__(?:APP|PLAY)_STORE_URL__["']/.test(source),
+    `${file} must not expose placeholder store URLs as clickable hrefs.`,
+  );
+  fail(
+    /href=["']\/waitlist\.html["'][^>]*data-store-url=["']__APP_STORE_URL__["']/.test(source),
+    `${file} must keep the App Store placeholder behind a waitlist fallback link.`,
+  );
+  fail(
+    /href=["']\/waitlist\.html["'][^>]*data-store-url=["']__PLAY_STORE_URL__["']/.test(source),
+    `${file} must keep the Play Store placeholder behind a waitlist fallback link.`,
+  );
+  fail(
+    /safeStoreUrl/.test(source) && /data-store-ready/.test(source),
+    `${file} must promote only validated production store URLs at runtime.`,
+  );
+}
+
 fail(
   has('apps/mobile/app.config.js', /associatedDomains/),
   'app.config.js must configure iOS associated domains.',

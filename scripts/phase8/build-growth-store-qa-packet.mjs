@@ -82,6 +82,7 @@ const evidence = {
 };
 
 const sourceFiles = [
+  '.env.example',
   'package.json',
   'apps/mobile/app.config.js',
   'apps/mobile/src/lib/env.ts',
@@ -96,10 +97,20 @@ const sourceFiles = [
   'apps/mobile/src/lib/legal/storeMetadata.ts',
   'docs/phase-8/source-of-truth.md',
   'docs/phase-8/link-routing-runbook.md',
+  'docs/phase-8/store-metadata-source-of-truth.md',
   'docs/phase-8/store-compliance-packet.md',
   'docs/phase-8/creator-brief.md',
+  'docs/phase-8/apple-ads-keyword-lab.md',
   'docs/phase-8/acquisition-dashboard.md',
   'docs/phase-8/launch-dry-run-checklist.md',
+  'docs/phase-8/support-review-response-playbook.md',
+  'docs/phase-8/phase-8-exit-review.md',
+  'docs/phase-8/public-site/index.html',
+  'docs/phase-8/public-site/share.html',
+  'docs/phase-8/public-site/waitlist.html',
+  'docs/phase-8/public-site/support.html',
+  'docs/phase-8/public-site/.well-known/apple-app-site-association.template.json',
+  'docs/phase-8/public-site/.well-known/assetlinks.template.json',
   'scripts/phase8/build-growth-store-qa-packet.mjs',
   'scripts/phase8/check-growth-store-readiness.mjs',
   'scripts/phase8/check-growth-store-smoke.mjs',
