@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T08:31:11.644Z",
+  "generatedAt": "2026-07-08T14:32:21.582Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "evidence": {
     "rcOfferingReviewed": false,
@@ -93,26 +93,26 @@
     {
       "path": "apps/mobile/src/app/onboarding/paywall.tsx",
       "exists": true,
-      "bytes": 12056,
-      "sha256": "e1b9a4bd1f29edbf86dad419a2a884fb14fd31198d52c44493387288e8c15702"
+      "bytes": 12195,
+      "sha256": "df0b406c727f1722e9f2bef2c600693290d0f3b302c20dad7d11439a767890b7"
     },
     {
       "path": "apps/mobile/src/app/paywall/upsell.tsx",
       "exists": true,
-      "bytes": 5943,
-      "sha256": "0d24fec8f3aef4737f9c4cd98fdeb233d69ddc451ba8dc573994927cb2af1ad2"
+      "bytes": 6967,
+      "sha256": "d32b620921003bf472fb974b0b9ade44f2b2f94a6bcb01037843c4674003abe7"
     },
     {
       "path": "apps/mobile/src/app/paywall/winback.tsx",
       "exists": true,
-      "bytes": 7108,
-      "sha256": "6a732b5c58198159e67567a9c2723dca8d2a2a994703bdd17ec8e07bc0862acb"
+      "bytes": 7394,
+      "sha256": "0858e3180d41540efd1ce4f2306ee40c4f313fe52d9e5963c0b3a6b264eef069"
     },
     {
       "path": "apps/mobile/src/app/settings/subscription.tsx",
       "exists": true,
-      "bytes": 11647,
-      "sha256": "77bedd3915ce7264fee205e36511fbfbfaa576e8de8ba631beb0f7643140cd72"
+      "bytes": 11547,
+      "sha256": "dce1c1aec8395a039f0a4d1d3312c52f4b3a5b2ee54d29ca0d86bc80111e4b09"
     },
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",

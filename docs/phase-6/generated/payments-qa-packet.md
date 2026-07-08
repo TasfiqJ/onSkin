@@ -1,6 +1,6 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-08T08:31:11.644Z
+Generated at: 2026-07-08T14:32:21.582Z
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
 
@@ -39,10 +39,10 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | apps/mobile/src/features/subscription/store.ts | present | 10936 | 9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991 |
 | apps/mobile/src/features/subscription/useEntitlement.ts | present | 8978 | 8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a |
 | apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 579 | 68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675 |
-| apps/mobile/src/app/onboarding/paywall.tsx | present | 12056 | e1b9a4bd1f29edbf86dad419a2a884fb14fd31198d52c44493387288e8c15702 |
-| apps/mobile/src/app/paywall/upsell.tsx | present | 5943 | 0d24fec8f3aef4737f9c4cd98fdeb233d69ddc451ba8dc573994927cb2af1ad2 |
-| apps/mobile/src/app/paywall/winback.tsx | present | 7108 | 6a732b5c58198159e67567a9c2723dca8d2a2a994703bdd17ec8e07bc0862acb |
-| apps/mobile/src/app/settings/subscription.tsx | present | 11647 | 77bedd3915ce7264fee205e36511fbfbfaa576e8de8ba631beb0f7643140cd72 |
+| apps/mobile/src/app/onboarding/paywall.tsx | present | 12195 | df0b406c727f1722e9f2bef2c600693290d0f3b302c20dad7d11439a767890b7 |
+| apps/mobile/src/app/paywall/upsell.tsx | present | 6967 | d32b620921003bf472fb974b0b9ade44f2b2f94a6bcb01037843c4674003abe7 |
+| apps/mobile/src/app/paywall/winback.tsx | present | 7394 | 0858e3180d41540efd1ce4f2306ee40c4f313fe52d9e5963c0b3a6b264eef069 |
+| apps/mobile/src/app/settings/subscription.tsx | present | 11547 | dce1c1aec8395a039f0a4d1d3312c52f4b3a5b2ee54d29ca0d86bc80111e4b09 |
 | supabase/functions/revenuecat-webhook/index.ts | present | 13292 | 210324cc1b57e321885d2fb523cf62a0b2adcfca3cee9fc2df9164ffde9147c4 |
 | supabase/functions/subscription-grants/index.ts | present | 3457 | 2922047f3ca942aa406785a00ee8175ac3f1899f6b97502f49393a6b204baa02 |
 | supabase/functions/account-deletion/index.ts | present | 15795 | d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73 |
