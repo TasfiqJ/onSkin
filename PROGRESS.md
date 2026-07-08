@@ -11,7 +11,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   checking worktree cleanliness, warns when produced from mixed local changes,
   and shows `Git status: clean` or `DIRTY` in Markdown. The Phase 8 readiness
   gate now enforces that dirty-worktree contract and verifies key public-site,
-  checker, smoke, packet-builder, and `.env.example` files remain hashed.
+  checker, smoke, packet-builder, and `.env.example` files remain hashed. Smoke
+  coverage now proves dirty worktree packet generation records the dirty marker
+  and warning.
 
 - Hardened Phase 11 public-launch packet coverage. The launch readiness gate now
   independently verifies that the generated packet hashes `.env.example`, the

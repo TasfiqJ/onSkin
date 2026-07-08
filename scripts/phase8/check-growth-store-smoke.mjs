@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -80,6 +80,16 @@ function runPacket(extraEnv) {
     return { ...result, packet };
   } finally {
     rmSync(outDir, { force: true, recursive: true });
+  }
+}
+
+function runPacketWithDirtyWorktree(extraEnv) {
+  const markerPath = join(root, `.phase8-smoke-dirty-${process.pid}.tmp`);
+  writeFileSync(markerPath, 'temporary Phase 8 dirty-worktree smoke marker\n');
+  try {
+    return runPacket(extraEnv);
+  } finally {
+    rmSync(markerPath, { force: true });
   }
 }
 
@@ -206,7 +216,12 @@ const cases = [
         result.packet.evidence.appleTeamId === true &&
         result.packet.evidence.androidCertificateFingerprints === true &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
+        /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
+        typeof result.packet.gitStatus === 'string' &&
         Boolean(result.packet.sourceHashes['.env.example']) &&
+        Boolean(result.packet.sourceHashes['scripts/phase8/build-growth-store-qa-packet.mjs']) &&
+        Boolean(result.packet.sourceHashes['scripts/phase8/check-growth-store-readiness.mjs']) &&
+        Boolean(result.packet.sourceHashes['scripts/phase8/check-growth-store-smoke.mjs']) &&
         Boolean(result.packet.sourceHashes['docs/phase-8/store-metadata-source-of-truth.md']) &&
         Boolean(result.packet.sourceHashes['docs/phase-8/support-review-response-playbook.md']) &&
         Boolean(result.packet.sourceHashes['docs/phase-8/public-site/index.html']) &&
@@ -221,6 +236,19 @@ const cases = [
           ],
         ) &&
         !result.packet.warnings.some((warning) => /signedOffBy/.test(warning))
+      );
+    },
+  },
+  {
+    name: 'Phase 8 packet warns when generated from a dirty worktree',
+    result: runPacketWithDirtyWorktree({ ...validPublicIdentity, ...validEvidence }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.gitStatus.includes(`.phase8-smoke-dirty-${process.pid}.tmp`) &&
+        result.packet.warnings.includes(
+          'Phase 8 QA packet generated with a dirty Git worktree; do not use it as final growth/store evidence.',
+        )
       );
     },
   },
