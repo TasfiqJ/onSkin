@@ -1,0 +1,76 @@
+{
+  "checks": {
+    "hasAddActivePromise": false,
+    "hasCycleRows": false,
+    "hasPauseOrRecoveryBanner": false,
+    "hasReviewCopy": false,
+    "hasRoutineAvailableCopy": false,
+    "hasSettingsControl": false
+  },
+  "minVisibleControlHeight": 54,
+  "overflowRight": [],
+  "text": "WEDNESDAY, JULY 8\nGood morning.\nNO ROUTINE YET\nBuild a routine from your shelf.\nAdd the products you use and Today will become your AM/PM checklist.\nAdd products\nToday\nProgress\nShelf\nYou",
+  "title": "",
+  "url": "http://localhost:8149/today",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Add products",
+      "visible": true,
+      "width": 230,
+      "x": 45,
+      "y": 246
+    },
+    {
+      "ariaLabel": "Today tab",
+      "height": 54,
+      "role": "tab",
+      "tag": "DIV",
+      "text": "Today",
+      "visible": true,
+      "width": 76,
+      "x": 9,
+      "y": 495
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "height": 54,
+      "role": "tab",
+      "tag": "DIV",
+      "text": "Progress",
+      "visible": true,
+      "width": 76,
+      "x": 85,
+      "y": 495
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "height": 54,
+      "role": "tab",
+      "tag": "DIV",
+      "text": "Shelf",
+      "visible": true,
+      "width": 76,
+      "x": 160,
+      "y": 495
+    },
+    {
+      "ariaLabel": "You tab",
+      "height": 54,
+      "role": "tab",
+      "tag": "DIV",
+      "text": "You",
+      "visible": true,
+      "width": 76,
+      "x": 236,
+      "y": 495
+    }
+  ]
+}

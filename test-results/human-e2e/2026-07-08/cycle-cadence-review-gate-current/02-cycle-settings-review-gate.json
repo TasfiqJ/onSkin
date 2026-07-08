@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "hasAddActivePromise": false,
+    "hasCycleRows": false,
+    "hasPauseOrRecoveryBanner": false,
+    "hasReviewCopy": true,
+    "hasRoutineAvailableCopy": true,
+    "hasSettingsControl": false
+  },
+  "minVisibleControlHeight": 48,
+  "overflowRight": [],
+  "text": "x\nCycle settings\nCycle settings open after review.\nYour routine can still be used daily. Skin-cycling cadence and ramp settings stay hidden in production until clinical and cosmetic-chemistry review closes.",
+  "title": "",
+  "url": "http://localhost:8149/cycle/settings?e2e=cycle-cadence-review-gate",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": "Done",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "x",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    }
+  ]
+}

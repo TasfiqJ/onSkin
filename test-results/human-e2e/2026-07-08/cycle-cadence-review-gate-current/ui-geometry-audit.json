@@ -1,0 +1,74 @@
+[
+  {
+    "file": "01-cycle-week-review-gate.json",
+    "url": "http://localhost:8149/cycle/week?e2e=cycle-cadence-review-gate",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "minVisibleControlHeight": 48,
+    "overflowRightCount": 0,
+    "checks": {
+      "hasAddActivePromise": false,
+      "hasCycleRows": false,
+      "hasPauseOrRecoveryBanner": false,
+      "hasReviewCopy": true,
+      "hasRoutineAvailableCopy": true,
+      "hasSettingsControl": false
+    }
+  },
+  {
+    "file": "02-cycle-settings-review-gate.json",
+    "url": "http://localhost:8149/cycle/settings?e2e=cycle-cadence-review-gate",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "minVisibleControlHeight": 48,
+    "overflowRightCount": 0,
+    "checks": {
+      "hasAddActivePromise": false,
+      "hasCycleRows": false,
+      "hasPauseOrRecoveryBanner": false,
+      "hasReviewCopy": true,
+      "hasRoutineAvailableCopy": true,
+      "hasSettingsControl": false
+    }
+  },
+  {
+    "file": "03-cycle-why-tonight-review-gate.json",
+    "url": "http://localhost:8149/cycle/why-tonight?date=2026-07-08&e2e=cycle-cadence-review-gate",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "minVisibleControlHeight": 56,
+    "overflowRightCount": 0,
+    "checks": {
+      "hasAddActivePromise": false,
+      "hasCycleRows": false,
+      "hasPauseOrRecoveryBanner": false,
+      "hasReviewCopy": true,
+      "hasRoutineAvailableCopy": true,
+      "hasSettingsControl": false
+    }
+  },
+  {
+    "file": "04-after-why-tonight-got-it.json",
+    "url": "http://localhost:8149/today",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "minVisibleControlHeight": 54,
+    "overflowRightCount": 0,
+    "checks": {
+      "hasAddActivePromise": false,
+      "hasCycleRows": false,
+      "hasPauseOrRecoveryBanner": false,
+      "hasReviewCopy": false,
+      "hasRoutineAvailableCopy": false,
+      "hasSettingsControl": false
+    }
+  }
+]

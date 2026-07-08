@@ -360,6 +360,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   clipped or sub-44 px visible controls. Evidence is in
   `test-results/human-e2e/2026-07-07/cycle-night-labels-current/`; it does not
   replace real iOS/Android scheduler QA or native Dynamic Type QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the
+  unreviewed cycle-cadence production gate with an active Pro fixture and
+  `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed`. Direct `/cycle/week`,
+  `/cycle/settings`, and `/cycle/why-tonight` show review-gate copy while
+  cadence review remains closed, keep AM/daily-routine reassurance visible,
+  hide Settings/variant/night controls, hide cycle rows and pause/recovery
+  banners, avoid `add an active/build your cycle` promises, keep visible
+  controls 48 px+ (56 px on `Got it`), and have zero horizontal overflow.
+  `Got it` from direct `/cycle/why-tonight` returns to `/today`. Evidence is in
+  `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`; this
+  does not replace native iOS/Android bottom-sheet, safe-area, screen-reader,
+  or reviewer-signoff QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

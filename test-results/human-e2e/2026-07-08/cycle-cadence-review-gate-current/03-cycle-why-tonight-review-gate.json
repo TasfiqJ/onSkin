@@ -1,0 +1,43 @@
+{
+  "checks": {
+    "hasAddActivePromise": false,
+    "hasCycleRows": false,
+    "hasPauseOrRecoveryBanner": false,
+    "hasReviewCopy": true,
+    "hasRoutineAvailableCopy": true,
+    "hasSettingsControl": false
+  },
+  "minVisibleControlHeight": 56,
+  "overflowRight": [],
+  "text": "Cycle guidance is under review. Your daily AM/PM routine is still available.\nGot it",
+  "title": "",
+  "url": "http://localhost:8149/cycle/why-tonight?date=2026-07-08&e2e=cycle-cadence-review-gate",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": "Dismiss",
+      "height": 336,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "",
+      "visible": true,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Got it",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 473
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "hasAddActivePromise": false,
+    "hasCycleRows": false,
+    "hasPauseOrRecoveryBanner": false,
+    "hasReviewCopy": true,
+    "hasRoutineAvailableCopy": true,
+    "hasSettingsControl": false
+  },
+  "minVisibleControlHeight": 48,
+  "overflowRight": [],
+  "text": "<\nYOUR CYCLE · REVIEW GATE\nThis week, by night.\nEVERY AM\nmoisturizer → SPF\nstable\nCycle guidance is under review.\nYour AM/PM routine still works. We publish skin-cycling cadence only after dermatologist and cosmetic-chemist review.",
+  "title": "",
+  "url": "http://localhost:8149/cycle/week?e2e=cycle-cadence-review-gate",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": "Back",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "<",
+      "visible": true,
+      "width": 48,
+      "x": 28,
+      "y": 8
+    }
+  ]
+}

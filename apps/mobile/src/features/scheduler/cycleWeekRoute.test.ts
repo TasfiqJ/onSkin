@@ -127,6 +127,11 @@ describe('cycle week route scheduler notes', () => {
     const week = readAppRoute('cycle/week.tsx');
     const settings = readAppRoute('cycle/settings.tsx');
     const whyTonight = readAppRoute('cycle/why-tonight.tsx');
+    const reviewGate = readFileSync(`${APP_DIR}/../features/routine/reviewGate.ts`, 'utf8');
+
+    expect(reviewGate).toContain('EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE');
+    expect(reviewGate).toContain("'closed'");
+    expect(reviewGate).toContain('isDev &&');
 
     expect(week).toContain("import { canUseRoutineCadence } from '@/features/routine/reviewGate';");
     expect(week).toContain('const cadenceReady = canUseRoutineCadence();');

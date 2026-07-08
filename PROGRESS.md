@@ -98,6 +98,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   opens `/shelf/archive` with the finished product visible. Evidence and bug
   report:
   `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`.
+
+- Added a dev-only fixture and human E2E evidence for the unreviewed
+  cycle-cadence production gate. With an active Pro fixture and
+  `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed`, `/cycle/week`,
+  `/cycle/settings`, and `/cycle/why-tonight` now prove the review-gate copy is
+  what users see while dermatologist/cosmetic-chemist cadence review remains
+  closed; cycle controls, night rows, pause/recovery banners, and add-active
+  cycle promises stay hidden. Evidence is in
+  `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`.
+
 - Hardened the Today empty-routine and compact PM cycle-strip states. Today no
   longer treats the routine-plan example preview as real check-off data: when
   the local shelf has no real routine, it shows `No routine yet` with a direct
@@ -4147,6 +4157,26 @@ errors. Evidence is in
 `test-results/human-e2e/2026-07-07/navigation-current/`. Desktop Chrome cannot
 prove native React Native keyboard-hide or platform text-scale behavior, so those
 remain iOS/Android simulator/device QA follow-ups.
+
+### Cycle cadence review-gate evidence (2026-07-08)
+
+Added `EXPO_PUBLIC_E2E_ROUTINE_CADENCE_REVIEW_GATE=closed` as a dev-only fixture
+inside the routine cadence review gate, so Expo web can exercise the
+production-like closed-review branch without changing production semantics. The
+fixture can close the gate in dev for E2E coverage, but it cannot open
+unreviewed cadence outside dev.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8149 with
+`EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and the closed-review fixture. Direct
+`/cycle/week`, `/cycle/settings`, and `/cycle/why-tonight` show review-gate copy
+while cadence review remains closed, keep AM/daily-routine reassurance visible,
+hide Settings/variant/night controls, hide cycle rows and pause/recovery
+banners, avoid `add an active/build your cycle` promises, keep visible controls
+48 px+ (56 px on `Got it`), and have zero horizontal overflow. `Got it` from
+direct `/cycle/why-tonight` returns to `/today`. Evidence and report are in
+`test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`. This
+does not replace native iOS/Android bottom-sheet, safe-area, screen-reader, or
+reviewer-signoff QA.
 
 ### Shelf scan/OCR permission recovery evidence (2026-07-08)
 
