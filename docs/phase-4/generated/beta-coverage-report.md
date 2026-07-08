@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-08T20:57:05.171Z
+Generated: 2026-07-08T22:13:36.379Z
 Status: blocked
-Git SHA: 57b80eb67ca759189e90e8653ea9936979cb1306
+Git SHA: 6924e54bd6f199aaf499a806150821c626e948a0
 Git status: clean
 
 
@@ -64,7 +64,7 @@ Phase 4 coverage thresholds below are satisfied.
 | scripts/phase4/catalog-qa-report.mjs | present | 6579 | cfb7d04ab9b1a0a940c186bd5b6921edca30e8447f5345aab7ccaefb4b8b0202 |
 | scripts/phase4/catalog-qa-report-smoke.mjs | present | 5271 | 6cf01a6d0303828a2b5b6aaddcd6cad662c9aeb3098700de431cf12ff182ab35 |
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
-| docs/FOR_TAS_TO_DO.md | present | 25928 | d5f9ed016f03f916c252597de0098afd449152ea08374b0d2226c5b07826d73b |
+| docs/FOR_TAS_TO_DO.md | present | 35184 | d7b84bb212d2c13a39ef88a56f76ce31d8bffe4a1a82ced301d0a286a44c15ff |
 | docs/phase-4/beta-coverage-report.md | present | 1854 | 5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6 |
 | docs/phase-4/observability-dashboard.md | present | 1804 | a42191be85ab1d75e0c7d9cce2934b0e52369852da35bdd6edf2c153fc6f09af |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
