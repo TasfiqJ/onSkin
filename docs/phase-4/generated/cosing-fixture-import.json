@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T02:00:48.649Z",
+  "generatedAt": "2026-07-08T14:43:47.130Z",
   "status": "fixture",
   "warning": "CosIng is informative only. Do not treat ingredient presence as approval or safety.",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\scripts\\phase4\\fixtures\\cosing-sample.csv",
@@ -18,7 +18,9 @@
       "annexStatus": null,
       "source": "cosing",
       "reviewStatus": "unreviewed",
-      "synonyms": ["Nicotinamide"]
+      "synonyms": [
+        "Nicotinamide"
+      ]
     },
     {
       "inciName": "RETINOL",
@@ -28,7 +30,9 @@
       "annexStatus": "restricted",
       "source": "cosing",
       "reviewStatus": "unreviewed",
-      "synonyms": ["Vitamin A"]
+      "synonyms": [
+        "Vitamin A"
+      ]
     },
     {
       "inciName": "ZINC OXIDE",

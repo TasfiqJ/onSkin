@@ -25,6 +25,10 @@ if (missingCategory.length > 0) warnings.push(`${missingCategory.length} accepte
 if (missingIngredients.length > 0) warnings.push(`${missingIngredients.length} accepted products have no ingredient text.`);
 if (products.length < 1) blockers.push('No accepted products in import output.');
 
+const localQaClear = blockers.length === 0 && warnings.length === 0;
+const launchClearReason =
+  'No. This report only validates the local fixture/export output; launch clearance still requires final source identity, ODbL/CosIng legal review, curated batch QA, beta coverage, and reviewer signoff.';
+
 const report = {
   generatedAt: new Date().toISOString(),
   inputPath,
@@ -40,7 +44,9 @@ const report = {
   },
   blockers,
   warnings,
-  launchClear: blockers.length === 0 && warnings.length === 0,
+  localQaClear,
+  launchClear: false,
+  launchClearReason,
 };
 
 mkdirSync(dirname(jsonOutputPath), { recursive: true });
@@ -52,9 +58,10 @@ writeFileSync(
     `Rejected records: ${report.totals.rejectedRecords}\n\n` +
     `Blockers: ${blockers.length ? blockers.join('; ') : 'none'}\n\n` +
     `Warnings: ${warnings.length ? warnings.join('; ') : 'none'}\n\n` +
-    `Launch clear: ${report.launchClear ? 'yes' : 'no'}\n`,
+    `Local fixture QA clear: ${report.localQaClear ? 'yes' : 'no'}\n\n` +
+    `Launch clear: no\n\n` +
+    `Launch clear reason: ${report.launchClearReason}\n`,
 );
 
 console.log(`Wrote ${jsonOutputPath}`);
 console.log(`Blockers ${blockers.length}; warnings ${warnings.length}.`);
-
