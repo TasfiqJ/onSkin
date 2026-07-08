@@ -4,6 +4,11 @@ Status: BLOCKED until dashboard links and privacy-payload evidence are attached.
 
 The beta schema is frozen to answer whether real users reach value, return, trust the product, understand Pro, and can be supported. Do not add new beta analytics properties without updating `apps/mobile/src/lib/analytics/eventRegistry.ts`, this document, and the Phase 9 privacy payload audit.
 
+The local `phase10:beta-analytics-audit` gate now checks the minimum event list
+below against both `ANALYTICS_ALLOWED_EVENTS` and runtime `track(...)` calls in
+non-test app source. A beta event is not considered ready if it is only
+documented or allowlisted.
+
 ## Privacy Rules
 
 - Event properties must be from `ANALYTICS_ALLOWED_PROP_KEYS`.

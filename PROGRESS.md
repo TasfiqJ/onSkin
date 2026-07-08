@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Phase 10 beta analytics audit. `phase10:beta-analytics-audit`
+  now parses the minimum beta event list in
+  `docs/phase-10/beta-event-schema.md` and blocks if any event is only
+  documented or allowlisted without a runtime `track(...)` emission in non-test
+  app source. The schema documents this gate so closed-beta readiness cannot
+  overstate instrumentation coverage. Non-strict Phase 10 analytics still
+  warns, correctly, on missing external dashboard and privacy-payload evidence.
+
 - Verified the full nested scheduler route group on `main`. Codex in-app
   browser Expo web at 320 x 568 confirms fresh free direct `/cycle/settings`,
   `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`,

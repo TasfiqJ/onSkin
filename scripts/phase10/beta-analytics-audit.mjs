@@ -60,12 +60,69 @@ block(
 );
 
 const registryText = exists(registryPath) ? read(registryPath) : '';
+const schemaText = exists(schemaPath) ? read(schemaPath) : '';
 const propRegistry = registryText.match(
   /ANALYTICS_ALLOWED_PROP_KEYS\s*=\s*\[([\s\S]*?)\]\s*as const/,
 );
 const allowed = new Set(
   [...(propRegistry?.[1] ?? '').matchAll(/'([^']+)'/g)].map((match) => match[1]),
 );
+const eventRegistry = registryText.match(
+  /ANALYTICS_ALLOWED_EVENTS\s*=\s*\[([\s\S]*?)\]\s*as const/,
+);
+const allowedEvents = new Set(
+  [...(eventRegistry?.[1] ?? '').matchAll(/'([^']+)'/g)].map((match) => match[1]),
+);
+
+function stripComments(source) {
+  return source.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
+function minimumBetaEvents() {
+  const section = schemaText.match(/## Minimum Event Coverage([\s\S]*?)(?:\n## |$)/);
+  return [...(section?.[1] ?? '').matchAll(/`([a-z0-9_]+)`/g)].map((match) => match[1]);
+}
+
+function runtimeTrackedEvents() {
+  const events = new Set();
+  const runtimeFiles = listFiles('apps/mobile/src').filter(
+    (file) =>
+      /\.(ts|tsx)$/.test(file) &&
+      !/\.(test|spec)\.(ts|tsx)$/.test(file) &&
+      !file.replaceAll('\\', '/').includes('/__tests__/'),
+  );
+
+  for (const file of runtimeFiles) {
+    const relative = file.replace(`${root}\\`, '').replace(`${root}/`, '').replaceAll('\\', '/');
+    const text = stripComments(read(relative));
+    for (const match of text.matchAll(/\btrack\(\s*['"]([a-z0-9_]+)['"]/g)) {
+      events.add(match[1]);
+    }
+  }
+
+  return events;
+}
+
+const betaEvents = minimumBetaEvents();
+const trackedEvents = runtimeTrackedEvents();
+
+block(
+  errors,
+  betaEvents.length >= 30,
+  'Beta event schema must list the minimum V1 beta event coverage.',
+);
+for (const event of betaEvents) {
+  block(
+    errors,
+    allowedEvents.has(event),
+    `Minimum beta event is missing from ANALYTICS_ALLOWED_EVENTS: ${event}.`,
+  );
+  block(
+    errors,
+    trackedEvents.has(event),
+    `Minimum beta event is registered in docs but not emitted by runtime source: ${event}.`,
+  );
+}
 for (const requiredKey of [
   'screen_name',
   'source',
@@ -103,7 +160,7 @@ for (const file of codeFiles) {
   for (const match of text.matchAll(
     /\b(?:track|identify)\(\s*['"][^'"]+['"]\s*,\s*\{([\s\S]*?)\}\s*\)/g,
   )) {
-    const props = match[1].replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+    const props = stripComments(match[1]);
     for (const prop of props.matchAll(/([A-Za-z_$][\w$]*)\s*:/g)) {
       const key = prop[1];
       warn(
