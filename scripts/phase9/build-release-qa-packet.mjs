@@ -44,6 +44,7 @@ function gitStatusExcludingGeneratedPacket() {
 }
 
 const sourceFiles = [
+  '.env.example',
   'package.json',
   'package-lock.json',
   '.github/workflows/security.yml',
@@ -74,7 +75,10 @@ const sourceFiles = [
   'supabase/functions/revenuecat-webhook/index.ts',
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'scripts/phase9/lib.mjs',
+  'scripts/phase9/release-contact-smoke.mjs',
+  'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase9/release-smoke.mjs',
+  'scripts/phase9/rls-adversarial.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
   'scripts/phase9/live-supabase-adversarial.mjs',
   'scripts/phase9/live-edge-auth.mjs',
@@ -85,7 +89,9 @@ const sourceFiles = [
   'scripts/phase9/live-order-report-poll.mjs',
   'scripts/phase9/live-revenuecat-webhook.mjs',
   'scripts/phase9/edge-auth-smoke.mjs',
+  'scripts/phase9/edge-functions-check.mjs',
   'scripts/phase9/data-rights-smoke.mjs',
+  'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/phase9/security-ci-smoke.mjs',
   'scripts/phase9/privacy-payload-audit.mjs',
@@ -98,6 +104,21 @@ const sourceFiles = [
   'docs/phase-9/security-scanner-evidence.md',
   'docs/phase-9/rollout-rollback-plan.md',
   'docs/phase-9/incident-response-plan.md',
+  'docs/phase-9/beta-evidence-summary.md',
+  'docs/phase-9/dependency-sbom.md',
+  'docs/phase-9/release-candidates/README.md',
+  'docs/phase-9/release-candidates/_template/manifest.md',
+  'docs/phase-9/release-candidates/_template/commands.md',
+  'docs/phase-9/release-candidates/_template/automated-verification.md',
+  'docs/phase-9/release-candidates/_template/manual-qa-matrix.md',
+  'docs/phase-9/release-candidates/_template/security-review.md',
+  'docs/phase-9/release-candidates/_template/privacy-review.md',
+  'docs/phase-9/release-candidates/_template/payments-review.md',
+  'docs/phase-9/release-candidates/_template/observability-review.md',
+  'docs/phase-9/release-candidates/_template/store-review-packet.md',
+  'docs/phase-9/release-candidates/_template/rollout-plan.md',
+  'docs/phase-9/release-candidates/_template/incident-plan.md',
+  'docs/phase-9/release-candidates/_template/signoff.md',
 ];
 
 for (const file of sourceFiles)

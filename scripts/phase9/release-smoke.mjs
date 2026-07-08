@@ -47,6 +47,22 @@ const liveHarnessFiles = [
   'scripts/phase9/live-consent-withdrawal.mjs',
 ];
 
+const localVerifierFiles = [
+  'scripts/phase9/release-contact-smoke.mjs',
+  'scripts/phase9/evidence-normalization-smoke.mjs',
+  'scripts/phase9/release-smoke.mjs',
+  'scripts/phase9/rls-adversarial.mjs',
+  'scripts/phase9/edge-auth-smoke.mjs',
+  'scripts/phase9/edge-functions-check.mjs',
+  'scripts/phase9/data-rights-smoke.mjs',
+  'scripts/phase9/consent-withdrawal-smoke.mjs',
+  'scripts/phase9/supabase-policy-lint.mjs',
+  'scripts/phase9/security-ci-smoke.mjs',
+  'scripts/phase9/privacy-payload-audit.mjs',
+  'scripts/phase9/dependency-sbom.mjs',
+  'scripts/phase9/store-build-inspect.mjs',
+];
+
 const requiredFiles = [
   'docs/phase-9/source-of-truth.md',
   'docs/phase-9/data-inventory.md',
@@ -76,6 +92,7 @@ const requiredFiles = [
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
+  ...localVerifierFiles,
   ...liveHarnessFiles,
   'apps/mobile/src/lib/observability/scrub.ts',
   'apps/mobile/src/lib/analytics/eventRegistry.ts',
@@ -296,6 +313,13 @@ block(
     /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
   'Phase 9 release QA packet must ignore only its own generated outputs when recording Git status.',
 );
+for (const file of ['.env.example', ...requiredFiles]) {
+  block(
+    errors,
+    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
+    `Phase 9 release QA packet must hash ${file}.`,
+  );
+}
 block(
   errors,
   has('apps/mobile/src/lib/launch/phase7.ts', /productionSurfaceReady/) &&

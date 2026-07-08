@@ -379,6 +379,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
   - Expected result: The static launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared.
   - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
+- Branch: Phase 8 public-site placeholder store links
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Serve `docs/phase-8/public-site` locally before final store URLs are substituted, open `index.html` and `share.html` at phone width, then tap one App Store/Google Play waitlist fallback.
+  - Expected result: Raw `__APP_STORE_URL__` and `__PLAY_STORE_URL__` tokens are never clickable `href` values. Placeholder store buttons visibly route to `/waitlist.html`; when final production store URLs are substituted, the runtime guard promotes only validated App Store and Play Store HTTPS URLs.
+  - Evidence: Phone-width screenshots, visible-text/link snapshots, click-through URL snapshot, and source-level final-substitution check.
+  - Current local evidence: 2026-07-08 Codex in-app browser at 390 x 700 serves `docs/phase-8/public-site` on localhost, verifies `index.html` and `share.html` render `App Store waitlist` / `Google Play waitlist` with `/waitlist.html` hrefs and `data-store-ready=false`, taps App Store and Google Play fallbacks into the waitlist, records zero horizontal overflow, and source-checks that final App Store / Play Store URL substitution leaves no placeholder tokens while keeping the production-host runtime guard. Evidence and report are in `test-results/human-e2e/2026-07-08/phase8-public-store-link-fallback/` and `docs/e2e-bug-reports/2026-07-08-phase8-public-store-placeholder-hrefs.md`.
 
 ## Flow: Today Routine Completion
 

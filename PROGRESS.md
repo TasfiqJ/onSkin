@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Phase 9 release-engineering QA packet coverage. The packet now
+  hashes `.env.example`, every local Phase 9 verifier script used by the release
+  gate, the beta/dependency evidence docs, and the release-candidate template
+  docs before any RC evidence can be reviewed as current. `phase9:release-smoke`
+  now rejects packet builders that omit those required hash inputs.
+
+- Fixed the Phase 8 static public pages so unresolved App Store / Play Store
+  placeholders are not exposed as clickable `href` destinations. Store buttons
+  now fall back to the waitlist until validated production store URLs are
+  substituted, and the Phase 8 readiness checker rejects raw placeholder store
+  hrefs. Browser evidence is in
+  `test-results/human-e2e/2026-07-08/phase8-public-store-link-fallback/`.
+
 - Hardened the Phase 8 growth/store QA packet input set. The generated packet
   now hashes the Phase 8 public-site fallback pages, Universal/App Links
   templates, store metadata source of truth, support playbook, Apple Ads lab,
