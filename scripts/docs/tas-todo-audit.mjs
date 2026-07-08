@@ -75,6 +75,14 @@ function collectKeys(text, patterns) {
   );
 }
 
+function isLocalOnlyGeneratedKey(key) {
+  return (
+    /_OUT_DIR$/.test(key) ||
+    key === 'PHASE8_STORE_METADATA_PACKET' ||
+    key === 'PHASE9_RELEASE_CANDIDATE_DIR'
+  );
+}
+
 function docHasAny(text, needles) {
   return needles.some((needle) => text.includes(needle));
 }
@@ -203,7 +211,9 @@ if (!/## How Codex Should Use This/.test(forTasText)) {
 const groups = gateGroups.map((group) => {
   const scriptText = collectScriptText(group.scriptDirs);
   const sourceText = `${scriptText}\n${envExampleText}`;
-  const keys = collectKeys(sourceText, group.keyPatterns);
+  const extractedKeys = collectKeys(sourceText, group.keyPatterns);
+  const localOnlyKeys = extractedKeys.filter(isLocalOnlyGeneratedKey);
+  const keys = extractedKeys.filter((key) => !isLocalOnlyGeneratedKey(key));
   const packageScriptsPresent = group.packageScriptNeedles.filter((needle) =>
     packageScripts.includes(needle),
   );
@@ -235,6 +245,7 @@ const groups = gateGroups.map((group) => {
     ...group,
     packageScriptsPresent,
     forTasCovered,
+    localOnlyKeys,
     keys,
     keysMentionedInForTas,
     keysNotMentionedInForTas,
@@ -256,6 +267,7 @@ const audit = {
     gateGroupCount: groups.length,
     coveredGateGroupCount: groups.filter((group) => group.forTasCovered).length,
     extractedKeyCount: groups.reduce((sum, group) => sum + group.keys.length, 0),
+    localOnlyKeyCount: groups.reduce((sum, group) => sum + group.localOnlyKeys.length, 0),
     keyMentionCount: groups.reduce((sum, group) => sum + group.keysMentionedInForTas.length, 0),
     keyNotMentionedCount: groups.reduce(
       (sum, group) => sum + group.keysNotMentionedInForTas.length,
@@ -273,6 +285,7 @@ const audit = {
       packageScriptsPresent,
       forTasNeedles,
       forTasCovered,
+      localOnlyKeys,
       keys,
       keysMentionedInForTas,
       keysNotMentionedInForTas,
@@ -316,6 +329,10 @@ const keySections = groups.flatMap((group) => [
       )
     : '- No machine-detected external evidence keys in this group.',
   '',
+  group.localOnlyKeys.length
+    ? `Local generated-only keys excluded from evidence warnings: ${group.localOnlyKeys.join(', ')}`
+    : 'Local generated-only keys excluded from evidence warnings: none.',
+  '',
 ]);
 
 writeFileSync(
@@ -329,16 +346,19 @@ writeFileSync(
     '',
     'This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the',
     'Tas-owned strict launch evidence gates and records the exact evidence keys',
-    'extracted from phase scripts and `.env.example`. Strict mode fails when a',
-    'phase gate is no longer covered by the founder handoff doc; exact key',
-    'omissions are warnings because the generated inventory itself is the',
-    'canonical machine-readable key list.',
+    'extracted from phase scripts and `.env.example`. Local generated-packet',
+    'outputs and source-contract markers are listed separately and excluded',
+    'from evidence warnings.',
+    'Strict mode fails when a phase gate is no longer covered by the founder',
+    'handoff doc; exact key omissions are warnings because the generated',
+    'inventory itself is the canonical machine-readable key list.',
     '',
     '## Summary',
     '',
     `- Gate groups: ${audit.summary.gateGroupCount}`,
     `- Covered gate groups: ${audit.summary.coveredGateGroupCount}`,
     `- Extracted keys: ${audit.summary.extractedKeyCount}`,
+    `- Local generated-only keys excluded: ${audit.summary.localOnlyKeyCount}`,
     `- Keys named verbatim in FOR_TAS_TO_DO.md: ${audit.summary.keyMentionCount}`,
     `- Keys only in generated inventory: ${audit.summary.keyNotMentionedCount}`,
     `- Blockers: ${audit.summary.blockerCount}`,

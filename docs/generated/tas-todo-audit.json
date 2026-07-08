@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T19:32:25.978Z",
+  "generatedAt": "2026-07-08T19:35:41.698Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,11 +11,12 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 241,
+    "extractedKeyCount": 231,
+    "localOnlyKeyCount": 10,
     "keyMentionCount": 55,
-    "keyNotMentionedCount": 186,
+    "keyNotMentionedCount": 176,
     "blockerCount": 0,
-    "warningCount": 10
+    "warningCount": 8
   },
   "groups": [
     {
@@ -166,13 +167,9 @@
         "phase3:audit-copy:strict"
       ],
       "forTasCovered": true,
-      "keys": [
-        "PHASE3_REVIEW_PACKET_OUT_DIR"
-      ],
+      "keys": [],
       "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
-        "PHASE3_REVIEW_PACKET_OUT_DIR"
-      ]
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase4",
@@ -249,7 +246,6 @@
         "PHASE5_NATIVE_OCR_QA_PASS",
         "PHASE5_NOTIFICATION_QA_PASS",
         "PHASE5_PROGRESS_PHOTO_QA_PASS",
-        "PHASE5_QA_PACKET_OUT_DIR",
         "PHASE5_QA_SIGNOFF",
         "PHASE5_REVENUECAT_NATIVE_QA_PASS",
         "PHASE5_SENTRY_NATIVE_QA_PASS",
@@ -279,9 +275,7 @@
         "PHASE5_SIGNED_OFF_BY",
         "PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS"
       ],
-      "keysNotMentionedInForTas": [
-        "PHASE5_QA_PACKET_OUT_DIR"
-      ]
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase6",
@@ -312,7 +306,6 @@
         "PHASE6_ANDROID_LICENSE_TEST_PASS",
         "PHASE6_FINANCE_SIGNOFF",
         "PHASE6_IOS_SANDBOX_RESTORE_PASS",
-        "PHASE6_PACKET_OUT_DIR",
         "PHASE6_RC_OFFERING_REVIEWED",
         "PHASE6_SIGNED_OFF_BY",
         "PHASE6_WEBHOOK_HMAC_TEST_PASS",
@@ -336,7 +329,6 @@
         "PHASE6_ANDROID_LICENSE_TEST_PASS",
         "PHASE6_FINANCE_SIGNOFF",
         "PHASE6_IOS_SANDBOX_RESTORE_PASS",
-        "PHASE6_PACKET_OUT_DIR",
         "PHASE6_RC_OFFERING_REVIEWED",
         "PHASE6_WEBHOOK_HMAC_TEST_PASS",
         "REVENUECAT_SECRET_API_KEY",
@@ -382,7 +374,6 @@
         "PHASE7_DEFERRED_SURFACES_QA_PASS",
         "PHASE7_DEVICE_QA_PASS",
         "PHASE7_ONBOARDING_CONSENT_QA_PASS",
-        "PHASE7_PACKET_OUT_DIR",
         "PHASE7_PAYMENTS_LIFECYCLE_QA_PASS",
         "PHASE7_PHOTOS_PRIVACY_QA_PASS",
         "PHASE7_PRIVACY_CONTROLS_QA_PASS",
@@ -426,7 +417,6 @@
         "PHASE7_CATALOG_BETA_IMPORT_PASS",
         "PHASE7_CLINICAL_REVIEW_PASS",
         "PHASE7_DEVICE_QA_PASS",
-        "PHASE7_PACKET_OUT_DIR",
         "PHASE7_PRIVACY_EXPORT_DELETE_PASS",
         "PHASE7_REVENUECAT_QA_PASS",
         "PHASE7_SUPABASE_RLS_PASS"
@@ -467,11 +457,9 @@
         "PHASE8_DRY_RUN_PASS",
         "PHASE8_IOS_UNIVERSAL_LINKS_PASS",
         "PHASE8_LAUNCH_DASHBOARD_READY",
-        "PHASE8_PACKET_OUT_DIR",
         "PHASE8_PLAY_STORE_PACKET_PASS",
         "PHASE8_SHARE_CARD_DEVICE_QA_PASS",
         "PHASE8_SIGNED_OFF_BY",
-        "PHASE8_STORE_METADATA_PACKET",
         "PHASE8_SUPPORT_RESPONSE_PASS"
       ],
       "keysMentionedInForTas": [],
@@ -491,11 +479,9 @@
         "PHASE8_DRY_RUN_PASS",
         "PHASE8_IOS_UNIVERSAL_LINKS_PASS",
         "PHASE8_LAUNCH_DASHBOARD_READY",
-        "PHASE8_PACKET_OUT_DIR",
         "PHASE8_PLAY_STORE_PACKET_PASS",
         "PHASE8_SHARE_CARD_DEVICE_QA_PASS",
         "PHASE8_SIGNED_OFF_BY",
-        "PHASE8_STORE_METADATA_PACKET",
         "PHASE8_SUPPORT_RESPONSE_PASS"
       ]
     },
@@ -552,11 +538,9 @@
         "PHASE9_OBSERVABILITY_PAYLOAD_PASS",
         "PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED",
         "PHASE9_ORDER_REPORT_POLL_PASS",
-        "PHASE9_PACKET_OUT_DIR",
         "PHASE9_PLAY_PACKET_PASS",
         "PHASE9_PUBLIC_FORMS_PASS",
         "PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX",
-        "PHASE9_RELEASE_CANDIDATE_DIR",
         "PHASE9_REVENUECAT_NATIVE_QA_PASS",
         "PHASE9_REVENUECAT_WEBHOOK_PASS",
         "PHASE9_RLS_PRODUCTION_PASS",
@@ -610,11 +594,9 @@
         "PHASE9_OBSERVABILITY_PAYLOAD_PASS",
         "PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED",
         "PHASE9_ORDER_REPORT_POLL_PASS",
-        "PHASE9_PACKET_OUT_DIR",
         "PHASE9_PLAY_PACKET_PASS",
         "PHASE9_PUBLIC_FORMS_PASS",
         "PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX",
-        "PHASE9_RELEASE_CANDIDATE_DIR",
         "PHASE9_REVENUECAT_NATIVE_QA_PASS",
         "PHASE9_REVENUECAT_WEBHOOK_PASS",
         "PHASE9_RLS_PRODUCTION_PASS",
@@ -658,7 +640,6 @@
         "PHASE10_BETA_TERMS_PASS",
         "PHASE10_CATALOG_BETA_PASS",
         "PHASE10_DASHBOARDS_PASS",
-        "PHASE10_PACKET_OUT_DIR",
         "PHASE10_PAYMENT_QA_PASS",
         "PHASE10_PHASE9_BETA_CANDIDATE_PASS",
         "PHASE10_PLAY_12_TESTERS_14_DAYS_SCHEDULED",
@@ -677,7 +658,6 @@
         "PHASE10_BETA_TERMS_PASS",
         "PHASE10_CATALOG_BETA_PASS",
         "PHASE10_DASHBOARDS_PASS",
-        "PHASE10_PACKET_OUT_DIR",
         "PHASE10_PAYMENT_QA_PASS",
         "PHASE10_PHASE9_BETA_CANDIDATE_PASS",
         "PHASE10_PLAY_12_TESTERS_14_DAYS_SCHEDULED",
@@ -715,7 +695,6 @@
         "PHASE11_CREATOR_DISCLOSURE_PASS",
         "PHASE11_INCIDENT_ROLLBACK_PASS",
         "PHASE11_MONITORING_PASS",
-        "PHASE11_PACKET_OUT_DIR",
         "PHASE11_PHASE10_EXIT_PASS",
         "PHASE11_PHASE9_RC_SIGNOFF_PASS",
         "PHASE11_PRODUCTION_ENV_PASS",
@@ -734,7 +713,6 @@
         "PHASE11_CREATOR_DISCLOSURE_PASS",
         "PHASE11_INCIDENT_ROLLBACK_PASS",
         "PHASE11_MONITORING_PASS",
-        "PHASE11_PACKET_OUT_DIR",
         "PHASE11_PHASE10_EXIT_PASS",
         "PHASE11_PHASE9_RC_SIGNOFF_PASS",
         "PHASE11_PRODUCTION_ENV_PASS",
@@ -752,14 +730,12 @@
   "blockers": [],
   "warnings": [
     "Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 3 legal and reviewer signoff has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 5 native build and device QA has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 7 core loop launch gates has 17 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 8 growth and store readiness has 21 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 9 release engineering has 55 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 10 closed beta has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 11 public launch has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
+    "Phase 6 payments and RevenueCat has 14 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 7 core loop launch gates has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 8 growth and store readiness has 19 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 9 release engineering has 53 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 10 closed beta has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 11 public launch has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
   ]
 }
