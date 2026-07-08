@@ -44,11 +44,6 @@ export function ToggleSwitch({
   const webActivationProps =
     Platform.OS === 'web'
       ? ({
-          onClick: (event: { preventDefault?: () => void; stopPropagation?: () => void }) => {
-            event.preventDefault?.();
-            event.stopPropagation?.();
-            activate();
-          },
           onKeyDown: (event: {
             key?: string;
             preventDefault?: () => void;
@@ -71,7 +66,7 @@ export function ToggleSwitch({
       aria-checked={value}
       aria-disabled={disabled ? true : undefined}
       disabled={disabled}
-      onPress={Platform.OS === 'web' ? undefined : activate}
+      onPress={activate}
       className={cn('h-12 min-h-[44px] w-[52px] items-center justify-center', className)}
       style={(state) => [
         TOUCH_TARGET_STYLE,

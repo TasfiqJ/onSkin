@@ -49,6 +49,7 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
 
 const POLICY_LINK_UNAVAILABLE_MESSAGE =
   'Link unavailable. We could not open this policy link. Please try again.';
+const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
@@ -60,6 +61,8 @@ const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 
 type StaticRouteHref = Extract<Href, string>;
+type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup';
+type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';
 
 function Row({
   label,
@@ -170,6 +173,11 @@ export default function YouScreen() {
   const [savingPrivacy, setSavingPrivacy] = useState<
     'marketing' | 'data_sharing' | 'photo_cloud_backup' | null
   >(null);
+  const [privacyFeedback, setPrivacyFeedback] = useState<{
+    key: PrivacyFeedbackKey;
+    placement: PrivacyFeedbackPlacement;
+    message: string;
+  } | null>(null);
   const [exportFeedback, setExportFeedback] = useState<string | null>(null);
   const [policyFeedback, setPolicyFeedback] = useState<{
     key: PolicyLinkKey;
@@ -276,10 +284,27 @@ export default function YouScreen() {
     forYouRows.push({ label: 'Shoppable routines', href: '/commerce/stacks' });
   }
 
-  async function setConsent(type: 'marketing' | 'data_sharing', granted: boolean) {
+  function renderPrivacyFeedback(key: PrivacyFeedbackKey, placement: PrivacyFeedbackPlacement) {
+    if (privacyFeedback?.key !== key || privacyFeedback.placement !== placement) return null;
+
+    return (
+      <Text accessibilityRole="alert" variant="bodySm" tone="muted" className="pb-2 text-center">
+        {PRIVACY_CHOICE_SAVE_FAILED_TITLE}
+        {'\n'}
+        {privacyFeedback.message}
+      </Text>
+    );
+  }
+
+  async function setConsent(
+    type: 'marketing' | 'data_sharing',
+    granted: boolean,
+    placement: PrivacyFeedbackPlacement,
+  ) {
     if (savingPrivacyRef.current) return;
     savingPrivacyRef.current = true;
     setSavingPrivacy(type);
+    setPrivacyFeedback(null);
     try {
       await applySettingsPrivacyChoice({
         save: async () => {
@@ -308,8 +333,10 @@ export default function YouScreen() {
           if (type === 'data_sharing') {
             qc.setQueryData<boolean>(['commerceConsent'], granted);
           }
+          setPrivacyFeedback(null);
         },
-        onFailure: () => Alert.alert('Choice not saved', privacyChoiceUserMessage()),
+        onFailure: () =>
+          setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() }),
         onSettled: async () => {
           await qc.invalidateQueries({ queryKey: ['consents'] });
           if (type === 'data_sharing') {
@@ -327,6 +354,7 @@ export default function YouScreen() {
     if (savingPrivacyRef.current) return;
     savingPrivacyRef.current = true;
     setSavingPrivacy('photo_cloud_backup');
+    setPrivacyFeedback(null);
     try {
       await applySettingsPrivacyChoice({
         save: async () => {
@@ -341,8 +369,14 @@ export default function YouScreen() {
               { text: 'Got it' },
             ]);
           }
+          setPrivacyFeedback(null);
         },
-        onFailure: () => Alert.alert('Choice not saved', privacyChoiceUserMessage()),
+        onFailure: () =>
+          setPrivacyFeedback({
+            key: 'photo_cloud_backup',
+            placement: 'security',
+            message: privacyChoiceUserMessage(),
+          }),
         onSettled: () => qc.invalidateQueries({ queryKey: ['photo_cloud_backup'] }),
       });
     } finally {
@@ -556,9 +590,10 @@ export default function YouScreen() {
                 accessibilityLabel="Share data with partners for where-to-buy"
                 value={commerceConsent.data ?? false}
                 disabled={savingPrivacy === 'data_sharing'}
-                onChange={(v) => void setConsent('data_sharing', v)}
+                onChange={(v) => void setConsent('data_sharing', v, 'commerce')}
               />
             </Row>
+            {renderPrivacyFeedback('data_sharing', 'commerce')}
           </Card>
         ) : null}
 
@@ -589,6 +624,7 @@ export default function YouScreen() {
               onChange={(v) => void setCloud(v)}
             />
           </Row>
+          {renderPrivacyFeedback('photo_cloud_backup', 'security')}
         </Card>
 
         <Card className="mt-4">
@@ -617,21 +653,25 @@ export default function YouScreen() {
               accessibilityLabel="Marketing emails"
               value={consents.data?.marketing ?? false}
               disabled={savingPrivacy === 'marketing'}
-              onChange={(v) => void setConsent('marketing', v)}
+              onChange={(v) => void setConsent('marketing', v, 'privacy')}
             />
           </Row>
+          {renderPrivacyFeedback('marketing', 'privacy')}
           {phase7Flags.commerce ? (
-            <Row
-              label="Share data with partners"
-              hint="Separate from collection (MHMDA). Off by default."
-            >
-              <Toggle
-                accessibilityLabel="Share data with partners"
-                value={commerceConsent.data ?? false}
-                disabled={savingPrivacy === 'data_sharing'}
-                onChange={(v) => void setConsent('data_sharing', v)}
-              />
-            </Row>
+            <>
+              <Row
+                label="Share data with partners"
+                hint="Separate from collection (MHMDA). Off by default."
+              >
+                <Toggle
+                  accessibilityLabel="Share data with partners"
+                  value={commerceConsent.data ?? false}
+                  disabled={savingPrivacy === 'data_sharing'}
+                  onChange={(v) => void setConsent('data_sharing', v, 'privacy')}
+                />
+              </Row>
+              {renderPrivacyFeedback('data_sharing', 'privacy')}
+            </>
           ) : null}
           <Row
             label="Photos & the no-AI-score promise"

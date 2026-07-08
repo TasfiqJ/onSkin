@@ -53,6 +53,19 @@ describe('settings privacy choice application', () => {
     const cloudAnalyticsIndex = source.indexOf("track('cloud_backup_opted_in');");
 
     expect(source).toContain('applySettingsPrivacyChoice');
+    expect(source).toContain("type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup';");
+    expect(source).toContain("type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';");
+    expect(source).toContain("const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';");
+    expect(source).toContain('const [privacyFeedback, setPrivacyFeedback] = useState<{');
+    expect(source).toContain('function renderPrivacyFeedback(');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('{PRIVACY_CHOICE_SAVE_FAILED_TITLE}');
+    expect(source).toContain('setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() })');
+    expect(source).toContain("placement: 'security'");
+    expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'commerce')}");
+    expect(source).toContain("onChange={(v) => void setConsent('marketing', v, 'privacy')}");
+    expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'privacy')}");
+    expect(source).not.toContain("Alert.alert('Choice not saved'");
     expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
     expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
     expect(source).toContain("disabled={savingPrivacy === 'photo_cloud_backup'}");

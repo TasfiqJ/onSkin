@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened settings privacy/security choice recovery and shared switch
+  activation. The You-tab Marketing emails, partner data-sharing, and cloud
+  backup save-failure paths now render route-owned inline `Choice not saved`
+  feedback instead of blocking native alerts, and the shared `ToggleSwitch`
+  uses `onPress` across platforms so Expo web pointer/touch activation works
+  like native taps. Codex in-app browser Expo web E2E at 320 x 568 verifies
+  `/settings/privacy` redirects to `/you?section=privacy`, pointer tap and
+  keyboard activation on Marketing emails show inline `role="alert"` recovery,
+  keep the switch unchecked on failed persistence, open no JS dialog, leak no
+  raw backend text, preserve a 52 x 48 switch target, and keep zero horizontal
+  overflow. Evidence is in
+  `test-results/human-e2e/2026-07-08/settings-privacy-choice-inline-feedback/`.
+  Tracked report:
+  `docs/e2e-bug-reports/2026-07-08-settings-privacy-choice-inline-feedback.md`.
+
 - Hardened the Today empty-routine and compact PM cycle-strip states. Today no
   longer treats the routine-plan example preview as real check-off data: when
   the local shelf has no real routine, it shows `No routine yet` with a direct
