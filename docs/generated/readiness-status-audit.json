@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-07-08T23:38:38.038Z",
+  "status": "pass",
+  "strict": true,
+  "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
+  "evidenceDate": "2026-07-08",
+  "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
+  "expectedMobileTestFiles": 171,
+  "expectedMobileTests": 1750,
+  "actualMobileTestFiles": 171,
+  "expectedTestPhrase": "171 mobile test files / 1750 tests",
+  "docs": [
+    {
+      "path": "LAUNCH_READINESS.md",
+      "date": "2026-07-08",
+      "expectedDate": "2026-07-08",
+      "hasExpectedTestPhrase": true,
+      "stalePatterns": [],
+      "missingCommands": []
+    },
+    {
+      "path": "BLOCKERS.md",
+      "date": "2026-07-08",
+      "expectedDate": "2026-07-08",
+      "hasExpectedTestPhrase": true,
+      "stalePatterns": [],
+      "missingCommands": []
+    }
+  ],
+  "requiredLaunchCommands": [
+    "npm run typecheck",
+    "npm run lint",
+    "npm test",
+    "npm run docs:source-packet-audit:check",
+    "npm run docs:tas-todo-audit:check",
+    "npm run e2e:human:manifest:check",
+    "npm run phase9:verify",
+    "npm run phase10-11:verify"
+  ],
+  "requiredPackageScripts": [
+    "docs:readiness-status-audit",
+    "docs:readiness-status-audit:strict",
+    "docs:readiness-status-audit:check"
+  ],
+  "summary": {
+    "blockerCount": 0,
+    "warningCount": 0,
+    "checkedDocCount": 2
+  },
+  "blockers": [],
+  "warnings": []
+}

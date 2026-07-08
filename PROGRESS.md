@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added a launch-readiness freshness audit for source-of-truth drift. The new
+  `docs:readiness-status-audit:check` gate verifies `LAUNCH_READINESS.md` and
+  `BLOCKERS.md` match the latest committed human-E2E evidence date, name the
+  non-mutating docs/E2E freshness checks, and do not retain stale mobile test
+  baselines. The launch docs now reflect the current 171 mobile test files /
+  1750 tests verification baseline.
+
 - Cleared the harsher 320 x 568 / 170% compact text-pressure route audit.
   The first sweep found floating-tab `Progress` label overflow, Shelf filter
   clipping, and Shelf no-match recovery peeking; iterative reruns also exposed

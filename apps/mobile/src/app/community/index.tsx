@@ -179,6 +179,8 @@ export default function SkinNotesHub() {
         >
           {groups.map((g, groupIndex) => {
             const keepSectionBelowFold = microShortCommunity && groupIndex > 0;
+            const keepUltraShortNarrowSectionBelowFold =
+              ultraShortCommunity && narrowCompactCommunity && groupIndex > 0;
             const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;
             const keepNextSectionBelowFold =
               narrowCompactCommunity && g.topic.slug === 'sensitive-skin';
@@ -189,6 +191,8 @@ export default function SkinNotesHub() {
                 style={
                   keepSectionBelowFold
                     ? { marginTop: 112 }
+                    : keepUltraShortNarrowSectionBelowFold
+                      ? { marginTop: 176 }
                     : keepNarrowSectionBelowFold
                       ? { marginTop: 144 }
                       : keepNextSectionBelowFold

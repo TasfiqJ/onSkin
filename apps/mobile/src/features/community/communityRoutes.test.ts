@@ -56,12 +56,19 @@ describe('Community route contracts', () => {
     expect(source).toContain('short={shortCommunity}');
     expect(source).toContain('{groups.map((g, groupIndex) => {');
     expect(source).toContain('const keepSectionBelowFold = microShortCommunity && groupIndex > 0;');
+    expect(source).toContain('const keepUltraShortNarrowSectionBelowFold =');
+    expect(source).toContain(
+      'ultraShortCommunity && narrowCompactCommunity && groupIndex > 0;',
+    );
     expect(source).toContain(
       'const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;',
     );
     expect(source).toContain('const keepNextSectionBelowFold =');
     expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
     expect(source).toContain('keepSectionBelowFold\n                    ? { marginTop: 112 }');
+    expect(source).toContain(
+      'keepUltraShortNarrowSectionBelowFold\n                      ? { marginTop: 176 }',
+    );
     expect(source).toContain(
       'keepNarrowSectionBelowFold\n                      ? { marginTop: 144 }',
     );

@@ -1,6 +1,6 @@
 # Launch Readiness
 
-Date: 2026-07-07
+Date: 2026-07-08
 
 This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.
@@ -51,10 +51,10 @@ Fresh verification on 2026-07-08:
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 170 mobile test files, 1744 tests.
+- `npm test` passed: 171 mobile test files / 1750 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 170 test files, 1744 tests.
+- `npm --workspace apps/mobile run test` passed: 171 test files / 1750 tests.
 - `npm run phase3:verify`, `npm run phase4:verify`,
   `npm run phase5:verify`, `npm run phase6:verify`,
   `npm run phase7:verify`, `npm run phase8:verify`,
@@ -72,11 +72,15 @@ Fresh verification on 2026-07-08:
   have active `docs/` mirrors, verifies all 10 mirrors are byte-identical, and
   verifies all mirrored packet docs are referenced by the root source-of-truth
   lists in `AGENTS.md` or `CLAUDE.md`.
+- `npm run docs:source-packet-audit:check` passed as the non-mutating freshness
+  gate for the committed source-packet audit.
 - `npm run docs:tas-todo-audit:strict` passed and wrote
   `docs/generated/tas-todo-audit.{json,md}`. The audit verifies
   `docs/FOR_TAS_TO_DO.md` still covers the Phase 2-11 Tas-owned launch
   evidence gate groups and records the exact machine-extracted key inventory
   from phase scripts and `.env.example`.
+- `npm run docs:tas-todo-audit:check` passed as the non-mutating freshness gate
+  for the committed Tas-owned evidence inventory.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 320 x 480 current-main route rerun,
@@ -84,6 +88,8 @@ Fresh verification on 2026-07-08:
   320 x 430 first-session activation. It does not replace physical iOS/Android
   device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
   StoreKit/Play Billing, or live Supabase release gates.
+- `npm run e2e:human:manifest:check` passed as the non-mutating local human-E2E
+  evidence freshness gate.
 - `npm run phase7:verify` passed non-strict core-loop code gates and refreshed
   `docs/phase-7/generated/core-loop-qa-packet.*` for the current Today and
   Progress route hashes. Strict Phase 7 remains blocked by missing final
