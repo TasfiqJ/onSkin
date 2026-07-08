@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Trend consent failure recovery. The `/trend/optin` save and
+  withdrawal failure path now relies on the existing route-owned
+  `accessibilityRole="alert"` panel instead of also firing a blocking native
+  `Alert.alert`, so compact-phone recovery stays polished and retryable. The
+  Trend route contract now rejects native alerts in that path. In-app browser
+  Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`,
+  `EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE=grant_once,revoke_once`, and
+  `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` verifies failed grant and
+  failed withdrawal show inline `Choice not saved` copy with no JS/system dialog,
+  keep the switch state honest, clear on retry, keep the switch 52 x 48, and
+  have zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-08/trend-consent-failure-inline-feedback/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-trend-consent-native-alert.md`.
+
 - Hardened single-photo Progress detail sharing on compact phones. The detail
   route no longer relies on a platform `Alert.alert` confirmation that can be
   invisible/inert on Expo web; it uses a route-owned confirmation panel and

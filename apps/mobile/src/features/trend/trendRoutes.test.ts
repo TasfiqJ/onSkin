@@ -61,7 +61,7 @@ describe('Trend route contracts', () => {
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('TREND_COPY.optIn.saveFailedTitle');
     expect(source).toContain('TREND_COPY.optIn.saveFailedBody');
-    expect(source).toContain('Alert.alert(TREND_COPY.optIn.saveFailedTitle');
+    expect(source).not.toContain('Alert.alert');
     expect(source).toContain(
       "invalidate: () => qc.invalidateQueries({ queryKey: ['trendConsent'] })",
     );

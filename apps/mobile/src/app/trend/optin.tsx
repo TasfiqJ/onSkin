@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyTrendConsentChoice } from '@/features/trend/applyConsentChoice';
@@ -116,7 +116,6 @@ export default function TrendOptInScreen() {
         invalidate: () => qc.invalidateQueries({ queryKey: ['trendConsent'] }),
         onFailure: () => {
           setSaveFailed(true);
-          Alert.alert(TREND_COPY.optIn.saveFailedTitle, TREND_COPY.optIn.saveFailedBody);
         },
       });
       if (saved) {
