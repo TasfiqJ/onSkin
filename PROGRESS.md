@@ -16,7 +16,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   actions complete on narrow phones. Focused Ask/Community/Shelf/navigation/chip
   contracts pass, and the final 49-route sweep reports zero failed routes with
   evidence in
-  `test-results/human-e2e/2026-07-08/text-pressure-170-compact-568-postfix-8/`
+  `test-results/human-e2e/2026-07-08/text-pressure-170-compact-568-postfix-9/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-170-compact-568-clearance.md`.
 
