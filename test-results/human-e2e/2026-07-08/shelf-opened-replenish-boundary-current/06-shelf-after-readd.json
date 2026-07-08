@@ -1,0 +1,155 @@
+{
+  "bodyText": "Shelf\n1 product\nAll\nActives\nExpiring\nEverything on your shelf, soonest to replace first.\nFIRST ROUTINE\nYour routine is ready to draft.\nEven one product can start an honest AM/PM draft. Missing steps stay visible, not invented.\nBuild my routine\nBoundary Vitamin C Serum\nRoutineKind E2E · opened Jul · 3 mo PAO\nOct 2026\nView archive (1) →\nScan a barcode\nToday\nProgress\nShelf\nYou",
+  "controls": [
+    {
+      "ariaLabel": "All",
+      "bottom": 0,
+      "height": 0,
+      "text": "All",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Actives",
+      "bottom": 0,
+      "height": 0,
+      "text": "Actives",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Expiring",
+      "bottom": 0,
+      "height": 0,
+      "text": "Expiring",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 0,
+      "height": 0,
+      "text": "Build my routine",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Boundary Vitamin C Serum, Oct 2026",
+      "bottom": 0,
+      "height": 0,
+      "text": "Boundary Vitamin C SerumRoutineKind E2E · opened Jul · 3 mo PAOOct 2026",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "View archive, 1 archived product",
+      "bottom": 0,
+      "height": 0,
+      "text": "View archive (1) →",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 0,
+      "height": 0,
+      "text": "Scan a barcode",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "All",
+      "bottom": 110,
+      "height": 48,
+      "text": "All",
+      "visible": true,
+      "width": 55,
+      "x": 24,
+      "y": 62
+    },
+    {
+      "ariaLabel": "Actives",
+      "bottom": 110,
+      "height": 48,
+      "text": "Actives",
+      "visible": true,
+      "width": 91,
+      "x": 89,
+      "y": 62
+    },
+    {
+      "ariaLabel": "Expiring",
+      "bottom": 110,
+      "height": 48,
+      "text": "Expiring",
+      "visible": true,
+      "width": 97,
+      "x": 190,
+      "y": 62
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 373,
+      "height": 56,
+      "text": "Build my routine",
+      "visible": true,
+      "width": 238,
+      "x": 41,
+      "y": 317
+    },
+    {
+      "ariaLabel": "Boundary Vitamin C Serum, Oct 2026",
+      "bottom": 577,
+      "height": 154,
+      "text": "Boundary Vitamin C SerumRoutineKind E2E · opened Jul · 3 mo PAOOct 2026",
+      "visible": true,
+      "width": 238,
+      "x": 41,
+      "y": 423
+    },
+    {
+      "ariaLabel": "View archive, 1 archived product",
+      "bottom": 666,
+      "height": 48,
+      "text": "View archive (1) →",
+      "visible": false,
+      "width": 272,
+      "x": 24,
+      "y": 618
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 742,
+      "height": 52,
+      "text": "Scan a barcode",
+      "visible": false,
+      "width": 168,
+      "x": 76,
+      "y": 690
+    }
+  ],
+  "hasArchiveLink": true,
+  "hasBoundaryCountdown": false,
+  "hasOpenedCurrentMonth": true,
+  "hasProduct": true,
+  "hasReplaceAction": false,
+  "hasScarcityCopy": false,
+  "hasThreeMonthPao": true,
+  "overflowX": 0,
+  "productNameOccurrences": 1,
+  "url": "http://localhost:8148/shelf"
+}

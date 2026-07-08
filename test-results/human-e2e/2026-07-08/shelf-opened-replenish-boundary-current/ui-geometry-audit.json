@@ -1,0 +1,47 @@
+[
+  {
+    "file": "01-manual-initial.json",
+    "url": "http://localhost:8148/shelf/manual?e2e=opened-replenish-boundary",
+    "overflowX": 0,
+    "sub44Controls": [],
+    "minVisibleControlHeight": null
+  },
+  {
+    "file": "02-opened-sheet-initial.json",
+    "url": "http://localhost:8148/shelf/opened",
+    "overflowX": 0,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "03-opened-boundary-configured.json",
+    "url": "http://localhost:8148/shelf/opened",
+    "overflowX": 0,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "04-shelf-boundary-product.json",
+    "url": "http://localhost:8148/shelf",
+    "overflowX": 0,
+    "hasScarcityCopy": false,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "05-replenish-boundary-prompt.json",
+    "url": "http://localhost:8148/shelf/replenish?id=05b1742d-0e3c-46e5-b1db-04ccf0d3a5f0",
+    "overflowX": 0,
+    "hasScarcityCopy": false,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "06-shelf-after-readd.json",
+    "url": "http://localhost:8148/shelf",
+    "overflowX": 0,
+    "hasScarcityCopy": false,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  }
+]

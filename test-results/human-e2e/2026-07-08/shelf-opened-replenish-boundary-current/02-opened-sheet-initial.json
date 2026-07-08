@@ -1,0 +1,128 @@
+{
+  "bodyText": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nPRODUCT NAME\nBRAND\nCATEGORY\nChoose\n▾\nINGREDIENTS · optional, we’ll find the actives\nPick a category and we'll estimate the PAO. You can change it next.\nContinue\n◴\nx\nWhen did you open it?\nThis starts the freshness clock. Not sure? We'll estimate from when you added it.\n✓\nJust opened it\nClock starts today\nPick a date\nI opened it earlier\nNot opened yet\nNo clock. We'll show shelf life\nPAO not set\ntap to set\n✎\nAdd to shelf",
+  "controls": [
+    {
+      "ariaLabel": "Cancel",
+      "bottom": 56,
+      "height": 48,
+      "role": "button",
+      "selected": null,
+      "text": "x",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaLabel": "Category",
+      "bottom": 280,
+      "height": 50,
+      "role": "button",
+      "selected": null,
+      "text": "Choose▾",
+      "visible": true,
+      "width": 136,
+      "x": 160,
+      "y": 230
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 557,
+      "height": 56,
+      "role": "button",
+      "selected": null,
+      "text": "Continue",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 501
+    },
+    {
+      "ariaLabel": "Close",
+      "bottom": 101,
+      "height": 48,
+      "role": "button",
+      "selected": null,
+      "text": "x",
+      "visible": true,
+      "width": 48,
+      "x": 244,
+      "y": 53
+    },
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    {
+      "ariaLabel": "Edit period after opening",
+      "bottom": 601,
+      "height": 70,
+      "role": "button",
+      "selected": null,
+      "text": "PAO not settap to set✎",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 531
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 681,
+      "height": 56,
+      "role": "button",
+      "selected": null,
+      "text": "Add to shelf",
+      "visible": false,
+      "width": 264,
+      "x": 28,
+      "y": 625
+    }
+  ],
+  "coreChoiceControls": [
+    {
+      "ariaLabel": null,
+      "bottom": 335,
+      "height": 80,
+      "role": "radio",
+      "selected": null,
+      "text": "✓Just opened itClock starts today",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 255
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 423,
+      "height": 78,
+      "role": "radio",
+      "selected": null,
+      "text": "Pick a dateI opened it earlier",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 345
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 511,
+      "height": 78,
+      "role": "radio",
+      "selected": null,
+      "text": "Not opened yetNo clock. We'll show shelf life",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 433
+    }
+  ],
+  "hasAddToShelf": true,
+  "hasCoreChoices": true,
+  "hasHeader": true,
+  "hasPaoRow": true,
+  "overflowX": 0,
+  "url": "http://localhost:8148/shelf/opened",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

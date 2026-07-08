@@ -641,6 +641,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   not replace native barcode camera/OCR QA, live Open Beauty Facts lookup,
   Supabase `shelf_scans` insert/RLS evidence, or real-device safe-area and
   screen-reader QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the Shelf
+  opened-date and replenishment boundary branch. `/shelf/opened` shows all three
+  core opened-state choices before PAO/save controls on a short phone, a
+  `3 months ago` + `3 mo` PAO boundary product produces `0 days left`, and the
+  fixed replenish prompt explains the trigger as `PAO or printed date` with
+  `not an alarm` copy instead of manufactured scarcity. `Re-add the same one`
+  resets the active unit to `opened Jul`, `3 mo PAO`, and `Oct 2026` while
+  preserving one archived prior unit. Evidence and the bug report are in
+  `test-results/human-e2e/2026-07-08/shelf-opened-replenish-boundary-current/`
+  and `docs/e2e-bug-reports/2026-07-08-shelf-replenish-scarcity-copy.md`; this
+  does not replace native iOS/Android bottom-sheet, Dynamic Type, screen-reader,
+  or restart-persistence QA.
 - 2026-07-08: In-app browser Expo web E2E at 320 x 568 covers Shelf OCR label
   capture failure recovery with `EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE=once`.
   The route now avoids Shelf OCR native/system alert calls, shows inline

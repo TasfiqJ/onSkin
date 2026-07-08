@@ -1,0 +1,153 @@
+{
+  "bodyText": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nPRODUCT NAME\nBRAND\nCATEGORY\nChoose\n▾\nINGREDIENTS · optional, we’ll find the actives\nPick a category and we'll estimate the PAO. You can change it next.\nContinue\n◴\nx\nWhen did you open it?\nThis starts the freshness clock. Not sure? We'll estimate from when you added it.\nJust opened it\nClock starts today\n✓\nPick a date\n3 months ago\n2 weeks ago\n1 month ago\n3 months ago\n6 months ago\nNot opened yet\nNo clock. We'll show shelf life\nLasts ~3 months opened\nfrom label · tap to change\n✎\nAdd to shelf",
+  "controls": [
+    {
+      "ariaLabel": "Cancel",
+      "bottom": 56,
+      "height": 48,
+      "role": "button",
+      "text": "x",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaLabel": "Category",
+      "bottom": 280,
+      "height": 50,
+      "role": "button",
+      "text": "Choose▾",
+      "visible": true,
+      "width": 136,
+      "x": 160,
+      "y": 230
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 557,
+      "height": 56,
+      "role": "button",
+      "text": "Continue",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 501
+    },
+    {
+      "ariaLabel": "Close",
+      "bottom": -221,
+      "height": 48,
+      "role": "button",
+      "text": "x",
+      "visible": false,
+      "width": 48,
+      "x": 244,
+      "y": -269
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 10,
+      "height": 78,
+      "role": "radio",
+      "text": "Just opened itClock starts today",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": -67
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 100,
+      "height": 80,
+      "role": "radio",
+      "text": "✓Pick a date3 months ago",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 20
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 158,
+      "height": 48,
+      "role": "button",
+      "text": "2 weeks ago",
+      "visible": true,
+      "width": 119,
+      "x": 32,
+      "y": 110
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 158,
+      "height": 48,
+      "role": "button",
+      "text": "1 month ago",
+      "visible": true,
+      "width": 119,
+      "x": 159,
+      "y": 110
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 214,
+      "height": 48,
+      "role": "button",
+      "text": "3 months ago",
+      "visible": true,
+      "width": 125,
+      "x": 32,
+      "y": 166
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 270,
+      "height": 48,
+      "role": "button",
+      "text": "6 months ago",
+      "visible": true,
+      "width": 127,
+      "x": 32,
+      "y": 222
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 358,
+      "height": 78,
+      "role": "radio",
+      "text": "Not opened yetNo clock. We'll show shelf life",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 280
+    },
+    {
+      "ariaLabel": "Edit period after opening",
+      "bottom": 448,
+      "height": 70,
+      "role": "button",
+      "text": "Lasts ~3 months openedfrom label · tap to change✎",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 378
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 528,
+      "height": 56,
+      "role": "button",
+      "text": "Add to shelf",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 472
+    }
+  ],
+  "hasPaoThree": true,
+  "hasSourceLabel": true,
+  "hasThreeMonthsAgo": true,
+  "overflowX": 0,
+  "url": "http://localhost:8148/shelf/opened"
+}

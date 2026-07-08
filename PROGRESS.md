@@ -4160,6 +4160,29 @@ This does not replace native iOS/Android OS permission-sheet, real
 `Linking.openSettings()` handoff, barcode camera, OCR camera, or physical-device
 safe-area QA.
 
+### Shelf opened-date/replenish boundary evidence (2026-07-08)
+
+Fixed the Shelf replenish prompt so PAO/expiry-triggered replacements do not use
+manufactured scarcity copy. The previous prompt could say a product was
+`nearly finished` or `running low` even when the trigger was a freshness
+boundary; `/shelf/replenish` now frames the branch around PAO or printed-date
+freshness, says it is not an alarm, and keeps similar options behind the
+separate commerce consent.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8148 with
+`EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. The run added
+`Boundary Vitamin C Serum`, confirmed `/shelf/opened` shows all three core
+opened-state choices before PAO/save controls on a short phone, set
+`3 months ago` plus `3 mo` PAO, confirmed Shelf showed `0 days left`, opened the
+replenish prompt, and confirmed PAO/printed-date copy with no scarcity wording.
+`Re-add the same one` archived the boundary unit and created one active fresh
+unit showing `opened Jul`, `3 mo PAO`, and `Oct 2026`. Evidence and the bug
+report are in
+`test-results/human-e2e/2026-07-08/shelf-opened-replenish-boundary-current/`
+and `docs/e2e-bug-reports/2026-07-08-shelf-replenish-scarcity-copy.md`. This
+does not replace native iOS/Android bottom-sheet, Dynamic Type, screen-reader,
+safe-area, or restart-persistence QA.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

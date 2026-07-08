@@ -1,0 +1,115 @@
+{
+  "bodyText": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nPRODUCT NAME\nBRAND\nCATEGORY\nChoose\n▾\nINGREDIENTS · optional, we’ll find the actives\nPick a category and we'll estimate the PAO. You can change it next.\nContinue\n◴\nx\nWhen did you open it?\nThis starts the freshness clock. Not sure? We'll estimate from when you added it.\nJust opened it\nClock starts today\n✓\nPick a date\n3 months ago\n2 weeks ago\n1 month ago\n3 months ago\n6 months ago\nNot opened yet\nNo clock. We'll show shelf life\nPAO not set\ntap to set\n✎\n3 mo\n6 mo\n9 mo\n12 mo\n18 mo\n24 mo\nAdd to shelf",
+  "controls": [
+    {
+      "ariaLabel": null,
+      "height": 80,
+      "role": "radio",
+      "text": "✓Pick a date3 months ago",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 20
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "1 month ago",
+      "visible": true,
+      "width": 119,
+      "x": 159,
+      "y": 110
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "3 months ago",
+      "visible": true,
+      "width": 125,
+      "x": 32,
+      "y": 166
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "6 months ago",
+      "visible": true,
+      "width": 127,
+      "x": 32,
+      "y": 222
+    },
+    {
+      "ariaLabel": "Edit period after opening",
+      "height": 70,
+      "role": "button",
+      "text": "PAO not settap to set✎",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 378
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "3 mo",
+      "visible": true,
+      "width": 70,
+      "x": 28,
+      "y": 458
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "6 mo",
+      "visible": true,
+      "width": 70,
+      "x": 106,
+      "y": 458
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "9 mo",
+      "visible": true,
+      "width": 70,
+      "x": 183,
+      "y": 458
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "12 mo",
+      "visible": true,
+      "width": 79,
+      "x": 28,
+      "y": 514
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "18 mo",
+      "visible": true,
+      "width": 79,
+      "x": 115,
+      "y": 514
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "text": "24 mo",
+      "visible": true,
+      "width": 79,
+      "x": 201,
+      "y": 514
+    }
+  ]
+}

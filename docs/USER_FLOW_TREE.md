@@ -477,6 +477,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Set an opened date or replenish state at a boundary date.
   - Expected result: The app explains expiration/replenish status clearly, and the opened-date sheet shows all three core opened-state choices without clipping on short phones before the user scrolls to PAO or save actions.
   - Evidence: Screenshot.
+  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 adds `Boundary Vitamin C Serum`, verifies `/shelf/opened` shows `Just opened it`, `Pick a date`, and `Not opened yet` before scrolling to PAO/save actions, sets `3 months ago` plus `3 mo` PAO, and confirms Shelf shows `0 days left`. The first pass found replenish copy manufactured scarcity (`running low` / `nearly finished`) for a PAO boundary; post-fix, `/shelf/replenish` explains the trigger as `PAO or printed date`, says it is `not an alarm`, shows no scarcity copy, and `Re-add the same one` creates a fresh active unit with `opened Jul`, `3 mo PAO`, `Oct 2026`, and one archived prior unit. Evidence and report are in `test-results/human-e2e/2026-07-08/shelf-opened-replenish-boundary-current/`; native bottom-sheet, screen-reader, Dynamic Type, and restart-persistence QA remain open.
 - Branch: active shelf empty with archive history
   - Priority: Critical
   - Automate later: Yes

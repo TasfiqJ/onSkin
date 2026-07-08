@@ -1,0 +1,81 @@
+{
+  "bodyText": "Shelf\n1 product\nAll\nActives\nExpiring\nEverything on your shelf, soonest to replace first.\nFIRST ROUTINE\nYour routine is ready to draft.\nEven one product can start an honest AM/PM draft. Missing steps stay visible, not invented.\nBuild my routine\nBoundary Vitamin C Serum\nRoutineKind E2E · opened Apr · 3 mo PAO\n0 days left\nReplace →\nScan a barcode\nToday\nProgress\nShelf\nYou",
+  "controls": [
+    {
+      "ariaLabel": "All",
+      "bottom": 110,
+      "height": 48,
+      "text": "All",
+      "visible": true,
+      "width": 55,
+      "x": 24,
+      "y": 62
+    },
+    {
+      "ariaLabel": "Actives",
+      "bottom": 110,
+      "height": 48,
+      "text": "Actives",
+      "visible": true,
+      "width": 91,
+      "x": 89,
+      "y": 62
+    },
+    {
+      "ariaLabel": "Expiring",
+      "bottom": 110,
+      "height": 48,
+      "text": "Expiring",
+      "visible": true,
+      "width": 97,
+      "x": 190,
+      "y": 62
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 373,
+      "height": 56,
+      "text": "Build my routine",
+      "visible": true,
+      "width": 238,
+      "x": 41,
+      "y": 317
+    },
+    {
+      "ariaLabel": "Boundary Vitamin C Serum, 0 days left",
+      "bottom": 577,
+      "height": 154,
+      "text": "Boundary Vitamin C SerumRoutineKind E2E · opened Apr · 3 mo PAO0 days left",
+      "visible": true,
+      "width": 238,
+      "x": 41,
+      "y": 423
+    },
+    {
+      "ariaLabel": "Replace Boundary Vitamin C Serum",
+      "bottom": 633,
+      "height": 48,
+      "text": "Replace →",
+      "visible": false,
+      "width": 96,
+      "x": 105,
+      "y": 585
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 726,
+      "height": 52,
+      "text": "Scan a barcode",
+      "visible": false,
+      "width": 168,
+      "x": 76,
+      "y": 674
+    }
+  ],
+  "hasCountdownOrReplaceBadge": true,
+  "hasProduct": true,
+  "hasReplaceAction": true,
+  "hasScarcityCopy": false,
+  "overflowX": 0,
+  "url": "http://localhost:8148/shelf"
+}

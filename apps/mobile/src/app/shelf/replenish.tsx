@@ -12,10 +12,10 @@ import { track } from '@/lib/analytics/track';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
-// Replenishment (design screen 09, docs/04 §6). An HONEST PAO-triggered prompt
-// (the product is genuinely running low/expiring), opt-in, claim-safe. "Re-add"
-// resets the clock; "see similar" + any affiliate link are gated behind the
-// separate MHMDA data-sharing consent (B-PRIVACY) and the catalog (B-CATALOG-SEED).
+// Replenishment (design screen 09, docs/04 §6). An honest PAO/expiry/finished
+// replacement prompt, opt-in and claim-safe. "Re-add" resets the clock; "see
+// similar" + any affiliate link are gated behind the separate MHMDA data-sharing
+// consent (B-PRIVACY) and the catalog (B-CATALOG-SEED).
 export default function ReplenishScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data } = useShelf();
@@ -64,12 +64,20 @@ export default function ReplenishScreen() {
   }
 
   const safety = isSafetyCriticalCategory(item.category);
+  const expired = item.badge.kind === 'expired';
+  const countdown = item.badge.kind === 'countdown';
   const headline = safety
-    ? `Your ${item.name} is nearly finished.`
-    : `Time to top up ${item.name}.`;
+    ? `Keep ${item.name} fresh.`
+    : expired
+      ? `${item.name} may be past its best.`
+      : `Line up a fresh ${item.name}.`;
   const body = safety
-    ? 'Sun protection is one to keep fresh. Its filters lose strength over time. Want to line up the next one?'
-    : 'You’re running low. Want to line up the next one so you don’t run out?';
+    ? 'For sunscreen and eye-area products, take printed expiry and PAO more seriously. You can re-add a fresh unit without losing history.'
+    : expired
+      ? 'Its PAO or printed date may be past its best. This is a calm replacement reminder, not an alarm.'
+      : countdown
+        ? 'Its PAO or printed date is coming up. This is a calm replacement reminder, not an alarm.'
+        : 'Use this when you are ready to replace or repurchase. No urgency is added.';
   const similarSub = safety
     ? 'Same protection, claim-safe matches'
     : 'Same role, claim-safe matches';

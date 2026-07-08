@@ -200,6 +200,20 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('Close');
   });
 
+  it('keeps replenishment copy tied to freshness without manufactured scarcity', () => {
+    const source = readAppRoute('shelf/replenish.tsx');
+
+    expect(source).toContain('const expired = item.badge.kind === \'expired\';');
+    expect(source).toContain('const countdown = item.badge.kind === \'countdown\';');
+    expect(source).toContain('may be past its best');
+    expect(source).toContain('PAO or printed date');
+    expect(source).toContain('calm replacement reminder, not an alarm');
+    expect(source).toContain('No urgency is added.');
+    expect(source).not.toContain('nearly finished');
+    expect(source).not.toContain('running low');
+    expect(source).not.toContain("don't run out");
+  });
+
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 

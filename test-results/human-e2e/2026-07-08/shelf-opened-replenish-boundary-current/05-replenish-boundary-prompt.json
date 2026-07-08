@@ -1,0 +1,126 @@
+{
+  "bodyText": "0 days left\nBoundary Vitamin C Serum\nLine up a fresh Boundary Vitamin C Serum.\nIts PAO or printed date is coming up. This is a calm replacement reminder, not an alarm.\n+\nRe-add the same one\nResets the freshness clock\n⌕\nSee similar options\nSame role, claim-safe matches\n✦\nshopping links share data only with your consent · turn on in Settings\nNot now",
+  "controls": [
+    {
+      "ariaLabel": "All",
+      "bottom": 0,
+      "height": 0,
+      "text": "All",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Actives",
+      "bottom": 0,
+      "height": 0,
+      "text": "Actives",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Expiring",
+      "bottom": 0,
+      "height": 0,
+      "text": "Expiring",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 0,
+      "height": 0,
+      "text": "Build my routine",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Boundary Vitamin C Serum, 0 days left",
+      "bottom": 0,
+      "height": 0,
+      "text": "Boundary Vitamin C SerumRoutineKind E2E · opened Apr · 3 mo PAO0 days left",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Replace Boundary Vitamin C Serum",
+      "bottom": 0,
+      "height": 0,
+      "text": "Replace →",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 0,
+      "height": 0,
+      "text": "Scan a barcode",
+      "visible": false,
+      "width": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": "Dismiss",
+      "bottom": 48,
+      "height": 48,
+      "text": "",
+      "visible": true,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 437,
+      "height": 80,
+      "text": "+Re-add the same oneResets the freshness clock",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 357
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 545,
+      "height": 98,
+      "text": "⌕See similar optionsSame role, claim-safe matches",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 447
+    },
+    {
+      "ariaLabel": null,
+      "bottom": 669,
+      "height": 48,
+      "text": "Not now",
+      "visible": false,
+      "width": 264,
+      "x": 28,
+      "y": 621
+    }
+  ],
+  "hasBoundaryBadge": true,
+  "hasConsentCopy": true,
+  "hasFreshHeadline": true,
+  "hasNoAlarmCopy": true,
+  "hasPaoCopy": true,
+  "hasProduct": true,
+  "hasReAdd": true,
+  "hasScarcityCopy": false,
+  "hasSimilar": true,
+  "overflowX": 0,
+  "url": "http://localhost:8148/shelf/replenish?id=05b1742d-0e3c-46e5-b1db-04ccf0d3a5f0"
+}
