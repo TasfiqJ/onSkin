@@ -1,8 +1,8 @@
 # E2E Bug Report: Ask consent failure used native alert recovery
 
 Severity: High
-Surface: Expo web
-Environment: Expo web at 320 x 568, `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`
+Surface: Expo web static export
+Environment: Expo web static export at 320 x 568, `APP_VARIANT=development`, `EXPO_PUBLIC_APP_ENV=development`, `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`
 Feature: Ask RoutineKind cloud consent gate
 Date: 2026-07-08
 Tester: Codex
@@ -23,9 +23,9 @@ Before the fix, the failure handler called `Alert.alert`, so failure recovery de
 
 ## Evidence
 
-- Screenshot: pending post-fix run
-- Logs: pending post-fix run
-- UI snapshot: pending post-fix run
+- Screenshot: `test-results/human-e2e/2026-07-08/main-branch-merge/ask-consent-inline-failure.png`
+- Logs: `test-results/human-e2e/2026-07-08/main-branch-merge/state.json`
+- UI snapshot: at 320 x 568 the route showed the Back button, `Enable Ask RoutineKind` switch, and `Open Ask RoutineKind` CTA without horizontal overflow.
 
 ## Frequency
 
@@ -54,13 +54,13 @@ Remove `Alert.alert` from the Ask consent route, keep the consent toggle fail-cl
 
 ## Post-Fix Evidence
 
-- Screenshot: pending post-fix run
-- Logs: pending post-fix run
-- UI snapshot: pending post-fix run
-- Terminal transcript: pending focused checks
+- Screenshot: `test-results/human-e2e/2026-07-08/main-branch-merge/ask-consent-inline-failure.png`
+- Logs and UI state: `test-results/human-e2e/2026-07-08/main-branch-merge/state.json`
+- UI snapshot: the failed consent save produced durable in-route recovery copy, left the switch fail-closed with `aria-checked="false"`, and did not trigger a JavaScript dialog.
+- Terminal transcript: full branch-merge checks passed with `npm run typecheck`, `npm run lint`, `npm test`, and `node scripts/phase9/store-build-inspect.mjs`.
 
 ## Remaining Risk
 
 - Untested branches: native iOS/Android consent animation and authenticated Supabase consent-ledger save/withdrawal.
-- Missing fixtures: live authenticated consent ledger for production-like verification.
+- Static export limitation: the export is not `__DEV__`, so the one-shot local-ledger retry success path still needs Expo dev-server or native verification.
 - Follow-up needed: device QA before Cloud Ask is release-enabled.
