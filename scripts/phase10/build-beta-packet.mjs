@@ -26,6 +26,24 @@ const env = envSnapshot();
 const sourceFiles = phase10SourceFiles();
 const packetOutDir = String(env.PHASE10_PACKET_OUT_DIR ?? '').trim();
 const outDir = packetOutDir || 'docs/phase-10/generated';
+const packetOutputPaths = [
+  `${outDir}/closed-beta-packet.json`,
+  `${outDir}/closed-beta-packet.md`,
+].map((path) => path.replace(/\\/g, '/'));
+
+function gitStatusExcludingGeneratedPacket() {
+  const excluded = new Set(packetOutputPaths);
+  return command('git', ['status', '--short'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !excluded.has(statusPath);
+    })
+    .join('\n')
+    .trim();
+}
 
 for (const file of sourceFiles)
   block(errors, exists(file), `${file} is missing from closed beta packet inputs.`);
@@ -34,7 +52,7 @@ let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
   gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = command('git', ['status', '--short']).trim();
+  gitStatus = gitStatusExcludingGeneratedPacket();
 } catch {
   warn(warnings, false, 'Git SHA/status could not be captured.');
 }
