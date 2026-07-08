@@ -133,6 +133,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={ultraShortPhone}');
     expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'");
+    expect(source).toContain('accessibilityLabel={`${title}. ${subtitle}`}');
     expect(source).toContain('min-h-[54px]');
     expect(source).toContain('!shortPhone ? (');
   });

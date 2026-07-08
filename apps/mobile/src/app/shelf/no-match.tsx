@@ -160,6 +160,7 @@ function NoMatchAction({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={`${title}. ${subtitle}`}
       onPress={onPress}
       className={cn(
         ultraCompact
