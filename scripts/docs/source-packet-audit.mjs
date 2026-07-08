@@ -5,6 +5,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 
 const root = process.cwd();
 const strict = process.argv.includes('--strict');
+const check = process.argv.includes('--check');
 const sourceRoot = '04_repo_docs';
 const sourceDocsDir = `${sourceRoot}/docs`;
 const activeDocsDir = 'docs';
@@ -61,6 +62,32 @@ function markdownTable(headers, rows) {
     render(widths.map((width) => '-'.repeat(width))),
     ...rows.map(render),
   ].join('\n');
+}
+
+function normalizeGeneratedMarkdown(text) {
+  return text
+    .replace(/\r\n/g, '\n')
+    .replace(/^Generated: .+$/m, 'Generated: <ignored>')
+    .trimEnd();
+}
+
+function normalizeGeneratedJson(text) {
+  const parsed = JSON.parse(text);
+  delete parsed.generatedAt;
+  return JSON.stringify(parsed, null, 2);
+}
+
+function checkGeneratedFile(path, expectedContent, normalize) {
+  if (!exists(path)) {
+    console.error(`FAIL Missing ${path}. Run npm run docs:source-packet-audit:strict.`);
+    return false;
+  }
+  const current = read(path);
+  if (normalize(current) !== normalize(expectedContent)) {
+    console.error(`FAIL ${path} is stale. Run npm run docs:source-packet-audit:strict.`);
+    return false;
+  }
+  return true;
 }
 
 function docTitle(path) {
@@ -191,8 +218,7 @@ const packet = {
   warnings,
 };
 
-mkdirSync(dirname(abs(outJson)), { recursive: true });
-writeFileSync(abs(outJson), `${JSON.stringify(packet, null, 2)}\n`);
+const jsonContent = `${JSON.stringify(packet, null, 2)}\n`;
 
 const docRows = docs.map((doc) => [
   doc.name,
@@ -202,68 +228,85 @@ const docRows = docs.map((doc) => [
   doc.sourceSha256.slice(0, 12),
 ]);
 
-writeFileSync(
-  abs(outMd),
-  [
-    '# Source Packet Audit',
-    '',
-    `Generated: ${packet.generatedAt}`,
-    `Status: ${packet.status}`,
-    `Strict mode: ${strict ? 'yes' : 'no'}`,
-    '',
-    'This generated audit checks the original `04_repo_docs` source packet and',
-    'verifies that its strategy docs are represented in the active `docs/` tree.',
-    'Non-strict mode fails on missing packet files or active mirror files; strict',
-    'mode also fails if a mirrored active doc differs from the packet copy, or if',
-    'the top-level packet markdown shape changes without updating the audit.',
-    '',
-    '## Summary',
-    '',
-    `- Total packet files: ${packet.summary.totalPacketFileCount}`,
-    `- Expected top-level packet files: ${packet.summary.topLevelPacketFileCount}/${packet.summary.expectedTopLevelPacketFileCount}`,
-    `- Unexpected top-level packet markdown files: ${packet.summary.unexpectedTopLevelMarkdownCount}`,
-    `- Source docs: ${packet.summary.sourceDocCount}`,
-    `- Active mirrors: ${packet.summary.activeMirrorCount}`,
-    `- Identical mirrors: ${packet.summary.identicalMirrorCount}`,
-    `- Blockers: ${packet.summary.blockerCount}`,
-    `- Warnings: ${packet.summary.warningCount}`,
-    '',
-    '## Docs Crosswalk',
-    '',
-    markdownTable(
-      ['Packet doc', 'Active docs status', 'AGENTS.md', 'CLAUDE.md', 'Packet SHA-256'],
-      docRows,
-    ),
-    '',
-    '## Top-Level Packet Files',
-    '',
-    markdownTable(
-      ['Packet file', 'Status', 'Bytes', 'SHA-256'],
-      topLevelPacketFiles.map((file) => [
-        file.path,
-        file.exists ? 'present' : 'missing',
-        file.bytes ?? '',
-        file.sha256?.slice(0, 12) ?? '',
-      ]),
-    ),
-    '',
-    '## Full Packet Inventory',
-    '',
-    markdownTable(
-      ['Packet file', 'Bytes', 'SHA-256'],
-      packetFiles.map((file) => [file.path, file.bytes, file.sha256.slice(0, 12)]),
-    ),
-    '',
-    '## Blockers',
-    '',
-    ...(blockers.length ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
-    '',
-    '## Warnings',
-    '',
-    ...(warnings.length ? warnings.map((warning) => `- ${warning}`) : ['- None.']),
-    '',
-  ].join('\n'),
-);
+const mdContent = [
+  '# Source Packet Audit',
+  '',
+  `Generated: ${packet.generatedAt}`,
+  `Status: ${packet.status}`,
+  `Strict mode: ${strict ? 'yes' : 'no'}`,
+  '',
+  'This generated audit checks the original `04_repo_docs` source packet and',
+  'verifies that its strategy docs are represented in the active `docs/` tree.',
+  'Non-strict mode fails on missing packet files or active mirror files; strict',
+  'mode also fails if a mirrored active doc differs from the packet copy, or if',
+  'the top-level packet markdown shape changes without updating the audit.',
+  '',
+  '## Summary',
+  '',
+  `- Total packet files: ${packet.summary.totalPacketFileCount}`,
+  `- Expected top-level packet files: ${packet.summary.topLevelPacketFileCount}/${packet.summary.expectedTopLevelPacketFileCount}`,
+  `- Unexpected top-level packet markdown files: ${packet.summary.unexpectedTopLevelMarkdownCount}`,
+  `- Source docs: ${packet.summary.sourceDocCount}`,
+  `- Active mirrors: ${packet.summary.activeMirrorCount}`,
+  `- Identical mirrors: ${packet.summary.identicalMirrorCount}`,
+  `- Blockers: ${packet.summary.blockerCount}`,
+  `- Warnings: ${packet.summary.warningCount}`,
+  '',
+  '## Docs Crosswalk',
+  '',
+  markdownTable(
+    ['Packet doc', 'Active docs status', 'AGENTS.md', 'CLAUDE.md', 'Packet SHA-256'],
+    docRows,
+  ),
+  '',
+  '## Top-Level Packet Files',
+  '',
+  markdownTable(
+    ['Packet file', 'Status', 'Bytes', 'SHA-256'],
+    topLevelPacketFiles.map((file) => [
+      file.path,
+      file.exists ? 'present' : 'missing',
+      file.bytes ?? '',
+      file.sha256?.slice(0, 12) ?? '',
+    ]),
+  ),
+  '',
+  '## Full Packet Inventory',
+  '',
+  markdownTable(
+    ['Packet file', 'Bytes', 'SHA-256'],
+    packetFiles.map((file) => [file.path, file.bytes, file.sha256.slice(0, 12)]),
+  ),
+  '',
+  '## Blockers',
+  '',
+  ...(blockers.length ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
+  '',
+  '## Warnings',
+  '',
+  ...(warnings.length ? warnings.map((warning) => `- ${warning}`) : ['- None.']),
+  '',
+].join('\n');
+
+if (check) {
+  const jsonCurrent = checkGeneratedFile(outJson, jsonContent, normalizeGeneratedJson);
+  const mdCurrent = checkGeneratedFile(outMd, mdContent, normalizeGeneratedMarkdown);
+  if (blockers.length > 0) {
+    for (const blocker of blockers) console.error(`FAIL ${blocker}`);
+    process.exit(1);
+  }
+  if (!jsonCurrent || !mdCurrent) process.exit(1);
+  if (strict && warnings.length > 0) {
+    for (const warning of warnings) console.warn(`WARN ${warning}`);
+  }
+  console.log('Source packet audit is current.');
+  console.log('Source packet audit passed.');
+  process.exit(0);
+}
+
+mkdirSync(dirname(abs(outJson)), { recursive: true });
+writeFileSync(abs(outJson), jsonContent);
+writeFileSync(abs(outMd), mdContent);
 
 console.log(`Wrote ${rel(abs(outJson))}`);
 console.log(`Wrote ${rel(abs(outMd))}`);

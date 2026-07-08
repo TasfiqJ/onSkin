@@ -514,4 +514,6 @@ Tas must provide real values/evidence for these exact keys before this gate can 
 - Run `npm run docs:tas-todo-audit:strict` after readiness-gate changes. It
   verifies this handoff still covers the Phase 2-11 external evidence gates and
   writes the exact machine-extracted key inventory to
-  `docs/generated/tas-todo-audit.{json,md}`.
+  `docs/generated/tas-todo-audit.{json,md}`. Use
+  `npm run docs:tas-todo-audit:check` in verification-only passes to confirm
+  the committed generated inventory is current without rewriting timestamps.

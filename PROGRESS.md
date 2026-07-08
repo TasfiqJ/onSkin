@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added non-mutating freshness checks for the `04_repo_docs` source-packet
+  audit and Tas strict-evidence handoff audit. `docs:source-packet-audit:check`
+  now verifies the active `docs/` mirrors still match the original strategy
+  packet, and `docs:tas-todo-audit:check` verifies the committed Phase 2-11
+  evidence-key inventory is current, both without rewriting generated
+  timestamps.
+
 - Cleared a harsher 320 x 568 / 140% text-pressure route audit. The sweep first
   clipped the direct upsell `Start free trial` CTA, then exposed shared ProGate
   routine paywalls where `Maybe later` overlapped `Restore` and the

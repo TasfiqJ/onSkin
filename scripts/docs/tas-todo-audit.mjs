@@ -4,6 +4,7 @@ import { dirname, extname, join, relative, resolve } from 'node:path';
 
 const root = process.cwd();
 const strict = process.argv.includes('--strict');
+const check = process.argv.includes('--check');
 const forTasPath = 'docs/FOR_TAS_TO_DO.md';
 const packagePath = 'package.json';
 const envExamplePath = '.env.example';
@@ -56,6 +57,32 @@ function markdownTable(headers, rows) {
     render(widths.map((width) => '-'.repeat(width))),
     ...rows.map(render),
   ].join('\n');
+}
+
+function normalizeGeneratedMarkdown(text) {
+  return text
+    .replace(/\r\n/g, '\n')
+    .replace(/^Generated: .+$/m, 'Generated: <ignored>')
+    .trimEnd();
+}
+
+function normalizeGeneratedJson(text) {
+  const parsed = JSON.parse(text);
+  delete parsed.generatedAt;
+  return JSON.stringify(parsed, null, 2);
+}
+
+function checkGeneratedFile(path, expectedContent, normalize) {
+  if (!exists(path)) {
+    console.error(`FAIL Missing ${path}. Run npm run docs:tas-todo-audit:strict.`);
+    return false;
+  }
+  const current = read(path);
+  if (normalize(current) !== normalize(expectedContent)) {
+    console.error(`FAIL ${path} is stale. Run npm run docs:tas-todo-audit:strict.`);
+    return false;
+  }
+  return true;
 }
 
 function collectScriptText(dirs) {
@@ -306,8 +333,7 @@ const audit = {
   warnings,
 };
 
-mkdirSync(dirname(abs(outJson)), { recursive: true });
-writeFileSync(abs(outJson), `${JSON.stringify(audit, null, 2)}\n`);
+const jsonContent = `${JSON.stringify(audit, null, 2)}\n`;
 
 const summaryRows = groups.map((group) => [
   group.id,
@@ -335,61 +361,78 @@ const keySections = groups.flatMap((group) => [
   '',
 ]);
 
-writeFileSync(
-  abs(outMd),
-  [
-    '# Tas To Do Audit',
-    '',
-    `Generated: ${audit.generatedAt}`,
-    `Status: ${audit.status}`,
-    `Strict mode: ${strict ? 'yes' : 'no'}`,
-    '',
-    'This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the',
-    'Tas-owned strict launch evidence gates and records the exact evidence keys',
-    'extracted from phase scripts and `.env.example`. Local generated-packet',
-    'outputs and source-contract markers are listed separately and excluded',
-    'from evidence warnings.',
-    'Strict mode fails when a phase gate is no longer covered by the founder',
-    'handoff doc; exact key omissions are warnings because the generated',
-    'inventory itself is the canonical machine-readable key list.',
-    '',
-    '## Summary',
-    '',
-    `- Gate groups: ${audit.summary.gateGroupCount}`,
-    `- Covered gate groups: ${audit.summary.coveredGateGroupCount}`,
-    `- Extracted keys: ${audit.summary.extractedKeyCount}`,
-    `- Local generated-only keys excluded: ${audit.summary.localOnlyKeyCount}`,
-    `- Keys named verbatim in FOR_TAS_TO_DO.md: ${audit.summary.keyMentionCount}`,
-    `- Keys only in generated inventory: ${audit.summary.keyNotMentionedCount}`,
-    `- Blockers: ${audit.summary.blockerCount}`,
-    `- Warnings: ${audit.summary.warningCount}`,
-    '',
-    '## Gate Coverage',
-    '',
-    markdownTable(
-      [
-        'Gate',
-        'FOR_TAS coverage',
-        'Package script evidence',
-        'Keys',
-        'Keys only in generated inventory',
-      ],
-      summaryRows,
-    ),
-    '',
-    '## Extracted Evidence Keys',
-    '',
-    ...keySections,
-    '## Blockers',
-    '',
-    ...(blockers.length ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
-    '',
-    '## Warnings',
-    '',
-    ...(warnings.length ? warnings.map((warning) => `- ${warning}`) : ['- None.']),
-    '',
-  ].join('\n'),
-);
+const mdContent = [
+  '# Tas To Do Audit',
+  '',
+  `Generated: ${audit.generatedAt}`,
+  `Status: ${audit.status}`,
+  `Strict mode: ${strict ? 'yes' : 'no'}`,
+  '',
+  'This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the',
+  'Tas-owned strict launch evidence gates and records the exact evidence keys',
+  'extracted from phase scripts and `.env.example`. Local generated-packet',
+  'outputs and source-contract markers are listed separately and excluded',
+  'from evidence warnings.',
+  'Strict mode fails when a phase gate is no longer covered by the founder',
+  'handoff doc; exact key omissions are warnings because the generated',
+  'inventory itself is the canonical machine-readable key list.',
+  '',
+  '## Summary',
+  '',
+  `- Gate groups: ${audit.summary.gateGroupCount}`,
+  `- Covered gate groups: ${audit.summary.coveredGateGroupCount}`,
+  `- Extracted keys: ${audit.summary.extractedKeyCount}`,
+  `- Local generated-only keys excluded: ${audit.summary.localOnlyKeyCount}`,
+  `- Keys named verbatim in FOR_TAS_TO_DO.md: ${audit.summary.keyMentionCount}`,
+  `- Keys only in generated inventory: ${audit.summary.keyNotMentionedCount}`,
+  `- Blockers: ${audit.summary.blockerCount}`,
+  `- Warnings: ${audit.summary.warningCount}`,
+  '',
+  '## Gate Coverage',
+  '',
+  markdownTable(
+    [
+      'Gate',
+      'FOR_TAS coverage',
+      'Package script evidence',
+      'Keys',
+      'Keys only in generated inventory',
+    ],
+    summaryRows,
+  ),
+  '',
+  '## Extracted Evidence Keys',
+  '',
+  ...keySections,
+  '## Blockers',
+  '',
+  ...(blockers.length ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
+  '',
+  '## Warnings',
+  '',
+  ...(warnings.length ? warnings.map((warning) => `- ${warning}`) : ['- None.']),
+  '',
+].join('\n');
+
+if (check) {
+  const jsonCurrent = checkGeneratedFile(outJson, jsonContent, normalizeGeneratedJson);
+  const mdCurrent = checkGeneratedFile(outMd, mdContent, normalizeGeneratedMarkdown);
+  if (blockers.length > 0) {
+    for (const blocker of blockers) console.error(`FAIL ${blocker}`);
+    process.exit(1);
+  }
+  if (!jsonCurrent || !mdCurrent) process.exit(1);
+  if (strict && warnings.length > 0) {
+    for (const warning of warnings) console.warn(`WARN ${warning}`);
+  }
+  console.log('Tas To Do audit is current.');
+  console.log('Tas To Do audit passed.');
+  process.exit(0);
+}
+
+mkdirSync(dirname(abs(outJson)), { recursive: true });
+writeFileSync(abs(outJson), jsonContent);
+writeFileSync(abs(outMd), mdContent);
 
 console.log(`Wrote ${rel(abs(outJson))}`);
 console.log(`Wrote ${rel(abs(outMd))}`);
