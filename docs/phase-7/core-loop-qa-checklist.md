@@ -379,6 +379,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   route contract, full typecheck, lint, and test suite passed. Evidence is in
   `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/`. Native
   iOS/Android rendering still needs device QA.
+- 2026-07-08: System Chrome Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser` covers Settings policy/help
+  handoff failure recovery. The pre-fix pass found no observable browser dialog
+  or persistent in-app feedback when the shared opener failed. `/settings/privacy`
+  now keeps users on `/you?section=privacy` and renders row-local
+  `Link unavailable` recovery copy for Privacy policy, Consumer health privacy,
+  Terms, Support, Account deletion, and Data export. All six rows are 70-94 px
+  tall, each recovery message is 48 px tall, and horizontal overflow is zero.
+  Evidence is in
+  `test-results/human-e2e/2026-07-08/settings-policy-link-failure/`; it does
+  not replace native iOS/Android OS handoff failure QA or final policy URL QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Progress first-photo
   non-destructive branch: open `/progress`, tap `Take my first photo`, verify
   `/progress/capture` local-only consent copy and 48 px+ visible controls, tap

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
@@ -47,6 +47,8 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
   dataExport: 'How to request and read your export.',
 };
 
+const POLICY_LINK_UNAVAILABLE_MESSAGE =
+  'Link unavailable. We could not open this policy link. Please try again.';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
@@ -149,8 +151,8 @@ function Toggle({
   );
 }
 
-function openPolicyUrl(url: string) {
-  void openExternalHttpsUrl(url, {
+function openPolicyUrl(url: string): Promise<boolean> {
+  return openExternalHttpsUrl(url, {
     invalidTitle: 'Link not configured',
     invalidMessage: 'This policy URL must be configured before launch.',
     failureTitle: 'Link unavailable',
@@ -169,6 +171,10 @@ export default function YouScreen() {
     'marketing' | 'data_sharing' | 'photo_cloud_backup' | null
   >(null);
   const [exportFeedback, setExportFeedback] = useState<string | null>(null);
+  const [policyFeedback, setPolicyFeedback] = useState<{
+    key: PolicyLinkKey;
+    message: string;
+  } | null>(null);
   const [privacyCardReady, setPrivacyCardReady] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
   const privacyCardY = useRef(0);
@@ -362,6 +368,14 @@ export default function YouScreen() {
       Alert.alert('Export failed', message);
     },
   });
+
+  async function openPolicyRow(row: (typeof POLICY_ROWS)[number]) {
+    setPolicyFeedback(null);
+    const opened = await openPolicyUrl(row.url);
+    if (!opened) {
+      setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });
+    }
+  }
 
   function confirmWithdrawHealthData() {
     Alert.alert(
@@ -656,13 +670,24 @@ export default function YouScreen() {
             POLICIES
           </Text>
           {POLICY_ROWS.map((row) => (
-            <Row
-              key={row.key}
-              label={row.label}
-              hint={POLICY_HINTS[row.key]}
-              compact={compactPhone}
-              onPress={() => openPolicyUrl(row.url)}
-            />
+            <Fragment key={row.key}>
+              <Row
+                label={row.label}
+                hint={POLICY_HINTS[row.key]}
+                compact={compactPhone}
+                onPress={() => void openPolicyRow(row)}
+              />
+              {policyFeedback?.key === row.key ? (
+                <Text
+                  accessibilityRole="alert"
+                  variant="bodySm"
+                  tone="muted"
+                  className="pb-2 text-center"
+                >
+                  {policyFeedback.message}
+                </Text>
+              ) : null}
+            </Fragment>
           ))}
         </Card>
 

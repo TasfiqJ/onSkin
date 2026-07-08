@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Settings policy/help link failure recovery. Human E2E with
+  `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser` reproduced the
+  `/settings/privacy` direct-entry branch at 320 x 568: the shared external
+  opener returned failure, but Expo web did not surface an observable browser
+  dialog or persistent in-app recovery copy. Settings now keeps the shared
+  native/browser handoff helper, adds a dev-only failed-handoff fixture guarded
+  to development runtime, and renders row-local `Link unavailable` feedback
+  with `accessibilityRole="alert"` when a policy, consumer-health, terms,
+  support, deletion, or export help link cannot open. Final System Chrome Expo
+  web evidence verifies all six rows remain 70-94 px tall, each failure renders
+  a 48 px row-local recovery message, horizontal overflow is zero, and the route
+  stays on `/you?section=privacy`. Evidence is in
+  `test-results/human-e2e/2026-07-08/settings-policy-link-failure/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-08-settings-policy-link-failure.md`.
+
 - Hardened the For You "you're set" state for compact phone heights. Human E2E
   seeded a complete shelf and reproduced the empty-state branch at 320 x 568 and
   320 x 480: before the fix, the branch used a non-scrollable centered view, the

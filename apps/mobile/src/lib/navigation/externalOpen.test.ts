@@ -36,6 +36,7 @@ describe('external URL opener', () => {
     mocks.alerts = [];
     mocks.openBrowserAsync.mockReset();
     mocks.openURL.mockReset();
+    delete process.env.EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE;
   });
 
   it('rejects unsafe URLs before any external handoff', async () => {
@@ -94,7 +95,70 @@ describe('external URL opener', () => {
     ]);
   });
 
+  it('supports a dev-only E2E fixture for failed browser handoffs', async () => {
+    const globalWithDev = globalThis as typeof globalThis & { __DEV__?: boolean };
+    const previousDev = globalWithDev.__DEV__;
+    globalWithDev.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE = 'browser';
+    mocks.openBrowserAsync.mockResolvedValueOnce({ type: 'opened' });
+
+    try {
+      await expect(
+        openExternalHttpsUrl('https://example.com/privacy', {
+          failureTitle: 'Link unavailable',
+          failureMessage: 'We could not open this policy link. Please try again.',
+        }),
+      ).resolves.toBe(false);
+    } finally {
+      if (previousDev === undefined) {
+        delete globalWithDev.__DEV__;
+      } else {
+        globalWithDev.__DEV__ = previousDev;
+      }
+      delete process.env.EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE;
+    }
+
+    expect(mocks.openBrowserAsync).not.toHaveBeenCalled();
+    expect(mocks.openURL).not.toHaveBeenCalled();
+    expect(mocks.alerts[0]).toEqual([
+      'Link unavailable',
+      'We could not open this policy link. Please try again.',
+    ]);
+  });
+
+  it('ignores the failed-handoff fixture outside development runtime', async () => {
+    const globalWithDev = globalThis as typeof globalThis & { __DEV__?: boolean };
+    const previousDev = globalWithDev.__DEV__;
+    globalWithDev.__DEV__ = false;
+    process.env.EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE = 'all';
+    mocks.openURL.mockResolvedValueOnce(undefined);
+
+    try {
+      await expect(
+        openExternalHttpsUrl('https://store.example/subscription', {
+          mode: 'linking',
+        }),
+      ).resolves.toBe(true);
+    } finally {
+      if (previousDev === undefined) {
+        delete globalWithDev.__DEV__;
+      } else {
+        globalWithDev.__DEV__ = previousDev;
+      }
+      delete process.env.EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE;
+    }
+
+    expect(mocks.openURL).toHaveBeenCalledWith('https://store.example/subscription');
+    expect(mocks.alerts).toEqual([]);
+  });
+
   it('keeps policy, billing, and retailer handoffs on the shared failure-alert helper', () => {
+    const externalOpen = readSource('lib/navigation/externalOpen.ts');
+
+    expect(externalOpen).toContain('EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE');
+    expect(externalOpen).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(externalOpen).toContain("tokens.includes('all') || tokens.includes(mode)");
+
     for (const path of [
       'app/(tabs)/you.tsx',
       'app/settings/subscription.tsx',

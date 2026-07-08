@@ -976,6 +976,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: Expo web for route recovery; iOS and Android for native subscription and notification settings behavior.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/settings/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/settings-privacy-policy-buffer/` and `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`
+- Current policy-link evidence: `test-results/human-e2e/2026-07-08/settings-policy-link-failure/`
 - Current reminder evidence: `test-results/human-e2e/2026-07-07/settings-reminder-timing-current/`
 
 ### Path A: Subscription Settings
@@ -1004,8 +1005,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Tap Privacy, Consumer Health Privacy, Terms, Support, account deletion help, or data export help while the browser cannot open the URL.
-  - Expected result: The app shows a clear unavailable alert instead of swallowing the failed handoff.
-  - Evidence: Alert text and visible route snapshot.
+  - Expected result: The app shows a clear unavailable alert or row-local recovery message instead of swallowing the failed handoff, keeps the user on Settings, and keeps policy/help rows at least 44 px tall on compact phones.
+  - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser` opens `/settings/privacy`, taps Privacy policy, Consumer health privacy, Terms, Support, Account deletion, and Data export, and verifies each failed handoff renders row-local `Link unavailable` recovery copy. All six rows are 70-94 px tall, each recovery message is 48 px tall, horizontal overflow is zero, and the route remains `/you?section=privacy`. Browser logs include expected Supabase placeholder network failures because live backend remains blocked.
 - Branch: data export share unavailable
   - Priority: Critical
   - Automate later: Yes

@@ -184,13 +184,28 @@ describe('Settings route contracts', () => {
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
     expect(source).toContain('accessibilityLabel={hint ? `${label}. ${hint}` : label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
-    expect(source).toContain('compact={compactPhone}\n              onPress={() => openPolicyUrl(row.url)}');
-    expect(source).toContain('onPress={() => openPolicyUrl(row.url)}');
+    expect(source).toContain("import { Fragment, useEffect, useRef, useState } from 'react';");
+    expect(source).toContain('const [policyFeedback, setPolicyFeedback] = useState<{');
+    expect(source).toContain('key: PolicyLinkKey;');
+    expect(source).toContain('message: string;');
+    expect(source).toContain(
+      "const POLICY_LINK_UNAVAILABLE_MESSAGE =\n  'Link unavailable. We could not open this policy link. Please try again.';",
+    );
+    expect(source).toContain('async function openPolicyRow(row: (typeof POLICY_ROWS)[number])');
+    expect(source).toContain('setPolicyFeedback(null);');
+    expect(source).toContain('const opened = await openPolicyUrl(row.url);');
+    expect(source).toContain(
+      'setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });',
+    );
+    expect(source).toContain('<Fragment key={row.key}>');
+    expect(source).toContain('compact={compactPhone}\n                onPress={() => void openPolicyRow(row)}');
+    expect(source).toContain('policyFeedback?.key === row.key');
+    expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain(
       'onPress={() => router.push(href)}\n                accessibilityRole="button"',
     );
     expect(source).not.toContain(
-      'onPress={() => openPolicyUrl(row.url)}\n                accessibilityRole="button"',
+      'onPress={() => void openPolicyRow(row)}\n                accessibilityRole="button"',
     );
   });
 
