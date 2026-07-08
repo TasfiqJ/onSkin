@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T22:25:04.196Z",
+  "generatedAt": "2026-07-08T22:56:03.906Z",
   "objective": "Phase 8 growth loop and store readiness",
   "status": "blocked",
-  "gitSha": "2e29014c07602eec26b6f2dce5714aad6a5be515",
+  "gitSha": "b8221515f8de23dbd35fdaec052d0d380092861b",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -60,7 +60,7 @@
   },
   "sourceHashes": {
     ".env.example": "09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1",
-    "package.json": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1",
+    "package.json": "bf030e5250bd594e49762bd3e759a7f027631747164234dadf096f5150b61fc7",
     "apps/mobile/app.config.js": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c",
     "apps/mobile/src/lib/env.ts": "2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321",
     "apps/mobile/src/lib/launch/phase8.ts": "94ac42c54e192d2f3c641de05609846ff3de9892646d5cc6ad41a098acbdac70",
@@ -90,9 +90,9 @@
     "docs/phase-8/public-site/.well-known/assetlinks.template.json": "1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319",
     "docs/HUMAN_SIMULATED_E2E_TESTING.md": "e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29",
     "docs/E2E_TESTING_CHECKLIST.md": "ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812",
-    "docs/USER_FLOW_TREE.md": "c4da06833b000323e18a87d20fbd528b38ea827073af06d7cc36cc39c1ac1136",
-    "docs/e2e/generated/human-e2e-manifest.json": "8e04c5b88b994230690beab0e6c9f5b8ea101a8a53ff1fad15f275f500d7efa2",
-    "docs/e2e/generated/human-e2e-manifest.md": "59840d872e6600d9694cec81de3ec54ef74a845c9a491af0233bc616e4f7d89c",
+    "docs/USER_FLOW_TREE.md": "1a40e3bb65f8417860f617dcde6d3242eb96c54c16beaabc7c8391b0f5989870",
+    "docs/e2e/generated/human-e2e-manifest.json": "1143a2b4cd0f6f5004c270b8c58e3b0a36d65e354994730b24eb1cdc3507ed78",
+    "docs/e2e/generated/human-e2e-manifest.md": "20720bf0846a929353d5267d943a118d078d407af93e43c8ec17dafaafa7e345",
     "docs/phase-5/generated/device-qa-packet.json": "e7b2975a30a9c048f8b042eee0e4abecac95dcc525786a900aab4a044046b81a",
     "docs/phase-5/generated/device-qa-packet.md": "e5cafe2c7e1d1d13fdb783bd0abf6340b4e208fb06db835a6b5b25fb46bcc28a",
     "docs/phase-6/generated/payments-qa-packet.json": "d31dd8aa571362206842f77071666a88a1c9b83249ee9cfd36a7bf8884e89fd4",
