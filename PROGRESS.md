@@ -6,7 +6,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
-- Cleared the harsher 320 x 370 / 130% micro-short text-pressure route audit.
+- Cleared the harsher 320 x 370 and 320 x 360 / 130% micro-short text-pressure route audits.
   The first 49-route sweep found `/settings/notifications` peeking the
   `Progress-photo nudge` switch and `/shelf/manual` exposing the optional
   Ingredients textarea under the sticky Continue footer. The fix adds sub-380
@@ -18,6 +18,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   evidence in
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`,
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`.
 
