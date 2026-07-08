@@ -11,9 +11,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   now use a 17 px line height with a 19 px protected box, and the navigation
   source test rejects the previous 16 px line height. Added
   `npm run e2e:tabbar-geometry`, which launches Expo web in headless Chrome,
-  opens Today, clicks Progress, Shelf, You, and Today through the floating tab
-  bar at 320 x 568 and 390 x 568, and captures screenshots, geometry snapshots,
-  and browser logs in
+  verifies Today, Progress, Shelf, and You selected-state geometry at 320 x 568
+  and 390 x 568, and captures screenshots, geometry snapshots, and browser logs
+  in
   `test-results/human-e2e/2026-07-08/navigation-tabbar-geometry-current/`.
   A follow-up in-app browser pass clicked the floating bar through the same four
   destinations at both widths and stored evidence in
