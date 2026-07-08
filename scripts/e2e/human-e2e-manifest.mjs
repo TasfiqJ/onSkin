@@ -326,7 +326,7 @@ if (check) {
     .map((line) => line.trimEnd())
     .filter(Boolean)
     .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
+      const statusPath = line.replace(/^[ MADRCU?!]{1,2}\s+/, '').replace(/\\/g, '/');
       return !allowedGeneratedPaths.has(statusPath);
     });
   if (dirtyGeneratedOrTracked.length > 0) {
