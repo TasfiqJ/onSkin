@@ -94,12 +94,27 @@ describe('Commerce route contracts', () => {
     const source = readAppRoute('commerce/consent.tsx');
 
     expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('sheetMaxHeight');
-    expect(source).toContain('height - 48');
+    expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(source).toContain('const insets = useSafeAreaInsets();');
+    expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
+    expect(source).toContain(
+      'insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined',
+    );
     expect(source).toContain('maxHeight: sheetMaxHeight');
+    expect(source).toContain('aria-modal');
+    expect(source).toContain('role="dialog"');
+    expect(source).toContain('accessibilityLabel={COMMERCE_COPY.consent.title}');
+    expect(source).toContain('accessibilityViewIsModal');
+    expect(source).toContain('aria-hidden');
+    expect(source).toContain('accessibilityElementsHidden');
+    expect(source).toContain('tabIndex={-1}');
+    expect(source).toContain('paddingBottom: footerPaddingBottom');
     expect(source).toContain('<ScrollView');
     expect(source).toContain('style={{ flexShrink: 1 }}');
     expect(source).toContain('className="h-[48px] items-center justify-center"');
+    expect(source).not.toContain('height - 48');
     expect(source).not.toContain('className="h-[44px] items-center justify-center"');
     expect(source).not.toContain('h-[42px]');
   });

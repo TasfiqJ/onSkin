@@ -6,6 +6,24 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the `/commerce/consent` MHMDA where-to-buy consent gate for native
+  bottom safe areas and modal semantics. The route-local sheet now uses
+  `useWindowDimensions()` plus `useSafeAreaInsets()`, caps itself at viewport
+  height minus a 44 px dismiss reserve, adds extra footer padding only when a
+  real native bottom inset exists, exposes `role="dialog"` / `aria-modal`, and
+  removes the full-screen scrim from accessibility traversal because the visible
+  Dismiss control is the named exit. Focused commerce route contracts, mobile
+  typecheck, and mobile lint pass. Codex in-app browser evidence with
+  `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true` confirms `/commerce/consent` at
+  320 px has one named dialog, zero horizontal overflow, a 48 x 48 Dismiss
+  control, a 264 x 54 Allow action, a 264 x 48 Not now action, and no mojibake
+  in visible text; screenshot capture was unavailable, so native
+  home-indicator, Dynamic Type, VoiceOver/TalkBack, and outbound-link handoff
+  remain follow-up QA. Evidence is in
+  `test-results/human-e2e/2026-07-08/commerce-consent-safe-area/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-08-commerce-consent-safe-area.md`.
+
 - Hardened the `/shelf/manual` category picker for native bottom safe areas and
   very short phone heights. The route-local sheet now owns its viewport cap with
   `useWindowDimensions()`, reserves a 44 px outside dismiss area, applies

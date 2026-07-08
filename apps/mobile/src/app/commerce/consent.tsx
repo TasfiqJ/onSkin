@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { declineCommerceConsent, grantCommerceConsent } from '@/features/commerce/consent';
@@ -18,8 +19,11 @@ import { colors } from '@/theme/tokens';
 // retailer regardless of consent (the opaque token carries none).
 export default function CommerceConsentSheet() {
   const qc = useQueryClient();
-  const { height } = useWindowDimensions();
-  const sheetMaxHeight = Math.max(280, height - 48);
+  const { height: viewportHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const footerPaddingBottom =
+    insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined;
 
   const close = () => backOrReplace(router, APP_YOU_ROUTE);
 
@@ -38,8 +42,21 @@ export default function CommerceConsentSheet() {
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.42)' }}>
-      <Pressable className="absolute inset-0" accessible={false} onPress={close} />
+      <Pressable
+        aria-hidden
+        className="absolute inset-0"
+        accessible={false}
+        accessibilityElementsHidden
+        focusable={false}
+        importantForAccessibility="no"
+        tabIndex={-1}
+        onPress={close}
+      />
       <View
+        aria-modal
+        role="dialog"
+        accessibilityLabel={COMMERCE_COPY.consent.title}
+        accessibilityViewIsModal
         className="overflow-hidden rounded-t-sheet bg-paper"
         style={{ maxHeight: sheetMaxHeight }}
       >
@@ -114,7 +131,14 @@ export default function CommerceConsentSheet() {
           </Text>
         </ScrollView>
 
-        <View className="px-7 pb-8 pt-2">
+        <View
+          className="px-7 pb-8 pt-2"
+          style={
+            footerPaddingBottom === undefined
+              ? undefined
+              : { paddingBottom: footerPaddingBottom }
+          }
+        >
           <Pressable
             accessibilityRole="button"
             onPress={() => void allow()}
