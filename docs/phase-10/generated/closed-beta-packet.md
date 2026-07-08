@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-08T17:37:59.132Z
+Generated: 2026-07-08T17:50:09.209Z
 Status: blocked
-Git SHA: 164f906c0750b27ca4979d992b35492bb859f4db
+Git SHA: 4bae6d1d65e14fbe851634a35ee91051487642d2
 Phase 9 packet status: blocked
 
 ## Beta Identity
@@ -55,7 +55,7 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `1eeae3e44ae91079c226bd7a7e9713aebc0fa812f7d4209077be63f1b54324f6`
+- `package.json`: `68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
 - `.env.example`: `08289db78a4388aed718466d895fe090f87f707c9752169fa9696df3c924c92b`
 - `scripts/phase9/lib.mjs`: `d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752`
@@ -70,7 +70,7 @@ Phase 9 packet status: blocked
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `51369d7e3a9566bd51058ecf51999525d21d934602fcc7688b46c9558aa359c9`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `7f411ad68330545f5096bf8ef7abb3313a696176fd9ec75fc842cfd0997e0407`
 - `docs/phase-10/beta-source-of-truth.md`: `d791b7e8893bb7a2f57fb858a1ddff7e9f89cf968ab9967fa97ae57a6962c03f`
 - `docs/phase-10/tester-recruitment-sheet.md`: `ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
