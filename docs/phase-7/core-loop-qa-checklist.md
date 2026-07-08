@@ -242,7 +242,7 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   home-indicator, Dynamic Type, screen-reader, or outbound-link handoff QA.
 - 2026-07-08: System Chrome Expo web E2E at 320 x 568 covers paywall and
   subscription settings external-handoff failure recovery. With
-  `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser,linking` and
+  `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` and
   `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, direct
   `/paywall/upsell?feature=full_routine` renders row-local `Link unavailable`
   after Terms/Privacy failure and a visible restore-empty message after Restore.
@@ -251,7 +251,7 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   renders visible recovery copy and policy/restore failures stay on the current
   surface. Paywall compliance controls are 48 px+ tall, subscription rows are
   52-53 px tall, horizontal overflow is zero, and screenshots/metrics are in
-  `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/`. This
+  `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/`. This
   does not replace native iOS/Android RevenueCat restore, native StoreKit/Play
   billing management, or final production policy URL QA.
 - 2026-07-07: Fresh Chrome E2E at 320 x 568 covers representative Pro route

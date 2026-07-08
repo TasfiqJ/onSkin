@@ -14,11 +14,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Settings now gives the same persistent feedback for Terms, Privacy, Restore,
   and store-management deep-link failure, with a local store-backed entitlement
   fixture for the manage-billing branch. System Chrome Expo web E2E at 320 x 568
-  with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser,linking` verifies
+  with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all` and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies
   `/paywall/upsell?feature=full_routine` and `/settings/subscription` show
   visible recovery copy, keep 48 px+ controls, and have zero horizontal
   overflow. Evidence is in
-  `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/`, with
+  `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/`, with
   the tracked report in
   `docs/e2e-bug-reports/2026-07-08-paywall-subscription-link-failure.md`.
 

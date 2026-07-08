@@ -2,14 +2,14 @@
 
 Severity: Medium
 Surface: Expo web
-Environment: System Chrome, Expo web, 320 x 568 viewport
+Environment: System Chrome, Expo web, 320 x 568 viewport, `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`
 Feature: Paywall compliance row and Subscription Settings
 Date: 2026-07-08
 Tester: Codex
 
 ## Reproduction Steps
 
-1. Start Expo web with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser,linking`.
+1. Start Expo web with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all`.
 2. Open `/paywall/upsell?feature=full_routine` and tap Terms, Privacy, and Restore.
 3. Open `/settings/subscription` with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and tap Manage in App Store, Terms, Privacy, and Restore purchases.
 
@@ -23,14 +23,13 @@ Before this fix, the shared paywall policy opener and subscription settings rows
 
 ## Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/paywall-terms-failure.png`
-- Screenshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/paywall-restore-failure.png`
-- Screenshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/settings-manage-failure.png`
-- Screenshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/settings-restore-failure.png`
-- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/paywall-after.json`
-- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/settings-after.json`
-- Logs: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/*-logs.json`
-- Terminal transcript: Playwright run passed 2/2 tests.
+- Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/01-paywall-before-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/02-paywall-after-feedback-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/03-settings-subscription-before-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/04-settings-subscription-after-feedback-320x568.png`
+- UI snapshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/summary.json`
+- Logs: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/browser-logs.json`
+- Terminal transcript: System Chrome CDP E2E run passed seven interactions.
 
 ## Frequency
 
@@ -59,12 +58,11 @@ Return and await the shared policy opener result, then set inline `accessibility
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/paywall-terms-failure.png`
-- Screenshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/settings-manage-failure.png`
-- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/paywall-after.json`
-- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/settings-after.json`
-- Terminal transcript: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts src/features/settings/settingsRoutes.test.ts src/features/photos/progressRoutes.test.ts src/lib/navigation/externalOpen.test.ts` passed 47 tests.
-- Terminal transcript: Playwright E2E passed 2 tests.
+- Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/02-paywall-after-feedback-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/04-settings-subscription-after-feedback-320x568.png`
+- UI snapshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/summary.json`
+- Terminal transcript: `npm --workspace apps/mobile run test -- paywallMobileContracts.test.ts externalOpen.test.ts settingsRoutes.test.ts` passed 36 tests.
+- Terminal transcript: System Chrome CDP E2E passed seven interactions.
 
 ## Remaining Risk
 
