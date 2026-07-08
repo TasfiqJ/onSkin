@@ -215,7 +215,9 @@ Status: launch-blocked
 Evidence needed:
 
 - Reviewed source memos.
-- QA report with zero launch blockers.
+- Generated `docs/phase-4/generated/catalog-qa-report.md` with
+  `Git status: clean`, current source hashes, zero launch blockers, and the
+  exact approved import artifact attached.
 - Beta coverage report with acceptable match/miss outcomes.
 
 ## P1 - Closed Beta And Business Proof

@@ -1,11 +1,32 @@
 #!/usr/bin/env node
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, relative, resolve } from 'node:path';
+import { command } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 const inputPath = resolve(root, process.argv[2] ?? 'docs/phase-4/generated/obf-fixture-import.json');
 const jsonOutputPath = resolve(root, process.argv[3] ?? 'docs/phase-4/generated/catalog-qa-report.json');
 const mdOutputPath = jsonOutputPath.replace(/\.json$/i, '.md');
+const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
+  relative(root, path).replace(/\\/g, '/'),
+);
+
+const requiredSourceHashPaths = [
+  'package.json',
+  'scripts/phase4/catalog-qa-report.mjs',
+  'scripts/phase4/import-obf-snapshot.mjs',
+  'scripts/phase4/import-cosing-dictionary.mjs',
+  'scripts/phase4/check-source-env.mjs',
+  'scripts/phase4/check-source-env-smoke.mjs',
+  'scripts/phase4/catalog-qa-report-smoke.mjs',
+  'scripts/phase9/lib.mjs',
+  'docs/FOR_TAS_TO_DO.md',
+  'docs/phase-4/catalog-source-memo-cosing.md',
+  'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
+  'docs/phase-4/odbl-compliance-memo.md',
+  'docs/phase-4/phase-4-exit-review.md',
+];
 
 const manifest = JSON.parse(readFileSync(inputPath, 'utf8'));
 const products = Array.isArray(manifest.products) ? manifest.products : [];
@@ -25,6 +46,60 @@ if (missingCategory.length > 0) warnings.push(`${missingCategory.length} accepte
 if (missingIngredients.length > 0) warnings.push(`${missingIngredients.length} accepted products have no ingredient text.`);
 if (products.length < 1) blockers.push('No accepted products in import output.');
 
+function repoRelative(path) {
+  const candidate = relative(root, path).replace(/\\/g, '/');
+  return candidate && !candidate.startsWith('..') ? candidate : path;
+}
+
+function hashAbsolute(path, label = repoRelative(path)) {
+  if (!existsSync(path)) return { path: label, exists: false };
+  const bytes = readFileSync(path);
+  return {
+    path: label,
+    exists: true,
+    bytes: bytes.length,
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+  };
+}
+
+function hashRepoFile(path) {
+  return hashAbsolute(resolve(root, path), path);
+}
+
+function gitStatusExcludingGeneratedReport() {
+  const excluded = new Set(reportOutputPaths);
+  return command('git', ['status', '--short'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !excluded.has(statusPath);
+    })
+    .join('\n')
+    .trim();
+}
+
+const inputArtifact = hashAbsolute(inputPath);
+const sourceHashes = requiredSourceHashPaths.map(hashRepoFile);
+for (const sourceHash of sourceHashes) {
+  if (!sourceHash.exists) blockers.push(`Missing source hash input ${sourceHash.path}.`);
+}
+
+let gitSha = 'unknown';
+let gitStatus = 'unknown';
+try {
+  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
+  gitStatus = gitStatusExcludingGeneratedReport();
+} catch {
+  warnings.push('Git SHA/status could not be captured.');
+}
+if (gitStatus.length > 0) {
+  warnings.push(
+    'Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence.',
+  );
+}
+
 const localQaClear = blockers.length === 0 && warnings.length === 0;
 const launchClearReason =
   'No. This report only validates the local fixture/export output; launch clearance still requires final source identity, ODbL/CosIng legal review, curated batch QA, beta coverage, and reviewer signoff.';
@@ -32,8 +107,12 @@ const launchClearReason =
 const report = {
   generatedAt: new Date().toISOString(),
   inputPath,
+  gitSha,
+  gitStatus,
   source: manifest.source,
   importMode: manifest.importMode,
+  inputArtifact,
+  sourceHashes,
   totals: {
     inputRecords: manifest.totals?.inputRecords ?? null,
     acceptedProducts: products.length,
@@ -51,16 +130,40 @@ const report = {
 
 mkdirSync(dirname(jsonOutputPath), { recursive: true });
 writeFileSync(jsonOutputPath, `${JSON.stringify(report, null, 2)}\n`);
+
+const markdownRows = sourceHashes
+  .map((sourceHash) =>
+    sourceHash.exists
+      ? `| ${sourceHash.path} | present | ${sourceHash.bytes} | ${sourceHash.sha256} |`
+      : `| ${sourceHash.path} | missing |  |  |`,
+  )
+  .join('\n');
+const dirtyDetails = gitStatus.length
+  ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n`
+  : '\n';
 writeFileSync(
   mdOutputPath,
   `# Catalog QA Report\n\nGenerated: ${report.generatedAt}\n\n` +
+    `Git SHA: ${report.gitSha}\n\n` +
+    `Git status: ${report.gitStatus.length ? 'DIRTY' : 'clean'}\n` +
+    dirtyDetails +
     `Accepted products: ${report.totals.acceptedProducts}\n\n` +
     `Rejected records: ${report.totals.rejectedRecords}\n\n` +
     `Blockers: ${blockers.length ? blockers.join('; ') : 'none'}\n\n` +
     `Warnings: ${warnings.length ? warnings.join('; ') : 'none'}\n\n` +
     `Local fixture QA clear: ${report.localQaClear ? 'yes' : 'no'}\n\n` +
     `Launch clear: no\n\n` +
-    `Launch clear reason: ${report.launchClearReason}\n`,
+    `Launch clear reason: ${report.launchClearReason}\n\n` +
+    `## Input Artifact\n\n` +
+    `| Path | Status | Bytes | SHA-256 |\n` +
+    `| --- | --- | ---: | --- |\n` +
+    (inputArtifact.exists
+      ? `| ${inputArtifact.path} | present | ${inputArtifact.bytes} | ${inputArtifact.sha256} |\n\n`
+      : `| ${inputArtifact.path} | missing |  |  |\n\n`) +
+    `## Source Hashes\n\n` +
+    `| Path | Status | Bytes | SHA-256 |\n` +
+    `| --- | --- | ---: | --- |\n` +
+    `${markdownRows}\n`,
 );
 
 console.log(`Wrote ${jsonOutputPath}`);

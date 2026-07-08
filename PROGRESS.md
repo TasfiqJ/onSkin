@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 4 catalog QA report provenance. The generated catalog report
+  now records the source Git SHA, ignores only its own generated report outputs
+  when checking worktree cleanliness, warns when generated from a dirty tree,
+  shows `Git status: clean` or `DIRTY` in Markdown, hashes the input artifact,
+  and hashes the Phase 4 source docs/scripts that define source/legal/catalog
+  evidence. Added `npm run phase4:qa-report-smoke` and wired it into
+  `phase4:verify` so the provenance contract and dirty-worktree warning stay
+  covered by the local Phase 4 gate.
+
 - Hardened Phase 3 review-packet provenance. Generated reviewer packets now
   record the source Git SHA, ignore only their own generated packet outputs
   when checking worktree cleanliness, warn when generated from a dirty tree, and
