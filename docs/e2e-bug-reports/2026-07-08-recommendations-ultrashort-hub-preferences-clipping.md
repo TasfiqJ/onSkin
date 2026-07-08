@@ -26,7 +26,7 @@ The current-main 320 x 430 route sweep found the second `/recommendations` card 
 
 - Pre-fix sweep: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postfix-sweep/failures.json`
 - Pre-fix route snapshots: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postfix-sweep/recommendations.json`, `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postfix-sweep/recommendations-preferences.json`
-- Post-fix screenshot/JSON packet: `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`
+- Post-fix screenshot/JSON packet: `test-results/human-e2e/2026-07-08/recommendations-short-phone-430-clearance/`
 
 ## Frequency
 
@@ -41,11 +41,11 @@ Always in the tested 320 x 430 recommendation hub and preferences states.
 
 ## Suspected Cause
 
-The sub-520 px recommendation density cleared 320 x 480 but still left too much vertical card and preference-chip content for 320 x 430. The preferences chip floor also relied only on class-generated min-height, which can render fractionally under 44 px or fail to update in the active web stylesheet when new arbitrary classes are introduced during a hot run.
+The sub-520 px recommendation density cleared 320 x 480 but still left too much vertical card and preference-chip content for 320 x 430. The preferences layout also spent one row per longer values chip, so `Sustainable` became a partially visible control instead of a deliberate scroll target.
 
 ## Minimal Fix Recommendation
 
-Add sub-460 px density to the recommendation hub/card layout. For preferences, keep value and budget chips at a real 48 px inline min-height and push texture chips below the first viewport so they are reached by scroll instead of clipping.
+Add sub-460 px density to the recommendation hub/card layout. For preferences, keep value and budget chips at a real 48 px hit target, tighten horizontal chip padding so values fit cleanly, and push texture chips below the first viewport so they are reached by scroll instead of clipping.
 
 ## Verification Flow After Fix
 
@@ -57,8 +57,9 @@ Add sub-460 px density to the recommendation hub/card layout. For preferences, k
 
 ## Post-Fix Evidence
 
-- Screenshot/JSON packet: `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`
-- Result: zero clipped controls, zero sub-44 controls, zero blocked center hit-tests, zero unexpected warn/error logs, and successful `Sustainable` chip selection.
+- Screenshot/JSON packet: `test-results/human-e2e/2026-07-08/recommendations-short-phone-430-clearance/`
+- Report: `test-results/human-e2e/2026-07-08/recommendations-short-phone-430-clearance/report.md`
+- Result: zero clipped controls, zero sub-44 controls, zero blocked center hit-tests, scrolled texture controls fully usable, and successful `Sustainable` chip selection.
 
 ## Remaining Risk
 
