@@ -1,0 +1,179 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 94.35679626464844,
+        "y": 249.93933868408203
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Fragrance-free",
+      "index": 1,
+      "isTab": false,
+      "label": "Fragrance-free",
+      "rect": {
+        "bottom": 273.93812561035156,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 164.71480560302734,
+        "top": 225.9405517578125,
+        "width": 140.7160186767578
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 140.7160186767578
+    },
+    {
+      "center": {
+        "x": 211.56705856323242,
+        "y": 249.93933868408203
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Vegan",
+      "index": 2,
+      "isTab": false,
+      "label": "Vegan",
+      "rect": {
+        "bottom": 273.93812561035156,
+        "height": 47.99757385253906,
+        "left": 172.7093505859375,
+        "right": 250.42476654052734,
+        "top": 225.9405517578125,
+        "width": 77.71541595458984
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 77.71541595458984
+    },
+    {
+      "center": {
+        "x": 84.83768463134766,
+        "y": 305.93143463134766
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Cruelty-free",
+      "index": 3,
+      "isTab": false,
+      "label": "Cruelty-free",
+      "rect": {
+        "bottom": 329.9302215576172,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 145.67658233642578,
+        "top": 281.9326477050781,
+        "width": 121.67779541015625
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 121.67779541015625
+    },
+    {
+      "center": {
+        "x": 105.8479995727539,
+        "y": 361.9235610961914
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Non-comedogenic",
+      "index": 4,
+      "isTab": false,
+      "label": "Non-comedogenic",
+      "rect": {
+        "bottom": 385.92234802246094,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 187.69721221923828,
+        "top": 337.9247741699219,
+        "width": 163.69842529296875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 163.69842529296875
+    },
+    {
+      "center": {
+        "x": 82.60770797729492,
+        "y": 417.91568756103516
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Sustainable",
+      "index": 5,
+      "isTab": false,
+      "label": "Sustainable",
+      "rect": {
+        "bottom": 441.9144744873047,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 141.2166290283203,
+        "top": 393.9169006347656,
+        "width": 117.21784210205078
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 36.083099365234375,
+      "visibleWidth": 117.21784210205078
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 1,
+  "issues": [
+    {
+      "label": "Sustainable",
+      "rect": "[Circular]",
+      "type": "clipped-visible-control",
+      "visibleHeight": 36.083099365234375,
+      "visibleWidth": 117.21784210205078
+    }
+  ],
+  "route": "/recommendations/preferences?postfix430=1783522201115",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "<PreferencesRecommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustainableBUDGETDrugstoreMid-rangePremiumTEXTUREGelCreamFluidBalmOil✦We prioritise options that fit these.",
+  "url": "http://localhost:8223/recommendations/preferences?postfix430=1783522201115",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

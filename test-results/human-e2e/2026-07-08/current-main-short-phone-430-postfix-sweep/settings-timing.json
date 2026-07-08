@@ -1,0 +1,147 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 43.992719650268555,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 244.80432510375977,
+        "y": 101.97209167480469
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "7:30 AM",
+      "index": 1,
+      "isTab": false,
+      "label": "Morning reminder time, 7:30 AM",
+      "rect": {
+        "bottom": 125.97087860107422,
+        "height": 47.99757385253906,
+        "left": 207.20571899414062,
+        "right": 282.4029312133789,
+        "top": 77.97330474853516,
+        "width": 75.19721221923828
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 75.19721221923828
+    },
+    {
+      "center": {
+        "x": 245.38835906982422,
+        "y": 178.9138412475586
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "9:30 PM",
+      "index": 2,
+      "isTab": false,
+      "label": "Evening reminder time, 9:30 PM",
+      "rect": {
+        "bottom": 202.91262817382812,
+        "height": 47.99757385253906,
+        "left": 208.37379455566406,
+        "right": 282.4029235839844,
+        "top": 154.91505432128906,
+        "width": 74.02912902832031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 74.02912902832031
+    },
+    {
+      "center": {
+        "x": 78.92142486572266,
+        "y": 336.87805938720703
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "10:00 PM",
+      "index": 3,
+      "isTab": false,
+      "label": "Quiet hours start, 10:00 PM",
+      "rect": {
+        "bottom": 360.87684631347656,
+        "height": 47.99757385253906,
+        "left": 37.98543930053711,
+        "right": 119.8574104309082,
+        "top": 312.8792724609375,
+        "width": 81.8719711303711
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 81.8719711303711
+    },
+    {
+      "center": {
+        "x": 191.14836502075195,
+        "y": 336.87805938720703
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "7:00 AM",
+      "index": 4,
+      "isTab": false,
+      "label": "Quiet hours end, 7:00 AM",
+      "rect": {
+        "bottom": 360.87684631347656,
+        "height": 47.99757385253906,
+        "left": 153.5497589111328,
+        "right": 228.7469711303711,
+        "top": 312.8792724609375,
+        "width": 75.19721221923828
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 75.19721221923828
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/timing?postfix430=1783522229165",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "<TimingMorning7:30 AMEvening9:30 PMQUIET HOURSNothing fires10:00 PM→7:00 AMNothing fires inside this window. Even your routine reminders wait until morning.LOCK SCREENLock screen privacyAlways generic; product, photo, and condition details stay inside the appOnRoutineKindYour evening routine’s ready.Always generic on the lock screen",
+  "url": "http://localhost:8223/settings/timing?postfix430=1783522229165",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

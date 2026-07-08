@@ -1,0 +1,99 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 375.9936466217041
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Continue with manual text",
+      "index": 1,
+      "label": "Continue with manual text",
+      "rect": {
+        "bottom": 403.9897041320801,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 347.9975891113281,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/ocr?codex430=1783522107392",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "textStart": "<Read the labelCapture the ingredient panelCamera permission lets you keep the label beside the editable text. Manual entry still works.On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.Continue with manual text",
+  "url": "http://localhost:8223/shelf/ocr?codex430=1783522107392",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "logs": [
+    {
+      "level": "info",
+      "message": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "log",
+      "message": "Running application \"main\" with appParams:\n Object \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

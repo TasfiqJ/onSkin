@@ -1,0 +1,99 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 43.992719650268555,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 134.2005500793457,
+        "y": 141.94478797912598
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "7:30 AM",
+      "index": 1,
+      "isTab": false,
+      "label": "Morning routine 7:30 AM",
+      "rect": {
+        "bottom": 173.93811416625977,
+        "height": 63.98665237426758,
+        "left": 37.98543930053711,
+        "right": 230.4156608581543,
+        "top": 109.95146179199219,
+        "width": 192.4302215576172
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 63.98665237426758,
+      "visibleWidth": 192.4302215576172
+    },
+    {
+      "center": {
+        "x": 134.2005500793457,
+        "y": 234.87561988830566
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "9:30 PM",
+      "index": 2,
+      "isTab": false,
+      "label": "Evening · tonight’s step 9:30 PM",
+      "rect": {
+        "bottom": 266.86894607543945,
+        "height": 63.98665237426758,
+        "left": 37.98543930053711,
+        "right": 230.4156608581543,
+        "top": 202.88229370117188,
+        "width": 192.4302215576172
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 63.98665237426758,
+      "visibleWidth": 192.4302215576172
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/notifications?postfix430=1783522227217",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "<NotificationsUTILITY · YOUR ROUTINEMorning routine 7:30 AMEvening · tonight’s step 9:30 PMGENTLE NUDGES · CAPPEDStreak & adherenceReplenishmentProgress-photo nudgePROMOTIONALTips & announcements off by defaultwe cap gentle nudges so they never stack up",
+  "url": "http://localhost:8223/settings/notifications?postfix430=1783522227217",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

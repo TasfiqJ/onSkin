@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-07-08T14:41:45.934Z",
+  "failedRouteCount": 8,
+  "failedRoutes": [
+    {
+      "route": "/progress",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "hitLabel": "TodayProgressShelfYou",
+          "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+          "rect": "[Circular]",
+          "type": "hit-blocked-control"
+        }
+      ]
+    },
+    {
+      "route": "/recommendations",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 133.15533447265625,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/recommendations/preferences",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Sustainable",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 36.083099365234375,
+          "visibleWidth": 117.21784210205078
+        }
+      ]
+    },
+    {
+      "route": "/community",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 88.2069091796875,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/settings/subscription",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Privacy›",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        }
+      ]
+    },
+    {
+      "route": "/shelf/no-match",
+      "issueCount": 2,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "+Add it by handAlways works, even offline",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 40.983001708984375,
+          "visibleWidth": 264.4114074707031
+        },
+        {
+          "hitLabel": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offline",
+          "label": "+Add it by handAlways works, even offline",
+          "rect": "[Circular]",
+          "type": "hit-blocked-control"
+        }
+      ]
+    },
+    {
+      "route": "/shelf/ocr",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Continue with manual text",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 12.084320068359375,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/shelf/manual",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "hitLabel": "Continue",
+          "label": "Ingredients",
+          "rect": "[Circular]",
+          "type": "hit-blocked-control"
+        }
+      ]
+    }
+  ]
+}

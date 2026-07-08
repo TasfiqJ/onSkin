@@ -1,0 +1,51 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 246.97361183166504
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add products",
+      "index": 0,
+      "isTab": false,
+      "label": "Add products",
+      "rect": {
+        "bottom": 274.969669342041,
+        "height": 55.99211502075195,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 218.97755432128906,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 232.40292358398438
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/today?routine=PM&postfix430=1783522169843",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "WEDNESDAY, JULY 8 · 10:49 AMGood evening.No routine yetBuild a routine from your shelf.Add the products you use and Today will become your AM/PM checklist.Add productsTodayProgressShelfYou .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }",
+  "url": "http://localhost:8223/today?routine=PM&postfix430=1783522169843",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

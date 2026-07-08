@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-07-08T14:47:38.965Z",
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "routeCount": 3,
+  "failedRouteCount": 0,
+  "summary": [
+    {
+      "route": "/shelf/manual",
+      "slug": "shelf-manual-postfix",
+      "issueCount": 0,
+      "issues": [],
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\shelf-short-phone-430-clearance\\shelf-manual-postfix.png",
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\shelf-short-phone-430-clearance\\shelf-manual-postfix.json",
+      "textStart": "xAdd by handProduct nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesPick a category and we'll estimate the PAO. You can change it next.Continue"
+    },
+    {
+      "route": "/shelf/ocr",
+      "slug": "shelf-ocr-postfix",
+      "issueCount": 0,
+      "issues": [],
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\shelf-short-phone-430-clearance\\shelf-ocr-postfix.png",
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\shelf-short-phone-430-clearance\\shelf-ocr-postfix.json",
+      "textStart": "<Read the labelCapture the ingredient panelCamera permission lets you keep the label beside the editable text. Manual entry still works.On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.Continue with manual text"
+    },
+    {
+      "route": "/shelf/no-match",
+      "slug": "shelf-no-match-postfix",
+      "issueCount": 0,
+      "issues": [],
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\shelf-short-phone-430-clearance\\shelf-no-match-postfix.png",
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\shelf-short-phone-430-clearance\\shelf-no-match-postfix.json",
+      "textStart": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offline"
+    }
+  ]
+}

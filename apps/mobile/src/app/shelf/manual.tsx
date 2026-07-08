@@ -49,6 +49,7 @@ function CategoryPickerSheet({
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const ultraShortSheet = viewportHeight < 460;
   const sheetMaxHeight = Math.max(0, viewportHeight - 48);
   const sheetPaddingBottom =
     insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
@@ -105,7 +106,7 @@ function CategoryPickerSheet({
           <ScrollView
             className="flex-1"
             showsVerticalScrollIndicator={false}
-            contentContainerClassName="pb-6"
+            contentContainerClassName={ultraShortSheet ? 'pb-14' : 'pb-6'}
             keyboardShouldPersistTaps="handled"
           >
             <View className="gap-2">
@@ -154,6 +155,8 @@ export default function ManualAddScreen() {
     presetCategory ? '' : draft.ingredients.join(', '),
   );
   const [pickerOpen, setPickerOpen] = useState(false);
+  const { height: viewportHeight } = useWindowDimensions();
+  const ultraShortPhone = viewportHeight < 460;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -205,14 +208,16 @@ export default function ManualAddScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-24"
+        contentContainerClassName={ultraShortPhone ? 'pb-28' : 'pb-24'}
         keyboardShouldPersistTaps="handled"
       >
-        <Text variant="bodySm" tone="muted" className="mb-4 mt-3">
-          The floor under every other path. This always works, even fully offline.
-        </Text>
+        {!ultraShortPhone ? (
+          <Text variant="bodySm" tone="muted" className="mb-4 mt-3">
+            The floor under every other path. This always works, even fully offline.
+          </Text>
+        ) : null}
 
-        <View className="gap-3">
+        <View className={ultraShortPhone ? 'gap-2' : 'gap-3'}>
           <View>
             <FieldLabel>Product name</FieldLabel>
             <TextInput
@@ -221,11 +226,11 @@ export default function ManualAddScreen() {
               onChangeText={setName}
               placeholder="e.g. Gentle Retinol Night Serum"
               placeholderTextColor={colors.mutedLight}
-              className={cn(inputClass, 'h-[50px]')}
+              className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}
             />
           </View>
 
-          <View className="flex-row gap-3">
+          <View className={ultraShortPhone ? 'flex-row gap-2' : 'flex-row gap-3'}>
             <View className="flex-1">
               <FieldLabel>Brand</FieldLabel>
               <TextInput
@@ -234,7 +239,7 @@ export default function ManualAddScreen() {
                 onChangeText={setBrand}
                 placeholder="Brand"
                 placeholderTextColor={colors.mutedLight}
-                className={cn(inputClass, 'h-[50px]')}
+                className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}
               />
             </View>
             <View className="flex-[1.1]">
@@ -244,7 +249,10 @@ export default function ManualAddScreen() {
                 accessibilityHint="Choose product category"
                 accessibilityRole="button"
                 onPress={() => setPickerOpen((o) => !o)}
-                className="h-[50px] flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3"
+                className={cn(
+                  ultraShortPhone ? 'h-[48px]' : 'h-[50px]',
+                  'flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3',
+                )}
               >
                 <Text
                   className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"
@@ -278,35 +286,47 @@ export default function ManualAddScreen() {
               placeholder="Paste or type the INCI list…"
               placeholderTextColor={colors.mutedLight}
               multiline
-              className={cn(inputClass, 'min-h-[64px] py-3')}
+              className={cn(
+                inputClass,
+                ultraShortPhone ? 'min-h-[52px] py-2.5' : 'min-h-[64px] py-3',
+              )}
               style={{ textAlignVertical: 'top' }}
             />
           </View>
 
-          {/* PAO pre-fill note (honest, from the category default. Editable next). */}
-          <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3">
-            <View className="h-[7px] w-[7px] rounded-full bg-clay" />
-            <Text variant="bodySm" tone="muted" className="flex-1">
-              {paoFromCategory != null ? (
-                <>
-                  We&apos;ll pre-fill the PAO from your category.{' '}
-                  <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-                    {categoryLabel(category)?.toLowerCase()} defaults to ~{paoFromCategory} months.
-                  </Text>{' '}
-                  You can change it next.
-                </>
-              ) : category ? (
-                <>You can set the PAO on the next step. Straight from the label.</>
-              ) : (
-                <>Pick a category and we&apos;ll estimate the PAO. You can change it next.</>
-              )}
-            </Text>
-          </View>
+          {!ultraShortPhone ? (
+            /* PAO pre-fill note (honest, from the category default. Editable next). */
+            <View className="flex-row items-center gap-3 rounded-[16px] bg-clay-tint px-4 py-3">
+              <View className="h-[7px] w-[7px] rounded-full bg-clay" />
+              <Text variant="bodySm" tone="muted" className="flex-1">
+                {paoFromCategory != null ? (
+                  <>
+                    We&apos;ll pre-fill the PAO from your category.{' '}
+                    <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
+                      {categoryLabel(category)?.toLowerCase()} defaults to ~{paoFromCategory}{' '}
+                      months.
+                    </Text>{' '}
+                    You can change it next.
+                  </>
+                ) : category ? (
+                  <>You can set the PAO on the next step. Straight from the label.</>
+                ) : (
+                  <>Pick a category and we&apos;ll estimate the PAO. You can change it next.</>
+                )}
+              </Text>
+            </View>
+          ) : null}
         </View>
       </ScrollView>
 
-      <View className="pb-3 pt-1">
-        <Button label="Continue" variant="accent" disabled={!canContinue} onPress={onContinue} />
+      <View className={ultraShortPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>
+        <Button
+          label="Continue"
+          variant="accent"
+          disabled={!canContinue}
+          className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}
+          onPress={onContinue}
+        />
       </View>
       <CategoryPickerSheet
         visible={pickerOpen}

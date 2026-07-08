@@ -1,0 +1,51 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 366.1028690338135
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to Skin Notes",
+      "index": 0,
+      "isTab": false,
+      "label": "Back to Skin Notes",
+      "rect": {
+        "bottom": 394.09892654418945,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 338.1068115234375,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community/people-like-you?postfix430=1783522211800",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "BETACommunity posting is not in this betaSkin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful.No user post is accepted until the review desk and consent copy are production-approved.Back to Skin Notes",
+  "url": "http://localhost:8223/community/people-like-you?postfix430=1783522211800",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

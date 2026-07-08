@@ -1,0 +1,75 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 289.0321731567383
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to For you",
+      "index": 1,
+      "isTab": false,
+      "label": "Back to For you",
+      "rect": {
+        "bottom": 313.0309600830078,
+        "height": 47.99757385253906,
+        "left": 103.39806365966797,
+        "right": 216.99030303955078,
+        "top": 265.03338623046875,
+        "width": 113.59223937988281
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 113.59223937988281
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/recommendations/stale-local-rec?postfix430=1783522203377",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "<RecommendationThis suggestion isn’t current anymore. Your routine may have changed.Back to For you",
+  "url": "http://localhost:8223/recommendations/stale-local-rec?postfix430=1783522203377",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

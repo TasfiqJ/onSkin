@@ -123,9 +123,16 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const shortPhone = height < 520');
-    expect(source).toContain("className={shortPhone ? 'px-6 pb-5 pt-3' : undefined}");
-    expect(source).toContain("<View className={shortPhone ? 'mt-3 gap-1.5' : 'mt-4 gap-2'}>");
+    expect(source).toContain('const ultraShortPhone = height < 460');
+    expect(source).toContain(
+      "className={ultraShortPhone ? 'px-6 pb-4 pt-2' : shortPhone ? 'px-6 pb-5 pt-3' : undefined}",
+    );
+    expect(source).toContain(
+      "<View className={ultraShortPhone ? 'mt-2 gap-1' : shortPhone ? 'mt-3 gap-1.5' : 'mt-4 gap-2'}>",
+    );
     expect(source).toContain('compact={shortPhone}');
+    expect(source).toContain('ultraCompact={ultraShortPhone}');
+    expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'");
     expect(source).toContain('min-h-[54px]');
     expect(source).toContain('!shortPhone ? (');
   });
@@ -405,15 +412,21 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('accessibilityLabel="Close category picker"');
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
     expect(source).toContain('const insets = useSafeAreaInsets();');
+    expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
     expect(source).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
     expect(source).toContain('aria-modal');
     expect(source).toContain('role="dialog"');
     expect(source).toContain('accessibilityLabel="Choose product category"');
     expect(source).toContain('className="flex-1"');
-    expect(source).toContain('contentContainerClassName="pb-24"');
-    expect(source).toContain('<View className="pb-3 pt-1">');
+    expect(source).toContain("contentContainerClassName={ultraShortPhone ? 'pb-28' : 'pb-24'}");
+    expect(source).toContain('{!ultraShortPhone ? (');
+    expect(source).toContain("className={ultraShortPhone ? 'gap-2' : 'gap-3'}");
+    expect(source).toContain("className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}");
+    expect(source).toContain("<View className={ultraShortPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>");
+    expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain(
       "return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');",
     );
@@ -424,7 +437,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('<View className="flex-1">');
     expect(source).toContain('<View className="flex-[1.1]">');
     expect(source).toContain(
-      'className="h-[50px] flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3"',
+      "ultraShortPhone ? 'h-[48px]' : 'h-[50px]'",
     );
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
@@ -440,7 +453,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'className="min-h-[52px] flex-row items-center justify-between rounded-[14px] border border-hairline bg-paper-raised px-4 py-3"',
     );
-    expect(source).toContain('contentContainerClassName="pb-6"');
+    expect(source).toContain("contentContainerClassName={ultraShortSheet ? 'pb-14' : 'pb-6'}");
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain('<CategoryPickerSheet');
     expect(source).not.toContain('const pickerSheetMaxHeight = Math.max(320, height - 48);');
@@ -455,6 +468,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('<Modal');
     expect(source).not.toContain('animationType="slide"');
     expect(source).not.toContain("contentContainerClassName={pickerOpen ? 'pb-32' : 'pb-24'}");
+    expect(source).not.toContain('contentContainerClassName="pb-24"');
     expect(source).not.toContain('nestedScrollEnabled');
     expect(source).not.toContain('style={{ maxHeight: 192 }}');
     expect(source).not.toContain("'flex-row items-center justify-between px-4 py-3'");
@@ -484,7 +498,16 @@ describe('Shelf route mobile contracts', () => {
       'min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3',
     );
     expect(source).toContain('{canShowCamera || capturedUri ? (');
-    expect(source).toContain("contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}");
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
+    expect(source).toContain(
+      "state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'",
+    );
+    expect(source).toContain("ultraShortPhone ? 'mt-3 h-[176px]' : 'mt-4 h-[230px]'");
+    expect(source).toContain(
+      "ultraShortPhone ? 'top-[48px] h-[78px]' : 'top-[64px] h-[96px]'",
+    );
+    expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain("{state === 'review' ? (");
     expect(source).toMatch(/\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/);
     expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');

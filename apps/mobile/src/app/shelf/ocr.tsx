@@ -3,7 +3,15 @@ import { Image } from 'expo-image';
 import { router, useIsFocused } from 'expo-router';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import {
@@ -13,6 +21,7 @@ import {
 import { tagLabel } from '@/features/intelligence/presentation';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { cn } from '@/lib/cn';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
@@ -68,6 +77,8 @@ export default function OcrScreen() {
   const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
   const lowConfidence = parsed.tokens.find((token) => token.isUnmatched);
   const canContinue = rawText.trim().length > 0;
+  const { height: viewportHeight } = useWindowDimensions();
+  const ultraShortPhone = viewportHeight < 460;
 
   const capture = async () => {
     if ((!cameraRef.current && !simulateCaptureFailureOnce) || state === 'capturing') return;
@@ -147,9 +158,16 @@ export default function OcrScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}
+        contentContainerClassName={
+          state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'
+        }
       >
-        <View className="mt-4 h-[230px] overflow-hidden rounded-[18px] bg-night-elevated">
+        <View
+          className={cn(
+            ultraShortPhone ? 'mt-3 h-[176px]' : 'mt-4 h-[230px]',
+            'overflow-hidden rounded-[18px] bg-night-elevated',
+          )}
+        >
           {state === 'review' ? (
             capturedUri ? (
               <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
@@ -233,7 +251,10 @@ export default function OcrScreen() {
           )}
           {canShowCamera || capturedUri ? (
             <View
-              className="absolute left-5 right-5 top-[64px] h-[96px] rounded-[10px]"
+              className={cn(
+                ultraShortPhone ? 'top-[48px] h-[78px]' : 'top-[64px] h-[96px]',
+                'absolute left-5 right-5 rounded-[10px]',
+              )}
               style={{
                 pointerEvents: 'none',
                 borderWidth: 2,
@@ -274,8 +295,12 @@ export default function OcrScreen() {
           </View>
         ) : null}
 
-        <View className="mt-3 rounded-[14px] bg-greige-chip p-3.5">
-          <Text variant="bodySm" tone="muted" style={{ lineHeight: 19 }}>
+        <View
+          className={cn(
+            ultraShortPhone ? 'mt-2 rounded-[14px] bg-greige-chip p-3' : 'mt-3 rounded-[14px] bg-greige-chip p-3.5',
+          )}
+        >
+          <Text variant="bodySm" tone="muted" style={{ lineHeight: ultraShortPhone ? 18 : 19 }}>
             {env.nativeOcrEnabled
               ? 'On-device OCR is enabled for this build. Check the text before saving.'
               : 'On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.'}
@@ -291,6 +316,7 @@ export default function OcrScreen() {
                   ? 'Capture label'
                   : 'Continue with manual text'
             }
+            className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}
             onPress={canAttemptCapture ? () => void capture() : () => setState('review')}
           />
         ) : null}

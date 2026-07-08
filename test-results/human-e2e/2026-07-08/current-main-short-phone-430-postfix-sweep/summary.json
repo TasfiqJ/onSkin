@@ -1,0 +1,541 @@
+{
+  "generatedAt": "2026-07-08T14:51:06.342Z",
+  "baseUrl": "http://localhost:8223",
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "routeCount": 49,
+  "failedRouteCount": 5,
+  "summary": [
+    {
+      "route": "/today",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\today.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\today.png",
+      "textStart": "WEDNESDAY, JULY 8Good morning.No routine yetBuild a routine from your shelf.Add the products you use and Today will become your AM/PM checklist.Add productsTodayProgressShelfYou",
+      "url": "http://localhost:8223/today?postfix430=1783522167897"
+    },
+    {
+      "route": "/today?routine=PM",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\today-routine-PM.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\today-routine-PM.png",
+      "textStart": "WEDNESDAY, JULY 8 · 10:49 AMGood evening.No routine yetBuild a routine from your shelf.Add the products you use and Today will become your AM/PM checklist.Add productsTodayProgressShelfYou .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }",
+      "url": "http://localhost:8223/today?routine=PM&postfix430=1783522169843"
+    },
+    {
+      "route": "/progress",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "hitLabel": "TodayProgressShelfYou",
+          "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+          "rect": "[Circular]",
+          "type": "hit-blocked-control"
+        }
+      ],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\progress.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\progress.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›TodayProgressShelfYou",
+      "url": "http://localhost:8223/progress?postfix430=1783522172007"
+    },
+    {
+      "route": "/progress/capture",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\progress-capture.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\progress-capture.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.› .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }",
+      "url": "http://localhost:8223/progress/capture?postfix430=1783522173886"
+    },
+    {
+      "route": "/progress/review",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\progress-review.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\progress-review.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/progress/review?postfix430=1783522175884"
+    },
+    {
+      "route": "/routine/plan",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-plan.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-plan.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/plan?postfix430=1783522177740"
+    },
+    {
+      "route": "/routine/ramp",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-ramp.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-ramp.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/ramp?postfix430=1783522179609"
+    },
+    {
+      "route": "/routine/tolerance",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-tolerance.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-tolerance.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/tolerance?postfix430=1783522181517"
+    },
+    {
+      "route": "/routine/reorder",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-reorder.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-reorder.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/reorder?postfix430=1783522183363"
+    },
+    {
+      "route": "/routine/adaptation",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-adaptation.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-adaptation.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/adaptation?postfix430=1783522185146"
+    },
+    {
+      "route": "/cycle/settings",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-settings.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-settings.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/settings?postfix430=1783522187014"
+    },
+    {
+      "route": "/cycle/disruption",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-disruption.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-disruption.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/disruption?postfix430=1783522188895"
+    },
+    {
+      "route": "/cycle/procedure",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-procedure.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-procedure.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/procedure?postfix430=1783522190762"
+    },
+    {
+      "route": "/cycle/phased-intro",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-phased-intro.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-phased-intro.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/phased-intro?postfix430=1783522192641"
+    },
+    {
+      "route": "/cycle/recovery",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-recovery.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-recovery.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/recovery?postfix430=1783522194469"
+    },
+    {
+      "route": "/cycle/why-tonight",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-why-tonight.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-why-tonight.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/why-tonight?postfix430=1783522196476"
+    },
+    {
+      "route": "/recommendations",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 133.15533447265625,
+          "visibleWidth": 272.3907775878906
+        }
+      ],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\recommendations.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\recommendations.png",
+      "textStart": "<PreferencesFor youRanked by fit and evidence,never by commission.START SIMPLE✦A mineral SPF 30+Strong fitYour morning routine has no SPF, and daily SPF is the single highest-impact step.Daily SPF. Broad consensusSee how →✦A ceramide moisturiserStrong fitYour routine has no moisturiser. It helps seal everything in and support your barrier.Barrier support. Well establishedSee how →✦A gentle cleanserStrong fitYour routine has no cleanser. A gentle, clean base is where every routine starts.A clean, non-stripping base. Well establishedSee how →",
+      "url": "http://localhost:8223/recommendations?postfix430=1783522198392"
+    },
+    {
+      "route": "/recommendations/preferences",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Sustainable",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 36.083099365234375,
+          "visibleWidth": 117.21784210205078
+        }
+      ],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\recommendations-preferences.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\recommendations-preferences.png",
+      "textStart": "<PreferencesRecommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustainableBUDGETDrugstoreMid-rangePremiumTEXTUREGelCreamFluidBalmOil✦We prioritise options that fit these.",
+      "url": "http://localhost:8223/recommendations/preferences?postfix430=1783522201115"
+    },
+    {
+      "route": "/recommendations/stale-local-rec",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\recommendations-stale-local-rec.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\recommendations-stale-local-rec.png",
+      "textStart": "<RecommendationThis suggestion isn’t current anymore. Your routine may have changed.Back to For you",
+      "url": "http://localhost:8223/recommendations/stale-local-rec?postfix430=1783522203377"
+    },
+    {
+      "route": "/community",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 88.2069091796875,
+          "visibleWidth": 272.3907775878906
+        }
+      ],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community.png",
+      "textStart": "<Skin NotesMyth vs evidence. Expert-written, evidence-graded, calm.INGREDIENT MYTHSCan you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.SENSITIVE SKINIs a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and essential oils are common irritants.RETINOIDSDoes retinol thin your skin?RefutedIt thickens the deeper dermis over time; surface flaking early on is not thinning.SUNSCREENDo you have to wait between skincare steps?RefutedMostly no. Layering onto slightly damp skin is fine for most routines.Is homemade sunscreen as protective as store-bought?RefutedNo. Homemade mixes can’t be measured for protection. Use a tested SPF.a librar",
+      "url": "http://localhost:8223/community?postfix430=1783522205503"
+    },
+    {
+      "route": "/community/note/missing-note-e2e",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community-note-missing-note-e2e.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community-note-missing-note-e2e.png",
+      "textStart": "<Skin NoteNote unavailableThis Skin Note is not available right now.It may have been updated or removed during expert review. Current Skin Notes are still available in the library.Back to Skin Notes",
+      "url": "http://localhost:8223/community/note/missing-note-e2e?postfix430=1783522207614"
+    },
+    {
+      "route": "/community/ask",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community-ask.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community-ask.png",
+      "textStart": "BETACommunity posting is not in this betaSkin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful.No user post is accepted until the review desk and consent copy are production-approved.Back to Skin Notes",
+      "url": "http://localhost:8223/community/ask?postfix430=1783522209879"
+    },
+    {
+      "route": "/community/people-like-you",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community-people-like-you.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\community-people-like-you.png",
+      "textStart": "BETACommunity posting is not in this betaSkin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful.No user post is accepted until the review desk and consent copy are production-approved.Back to Skin Notes",
+      "url": "http://localhost:8223/community/people-like-you?postfix430=1783522211800"
+    },
+    {
+      "route": "/commerce/consent",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-consent.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-consent.png",
+      "textStart": "BETAWhere-to-buy is not in this betaRecommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.This keeps money out of the decision engine while the core routine loop is being validated.Back to You",
+      "url": "http://localhost:8223/commerce/consent?postfix430=1783522213798"
+    },
+    {
+      "route": "/commerce/stacks",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-stacks.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-stacks.png",
+      "textStart": "BETAWhere-to-buy is not in this betaRecommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.This keeps money out of the decision engine while the core routine loop is being validated.Back to You",
+      "url": "http://localhost:8223/commerce/stacks?postfix430=1783522215925"
+    },
+    {
+      "route": "/commerce/stack/barrier-basics",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-stack-barrier-basics.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-stack-barrier-basics.png",
+      "textStart": "BETAWhere-to-buy is not in this betaRecommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.This keeps money out of the decision engine while the core routine loop is being validated.Back to You",
+      "url": "http://localhost:8223/commerce/stack/barrier-basics?postfix430=1783522218201"
+    },
+    {
+      "route": "/commerce/stack/missing-stack-e2e",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-stack-missing-stack-e2e.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-stack-missing-stack-e2e.png",
+      "textStart": "BETAWhere-to-buy is not in this betaRecommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.This keeps money out of the decision engine while the core routine loop is being validated.Back to You",
+      "url": "http://localhost:8223/commerce/stack/missing-stack-e2e?postfix430=1783522220600"
+    },
+    {
+      "route": "/commerce/transparency",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-transparency.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\commerce-transparency.png",
+      "textStart": "BETAWhere-to-buy is not in this betaRecommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.This keeps money out of the decision engine while the core routine loop is being validated.Back to You",
+      "url": "http://localhost:8223/commerce/transparency?postfix430=1783522222947"
+    },
+    {
+      "route": "/settings/subscription",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Privacy›",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        }
+      ],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-subscription.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-subscription.png",
+      "textStart": "<SubscriptionYou’re on the free planThe quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.See RoutineKind ProRestore purchases›Terms›Privacy›",
+      "url": "http://localhost:8223/settings/subscription?postfix430=1783522225162"
+    },
+    {
+      "route": "/settings/notifications",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-notifications.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-notifications.png",
+      "textStart": "<NotificationsUTILITY · YOUR ROUTINEMorning routine 7:30 AMEvening · tonight’s step 9:30 PMGENTLE NUDGES · CAPPEDStreak & adherenceReplenishmentProgress-photo nudgePROMOTIONALTips & announcements off by defaultwe cap gentle nudges so they never stack up",
+      "url": "http://localhost:8223/settings/notifications?postfix430=1783522227217"
+    },
+    {
+      "route": "/settings/timing",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-timing.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-timing.png",
+      "textStart": "<TimingMorning7:30 AMEvening9:30 PMQUIET HOURSNothing fires10:00 PM→7:00 AMNothing fires inside this window. Even your routine reminders wait until morning.LOCK SCREENLock screen privacyAlways generic; product, photo, and condition details stay inside the appOnRoutineKindYour evening routine’s ready.Always generic on the lock screen",
+      "url": "http://localhost:8223/settings/timing?postfix430=1783522229165"
+    },
+    {
+      "route": "/settings/privacy",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-privacy.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\settings-privacy.png",
+      "textStart": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly check-in>Recent changes>FOR YOURecommendations>Recommendation preferences>Skin NotesMyth vs evidence, reviewed and claim-safe.>SECURITYApp lockRequire your phone's unlock to open the app and your photo timeline.Encrypted cloud backupOff by default. A separate choice. Photos stay on this phone until you turn it on.REMINDERSReminders & notificationsTiered, capped, at times you choose. Quiet hours & lock-screen discretion.>PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the consent ledger and deletes your collected health data.>POLICIESPrivacy policyWhat data we collect, use, and share.>Consumer health privacyConsumer health data noti",
+      "url": "http://localhost:8223/you?section=privacy"
+    },
+    {
+      "route": "/trend/optin",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\trend-optin.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\trend-optin.png",
+      "textStart": "BETAPhoto trend insights are not in this betaThe photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy.Progress photos remain useful without estimated scores or change claims.Back to Progress",
+      "url": "http://localhost:8223/trend/optin?postfix430=1783522233054"
+    },
+    {
+      "route": "/trend/fairness",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\trend-fairness.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\trend-fairness.png",
+      "textStart": "BETAPhoto trend insights are not in this betaThe photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy.Progress photos remain useful without estimated scores or change claims.Back to Progress",
+      "url": "http://localhost:8223/trend/fairness?postfix430=1783522234947"
+    },
+    {
+      "route": "/ask",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\ask.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\ask.png",
+      "textStart": "<✦Ask RoutineKindAsk about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know.Grounded in your shelf right nowIs there a conflict on my shelf?›What should I do tonight?›↑AI advisor · disclosed honestly · your context stays on this device",
+      "url": "http://localhost:8223/ask?postfix430=1783522236866"
+    },
+    {
+      "route": "/ask/consent",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\ask-consent.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\ask-consent.png",
+      "textStart": "BETAAsk RoutineKind is not in this betaThe launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls.A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship.Back to Ask",
+      "url": "http://localhost:8223/ask/consent?postfix430=1783522238900"
+    },
+    {
+      "route": "/shelf",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf.png",
+      "textStart": "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+      "url": "http://localhost:8223/shelf?postfix430=1783522240777"
+    },
+    {
+      "route": "/shelf/search",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-search.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-search.png",
+      "textStart": "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.Add by hand",
+      "url": "http://localhost:8223/shelf/search?postfix430=1783522242618"
+    },
+    {
+      "route": "/shelf/no-match",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-no-match.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-no-match.png",
+      "textStart": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offline",
+      "url": "http://localhost:8223/shelf/no-match?postfix430=1783522244512"
+    },
+    {
+      "route": "/shelf/scan",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-scan.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-scan.png",
+      "textStart": "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+      "url": "http://localhost:8223/shelf/scan?postfix430=1783522246489"
+    },
+    {
+      "route": "/shelf/ocr",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-ocr.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-ocr.png",
+      "textStart": "<Read the labelCapture the ingredient panelCamera permission lets you keep the label beside the editable text. Manual entry still works.On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.Continue with manual text",
+      "url": "http://localhost:8223/shelf/ocr?postfix430=1783522249149"
+    },
+    {
+      "route": "/shelf/manual",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-manual.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-manual.png",
+      "textStart": "xAdd by handProduct nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesContinue",
+      "url": "http://localhost:8223/shelf/manual?postfix430=1783522251041"
+    },
+    {
+      "route": "/shelf/archive",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-archive.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-archive.png",
+      "textStart": "<ArchiveFinished and discarded products live here. We keep the history so repurchases and replenishment just work.Unopened›Active›FinishedNothing archived yet. When you finish or discard a product, it'll move here.",
+      "url": "http://localhost:8223/shelf/archive?postfix430=1783522252913"
+    },
+    {
+      "route": "/shelf/opened",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-opened.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\shelf-opened.png",
+      "textStart": "+xAdd product details first.Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it.Add by hand",
+      "url": "http://localhost:8223/shelf/opened?postfix430=1783522254947"
+    },
+    {
+      "route": "/paywall/upsell?feature=full_routine",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\paywall-upsell-feature-full_routine.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\paywall-upsell-feature-full_routine.png",
+      "textStart": "Unlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialTerms·Privacy·RestoreMaybe later",
+      "url": "http://localhost:8223/paywall/upsell?feature=full_routine&postfix430=1783522256890"
+    },
+    {
+      "route": "/paywall/success",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\paywall-success.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\paywall-success.png",
+      "textStart": "✓You’re all set.Pro is active now. Your plan renews at $49.99/year. Cancel anytime.active until July 8renews $49.99/yrSee tonight’s routine",
+      "url": "http://localhost:8223/paywall/success?postfix430=1783522258842"
+    },
+    {
+      "route": "/routine/streak",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-streak.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-streak.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterReminders, streaks & home-screen widgets.Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/streak?postfix430=1783522260697"
+    },
+    {
+      "route": "/routine/widgets",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-widgets.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\routine-widgets.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterReminders, streaks & home-screen widgets.Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/routine/widgets?postfix430=1783522262550"
+    },
+    {
+      "route": "/cycle/week",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": [],
+      "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-week.json",
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-430-postfix-sweep\\cycle-week.png",
+      "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "url": "http://localhost:8223/cycle/week?postfix430=1783522264432"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ export default function NoMatchScreen() {
   const { reset } = useIntake();
   const { height } = useWindowDimensions();
   const shortPhone = height < 520;
+  const ultraShortPhone = height < 460;
 
   const goOcr = () => {
     haptics.select();
@@ -41,17 +42,25 @@ export default function NoMatchScreen() {
       fallbackRoute={APP_SHELF_ROUTE}
       scroll
       backdropAccessible={false}
-      className={shortPhone ? 'px-6 pb-5 pt-3' : undefined}
+      className={ultraShortPhone ? 'px-6 pb-4 pt-2' : shortPhone ? 'px-6 pb-5 pt-3' : undefined}
     >
-      <View className={cn(shortPhone ? 'mb-2' : 'mb-4', 'flex-row items-start justify-between')}>
+      <View
+        className={cn(
+          ultraShortPhone ? 'mb-1' : shortPhone ? 'mb-2' : 'mb-4',
+          'flex-row items-start justify-between',
+        )}
+      >
         <View
           className={cn(
-            shortPhone ? 'h-10 w-10' : 'h-12 w-12',
+            ultraShortPhone ? 'h-9 w-9' : shortPhone ? 'h-10 w-10' : 'h-12 w-12',
             'items-center justify-center rounded-full',
           )}
           style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
         >
-          <Text className={shortPhone ? 'text-[16px]' : 'text-[18px]'} tone="inverseMuted">
+          <Text
+            className={ultraShortPhone ? 'text-[15px]' : shortPhone ? 'text-[16px]' : 'text-[18px]'}
+            tone="inverseMuted"
+          >
             ?
           </Text>
         </View>
@@ -65,7 +74,13 @@ export default function NoMatchScreen() {
       <Text
         variant="title"
         tone="inverse"
-        className={shortPhone ? 'text-[26px] leading-[29px]' : 'text-[30px] leading-[33px]'}
+        className={
+          ultraShortPhone
+            ? 'text-[24px] leading-[27px]'
+            : shortPhone
+              ? 'text-[26px] leading-[29px]'
+              : 'text-[30px] leading-[33px]'
+        }
         accessibilityRole="header"
       >
         We don&apos;t have this one yet.
@@ -73,18 +88,25 @@ export default function NoMatchScreen() {
       <Text
         variant="body"
         tone="inverseMuted"
-        className={shortPhone ? 'mt-1 text-[13px] leading-[19px]' : 'mt-2'}
+        className={
+          ultraShortPhone
+            ? 'mt-1 text-[12px] leading-[17px]'
+            : shortPhone
+              ? 'mt-1 text-[13px] leading-[19px]'
+              : 'mt-2'
+        }
       >
         That barcode isn&apos;t in our database yet. No problem. Add it another way, then report any
         wrong details from the product page.
       </Text>
 
-      <View className={shortPhone ? 'mt-3 gap-1.5' : 'mt-4 gap-2'}>
+      <View className={ultraShortPhone ? 'mt-2 gap-1' : shortPhone ? 'mt-3 gap-1.5' : 'mt-4 gap-2'}>
         <NoMatchAction
           icon="S"
           title="Search catalog"
           subtitle="Try name or brand instead"
           compact={shortPhone}
+          ultraCompact={ultraShortPhone}
           onPress={goSearch}
         />
         <NoMatchAction
@@ -92,6 +114,7 @@ export default function NoMatchScreen() {
           title="Scan the ingredient list"
           subtitle="We'll read the INCI text"
           compact={shortPhone}
+          ultraCompact={ultraShortPhone}
           onPress={goOcr}
         />
         <NoMatchAction
@@ -99,6 +122,7 @@ export default function NoMatchScreen() {
           title="Add it by hand"
           subtitle="Always works, even offline"
           compact={shortPhone}
+          ultraCompact={ultraShortPhone}
           onPress={goManual}
         />
       </View>
@@ -123,12 +147,14 @@ function NoMatchAction({
   title,
   subtitle,
   compact,
+  ultraCompact,
   onPress,
 }: {
   icon: string;
   title: string;
   subtitle: string;
   compact: boolean;
+  ultraCompact: boolean;
   onPress: () => void;
 }) {
   return (
@@ -136,14 +162,22 @@ function NoMatchAction({
       accessibilityRole="button"
       onPress={onPress}
       className={cn(
-        compact ? 'min-h-[54px] gap-3 rounded-[16px] p-2.5' : 'gap-3.5 rounded-[18px] p-3',
+        ultraCompact
+          ? 'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'
+          : compact
+            ? 'min-h-[54px] gap-3 rounded-[16px] p-2.5'
+            : 'gap-3.5 rounded-[18px] p-3',
         'flex-row items-center',
       )}
       style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
     >
       <View
         className={cn(
-          compact ? 'h-8 w-8 rounded-[9px]' : 'h-[34px] w-[34px] rounded-[10px]',
+          ultraCompact
+            ? 'h-[30px] w-[30px] rounded-[9px]'
+            : compact
+              ? 'h-8 w-8 rounded-[9px]'
+              : 'h-[34px] w-[34px] rounded-[10px]',
           'items-center justify-center bg-clay-bright/20',
         )}
       >
@@ -154,7 +188,11 @@ function NoMatchAction({
           variant="body"
           tone="inverse"
           className={
-            compact ? 'text-[14px] leading-[18px] font-sans-semibold' : 'font-sans-semibold'
+            ultraCompact
+              ? 'text-[13px] leading-[17px] font-sans-semibold'
+              : compact
+                ? 'text-[14px] leading-[18px] font-sans-semibold'
+                : 'font-sans-semibold'
           }
         >
           {title}
@@ -162,7 +200,14 @@ function NoMatchAction({
         <Text
           variant="bodySm"
           tone="inverseMuted"
-          className={compact ? 'text-[12px] leading-[16px]' : undefined}
+          className={
+            ultraCompact
+              ? 'text-[11px] leading-[14px]'
+              : compact
+                ? 'text-[12px] leading-[16px]'
+                : undefined
+          }
+          numberOfLines={ultraCompact ? 1 : undefined}
         >
           {subtitle}
         </Text>

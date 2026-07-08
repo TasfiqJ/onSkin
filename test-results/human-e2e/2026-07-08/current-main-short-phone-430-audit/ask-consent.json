@@ -1,0 +1,51 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 366.1028690338135
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to Ask",
+      "index": 0,
+      "isTab": false,
+      "label": "Back to Ask",
+      "rect": {
+        "bottom": 394.09892654418945,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 338.1068115234375,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/ask/consent",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "BETAAsk RoutineKind is not in this betaThe launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls.A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship.Back to Ask .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }",
+  "url": "http://localhost:8223/ask/consent",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}
