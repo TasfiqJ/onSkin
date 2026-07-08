@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T20:55:50.538Z",
+  "generatedAt": "2026-07-08T20:57:05.171Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "bfb4c68b5907e8d3b49ddfe5267ba62cf80df0b5",
+  "gitSha": "57b80eb67ca759189e90e8653ea9936979cb1306",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -78,13 +78,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 4303,
-      "sha256": "22f259ccae807e6f5966ce58133e1ca819c4e63dbe9a64fae587e50a304277bf"
+      "sha256": "4d6f73361b8420637af146bd90cee9dc6a66ecc89190df98b8d8ce329a6b47ef"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 2902,
-      "sha256": "90023d770f7d86514a875f3712e024f59378c15f8335005dc1840fad77b1529a"
+      "sha256": "b33c1495c1c97dcc92a364f6a08bcb0dba9d2e322ecda101aa7fc09aa6cb6428"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
