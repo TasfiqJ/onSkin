@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-08T16:20:33.545Z
+Generated: 2026-07-08T17:35:30.660Z
 Status: blocked
-Git SHA: 23833902da68e100c57a5ce85e35cc508b8165a2
+Git SHA: 0f754597f87269115fb115d140fc628bd9a00eb6
 Git status: clean
 
 ## Release Identity
@@ -79,7 +79,7 @@ Git status: clean
 
 ## Source Hashes
 
-- `package.json`: `c8ebb02c4dd1e0031017d04803d50617975b9023f60f4a37b33daf01150f9f19`
+- `package.json`: `1eeae3e44ae91079c226bd7a7e9713aebc0fa812f7d4209077be63f1b54324f6`
 - `package-lock.json`: `1c13e399c5f12e19fc9c540a774bec9674f0c0f33db5e2cac0d569d65962ead4`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `6b2d2b08e8c0092c04126228a9683cfb918c17f827a66ea8c181e73f6a366fd6`
@@ -89,7 +89,7 @@ Git status: clean
 - `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
 - `apps/mobile/src/lib/launch/phase7.ts`: `4369c73351a58fd6cad9c5d94917185fadb7e67bf219aa9f85814dea5055e663`
 - `apps/mobile/src/lib/launch/phase7.test.ts`: `d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `dd52814618b7f51915aa6d4428d533d490f257a8bf6a413f36ece71bd0c16218`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
@@ -109,8 +109,8 @@ Git status: clean
 - `supabase/functions/revenuecat-webhook/index.ts`: `210324cc1b57e321885d2fb523cf62a0b2adcfca3cee9fc2df9164ffde9147c4`
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
 - `scripts/phase9/lib.mjs`: `d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752`
-- `scripts/phase9/release-smoke.mjs`: `fdc537b7d6a979bfcc1a471fa3c86f976134ec444391bf703359cf0cb7e0fec2`
-- `scripts/phase9/build-release-qa-packet.mjs`: `67e1082e32f61da090905b0e1f7b16528a1e527e6e0ec8042edcc0b32a09d541`
+- `scripts/phase9/release-smoke.mjs`: `440548e86f4c5f04dc4e1a8b4e3bf6d7b3c8cac8f47ac0111595f92705c16c5f`
+- `scripts/phase9/build-release-qa-packet.mjs`: `948563e14ca1489937114edc763ad1b469fcfc56a283c5cd7e9eb3c77567e0f5`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `98c836d4dd6494c3ac6bf24719e97afd7f7cb4f8d542162deebbe1e15beed7ef`
 - `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
 - `scripts/phase9/live-data-rights.mjs`: `987f92e64ae380e5f9e6e641117ef7a85e89a40749b278ecede19fa2f5417b65`
