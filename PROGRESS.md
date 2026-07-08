@@ -14,6 +14,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   overstate instrumentation coverage. Non-strict Phase 10 analytics still
   warns, correctly, on missing external dashboard and privacy-payload evidence.
 
+- Hardened the Phase 10 closed-beta packet hash coverage. Generated beta
+  packets now hash the Phase 10 verifier scripts, the shared Phase 9 evidence
+  normalization helper, and the Phase 10/11 public-contact smoke script in
+  addition to the beta docs and app analytics files, so a packet cannot omit the
+  local gates that decided its status. The refreshed packet remains blocked on
+  external beta identity, TestFlight/Play, dashboard, payment, catalog,
+  retention, and named-signoff evidence.
+
 - Verified the full nested scheduler route group on `main`. Codex in-app
   browser Expo web at 320 x 568 confirms fresh free direct `/cycle/settings`,
   `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`,

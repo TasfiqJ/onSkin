@@ -113,3 +113,8 @@ Strict Phase 10 verification requires these variables to be set in the release s
 
 Run `npm run phase10:verify` for code/artifact gates and `npm run phase10:beta-readiness:strict` only when the external evidence exists.
 
+The generated closed-beta packet must hash the verifier scripts that decide
+readiness, not only the app and documentation inputs. Source hashes include the
+Phase 10 readiness, analytics-audit, packet-builder, shared evidence
+normalization, and public-contact smoke scripts so a release packet can be tied
+to the exact local gates used to produce it.
