@@ -22,6 +22,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   external beta identity, TestFlight/Play, dashboard, payment, catalog,
   retention, and named-signoff evidence.
 
+- Hardened Phase 11 public-launch evidence gates. Launch ring evidence now uses
+  the shared normalized evidence parser instead of raw `true` string checks, the
+  evidence-normalization smoke covers Phase 11 readiness/ring/packet scripts,
+  and public-launch packets now hash the Phase 11 verifier scripts plus the
+  shared Phase 9/10 helpers that influence launch status. The refreshed packet
+  remains blocked on Phase 10 exit, store approval, production environment,
+  RevenueCat production, monitoring/support, ring reports, and named signoff.
+
 - Verified the full nested scheduler route group on `main`. Codex in-app
   browser Expo web at 320 x 568 confirms fresh free direct `/cycle/settings`,
   `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`,

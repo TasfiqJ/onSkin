@@ -31,6 +31,13 @@ Phase 11 is controlled public launch, not scale. The launch is allowed to expand
 | Support | launch categories, macros, SLA, owners live | BLOCKED |
 | Incident/rollback | rollback drill completed and owners reachable | BLOCKED |
 
+The generated public-launch packet must hash the verifier scripts that decide
+launch readiness, not only the app, generated beta packet, and Phase 11 docs.
+Source hashes include the shared evidence normalization helper, Phase 10 beta
+packet builder, Phase 10/11 public-contact smoke, and Phase 11 readiness, ring,
+and packet scripts so a launch packet is tied to the exact local gates that
+produced it.
+
 ## Launch Rings
 
 | Ring | Audience | Traffic control | Expansion rule |
@@ -60,4 +67,3 @@ Review every 4-6 hours:
 - Hold: stop expansion while fixing unresolved risk.
 - Roll back or halt: use app-store, Play, EAS Update, feature flags, or server-side disablement depending on issue type.
 - No-go: stop launch when trust, safety, payment, privacy, or retention evidence invalidates public expansion.
-

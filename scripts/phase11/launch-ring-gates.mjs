@@ -1,5 +1,15 @@
 #!/usr/bin/env node
-import { block, envSnapshot, exists, has, phase11RequiredDocs, printResult, requiredPhase11EvidenceKeys, warn } from './lib.mjs';
+import {
+  block,
+  envSnapshot,
+  evidenceFlagEnabled,
+  exists,
+  has,
+  phase11RequiredDocs,
+  printResult,
+  requiredPhase11EvidenceKeys,
+  warn,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -20,12 +30,11 @@ block(errors, has('docs/phase-11/aso-store-conversion-review.md', /Banned Claim 
 block(errors, has('docs/phase-11/launch-72-hour-report.md', /continue, hold, rollback, no-go/i), '72-hour report must force a continue/hold/rollback/no-go decision.');
 
 for (const key of ['PHASE11_RING0_PASS', 'PHASE11_RING1_72H_REPORT_PASS', 'PHASE11_WEEK1_DECISION_PASS']) {
-  warn(warnings, env[key] === 'true', `Missing launch ring evidence: ${key}=true.`);
+  warn(warnings, evidenceFlagEnabled(env[key]), `Missing launch ring evidence: ${key}=true.`);
 }
 for (const key of requiredPhase11EvidenceKeys()) {
   if (['PHASE11_RING0_PASS', 'PHASE11_RING1_72H_REPORT_PASS', 'PHASE11_WEEK1_DECISION_PASS'].includes(key)) continue;
-  warn(warnings, env[key] === 'true', `Missing launch readiness evidence: ${key}=true.`);
+  warn(warnings, evidenceFlagEnabled(env[key]), `Missing launch readiness evidence: ${key}=true.`);
 }
 
 printResult('Phase 11 launch ring gates', errors, warnings);
-

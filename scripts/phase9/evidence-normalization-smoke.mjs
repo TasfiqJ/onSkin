@@ -45,6 +45,69 @@ const evidenceGates = [
     file: 'scripts/phase10/beta-analytics-audit.mjs',
     keys: ['PHASE10_DASHBOARDS_PASS', 'PHASE10_PRIVACY_PAYLOAD_PASS'],
   },
+  {
+    file: 'scripts/phase11/launch-readiness.mjs',
+    dynamicKeySource: 'scripts/phase11/lib.mjs',
+    dynamicKeyFunction: 'requiredPhase11EvidenceKeys',
+    keys: [
+      'PHASE11_PHASE10_EXIT_PASS',
+      'PHASE11_PHASE9_RC_SIGNOFF_PASS',
+      'PHASE11_STORE_APPROVAL_PASS',
+      'PHASE11_PRODUCTION_ENV_PASS',
+      'PHASE11_REVENUECAT_PROD_PASS',
+      'PHASE11_MONITORING_PASS',
+      'PHASE11_SUPPORT_READY',
+      'PHASE11_INCIDENT_ROLLBACK_PASS',
+      'PHASE11_RING0_PASS',
+      'PHASE11_RING1_72H_REPORT_PASS',
+      'PHASE11_ASO_REVIEW_PASS',
+      'PHASE11_CREATOR_DISCLOSURE_PASS',
+      'PHASE11_REVENUE_RECON_PASS',
+      'PHASE11_WEEK1_DECISION_PASS',
+    ],
+  },
+  {
+    file: 'scripts/phase11/launch-ring-gates.mjs',
+    dynamicKeySource: 'scripts/phase11/lib.mjs',
+    dynamicKeyFunction: 'requiredPhase11EvidenceKeys',
+    keys: [
+      'PHASE11_PHASE10_EXIT_PASS',
+      'PHASE11_PHASE9_RC_SIGNOFF_PASS',
+      'PHASE11_STORE_APPROVAL_PASS',
+      'PHASE11_PRODUCTION_ENV_PASS',
+      'PHASE11_REVENUECAT_PROD_PASS',
+      'PHASE11_MONITORING_PASS',
+      'PHASE11_SUPPORT_READY',
+      'PHASE11_INCIDENT_ROLLBACK_PASS',
+      'PHASE11_RING0_PASS',
+      'PHASE11_RING1_72H_REPORT_PASS',
+      'PHASE11_ASO_REVIEW_PASS',
+      'PHASE11_CREATOR_DISCLOSURE_PASS',
+      'PHASE11_REVENUE_RECON_PASS',
+      'PHASE11_WEEK1_DECISION_PASS',
+    ],
+  },
+  {
+    file: 'scripts/phase11/build-launch-packet.mjs',
+    dynamicKeySource: 'scripts/phase11/lib.mjs',
+    dynamicKeyFunction: 'requiredPhase11EvidenceKeys',
+    keys: [
+      'PHASE11_PHASE10_EXIT_PASS',
+      'PHASE11_PHASE9_RC_SIGNOFF_PASS',
+      'PHASE11_STORE_APPROVAL_PASS',
+      'PHASE11_PRODUCTION_ENV_PASS',
+      'PHASE11_REVENUECAT_PROD_PASS',
+      'PHASE11_MONITORING_PASS',
+      'PHASE11_SUPPORT_READY',
+      'PHASE11_INCIDENT_ROLLBACK_PASS',
+      'PHASE11_RING0_PASS',
+      'PHASE11_RING1_72H_REPORT_PASS',
+      'PHASE11_ASO_REVIEW_PASS',
+      'PHASE11_CREATOR_DISCLOSURE_PASS',
+      'PHASE11_REVENUE_RECON_PASS',
+      'PHASE11_WEEK1_DECISION_PASS',
+    ],
+  },
 ];
 
 const accessFor = (key) => String.raw`(?:process\.env|env)\.${key}`;
@@ -56,6 +119,35 @@ for (const { file, keys } of evidenceGates) {
     source.includes('evidenceFlagEnabled'),
     `${file} must import/use evidenceFlagEnabled for external evidence pass flags.`,
   );
+
+  const gate = evidenceGates.find((candidate) => candidate.file === file);
+  if (gate?.dynamicKeyFunction) {
+    const keySource = read(gate.dynamicKeySource);
+    block(
+      errors,
+      source.includes(gate.dynamicKeyFunction),
+      `${file} must use ${gate.dynamicKeyFunction} for external evidence keys.`,
+    );
+    block(
+      errors,
+      /evidenceFlagEnabled\(env\[key\]\)/.test(source),
+      `${file} must normalize dynamic evidence keys with evidenceFlagEnabled(env[key]).`,
+    );
+    block(
+      errors,
+      !/env\[[^\]]+\]\s*={2,3}\s*['"]true['"]/.test(source),
+      `${file} must not raw-compare dynamic env evidence to true.`,
+    );
+    block(
+      errors,
+      !/['"]true['"]\s*={2,3}\s*env\[[^\]]+\]/.test(source),
+      `${file} must not raw-compare true to dynamic env evidence.`,
+    );
+    for (const key of keys) {
+      block(errors, keySource.includes(`'${key}'`), `${gate.dynamicKeySource} is missing ${key}.`);
+    }
+    continue;
+  }
 
   for (const key of keys) {
     const access = accessFor(key);
@@ -93,4 +185,4 @@ for (const [value, expected] of [
   );
 }
 
-printResult('Phase 9/10 evidence normalization smoke', errors, warnings);
+printResult('Phase 9/10/11 evidence normalization smoke', errors, warnings);
