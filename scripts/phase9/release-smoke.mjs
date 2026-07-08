@@ -8,6 +8,7 @@ import {
   evidenceFlagEnabled,
   exists,
   has,
+  hash,
   normalizeNamedSignoff,
   placeholderEnvValue,
   printResult,
@@ -416,7 +417,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
       'PHASE9_RELEASE_CANDIDATE_DIR must point to one immutable non-template folder under docs/phase-9/release-candidates/.',
     );
 
-    const rcFiles = [
+    const rcFileNames = [
       'manifest.md',
       'commands.md',
       'automated-verification.md',
@@ -429,26 +430,28 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
       'rollout-plan.md',
       'incident-plan.md',
       'signoff.md',
-    ].map((file) => `${releaseCandidateDir}/${file}`);
+    ];
+    const rcFiles = rcFileNames.map((file) => `${releaseCandidateDir}/${file}`);
 
     for (const file of rcFiles)
       block(errors, exists(file), `${file} is missing from claimed release-candidate evidence.`);
 
-    for (const file of [
-      'manifest.md',
-      'automated-verification.md',
-      'security-review.md',
-      'privacy-review.md',
-      'payments-review.md',
-      'observability-review.md',
-      'store-review-packet.md',
-      'signoff.md',
-    ].map((name) => `${releaseCandidateDir}/${name}`)) {
+    for (const file of rcFiles) {
       if (!exists(file)) continue;
       block(
         errors,
         !/\b(?:TBD|BLOCKED)\b/.test(read(file)),
         `${file} must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.`,
+      );
+    }
+    for (const name of rcFileNames) {
+      const file = `${releaseCandidateDir}/${name}`;
+      const templateFile = `docs/phase-9/release-candidates/_template/${name}`;
+      if (!exists(file) || !exists(templateFile)) continue;
+      block(
+        errors,
+        hash(file) !== hash(templateFile),
+        `${file} must be customized from the RC template when Phase 9 evidence is claimed.`,
       );
     }
 

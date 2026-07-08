@@ -10,6 +10,7 @@ import {
   normalizeLaunchDecision,
   normalizeNamedSignoff,
   phase10RequiredDocs,
+  phase10SourceFiles,
   printResult,
   productionDomain,
   productionSupportEmail,
@@ -23,6 +24,26 @@ const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
+
+const closedBetaPacketRequiredSourceFiles = [
+  'package.json',
+  'turbo.json',
+  '.env.example',
+  'scripts/phase9/lib.mjs',
+  'scripts/phase9/evidence-normalization-smoke.mjs',
+  'scripts/phase10-11/public-contact-smoke.mjs',
+  'scripts/phase10/lib.mjs',
+  'scripts/phase10/beta-readiness.mjs',
+  'scripts/phase10/beta-analytics-audit.mjs',
+  'scripts/phase10/build-beta-packet.mjs',
+  'apps/mobile/eas.json',
+  'apps/mobile/app.config.js',
+  'apps/mobile/src/lib/analytics/eventRegistry.ts',
+  'apps/mobile/src/lib/analytics/track.ts',
+  'apps/mobile/src/lib/observability/scrub.ts',
+  'docs/phase-9/generated/release-engineering-qa-packet.json',
+  ...phase10RequiredDocs(),
+];
 
 for (const file of phase10RequiredDocs()) block(errors, exists(file), `${file} is missing.`);
 
@@ -48,6 +69,34 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+
+const closedBetaPacketSourceFiles = new Set(phase10SourceFiles());
+for (const file of closedBetaPacketRequiredSourceFiles) {
+  block(errors, exists(file), `${file} is missing from closed beta packet source inputs.`);
+  block(
+    errors,
+    closedBetaPacketSourceFiles.has(file),
+    `Phase 10 closed beta packet must hash ${file}.`,
+  );
+}
+
+const betaPacketBuilder = read('scripts/phase10/build-beta-packet.mjs');
+block(
+  errors,
+  betaPacketBuilder.includes('const sourceFiles = phase10SourceFiles();') &&
+    betaPacketBuilder.includes(
+      'sourceHashes: Object.fromEntries(sourceFiles.filter(exists).map((file) => [file, hash(file)]))',
+    ),
+  'Phase 10 closed beta packet must hash phase10SourceFiles() inputs.',
+);
+block(
+  errors,
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(betaPacketBuilder) &&
+    /closed-beta-packet\.json/.test(betaPacketBuilder) &&
+    /closed-beta-packet\.md/.test(betaPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(betaPacketBuilder),
+  'Phase 10 closed beta packet must ignore only its own generated outputs when recording Git status.',
+);
 
 block(
   errors,

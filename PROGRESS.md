@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 10 closed-beta packet source-coverage enforcement in
+  `phase10:beta-readiness`. The gate now verifies that the generated packet
+  hashes `.env.example`, the shared evidence normalizer, public-contact smoke,
+  Phase 10 verifier scripts, app config, analytics/observability sources, the
+  Phase 9 release packet, and every required beta evidence doc before
+  closed-beta evidence can be reviewed as current.
+
+- Hardened Phase 9 release-candidate evidence checks so claimed RC evidence now
+  rejects every RC file that still contains `TBD` or `BLOCKED`, not only the
+  core review docs. The gate also rejects RC files still byte-for-byte identical
+  to `_template`, covering narrative files such as commands and incident plans
+  that do not always carry explicit placeholders.
+
 - Hardened the Phase 9 release-engineering QA packet coverage. The packet now
   hashes `.env.example`, every local Phase 9 verifier script used by the release
   gate, the beta/dependency evidence docs, and the release-candidate template

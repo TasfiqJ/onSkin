@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
+import { cpSync, rmSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -57,6 +58,25 @@ function run(extraEnv) {
 
 function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+}
+
+function runWithTemplateReleaseCandidate(extraEnv = {}) {
+  const rcName = `rc-smoke-template-${process.pid}`;
+  const rcRelativeDir = `docs/phase-9/release-candidates/${rcName}`;
+  const rcDir = resolve(root, rcRelativeDir);
+  rmSync(rcDir, { recursive: true, force: true });
+  cpSync(resolve(root, 'docs/phase-9/release-candidates/_template'), rcDir, {
+    recursive: true,
+  });
+  try {
+    return run({
+      PHASE9_FINAL_IDENTITY_PASS: 'true',
+      PHASE9_RELEASE_CANDIDATE_DIR: rcRelativeDir,
+      ...extraEnv,
+    });
+  } finally {
+    rmSync(rcDir, { recursive: true, force: true });
+  }
 }
 
 const cases = [
@@ -151,6 +171,31 @@ const cases = [
       return (
         result.status === 1 &&
         output(result).includes('Production Share cards requires PHASE7_SIGNED_OFF_BY.')
+      );
+    },
+  },
+  {
+    name: 'Phase 9 blocks uncustomized release-candidate template files',
+    result: runWithTemplateReleaseCandidate(),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 1 &&
+        text.includes(
+          'docs/phase-9/release-candidates/rc-smoke-template-' +
+            process.pid +
+            '/manual-qa-matrix.md must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.',
+        ) &&
+        text.includes(
+          'docs/phase-9/release-candidates/rc-smoke-template-' +
+            process.pid +
+            '/rollout-plan.md must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.',
+        ) &&
+        text.includes(
+          'docs/phase-9/release-candidates/rc-smoke-template-' +
+            process.pid +
+            '/incident-plan.md must be customized from the RC template when Phase 9 evidence is claimed.',
+        )
       );
     },
   },
