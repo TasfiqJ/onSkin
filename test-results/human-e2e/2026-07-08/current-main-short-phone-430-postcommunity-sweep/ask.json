@@ -1,0 +1,146 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back",
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 213.98665618896484
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Is there a conflict on my shelf? ›",
+      "index": 1,
+      "label": "Is there a conflict on my shelf? ›",
+      "rect": {
+        "bottom": 237.98544311523438,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 189.9878692626953,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 267.9763412475586
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "What should I do tonight? ›",
+      "index": 2,
+      "label": "What should I do tonight? ›",
+      "rect": {
+        "bottom": 291.9751281738281,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 243.97755432128906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "center": {
+        "x": 131.19691467285156,
+        "y": 335.1335220336914
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Ask a question about your shelf",
+      "index": 3,
+      "label": "Ask a question about your shelf",
+      "rect": {
+        "bottom": 359.13230895996094,
+        "height": 47.99757385253906,
+        "left": 38.95631408691406,
+        "right": 223.43751525878906,
+        "top": 311.1347351074219,
+        "width": 184.481201171875
+      },
+      "role": "input",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 184.481201171875
+    },
+    {
+      "center": {
+        "x": 257.43326568603516,
+        "y": 335.1335220336914
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Send",
+      "index": 4,
+      "label": "Send",
+      "rect": {
+        "bottom": 359.13230895996094,
+        "height": 47.99757385253906,
+        "left": 233.43447875976562,
+        "right": 281.4320526123047,
+        "top": 311.1347351074219,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    }
+  ],
+  "disallowedLogCount": 0,
+  "disallowedLogs": [],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/ask",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 244,
+      "i": 51,
+      "scrollHeight": 260,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "url": "http://localhost:8223/ask?postcommunity430=1783524266738",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

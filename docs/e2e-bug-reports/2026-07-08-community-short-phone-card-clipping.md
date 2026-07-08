@@ -21,10 +21,14 @@ Visible Skin Note cards should be fully readable and tappable. Back and any expo
 
 The third Skin Note card was visible but clipped below the viewport. The pre-fix geometry snapshot recorded `Is "natural" always gentler for sensitive skin?` as a clipped visible control with about 75 px of its 102 px height visible.
 
+A later 320 x 430 route sweep reproduced the same failure after the 480 px fix: `Is "natural" always gentler for sensitive skin?` was clipped by about 3 px at the bottom of the viewport.
+
 ## Evidence
 
 - Screenshot: `test-results/human-e2e/2026-07-08/current-main-short-phone-480-sweep/community.png`
 - UI snapshot: `test-results/human-e2e/2026-07-08/current-main-short-phone-480-sweep/community.json`
+- 320 x 430 sweep: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postrecommendations-sweep/community.png`
+- 320 x 430 snapshot: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postrecommendations-sweep/community.json`
 
 ## Frequency
 
@@ -43,7 +47,7 @@ The existing compact Skin Notes density targeted shorter 568 px phones but still
 
 ## Minimal Fix Recommendation
 
-Add a sub-520 px Skin Notes hub density that trims heading, section, card, title, evidence-pill, and summary spacing while preserving readable copy and 44 pt or larger navigation controls.
+Add a sub-520 px Skin Notes hub density that trims heading, section, card, title, evidence-pill, and summary spacing while preserving readable copy and 44 pt or larger navigation controls. Add a sub-460 px scroll-content adjustment so the 320 x 430 first viewport does not expose a clipped third note.
 
 ## Verification Flow After Fix
 
@@ -58,9 +62,11 @@ Add a sub-520 px Skin Notes hub density that trims heading, section, card, title
 - Screenshot: `test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/community.png`
 - UI snapshot: `test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/community.json`
 - Report: `test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/report.md`
+- 320 x 430 screenshot/JSON packet: `test-results/human-e2e/2026-07-08/community-short-phone-430-card-fit/`
+- 320 x 430 follow-up sweep: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postcommunity-sweep/failures.json`
 
 ## Remaining Risk
 
 - Untested branches: Native iOS/Android safe-area, Dynamic Type, and screen-reader pass.
 - Missing fixtures: Durable native visual regression for the Skin Notes hub.
-- Follow-up needed: Promote this shortest-phone hub case into the eventual native compact-phone E2E suite.
+- Follow-up needed: Promote the 320 x 480 and 320 x 430 Skin Notes hub cases into the eventual native compact-phone E2E suite.

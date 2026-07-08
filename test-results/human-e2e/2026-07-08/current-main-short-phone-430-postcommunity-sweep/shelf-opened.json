@@ -1,0 +1,101 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 39.58586502075195
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Dismiss",
+      "index": 0,
+      "label": "Dismiss",
+      "rect": {
+        "bottom": 79.1717300415039,
+        "height": 79.1717300415039,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 0,
+        "width": 320.38836669921875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 79.1717300415039,
+      "visibleWidth": 320
+    },
+    {
+      "center": {
+        "x": 268.4011001586914,
+        "y": 144.14442443847656
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Close",
+      "index": 1,
+      "label": "Close",
+      "rect": {
+        "bottom": 168.1432113647461,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 120.14563751220703,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 366.1104507446289
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add product by hand",
+      "index": 2,
+      "label": "Add product by hand",
+      "rect": {
+        "bottom": 390.10923767089844,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 342.1116638183594,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "disallowedLogCount": 0,
+  "disallowedLogs": [],
+  "issueCount": 1,
+  "issues": [
+    {
+      "label": "Dismiss",
+      "rect": "[Circular]",
+      "type": "clipped-visible-control",
+      "visibleHeight": 79.1717300415039,
+      "visibleWidth": 320
+    }
+  ],
+  "route": "/shelf/opened",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [],
+  "textStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand",
+  "url": "http://localhost:8223/shelf/opened?postcommunity430=1783524281624",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

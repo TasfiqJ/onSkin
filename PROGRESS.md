@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the 320 x 430 Skin Notes hub clipping that remained after the
+  recommendation pass. `/community` now has a sub-460 px scroll-content
+  density so the third visible Skin Note no longer clips at the viewport edge.
+  Codex in-app browser Expo web verifies `/community` at 320 x 430 with zero
+  clipped controls, zero sub-44 controls, and zero blocked center hit-tests;
+  tapping the previously clipped `Is "natural" always gentler for sensitive
+  skin?` card opens the note detail cleanly. The follow-up 49-route sweep no
+  longer reports Community. Evidence:
+  `test-results/human-e2e/2026-07-08/community-short-phone-430-card-fit/`,
+  `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postcommunity-sweep/`.
+
 - Fixed the remaining 320 x 430 personalized recommendation clipping from the
   ultra-short route sweep. The For You hub now has a sub-460 px density for
   heading/card spacing, and recommendation preferences keep value/budget chips

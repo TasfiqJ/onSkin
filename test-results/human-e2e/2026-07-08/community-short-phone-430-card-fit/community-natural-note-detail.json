@@ -1,0 +1,30 @@
+{
+  "controls": [
+    {
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back",
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "textStart": "< Skin Note THE CLAIM “Natural ingredients are always gentler.” Contested Depends on the ingredient WHY “Natural” isn’t the same as “gentle”. Some botanical extracts and essential oils are among the more common triggers for sensitive skin, while many lab-made ingredients are very well tolerated. Evidence grade Contested · SORT C Reviewed by a board-certified dermatologist. Source: Dermatology consensus. ✦ General cosmetic information. For the appearance of skin, not medical advice. ♥ This helped Share note",
+  "url": "http://localhost:8223/community/note/note-natural-gentler",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

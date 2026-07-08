@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-07-08T15:23:09.485Z",
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "route": {
+    "route": "/community",
+    "issueCount": 0,
+    "disallowedLogCount": 0,
+    "issues": []
+  },
+  "detail": {
+    "name": "community-natural-note-detail",
+    "issueCount": 0,
+    "issues": [],
+    "url": "http://localhost:8223/community/note/note-natural-gentler"
+  },
+  "failedRouteCount": 0
+}

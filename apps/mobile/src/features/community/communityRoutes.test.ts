@@ -43,9 +43,8 @@ describe('Community route contracts', () => {
     const source = readAppRoute('community/index.tsx');
 
     expect(source).toContain('const shortCommunity = height < 520;');
-    expect(source).toContain(
-      "shortCommunity ? 'pb-20 pt-1' : compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'",
-    );
+    expect(source).toContain('const ultraShortCommunity = height < 460;');
+    expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
     expect(source).toContain(
       "shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'",
     );

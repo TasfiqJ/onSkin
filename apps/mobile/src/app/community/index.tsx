@@ -103,6 +103,7 @@ export default function SkinNotesHub() {
   const groups = notesByTopic();
   const compactCommunity = height < 640;
   const shortCommunity = height < 520;
+  const ultraShortCommunity = height < 460;
   const narrowCompactCommunity = compactCommunity && width < 360;
 
   useEffect(() => {
@@ -165,7 +166,13 @@ export default function SkinNotesHub() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerClassName={
-            shortCommunity ? 'pb-20 pt-1' : compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'
+            ultraShortCommunity
+              ? 'pb-20 pt-0'
+              : shortCommunity
+                ? 'pb-20 pt-1'
+                : compactCommunity
+                  ? 'pb-12 pt-2'
+                  : 'pb-10 pt-5'
           }
         >
           {groups.map((g) => {
