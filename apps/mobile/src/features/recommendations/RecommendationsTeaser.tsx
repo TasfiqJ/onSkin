@@ -16,7 +16,15 @@ import { useRecommendations } from './useRecommendations';
 // card + the in-routine SPF gap prompt (design 04). Inline, dismissible, never
 // modal-blocking, surfaced where the need arises. Both route into the hub.
 
-function ForYouCard({ compact, count, youreSet }: { compact?: boolean; count: number; youreSet: boolean }) {
+function ForYouCard({
+  compact,
+  count,
+  youreSet,
+}: {
+  compact?: boolean;
+  count: number;
+  youreSet: boolean;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -29,14 +37,16 @@ function ForYouCard({ compact, count, youreSet }: { compact?: boolean; count: nu
         'flex-row items-center rounded-card bg-paper-raised',
         compact ? 'mt-3 gap-3 p-4' : 'mt-4 gap-4 p-5',
       )}
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
       <View
         className={
           compact
             ? 'h-9 w-9 items-center justify-center rounded-full'
             : 'h-[38px] w-[38px] items-center justify-center rounded-full'
         }
-        style={{ backgroundColor: colors.clayTint }}>
+        style={{ backgroundColor: colors.clayTint }}
+      >
         <Text className="text-[16px]" style={{ color: colors.clay }}>
           ✦
         </Text>
@@ -101,7 +111,7 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           </View>
           <View className="min-w-0 flex-1">
             <Text
-              numberOfLines={1}
+              numberOfLines={2}
               className="font-sans-bold text-[12.5px]"
               style={{ color: colors.clayDeep, lineHeight: 15 }}
             >
@@ -116,15 +126,15 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           accessibilityRole="button"
           accessibilityLabel={REC_COPY.gapPrompt.dismiss}
           onPress={() => void dismiss()}
-          className="h-12 w-12 items-center justify-center rounded-full"
+          className="min-h-[48px] min-w-[72px] items-center justify-center rounded-full px-3"
           style={{
             backgroundColor: 'rgba(165,105,75,0.12)',
             borderWidth: 1,
             borderColor: 'rgba(165,105,75,0.14)',
           }}
         >
-          <Text className="font-sans-bold text-[14px]" style={{ color: colors.clay }}>
-            x
+          <Text className="font-sans-bold text-[12.5px]" style={{ color: colors.clay }}>
+            {REC_COPY.gapPrompt.dismiss}
           </Text>
         </Pressable>
       </View>
@@ -134,7 +144,12 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   return (
     <View
       className="mt-4 rounded-[18px] p-4"
-      style={{ backgroundColor: colors.clayTint, borderWidth: 1, borderColor: 'rgba(165,105,75,0.22)' }}>
+      style={{
+        backgroundColor: colors.clayTint,
+        borderWidth: 1,
+        borderColor: 'rgba(165,105,75,0.22)',
+      }}
+    >
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Dismiss SPF recommendation"
@@ -144,7 +159,8 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           backgroundColor: 'rgba(165,105,75,0.12)',
           borderWidth: 1,
           borderColor: 'rgba(165,105,75,0.14)',
-        }}>
+        }}
+      >
         <Text className="text-[14px]" style={{ color: colors.clay }}>
           ✕
         </Text>
@@ -152,20 +168,17 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
       <View className="mb-2 flex-row items-center gap-2.5 pr-12">
         <View
           className="h-[30px] w-[30px] items-center justify-center rounded-lg"
-          style={{ backgroundColor: colors.clay }}>
+          style={{ backgroundColor: colors.clay }}
+        >
           <Text className="text-[15px]" style={{ color: colors.paper }}>
             ☀
           </Text>
         </View>
-        <Text
-          className="flex-1 font-sans-bold text-[14.5px]"
-          style={{ color: colors.clayDeep }}>
+        <Text className="flex-1 font-sans-bold text-[14.5px]" style={{ color: colors.clayDeep }}>
           {REC_COPY.gapPrompt.title}
         </Text>
       </View>
-      <Text
-        className="mb-3 text-[12.5px]"
-        style={{ color: '#6F4A36', lineHeight: 18 }}>
+      <Text className="mb-3 text-[12.5px]" style={{ color: '#6F4A36', lineHeight: 18 }}>
         {REC_COPY.gapPrompt.body}
       </Text>
       <View className="flex-row items-center gap-4">
@@ -174,7 +187,8 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
           accessibilityLabel={REC_COPY.gapPrompt.cta}
           onPress={openRecommendation}
           className="items-center justify-center rounded-pill px-5 py-2"
-          style={{ minHeight: 48, backgroundColor: colors.clay }}>
+          style={{ minHeight: 48, backgroundColor: colors.clay }}
+        >
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.paper }}>
             {REC_COPY.gapPrompt.cta}
           </Text>
@@ -189,7 +203,8 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
             borderWidth: 1,
             borderColor: 'rgba(165,105,75,0.22)',
             backgroundColor: 'rgba(255,255,255,0.18)',
-          }}>
+          }}
+        >
           <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.clay }}>
             {REC_COPY.gapPrompt.dismiss}
           </Text>
@@ -210,7 +225,8 @@ export function RecommendationsTeaser({
   if (isLoading) return null;
 
   const spfGap = result.recommendations.find(
-    (r) => (r.trigger === 'gap' || r.trigger === 'routine_completion') && r.productType.includes('spf'),
+    (r) =>
+      (r.trigger === 'gap' || r.trigger === 'routine_completion') && r.productType.includes('spf'),
   );
   const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap);
 
@@ -218,7 +234,11 @@ export function RecommendationsTeaser({
     <>
       {showGapPrompt && spfGap ? <GapPrompt compact={compact} recId={spfGap.id} /> : null}
       {showCompactGapOnly ? null : (
-        <ForYouCard compact={compact} count={result.recommendations.length} youreSet={result.youreSet} />
+        <ForYouCard
+          compact={compact}
+          count={result.recommendations.length}
+          youreSet={result.youreSet}
+        />
       )}
     </>
   );

@@ -37,6 +37,22 @@ describe('Progress route mobile contracts', () => {
     expect(detail).toContain('useLocalSearchParams');
   });
 
+  it('keeps the empty Progress first-photo CTA above the floating tab bar on shortest phones', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+
+    expect(source).toContain('function FirstRun({ compact = false }: { compact?: boolean })');
+    expect(source).toContain('const { height } = useWindowDimensions();');
+    expect(source).toContain('const compactFirstRun = height < 520;');
+    expect(source).toContain("contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}");
+    expect(source).toContain('<FirstRun compact={compactFirstRun} />');
+    expect(source).toContain("compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'");
+    expect(source).toContain("compact ? 'mb-3 p-4' : 'mb-5'");
+    expect(source).toContain('fontSize: compact ? 24 : 26');
+    expect(source).toContain('lineHeight: compact ? 19 : 22');
+    expect(source).toContain("'mb-4 flex-row items-center gap-2.5 px-1'");
+    expect(source).toContain("'mb-7 flex-row items-center gap-2.5 px-1'");
+  });
+
   it('keeps direct-entry progress exits touchable on phones', () => {
     for (const route of [
       'progress/[id].tsx',
@@ -78,7 +94,18 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('paddingTop: insets.top + (compact ? 16 : 28)');
     expect(source).toContain('paddingBottom: insets.bottom + (compact ? 20 : 28)');
-    expect(source).toContain('useWindowDimensions().height < 640');
+    expect(source).toContain('const height = useWindowDimensions().height;');
+    expect(source).toContain('const compact = height < 640;');
+    expect(source).toContain('const shortPhone = height < 520;');
+    expect(source).toContain('const showPrepReminder = !(shortPhone || (compact && saveFailed));');
+    expect(source).toContain('fontSize: shortPhone ? 25 : compact ? 27 : 30');
+    expect(source).toContain('lineHeight: shortPhone ? 27 : compact ? 29 : undefined');
+    expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 10 : 16');
+    expect(source).toContain('fontSize: shortPhone ? 13 : compact ? 14 : 14.5');
+    expect(source).toContain('lineHeight: shortPhone ? 17 : compact ? 19 : 21');
+    expect(source).toContain('fontSize: shortPhone ? 10 : compact ? 10.5 : 11');
+    expect(source).toContain('lineHeight: shortPhone ? 13 : compact ? 15 : undefined');
+    expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 8 : 14');
     expect(source.match(/height: 48/g)).toHaveLength(5);
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)'");
@@ -142,12 +169,22 @@ describe('Progress route mobile contracts', () => {
     const source = readAppRoute('progress/[id].tsx');
     const copy = readSource('features/photos/copy.ts');
 
-    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
-    expect(source).toContain('const [shareConfirmVisible, setShareConfirmVisible] = useState(false);');
-    expect(source).toContain('const [deleteFeedback, setDeleteFeedback] = useState<string | null>(null);');
-    expect(source).toContain('const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);');
+    expect(source).toContain(
+      'const [shareFeedback, setShareFeedback] = useState<string | null>(null);',
+    );
+    expect(source).toContain(
+      'const [shareConfirmVisible, setShareConfirmVisible] = useState(false);',
+    );
+    expect(source).toContain(
+      'const [deleteFeedback, setDeleteFeedback] = useState<string | null>(null);',
+    );
+    expect(source).toContain(
+      'const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);',
+    );
     expect(source).toContain('const scrollRef = useRef<ScrollView>(null);');
-    expect(source).toContain('const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;');
+    expect(source).toContain(
+      'const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;',
+    );
     expect(source).toContain('const actionFeedback = deleteFeedback ?? shareFeedback;');
     expect(source).toContain('function nudgeActionFeedbackIntoView()');
     expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
@@ -155,9 +192,11 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('setTimeout(scrollToEnd, 280);');
     expect(source).toContain('<ScrollView');
     expect(source).toContain('ref={scrollRef}');
-    expect(source).toContain('contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}');
-    expect(source).toContain("height: photoHeight");
-    expect(source).toContain("marginBottom: compact ? 10 : 14");
+    expect(source).toContain(
+      'contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}',
+    );
+    expect(source).toContain('height: photoHeight');
+    expect(source).toContain('marginBottom: compact ? 10 : 14');
     expect(source).toContain("flexWrap: 'wrap'");
     expect(source).toContain('const shared = await sharePhotoImageOnly(photo);');
     expect(source).toContain('if (!shared) {');
@@ -258,13 +297,13 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
     expect(source).toContain('const insets = useSafeAreaInsets();');
-    expect(source).toContain('const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;');
+    expect(source).toContain(
+      'const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;',
+    );
     expect(source).toContain(
       'sheetPaddingBottom === undefined\n              ? { maxHeight: sheetMaxHeight }',
     );
-    expect(source).toContain(
-      ': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }',
-    );
+    expect(source).toContain(': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }');
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain(
       'accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}',
@@ -279,7 +318,9 @@ describe('Progress route mobile contracts', () => {
 
     expect(source).toContain('const TIMELAPSE_UNAVAILABLE_TITLE');
     expect(source).toContain('const TIMELAPSE_UNAVAILABLE_BODY');
-    expect(source).toContain('const [timelapseFeedbackVisible, setTimelapseFeedbackVisible] = useState(false);');
+    expect(source).toContain(
+      'const [timelapseFeedbackVisible, setTimelapseFeedbackVisible] = useState(false);',
+    );
     expect(source).toContain('accessibilityLabel="Play a quiet time-lapse of your series"');
     expect(source).toContain('onPress={() => setTimelapseFeedbackVisible(true)}');
     expect(source).toContain('{timelapseFeedbackVisible ? (');

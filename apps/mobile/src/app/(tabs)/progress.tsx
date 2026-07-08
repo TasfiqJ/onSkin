@@ -33,15 +33,32 @@ function short(ymd: string): string {
 }
 
 // ── Mode switch ──────────────────────────────────────────────────────────────
-function ModeTab({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
+function ModeTab({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected: active }}
       onPress={onPress}
       className="min-h-[48px] min-w-[96px] items-center justify-center rounded-pill px-[18px] py-2.5"
-      style={{ backgroundColor: active ? colors.ink : colors.paperRaised, borderWidth: active ? 0 : 1, borderColor: colors.hairlineStrong }}>
-      <Text variant="bodySm" className="font-sans-semibold" style={{ color: active ? colors.paper : colors.muted }}>
+      style={{
+        backgroundColor: active ? colors.ink : colors.paperRaised,
+        borderWidth: active ? 0 : 1,
+        borderColor: colors.hairlineStrong,
+      }}
+    >
+      <Text
+        variant="bodySm"
+        className="font-sans-semibold"
+        style={{ color: active ? colors.paper : colors.muted }}
+      >
         {label}
       </Text>
     </Pressable>
@@ -49,19 +66,30 @@ function ModeTab({ label, active, onPress }: { label: string; active: boolean; o
 }
 
 // ── Empty / first-run (design screen 03) ─────────────────────────────────────
-function FirstRun() {
+function FirstRun({ compact = false }: { compact?: boolean }) {
   return (
-    <View className="flex-1 justify-center pb-6">
-      <Card className="mb-5">
-        <Text variant="titleSm" style={{ fontSize: 26, lineHeight: 30 }}>
+    <View className={compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'}>
+      <Card className={compact ? 'mb-3 p-4' : 'mb-5'}>
+        <Text
+          variant="titleSm"
+          style={{ fontSize: compact ? 24 : 26, lineHeight: compact ? 27 : 30 }}
+        >
           {PHOTO_COPY.firstRun.title}
         </Text>
-        <Text variant="bodySm" tone="muted" className="mt-3" style={{ lineHeight: 22 }}>
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={compact ? 'mt-2' : 'mt-3'}
+          style={{ lineHeight: compact ? 19 : 22 }}
+        >
           {PHOTO_COPY.firstRun.body}
         </Text>
         {/* honest 8-12 week expectation bar */}
-        <View className="mt-5 flex-row">
-          <View className="h-1.5 flex-1 rounded-l-[3px]" style={{ backgroundColor: colors.greigeDeep }} />
+        <View className={compact ? 'mt-3.5 flex-row' : 'mt-5 flex-row'}>
+          <View
+            className="h-1.5 flex-1 rounded-l-[3px]"
+            style={{ backgroundColor: colors.greigeDeep }}
+          />
           <View className="h-1.5 flex-1" style={{ backgroundColor: colors.clayBright }} />
           <View className="h-1.5 flex-1 rounded-r-[3px]" style={{ backgroundColor: colors.clay }} />
         </View>
@@ -73,9 +101,15 @@ function FirstRun() {
           ))}
         </View>
       </Card>
-      <View className="mb-7 flex-row items-center gap-2.5 px-1">
+      <View
+        className={
+          compact
+            ? 'mb-4 flex-row items-center gap-2.5 px-1'
+            : 'mb-7 flex-row items-center gap-2.5 px-1'
+        }
+      >
         <View className="h-3.5 w-3.5 rounded-full border-2" style={{ borderColor: colors.sage }} />
-        <Text variant="bodySm" tone="muted">
+        <Text variant="bodySm" tone="muted" style={{ lineHeight: compact ? 18 : undefined }}>
           {PHOTO_COPY.firstRun.reassure}
         </Text>
       </View>
@@ -83,8 +117,13 @@ function FirstRun() {
         accessibilityRole="button"
         onPress={() => router.push('/progress/capture')}
         className="h-14 items-center justify-center rounded-pill"
-        style={{ backgroundColor: colors.ink }}>
-        <Text variant="body" className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
+        style={{ backgroundColor: colors.ink }}
+      >
+        <Text
+          variant="body"
+          className="font-sans-semibold"
+          style={{ color: colors.paper, fontSize: 17 }}
+        >
           {PHOTO_COPY.firstRun.cta}
         </Text>
       </Pressable>
@@ -138,14 +177,21 @@ function PairPicker({
               : { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }
           }
         >
-          <View className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]" style={{ backgroundColor: 'rgba(32,27,21,0.15)' }} />
+          <View
+            className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
+            style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+          />
           <Text variant="titleSm" className="mb-1">
             {title}
           </Text>
           <Text variant="bodySm" tone="muted" className="mb-4">
             Any two captures. You decide what to compare.
           </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 10 }}
+          >
             {photos
               .slice()
               .reverse()
@@ -171,7 +217,10 @@ function PairPicker({
                       className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
                       style={{ borderWidth: sel ? 2.5 : 0, borderColor: colors.clay }}
                     />
-                    <View className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5" style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}>
+                    <View
+                      className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
+                      style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
+                    >
                       <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
                         {short(p.takenLocalDate)}
                       </Text>
@@ -197,7 +246,10 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
     // Sparse: exactly one photo. Invite a second rather than an empty slider.
     return (
       <Card className="mt-2">
-        <View className="mb-3 h-44 items-center justify-center rounded-card" style={{ backgroundColor: colors.greige }}>
+        <View
+          className="mb-3 h-44 items-center justify-center rounded-card"
+          style={{ backgroundColor: colors.greige }}
+        >
           <Text variant="label" tone="muted">
             your first photo
           </Text>
@@ -215,7 +267,9 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
   const after = (pick.afterId && data.series.find((p) => p.id === pick.afterId)) || dflt.after;
 
   function choose(id: string) {
-    setPick((prev) => (picking === 'before' ? { ...prev, beforeId: id } : { ...prev, afterId: id }));
+    setPick((prev) =>
+      picking === 'before' ? { ...prev, beforeId: id } : { ...prev, afterId: id },
+    );
     setPicking(null);
   }
 
@@ -228,7 +282,12 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
           accessibilityState={{ selected: sideBySide }}
           onPress={() => setSideBySide((v) => !v)}
           className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
-          style={{ backgroundColor: sideBySide ? colors.ink : colors.paperRaised, borderWidth: sideBySide ? 0 : 1, borderColor: colors.hairlineStrong }}>
+          style={{
+            backgroundColor: sideBySide ? colors.ink : colors.paperRaised,
+            borderWidth: sideBySide ? 0 : 1,
+            borderColor: colors.hairlineStrong,
+          }}
+        >
           <Text variant="label" style={{ color: sideBySide ? colors.paper : colors.muted }}>
             {PHOTO_COPY.sideBySide}
           </Text>
@@ -271,7 +330,12 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
           accessibilityLabel="Play a quiet time-lapse of your series"
           onPress={() => setTimelapseFeedbackVisible(true)}
           className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
-          style={{ backgroundColor: colors.paperRaised, borderWidth: 1, borderColor: colors.hairlineStrong }}>
+          style={{
+            backgroundColor: colors.paperRaised,
+            borderWidth: 1,
+            borderColor: colors.hairlineStrong,
+          }}
+        >
           <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
           <Text variant="label" tone="muted">
             Play
@@ -304,50 +368,68 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
         // Milestones whose crossing photo falls in this month group, so each marker
         // shows inline at the photo that earned it and earlier markers don't vanish.
         const ids = new Set(group.photos.map((p) => p.id));
-        const groupMilestones = data.milestones.filter((m) => m.milestone !== 'first' && ids.has(m.photo.id));
+        const groupMilestones = data.milestones.filter(
+          (m) => m.milestone !== 'first' && ids.has(m.photo.id),
+        );
         return (
-        <View key={group.key} className="mb-5">
-          <Text variant="label" tone="muted" className="mb-2.5" style={{ letterSpacing: 1 }}>
-            {group.label.toUpperCase()}
-          </Text>
-          <View className="flex-row flex-wrap" style={{ gap: 8 }}>
-            {group.photos.map((p) => (
-              <Pressable
-                key={p.id}
-                accessibilityRole="button"
-                accessibilityLabel={`Photo ${short(p.takenLocalDate)}`}
-                onPress={() => router.push(`/progress/${p.id}`)}
-                style={{ width: '31.6%', aspectRatio: 3 / 4 }}
-                className="overflow-hidden rounded-[12px]"
+          <View key={group.key} className="mb-5">
+            <Text variant="label" tone="muted" className="mb-2.5" style={{ letterSpacing: 1 }}>
+              {group.label.toUpperCase()}
+            </Text>
+            <View className="flex-row flex-wrap" style={{ gap: 8 }}>
+              {group.photos.map((p) => (
+                <Pressable
+                  key={p.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Photo ${short(p.takenLocalDate)}`}
+                  onPress={() => router.push(`/progress/${p.id}`)}
+                  style={{ width: '31.6%', aspectRatio: 3 / 4 }}
+                  className="overflow-hidden rounded-[12px]"
+                >
+                  {p.localUri ? (
+                    <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
+                  ) : (
+                    <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+                  )}
+                  <View
+                    className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
+                    style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
+                  >
+                    <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
+                      {short(p.takenLocalDate)}
+                    </Text>
+                  </View>
+                  {p.isReference ? (
+                    <View
+                      className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: SAGE }}
+                    />
+                  ) : null}
+                </Pressable>
+              ))}
+            </View>
+            {/* calm milestone markers, inline at the photo that crossed each (docs/06 §4) */}
+            {groupMilestones.map((m) => (
+              <View
+                key={m.milestone}
+                className="mt-4 flex-row items-center gap-3 rounded-card p-3.5"
+                style={{ backgroundColor: colors.clayTint }}
               >
-                {p.localUri ? (
-                  <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
-                ) : (
-                  <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
-                )}
-                <View className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5" style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}>
-                  <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
-                    {short(p.takenLocalDate)}
-                  </Text>
+                <View
+                  className="h-[30px] w-[30px] items-center justify-center rounded-full"
+                  style={{ backgroundColor: colors.paperRaised }}
+                >
+                  <View
+                    className="h-[11px] w-[11px] rounded-full"
+                    style={{ backgroundColor: colors.clay }}
+                  />
                 </View>
-                {p.isReference ? (
-                  <View className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full" style={{ backgroundColor: SAGE }} />
-                ) : null}
-              </Pressable>
+                <Text variant="bodySm" className="flex-1" style={{ color: colors.clayDeep }}>
+                  {MILESTONE_COPY[m.milestone]}
+                </Text>
+              </View>
             ))}
           </View>
-          {/* calm milestone markers, inline at the photo that crossed each (docs/06 §4) */}
-          {groupMilestones.map((m) => (
-            <View key={m.milestone} className="mt-4 flex-row items-center gap-3 rounded-card p-3.5" style={{ backgroundColor: colors.clayTint }}>
-              <View className="h-[30px] w-[30px] items-center justify-center rounded-full" style={{ backgroundColor: colors.paperRaised }}>
-                <View className="h-[11px] w-[11px] rounded-full" style={{ backgroundColor: colors.clay }} />
-              </View>
-              <Text variant="bodySm" className="flex-1" style={{ color: colors.clayDeep }}>
-                {MILESTONE_COPY[m.milestone]}
-              </Text>
-            </View>
-          ))}
-        </View>
         );
       })}
     </View>
@@ -380,15 +462,28 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
   }, [requestUnlock]);
   // Full-bleed #16130F incl. the safe-area bands (design screen 08). No night sliver.
   return (
-    <View className="flex-1" style={{ backgroundColor: BG, paddingTop: insets.top, paddingBottom: insets.bottom }}>
+    <View
+      className="flex-1"
+      style={{ backgroundColor: BG, paddingTop: insets.top, paddingBottom: insets.bottom }}
+    >
       <View className="flex-1 items-center justify-center px-7">
-        <View className="mb-6 h-[78px] w-[78px] items-center justify-center rounded-[24px]" style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}>
+        <View
+          className="mb-6 h-[78px] w-[78px] items-center justify-center rounded-[24px]"
+          style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}
+        >
           <Text style={{ color: SAGE, fontSize: 30 }}>🔒</Text>
         </View>
-        <Text variant="title" style={{ color: colors.cream, fontSize: 30, lineHeight: 33, textAlign: 'center' }}>
+        <Text
+          variant="title"
+          style={{ color: colors.cream, fontSize: 30, lineHeight: 33, textAlign: 'center' }}
+        >
           {PHOTO_COPY.lock.title}
         </Text>
-        <Text variant="bodySm" className="mt-2.5 text-center" style={{ color: 'rgba(244,239,231,0.6)', maxWidth: 280, lineHeight: 21 }}>
+        <Text
+          variant="bodySm"
+          className="mt-2.5 text-center"
+          style={{ color: 'rgba(244,239,231,0.6)', maxWidth: 280, lineHeight: 21 }}
+        >
           {PHOTO_COPY.lock.body}
         </Text>
         {lockFeedback ? (
@@ -415,7 +510,8 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
           accessibilityRole="button"
           onPress={authenticate}
           className={`${lockFeedback ? 'mt-5' : 'mt-7'} flex-row items-center gap-2.5 rounded-pill px-8 py-4`}
-          style={{ backgroundColor: colors.cream }}>
+          style={{ backgroundColor: colors.cream }}
+        >
           <Text style={{ color: BG, fontSize: 15 }}>⊡</Text>
           <Text className="font-sans-semibold" style={{ color: BG, fontSize: 16 }}>
             {PHOTO_COPY.lock.unlock}
@@ -426,12 +522,20 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
         accessibilityRole="button"
         onPress={() => router.push('/(tabs)/you')}
         className="mb-10 flex-row items-center gap-3.5 rounded-[18px] p-4"
-        style={{ backgroundColor: 'rgba(244,239,231,0.07)', marginHorizontal: 4 }}>
+        style={{ backgroundColor: 'rgba(244,239,231,0.07)', marginHorizontal: 4 }}
+      >
         <View className="flex-1">
           <Text className="font-sans-bold" style={{ color: colors.cream, fontSize: 14 }}>
             {PHOTO_COPY.lock.cloudTitle}
           </Text>
-          <Text style={{ color: 'rgba(244,239,231,0.5)', fontSize: 12, lineHeight: 17, fontFamily: 'HankenGrotesk_400Regular' }}>
+          <Text
+            style={{
+              color: 'rgba(244,239,231,0.5)',
+              fontSize: 12,
+              lineHeight: 17,
+              fontFamily: 'HankenGrotesk_400Regular',
+            }}
+          >
             {PHOTO_COPY.lock.cloudOff}
           </Text>
         </View>
@@ -443,9 +547,11 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
 
 function PhotoProgressTab() {
   const { enabled: lockEnabled } = useAppLock();
+  const { height } = useWindowDimensions();
   const { data } = usePhotos('front');
   const [unlocked, setUnlocked] = useState(false);
   const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
+  const compactFirstRun = height < 520;
 
   useEffect(() => {
     if (mode === 'compare') track('comparison_viewed');
@@ -462,7 +568,10 @@ function PhotoProgressTab() {
 
   return (
     <Screen edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}
+      >
         <View className="flex-row items-start justify-between">
           <Text variant="title" className="mt-2" style={{ fontSize: 38 }}>
             {PHOTO_COPY.tabTitle}
@@ -473,7 +582,8 @@ function PhotoProgressTab() {
               accessibilityLabel="Take a progress photo"
               onPress={() => router.push('/progress/capture')}
               className="mt-3 min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
-              style={{ backgroundColor: colors.clay }}>
+              style={{ backgroundColor: colors.clay }}
+            >
               <Text style={{ color: colors.paper, fontSize: 14 }}>＋</Text>
               <Text variant="label" style={{ color: colors.paper }}>
                 Photo
@@ -483,7 +593,7 @@ function PhotoProgressTab() {
         </View>
 
         {count === 0 ? (
-          <FirstRun />
+          <FirstRun compact={compactFirstRun} />
         ) : (
           <>
             <Text variant="bodySm" tone="muted" className="mt-1">
@@ -503,8 +613,16 @@ function PhotoProgressTab() {
 
             <View className="mt-4 gap-2.5">
               <View className="flex-row items-center gap-2.5">
-                <ModeTab label="Compare" active={mode === 'compare'} onPress={() => setMode('compare')} />
-                <ModeTab label="Timeline" active={mode === 'timeline'} onPress={() => setMode('timeline')} />
+                <ModeTab
+                  label="Compare"
+                  active={mode === 'compare'}
+                  onPress={() => setMode('compare')}
+                />
+                <ModeTab
+                  label="Timeline"
+                  active={mode === 'timeline'}
+                  onPress={() => setMode('timeline')}
+                />
               </View>
               <Pressable
                 accessibilityRole="link"

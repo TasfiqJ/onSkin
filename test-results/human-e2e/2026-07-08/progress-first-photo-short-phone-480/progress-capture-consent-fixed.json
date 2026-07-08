@@ -1,0 +1,72 @@
+{
+  "blockedControls": [],
+  "documentSize": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320
+  },
+  "finalUrl": "http://localhost:8201/progress/capture",
+  "horizontalOverflow": 0,
+  "targets": [
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 303.9517593383789
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": null,
+        "label": "Take photos. On device only",
+        "rect": {
+          "bottom": 329.9453887939453,
+          "height": 51.98725891113281,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 277.9581298828125,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 51.98725891113281,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Take photos. On device only",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 357.93387603759766
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": null,
+        "label": "Not now",
+        "rect": {
+          "bottom": 381.9326629638672,
+          "height": 47.99757385253906,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 333.9350891113281,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Not now",
+      "pass": true
+    }
+  ],
+  "title": "",
+  "under44VisibleControls": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Take photos. On device only Not now"
+}

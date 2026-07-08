@@ -1,0 +1,221 @@
+{
+  "route": "/photos/capture",
+  "bottomZoneControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "clippedVisible": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "center": {
+        "x": 160.2,
+        "y": 439.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Take photos. On device only",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Take photos. On device only",
+      "rect": {
+        "bottom": 465.9,
+        "height": 52,
+        "left": 28,
+        "right": 292.4,
+        "top": 413.9,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": {
+        "height": 52,
+        "width": 264.4
+      }
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 493.9
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": true,
+      "hitBlocked": false,
+      "hitLabel": null,
+      "hitTag": null,
+      "inBottom96": true,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Not now",
+      "rect": {
+        "bottom": 517.9,
+        "height": 48,
+        "left": 28,
+        "right": 292.4,
+        "top": 469.9,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": true,
+      "visible": {
+        "height": 11.1,
+        "width": 264.4
+      }
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8201/progress/capture",
+  "rawErrorMarkers": [],
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "fullHeight": 481,
+    "fullWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [
+    "[Circular]"
+  ],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Clean skin, no makeup, hair back. Same time of day as last week. Take photos. On device only Not now",
+  "jsDialog": null,
+  "currentRouteLogs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:55:38.576Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:55:38.576Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:55:38.591Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:35.475Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:35.476Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:35.480Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:37.648Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:37.648Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:37.652Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:39.985Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:39.986Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:39.990Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:42.043Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:42.044Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:42.047Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:44.053Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:44.054Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:44.057Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:46.077Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:46.078Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:46.082Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

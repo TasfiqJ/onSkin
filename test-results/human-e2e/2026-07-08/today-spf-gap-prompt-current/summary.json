@@ -1,0 +1,48 @@
+{
+  "environment": {
+    "date": "2026-07-08",
+    "app": "Expo web",
+    "url": "http://localhost:8195/today?routine=AM",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    }
+  },
+  "setup": {
+    "shelfProductsAddedThroughUi": [
+      "Gentle cleanser",
+      "Barrier moisturizer"
+    ],
+    "profileState": "local neutral profile fallback",
+    "spfProductPresent": false
+  },
+  "assertions": {
+    "initialSpfPromptVisible": true,
+    "seeWhyVisible": true,
+    "notNowVisible": true,
+    "seeWhySizeAtLeast44": true,
+    "notNowSizeAtLeast44": true,
+    "initialHorizontalOverflow": 0,
+    "detailRoute": "http://localhost:8195/recommendations/gap:mineral_spf",
+    "detailShowsMineralSpf": true,
+    "detailShowsWhySignals": true,
+    "detailHorizontalOverflow": 0,
+    "dismissHidesPrompt": true,
+    "reloadKeepsPromptDismissed": true,
+    "afterDismissHorizontalOverflow": 0,
+    "afterReloadHorizontalOverflow": 0,
+    "currentPortWarnErrorLogs": []
+  },
+  "artifacts": [
+    "01-today-spf-prompt-initial.png",
+    "01-today-spf-prompt-initial.json",
+    "02-after-see-why-detail.png",
+    "02-after-see-why-detail.json",
+    "03-today-before-dismiss.png",
+    "04-today-after-dismiss.png",
+    "04-today-after-dismiss.json",
+    "05-today-after-dismiss-reload.png",
+    "05-today-after-dismiss-reload.json",
+    "browser-warn-error-logs.json"
+  ]
+}

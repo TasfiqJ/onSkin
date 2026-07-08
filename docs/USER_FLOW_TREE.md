@@ -544,6 +544,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-current-compact-check/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/progress-first-photo-short-phone-480/`
 
 ### Path A: Happy Path
 
@@ -551,6 +552,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: The photo flow is clear, private by default, and does not imply diagnosis or guaranteed improvement. When the comparison surface is populated, the Photo CTA, Compare/Timeline tabs, No scores link, Side-by-side toggle, and date-change chips meet the 44 pt phone touch target without clipping on small phones.
    Evidence: Screenshots or simulator video.
    Current local evidence: 2026-07-07 Expo web 320 x 568 covers the first-photo entry and non-destructive capture-consent branch: `/progress` shows a 56 px `Take my first photo` CTA with zero horizontal overflow, `/progress/capture` shows complete local-only consent copy plus 52 px `Take photos. On device only` and 48 px `Not now` controls, and `Not now` returns to `/progress`.
+   Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced the first-photo CTA center being blocked by the floating Shelf tab and the first-use consent `Not now` action clipping below the viewport. Post-fix `/progress` renders `Take my first photo` as a 56 px unblocked action above the floating tab bar; `/progress/capture` and redirected `/photos/capture` render 52 px `Take photos. On device only` and 48 px `Not now` controls fully inside the viewport with zero horizontal overflow, zero blocked controls, and zero sub-44 visible controls; tapping `Not now` returns to `/progress`. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-first-photo-short-phone-480/` and `docs/e2e-bug-reports/2026-07-08-progress-first-photo-short-phone-tabbar-consent.md`.
    Current populated evidence: 2026-07-07 Codex in-app browser Expo web with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` verifies the populated Compare view after the local Pro preview, including `12 weeks · 3 photos · all on this phone`, Compare/Timeline/No scores controls, zero horizontal overflow, no sub-44 controls, one named `Choose the first photo` dialog, a named dismiss target, three contextual photo-tile labels, dismiss recovery, and a successful first-photo update to `May 12`.
 
 ### Branches
@@ -573,9 +575,10 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/progress/capture` without prior `photo_capture` consent and inspect the consent gate at a compact phone size.
-  - Expected result: The consent gate says photos stay on-device, no faceprint or biometric template is stored, cloud backup is a separate choice, and backup-off/lost-phone tradeoff is visible before the first capture. Capture-frame labels, shutter copy, and camera preview chrome are not rendered until photo consent is saved. The Take photos and Not now controls remain readable and tappable on a 320 x 568 phone viewport.
+  - Expected result: The consent gate says photos stay on-device, no faceprint or biometric template is stored, cloud backup is a separate choice, and backup-off/lost-phone tradeoff is visible before the first capture. Capture-frame labels, shutter copy, and camera preview chrome are not rendered until photo consent is saved. The Take photos and Not now controls remain readable and tappable on 320 x 568 and shortest 320 x 480 phone viewports.
   - Evidence: Phone screenshot, visible-text snapshot, and 320 px button-geometry snapshot.
   - Current local evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 verifies direct `/progress/capture` renders the complete local-only consent gate with no pre-consent capture chrome, 52 px `Take photos. On device only`, 48 px `Not now`, zero horizontal overflow, and safe recovery to `/progress` after tapping `Not now`. The overlay source now adds top and bottom safe-area insets to its scroll padding; native notch/home-indicator verification remains device QA.
+  - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 verifies direct `/progress/capture` and legacy `/photos/capture` keep the local-only consent copy, hide only the prep reminder on shortest phones, show no camera chrome before consent, keep `Take photos. On device only` and `Not now` fully visible and hit-testable, and recover to `/progress` after `Not now`. Evidence is in `test-results/human-e2e/2026-07-08/progress-first-photo-short-phone-480/`.
 - Branch: camera start or photo capture failure
   - Priority: Critical
   - Automate later: Yes
@@ -819,6 +822,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendations-hub-narrow-scroll-continuation/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/today-spf-gap-prompt-current/`
 
 ### Path A: For You Hub
 
@@ -834,6 +838,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Today with a shelf/profile state that produces an SPF gap, inspect the inline prompt, then tap See why or dismiss it.
   - Expected result: The prompt stays advisory and dismissible, the visible close, See why, and Not now controls meet the 44 pt phone touch target, and no text or action overflows on a 320 px phone.
   - Evidence: Small-phone screenshot, button-geometry snapshot, and local dismissed recommendation state when dismissing.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 uses the real manual shelf flow to add `Gentle cleanser` and `Barrier moisturizer`, opens `/today?routine=AM`, and verifies the compact SPF prompt renders full readable `No SPF this morning`, visible `See why` and `Not now` actions, 56 x 176 px and 48 x 86 px controls, zero horizontal overflow, `/recommendations/gap:mineral_spf` detail routing with SPF rationale, dismissal, and reload persistence. Evidence is in `test-results/human-e2e/2026-07-08/today-spf-gap-prompt-current/`.
 - Branch: compact you're-set state
   - Priority: Important
   - Automate later: Yes

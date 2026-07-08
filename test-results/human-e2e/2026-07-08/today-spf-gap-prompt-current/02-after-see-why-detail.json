@@ -1,0 +1,28 @@
+{
+  "visibleDom": "<button node_id=9 aria-label=\"Back\" role=\"button\" type=\"button\">&lt;</button>",
+  "summary": {
+    "controls": {
+      "back": {
+        "ariaLabel": "Back",
+        "height": 48,
+        "role": "button",
+        "text": "<",
+        "width": 48,
+        "x": 24,
+        "y": 4
+      }
+    },
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8195/recommendations/gap:mineral_spf",
+    "textIncludes": {
+      "broadConsensus": true,
+      "matchedToProfile": true,
+      "mineralSpf": true,
+      "noSpfInRoutine": true
+    },
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  }
+}

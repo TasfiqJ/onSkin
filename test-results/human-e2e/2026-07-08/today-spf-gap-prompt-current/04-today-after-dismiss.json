@@ -1,0 +1,20 @@
+{
+  "notNowCount": 1,
+  "visibleDom": "<div node_id=1 aria-label=\"Gentle cleanser\" role=\"checkbox\">Gentle cleanser Clean base first. NEXT</div>\n<div node_id=2 aria-label=\"Barrier moisturizer\" role=\"checkbox\">Barrier moisturizer Seal it in.</div>\n<button node_id=3 aria-label=\"See your recommendations\" role=\"button\" type=\"button\">✦ A few honest suggestions Your routine looks complete ›</button>\n<div node_id=4 aria-label=\"Today tab\" role=\"tab\">Today</div>\n<div node_id=5 aria-label=\"Progress tab\" role=\"tab\">Progress</div>\n<div node_id=6 aria-label=\"Shelf tab\" role=\"tab\">Shelf</div>\n<div node_id=7 aria-label=\"You tab\" role=\"tab\">You</div>",
+  "summary": {
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8195/today?routine=AM",
+    "textIncludes": {
+      "barrierMoisturizer": true,
+      "gentleCleanser": true,
+      "noSpfThisMorning": false,
+      "notNow": false,
+      "seeWhy": false,
+      "seeYourRecommendations": true
+    },
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  }
+}

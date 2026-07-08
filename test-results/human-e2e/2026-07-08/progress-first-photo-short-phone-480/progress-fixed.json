@@ -1,0 +1,46 @@
+{
+  "blockedControls": [],
+  "documentSize": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320
+  },
+  "finalUrl": "http://localhost:8201/progress",
+  "horizontalOverflow": 0,
+  "targets": [
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 376.9038333892822
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": null,
+        "label": "Take my first photo",
+        "rect": {
+          "bottom": 404.8998908996582,
+          "height": 55.99211502075195,
+          "left": 23.99878692626953,
+          "right": 296.38956451416016,
+          "top": 348.90777587890625,
+          "width": 272.3907775878906
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906
+      },
+      "needle": "Take my first photo",
+      "pass": true
+    }
+  ],
+  "title": "",
+  "under44VisibleControls": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. Take my first photo Today Progress Shelf You"
+}

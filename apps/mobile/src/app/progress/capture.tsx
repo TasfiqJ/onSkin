@@ -87,18 +87,20 @@ function ConsentGate({
   onGrant: () => void;
   onCancel: () => void;
 }) {
-  const compact = useWindowDimensions().height < 640;
-  const showPrepReminder = !(compact && saveFailed);
+  const height = useWindowDimensions().height;
+  const compact = height < 640;
+  const shortPhone = height < 520;
+  const showPrepReminder = !(shortPhone || (compact && saveFailed));
 
   return (
     <CaptureOverlay backgroundColor={NIGHT_CONSENT_OVERLAY_BG} compact={compact}>
       <Text
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
-          fontSize: compact ? 27 : 30,
-          lineHeight: compact ? 29 : undefined,
+          fontSize: shortPhone ? 25 : compact ? 27 : 30,
+          lineHeight: shortPhone ? 27 : compact ? 29 : undefined,
           color: '#F4EFE7',
-          marginBottom: compact ? 10 : 16,
+          marginBottom: shortPhone ? 6 : compact ? 10 : 16,
         }}
       >
         Your photos stay on this phone.
@@ -110,16 +112,16 @@ function ConsentGate({
           ['Never', PHOTO_CAPTURE_CONSENT.never],
         ] as const
       ).map(([k, v]) => (
-        <View key={k} style={{ marginBottom: compact ? 9 : 14 }}>
-          <Text variant="label" style={{ color: '#D9A183', marginBottom: 2 }}>
+        <View key={k} style={{ marginBottom: shortPhone ? 6 : compact ? 9 : 14 }}>
+          <Text variant="label" style={{ color: '#D9A183', marginBottom: shortPhone ? 1 : 2 }}>
             {k.toUpperCase()}
           </Text>
           <Text
             style={{
               fontFamily: 'HankenGrotesk_400Regular',
-              fontSize: compact ? 14 : 14.5,
+              fontSize: shortPhone ? 13 : compact ? 14 : 14.5,
               color: 'rgba(244,239,231,0.9)',
-              lineHeight: compact ? 19 : 21,
+              lineHeight: shortPhone ? 17 : compact ? 19 : 21,
             }}
           >
             {v}
@@ -129,11 +131,11 @@ function ConsentGate({
       <Text
         style={{
           fontFamily: 'IBMPlexMono_400Regular',
-          fontSize: compact ? 10.5 : 11,
+          fontSize: shortPhone ? 10 : compact ? 10.5 : 11,
           color: NIGHT_FOOTNOTE_TEXT,
-          lineHeight: compact ? 15 : undefined,
-          marginTop: compact ? 2 : 6,
-          marginBottom: compact ? 8 : 14,
+          lineHeight: shortPhone ? 13 : compact ? 15 : undefined,
+          marginTop: shortPhone ? 0 : compact ? 2 : 6,
+          marginBottom: shortPhone ? 6 : compact ? 8 : 14,
         }}
       >
         {PHOTO_CAPTURE_CONSENT.footnote}

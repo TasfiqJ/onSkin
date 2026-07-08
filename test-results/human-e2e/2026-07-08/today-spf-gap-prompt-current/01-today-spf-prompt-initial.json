@@ -1,0 +1,38 @@
+{
+  "visibleDom": "<div node_id=1 aria-label=\"Gentle cleanser\" role=\"checkbox\">Gentle cleanser Clean base first. NEXT</div>\n<div node_id=2 aria-label=\"Barrier moisturizer\" role=\"checkbox\">Barrier moisturizer Seal it in.</div>\n<button node_id=3 aria-label=\"See why\" role=\"button\" type=\"button\">SPF No SPF this morning See why</button>\n<button node_id=4 aria-label=\"Not now\" role=\"button\" type=\"button\">Not now</button>\n<div node_id=5 aria-label=\"Today tab\" role=\"tab\">Today</div>\n<div node_id=6 aria-label=\"Progress tab\" role=\"tab\">Progress</div>\n<div node_id=7 aria-label=\"Shelf tab\" role=\"tab\">Shelf</div>\n<div node_id=8 aria-label=\"You tab\" role=\"tab\">You</div>",
+  "summary": {
+    "controls": {
+      "notNow": {
+        "ariaLabel": "Not now",
+        "height": 48,
+        "role": "button",
+        "text": "Not now",
+        "width": 86,
+        "x": 209,
+        "y": 270
+      },
+      "seeWhy": {
+        "ariaLabel": "See why",
+        "height": 56,
+        "role": "button",
+        "text": "SPFNo SPF this morningSee why",
+        "width": 176,
+        "x": 25,
+        "y": 266
+      }
+    },
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8195/today?routine=AM",
+    "textIncludes": {
+      "barrierMoisturizer": true,
+      "gentleCleanser": true,
+      "noSpfThisMorning": true,
+      "notNow": true,
+      "seeWhy": true
+    },
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  }
+}

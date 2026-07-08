@@ -68,7 +68,8 @@ describe('photo capture consent application', () => {
     expect(source).toContain('const [consentSaveFailed, setConsentSaveFailed] = useState(false)');
     expect(source).toContain('saveFailed={consentSaveFailed}');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('const showPrepReminder = !(compact && saveFailed)');
+    expect(source).toContain('const shortPhone = height < 520');
+    expect(source).toContain('const showPrepReminder = !(shortPhone || (compact && saveFailed))');
     expect(source).toContain('{showPrepReminder ? (');
     expect(source).toContain('PHOTO_COPY.capture.consentFailedTitle');
     expect(source).toContain('PHOTO_COPY.capture.consentFailedBody');

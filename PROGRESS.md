@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed and verified the Today SPF gap prompt on compact phones. The compact
+  prompt now exposes a visible `Not now` dismissal instead of an icon-only
+  close affordance, and the SPF headline can wrap to two lines instead of
+  ellipsizing at 320 px. Codex in-app browser Expo web at 320 x 568 used the
+  real manual shelf flow to add `Gentle cleanser` and `Barrier moisturizer`,
+  verified `/today?routine=AM` shows the SPF prompt with 48 px+ `See why` and
+  `Not now` controls, zero horizontal overflow, `/recommendations/gap:mineral_spf`
+  detail routing, dismissal, and reload persistence. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/today-spf-gap-prompt-current/`,
+  `docs/e2e-bug-reports/2026-07-08-today-spf-gap-prompt-compact.md`.
+
 - Added current app-surface evidence for Recommendations direct-entry exits.
   Codex in-app browser Expo web at 320 x 568 verifies direct
   `/recommendations` Back recovery to `/you`, direct
@@ -4718,6 +4729,31 @@ Fresh current-source recheck on localhost:8193 confirms the manual fallback is
 succeeds, and the tap-through still lands on `/shelf/manual`.
 Native iOS/Android camera, safe-area, Dynamic Type, and screen-reader traversal
 remain device QA follow-up.
+
+### Progress first-photo shortest-phone controls (2026-07-08)
+
+Found a 320 x 480 Progress first-use bug in the Codex in-app browser:
+`/progress` rendered a 56 px `Take my first photo` CTA whose center was covered
+by the floating Shelf tab, while `/progress/capture` and redirected
+`/photos/capture` clipped `Not now` below the viewport with only an 11 px
+visible sliver.
+
+Added a shortest-phone mode for the empty Progress first-run state and the
+first-use photo consent gate. The compact mode keeps the privacy-critical
+local-only consent copy visible, keeps both consent actions 48 px+, preserves
+the on-device/no-faceprint/cloud-separate tradeoff, and removes only the
+nonessential prep reminder on sub-520 px height viewports.
+
+Post-fix human-simulated E2E at 320 x 481 verifies `/progress` keeps `Take my
+first photo` fully visible and unblocked above the floating tab bar;
+`/progress/capture` and `/photos/capture` keep 52 px `Take photos. On device
+only` and 48 px `Not now` fully visible, hit-testable, and free of horizontal
+overflow, blocked controls, or sub-44 visible controls; and tapping `Not now`
+returns to `/progress`. Evidence and bug report are in
+`test-results/human-e2e/2026-07-08/progress-first-photo-short-phone-480/` and
+`docs/e2e-bug-reports/2026-07-08-progress-first-photo-short-phone-tabbar-consent.md`.
+Native iOS/Android camera permission sheets, hardware safe areas, Dynamic Type,
+and screen-reader traversal remain device QA follow-up.
 
 ## Open questions for the founder
 
