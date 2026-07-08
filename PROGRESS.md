@@ -6,14 +6,25 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 5 device-QA packet evidence normalization. The Phase 5 packet
+  builder now uses the shared normalized evidence/signoff helpers, the
+  cross-phase evidence-normalization smoke covers `PHASE5_QA_SIGNOFF`, and the
+  generated device-QA packet hashes the Phase 5 verifier scripts plus the shared
+  helper it depends on. `PHASE5_QA_SIGNOFF` tolerates whitespace/case but only
+  `true` passes, while `PHASE5_SIGNED_OFF_BY` is written as a normalized real
+  tester/reviewer name and placeholders remain blocked. The refreshed generated
+  packet remains blocked on real EAS build IDs, physical devices, and named
+  tester evidence.
+
 - Hardened Shelf replenish similar-options recovery after commerce consent.
   The `/shelf/replenish` `See similar options` consented empty-state branch now
   uses the shared route-owned `CommerceLinkNotice` instead of `Alert.alert`,
-  keeping the user in the replacement context while the catalogue/partner rail is
-  launch-gated. Codex in-app browser Expo web at 320 x 568 with commerce enabled
-  verifies the boundary product setup, consent sheet, no dialog after the
-  consented retap, one visible `role="alert"` notice at y=427-545, zero
-  horizontal overflow, and empty warn/error logs. Evidence and bug report:
+  keys the notice state to the current product, and keeps the user in the
+  replacement context while the catalogue/partner rail is launch-gated. Codex
+  in-app browser Expo web at 320 x 568 with commerce enabled verifies the
+  boundary product setup, consent sheet, no dialog after the consented retap,
+  one visible `role="alert"` notice at y=427-545, zero horizontal overflow, and
+  empty warn/error logs. Evidence and bug report:
   `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/`,
   `docs/e2e-bug-reports/2026-07-08-shelf-replenish-similar-inline-recovery.md`.
 

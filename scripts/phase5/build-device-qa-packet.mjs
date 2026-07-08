@@ -2,13 +2,14 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { placeholderEnvValue } from '../phase9/lib.mjs';
+import { evidenceFlagEnabled, normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
 const outDir = resolve(root, process.env.PHASE5_QA_PACKET_OUT_DIR ?? 'docs/phase-5/generated');
 
 const requiredFiles = [
+  'package.json',
   'apps/mobile/app.base.json',
   'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
@@ -22,6 +23,10 @@ const requiredFiles = [
   'apps/mobile/src/features/photos/store.ts',
   'apps/mobile/src/features/notifications/deliver.ts',
   'apps/mobile/src/lib/iap/revenuecat.ts',
+  'scripts/phase5/build-device-qa-packet.mjs',
+  'scripts/phase5/check-native-config.mjs',
+  'scripts/phase5/device-qa-packet-smoke.mjs',
+  'scripts/phase9/lib.mjs',
   'docs/phase-5/native-build-runbook.md',
   'docs/phase-5/device-qa-checklist.md',
   'docs/phase-5/phase-5-exit-review.md',
@@ -110,26 +115,16 @@ function looksLikePhysicalAndroidDevice(value) {
   return /\bAndroid(?:\s+OS)?\s+\d{1,2}(?:\.\d+){0,2}\b/i.test(trimmed);
 }
 
-function looksLikeNamedSignoff(value) {
-  const trimmed = String(value ?? '').trim();
-  if (placeholderEnvValue(trimmed)) return false;
-  if (
-    /^(?:name|tester|qa|reviewer|signoff|signed off|tbd|n\/a)$/i.test(trimmed) ||
-    /\b(?:tester|reviewer|your|full|actual|first|last)\s+name\b/i.test(trimmed) ||
-    /\b(?:john|jane)\s+doe\b/i.test(trimmed)
-  ) {
-    return false;
-  }
-  return /[a-z]/i.test(trimmed) && trimmed.length >= 3;
-}
+const rawSignedOffBy = envValue('PHASE5_SIGNED_OFF_BY');
+const normalizedSignedOffBy = normalizeNamedSignoff(rawSignedOffBy) ?? '';
 
 const buildEvidence = {
   iosBuildId: envValue('PHASE5_IOS_BUILD_ID'),
   androidBuildId: envValue('PHASE5_ANDROID_BUILD_ID'),
   iosDevice: envValue('PHASE5_IOS_DEVICE'),
   androidDevice: envValue('PHASE5_ANDROID_DEVICE'),
-  qaSignedOff: envValue('PHASE5_QA_SIGNOFF').toLowerCase() === 'true',
-  signedOffBy: envValue('PHASE5_SIGNED_OFF_BY'),
+  qaSignedOff: evidenceFlagEnabled(process.env.PHASE5_QA_SIGNOFF),
+  signedOffBy: normalizedSignedOffBy,
 };
 
 const files = requiredFiles.map(hashFile);
@@ -151,8 +146,8 @@ else if (!looksLikePhysicalAndroidDevice(buildEvidence.androidDevice)) {
   blockers.push('PHASE5_ANDROID_DEVICE must name a physical Android model and Android OS version.');
 }
 if (!buildEvidence.qaSignedOff) blockers.push('Missing PHASE5_QA_SIGNOFF=true.');
-if (!buildEvidence.signedOffBy) blockers.push('Missing PHASE5_SIGNED_OFF_BY.');
-else if (!looksLikeNamedSignoff(buildEvidence.signedOffBy)) {
+if (!rawSignedOffBy) blockers.push('Missing PHASE5_SIGNED_OFF_BY.');
+else if (!buildEvidence.signedOffBy) {
   blockers.push('PHASE5_SIGNED_OFF_BY must name a real tester/reviewer, not a placeholder.');
 }
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);

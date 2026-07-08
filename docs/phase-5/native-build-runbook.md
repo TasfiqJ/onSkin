@@ -38,6 +38,10 @@ PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
 
+`PHASE5_QA_SIGNOFF` is trimmed and case-normalized, but only `true` passes.
+`PHASE5_SIGNED_OFF_BY` must be a real tester/reviewer name; placeholders and
+generic tester labels are rejected.
+
 ## Native Runtime Policy
 
 `app.base.json` uses `runtimeVersion.policy=fingerprint` and is consumed by `app.config.js`. Any native dependency, plugin, permission, or app config change must ship through a new native binary, not only OTA.

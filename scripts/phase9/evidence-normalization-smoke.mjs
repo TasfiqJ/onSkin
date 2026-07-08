@@ -6,6 +6,10 @@ const warnings = [];
 
 const evidenceGates = [
   {
+    file: 'scripts/phase5/build-device-qa-packet.mjs',
+    keys: ['PHASE5_QA_SIGNOFF'],
+  },
+  {
     file: 'scripts/phase9/rls-adversarial.mjs',
     keys: ['PHASE9_RLS_STAGING_PASS', 'PHASE9_RLS_PRODUCTION_PASS'],
   },
@@ -185,4 +189,4 @@ for (const [value, expected] of [
   );
 }
 
-printResult('Phase 9/10/11 evidence normalization smoke', errors, warnings);
+printResult('Phase 5/9/10/11 evidence normalization smoke', errors, warnings);

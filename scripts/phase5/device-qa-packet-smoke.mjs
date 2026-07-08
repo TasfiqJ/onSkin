@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,7 +40,7 @@ const validEvidence = {
 
 function run(extraEnv) {
   const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase5-qa-'));
-  return spawnSync(process.execPath, [packetPath, '--strict'], {
+  const result = spawnSync(process.execPath, [packetPath, '--strict'], {
     cwd: root,
     encoding: 'utf8',
     env: {
@@ -50,6 +50,8 @@ function run(extraEnv) {
       PHASE5_QA_PACKET_OUT_DIR: outDir,
     },
   });
+  result.outDir = outDir;
+  return result;
 }
 
 function output(result) {
@@ -155,6 +157,17 @@ const cases = [
     expect(result) {
       const text = output(result);
       return result.status === 0 && /device-qa-packet\.json/.test(text) && !/^FAIL /m.test(text);
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet normalizes named signoff output',
+    result: run({ PHASE5_SIGNED_OFF_BY: ' Tas Mohammed ' }),
+    expect(result) {
+      if (result.status !== 0) return false;
+      const packet = JSON.parse(
+        readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'),
+      );
+      return packet.buildEvidence.signedOffBy === 'Tas Mohammed';
     },
   },
 ];
