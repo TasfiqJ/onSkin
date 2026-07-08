@@ -116,6 +116,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`; it
   does not replace native keyboard/accessibility QA or final legal quiz-copy
   review.
+- 2026-07-08: Codex in-app browser Expo web at 320 px plus focused onboarding
+  route contracts cover the compact `/onboarding/products` category selector
+  after native safe-area hardening. The collapsed route has zero horizontal
+  overflow, a 54 px product-name input, a 50 px `Choose product category`
+  control, and a 56 px footer action; source contracts verify the picker sheet
+  uses native bottom-inset padding when present, caps height at viewport minus a
+  44 px outside dismiss reserve, exposes web modal-dialog semantics, and keeps
+  category chips inside a shrinkable scroll view. Evidence is in
+  `test-results/human-e2e/2026-07-08/onboarding-product-category-picker-safe-area/`;
+  it does not replace native iOS/Android home-indicator, Dynamic Type,
+  VoiceOver/TalkBack, or a stable modal-open browser run.
 - 2026-07-07: Expo web E2E at 320 x 568 covers runtime brand identity on
   `/ask`, `/paywall/upsell?feature=full_routine`, and
   `/settings/subscription`: the checked surfaces render `Ask RoutineKind` and

@@ -4,6 +4,25 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-08
+
+- Hardened the first-run `/onboarding/products` category picker for native
+  bottom safe areas and compact dismiss targets. The hand-built picker now owns
+  the same core contract as the shared sheets: compact web keeps the 40 px
+  bottom baseline, native devices with a real bottom inset get
+  `insets.bottom + 24`, sheet height is capped at viewport height minus a 44 px
+  outside dismiss reserve, the sheet exposes modal-dialog semantics on web, and
+  category chips sit in a shrinkable scroll view for short screens or larger
+  text. Focused onboarding route contracts and product-category tests pass, as
+  do mobile typecheck and lint. Codex in-app browser evidence confirms the
+  compact route at 320 px has zero horizontal overflow with 50+ px visible
+  controls; browser screenshot and modal-open capture timed out, so native
+  home-indicator, Dynamic Type, VoiceOver/TalkBack, and stable modal-open E2E
+  remain follow-up QA. Evidence is in
+  `test-results/human-e2e/2026-07-08/onboarding-product-category-picker-safe-area/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-onboarding-product-category-picker-safe-area.md`.
+
 ## 2026-07-07
 
 - Ran the Phase 9 release-engineering verification suite. `npm run

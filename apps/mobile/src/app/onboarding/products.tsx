@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { reviewedCategoryPao } from '@/features/intelligence/pao';
@@ -17,16 +18,20 @@ const ONBOARDING_PRODUCT_TARGET = 3;
 function CategoryPickerSheet({
   visible,
   selectedCategory,
-  sheetMaxHeight,
   onSelect,
   onClose,
 }: {
   visible: boolean;
   selectedCategory: string | null;
-  sheetMaxHeight: number;
   onSelect: (category: string | null) => void;
   onClose: () => void;
 }) {
+  const { height: viewportHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const sheetMaxHeight = Math.max(280, viewportHeight - 44);
+  const sheetPaddingBottom =
+    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+
   return (
     <Modal
       visible={visible}
@@ -43,9 +48,15 @@ function CategoryPickerSheet({
           onPress={onClose}
         />
         <View
+          aria-modal
+          role="dialog"
           accessibilityViewIsModal
-          className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"
-          style={{ maxHeight: sheetMaxHeight }}
+          className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"
+          style={
+            sheetPaddingBottom === undefined
+              ? { maxHeight: sheetMaxHeight }
+              : { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }
+          }
         >
           <View
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
@@ -66,17 +77,23 @@ function CategoryPickerSheet({
               </Text>
             </Pressable>
           </View>
-          <View className="flex-row flex-wrap gap-2">
-            {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
-              <Chip
-                key={c.id}
-                label={c.label}
-                selected={selectedCategory === c.id}
-                className="px-4"
-                onPress={() => onSelect(selectedCategory === c.id ? null : c.id)}
-              />
-            ))}
-          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ flexShrink: 1 }}
+            contentContainerClassName="pb-1"
+          >
+            <View className="flex-row flex-wrap gap-2">
+              {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
+                <Chip
+                  key={c.id}
+                  label={c.label}
+                  selected={selectedCategory === c.id}
+                  className="px-4"
+                  onPress={() => onSelect(selectedCategory === c.id ? null : c.id)}
+                />
+              ))}
+            </View>
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -100,7 +117,6 @@ export default function ProductsScreen() {
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
   const added = data?.items ?? [];
   const compactPhone = height < 640;
-  const pickerSheetMaxHeight = Math.max(280, height - 48);
   const compactFooterAdds = compactPhone && name.trim().length > 0;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
   const hasTargetProducts = remainingToTarget === 0;
@@ -254,7 +270,6 @@ export default function ProductsScreen() {
                 <CategoryPickerSheet
                   visible={categoryPickerOpen}
                   selectedCategory={category}
-                  sheetMaxHeight={pickerSheetMaxHeight}
                   onSelect={selectCategory}
                   onClose={() => setCategoryPickerOpen(false)}
                 />

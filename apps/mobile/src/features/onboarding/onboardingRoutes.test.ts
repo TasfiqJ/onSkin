@@ -73,7 +73,17 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('animationType="slide"');
     expect(products).toContain('accessibilityLabel="Choose product category"');
     expect(products).toContain('accessibilityLabel="Dismiss category picker"');
-    expect(products).toContain('className="rounded-t-sheet bg-paper px-6 pb-10 pt-4"');
+    expect(products).toContain('useSafeAreaInsets');
+    expect(products).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(products).toContain('const insets = useSafeAreaInsets();');
+    expect(products).toContain('const sheetMaxHeight = Math.max(280, viewportHeight - 44);');
+    expect(products).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
+    expect(products).toContain('aria-modal');
+    expect(products).toContain('role="dialog"');
+    expect(products).toContain('className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"');
+    expect(products).toContain('paddingBottom: sheetPaddingBottom');
+    expect(products).toContain('showsVerticalScrollIndicator={false}');
+    expect(products).toContain('style={{ flexShrink: 1 }}');
     expect(products).toContain('setCategoryPickerOpen((open) => !open)');
     expect(products).not.toContain('horizontal');
     expect(products).not.toContain('contentContainerStyle={{ gap: 4, paddingRight: 8 }}');
