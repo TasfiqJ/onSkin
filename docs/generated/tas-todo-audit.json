@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T20:20:30.610Z",
+  "generatedAt": "2026-07-08T20:58:28.030Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,10 +11,10 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 231,
+    "extractedKeyCount": 233,
     "localOnlyKeyCount": 10,
-    "keyMentionCount": 55,
-    "keyNotMentionedCount": 176,
+    "keyMentionCount": 56,
+    "keyNotMentionedCount": 177,
     "blockerCount": 0,
     "warningCount": 8
   },
@@ -196,20 +196,24 @@
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
         "OBF_API_ENABLED",
         "OBF_CONTRIBUTION_ENABLED",
-        "OBF_USER_AGENT"
+        "OBF_USER_AGENT",
+        "PHASE4_BETA_COVERAGE_INPUT",
+        "PHASE4_BETA_COVERAGE_REPORT"
       ],
       "keysMentionedInForTas": [
         "CATALOG_APP_NAME",
         "CATALOG_APP_VERSION",
         "CATALOG_ATTRIBUTION_URL",
         "CATALOG_CONTACT_EMAIL",
-        "OBF_USER_AGENT"
+        "OBF_USER_AGENT",
+        "PHASE4_BETA_COVERAGE_INPUT"
       ],
       "keysNotMentionedInForTas": [
         "CATALOG_RATE_LIMIT_MAX",
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
         "OBF_API_ENABLED",
-        "OBF_CONTRIBUTION_ENABLED"
+        "OBF_CONTRIBUTION_ENABLED",
+        "PHASE4_BETA_COVERAGE_REPORT"
       ]
     },
     {
@@ -730,7 +734,7 @@
   "blockers": [],
   "warnings": [
     "Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 4 catalog source posture has 5 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 6 payments and RevenueCat has 14 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 7 core loop launch gates has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 8 growth and store readiness has 19 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",

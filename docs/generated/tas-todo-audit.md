@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-08T20:20:30.610Z
+Generated: 2026-07-08T20:58:28.030Z
 Status: pass
 Strict mode: yes
 
@@ -17,10 +17,10 @@ inventory itself is the canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 231
+- Extracted keys: 233
 - Local generated-only keys excluded: 10
-- Keys named verbatim in FOR_TAS_TO_DO.md: 55
-- Keys only in generated inventory: 176
+- Keys named verbatim in FOR_TAS_TO_DO.md: 56
+- Keys only in generated inventory: 177
 - Blockers: 0
 - Warnings: 8
 
@@ -30,7 +30,7 @@ inventory itself is the canonical machine-readable key list.
 | ------- | ---------------- | ---------------------------------------------------------- | ---- | -------------------------------- |
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 40                               |
 | phase3  | yes              | phase3:audit-copy:strict                                   | 0    | 0                                |
-| phase4  | yes              | phase4:check-source-env:strict                             | 9    | 4                                |
+| phase4  | yes              | phase4:check-source-env:strict                             | 11   | 5                                |
 | phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 20   | 0                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 18   | 14                               |
 | phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 29   | 16                               |
@@ -126,6 +126,8 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | OBF_API_ENABLED                   | no                        |
 | OBF_CONTRIBUTION_ENABLED          | no                        |
 | OBF_USER_AGENT                    | yes                       |
+| PHASE4_BETA_COVERAGE_INPUT        | yes                       |
+| PHASE4_BETA_COVERAGE_REPORT       | no                        |
 
 Local generated-only keys excluded from evidence warnings: none.
 
@@ -368,7 +370,7 @@ Local generated-only keys excluded from evidence warnings: PHASE11_PACKET_OUT_DI
 ## Warnings
 
 - Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
-- Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
+- Phase 4 catalog source posture has 5 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 6 payments and RevenueCat has 14 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 7 core loop launch gates has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 8 growth and store readiness has 19 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
