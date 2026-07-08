@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T01:10:05.361Z",
+  "generatedAt": "2026-07-08T01:23:36.492Z",
   "status": "blocked",
-  "gitSha": "47b1a50f4882b8d120f52ff1b2a6b2644973ed13",
-  "gitStatus": "M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md",
+  "gitSha": "9203efc80870b2fe3b753a2be1e6f95e0a8c2340",
+  "gitStatus": "M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",

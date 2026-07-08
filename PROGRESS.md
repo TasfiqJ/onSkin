@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Refreshed closed-beta/public-launch readiness evidence after the latest safe-
+  area and packet commits. `npm run phase10-11:verify` passes non-strict code
+  gates, while the generated Phase 10 and Phase 11 packets remain correctly
+  `blocked` on external proof: final identity URLs, TestFlight/Play evidence,
+  RevenueCat production evidence, monitoring/support proof, beta/launch reports,
+  and named signoffs. `LAUNCH_READINESS.md` and `BLOCKERS.md` now reflect the
+  current 166-file / 1,677-test mobile suite and the latest non-strict
+  verification status.
+
 - Polished the floating bottom tab bar scene background so it no longer sits on
   a mismatched white band over PM Today. Human E2E geometry already proved the
   labels and hit targets were correct, but screenshot review showed Today's

@@ -84,11 +84,14 @@ The `04_repo_docs` strategy packet has also been copied into active docs as
 privacy, or architecture changes should use the master-plan patch process
 instead of silently editing implementation around the plan.
 
-Fresh verification on 2026-07-07: `npm run typecheck`, `npm run lint`,
+Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
-`npm --workspace apps/mobile run lint`, and
-`npm --workspace apps/mobile run test` pass. Re-run the relevant checks after
-any readiness-changing work.
+`npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
+`npm run brand:audit:strict`, and `npm run phase10-11:verify` pass non-strict
+code gates. The mobile suite currently covers 166 test files and 1677 tests.
+Strict beta/public-launch gates still require the external evidence listed in
+`docs/FOR_TAS_TO_DO.md`. Re-run the relevant checks after any
+readiness-changing work.
 
 The previous `docs/design-spec.pdf` reference is obsolete. The available design
 handoff source in this workspace is the local `dx*` folders and `.dc.html`

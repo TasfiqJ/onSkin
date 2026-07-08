@@ -15,18 +15,22 @@ quality logic, OBF fixture import/QA tooling, catalog lookup/search/report Edge
 Functions, and mobile source/quality disclosure. This is not source/legal
 clearance and not a real launch catalog.
 
-Fresh verification on 2026-07-07:
+Fresh verification on 2026-07-08:
 
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 166 mobile test files, 1676 tests.
+- `npm test` passed: 166 mobile test files, 1677 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 166 test files, 1676 tests.
+- `npm --workspace apps/mobile run test` passed: 166 test files, 1677 tests.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
+- `npm run phase10-11:verify` passed non-strict code gates. Strict closed-beta
+  and public-launch readiness remain blocked by missing final identity URLs,
+  TestFlight/Play evidence, RevenueCat production evidence, monitoring/support
+  proof, beta/launch reports, and named signoffs.
 
-Re-run all three after any production-readiness change.
+Re-run the relevant checks after any production-readiness change.
 
 ## Launch Gates
 
