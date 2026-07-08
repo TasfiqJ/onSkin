@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared a new 320 x 568 / 200% compact text-pressure route audit. The sweep
+  reproduced partial controls in Recommendation Preferences and Settings
+  Notifications, plus a Settings Privacy direct-entry row whose center was
+  blocked by the floating tab bar. Compact-short screens now defer lower
+  preference chips and the third notification nudge below 600 px, and narrow
+  privacy direct entries use a stronger short-phone scroll nudge so the
+  destructive health-data consent row clears the tab bar. Focused
+  Settings/Recommendations route contracts pass, and the final 49-route sweep
+  reports zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-200-compact-568-postfix/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-200-compact-568-clearance.md`.
+
 - Added a generated-packet status audit after smoke runs left Phase 5-8 packet
   outputs stamped with dirty-worktree warnings. The new
   `docs:generated-packet-status-audit:check` gate scans generated Phase 3-11
