@@ -1,0 +1,155 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 43.992719650268555,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 222.92173957824707
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "See RoutineKind Pro",
+      "index": 1,
+      "isTab": false,
+      "label": "See RoutineKind Pro",
+      "rect": {
+        "bottom": 247.9217414855957,
+        "height": 50.000003814697266,
+        "left": 40.958740234375,
+        "right": 279.42962646484375,
+        "top": 197.92173767089844,
+        "width": 238.47088623046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 50.000003814697266,
+      "visibleWidth": 238.47088623046875
+    },
+    {
+      "center": {
+        "x": 160.1941795349121,
+        "y": 311.3470916748047
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore purchases",
+      "index": 2,
+      "isTab": false,
+      "label": "Restore purchases›",
+      "rect": {
+        "bottom": 337.8185729980469,
+        "height": 52.942962646484375,
+        "left": 37.98543930053711,
+        "right": 282.4029197692871,
+        "top": 284.8756103515625,
+        "width": 244.41748046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 52.942962646484375,
+      "visibleWidth": 244.41748046875
+    },
+    {
+      "center": {
+        "x": 160.1941795349121,
+        "y": 364.29005432128906
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms›",
+      "index": 3,
+      "isTab": false,
+      "label": "Terms›",
+      "rect": {
+        "bottom": 390.76153564453125,
+        "height": 52.942962646484375,
+        "left": 37.98543930053711,
+        "right": 282.4029197692871,
+        "top": 337.8185729980469,
+        "width": 244.41748046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 52.942962646484375,
+      "visibleWidth": 244.41748046875
+    },
+    {
+      "center": {
+        "x": 160.1941795349121,
+        "y": 416.7475814819336
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Privacy›",
+      "index": 4,
+      "isTab": false,
+      "label": "Privacy›",
+      "rect": {
+        "bottom": 442.73362731933594,
+        "height": 51.97209167480469,
+        "left": 37.98543930053711,
+        "right": 282.4029197692871,
+        "top": 390.76153564453125,
+        "width": 244.41748046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 39.23846435546875,
+      "visibleWidth": 244.41748046875
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 1,
+  "issues": [
+    {
+      "label": "Privacy›",
+      "rect": "[Circular]",
+      "type": "clipped-visible-control",
+      "visibleHeight": 39.23846435546875,
+      "visibleWidth": 244.41748046875
+    }
+  ],
+  "route": "/settings/subscription?postprogress430=1783522855896",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "<SubscriptionYou’re on the free planThe quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime.See RoutineKind ProRestore purchases›Terms›Privacy›",
+  "url": "http://localhost:8223/settings/subscription?postprogress430=1783522855896",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

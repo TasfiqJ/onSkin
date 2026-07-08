@@ -1,0 +1,99 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 39.58586502075195
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Dismiss",
+      "index": 0,
+      "isTab": false,
+      "label": "Dismiss",
+      "rect": {
+        "bottom": 79.1717300415039,
+        "height": 79.1717300415039,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 0,
+        "width": 320.38836669921875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 79.1717300415039,
+      "visibleWidth": 320
+    },
+    {
+      "center": {
+        "x": 268.4011001586914,
+        "y": 144.14442443847656
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 1,
+      "isTab": false,
+      "label": "Close",
+      "rect": {
+        "bottom": 168.1432113647461,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 120.14563751220703,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 366.1104507446289
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "index": 2,
+      "isTab": false,
+      "label": "Add product by hand",
+      "rect": {
+        "bottom": 390.10923767089844,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 342.1116638183594,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "currentDialog": "+xAdd product details first.Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it.Add by hand",
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/opened?postprogress430=1783522884568",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "+xAdd product details first.Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it.Add by hand",
+  "url": "http://localhost:8223/shelf/opened?postprogress430=1783522884568",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

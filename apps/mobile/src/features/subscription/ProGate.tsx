@@ -31,6 +31,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
   const shortPaywall = height < 520;
+  const ultraShortPaywall = height < 460;
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
@@ -163,8 +164,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Text
           variant="title"
           style={{
-            fontSize: shortPaywall ? 26 : compactPaywall ? 28 : 32,
-            lineHeight: shortPaywall ? 29 : compactPaywall ? 32 : 36,
+            fontSize: ultraShortPaywall ? 24 : shortPaywall ? 26 : compactPaywall ? 28 : 32,
+            lineHeight: ultraShortPaywall ? 27 : shortPaywall ? 29 : compactPaywall ? 32 : 36,
           }}
         >
           {copy.title}
@@ -173,16 +174,20 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           variant="body"
           tone="muted"
           className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
+          numberOfLines={ultraShortPaywall ? 2 : undefined}
+          ellipsizeMode="tail"
           style={{
-            fontSize: shortPaywall ? 14 : compactPaywall ? 15 : undefined,
-            lineHeight: shortPaywall ? 18 : compactPaywall ? 21 : 24,
+            fontSize: ultraShortPaywall ? 13 : shortPaywall ? 14 : compactPaywall ? 15 : undefined,
+            lineHeight: ultraShortPaywall ? 17 : shortPaywall ? 18 : compactPaywall ? 21 : 24,
           }}
         >
           {copy.body}
         </Text>
         <View
           className={
-            shortPaywall
+            ultraShortPaywall
+              ? 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
+              : shortPaywall
               ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
               : compactPaywall
                 ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
@@ -225,16 +230,20 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             variant="bodySm"
             tone="muted"
             className={
-              shortPaywall
+              ultraShortPaywall
+                ? 'mt-0.5 text-center'
+                : shortPaywall
                 ? 'mt-1 text-center'
                 : compactPaywall
                   ? 'mt-1 text-center'
                   : 'mt-2 text-center'
             }
             style={{
-              fontSize: shortPaywall ? 10.5 : compactPaywall ? 11 : 12,
-              lineHeight: shortPaywall ? 14 : compactPaywall ? 15 : 17,
+              fontSize: ultraShortPaywall ? 10 : shortPaywall ? 10.5 : compactPaywall ? 11 : 12,
+              lineHeight: ultraShortPaywall ? 12 : shortPaywall ? 14 : compactPaywall ? 15 : 17,
             }}
+            numberOfLines={ultraShortPaywall ? 1 : undefined}
+            ellipsizeMode="tail"
           >
             {offering.data.reason}
           </Text>
@@ -244,7 +253,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className={
-            shortPaywall
+            ultraShortPaywall
+              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
+              : shortPaywall
               ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
               : compactPaywall
                 ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
@@ -262,7 +273,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             disabled={startReverseTrial.isPending}
             onPress={onStartReverseTrial}
             className={
-              shortPaywall
+              ultraShortPaywall
+                ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
+                : shortPaywall
                 ? 'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
                 : compactPaywall
                   ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
@@ -301,6 +314,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               </Text>
               <Text
                 variant="label"
+                numberOfLines={ultraShortPaywall ? 1 : undefined}
+                ellipsizeMode="tail"
                 style={{
                   color: colors.clay,
                   fontSize: compactPaywall ? 10.5 : 11.5,

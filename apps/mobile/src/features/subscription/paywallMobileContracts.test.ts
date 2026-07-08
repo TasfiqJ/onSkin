@@ -127,12 +127,26 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('useWindowDimensions');
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain('const shortPaywall = height < 520');
+    expect(proGate).toContain('const ultraShortPaywall = height < 460');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(proGate).toMatch(
       /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
     expect(proGate).toContain('{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}');
     expect(proGate).toContain('{shortPaywall ? null : <ComplianceRow />}');
+    expect(proGate).toContain('fontSize: ultraShortPaywall ? 24');
+    expect(proGate).toContain('lineHeight: ultraShortPaywall ? 27');
+    expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 2 : undefined}');
+    expect(proGate).toContain(
+      "ultraShortPaywall\n              ? 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'",
+    );
+    expect(proGate).toContain(
+      "ultraShortPaywall\n              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'",
+    );
+    expect(proGate).toContain(
+      "ultraShortPaywall\n                ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
+    );
+    expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 1 : undefined}');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
@@ -163,6 +177,7 @@ describe('paywall mobile contracts', () => {
       'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
     );
     expect(proGate).toContain('const shortPaywall = height < 520;');
+    expect(proGate).toContain('const ultraShortPaywall = height < 460;');
     expect(proGate).not.toContain('compactComplianceSpacer');
     expect(proGate).not.toContain('height: compactComplianceSpacer');
     expect(proGate).toContain('paddingTop: shortPaywall ? 0 : compactPaywall ? 4 : 0,');

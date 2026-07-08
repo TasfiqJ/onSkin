@@ -1,0 +1,75 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 284.9287052154541
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan a barcode",
+      "index": 0,
+      "isTab": false,
+      "label": "Scan a barcode",
+      "rect": {
+        "bottom": 312.9247627258301,
+        "height": 55.99211502075195,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 256.9326477050781,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 256.4017028808594
+    },
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 344.91809844970703
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "index": 1,
+      "isTab": false,
+      "label": "Add by hand",
+      "rect": {
+        "bottom": 368.91688537597656,
+        "height": 47.99757385253906,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 320.9193115234375,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 256.4017028808594
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf?postprogress430=1783522871051",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+  "url": "http://localhost:8223/shelf?postprogress430=1783522871051",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-07-08T15:01:35.884Z",
+  "failedRouteCount": 4,
+  "failedRoutes": [
+    {
+      "route": "/recommendations",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 133.15533447265625,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/recommendations/preferences",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Sustainable",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 36.083099365234375,
+          "visibleWidth": 117.21784210205078
+        }
+      ]
+    },
+    {
+      "route": "/community",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 88.2069091796875,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/settings/subscription",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Privacy›",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        }
+      ]
+    }
+  ]
+}

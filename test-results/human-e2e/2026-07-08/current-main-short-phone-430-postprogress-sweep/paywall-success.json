@@ -1,0 +1,51 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 386.1119632720947
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "See tonight’s routine",
+      "index": 0,
+      "isTab": false,
+      "label": "See tonight’s routine",
+      "rect": {
+        "bottom": 414.1080207824707,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 358.11590576171875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/paywall/success?postprogress430=1783522888355",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "✓You’re all set.Pro is active now. Your plan renews at $49.99/year. Cancel anytime.active until July 8renews $49.99/yrSee tonight’s routine",
+  "url": "http://localhost:8223/paywall/success?postprogress430=1783522888355",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}
