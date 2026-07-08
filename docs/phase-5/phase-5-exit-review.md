@@ -20,6 +20,9 @@ Completed in repo:
   for install, camera permission recovery, barcode, label capture, progress
   photos, encrypted photo storage, notifications, share sheet, RevenueCat,
   Sentry, Supabase catalog calls, accessibility, and conditional native OCR.
+- The generated QA packet hashes the human-simulated E2E rules, user-flow tree,
+  manifest generator, and generated manifest so native QA reviewers can see
+  which local UI evidence contract the build was checked against.
 
 Still blocked before beta:
 

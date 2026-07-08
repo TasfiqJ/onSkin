@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 5 native-device packet provenance. The generated device QA
+  packet now hashes the human-simulated E2E rules, testing checklist, user-flow
+  tree, manifest generator, and generated human-E2E manifest alongside native
+  app config, runtime files, device QA scripts, RevenueCat integration, and
+  Phase 5 docs. `phase5:check-native-config` now enforces those hash inputs,
+  and `phase5:qa-packet-smoke` proves they appear in strict packet output so
+  physical-device signoff cannot drift from the local UI evidence contract.
+
 - Cleared the harsher 320 x 430 / 120% text-pressure route audit for the
   current Expo web route set. The pass exposed ultra-short density gaps in
   shared contextual ProGate paywalls, `/settings/notifications`,
