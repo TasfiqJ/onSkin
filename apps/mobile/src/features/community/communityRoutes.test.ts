@@ -104,6 +104,20 @@ describe('Community route contracts', () => {
     }
   });
 
+  it('keeps Skin Note share failures visible on the note surface', () => {
+    const source = readAppRoute('community/note/[id].tsx');
+
+    expect(source).toContain("import { useEffect, useState } from 'react';");
+    expect(source).toContain(
+      "import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';",
+    );
+    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain('const shared = await shareSkinNote(note);');
+    expect(source).toContain('if (!shared) setShareFeedback(SHARE_FAILURE_MESSAGE);');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('className="mt-3 text-center"');
+  });
+
   it('recovers missing Skin Note details without a dead empty state', () => {
     const source = readAppRoute('community/note/[id].tsx');
 

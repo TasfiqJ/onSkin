@@ -649,6 +649,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, and `/routine/adaptation` directly.
   - Expected result: Free users see the full-routine contextual paywall, not the routine builder, sequencing, ramp, tolerance, or adaptation screen. First-time free users can choose the no-card `Explore first` path from that paywall; lapsed entitlement users remain on the paid re-offer path.
   - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified free `/routine/plan` shows `Unlock your full routine.`, `Explore first. 7 days of Pro`, and no routine-plan content; tapping Explore first starts the local reverse trial and renders the routine plan. Other routine intelligence routes remain covered by route contracts, not fresh UI screenshots.
+  - Current lapsed-paid evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store` verifies direct `/routine/plan` shows `Restore Pro for` and `Renew Pro`, hides `Explore first. 7 days of Pro` and `Start free trial`, exposes no routine-plan content, keeps Renew/Terms/Privacy/Restore/Maybe later controls 48 px+ tall, and has zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/lapsed-entitlement-contextual-paywall/`. Native RevenueCat expiry/restore states remain Phase 6 QA.
 - Branch: reminders, streaks, and widgets routes
   - Priority: Critical
   - Automate later: Yes
@@ -917,6 +918,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a Skin Note, tap Share note, and simulate the native share sheet being unavailable or rejected.
   - Expected result: The outbound note text keeps the claim-safe disclaimer plus source/reviewer context, and a failed share sheet shows a clear Sharing unavailable alert without leaving the note.
   - Evidence: Alert text and share payload snapshot.
+  - Current local evidence: 2026-07-08 Expo web 320 x 568 with `EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1` opens `/community/note/note-niacinamide-vitc`, verifies the claim-safe note detail and 128 x 48 `Share note` control, taps the real control, stays on the note route, and renders the failed-share recovery copy as an accessible alert with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/community-note-share-failure-current/`.
 - Branch: claim-safe anonymous ask
   - Priority: Critical
   - Automate later: Yes

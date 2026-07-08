@@ -31,6 +31,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';
   const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
+  const lapsedEntitlement = data?.expired === true;
+  const lapsedReverseTrial = lapsedEntitlement && data?.priorPeriodType === 'reverse_trial';
   const paywallDismissFallback = paywallDismissFallbackForFeature(feature);
 
   useEffect(() => {
@@ -53,6 +55,12 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
+  const priceIntroLabel = lapsedEntitlement ? 'Restore Pro for' : annualDisplay.introLabel;
+  const primaryCtaLabel = lapsedEntitlement
+    ? lapsedReverseTrial
+      ? PAYWALL_COPY.reoffer.keepCta
+      : PAYWALL_COPY.downgrade.renewCta
+    : PAYWALL_COPY.offer.cta;
 
   function onStartTrial() {
     if (!canPurchase) {
@@ -155,7 +163,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         >
           <View>
             <Text variant="bodySm" tone="muted">
-              {annualDisplay.introLabel}
+              {priceIntroLabel}
             </Text>
             <Text
               variant="title"
@@ -210,7 +218,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
-            Start free trial
+            {primaryCtaLabel}
           </Text>
         </Pressable>
         {showExploreFirst ? (

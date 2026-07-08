@@ -38,10 +38,17 @@ function activeResult(
 
 function e2eEntitlementState(): SubscriptionState | null {
   const fixture = process.env.EXPO_PUBLIC_E2E_ENTITLEMENT;
-  if (fixture !== 'pro' && fixture !== 'store_pro') return null;
+  if (
+    fixture !== 'pro' &&
+    fixture !== 'store_pro' &&
+    fixture !== 'expired_store' &&
+    fixture !== 'expired_reverse_trial'
+  )
+    return null;
 
   const now = new Date();
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
   if (fixture === 'store_pro') {
     return deriveState(
       {
@@ -61,6 +68,52 @@ function e2eEntitlementState(): SubscriptionState | null {
         packageId: 'annual',
         storeUserId: 'e2e-store-user',
         priceLabel: '$49.99/year',
+      },
+      now.toISOString(),
+    );
+  }
+  if (fixture === 'expired_store') {
+    return deriveState(
+      {
+        tier: 'pro',
+        isActive: true,
+        periodType: 'normal',
+        store: 'app_store',
+        productId: 'routinekind_pro_annual_dev',
+        expiresAt: expiredAt,
+        willRenew: false,
+        grantedAt: new Date(now.getTime() - 31 * 24 * 60 * 60 * 1000).toISOString(),
+        source: 'revenuecat',
+        environment: 'sandbox',
+        managementUrl: 'https://apps.apple.com/account/subscriptions',
+        verifiedAt: now.toISOString(),
+        offeringId: 'local_store_fixture',
+        packageId: 'annual',
+        storeUserId: 'e2e-expired-store-user',
+        priceLabel: '$49.99/year',
+      },
+      now.toISOString(),
+    );
+  }
+  if (fixture === 'expired_reverse_trial') {
+    return deriveState(
+      {
+        tier: 'pro',
+        isActive: true,
+        periodType: 'reverse_trial',
+        store: 'app_granted',
+        productId: 'routinekind_pro_reverse_trial_local',
+        expiresAt: expiredAt,
+        willRenew: false,
+        grantedAt: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+        source: 'app_granted',
+        environment: 'development',
+        managementUrl: null,
+        verifiedAt: now.toISOString(),
+        offeringId: 'local_reverse_trial',
+        packageId: 'reverse_trial_7d',
+        storeUserId: null,
+        priceLabel: null,
       },
       now.toISOString(),
     );

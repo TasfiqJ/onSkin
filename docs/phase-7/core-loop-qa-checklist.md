@@ -254,6 +254,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/`. This
   does not replace native iOS/Android RevenueCat restore, native StoreKit/Play
   billing management, or final production policy URL QA.
+- 2026-07-08: System Chrome Expo web E2E at 320 x 568 covers the lapsed paid
+  entitlement branch for contextual routine paywalls. With
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store`, direct `/routine/plan` shows the
+  paid recovery framing (`Restore Pro for`, `Renew Pro`), hides `Explore first.
+  7 days of Pro` and `Start free trial`, exposes no routine-plan content, keeps
+  Renew/Terms/Privacy/Restore/Maybe later controls 48 px+ tall, and has zero
+  horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-08/lapsed-entitlement-contextual-paywall/`.
+  This does not replace native RevenueCat expiry, refund, restore, or store
+  purchase QA.
 - 2026-07-07: Fresh Chrome E2E at 320 x 568 covers representative Pro route
   locking and local reverse-trial unlocking. In fresh free state, direct
   `/routine/widgets`, `/cycle/settings`, and `/routine/plan` render the correct
@@ -459,6 +469,14 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   with zero horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/community-missing-note-current-check/`; it
   does not replace native-device QA.
+- 2026-07-08: In-app browser Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1` covers Skin Note share failure
+  recovery: direct `/community/note/note-niacinamide-vitc` renders the expert
+  note detail, the `Share note` control is 128 x 48, tapping it keeps the route
+  on the note and renders the failed-share recovery copy as an accessible alert
+  with zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-08/community-note-share-failure-current/`; it
+  does not replace native iOS/Android OS share-sheet QA.
 - 2026-07-07: Expo web E2E at 320 x 568 and 390 x 568 covers Shelf direct-entry
   recovery after the search fallback buffer fix: `/shelf/add`, `/shelf/manual`,
   `/shelf/search`, `/shelf/ocr`, `/shelf/scan`, `/shelf/no-match`,

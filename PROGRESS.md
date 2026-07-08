@@ -6,6 +6,35 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Corrected lapsed paid entitlement contextual paywall framing. Contextual Pro
+  gates now distinguish first-time free users from users with a prior expired
+  entitlement: first-time users still get the no-card `Explore first` path, while
+  lapsed paid users see `Restore Pro for` and a `Renew Pro` CTA instead of
+  another first-trial CTA. Added local `expired_store` and
+  `expired_reverse_trial` E2E entitlement fixtures plus route contracts. System
+  Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store`
+  verifies direct `/routine/plan` shows the contextual renewal paywall, hides
+  `Explore first. 7 days of Pro` and `Start free trial`, keeps all controls 48
+  px+ tall, has zero horizontal overflow, and shows no routine-plan content.
+  Evidence is in
+  `test-results/human-e2e/2026-07-08/lapsed-entitlement-contextual-paywall/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-lapsed-entitlement-contextual-paywall.md`.
+
+- Hardened Skin Note share failure recovery. The native share helper now exposes
+  reusable failure copy and a dev-only forced-failure fixture, while the note
+  detail route awaits the share attempt and leaves persistent
+  `accessibilityRole="alert"` feedback on the Skin Note surface when the share
+  sheet cannot open. Focused community route/share and affected paywall/progress
+  contract tests pass. In-app browser Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1` verifies
+  `/community/note/note-niacinamide-vitc` keeps the user on the note, renders
+  the failed-share recovery copy, keeps the `Share note` control 128 x 48, and
+  has zero horizontal overflow. Evidence is in
+  `test-results/human-e2e/2026-07-08/community-note-share-failure-current/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-community-note-share-failure.md`.
+
 - Hardened paywall and subscription-management handoff failure recovery. The
   shared paywall ComplianceRow now treats Terms/Privacy opens as awaitable
   handoffs and renders inline `Link unavailable` feedback when the external

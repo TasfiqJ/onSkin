@@ -193,6 +193,30 @@ describe('paywall mobile contracts', () => {
     expect(entitlement).toContain('s.priorPeriodType === null');
   });
 
+  it('keeps lapsed contextual paywalls on paid recovery copy', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const useEntitlement = readSource('features/subscription/useEntitlement.ts');
+
+    expect(proGate).toContain('const lapsedEntitlement = data?.expired === true;');
+    expect(proGate).toContain(
+      "const lapsedReverseTrial = lapsedEntitlement && data?.priorPeriodType === 'reverse_trial';",
+    );
+    expect(proGate).toContain(
+      "const priceIntroLabel = lapsedEntitlement ? 'Restore Pro for' : annualDisplay.introLabel;",
+    );
+    expect(proGate).toContain('const primaryCtaLabel = lapsedEntitlement');
+    expect(proGate).toContain('PAYWALL_COPY.reoffer.keepCta');
+    expect(proGate).toContain('PAYWALL_COPY.downgrade.renewCta');
+    expect(proGate).toContain('PAYWALL_COPY.offer.cta');
+    expect(proGate).toContain('{priceIntroLabel}');
+    expect(proGate).toContain('{primaryCtaLabel}');
+    expect(useEntitlement).toContain("fixture !== 'expired_store'");
+    expect(useEntitlement).toContain("fixture !== 'expired_reverse_trial'");
+    expect(useEntitlement).toContain("if (fixture === 'expired_store')");
+    expect(useEntitlement).toContain("if (fixture === 'expired_reverse_trial')");
+    expect(useEntitlement).toContain("const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();");
+  });
+
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {
     const source = readSource('features/subscription/ComplianceRow.tsx');
 
@@ -218,7 +242,8 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('setFeedback(message);');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('className="px-4 pb-2 text-center"');
-    expect(entitlement).toContain("fixture !== 'pro' && fixture !== 'store_pro'");
+    expect(entitlement).toContain("fixture !== 'expired_store'");
+    expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(entitlement).toContain("periodType: 'normal'");
     expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
   });

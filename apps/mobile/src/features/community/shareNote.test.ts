@@ -32,6 +32,7 @@ describe('community note sharing', () => {
   beforeEach(() => {
     mocks.alerts = [];
     mocks.share.mockReset();
+    delete process.env.EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE;
   });
 
   it('keeps the note disclaimer and source context in outbound share text', () => {
@@ -68,10 +69,37 @@ describe('community note sharing', () => {
     ]);
   });
 
+  it('supports a dev-only E2E fixture for failed note sharing', async () => {
+    const globalWithDev = globalThis as typeof globalThis & { __DEV__?: boolean };
+    const previousDev = globalWithDev.__DEV__;
+    globalWithDev.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE = '1';
+
+    try {
+      await expect(shareSkinNote(SKIN_NOTES[0]!)).resolves.toBe(false);
+    } finally {
+      if (previousDev === undefined) {
+        delete globalWithDev.__DEV__;
+      } else {
+        globalWithDev.__DEV__ = previousDev;
+      }
+      delete process.env.EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE;
+    }
+
+    expect(mocks.share).not.toHaveBeenCalled();
+    expect(mocks.alerts[0]).toEqual([
+      'Sharing unavailable',
+      "We couldn't open the share sheet. You can still read this note in Skin Notes.",
+    ]);
+  });
+
   it('keeps the note route on the claim-safe share helper', () => {
     const source = readSource('app/community/note/[id].tsx');
 
-    expect(source).toContain('shareSkinNote(note)');
+    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain('const shared = await shareSkinNote(note);');
+    expect(source).toContain('if (!shared) setShareFeedback(SHARE_FAILURE_MESSAGE);');
+    expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Share.share');
   });
 });

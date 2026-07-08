@@ -1,13 +1,13 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
 import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionStore';
-import { shareSkinNote } from '@/features/community/shareNote';
+import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -22,6 +22,7 @@ export default function NoteDetail() {
   const { height } = useWindowDimensions();
   const qc = useQueryClient();
   const note = id ? noteById(id) : undefined;
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const compactMissingNote = height < 640;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
@@ -44,10 +45,12 @@ export default function NoteDetail() {
     if (note) track('skin_note_viewed', { surface: 'detail' });
   }, [note]);
 
-  const onShare = () => {
+  const onShare = async () => {
     if (!note) return;
     haptics.select();
-    void shareSkinNote(note);
+    setShareFeedback(null);
+    const shared = await shareSkinNote(note);
+    if (!shared) setShareFeedback(SHARE_FAILURE_MESSAGE);
   };
 
   return (
@@ -196,7 +199,7 @@ export default function NoteDetail() {
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              onPress={onShare}
+              onPress={() => void onShare()}
               className="h-12 items-center justify-center rounded-pill px-6"
               style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}
             >
@@ -205,6 +208,17 @@ export default function NoteDetail() {
               </Text>
             </Pressable>
           </View>
+          {shareFeedback ? (
+            <Text
+              accessibilityRole="alert"
+              variant="bodySm"
+              tone="muted"
+              className="mt-3 text-center"
+              style={{ lineHeight: 18 }}
+            >
+              {shareFeedback}
+            </Text>
+          ) : null}
         </ScrollView>
       )}
     </Screen>
