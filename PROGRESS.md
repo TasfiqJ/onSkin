@@ -4598,13 +4598,15 @@ text sliver near the fixed `Start today` action. The specific product guidance
 now lives in the first insight card, and bottom gap notes stay suppressed while
 unplaced products are the primary issue.
 
-Verified in the Codex in-app browser at 320 x 568 on Expo web port 8173 by
-adding `Mystery drops` with no category through `/onboarding/products`, then
-opening `/routine/plan`. The route shows `Product needs details`, names
-`Mystery drops` as needing a category or ingredient clue, keeps the product out
-of Morning and Evening rows, keeps `Start today` visible, and has zero
-horizontal overflow, no raw error text, no JavaScript dialog, and no
-product-note footer sliver. Evidence and bug report are in
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8164 with
+`EXPO_PUBLIC_E2E_ENTITLEMENT=pro` by adding `Mystery drops` with no category
+through `/shelf/manual`, then opening `/routine/plan` from Shelf. The route
+shows `Product needs details`, names `Mystery drops` as needing a category or
+ingredient clue, keeps the product out of Morning and Evening rows, keeps
+`Start today` visible, and has zero horizontal overflow, no raw error text, no
+JavaScript dialog, no current-route warning/error logs, and no product-note
+footer sliver. Tapping `Start today` routes to `/today` with zero horizontal
+overflow and no raw error text. Evidence and bug report are in
 `test-results/human-e2e/2026-07-08/routine-plan-unplaced-product/` and
 `docs/e2e-bug-reports/2026-07-08-routine-plan-unclassified-product.md`.
 Native iOS/Android screen-reader, Dynamic Type, and production entitlement QA

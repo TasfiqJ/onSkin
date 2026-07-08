@@ -1,0 +1,70 @@
+{
+  "branch": "Routine Plan First Value / unclassified shelf item",
+  "setup": {
+    "appUrl": "http://localhost:8164",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "entitlementFixture": "EXPO_PUBLIC_E2E_ENTITLEMENT=pro",
+    "shelfItem": {
+      "name": "Mystery drops",
+      "category": null,
+      "ingredients": []
+    }
+  },
+  "manualVisibleDom": "<button node_id=1 aria-label=\"Cancel\" role=\"button\" type=\"button\">x</button>\n<input node_id=2 aria-label=\"Product name\" placeholder=\"e.g. Gentle Retinol Night Serum\" />\n<input node_id=3 aria-label=\"Brand\" placeholder=\"Brand\" />\n<button node_id=4 aria-label=\"Category\" role=\"button\" type=\"button\">Choose ▾</button>\n<textarea node_id=5 aria-label=\"Ingredients\" placeholder=\"Paste or type the INCI list…\" />",
+  "openedVisibleDom": "<button node_id=1 aria-label=\"Cancel\" role=\"button\" type=\"button\">x</button>\n<input node_id=2 aria-label=\"Product name\" placeholder=\"e.g. Gentle Retinol Night Serum\" value=\"Mystery drops\" />\n<input node_id=3 aria-label=\"Brand\" placeholder=\"Brand\" />\n<button node_id=4 aria-label=\"Category\" role=\"button\" type=\"button\">Choose ▾</button>\n<textarea node_id=5 aria-label=\"Ingredients\" placeholder=\"Paste or type the INCI list…\" />\n<button node_id=6 role=\"button\" type=\"button\">Continue</button>\n<div node_id=7 role=\"radio\">✓ Just opened it Clock starts today</div>\n<div node_id=8 role=\"radio\">Pick a date I opened it earlier</div>\n<div node_id=9 role=\"radio\">Not opened yet No clock. We'll show shelf life</div>\n<button node_id=10 aria-label=\"Edit period after opening\" role=\"button\" type=\"button\">PAO not set tap to set ✎</button>\n<button node_id=11 role=\"button\" type=\"button\">Add to shelf</button>",
+  "shelfVisibleDom": "<button node_id=12 aria-label=\"All\" role=\"button\" type=\"button\">All</button>\n<button node_id=13 aria-label=\"Actives\" role=\"button\" type=\"button\">Actives</button>\n<button node_id=14 aria-label=\"Expiring\" role=\"button\" type=\"button\">Expiring</button>\n<button node_id=15 role=\"button\" type=\"button\">Build my routine</button>\n<button node_id=16 aria-label=\"Mystery drops, PAO est.\" role=\"button\" type=\"button\">Mystery drops added by hand · opened Jul PAO est.</button>\n<button node_id=17 role=\"button\" type=\"button\">Scan a barcode</button>\n<div node_id=18 aria-label=\"Today tab\" role=\"tab\">Today</div>\n<div node_id=19 aria-label=\"Progress tab\" role=\"tab\">Progress</div>\n<div node_id=20 aria-label=\"Shelf tab\" role=\"tab\">Shelf</div>\n<div node_id=21 aria-label=\"You tab\" role=\"tab\">You</div>",
+  "planControlsVisibleDom": "<button node_id=22 aria-label=\"Back\" role=\"button\" type=\"button\">&lt;</button>\n<button node_id=23 role=\"button\" type=\"button\">Start today</button>",
+  "planState": {
+    "bodyText": "<\nBUILT FROM YOUR SHELF\nYour routine, in order.\nFIRST INSIGHT\nProduct needs details\nMystery drops needs a category or ingredient clue before it can be placed.\nMORNING\nEVENING\nNo night steps yet.\nAdd a cleanser, moisturiser, or night product to build this out.\nStart today",
+    "clientWidth": 320,
+    "hasMysteryDrops": true,
+    "hasNamedInsight": true,
+    "hasOldGenericInsight": false,
+    "hasOldLowerNote": false,
+    "hasProductNeedsDetails": true,
+    "hasRawError": false,
+    "hasStartToday": true,
+    "horizontalOverflow": 0,
+    "scrollWidth": 320,
+    "textLength": 271,
+    "url": "http://localhost:8164/routine/plan",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "todayState": {
+    "bodyText": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8\nGood morning.\nMorning routine\n0 of 0\nSPF\nNo SPF this morning\nSee why\nx\nToday\nProgress\nShelf\nYou",
+    "clientWidth": 320,
+    "hasRawError": false,
+    "horizontalOverflow": 0,
+    "scrollWidth": 320,
+    "url": "http://localhost:8164/today",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "currentRouteWarnOrErrorLogs": [],
+  "acceptance": {
+    "productNeedsDetailsInsight": true,
+    "namedUnplacedInsight": true,
+    "oldGenericInsightGone": true,
+    "oldLowerNoteGone": true,
+    "startTodayVisible": true,
+    "startTodayNavigatesToToday": true,
+    "planHorizontalOverflow": 0,
+    "todayHorizontalOverflow": 0,
+    "planRawErrorText": false,
+    "todayRawErrorText": false
+  },
+  "artifacts": [
+    "routine-plan-unplaced-product.png",
+    "routine-plan-unplaced-product.json",
+    "today-after-start.png",
+    "today-after-start.json"
+  ]
+}

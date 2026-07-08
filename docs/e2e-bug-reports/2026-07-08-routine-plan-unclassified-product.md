@@ -2,7 +2,7 @@
 
 Severity: High
 Surface: Expo web
-Environment: Codex in-app browser, Expo web at 320 x 568, port 8163
+Environment: Codex in-app browser, Expo web at 320 x 568, port 8164
 Feature: Routine plan generation
 Date: 2026-07-08
 Tester: Codex

@@ -1,0 +1,14 @@
+{
+  "todayState": {
+    "bodyText": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8\nGood morning.\nMorning routine\n0 of 0\nSPF\nNo SPF this morning\nSee why\nx\nToday\nProgress\nShelf\nYou",
+    "clientWidth": 320,
+    "hasRawError": false,
+    "horizontalOverflow": 0,
+    "scrollWidth": 320,
+    "url": "http://localhost:8164/today",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  }
+}
