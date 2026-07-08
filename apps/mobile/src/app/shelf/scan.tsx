@@ -29,7 +29,51 @@ type ScanState =
   | { kind: 'looking_up'; barcode: string }
   | { kind: 'matched'; barcode: string; product: CatalogProductSummary; external: boolean }
   | { kind: 'no_match'; barcode: string }
+  | { kind: 'offline'; barcode: string }
   | { kind: 'error'; barcode: string; reason: string };
+
+function devShelfScanFixtureState(): ScanState | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  const fixture = process.env.EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT?.trim().toLowerCase();
+  const barcode = process.env.EXPO_PUBLIC_E2E_SHELF_SCAN_BARCODE?.trim() || '012345678905';
+
+  switch (fixture) {
+    case 'matched':
+    case 'external_candidate':
+      return {
+        kind: 'matched',
+        barcode,
+        external: fixture === 'external_candidate',
+        product: {
+          id: fixture === 'external_candidate' ? 'e2e-external-product' : 'e2e-catalog-product',
+          barcode,
+          name: 'Mineral SPF 50',
+          brand: 'RoutineKind Fixture',
+          category: 'sunscreen',
+          default_pao_months: 12,
+          source: fixture === 'external_candidate' ? 'open_beauty_facts' : 'routinekind_fixture',
+          source_ref: fixture,
+          source_url: null,
+          source_snapshot_date: null,
+          quality_grade: fixture === 'external_candidate' ? 'unverified' : 'usable',
+          review_status: fixture === 'external_candidate' ? 'external_candidate' : 'reviewed',
+          data_quality_score: fixture === 'external_candidate' ? 45 : 82,
+          ingredient_parse_status: 'empty',
+          ingredient_parse_confidence: null,
+          rawIngredientsText: null,
+          external: fixture === 'external_candidate',
+        },
+      };
+    case 'no_match':
+      return { kind: 'no_match', barcode };
+    case 'offline':
+      return { kind: 'offline', barcode };
+    case 'error':
+      return { kind: 'error', barcode, reason: 'Lookup failed. Add it another way.' };
+    default:
+      return null;
+  }
+}
 
 function activeIngredients(product: CatalogProductSummary): {
   ingredients: string[];
@@ -60,7 +104,7 @@ export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const { reset } = useIntake();
   const [torch, setTorch] = useState(false);
-  const [state, setState] = useState<ScanState>({ kind: 'idle' });
+  const [state, setState] = useState<ScanState>(() => devShelfScanFixtureState() ?? { kind: 'idle' });
   const [cameraReady, setCameraReady] = useState(false);
   const lastScan = useRef<DuplicateBarcodeGate | null>(null);
 
@@ -155,10 +199,13 @@ export default function ScanScreen() {
         }
         if (
           response.result === 'no_match' ||
-          response.result === 'too_short' ||
-          response.result === 'offline'
+          response.result === 'too_short'
         ) {
           setState({ kind: 'no_match', barcode: normalized.lookupValue });
+          return;
+        }
+        if (response.result === 'offline') {
+          setState({ kind: 'offline', barcode: normalized.lookupValue });
           return;
         }
         setState({
@@ -338,6 +385,11 @@ export default function ScanScreen() {
             Barcode {state.barcode} is not in the catalog yet. Add it another way, then report the
             miss if you want.
           </Text>
+        ) : state.kind === 'offline' ? (
+          <Text variant="bodySm" tone="inverseMuted" className="mb-4">
+            Couldn&apos;t reach the product catalog for barcode {state.barcode}. Search by name,
+            scan the label, or add it by hand; the shelf still works offline.
+          </Text>
         ) : state.kind === 'invalid' || state.kind === 'error' ? (
           <Text variant="bodySm" tone="inverseMuted" className="mb-4">
             {state.reason}
@@ -369,7 +421,7 @@ export default function ScanScreen() {
             onPress={goManual}
           />
         </View>
-        {(state.kind === 'no_match' || state.kind === 'error') && (
+        {state.kind === 'no_match' && (
           <Pressable
             accessibilityRole="button"
             className="mt-5 items-center py-1"
