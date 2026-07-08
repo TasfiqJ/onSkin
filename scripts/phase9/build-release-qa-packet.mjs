@@ -22,6 +22,26 @@ import {
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const packetOutDir = String(env.PHASE9_PACKET_OUT_DIR ?? '').trim();
+const outDir = packetOutDir || 'docs/phase-9/generated';
+const packetOutputPaths = [
+  `${outDir}/release-engineering-qa-packet.json`,
+  `${outDir}/release-engineering-qa-packet.md`,
+].map((path) => path.replace(/\\/g, '/'));
+
+function gitStatusExcludingGeneratedPacket() {
+  const excluded = new Set(packetOutputPaths);
+  return command('git', ['status', '--short'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !excluded.has(statusPath);
+    })
+    .join('\n')
+    .trim();
+}
 
 const sourceFiles = [
   'package.json',
@@ -87,7 +107,7 @@ let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
   gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = command('git', ['status', '--short']).trim();
+  gitStatus = gitStatusExcludingGeneratedPacket();
 } catch {
   warn(warnings, false, 'Git SHA/status could not be captured.');
 }
@@ -145,12 +165,9 @@ const packet = {
   warnings,
 };
 
+write(`${outDir}/release-engineering-qa-packet.json`, `${JSON.stringify(packet, null, 2)}\n`);
 write(
-  'docs/phase-9/generated/release-engineering-qa-packet.json',
-  `${JSON.stringify(packet, null, 2)}\n`,
-);
-write(
-  'docs/phase-9/generated/release-engineering-qa-packet.md',
+  `${outDir}/release-engineering-qa-packet.md`,
   [
     '# Phase 9 Release Engineering QA Packet',
     '',

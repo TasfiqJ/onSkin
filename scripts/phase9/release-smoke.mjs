@@ -290,6 +290,14 @@ block(
 );
 block(
   errors,
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+    /release-engineering-qa-packet\.json/.test(qaPacketBuilder) &&
+    /release-engineering-qa-packet\.md/.test(qaPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
+  'Phase 9 release QA packet must ignore only its own generated outputs when recording Git status.',
+);
+block(
+  errors,
   has('apps/mobile/src/lib/launch/phase7.ts', /productionSurfaceReady/) &&
     has(
       'apps/mobile/src/lib/launch/phase7.ts',
