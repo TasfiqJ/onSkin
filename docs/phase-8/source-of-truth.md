@@ -35,6 +35,12 @@ All flags default off in `.env.example`.
 
 Strict release evidence is represented by `PHASE8_*` environment variables and checked by `npm run phase8:check-growth-store:strict`.
 
+The generated Phase 8 growth/store QA packet must hash the public-site fallback
+pages, Universal/App Links templates, store metadata source of truth, support
+playbook, readiness checker, smoke coverage, packet builder, and `.env.example`.
+Its Markdown must show whether it was generated from a clean or dirty Git
+worktree so reviewers can reject stale or mixed-worktree store evidence.
+
 ## Public Routes Required On Final Domain
 
 - `/`

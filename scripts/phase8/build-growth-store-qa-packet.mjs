@@ -11,11 +11,17 @@ import {
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
+  command,
 } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
-const outDir = resolve(root, process.env.PHASE8_PACKET_OUT_DIR ?? 'docs/phase-8/generated');
+const packetOutDir = process.env.PHASE8_PACKET_OUT_DIR ?? 'docs/phase-8/generated';
+const outDir = resolve(root, packetOutDir);
+const packetOutputPaths = [
+  `${packetOutDir}/growth-store-qa-packet.json`,
+  `${packetOutDir}/growth-store-qa-packet.md`,
+].map((path) => path.replace(/\\/g, '/'));
 const blockers = [];
 const warnings = [];
 
@@ -56,6 +62,20 @@ function warn(condition, message) {
 
 function block(condition, message) {
   if (!condition) blockers.push(message);
+}
+
+function gitStatusExcludingGeneratedPacket() {
+  const excluded = new Set(packetOutputPaths);
+  return command('git', ['status', '--short'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !excluded.has(statusPath);
+    })
+    .join('\n')
+    .trim();
 }
 
 const exampleEnv = parseEnv(read('.env.example'));
@@ -124,6 +144,19 @@ for (const file of sourceFiles) {
   block(exists(file), `${file} is missing from the QA packet inputs.`);
 }
 
+let gitSha = 'unknown';
+let gitStatus = 'unknown';
+try {
+  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
+  gitStatus = gitStatusExcludingGeneratedPacket();
+} catch {
+  warn(false, 'Git SHA/status could not be captured.');
+}
+warn(
+  gitStatus.length === 0,
+  'Phase 8 QA packet generated with a dirty Git worktree; do not use it as final growth/store evidence.',
+);
+
 const publicIdentity = {
   finalBrandDomain: normalizeProductionDomain(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
   marketingUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_MARKETING_URL),
@@ -148,6 +181,8 @@ const packet = {
   generatedAt: new Date().toISOString(),
   objective: 'Phase 8 growth loop and store readiness',
   status: blockers.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
+  gitSha,
+  gitStatus,
   publicIdentity,
   evidence,
   matrices: {
@@ -196,6 +231,8 @@ const markdown = [
   '',
   `Generated: ${packet.generatedAt}`,
   `Status: ${packet.status}`,
+  `Git SHA: ${packet.gitSha}`,
+  `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
   '',
   '## Public Identity',
   '',

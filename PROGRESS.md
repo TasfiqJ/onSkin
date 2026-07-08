@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Phase 8 growth/store QA packet provenance. The generated packet
+  now records the source Git SHA, ignores only its own generated outputs when
+  checking worktree cleanliness, warns when produced from mixed local changes,
+  and shows `Git status: clean` or `DIRTY` in Markdown. The Phase 8 readiness
+  gate now enforces that dirty-worktree contract and verifies key public-site,
+  checker, smoke, packet-builder, and `.env.example` files remain hashed.
+
 - Hardened Phase 11 public-launch packet coverage. The launch readiness gate now
   independently verifies that the generated packet hashes `.env.example`, the
   shared evidence normalizer, public-contact smoke, Phase 10 packet builder,

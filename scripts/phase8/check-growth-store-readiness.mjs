@@ -279,6 +279,35 @@ fail(
   'waitlist function must validate email.',
 );
 
+const qaPacketBuilder = read('scripts/phase8/build-growth-store-qa-packet.mjs');
+fail(
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+    /growth-store-qa-packet\.json/.test(qaPacketBuilder) &&
+    /growth-store-qa-packet\.md/.test(qaPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
+  'Phase 8 growth/store QA packet must ignore only its own generated outputs when recording Git status.',
+);
+fail(
+  /Phase 8 QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
+  'Phase 8 growth/store QA packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
+for (const file of [
+  '.env.example',
+  'docs/phase-8/public-site/index.html',
+  'docs/phase-8/public-site/share.html',
+  'docs/phase-8/public-site/waitlist.html',
+  'docs/phase-8/public-site/support.html',
+  'scripts/phase8/build-growth-store-qa-packet.mjs',
+  'scripts/phase8/check-growth-store-readiness.mjs',
+  'scripts/phase8/check-growth-store-smoke.mjs',
+]) {
+  fail(
+    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
+    `Phase 8 growth/store QA packet must hash ${file}.`,
+  );
+}
+
 const allText = listFiles('.')
   .filter((file) => !file.includes(`${join('node_modules', '')}`))
   .filter((file) => !file.includes(`${join('.git', '')}`))
