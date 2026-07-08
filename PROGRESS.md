@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Ran the Phase 8 growth/store verification suite after the Phase 7 picker
+  hardening work. `npm run phase8:verify` passes non-strict: smoke checks,
+  growth/store readiness, QA packet generation, root typecheck, root lint, and
+  root tests all pass. Strict Phase 8 remains blocked only on external evidence:
+  final brand/domain/support/store URLs, Universal Links/App Links device QA,
+  share-card device QA, attribution privacy signoff, store packets, creator
+  compliance, support workflow, launch dashboard, dry run, Apple Team ID,
+  Android release certificate fingerprint, and named signoff.
+
 - Hardened the populated Progress comparison photo picker for native bottom
   safe areas and compact dismiss targets. The `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS`
   `populated` mode now supplies three local metadata-only photo records, with an

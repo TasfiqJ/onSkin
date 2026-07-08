@@ -1,6 +1,6 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-07T07:34:58.843Z
+Generated: 2026-07-08T00:00:50.595Z
 Status: blocked
 
 ## Public Identity
@@ -79,11 +79,11 @@ Status: blocked
 - `apps/mobile/src/lib/launch/phase8.ts`: `94ac42c54e192d2f3c641de05609846ff3de9892646d5cc6ad41a098acbdac70`
 - `apps/mobile/src/lib/growth/attribution.ts`: `ad7a471633455bcdf45c95f8ce41ef4a7275c108786b06ba5f63d424d272208f`
 - `apps/mobile/src/features/growth/shareLinks.ts`: `0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d`
-- `apps/mobile/src/app/s/[shareId].tsx`: `8fa9d7a806ad27c0948c98e055128356c8d9cb129d3b7ff3f7bd5a4d162be24a`
+- `apps/mobile/src/app/s/[shareId].tsx`: `98ca033789f88188c3056bb2a9f5d411bf8de52cf5b44e408c15c311c4c4e54d`
 - `apps/mobile/src/features/growth/shareCard.ts`: `11996ad492cfd76a744a3ae45b50ffacae111721119b222b31bcafc1f9d59b3d`
 - `apps/mobile/src/app/share/conflict/[ruleId].tsx`: `096fa24edb685bb08d08a4868fedef42a0b3b208e375335d8d96a094717a7cf7`
 - `apps/mobile/src/features/review/policy.ts`: `cd8ccb30d06e9ef1e44f45693609dfecea5860582695cb18e5f6ac8e1a458d05`
-- `apps/mobile/src/features/review/prompt.ts`: `7bf14c14240b3dfb2a50dc179b4b25de7ee9df9b5dfb2c653d9add085c8a8546`
+- `apps/mobile/src/features/review/prompt.ts`: `e345835e33c6a899d4337bd2ff332d7003224571db610ad3be32adc3613a9a57`
 - `apps/mobile/src/lib/legal/storeMetadata.ts`: `1708605207ee343e401eb71ed07c38af193232841ac35f1fbf7c0459aa5ffa68`
 - `docs/phase-8/source-of-truth.md`: `5d8dafa07759bbddccc928bb47ca6eeb262bc0e46f08e9e84c3344d6406b85d1`
 - `docs/phase-8/link-routing-runbook.md`: `43b789dd31a1dc3bbef6cc351935fbfcd8c852678c5954429ff71bf469b91e90`
