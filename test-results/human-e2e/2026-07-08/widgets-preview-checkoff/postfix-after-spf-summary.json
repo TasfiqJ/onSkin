@@ -1,0 +1,44 @@
+{
+  "controls": [
+    {
+      "checked": "",
+      "height": 48,
+      "label": "Back",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 48
+    },
+    {
+      "checked": "true",
+      "height": 48,
+      "label": "Undo preview check-off for Ceramide moisturizer",
+      "role": "checkbox",
+      "tag": "DIV",
+      "visible": true,
+      "width": 240.41
+    },
+    {
+      "checked": "true",
+      "height": 48,
+      "label": "Undo preview check-off for Mineral SPF 50",
+      "role": "checkbox",
+      "tag": "DIV",
+      "visible": true,
+      "width": 240.41
+    },
+    {
+      "checked": "false",
+      "height": 48,
+      "label": "Show on the Lock Screen",
+      "role": "switch",
+      "tag": "DIV",
+      "visible": true,
+      "width": 51.99
+    }
+  ],
+  "count4of4": true,
+  "feedback": true,
+  "horizontalOverflow": 0,
+  "shortControls": []
+}

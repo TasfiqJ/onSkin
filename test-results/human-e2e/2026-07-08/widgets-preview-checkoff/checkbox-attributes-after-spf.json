@@ -1,0 +1,46 @@
+[
+  {
+    "attrs": [
+      [
+        "aria-label",
+        "Undo preview check-off for Ceramide moisturizer"
+      ],
+      [
+        "role",
+        "checkbox"
+      ],
+      [
+        "tabindex",
+        "0"
+      ],
+      [
+        "class",
+        "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] flex-row items-center gap-3 py-2"
+      ]
+    ],
+    "outer": "<div aria-label=\"Undo preview check-off for Ceramide moisturizer\" role=\"checkbox\" tabindex=\"0\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] flex-row items-center gap-3 py-2\"><div class=\"css-view-g5y9jx h-6 w-6 items-center justify-center rounded-full\" style=\"background-color: rgb(165, 105, 75);\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink\" style=\"color: rgb(250, 247, 242); font-size: 11px;\">✓</div></div><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink flex-1 font-sans-semibold\" style=\"color: rgb(163, 154, 139); font-size: 14px; text-decoration-line: line-through;\">Ceramide moisturizer</div><div dir",
+    "text": "✓Ceramide moisturizerDONE"
+  },
+  {
+    "attrs": [
+      [
+        "aria-label",
+        "Undo preview check-off for Mineral SPF 50"
+      ],
+      [
+        "role",
+        "checkbox"
+      ],
+      [
+        "tabindex",
+        "0"
+      ],
+      [
+        "class",
+        "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] flex-row items-center gap-3 py-2"
+      ]
+    ],
+    "outer": "<div aria-label=\"Undo preview check-off for Mineral SPF 50\" role=\"checkbox\" tabindex=\"0\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] flex-row items-center gap-3 py-2\"><div class=\"css-view-g5y9jx h-6 w-6 items-center justify-center rounded-full\" style=\"background-color: rgb(165, 105, 75);\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink\" style=\"color: rgb(250, 247, 242); font-size: 11px;\">✓</div></div><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink flex-1 font-sans-semibold\" style=\"color: rgb(163, 154, 139); font-size: 14px; text-decoration-line: line-through;\">Mineral SPF 50</div><div dir=\"auto\" clas",
+    "text": "✓Mineral SPF 50DONE"
+  }
+]

@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
@@ -42,9 +43,75 @@ function Bars({
   );
 }
 
+type PreviewStepKey = 'ceramide' | 'spf';
+
+function WidgetPreviewStep({
+  checked,
+  label,
+  onPress,
+}: {
+  checked: boolean;
+  label: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityHint="Updates only this in-app widget preview"
+      accessibilityLabel={`${checked ? 'Undo preview check-off for' : 'Preview check off'} ${label}`}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+      aria-checked={checked}
+      className="min-h-[48px] flex-row items-center gap-3 py-2"
+      onPress={onPress}
+      style={({ pressed }) => ({ opacity: pressed ? 0.72 : 1 })}
+    >
+      <View
+        className="h-6 w-6 items-center justify-center rounded-full"
+        style={
+          checked
+            ? { backgroundColor: colors.clay }
+            : { borderWidth: 2, borderColor: colors.clay }
+        }
+      >
+        {checked ? <Text style={{ color: colors.paper, fontSize: 11 }}>✓</Text> : null}
+      </View>
+      <Text
+        className="flex-1 font-sans-semibold"
+        style={{
+          color: checked ? colors.mutedLight : colors.ink,
+          fontSize: 14,
+          textDecorationLine: checked ? 'line-through' : 'none',
+        }}
+      >
+        {label}
+      </Text>
+      <Text variant="label" tone={checked ? 'muted' : 'clay'} style={{ fontSize: 10 }}>
+        {checked ? 'DONE' : 'TRY'}
+      </Text>
+    </Pressable>
+  );
+}
+
 function WidgetsScreen() {
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
+  const [previewChecked, setPreviewChecked] = useState<Record<PreviewStepKey, boolean>>({
+    ceramide: false,
+    spf: false,
+  });
+  const [previewFeedback, setPreviewFeedback] = useState('');
+  const previewDoneCount =
+    2 + Number(previewChecked.ceramide) + Number(previewChecked.spf);
+
+  function togglePreviewStep(step: PreviewStepKey, label: string) {
+    const checked = !previewChecked[step];
+    setPreviewChecked({ ...previewChecked, [step]: checked });
+    setPreviewFeedback(
+      checked
+        ? `Preview updated: ${label} checked off. Real home-screen check-off still needs the native widget build.`
+        : `Preview updated: ${label} moved back to next. Real home-screen check-off still needs the native widget build.`,
+    );
+  }
 
   if (!phase7Flags.widgets)
     return (
@@ -182,10 +249,9 @@ function WidgetsScreen() {
               Morning routine
             </Text>
             <Text variant="label" tone="muted">
-              2 of 4
+              {previewDoneCount} of 4
             </Text>
           </View>
-          {/* done */}
           <View
             className="flex-row items-center gap-3 py-2"
             style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
@@ -207,30 +273,27 @@ function WidgetsScreen() {
               Vitamin C serum
             </Text>
           </View>
-          {/* tappable next */}
-          <View className="flex-row items-center gap-3 py-2">
-            <View
-              className="h-6 w-6 rounded-full"
-              style={{ borderWidth: 2, borderColor: colors.clay }}
-            />
-            <Text className="flex-1 font-sans-semibold" style={{ fontSize: 14 }}>
-              Ceramide moisturizer
-            </Text>
-            <Text variant="label" tone="clay" style={{ fontSize: 10 }}>
-              TAP
-            </Text>
-          </View>
-          {/* todo */}
-          <View className="flex-row items-center gap-3 py-2">
-            <View
-              className="h-6 w-6 rounded-full"
-              style={{ borderWidth: 1.5, borderColor: 'rgba(32,27,21,0.18)' }}
-            />
-            <Text className="font-sans-semibold" style={{ fontSize: 14 }}>
-              Mineral SPF 50
-            </Text>
-          </View>
+          <WidgetPreviewStep
+            checked={previewChecked.ceramide}
+            label="Ceramide moisturizer"
+            onPress={() => togglePreviewStep('ceramide', 'Ceramide moisturizer')}
+          />
+          <WidgetPreviewStep
+            checked={previewChecked.spf}
+            label="Mineral SPF 50"
+            onPress={() => togglePreviewStep('spf', 'Mineral SPF 50')}
+          />
         </View>
+        {previewFeedback ? (
+          <Text
+            accessibilityRole="alert"
+            variant="bodySm"
+            tone="muted"
+            className="ml-1 mt-2.5"
+          >
+            {previewFeedback}
+          </Text>
+        ) : null}
         <Text variant="bodySm" tone="muted" className="ml-1 mt-2.5">
           Check it off right from the home screen. No need to open the app (iOS 17 / Android).
         </Text>

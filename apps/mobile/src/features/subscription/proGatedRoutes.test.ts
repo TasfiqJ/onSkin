@@ -295,6 +295,28 @@ describe('Pro-gated route contracts', () => {
     expect(source).not.toContain('onValueChange');
   });
 
+  it('keeps the widgets check-off preview interactive and honest', () => {
+    const source = readAppRoute('routine/widgets.tsx');
+
+    expect(source).toContain('type PreviewStepKey');
+    expect(source).toContain('function WidgetPreviewStep');
+    expect(source).toContain('<Pressable');
+    expect(source).toContain('accessibilityRole="checkbox"');
+    expect(source).toContain('accessibilityState={{ checked }}');
+    expect(source).toContain('aria-checked={checked}');
+    expect(source).toContain('accessibilityHint="Updates only this in-app widget preview"');
+    expect(source).toContain("label=\"Ceramide moisturizer\"");
+    expect(source).toContain("label=\"Mineral SPF 50\"");
+    expect(source).toContain('const previewDoneCount =');
+    expect(source).toContain('{previewDoneCount} of 4');
+    expect(source).toContain('Preview updated:');
+    expect(source).toContain('Real home-screen check-off still needs the native widget build.');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).not.toContain('{/* todo */}');
+    expect(source).not.toContain("{checked ? 'DONE' : 'TAP'}");
+    expect(source).not.toContain('>TAP</Text>');
+  });
+
   it('returns deferred widgets direct entries to Today with explicit copy', () => {
     const source = readAppRoute('routine/widgets.tsx');
 

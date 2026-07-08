@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "checked": "",
+      "height": 48,
+      "label": "Back",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 48
+    },
+    {
+      "checked": "",
+      "height": 48,
+      "label": "Undo preview check-off for Ceramide moisturizer",
+      "role": "checkbox",
+      "tag": "DIV",
+      "visible": true,
+      "width": 240.41
+    },
+    {
+      "checked": "",
+      "height": 48,
+      "label": "Preview check off Mineral SPF 50",
+      "role": "checkbox",
+      "tag": "DIV",
+      "visible": true,
+      "width": 240.41
+    },
+    {
+      "checked": "false",
+      "height": 48,
+      "label": "Show on the Lock Screen",
+      "role": "switch",
+      "tag": "DIV",
+      "visible": true,
+      "width": 51.99
+    }
+  ],
+  "count3of4": true,
+  "feedback": true,
+  "horizontalOverflow": 0,
+  "shortControls": [],
+  "text": "<WidgetsOne to three things, readable in a glance. (Previews. The home-screen widgets arrive in the device build.)TONIGHTRetinoid night1 of 3 done2/4TodaySTREAK12daysprotectedCYCLENight 2 of 4RetinoidONE-TAP CHECK-OFFMorning routine3 of 4✓Vitamin C serum✓Ceramide moisturizerDONEMineral SPF 50TRYPreview updated: Ceramide moisturizer checked off. Real home-screen check-off still needs the native widget build.Check it off right from the home screen. No need to open the app (iOS 17 / Android).EVENING LIVE ACTIVITYRoutineKind · Retinoid nightEvening routine · 1 of 3NEXTUp next · Retinol 0.3% · pea-sizedShow on the Lock ScreenOpt-in · starts at your PM reminder, ends when you’re done "
+}

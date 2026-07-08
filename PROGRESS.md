@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the `/routine/widgets` one-tap widget preview so tappable-looking rows
+  are real 48 px checkbox controls instead of inert mockup content. The preview
+  now updates from `2 of 4` to `4 of 4`, removes the fake `TAP` affordance, and
+  shows honest inline copy that real home-screen check-off still needs the
+  native widget build. Focused route-contract tests pass, and Codex in-app
+  browser Expo web at 320 x 568 verifies both preview taps, checked state, zero
+  horizontal overflow, zero visible sub-44 px controls, no JavaScript dialog,
+  and zero current-route unexpected browser logs. Evidence:
+  `test-results/human-e2e/2026-07-08/widgets-preview-checkoff-current/`,
+  `docs/e2e-bug-reports/2026-07-08-widgets-preview-inert-checkoff.md`.
+
 - Hardened the Phase 6 payments QA packet so strict payment exit evidence now
   records production RevenueCat/native billing readiness instead of only
   external scenario flags. The generated packet writes boolean-only production
