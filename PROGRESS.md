@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Today empty-routine and compact PM cycle-strip states. Today no
+  longer treats the routine-plan example preview as real check-off data: when
+  the local shelf has no real routine, it shows `No routine yet` with a direct
+  `Add products` action into manual shelf intake, and it hides routine-only
+  recommendation/tonight prompts until a real plan exists. The PM skin-cycling
+  strip now uses compact two-line labels with full accessibility labels so
+  six-night cycles stay readable at 320 px without visual ellipses. System
+  Chrome Expo web E2E at 320 x 568 covers the empty state, the `Add products`
+  route handoff, and the PM strip geometry. Tracked report:
+  `docs/e2e-bug-reports/2026-07-08-today-example-routine-empty-state.md`.
+
+- Removed the remaining native alert from Skin Note share failure recovery.
+  The share helper now returns `false` without opening a blocking platform
+  dialog, leaving `/community/note/[id]` as the single owner of durable
+  `accessibilityRole="alert"` feedback. The community share tests now reject
+  helper-level `Alert.alert` so the route cannot regress into double recovery
+  on compact phones, and the route scrolls the recovery region plus retry/help
+  controls fully into view on a 320 px phone viewport. E2E evidence is in
+  `test-results/human-e2e/2026-07-08/community-note-native-alert-current/`.
+  Tracked report:
+  `docs/e2e-bug-reports/2026-07-08-community-note-native-alert.md`.
+
 - Fixed the scheduler profile source so local-first onboarding stays
   personalized before Supabase is available. The shared `readProfileBits`
   helper now reads the device-local skin profile first, mapping the quiz axes,

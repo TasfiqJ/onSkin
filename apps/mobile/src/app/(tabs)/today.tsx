@@ -2,8 +2,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { Button, Screen, Text } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
+import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
@@ -36,7 +37,7 @@ const ROUTINE_CARD_SHADOW =
         shadowOffset: { width: 0, height: 1 },
       };
 
-function slotInstruction(slot: string): string {
+function slotInstruction(slot: SchedulerSlot): string {
   if (slot === 'retinoid') return 'Apply to dry skin · pea-sized · avoid the eye area.';
   if (slot === 'exfoliate') return 'A thin layer. Exfoliation night only.';
   return 'Barrier support. Keep it simple.';
@@ -78,6 +79,58 @@ function compactRoutineInstruction(instruction: string): string {
 
 function streakLabel(days: number): string {
   return `${days} ${days === 1 ? 'day' : 'days'}`;
+}
+
+function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
+  if (!compact) return slotLabel(slot);
+  if (slot === 'exfoliate') return 'Exfol\niate';
+  if (slot === 'retinoid') return 'Retin\noid';
+  if (slot === 'recover') return 'Reco\nver';
+  return 'Active';
+}
+
+function EmptyRoutineCard({ compact = false, dark }: { compact?: boolean; dark: boolean }) {
+  return (
+    <View
+      className={cn(compact ? 'mt-4 rounded-card p-5' : 'mt-6 rounded-card p-6')}
+      style={{
+        backgroundColor: dark ? colors.nightSurface : colors.paperRaised,
+        borderWidth: dark ? 0 : 1,
+        borderColor: colors.hairline,
+        ...(dark ? undefined : ROUTINE_CARD_SHADOW),
+      }}
+    >
+      <Text
+        className="font-mono text-[11px] uppercase"
+        style={{ color: dark ? 'rgba(244,239,231,0.52)' : colors.clayDeep }}
+      >
+        No routine yet
+      </Text>
+      <Text
+        className={
+          compact ? 'mt-2 font-sans-semibold text-[19px]' : 'mt-3 font-sans-semibold text-[21px]'
+        }
+        style={{ color: dark ? colors.cream : colors.ink, lineHeight: compact ? 23 : 25 }}
+      >
+        Build a routine from your shelf.
+      </Text>
+      <Text
+        className={compact ? 'mt-2 text-[13px]' : 'mt-2.5 text-[14px]'}
+        style={{
+          color: dark ? 'rgba(244,239,231,0.58)' : colors.muted,
+          lineHeight: compact ? 18 : 20,
+        }}
+      >
+        Add the products you use and Today will become your AM/PM checklist.
+      </Text>
+      <Button
+        label="Add products"
+        variant={dark ? 'inverse' : 'primary'}
+        className={compact ? 'mt-4' : 'mt-5'}
+        onPress={() => router.push('/shelf/manual')}
+      />
+    </View>
+  );
 }
 
 // Geometric checkmark (two rotated bars). No react-native-svg, per house rule.
@@ -210,7 +263,7 @@ function CheckRow({
 }
 
 export default function TodayScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const type = currentRoutineType();
   const dark = type === 'PM';
   const { data: planData } = usePlan();
@@ -223,11 +276,13 @@ export default function TodayScreen() {
     queryFn: () => getCompletedSteps(today),
   });
   const done = doneData ?? new Set<string>();
-  const plan = planData?.plan;
+  const hasExamplePlan = planData?.isExample === true;
+  const hasRealRoutine = Boolean(planData && !planData.isExample);
+  const plan = hasRealRoutine ? planData?.plan : undefined;
 
   // The orchestrated, profile-aware cycle drives tonight everywhere (so pregnancy
   // suppression etc. is never contradicted by a hardcoded surface. Review fix).
-  const cycle = cycleData?.cycle ?? null;
+  const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;
   const cTonight = cycleData?.tonight ?? null;
   const skippedTonight = cycleData?.skippedTonight ?? false;
   const recoveryActive = cycleData?.recovery.active ?? false;
@@ -258,6 +313,7 @@ export default function TodayScreen() {
   });
   const clockLabel = localClockLabel();
   const compactPhone = height < 700;
+  const compactCycleStrip = compactPhone || width < 360;
   const compactRecommendationPrompt = height < 860;
 
   // ---- AM ----
@@ -296,54 +352,60 @@ export default function TodayScreen() {
             Good morning.
           </Text>
 
-          <View
-            className={
-              compactPhone
-                ? 'mt-4 rounded-card bg-paper-raised'
-                : 'mt-6 rounded-card bg-paper-raised'
-            }
-            style={{
-              paddingHorizontal: compactPhone ? 20 : 22,
-              paddingTop: compactPhone ? 18 : 22,
-              paddingBottom: compactPhone ? 8 : 12,
-              borderWidth: 1,
-              borderColor: colors.hairline,
-              ...ROUTINE_CARD_SHADOW,
-            }}
-          >
-            <View className="mb-2 flex-row items-center justify-between">
-              <Text variant="body" className="font-sans-bold">
-                Morning routine
-              </Text>
-              <Text variant="label" tone="muted" className="font-mono">
-                {doneCount} of {steps.length}
-              </Text>
+          {hasExamplePlan ? (
+            <EmptyRoutineCard compact={compactPhone} dark={false} />
+          ) : (
+            <View
+              className={
+                compactPhone
+                  ? 'mt-4 rounded-card bg-paper-raised'
+                  : 'mt-6 rounded-card bg-paper-raised'
+              }
+              style={{
+                paddingHorizontal: compactPhone ? 20 : 22,
+                paddingTop: compactPhone ? 18 : 22,
+                paddingBottom: compactPhone ? 8 : 12,
+                borderWidth: 1,
+                borderColor: colors.hairline,
+                ...ROUTINE_CARD_SHADOW,
+              }}
+            >
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text variant="body" className="font-sans-bold">
+                  Morning routine
+                </Text>
+                <Text variant="label" tone="muted" className="font-mono">
+                  {doneCount} of {steps.length}
+                </Text>
+              </View>
+              {steps.map((s, i) => {
+                const k = stepKey('AM', s.productId);
+                return (
+                  <CheckRow
+                    key={k}
+                    name={s.name}
+                    sub={s.instruction}
+                    state={rowState(k, firstUndone)}
+                    dark={false}
+                    compact={compactPhone}
+                    first={i === 0}
+                    onPress={() => void toggle(k)}
+                  />
+                );
+              })}
             </View>
-            {steps.map((s, i) => {
-              const k = stepKey('AM', s.productId);
-              return (
-                <CheckRow
-                  key={k}
-                  name={s.name}
-                  sub={s.instruction}
-                  state={rowState(k, firstUndone)}
-                  dark={false}
-                  compact={compactPhone}
-                  first={i === 0}
-                  onPress={() => void toggle(k)}
-                />
-              );
-            })}
-          </View>
+          )}
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
-          <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
+          {hasRealRoutine ? (
+            <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
+          ) : null}
 
           {/* Ask. The deterministic, on-device advisor (docs/13 §9 moat taste) */}
           {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
-          {compactPhone || !cycle ? null : (
+          {hasRealRoutine && !compactPhone && cycle ? (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="See your cycle week ahead"
@@ -389,7 +451,7 @@ export default function TodayScreen() {
               </View>
               <Text style={{ color: 'rgba(244,239,231,0.4)', fontSize: 20 }}>›</Text>
             </Pressable>
-          )}
+          ) : null}
         </ScrollView>
       </Screen>
     );
@@ -516,7 +578,8 @@ export default function TodayScreen() {
             </View>
             <View className="flex-row gap-1">
               {cycle.nights.map((n, i) => {
-                const label = slotLabel(n.slot);
+                const label = cycleStripLabel(n.slot, compactCycleStrip);
+                const accessibilityLabel = slotLabel(n.slot);
                 const active = cTonight ? i === cTonight.index : false;
                 return (
                   <View key={i} className="flex-1">
@@ -527,16 +590,15 @@ export default function TodayScreen() {
                       }}
                     />
                     <Text
-                      adjustsFontSizeToFit
-                      maxFontSizeMultiplier={1.12}
-                      minimumFontScale={0.85}
-                      numberOfLines={1}
+                      accessibilityLabel={accessibilityLabel}
+                      maxFontSizeMultiplier={1.08}
+                      numberOfLines={compactCycleStrip ? 2 : 1}
                       style={{
                         color: active ? colors.clayBright : 'rgba(244,239,231,0.45)',
-                        fontSize: 12,
+                        fontSize: compactCycleStrip ? 10.5 : 12,
                         fontWeight: active ? '700' : '400',
-                        lineHeight: 15,
-                        marginTop: 8,
+                        lineHeight: compactCycleStrip ? 11 : 15,
+                        marginTop: compactCycleStrip ? 7 : 8,
                         textAlign: 'center',
                       }}
                     >
@@ -550,44 +612,54 @@ export default function TodayScreen() {
         ) : null}
 
         {/* Evening routine */}
-        <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
-          <View className="mb-2 flex-row items-center justify-between">
-            <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
-              Evening routine
-            </Text>
-            {pmSteps.length ? (
-              <Text className="font-mono text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
-                {donePm} of {pmSteps.length}
+        {hasExamplePlan ? (
+          <EmptyRoutineCard compact={compactPhone} dark />
+        ) : (
+          <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
+            <View className="mb-2 flex-row items-center justify-between">
+              <Text className="font-sans-bold text-[16px]" style={{ color: colors.cream }}>
+                Evening routine
               </Text>
-            ) : null}
-          </View>
-          {pmSteps.length ? (
-            pmSteps.map((s, i) => {
-              const k = stepKey('PM', s.productId);
-              return (
-                <CheckRow
-                  key={k}
-                  name={s.name}
-                  sub={pmDisplaySub(s)}
-                  state={rowState(k, firstUndonePm)}
-                  dark
-                  compact={compactPhone}
-                  first={i === 0}
-                  onPress={() => void toggle(k)}
-                />
-              );
-            })
-          ) : (
-            <View className={compactPhone ? 'py-2.5' : 'py-3'}>
-              <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
-                No evening steps yet.
-              </Text>
-              <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
-                Add a cleanser, moisturiser, or night product to build this out.
-              </Text>
+              {pmSteps.length ? (
+                <Text
+                  className="font-mono text-[12px]"
+                  style={{ color: 'rgba(244,239,231,0.45)' }}
+                >
+                  {donePm} of {pmSteps.length}
+                </Text>
+              ) : null}
             </View>
-          )}
-        </View>
+            {pmSteps.length ? (
+              pmSteps.map((s, i) => {
+                const k = stepKey('PM', s.productId);
+                return (
+                  <CheckRow
+                    key={k}
+                    name={s.name}
+                    sub={pmDisplaySub(s)}
+                    state={rowState(k, firstUndonePm)}
+                    dark
+                    compact={compactPhone}
+                    first={i === 0}
+                    onPress={() => void toggle(k)}
+                  />
+                );
+              })
+            ) : (
+              <View className={compactPhone ? 'py-2.5' : 'py-3'}>
+                <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
+                  No evening steps yet.
+                </Text>
+                <Text
+                  className="mt-1 text-[12.5px]"
+                  style={{ color: 'rgba(244,239,231,0.5)' }}
+                >
+                  Add a cleanser, moisturiser, or night product to build this out.
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* Auto-resolution banner. The Doc-2 resolution rendered (docs/03 §5) */}
         {suppressedAcidName ? (

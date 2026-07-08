@@ -27,14 +27,24 @@ describe('Today route mobile contracts', () => {
   it('keeps Today prompt actions clear of the floating tab bar on short phones', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 
+    expect(source).toContain("import { Button, Screen, Text } from '@/components/ui';");
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPhone = height < 700');
     expect(source).toContain('const compactRecommendationPrompt = height < 860');
+    expect(source).toContain('function EmptyRoutineCard');
+    expect(source).toContain('No routine yet');
+    expect(source).toContain('Build a routine from your shelf.');
+    expect(source).toContain('label="Add products"');
+    expect(source).toContain("router.push('/shelf/manual')");
+    expect(source).toContain('const hasExamplePlan = planData?.isExample === true;');
+    expect(source).toContain('const hasRealRoutine = Boolean(planData && !planData.isExample);');
+    expect(source).toContain('const plan = hasRealRoutine ? planData?.plan : undefined;');
+    expect(source).toContain('const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');
     expect(source).toContain("className={compactPhone ? 'mt-3' : 'mt-4'}");
-    expect(source).toContain("compactPhone\n                ? 'mt-4 rounded-card bg-paper-raised'");
+    expect(source).toContain("? 'mt-4 rounded-card bg-paper-raised'");
     expect(source).toContain(": 'mt-6 rounded-card bg-paper-raised'");
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
     expect(source).toContain('paddingBottom: compactPhone ? 8 : 12');
@@ -62,31 +72,43 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain(
       '<RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />',
     );
+    expect(source).toContain('{hasRealRoutine ? (');
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
-    expect(source).toContain('{compactPhone || !cycle ? null : (');
+    expect(source).toContain('{hasRealRoutine && !compactPhone && cycle ? (');
   });
 
   it('keeps PM cycle strip labels legible only when a real cycle exists', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 
     expect(source).not.toContain('FALLBACK_SLOTS');
+    expect(source).toContain(
+      'function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string',
+    );
+    expect(source).toContain("if (slot === 'exfoliate') return 'Exfol\\niate';");
+    expect(source).toContain("if (slot === 'retinoid') return 'Retin\\noid';");
+    expect(source).toContain("if (slot === 'recover') return 'Reco\\nver';");
+    expect(source).toContain('const { height, width } = useWindowDimensions();');
+    expect(source).toContain('const compactCycleStrip = compactPhone || width < 360;');
     expect(source).toContain('const nightNumber = cTonight ? cTonight.index + 1 : 0');
     expect(source).toContain('const nightTotal = cycle?.lengthNights ?? 0');
-    expect(source).toContain('slotLabel(n.slot)');
+    expect(source).toContain('const label = cycleStripLabel(n.slot, compactCycleStrip);');
+    expect(source).toContain('const accessibilityLabel = slotLabel(n.slot);');
     expect(source).toContain('{cycle ? (');
     expect(source).toContain('cycle.nights.map((n, i) =>');
     expect(source).toContain('const active = cTonight ? i === cTonight.index : false;');
     expect(source).toContain('No evening steps yet.');
     expect(source).toContain('Add a cleanser, moisturiser, or night product to build this out.');
-    expect(source).toContain('adjustsFontSizeToFit');
-    expect(source).toContain('maxFontSizeMultiplier={1.12}');
-    expect(source).toContain('minimumFontScale={0.85}');
+    expect(source).toContain('maxFontSizeMultiplier={1.08}');
+    expect(source).toContain('accessibilityLabel={accessibilityLabel}');
+    expect(source).toContain('numberOfLines={compactCycleStrip ? 2 : 1}');
     expect(source).toContain('<View className="flex-row gap-1">');
-    expect(source).toContain('fontSize: 12');
-    expect(source).toContain('lineHeight: 15');
-    expect(source).toContain('marginTop: 8');
+    expect(source).toContain('fontSize: compactCycleStrip ? 10.5 : 12');
+    expect(source).toContain('lineHeight: compactCycleStrip ? 11 : 15');
+    expect(source).toContain('marginTop: compactCycleStrip ? 7 : 8');
     expect(source).toContain("textAlign: 'center'");
+    expect(source).not.toContain('adjustsFontSizeToFit');
+    expect(source).not.toContain('minimumFontScale={0.85}');
     expect(source).not.toContain('className="mt-2 text-center text-[10.5px]"');
   });
 });

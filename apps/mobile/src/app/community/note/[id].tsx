@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
@@ -23,6 +23,7 @@ export default function NoteDetail() {
   const qc = useQueryClient();
   const note = id ? noteById(id) : undefined;
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
+  const scrollRef = useRef<ScrollView>(null);
   const compactMissingNote = height < 640;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
@@ -50,7 +51,12 @@ export default function NoteDetail() {
     haptics.select();
     setShareFeedback(null);
     const shared = await shareSkinNote(note);
-    if (!shared) setShareFeedback(SHARE_FAILURE_MESSAGE);
+    if (!shared) {
+      setShareFeedback(SHARE_FAILURE_MESSAGE);
+      requestAnimationFrame(() => {
+        scrollRef.current?.scrollToEnd({ animated: true });
+      });
+    }
   };
 
   return (
@@ -100,7 +106,11 @@ export default function NoteDetail() {
           </View>
         </ScrollView>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+        <ScrollView
+          ref={scrollRef}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-8"
+        >
           <View
             className="rounded-[22px] bg-paper-raised p-5"
             style={{ borderWidth: 1, borderColor: colors.hairline }}
@@ -179,8 +189,20 @@ export default function NoteDetail() {
             </View>
           </View>
 
+          {shareFeedback ? (
+            <Text
+              accessibilityRole="alert"
+              variant="bodySm"
+              tone="muted"
+              className="mt-3 text-center"
+              style={{ lineHeight: 18 }}
+            >
+              {shareFeedback}
+            </Text>
+          ) : null}
+
           {/* the only reaction. A structured "This helped" (the docs/09 flywheel) */}
-          <View className="mt-4 flex-row gap-3">
+          <View className={shareFeedback ? 'mt-3 flex-row gap-3' : 'mt-4 flex-row gap-3'}>
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ selected: helped }}
@@ -208,17 +230,6 @@ export default function NoteDetail() {
               </Text>
             </Pressable>
           </View>
-          {shareFeedback ? (
-            <Text
-              accessibilityRole="alert"
-              variant="bodySm"
-              tone="muted"
-              className="mt-3 text-center"
-              style={{ lineHeight: 18 }}
-            >
-              {shareFeedback}
-            </Text>
-          ) : null}
         </ScrollView>
       )}
     </Screen>

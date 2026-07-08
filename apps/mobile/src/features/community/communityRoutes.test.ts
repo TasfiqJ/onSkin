@@ -106,16 +106,30 @@ describe('Community route contracts', () => {
 
   it('keeps Skin Note share failures visible on the note surface', () => {
     const source = readAppRoute('community/note/[id].tsx');
+    const feedbackIndex = source.indexOf('accessibilityRole="alert"');
+    const actionRowIndex = source.indexOf(
+      "className={shareFeedback ? 'mt-3 flex-row gap-3' : 'mt-4 flex-row gap-3'}",
+    );
 
-    expect(source).toContain("import { useEffect, useState } from 'react';");
+    expect(source).toContain("import { useEffect, useRef, useState } from 'react';");
     expect(source).toContain(
       "import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';",
     );
     expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain('const scrollRef = useRef<ScrollView>(null);');
     expect(source).toContain('const shared = await shareSkinNote(note);');
-    expect(source).toContain('if (!shared) setShareFeedback(SHARE_FAILURE_MESSAGE);');
+    expect(source).toContain('if (!shared) {');
+    expect(source).toContain('setShareFeedback(SHARE_FAILURE_MESSAGE);');
+    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true });');
+    expect(source).toContain('ref={scrollRef}');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('className="mt-3 text-center"');
+    expect(source).toContain(
+      "className={shareFeedback ? 'mt-3 flex-row gap-3' : 'mt-4 flex-row gap-3'}",
+    );
+    expect(feedbackIndex).toBeGreaterThan(-1);
+    expect(actionRowIndex).toBeGreaterThan(-1);
+    expect(feedbackIndex).toBeLessThan(actionRowIndex);
   });
 
   it('recovers missing Skin Note details without a dead empty state', () => {

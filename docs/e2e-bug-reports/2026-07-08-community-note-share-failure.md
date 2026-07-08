@@ -15,7 +15,7 @@ Tester: Codex
 
 ## Expected Result
 
-The user remains on the Skin Note route and gets clear failed-share recovery feedback on the app surface, while the share helper keeps claim-safe outbound copy and source/reviewer context.
+The user remains on the Skin Note route and gets clear failed-share recovery feedback on the app surface, while the share helper keeps claim-safe outbound copy and source/reviewer context without opening a second native alert.
 
 ## Actual Result
 
@@ -58,6 +58,8 @@ Await `shareSkinNote(note)`, clear stale share feedback before each attempt, and
 - Screenshot: `test-results/human-e2e/2026-07-08/community-note-share-failure-current/02-after-share-failure.png`
 - Logs: `test-results/human-e2e/2026-07-08/community-note-share-failure-current/browser-logs.json`
 - UI snapshot: `test-results/human-e2e/2026-07-08/community-note-share-failure-current/after-state.json`
+- Follow-up source contract: `apps/mobile/src/features/community/shareNote.test.ts` rejects helper-level `Alert.alert`; `/community/note/[id]` owns the accessible failure copy.
+- Follow-up E2E: `test-results/human-e2e/2026-07-08/community-note-native-alert-current/` confirms the app opens no JS dialog and keeps the recovery copy plus both action controls fully visible on a 320 px phone viewport.
 
 ## Remaining Risk
 

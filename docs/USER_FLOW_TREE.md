@@ -355,6 +355,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Surface: iOS and Android first; Expo web if route parity is confirmed.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/today/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`
 
 ### Path A: Happy Path
 
@@ -370,6 +371,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Today with no routine fixture.
   - Expected result: Empty state gives a clear next action and does not look broken.
   - Evidence: Screenshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 opens `/today?routine=AM` with empty local shelf/profile state and verifies `No routine yet`, `Build a routine from your shelf.`, and a 56 px `Add products` action. The example `Cream cleanser` and `Morning routine` check-off rows are absent, horizontal overflow is zero, and tapping `Add products` routes to `/shelf/manual`. Evidence is in `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`.
 - Branch: offline or sync pending
   - Priority: Important
   - Automate later: Yes
@@ -388,6 +390,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open the PM Today tab at a 320 px phone width with the skin-cycling strip visible.
   - Expected result: Exfoliate, Retinoid, and Recover phase labels remain readable without ellipses or clipped glyphs while the active phase still has a clear visual state.
   - Evidence: Phone-width screenshot and cycle-label geometry snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 seeds a local sensitive/barrier profile plus cleanser, retinol, glycolic, ceramide, and SPF shelf products, opens `/today?routine=PM`, and verifies the six-night skin-cycling strip renders split two-line Exfoliate/Retinoid/Recover labels with full accessibility labels, no visual ellipses, zero horizontal overflow, and 44 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`.
 - Branch: local date and clock display
   - Priority: Important
   - Automate later: Yes
@@ -924,9 +927,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open a Skin Note, tap Share note, and simulate the native share sheet being unavailable or rejected.
-  - Expected result: The outbound note text keeps the claim-safe disclaimer plus source/reviewer context, and a failed share sheet shows a clear Sharing unavailable alert without leaving the note.
-  - Evidence: Alert text and share payload snapshot.
-  - Current local evidence: 2026-07-08 Expo web 320 x 568 with `EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1` opens `/community/note/note-niacinamide-vitc`, verifies the claim-safe note detail and 128 x 48 `Share note` control, taps the real control, stays on the note route, and renders the failed-share recovery copy as an accessible alert with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/community-note-share-failure-current/`.
+  - Expected result: The outbound note text keeps the claim-safe disclaimer plus source/reviewer context, and a failed share sheet shows clear route-owned failed-share feedback without also opening a blocking native alert.
+  - Evidence: Route alert-region text, absence of a JS/native dialog, and share payload snapshot.
+  - Current local evidence: 2026-07-08 Expo web 320 x 568 with `EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1` opens `/community/note/note-niacinamide-vitc`, verifies the claim-safe note detail and 128 x 48 `Share note` control, taps the real control, stays on the note route, opens no JS dialog, and renders the failed-share recovery copy plus both 48 px action controls fully in the viewport with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/community-note-native-alert-current/`.
 - Branch: claim-safe anonymous ask
   - Priority: Critical
   - Automate later: Yes

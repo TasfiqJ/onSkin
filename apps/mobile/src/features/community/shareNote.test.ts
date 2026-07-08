@@ -13,16 +13,10 @@ function readSource(path: string): string {
 }
 
 const mocks = vi.hoisted(() => ({
-  alerts: [] as unknown[][],
   share: vi.fn(),
 }));
 
 vi.mock('react-native', () => ({
-  Alert: {
-    alert: (...args: unknown[]) => {
-      mocks.alerts.push(args);
-    },
-  },
   Share: {
     share: mocks.share,
   },
@@ -30,7 +24,6 @@ vi.mock('react-native', () => ({
 
 describe('community note sharing', () => {
   beforeEach(() => {
-    mocks.alerts = [];
     mocks.share.mockReset();
     delete process.env.EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE;
   });
@@ -55,18 +48,12 @@ describe('community note sharing', () => {
     await expect(shareSkinNote(note)).resolves.toBe(true);
 
     expect(mocks.share).toHaveBeenCalledWith({ message: buildSkinNoteShareMessage(note) });
-    expect(mocks.alerts).toEqual([]);
   });
 
-  it('alerts and returns false when the native share sheet fails', async () => {
+  it('returns false without opening a native alert when the share sheet fails', async () => {
     mocks.share.mockRejectedValueOnce(new Error('share unavailable'));
 
     await expect(shareSkinNote(SKIN_NOTES[0]!)).resolves.toBe(false);
-
-    expect(mocks.alerts[0]).toEqual([
-      'Sharing unavailable',
-      "We couldn't open the share sheet. You can still read this note in Skin Notes.",
-    ]);
   });
 
   it('supports a dev-only E2E fixture for failed note sharing', async () => {
@@ -87,19 +74,18 @@ describe('community note sharing', () => {
     }
 
     expect(mocks.share).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      'Sharing unavailable',
-      "We couldn't open the share sheet. You can still read this note in Skin Notes.",
-    ]);
   });
 
   it('keeps the note route on the claim-safe share helper', () => {
     const source = readSource('app/community/note/[id].tsx');
+    const shareHelper = readSource('features/community/shareNote.ts');
 
     expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
     expect(source).toContain('const shared = await shareSkinNote(note);');
-    expect(source).toContain('if (!shared) setShareFeedback(SHARE_FAILURE_MESSAGE);');
+    expect(source).toContain('if (!shared) {');
+    expect(source).toContain('setShareFeedback(SHARE_FAILURE_MESSAGE);');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Share.share');
+    expect(shareHelper).not.toContain('Alert.alert');
   });
 });

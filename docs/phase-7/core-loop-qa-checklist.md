@@ -319,6 +319,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in
   `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; it does not
   replace real iOS/Android beta-device QA.
+- 2026-07-08: System Chrome Expo web E2E at 320 x 568 covers Today empty-routine
+  recovery and compact PM cycle-strip readability. Empty local state now shows
+  `No routine yet`, `Build a routine from your shelf.`, and a 56 px `Add
+  products` action without showing the example `Cream cleanser` or `Morning
+  routine` check-off rows; tapping the action routes to `/shelf/manual`. A
+  seeded six-night PM cycle shows split two-line Exfoliate/Retinoid/Recover
+  labels with full accessibility labels, zero horizontal overflow, and no
+  visible sub-44 px controls. Evidence is in
+  `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`; it does
+  not replace native iOS/Android beta-device QA, Dynamic Type QA, or native
+  secure-storage timing checks.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers recommendation dismissal
   persistence and the dismissed-card cold-start branch: open `/recommendations`,
   open `A ceramide moisturiser`, tap `Not for me`, confirm the hub recomputes to

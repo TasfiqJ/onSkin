@@ -1,9 +1,8 @@
-import { Alert, Share } from 'react-native';
+import { Share } from 'react-native';
 
 import { COMMUNITY_COPY } from './copy';
 import type { SkinNote } from './notes';
 
-export const SHARE_FAILURE_TITLE = 'Sharing unavailable';
 export const SHARE_FAILURE_MESSAGE =
   "We couldn't open the share sheet. You can still read this note in Skin Notes.";
 
@@ -27,7 +26,6 @@ export async function shareSkinNote(note: SkinNote): Promise<boolean> {
     await Share.share({ message: buildSkinNoteShareMessage(note) });
     return true;
   } catch {
-    Alert.alert(SHARE_FAILURE_TITLE, SHARE_FAILURE_MESSAGE);
     return false;
   }
 }
