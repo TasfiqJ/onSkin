@@ -1,118 +1,215 @@
 {
+  "bodyTextIncludes": {
+    "ask": false,
+    "glassSkin": true,
+    "libraryNotFeed": true,
+    "natural": true,
+    "niacinamide": true,
+    "retinol": true,
+    "skinNotes": true
+  },
   "controls": [
     {
-      "ariaLabel": "Back",
-      "center": {
-        "x": 48,
-        "y": 28
-      },
-      "clipped": false,
-      "hitBlocked": false,
-      "hitLabel": "<",
-      "index": 0,
+      "below44": false,
+      "clippedByViewport": false,
       "label": "Back",
       "rect": {
-        "bottom": 52,
-        "height": 48,
-        "left": 24,
-        "right": 72,
-        "top": 4,
-        "width": 48
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
       },
       "role": "button",
-      "tinyTarget": false,
-      "visibleHeight": 48,
-      "visibleWidth": 48
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      }
     },
     {
-      "ariaLabel": "Can you use niacinamide with vitamin C?. Refuted.",
-      "center": {
-        "x": 160,
-        "y": 186
-      },
-      "clipped": false,
-      "hitBlocked": false,
-      "hitLabel": "Can you use niacinamide with vitamin C?",
-      "index": 1,
+      "below44": false,
+      "clippedByViewport": false,
       "label": "Can you use niacinamide with vitamin C?. Refuted.",
       "rect": {
-        "bottom": 238,
-        "height": 104,
-        "left": 24,
-        "right": 296,
-        "top": 134,
-        "width": 272
+        "bottom": 222.90656280517578,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 133.9805908203125,
+        "width": 272.3907775878906
       },
       "role": "button",
-      "tinyTarget": false,
-      "visibleHeight": 104,
-      "visibleWidth": 272
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 222.90656280517578,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 133.9805908203125,
+        "width": 272.3907775878906
+      }
     },
     {
-      "ariaLabel": "Is a 10-step “glass skin” routine better?. Contested.",
-      "center": {
-        "x": 160,
-        "y": 308.5
-      },
-      "clipped": false,
-      "hitBlocked": false,
-      "hitLabel": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
-      "index": 2,
+      "below44": false,
+      "clippedByViewport": false,
       "label": "Is a 10-step “glass skin” routine better?. Contested.",
       "rect": {
-        "bottom": 353,
-        "height": 89,
-        "left": 24,
-        "right": 296,
-        "top": 264,
-        "width": 272
+        "bottom": 337.8034133911133,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 248.87744140625,
+        "width": 272.3907775878906
       },
       "role": "button",
-      "tinyTarget": false,
-      "visibleHeight": 89,
-      "visibleWidth": 272
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 337.8034133911133,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 248.87744140625,
+        "width": 272.3907775878906
+      }
     },
     {
-      "ariaLabel": "Is “natural” always gentler for sensitive skin?. Contested.",
-      "center": {
-        "x": 160,
-        "y": 402.5
-      },
-      "clipped": false,
-      "hitBlocked": false,
-      "hitLabel": "Is “natural” always gentler for sensitive skin?",
-      "index": 3,
+      "below44": false,
+      "clippedByViewport": false,
       "label": "Is “natural” always gentler for sensitive skin?. Contested.",
       "rect": {
-        "bottom": 448,
-        "height": 91,
-        "left": 24,
-        "right": 296,
-        "top": 357,
-        "width": 272
+        "bottom": 432.72149658203125,
+        "height": 90.92840576171875,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 341.7930908203125,
+        "width": 272.3907775878906
       },
       "role": "button",
-      "tinyTarget": false,
-      "visibleHeight": 91,
-      "visibleWidth": 272
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 432.72149658203125,
+        "height": 90.92840576171875,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 341.7930908203125,
+        "width": 272.3907775878906
+      }
     }
   ],
-  "currentDialog": null,
-  "issueCount": 0,
-  "issues": [],
-  "route": "/community",
-  "scroll": {
-    "clientHeight": 480,
+  "critical": [
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "visibleRect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "rect": {
+        "bottom": 222.90656280517578,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 133.9805908203125,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "visibleRect": {
+        "bottom": 222.90656280517578,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 133.9805908203125,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "rect": {
+        "bottom": 337.8034133911133,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 248.87744140625,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "visibleRect": {
+        "bottom": 337.8034133911133,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 248.87744140625,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "rect": {
+        "bottom": 432.72149658203125,
+        "height": 90.92840576171875,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 341.7930908203125,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "visibleRect": {
+        "bottom": 432.72149658203125,
+        "height": 90.92840576171875,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 341.7930908203125,
+        "width": 272.3907775878906
+      }
+    }
+  ],
+  "document": {
+    "clientHeight": 481,
     "clientWidth": 320,
-    "scrollHeight": 480,
-    "scrollWidth": 320,
-    "x": 0,
-    "y": 0
+    "scrollHeight": 481,
+    "scrollWidth": 320
   },
-  "textStart": "<Skin NotesMyth vs evidence. Expert-written, evidence-graded, calm.INGREDIENT MYTHSCan you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.SENSITIVE SKINIs a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and essential oils are common irritants.RETINOIDSDoes retinol thin your skin?RefutedIt thickens the deeper dermis over time; surface flaking early on is not thinning.SUNSCREENDo you have to wait between skincare steps?RefutedMostly no. Layering onto slightly damp skin is fine for most routines.Is homemade sunscreen as protective as store-bought?RefutedNo. Homemade mixes can’t be measured for protection. Use a tested SPF.a librar",
-  "url": "http://localhost:8210/community",
+  "horizontalOverflow": 0,
+  "issues": [],
+  "title": "",
+  "url": "http://localhost:8206/community",
   "viewport": {
-    "width": 320,
-    "height": 480
-  }
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 481,
+    "width": 320
+  },
+  "dialog": null
 }
