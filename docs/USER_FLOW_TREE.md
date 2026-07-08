@@ -739,6 +739,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendation-stale-detail-recovery/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendations-hub-compact-card-fit/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/recommendations-hub-narrow-scroll-continuation/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`
 
 ### Path A: For You Hub
 
@@ -754,6 +755,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Today with a shelf/profile state that produces an SPF gap, inspect the inline prompt, then tap See why or dismiss it.
   - Expected result: The prompt stays advisory and dismissible, the visible close, See why, and Not now controls meet the 44 pt phone touch target, and no text or action overflows on a 320 px phone.
   - Evidence: Small-phone screenshot, button-geometry snapshot, and local dismissed recommendation state when dismissing.
+- Branch: compact you're-set state
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open `/recommendations` with a complete, non-expiring shelf state that produces no recommendation cards, inspect the first viewport, then scroll on a very short phone viewport.
+  - Expected result: The honest "you're set" trust copy uses a scrollable compact layout, does not overlap the For You subtitle, keeps the footnote fully visible at 320 x 568, keeps it reachable after scroll at 320 x 480, and has zero horizontal overflow.
+  - Evidence: Phone-width screenshot, scroll snapshot, and UI geometry JSON.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 and 320 x 480 verifies the seeded complete-shelf you're-set state has no subtitle overlap, no horizontal overflow, no sub-44 px controls, one scrollable empty-state region, a fully visible 320 x 568 footnote, and a fully reachable 320 x 480 footnote after scroll.
 - Branch: direct-entry recommendation exits
   - Priority: Important
   - Automate later: Yes

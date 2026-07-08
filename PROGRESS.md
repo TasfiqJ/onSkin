@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the For You "you're set" state for compact phone heights. Human E2E
+  seeded a complete shelf and reproduced the empty-state branch at 320 x 568 and
+  320 x 480: before the fix, the branch used a non-scrollable centered view, the
+  completion icon crowded the hub subtitle, and the trust footnote clipped below
+  the viewport. The empty state now uses the same compact-aware scroll pattern as
+  the recommendation list, with explicit icon sizing and tighter short-phone
+  rhythm. Final System Chrome Expo web evidence confirms no subtitle overlap, no
+  horizontal overflow, no sub-44 px visible controls, a fully visible 320 x 568
+  footnote, and a fully reachable 320 x 480 footnote after scroll. Evidence is in
+  `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`, with
+  the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-recommendations-youre-set-compact.md`.
+
 - Added fresh Ask direct-entry navigation evidence for the deterministic/free
   advisor and deferred cloud Ask route. System Chrome Expo web at 320 x 568
   verifies direct `/ask`, reload, Back recovery to `/today`, direct

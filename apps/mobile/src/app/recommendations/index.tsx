@@ -168,37 +168,68 @@ function RecCard({ rec, compact = false }: { rec: Recommendation; compact?: bool
   );
 }
 
-function YoureSet() {
+function YoureSet({ compact = false }: { compact?: boolean }) {
   return (
-    <View className="flex-1 items-center justify-center px-2">
+    <ScrollView
+      className="flex-1"
+      showsVerticalScrollIndicator={false}
+      contentContainerClassName={
+        compact
+          ? 'items-center px-2 pb-28 pt-3'
+          : 'flex-grow items-center justify-center px-2 pb-10 pt-7'
+      }
+    >
       <View
-        className="mb-7 h-[78px] w-[78px] items-center justify-center rounded-full bg-paper-raised"
-        style={{ borderWidth: 1.5, borderColor: 'rgba(165,105,75,0.3)' }}
+        className={
+          compact
+            ? 'mb-4 items-center justify-center rounded-full bg-paper-raised'
+            : 'mb-7 items-center justify-center rounded-full bg-paper-raised'
+        }
+        style={{
+          width: compact ? 50 : 78,
+          height: compact ? 50 : 78,
+          borderWidth: 1.5,
+          borderColor: 'rgba(165,105,75,0.3)',
+        }}
       >
-        <Text className="text-[30px]" style={{ color: colors.clay }}>
+        <Text style={{ color: colors.clay, fontSize: compact ? 23 : 30 }}>
           ✓
         </Text>
       </View>
       <Text
         variant="title"
-        className="text-center text-[31px] leading-[34px]"
+        className={
+          compact
+            ? 'text-center text-[27px] leading-[30px]'
+            : 'text-center text-[31px] leading-[34px]'
+        }
         accessibilityRole="header"
       >
         {REC_COPY.youreSet.title}
       </Text>
       <Text
-        variant="body"
+        variant={compact ? 'bodySm' : 'body'}
         tone="muted"
-        className="mt-3.5 max-w-[300px] text-center"
-        style={{ lineHeight: 23 }}
+        className={
+          compact ? 'mt-2.5 max-w-[300px] text-center' : 'mt-3.5 max-w-[300px] text-center'
+        }
+        style={{ lineHeight: compact ? 20 : 23 }}
       >
         {goalRecsShippable() ? REC_COPY.youreSet.body : REC_COPY.youreSet.bodyNoGoals}
       </Text>
-      <View className="mt-7 w-full max-w-[300px] gap-2.5">
+      <View
+        className={
+          compact ? 'mt-4 w-full max-w-[300px] gap-2' : 'mt-7 w-full max-w-[300px] gap-2.5'
+        }
+      >
         {REC_COPY.youreSet.checks.map((c) => (
           <View
             key={c}
-            className="flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3"
+            className={
+              compact
+                ? 'flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-2'
+                : 'flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3'
+            }
             style={{ borderWidth: 1, borderColor: colors.hairline }}
           >
             <View
@@ -215,10 +246,14 @@ function YoureSet() {
           </View>
         ))}
       </View>
-      <Text variant="label" tone="muted" className="mt-8 text-center">
+      <Text
+        variant="label"
+        tone="muted"
+        className={compact ? 'mt-5 pb-2 text-center' : 'mt-8 text-center'}
+      >
         {REC_COPY.youreSet.footnote}
       </Text>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -285,7 +320,7 @@ export default function ForYouScreen() {
           </Text>
         </View>
       ) : result.youreSet ? (
-        <YoureSet />
+        <YoureSet compact={compactHub} />
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}

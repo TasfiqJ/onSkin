@@ -72,6 +72,25 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('lineHeight: compact ? 13 : 15');
   });
 
+  it("keeps the you're-set state scrollable on compact phones", () => {
+    const source = readAppRoute('recommendations/index.tsx');
+
+    expect(source).toContain('function YoureSet({ compact = false }: { compact?: boolean })');
+    expect(source).toContain('className="flex-1"');
+    expect(source).toContain('showsVerticalScrollIndicator={false}');
+    expect(source).toContain("'items-center px-2 pb-28 pt-3'");
+    expect(source).toContain("'flex-grow items-center justify-center px-2 pb-10 pt-7'");
+    expect(source).toContain('width: compact ? 50 : 78');
+    expect(source).toContain('height: compact ? 50 : 78');
+    expect(source).toContain('fontSize: compact ? 23 : 30');
+    expect(source).toContain("'text-center text-[27px] leading-[30px]'");
+    expect(source).toContain("variant={compact ? 'bodySm' : 'body'}");
+    expect(source).toContain('style={{ lineHeight: compact ? 20 : 23 }}');
+    expect(source).toContain('<YoureSet compact={compactHub} />');
+    expect(source).not.toContain('<View className="flex-1 items-center justify-center px-2">');
+    expect(source).not.toContain('<YoureSet />');
+  });
+
   it('keeps recommendation preferences fail-closed on local save failure', () => {
     const source = readAppRoute('recommendations/preferences.tsx');
 
