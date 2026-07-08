@@ -89,9 +89,16 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("color: 'rgba(244,239,231,0.88)'");
     expect(source).toContain('height: compact ? 52 : 56');
     expect(source).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE');
+    expect(source).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION');
     expect(source).toContain('PhotoCaptureFailureGate');
     expect(source).toContain('setPhotoCaptureFailed(true)');
+    expect(source).toContain('setSettingsOpenFailed(true)');
+    expect(source).toContain('CAMERA_FAILURE_COPY.progressSettingsTitle');
+    expect(source).toContain('CAMERA_FAILURE_COPY.progressSettingsBody');
+    expect(source).toContain('alertOnFailure: false');
+    expect(source).toContain('{canAttemptCapture ? (');
     expect(source).toContain('Try photo again');
+    expect(source).toContain('Open settings');
     expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(source).not.toContain('backgroundColor="rgba(10,8,6,0.92)"');
     expect(source).not.toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)'");

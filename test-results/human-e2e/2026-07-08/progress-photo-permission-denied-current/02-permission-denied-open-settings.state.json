@@ -1,0 +1,75 @@
+{
+  "controls": [
+    {
+      "ariaLabel": "Close",
+      "disabled": false,
+      "rect": {
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 16
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "x",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "height": 56,
+        "width": 264,
+        "x": 28,
+        "y": 311
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Open settings",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "height": 48,
+        "width": 264,
+        "x": 28,
+        "y": 375
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Not now",
+      "visible": true
+    }
+  ],
+  "documentSize": {
+    "clientHeight": 569,
+    "clientWidth": 320,
+    "scrollHeight": 569,
+    "scrollTop": 0,
+    "scrollWidth": 320
+  },
+  "forbiddenTextPresence": {
+    "E2E_APP_SETTINGS_FAILURE": false,
+    "E2E_PROGRESS_CAMERA_PERMISSION": false
+  },
+  "href": "http://localhost:8146/progress/capture?e2e=progress-permission-denied",
+  "overflowX": false,
+  "requiredTextPresence": {
+    "Camera access is needed for progress photos.": true,
+    "Camera settings unavailable": false,
+    "Not now": true,
+    "Open Settings manually to enable camera access. Your timeline is unchanged.": false,
+    "Open settings": true,
+    "Take photos. On device only": false,
+    "Your photos stay on this phone.": false
+  },
+  "title": "",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": "x Front · weekly align to the ghost of last week preview quality estimate Center your face in the guide Camera access is needed for progress photos. The photo is captured on this device and saved into encrypted app-private storage. Open settings Not now",
+  "urlFromTab": "http://localhost:8146/progress/capture?e2e=progress-permission-denied"
+}

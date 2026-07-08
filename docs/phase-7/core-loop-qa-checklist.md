@@ -182,6 +182,22 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   it does not replace native iOS/Android system-alert, camera-permission,
   restart-persistence, safe-area, or real camera-start QA.
 - 2026-07-08: Codex in-app browser Expo web E2E at 320 x 568 covers
+  `/progress/capture` camera/photo permission denied recovery with
+  `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`,
+  `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. The route starts on the local-only
+  photo consent gate, consent reaches a denied/no-retry permission gate with one
+  `Open settings` action, no `Capture photo` control, and no JavaScript dialog.
+  The forced Settings handoff failure renders route-owned
+  `Camera settings unavailable` copy with `role="alert"`, no native/browser
+  dialog, no raw fixture text, no horizontal overflow, and 48 px+ visible
+  controls; `Not now` returns to `/progress`. Evidence and the bug report are in
+  `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-progress-photo-permission-settings-inline-recovery.md`;
+  this does not replace native iOS/Android OS permission-sheet, real Settings
+  handoff, physical camera, or home-indicator QA.
+- 2026-07-08: Codex in-app browser Expo web E2E at 320 x 568 covers
   `/progress/capture` still-photo rejection with
   `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and
   `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. The capture surface exposes one

@@ -1,0 +1,53 @@
+{
+  "href": "http://localhost:8146/progress/capture?e2e=progress-permission-denied",
+  "overflowX": false,
+  "dialogAfterOpenSettings": null,
+  "openSettingsCount": 1,
+  "notNowCount": 1,
+  "captureCountBeforeSettings": 0,
+  "captureCountAfterSettings": 0,
+  "rawFixtureVisible": false,
+  "requiredTextPresence": {
+    "Camera access is needed for progress photos.": true,
+    "Camera settings unavailable": true,
+    "Not now": true,
+    "Open Settings manually to enable camera access. Your timeline is unchanged.": true,
+    "Open settings": true,
+    "Take photos. On device only": false,
+    "Your photos stay on this phone.": false
+  },
+  "visibleControlAudit": [
+    {
+      "text": "x",
+      "ariaLabel": "Close",
+      "role": "button",
+      "width": 48,
+      "height": 48,
+      "ok44": true
+    },
+    {
+      "text": "Camera settings unavailableOpen Settings manually to enable camera access. Your timeline is unchanged.",
+      "ariaLabel": null,
+      "role": "alert",
+      "width": 264,
+      "height": 102,
+      "ok44": true
+    },
+    {
+      "text": "Open settings",
+      "ariaLabel": null,
+      "role": "button",
+      "width": 264,
+      "height": 56,
+      "ok44": true
+    },
+    {
+      "text": "Not now",
+      "ariaLabel": null,
+      "role": "button",
+      "width": 264,
+      "height": 48,
+      "ok44": true
+    }
+  ]
+}

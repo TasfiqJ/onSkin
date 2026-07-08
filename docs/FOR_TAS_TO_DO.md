@@ -140,7 +140,10 @@ Status: needs-device-verification
   recovery overlays on physical iOS and Android devices with real safe-area
   insets: notch/status bar, home indicator/gesture nav, and short-screen
   layouts must keep the primary action and `Not now` exit fully visible and
-  tappable.
+  tappable. Expo web fixtures now cover denied/no-retry camera permission plus
+  failed Settings handoff inline recovery; physical iOS/Android must still prove
+  the real OS permission sheet, real `Linking.openSettings()` handoff, and
+  Settings failure behavior.
 - Verify real Progress still-photo capture rejection on physical iOS and
   Android: `takePictureAsync` failure must show inline `Photo wasn't captured`
   recovery, leave the timeline unchanged, keep retry/exit actions tappable, and

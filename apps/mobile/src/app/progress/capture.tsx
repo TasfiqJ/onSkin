@@ -41,6 +41,13 @@ function devProgressCaptureFailureMode(): 'once' | null {
   return process.env.EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE === 'once' ? 'once' : null;
 }
 
+function devProgressCameraPermissionMode(): 'denied_no_retry' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION === 'denied_no_retry'
+    ? 'denied_no_retry'
+    : null;
+}
+
 function CaptureOverlay({
   backgroundColor = 'rgba(10,8,6,0.9)',
   compact = false,
@@ -384,11 +391,15 @@ function PhotoCaptureFailureGate({
 
 function PermissionGate({
   canAskAgain,
+  settingsOpenFailed,
   onAsk,
+  onOpenSettings,
   onCancel,
 }: {
   canAskAgain: boolean;
+  settingsOpenFailed: boolean;
   onAsk: () => void;
+  onOpenSettings: () => void;
   onCancel: () => void;
 }) {
   return (
@@ -415,9 +426,44 @@ function PermissionGate({
       >
         The photo is captured on this device and saved into encrypted app-private storage.
       </Text>
+      {settingsOpenFailed ? (
+        <View
+          accessibilityRole="alert"
+          style={{
+            borderRadius: 14,
+            backgroundColor: 'rgba(217,161,131,0.13)',
+            borderWidth: 1,
+            borderColor: 'rgba(217,161,131,0.36)',
+            paddingHorizontal: 14,
+            paddingVertical: 10,
+            marginBottom: 14,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontSize: 13.5,
+              color: '#F4EFE7',
+              marginBottom: 2,
+            }}
+          >
+            {CAMERA_FAILURE_COPY.progressSettingsTitle}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 13,
+              color: 'rgba(244,239,231,0.86)',
+              lineHeight: 18,
+            }}
+          >
+            {CAMERA_FAILURE_COPY.progressSettingsBody}
+          </Text>
+        </View>
+      ) : null}
       <Pressable
         accessibilityRole="button"
-        onPress={canAskAgain ? onAsk : () => void openAppSettings()}
+        onPress={canAskAgain ? onAsk : onOpenSettings}
         style={{
           height: 56,
           borderRadius: 999,
@@ -465,6 +511,7 @@ function CaptureScreenContent() {
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [photoCaptureFailed, setPhotoCaptureFailed] = useState(false);
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [grantingConsent, setGrantingConsent] = useState(false);
   const [consentSaveFailed, setConsentSaveFailed] = useState(false);
@@ -473,6 +520,7 @@ function CaptureScreenContent() {
   const [simulateProgressCaptureFailureOnce, setSimulateProgressCaptureFailureOnce] = useState(
     () => devProgressCaptureFailureMode() === 'once',
   );
+  const progressCameraPermissionMode = devProgressCameraPermissionMode();
   const { data } = usePhotos('front');
 
   useEffect(() => {
@@ -486,6 +534,8 @@ function CaptureScreenContent() {
     Boolean(permission?.granted) &&
     !cameraUnavailable;
   const canAttemptCapture = canShowCamera || simulateProgressCaptureFailureOnce;
+  const canAskCameraPermission =
+    progressCameraPermissionMode === 'denied_no_retry' ? false : (permission?.canAskAgain ?? true);
   const captureReady =
     (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
   const { signals, ready } = useGuidedCaptureSignals(cameraReady && canShowCamera);
@@ -537,6 +587,16 @@ function CaptureScreenContent() {
       setCapturing(false);
       setPhotoCaptureFailed(true);
     }
+  }
+
+  async function openCameraSettings() {
+    setSettingsOpenFailed(false);
+    const opened = await openAppSettings({
+      failureTitle: CAMERA_FAILURE_COPY.progressSettingsTitle,
+      failureMessage: CAMERA_FAILURE_COPY.progressSettingsBody,
+      alertOnFailure: false,
+    });
+    if (!opened) setSettingsOpenFailed(true);
   }
 
   async function grantCaptureConsent() {
@@ -741,111 +801,113 @@ function CaptureScreenContent() {
         </View>
       </View>
 
-      <View
-        style={{
-          backgroundColor: 'rgba(22,19,15,0.9)',
-          borderTopLeftRadius: 28,
-          borderTopRightRadius: 28,
-          paddingHorizontal: 26,
-          paddingTop: 20,
-          paddingBottom: insets.bottom + 24,
-        }}
-      >
-        <View className="mb-5 flex-row items-center" style={{ gap: 14 }}>
-          <Text
-            style={{
-              width: 58,
-              fontFamily: 'HankenGrotesk_600SemiBold',
-              fontSize: 12.5,
-              color: 'rgba(244,239,231,0.6)',
-            }}
-          >
-            {PHOTO_COPY.capture.lightingLabel}
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              height: 5,
-              borderRadius: 3,
-              backgroundColor: 'rgba(244,239,231,0.14)',
-              overflow: 'hidden',
-            }}
-          >
-            <View
+      {canAttemptCapture ? (
+        <View
+          style={{
+            backgroundColor: 'rgba(22,19,15,0.9)',
+            borderTopLeftRadius: 28,
+            borderTopRightRadius: 28,
+            paddingHorizontal: 26,
+            paddingTop: 20,
+            paddingBottom: insets.bottom + 24,
+          }}
+        >
+          <View className="mb-5 flex-row items-center" style={{ gap: 14 }}>
+            <Text
               style={{
-                width: `${Math.round(light.fill * 100)}%`,
-                height: '100%',
-                backgroundColor: READY,
-                borderRadius: 3,
-              }}
-            />
-          </View>
-          <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>
-            {light.label}
-          </Text>
-        </View>
-        <View className="flex-row items-center justify-between">
-          <View
-            style={{
-              width: 46,
-              height: 46,
-              borderRadius: 13,
-              backgroundColor: 'rgba(244,239,231,0.1)',
-            }}
-          />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Capture photo"
-            disabled={!captureReady || capturing}
-            onPress={() => void capture()}
-            style={{
-              width: 78,
-              height: 78,
-              borderRadius: 39,
-              borderWidth: 4,
-              borderColor: READY,
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: captureReady && !capturing ? 1 : 0.55,
-            }}
-          >
-            <View
-              style={{
-                width: 62,
-                height: 62,
-                borderRadius: 31,
-                backgroundColor: READY,
-                alignItems: 'center',
-                justifyContent: 'center',
+                width: 58,
+                fontFamily: 'HankenGrotesk_600SemiBold',
+                fontSize: 12.5,
+                color: 'rgba(244,239,231,0.6)',
               }}
             >
-              <Text
+              {PHOTO_COPY.capture.lightingLabel}
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                height: 5,
+                borderRadius: 3,
+                backgroundColor: 'rgba(244,239,231,0.14)',
+                overflow: 'hidden',
+              }}
+            >
+              <View
                 style={{
-                  fontFamily: 'HankenGrotesk_700Bold',
-                  fontSize: 11,
-                  color: BG,
-                  textAlign: 'center',
-                  lineHeight: 13,
+                  width: `${Math.round(light.fill * 100)}%`,
+                  height: '100%',
+                  backgroundColor: READY,
+                  borderRadius: 3,
+                }}
+              />
+            </View>
+            <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>
+              {light.label}
+            </Text>
+          </View>
+          <View className="flex-row items-center justify-between">
+            <View
+              style={{
+                width: 46,
+                height: 46,
+                borderRadius: 13,
+                backgroundColor: 'rgba(244,239,231,0.1)',
+              }}
+            />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Capture photo"
+              disabled={!captureReady || capturing}
+              onPress={() => void capture()}
+              style={{
+                width: 78,
+                height: 78,
+                borderRadius: 39,
+                borderWidth: 4,
+                borderColor: READY,
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: captureReady && !capturing ? 1 : 0.55,
+              }}
+            >
+              <View
+                style={{
+                  width: 62,
+                  height: 62,
+                  borderRadius: 31,
+                  backgroundColor: READY,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                {capturing ? 'Saving' : PHOTO_COPY.capture.autoReady}
-              </Text>
-            </View>
-          </Pressable>
-          <Text
-            style={{
-              width: 104,
-              textAlign: 'right',
-              fontFamily: 'IBMPlexMono_400Regular',
-              fontSize: 10,
-              lineHeight: 15,
-              color: 'rgba(244,239,231,0.42)',
-            }}
-          >
-            {PHOTO_COPY.capture.onDevice}
-          </Text>
+                <Text
+                  style={{
+                    fontFamily: 'HankenGrotesk_700Bold',
+                    fontSize: 11,
+                    color: BG,
+                    textAlign: 'center',
+                    lineHeight: 13,
+                  }}
+                >
+                  {capturing ? 'Saving' : PHOTO_COPY.capture.autoReady}
+                </Text>
+              </View>
+            </Pressable>
+            <Text
+              style={{
+                width: 104,
+                textAlign: 'right',
+                fontFamily: 'IBMPlexMono_400Regular',
+                fontSize: 10,
+                lineHeight: 15,
+                color: 'rgba(244,239,231,0.42)',
+              }}
+            >
+              {PHOTO_COPY.capture.onDevice}
+            </Text>
+          </View>
         </View>
-      </View>
+      ) : null}
 
       {photoCaptureFailed ? (
         <PhotoCaptureFailureGate
@@ -864,8 +926,13 @@ function CaptureScreenContent() {
         />
       ) : !canAttemptCapture ? (
         <PermissionGate
-          canAskAgain={permission?.canAskAgain ?? true}
-          onAsk={() => void requestPermission()}
+          canAskAgain={canAskCameraPermission}
+          settingsOpenFailed={settingsOpenFailed}
+          onAsk={() => {
+            setSettingsOpenFailed(false);
+            void requestPermission();
+          }}
+          onOpenSettings={() => void openCameraSettings()}
           onCancel={closeToProgress}
         />
       ) : null}

@@ -1,0 +1,103 @@
+{
+  "controls": [
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "height": 56,
+        "width": 272,
+        "x": 24,
+        "y": 400
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Take my first photo",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Today tab",
+      "disabled": false,
+      "rect": {
+        "height": 54,
+        "width": 76,
+        "x": 9,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "Today",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "disabled": false,
+      "rect": {
+        "height": 54,
+        "width": 76,
+        "x": 85,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "Progress",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "disabled": false,
+      "rect": {
+        "height": 54,
+        "width": 76,
+        "x": 160,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "Shelf",
+      "visible": true
+    },
+    {
+      "ariaLabel": "You tab",
+      "disabled": false,
+      "rect": {
+        "height": 54,
+        "width": 76,
+        "x": 236,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "You",
+      "visible": true
+    }
+  ],
+  "documentSize": {
+    "clientHeight": 569,
+    "clientWidth": 320,
+    "scrollHeight": 569,
+    "scrollTop": 0,
+    "scrollWidth": 320
+  },
+  "forbiddenTextPresence": {
+    "E2E_APP_SETTINGS_FAILURE": false,
+    "E2E_PROGRESS_CAMERA_PERMISSION": false
+  },
+  "href": "http://localhost:8146/progress",
+  "overflowX": false,
+  "requiredTextPresence": {
+    "Camera access is needed for progress photos.": false,
+    "Camera settings unavailable": false,
+    "Not now": false,
+    "Open Settings manually to enable camera access. Your timeline is unchanged.": false,
+    "Open settings": false,
+    "Take photos. On device only": false,
+    "Your photos stay on this phone.": false
+  },
+  "title": "",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. Take my first photo Today Progress Shelf You",
+  "urlFromTab": "http://localhost:8146/progress"
+}

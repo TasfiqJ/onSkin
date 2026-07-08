@@ -523,6 +523,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Deny camera or photo permission.
   - Expected result: User sees a clear recovery path and no broken UI, including a visible alert if the OS Settings handoff fails.
   - Evidence: Screenshot, alert text, and permission state.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`, `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies `/progress/capture` starts on the local-only consent gate, consent reaches the denied/no-retry permission gate with one `Open settings` action, no `Capture photo` control, and no JavaScript dialog, failed Settings handoff renders inline `Camera settings unavailable` alert copy with no dialog or raw fixture text, visible alert/actions are 48 px+ with zero horizontal overflow, and `Not now` returns to `/progress`. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`.
 - Branch: first-use photo consent save failure
   - Priority: Critical
   - Automate later: Yes

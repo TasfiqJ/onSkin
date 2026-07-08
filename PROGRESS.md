@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Progress camera/photo permission-denied recovery. The shared
+  `openAppSettings` helper can now return failure without owning a native alert,
+  letting `/progress/capture` render route-owned `Camera settings unavailable`
+  feedback when the OS Settings handoff fails. The denied/no-retry gate no
+  longer exposes background capture chrome behind the recovery overlay. In-app
+  browser Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_E2E_PROGRESS_CAMERA_PERMISSION=denied_no_retry`,
+  `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies consent into the permission
+  gate, one `Open settings` action, no `Capture photo` control, no dialog,
+  inline alert copy, no raw fixture text, 48 px+ visible controls, zero
+  horizontal overflow, and `Not now` returning to `/progress`. Evidence and bug
+  report:
+  `test-results/human-e2e/2026-07-08/progress-photo-permission-denied-current/`,
+  `docs/e2e-bug-reports/2026-07-08-progress-photo-permission-settings-inline-recovery.md`.
+
 - Hardened Progress still-photo capture failure recovery. `/progress/capture`
   now converts `takePictureAsync` rejection into route-owned `Photo wasn't
   captured` recovery instead of a platform alert, with a foreground retry, a

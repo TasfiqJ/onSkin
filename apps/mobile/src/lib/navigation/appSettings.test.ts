@@ -22,6 +22,7 @@ describe('app settings opener', () => {
   beforeEach(() => {
     mocks.alerts = [];
     mocks.openSettings.mockReset();
+    delete process.env.EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE;
   });
 
   it('opens the native settings surface', async () => {
@@ -58,5 +59,32 @@ describe('app settings opener', () => {
       'Camera settings unavailable',
       'Open Settings manually to enable camera access.',
     ]);
+  });
+
+  it('can return failure without a native alert for route-owned recovery', async () => {
+    const globalWithDev = globalThis as typeof globalThis & { __DEV__?: boolean };
+    const previousDev = globalWithDev.__DEV__;
+    globalWithDev.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE = '1';
+
+    try {
+      await expect(
+        openAppSettings({
+          failureTitle: 'Camera settings unavailable',
+          failureMessage: 'Open Settings manually to enable camera access.',
+          alertOnFailure: false,
+        }),
+      ).resolves.toBe(false);
+    } finally {
+      if (previousDev === undefined) {
+        delete globalWithDev.__DEV__;
+      } else {
+        globalWithDev.__DEV__ = previousDev;
+      }
+      delete process.env.EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE;
+    }
+
+    expect(mocks.openSettings).not.toHaveBeenCalled();
+    expect(mocks.alerts).toEqual([]);
   });
 });
