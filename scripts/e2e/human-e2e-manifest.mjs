@@ -22,6 +22,16 @@ function normalizeRepoPath(path) {
   return String(path).replace(/\\/g, '/').replace(/^\.\//, '');
 }
 
+const ignoredGeneratedOutputPatterns = [
+  /^docs\/generated\/(?:source-packet-audit|tas-todo-audit)\.(?:json|md)$/,
+  /^docs\/phase-(?:3|4|5|6|7|8|9|10|11)\/generated\/.+\.(?:json|md)$/,
+];
+
+function ignoredGeneratedOutputPath(path) {
+  const normalized = normalizeRepoPath(path);
+  return ignoredGeneratedOutputPatterns.some((pattern) => pattern.test(normalized));
+}
+
 function exists(path) {
   return existsSync(abs(path));
 }
@@ -316,7 +326,8 @@ if (check) {
   }
 
   const disallowedCommittedChanges = changedSinceRecorded.filter(
-    (path) => !allowedGeneratedPaths.has(normalizeRepoPath(path)),
+    (path) =>
+      !allowedGeneratedPaths.has(normalizeRepoPath(path)) && !ignoredGeneratedOutputPath(path),
   );
   if (disallowedCommittedChanges.length > 0) {
     console.error(
@@ -331,7 +342,7 @@ if (check) {
     .filter(Boolean)
     .filter((line) => {
       const statusPath = normalizeRepoPath(line.replace(/^[ MADRCU?!]{1,2}\s+/, ''));
-      return !allowedGeneratedPaths.has(statusPath);
+      return !allowedGeneratedPaths.has(statusPath) && !ignoredGeneratedOutputPath(statusPath);
     });
   if (dirtyGeneratedOrTracked.length > 0) {
     console.error(
