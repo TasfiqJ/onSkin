@@ -161,7 +161,10 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('e2e-front-2026-05-12');
     expect(source).toContain('e2e-front-2026-06-24');
     expect(source).toContain('const photos = e2eProgressPhotoFixture() ?? (await loadPhotos());');
-    expect(entitlement).toContain("process.env.EXPO_PUBLIC_E2E_ENTITLEMENT !== 'pro'");
+    expect(entitlement).toContain("fixture !== 'pro' && fixture !== 'store_pro'");
+    expect(entitlement).toContain("if (fixture === 'store_pro')");
+    expect(entitlement).toContain("store: 'app_store'");
+    expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
     expect(entitlement).toContain('function e2eEntitlementState(): SubscriptionState | null');
   });
 

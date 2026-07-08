@@ -137,6 +137,12 @@ Status: needs-device-verification
   cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets
   must keep visible exits/choices tappable and must not expose tiny hidden
   backdrop strips to VoiceOver/TalkBack or keyboard focus.
+- Verify paywall and subscription-settings policy, Restore, and OS billing
+  management handoff branches on physical iOS and Android builds with real
+  RevenueCat sandbox configuration: Terms/Privacy failures, Restore empty/active
+  states, StoreKit/Play manage-subscription sheet success, and manage-link
+  fallback failure must all keep visible recovery copy and tappable 44 pt+
+  controls.
 - Verify the custom Settings reminder time-picker sheet on physical iOS and
   Android devices with real safe-area insets and screen readers: AM/PM and quiet
   hours pickers must keep the outside dismiss target, 48 px time rows, bottom

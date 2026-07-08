@@ -286,10 +286,21 @@ describe('Settings route contracts', () => {
   it('keeps free subscription settings compliant with restore and policy access', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
+    expect(source).toContain("import { useState } from 'react';");
+    expect(source).toContain('const [subscriptionFeedback, setSubscriptionFeedback] = useState<');
+    expect(source).toContain('const POLICY_LINK_UNAVAILABLE_MESSAGE =');
+    expect(source).toContain('const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE =');
+    expect(source).toContain('const RESTORE_UNAVAILABLE_MESSAGE =');
+    expect(source).toContain('const opened = await openExternalHttpsUrl(url, {');
+    expect(source).toContain('if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);');
+    expect(source).toContain('async function onPolicy(url: string)');
+    expect(source).toContain('if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);');
+    expect(source).toContain('const feedbackLabel = subscriptionFeedback ? (');
+    expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('<Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />');
-    expect(source).toContain('<Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />');
+    expect(source).toContain('<Row label="Terms" onPress={() => void onPolicy(TERMS_URL)} />');
     expect(source).toContain(
-      '<Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />',
+      '<Row label="Privacy" last onPress={() => void onPolicy(PRIVACY_URL)} />',
     );
     expect(source).not.toContain(
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',

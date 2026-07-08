@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
@@ -16,8 +17,17 @@ import { useEntitlementActions } from './useEntitlement';
 export const TERMS_URL = POLICY_LINKS.terms.url;
 export const PRIVACY_URL = POLICY_LINKS.privacy.url;
 
-export function openPolicy(url: string) {
-  void openExternalHttpsUrl(url, {
+const POLICY_LINK_UNAVAILABLE_MESSAGE =
+  'Link unavailable. We could not open this policy link. Please try again.';
+
+function restoreFeedbackMessage(active: boolean): string {
+  return active
+    ? 'Your active subscription is restored on this device.'
+    : 'No active subscription was found for this account.';
+}
+
+export function openPolicy(url: string): Promise<boolean> {
+  return openExternalHttpsUrl(url, {
     invalidTitle: 'Link not configured',
     invalidMessage: 'This policy URL must be configured before launch.',
     failureTitle: 'Link unavailable',
@@ -29,18 +39,27 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   const { restore } = useEntitlementActions();
   const color = tone === 'dark' ? 'rgba(244,239,231,0.7)' : colors.muted;
   const sep = tone === 'dark' ? 'rgba(244,239,231,0.3)' : colors.greigeDeep;
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  async function onPolicy(url: string) {
+    setFeedback(null);
+    const opened = await openPolicy(url);
+    if (!opened) setFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);
+  }
 
   function onRestore() {
+    setFeedback(null);
     restore.mutate(undefined, {
-      onSuccess: (result) =>
-        Alert.alert(
-          'Restore purchases',
-          result.active
-            ? 'Your active subscription is restored on this device.'
-            : 'No active subscription was found for this account.',
-        ),
-      onError: () =>
-        Alert.alert('Restore purchases', 'We could not restore purchases. Please try again.'),
+      onSuccess: (result) => {
+        const message = restoreFeedbackMessage(result.active);
+        setFeedback(message);
+        Alert.alert('Restore purchases', message);
+      },
+      onError: () => {
+        const message = 'We could not restore purchases. Please try again.';
+        setFeedback(message);
+        Alert.alert('Restore purchases', message);
+      },
     });
   }
 
@@ -51,33 +70,45 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   );
 
   return (
-    <View className="min-h-[48px] flex-row items-center justify-center gap-2.5">
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => openPolicy(TERMS_URL)}
-        className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
-        style={{ minHeight: 48, minWidth: 48 }}
-      >
-        {label('Terms')}
-      </Pressable>
-      <Text style={{ color: sep }}>·</Text>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => openPolicy(PRIVACY_URL)}
-        className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
-        style={{ minHeight: 48, minWidth: 48 }}
-      >
-        {label('Privacy')}
-      </Pressable>
-      <Text style={{ color: sep }}>·</Text>
-      <Pressable
-        accessibilityRole="button"
-        onPress={onRestore}
-        className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
-        style={{ minHeight: 48, minWidth: 48 }}
-      >
-        {label('Restore')}
-      </Pressable>
+    <View className="items-center">
+      <View className="min-h-[48px] flex-row items-center justify-center gap-2.5">
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void onPolicy(TERMS_URL)}
+          className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+          style={{ minHeight: 48, minWidth: 48 }}
+        >
+          {label('Terms')}
+        </Pressable>
+        <Text style={{ color: sep }}>·</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void onPolicy(PRIVACY_URL)}
+          className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+          style={{ minHeight: 48, minWidth: 48 }}
+        >
+          {label('Privacy')}
+        </Pressable>
+        <Text style={{ color: sep }}>·</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onRestore}
+          className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+          style={{ minHeight: 48, minWidth: 48 }}
+        >
+          {label('Restore')}
+        </Pressable>
+      </View>
+      {feedback ? (
+        <Text
+          accessibilityRole="alert"
+          variant="bodySm"
+          className="px-4 pb-2 text-center"
+          style={{ color, fontSize: 12, lineHeight: 16 }}
+        >
+          {feedback}
+        </Text>
+      ) : null}
     </View>
   );
 }

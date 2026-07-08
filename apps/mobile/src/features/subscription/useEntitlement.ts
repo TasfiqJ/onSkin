@@ -37,10 +37,35 @@ function activeResult(
 }
 
 function e2eEntitlementState(): SubscriptionState | null {
-  if (process.env.EXPO_PUBLIC_E2E_ENTITLEMENT !== 'pro') return null;
+  const fixture = process.env.EXPO_PUBLIC_E2E_ENTITLEMENT;
+  if (fixture !== 'pro' && fixture !== 'store_pro') return null;
 
   const now = new Date();
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  if (fixture === 'store_pro') {
+    return deriveState(
+      {
+        tier: 'pro',
+        isActive: true,
+        periodType: 'normal',
+        store: 'app_store',
+        productId: 'routinekind_pro_annual_dev',
+        expiresAt,
+        willRenew: true,
+        grantedAt: now.toISOString(),
+        source: 'revenuecat',
+        environment: 'sandbox',
+        managementUrl: 'https://apps.apple.com/account/subscriptions',
+        verifiedAt: now.toISOString(),
+        offeringId: 'local_store_fixture',
+        packageId: 'annual',
+        storeUserId: 'e2e-store-user',
+        priceLabel: '$49.99/year',
+      },
+      now.toISOString(),
+    );
+  }
+
   return deriveState(
     {
       tier: 'pro',

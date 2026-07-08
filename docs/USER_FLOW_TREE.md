@@ -684,8 +684,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Tap Terms, Privacy, Restore, and Manage subscription while the OS/browser cannot open external URLs.
-  - Expected result: Policy and billing links show a clear unavailable alert instead of silently doing nothing; Restore still reports success/failure through the purchase state.
-  - Evidence: Alert text and visible route snapshot.
+  - Expected result: Policy and billing links show clear unavailable feedback instead of silently doing nothing; Restore still reports success/failure through the purchase state and leaves visible status on the current surface.
+  - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser,linking` verifies direct `/paywall/upsell?feature=full_routine` renders row-local `Link unavailable` after Terms/Privacy failure and `No active subscription was found for this account.` after Restore. The Start free trial control is 264 x 54, Terms/Privacy/Restore controls are 48 px+ tall, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/`. Native RevenueCat restore and OS billing-management handoff remain Phase 5/6 device QA.
 - Branch: Pro entitlement state
   - Priority: Critical
   - Automate later: Yes
@@ -1001,6 +1002,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The screen shows the reverse-trial/free-until state, a no-card status label, and a keep-Pro options row that opens the Pro keep-options paywall. It must not open App Store or Google Play subscription management, must not imply there is a card on file, and must not show expired-trial copy while the reverse trial is still active. On compact phones, the annual price and store-unavailable reason must appear before the keep-Pro CTA, and Terms, Privacy, and Restore must remain reachable without clipped controls.
   - Evidence: Screenshot sequence, visible route snapshot, and local entitlement fixture snapshot.
   - Current local evidence: 2026-07-07 Expo web at 320 x 568 reproduced the compact keep-options bug where the CTA appeared before the annual price/store-unavailable reason, then verified the fix through `/settings/subscription` -> `Keep Pro after your week` -> `/paywall/reoffer` at 320 x 568 and 390 x 568. Post-fix state has active no-card copy, no expired-trial copy, annual price and preview-checkout reason before the CTA, zero horizontal overflow, no sub-44 px visible controls, no clipped controls, and scroll-reachable 48 px Terms/Privacy/Restore above the fixed footer. Evidence is in `test-results/human-e2e/2026-07-07/reverse-trial-keep-options-current/`.
+- Branch: subscription billing and policy handoff failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Seed a store-backed Pro entitlement, open `/settings/subscription`, then tap Manage in App Store, Restore purchases, Terms, and Privacy while external handoffs fail.
+  - Expected result: The screen keeps the user in Subscription Settings, exposes visible row-local feedback for billing-management and policy-link failure, Restore reports an empty/success/failure state, and all rows remain at least 44 px tall on compact phones.
+  - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser,linking` verifies `/settings/subscription` shows `RoutineKind Pro`, `Manage in App Store`, Restore, Terms, and Privacy. Manage failure renders `We could not open subscription management...`, Terms/Privacy failure renders `Link unavailable`, Restore renders `No active subscription was found for this account.`, controls are 52-53 px tall, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/`. Native iOS/Android RevenueCat restore and store-management sheet evidence remain Phase 5/6 QA.
 - Branch: policy link handoff failure
   - Priority: Important
   - Automate later: Yes

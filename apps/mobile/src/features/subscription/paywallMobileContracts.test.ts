@@ -204,6 +204,25 @@ describe('paywall mobile contracts', () => {
     expect(source).not.toContain('hitSlop={8}');
   });
 
+  it('keeps paywall compliance handoff and restore feedback visible', () => {
+    const source = readSource('features/subscription/ComplianceRow.tsx');
+    const entitlement = readSource('features/subscription/useEntitlement.ts');
+
+    expect(source).toContain('const [feedback, setFeedback] = useState<string | null>(null);');
+    expect(source).toContain('export function openPolicy(url: string): Promise<boolean>');
+    expect(source).toContain('const opened = await openPolicy(url);');
+    expect(source).toContain('if (!opened) setFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);');
+    expect(source).toContain('onPress={() => void onPolicy(TERMS_URL)}');
+    expect(source).toContain('onPress={() => void onPolicy(PRIVACY_URL)}');
+    expect(source).toContain('function restoreFeedbackMessage(active: boolean): string');
+    expect(source).toContain('setFeedback(message);');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('className="px-4 pb-2 text-center"');
+    expect(entitlement).toContain("fixture !== 'pro' && fixture !== 'store_pro'");
+    expect(entitlement).toContain("periodType: 'normal'");
+    expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
+  });
+
   it('keeps purchase-capable lifecycle paywalls compliant with Terms, Privacy, and Restore', () => {
     for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx']) {
       const source = readAppRoute(route);

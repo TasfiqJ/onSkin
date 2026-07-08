@@ -93,7 +93,7 @@ export default function HealthConsentScreen() {
       return;
     }
     setPolicyLinkMissing(false);
-    openPolicy(POLICY_LINKS.consumerHealthPrivacy.url);
+    void openPolicy(POLICY_LINKS.consumerHealthPrivacy.url);
   }
 
   return (

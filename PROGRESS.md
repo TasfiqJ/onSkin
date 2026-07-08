@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened paywall and subscription-management handoff failure recovery. The
+  shared paywall ComplianceRow now treats Terms/Privacy opens as awaitable
+  handoffs and renders inline `Link unavailable` feedback when the external
+  policy opener fails; Restore also leaves visible success/empty/failure status
+  in the paywall instead of relying only on a transient alert. Subscription
+  Settings now gives the same persistent feedback for Terms, Privacy, Restore,
+  and store-management deep-link failure, with a local store-backed entitlement
+  fixture for the manage-billing branch. System Chrome Expo web E2E at 320 x 568
+  with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser,linking` verifies
+  `/paywall/upsell?feature=full_routine` and `/settings/subscription` show
+  visible recovery copy, keep 48 px+ controls, and have zero horizontal
+  overflow. Evidence is in
+  `test-results/human-e2e/2026-07-08/paywall-subscription-link-failure/`, with
+  the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-paywall-subscription-link-failure.md`.
+
 - Hardened Settings policy/help link failure recovery. Human E2E with
   `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser` reproduced the
   `/settings/privacy` direct-entry branch at 320 x 568: the shared external

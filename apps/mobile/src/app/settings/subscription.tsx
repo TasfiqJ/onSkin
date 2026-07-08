@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,6 +20,12 @@ import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
+
+const POLICY_LINK_UNAVAILABLE_MESSAGE =
+  'Link unavailable. We could not open this policy link. Please try again.';
+const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE =
+  'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.';
+const RESTORE_UNAVAILABLE_MESSAGE = 'We could not restore purchases. Please try again.';
 
 // Manage subscription (design 06, docs/08 §3.4). Plan/state, renewal date, one-tap
 // OS cancel deep-link, Restore, Terms/Privacy. ARL-compliant: cancel as easy as
@@ -52,9 +59,11 @@ export default function SubscriptionScreen() {
   const { data } = useEntitlement();
   const { restore } = useEntitlementActions();
   const offering = useSubscriptionOffering();
+  const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const isPro = data?.isPro ?? false;
 
   async function openStore() {
+    setSubscriptionFeedback(null);
     track('manage_subscription_opened');
     const entitlementState = data;
     if (entitlementState && shouldTrackSubscriptionCancelIntent(entitlementState)) {
@@ -68,12 +77,13 @@ export default function SubscriptionScreen() {
     const fallbackUrl =
       Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS;
     const url = safeExternalHttpsUrl(data?.managementUrl) ?? fallbackUrl;
-    await openExternalHttpsUrl(url, {
+    const opened = await openExternalHttpsUrl(url, {
       mode: 'linking',
       failureTitle: 'Subscription link unavailable',
       failureMessage:
         'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.',
     });
+    if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);
   }
   function openReverseTrialOptions() {
     router.push('/paywall/reoffer');
@@ -82,17 +92,26 @@ export default function SubscriptionScreen() {
     router.push('/paywall/upsell?feature=full_routine');
   }
   function onRestore() {
+    setSubscriptionFeedback(null);
     restore.mutate(undefined, {
-      onSuccess: (result) =>
-        Alert.alert(
-          'Restore purchases',
-          result.active
-            ? 'Your active subscription is restored on this device.'
-            : 'No active subscription was found for this account.',
-        ),
-      onError: () =>
-        Alert.alert('Restore purchases', 'We could not restore purchases. Please try again.'),
+      onSuccess: (result) => {
+        const message = result.active
+          ? 'Your active subscription is restored on this device.'
+          : 'No active subscription was found for this account.';
+        setSubscriptionFeedback(message);
+        Alert.alert('Restore purchases', message);
+      },
+      onError: () => {
+        setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);
+        Alert.alert('Restore purchases', RESTORE_UNAVAILABLE_MESSAGE);
+      },
     });
+  }
+
+  async function onPolicy(url: string) {
+    setSubscriptionFeedback(null);
+    const opened = await openPolicy(url);
+    if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);
   }
 
   const periodLabel = data?.inReverseTrial
@@ -126,6 +145,11 @@ export default function SubscriptionScreen() {
     : data?.inTrial
       ? 'Store trial'
       : PAYWALL_COPY.manage.activeLabel;
+  const feedbackLabel = subscriptionFeedback ? (
+    <Text accessibilityRole="alert" variant="bodySm" tone="muted" className="pb-4 text-center">
+      {subscriptionFeedback}
+    </Text>
+  ) : null;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -192,8 +216,9 @@ export default function SubscriptionScreen() {
             <View className="mb-4 rounded-[18px] bg-paper-raised px-[18px]">
               <Row label={manageLabel} onPress={manageAction} />
               <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
-              <Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />
-              <Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />
+              <Row label="Terms" onPress={() => void onPolicy(TERMS_URL)} />
+              <Row label="Privacy" last onPress={() => void onPolicy(PRIVACY_URL)} />
+              {feedbackLabel}
             </View>
 
             <View
@@ -236,8 +261,9 @@ export default function SubscriptionScreen() {
             </View>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
               <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
-              <Row label="Terms" onPress={() => openPolicy(TERMS_URL)} />
-              <Row label="Privacy" last onPress={() => openPolicy(PRIVACY_URL)} />
+              <Row label="Terms" onPress={() => void onPolicy(TERMS_URL)} />
+              <Row label="Privacy" last onPress={() => void onPolicy(PRIVACY_URL)} />
+              {feedbackLabel}
             </View>
             {data?.expired ? (
               <Pressable
