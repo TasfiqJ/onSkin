@@ -1,18 +1,20 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { openAppSettings } from './appSettings';
 
+const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+
+function readSource(path: string): string {
+  return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
+}
+
 const mocks = vi.hoisted(() => ({
-  alerts: [] as unknown[][],
   openSettings: vi.fn(),
 }));
 
 vi.mock('react-native', () => ({
-  Alert: {
-    alert: (...args: unknown[]) => {
-      mocks.alerts.push(args);
-    },
-  },
   Linking: {
     openSettings: mocks.openSettings,
   },
@@ -20,7 +22,6 @@ vi.mock('react-native', () => ({
 
 describe('app settings opener', () => {
   beforeEach(() => {
-    mocks.alerts = [];
     mocks.openSettings.mockReset();
     delete process.env.EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE;
   });
@@ -31,21 +32,15 @@ describe('app settings opener', () => {
     await expect(openAppSettings()).resolves.toBe(true);
 
     expect(mocks.openSettings).toHaveBeenCalledTimes(1);
-    expect(mocks.alerts).toEqual([]);
   });
 
-  it('alerts when native settings cannot be opened', async () => {
+  it('returns false when native settings cannot be opened', async () => {
     mocks.openSettings.mockRejectedValueOnce(new Error('settings unavailable'));
 
     await expect(openAppSettings()).resolves.toBe(false);
-
-    expect(mocks.alerts[0]).toEqual([
-      'Settings unavailable',
-      "We couldn't open Settings. You can still use another path in the app.",
-    ]);
   });
 
-  it('supports route-specific failure copy', async () => {
+  it('accepts route-specific options while leaving recovery UI to the route', async () => {
     mocks.openSettings.mockRejectedValueOnce(new Error('settings unavailable'));
 
     await expect(
@@ -54,14 +49,9 @@ describe('app settings opener', () => {
         failureMessage: 'Open Settings manually to enable camera access.',
       }),
     ).resolves.toBe(false);
-
-    expect(mocks.alerts[0]).toEqual([
-      'Camera settings unavailable',
-      'Open Settings manually to enable camera access.',
-    ]);
   });
 
-  it('can return failure without a native alert for route-owned recovery', async () => {
+  it('supports the dev-only settings failure fixture for route-owned recovery', async () => {
     const globalWithDev = globalThis as typeof globalThis & { __DEV__?: boolean };
     const previousDev = globalWithDev.__DEV__;
     globalWithDev.__DEV__ = true;
@@ -85,6 +75,13 @@ describe('app settings opener', () => {
     }
 
     expect(mocks.openSettings).not.toHaveBeenCalled();
-    expect(mocks.alerts).toEqual([]);
+  });
+
+  it('keeps the settings helper UI-free so routes own recovery feedback', () => {
+    const source = readSource('lib/navigation/appSettings.ts');
+
+    expect(source).toContain('EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE');
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain("import { Alert");
   });
 });

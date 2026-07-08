@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Removed the last production native-alert calls from shared navigation helpers.
+  `openExternalHttpsUrl` and `openAppSettings` now stay UI-free and return
+  `false` for invalid links, browser/linking failures, settings failures, and
+  dev-only E2E fixtures, so policy, billing, retailer, camera-settings, and
+  permission-recovery screens must own inline feedback. Updated navigation and
+  paywall contracts to reject helper-level `Alert.alert` while preserving the
+  existing route option shape for call-site compatibility. Current route
+  surfaces already pass `alertOnFailure: false` and have local E2E evidence for
+  route-owned recovery; this slice removes the shared default that could
+  reintroduce platform chrome over polished launch flows.
+
 - Replaced Progress single-photo delete confirmation with route-owned inline UI.
   The detail route now owns delete confirmation and local-delete failure feedback,
   closes back to Progress only after successful removal, and uses a dev-only

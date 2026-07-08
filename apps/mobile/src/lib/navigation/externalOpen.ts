@@ -1,5 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
-import { Alert, Linking } from 'react-native';
+import { Linking } from 'react-native';
 
 import { safeExternalHttpsUrl } from './externalUrl';
 
@@ -13,11 +13,6 @@ export type ExternalOpenOptions = {
   failureTitle?: string;
   failureMessage?: string;
 };
-
-const DEFAULT_INVALID_TITLE = 'Link not configured';
-const DEFAULT_INVALID_MESSAGE = 'This link must be configured before launch.';
-const DEFAULT_FAILURE_TITLE = 'Link unavailable';
-const DEFAULT_FAILURE_MESSAGE = 'We could not open this link. Please try again.';
 
 function shouldForceExternalOpenFailure(mode: ExternalOpenMode): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
@@ -36,12 +31,6 @@ export async function openExternalHttpsUrl(
 ): Promise<boolean> {
   const safeUrl = safeExternalHttpsUrl(url);
   if (!safeUrl) {
-    if (options.alertOnFailure !== false) {
-      Alert.alert(
-        options.invalidTitle ?? DEFAULT_INVALID_TITLE,
-        options.invalidMessage ?? DEFAULT_INVALID_MESSAGE,
-      );
-    }
     return false;
   }
 
@@ -57,12 +46,6 @@ export async function openExternalHttpsUrl(
     }
     return true;
   } catch {
-    if (options.alertOnFailure !== false) {
-      Alert.alert(
-        options.failureTitle ?? DEFAULT_FAILURE_TITLE,
-        options.failureMessage ?? DEFAULT_FAILURE_MESSAGE,
-      );
-    }
     return false;
   }
 }

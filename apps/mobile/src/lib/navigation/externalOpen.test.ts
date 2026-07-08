@@ -11,7 +11,6 @@ function readSource(path: string): string {
 }
 
 const mocks = vi.hoisted(() => ({
-  alerts: [] as unknown[][],
   openBrowserAsync: vi.fn(),
   openURL: vi.fn(),
 }));
@@ -21,11 +20,6 @@ vi.mock('expo-web-browser', () => ({
 }));
 
 vi.mock('react-native', () => ({
-  Alert: {
-    alert: (...args: unknown[]) => {
-      mocks.alerts.push(args);
-    },
-  },
   Linking: {
     openURL: mocks.openURL,
   },
@@ -33,13 +27,12 @@ vi.mock('react-native', () => ({
 
 describe('external URL opener', () => {
   beforeEach(() => {
-    mocks.alerts = [];
     mocks.openBrowserAsync.mockReset();
     mocks.openURL.mockReset();
     delete process.env.EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE;
   });
 
-  it('rejects unsafe URLs before any external handoff', async () => {
+  it('returns false for unsafe URLs before any external handoff', async () => {
     await expect(
       openExternalHttpsUrl('http://example.com/policy', {
         invalidTitle: 'Link not configured',
@@ -49,10 +42,6 @@ describe('external URL opener', () => {
 
     expect(mocks.openBrowserAsync).not.toHaveBeenCalled();
     expect(mocks.openURL).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      'Link not configured',
-      'This policy URL must be configured before launch.',
-    ]);
   });
 
   it('opens sanitized HTTPS URLs in the in-app browser by default', async () => {
@@ -62,21 +51,15 @@ describe('external URL opener', () => {
 
     expect(mocks.openBrowserAsync).toHaveBeenCalledWith('https://example.com/privacy');
     expect(mocks.openURL).not.toHaveBeenCalled();
-    expect(mocks.alerts).toEqual([]);
   });
 
-  it('alerts when the in-app browser handoff fails', async () => {
+  it('returns false when the in-app browser handoff fails', async () => {
     mocks.openBrowserAsync.mockRejectedValueOnce(new Error('no browser'));
 
     await expect(openExternalHttpsUrl('https://example.com/privacy')).resolves.toBe(false);
-
-    expect(mocks.alerts[0]).toEqual([
-      'Link unavailable',
-      'We could not open this link. Please try again.',
-    ]);
   });
 
-  it('can suppress native alerts for route-owned recovery UI', async () => {
+  it('stays UI-free for route-owned recovery UI', async () => {
     mocks.openBrowserAsync.mockRejectedValueOnce(new Error('no browser'));
 
     await expect(
@@ -90,11 +73,9 @@ describe('external URL opener', () => {
         alertOnFailure: false,
       }),
     ).resolves.toBe(false);
-
-    expect(mocks.alerts).toEqual([]);
   });
 
-  it('alerts when a native Linking handoff fails', async () => {
+  it('returns false when a native Linking handoff fails', async () => {
     mocks.openURL.mockRejectedValueOnce(new Error('cannot open'));
 
     await expect(
@@ -107,10 +88,6 @@ describe('external URL opener', () => {
 
     expect(mocks.openURL).toHaveBeenCalledWith('https://store.example/subscription');
     expect(mocks.openBrowserAsync).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      'Subscription link unavailable',
-      'We could not open subscription management.',
-    ]);
   });
 
   it('supports a dev-only E2E fixture for failed browser handoffs', async () => {
@@ -138,10 +115,6 @@ describe('external URL opener', () => {
 
     expect(mocks.openBrowserAsync).not.toHaveBeenCalled();
     expect(mocks.openURL).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      'Link unavailable',
-      'We could not open this policy link. Please try again.',
-    ]);
   });
 
   it('ignores the failed-handoff fixture outside development runtime', async () => {
@@ -167,15 +140,16 @@ describe('external URL opener', () => {
     }
 
     expect(mocks.openURL).toHaveBeenCalledWith('https://store.example/subscription');
-    expect(mocks.alerts).toEqual([]);
   });
 
-  it('keeps policy, billing, and retailer handoffs on the shared failure-alert helper', () => {
+  it('keeps policy, billing, and retailer handoffs on the shared UI-free helper', () => {
     const externalOpen = readSource('lib/navigation/externalOpen.ts');
 
     expect(externalOpen).toContain('EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE');
     expect(externalOpen).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(externalOpen).toContain("tokens.includes('all') || tokens.includes(mode)");
+    expect(externalOpen).not.toContain('Alert.alert');
+    expect(externalOpen).not.toContain("import { Alert");
 
     for (const path of [
       'app/(tabs)/you.tsx',

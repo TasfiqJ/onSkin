@@ -276,7 +276,8 @@ describe('paywall mobile contracts', () => {
     expect(feedback).toContain('accessibilityRole="alert"');
     expect(feedback).toContain('PAYWALL_FEEDBACK');
     expect(externalOpen).toContain('alertOnFailure?: boolean');
-    expect(externalOpen).toContain('options.alertOnFailure !== false');
+    expect(externalOpen).not.toContain('Alert.alert');
+    expect(externalOpen).not.toContain("import { Alert");
 
     for (const route of [
       'onboarding/paywall.tsx',
