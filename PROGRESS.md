@@ -19,6 +19,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `Ease back in` returning to `/today`. Evidence and report are in
   `test-results/human-e2e/2026-07-08/nested-scheduler-routes-current/`.
 
+- Hardened the enabled Community anonymous ask path. The
+  `community_participation` gate now stays local-first when the consent ledger
+  mirror is unavailable, so the composer can open in local/offline placeholder
+  mode after the explicit 16+ checkbox. Deferred `Submit for review` recovery
+  now renders a route-owned `Asking opens soon` `role="alert"` panel and scrolls
+  it into view instead of using a native alert. Codex in-app browser Expo web at
+  320 x 568 with `EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED=true` verifies
+  the consent gate reaches the composer, claim-heavy copy is flagged, submit
+  opens no dialog, the recovery sits fully in view at y=292-471, and horizontal
+  overflow remains zero. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/community-ask-submit-inline-recovery-current/`,
+  `docs/e2e-bug-reports/2026-07-08-community-ask-submit-inline-recovery.md`.
+
 - Hardened commerce paid-link recovery for compact phones. The recommendation
   where-to-buy and shoppable stack paid-link paths now use a route-owned
   accessible commerce notice instead of native `Alert.alert`; the notice renders

@@ -36,7 +36,8 @@ export async function grantCommunityConsent(): Promise<void> {
     });
     track('community_consent_granted');
   } catch {
-    await setCommunityConsentLocal(false).catch(() => undefined);
+    // Local-first/offline-safe: keep the local gate usable when the immutable
+    // ledger mirror is unavailable. Ledger state still wins on future reads when present.
   }
 }
 

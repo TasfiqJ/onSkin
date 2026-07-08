@@ -951,6 +951,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: With community posting enabled and consent granted, type claim-heavy and calm questions into the anonymous ask composer.
   - Expected result: Claim-safety copy flags risky wording as a first pass, never as an automated moderation decision, and no question is posted publicly before human review is staffed.
   - Evidence: Screenshot sequence and local moderation state.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED=true` verified the enabled `/community/ask` consent gate requires the 16+ checkbox, local-first consent reaches the anonymous composer with Supabase unconfigured, claim-heavy text (`Can glycolic acid cure acne if I use it every night?`) shows the claim-safety flag, `Submit for review` opens no dialog, and the route-owned `Asking opens soon` `role="alert"` recovery scrolls fully into view at y=292-471 with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/community-ask-submit-inline-recovery-current/`.
 
 ## Flow: Shelf Conflict Checks And Share Cards
 

@@ -158,4 +158,20 @@ describe('Community route contracts', () => {
     expect(source).toContain('className="h-[48px] items-center justify-center"');
     expect(source).not.toContain('className="h-[44px] items-center justify-center"');
   });
+
+  it('keeps anonymous ask deferred submission inline and route-owned', () => {
+    const source = readAppRoute('community/ask.tsx');
+
+    expect(source).not.toContain('Alert');
+    expect(source).toContain("import { useEffect, useMemo, useRef, useState } from 'react';");
+    expect(source).toContain('const scrollRef = useRef<ScrollView>(null);');
+    expect(source).toContain('deferredNoticeVisible');
+    expect(source).toContain('requestAnimationFrame');
+    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
+    expect(source).toContain('ref={scrollRef}');
+    expect(source).toContain('setDeferredNoticeVisible(true)');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('COMMUNITY_COPY.ask.deferredTitle');
+    expect(source).toContain('COMMUNITY_COPY.ask.deferredBody');
+  });
 });

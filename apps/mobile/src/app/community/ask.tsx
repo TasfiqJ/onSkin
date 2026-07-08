@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { RouteIconButton, Screen, Text } from '@/components/ui';
@@ -137,22 +137,36 @@ function ConsentGate() {
 }
 
 function Composer() {
+  const scrollRef = useRef<ScrollView>(null);
   const handle = useMemo(() => buildAnonHandle(), []);
   const [body, setBody] = useState('');
+  const [deferredNoticeVisible, setDeferredNoticeVisible] = useState(false);
   const scan = scanClaimSafety(body);
   const hasText = body.trim().length > 0;
+
+  useEffect(() => {
+    if (!deferredNoticeVisible) return;
+    requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
+  }, [deferredNoticeVisible]);
+
+  const updateBody = (nextBody: string) => {
+    setBody(nextBody);
+    if (deferredNoticeVisible) setDeferredNoticeVisible(false);
+  };
 
   const submit = () => {
     haptics.select();
     track('question_submitted', { flagged: scan.flagged });
     // Peer posting is deferred (B-COMMUNITY-MOD). The honest pre-moderation reality.
-    Alert.alert(COMMUNITY_COPY.ask.deferredTitle, COMMUNITY_COPY.ask.deferredBody, [
-      { text: 'OK' },
-    ]);
+    setDeferredNoticeVisible(true);
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8 pt-1">
+    <ScrollView
+      ref={scrollRef}
+      showsVerticalScrollIndicator={false}
+      contentContainerClassName="pb-8 pt-1"
+    >
       {/* composer */}
       <View
         className="rounded-[22px] bg-paper-raised p-4"
@@ -179,7 +193,7 @@ function Composer() {
         </View>
         <TextInput
           value={body}
-          onChangeText={setBody}
+          onChangeText={updateBody}
           multiline
           placeholder="Ask a calm, claim-safe question…"
           placeholderTextColor={colors.mutedLight}
@@ -249,6 +263,25 @@ function Composer() {
           {COMMUNITY_COPY.ask.preModeration}
         </Text>
       </View>
+
+      {deferredNoticeVisible ? (
+        <View
+          accessibilityRole="alert"
+          className="mt-3.5 rounded-2xl px-4 py-3.5"
+          style={{
+            backgroundColor: colors.clayTint,
+            borderWidth: 1,
+            borderColor: 'rgba(165,105,75,0.2)',
+          }}
+        >
+          <Text className="font-sans-semibold text-[13px]" style={{ color: colors.ink }}>
+            {COMMUNITY_COPY.ask.deferredTitle}
+          </Text>
+          <Text className="mt-1.5 text-[12px]" style={{ color: '#6F4A36', lineHeight: 17 }}>
+            {COMMUNITY_COPY.ask.deferredBody}
+          </Text>
+        </View>
+      ) : null}
 
       <Pressable
         accessibilityRole="button"
