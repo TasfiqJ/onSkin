@@ -32,6 +32,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const compactPaywall = height < 640;
   const shortPaywall = height < 600;
   const ultraShortPaywall = height < 460;
+  const storeUnavailableReason =
+    ultraShortPaywall && offering.data?.reason
+      ? 'Store unavailable in this preview.'
+      : offering.data?.reason;
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
@@ -243,10 +247,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               fontSize: ultraShortPaywall ? 10 : shortPaywall ? 10.5 : compactPaywall ? 11 : 12,
               lineHeight: ultraShortPaywall ? 12 : shortPaywall ? 14 : compactPaywall ? 15 : 17,
             }}
-            numberOfLines={ultraShortPaywall ? 1 : undefined}
-            ellipsizeMode="tail"
           >
-            {offering.data.reason}
+            {storeUnavailableReason}
           </Text>
         ) : null}
         <Pressable
@@ -268,7 +270,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             {primaryCtaLabel}
           </Text>
         </Pressable>
-        {showExploreFirst ? (
+        {showExploreFirst && !ultraShortPaywall ? (
           <Pressable
             accessibilityRole="button"
             disabled={startReverseTrial.isPending}

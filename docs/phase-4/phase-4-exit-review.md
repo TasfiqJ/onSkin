@@ -10,6 +10,8 @@ Implemented locally:
 - Source/license control docs for CosIng, Open Beauty Facts, and ODbL.
 - Ingredient parser, product quality model, OBF mapping, and fixture tests.
 - OBF fixture import and QA report scripts.
+- Beta coverage report generator and smoke gate that reject missing,
+  placeholder, or threshold-failing closed-beta catalog evidence.
 - Product search, barcode lookup, and correction-report Edge Function scaffolds.
 - Mobile shelf source/quality disclosure, search fallback, parser-backed OCR, and report issue flow.
 - Explicit non-implementation of live contribution-back until legal/source approval.
@@ -50,4 +52,3 @@ The unresolved commercial risk is coverage. A polished catalog architecture does
 - Product recommendations use only eligible products.
 - Closed beta coverage meets threshold.
 - App copy and attribution approved under final brand.
-

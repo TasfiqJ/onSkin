@@ -123,14 +123,19 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const shortPhone = height < 600');
-    expect(source).not.toContain('const ultraShortPhone');
+    expect(source).toContain('const ultraShortPhone = height < 460;');
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
     expect(source).toContain(": shortPhone\n            ? 'px-6 pb-4 pt-2'");
+    expect(source).toContain("ultraShortPhone ? 'mb-0' : shortPhone ? 'mb-1' : 'mb-4'");
     expect(source).toContain('{!shortPhone ? (');
+    expect(source).toContain("? 'text-[21px] leading-[24px]'");
     expect(source).toContain("? 'mt-2 gap-1'");
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={shortPhone}');
+    expect(source).toContain('hideSubtitle={ultraShortPhone}');
+    expect(source).toContain('hideSubtitle?: boolean;');
+    expect(source).toContain('{hideSubtitle ? null : (');
     expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'");
     expect(source).toContain('accessibilityLabel={`${title}. ${subtitle}`}');
     expect(source).toContain('min-h-[54px]');
@@ -336,15 +341,32 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactScanSurface = height < 640');
+    expect(source).toContain('const splitShortScanSurface = height < 460;');
+    expect(source).toContain('const showScanPreview = !splitShortScanSurface || canShowCamera;');
+    expect(source).toContain(
+      'style={splitShortScanSurface ? { minHeight: 68 } : undefined}',
+    );
+    expect(source).toContain('{showScanPreview ? (');
+    expect(source).toContain(
+      "'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'",
+    );
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
     expect(source).toContain('{canShowCamera ? (');
+    expect(source).toContain("'absolute left-8 right-8 top-[34px] h-8 rounded-[12px]'");
     expect(source).toContain("'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'");
     expect(source).toContain('!compactScanSurface ? (');
     expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'");
+    expect(source).toContain("className={splitShortScanSurface ? 'gap-1.5' : 'gap-2.5'}");
     expect(source).toContain('title="Scan ingredient label"');
     expect(source).toContain('subtitle="Review editable OCR"');
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
+    expect(source).toContain('compact={splitShortScanSurface}');
+    expect(source).toContain('compact?: boolean;');
+    expect(source).toContain(
+      "? 'flex-row items-center gap-3 rounded-[16px] px-3 py-2.5'",
+    );
+    expect(source).toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION');
     expect(source).toContain("devShelfCameraPermissionMode(): 'denied_no_retry' | null");
     expect(source).toContain('const [settingsOpenFailed, setSettingsOpenFailed] = useState(false)');

@@ -123,7 +123,6 @@ export default function NotificationSettingsScreen() {
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
-  const splitShortNotifications = height < 410;
   if (!p) return null;
 
   return (
@@ -192,7 +191,7 @@ export default function NotificationSettingsScreen() {
           />
         </View>
 
-        <View style={splitShortNotifications ? { marginTop: 56 } : undefined}>
+        <View style={ultraShortNotifications ? { marginTop: 56 } : undefined}>
           <SectionLabel compact={compactNotifications}>PROMOTIONAL</SectionLabel>
           <View className="rounded-[18px] bg-paper-raised px-[18px]">
             <Row

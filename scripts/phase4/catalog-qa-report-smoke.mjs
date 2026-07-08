@@ -79,6 +79,8 @@ function runReport({ manifest = validManifest, dirtyMarker = false } = {}) {
 const requiredSourceHashes = [
   'package.json',
   'scripts/phase4/catalog-qa-report.mjs',
+  'scripts/phase4/beta-coverage-report.mjs',
+  'scripts/phase4/beta-coverage-report-smoke.mjs',
   'scripts/phase4/import-obf-snapshot.mjs',
   'scripts/phase4/import-cosing-dictionary.mjs',
   'scripts/phase4/import-fixture-smoke.mjs',
@@ -87,6 +89,7 @@ const requiredSourceHashes = [
   'scripts/phase4/catalog-qa-report-smoke.mjs',
   'scripts/phase9/lib.mjs',
   'docs/FOR_TAS_TO_DO.md',
+  'docs/phase-4/beta-coverage-report.md',
   'docs/phase-4/catalog-source-memo-cosing.md',
   'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
   'docs/phase-4/odbl-compliance-memo.md',

@@ -128,7 +128,8 @@ export default function ScanScreen() {
     !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
   const canShowCamera = cameraEnabled && permissionGranted;
   const compactScanSurface = height < 640;
-  const splitShortScanSurface = height < 410;
+  const splitShortScanSurface = height < 460;
+  const showScanPreview = !splitShortScanSurface || canShowCamera;
 
   const goManual = () => {
     haptics.select();
@@ -263,7 +264,10 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
-      <View className="flex-1 px-6">
+      <View
+        className="flex-1 px-6"
+        style={splitShortScanSurface ? { minHeight: 68 } : undefined}
+      >
         <View
           className="mt-2 flex-row items-center justify-between"
           style={{ position: 'relative', zIndex: 20 }}
@@ -287,106 +291,114 @@ export default function ScanScreen() {
           </Pressable>
         </View>
 
-        <View className="flex-1 items-center justify-center">
-          <View
-            className={
-              compactScanSurface
-                ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
-                : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
-            }
-          >
-            {canShowCamera ? (
-              <CameraView
-                active={isFocused}
-                animateShutter={false}
-                barcodeScannerSettings={{ barcodeTypes: PRODUCT_BARCODE_TYPES }}
-                enableTorch={torch}
-                facing="back"
-                onBarcodeScanned={
-                  state.kind === 'looking_up' || state.kind === 'matched'
-                    ? undefined
-                    : onBarcodeScanned
-                }
-                onCameraReady={() => setCameraReady(true)}
-                onMountError={() =>
-                  setState({
-                    kind: 'error',
-                    barcode: '',
-                    reason: 'Camera could not start on this device.',
-                  })
-                }
-                style={{ flex: 1 }}
-              />
-            ) : (
-              <View className="flex-1 items-center justify-center px-7">
-                <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
-                  Camera permission is needed for barcode scanning.
+        {showScanPreview ? (
+          <View className="flex-1 items-center justify-center">
+            <View
+              className={
+                splitShortScanSurface
+                  ? 'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'
+                  : compactScanSurface
+                    ? 'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+                    : 'h-[320px] w-full overflow-hidden rounded-[20px] bg-night-elevated'
+              }
+            >
+              {canShowCamera ? (
+                <CameraView
+                  active={isFocused}
+                  animateShutter={false}
+                  barcodeScannerSettings={{ barcodeTypes: PRODUCT_BARCODE_TYPES }}
+                  enableTorch={torch}
+                  facing="back"
+                  onBarcodeScanned={
+                    state.kind === 'looking_up' || state.kind === 'matched'
+                      ? undefined
+                      : onBarcodeScanned
+                  }
+                  onCameraReady={() => setCameraReady(true)}
+                  onMountError={() =>
+                    setState({
+                      kind: 'error',
+                      barcode: '',
+                      reason: 'Camera could not start on this device.',
+                    })
+                  }
+                  style={{ flex: 1 }}
+                />
+              ) : (
+                <View className="flex-1 items-center justify-center px-7">
+                  <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
+                    Camera permission is needed for barcode scanning.
+                  </Text>
+                  <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
+                    You can still search, scan the label path, or add by hand.
+                  </Text>
+                  {canShowPermissionRecovery ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={
+                        canAskCameraPermission ? requestCamera : () => void openShelfCameraSettings()
+                      }
+                      className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
+                    >
+                      <Text className="font-sans-semibold text-night">
+                        {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
+                      </Text>
+                    </Pressable>
+                  ) : null}
+                  {settingsOpenFailed ? (
+                    <View
+                      accessibilityRole="alert"
+                      className="mt-4 w-full rounded-[14px] p-3.5"
+                      style={{
+                        borderWidth: 1,
+                        borderColor: 'rgba(217,161,131,0.45)',
+                        backgroundColor: 'rgba(217,161,131,0.14)',
+                      }}
+                    >
+                      <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+                        {CAMERA_FAILURE_COPY.shelfSettingsTitle}
+                      </Text>
+                      <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+                        {CAMERA_FAILURE_COPY.shelfSettingsBody}
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+              )}
+              {canShowCamera ? (
+                <View
+                  className={
+                    splitShortScanSurface
+                      ? 'absolute left-8 right-8 top-[34px] h-8 rounded-[12px]'
+                      : compactScanSurface
+                        ? 'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'
+                        : 'absolute left-8 right-8 top-[118px] h-28 rounded-[18px]'
+                  }
+                  style={{
+                    pointerEvents: 'none',
+                    borderWidth: 2,
+                    borderColor: cameraReady
+                      ? 'rgba(157,177,138,0.9)'
+                      : 'rgba(244,239,231,0.45)',
+                  }}
+                />
+              ) : null}
+            </View>
+            {!compactScanSurface ? (
+              <>
+                <Text variant="body" tone="inverseMuted" className="mt-5">
+                  Line up the barcode
                 </Text>
-                <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
-                  You can still search, scan the label path, or add by hand.
-                </Text>
-                {canShowPermissionRecovery ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={
-                      canAskCameraPermission ? requestCamera : () => void openShelfCameraSettings()
-                    }
-                    className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
-                  >
-                    <Text className="font-sans-semibold text-night">
-                      {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
-                    </Text>
-                  </Pressable>
-                ) : null}
-                {settingsOpenFailed ? (
-                  <View
-                    accessibilityRole="alert"
-                    className="mt-4 w-full rounded-[14px] p-3.5"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: 'rgba(217,161,131,0.45)',
-                      backgroundColor: 'rgba(217,161,131,0.14)',
-                    }}
-                  >
-                    <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
-                      {CAMERA_FAILURE_COPY.shelfSettingsTitle}
-                    </Text>
-                    <Text variant="bodySm" tone="inverseMuted" className="mt-1">
-                      {CAMERA_FAILURE_COPY.shelfSettingsBody}
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
-            )}
-            {canShowCamera ? (
-              <View
-                className={
-                  compactScanSurface
-                    ? 'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'
-                    : 'absolute left-8 right-8 top-[118px] h-28 rounded-[18px]'
-                }
-                style={{
-                  pointerEvents: 'none',
-                  borderWidth: 2,
-                  borderColor: cameraReady ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.45)',
-                }}
-              />
+                <View className="mt-3 flex-row items-center gap-2">
+                  <View className="h-1.5 w-1.5 rounded-full bg-clay-bright" />
+                  <Text variant="label" tone="inverseMuted">
+                    Decoding happens on your device
+                  </Text>
+                </View>
+              </>
             ) : null}
           </View>
-          {!compactScanSurface ? (
-            <>
-              <Text variant="body" tone="inverseMuted" className="mt-5">
-                Line up the barcode
-              </Text>
-              <View className="mt-3 flex-row items-center gap-2">
-                <View className="h-1.5 w-1.5 rounded-full bg-clay-bright" />
-                <Text variant="label" tone="inverseMuted">
-                  Decoding happens on your device
-                </Text>
-              </View>
-            </>
-          ) : null}
-        </View>
+        ) : null}
       </View>
 
       <View
@@ -460,18 +472,21 @@ export default function ScanScreen() {
             icon="="
             title="Scan ingredient label"
             subtitle="Review editable OCR"
+            compact={splitShortScanSurface}
             onPress={goOcr}
           />
           <FallbackRow
             icon="S"
             title="Search catalog"
             subtitle="Use reviewed matches"
+            compact={splitShortScanSurface}
             onPress={goSearch}
           />
           <FallbackRow
             icon="+"
             title="Add it by hand"
             subtitle="Always works offline"
+            compact={splitShortScanSurface}
             onPress={goManual}
           />
         </View>
@@ -498,28 +513,45 @@ function FallbackRow({
   icon,
   title,
   subtitle,
+  compact,
   onPress,
 }: {
   icon: string;
   title: string;
   subtitle: string;
+  compact?: boolean;
   onPress: () => void;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="flex-row items-center gap-3.5 rounded-[18px] p-4"
+      className={
+        compact
+          ? 'flex-row items-center gap-3 rounded-[16px] px-3 py-2.5'
+          : 'flex-row items-center gap-3.5 rounded-[18px] p-4'
+      }
       style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
     >
-      <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-clay-bright/20">
+      <View
+        className={
+          compact
+            ? 'h-8 w-8 items-center justify-center rounded-[9px] bg-clay-bright/20'
+            : 'h-9 w-9 items-center justify-center rounded-[10px] bg-clay-bright/20'
+        }
+      >
         <Text className="font-sans-bold text-clay-bright">{icon}</Text>
       </View>
       <View className="flex-1">
-        <Text variant="body" tone="inverse" className="font-sans-semibold">
+        <Text
+          variant="body"
+          tone="inverse"
+          className="font-sans-semibold"
+          numberOfLines={compact ? 1 : undefined}
+        >
           {title}
         </Text>
-        <Text variant="bodySm" tone="inverseMuted">
+        <Text variant="bodySm" tone="inverseMuted" numberOfLines={compact ? 1 : undefined}>
           {subtitle}
         </Text>
       </View>

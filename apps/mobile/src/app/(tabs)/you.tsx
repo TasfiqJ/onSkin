@@ -70,6 +70,7 @@ const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
 const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
+const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 
 type StaticRouteHref = Extract<Href, string>;
@@ -97,11 +98,21 @@ function Row({
   const labelContent = (
     <>
       <View className="flex-1 pr-3">
-        <Text variant="body" className="font-sans-medium">
+        <Text
+          variant="body"
+          className="font-sans-medium"
+          style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}
+        >
           {label}
         </Text>
         {hint ? (
-          <Text variant="bodySm" tone="muted" className="mt-0.5">
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className="mt-0.5"
+            numberOfLines={compact ? 1 : undefined}
+            style={compact ? { fontSize: 12, lineHeight: 14 } : undefined}
+          >
             {hint}
           </Text>
         ) : null}
@@ -309,7 +320,10 @@ export default function YouScreen() {
   const compactPhone = height < 640 || width < 430;
   const privacyDirectEntry = params.section === 'privacy';
   const narrowPhone = compactPhone && width < 360;
-  const privacyDirectEntryScrollNudge = narrowPhone
+  const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;
+  const privacyDirectEntryScrollNudge = ultraShortPrivacyEntry
+    ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
+    : narrowPhone
     ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
     : compactPhone
       ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
@@ -805,7 +819,10 @@ export default function YouScreen() {
           <Text variant="label" tone="muted" className="mb-1">
             PRIVACY &amp; CONSENT
           </Text>
-          <Row label="Marketing emails" hint="Off by default. Opt in anytime.">
+          <Row
+            label="Marketing emails"
+            hint={ultraShortPrivacyEntry ? undefined : 'Off by default. Opt in anytime.'}
+          >
             <Toggle
               accessibilityLabel="Marketing emails"
               value={consents.data?.marketing ?? false}
@@ -852,9 +869,11 @@ export default function YouScreen() {
           <Row
             label="Withdraw health-data consent"
             hint={
-              compactPhone
-                ? 'Records withdrawal and deletes collected health data.'
-                : 'Records your withdrawal in the consent ledger and deletes your collected health data.'
+              ultraShortPrivacyEntry
+                ? undefined
+                : compactPhone
+                  ? 'Records withdrawal and deletes collected health data.'
+                  : 'Records your withdrawal in the consent ledger and deletes your collected health data.'
             }
             compact={compactPhone}
             onPress={promptWithdrawHealthData}
@@ -889,7 +908,7 @@ export default function YouScreen() {
             <Fragment key={row.key}>
               <Row
                 label={row.label}
-                hint={POLICY_HINTS[row.key]}
+                hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}
                 compact={compactPhone}
                 onPress={() => void openPolicyRow(row)}
               />
@@ -913,7 +932,7 @@ export default function YouScreen() {
           </Text>
           <Button
             className="mt-2"
-            label={exportMut.isPending ? 'Preparing…' : 'Export my data'}
+            label={exportMut.isPending ? 'Preparing...' : 'Export my data'}
             variant="ghost"
             disabled={exportMut.isPending}
             onPress={() => exportMut.mutate()}

@@ -130,6 +130,8 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain('const shortPaywall = height < 600');
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
+    expect(proGate).toContain("const storeUnavailableReason =");
+    expect(proGate).toContain("? 'Store unavailable in this preview.'");
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(proGate).toMatch(
       /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
@@ -150,7 +152,8 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "ultraShortPaywall\n                ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
-    expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 1 : undefined}');
+    expect(proGate).toContain('{storeUnavailableReason}');
+    expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall ? (');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
@@ -185,6 +188,8 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('const shortPaywall = height < 600;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');
+    expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall ? (');
+    expect(proGate).toContain('{storeUnavailableReason}');
     expect(proGate).not.toContain('compactComplianceSpacer');
     expect(proGate).not.toContain('height: compactComplianceSpacer');
     expect(proGate).toContain('paddingTop: shortPaywall ? 0 : compactPaywall ? 4 : 0,');

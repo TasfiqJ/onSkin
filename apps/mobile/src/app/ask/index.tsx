@@ -368,8 +368,9 @@ export default function AskScreen() {
   const empty = messages.length === 0;
   const compactPhone = height < 640;
   const shortPhone = height < 520;
+  const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
-  const emptyPromptOrder = splitShortPhone
+  const emptyPromptOrder = ultraShortPhone || splitShortPhone
     ? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER
     : shortPhone
       ? SHORT_PHONE_EMPTY_PROMPT_ORDER
@@ -420,17 +421,21 @@ export default function AskScreen() {
                 ))}
               </View>
             ) : null}
-            <Text
-              variant="body"
-              tone="muted"
-              className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}
-              style={{ lineHeight: shortPhone ? 18 : 19 }}
-            >
-              {ASK_COPY.home.intro}
-            </Text>
+            {ultraShortPhone ? null : (
+              <Text
+                variant="body"
+                tone="muted"
+                className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}
+                style={{ lineHeight: shortPhone ? 18 : 19 }}
+              >
+                {ASK_COPY.home.intro}
+              </Text>
+            )}
             <Text
               className={
-                shortPhone
+                ultraShortPhone
+                  ? 'mb-1 font-mono text-[9px] uppercase'
+                  : shortPhone
                   ? 'mb-1.5 font-mono text-[10px] uppercase'
                   : 'mb-2 font-mono text-[10px] uppercase'
               }

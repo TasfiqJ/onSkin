@@ -6,6 +6,35 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the harsher 320 x 430 / 120% text-pressure route audit for the
+  current Expo web route set. The pass exposed ultra-short density gaps in
+  shared contextual ProGate paywalls, `/settings/notifications`,
+  `/settings/privacy`, `/ask`, `/shelf/no-match`, and `/shelf/scan`; those
+  routes now prioritize complete legal/primary controls, 48 px switches,
+  fixed-composer clearance, recovery rows, and scan header hit targets over
+  secondary copy on sub-460 px phones. Focused route contracts, mobile
+  typecheck, mobile lint, and the final 49-route sweep are clean, with evidence
+  in
+  `test-results/human-e2e/2026-07-08/text-pressure-120-short-phone-430-final-audit/`
+  plus the Shelf scan follow-up in
+  `test-results/human-e2e/2026-07-08/text-pressure-120-route-audit-430-current/`.
+  Reports are in
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-short-phone-430-clearance.md`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-430-ultrashort-route-clearance.md`.
+  Native iOS/Android Dynamic Type, keyboard, screen-reader, and hardware
+  safe-area QA remain device follow-up.
+
+- Added the Phase 4 beta coverage report gate. `npm run
+  phase4:beta-coverage-report` now writes a generated blocked packet until real
+  closed-beta evidence exists, and strict mode rejects placeholder signoffs,
+  placeholder URLs, high wrong-match/parser-error rates, below-usable
+  recommendation catalog usage, open P0/P1 support tickets, and stale source
+  hashes. `npm run phase4:beta-coverage-report-smoke` covers valid evidence,
+  missing input, placeholders, high error rates, and unsafe recommendation
+  usage, and `phase4:verify` now includes the beta-coverage smoke and report.
+  The Tas handoff documents the required beta export and signoff inputs.
+
 - Added a repeatable 320 x 568 / 120% text-pressure route audit and cleared
   the compact-phone clipping issues it exposed. `npm run e2e:text-pressure`
   now launches Expo web in headless Chrome, applies text pressure across 49

@@ -15,6 +15,7 @@ export default function NoMatchScreen() {
   const { reset } = useIntake();
   const { height } = useWindowDimensions();
   const shortPhone = height < 600;
+  const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
 
   const goOcr = () => {
@@ -52,7 +53,7 @@ export default function NoMatchScreen() {
     >
       <View
         className={cn(
-          shortPhone ? 'mb-1' : 'mb-4',
+          ultraShortPhone ? 'mb-0' : shortPhone ? 'mb-1' : 'mb-4',
           'flex-row items-start justify-between',
         )}
       >
@@ -81,8 +82,10 @@ export default function NoMatchScreen() {
         variant="title"
         tone="inverse"
         className={
-          shortPhone
-            ? 'text-[24px] leading-[27px]'
+          ultraShortPhone
+            ? 'text-[21px] leading-[24px]'
+            : shortPhone
+              ? 'text-[24px] leading-[27px]'
             : 'text-[30px] leading-[33px]'
         }
         accessibilityRole="header"
@@ -119,6 +122,7 @@ export default function NoMatchScreen() {
           subtitle="Try name or brand instead"
           compact={shortPhone}
           ultraCompact={shortPhone}
+          hideSubtitle={ultraShortPhone}
           onPress={goSearch}
         />
         <NoMatchAction
@@ -127,6 +131,7 @@ export default function NoMatchScreen() {
           subtitle="We'll read the INCI text"
           compact={shortPhone}
           ultraCompact={shortPhone}
+          hideSubtitle={ultraShortPhone}
           onPress={goOcr}
         />
         <NoMatchAction
@@ -135,6 +140,7 @@ export default function NoMatchScreen() {
           subtitle="Always works, even offline"
           compact={shortPhone}
           ultraCompact={shortPhone}
+          hideSubtitle={ultraShortPhone}
           onPress={goManual}
         />
       </View>
@@ -160,6 +166,7 @@ function NoMatchAction({
   subtitle,
   compact,
   ultraCompact,
+  hideSubtitle = false,
   onPress,
 }: {
   icon: string;
@@ -167,6 +174,7 @@ function NoMatchAction({
   subtitle: string;
   compact: boolean;
   ultraCompact: boolean;
+  hideSubtitle?: boolean;
   onPress: () => void;
 }) {
   return (
@@ -210,20 +218,22 @@ function NoMatchAction({
         >
           {title}
         </Text>
-        <Text
-          variant="bodySm"
-          tone="inverseMuted"
-          className={
-            ultraCompact
-              ? 'text-[11px] leading-[14px]'
-              : compact
-                ? 'text-[12px] leading-[16px]'
-                : undefined
-          }
-          numberOfLines={ultraCompact ? 1 : undefined}
-        >
-          {subtitle}
-        </Text>
+        {hideSubtitle ? null : (
+          <Text
+            variant="bodySm"
+            tone="inverseMuted"
+            className={
+              ultraCompact
+                ? 'text-[11px] leading-[14px]'
+                : compact
+                  ? 'text-[12px] leading-[16px]'
+                  : undefined
+            }
+            numberOfLines={ultraCompact ? 1 : undefined}
+          >
+            {subtitle}
+          </Text>
+        )}
       </View>
     </Pressable>
   );

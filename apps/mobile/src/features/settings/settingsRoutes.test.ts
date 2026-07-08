@@ -37,12 +37,17 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
     expect(you).toContain("const privacyDirectEntry = params.section === 'privacy';");
     expect(you).toContain('const narrowPhone = compactPhone && width < 360;');
-    expect(you).toContain('const privacyDirectEntryScrollNudge = narrowPhone');
+    expect(you).toContain(
+      'const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;',
+    );
+    expect(you).toContain('const privacyDirectEntryScrollNudge = ultraShortPrivacyEntry');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE');
     expect(you).toContain(
@@ -136,14 +141,14 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('useWindowDimensions');
     expect(notifications).toContain('const compactNotifications = height < 600;');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
-    expect(notifications).toContain('const splitShortNotifications = height < 410;');
+    expect(notifications).not.toContain('const splitShortNotifications');
     expect(notifications).toContain("className={compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}");
     expect(notifications).toContain('min-h-[48px] flex-row items-center justify-between py-0');
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-2.5');
     expect(notifications).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
     expect(notifications).toContain('compact={compactNotifications}');
     expect(notifications).toContain(
-      'style={splitShortNotifications ? { marginTop: 56 } : undefined}',
+      'style={ultraShortNotifications ? { marginTop: 56 } : undefined}',
     );
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
@@ -285,7 +290,13 @@ describe('Settings route contracts', () => {
       source.indexOf('MORE ROUTINE'),
     );
     expect(source).toContain('compact={compactPhone}');
-    expect(source).toContain("compactPhone\n                ? 'Records withdrawal and deletes collected health data.'");
+    expect(source).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
+    expect(source).toContain('numberOfLines={compact ? 1 : undefined}');
+    expect(source).toContain('style={compact ? { fontSize: 12, lineHeight: 14 } : undefined}');
+    expect(source).toContain("hint={ultraShortPrivacyEntry ? undefined : 'Off by default. Opt in anytime.'}");
+    expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
+    expect(source).toContain("ultraShortPrivacyEntry\n                ? undefined");
+    expect(source).toContain(": compactPhone\n                  ? 'Records withdrawal and deletes collected health data.'");
   });
 
   it('keeps secondary subscription exits buffered above 44px on phones', () => {

@@ -210,6 +210,16 @@ Status: launch-blocked
 - Import real product data from approved sources.
 - Curate the first launch batch from beta shelves and common products.
 - Track barcode match rate, search miss rate, wrong-match rate, parser unknown-token rate, and support tickets.
+- Provide a real closed-beta catalog export for
+  `PHASE4_BETA_COVERAGE_INPUT` or `docs/phase-4/beta-coverage-input.json` so
+  `npm run phase4:beta-coverage-report:strict` can generate a clean
+  `docs/phase-4/generated/beta-coverage-report.{json,md}`. The export must
+  include 50-100 real target users, users with 3+ products, barcode/search/OCR
+  and manual-fallback counts, category coverage, top no-matches, wrong-match
+  reports, parser unknown-token rate and top tokens, recommendation eligibility
+  proof, support ticket counts, real catalog/analytics/support dashboard URLs,
+  a non-placeholder source export hash, `evidence.realBetaData=true`, and a
+  named beta coverage signoff. Codex will not fake this input.
 - Keep product images disabled unless image rights are cleared.
 
 Evidence needed:
@@ -227,6 +237,8 @@ Status: launch-blocked
 - Recruit 50-100 real users who own 5+ skincare products.
 - Observe first-session onboarding and shelf add.
 - Measure product add completion, first useful insight, first check-off, D7/D14/D30 retention, baseline photo, reminders, trial starts, trial-to-paid, cancel/refund reasons, catalog misses, and support tickets.
+- Attach the Phase 4 generated beta coverage packet after the real beta export
+  passes strict mode.
 - Run willingness-to-pay tests for annual pricing.
 - Interview churned or confused users within 48 hours.
 
