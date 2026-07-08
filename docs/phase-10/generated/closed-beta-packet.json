@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T17:27:51.477Z",
+  "generatedAt": "2026-07-08T17:29:23.196Z",
   "status": "blocked",
-  "gitSha": "16845f18950e14cc2fab924574ca1d5cfc507496",
-  "gitStatus": "M docs/phase-10/generated/closed-beta-packet.json\n M docs/phase-10/generated/closed-beta-packet.md",
+  "gitSha": "cfbba328714bc035b72b8ba8b3adbff329378e36",
+  "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",
@@ -37,7 +37,7 @@
     "scripts/phase10/lib.mjs": "f7603dc439343586c1aa6b254dd6200ec49ee3348b4de259f15340f1ca2cca2a",
     "scripts/phase10/beta-readiness.mjs": "85a4ccc8cb2323654f2cf2e43a3281b75327dbaef452d26a1cec28c2c5312008",
     "scripts/phase10/beta-analytics-audit.mjs": "38e0ab4ac720d35035a83a6ee7120174aedd6afffc97f1228f69ec0f51f45201",
-    "scripts/phase10/build-beta-packet.mjs": "dcf3d0a5f42b67b676e61ba4f4425565974969220f5a159c4b30646c486aecc7",
+    "scripts/phase10/build-beta-packet.mjs": "7bb284fb30bba25e429c9cb15798fe887898157389c26e3bc9fa733b10225868",
     "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",
     "apps/mobile/app.config.js": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c",
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d",
