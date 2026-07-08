@@ -56,6 +56,11 @@ try {
 } catch {
   warn(warnings, false, 'Git SHA/status could not be captured.');
 }
+warn(
+  warnings,
+  gitStatus.length === 0,
+  'Closed beta packet generated with a dirty Git worktree; do not use it as final beta evidence.',
+);
 
 let phase9PacketStatus = 'missing';
 if (exists('docs/phase-9/generated/release-engineering-qa-packet.json')) {
@@ -113,6 +118,7 @@ write(
     `Generated: ${packet.generatedAt}`,
     `Status: ${packet.status}`,
     `Git SHA: ${packet.gitSha}`,
+    `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
     `Phase 9 packet status: ${packet.phase9PacketStatus}`,
     '',
     '## Beta Identity',

@@ -56,6 +56,11 @@ try {
 } catch {
   warn(warnings, false, 'Git SHA/status could not be captured.');
 }
+warn(
+  warnings,
+  gitStatus.length === 0,
+  'Public launch packet generated with a dirty Git worktree; do not use it as final launch evidence.',
+);
 
 let phase9PacketStatus = 'missing';
 if (exists('docs/phase-9/generated/release-engineering-qa-packet.json')) {
@@ -132,6 +137,7 @@ write(
     `Generated: ${packet.generatedAt}`,
     `Status: ${packet.status}`,
     `Git SHA: ${packet.gitSha}`,
+    `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
     `Phase 9 packet status: ${packet.phase9PacketStatus}`,
     `Phase 10 packet status: ${packet.phase10PacketStatus}`,
     `Phase 10 decision: ${packet.phase10Decision || 'BLOCKED'}`,

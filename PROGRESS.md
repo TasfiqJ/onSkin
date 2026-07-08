@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 11 public-launch packet coverage. The launch readiness gate now
+  independently verifies that the generated packet hashes `.env.example`, the
+  shared evidence normalizer, public-contact smoke, Phase 10 packet builder,
+  Phase 11 readiness/ring/packet scripts, app config/env/revenue sources, the
+  Phase 9 and Phase 10 generated packets, and every required launch-operations
+  doc before public-launch evidence can be reviewed as current. Public-launch
+  packets also now warn when generated from a dirty Git worktree and show
+  `Git status: clean` or `DIRTY` in Markdown.
+
+- Hardened the Phase 10 closed-beta packet dirty-worktree contract. Generated
+  beta packets now warn when produced from mixed local changes and show
+  `Git status: clean` or `DIRTY` in Markdown, and `phase10:beta-readiness`
+  enforces that reviewers can see the packet cleanliness before trusting beta
+  evidence.
+
 - Hardened Phase 10 closed-beta packet source-coverage enforcement in
   `phase10:beta-readiness`. The gate now verifies that the generated packet
   hashes `.env.example`, the shared evidence normalizer, public-contact smoke,

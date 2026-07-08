@@ -97,6 +97,12 @@ block(
     /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(betaPacketBuilder),
   'Phase 10 closed beta packet must ignore only its own generated outputs when recording Git status.',
 );
+block(
+  errors,
+  /Closed beta packet generated with a dirty Git worktree/.test(betaPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(betaPacketBuilder),
+  'Phase 10 closed beta packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
 
 block(
   errors,

@@ -10,6 +10,7 @@ import {
   normalizeLaunchDecision,
   normalizeNamedSignoff,
   phase11RequiredDocs,
+  phase11SourceFiles,
   printResult,
   productionDomain,
   productionSupportEmail,
@@ -23,6 +24,28 @@ const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
+
+const publicLaunchPacketRequiredSourceFiles = [
+  'package.json',
+  'turbo.json',
+  '.env.example',
+  'scripts/phase9/lib.mjs',
+  'scripts/phase9/evidence-normalization-smoke.mjs',
+  'scripts/phase10/lib.mjs',
+  'scripts/phase10/build-beta-packet.mjs',
+  'scripts/phase10-11/public-contact-smoke.mjs',
+  'scripts/phase11/lib.mjs',
+  'scripts/phase11/launch-readiness.mjs',
+  'scripts/phase11/launch-ring-gates.mjs',
+  'scripts/phase11/build-launch-packet.mjs',
+  'apps/mobile/eas.json',
+  'apps/mobile/app.config.js',
+  'apps/mobile/src/lib/env.ts',
+  'apps/mobile/src/lib/iap/revenuecat.ts',
+  'docs/phase-9/generated/release-engineering-qa-packet.json',
+  'docs/phase-10/generated/closed-beta-packet.json',
+  ...phase11RequiredDocs(),
+];
 
 for (const file of phase11RequiredDocs()) block(errors, exists(file), `${file} is missing.`);
 
@@ -44,6 +67,40 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+
+const publicLaunchPacketSourceFiles = new Set(phase11SourceFiles());
+for (const file of publicLaunchPacketRequiredSourceFiles) {
+  block(errors, exists(file), `${file} is missing from public launch packet source inputs.`);
+  block(
+    errors,
+    publicLaunchPacketSourceFiles.has(file),
+    `Phase 11 public launch packet must hash ${file}.`,
+  );
+}
+
+const launchPacketBuilder = read('scripts/phase11/build-launch-packet.mjs');
+block(
+  errors,
+  launchPacketBuilder.includes('const sourceFiles = phase11SourceFiles();') &&
+    launchPacketBuilder.includes(
+      'sourceHashes: Object.fromEntries(sourceFiles.filter(exists).map((file) => [file, hash(file)]))',
+    ),
+  'Phase 11 public launch packet must hash phase11SourceFiles() inputs.',
+);
+block(
+  errors,
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(launchPacketBuilder) &&
+    /public-launch-packet\.json/.test(launchPacketBuilder) &&
+    /public-launch-packet\.md/.test(launchPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(launchPacketBuilder),
+  'Phase 11 public launch packet must ignore only its own generated outputs when recording Git status.',
+);
+block(
+  errors,
+  /Public launch packet generated with a dirty Git worktree/.test(launchPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(launchPacketBuilder),
+  'Phase 11 public launch packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
 
 block(
   errors,
