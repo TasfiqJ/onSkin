@@ -1,0 +1,297 @@
+{
+  "bodyText": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You",
+  "controls": [
+    {
+      "ariaLabel": null,
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 396,
+        "height": 56,
+        "left": 32,
+        "right": 288,
+        "top": 340,
+        "width": 256,
+        "x": 32,
+        "y": 340
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Scan a barcode",
+      "withinViewport": true
+    },
+    {
+      "ariaLabel": null,
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 458,
+        "height": 50,
+        "left": 32,
+        "right": 288,
+        "top": 408,
+        "width": 256,
+        "x": 32,
+        "y": 408
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Add by hand",
+      "withinViewport": true
+    },
+    {
+      "ariaLabel": "Today tab",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "left": 9,
+        "right": 85,
+        "top": 495,
+        "width": 76,
+        "x": 9,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "Today",
+      "withinViewport": true
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "left": 85,
+        "right": 160,
+        "top": 495,
+        "width": 76,
+        "x": 85,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "Progress",
+      "withinViewport": true
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "left": 160,
+        "right": 236,
+        "top": 495,
+        "width": 76,
+        "x": 160,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "Shelf",
+      "withinViewport": true
+    },
+    {
+      "ariaLabel": "You tab",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "left": 236,
+        "right": 311,
+        "top": 495,
+        "width": 76,
+        "x": 236,
+        "y": 495
+      },
+      "role": "tab",
+      "tag": "div",
+      "text": "You",
+      "withinViewport": true
+    }
+  ],
+  "jsDialog": null,
+  "requiredText": {
+    "emptyLabel": {
+      "ariaLabel": null,
+      "rect": {
+        "bottom": 68,
+        "height": 16,
+        "left": 24,
+        "right": 296,
+        "top": 52,
+        "width": 272,
+        "x": 24,
+        "y": 52
+      },
+      "role": null,
+      "tag": "div",
+      "text": "empty for now"
+    },
+    "headline": {
+      "ariaLabel": null,
+      "rect": {
+        "bottom": 226,
+        "height": 34,
+        "left": 39,
+        "right": 282,
+        "top": 192,
+        "width": 243,
+        "x": 39,
+        "y": 192
+      },
+      "role": null,
+      "tag": "div",
+      "text": "Let's build your cabinet."
+    },
+    "helper": {
+      "area": 18459.98950491124,
+      "ariaLabel": null,
+      "rect": {
+        "bottom": 308,
+        "height": 72,
+        "left": 32,
+        "right": 288,
+        "top": 236,
+        "width": 256,
+        "x": 32,
+        "y": 236
+      },
+      "role": null,
+      "tag": "div",
+      "text": "Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes."
+    },
+    "manual": {
+      "ariaLabel": null,
+      "rect": {
+        "bottom": 445,
+        "height": 24,
+        "left": 115,
+        "right": 206,
+        "top": 421,
+        "width": 91,
+        "x": 115,
+        "y": 421
+      },
+      "role": null,
+      "tag": "div",
+      "text": "Add by hand"
+    },
+    "scan": {
+      "ariaLabel": null,
+      "rect": {
+        "bottom": 380,
+        "height": 24,
+        "left": 104,
+        "right": 216,
+        "top": 356,
+        "width": 112,
+        "x": 104,
+        "y": 356
+      },
+      "role": null,
+      "tag": "div",
+      "text": "Scan a barcode"
+    },
+    "shelfTitle": {
+      "ariaLabel": null,
+      "rect": {
+        "bottom": 545,
+        "height": 17,
+        "left": 162,
+        "right": 234,
+        "top": 528,
+        "width": 72,
+        "x": 162,
+        "y": 528
+      },
+      "role": null,
+      "tag": "div",
+      "text": "Shelf"
+    },
+    "tabs": [
+      {
+        "ariaLabel": null,
+        "rect": {
+          "bottom": 545,
+          "height": 17,
+          "left": 11,
+          "right": 83,
+          "top": 528,
+          "width": 72,
+          "x": 11,
+          "y": 528
+        },
+        "role": null,
+        "tag": "div",
+        "text": "Today"
+      },
+      {
+        "ariaLabel": null,
+        "rect": {
+          "bottom": 545,
+          "height": 17,
+          "left": 87,
+          "right": 158,
+          "top": 528,
+          "width": 72,
+          "x": 87,
+          "y": 528
+        },
+        "role": null,
+        "tag": "div",
+        "text": "Progress"
+      },
+      {
+        "ariaLabel": null,
+        "rect": {
+          "bottom": 545,
+          "height": 17,
+          "left": 162,
+          "right": 234,
+          "top": 528,
+          "width": 72,
+          "x": 162,
+          "y": 528
+        },
+        "role": null,
+        "tag": "div",
+        "text": "Shelf"
+      },
+      {
+        "ariaLabel": null,
+        "rect": {
+          "bottom": 545,
+          "height": 17,
+          "left": 238,
+          "right": 309,
+          "top": 528,
+          "width": 72,
+          "x": 238,
+          "y": 528
+        },
+        "role": null,
+        "tag": "div",
+        "text": "You"
+      }
+    ]
+  },
+  "scroll": {
+    "bodyScrollWidth": 320,
+    "documentClientHeight": 569,
+    "documentClientWidth": 320,
+    "documentScrollHeight": 569,
+    "documentScrollWidth": 320,
+    "horizontalOverflow": 0
+  },
+  "url": "http://localhost:8171/shelf?e2e=shelf-empty-compact-current",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleBounds": {
+    "maxBottom": 569,
+    "maxRight": 320,
+    "minLeft": 0
+  }
+}

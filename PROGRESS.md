@@ -4633,6 +4633,24 @@ overflow and no raw error text. Evidence and bug report are in
 Native iOS/Android screen-reader, Dynamic Type, and production entitlement QA
 remain device follow-up.
 
+### Shelf empty compact viewport evidence (2026-07-08)
+
+Closed the missing user-flow evidence branch for an empty no-archive Shelf at a
+320 px compact phone width. Added a focused source contract so the no-archive
+empty Shelf keeps its compact spacing, bottle illustration, headline/helper
+copy, `Scan a barcode` and `Add by hand` actions, and non-empty-only floating
+scan FAB behavior.
+
+Verified in the Codex in-app browser on Expo web port 8171 with a fresh local
+origin and no shelf data. `/shelf` renders the empty-state bottle illustration,
+headline, helper copy, both add actions, and the floating tab bar in the first
+viewport. Runtime geometry reports zero horizontal overflow, 56 px and 50 px add
+actions, 54 px tab targets, no JavaScript dialog, and no current-origin
+warn/error logs. Evidence is in
+`test-results/human-e2e/2026-07-08/shelf-empty-compact-current/`. Native
+iOS/Android safe-area, Dynamic Type, and screen-reader traversal remain device
+QA follow-up.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

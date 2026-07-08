@@ -468,6 +468,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The empty-state bottle illustration, headline, helper copy, Scan a barcode action, Add by hand
     action, and floating tab bar stay within the viewport with no horizontal page overflow or side-scroll.
   - Evidence: 320 px screenshot and overflow geometry snapshot.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web opens a fresh `localhost:8171` origin at `/shelf` with a 320 px compact phone viewport and no shelf data. The empty Shelf shows the bottle illustration, headline, helper copy, `Scan a barcode`, `Add by hand`, and the floating tab bar in the first viewport; document horizontal overflow is zero, both add actions are 50 px+ tall, each tab target is 54 px tall, no JavaScript dialog is present, and current-origin warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/shelf-empty-compact-current/`.
 - Branch: manual category picker on short phones
   - Priority: Important
   - Automate later: Yes

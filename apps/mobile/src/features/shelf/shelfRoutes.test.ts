@@ -153,6 +153,29 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('!isEmpty && !showLoading ? (');
   });
 
+  it('keeps the compact no-archive empty Shelf usable in the first viewport', () => {
+    const source = readAppRoute('(tabs)/shelf.tsx');
+
+    expect(source).toContain('const compactShelf = height < 640');
+    expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
+    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
+    expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
+    expect(source).toContain("`${compactWithArchive ? 'mb-4' : 'mb-7'} flex-row items-end gap-2.5`");
+    expect(source).toContain('Let&apos;s build your cabinet.');
+    expect(source).toContain(
+      'Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and',
+    );
+    expect(source).toContain("`${compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'} w-full max-w-[300px]`");
+    expect(source).toContain('trackProductAddStarted(\'empty_scan\');');
+    expect(source).toContain("router.push('/shelf/scan');");
+    expect(source).toContain('className="h-14 items-center justify-center rounded-pill bg-ink"');
+    expect(source).toContain('trackProductAddStarted(\'empty_manual\');');
+    expect(source).toContain("router.push('/shelf/manual');");
+    expect(source).toContain('className="h-[50px] items-center justify-center"');
+    expect(source).toContain('!isEmpty && !showLoading && !compactShelf');
+    expect(source).not.toContain('!isEmpty && !showLoading ? (');
+  });
+
   it('surfaces a first-routine handoff once the shelf has real products', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
