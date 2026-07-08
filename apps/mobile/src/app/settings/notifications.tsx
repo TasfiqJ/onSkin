@@ -121,6 +121,7 @@ export default function NotificationSettingsScreen() {
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
+  const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 410;
   if (!p) return null;
@@ -129,11 +130,11 @@ export default function NotificationSettingsScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={ultraShortNotifications ? 'px-5 pb-8' : 'px-5 pb-10'}
+        contentContainerClassName={compactNotifications ? 'px-5 pb-8' : 'px-5 pb-10'}
       >
         <View
           className={
-            ultraShortNotifications
+            compactNotifications
               ? 'mb-0 flex-row items-center gap-3 pt-1'
               : 'mb-1 flex-row items-center gap-3 pt-1'
           }
@@ -147,7 +148,7 @@ export default function NotificationSettingsScreen() {
           </Text>
         </View>
 
-        <SectionLabel compact={ultraShortNotifications}>UTILITY · YOUR ROUTINE</SectionLabel>
+        <SectionLabel compact={compactNotifications}>UTILITY · YOUR ROUTINE</SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Morning routine"
@@ -155,7 +156,7 @@ export default function NotificationSettingsScreen() {
             value={p.amEnabled}
             onChange={(v) => set({ amEnabled: v })}
             onPress={() => router.push('/settings/timing')}
-            compact={ultraShortNotifications}
+            compact={compactNotifications}
           />
           <Row
             title="Evening · tonight’s step"
@@ -164,35 +165,35 @@ export default function NotificationSettingsScreen() {
             onChange={(v) => set({ pmEnabled: v })}
             onPress={() => router.push('/settings/timing')}
             last
-            compact={ultraShortNotifications}
+            compact={compactNotifications}
           />
         </View>
 
-        <SectionLabel compact={ultraShortNotifications}>GENTLE NUDGES · CAPPED</SectionLabel>
+        <SectionLabel compact={compactNotifications}>GENTLE NUDGES · CAPPED</SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Streak &amp; adherence"
             value={p.streakNudges}
             onChange={(v) => set({ streakNudges: v })}
-            compact={ultraShortNotifications}
+            compact={compactNotifications}
           />
           <Row
             title="Replenishment"
             value={p.replenishmentAlerts}
             onChange={(v) => set({ replenishmentAlerts: v })}
-            compact={ultraShortNotifications}
+            compact={compactNotifications}
           />
           <Row
             title="Progress-photo nudge"
             value={p.captureReminders}
             onChange={(v) => set({ captureReminders: v })}
             last
-            compact={ultraShortNotifications}
+            compact={compactNotifications}
           />
         </View>
 
         <View style={splitShortNotifications ? { marginTop: 56 } : undefined}>
-          <SectionLabel compact={ultraShortNotifications}>PROMOTIONAL</SectionLabel>
+          <SectionLabel compact={compactNotifications}>PROMOTIONAL</SectionLabel>
           <View className="rounded-[18px] bg-paper-raised px-[18px]">
             <Row
               title="Tips &amp; announcements"
@@ -200,7 +201,7 @@ export default function NotificationSettingsScreen() {
               value={p.promotionalOptIn}
               onChange={(v) => set({ promotionalOptIn: v })}
               last
-              compact={ultraShortNotifications}
+              compact={compactNotifications}
             />
           </View>
         </View>

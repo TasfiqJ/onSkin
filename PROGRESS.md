@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added a repeatable 320 x 568 / 120% text-pressure route audit and cleared
+  the compact-phone clipping issues it exposed. `npm run e2e:text-pressure`
+  now launches Expo web in headless Chrome, applies text pressure across 49
+  current routes, and checks visible controls for clipping, sub-44 px visible
+  targets, blocked center hit-tests, horizontal overflow, and unexpected browser
+  logs. The pass tightened settings notifications/privacy rows, shelf no-match
+  recovery, short paywall compliance/actions, shared ProGate density, and
+  Recommendation Preferences chips while preserving 48 px+ controls. Post-fix
+  evidence reports zero failed routes at 320 x 568 / 120% text pressure in
+  `test-results/human-e2e/2026-07-08/text-pressure-120-route-audit-current/`,
+  with the report in
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-route-audit-compact-clipping.md`.
+  Native iOS/Android Dynamic Type, keyboard, screen-reader, and hardware
+  safe-area QA remain device follow-up.
+
 - Made Phase 4 fixture imports stable across no-op reruns. The Open Beauty
   Facts and CosIng fixture importers now preserve `generatedAt` when the
   generated manifest content is unchanged, preventing timestamp-only churn from

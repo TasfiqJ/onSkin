@@ -122,16 +122,15 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/no-match.tsx');
 
     expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const shortPhone = height < 520');
-    expect(source).toContain('const ultraShortPhone = height < 460');
+    expect(source).toContain('const shortPhone = height < 600');
+    expect(source).not.toContain('const ultraShortPhone');
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
-    expect(source).toContain(": ultraShortPhone\n            ? 'px-6 pb-4 pt-2'");
-    expect(source).toContain('{!splitShortPhone ? (');
+    expect(source).toContain(": shortPhone\n            ? 'px-6 pb-4 pt-2'");
+    expect(source).toContain('{!shortPhone ? (');
     expect(source).toContain("? 'mt-2 gap-1'");
-    expect(source).toContain(": ultraShortPhone\n              ? 'mt-2 gap-1'");
     expect(source).toContain('compact={shortPhone}');
-    expect(source).toContain('ultraCompact={ultraShortPhone}');
+    expect(source).toContain('ultraCompact={shortPhone}');
     expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'");
     expect(source).toContain('accessibilityLabel={`${title}. ${subtitle}`}');
     expect(source).toContain('min-h-[54px]');

@@ -122,22 +122,27 @@ export default function PreferencesScreen() {
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
+  const shortPreferences = height < 600;
   const ultraShortPreferences = height < 460;
   const splitShortPreferences = height < 410;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
-    : compactPreferences
+    : shortPreferences
+      ? 'mb-1.5 mt-3'
+      : compactPreferences
       ? 'mb-2 mt-5'
       : 'mb-3 mt-7';
   const sectionLabelClassName = splitShortPreferences
     ? 'mb-1.5 mt-20'
     : ultraShortPreferences
     ? 'mb-1.5 mt-12'
-    : compactPreferences
+    : shortPreferences
+      ? 'mb-1.5 mt-12'
+      : compactPreferences
       ? 'mb-2 mt-5'
       : 'mb-3 mt-7';
-  const chipGroupClassName = ultraShortPreferences
-    ? 'flex-row flex-wrap gap-1.5'
+  const chipGroupClassName = shortPreferences
+    ? 'flex-row flex-wrap gap-1'
     : 'flex-row flex-wrap gap-2';
   const textureSectionLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-7'
@@ -209,14 +214,14 @@ export default function PreferencesScreen() {
       >
         <Text
           variant="title"
-          className={ultraShortPreferences ? 'mt-1 text-[30px] leading-[32px]' : 'mt-2'}
+          className={ultraShortPreferences || shortPreferences ? 'mt-1 text-[30px] leading-[32px]' : 'mt-2'}
         >
           {REC_COPY.preferences.title}
         </Text>
         <Text
           variant="bodySm"
           tone="muted"
-          className={ultraShortPreferences ? 'mt-1 text-[12.5px] leading-[16px]' : 'mt-1.5'}
+          className={ultraShortPreferences || shortPreferences ? 'mt-1 text-[12.5px] leading-[16px]' : 'mt-1.5'}
         >
           {REC_COPY.preferences.subtitle}
         </Text>
@@ -242,7 +247,7 @@ export default function PreferencesScreen() {
           {VALUES_FILTERS.map((v) => (
             <Toggle
               key={v}
-              ultraDense={ultraShortPreferences}
+              ultraDense={ultraShortPreferences || shortPreferences}
               label={VALUES_LABEL[v] ?? v}
               active={p.values.includes(v)}
               disabled={controlsDisabled}
@@ -258,8 +263,9 @@ export default function PreferencesScreen() {
           {BUDGETS.map((b) => (
             <Toggle
               key={b}
-              fill
-              ultraDense={ultraShortPreferences}
+              dense={compactPreferences}
+              fill={!compactPreferences}
+              ultraDense={ultraShortPreferences || shortPreferences}
               label={BUDGET_LABEL[b] ?? b}
               active={p.budget === b}
               disabled={controlsDisabled}
@@ -281,7 +287,7 @@ export default function PreferencesScreen() {
             <Toggle
               key={f}
               dense={compactPreferences}
-              ultraDense={ultraShortPreferences}
+              ultraDense={ultraShortPreferences || shortPreferences}
               label={FORMAT_LABEL[f] ?? f}
               active={p.formats.includes(f)}
               disabled={controlsDisabled}

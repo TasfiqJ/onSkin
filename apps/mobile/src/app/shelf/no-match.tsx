@@ -14,8 +14,7 @@ import { colors } from '@/theme/tokens';
 export default function NoMatchScreen() {
   const { reset } = useIntake();
   const { height } = useWindowDimensions();
-  const shortPhone = height < 520;
-  const ultraShortPhone = height < 460;
+  const shortPhone = height < 600;
   const splitShortPhone = height < 410;
 
   const goOcr = () => {
@@ -46,28 +45,26 @@ export default function NoMatchScreen() {
       className={
         splitShortPhone
           ? 'px-6 pb-3 pt-2'
-          : ultraShortPhone
+          : shortPhone
             ? 'px-6 pb-4 pt-2'
-            : shortPhone
-              ? 'px-6 pb-5 pt-3'
-              : undefined
+            : undefined
       }
     >
       <View
         className={cn(
-          ultraShortPhone ? 'mb-1' : shortPhone ? 'mb-2' : 'mb-4',
+          shortPhone ? 'mb-1' : 'mb-4',
           'flex-row items-start justify-between',
         )}
       >
         <View
           className={cn(
-            ultraShortPhone ? 'h-9 w-9' : shortPhone ? 'h-10 w-10' : 'h-12 w-12',
+            shortPhone ? 'h-9 w-9' : 'h-12 w-12',
             'items-center justify-center rounded-full',
           )}
           style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
         >
           <Text
-            className={ultraShortPhone ? 'text-[15px]' : shortPhone ? 'text-[16px]' : 'text-[18px]'}
+            className={shortPhone ? 'text-[15px]' : 'text-[18px]'}
             tone="inverseMuted"
           >
             ?
@@ -84,26 +81,22 @@ export default function NoMatchScreen() {
         variant="title"
         tone="inverse"
         className={
-          ultraShortPhone
+          shortPhone
             ? 'text-[24px] leading-[27px]'
-            : shortPhone
-              ? 'text-[26px] leading-[29px]'
-              : 'text-[30px] leading-[33px]'
+            : 'text-[30px] leading-[33px]'
         }
         accessibilityRole="header"
       >
         We don&apos;t have this one yet.
       </Text>
-      {!splitShortPhone ? (
+      {!shortPhone ? (
         <Text
           variant="body"
           tone="inverseMuted"
           className={
-            ultraShortPhone
+            shortPhone
               ? 'mt-1 text-[12px] leading-[17px]'
-              : shortPhone
-                ? 'mt-1 text-[13px] leading-[19px]'
-                : 'mt-2'
+              : 'mt-2'
           }
         >
           That barcode isn&apos;t in our database yet. No problem. Add it another way, then report any
@@ -115,11 +108,9 @@ export default function NoMatchScreen() {
         className={
           splitShortPhone
             ? 'mt-2 gap-1'
-            : ultraShortPhone
+            : shortPhone
               ? 'mt-2 gap-1'
-              : shortPhone
-                ? 'mt-3 gap-1.5'
-                : 'mt-4 gap-2'
+              : 'mt-4 gap-2'
         }
       >
         <NoMatchAction
@@ -127,7 +118,7 @@ export default function NoMatchScreen() {
           title="Search catalog"
           subtitle="Try name or brand instead"
           compact={shortPhone}
-          ultraCompact={ultraShortPhone}
+          ultraCompact={shortPhone}
           onPress={goSearch}
         />
         <NoMatchAction
@@ -135,7 +126,7 @@ export default function NoMatchScreen() {
           title="Scan the ingredient list"
           subtitle="We'll read the INCI text"
           compact={shortPhone}
-          ultraCompact={ultraShortPhone}
+          ultraCompact={shortPhone}
           onPress={goOcr}
         />
         <NoMatchAction
@@ -143,7 +134,7 @@ export default function NoMatchScreen() {
           title="Add it by hand"
           subtitle="Always works, even offline"
           compact={shortPhone}
-          ultraCompact={ultraShortPhone}
+          ultraCompact={shortPhone}
           onPress={goManual}
         />
       </View>

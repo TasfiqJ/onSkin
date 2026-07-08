@@ -832,6 +832,7 @@ export default function YouScreen() {
           ) : null}
           <Row
             label="Photos & the no-AI-score promise"
+            compact={compactPhone}
             onPress={() => router.push('/progress/about')}
           />
           {phase7Flags.trend ? (
@@ -850,7 +851,12 @@ export default function YouScreen() {
           ) : null}
           <Row
             label="Withdraw health-data consent"
-            hint="Records your withdrawal in the consent ledger and deletes your collected health data."
+            hint={
+              compactPhone
+                ? 'Records withdrawal and deletes collected health data.'
+                : 'Records your withdrawal in the consent ledger and deletes your collected health data.'
+            }
+            compact={compactPhone}
             onPress={promptWithdrawHealthData}
           />
           {confirmingDataRightsAction === 'withdraw_health_data' ? (

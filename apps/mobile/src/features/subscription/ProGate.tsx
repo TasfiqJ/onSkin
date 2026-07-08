@@ -30,7 +30,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
-  const shortPaywall = height < 520;
+  const shortPaywall = height < 600;
   const ultraShortPaywall = height < 460;
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');

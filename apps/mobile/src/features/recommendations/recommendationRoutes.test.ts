@@ -140,10 +140,13 @@ describe('Recommendation route contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPreferences = height < 640');
+    expect(source).toContain('const shortPreferences = height < 600;');
     expect(source).toContain('const ultraShortPreferences = height < 460;');
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
+    expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");
-    expect(source).toContain('const chipGroupClassName = ultraShortPreferences');
+    expect(source).toContain('const chipGroupClassName = shortPreferences');
+    expect(source).toContain("? 'flex-row flex-wrap gap-1'");
     expect(source).toContain('const textureSectionLabelClassName = ultraShortPreferences');
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3 py-2'");
     expect(source).toContain('minHeight: ultraDense ? 48 : undefined');
@@ -160,8 +163,8 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('flexGrow: fill ? 1 : undefined');
     expect(source).toContain('minWidth: fill ? 0 : dense ? 48 : undefined');
     expect(source).toContain('dense={compactPreferences}');
-    expect(source).toContain('ultraDense={ultraShortPreferences}');
-    expect(source).toContain('<Toggle\n              key={b}\n              fill');
+    expect(source).toContain('ultraDense={ultraShortPreferences || shortPreferences}');
+    expect(source).toContain('fill={!compactPreferences}');
   });
 
   it('keeps recommendation detail navigation touchable on phones', () => {

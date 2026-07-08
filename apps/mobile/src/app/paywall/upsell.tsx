@@ -30,7 +30,7 @@ export default function UpsellSheet() {
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
   const compactPaywall = height < 640;
-  const shortPaywall = height < 520;
+  const shortPaywall = height < 600;
   const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
@@ -71,6 +71,17 @@ export default function UpsellSheet() {
       }
       onClose={() => dismissPaywall(router)}
     >
+      {shortPaywall ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => dismissPaywall(router)}
+          className="mb-1 h-[48px] self-end justify-center px-2"
+        >
+          <Text className="font-sans-semibold" tone="muted" variant="body">
+            Maybe later
+          </Text>
+        </Pressable>
+      ) : null}
       {shortPaywall ? null : (
         <View
           className={
@@ -83,6 +94,7 @@ export default function UpsellSheet() {
           <View className="h-4 w-4 rounded-[5px]" style={{ backgroundColor: colors.clay }} />
         </View>
       )}
+      {shortPaywall ? <ComplianceRow density="compactHeader" /> : null}
       <Text
         variant="title"
         style={{
@@ -182,16 +194,18 @@ export default function UpsellSheet() {
         </Text>
       </Pressable>
       <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
-      <ComplianceRow />
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => dismissPaywall(router)}
-        className="h-[48px] items-center justify-center"
-      >
-        <Text className="font-sans-semibold" tone="muted" variant="body">
-          Maybe later
-        </Text>
-      </Pressable>
+      {shortPaywall ? null : <ComplianceRow />}
+      {shortPaywall ? null : (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => dismissPaywall(router)}
+          className="h-[48px] items-center justify-center"
+        >
+          <Text className="font-sans-semibold" tone="muted" variant="body">
+            Maybe later
+          </Text>
+        </Pressable>
+      )}
     </Sheet>
   );
 }

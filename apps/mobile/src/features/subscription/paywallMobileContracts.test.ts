@@ -96,7 +96,7 @@ describe('paywall mobile contracts', () => {
     expect(sheet).toContain('backdropAccessible?: boolean');
     expect(upsell).toContain('useWindowDimensions');
     expect(upsell).toContain('const compactPaywall = height < 640;');
-    expect(upsell).toContain('const shortPaywall = height < 520;');
+    expect(upsell).toContain('const shortPaywall = height < 600;');
     expect(upsell).toContain('const splitShortPaywall = height < 410;');
     expect(upsell).toContain(
       "const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';",
@@ -119,6 +119,8 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain(
       "shortPaywall\n            ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'",
     );
+    expect(upsell).toContain('{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}');
+    expect(upsell).toContain('{shortPaywall ? null : <ComplianceRow />}');
     expect(upsell).toContain('backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');
     expect(proGate).toContain('className="h-[48px] justify-center px-2"');
@@ -126,7 +128,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('dismissPaywall(router, paywallDismissFallback)');
     expect(proGate).toContain('useWindowDimensions');
     expect(proGate).toContain('const compactPaywall = height < 640');
-    expect(proGate).toContain('const shortPaywall = height < 520');
+    expect(proGate).toContain('const shortPaywall = height < 600');
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(proGate).toMatch(
@@ -181,7 +183,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;',
     );
-    expect(proGate).toContain('const shortPaywall = height < 520;');
+    expect(proGate).toContain('const shortPaywall = height < 600;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');
     expect(proGate).not.toContain('compactComplianceSpacer');
     expect(proGate).not.toContain('height: compactComplianceSpacer');

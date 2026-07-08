@@ -118,6 +118,7 @@
     "docs:tas-todo-audit": "node scripts/docs/tas-todo-audit.mjs",
     "docs:tas-todo-audit:strict": "node scripts/docs/tas-todo-audit.mjs --strict",
     "e2e:tabbar-geometry": "node scripts/e2e/tabbar-geometry.mjs",
+    "e2e:text-pressure": "node scripts/e2e/text-pressure-route-audit.mjs",
     "e2e:human:manifest": "node scripts/e2e/human-e2e-manifest.mjs",
     "e2e:human:manifest:check": "node scripts/e2e/human-e2e-manifest.mjs --check",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
