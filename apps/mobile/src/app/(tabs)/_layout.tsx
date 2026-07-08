@@ -1,3 +1,4 @@
+import type { RoutineType } from '@onskin/types';
 import { router, Tabs } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
 import { useEffect, useState } from 'react';
@@ -16,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRoute } from '@/features/subscription/lifecycle';
+import { currentRoutineType } from '@/features/today/useToday';
 import { colors } from '@/theme/tokens';
 
 // On app entry, present the honest reverse-trial re-offer / graceful-downgrade once
@@ -63,6 +65,10 @@ const TAB_BAR_SHADOW = Platform.select({
   } as ViewStyle,
   default: {},
 }) as ViewStyle;
+
+function tabSceneBackground(routeName: string, todayRoutineType: RoutineType) {
+  return routeName === 'today' && todayRoutineType === 'PM' ? colors.night : colors.paper;
+}
 
 const WEB_TAB_ITEM_FOCUS_RESET = Platform.select({
   web: {
@@ -278,6 +284,7 @@ export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const tabBarBottom = Math.max(insets.bottom, FLOATING_TAB_BAR_BOTTOM);
   const tabSceneClearance = FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP;
+  const todayRoutineType = currentRoutineType();
 
   useExpiryReoffer();
   return (
@@ -286,14 +293,20 @@ export default function TabsLayout() {
       <BehaviouralTriggers />
       <Tabs
         tabBar={(props) => <FloatingTabBar {...props} />}
-        screenOptions={{
+        screenOptions={({ route }) => ({
           headerShown: false,
-          sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }],
+          sceneStyle: [
+            styles.tabScene,
+            {
+              backgroundColor: tabSceneBackground(route.name, todayRoutineType),
+              paddingBottom: tabSceneClearance,
+            },
+          ],
           tabBarActiveTintColor: colors.ink,
           tabBarInactiveTintColor: colors.mutedStrong,
           tabBarHideOnKeyboard: true,
           tabBarShowLabel: false,
-        }}
+        })}
       >
         <Tabs.Screen
           name="today"

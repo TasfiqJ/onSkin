@@ -48,7 +48,15 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabBarInactiveTintColor: colors.mutedStrong');
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('tabSceneClearance');
-    expect(source).toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
+    expect(source).toContain("import { currentRoutineType } from '@/features/today/useToday';");
+    expect(source).toContain('function tabSceneBackground');
+    expect(source).toContain('todayRoutineType');
+    expect(source).toContain(
+      "return routeName === 'today' && todayRoutineType === 'PM' ? colors.night : colors.paper;",
+    );
+    expect(source).toContain('screenOptions={({ route }) => ({');
+    expect(source).toContain('backgroundColor: tabSceneBackground(route.name, todayRoutineType)');
+    expect(source).toContain('paddingBottom: tabSceneClearance');
     expect(source).toContain('backgroundColor: colors.paperRaised');
     expect(source).toContain('focused ? colors.paperRaised : colors.mutedStrong');
     expect(source).toContain('backgroundColor: colors.paperRaised');
@@ -92,6 +100,7 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
     expect(source).not.toContain('backgroundColor: colors.greigeChip');
+    expect(source).not.toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
   });
 
   it('renders tab labels directly inside protected one-line phone geometry', () => {

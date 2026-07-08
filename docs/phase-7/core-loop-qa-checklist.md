@@ -88,6 +88,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   and no non-tab controls intersect the floating-bar zone. Evidence is in
   `test-results/human-e2e/2026-07-07/navigation-current/`; it does not replace
   native simulator/device keyboard-hide or platform text-scale QA.
+- 2026-07-08: Headless Chrome E2E at 320 x 568 and 390 x 568 covers the
+  floating tab bar scene-background polish follow-up. Pre-fix screenshot review
+  showed PM Today's dark surface ending above the floating tab bar, leaving a
+  light scene-clearance band behind the bar. Post-fix, `/(tabs)` paints scene
+  clearance by route: PM Today samples `colors.night` behind the bar, while
+  Progress/Shelf/You sample `colors.paper`; labels remain visible, tab centers
+  hit the expected target, exactly one tab is selected after each switch, and
+  horizontal overflow is zero. Evidence is in
+  `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`; it does not
+  replace native simulator/device keyboard-hide or platform text-scale QA.
 - 2026-07-07: Expo web E2E at 320 x 568 plus focused onboarding consent tests
   cover direct quiz-entry privacy gating: `/onboarding/quiz` without a local
   health-data collection grant redirects to `/onboarding/consent`, does not

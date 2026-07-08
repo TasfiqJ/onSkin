@@ -42,6 +42,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Expected result: Each tab remains reachable and visibly selected when active.
    Evidence: Screenshot and tab geometry snapshot.
    Current local evidence: 2026-07-07 Chrome CDP Expo web run at 320 x 568 and 390 x 568 starts on `/today`, clicks Progress, Shelf, and You through the floating tab bar, and verifies exactly one selected tab after each switch, all four visible labels, 54 px tab targets, center hit-tests inside each tab, zero horizontal overflow, no non-tab controls in the floating-bar zone, and zero browser console errors.
+   Current polish evidence: 2026-07-08 headless Chrome Expo web at 320 x 568 and 390 x 568 caught PM Today's floating tab bar sitting over a light scene-clearance band even though the dark screen was active. After the route-aware scene background fix, PM Today samples dark behind the bar, Progress/Shelf/You sample paper, all labels remain visible, exactly one tab is selected after each switch, centers hit the expected tab, targets are 54 px tall, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`.
 
 ### Branches
 
@@ -52,6 +53,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Today, Progress, Shelf, and You labels render on one line inside the floating bar, with no clipped glyphs, no text overlap, and at least 44 pt tap targets.
   - Evidence: Phone-width screenshots and DOM/native geometry snapshot.
   - Current local evidence: 2026-07-07 Chrome CDP Expo web screenshots and geometry snapshots at 320 x 568 and 390 x 568 show Today, Progress, Shelf, and You labels inside their tab bounds, all tab targets at least 54 px tall, tab widths 75.5 px at 320 and 93 px at 390, and no horizontal overflow.
+  - Current polish evidence: 2026-07-08 headless Chrome screenshots confirm the Wealthsimple-style white floating bar remains readable while PM Today now keeps the surrounding bottom clearance dark instead of showing a light slab.
 - Branch: content clearance beneath floating tab bar
   - Priority: Critical
   - Automate later: Yes
@@ -59,6 +61,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: No visible CTA, prompt control, or inactive locked-paywall compliance control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view.
   - Evidence: Phone-width screenshots, hit-test snapshot, and control geometry.
   - Current local evidence: 2026-07-07 Chrome CDP Expo web checked `/today`, `/progress`, `/shelf`, and `/you` at 320 x 568 and 390 x 568; the DOM geometry snapshot found no non-tab visible controls intersecting the floating tab-bar zone.
+- Branch: PM Today scene background
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Today in the PM routine state at 320 px and switch away to another tab.
+  - Expected result: The Today tab scene uses the night background behind the PM route, while non-Today tabs keep the paper background so there is no paper strip or flash around the night Today surface.
+  - Evidence: Phone-width screenshot, route snapshot, and computed background colors.
+  - Current local evidence: 2026-07-08 headless Chrome Expo web at 320 x 568 and 390 x 568 verified PM Today uses dark bottom-scene samples around the floating tab bar after the fix, Progress/Shelf/You use paper samples, tab labels and hit targets remain correct, exactly one tab is selected, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`.
 - Branch: keyboard or text-scale pressure
   - Priority: Important
   - Automate later: Yes

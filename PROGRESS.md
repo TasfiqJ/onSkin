@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Polished the floating bottom tab bar scene background so it no longer sits on
+  a mismatched white band over PM Today. Human E2E geometry already proved the
+  labels and hit targets were correct, but screenshot review showed Today's
+  dark surface stopped above the floating bar because the tab scene clearance
+  used the default light background outside the `Screen` component. The tabs
+  layout now paints scene clearance by route: PM Today uses `colors.night`,
+  while Progress, Shelf, You, and AM Today use `colors.paper`. Headless Chrome
+  evidence at 320 x 568 and 390 x 568 confirms Today has a dark bottom sample
+  behind the bar, light tabs keep paper samples, all labels remain visible, all
+  centers hit the expected tab, targets stay 54 px tall, and horizontal
+  overflow is zero. Evidence is in
+  `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-08-tabbar-scene-background.md`.
+
 - Hardened `/conflict/[ruleId]` stale conflict and detail sheets for compact
   phone viewports, native bottom safe areas, and web modal semantics. E2E first
   caught the route-local sheet still collapsing when Expo web reported a
