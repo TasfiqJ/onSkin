@@ -44,6 +44,7 @@ describe('Community route contracts', () => {
 
     expect(source).toContain('const shortCommunity = height < 520;');
     expect(source).toContain('const ultraShortCommunity = height < 460;');
+    expect(source).toContain('const splitShortCommunity = height < 410;');
     expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
     expect(source).toContain(
       "shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'",
@@ -55,6 +56,8 @@ describe('Community route contracts', () => {
     expect(source).toContain('const keepNextSectionBelowFold =');
     expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
     expect(source).toContain('style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}');
+    expect(source).toContain('const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;');
+    expect(source).toContain('style={keepNextNoteBelowFold ? { marginTop: 72 } : undefined}');
     expect(source).toContain("short\n          ? 'mb-1 rounded-[14px] bg-paper-raised p-2'");
     expect(source).toContain("shortCommunity\n                      ? 'mb-1 pl-0.5 text-[10px]'");
     expect(source).toContain('style={{ lineHeight: short ? 15 : compact ? 16 : 19 }}');

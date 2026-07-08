@@ -104,6 +104,7 @@ export default function SkinNotesHub() {
   const compactCommunity = height < 640;
   const shortCommunity = height < 520;
   const ultraShortCommunity = height < 460;
+  const splitShortCommunity = height < 410;
   const narrowCompactCommunity = compactCommunity && width < 360;
 
   useEffect(() => {
@@ -197,14 +198,17 @@ export default function SkinNotesHub() {
                 >
                   {g.topic.title.toUpperCase()}
                 </Text>
-                {g.notes.map((note) => (
-                  <NoteCard
-                    key={note.id}
-                    note={note}
-                    compact={compactCommunity}
-                    short={shortCommunity}
-                  />
-                ))}
+                {g.notes.map((note, noteIndex) => {
+                  const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;
+                  return (
+                    <View
+                      key={note.id}
+                      style={keepNextNoteBelowFold ? { marginTop: 72 } : undefined}
+                    >
+                      <NoteCard note={note} compact={compactCommunity} short={shortCommunity} />
+                    </View>
+                  );
+                })}
               </View>
             );
           })}

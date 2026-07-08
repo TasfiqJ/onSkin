@@ -122,6 +122,7 @@ export default function NotificationSettingsScreen() {
   const update = useUpdateNotifPrefs();
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const ultraShortNotifications = height < 460;
+  const splitShortNotifications = height < 410;
   if (!p) return null;
 
   return (
@@ -190,16 +191,18 @@ export default function NotificationSettingsScreen() {
           />
         </View>
 
-        <SectionLabel compact={ultraShortNotifications}>PROMOTIONAL</SectionLabel>
-        <View className="rounded-[18px] bg-paper-raised px-[18px]">
-          <Row
-            title="Tips &amp; announcements"
-            subtitle="off by default"
-            value={p.promotionalOptIn}
-            onChange={(v) => set({ promotionalOptIn: v })}
-            last
-            compact={ultraShortNotifications}
-          />
+        <View style={splitShortNotifications ? { marginTop: 56 } : undefined}>
+          <SectionLabel compact={ultraShortNotifications}>PROMOTIONAL</SectionLabel>
+          <View className="rounded-[18px] bg-paper-raised px-[18px]">
+            <Row
+              title="Tips &amp; announcements"
+              subtitle="off by default"
+              value={p.promotionalOptIn}
+              onChange={(v) => set({ promotionalOptIn: v })}
+              last
+              compact={ultraShortNotifications}
+            />
+          </View>
         </View>
 
         <Text variant="label" tone="muted" className="mt-6 text-center" style={{ fontSize: 10.5 }}>

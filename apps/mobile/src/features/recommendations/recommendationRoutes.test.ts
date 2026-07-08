@@ -61,11 +61,17 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const compactHub = height < 640;');
     expect(source).toContain('const shortHub = height < 520;');
     expect(source).toContain('const ultraShortHub = height < 460;');
+    expect(source).toContain('const splitShortHub = height < 410;');
     expect(source).toContain('const narrowCompactHub = compactHub && width <= 430;');
     expect(source).toContain("ultraShortHub\n              ? 'pb-20 pt-1'");
     expect(source).toContain('<HubIntro short={shortHub} ultraShort={ultraShortHub} />');
-    expect(source).toContain('const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;');
-    expect(source).toContain('style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}');
+    expect(source).toContain('const keepNextCardBelowFold = splitShortHub');
+    expect(source).toContain('? recIndex > 0');
+    expect(source).toContain(': narrowCompactHub && recIndex > 1;');
+    expect(source).toContain('const deferredCardTopMargin = splitShortHub ? 128 : 80;');
+    expect(source).toContain(
+      'style={keepNextCardBelowFold ? { marginTop: deferredCardTopMargin } : undefined}',
+    );
     expect(source).toContain('ultraShort={ultraShortHub}');
     expect(source).toContain("ultraShort\n          ? 'mb-1.5 rounded-[12px] bg-paper-raised p-2'");
     expect(source).toContain("ultraShort\n              ? 'h-6 w-6 items-center justify-center rounded-[7px]'");

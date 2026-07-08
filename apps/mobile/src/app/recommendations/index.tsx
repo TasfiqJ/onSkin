@@ -348,6 +348,7 @@ export default function ForYouScreen() {
   const compactHub = height < 640;
   const shortHub = height < 520;
   const ultraShortHub = height < 460;
+  const splitShortHub = height < 410;
   const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
@@ -407,9 +408,15 @@ export default function ForYouScreen() {
                 {g.group.toUpperCase()}
               </Text>
               {g.items.map((rec, recIndex) => {
-                const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;
+                const keepNextCardBelowFold = splitShortHub
+                  ? recIndex > 0
+                  : narrowCompactHub && recIndex > 1;
+                const deferredCardTopMargin = splitShortHub ? 128 : 80;
                 return (
-                  <View key={rec.id} style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}>
+                  <View
+                    key={rec.id}
+                    style={keepNextCardBelowFold ? { marginTop: deferredCardTopMargin } : undefined}
+                  >
                     <RecCard
                       rec={rec}
                       compact={compactHub}

@@ -135,11 +135,15 @@ describe('Settings route contracts', () => {
     expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
     expect(notifications).toContain('useWindowDimensions');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
+    expect(notifications).toContain('const splitShortNotifications = height < 410;');
     expect(notifications).toContain("className={compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}");
     expect(notifications).toContain('min-h-[48px] flex-row items-center justify-between py-0');
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-2.5');
     expect(notifications).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
     expect(notifications).toContain('compact={ultraShortNotifications}');
+    expect(notifications).toContain(
+      'style={splitShortNotifications ? { marginTop: 56 } : undefined}',
+    );
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
   });
