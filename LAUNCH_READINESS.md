@@ -81,6 +81,9 @@ Fresh verification on 2026-07-08:
   from phase scripts and `.env.example`.
 - `npm run docs:tas-todo-audit:check` passed as the non-mutating freshness gate
   for the committed Tas-owned evidence inventory.
+- `npm run docs:generated-packet-status-audit:check` passed as the
+  non-mutating guard that committed generated phase packets do not record a
+  dirty Git worktree or dirty-packet warning text.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 320 x 480 current-main route rerun,

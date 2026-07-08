@@ -32,6 +32,7 @@ const requiredLaunchCommands = [
   'npm run docs:source-packet-audit:check',
   'npm run docs:tas-todo-audit:check',
   'npm run e2e:human:manifest:check',
+  'npm run docs:generated-packet-status-audit:check',
   'npm run phase9:verify',
   'npm run phase10-11:verify',
 ];

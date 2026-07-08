@@ -97,8 +97,10 @@ Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
 `npm run phase8:verify`, `npm run phase9:verify`,
 `npm run phase10-11:verify`, `npm run docs:source-packet-audit:check`,
-`npm run docs:tas-todo-audit:check`, `npm run docs:readiness-status-audit:check`,
-and `npm run e2e:human:manifest:check` pass non-strict code and documentation
+`npm run docs:tas-todo-audit:check`,
+`npm run docs:readiness-status-audit:check`,
+`npm run docs:generated-packet-status-audit:check`, and
+`npm run e2e:human:manifest:check` pass non-strict code and documentation
 freshness gates. The Phase 7 core-loop packet has been refreshed for the
 current Today and Progress route hashes; the Phase 8 growth/store packet has
 been refreshed for the current share-card and conflict-share route hashes; the

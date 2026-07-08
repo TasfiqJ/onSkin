@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T23:38:38.038Z",
+  "generatedAt": "2026-07-08T23:49:57.785Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -34,6 +34,7 @@
     "npm run docs:source-packet-audit:check",
     "npm run docs:tas-todo-audit:check",
     "npm run e2e:human:manifest:check",
+    "npm run docs:generated-packet-status-audit:check",
     "npm run phase9:verify",
     "npm run phase10-11:verify"
   ],
