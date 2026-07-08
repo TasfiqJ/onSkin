@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened recommendation preference save failure recovery. The preferences
+  route now has a clamped
+  `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS` fixture so the saving
+  state is observable, and compact preference chips expose `aria-selected` on
+  Expo web in addition to their React Native accessibility state. System Chrome
+  Expo web at 320 x 568 with
+  `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE=once` and a 1.2s save
+  delay verifies `Vegan` stays unselected and disabled while the forced save is
+  pending, shows persistent `Preference not saved` recovery copy after failure,
+  disables again during retry, becomes selected only after the successful save,
+  persists selected state after reload, keeps zero horizontal overflow, and
+  keeps all visible controls 48 px tall. Evidence is in
+  `test-results/human-e2e/2026-07-08/recommendation-preference-save-failure-current/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-recommendation-preference-save-state.md`.
+
 - Hardened Trend consent failure recovery. The `/trend/optin` save and
   withdrawal failure path now relies on the existing route-owned
   `accessibilityRole="alert"` panel instead of also firing a blocking native

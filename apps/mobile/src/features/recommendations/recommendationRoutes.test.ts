@@ -102,10 +102,14 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('setSaveFailed(true);');
     expect(source).toContain('Alert.alert(REC_COPY.preferences.saveFailedTitle');
     expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('aria-selected={active}');
     expect(source).toContain('EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE');
+    expect(source).toContain('EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS');
+    expect(source).toContain('const MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS = 3_000;');
     expect(source).toContain(
       "process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE === 'once'",
     );
+    expect(source).toContain('if (preferenceDelayMs > 0) await wait(preferenceDelayMs);');
     expect(source).toContain("throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE')");
     expect(source).toContain("track('preference_set')");
     expect(source.indexOf('save: savePreferenceWithFixture')).toBeLessThan(

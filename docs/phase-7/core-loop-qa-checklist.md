@@ -374,6 +374,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   overflow or sub-44 px controls. Evidence is in
   `test-results/human-e2e/2026-07-07/recommendation-preferences-texture-clearance/`;
   it does not replace real iOS/Android beta-device QA.
+- 2026-07-08: System Chrome Expo web E2E at 320 x 568 plus focused route
+  contracts cover recommendation preference save failure recovery with a
+  one-shot local persistence failure and a 1.2s save delay. `Vegan` remains
+  `aria-selected=false` and disabled while the failed save is pending, the route
+  shows stable `Preference not saved` recovery copy after rejection, retry
+  disables the chips again, and `Vegan` becomes `aria-selected=true` only after
+  the successful save. Reload preserves the saved selection, every visible
+  control remains 48 px tall, and horizontal overflow stays zero. Evidence is in
+  `test-results/human-e2e/2026-07-08/recommendation-preference-save-failure-current/`;
+  it does not replace real iOS/Android beta-device QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers stale recommendation detail
   recovery: direct-open `/recommendations/stale-local-rec`, verify the stale
   suggestion copy and 48 px `Back to For you` action, tap it, and confirm the

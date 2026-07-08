@@ -27,12 +27,28 @@ import { colors } from '@/theme/tokens';
 
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
 const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
+const MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS = 3_000;
 
 function devRecommendationPreferenceFailureMode(): 'once' | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
   return process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE === 'once'
     ? 'once'
     : null;
+}
+
+function devRecommendationPreferenceDelayMs(): number {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return 0;
+
+  const raw = process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS;
+  if (!raw) return 0;
+
+  const value = Number(raw);
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  return Math.min(Math.round(value), MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS);
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function Toggle({
@@ -52,6 +68,7 @@ function Toggle({
 }) {
   return (
     <Pressable
+      aria-selected={active}
       accessibilityRole="button"
       accessibilityState={{ selected: active, disabled }}
       disabled={disabled}
@@ -96,10 +113,12 @@ export default function PreferencesScreen() {
   const p = prefs ?? DEFAULT_PREFERENCES;
   const controlsDisabled = isLoading || saving;
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
+  const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
   const sectionLabelClassName = compactPreferences ? 'mb-2 mt-5' : 'mb-3 mt-7';
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
+    if (preferenceDelayMs > 0) await wait(preferenceDelayMs);
     if (preferenceFailureMode === 'once' && !simulatedPreferenceFailureUsed.current) {
       simulatedPreferenceFailureUsed.current = true;
       throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE');
