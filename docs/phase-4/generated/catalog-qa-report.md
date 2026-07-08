@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-08T22:13:36.325Z
+Generated: 2026-07-08T22:32:21.305Z
 
-Git SHA: 6924e54bd6f199aaf499a806150821c626e948a0
+Git SHA: 36321409ae4188015e815cd51e573f80f0e07396
 
 Git status: clean
 
@@ -30,7 +30,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 12147 | bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1 |
+| package.json | present | 12337 | bf030e5250bd594e49762bd3e759a7f027631747164234dadf096f5150b61fc7 |
 | scripts/phase4/catalog-qa-report.mjs | present | 6579 | cfb7d04ab9b1a0a940c186bd5b6921edca30e8447f5345aab7ccaefb4b8b0202 |
 | scripts/phase4/beta-coverage-report.mjs | present | 21304 | 17db7bc6e862bc6fb065b5e740b12da8f3634adfaefb80b8c05393e39690a3de |
 | scripts/phase4/beta-coverage-report-smoke.mjs | present | 7116 | a7f0280c06c6247c5cbccf806403f7960636cc85fdb5f9223d03ad517f8ca558 |
@@ -41,7 +41,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | scripts/phase4/check-source-env-smoke.mjs | present | 3992 | ae38709e83827c30bfbc2c52b4d4165a0ada5bc1ab36f9cc2a37cdc986f40149 |
 | scripts/phase4/catalog-qa-report-smoke.mjs | present | 5271 | 6cf01a6d0303828a2b5b6aaddcd6cad662c9aeb3098700de431cf12ff182ab35 |
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
-| docs/FOR_TAS_TO_DO.md | present | 35184 | d7b84bb212d2c13a39ef88a56f76ce31d8bffe4a1a82ced301d0a286a44c15ff |
+| docs/FOR_TAS_TO_DO.md | present | 35342 | 4cfd8bb47d3b285e3b6bc58f51355d5e3c1e654a65346b543ae2a52300a7fd1c |
 | docs/phase-4/beta-coverage-report.md | present | 1854 | 5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6 |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2022 | 313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2335 | a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8 |

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T22:13:36.325Z",
+  "generatedAt": "2026-07-08T22:32:21.305Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "6924e54bd6f199aaf499a806150821c626e948a0",
+  "gitSha": "36321409ae4188015e815cd51e573f80f0e07396",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -15,8 +15,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 12147,
-      "sha256": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1"
+      "bytes": 12337,
+      "sha256": "bf030e5250bd594e49762bd3e759a7f027631747164234dadf096f5150b61fc7"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
@@ -81,8 +81,8 @@
     {
       "path": "docs/FOR_TAS_TO_DO.md",
       "exists": true,
-      "bytes": 35184,
-      "sha256": "d7b84bb212d2c13a39ef88a56f76ce31d8bffe4a1a82ced301d0a286a44c15ff"
+      "bytes": 35342,
+      "sha256": "4cfd8bb47d3b285e3b6bc58f51355d5e3c1e654a65346b543ae2a52300a7fd1c"
     },
     {
       "path": "docs/phase-4/beta-coverage-report.md",
