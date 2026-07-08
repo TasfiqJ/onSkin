@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the harsher 320 x 430 / 170% short-phone text-pressure route audit.
+  The sweep reproduced partial first-viewport controls in Skin Notes,
+  Settings Notifications, and Recommendation Preferences: a later community
+  card peeked into view, the `Progress-photo nudge` switch was clipped, and
+  the `Non-comedogenic` value chip appeared as a partial target. Ultra-short
+  narrow Community sections now move later topics fully below the fold,
+  Notification Settings splits the third nudge row below 460 px, and
+  Recommendation Preferences defers lower value chips below 460 px. Focused
+  Community/Settings/Recommendations route contracts pass, and the final
+  49-route sweep reports zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-170-short-phone-430-postfix-2/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-170-short-phone-430-clearance.md`.
+
 - Added a launch-readiness freshness audit for source-of-truth drift. The new
   `docs:readiness-status-audit:check` gate verifies `LAUNCH_READINESS.md` and
   `BLOCKERS.md` match the latest committed human-E2E evidence date, name the
