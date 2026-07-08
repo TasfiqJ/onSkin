@@ -97,6 +97,42 @@ warn(
 );
 warn(Boolean(rootPkg.scripts?.['phase5:verify']), 'Root package is missing phase5:verify script.');
 
+const qaPacketBuilder = readFileSync(
+  resolve(root, 'scripts/phase5/build-device-qa-packet.mjs'),
+  'utf8',
+);
+require(
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+    /device-qa-packet\.json/.test(qaPacketBuilder) &&
+    /device-qa-packet\.md/.test(qaPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
+  'Phase 5 device QA packet must ignore only its own generated outputs when recording Git status.',
+);
+require(
+  /Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
+  'Phase 5 device QA packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
+for (const file of [
+  'package.json',
+  'apps/mobile/app.base.json',
+  'apps/mobile/app.config.js',
+  'apps/mobile/eas.json',
+  'apps/mobile/src/lib/iap/revenuecat.ts',
+  'scripts/phase5/build-device-qa-packet.mjs',
+  'scripts/phase5/check-native-config.mjs',
+  'scripts/phase5/device-qa-packet-smoke.mjs',
+  'scripts/phase9/lib.mjs',
+  'docs/phase-5/native-build-runbook.md',
+  'docs/phase-5/device-qa-checklist.md',
+  'docs/phase-5/phase-5-exit-review.md',
+]) {
+  require(
+    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
+    `Phase 5 device QA packet must hash ${file}.`,
+  );
+}
+
 console.log('Phase 5 native config check');
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);

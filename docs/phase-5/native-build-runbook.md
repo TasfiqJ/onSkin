@@ -51,6 +51,13 @@ PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
 
+The generated packet must show the source Git SHA and `Git status: clean`.
+Treat `Git status: DIRTY` as investigation evidence only, not final native QA
+signoff. The packet hashes the native app config, device QA scripts, native
+runtime files, RevenueCat integration, shared evidence helpers, and Phase 5
+runbook/checklist/exit docs so reviewers can tie device results to the exact
+source and gates that produced them.
+
 `PHASE5_QA_SIGNOFF` is trimmed and case-normalized, but only `true` passes.
 `PHASE5_SIGNED_OFF_BY` must be a real tester/reviewer name; placeholders and
 generic tester labels are rejected.

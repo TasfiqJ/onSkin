@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import {
+  command,
   evidenceFlagEnabled,
   normalizeNamedSignoff,
   placeholderEnvValue,
@@ -11,7 +12,12 @@ import {
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
-const outDir = resolve(root, process.env.PHASE6_PACKET_OUT_DIR ?? 'docs/phase-6/generated');
+const packetOutDir = process.env.PHASE6_PACKET_OUT_DIR ?? 'docs/phase-6/generated';
+const outDir = resolve(root, packetOutDir);
+const packetOutputPaths = [
+  `${packetOutDir}/payments-qa-packet.json`,
+  `${packetOutDir}/payments-qa-packet.md`,
+].map((path) => path.replace(/\\/g, '/'));
 
 const requiredFiles = [
   'package.json',
@@ -106,6 +112,20 @@ function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 }
 
+function gitStatusExcludingGeneratedPacket() {
+  const excluded = new Set(packetOutputPaths);
+  return command('git', ['status', '--short'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !excluded.has(statusPath);
+    })
+    .join('\n')
+    .trim();
+}
+
 function revenueCatPublicKey(value, prefix) {
   const trimmed = String(value ?? '').trim();
   return !placeholderEnvValue(trimmed) && new RegExp(`^${prefix}_[A-Za-z0-9]{8,}$`).test(trimmed);
@@ -181,6 +201,20 @@ const evidence = {
 
 const files = requiredFiles.map(hashFile);
 const blockers = [];
+const warnings = [];
+let gitSha = 'unknown';
+let gitStatus = 'unknown';
+try {
+  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
+  gitStatus = gitStatusExcludingGeneratedPacket();
+} catch {
+  warnings.push('Git SHA/status could not be captured.');
+}
+if (gitStatus.length > 0) {
+  warnings.push(
+    'Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence.',
+  );
+}
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
 for (const [key, message] of productionConfigBlockers) {
   if (!productionConfig[key]) blockers.push(message);
@@ -196,11 +230,14 @@ if (!evidence.signedOffBy) blockers.push('Missing PHASE6_SIGNED_OFF_BY.');
 const packet = {
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.',
+  gitSha,
+  gitStatus,
   productionConfig,
   evidence,
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
   files,
   blockers,
+  warnings,
 };
 
 mkdirSync(outDir, { recursive: true });
@@ -224,6 +261,8 @@ writeFileSync(
     '# Generated Phase 6 Payments QA Packet',
     '',
     `Generated at: ${packet.generatedAt}`,
+    `Git SHA: ${packet.gitSha}`,
+    `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
     '',
     'Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.',
     '',
@@ -269,6 +308,10 @@ writeFileSync(
     '## Blockers',
     '',
     blockers.length > 0 ? blockers.map((blocker) => `- ${blocker}`).join('\n') : '- none',
+    '',
+    '## Warnings',
+    '',
+    warnings.length > 0 ? warnings.map((warning) => `- ${warning}`).join('\n') : '- none',
     '',
   ].join('\n'),
 );

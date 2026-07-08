@@ -58,6 +58,9 @@
 
 ## Evidence Required For Strict Exit
 
+- Generated `docs/phase-6/generated/payments-qa-packet.md` with `Git status:
+  clean`, current source hashes, final RevenueCat/payment config evidence, and
+  named signoff.
 - `EXPO_PUBLIC_REVENUECAT_IOS_KEY=<final appl_ key>`
 - `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=<final goog_ key>`
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`

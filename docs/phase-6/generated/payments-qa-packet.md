@@ -1,6 +1,8 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-08T17:46:01.779Z
+Generated at: 2026-07-08T19:03:35.708Z
+Git SHA: 0cbd353d8b228069aaf81919fbcf65be0b9d998e
+Git status: DIRTY
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
 
@@ -52,7 +54,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 11407 | 68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd |
+| package.json | present | 11474 | e28da6891b2a246560edf0e39d2a19af46c154d892d9febadeea4204cae14212 |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 18355 | b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75 |
 | apps/mobile/src/features/subscription/store.ts | present | 10936 | 9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991 |
 | apps/mobile/src/features/subscription/useEntitlement.ts | present | 8978 | 8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a |
@@ -67,12 +69,12 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |
 | supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql | present | 3947 | a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02 |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 3019 | d956f0f80adc8c7fa64ab50322b665606449c89f98d2209704c73a674df4cc97 |
-| scripts/phase6/build-payments-qa-packet.mjs | present | 12605 | f6e1aeb7535d99d3bb6da7167a780966ca57fbb49ba3cb2fe0a97d747376eab4 |
-| scripts/phase6/check-payments-env.mjs | present | 7645 | c2008b98067f42c4c8bd2dbc84dcd1cfe80167edd43ca30f32253b7a18e92b50 |
-| scripts/phase6/check-payments-env-smoke.mjs | present | 7493 | 40919a7139f9d5315f15dec5d62e7e7605eb84ee0c846440a52b8127fc187874 |
+| scripts/phase6/build-payments-qa-packet.mjs | present | 13864 | 758b94539937e13eb8a13111bf54879d7f6ef484bd7e081d5d6424cfad83c296 |
+| scripts/phase6/check-payments-env.mjs | present | 9189 | c06e92d7c35808545c9e1cd72bd7dd5846d1dc8ad33854be783e30fa54d62ce1 |
+| scripts/phase6/check-payments-env-smoke.mjs | present | 8751 | 2f5d3e43dcf43bc3acff647f87d6d80a0f0478add183fc944ba0cb9737728c7e |
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
-| docs/phase-6/payments-runbook.md | present | 3696 | f8e63af71f040eda8bc9c468e34421981c3479be81d0fd29bc052794fdf3e6da |
-| docs/phase-6/payments-qa-checklist.md | present | 3469 | d335de4c06ae6cc01cbb695a6b32b2d48bd97073f86218d31693ebcd79976337 |
+| docs/phase-6/payments-runbook.md | present | 3857 | cbd93c2200e4b39d9984a18dd7644171291086982db22969bd62a75d2e3d6660 |
+| docs/phase-6/payments-qa-checklist.md | present | 3642 | f214635928c28e742eb357182ba3d440625a06881213ca3a3b61544da8958be0 |
 | docs/phase-6/phase-6-exit-review.md | present | 2367 | 6702047baf4028eab3e49d23bc145afbf689f1f3262263b43020cdffcc720cac |
 
 ## Blockers
@@ -95,3 +97,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 - Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.
 - Missing PHASE6_FINANCE_SIGNOFF=true.
 - Missing PHASE6_SIGNED_OFF_BY.
+
+## Warnings
+
+- Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence.

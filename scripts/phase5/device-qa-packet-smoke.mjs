@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -66,6 +66,16 @@ function run(extraEnv) {
   });
   result.outDir = outDir;
   return result;
+}
+
+function runWithDirtyWorktree(extraEnv) {
+  const markerPath = join(root, `.phase5-smoke-dirty-${process.pid}.tmp`);
+  writeFileSync(markerPath, 'temporary Phase 5 dirty-worktree smoke marker\n');
+  try {
+    return run(extraEnv);
+  } finally {
+    rmSync(markerPath, { force: true });
+  }
 }
 
 function output(result) {
@@ -210,7 +220,29 @@ const cases = [
     expect(result) {
       if (result.status !== 0) return false;
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
-      return packet.buildEvidence.signedOffBy === 'Tas Mohammed';
+      return (
+        packet.buildEvidence.signedOffBy === 'Tas Mohammed' &&
+        /^[0-9a-f]{40}$/i.test(packet.gitSha) &&
+        typeof packet.gitStatus === 'string' &&
+        Array.isArray(packet.warnings) &&
+        packet.files.some((file) => file.path === 'scripts/phase5/build-device-qa-packet.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/phase5/check-native-config.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/phase5/device-qa-packet-smoke.mjs')
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet warns when generated from a dirty worktree',
+    result: runWithDirtyWorktree({}),
+    expect(result) {
+      if (result.status !== 0) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
+        packet.warnings.includes(
+          'Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence.',
+        )
+      );
     },
   },
 ];

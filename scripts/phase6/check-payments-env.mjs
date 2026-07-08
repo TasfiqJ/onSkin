@@ -83,6 +83,41 @@ require(Boolean(
 ), 'Root package is missing phase6:qa-packet.');
 require(Boolean(rootPkg.scripts?.['phase6:verify']), 'Root package is missing phase6:verify.');
 
+const qaPacketBuilder = read('scripts/phase6/build-payments-qa-packet.mjs');
+require(
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+    /payments-qa-packet\.json/.test(qaPacketBuilder) &&
+    /payments-qa-packet\.md/.test(qaPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
+  'Phase 6 payments QA packet must ignore only its own generated outputs when recording Git status.',
+);
+require(
+  /Phase 6 payments QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
+  'Phase 6 payments QA packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
+for (const file of [
+  'package.json',
+  'apps/mobile/src/lib/iap/revenuecat.ts',
+  'apps/mobile/src/features/subscription/store.ts',
+  'apps/mobile/src/features/subscription/useEntitlement.ts',
+  'supabase/functions/revenuecat-webhook/index.ts',
+  'supabase/functions/subscription-grants/index.ts',
+  'supabase/functions/account-deletion/index.ts',
+  'scripts/phase6/build-payments-qa-packet.mjs',
+  'scripts/phase6/check-payments-env.mjs',
+  'scripts/phase6/check-payments-env-smoke.mjs',
+  'scripts/phase9/lib.mjs',
+  'docs/phase-6/payments-runbook.md',
+  'docs/phase-6/payments-qa-checklist.md',
+  'docs/phase-6/phase-6-exit-review.md',
+]) {
+  require(
+    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
+    `Phase 6 payments QA packet must hash ${file}.`,
+  );
+}
+
 require(existsSync(
   resolve(root, 'supabase/functions/subscription-grants/index.ts'),
 ), 'subscription-grants Edge Function is missing.');

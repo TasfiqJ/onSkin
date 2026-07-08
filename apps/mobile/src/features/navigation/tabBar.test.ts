@@ -78,8 +78,10 @@ describe('tab bar treatment', () => {
     expect(source).toContain("type: 'tabPress'");
     expect(source).toContain("type: 'tabLongPress'");
     expect(source).toContain('fontSize: 12.5');
-    expect(source).toContain('lineHeight: 16');
-    expect(source).toContain('minHeight: 17');
+    expect(source).toContain('lineHeight: 17');
+    expect(source).toContain('minHeight: 19');
+    expect(source).toContain('paddingBottom: 1');
+    expect(source).toContain('paddingTop: 1');
     expect(source).toContain('minHeight: MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT + tabBarBottom + FLOATING_TAB_BAR_GAP');
@@ -118,7 +120,8 @@ describe('tab bar treatment', () => {
     expect(source).toContain('flexShrink: 1');
     expect(source).toContain('fontSize: 12.5');
     expect(source).toContain('includeFontPadding: false');
-    expect(source).toContain('lineHeight: 16');
+    expect(source).toContain('lineHeight: 17');
+    expect(source).toContain('minHeight: 19');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('minWidth: 0');
     expect(source).toContain("pointerEvents: 'none'");
@@ -132,6 +135,7 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('tabBarLabel: renderTabBarLabel');
     expect(source).not.toContain("tabBarLabelPosition: 'below-icon'");
     expect(source).not.toContain('lineHeight: 15');
+    expect(source).not.toContain('lineHeight: 16');
     expect(source).not.toContain('fontSize: 11');
     expect(source).not.toContain('fontSize: 12,\n    includeFontPadding: false');
     expect(source).not.toContain('minWidth: 56');

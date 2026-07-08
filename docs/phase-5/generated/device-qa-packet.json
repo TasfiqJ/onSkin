@@ -1,6 +1,8 @@
 {
-  "generatedAt": "2026-07-08T17:56:24.287Z",
+  "generatedAt": "2026-07-08T19:02:53.219Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
+  "gitSha": "0cbd353d8b228069aaf81919fbcf65be0b9d998e",
+  "gitStatus": "M PROGRESS.md\n M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/navigation/tabBar.test.ts\n M docs/phase-5/device-qa-checklist.md\n M docs/phase-5/native-build-runbook.md\n M docs/phase-6/payments-qa-checklist.md\n M docs/phase-6/payments-runbook.md\n M scripts/phase5/build-device-qa-packet.mjs\n M scripts/phase5/check-native-config.mjs\n M scripts/phase5/device-qa-packet-smoke.mjs\n M scripts/phase6/build-payments-qa-packet.mjs\n M scripts/phase6/check-payments-env-smoke.mjs\n M scripts/phase6/check-payments-env.mjs",
   "buildEvidence": {
     "iosBuildId": "",
     "androidBuildId": "",
@@ -219,20 +221,20 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 11558,
-      "sha256": "14fca81e3908174c8902c34d0b60ec709f62023ebc47ae8441dcba2bdca00b53"
+      "bytes": 12823,
+      "sha256": "e13961b392af213de666a3395af039320d1217051ba28537b8b319c84bf2a4c9"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 4531,
-      "sha256": "65c39abc9f8ba8789f8ceddb9cbeaf93d60097f537946282c99be4b327a895a6"
+      "bytes": 5918,
+      "sha256": "aabc83b18912fb80076e8c0b659fa407813f2c311d438405c18c19fd662e4adb"
     },
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 7075,
-      "sha256": "0b62398e435f9957950b6b4c0b750a847c2cb9e91852c0b35b88ed7f5067686d"
+      "bytes": 8410,
+      "sha256": "05966f96f3b0c8348ff94eb73c7f96840810cd3c412078a5156c311b30894e83"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -243,14 +245,14 @@
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 2868,
-      "sha256": "88b0e9d853262f06a8065dd7d51747760dce86a9b60401edcfd4d45114e899c0"
+      "bytes": 3288,
+      "sha256": "5700bd58909f709b425219330dc78c178461858d349ff68ac3ea9e9ba8ed2117"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 4141,
-      "sha256": "63924b4b607c3d0ddc5c55f52b3d9ea1f142b69b3bf4afa5f7b3b0e53cd4e996"
+      "bytes": 4319,
+      "sha256": "baf131a4949b7d1c5a328d262c8095645fa5b9f09064b28b25276c0b2e5c2681"
     },
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
@@ -279,5 +281,8 @@
     "Missing PHASE5_SENTRY_NATIVE_QA_PASS=true (Sentry native crash/source-map smoke).",
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
     "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver/TalkBack labels, traversal, and 44 pt controls)."
+  ],
+  "warnings": [
+    "Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence."
   ]
 }

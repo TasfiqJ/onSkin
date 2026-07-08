@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -75,6 +75,16 @@ function runPacket(extraEnv) {
     return { ...result, packet };
   } finally {
     rmSync(outDir, { force: true, recursive: true });
+  }
+}
+
+function runPacketWithDirtyWorktree(extraEnv) {
+  const markerPath = join(root, `.phase6-smoke-dirty-${process.pid}.tmp`);
+  writeFileSync(markerPath, 'temporary Phase 6 dirty-worktree smoke marker\n');
+  try {
+    return runPacket(extraEnv);
+  } finally {
+    rmSync(markerPath, { force: true });
   }
 }
 
@@ -160,7 +170,26 @@ const cases = [
         result.packet.evidence.rcOfferingReviewed === true &&
         result.packet.evidence.androidLicenseTestPass === true &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
+        /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
+        typeof result.packet.gitStatus === 'string' &&
+        Array.isArray(result.packet.warnings) &&
+        result.packet.files.some((file) => file.path === 'scripts/phase6/build-payments-qa-packet.mjs') &&
+        result.packet.files.some((file) => file.path === 'scripts/phase6/check-payments-env.mjs') &&
+        result.packet.files.some((file) => file.path === 'scripts/phase6/check-payments-env-smoke.mjs') &&
         !result.packet.blockers.some((blocker) => /PHASE6_SIGNED_OFF_BY/.test(blocker))
+      );
+    },
+  },
+  {
+    name: 'Phase 6 packet warns when generated from a dirty worktree',
+    result: runPacketWithDirtyWorktree({}),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.gitStatus.includes(`.phase6-smoke-dirty-${process.pid}.tmp`) &&
+        result.packet.warnings.includes(
+          'Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence.',
+        )
       );
     },
   },

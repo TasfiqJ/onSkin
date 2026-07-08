@@ -32,6 +32,9 @@ Minimum before beta:
 
 ## Evidence Required For Strict Exit
 
+- Generated `docs/phase-5/generated/device-qa-packet.md` with `Git status:
+  clean`, current source hashes, real EAS build evidence, physical-device
+  labels, and named signoff.
 - `PHASE5_IOS_BUILD_ID=<real EAS UUID or expo.dev build URL>`
 - `PHASE5_ANDROID_BUILD_ID=<real EAS UUID or expo.dev build URL>`
 - `PHASE5_IOS_DEVICE=<physical iPhone/iPad model and iOS/iPadOS version>`

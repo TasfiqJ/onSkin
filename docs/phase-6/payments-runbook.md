@@ -32,7 +32,9 @@ Production environment:
 Strict QA packets hash the payment runtime files, Supabase payment functions and
 migrations, Phase 6 verifier scripts, and shared evidence-normalization helper.
 Regenerate `docs/phase-6/generated/payments-qa-packet.md` after changing any of
-those inputs.
+those inputs. The generated packet must show the source Git SHA and
+`Git status: clean`; treat `Git status: DIRTY` as investigation evidence only,
+not final payments signoff.
 
 ## Entitlement Truth
 

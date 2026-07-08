@@ -6,6 +6,26 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Tightened bottom-tab label geometry after the compact-phone tab bar showed
+  too little text line-box clearance on current fonts. The floating tab labels
+  now use a 17 px line height with a 19 px protected box, and the navigation
+  source test rejects the previous 16 px line height. Added
+  `npm run e2e:tabbar-geometry`, which launches Expo web in headless Chrome,
+  opens Today, clicks Progress, Shelf, You, and Today through the floating tab
+  bar at 320 x 568 and 390 x 568, and captures screenshots, geometry snapshots,
+  and browser logs in
+  `test-results/human-e2e/2026-07-08/navigation-tabbar-geometry-current/`.
+  A follow-up in-app browser pass clicked the floating bar through the same four
+  destinations at both widths and stored evidence in
+  `test-results/human-e2e/2026-07-08/navigation-tabbar-interactive-current/`.
+
+- Hardened Phase 5/6 QA packet provenance. Native-device and payments QA
+  packets now record the source Git SHA, ignore only their own generated packet
+  outputs when checking worktree cleanliness, warn when generated from a dirty
+  tree, and show `Git status: clean` or `DIRTY` in Markdown. The Phase 5/6
+  smoke and readiness gates now protect those provenance fields and required
+  source-hash inputs.
+
 - Hardened Phase 7 core-loop QA packet provenance. The generated packet now
   records the source Git SHA, ignores only its own generated outputs when
   checking worktree cleanliness, warns when produced from mixed local changes,
