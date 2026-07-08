@@ -15,7 +15,11 @@ function abs(path) {
 }
 
 function rel(path) {
-  return relative(root, path).replaceAll('\\', '/');
+  return normalizeRepoPath(relative(root, path));
+}
+
+function normalizeRepoPath(path) {
+  return String(path).replace(/\\/g, '/').replace(/^\.\//, '');
 }
 
 function exists(path) {
@@ -312,7 +316,7 @@ if (check) {
   }
 
   const disallowedCommittedChanges = changedSinceRecorded.filter(
-    (path) => !allowedGeneratedPaths.has(path.replace(/\\/g, '/')),
+    (path) => !allowedGeneratedPaths.has(normalizeRepoPath(path)),
   );
   if (disallowedCommittedChanges.length > 0) {
     console.error(
@@ -326,7 +330,7 @@ if (check) {
     .map((line) => line.trimEnd())
     .filter(Boolean)
     .filter((line) => {
-      const statusPath = line.replace(/^[ MADRCU?!]{1,2}\s+/, '').replace(/\\/g, '/');
+      const statusPath = normalizeRepoPath(line.replace(/^[ MADRCU?!]{1,2}\s+/, ''));
       return !allowedGeneratedPaths.has(statusPath);
     });
   if (dirtyGeneratedOrTracked.length > 0) {
