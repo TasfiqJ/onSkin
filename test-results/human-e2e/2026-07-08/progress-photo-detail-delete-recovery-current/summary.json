@@ -97,9 +97,11 @@
         "x": 24,
         "y": 506
       },
+      "visibleActionRow": [],
       "dialogOpened": false,
       "routeStayed": "/progress/e2e-front-2026-04-01",
       "horizontalOverflow": 0,
+      "scrollYAfterFeedback": 0,
       "evidence": [
         "02-share-confirm.png",
         "03-share-inline-failure.png"
@@ -143,9 +145,11 @@
         "x": 24,
         "y": 506
       },
+      "visibleActionRow": [],
       "dialogOpenedAfterFailure": false,
       "routeStayed": "/progress/e2e-front-2026-04-01",
       "horizontalOverflow": 0,
+      "scrollYAfterFeedback": 0,
       "evidence": [
         "04-delete-confirm.png",
         "05-delete-cancelled.png",
@@ -154,7 +158,7 @@
     }
   },
   "browserLogs": {
-    "currentOriginWarnErrorCount": 3,
+    "currentOriginWarnErrorCount": 6,
     "expectedWarnings": [
       "Placeholder Supabase URL/key warnings",
       "Expo notifications web-support warning"
