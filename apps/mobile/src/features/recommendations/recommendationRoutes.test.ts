@@ -52,19 +52,24 @@ describe('Recommendation route contracts', () => {
   it('keeps the For You hub heading and cards readable on shortest phone web', () => {
     const source = readAppRoute('recommendations/index.tsx');
 
-    expect(source).toContain('function HubIntro({ short = false }: { short?: boolean })');
+    expect(source).toContain('function HubIntro({');
+    expect(source).toContain('ultraShort = false');
     expect(source).toContain('accessibilityRole="header"');
     expect(source).toContain("style={{ alignSelf: 'flex-start' }}");
     expect(source).toContain("REC_COPY.hub.subtitle.split(', ')");
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactHub = height < 640;');
     expect(source).toContain('const shortHub = height < 520;');
+    expect(source).toContain('const ultraShortHub = height < 460;');
     expect(source).toContain('const narrowCompactHub = compactHub && width <= 430;');
-    expect(source).toContain("shortHub ? 'pb-20 pt-2' : compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'");
-    expect(source).toContain('<HubIntro short={shortHub} />');
+    expect(source).toContain("ultraShortHub\n              ? 'pb-20 pt-1'");
+    expect(source).toContain('<HubIntro short={shortHub} ultraShort={ultraShortHub} />');
     expect(source).toContain('const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;');
     expect(source).toContain('style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}');
-    expect(source).toContain('<RecCard rec={rec} compact={compactHub} short={shortHub} />');
+    expect(source).toContain('ultraShort={ultraShortHub}');
+    expect(source).toContain("ultraShort\n          ? 'mb-1.5 rounded-[12px] bg-paper-raised p-2'");
+    expect(source).toContain("ultraShort\n              ? 'h-6 w-6 items-center justify-center rounded-[7px]'");
+    expect(source).toContain("ultraShort\n            ? 'mt-1 flex-row items-start justify-between gap-2 pt-1'");
     expect(source).toContain("short\n          ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'");
     expect(source).toContain('style={{ lineHeight: short ? 14 : compact ? 16 : 18 }}');
     expect(source).toContain('lineHeight: short ? 12 : compact ? 13 : 15');
@@ -121,10 +126,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('h-7 w-7');
     expect(source).toContain('Preferences');
-    expect(source).toContain('className="min-h-[48px] items-center justify-center rounded-pill');
-    expect(source).not.toContain(
-      'className="min-h-[44px] items-center justify-center rounded-pill',
-    );
+    expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-4 py-2.5'");
   });
 
   it('keeps recommendation budget preferences fully visible on compact phones', () => {
@@ -132,18 +134,27 @@ describe('Recommendation route contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPreferences = height < 640');
-    expect(source).toContain(
-      "const sectionLabelClassName = compactPreferences ? 'mb-2 mt-5' : 'mb-3 mt-7';",
-    );
+    expect(source).toContain('const ultraShortPreferences = height < 460;');
+    expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
+    expect(source).toContain("? 'mb-1.5 mt-12'");
+    expect(source).toContain('const chipGroupClassName = ultraShortPreferences');
+    expect(source).toContain('const textureSectionLabelClassName = ultraShortPreferences');
+    expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3 py-2'");
+    expect(source).toContain('minHeight: ultraDense ? 48 : undefined');
+    expect(source).toContain('const textureSectionLabelStyle = ultraShortPreferences');
+    expect(source).toContain("className={textureSectionLabelClassName}");
+    expect(source).toContain('style={textureSectionLabelStyle}');
     expect(source).toContain("contentContainerClassName={compactPreferences ? 'pb-24' : 'pb-10'}");
     expect(source).toContain('fill?: boolean');
     expect(source).toContain('dense?: boolean');
+    expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain('paddingHorizontal: fill ? 8 : dense ? 12 : undefined');
-    expect(source).toContain('fontSize: fill ? 12 : dense ? 13 : undefined');
+    expect(source).toContain('paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined');
+    expect(source).toContain('fontSize: fill ? 12 : ultraDense ? 12.5 : dense ? 13 : undefined');
     expect(source).toContain('flexGrow: fill ? 1 : undefined');
     expect(source).toContain('minWidth: fill ? 0 : dense ? 48 : undefined');
     expect(source).toContain('dense={compactPreferences}');
+    expect(source).toContain('ultraDense={ultraShortPreferences}');
     expect(source).toContain('<Toggle\n              key={b}\n              fill');
   });
 

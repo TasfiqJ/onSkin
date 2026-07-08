@@ -57,6 +57,7 @@ function Toggle({
   disabled,
   dense = false,
   fill = false,
+  ultraDense = false,
   onPress,
 }: {
   label: string;
@@ -64,6 +65,7 @@ function Toggle({
   disabled: boolean;
   dense?: boolean;
   fill?: boolean;
+  ultraDense?: boolean;
   onPress: () => void;
 }) {
   return (
@@ -73,16 +75,21 @@ function Toggle({
       accessibilityState={{ selected: active, disabled }}
       disabled={disabled}
       onPress={onPress}
-      className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2.5"
+      className={
+        ultraDense
+          ? 'min-h-[48px] items-center justify-center rounded-pill px-3 py-2'
+          : 'min-h-[48px] items-center justify-center rounded-pill px-4 py-2.5'
+      }
       style={{
         backgroundColor: active ? colors.ink : colors.paperRaised,
         borderWidth: 1,
         borderColor: active ? colors.ink : colors.hairlineStrong,
         flexBasis: fill ? 0 : undefined,
         flexGrow: fill ? 1 : undefined,
+        minHeight: ultraDense ? 48 : undefined,
         minWidth: fill ? 0 : dense ? 48 : undefined,
         opacity: disabled ? 0.58 : 1,
-        paddingHorizontal: fill ? 8 : dense ? 12 : undefined,
+        paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined,
       }}
     >
       <Text
@@ -90,8 +97,8 @@ function Toggle({
         numberOfLines={1}
         style={{
           color: active ? colors.paper : colors.inkSoft,
-          fontSize: fill ? 12 : dense ? 13 : undefined,
-          lineHeight: fill || dense ? 16 : undefined,
+          fontSize: fill ? 12 : ultraDense ? 12.5 : dense ? 13 : undefined,
+          lineHeight: fill || dense || ultraDense ? 16 : undefined,
         }}
       >
         {label}
@@ -115,7 +122,26 @@ export default function PreferencesScreen() {
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
-  const sectionLabelClassName = compactPreferences ? 'mb-2 mt-5' : 'mb-3 mt-7';
+  const ultraShortPreferences = height < 460;
+  const valuesLabelClassName = ultraShortPreferences
+    ? 'mb-1.5 mt-2.5'
+    : compactPreferences
+      ? 'mb-2 mt-5'
+      : 'mb-3 mt-7';
+  const sectionLabelClassName = ultraShortPreferences
+    ? 'mb-1.5 mt-12'
+    : compactPreferences
+      ? 'mb-2 mt-5'
+      : 'mb-3 mt-7';
+  const chipGroupClassName = ultraShortPreferences
+    ? 'flex-row flex-wrap gap-1.5'
+    : 'flex-row flex-wrap gap-2';
+  const textureSectionLabelClassName = ultraShortPreferences
+    ? 'mb-1.5 mt-7'
+    : sectionLabelClassName;
+  const textureSectionLabelStyle = ultraShortPreferences
+    ? { marginBottom: 6, marginTop: 44 }
+    : undefined;
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
     if (preferenceDelayMs > 0) await wait(preferenceDelayMs);
@@ -178,10 +204,17 @@ export default function PreferencesScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPreferences ? 'pb-24' : 'pb-10'}
       >
-        <Text variant="title" className="mt-2">
+        <Text
+          variant="title"
+          className={ultraShortPreferences ? 'mt-1 text-[30px] leading-[32px]' : 'mt-2'}
+        >
           {REC_COPY.preferences.title}
         </Text>
-        <Text variant="bodySm" tone="muted" className="mt-1.5">
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={ultraShortPreferences ? 'mt-1 text-[12.5px] leading-[16px]' : 'mt-1.5'}
+        >
           {REC_COPY.preferences.subtitle}
         </Text>
         {saveFailed ? (
@@ -199,13 +232,14 @@ export default function PreferencesScreen() {
           </View>
         ) : null}
 
-        <Text variant="label" tone="muted" className={sectionLabelClassName}>
+        <Text variant="label" tone="muted" className={valuesLabelClassName}>
           {REC_COPY.preferences.valuesLabel.toUpperCase()}
         </Text>
-        <View className="flex-row flex-wrap gap-2">
+        <View className={chipGroupClassName}>
           {VALUES_FILTERS.map((v) => (
             <Toggle
               key={v}
+              ultraDense={ultraShortPreferences}
               label={VALUES_LABEL[v] ?? v}
               active={p.values.includes(v)}
               disabled={controlsDisabled}
@@ -217,11 +251,12 @@ export default function PreferencesScreen() {
         <Text variant="label" tone="muted" className={sectionLabelClassName}>
           {REC_COPY.preferences.budgetLabel.toUpperCase()}
         </Text>
-        <View className="flex-row flex-wrap gap-2">
+        <View className={chipGroupClassName}>
           {BUDGETS.map((b) => (
             <Toggle
               key={b}
               fill
+              ultraDense={ultraShortPreferences}
               label={BUDGET_LABEL[b] ?? b}
               active={p.budget === b}
               disabled={controlsDisabled}
@@ -230,14 +265,20 @@ export default function PreferencesScreen() {
           ))}
         </View>
 
-        <Text variant="label" tone="muted" className={sectionLabelClassName}>
+        <Text
+          variant="label"
+          tone="muted"
+          className={textureSectionLabelClassName}
+          style={textureSectionLabelStyle}
+        >
           {REC_COPY.preferences.formatLabel.toUpperCase()}
         </Text>
-        <View className="flex-row flex-wrap gap-2">
+        <View className={chipGroupClassName}>
           {FORMATS.map((f) => (
             <Toggle
               key={f}
               dense={compactPreferences}
+              ultraDense={ultraShortPreferences}
               label={FORMAT_LABEL[f] ?? f}
               active={p.formats.includes(f)}
               disabled={controlsDisabled}

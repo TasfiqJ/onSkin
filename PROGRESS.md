@@ -6,6 +6,29 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the remaining 320 x 430 personalized recommendation clipping from the
+  ultra-short route sweep. The For You hub now has a sub-460 px density for
+  heading/card spacing, and recommendation preferences keep value/budget chips
+  at a real 48 px floor while moving texture chips below the first viewport
+  for deliberate scroll access. Codex in-app browser Expo web verifies
+  `/recommendations` and `/recommendations/preferences` at 320 x 430 with zero
+  clipped controls, zero sub-44 controls, zero blocked center hit-tests, zero
+  unexpected warn/error logs, and a successful `Sustainable` chip tap. Evidence
+  and bug report:
+  `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`,
+  `docs/e2e-bug-reports/2026-07-08-recommendations-ultrashort-hub-preferences-clipping.md`.
+
+- Fixed the ultra-short 320 x 430 Progress contextual ProGate clearance. The
+  shared ProGate now applies a sub-460 px density that trims only nonessential
+  body spacing/copy while preserving 48 px Terms, Privacy, Restore, Maybe
+  later, Start free trial, and Explore first controls. Codex in-app browser
+  Expo web evidence verifies `/progress` at 320 x 430 has zero clipped
+  controls, zero blocked center hit-tests, zero horizontal overflow, and zero
+  unexpected warn/error logs; tapping `Explore first` unlocks the Progress
+  photo surface without store checkout. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/progress-progate-short-phone-430-clearance/`,
+  `docs/e2e-bug-reports/2026-07-08-progress-progate-short-phone-430-clearance.md`.
+
 - Tightened the shortest-height Shelf intake fallbacks below 460 px viewport
   height. Manual add now hides nonessential helper/PAO copy, trims field
   spacing, keeps the fixed Continue action at 52 px, and gives the category

@@ -58,6 +58,19 @@ Fresh verification on 2026-07-08:
   user-facing controls, zero blocked hit-tests, zero horizontal overflow, and
   zero disallowed browser logs. Evidence:
   `test-results/human-e2e/2026-07-08/current-main-short-phone-480-rerun/`.
+- Expo web `/progress` contextual ProGate evidence at 320 x 430 passed the
+  ultra-short paywall gate: Terms, Privacy, Restore, Maybe later, Start free
+  trial, and Explore first are visible and 48 px, with zero clipped controls,
+  zero blocked center hit-tests, zero horizontal overflow, and zero unexpected
+  warn/error logs. Tapping Explore first unlocks the Progress photo surface
+  without store checkout. Evidence:
+  `test-results/human-e2e/2026-07-08/progress-progate-short-phone-430-clearance/`.
+- Expo web personalized recommendations evidence at 320 x 430 passed the
+  ultra-short hub/preferences gate: `/recommendations` and
+  `/recommendations/preferences` have zero clipped controls, zero sub-44
+  controls, zero blocked center hit-tests, zero unexpected warn/error logs, and
+  the `Sustainable` chip remains tappable. Evidence:
+  `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`.
 - Expo web Shelf manual category picker evidence at 320 x 480 and 320 x 568
   passed the named bottom-sheet, lower-option scroll, 52 px category row,
   `Other` selection, `/shelf/opened` continuation, horizontal-overflow, and

@@ -59,10 +59,12 @@ function RecCard({
   rec,
   compact = false,
   short = false,
+  ultraShort = false,
 }: {
   rec: Recommendation;
   compact?: boolean;
   short?: boolean;
+  ultraShort?: boolean;
 }) {
   const evidenceGood = rec.evidenceLabel === 'established' || rec.evidenceLabel === 'plausible';
   return (
@@ -71,7 +73,9 @@ function RecCard({
       accessibilityLabel={`${rec.what}. ${rec.why}`}
       onPress={() => openRec(rec)}
       className={
-        short
+        ultraShort
+          ? 'mb-1.5 rounded-[12px] bg-paper-raised p-2'
+          : short
           ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'
           : compact
             ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'
@@ -90,7 +94,9 @@ function RecCard({
       >
         <View
           className={
-            short
+            ultraShort
+              ? 'h-6 w-6 items-center justify-center rounded-[7px]'
+              : short
               ? 'h-7 w-7 items-center justify-center rounded-[8px]'
               : compact
                 ? 'h-8 w-8 items-center justify-center rounded-[9px]'
@@ -153,11 +159,13 @@ function RecCard({
       </View>
       <View
         className={
-          short
-            ? 'mt-1.5 flex-row items-start justify-between gap-2 pt-1.5'
-            : compact
-              ? 'mt-2 flex-row items-start justify-between gap-2.5 pt-2'
-              : 'mt-3 flex-row items-start justify-between gap-3 pt-3'
+          ultraShort
+            ? 'mt-1 flex-row items-start justify-between gap-2 pt-1'
+            : short
+              ? 'mt-1.5 flex-row items-start justify-between gap-2 pt-1.5'
+              : compact
+                ? 'mt-2 flex-row items-start justify-between gap-2.5 pt-2'
+                : 'mt-3 flex-row items-start justify-between gap-3 pt-3'
         }
         style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}
       >
@@ -283,16 +291,28 @@ function YoureSet({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function HubIntro({ short = false }: { short?: boolean }) {
+function HubIntro({
+  short = false,
+  ultraShort = false,
+}: {
+  short?: boolean;
+  ultraShort?: boolean;
+}) {
   const [subtitleLead, ...subtitleRest] = REC_COPY.hub.subtitle.split(', ');
   const subtitleTail = subtitleRest.join(', ');
 
   return (
-    <View className={short ? 'mt-1.5' : 'mt-3'}>
+    <View className={ultraShort ? 'mt-0.5' : short ? 'mt-1.5' : 'mt-3'}>
       <Text
         variant="title"
         accessibilityRole="header"
-        className={short ? 'text-[28px] leading-[30px]' : undefined}
+        className={
+          ultraShort
+            ? 'text-[27px] leading-[29px]'
+            : short
+              ? 'text-[28px] leading-[30px]'
+              : undefined
+        }
         style={{ alignSelf: 'flex-start' }}
       >
         {REC_COPY.hub.title}
@@ -327,6 +347,7 @@ export default function ForYouScreen() {
   const groups = grouped(result.recommendations);
   const compactHub = height < 640;
   const shortHub = height < 520;
+  const ultraShortHub = height < 460;
   const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
@@ -353,7 +374,7 @@ export default function ForYouScreen() {
         </Pressable>
       </View>
 
-      <HubIntro short={shortHub} />
+      <HubIntro short={shortHub} ultraShort={ultraShortHub} />
 
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
@@ -367,7 +388,13 @@ export default function ForYouScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerClassName={
-            shortHub ? 'pb-20 pt-2' : compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'
+            ultraShortHub
+              ? 'pb-20 pt-1'
+              : shortHub
+                ? 'pb-20 pt-2'
+                : compactHub
+                  ? 'pb-12 pt-4'
+                  : 'pb-10 pt-5'
           }
         >
           {groups.map((g) => (
@@ -383,7 +410,12 @@ export default function ForYouScreen() {
                 const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;
                 return (
                   <View key={rec.id} style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}>
-                    <RecCard rec={rec} compact={compactHub} short={shortHub} />
+                    <RecCard
+                      rec={rec}
+                      compact={compactHub}
+                      short={shortHub}
+                      ultraShort={ultraShortHub}
+                    />
                   </View>
                 );
               })}

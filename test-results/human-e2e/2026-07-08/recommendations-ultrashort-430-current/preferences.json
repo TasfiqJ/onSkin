@@ -1,0 +1,250 @@
+{
+  "generatedAt": "2026-07-08T15:12:55.757Z",
+  "route": "/recommendations/preferences",
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-ultrashort-430-current\\preferences.png",
+  "snapshot": {
+    "bodyText": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+    "controls": [
+      {
+        "center": {
+          "x": 47.99757385253906,
+          "y": 27.988471508026123
+        },
+        "centerHitLabel": "Back",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Back",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 71.9963607788086,
+          "top": 3.989684581756592,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906
+      },
+      {
+        "center": {
+          "x": 76.66869354248047,
+          "y": 225.9557113647461
+        },
+        "centerHitLabel": "Fragrance-free",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Fragrance-free",
+        "rect": {
+          "bottom": 249.95449829101562,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 129.3386001586914,
+          "top": 201.95692443847656,
+          "width": 105.33981323242188,
+          "x": 23.99878692626953,
+          "y": 201.95692443847656
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 105.33981323242188
+      },
+      {
+        "center": {
+          "x": 163.4026107788086,
+          "y": 225.9557113647461
+        },
+        "centerHitLabel": "Vegan",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Vegan",
+        "rect": {
+          "bottom": 249.95449829101562,
+          "height": 47.99757385253906,
+          "left": 135.33070373535156,
+          "right": 191.47451782226562,
+          "top": 201.95692443847656,
+          "width": 56.14381408691406,
+          "x": 135.33070373535156,
+          "y": 201.95692443847656
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 56.14381408691406
+      },
+      {
+        "center": {
+          "x": 242.7032814025879,
+          "y": 225.9557113647461
+        },
+        "centerHitLabel": "Cruelty-free",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Cruelty-free",
+        "rect": {
+          "bottom": 249.95449829101562,
+          "height": 47.99757385253906,
+          "left": 197.4666290283203,
+          "right": 287.93993377685547,
+          "top": 201.95692443847656,
+          "width": 90.47330474853516,
+          "x": 197.4666290283203,
+          "y": 201.95692443847656
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 90.47330474853516
+      },
+      {
+        "center": {
+          "x": 85.64168930053711,
+          "y": 279.94539642333984
+        },
+        "centerHitLabel": "Non-comedogenic",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Non-comedogenic",
+        "rect": {
+          "bottom": 303.9441833496094,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 147.2845916748047,
+          "top": 255.9466094970703,
+          "width": 123.28580474853516,
+          "x": 23.99878692626953,
+          "y": 255.9466094970703
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 123.28580474853516
+      },
+      {
+        "center": {
+          "x": 196.7764015197754,
+          "y": 279.94539642333984
+        },
+        "centerHitLabel": "Sustainable",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Sustainable",
+        "rect": {
+          "bottom": 303.9441833496094,
+          "height": 47.99757385253906,
+          "left": 153.27670288085938,
+          "right": 240.2761001586914,
+          "top": 255.9466094970703,
+          "width": 86.99939727783203,
+          "x": 153.27670288085938,
+          "y": 255.9466094970703
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 86.99939727783203
+      },
+      {
+        "center": {
+          "x": 67.3998794555664,
+          "y": 361.93872833251953
+        },
+        "centerHitLabel": "Drugstore",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Drugstore",
+        "rect": {
+          "bottom": 385.93751525878906,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 110.80097198486328,
+          "top": 337.93994140625,
+          "width": 86.80218505859375,
+          "x": 23.99878692626953,
+          "y": 337.93994140625
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 86.80218505859375
+      },
+      {
+        "center": {
+          "x": 160.19418334960938,
+          "y": 361.93872833251953
+        },
+        "centerHitLabel": "Mid-range",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Mid-range",
+        "rect": {
+          "bottom": 385.93751525878906,
+          "height": 47.99757385253906,
+          "left": 116.7930908203125,
+          "right": 203.59527587890625,
+          "top": 337.93994140625,
+          "width": 86.80218505859375,
+          "x": 116.7930908203125,
+          "y": 337.93994140625
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 86.80218505859375
+      },
+      {
+        "center": {
+          "x": 252.9884796142578,
+          "y": 361.93872833251953
+        },
+        "centerHitLabel": "Premium",
+        "centerHitOk": true,
+        "clipped": false,
+        "label": "Premium",
+        "rect": {
+          "bottom": 385.93751525878906,
+          "height": 47.99757385253906,
+          "left": 209.58738708496094,
+          "right": 296.3895721435547,
+          "top": 337.93994140625,
+          "width": 86.80218505859375,
+          "x": 209.58738708496094,
+          "y": 337.93994140625
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 86.80218505859375
+      }
+    ],
+    "horizontalOverflow": 0.38836669921875,
+    "issues": [],
+    "scroll": {
+      "height": 430,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "url": "http://127.0.0.1:8261/recommendations/preferences",
+    "viewport": {
+      "height": 430,
+      "width": 320
+    }
+  },
+  "logs": [],
+  "disallowedLogs": []
+}
