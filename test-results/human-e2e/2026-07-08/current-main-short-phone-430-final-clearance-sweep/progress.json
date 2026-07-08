@@ -1,0 +1,267 @@
+{
+  "route": "/progress",
+  "url": "http://localhost:8231/progress?final430=1783524834520",
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "index": 0,
+      "label": "Terms",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 109.32949829101562,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "index": 1,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 85.3307113647461,
+        "right": 133.32828521728516,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 170.66141510009766,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "index": 2,
+      "label": "Restore",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 146.66262817382812,
+        "right": 194.6602020263672,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "index": 3,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 102.22998046875
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 252.88228607177734
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Start free trial",
+      "index": 4,
+      "label": "Start free trial",
+      "rect": {
+        "bottom": 276.8810729980469,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 228.8834991455078,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 304.86954498291016
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Explore first. 7 days of Pro",
+      "index": 5,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "bottom": 328.8683319091797,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 280.8707580566406,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "center": {
+        "x": 46.76881122589111,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Today tab",
+      "index": 6,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 356.128662109375,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "center": {
+        "x": 122.38319778442383,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress tab",
+      "index": 7,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 356.128662109375,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    },
+    {
+      "center": {
+        "x": 197.9975814819336,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab",
+      "index": 8,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 356.128662109375,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "center": {
+        "x": 273.61196517944336,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "You tab",
+      "index": 9,
+      "label": "You tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 356.128662109375,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 274,
+      "i": 59,
+      "scrollHeight": 373,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 34,
+      "i": 62,
+      "scrollHeight": 51,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "Terms · Privacy · Restore Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Today Progress Shelf You",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

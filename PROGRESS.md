@@ -6,6 +6,24 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the final 320 x 430 route-sweep failures from the post-recommendation
+  pass. Subscription Settings now has a sub-460 px density for the free-plan
+  card and compliance rows so Restore, Terms, and Privacy remain complete 48 px
+  rows in the first viewport. Notification Settings now compacts row typography
+  and spacing below 460 px while preserving 48 px switches, so Replenishment no
+  longer peeks as a tiny clipped control. The Shelf opened-date recovery sheet
+  no longer exposes the dimmed backdrop as a clipped `Dismiss` control when a
+  direct `/shelf/opened` entry has no product draft. Focused Codex in-app
+  browser evidence verifies `/community`, `/settings/subscription`,
+  `/settings/notifications`, and `/shelf/opened` at 320 x 430 with zero clipped
+  controls, zero sub-44 controls, zero blocked center hit-tests, and successful
+  taps for the formerly clipped Skin Note, Restore purchases, Replenishment,
+  and Add product by hand controls. A fresh 49-route 320 x 430 sweep now has
+  zero failed routes. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/`,
+  `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`,
+  `docs/e2e-bug-reports/2026-07-08-remaining-short-phone-430-clearance.md`.
+
 - Fixed the 320 x 430 Skin Notes hub clipping that remained after the
   recommendation pass. `/community` now has a sub-460 px scroll-content
   density so the third visible Skin Note no longer clips at the viewport edge.

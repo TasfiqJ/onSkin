@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -39,12 +39,26 @@ function fmtDate(iso: string | null): string {
   });
 }
 
-function Row({ label, last, onPress }: { label: string; last?: boolean; onPress: () => void }) {
+function Row({
+  label,
+  last,
+  onPress,
+  compact = false,
+}: {
+  label: string;
+  last?: boolean;
+  onPress: () => void;
+  compact?: boolean;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      className="min-h-[48px] flex-row items-center justify-between py-3.5"
+      className={
+        compact
+          ? 'min-h-[48px] flex-row items-center justify-between py-2.5'
+          : 'min-h-[48px] flex-row items-center justify-between py-3.5'
+      }
       style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: colors.hairline }}
     >
       <Text variant="body" className="font-sans-semibold">
@@ -56,10 +70,12 @@ function Row({ label, last, onPress }: { label: string; last?: boolean; onPress:
 }
 
 export default function SubscriptionScreen() {
+  const { height } = useWindowDimensions();
   const { data } = useEntitlement();
   const { restore } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
+  const ultraShortSubscription = height < 460;
   const isPro = data?.isPro ?? false;
 
   async function openStore() {
@@ -152,13 +168,22 @@ export default function SubscriptionScreen() {
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
-        <View className="mb-3 flex-row items-center gap-3 pt-1">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={ultraShortSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}
+      >
+        <View
+          className={
+            ultraShortSubscription
+              ? 'mb-1 flex-row items-center gap-3 pt-1'
+              : 'mb-3 flex-row items-center gap-3 pt-1'
+          }
+        >
           <RouteIconButton
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           />
-          <Text variant="title" style={{ fontSize: 28 }}>
+          <Text variant="title" style={{ fontSize: ultraShortSubscription ? 26 : 28 }}>
             {PAYWALL_COPY.manage.title}
           </Text>
         </View>
@@ -213,10 +238,23 @@ export default function SubscriptionScreen() {
             </View>
 
             <View className="mb-4 rounded-[18px] bg-paper-raised px-[18px]">
-              <Row label={manageLabel} onPress={manageAction} />
-              <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
-              <Row label="Terms" onPress={() => void onPolicy(TERMS_URL)} />
-              <Row label="Privacy" last onPress={() => void onPolicy(PRIVACY_URL)} />
+              <Row label={manageLabel} onPress={manageAction} compact={ultraShortSubscription} />
+              <Row
+                label={PAYWALL_COPY.manage.restoreRow}
+                onPress={onRestore}
+                compact={ultraShortSubscription}
+              />
+              <Row
+                label="Terms"
+                onPress={() => void onPolicy(TERMS_URL)}
+                compact={ultraShortSubscription}
+              />
+              <Row
+                label="Privacy"
+                last
+                onPress={() => void onPolicy(PRIVACY_URL)}
+                compact={ultraShortSubscription}
+              />
               {feedbackLabel}
             </View>
 
@@ -240,17 +278,30 @@ export default function SubscriptionScreen() {
         ) : (
           <>
             <View
-              className="mb-4 rounded-card bg-paper-raised p-5"
+              className={
+                ultraShortSubscription
+                  ? 'mb-3 rounded-card bg-paper-raised p-4'
+                  : 'mb-4 rounded-card bg-paper-raised p-5'
+              }
               style={{ borderWidth: 1, borderColor: colors.hairline }}
             >
               <Text variant="titleSm">{PAYWALL_COPY.manage.freeTitle}</Text>
-              <Text variant="bodySm" tone="muted" className="mt-2" style={{ lineHeight: 21 }}>
+              <Text
+                variant="bodySm"
+                tone="muted"
+                className={ultraShortSubscription ? 'mt-1.5' : 'mt-2'}
+                style={{ lineHeight: ultraShortSubscription ? 19 : 21 }}
+              >
                 {PAYWALL_COPY.manage.freeBody}
               </Text>
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/paywall/upsell?feature=full_routine')}
-                className="mt-4 h-[50px] items-center justify-center rounded-pill"
+                className={
+                  ultraShortSubscription
+                    ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
+                    : 'mt-4 h-[50px] items-center justify-center rounded-pill'
+                }
                 style={{ backgroundColor: colors.clay }}
               >
                 <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
@@ -259,9 +310,22 @@ export default function SubscriptionScreen() {
               </Pressable>
             </View>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
-              <Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />
-              <Row label="Terms" onPress={() => void onPolicy(TERMS_URL)} />
-              <Row label="Privacy" last onPress={() => void onPolicy(PRIVACY_URL)} />
+              <Row
+                label={PAYWALL_COPY.manage.restoreRow}
+                onPress={onRestore}
+                compact={ultraShortSubscription}
+              />
+              <Row
+                label="Terms"
+                onPress={() => void onPolicy(TERMS_URL)}
+                compact={ultraShortSubscription}
+              />
+              <Row
+                label="Privacy"
+                last
+                onPress={() => void onPolicy(PRIVACY_URL)}
+                compact={ultraShortSubscription}
+              />
               {feedbackLabel}
             </View>
             {data?.expired ? (

@@ -1,0 +1,169 @@
+{
+  "route": "/routine/streak",
+  "url": "http://localhost:8231/routine/streak?final430=1783524834520",
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "index": 0,
+      "label": "Terms",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 109.32949829101562,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "index": 1,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 85.3307113647461,
+        "right": 133.32828521728516,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 170.66141510009766,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "index": 2,
+      "label": "Restore",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 146.66262817382812,
+        "right": 194.6602020263672,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "index": 3,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 102.22998046875
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 252.88228607177734
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Start free trial",
+      "index": 4,
+      "label": "Start free trial",
+      "rect": {
+        "bottom": 276.8810729980469,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 228.8834991455078,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 304.86954498291016
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Explore first. 7 days of Pro",
+      "index": 5,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "bottom": 328.8683319091797,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 280.8707580566406,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 34,
+      "i": 56,
+      "scrollHeight": 51,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "Terms · Privacy · Restore Maybe later Reminders, streaks & home-screen widgets. Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

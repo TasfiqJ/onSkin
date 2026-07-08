@@ -1,0 +1,32 @@
+{
+  "route": "/shelf/opened",
+  "target": {
+    "center": {
+      "x": 160.19417572021484,
+      "y": 366.1104507446289
+    },
+    "label": "Add product by hand",
+    "rect": {
+      "bottom": 390.10923767089844,
+      "height": 47.99757385253906,
+      "left": 27.98847198486328,
+      "right": 292.3998794555664,
+      "top": 342.1116638183594,
+      "width": 264.4114074707031
+    },
+    "role": "button",
+    "visibleHeight": 47.99757385253906,
+    "visibleWidth": 264.4114074707031
+  },
+  "after": {
+    "scroll": {
+      "height": 430,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textStart": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+    "url": "http://localhost:8231/shelf/manual"
+  },
+  "jsDialogOpen": false
+}

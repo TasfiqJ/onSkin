@@ -1,0 +1,141 @@
+{
+  "route": "/shelf/no-match",
+  "url": "http://localhost:8231/shelf/no-match?final430=1783524834520",
+  "controls": [
+    {
+      "center": {
+        "x": 268.4011001586914,
+        "y": 86.14988327026367
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 0,
+      "label": "Close",
+      "rect": {
+        "bottom": 110.1486701965332,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 62.15109634399414,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 286.1347122192383
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Search catalog",
+      "index": 1,
+      "label": "Search catalog. Try name or brand instead",
+      "rect": {
+        "bottom": 310.1334991455078,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 262.13592529296875,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 338.12198638916016
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan the ingredient list",
+      "index": 2,
+      "label": "Scan the ingredient list. We'll read the INCI text",
+      "rect": {
+        "bottom": 362.1207733154297,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 314.1231994628906,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 390.1092300415039
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add it by hand",
+      "index": 3,
+      "label": "Add it by hand. Always works, even offline",
+      "rect": {
+        "bottom": 414.10801696777344,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 366.1104431152344,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 68,
+      "i": 54,
+      "scrollHeight": 71,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 14,
+      "i": 62,
+      "scrollHeight": 16,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 14,
+      "i": 68,
+      "scrollHeight": 16,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 14,
+      "i": 74,
+      "scrollHeight": 16,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

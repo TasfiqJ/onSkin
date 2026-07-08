@@ -1,0 +1,32 @@
+{
+  "route": "/settings/subscription",
+  "target": {
+    "center": {
+      "x": 160.1941795349121,
+      "y": 274.86348724365234
+    },
+    "label": "Restore purchases›",
+    "rect": {
+      "bottom": 298.8622741699219,
+      "height": 47.99757385253906,
+      "left": 37.98543930053711,
+      "right": 282.4029197692871,
+      "top": 250.8647003173828,
+      "width": 244.41748046875
+    },
+    "role": "button",
+    "visibleHeight": 47.99757385253906,
+    "visibleWidth": 244.41748046875
+  },
+  "after": {
+    "scroll": {
+      "height": 430,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textStart": "< Subscription You’re on the free plan The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime. See RoutineKind Pro Restore purchases › Terms › Privacy › No active subscription was found for this account.",
+    "url": "http://localhost:8231/settings/subscription?remaining430tap=1783524744668"
+  },
+  "jsDialogOpen": false
+}

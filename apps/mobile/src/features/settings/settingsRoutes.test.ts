@@ -133,6 +133,12 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('min-h-[56px] flex-row items-center justify-between py-3.5');
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-3');
     expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
+    expect(notifications).toContain('useWindowDimensions');
+    expect(notifications).toContain('const ultraShortNotifications = height < 460;');
+    expect(notifications).toContain('min-h-[52px] flex-row items-center justify-between py-1.5');
+    expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-2.5');
+    expect(notifications).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
+    expect(notifications).toContain('compact={ultraShortNotifications}');
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
   });
@@ -278,7 +284,14 @@ describe('Settings route contracts', () => {
   it('keeps secondary subscription exits buffered above 44px on phones', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const ultraShortSubscription = height < 460;');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-3.5');
+    expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
+    expect(source).toContain('compact={ultraShortSubscription}');
+    expect(source).toContain(
+      "contentContainerClassName={ultraShortSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}",
+    );
     expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
     expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');
   });
@@ -297,11 +310,10 @@ describe('Settings route contracts', () => {
     expect(source).toContain('if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);');
     expect(source).toContain('const feedbackLabel = subscriptionFeedback ? (');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('<Row label={PAYWALL_COPY.manage.restoreRow} onPress={onRestore} />');
-    expect(source).toContain('<Row label="Terms" onPress={() => void onPolicy(TERMS_URL)} />');
-    expect(source).toContain(
-      '<Row label="Privacy" last onPress={() => void onPolicy(PRIVACY_URL)} />',
-    );
+    expect(source).toContain('label={PAYWALL_COPY.manage.restoreRow}');
+    expect(source).toContain('label="Terms"');
+    expect(source).toContain('label="Privacy"');
+    expect(source).toContain('compact={ultraShortSubscription}');
     expect(source).not.toContain(
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',
     );
@@ -339,7 +351,9 @@ describe('Settings route contracts', () => {
     expect(source).toContain("? 'Store trial'");
     expect(source).toContain('const manageAction = isAppGrantedAccess');
     expect(source).toContain('const supportNote = isReverseTrialAccess');
-    expect(source).toContain('<Row label={manageLabel} onPress={manageAction} />');
+    expect(source).toContain(
+      '<Row label={manageLabel} onPress={manageAction} compact={ultraShortSubscription} />',
+    );
     expect(source).not.toContain('<Row label={manageLabel} onPress={openStore} />');
   });
 });

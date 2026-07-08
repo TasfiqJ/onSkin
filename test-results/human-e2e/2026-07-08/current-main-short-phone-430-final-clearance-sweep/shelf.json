@@ -1,0 +1,217 @@
+{
+  "route": "/shelf",
+  "url": "http://localhost:8231/shelf?final430=1783524834520",
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 284.9287052154541
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan a barcode",
+      "index": 0,
+      "label": "Scan a barcode",
+      "rect": {
+        "bottom": 312.9247627258301,
+        "height": 55.99211502075195,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 256.9326477050781,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 256.4017028808594
+    },
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 344.91809844970703
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "index": 1,
+      "label": "Add by hand",
+      "rect": {
+        "bottom": 368.91688537597656,
+        "height": 47.99757385253906,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 320.9193115234375,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 256.4017028808594
+    },
+    {
+      "center": {
+        "x": 46.76881122589111,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Today tab",
+      "index": 2,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 356.128662109375,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "center": {
+        "x": 122.38319778442383,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress tab",
+      "index": 3,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 356.128662109375,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    },
+    {
+      "center": {
+        "x": 197.9975814819336,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab",
+      "index": 4,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 356.128662109375,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "center": {
+        "x": 273.61196517944336,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "You tab",
+      "index": 5,
+      "label": "You tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 356.128662109375,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 430,
+      "i": 40,
+      "scrollHeight": 481,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 430,
+      "i": 41,
+      "scrollHeight": 481,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 430,
+      "i": 42,
+      "scrollHeight": 481,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 326,
+      "i": 43,
+      "scrollHeight": 481,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 326,
+      "i": 44,
+      "scrollHeight": 481,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 326,
+      "i": 45,
+      "scrollHeight": 481,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 40,
+      "i": 47,
+      "scrollHeight": 45,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 56,
+      "i": 50,
+      "scrollHeight": 58,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 34,
+      "i": 56,
+      "scrollHeight": 37,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
@@ -17,13 +17,13 @@ export function fmtTime(hm: string): string {
   return `${hr}:${String(m ?? 0).padStart(2, '0')} ${ap}`;
 }
 
-function SectionLabel({ children }: { children: string }) {
+function SectionLabel({ children, compact = false }: { children: string; compact?: boolean }) {
   return (
     <Text
       variant="label"
       tone="muted"
-      className="mb-2 ml-2 mt-4"
-      style={{ fontSize: 10, letterSpacing: 1 }}
+      className={compact ? 'mb-1 ml-2 mt-3' : 'mb-2 ml-2 mt-4'}
+      style={{ fontSize: compact ? 9.5 : 10, letterSpacing: 1 }}
     >
       {children}
     </Text>
@@ -37,6 +37,7 @@ function Row({
   onChange,
   onPress,
   last,
+  compact = false,
 }: {
   title: string;
   subtitle?: string;
@@ -44,29 +45,70 @@ function Row({
   onChange: (v: boolean) => void;
   onPress?: () => void;
   last?: boolean;
+  compact?: boolean;
 }) {
   return (
     <View
-      className="min-h-[56px] flex-row items-center justify-between py-3.5"
+      className={
+        compact
+          ? 'min-h-[52px] flex-row items-center justify-between py-1.5'
+          : 'min-h-[56px] flex-row items-center justify-between py-3.5'
+      }
       style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
     >
       {onPress ? (
         <Pressable
           accessibilityRole="button"
           onPress={onPress}
-          className="min-h-[48px] flex-1 justify-center pr-3"
+          className={
+            compact
+              ? 'min-h-[48px] flex-1 justify-center pr-2.5'
+              : 'min-h-[48px] flex-1 justify-center pr-3'
+          }
         >
-          <Text variant="body" className="font-sans-semibold">
+          <Text
+            variant="body"
+            className="font-sans-semibold"
+            style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}
+          >
             {title}
           </Text>
-          {subtitle ? <Text variant="bodySm" tone="muted">{`\n${subtitle}`}</Text> : null}
+          {subtitle ? (
+            <Text
+              variant="bodySm"
+              tone="muted"
+              className={compact ? 'text-[12px]' : undefined}
+              style={compact ? { lineHeight: 14 } : undefined}
+            >
+              {compact ? subtitle : `\n${subtitle}`}
+            </Text>
+          ) : null}
         </Pressable>
       ) : (
-        <View className="min-h-[48px] flex-1 justify-center pr-3">
-          <Text variant="body" className="font-sans-semibold">
+        <View
+          className={
+            compact
+              ? 'min-h-[48px] flex-1 justify-center pr-2.5'
+              : 'min-h-[48px] flex-1 justify-center pr-3'
+          }
+        >
+          <Text
+            variant="body"
+            className="font-sans-semibold"
+            style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}
+          >
             {title}
           </Text>
-          {subtitle ? <Text variant="bodySm" tone="muted">{`\n${subtitle}`}</Text> : null}
+          {subtitle ? (
+            <Text
+              variant="bodySm"
+              tone="muted"
+              className={compact ? 'text-[12px]' : undefined}
+              style={compact ? { lineHeight: 14 } : undefined}
+            >
+              {compact ? subtitle : `\n${subtitle}`}
+            </Text>
+          ) : null}
         </View>
       )}
       <ToggleSwitch accessibilityLabel={title} value={value} onChange={onChange} />
@@ -75,25 +117,36 @@ function Row({
 }
 
 export default function NotificationSettingsScreen() {
+  const { height } = useWindowDimensions();
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
+  const ultraShortNotifications = height < 460;
   if (!p) return null;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
-        <View className="mb-1 flex-row items-center gap-3 pt-1">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={ultraShortNotifications ? 'px-5 pb-8' : 'px-5 pb-10'}
+      >
+        <View
+          className={
+            ultraShortNotifications
+              ? 'mb-0 flex-row items-center gap-3 pt-1'
+              : 'mb-1 flex-row items-center gap-3 pt-1'
+          }
+        >
           <RouteIconButton
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           />
-          <Text variant="title" style={{ fontSize: 28 }}>
+          <Text variant="title" style={{ fontSize: ultraShortNotifications ? 26 : 28 }}>
             Notifications
           </Text>
         </View>
 
-        <SectionLabel>UTILITY · YOUR ROUTINE</SectionLabel>
+        <SectionLabel compact={ultraShortNotifications}>UTILITY · YOUR ROUTINE</SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Morning routine"
@@ -101,6 +154,7 @@ export default function NotificationSettingsScreen() {
             value={p.amEnabled}
             onChange={(v) => set({ amEnabled: v })}
             onPress={() => router.push('/settings/timing')}
+            compact={ultraShortNotifications}
           />
           <Row
             title="Evening · tonight’s step"
@@ -109,30 +163,34 @@ export default function NotificationSettingsScreen() {
             onChange={(v) => set({ pmEnabled: v })}
             onPress={() => router.push('/settings/timing')}
             last
+            compact={ultraShortNotifications}
           />
         </View>
 
-        <SectionLabel>GENTLE NUDGES · CAPPED</SectionLabel>
+        <SectionLabel compact={ultraShortNotifications}>GENTLE NUDGES · CAPPED</SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Streak &amp; adherence"
             value={p.streakNudges}
             onChange={(v) => set({ streakNudges: v })}
+            compact={ultraShortNotifications}
           />
           <Row
             title="Replenishment"
             value={p.replenishmentAlerts}
             onChange={(v) => set({ replenishmentAlerts: v })}
+            compact={ultraShortNotifications}
           />
           <Row
             title="Progress-photo nudge"
             value={p.captureReminders}
             onChange={(v) => set({ captureReminders: v })}
             last
+            compact={ultraShortNotifications}
           />
         </View>
 
-        <SectionLabel>PROMOTIONAL</SectionLabel>
+        <SectionLabel compact={ultraShortNotifications}>PROMOTIONAL</SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Tips &amp; announcements"
@@ -140,6 +198,7 @@ export default function NotificationSettingsScreen() {
             value={p.promotionalOptIn}
             onChange={(v) => set({ promotionalOptIn: v })}
             last
+            compact={ultraShortNotifications}
           />
         </View>
 

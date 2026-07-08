@@ -1,0 +1,77 @@
+{
+  "route": "/shelf/opened",
+  "url": "http://localhost:8231/shelf/opened?remaining430=1783524691379",
+  "controls": [
+    {
+      "center": {
+        "x": 268.4011001586914,
+        "y": 144.14442443847656
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 0,
+      "label": "Close",
+      "rect": {
+        "bottom": 168.1432113647461,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 120.14563751220703,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 366.1104507446289
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "index": 1,
+      "label": "Add product by hand",
+      "rect": {
+        "bottom": 390.10923767089844,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 342.1116638183594,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 34,
+      "i": 53,
+      "scrollHeight": 37,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

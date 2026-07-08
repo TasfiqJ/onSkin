@@ -1,0 +1,198 @@
+{
+  "route": "/settings/privacy",
+  "url": "http://localhost:8231/settings/privacy?final430=1783524834520",
+  "controls": [
+    {
+      "center": {
+        "x": 250.40201568603516,
+        "y": 66.62621688842773
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Marketing emails",
+      "index": 0,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 90.62500381469727,
+        "height": 47.99757385253906,
+        "left": 224.40838623046875,
+        "right": 276.39564514160156,
+        "top": 42.6274299621582,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 51.98725891113281
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 139.60862159729004
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Photos & the no-AI-score promise",
+      "index": 1,
+      "label": "Photos & the no-AI-score promise",
+      "rect": {
+        "bottom": 171.60194778442383,
+        "height": 63.98665237426758,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 107.61529541015625,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 63.98665237426758,
+      "visibleWidth": 232.40292358398438
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 244.57676696777344
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "index": 2,
+      "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "rect": {
+        "bottom": 317.5515899658203,
+        "height": 145.94964599609375,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 171.60194396972656,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 145.94964599609375,
+      "visibleWidth": 232.40292358398438
+    },
+    {
+      "center": {
+        "x": 46.76881122589111,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Today tab",
+      "index": 3,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 356.128662109375,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "center": {
+        "x": 122.38319778442383,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress tab",
+      "index": 4,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 356.128662109375,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    },
+    {
+      "center": {
+        "x": 197.9975814819336,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab",
+      "index": 5,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 356.128662109375,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "center": {
+        "x": 273.61196517944336,
+        "y": 383.1235065460205
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "You tab",
+      "index": 6,
+      "label": "You tab",
+      "rect": {
+        "bottom": 410.118350982666,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 356.128662109375,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 326,
+      "i": 46,
+      "scrollHeight": 3503,
+      "scrollTop": 1837.8641357421875
+    },
+    {
+      "clientHeight": 34,
+      "i": 48,
+      "scrollHeight": 37,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKi",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -71,6 +71,15 @@ Fresh verification on 2026-07-08:
   controls, zero blocked center hit-tests, zero unexpected warn/error logs, and
   the `Sustainable` chip remains tappable. Evidence:
   `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`.
+- Expo web 320 x 430 final clearance passed the remaining ultra-short routes:
+  `/community`, `/settings/subscription`, `/settings/notifications`, and
+  `/shelf/opened` now have zero clipped controls, zero sub-44 controls, zero
+  blocked center hit-tests, and zero disallowed browser logs. The same run
+  verifies user-like taps on the formerly failing Skin Note, Restore purchases,
+  Replenishment, and Add product by hand controls. A fresh 49-route 320 x 430
+  sweep now reports zero failed routes. Evidence:
+  `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/`,
+  `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
 - Expo web Shelf manual category picker evidence at 320 x 480 and 320 x 568
   passed the named bottom-sheet, lower-option scroll, 52 px category row,
   `Other` selection, `/shelf/opened` continuation, horizontal-overflow, and

@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-07-08T15:31:41.099Z",
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "routeCount": 4,
+  "failedRoutes": [],
+  "results": [
+    {
+      "route": "/community",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/settings/subscription",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/settings/notifications",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/opened",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    }
+  ],
+  "failedRouteCount": 0
+}

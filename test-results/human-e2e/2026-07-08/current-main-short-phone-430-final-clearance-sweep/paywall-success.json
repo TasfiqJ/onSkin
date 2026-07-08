@@ -1,0 +1,60 @@
+{
+  "route": "/paywall/success",
+  "url": "http://localhost:8231/paywall/success?final430=1783524834520",
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 386.1119632720947
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "See tonight’s routine",
+      "index": 0,
+      "label": "See tonight’s routine",
+      "rect": {
+        "bottom": 414.1080207824707,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 358.11590576171875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 38,
+      "i": 47,
+      "scrollHeight": 41,
+      "scrollTop": 0
+    },
+    {
+      "clientHeight": 45,
+      "i": 48,
+      "scrollHeight": 50,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 8 renews $49.99/yr See tonight’s routine",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

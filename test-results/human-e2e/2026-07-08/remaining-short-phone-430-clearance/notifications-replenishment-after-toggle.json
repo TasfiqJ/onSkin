@@ -1,0 +1,32 @@
+{
+  "route": "/settings/notifications",
+  "target": {
+    "center": {
+      "x": 256.40929412841797,
+      "y": 343.8410415649414
+    },
+    "label": "Replenishment",
+    "rect": {
+      "bottom": 367.83982849121094,
+      "height": 47.99757385253906,
+      "left": 230.41566467285156,
+      "right": 282.4029235839844,
+      "top": 319.8422546386719,
+      "width": 51.98725891113281
+    },
+    "role": "switch",
+    "visibleHeight": 47.99757385253906,
+    "visibleWidth": 51.98725891113281
+  },
+  "after": {
+    "scroll": {
+      "height": 430,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+    "url": "http://localhost:8231/settings/notifications?remaining430tap=1783524748185"
+  },
+  "jsDialogOpen": false
+}

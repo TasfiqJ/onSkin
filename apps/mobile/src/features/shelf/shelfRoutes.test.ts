@@ -536,6 +536,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('if (!hasProductDraft || !productName || !canSave || saving) return;');
     expect(source).toContain('name: productName');
     expect(source).not.toContain("name: draft.name || 'Product'");
+    expect(source).toContain('<Sheet fallbackRoute={APP_SHELF_ROUTE} backdropAccessible={false}>');
     expect(source).toContain(
       '<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
     );
