@@ -22,6 +22,9 @@ All shelf intake fallback paths remain reachable on the shorter phone height. Ma
 
 The pre-fix 49-route sweep found three shelf failures at 320 x 430: `/shelf/manual` had the Ingredients field hit-blocked by Continue, `/shelf/ocr` clipped `Continue with manual text`, and `/shelf/no-match` clipped and hit-blocked `Add it by hand`.
 
+A follow-up 320 x 440 manual-picker pass also found the lower `Something else`
+category row was tappable but still partially clipped after scrolling.
+
 ## Evidence
 
 - Screenshot: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-audit/shelf-manual.png`
@@ -47,6 +50,8 @@ The shelf fallback layouts had already been compacted for 320 x 480, but the sho
 ## Minimal Fix Recommendation
 
 Add an ultra-short height band below 460 px: reduce nonessential copy/media height, keep controls at 48 px or higher, and hide nonessential helper copy that would otherwise peek behind fixed footers.
+Pad the category sheet list enough for the final option to scroll fully into
+view, and expose explicit accessibility labels for no-match fallback rows.
 
 ## Verification Flow After Fix
 
@@ -61,6 +66,8 @@ Add an ultra-short height band below 460 px: reduce nonessential copy/media heig
 - Screenshot: `test-results/human-e2e/2026-07-08/shelf-short-phone-430-clearance/shelf-no-match-final.png`
 - UI snapshot: `test-results/human-e2e/2026-07-08/shelf-short-phone-430-clearance/summary-final.json`
 - Full sweep: `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postfix-sweep/failures.json`
+- Current 320 x 440 manual/OCR evidence: `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`
+- Current no-match labeled fallback evidence: `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/no-match-current-labeled-320x430.json`
 
 ## Remaining Risk
 

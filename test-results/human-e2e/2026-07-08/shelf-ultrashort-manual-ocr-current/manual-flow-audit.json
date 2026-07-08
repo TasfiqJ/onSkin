@@ -1,0 +1,874 @@
+[
+  {
+    "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+    "hasJsDialog": false,
+    "issues": [],
+    "label": "manual-initial-320x440",
+    "overflowX": 0,
+    "scroll": {
+      "clientHeight": 441,
+      "clientWidth": 320,
+      "height": 441,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textFlags": {
+      "hasAddByHand": true,
+      "hasCaptureFailure": false,
+      "hasCategoryDialog": false,
+      "hasContinueManual": false,
+      "hasLooksRight": false,
+      "hasOcrTitle": false,
+      "hasOpenedDate": false,
+      "hasSomethingElse": false,
+      "helperHidden": true
+    },
+    "url": "http://localhost:8260/shelf/manual",
+    "viewport": {
+      "height": 441,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Cancel",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Product name",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Brand",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 125.91,
+        "x": 24,
+        "y": 155.98
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Category",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 138.49,
+        "x": 157.9,
+        "y": 155.98
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 60.77,
+        "name": "Ingredients",
+        "role": null,
+        "sub44": false,
+        "tag": "TEXTAREA",
+        "w": 272.39,
+        "x": 24,
+        "y": 265.96
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 55.99,
+        "name": "Continue",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 376.79
+      }
+    ]
+  },
+  {
+    "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+    "hasJsDialog": false,
+    "issues": [],
+    "label": "manual-filled-320x440",
+    "overflowX": 0,
+    "scroll": {
+      "clientHeight": 441,
+      "clientWidth": 320,
+      "height": 441,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textFlags": {
+      "hasAddByHand": true,
+      "hasCaptureFailure": false,
+      "hasCategoryDialog": false,
+      "hasContinueManual": false,
+      "hasLooksRight": false,
+      "hasOcrTitle": false,
+      "hasOpenedDate": false,
+      "hasSomethingElse": false,
+      "helperHidden": true
+    },
+    "url": "http://localhost:8260/shelf/manual",
+    "viewport": {
+      "height": 441,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Cancel",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Product name",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Brand",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 125.91,
+        "x": 24,
+        "y": 155.98
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Category",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 138.49,
+        "x": 157.9,
+        "y": 155.98
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 60.77,
+        "name": "Ingredients",
+        "role": null,
+        "sub44": false,
+        "tag": "TEXTAREA",
+        "w": 272.39,
+        "x": 24,
+        "y": 265.96
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 55.99,
+        "name": "Continue",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 376.79
+      }
+    ]
+  },
+  {
+    "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue Product category Close Cleanser Toner / essence Vitamin C serum Retinol / retinoid serum Serum Moisturiser (tube) Moisturiser (jar) Eye cream Lash / brow serum Mascara / liquid eye Sunscreen (SPF) Oil / balm Benzoyl peroxide product Something else",
+    "hasJsDialog": false,
+    "issues": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "label": "category-open-320x440",
+    "overflowX": 0,
+    "scroll": {
+      "clientHeight": 441,
+      "clientWidth": 320,
+      "height": 441,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textFlags": {
+      "hasAddByHand": true,
+      "hasCaptureFailure": false,
+      "hasCategoryDialog": true,
+      "hasContinueManual": false,
+      "hasLooksRight": false,
+      "hasOcrTitle": false,
+      "hasOpenedDate": false,
+      "hasSomethingElse": true,
+      "helperHidden": true
+    },
+    "url": "http://localhost:8260/shelf/manual",
+    "viewport": {
+      "height": 441,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Cancel",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Product name",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Brand",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 125.91,
+        "x": 24,
+        "y": 155.98
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Category",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 138.49,
+        "x": 157.9,
+        "y": 155.98
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 60.77,
+        "name": "Ingredients",
+        "role": null,
+        "sub44": false,
+        "tag": "TEXTAREA",
+        "w": 272.39,
+        "x": 24,
+        "y": 265.96
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 55.99,
+        "name": "Continue",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 376.79
+      },
+      {
+        "centerHit": true,
+        "clipped": true,
+        "h": 47.79,
+        "name": "Dismiss category picker",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 320.39,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "centerHit": true,
+        "clipped": true,
+        "h": 392.99,
+        "name": "Choose product category",
+        "role": "dialog",
+        "sub44": false,
+        "tag": "DIV",
+        "w": 320.39,
+        "x": 0,
+        "y": 47.79
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Close category picker",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 63.99,
+        "x": 232.4,
+        "y": 84.75
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Cleanser",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 144.75
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Toner / essence",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 204.73
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Vitamin C serum",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 264.71
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Retinol / retinoid serum",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 324.7
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Serum",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 384.68
+      }
+    ]
+  },
+  {
+    "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue Product category Close Cleanser Toner / essence Vitamin C serum Retinol / retinoid serum Serum Moisturiser (tube) Moisturiser (jar) Eye cream Lash / brow serum Mascara / liquid eye Sunscreen (SPF) Oil / balm Benzoyl peroxide product Something else",
+    "hasJsDialog": false,
+    "issues": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "label": "category-scrolled-320x440",
+    "overflowX": 0,
+    "scroll": {
+      "clientHeight": 441,
+      "clientWidth": 320,
+      "height": 441,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textFlags": {
+      "hasAddByHand": true,
+      "hasCaptureFailure": false,
+      "hasCategoryDialog": true,
+      "hasContinueManual": false,
+      "hasLooksRight": false,
+      "hasOcrTitle": false,
+      "hasOpenedDate": false,
+      "hasSomethingElse": true,
+      "helperHidden": true
+    },
+    "url": "http://localhost:8260/shelf/manual",
+    "viewport": {
+      "height": 441,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Cancel",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Product name",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Brand",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 125.91,
+        "x": 24,
+        "y": 155.98
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Category",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 138.49,
+        "x": 157.9,
+        "y": 155.98
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 60.77,
+        "name": "Ingredients",
+        "role": null,
+        "sub44": false,
+        "tag": "TEXTAREA",
+        "w": 272.39,
+        "x": 24,
+        "y": 265.96
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 55.99,
+        "name": "Continue",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 376.79
+      },
+      {
+        "centerHit": true,
+        "clipped": true,
+        "h": 47.79,
+        "name": "Dismiss category picker",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 320.39,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "centerHit": true,
+        "clipped": true,
+        "h": 392.99,
+        "name": "Choose product category",
+        "role": "dialog",
+        "sub44": false,
+        "tag": "DIV",
+        "w": 320.39,
+        "x": 0,
+        "y": 47.79
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Close category picker",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 63.99,
+        "x": 232.4,
+        "y": 84.75
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Cleanser",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 144.75
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Toner / essence",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 204.73
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Vitamin C serum",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 264.71
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Retinol / retinoid serum",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 324.7
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 51.99,
+        "name": "Category, Serum",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 384.68
+      }
+    ]
+  },
+  {
+    "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Other ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+    "hasJsDialog": false,
+    "issues": [],
+    "label": "category-selected-320x440",
+    "overflowX": 0,
+    "scroll": {
+      "clientHeight": 441,
+      "clientWidth": 320,
+      "height": 441,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textFlags": {
+      "hasAddByHand": true,
+      "hasCaptureFailure": false,
+      "hasCategoryDialog": false,
+      "hasContinueManual": false,
+      "hasLooksRight": false,
+      "hasOcrTitle": false,
+      "hasOpenedDate": false,
+      "hasSomethingElse": false,
+      "helperHidden": true
+    },
+    "url": "http://localhost:8260/shelf/manual",
+    "viewport": {
+      "height": 441,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Cancel",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Product name",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Brand",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 125.91,
+        "x": 24,
+        "y": 155.98
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Category, Other",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 138.49,
+        "x": 157.9,
+        "y": 155.98
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 60.77,
+        "name": "Ingredients",
+        "role": null,
+        "sub44": false,
+        "tag": "TEXTAREA",
+        "w": 272.39,
+        "x": 24,
+        "y": 265.96
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 55.99,
+        "name": "Continue",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 376.79
+      }
+    ]
+  },
+  {
+    "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Other ▾ INGREDIENTS · optional, we’ll find the actives Continue ◴ x When did you open it? This starts the freshness clock. Not sure? We'll estimate from when you added it. ✓ Just opened it Clock starts today Pick a date I opened it earlier Not opened yet No clock. We'll show shelf life PAO not set tap to set ✎ Add to shelf",
+    "hasJsDialog": false,
+    "issues": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "label": "opened-after-manual-320x440",
+    "overflowX": 0,
+    "scroll": {
+      "clientHeight": 441,
+      "clientWidth": 320,
+      "height": 441,
+      "width": 320,
+      "x": 0,
+      "y": 0
+    },
+    "textFlags": {
+      "hasAddByHand": true,
+      "hasCaptureFailure": false,
+      "hasCategoryDialog": false,
+      "hasContinueManual": false,
+      "hasLooksRight": false,
+      "hasOcrTitle": false,
+      "hasOpenedDate": true,
+      "hasSomethingElse": false,
+      "helperHidden": true
+    },
+    "url": "http://localhost:8260/shelf/opened",
+    "viewport": {
+      "height": 441,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Cancel",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Product name",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Brand",
+        "role": null,
+        "sub44": false,
+        "tag": "INPUT",
+        "w": 125.91,
+        "x": 24,
+        "y": 155.98
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 48,
+        "name": "Category, Other",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 138.49,
+        "x": 157.9,
+        "y": 155.98
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 60.77,
+        "name": "Ingredients",
+        "role": null,
+        "sub44": false,
+        "tag": "TEXTAREA",
+        "w": 272.39,
+        "x": 24,
+        "y": 265.96
+      },
+      {
+        "centerHit": false,
+        "clipped": false,
+        "h": 55.99,
+        "name": "Continue",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 272.39,
+        "x": 24,
+        "y": 376.79
+      },
+      {
+        "centerHit": true,
+        "clipped": true,
+        "h": 428.99,
+        "name": "◴xWhen did you open it?This starts the freshness clock. Not sure? We'll estimate from when you added it.✓Just opened itC",
+        "role": "dialog",
+        "sub44": false,
+        "tag": "DIV",
+        "w": 320.39,
+        "x": 0,
+        "y": 11.79
+      },
+      {
+        "centerHit": true,
+        "clipped": false,
+        "h": 48,
+        "name": "Close",
+        "role": "button",
+        "sub44": false,
+        "tag": "BUTTON",
+        "w": 48,
+        "x": 244.4,
+        "y": 52.76
+      }
+    ]
+  }
+]

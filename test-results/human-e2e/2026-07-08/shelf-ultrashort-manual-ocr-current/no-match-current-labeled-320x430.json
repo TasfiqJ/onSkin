@@ -1,0 +1,95 @@
+{
+  "bodyText": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+  "hasJsDialog": false,
+  "issues": [
+    "[Circular]"
+  ],
+  "label": "no-match-current-labeled-320x430",
+  "overflowX": 0,
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "height": 430,
+    "width": 320,
+    "x": 0,
+    "y": 0
+  },
+  "textFlags": {
+    "hasAddByHand": false,
+    "hasCaptureFailure": false,
+    "hasCategoryDialog": false,
+    "hasContinueManual": false,
+    "hasLooksRight": false,
+    "hasOcrTitle": false,
+    "hasOpenedDate": false,
+    "hasSomethingElse": false,
+    "helperHidden": true
+  },
+  "url": "http://localhost:8260/shelf/no-match",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "centerHit": true,
+      "clipped": true,
+      "h": 408.92,
+      "name": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wro",
+      "role": "dialog",
+      "sub44": false,
+      "tag": "DIV",
+      "w": 320.39,
+      "x": 0,
+      "y": 21.18
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Close",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 48,
+      "x": 244.4,
+      "y": 62.15
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Search catalog. Try name or brand instead",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 264.41,
+      "x": 27.99,
+      "y": 262.14
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Scan the ingredient list. We'll read the INCI text",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 264.41,
+      "x": 27.99,
+      "y": 314.12
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Add it by hand. Always works, even offline",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 264.41,
+      "x": 27.99,
+      "y": 366.11
+    }
+  ]
+}

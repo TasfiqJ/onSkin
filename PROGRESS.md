@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Tightened the shortest-height Shelf intake fallbacks below 460 px viewport
+  height. Manual add now hides nonessential helper/PAO copy, trims field
+  spacing, keeps the fixed Continue action at 52 px, and gives the category
+  sheet enough ultra-short bottom padding for `Something else` to scroll fully
+  into view. OCR label capture now uses a shorter camera panel and compact
+  action spacing while preserving inline capture-failure recovery and editable
+  manual text. Barcode no-match now has an ultra-compact density for all three
+  recovery rows and explicit row accessibility labels. Codex in-app browser
+  Expo web evidence at 320 x 440 verifies manual add, category selection into
+  `/shelf/opened`, OCR capture failure, manual INCI continuation into
+  `/shelf/manual`, and zero current-origin warn/error logs; 320 x 430 evidence
+  verifies the no-match `Add it by hand` labeled fallback routes to
+  `/shelf/manual`. Evidence:
+  `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`.
+
 - Re-ran `npm run phase5:verify` on current `main` after the latest native
   capture route changes. Phase 5 QA packet smoke, native config check,
   generated device QA packet, root typecheck, root lint, and the full mobile

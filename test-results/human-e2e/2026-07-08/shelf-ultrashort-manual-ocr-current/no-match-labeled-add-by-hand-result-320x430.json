@@ -1,0 +1,105 @@
+{
+  "bodyText": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+  "hasJsDialog": false,
+  "issues": [],
+  "label": "no-match-labeled-add-by-hand-result-320x430",
+  "overflowX": 0,
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "height": 430,
+    "width": 320,
+    "x": 0,
+    "y": 0
+  },
+  "textFlags": {
+    "hasAddByHand": true,
+    "hasCaptureFailure": false,
+    "hasCategoryDialog": false,
+    "hasContinueManual": false,
+    "hasLooksRight": false,
+    "hasOcrTitle": false,
+    "hasOpenedDate": false,
+    "hasSomethingElse": false,
+    "helperHidden": true
+  },
+  "url": "http://localhost:8260/shelf/manual",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Cancel",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 48,
+      "x": 24,
+      "y": 7.99
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Product name",
+      "role": null,
+      "sub44": false,
+      "tag": "INPUT",
+      "w": 272.39,
+      "x": 24,
+      "y": 77.99
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Brand",
+      "role": null,
+      "sub44": false,
+      "tag": "INPUT",
+      "w": 125.91,
+      "x": 24,
+      "y": 155.98
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 48,
+      "name": "Category",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 138.49,
+      "x": 157.9,
+      "y": 155.98
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 60.77,
+      "name": "Ingredients",
+      "role": null,
+      "sub44": false,
+      "tag": "TEXTAREA",
+      "w": 272.39,
+      "x": 24,
+      "y": 265.96
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "h": 55.99,
+      "name": "Continue",
+      "role": "button",
+      "sub44": false,
+      "tag": "BUTTON",
+      "w": 272.39,
+      "x": 24,
+      "y": 366.11
+    }
+  ]
+}

@@ -61,8 +61,12 @@ Fresh verification on 2026-07-08:
 - Expo web Shelf manual category picker evidence at 320 x 480 and 320 x 568
   passed the named bottom-sheet, lower-option scroll, 52 px category row,
   `Other` selection, `/shelf/opened` continuation, horizontal-overflow, and
-  browser-log checks. Evidence:
-  `test-results/human-e2e/2026-07-08/shelf-manual-category-sheet-current/`.
+  browser-log checks. Additional 320 x 440 / 320 x 430 Shelf intake evidence
+  verifies manual add, fully visible lower category selection, OCR
+  capture-failure/manual-text continuation, labeled no-match fallbacks, and
+  `/shelf/manual` recovery with zero current-origin warn/error logs. Evidence:
+  `test-results/human-e2e/2026-07-08/shelf-manual-category-sheet-current/`,
+  `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`.
 
 Re-run the relevant checks after any production-readiness change.
 

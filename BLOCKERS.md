@@ -104,7 +104,11 @@ visible clipped controls, sub-44 user-facing controls, blocked hit-tests,
 horizontal overflow, or disallowed browser logs. The Shelf manual category
 picker also passed fresh 320 x 480 and 320 x 568 Expo web evidence for its named
 bottom sheet, scrollable lower category options, 52 px rows, `Other` selection,
-`/shelf/opened` continuation, and zero disallowed browser logs.
+`/shelf/opened` continuation, and zero disallowed browser logs. Additional
+320 x 440 / 320 x 430 Shelf intake evidence verifies the ultra-short manual
+add, OCR capture-failure/manual-text continuation, and labeled no-match fallback
+paths without horizontal overflow, blocked user-facing controls, or
+current-origin warn/error logs.
 Strict beta/public-launch gates still require the external evidence listed in
 `docs/FOR_TAS_TO_DO.md`. Re-run the relevant checks after any
 readiness-changing work.
