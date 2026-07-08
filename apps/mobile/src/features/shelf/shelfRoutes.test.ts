@@ -70,11 +70,12 @@ describe('Shelf route mobile contracts', () => {
     }
   });
 
-  it('keeps scan fallback rows complete on split-short text-pressure phones', () => {
+  it('keeps scan fallback rows complete on compact text-pressure phones', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
     expect(source).toContain('const splitShortScanSurface = height < 460;');
-    expect(source).toContain('hideSubtitle={splitShortScanSurface}');
+    expect(source).toContain('const compactScanSurface = height < 640');
+    expect(source).toContain('hideSubtitle={compactScanSurface}');
     expect(source).toContain('hideSubtitle?: boolean;');
     expect(source).toContain('accessibilityLabel?: string;');
     expect(source).toContain('accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}');
@@ -386,9 +387,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const showScanPreview = !splitShortScanSurface || canShowCamera;');
     expect(source).toContain('style={splitShortScanSurface ? { minHeight: 68 } : undefined}');
     expect(source).toContain('{showScanPreview ? (');
-    expect(source).toContain(
-      "title={splitShortScanSurface ? 'Scan label' : 'Scan ingredient label'}",
-    );
+    expect(source).toContain("title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}");
     expect(source).toContain('accessibilityLabel="Scan ingredient label. Review editable OCR"');
     expect(source).toContain("'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'");
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
@@ -396,13 +395,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("'absolute left-8 right-8 top-[34px] h-8 rounded-[12px]'");
     expect(source).toContain("'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'");
     expect(source).toContain('!compactScanSurface ? (');
-    expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'");
-    expect(source).toContain("className={splitShortScanSurface ? 'gap-1.5' : 'gap-2.5'}");
+    expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'");
+    expect(source).toContain("state.kind === 'idle' && compactScanSurface ? null");
+    expect(source).toContain("className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}");
     expect(source).toContain('subtitle="Review editable OCR"');
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
-    expect(source).toContain('compact={splitShortScanSurface}');
-    expect(source).toContain('hideSubtitle={splitShortScanSurface}');
+    expect(source).toContain('compact={compactScanSurface}');
+    expect(source).toContain('hideSubtitle={compactScanSurface}');
     expect(source).toContain('compact?: boolean;');
     expect(source).toContain('hideSubtitle?: boolean;');
     expect(source).toContain(
@@ -493,6 +493,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
     expect(source).toContain('const splitShortPhone = viewportHeight < 410;');
+    expect(source).toContain('const compactManualPhone = viewportHeight < 600;');
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
@@ -501,16 +502,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('role="dialog"');
     expect(source).toContain('accessibilityLabel="Choose product category"');
     expect(source).toContain('className="flex-1"');
+    expect(source).toContain("splitShortPhone ? 'pb-40' : compactManualPhone ? 'pb-36' : 'pb-24'");
+    expect(source).toContain('{!compactManualPhone ? (');
+    expect(source).toContain("className={compactManualPhone ? 'gap-2' : 'gap-3'}");
     expect(source).toContain(
-      "contentContainerClassName={splitShortPhone ? 'pb-40' : ultraShortPhone ? 'pb-28' : 'pb-24'}",
+      "className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}",
     );
-    expect(source).toContain('{!ultraShortPhone ? (');
-    expect(source).toContain("className={ultraShortPhone ? 'gap-2' : 'gap-3'}");
-    expect(source).toContain(
-      "className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}",
-    );
-    expect(source).toContain("<View className={ultraShortPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>");
-    expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
+    expect(source).toContain("<View className={compactManualPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>");
+    expect(source).toContain("className={compactManualPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain(
       "return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');",
     );
@@ -518,19 +517,22 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toMatch(
       /accessibilityLabel=\{\s*category\s*\?\s*`Category, \$\{categoryFieldLabel\(category\)\}`\s*:\s*'Category'\s*\}/,
     );
-    expect(source).toContain('<View className="flex-1">');
-    expect(source).toContain('<View className="flex-[1.1]">');
-    expect(source).toContain("ultraShortPhone ? 'h-[48px]' : 'h-[50px]'");
-    expect(source).toContain('style={splitShortPhone ? { marginTop: 152 } : undefined}');
+    expect(source).toContain("className={compactManualPhone ? 'flex-[0.82]' : 'flex-1'}");
+    expect(source).toContain("className={compactManualPhone ? 'flex-[1.28]' : 'flex-[1.1]'}");
+    expect(source).toContain("compactManualPhone ? 'h-[48px]' : 'h-[50px]'");
+    expect(source).toContain(
+      "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
+    );
+    expect(source).toContain('compactManualPhone');
+    expect(source).toContain('? { marginTop: 176 }');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
     );
     expect(source).toContain('{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }');
     expect(source).toContain('paddingBottom: sheetPaddingBottom');
-    expect(source).toContain(
-      'className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"',
-    );
+    expect(source).toContain("'min-w-0 flex-1 font-sans-medium leading-[18px]'");
+    expect(source).toContain("compactManualPhone ? 'text-[13px]' : 'text-[14px]'");
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('ellipsizeMode="tail"');
     expect(source).toContain(

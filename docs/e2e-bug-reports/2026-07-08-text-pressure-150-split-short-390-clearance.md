@@ -55,7 +55,7 @@ The 150% text scale and 390 px height crossed a tighter threshold than the exist
 - Split Recommendation Preferences value filters into first-viewport and below-fold groups on split-short phones.
 - Move the lower-priority notification toggle into a separate below-fold card on split-short phones.
 - Add split-short clearance before the optional manual-add Ingredients field.
-- Use a shorter split-short Shelf scan row label while preserving the full accessibility label.
+- Use shorter compact Shelf scan fallback rows while preserving the full accessibility label.
 - Use shorter split-short Shelf no-match and narrow tab visible labels while preserving full accessibility labels.
 - Remove web-rendered decoration pointer-events usage where bubbling keeps controls tappable without a browser warning.
 
@@ -67,9 +67,9 @@ The 150% text scale and 390 px height crossed a tighter threshold than the exist
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-7/`
-- Logs: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-7/expo-web.log`
-- UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-7/summary.json`
+- Screenshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-8/`
+- Logs: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-8/expo-web.log`
+- UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-8/summary.json`
 - Terminal transcript:
   - `npm --workspace apps/mobile run test -- src/features/shelf/shelfRoutes.test.ts src/features/settings/settingsRoutes.test.ts src/features/recommendations/recommendationRoutes.test.ts src/features/navigation/tabBar.test.ts src/components/ui/ToggleSwitch.test.ts`
   - `npm run e2e:text-pressure`

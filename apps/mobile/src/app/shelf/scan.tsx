@@ -402,7 +402,7 @@ export default function ScanScreen() {
           splitShortScanSurface
             ? 'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'
             : compactScanSurface
-              ? 'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'
+              ? 'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'
               : 'rounded-t-sheet bg-night-surface px-7 pb-10 pt-6'
         }
       >
@@ -456,37 +456,37 @@ export default function ScanScreen() {
           <Text variant="bodySm" tone="inverseMuted" className="mb-4">
             {state.reason}
           </Text>
-        ) : (
+        ) : state.kind === 'idle' && compactScanSurface ? null : (
           <Text variant="bodySm" tone="inverseMuted" className="mb-4">
             Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called
             from the app.
           </Text>
         )}
 
-        <View className={splitShortScanSurface ? 'gap-1.5' : 'gap-2.5'}>
+        <View className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}>
           <FallbackRow
             icon="="
-            title={splitShortScanSurface ? 'Scan label' : 'Scan ingredient label'}
+            title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}
             subtitle="Review editable OCR"
             accessibilityLabel="Scan ingredient label. Review editable OCR"
-            compact={splitShortScanSurface}
-            hideSubtitle={splitShortScanSurface}
+            compact={compactScanSurface}
+            hideSubtitle={compactScanSurface}
             onPress={goOcr}
           />
           <FallbackRow
             icon="S"
             title="Search catalog"
             subtitle="Use reviewed matches"
-            compact={splitShortScanSurface}
-            hideSubtitle={splitShortScanSurface}
+            compact={compactScanSurface}
+            hideSubtitle={compactScanSurface}
             onPress={goSearch}
           />
           <FallbackRow
             icon="+"
             title="Add it by hand"
             subtitle="Always works offline"
-            compact={splitShortScanSurface}
-            hideSubtitle={splitShortScanSurface}
+            compact={compactScanSurface}
+            hideSubtitle={compactScanSurface}
             onPress={goManual}
           />
         </View>

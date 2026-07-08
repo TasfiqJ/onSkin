@@ -11,14 +11,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Recommendation Preferences now moves the last value-filter row fully below
   the first viewport, Settings Notifications moves the progress-photo nudge to
   a below-fold card, Shelf manual add reserves fixed-footer clearance before
-  Ingredients, Shelf scan shortens the fallback row label only in split-short
-  mode while preserving the full accessibility label, Shelf no-match uses
+  Ingredients, Shelf scan shortens fallback rows on compact scan surfaces while
+  preserving the full accessibility label, Shelf no-match uses
   shorter split-short visible copy with full accessibility labels, the 320 px
   tab bar abbreviates only the visible Progress label, and rendered web chrome
   no longer emits the pointer-events warning from decoration-only layers.
   Focused Shelf/Settings/Recommendations/TabBar/ToggleSwitch contracts pass,
   and the final 49-route sweep reports zero failed routes with evidence in
-  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-7/`
+  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-8/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-150-split-short-390-clearance.md`.
 

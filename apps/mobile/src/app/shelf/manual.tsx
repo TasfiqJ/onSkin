@@ -157,6 +157,7 @@ export default function ManualAddScreen() {
   const { height: viewportHeight } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
   const splitShortPhone = viewportHeight < 410;
+  const compactManualPhone = viewportHeight < 600;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -208,16 +209,18 @@ export default function ManualAddScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={splitShortPhone ? 'pb-40' : ultraShortPhone ? 'pb-28' : 'pb-24'}
+        contentContainerClassName={
+          splitShortPhone ? 'pb-40' : compactManualPhone ? 'pb-36' : 'pb-24'
+        }
         keyboardShouldPersistTaps="handled"
       >
-        {!ultraShortPhone ? (
+        {!compactManualPhone ? (
           <Text variant="bodySm" tone="muted" className="mb-4 mt-3">
             The floor under every other path. This always works, even fully offline.
           </Text>
         ) : null}
 
-        <View className={ultraShortPhone ? 'gap-2' : 'gap-3'}>
+        <View className={compactManualPhone ? 'gap-2' : 'gap-3'}>
           <View>
             <FieldLabel>Product name</FieldLabel>
             <TextInput
@@ -226,12 +229,12 @@ export default function ManualAddScreen() {
               onChangeText={setName}
               placeholder="e.g. Gentle Retinol Night Serum"
               placeholderTextColor={colors.mutedLight}
-              className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}
+              className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
             />
           </View>
 
-          <View className={ultraShortPhone ? 'flex-row gap-2' : 'flex-row gap-3'}>
-            <View className="flex-1">
+          <View className={compactManualPhone ? 'flex-row gap-2' : 'flex-row gap-3'}>
+            <View className={compactManualPhone ? 'flex-[0.82]' : 'flex-1'}>
               <FieldLabel>Brand</FieldLabel>
               <TextInput
                 accessibilityLabel="Brand"
@@ -239,10 +242,10 @@ export default function ManualAddScreen() {
                 onChangeText={setBrand}
                 placeholder="Brand"
                 placeholderTextColor={colors.mutedLight}
-                className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}
+                className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
               />
             </View>
-            <View className="flex-[1.1]">
+            <View className={compactManualPhone ? 'flex-[1.28]' : 'flex-[1.1]'}>
               <FieldLabel>Category</FieldLabel>
               <Pressable
                 accessibilityLabel={
@@ -252,12 +255,15 @@ export default function ManualAddScreen() {
                 accessibilityRole="button"
                 onPress={() => setPickerOpen((o) => !o)}
                 className={cn(
-                  ultraShortPhone ? 'h-[48px]' : 'h-[50px]',
-                  'flex-row items-center justify-between gap-1 rounded-[14px] border border-hairline bg-paper-raised px-3',
+                  compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3',
+                  'flex-row items-center justify-between rounded-[14px] border border-hairline bg-paper-raised',
                 )}
               >
                 <Text
-                  className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"
+                  className={cn(
+                    'min-w-0 flex-1 font-sans-medium leading-[18px]',
+                    compactManualPhone ? 'text-[13px]' : 'text-[14px]',
+                  )}
                   tone={category ? 'ink' : 'muted'}
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -271,7 +277,15 @@ export default function ManualAddScreen() {
             </View>
           </View>
 
-          <View style={splitShortPhone ? { marginTop: 152 } : undefined}>
+          <View
+            style={
+              splitShortPhone
+                ? { marginTop: 152 }
+                : compactManualPhone
+                  ? { marginTop: 176 }
+                  : undefined
+            }
+          >
             <Text variant="label" tone="muted" className="mb-1.5 uppercase">
               Ingredients
               <Text
@@ -321,12 +335,12 @@ export default function ManualAddScreen() {
         </View>
       </ScrollView>
 
-      <View className={ultraShortPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>
+      <View className={compactManualPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>
         <Button
           label="Continue"
           variant="accent"
           disabled={!canContinue}
-          className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}
+          className={compactManualPhone ? 'min-h-[52px] py-3' : undefined}
           onPress={onContinue}
         />
       </View>
