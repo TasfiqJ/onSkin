@@ -1,6 +1,6 @@
 import { router, useIsFocused, usePathname } from 'expo-router';
-import { useEffect, type ReactNode } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
@@ -11,6 +11,11 @@ import { ComplianceRow } from './ComplianceRow';
 import { PAYWALL_COPY, UPSELL_COPY } from './copy';
 import { dismissPaywall, paywallDismissFallbackForFeature } from './dismissPaywall';
 import { canStartContextualReverseTrial } from './entitlement';
+import {
+  PAYWALL_FEEDBACK,
+  PaywallFeedback,
+  type PaywallFeedbackState,
+} from './PaywallFeedback';
 import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
 import { useSubscriptionOffering } from './useSubscriptionOffering';
@@ -26,6 +31,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const { data, isLoading } = useEntitlement();
   const { startReverseTrial, startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
+  const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
   const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';
@@ -84,31 +90,24 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     : PAYWALL_COPY.offer.cta;
 
   function onStartTrial() {
+    setActionFeedback(null);
     if (!canPurchase) {
-      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled)
-          Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      onError: () =>
-        Alert.alert(
-          'Purchase unavailable',
-          'We could not open the store purchase sheet. Please try again.',
-        ),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
     });
   }
 
   function onStartReverseTrial() {
+    setActionFeedback(null);
     startReverseTrial.mutate(undefined, {
-      onError: () =>
-        Alert.alert(
-          'Explore first unavailable',
-          'We could not start the no-card Pro week for this account.',
-        ),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
     });
   }
 
@@ -299,6 +298,17 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
           </Pressable>
         ) : null}
+        <PaywallFeedback
+          compact={compactPaywall}
+          feedback={actionFeedback}
+          className={
+            compactTabbedPhotoPaywall
+              ? 'mt-1.5 rounded-card px-3 py-2'
+              : compactPaywall
+                ? 'mt-2 rounded-card px-3 py-2'
+                : undefined
+          }
+        />
         <ComplianceRow />
       </ScrollView>
     </Screen>

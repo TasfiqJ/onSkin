@@ -251,6 +251,7 @@ describe('paywall mobile contracts', () => {
 
     expect(source).toContain('const [feedback, setFeedback] = useState<string | null>(null);');
     expect(source).toContain('export function openPolicy(url: string): Promise<boolean>');
+    expect(source).toContain('alertOnFailure: false');
     expect(source).toContain('const opened = await openPolicy(url);');
     expect(source).toContain('if (!opened) setFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);');
     expect(source).toContain('onPress={() => void onPolicy(TERMS_URL)}');
@@ -259,10 +260,61 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('setFeedback(message);');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('className="px-4 pb-2 text-center"');
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain("import { Alert");
     expect(entitlement).toContain("fixture !== 'expired_store'");
     expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(entitlement).toContain("periodType: 'normal'");
     expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
+  });
+
+  it('keeps purchase and restore recovery route-owned instead of native alerts', () => {
+    const feedback = readSource('features/subscription/PaywallFeedback.tsx');
+    const externalOpen = readSource('lib/navigation/externalOpen.ts');
+
+    expect(feedback).toContain('export function PaywallFeedback');
+    expect(feedback).toContain('accessibilityRole="alert"');
+    expect(feedback).toContain('PAYWALL_FEEDBACK');
+    expect(externalOpen).toContain('alertOnFailure?: boolean');
+    expect(externalOpen).toContain('options.alertOnFailure !== false');
+
+    for (const route of [
+      'onboarding/paywall.tsx',
+      'paywall/reoffer.tsx',
+      'paywall/downgrade.tsx',
+      'paywall/upsell.tsx',
+      'paywall/winback.tsx',
+    ]) {
+      const source = readAppRoute(route);
+
+      expect(source, `${route} should render shared inline paywall feedback`).toContain(
+        'PaywallFeedback',
+      );
+      expect(source, `${route} should clear stale feedback before purchase action`).toContain(
+        'setActionFeedback(null);',
+      );
+      expect(source, `${route} should use shared store-pricing feedback`).toContain(
+        'PAYWALL_FEEDBACK',
+      );
+      expect(source, `${route} should not use native alerts for purchase recovery`).not.toContain(
+        'Alert.alert',
+      );
+      expect(source, `${route} should not import native Alert`).not.toContain("import { Alert");
+    }
+
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    expect(proGate).toContain('PaywallFeedback');
+    expect(proGate).toContain('setActionFeedback(null);');
+    expect(proGate).toContain('PAYWALL_FEEDBACK');
+    expect(proGate).not.toContain('Alert.alert');
+    expect(proGate).not.toContain("import { Alert");
+
+    const subscriptionSettings = readAppRoute('settings/subscription.tsx');
+    expect(subscriptionSettings).toContain('alertOnFailure: false');
+    expect(subscriptionSettings).toContain('setSubscriptionFeedback(message);');
+    expect(subscriptionSettings).toContain('setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);');
+    expect(subscriptionSettings).not.toContain('Alert.alert');
+    expect(subscriptionSettings).not.toContain("import { Alert");
   });
 
   it('keeps purchase-capable lifecycle paywalls compliant with Terms, Privacy, and Restore', () => {

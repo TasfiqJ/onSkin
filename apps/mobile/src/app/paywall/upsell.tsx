@@ -1,11 +1,16 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import { Alert, Pressable, View, useWindowDimensions } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { UPSELL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
+import {
+  PAYWALL_FEEDBACK,
+  PaywallFeedback,
+  type PaywallFeedbackState,
+} from '@/features/subscription/PaywallFeedback';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
@@ -21,6 +26,7 @@ export default function UpsellSheet() {
   const { height, width } = useWindowDimensions();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
+  const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
   const compactPaywall = height < 640;
@@ -30,21 +36,17 @@ export default function UpsellSheet() {
   const annualDisplay = planPriceDisplay('annual', offering.data);
 
   function onStartTrial() {
+    setActionFeedback(null);
     if (!canPurchase) {
-      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled)
-          Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      onError: () =>
-        Alert.alert(
-          'Purchase unavailable',
-          'We could not open the store purchase sheet. Please try again.',
-        ),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
     });
   }
 
@@ -143,6 +145,7 @@ export default function UpsellSheet() {
           Start free trial
         </Text>
       </Pressable>
+      <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
       <ComplianceRow />
       <Pressable
         accessibilityRole="button"

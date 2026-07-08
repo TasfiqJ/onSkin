@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
@@ -32,6 +32,7 @@ export function openPolicy(url: string): Promise<boolean> {
     invalidMessage: 'This policy URL must be configured before launch.',
     failureTitle: 'Link unavailable',
     failureMessage: 'We could not open this policy link. Please try again.',
+    alertOnFailure: false,
   });
 }
 
@@ -53,12 +54,10 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
       onSuccess: (result) => {
         const message = restoreFeedbackMessage(result.active);
         setFeedback(message);
-        Alert.alert('Restore purchases', message);
       },
       onError: () => {
         const message = 'We could not restore purchases. Please try again.';
         setFeedback(message);
-        Alert.alert('Restore purchases', message);
       },
     });
   }

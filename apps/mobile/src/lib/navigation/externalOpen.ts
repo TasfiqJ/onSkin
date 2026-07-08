@@ -7,6 +7,7 @@ export type ExternalOpenMode = 'browser' | 'linking';
 
 export type ExternalOpenOptions = {
   mode?: ExternalOpenMode;
+  alertOnFailure?: boolean;
   invalidTitle?: string;
   invalidMessage?: string;
   failureTitle?: string;
@@ -35,10 +36,12 @@ export async function openExternalHttpsUrl(
 ): Promise<boolean> {
   const safeUrl = safeExternalHttpsUrl(url);
   if (!safeUrl) {
-    Alert.alert(
-      options.invalidTitle ?? DEFAULT_INVALID_TITLE,
-      options.invalidMessage ?? DEFAULT_INVALID_MESSAGE,
-    );
+    if (options.alertOnFailure !== false) {
+      Alert.alert(
+        options.invalidTitle ?? DEFAULT_INVALID_TITLE,
+        options.invalidMessage ?? DEFAULT_INVALID_MESSAGE,
+      );
+    }
     return false;
   }
 
@@ -54,10 +57,12 @@ export async function openExternalHttpsUrl(
     }
     return true;
   } catch {
-    Alert.alert(
-      options.failureTitle ?? DEFAULT_FAILURE_TITLE,
-      options.failureMessage ?? DEFAULT_FAILURE_MESSAGE,
-    );
+    if (options.alertOnFailure !== false) {
+      Alert.alert(
+        options.failureTitle ?? DEFAULT_FAILURE_TITLE,
+        options.failureMessage ?? DEFAULT_FAILURE_MESSAGE,
+      );
+    }
     return false;
   }
 }

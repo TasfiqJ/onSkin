@@ -1,9 +1,15 @@
 import { router } from 'expo-router';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import {
+  PAYWALL_FEEDBACK,
+  PaywallFeedback,
+  type PaywallFeedbackState,
+} from '@/features/subscription/PaywallFeedback';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { colors } from '@/theme/tokens';
@@ -14,21 +20,23 @@ export default function DowngradeScreen() {
   const { height } = useWindowDimensions();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
+  const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const compactPaywall = height < 640;
 
   function onRenew() {
+    setActionFeedback(null);
     if (!canPurchase) {
-      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled) Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      onError: () => Alert.alert('Purchase unavailable', 'We could not open the store purchase sheet. Please try again.'),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
     });
   }
 
@@ -82,6 +90,7 @@ export default function DowngradeScreen() {
             {offering.data.reason}
           </Text>
         ) : null}
+        <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
         <Pressable
           accessibilityRole="button"
           disabled={!canPurchase || startTrial.isPending}

@@ -6,6 +6,27 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened subscription/paywall recovery to stay route-owned instead of stacking
+  native alerts over polished paywall surfaces. Contextual, onboarding, re-offer,
+  downgrade, win-back, subscription settings, compliance restore, policy-link,
+  and commerce-link recovery now use persistent inline feedback where the screen
+  already owns the failure state. Added `PaywallFeedback`, an external-open
+  `alertOnFailure: false` opt-out, contract coverage for no native `Alert.alert`
+  purchase/restore recovery, and Codex in-app browser evidence for direct
+  `/paywall/upsell?feature=full_routine` restore recovery at 320 x 568 with no
+  dialog, no raw provider text, and zero horizontal overflow.
+
+- Hardened Phase 7 and Phase 8 QA packet traceability. Phase 7 core-loop
+  packets now hash the Phase 7 verifier scripts, root script manifest, and
+  shared evidence-normalization helper. Phase 8 growth/store packets now hash
+  the Phase 8 verifier scripts, root script manifest, and the same shared helper
+  alongside public-growth source inputs. The cross-phase evidence-normalization
+  smoke now covers Phase 7 and Phase 8 packet flags, so closed-beta and
+  public-growth evidence cannot regress to raw string checks locally. The
+  refreshed packets remain blocked on external brand, legal, clinical, device,
+  RevenueCat, Supabase, store-console, launch-dashboard, and named-signoff
+  evidence.
+
 - Hardened Phase 6 payments QA packet traceability. Generated payments packets
   now hash the Phase 6 verifier scripts, root script manifest, and shared
   evidence-normalization helper alongside the RevenueCat runtime, Supabase

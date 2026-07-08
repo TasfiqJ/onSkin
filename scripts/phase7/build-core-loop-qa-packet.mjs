@@ -9,6 +9,7 @@ const root = process.cwd();
 const outDir = resolve(root, process.env.PHASE7_PACKET_OUT_DIR ?? 'docs/phase-7/generated');
 
 const requiredFiles = [
+  'package.json',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
@@ -18,6 +19,10 @@ const requiredFiles = [
   'apps/mobile/src/app/share/conflict/[ruleId].tsx',
   'apps/mobile/src/app/conflict/[ruleId].tsx',
   'apps/mobile/src/features/commerce/WhereToBuy.tsx',
+  'scripts/phase7/build-core-loop-qa-packet.mjs',
+  'scripts/phase7/check-core-loop.mjs',
+  'scripts/phase7/check-core-loop-smoke.mjs',
+  'scripts/phase9/lib.mjs',
   'docs/phase-7/surface-inventory.md',
   'docs/phase-7/launch-claim-matrix.md',
   'docs/phase-7/beta-evidence-dashboard.md',

@@ -12,6 +12,9 @@
 - Added Phase 7 environment documentation to `.env.example`.
 - Added Phase 7 surface inventory, launch claim matrix, beta dashboard spec, and QA checklist.
 - Added Phase 7 verification scripts and generated QA packet output.
+- Generated QA packets hash the Phase 7 verifier scripts and shared
+  evidence-normalization helper, so packet evidence is tied to the local gates
+  that decided its status.
 
 ## Seven-figure readiness assessment
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T00:03:02.717Z",
+  "generatedAt": "2026-07-08T08:44:18.891Z",
   "objective": "Phase 8 growth loop and store readiness",
   "status": "blocked",
   "publicIdentity": {
@@ -57,6 +57,7 @@
     ]
   },
   "sourceHashes": {
+    "package.json": "c8ebb02c4dd1e0031017d04803d50617975b9023f60f4a37b33daf01150f9f19",
     "apps/mobile/app.config.js": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c",
     "apps/mobile/src/lib/env.ts": "2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321",
     "apps/mobile/src/lib/launch/phase8.ts": "94ac42c54e192d2f3c641de05609846ff3de9892646d5cc6ad41a098acbdac70",
@@ -74,6 +75,10 @@
     "docs/phase-8/creator-brief.md": "4d24677954d2ec765fc40c912806fbfc6cb9ab5020ad4d71b1c00cd5bc2453bb",
     "docs/phase-8/acquisition-dashboard.md": "444868fad465a28a1732161b2a3d3c177854f9589e48ac137f7c3658452b2877",
     "docs/phase-8/launch-dry-run-checklist.md": "3d357c7e4a8d4adc1d018da0d646d81944b7c30d0f2c357eac4264e14f76b798",
+    "scripts/phase8/build-growth-store-qa-packet.mjs": "260c6199daf73b0bba483717a669d54fb0cf80c8e3bf8203511287bf18ff8873",
+    "scripts/phase8/check-growth-store-readiness.mjs": "ac9843f643d2ace574daa830316f3ba545cb2fbec203ebf1d7d67fd75b8601d4",
+    "scripts/phase8/check-growth-store-smoke.mjs": "763fdc15b3a3eef8d448de8edf5bf98844c495fee84bf202af16c3abca013403",
+    "scripts/phase9/lib.mjs": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752",
     "supabase/migrations/20260616000028_phase8_growth.sql": "629bcda19f7f227679b8202a6d0234392dba62d4cf602023d0c2b976c576f14e",
     "supabase/functions/growth-event/index.ts": "a7945cfe8706fffeec0bb733aac5a9a19a47545c2dfa021c9807db907b6261ae",
     "supabase/functions/waitlist/index.ts": "828be1876b1aa1de84e33267a912b957a05a018b42d9207ade2be7d34157d256"

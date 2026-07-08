@@ -21,6 +21,8 @@ Failed policy or billing handoffs leave clear visible recovery feedback on the c
 
 Before this fix, the shared paywall policy opener and subscription settings rows relied on transient alerts for external-open failure. If the alert was dismissed, suppressed, or not visible in the web/native bridge, the user had no persistent status on the paywall or subscription settings surface.
 
+Follow-up finding: after visible inline feedback was added, restore and purchase recovery still called `Alert.alert` in the shared paywall compliance row, contextual paywalls, onboarding paywall, lifecycle paywalls, and subscription settings. On iOS and Android that could stack a native system dialog over the polished route-owned recovery copy; on Expo web it made the durable in-screen state harder to trust as the only recovery channel.
+
 ## Evidence
 
 - Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/01-paywall-before-320x568.png`
@@ -29,6 +31,11 @@ Before this fix, the shared paywall policy opener and subscription settings rows
 - Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/04-settings-subscription-after-feedback-320x568.png`
 - UI snapshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/summary.json`
 - Logs: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/browser-logs.json`
+- Screenshot: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/01-upsell-paywall-start.png`
+- Screenshot: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/03-after-restore.png`
+- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/02-start-state.json`
+- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/04-after-restore-state.json`
+- Logs: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/05-browser-warn-error-logs.json`
 - Terminal transcript: System Chrome CDP E2E run passed seven interactions.
 
 ## Frequency
@@ -46,9 +53,13 @@ Before this fix, the shared paywall policy opener and subscription settings rows
 
 The external URL helper returned failure and displayed an alert, but calling surfaces did not preserve a route-local recovery message after the handoff failed.
 
+The follow-up native-alert issue came from older `Alert.alert` calls remaining after the UI gained inline feedback. The app had two recovery channels for the same billing state instead of one stable route-owned alert region.
+
 ## Minimal Fix Recommendation
 
 Return and await the shared policy opener result, then set inline `accessibilityRole="alert"` feedback in the paywall compliance row and subscription settings rows. Add a store-backed local entitlement fixture so the manage-billing branch can be exercised without live RevenueCat.
+
+Follow-up fix: add a shared `PaywallFeedback` component for paywall action failures, route purchase/restore/unavailable-offer failures into that component, remove native `Alert.alert` imports from paywall and subscription settings recovery paths, and add `alertOnFailure: false` to the external opener for surfaces that already render inline recovery.
 
 ## Verification Flow After Fix
 
@@ -60,9 +71,16 @@ Return and await the shared policy opener result, then set inline `accessibility
 
 - Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/02-paywall-after-feedback-320x568.png`
 - Screenshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/04-settings-subscription-after-feedback-320x568.png`
+- Screenshot: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/03-after-restore.png`
 - UI snapshot: `test-results/human-e2e/2026-07-08/subscription-compliance-feedback-current/summary.json`
+- UI snapshot: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/04-after-restore-state.json`
+- Logs: `test-results/human-e2e/2026-07-08/paywall-restore-inline-recovery-current/05-browser-warn-error-logs.json`
 - Terminal transcript: `npm --workspace apps/mobile run test -- paywallMobileContracts.test.ts externalOpen.test.ts settingsRoutes.test.ts` passed 36 tests.
 - Terminal transcript: System Chrome CDP E2E passed seven interactions.
+- Terminal transcript: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts src/lib/navigation/externalOpen.test.ts` passed 26 tests.
+- Terminal transcript: `npm --workspace apps/mobile run typecheck` passed.
+- Terminal transcript: `npm --workspace apps/mobile run lint` passed.
+- Browser transcript: Codex in-app browser at 320 x 568 verified direct `/paywall/upsell?feature=full_routine`, tapped `Restore`, observed one visible inline alert, `dialog: null`, `scrollWidth: 320`, no raw RevenueCat text, and only known local placeholder warnings.
 
 ## Remaining Risk
 

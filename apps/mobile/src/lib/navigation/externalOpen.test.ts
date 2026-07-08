@@ -76,6 +76,24 @@ describe('external URL opener', () => {
     ]);
   });
 
+  it('can suppress native alerts for route-owned recovery UI', async () => {
+    mocks.openBrowserAsync.mockRejectedValueOnce(new Error('no browser'));
+
+    await expect(
+      openExternalHttpsUrl('https://example.com/privacy', {
+        alertOnFailure: false,
+      }),
+    ).resolves.toBe(false);
+
+    await expect(
+      openExternalHttpsUrl('http://example.com/privacy', {
+        alertOnFailure: false,
+      }),
+    ).resolves.toBe(false);
+
+    expect(mocks.alerts).toEqual([]);
+  });
+
   it('alerts when a native Linking handoff fails', async () => {
     mocks.openURL.mockRejectedValueOnce(new Error('cannot open'));
 

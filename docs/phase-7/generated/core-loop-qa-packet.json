@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T00:02:40.087Z",
+  "generatedAt": "2026-07-08T08:44:18.819Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -64,6 +64,12 @@
   ],
   "files": [
     {
+      "path": "package.json",
+      "exists": true,
+      "bytes": 10935,
+      "sha256": "c8ebb02c4dd1e0031017d04803d50617975b9023f60f4a37b33daf01150f9f19"
+    },
+    {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
       "exists": true,
       "bytes": 4930,
@@ -84,8 +90,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/today.tsx",
       "exists": true,
-      "bytes": 23758,
-      "sha256": "7bd8818436e71dbc43a9563fa8b70111942f21361f802ed6fdb49b2cfe2cf94f"
+      "bytes": 26536,
+      "sha256": "f9292c22a4a130c32710dbfafc4664d07e2fe2c7e38eac044a1ece8072a5a0df"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
@@ -96,8 +102,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 24490,
-      "sha256": "b8cd5f3aaf3a41f1d611addd929607d77226da389de3ff6bbd4c687715891eb8"
+      "bytes": 26897,
+      "sha256": "5cd4c2b18874b1de7f1da4dde1d8a9944b8e9d948797b04f21ce86b0dfd34db6"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
@@ -108,14 +114,38 @@
     {
       "path": "apps/mobile/src/app/conflict/[ruleId].tsx",
       "exists": true,
-      "bytes": 23984,
-      "sha256": "f6f49dc7fca334174efd23bbcfc0107a9195c82a65d5e87b3ca5c3b91e66d1d2"
+      "bytes": 24700,
+      "sha256": "61d0ca03d82d58b972df8bb0f6dd4a5a480f7db6eef75be8f45bbf9abc53038a"
     },
     {
       "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
       "exists": true,
-      "bytes": 7811,
-      "sha256": "36f4fd40476fa553dde281bbbd42a560b5c4fe35a86483837bee23e9092ebe3c"
+      "bytes": 8380,
+      "sha256": "236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293"
+    },
+    {
+      "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
+      "exists": true,
+      "bytes": 6651,
+      "sha256": "0b37ca988802fd3ff21bd031c36f87348f569e5f181e4599339de644bc5d7aef"
+    },
+    {
+      "path": "scripts/phase7/check-core-loop.mjs",
+      "exists": true,
+      "bytes": 12093,
+      "sha256": "b7447a14bb15dc30489c98f535552351ea6d081b60594db632fea150b165548a"
+    },
+    {
+      "path": "scripts/phase7/check-core-loop-smoke.mjs",
+      "exists": true,
+      "bytes": 6955,
+      "sha256": "667899b5151eb18987a87e13c6d42589a1711f038414f94798eaba70e77ccb14"
+    },
+    {
+      "path": "scripts/phase9/lib.mjs",
+      "exists": true,
+      "bytes": 9767,
+      "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -138,14 +168,14 @@
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",
       "exists": true,
-      "bytes": 31356,
-      "sha256": "4f8865d50d43d91beaf62a10217021e11faeee97bd4c24c3043f90441456e044"
+      "bytes": 56746,
+      "sha256": "dd2438f05eae911ca6bd60394ae10752cd13d70017b16cd48f2317b948fb7a80"
     },
     {
       "path": "docs/phase-7/phase-7-exit-review.md",
       "exists": true,
-      "bytes": 2670,
-      "sha256": "a18a08606b4c7130fe149594d126de66739af77ea5728d95ec82a5cf5f7896c5"
+      "bytes": 2844,
+      "sha256": "9d2195e36d9696484386f9d1abf5d59cd4853eda3ea36136c89a313a86b44fc0"
     }
   ],
   "blockers": [

@@ -1,0 +1,61 @@
+{
+  "dialog": null,
+  "alerts": [
+    {
+      "height": 40,
+      "text": "No active subscription was found for this account.",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 449
+    }
+  ],
+  "bodyExcerpt": "Unlock your full routine.\nThe complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nTerms\n·\nPrivacy\n·\nRestore\nNo active subscription was found for this account.\nMaybe later",
+  "buttons": [
+    {
+      "height": 54,
+      "text": "Start free trial",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 347
+    },
+    {
+      "height": 48,
+      "text": "Terms",
+      "visible": true,
+      "width": 48,
+      "x": 62,
+      "y": 401
+    },
+    {
+      "height": 48,
+      "text": "Privacy",
+      "visible": true,
+      "width": 48,
+      "x": 135,
+      "y": 401
+    },
+    {
+      "height": 48,
+      "text": "Restore",
+      "visible": true,
+      "width": 49,
+      "x": 209,
+      "y": 401
+    },
+    {
+      "height": 48,
+      "text": "Maybe later",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 489
+    }
+  ],
+  "clientWidth": 320,
+  "hasInlineRestoreCopy": true,
+  "hasRawRevenueCatText": false,
+  "scrollWidth": 320,
+  "url": "http://localhost:8099/paywall/upsell?feature=full_routine"
+}

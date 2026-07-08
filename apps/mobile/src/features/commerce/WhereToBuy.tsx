@@ -111,6 +111,7 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
         mode: 'linking',
         failureTitle: 'Link unavailable',
         failureMessage: 'We could not open this retailer link. Please try again.',
+        alertOnFailure: false,
       });
       if (!opened) {
         track('where_to_buy_link_failed', { source: option.source });

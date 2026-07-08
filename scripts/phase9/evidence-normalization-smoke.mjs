@@ -20,6 +20,36 @@ const evidenceGates = [
     ],
   },
   {
+    file: 'scripts/phase7/build-core-loop-qa-packet.mjs',
+    keys: [
+      'PHASE7_BRAND_READY',
+      'PHASE7_SUPABASE_RLS_PASS',
+      'PHASE7_CLINICAL_REVIEW_PASS',
+      'PHASE7_CATALOG_BETA_IMPORT_PASS',
+      'PHASE7_DEVICE_QA_PASS',
+      'PHASE7_REVENUECAT_QA_PASS',
+      'PHASE7_PRIVACY_EXPORT_DELETE_PASS',
+      'PHASE7_BETA_DASHBOARD_READY',
+    ],
+  },
+  {
+    file: 'scripts/phase8/build-growth-store-qa-packet.mjs',
+    keys: [
+      'PHASE8_BRAND_SOURCE_OF_TRUTH_PASS',
+      'PHASE8_DOMAIN_DNS_PASS',
+      'PHASE8_IOS_UNIVERSAL_LINKS_PASS',
+      'PHASE8_ANDROID_APP_LINKS_PASS',
+      'PHASE8_SHARE_CARD_DEVICE_QA_PASS',
+      'PHASE8_ATTRIBUTION_PRIVACY_PASS',
+      'PHASE8_APP_STORE_PACKET_PASS',
+      'PHASE8_PLAY_STORE_PACKET_PASS',
+      'PHASE8_CREATOR_COMPLIANCE_PASS',
+      'PHASE8_SUPPORT_RESPONSE_PASS',
+      'PHASE8_LAUNCH_DASHBOARD_READY',
+      'PHASE8_DRY_RUN_PASS',
+    ],
+  },
+  {
     file: 'scripts/phase9/rls-adversarial.mjs',
     keys: ['PHASE9_RLS_STAGING_PASS', 'PHASE9_RLS_PRODUCTION_PASS'],
   },
@@ -199,4 +229,4 @@ for (const [value, expected] of [
   );
 }
 
-printResult('Phase 5/6/9/10/11 evidence normalization smoke', errors, warnings);
+printResult('Phase 5/6/7/8/9/10/11 evidence normalization smoke', errors, warnings);

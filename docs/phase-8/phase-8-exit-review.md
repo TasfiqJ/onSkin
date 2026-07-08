@@ -14,6 +14,9 @@ Status: not launch-ready.
 - Store review prompt policy with caps and value moments.
 - Store metadata packet with validator.
 - Creator brief, paid measurement lab, dashboard spec, compliance packet, dry-run checklist.
+- Generated QA packets hash the Phase 8 verifier scripts and shared
+  evidence-normalization helper, so public-growth evidence is tied to the local
+  gates that decided its status.
 
 ## Still Blocked
 

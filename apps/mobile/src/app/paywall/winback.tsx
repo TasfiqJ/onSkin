@@ -1,12 +1,17 @@
 import { router } from 'expo-router';
-import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
+import {
+  PAYWALL_FEEDBACK,
+  PaywallFeedback,
+  type PaywallFeedbackState,
+} from '@/features/subscription/PaywallFeedback';
 import { planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
@@ -22,6 +27,7 @@ export default function WinbackScreen() {
   const { height } = useWindowDimensions();
   const { winback } = useEntitlementActions();
   const offering = useSubscriptionOffering();
+  const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const offer = offering.data?.winBack ?? null;
   const canWinBack = offering.data?.status === 'available' && offer?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
@@ -30,6 +36,7 @@ export default function WinbackScreen() {
   const compactPaywall = height < 640;
 
   function onComeBack() {
+    setActionFeedback(null);
     if (!canWinBack) {
       router.replace('/paywall/upsell?feature=full_routine');
       return;
@@ -37,19 +44,10 @@ export default function WinbackScreen() {
     winback.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (result.offerUnavailable)
-          Alert.alert(
-            'Offer unavailable',
-            'This welcome-back offer is not available for this account right now.',
-          );
-        else if (!result.cancelled)
-          Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (result.offerUnavailable) setActionFeedback(PAYWALL_FEEDBACK.offerUnavailable);
+        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      onError: () =>
-        Alert.alert(
-          'Purchase unavailable',
-          'We could not open the store purchase sheet. Please try again.',
-        ),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
     });
   }
 
@@ -164,6 +162,12 @@ export default function WinbackScreen() {
             {unavailableOfferCopy}
           </Text>
         ) : null}
+        <PaywallFeedback
+          compact={compactPaywall}
+          feedback={actionFeedback}
+          tone="dark"
+          className="rounded-card px-3 py-2"
+        />
         <Pressable
           accessibilityRole="button"
           disabled={winback.isPending}

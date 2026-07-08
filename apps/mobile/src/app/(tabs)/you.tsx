@@ -160,6 +160,7 @@ function openPolicyUrl(url: string): Promise<boolean> {
     invalidMessage: 'This policy URL must be configured before launch.',
     failureTitle: 'Link unavailable',
     failureMessage: 'We could not open this policy link. Please try again.',
+    alertOnFailure: false,
   });
 }
 

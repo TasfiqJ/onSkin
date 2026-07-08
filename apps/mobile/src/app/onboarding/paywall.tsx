@@ -1,12 +1,17 @@
 import { router } from 'expo-router';
-import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import {
+  PAYWALL_FEEDBACK,
+  PaywallFeedback,
+  type PaywallFeedbackState,
+} from '@/features/subscription/PaywallFeedback';
 import { planLineLabel, planPriceDisplay } from '@/features/subscription/priceDisplay';
 import { useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
@@ -52,6 +57,7 @@ export default function PaywallScreen() {
   const { goals, quizAnswers, computeResult } = useOnboarding();
   const { startTrial, startReverseTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
+  const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
@@ -61,34 +67,27 @@ export default function PaywallScreen() {
   const compactPaywall = height < 640;
 
   function onStartTrial() {
+    setActionFeedback(null);
     if (!canPurchase) {
-      Alert.alert('Store pricing unavailable', offering.data?.reason ?? 'Please try again later.');
+      setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled)
-          Alert.alert('Purchase not active', 'No active subscription was found for this account.');
+        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      onError: () =>
-        Alert.alert(
-          'Purchase unavailable',
-          'We could not open the store purchase sheet. Please try again.',
-        ),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
     });
   }
 
   function onStartReverseTrial() {
+    setActionFeedback(null);
     startReverseTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/routine/plan');
       },
-      onError: () =>
-        Alert.alert(
-          'Explore first unavailable',
-          'We could not start the no-card Pro week for this account.',
-        ),
+      onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
     });
   }
 
@@ -288,6 +287,8 @@ export default function PaywallScreen() {
           </View>
           <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
         </Pressable>
+
+        <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
 
         {/* compliance (Apple 3.1.2) */}
         <ComplianceRow />

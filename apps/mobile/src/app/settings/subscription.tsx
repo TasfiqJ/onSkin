@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -82,6 +82,7 @@ export default function SubscriptionScreen() {
       failureTitle: 'Subscription link unavailable',
       failureMessage:
         'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.',
+      alertOnFailure: false,
     });
     if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);
   }
@@ -99,11 +100,9 @@ export default function SubscriptionScreen() {
           ? 'Your active subscription is restored on this device.'
           : 'No active subscription was found for this account.';
         setSubscriptionFeedback(message);
-        Alert.alert('Restore purchases', message);
       },
       onError: () => {
         setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);
-        Alert.alert('Restore purchases', RESTORE_UNAVAILABLE_MESSAGE);
       },
     });
   }

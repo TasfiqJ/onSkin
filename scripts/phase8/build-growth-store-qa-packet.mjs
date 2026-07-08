@@ -82,6 +82,7 @@ const evidence = {
 };
 
 const sourceFiles = [
+  'package.json',
   'apps/mobile/app.config.js',
   'apps/mobile/src/lib/env.ts',
   'apps/mobile/src/lib/launch/phase8.ts',
@@ -99,6 +100,10 @@ const sourceFiles = [
   'docs/phase-8/creator-brief.md',
   'docs/phase-8/acquisition-dashboard.md',
   'docs/phase-8/launch-dry-run-checklist.md',
+  'scripts/phase8/build-growth-store-qa-packet.mjs',
+  'scripts/phase8/check-growth-store-readiness.mjs',
+  'scripts/phase8/check-growth-store-smoke.mjs',
+  'scripts/phase9/lib.mjs',
   'supabase/migrations/20260616000028_phase8_growth.sql',
   'supabase/functions/growth-event/index.ts',
   'supabase/functions/waitlist/index.ts',
