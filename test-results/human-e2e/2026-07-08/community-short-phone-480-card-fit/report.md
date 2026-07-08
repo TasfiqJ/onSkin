@@ -27,6 +27,7 @@ Pass.
 - Visible user-facing controls below 44 px: none.
 - Visible clipped controls: none.
 - Back: 48 x 48 px.
+- Ask: not exposed on this local launch surface because community posting is flag-disabled.
 - `Can you use niacinamide with vitamin C?` card: fully visible at y=134-223.
 - `Is a 10-step "glass skin" routine better?` card: fully visible at y=249-338.
 - `Is "natural" always gentler for sensitive skin?` card: fully visible at y=342-433.

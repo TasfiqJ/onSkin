@@ -15,7 +15,7 @@ Tester: Codex
 
 ## Expected Result
 
-Visible Skin Note cards should be fully readable and tappable. Back and Ask should remain 44 pt or larger, the route should have no horizontal overflow, and the expert-led library should not resemble a social feed.
+Visible Skin Note cards should be fully readable and tappable. Back and any exposed Ask control should remain 44 pt or larger, the route should have no horizontal overflow, and the expert-led library should not resemble a social feed.
 
 ## Actual Result
 
@@ -48,7 +48,7 @@ Add a sub-520 px Skin Notes hub density that trims heading, section, card, title
 ## Verification Flow After Fix
 
 1. Reopen `/community` at 320 x 480.
-2. Confirm Back and Ask remain visible 44 pt or larger.
+2. Confirm Back and any exposed Ask control remain visible 44 pt or larger.
 3. Confirm visible Skin Note cards are not clipped.
 4. Confirm tapping a visible Skin Note opens the note detail.
 5. Confirm horizontal overflow is zero and no JavaScript dialog appears.

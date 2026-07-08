@@ -11,9 +11,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   cards: the second recommendation card before its evidence and `See how` row,
   and the third Skin Note before the bottom of the note card. Both hubs now have
   sub-520 px densities for heading, card spacing, card copy, and metadata rows
-  while keeping Back, Preferences, and Ask controls at 48 px. Post-fix Expo web
-  evidence verifies no clipped visible cards, no sub-44 controls, zero
-  horizontal overflow, and no dialogs. Evidence and bug reports:
+  while keeping Back, Preferences, and any exposed Ask control at 48 px.
+  Post-fix Expo web evidence verifies no clipped visible cards, no sub-44
+  controls, zero horizontal overflow, and no dialogs. Evidence and bug reports:
   `test-results/human-e2e/2026-07-08/recommendations-short-phone-480-card-fit/`,
   `test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/`,
   `docs/e2e-bug-reports/2026-07-08-recommendations-short-phone-card-clipping.md`,
