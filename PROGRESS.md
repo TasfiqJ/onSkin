@@ -13,8 +13,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   the viewport. The empty state now uses the same compact-aware scroll pattern as
   the recommendation list, with explicit icon sizing and tighter short-phone
   rhythm. Final System Chrome Expo web evidence confirms no subtitle overlap, no
-  horizontal overflow, no sub-44 px visible controls, a fully visible 320 x 568
-  footnote, and a fully reachable 320 x 480 footnote after scroll. Evidence is in
+  horizontal overflow, no sub-44 px visible controls, no first-viewport subtitle
+  collision, a fully visible 320 x 568 footnote, and a fully reachable 320 x 480
+  footnote after scroll. Evidence is in
   `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`, with
   the tracked report in
   `docs/e2e-bug-reports/2026-07-08-recommendations-youre-set-compact.md`.

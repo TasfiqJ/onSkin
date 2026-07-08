@@ -759,9 +759,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/recommendations` with a complete, non-expiring shelf state that produces no recommendation cards, inspect the first viewport, then scroll on a very short phone viewport.
-  - Expected result: The honest "you're set" trust copy uses a scrollable compact layout, does not overlap the For You subtitle, keeps the footnote fully visible at 320 x 568, keeps it reachable after scroll at 320 x 480, and has zero horizontal overflow.
+  - Expected result: The honest "you're set" trust copy uses a scrollable compact layout, does not overlap the For You subtitle in the first viewport, keeps the footnote fully visible at 320 x 568, keeps it reachable after scroll at 320 x 480, and has zero horizontal overflow.
   - Evidence: Phone-width screenshot, scroll snapshot, and UI geometry JSON.
-  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 and 320 x 480 verifies the seeded complete-shelf you're-set state has no subtitle overlap, no horizontal overflow, no sub-44 px controls, one scrollable empty-state region, a fully visible 320 x 568 footnote, and a fully reachable 320 x 480 footnote after scroll.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 and 320 x 480 verifies the seeded complete-shelf you're-set state has no first-viewport subtitle overlap, no horizontal overflow, no sub-44 px controls, one scrollable empty-state region, a fully visible 320 x 568 footnote, and a fully reachable 320 x 480 footnote after scroll.
 - Branch: direct-entry recommendation exits
   - Priority: Important
   - Automate later: Yes

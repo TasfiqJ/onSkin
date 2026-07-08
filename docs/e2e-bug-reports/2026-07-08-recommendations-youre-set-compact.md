@@ -50,8 +50,8 @@ Render `YoureSet` inside a `ScrollView`, pass the existing compact hub signal, t
 ## Verification Flow After Fix
 
 1. Reopen `/recommendations` with the same seeded complete shelf at 320 x 568.
-2. Verify the first viewport has no subtitle overlap, zero horizontal overflow, no sub-44 px controls, and a fully visible footnote.
-3. Reopen at 320 x 480, scroll the you're-set state, and verify the footnote becomes fully visible.
+2. Verify the first viewport has no subtitle overlap, zero horizontal overflow, no sub-44 px controls, and a fully visible footnote at 320 x 568.
+3. Reopen at 320 x 480, scroll the you're-set state, and verify the footnote becomes fully visible inside the scroll region.
 
 ## Post-Fix Evidence
 

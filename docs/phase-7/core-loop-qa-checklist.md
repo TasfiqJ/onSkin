@@ -317,9 +317,9 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   found the empty state on a non-scrollable fixed view, with content extending to
   602 px at 320 x 568 and 558 px at 320 x 480. `/recommendations` now uses the
   compact scrollable empty-state layout, keeps the completion icon clear of the
-  hub subtitle, has zero horizontal overflow and no sub-44 px controls, shows the
-  footnote fully at 320 x 568, and makes it fully reachable after scroll at
-  320 x 480. Evidence is in
+  hub subtitle in the first viewport, has zero horizontal overflow and no
+  sub-44 px controls, shows the footnote fully at 320 x 568, and makes it fully
+  reachable after scroll at 320 x 480. Evidence is in
   `test-results/human-e2e/2026-07-08/recommendations-youre-set-compact/`; it
   does not replace real iOS/Android beta-device QA or native Dynamic Type QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 and 390 x 568 plus focused
