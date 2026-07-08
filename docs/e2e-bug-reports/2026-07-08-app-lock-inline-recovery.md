@@ -66,7 +66,7 @@ Move unavailable recovery into inline feedback owned by the lock overlay, Progre
 - Screenshot: `test-results/human-e2e/2026-07-08/app-lock-inline-recovery-current/03-you-app-lock-toggle-inline-feedback.png`
 - UI snapshot: `test-results/human-e2e/2026-07-08/app-lock-inline-recovery-current/summary.json`
 - Logs: `test-results/human-e2e/2026-07-08/app-lock-inline-recovery-current/browser-warn-error-logs.json`
-- Terminal transcript: `npm --workspace apps/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/store.test.ts src/features/settings/applyPrivacyChoice.test.ts src/features/photos/progressRoutes.test.ts` passed 31 tests.
+- Terminal transcript: `npm --workspace apps/mobile run test -- src/lib/applock/authenticate.test.ts src/lib/applock/store.test.ts src/lib/applock/privacyState.test.ts src/features/settings/applyPrivacyChoice.test.ts src/features/photos/progressRoutes.test.ts` passed 33 tests.
 - Terminal transcript: `npm --workspace apps/mobile run typecheck` passed.
 - Terminal transcript: `npm --workspace apps/mobile run lint` passed.
 
