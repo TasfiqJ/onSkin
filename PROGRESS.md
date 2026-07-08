@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the split-short stale Skin Note fallback. Direct
+  `/community/note/missing-note-e2e` now uses a sub-410 px density band that
+  removes the decorative thumbnail, tightens note-unavailable copy, and keeps
+  `Back to Skin Notes` as a complete 57 px recovery action. The direct upsell
+  paywall also keeps `Maybe later` and compact compliance links in the
+  split-short header band so lower content does not push them into clipped
+  zones. The 320 x 390 / 120% text-pressure route audit passes all 49 routes,
+  and the stale-note and upsell snapshots report zero clipped controls, blocked
+  hit-tests, sub-44 controls, text overflow, horizontal overflow, or disallowed
+  browser logs. Evidence and report are in
+  `test-results/human-e2e/2026-07-08/text-pressure-120-split-short-390-current/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-community-missing-note-split-short-clearance.md`.
+
 - Hardened Phase 5 native-device packet provenance. The generated device QA
   packet now hashes the human-simulated E2E rules, testing checklist, user-flow
   tree, manifest generator, and generated human-E2E manifest alongside native

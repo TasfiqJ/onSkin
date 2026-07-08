@@ -104,6 +104,8 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain("? 'px-6 pb-3 pt-2'");
     expect(upsell).toContain(": shortPaywall\n            ? 'px-7 pb-5 pt-3'");
     expect(upsell).toContain('{shortPaywall ? null : (');
+    expect(upsell).toContain('<View className="mb-0 flex-row items-center justify-between">');
+    expect(upsell).toContain("className=\"h-[48px] justify-center pl-2\"");
     expect(upsell).toContain('fontSize: splitShortPaywall ? 24 : shortPaywall ? 27');
     expect(upsell).toContain('lineHeight: splitShortPaywall ? 27 : shortPaywall ? 30');
     expect(upsell).toContain('{!splitShortPaywall ? (');
@@ -119,7 +121,9 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain(
       "shortPaywall\n            ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'",
     );
-    expect(upsell).toContain('{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}');
+    expect(upsell).toContain(
+      '{shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
+    );
     expect(upsell).toContain('{shortPaywall ? null : <ComplianceRow />}');
     expect(upsell).toContain('backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');

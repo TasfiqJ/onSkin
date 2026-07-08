@@ -72,15 +72,30 @@ export default function UpsellSheet() {
       onClose={() => dismissPaywall(router)}
     >
       {shortPaywall ? (
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => dismissPaywall(router)}
-          className="mb-1 h-[48px] self-end justify-center px-2"
-        >
-          <Text className="font-sans-semibold" tone="muted" variant="body">
-            Maybe later
-          </Text>
-        </Pressable>
+        splitShortPaywall ? (
+          <View className="mb-0 flex-row items-center justify-between">
+            <ComplianceRow density="compactHeader" />
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => dismissPaywall(router)}
+              className="h-[48px] justify-center pl-2"
+            >
+              <Text className="font-sans-semibold" tone="muted" variant="body">
+                Maybe later
+              </Text>
+            </Pressable>
+          </View>
+        ) : (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => dismissPaywall(router)}
+            className="mb-1 h-[48px] self-end justify-center px-2"
+          >
+            <Text className="font-sans-semibold" tone="muted" variant="body">
+              Maybe later
+            </Text>
+          </Pressable>
+        )
       ) : null}
       {shortPaywall ? null : (
         <View
@@ -94,7 +109,7 @@ export default function UpsellSheet() {
           <View className="h-4 w-4 rounded-[5px]" style={{ backgroundColor: colors.clay }} />
         </View>
       )}
-      {shortPaywall ? <ComplianceRow density="compactHeader" /> : null}
+      {shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}
       <Text
         variant="title"
         style={{

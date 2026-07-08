@@ -25,6 +25,7 @@ export default function NoteDetail() {
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
   const compactMissingNote = height < 640;
+  const splitShortMissingNote = height < 410;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
     queryKey: ['noteHelped', id],
@@ -76,33 +77,56 @@ export default function NoteDetail() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: 'center',
-            paddingBottom: compactMissingNote ? 24 : 38,
+            justifyContent: splitShortMissingNote ? 'flex-start' : 'center',
+            paddingBottom: splitShortMissingNote ? 12 : compactMissingNote ? 24 : 38,
+            paddingTop: splitShortMissingNote ? 2 : 0,
           }}
         >
           <View className="items-center px-2">
-            <StripedThumb size={compactMissingNote ? 66 : 74} radius={20} faded />
-            <Text variant="label" tone="clay" className="mt-5 font-mono uppercase">
+            {splitShortMissingNote ? null : (
+              <StripedThumb size={compactMissingNote ? 66 : 74} radius={20} faded />
+            )}
+            <Text
+              variant="label"
+              tone="clay"
+              className={
+                splitShortMissingNote ? 'mt-1 font-mono uppercase' : 'mt-5 font-mono uppercase'
+              }
+            >
               Note unavailable
             </Text>
             <Text
               variant="titleSm"
-              className="mt-2 text-center"
+              className={splitShortMissingNote ? 'mt-1 text-center' : 'mt-2 text-center'}
               style={{
-                fontSize: compactMissingNote ? 24 : 27,
-                lineHeight: compactMissingNote ? 28 : 31,
+                fontSize: splitShortMissingNote ? 21 : compactMissingNote ? 24 : 27,
+                lineHeight: splitShortMissingNote ? 24 : compactMissingNote ? 28 : 31,
               }}
               accessibilityRole="header"
             >
               This Skin Note is not available right now.
             </Text>
-            <Text variant="bodySm" tone="muted" className="mt-2 max-w-[284px] text-center">
-              It may have been updated or removed during expert review. Current Skin Notes are still
-              available in the library.
+            <Text
+              variant="bodySm"
+              tone="muted"
+              className={
+                splitShortMissingNote
+                  ? 'mt-1 max-w-[278px] text-center text-[12px]'
+                  : 'mt-2 max-w-[284px] text-center'
+              }
+              style={splitShortMissingNote ? { lineHeight: 17 } : undefined}
+            >
+              {splitShortMissingNote
+                ? 'It may have been updated or removed during expert review. Current Skin Notes are still in the library.'
+                : 'It may have been updated or removed during expert review. Current Skin Notes are still available in the library.'}
             </Text>
           </View>
-          <View className="mt-6">
-            <Button label="Back to Skin Notes" onPress={() => router.replace(APP_COMMUNITY_ROUTE)} />
+          <View className={splitShortMissingNote ? 'mt-3' : 'mt-6'}>
+            <Button
+              label="Back to Skin Notes"
+              className={splitShortMissingNote ? 'min-h-[48px] py-3' : undefined}
+              onPress={() => router.replace(APP_COMMUNITY_ROUTE)}
+            />
           </View>
         </ScrollView>
       ) : (

@@ -139,11 +139,25 @@ describe('Community route contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactMissingNote = height < 640');
+    expect(source).toContain('const splitShortMissingNote = height < 410;');
     expect(source).toContain('<ScrollView');
+    expect(source).toContain(
+      "justifyContent: splitShortMissingNote ? 'flex-start' : 'center'",
+    );
+    expect(source).toContain(
+      'paddingBottom: splitShortMissingNote ? 12 : compactMissingNote ? 24 : 38',
+    );
+    expect(source).toContain('paddingTop: splitShortMissingNote ? 2 : 0');
+    expect(source).toContain('{splitShortMissingNote ? null : (');
     expect(source).toContain('Note unavailable');
     expect(source).toContain('This Skin Note is not available right now.');
     expect(source).toContain('It may have been updated or removed during expert review.');
     expect(source).toContain('Current Skin Notes are still');
+    expect(source).toContain(
+      "? 'It may have been updated or removed during expert review. Current Skin Notes are still in the library.'",
+    );
+    expect(source).toContain("splitShortMissingNote ? 'mt-3' : 'mt-6'");
+    expect(source).toContain("className={splitShortMissingNote ? 'min-h-[48px] py-3' : undefined}");
     expect(source).toContain('label="Back to Skin Notes"');
     expect(source).toContain('router.replace(APP_COMMUNITY_ROUTE)');
     expect(source).not.toContain('This note isn’t available right now.');
