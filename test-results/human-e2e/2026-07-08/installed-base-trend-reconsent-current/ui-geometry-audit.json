@@ -1,0 +1,48 @@
+{
+  "date": "2026-07-08",
+  "surface": "Codex in-app browser, Expo web",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro EXPO_PUBLIC_PHASE7_TREND_ENABLED=true EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only npm --workspace apps/mobile run web -- --port 8151 --host localhost --clear",
+  "beforeOptIn": {
+    "url": "http://localhost:8152/progress",
+    "photoHistoryVisible": true,
+    "trendInsightVisible": false,
+    "minVisibleControlHeight": 47.99757385253906,
+    "overflowRightCount": 0
+  },
+  "refusalRoute": {
+    "optionalOptInLinkVisible": true,
+    "trendInsightVisible": false,
+    "minVisibleControlHeight": 47.99757385253906,
+    "overflowRightCount": 0
+  },
+  "optInRoute": {
+    "separateConsentCopyVisible": true,
+    "offByDefaultCopyVisible": true,
+    "switchCheckedBefore": "false",
+    "switchCheckedAfter": "true",
+    "saveFailureVisibleAfterToggle": false,
+    "overflowRightCountBefore": 0,
+    "overflowRightCountAfter": 0
+  },
+  "afterExplicitOptIn": {
+    "photoHistoryVisible": true,
+    "trendInsightVisible": true,
+    "trendOutputHasScoreOrSkinAge": false,
+    "trendCardText": "Computed on this phone · nothing uploadedNo clear change to point to yet. Skin changes are usually gradual (8-12 weeks).",
+    "minVisibleControlHeight": 47.99757385253906,
+    "overflowRightCount": 0,
+    "screenshot": "05-progress-after-explicit-optin.png is the verified viewport capture from localhost:8151 after explicit opt-in."
+  },
+  "logs": {
+    "localhost8151CurrentOriginWarnErrorCount": 0,
+    "localhost8152CurrentOriginWarnErrorCount": 0,
+    "hasDialog8151": false,
+    "hasDialog8152": false
+  },
+  "storageNote": "The browser read-only scope did not expose localStorage/IndexedDB-backed private storage after the saved switch. App-visible consent state is evidenced by aria-checked=true and the trend card rendering after reopening Progress; unit tests cover the local-first fallback and configured-ledger no-row fail-closed behavior.",
+  "originNote": "Pre-opt-in was recaptured on localhost:8152 as a clean origin because localhost:8151 had already stored the explicit opt-in during the same human E2E run."
+}

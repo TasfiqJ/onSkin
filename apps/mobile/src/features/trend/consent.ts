@@ -1,5 +1,6 @@
 import { track } from '@/lib/analytics/track';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { isSupabaseConfigured } from '@/lib/env';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 
 import { TREND_COPY } from './copy';
@@ -17,6 +18,7 @@ export async function isTrendInsightsConsented(): Promise<boolean> {
   try {
     const consents = await getLatestConsents();
     if ('photo_trend_insights' in consents) return consents['photo_trend_insights'] === true;
+    if (isSupabaseConfigured) return false;
   } catch {
     /* offline / no DB. Fall back to the local-first flag */
   }

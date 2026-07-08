@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened and verified the installed-base Trend reconsent gate. When Supabase
+  is configured and the consent ledger returns old `photo_capture` consent but
+  no `photo_trend_insights` row, Trend now fails closed instead of falling back
+  to any local flag, preserving the explicit reconsent requirement for previous
+  photo users. Focused tests cover the legacy-photo/no-trend-consent case, the
+  explicit trend-consent row, and local-first fallback when the backend is not
+  configured. Codex in-app browser Expo web E2E at 320 x 568 with populated
+  Progress photos verifies a returning photo user sees photo history while the
+  Trend card stays hidden, the no-score refusal links to optional off-by-default
+  consent, one explicit `Read my progress` toggle unlocks the card, and the
+  scoped output remains score-free with zero horizontal overflow. Evidence is
+  in
+  `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/`.
+
 - Hardened settings privacy/security choice recovery and shared switch
   activation. The You-tab Marketing emails, partner data-sharing, and cloud
   backup save-failure paths now render route-owned inline `Choice not saved`

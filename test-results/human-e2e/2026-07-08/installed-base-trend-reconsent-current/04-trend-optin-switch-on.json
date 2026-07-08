@@ -1,0 +1,14 @@
+{
+  "hasSaveFailure": false,
+  "hasSeparateConsentCopy": true,
+  "overflowRightCount": 0,
+  "switchAriaChecked": "true",
+  "switchBox": {
+    "height": 47.99757385253906,
+    "width": 51.98725891113281,
+    "x": 229.44479370117188,
+    "y": 361.11956787109375
+  },
+  "url": "http://localhost:8152/trend/optin",
+  "visibleTextSample": "< Changes in your own photos Want your phone to read your own progress for you? It compares your own guided photos over time and describes what changed. In words, never a number or grade. ✓ Runs entirely on your phone. Your own photos comparing your own photos. ✓ No photo or result is ever uploaded. Nothing trains any AI. ✓ No score, no “skin age,” no grade, and you can turn it off anytime. ✦ A separate, distinct, revocable choice, never bundled with anything else. Read my progress Off by default How it stays fair across skin tones › never default-on · installed base is re-consented, never silently enrolled"
+}

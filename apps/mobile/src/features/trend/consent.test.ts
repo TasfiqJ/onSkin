@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
+  isSupabaseConfigured: false,
   getLatestConsents: vi.fn(),
   recordConsent: vi.fn(),
   track: vi.fn(),
@@ -23,6 +24,12 @@ vi.mock('@/lib/consent/withdrawal', () => ({
   withdrawConsent: mocks.withdrawConsent,
 }));
 
+vi.mock('@/lib/env', () => ({
+  get isSupabaseConfigured() {
+    return mocks.isSupabaseConfigured;
+  },
+}));
+
 vi.mock('./store', () => ({
   deleteTrendState: mocks.deleteTrendState,
   getTrendInsightsLocal: mocks.getTrendInsightsLocal,
@@ -31,6 +38,8 @@ vi.mock('./store', () => ({
 
 describe('trend insight consent persistence', () => {
   beforeEach(() => {
+    vi.resetModules();
+    mocks.isSupabaseConfigured = false;
     mocks.getLatestConsents.mockReset();
     mocks.recordConsent.mockReset();
     mocks.track.mockReset();
@@ -43,6 +52,38 @@ describe('trend insight consent persistence', () => {
     mocks.deleteTrendState.mockResolvedValue(undefined);
     mocks.getTrendInsightsLocal.mockResolvedValue(false);
     mocks.setTrendInsightsLocal.mockResolvedValue(undefined);
+  });
+
+  it('does not silently enroll installed-base photo users without trend consent', async () => {
+    mocks.isSupabaseConfigured = true;
+    const { isTrendInsightsConsented } = await import('./consent');
+    mocks.getLatestConsents.mockResolvedValueOnce({ photo_capture: true });
+    mocks.getTrendInsightsLocal.mockResolvedValueOnce(true);
+
+    await expect(isTrendInsightsConsented()).resolves.toBe(false);
+
+    expect(mocks.getTrendInsightsLocal).not.toHaveBeenCalled();
+  });
+
+  it('requires the explicit trend consent row when the ledger is reachable', async () => {
+    mocks.isSupabaseConfigured = true;
+    const { isTrendInsightsConsented } = await import('./consent');
+    mocks.getLatestConsents.mockResolvedValueOnce({
+      photo_capture: true,
+      photo_trend_insights: true,
+    });
+
+    await expect(isTrendInsightsConsented()).resolves.toBe(true);
+
+    expect(mocks.getTrendInsightsLocal).not.toHaveBeenCalled();
+  });
+
+  it('keeps local-first trend consent available when the backend is not configured', async () => {
+    const { isTrendInsightsConsented } = await import('./consent');
+    mocks.getLatestConsents.mockResolvedValueOnce({});
+    mocks.getTrendInsightsLocal.mockResolvedValueOnce(true);
+
+    await expect(isTrendInsightsConsented()).resolves.toBe(true);
   });
 
   it('records trend opt-in analytics only after the consent ledger saves', async () => {

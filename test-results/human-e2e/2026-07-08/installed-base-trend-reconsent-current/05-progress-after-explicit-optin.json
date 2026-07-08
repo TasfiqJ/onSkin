@@ -1,0 +1,76 @@
+{
+  "controls": [
+    {
+      "height": 47.99757385253906,
+      "label": "Take a progress photo",
+      "role": "button",
+      "visible": true,
+      "width": 92.9763412475586,
+      "x": 203.41323852539062,
+      "y": 11.999393463134766
+    },
+    {
+      "height": 47.99757385253906,
+      "label": "Compare",
+      "role": "button",
+      "visible": true,
+      "width": 95.99514770507812,
+      "x": 23.99878692626953,
+      "y": 323.87744140625
+    },
+    {
+      "height": 47.99757385253906,
+      "label": "Timeline",
+      "role": "button",
+      "visible": true,
+      "width": 95.99514770507812,
+      "x": 129.99090576171875,
+      "y": 323.87744140625
+    },
+    {
+      "height": 47.99757385253906,
+      "label": "Why no AI score",
+      "role": "link",
+      "visible": true,
+      "width": 118.65898895263672,
+      "x": 23.99878692626953,
+      "y": 381.8719787597656
+    },
+    {
+      "height": 47.99757385253906,
+      "label": "Side-by-side",
+      "role": "button",
+      "visible": true,
+      "width": 132.3270721435547,
+      "x": 164.06251525878906,
+      "y": 437.8641052246094
+    },
+    {
+      "height": 47.99757385253906,
+      "label": "Change to a different date (currently Apr 1)",
+      "role": "button",
+      "visible": true,
+      "width": 71.9963607788086,
+      "x": 38.95631408691406,
+      "y": 512.818603515625
+    },
+    {
+      "height": 47.99757385253906,
+      "label": "Change to a different date (currently Jun 24)",
+      "role": "button",
+      "visible": true,
+      "width": 75.36408233642578,
+      "x": 206.06797790527344,
+      "y": 512.818603515625
+    }
+  ],
+  "hasComputedNote": true,
+  "hasNarrative": true,
+  "hasPhotoHistory": true,
+  "hasScoreOrSkinAge": true,
+  "hasTrendInsight": true,
+  "minVisibleControlHeight": 47.99757385253906,
+  "overflowRightCount": 0,
+  "url": "http://localhost:8151/progress",
+  "visibleTextSample": "Progress ＋ Photo 12 weeks · 3 photos · all on this phone Same light, same angle. Honestly comparable. No scores, no AI grades. Computed on this phone · nothing uploaded No clear change to point to yet. Skin changes are usually gradual (8-12 weeks). Compare Timeline No scores ⓘ Side-by-side your photo your photo ‹ › Apr 1 Jun 24 drag to wipe · tap a date to change No “improvement %.” Just your two photos and their dates. You decide. Today Progress Shelf You"
+}

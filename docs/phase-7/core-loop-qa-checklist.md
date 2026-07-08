@@ -168,6 +168,21 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in `test-results/human-e2e/2026-07-07/trend-routes-current/`; it
   does not replace native photo/toggle QA, live authenticated consent-ledger/RLS
   evidence, fairness validation, or final legal consent-copy review.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers installed-base
+  Trend reconsent with populated local Progress photos and no
+  `photo_trend_insights` consent. A clean-origin returning photo user sees
+  `12 weeks · 3 photos · all on this phone` while the Trend insight is hidden;
+  the no-score refusal remains visible with optional/off-by-default opt-in copy;
+  `/trend/optin` starts with `Read my progress` off and separate revocable
+  consent copy; one explicit switch tap sets `aria-checked=true`; and reopening
+  Progress renders the on-device Trend card. The scoped Trend output has no
+  score, grade, skin age, or percentage, visible controls are 48 px+, and
+  horizontal overflow is zero. Evidence is in
+  `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/`;
+  focused tests now ensure a configured consent ledger with legacy
+  `photo_capture` but no `photo_trend_insights` fails closed. This does not
+  replace native secure-storage/biometric-lock QA or live Supabase
+  consent-ledger/RLS evidence.
 - 2026-07-07: Codex in-app browser Expo web E2E at 320 x 568 covers the
   first-use `/progress/capture` local-only consent gate after the safe-area
   overlay hardening. The gate renders complete on-device/no-faceprint/cloud-

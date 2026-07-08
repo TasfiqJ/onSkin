@@ -621,6 +621,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Simulate a returning user with photo history but no `photo_trend_insights` consent.
   - Expected result: Trend insight stays hidden until the user explicitly opts in; no previous photo user is silently enrolled.
   - Evidence: Screenshot and local consent state.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` verifies a clean-origin returning Progress photo user shows `12 weeks · 3 photos · all on this phone` while the Trend insight stays hidden. The preserved no-score refusal surface exposes the optional, on-device, off-by-default opt-in link, `/trend/optin` starts with `Read my progress` off plus separate/revocable consent copy, one explicit toggle changes the switch to `aria-checked=true` without failure copy, and reopening Progress renders the on-device Trend card. The scoped Trend output has no score, grade, skin age, or percentage; visible controls remain 48 px+ and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/`. Source tests now make a configured ledger with legacy `photo_capture` but no `photo_trend_insights` fail closed, so old photo users are not silently enrolled.
 - Branch: consent save or withdrawal failure
   - Priority: Critical
   - Automate later: Yes
