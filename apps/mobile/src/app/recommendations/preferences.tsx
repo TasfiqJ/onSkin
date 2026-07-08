@@ -135,7 +135,7 @@ export default function PreferencesScreen() {
     : ultraShortPreferences
       ? 'mb-1.5 mt-12'
       : shortPreferences
-        ? 'mb-1.5 mt-20'
+        ? 'mb-1.5 mt-24'
         : compactPreferences
           ? 'mb-2 mt-5'
           : 'mb-3 mt-7';

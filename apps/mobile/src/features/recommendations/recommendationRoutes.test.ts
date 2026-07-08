@@ -149,7 +149,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");
-    expect(source).toContain("? 'mb-1.5 mt-20'");
+    expect(source).toContain("? 'mb-1.5 mt-24'");
     expect(source).toContain("? 'mb-1.5 mt-28'");
     expect(source).toContain('const chipGroupClassName = shortPreferences');
     expect(source).toContain("? 'flex-row flex-wrap gap-1'");

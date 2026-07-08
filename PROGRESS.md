@@ -16,7 +16,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   no longer emits the pointer-events warning from decoration-only layers.
   Focused Shelf/Settings/Recommendations/TabBar/ToggleSwitch contracts pass,
   and the final 49-route sweep reports zero failed routes with evidence in
-  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-5/`
+  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-6/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-150-split-short-390-clearance.md`.
 

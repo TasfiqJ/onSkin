@@ -65,9 +65,9 @@ The 150% text scale and 390 px height crossed a tighter threshold than the exist
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-5/`
-- Logs: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-5/expo-web.log`
-- UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-5/summary.json`
+- Screenshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-6/`
+- Logs: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-6/expo-web.log`
+- UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-6/summary.json`
 - Terminal transcript:
   - `npm --workspace apps/mobile run test -- src/features/shelf/shelfRoutes.test.ts src/features/settings/settingsRoutes.test.ts src/features/recommendations/recommendationRoutes.test.ts src/features/navigation/tabBar.test.ts src/components/ui/ToggleSwitch.test.ts`
   - `npm run e2e:text-pressure`
