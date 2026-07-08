@@ -1,0 +1,64 @@
+{
+  "bodyTextSample": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice. Back to Shelf Add a product",
+  "buttons": [
+    {
+      "bottom": 569,
+      "height": 569,
+      "label": "Dismiss",
+      "role": "button",
+      "tag": "BUTTON",
+      "top": 0,
+      "visible": true,
+      "width": 320
+    },
+    {
+      "bottom": 1010,
+      "height": 56,
+      "label": "Back to Shelf",
+      "role": "button",
+      "tag": "BUTTON",
+      "top": 954,
+      "visible": true,
+      "width": 264
+    },
+    {
+      "bottom": 1066,
+      "height": 48,
+      "label": "Add a product",
+      "role": "button",
+      "tag": "BUTTON",
+      "top": 1018,
+      "visible": true,
+      "width": 264
+    }
+  ],
+  "dialogs": [
+    {
+      "ariaLabel": null,
+      "ariaModal": "true",
+      "bottom": 569,
+      "height": 16,
+      "maxHeight": "0px",
+      "overflowY": "visible",
+      "tag": "DIV",
+      "text": "Shelf updatedThis timing note is no longer active.Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine.We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice.Back to ShelfAdd a product",
+      "top": 553,
+      "width": 320
+    }
+  ],
+  "hasAddProduct": true,
+  "hasBackToShelf": true,
+  "hasMissingState": true,
+  "hasMojibake": false,
+  "href": "http://localhost:19141/conflict/missing-rule-e2e",
+  "overflow": {
+    "clientWidth": 320,
+    "horizontalOverflow": false,
+    "scrollWidth": 320
+  },
+  "title": "",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "label": "Add by hand",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 119.2,
+        "y": 97
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Catalog search query | Brand or product name",
+      "hitTag": "input",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Catalog search query | Brand or product name",
+      "rect": {
+        "bottom": 122,
+        "height": 50,
+        "left": 24,
+        "right": 214.3,
+        "top": 72,
+        "width": 190.3
+      },
+      "role": "",
+      "tag": "input",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 259.3,
+        "y": 97
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Search",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Search",
+      "rect": {
+        "bottom": 122,
+        "height": 50,
+        "left": 222.3,
+        "right": 296.4,
+        "top": 72,
+        "width": 74.1
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 420.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Add by hand",
+      "rect": {
+        "bottom": 448.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 392.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/shelf/search",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+  "jsDialog": null
+}

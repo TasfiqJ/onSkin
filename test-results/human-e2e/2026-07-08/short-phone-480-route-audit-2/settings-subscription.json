@@ -1,0 +1,79 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 389.7,
+          "height": 52.9,
+          "left": 38,
+          "right": 282.4,
+          "top": 336.8,
+          "width": 244.4
+        },
+        "text": "Terms ›"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Restore purchases",
+        "owned": true,
+        "x": 160.2,
+        "y": 310.3
+      },
+      "rect": {
+        "bottom": 336.8,
+        "height": 52.9,
+        "left": 38,
+        "right": 282.4,
+        "top": 283.8,
+        "width": 244.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Restore purchases ›"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 389.7,
+          "height": 52.9,
+          "left": 38,
+          "right": 282.4,
+          "top": 336.8,
+          "width": 244.4
+        },
+        "text": "Terms ›"
+      },
+      "hit": {
+        "hitTag": "button",
+        "hitText": "Privacy ›",
+        "owned": true,
+        "x": 160.2,
+        "y": 415.7
+      },
+      "rect": {
+        "bottom": 441.7,
+        "height": 52,
+        "left": 38,
+        "right": 282.4,
+        "top": 389.7,
+        "width": 244.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Privacy ›"
+    }
+  ],
+  "hitBlocked": [],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "< Subscription RoutineKind Pro Active Plan RoutineKind Pro · $49.99/year Renews July 15, 2026 Manage in App Store › Restore purchases › Terms › Privacy › Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls.",
+  "title": "",
+  "under44": [],
+  "url": "/settings/subscription",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

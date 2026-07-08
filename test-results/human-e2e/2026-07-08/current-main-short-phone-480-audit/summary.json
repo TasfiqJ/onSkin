@@ -1,0 +1,311 @@
+[
+  {
+    "route": "/today",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+  },
+  {
+    "route": "/today?routine=PM",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 · 9:09 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+  },
+  {
+    "route": "/progress",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. T"
+  },
+  {
+    "route": "/progress/capture",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or bio"
+  },
+  {
+    "route": "/progress/review",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress"
+  },
+  {
+    "route": "/routine/plan",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< EXAMPLE ROUTINE Your routine, in order. FIRST INSIGHT Example only Add products to see an insight from your own shelf. MORNING 1 Cream cleanser 2 Vitamin C serum 3 Ceramide moisturizer EVENING SKIN CYCLING Night 1 Glycolic 7% exfoliate Night 2 Retinol 0.3% 2"
+  },
+  {
+    "route": "/routine/ramp",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< RETINOID · RAMP-UP Low and slow, on your terms. Consistency matters more than frequency. We only ever offer a step-up. Never increase it for you. Nights per week 2 of 3 wk1 wk2 wk3 now next? You're at 2 of 3 nights a week. We will check in as your skin settl"
+  },
+  {
+    "route": "/routine/tolerance",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save"
+  },
+  {
+    "route": "/routine/reorder",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer"
+  },
+  {
+    "route": "/routine/adaptation",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "EXAMPLE ROUTINE Here's what changed. This preview shows the explanation style until your shelf has products. + Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence. Active nights stay separated Retin"
+  },
+  {
+    "route": "/cycle/settings",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "x Cycle settings VARIANT Gentle more recovery Classic balanced rest Advanced fewer rest Add a retinoid or an exfoliating acid to your shelf and we'll build your cycle here."
+  },
+  {
+    "route": "/cycle/disruption",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a fac"
+  },
+  {
+    "route": "/cycle/procedure",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< ◇ Let's give your skin a few days. After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in. HOW LONG TO REST? 3 days 5 days 7 days WHILE YOU RECOVER ✓ Gentle cleanser ✓ Barrier moisturizer. Ceramides ✓ SPF"
+  },
+  {
+    "route": "/cycle/phased-intro",
+    "issueCount": 1,
+    "issues": [
+      {
+        "type": "clipped-control",
+        "label": "Sounds good"
+      }
+    ],
+    "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its ow"
+  },
+  {
+    "route": "/cycle/recovery",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< No recovery in progress. Your cycle is running normally."
+  },
+  {
+    "route": "/cycle/why-tonight",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "No cycle is running yet. Add an active to get started. Got it"
+  },
+  {
+    "route": "/recommendations",
+    "issueCount": 1,
+    "issues": [
+      {
+        "type": "clipped-control",
+        "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier."
+      }
+    ],
+    "visibleTextStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser S"
+  },
+  {
+    "route": "/recommendations/preferences",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options t"
+  },
+  {
+    "route": "/recommendations/stale-local-rec",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you"
+  },
+  {
+    "route": "/community",
+    "issueCount": 1,
+    "issues": [
+      {
+        "type": "clipped-control",
+        "label": "Is “natural” always gentler for sensitive skin?. Contested."
+      }
+    ],
+    "visibleTextStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “gla"
+  },
+  {
+    "route": "/community/note/missing-note-e2e",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes"
+  },
+  {
+    "route": "/community/ask",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved."
+  },
+  {
+    "route": "/community/people-like-you",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved."
+  },
+  {
+    "route": "/commerce/consent",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stacks",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stack/barrier-basics",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stack/missing-stack-e2e",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/transparency",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/settings/subscription",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Subscription RoutineKind Pro No card Plan Reverse trial Free until July 15, 2026 Keep Pro after your week › Restore purchases › Terms › Privacy › No card is on file. You have Pro until July 15, 2026. Choose a plan only if you want to keep Pro after your week"
+  },
+  {
+    "route": "/settings/notifications",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stac"
+  },
+  {
+    "route": "/settings/timing",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay i"
+  },
+  {
+    "route": "/settings/privacy",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Exploring Pro > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences "
+  },
+  {
+    "route": "/trend/optin",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progr"
+  },
+  {
+    "route": "/trend/fairness",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progr"
+  },
+  {
+    "route": "/ask",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · "
+  },
+  {
+    "route": "/ask/consent",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can "
+  },
+  {
+    "route": "/shelf",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You"
+  },
+  {
+    "route": "/shelf/search",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand"
+  },
+  {
+    "route": "/shelf/no-match",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it"
+  },
+  {
+    "route": "/shelf/scan",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR"
+  },
+  {
+    "route": "/shelf/ocr",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredient"
+  },
+  {
+    "route": "/shelf/manual",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue"
+  },
+  {
+    "route": "/shelf/archive",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here."
+  },
+  {
+    "route": "/shelf/opened",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand"
+  },
+  {
+    "route": "/paywall/upsell?feature=full_routine",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · "
+  },
+  {
+    "route": "/paywall/success",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 15 renews $49.99/yr See tonight’s routine"
+  },
+  {
+    "route": "/routine/streak",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< STREAK & ADHERENCE Showing up beats being perfect. Your nights, no pressure. This week 0 of 7 nights M T W T F S S July less more"
+  },
+  {
+    "route": "/routine/widgets",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "BETA Widgets are not in this beta Today check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA. The beta should prove the core habit loop before adding OS-level surfaces. Back to Today"
+  },
+  {
+    "route": "/cycle/week",
+    "issueCount": 0,
+    "issues": [],
+    "visibleTextStart": "< Settings YOUR CYCLE · SIMPLE DAILY This week, by night. EVERY AM moisturizer → SPF stable No actives to cycle yet. Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating acid and we'll build your cycle."
+  }
+]

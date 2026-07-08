@@ -1,0 +1,64 @@
+{
+  "url": "http://localhost:19143/ask",
+  "viewportWidth": 320,
+  "viewportHeight": 568,
+  "overflowX": 0,
+  "scrollY": 0,
+  "bodyText": "<\n✦\nAsk RoutineKind\nknows your shelf\nevidence-grounded\nprivate\nAsk about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know.\nGROUNDED IN YOUR SHELF RIGHT NOW\nIs there a conflict on my shelf?\n›\nWhat should I do tonight?\n›\nIs this product a fit for me?\n›\n↑\nAI advisor · disclosed honestly · your context stays on this device",
+  "controls": [
+    {
+      "role": "button",
+      "label": "Back",
+      "width": 48,
+      "height": 48,
+      "top": 4,
+      "left": 24,
+      "visible": true
+    },
+    {
+      "role": "button",
+      "label": "Is there a conflict on my shelf?›",
+      "width": 272,
+      "height": 48,
+      "top": 286,
+      "left": 24,
+      "visible": true
+    },
+    {
+      "role": "button",
+      "label": "What should I do tonight?›",
+      "width": 272,
+      "height": 48,
+      "top": 342,
+      "left": 24,
+      "visible": true
+    },
+    {
+      "role": "button",
+      "label": "Is this product a fit for me?›",
+      "width": 272,
+      "height": 48,
+      "top": 398,
+      "left": 24,
+      "visible": true
+    },
+    {
+      "role": "input",
+      "label": "Ask a question about your shelf",
+      "width": 184,
+      "height": 48,
+      "top": 449,
+      "left": 39,
+      "visible": true
+    },
+    {
+      "role": "button",
+      "label": "Send",
+      "width": 48,
+      "height": 48,
+      "top": 449,
+      "left": 233,
+      "visible": true
+    }
+  ]
+}

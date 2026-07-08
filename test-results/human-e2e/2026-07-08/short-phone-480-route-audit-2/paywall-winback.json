@@ -1,0 +1,202 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 406.6,
+          "height": 54,
+          "left": 30,
+          "right": 290.4,
+          "top": 352.6,
+          "width": 260.4
+        },
+        "text": "See current Pro plan"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+        "owned": false,
+        "x": 86.1,
+        "y": 346.9
+      },
+      "rect": {
+        "bottom": 370.9,
+        "height": 48,
+        "left": 62.1,
+        "right": 110.1,
+        "top": 322.9,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Terms"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 406.6,
+          "height": 54,
+          "left": 30,
+          "right": 290.4,
+          "top": 352.6,
+          "width": 260.4
+        },
+        "text": "See current Pro plan"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+        "owned": false,
+        "x": 159.5,
+        "y": 346.9
+      },
+      "rect": {
+        "bottom": 370.9,
+        "height": 48,
+        "left": 135.5,
+        "right": 183.5,
+        "top": 322.9,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Privacy"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 406.6,
+          "height": 54,
+          "left": 30,
+          "right": 290.4,
+          "top": 352.6,
+          "width": 260.4
+        },
+        "text": "See current Pro plan"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+        "owned": false,
+        "x": 233.5,
+        "y": 346.9
+      },
+      "rect": {
+        "bottom": 370.9,
+        "height": 48,
+        "left": 208.8,
+        "right": 258.3,
+        "top": 322.9,
+        "width": 49.5
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Restore"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 406.6,
+          "height": 54,
+          "left": 30,
+          "right": 290.4,
+          "top": 352.6,
+          "width": 260.4
+        },
+        "text": "See current Pro plan"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "No thanks",
+        "owned": true,
+        "x": 160.2,
+        "y": 440.6
+      },
+      "rect": {
+        "bottom": 464.6,
+        "height": 48,
+        "left": 30,
+        "right": 290.4,
+        "top": 416.6,
+        "width": 260.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "No thanks"
+    }
+  ],
+  "hitBlocked": [
+    {
+      "hit": {
+        "hitTag": "div",
+        "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+        "owned": false,
+        "x": 86.1,
+        "y": 346.9
+      },
+      "rect": {
+        "bottom": 370.9,
+        "height": 48,
+        "left": 62.1,
+        "right": 110.1,
+        "top": 322.9,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Terms"
+    },
+    {
+      "hit": {
+        "hitTag": "div",
+        "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+        "owned": false,
+        "x": 159.5,
+        "y": 346.9
+      },
+      "rect": {
+        "bottom": 370.9,
+        "height": 48,
+        "left": 135.5,
+        "right": 183.5,
+        "top": 322.9,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Privacy"
+    },
+    {
+      "hit": {
+        "hitTag": "div",
+        "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+        "owned": false,
+        "x": 233.5,
+        "y": 346.9
+      },
+      "rect": {
+        "bottom": 370.9,
+        "height": 48,
+        "left": 208.8,
+        "right": 258.3,
+        "top": 322.9,
+        "width": 49.5
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Restore"
+    }
+  ],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+  "title": "",
+  "under44": [],
+  "url": "/paywall/winback",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

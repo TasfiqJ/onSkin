@@ -1,0 +1,69 @@
+{
+  "route": "/progress/capture",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Take photos. On device only",
+      "rect": {
+        "bottom": 329.9453887939453,
+        "height": 51.98725891113281,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 277.9581298828125,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 51.98725891113281,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Not now",
+      "rect": {
+        "bottom": 381.9326629638672,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 333.9350891113281,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/progress/capture",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or bio"
+}

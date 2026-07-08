@@ -1,0 +1,98 @@
+{
+  "route": "/settings/privacy",
+  "bottomControls": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 14,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 90.62500381469727,
+        "height": 47.99757385253906,
+        "left": 224.40838623046875,
+        "right": 276.39564514160156,
+        "top": 42.6274299621582,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "div",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 51.98725891113281
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 15,
+      "label": "Photos & the no-AI-score promise",
+      "rect": {
+        "bottom": 171.60194778442383,
+        "height": 63.98665237426758,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 107.61529541015625,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 63.98665237426758,
+      "visibleWidth": 232.40292358398438
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 16,
+      "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "rect": {
+        "bottom": 317.5515899658203,
+        "height": 145.94964599609375,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 171.60194396972656,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 145.94964599609375,
+      "visibleWidth": 232.40292358398438
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": {
+    "bottom": 466.5958938598633,
+    "height": 65.98908233642578,
+    "left": 7.994539260864258,
+    "right": 312.39383125305176,
+    "text": "Today Progress Shelf You",
+    "top": 400.6068115234375,
+    "width": 304.3992919921875
+  },
+  "url": "http://localhost:8205/you?section=privacy",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Exploring Pro > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences "
+}

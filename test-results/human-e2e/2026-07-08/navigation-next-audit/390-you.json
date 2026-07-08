@@ -1,0 +1,331 @@
+{
+  "horizontalOverflow": 0,
+  "selectedCount": 1,
+  "tablists": [
+    {
+      "rect": {
+        "bottom": 555,
+        "height": 66,
+        "right": 382,
+        "width": 374,
+        "x": 8,
+        "y": 489
+      },
+      "style": {
+        "backgroundColor": "rgb(255, 255, 255)",
+        "borderRadius": "33px",
+        "boxShadow": "rgba(32, 27, 21, 0.14) 0px 16px 32px 0px, rgba(32, 27, 21, 0.06) 0px 2px 8px 0px"
+      }
+    }
+  ],
+  "tabs": [
+    {
+      "aria": "Today tab",
+      "centerHitRole": "tab",
+      "centerHitText": "Today",
+      "label": "Today",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 102,
+        "width": 93,
+        "x": 9,
+        "y": 495
+      },
+      "selected": false,
+      "testId": "bottom-tab-today",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 100,
+            "width": 89,
+            "x": 11,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "Today"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 100,
+            "width": 89,
+            "x": 11,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(111, 103, 89)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "Today"
+        }
+      ]
+    },
+    {
+      "aria": "Progress tab",
+      "centerHitRole": "tab",
+      "centerHitText": "Progress",
+      "label": "Progress",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 195,
+        "width": 93,
+        "x": 102,
+        "y": 495
+      },
+      "selected": false,
+      "testId": "bottom-tab-progress",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 193,
+            "width": 89,
+            "x": 104,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "Progress"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 193,
+            "width": 89,
+            "x": 104,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(111, 103, 89)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "Progress"
+        }
+      ]
+    },
+    {
+      "aria": "Shelf tab",
+      "centerHitRole": "tab",
+      "centerHitText": "Shelf",
+      "label": "Shelf",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 288,
+        "width": 93,
+        "x": 195,
+        "y": 495
+      },
+      "selected": false,
+      "testId": "bottom-tab-shelf",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 286,
+            "width": 89,
+            "x": 197,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "Shelf"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 286,
+            "width": 89,
+            "x": 197,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(111, 103, 89)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "Shelf"
+        }
+      ]
+    },
+    {
+      "aria": "You tab",
+      "centerHitRole": "tab",
+      "centerHitText": "You",
+      "label": "You",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 381,
+        "width": 93,
+        "x": 288,
+        "y": 495
+      },
+      "selected": true,
+      "testId": "bottom-tab-you",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 379,
+            "width": 89,
+            "x": 290,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "You"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 379,
+            "width": 89,
+            "x": 290,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(255, 255, 255)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "You"
+        }
+      ]
+    }
+  ],
+  "text": "TUESDAY, JULY 7\nGood morning.\nNO ROUTINE YET\nBuild a routine from your shelf.\nAdd the products you use and Today will become your AM/PM checklist.\nAdd products\nShelf\nempty for now\nLet's build your cabinet.\nAdd what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.\nScan a barcode\nAdd by hand\nYou\nACCOUNT\nSigned in\nSign out\nSUBSCRIPTION\nManage subscription\nFree plan\n>\nYOUR ROUTINE\nYour plan\n>\nEdit the order\n>\nMORE ROUTINE\nRetinoid ramp\n>\nStreak & adherence\n>\nWeekly check-in\n>\nRecent changes\n>\nFOR YOU\nRecommendations\n>\nRecommendation preferences\n>\nSkin Notes\nMyth vs evidence, reviewed and claim-safe.\n>\nSECURITY\nApp lock\nRequire your phone's unlock to open the app and your photo timeline.\nEncrypted cloud backup\nOff by default. A separate choice. Photos stay on this phone until you turn it on.\nREMINDERS\nReminders & notifications\nTiered, capped, at times you choose. Quiet hours & lock-screen discretion.\n>\nPRIVACY & CONSENT\nMarketing emails\nOff by default. Opt in anytime.\nPhotos & the no-AI-score promise\n>\nWithdraw health-data consent\nRecords your withdrawal in the consent ledger and deletes your collected health data.\n>\nPOLICIES\nPrivacy policy\nWhat data we collect, use, and share.\n>\nConsumer health privacy\nConsumer health data notice and rights.\n>\nTerms\nRules for using RoutineKind and subscription terms.\n>\nSupport\nHelp with accounts, billing, deletion, or export.\n>\nAccount deletion\nHow account deletion works before and after deleting in app.\n>\nData export\nHow to request and read your export.\n>\nYOUR DATA\nExport my data\nDelete account\nPhotos sta",
+  "url": "http://localhost:19173/you",
+  "viewport": {
+    "height": 569,
+    "width": 390
+  },
+  "visibleControls": [
+    {
+      "rect": {
+        "bottom": 284,
+        "height": 56,
+        "right": 345,
+        "width": 300,
+        "x": 45,
+        "y": 228
+      },
+      "role": "button",
+      "text": "Add products"
+    },
+    {
+      "rect": {
+        "bottom": 396,
+        "height": 56,
+        "right": 345,
+        "width": 300,
+        "x": 45,
+        "y": 340
+      },
+      "role": "button",
+      "text": "Scan a barcode"
+    },
+    {
+      "rect": {
+        "bottom": 458,
+        "height": 50,
+        "right": 345,
+        "width": 300,
+        "x": 45,
+        "y": 408
+      },
+      "role": "button",
+      "text": "Add by hand"
+    },
+    {
+      "rect": {
+        "bottom": 138,
+        "height": 48,
+        "right": 346,
+        "width": 90,
+        "x": 256,
+        "y": 90
+      },
+      "role": "button",
+      "text": "Sign out"
+    },
+    {
+      "rect": {
+        "bottom": 256,
+        "height": 50,
+        "right": 346,
+        "width": 302,
+        "x": 44,
+        "y": 206
+      },
+      "role": "button",
+      "text": "Manage subscriptionFree plan>"
+    },
+    {
+      "rect": {
+        "bottom": 372,
+        "height": 48,
+        "right": 346,
+        "width": 302,
+        "x": 44,
+        "y": 324
+      },
+      "role": "button",
+      "text": "Your plan>"
+    },
+    {
+      "rect": {
+        "bottom": 420,
+        "height": 48,
+        "right": 346,
+        "width": 302,
+        "x": 44,
+        "y": 372
+      },
+      "role": "button",
+      "text": "Edit the order>"
+    }
+  ]
+}

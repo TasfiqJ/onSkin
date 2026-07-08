@@ -1,0 +1,48 @@
+{
+  "actualPath": "/conflict/00000000-0000-4000-8000-000000000004",
+  "badPlaceholder": false,
+  "controls": [
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 500.8647041320801,
+        "height": 55.99211502075195,
+        "right": 292.3998794555664,
+        "width": 264.4114074707031,
+        "x": 27.98847198486328,
+        "y": 444.8725891113281
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Back to Shelf"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 556.8568267822266,
+        "height": 47.99757385253906,
+        "right": 292.3998794555664,
+        "width": 264.4114074707031,
+        "x": 27.98847198486328,
+        "y": 508.8592529296875
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Add a product"
+    }
+  ],
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "mojibake": false,
+  "rawLeaks": [],
+  "route": "/conflict/00000000-0000-4000-8000-000000000004",
+  "tabOverlaps": [],
+  "textSample": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice. Back to Shelf Add a product",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleAlerts": [],
+  "hasJsDialog": false
+}

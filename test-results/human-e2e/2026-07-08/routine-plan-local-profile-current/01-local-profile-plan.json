@@ -1,0 +1,33 @@
+{
+  "controls": [
+    {
+      "aria": "Back",
+      "bottom": 48,
+      "height": 48,
+      "left": 24,
+      "right": 72,
+      "tag": "BUTTON",
+      "text": "<",
+      "top": 0,
+      "width": 48
+    },
+    {
+      "aria": "",
+      "bottom": 553,
+      "height": 56,
+      "left": 24,
+      "right": 296,
+      "tag": "BUTTON",
+      "text": "Start today",
+      "top": 497,
+      "width": 272
+    }
+  ],
+  "horizontalOverflow": 0,
+  "text": "<\nBUILT FOR OILY, RESISTANT SKIN\nYour routine, in order.\nFIRST INSIGHT\nMissing step flagged\nUseful gaps stay visible instead of being filled with products you do not own.\nMORNING\n1\nGel cleanser\n2\nMineral SPF 50\nEVENING\n1\nGel cleanser\nStart with a clean base.\nA moisturiser would help seal everything in.\nStart today",
+  "url": "http://localhost:19170/routine/plan",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

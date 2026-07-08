@@ -1,0 +1,331 @@
+{
+  "horizontalOverflow": 0,
+  "selectedCount": 1,
+  "tablists": [
+    {
+      "rect": {
+        "bottom": 555,
+        "height": 66,
+        "right": 382,
+        "width": 374,
+        "x": 8,
+        "y": 489
+      },
+      "style": {
+        "backgroundColor": "rgb(255, 255, 255)",
+        "borderRadius": "33px",
+        "boxShadow": "rgba(32, 27, 21, 0.14) 0px 16px 32px 0px, rgba(32, 27, 21, 0.06) 0px 2px 8px 0px"
+      }
+    }
+  ],
+  "tabs": [
+    {
+      "aria": "Today tab",
+      "centerHitRole": "tab",
+      "centerHitText": "Today",
+      "label": "Today",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 102,
+        "width": 93,
+        "x": 9,
+        "y": 495
+      },
+      "selected": false,
+      "testId": "bottom-tab-today",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 100,
+            "width": 89,
+            "x": 11,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "Today"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 100,
+            "width": 89,
+            "x": 11,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(111, 103, 89)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "Today"
+        }
+      ]
+    },
+    {
+      "aria": "Progress tab",
+      "centerHitRole": "tab",
+      "centerHitText": "Progress",
+      "label": "Progress",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 195,
+        "width": 93,
+        "x": 102,
+        "y": 495
+      },
+      "selected": true,
+      "testId": "bottom-tab-progress",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 193,
+            "width": 89,
+            "x": 104,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "Progress"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 193,
+            "width": 89,
+            "x": 104,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(255, 255, 255)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "Progress"
+        }
+      ]
+    },
+    {
+      "aria": "Shelf tab",
+      "centerHitRole": "tab",
+      "centerHitText": "Shelf",
+      "label": "Shelf",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 288,
+        "width": 93,
+        "x": 195,
+        "y": 495
+      },
+      "selected": false,
+      "testId": "bottom-tab-shelf",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 286,
+            "width": 89,
+            "x": 197,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "Shelf"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 286,
+            "width": 89,
+            "x": 197,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(111, 103, 89)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "Shelf"
+        }
+      ]
+    },
+    {
+      "aria": "You tab",
+      "centerHitRole": "tab",
+      "centerHitText": "You",
+      "label": "You",
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "right": 381,
+        "width": 93,
+        "x": 288,
+        "y": 495
+      },
+      "selected": false,
+      "testId": "bottom-tab-you",
+      "textNodes": [
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 46,
+            "right": 379,
+            "width": 89,
+            "x": 290,
+            "y": 499
+          },
+          "style": {
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "lineHeight": "24px"
+          },
+          "text": "You"
+        },
+        {
+          "fullyInsideTab": true,
+          "overflowX": 0,
+          "rect": {
+            "bottom": 545,
+            "height": 17,
+            "right": 379,
+            "width": 89,
+            "x": 290,
+            "y": 528
+          },
+          "style": {
+            "color": "rgb(111, 103, 89)",
+            "fontSize": "12.5px",
+            "lineHeight": "16px"
+          },
+          "text": "You"
+        }
+      ]
+    }
+  ],
+  "text": "TUESDAY, JULY 7\nGood morning.\nNO ROUTINE YET\nBuild a routine from your shelf.\nAdd the products you use and Today will become your AM/PM checklist.\nAdd products\nMaybe later\nUnlock your private photo timeline.\nWatch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore\nToday\nProgress\nShelf\nYou",
+  "url": "http://localhost:19173/progress",
+  "viewport": {
+    "height": 569,
+    "width": 390
+  },
+  "visibleControls": [
+    {
+      "rect": {
+        "bottom": 284,
+        "height": 56,
+        "right": 345,
+        "width": 300,
+        "x": 45,
+        "y": 228
+      },
+      "role": "button",
+      "text": "Add products"
+    },
+    {
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "right": 366,
+        "width": 102,
+        "x": 264,
+        "y": 4
+      },
+      "role": "button",
+      "text": "Maybe later"
+    },
+    {
+      "rect": {
+        "bottom": 276,
+        "height": 48,
+        "right": 366,
+        "width": 342,
+        "x": 24,
+        "y": 228
+      },
+      "role": "button",
+      "text": "Start free trial"
+    },
+    {
+      "rect": {
+        "bottom": 338,
+        "height": 56,
+        "right": 366,
+        "width": 342,
+        "x": 24,
+        "y": 282
+      },
+      "role": "button",
+      "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›"
+    },
+    {
+      "rect": {
+        "bottom": 386,
+        "height": 48,
+        "right": 145,
+        "width": 48,
+        "x": 97,
+        "y": 338
+      },
+      "role": "button",
+      "text": "Terms"
+    },
+    {
+      "rect": {
+        "bottom": 386,
+        "height": 48,
+        "right": 218,
+        "width": 48,
+        "x": 170,
+        "y": 338
+      },
+      "role": "button",
+      "text": "Privacy"
+    },
+    {
+      "rect": {
+        "bottom": 386,
+        "height": 48,
+        "right": 293,
+        "width": 49,
+        "x": 244,
+        "y": 338
+      },
+      "role": "button",
+      "text": "Restore"
+    }
+  ]
+}

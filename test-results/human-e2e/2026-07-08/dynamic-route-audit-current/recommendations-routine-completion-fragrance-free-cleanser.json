@@ -1,0 +1,48 @@
+{
+  "actualPath": "/recommendations/routine_completion%3Afragrance_free_cleanser",
+  "badPlaceholder": false,
+  "controls": [
+    {
+      "aria": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "right": 71.9963607788086,
+        "width": 47.99757385253906,
+        "x": 23.99878692626953,
+        "y": 3.989684581756592
+      },
+      "role": "button",
+      "testId": null,
+      "text": "<"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 382.4484405517578,
+        "height": 47.99757385253906,
+        "right": 216.99030303955078,
+        "width": 113.59223937988281,
+        "x": 103.39806365966797,
+        "y": 334.45086669921875
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Back to For you"
+    }
+  ],
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "mojibake": false,
+  "rawLeaks": [],
+  "route": "/recommendations/routine_completion%3Afragrance_free_cleanser",
+  "tabOverlaps": [],
+  "textSample": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleAlerts": [],
+  "hasJsDialog": false
+}

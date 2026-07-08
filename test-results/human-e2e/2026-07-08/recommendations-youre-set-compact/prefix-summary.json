@@ -1,0 +1,160 @@
+[
+  {
+    "url": "http://localhost:19144/recommendations",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "text": "<\nPreference \nFor you\nRanked by fit and evidence,\nnever by commi ion.\n✓\nYour routine look  complete.\nClean er, treatment, moi turi er and SPF. All covered, conflict-free, and matched to your goal . Nothing to add right now.\n✓\nClean er · treatment · moi turi er · SPF\n✓\nNo unre olved conflict \nwe'll tell you the moment that change , never before",
+    "bodyBox": {
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollHeight": 602,
+      "clientHeight": 568
+    },
+    "horizontalOverflow": false,
+    "title": {
+      "top": 214,
+      "bottom": 282,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 68
+    },
+    "body": {
+      "top": 296,
+      "bottom": 388,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 92
+    },
+    "checkOne": {
+      "top": 296,
+      "bottom": 388,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 92
+    },
+    "checkTwo": {
+      "top": 505,
+      "bottom": 525,
+      "left": 77,
+      "right": 273,
+      "width": 196,
+      "height": 20
+    },
+    "foot": {
+      "top": 570,
+      "bottom": 602,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 32
+    },
+    "minTop": 214,
+    "maxBottom": 602,
+    "clipsViewport": true,
+    "controls": [
+      {
+        "text": "<",
+        "top": 4,
+        "bottom": 52,
+        "left": 24,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      {
+        "text": "Preference",
+        "top": 4,
+        "bottom": 52,
+        "left": 194.515625,
+        "width": 101.484375,
+        "height": 48,
+        "visible": true
+      }
+    ],
+    "smallControls": []
+  },
+  {
+    "url": "http://localhost:19144/recommendations",
+    "viewport": {
+      "width": 320,
+      "height": 480
+    },
+    "text": "<\nPreference \nFor you\nRanked by fit and evidence,\nnever by commi ion.\n✓\nYour routine look  complete.\nClean er, treatment, moi turi er and SPF. All covered, conflict-free, and matched to your goal . Nothing to add right now.\n✓\nClean er · treatment · moi turi er · SPF\n✓\nNo unre olved conflict \nwe'll tell you the moment that change , never before",
+    "bodyBox": {
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollHeight": 558,
+      "clientHeight": 480
+    },
+    "horizontalOverflow": false,
+    "title": {
+      "top": 170,
+      "bottom": 238,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 68
+    },
+    "body": {
+      "top": 252,
+      "bottom": 344,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 92
+    },
+    "checkOne": {
+      "top": 252,
+      "bottom": 344,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 92
+    },
+    "checkTwo": {
+      "top": 461,
+      "bottom": 481,
+      "left": 77,
+      "right": 273,
+      "width": 196,
+      "height": 20
+    },
+    "foot": {
+      "top": 526,
+      "bottom": 558,
+      "left": 32,
+      "right": 288,
+      "width": 256,
+      "height": 32
+    },
+    "minTop": 170,
+    "maxBottom": 558,
+    "clipsViewport": true,
+    "controls": [
+      {
+        "text": "<",
+        "top": 4,
+        "bottom": 52,
+        "left": 24,
+        "width": 48,
+        "height": 48,
+        "visible": true
+      },
+      {
+        "text": "Preference",
+        "top": 4,
+        "bottom": 52,
+        "left": 194.515625,
+        "width": 101.484375,
+        "height": 48,
+        "visible": true
+      }
+    ],
+    "smallControls": []
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "path": "/today",
+  "search": "?routine=PM",
+  "text": "TUESDAY, JULY 7 · 11:25 PM\nGood evening.\nSKIN CYCLING · NIGHT 1 OF 6\nWeek ahead ›\nExfol\niate\nReco\nver\nRetin\noid\nReco\nver\nRetin\noid\nReco\nver\nEvening routine\n0 of 3\nCream cleanser\nDry skin first.\nNEXT\nCeramide moisturizer\nGenerous layer tonight\nGlycolic 7% Toner\nThin layer tonight.\nToday\nProgress\nShelf\nYou",
+  "overflowX": 0,
+  "visibleControls": [
+    {
+      "text": "Skin cycling · night 1 of 6Week ahead ›Exfol\niateReco\nverRetin\noidReco\nverRetin\noidReco\nver",
+      "width": 272,
+      "height": 139,
+      "top": 84,
+      "bottom": 223,
+      "visible": true
+    },
+    {
+      "text": "Cream cleanserDry skin first.NEXT",
+      "width": 232,
+      "height": 56,
+      "top": 291,
+      "bottom": 347,
+      "visible": true
+    },
+    {
+      "text": "Ceramide moisturizerGenerous layer tonight",
+      "width": 232,
+      "height": 57,
+      "top": 347,
+      "bottom": 404,
+      "visible": true
+    },
+    {
+      "text": "Glycolic 7% TonerThin layer tonight.",
+      "width": 232,
+      "height": 57,
+      "top": 404,
+      "bottom": 461,
+      "visible": true
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier. | ✦A ceramide moisturiserStrong fitYour routine h",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [
+    {
+      "centerInsideViewport": true,
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier. | ✦A ceramide moisturiserStrong fitYour routine h",
+      "rect": "[Circular]"
+    }
+  ],
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 245.7,
+        "y": 28
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Preferences",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Preferences",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 194.9,
+        "right": 296.4,
+        "top": 4,
+        "width": 101.5
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 269.4
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step. | ✦A mineral SPF 30+Strong fitYour morning routine has no S",
+      "rect": {
+        "bottom": 354.8,
+        "height": 170.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 184,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 452.3
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": true,
+      "hitBlocked": false,
+      "hitLabel": "Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier. | ✦A ceramide moisturiserStrong fitYour routine h",
+      "rect": {
+        "bottom": 537.7,
+        "height": 170.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 366.8,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier. | ✦A ceramide moisturiserStrong fitYour routine h",
+      "hitTag": "button",
+      "inBottom96": false,
+      "index": 4,
+      "intersectsViewport": false,
+      "label": "A gentle cleanser. Your routine has no cleanser. A gentle, clean base is where every routine starts. | ✦A gentle cleanserStrong fitYour routine has no cleanser.",
+      "rect": {
+        "bottom": 813.6,
+        "height": 183.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 629.7,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/recommendations",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+  "jsDialog": null
+}

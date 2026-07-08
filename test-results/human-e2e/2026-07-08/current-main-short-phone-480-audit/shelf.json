@@ -1,0 +1,77 @@
+{
+  "route": "/shelf",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Scan a barcode",
+      "rect": {
+        "bottom": 312.9247627258301,
+        "height": 55.99211502075195,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 256.9326477050781,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 256.4017028808594
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Add by hand",
+      "rect": {
+        "bottom": 368.91688537597656,
+        "height": 47.99757385253906,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 320.9193115234375,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 256.4017028808594
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": {
+    "bottom": 466.5958938598633,
+    "height": 65.98908233642578,
+    "left": 7.994539260864258,
+    "right": 312.39383125305176,
+    "text": "Today Progress Shelf You",
+    "top": 400.6068115234375,
+    "width": 304.3992919921875
+  },
+  "url": "http://localhost:8205/shelf",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You"
+}

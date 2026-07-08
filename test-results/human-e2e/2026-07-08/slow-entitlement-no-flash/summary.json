@@ -1,0 +1,57 @@
+{
+  "loadingText": "PRO ACCESS\nChecking your access\nWe will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "samples": [
+    {
+      "tMs": 300,
+      "text": "PRO ACCESS\nChecking your access\nWe will keep Pro-only screens hidden until your subscription status is confirmed."
+    },
+    {
+      "tMs": 600,
+      "text": "PRO ACCESS\nChecking your access\nWe will keep Pro-only screens hidden until your subscription status is confirmed."
+    },
+    {
+      "tMs": 900,
+      "text": "PRO ACCESS\nChecking your access\nWe will keep Pro-only screens hidden until your subscription status is confirmed."
+    },
+    {
+      "tMs": 1200,
+      "text": "PRO ACCESS\nChecking your access\nWe will keep Pro-only screens hidden until your subscription status is confirmed."
+    },
+    {
+      "tMs": 1500,
+      "text": "PRO ACCESS\nChecking your access\nWe will keep Pro-only screens hidden until your subscription status is confirmed."
+    }
+  ],
+  "finalText": "Maybe later\nUnlock your full routine.\nThe complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.\nRestore Pro for\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nRenew Pro\nTerms\n·\nPrivacy\n·\nRestore",
+  "metrics": {
+    "url": "http://localhost:19164/routine/plan",
+    "overflow": 0,
+    "buttons": [
+      {
+        "text": "Maybe later",
+        "width": 102,
+        "height": 48
+      },
+      {
+        "text": "Renew Pro",
+        "width": 272,
+        "height": 50
+      },
+      {
+        "text": "Terms",
+        "width": 48,
+        "height": 48
+      },
+      {
+        "text": "Privacy",
+        "width": 48,
+        "height": 48
+      },
+      {
+        "text": "Restore",
+        "width": 49,
+        "height": 48
+      }
+    ]
+  }
+}

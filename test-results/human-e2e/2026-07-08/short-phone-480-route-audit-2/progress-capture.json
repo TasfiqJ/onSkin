@@ -1,0 +1,48 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 465.9,
+          "height": 52,
+          "left": 28,
+          "right": 292.4,
+          "top": 413.9,
+          "width": 264.4
+        },
+        "text": "Take photos. On device only"
+      },
+      "hit": {
+        "hitTag": "button",
+        "hitText": "Not now",
+        "owned": true,
+        "x": 160.2,
+        "y": 479
+      },
+      "rect": {
+        "bottom": 517.9,
+        "height": 48,
+        "left": 28,
+        "right": 292.4,
+        "top": 469.9,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Not now"
+    }
+  ],
+  "hitBlocked": [],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Clean skin, no makeup, hair back. Same time of day as last week. Take photos. On device only Not now",
+  "title": "",
+  "under44": [],
+  "url": "/progress/capture",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

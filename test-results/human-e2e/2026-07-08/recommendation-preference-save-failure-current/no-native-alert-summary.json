@@ -1,0 +1,148 @@
+{
+  "recRetryPendingState": {
+    "alerts": [],
+    "disabled": "true",
+    "overflowX": 0,
+    "selected": "false"
+  },
+  "recRetrySavedState": {
+    "alerts": [],
+    "disabled": null,
+    "overflowX": 0,
+    "selected": "true"
+  },
+  "recReloadState": {
+    "alerts": [],
+    "disabled": null,
+    "minVisibleControlHeight": 48,
+    "overflowX": 0,
+    "selected": "true",
+    "visibleControls": [
+      {
+        "aria": "Back",
+        "height": 48,
+        "selected": null,
+        "text": "<",
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Fragrance-free",
+        "width": 141
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "true",
+        "text": "Vegan",
+        "width": 78
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Cruelty-free",
+        "width": 122
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Non-comedogenic",
+        "width": 164
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Sustainable",
+        "width": 117
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Drugstore",
+        "width": 85
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Mid-range",
+        "width": 85
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Premium",
+        "width": 85
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Gel",
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Cream",
+        "width": 65
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Fluid",
+        "width": 55
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Balm",
+        "width": 55
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "selected": "false",
+        "text": "Oil",
+        "width": 48
+      }
+    ]
+  },
+  "dialogType": null,
+  "warnErrorLogs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T02:42:05.665Z",
+      "url": "http://localhost:8097/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T02:42:05.666Z",
+      "url": "http://localhost:8097/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T02:42:05.682Z",
+      "url": "http://localhost:8097/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "Disconnected from Metro (1006)\nTo reconnect:\n- Ensure that Metro is running and available on the same network\n- Reload this app (will trigger further help if Metro cannot be connected to)",
+      "timestamp": "2026-07-08T02:45:55.746Z",
+      "url": "http://localhost:8097/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

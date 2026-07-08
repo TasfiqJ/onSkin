@@ -1,0 +1,68 @@
+{
+  "url": "http://localhost:19145/paywall/success",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "text": "✓\nYou're all  et.\nYour 14 day  of Pro  tart now. We'll remind you 2 day  before it convert  to the  tore price/year. Cancel anytime.\ntrial end  July 21\nrenew  the  tore price/yr\nSee tonight'  routine",
+  "bodyBox": {
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "clientHeight": 480
+  },
+  "horizontalOverflow": false,
+  "title": null,
+  "body": null,
+  "meta": {
+    "top": 341.5,
+    "bottom": 359.5,
+    "left": 41,
+    "right": 279,
+    "width": 238,
+    "height": 18,
+    "visible": true,
+    "fullyVisible": true
+  },
+  "cta": {
+    "text": "See tonight'  routine",
+    "top": 408,
+    "bottom": 464,
+    "left": 24,
+    "right": 296,
+    "width": 272,
+    "height": 56,
+    "visible": true,
+    "fullyVisible": true
+  },
+  "ctaFullyVisible": true,
+  "smallControls": [],
+  "controls": [
+    {
+      "text": "See tonight'  routine",
+      "top": 408,
+      "bottom": 464,
+      "left": 24,
+      "right": 296,
+      "width": 272,
+      "height": 56,
+      "visible": true,
+      "fullyVisible": true
+    }
+  ],
+  "scrollables": [
+    {
+      "index": 48,
+      "tag": "DIV",
+      "top": 135.5,
+      "bottom": 180.5,
+      "width": 184.140625,
+      "height": 45,
+      "clientHeight": 45,
+      "scrollHeight": 50,
+      "scrollTop": 0,
+      "overflowY": "visible",
+      "text": "You're all  et."
+    }
+  ]
+}

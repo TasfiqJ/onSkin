@@ -1,0 +1,46 @@
+{
+  "route": "/paywall/success",
+  "bottomControls": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "See tonight’s routine",
+      "rect": {
+        "bottom": 464.5934638977051,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 408.6013488769531,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/paywall/success",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 15 renews $49.99/yr See tonight’s routine"
+}

@@ -1,0 +1,48 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 412.6,
+          "height": 48,
+          "left": 24,
+          "right": 296.4,
+          "top": 364.6,
+          "width": 272.4
+        },
+        "text": "I don't agree"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Read the health data policy",
+        "owned": true,
+        "x": 160.2,
+        "y": 440.6
+      },
+      "rect": {
+        "bottom": 464.6,
+        "height": 48,
+        "left": 24,
+        "right": 296.4,
+        "top": 416.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Read the health data policy"
+    }
+  ],
+  "hitBlocked": [],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+  "title": "",
+  "under44": [],
+  "url": "/onboarding/consent",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

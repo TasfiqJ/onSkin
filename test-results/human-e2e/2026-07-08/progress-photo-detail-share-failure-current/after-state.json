@@ -1,0 +1,67 @@
+{
+  "alerts": [
+    {
+      "bottom": 487,
+      "fullyVisible": true,
+      "height": 80,
+      "text": "Sharing isn't available on this device. Your photo stays on your phone unless you choose another way to export it.",
+      "top": 407,
+      "width": 272
+    }
+  ],
+  "controls": [
+    {
+      "bottom": 60,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "Back",
+      "left": 24,
+      "role": "button",
+      "text": "<",
+      "top": 12,
+      "visible": true,
+      "width": 48
+    },
+    {
+      "bottom": 558,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "",
+      "left": 24,
+      "role": "button",
+      "text": "Set as reference",
+      "top": 510,
+      "visible": true,
+      "width": 160
+    },
+    {
+      "bottom": 558,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "Share photo",
+      "left": 192,
+      "role": "button",
+      "text": "↗",
+      "top": 510,
+      "visible": true,
+      "width": 48
+    },
+    {
+      "bottom": 558,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "Delete photo",
+      "left": 248,
+      "role": "button",
+      "text": "🗑",
+      "top": 510,
+      "visible": true,
+      "width": 48
+    }
+  ],
+  "hasConfirmTitle": false,
+  "hasFailure": true,
+  "horizontalOverflow": 0,
+  "url": "http://localhost:19163/progress/e2e-front-2026-04-01",
+  "viewportHeight": 569
+}

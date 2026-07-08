@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "bottom": 60,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "Back",
+      "left": 24,
+      "role": "button",
+      "text": "<",
+      "top": 12,
+      "visible": true,
+      "width": 48
+    },
+    {
+      "bottom": 534,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "",
+      "left": 39,
+      "role": "button",
+      "text": "Cancel",
+      "top": 486,
+      "visible": true,
+      "width": 117
+    },
+    {
+      "bottom": 534,
+      "fullyVisible": true,
+      "height": 48,
+      "label": "",
+      "left": 164,
+      "role": "button",
+      "text": "Share photo",
+      "top": 486,
+      "visible": true,
+      "width": 117
+    }
+  ],
+  "hasConfirmBody": true,
+  "hasConfirmTitle": true,
+  "horizontalOverflow": 0,
+  "url": "http://localhost:19163/progress/e2e-front-2026-04-01",
+  "viewportHeight": 569
+}

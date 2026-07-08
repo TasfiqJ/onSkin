@@ -1,0 +1,801 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Today tab | bottom-tab-today | Today",
+      "label": "Today tab | bottom-tab-today | Today",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Progress tab | bottom-tab-progress | Progress",
+      "label": "Progress tab | bottom-tab-progress | Progress",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab | bottom-tab-shelf | Shelf",
+      "label": "Shelf tab | bottom-tab-shelf | Shelf",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "You tab | bottom-tab-you | You",
+      "label": "You tab | bottom-tab-you | You",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 231.3,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": false,
+      "label": "Sign out | Sign out",
+      "rect": {
+        "bottom": -1699.9,
+        "height": 48,
+        "left": 186.1,
+        "right": 276.4,
+        "top": -1747.9,
+        "width": 90.3
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": false,
+      "label": "Manage subscription. Free plan | Manage subscriptionFree plan>",
+      "rect": {
+        "bottom": -1582,
+        "height": 50,
+        "left": 44,
+        "right": 276.4,
+        "top": -1631.9,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": false,
+      "label": "Your plan | Your plan>",
+      "rect": {
+        "bottom": -1466,
+        "height": 48,
+        "left": 44,
+        "right": 276.4,
+        "top": -1514,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 3,
+      "intersectsViewport": false,
+      "label": "Edit the order | Edit the order>",
+      "rect": {
+        "bottom": -1418,
+        "height": 48,
+        "left": 44,
+        "right": 276.4,
+        "top": -1466,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 4,
+      "intersectsViewport": false,
+      "label": "Retinoid ramp | Retinoid ramp>",
+      "rect": {
+        "bottom": -1206,
+        "height": 48,
+        "left": 44,
+        "right": 276.4,
+        "top": -1254,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 5,
+      "intersectsViewport": false,
+      "label": "Streak & adherence | Streak & adherence>",
+      "rect": {
+        "bottom": -1158,
+        "height": 48,
+        "left": 44,
+        "right": 276.4,
+        "top": -1206,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 6,
+      "intersectsViewport": false,
+      "label": "Weekly check-in | Weekly check-in>",
+      "rect": {
+        "bottom": -1110,
+        "height": 48,
+        "left": 44,
+        "right": 276.4,
+        "top": -1158,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 7,
+      "intersectsViewport": false,
+      "label": "Recent changes | Recent changes>",
+      "rect": {
+        "bottom": -1062,
+        "height": 48,
+        "left": 44,
+        "right": 276.4,
+        "top": -1110,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 8,
+      "intersectsViewport": false,
+      "label": "Recommendations | Recommendations>",
+      "rect": {
+        "bottom": -702.1,
+        "height": 60,
+        "left": 44,
+        "right": 276.4,
+        "top": -762.1,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 9,
+      "intersectsViewport": false,
+      "label": "Recommendation preferences | Recommendation preferences>",
+      "rect": {
+        "bottom": -638.1,
+        "height": 64,
+        "left": 44,
+        "right": 276.4,
+        "top": -702.1,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 10,
+      "intersectsViewport": false,
+      "label": "Skin Notes. Myth vs evidence, reviewed and claim-safe. | Skin NotesMyth vs evidence, reviewed and claim-safe.>",
+      "rect": {
+        "bottom": -556.1,
+        "height": 82,
+        "left": 44,
+        "right": 276.4,
+        "top": -638.1,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 250.4,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 11,
+      "intersectsViewport": false,
+      "label": "App lock",
+      "rect": {
+        "bottom": -405.2,
+        "height": 48,
+        "left": 224.4,
+        "right": 276.4,
+        "top": -453.2,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 250.4,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 12,
+      "intersectsViewport": false,
+      "label": "Encrypted cloud backup",
+      "rect": {
+        "bottom": -291.2,
+        "height": 48,
+        "left": 224.4,
+        "right": 276.4,
+        "top": -339.2,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 0
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords your withdrawal in the cons",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 13,
+      "intersectsViewport": false,
+      "label": "Reminders & notifications. Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. | Reminders & notificationsTiered, capped, at times you ch",
+      "rect": {
+        "bottom": -50.3,
+        "height": 126,
+        "left": 44,
+        "right": 276.4,
+        "top": -176.3,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 250.4,
+        "y": 66.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Marketing emails",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 14,
+      "intersectsViewport": true,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 90.6,
+        "height": 48,
+        "left": 224.4,
+        "right": 276.4,
+        "top": 42.6,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 139.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Photos & the no-AI-score promise",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 15,
+      "intersectsViewport": true,
+      "label": "Photos & the no-AI-score promise | Photos & the no-AI-score promise>",
+      "rect": {
+        "bottom": 171.6,
+        "height": 64,
+        "left": 44,
+        "right": 276.4,
+        "top": 107.6,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 244.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 16,
+      "intersectsViewport": true,
+      "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data. | Withdraw health-data consentRecords your w",
+      "rect": {
+        "bottom": 317.6,
+        "height": 145.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 171.6,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 17,
+      "intersectsViewport": false,
+      "label": "Privacy policy. What data we collect, use, and share. | Privacy policyWhat data we collect, use, and share.>",
+      "rect": {
+        "bottom": 727.5,
+        "height": 69.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 657.5,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 18,
+      "intersectsViewport": false,
+      "label": "Consumer health privacy. Consumer health data notice and rights. | Consumer health privacyConsumer health data notice and rights.>",
+      "rect": {
+        "bottom": 821.4,
+        "height": 93.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 727.5,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 19,
+      "intersectsViewport": false,
+      "label": "Terms. Rules for using RoutineKind and subscription terms. | TermsRules for using RoutineKind and subscription terms.>",
+      "rect": {
+        "bottom": 891.4,
+        "height": 69.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 821.4,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 20,
+      "intersectsViewport": false,
+      "label": "Support. Help with accounts, billing, deletion, or export. | SupportHelp with accounts, billing, deletion, or export.>",
+      "rect": {
+        "bottom": 961.3,
+        "height": 69.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 891.4,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 21,
+      "intersectsViewport": false,
+      "label": "Account deletion. How account deletion works before and after deleting in app. | Account deletionHow account deletion works before and after deleting in app.>",
+      "rect": {
+        "bottom": 1051.3,
+        "height": 89.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 961.3,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 22,
+      "intersectsViewport": false,
+      "label": "Data export. How to request and read your export. | Data exportHow to request and read your export.>",
+      "rect": {
+        "bottom": 1121.2,
+        "height": 69.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 1051.3,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 23,
+      "intersectsViewport": false,
+      "label": "Export my data",
+      "rect": {
+        "bottom": 1261.2,
+        "height": 56,
+        "left": 44,
+        "right": 276.4,
+        "top": 1205.2,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>MORE ROUTINERetinoid ramp>Streak & adherence>Weekly che",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 24,
+      "intersectsViewport": false,
+      "label": "Delete account",
+      "rect": {
+        "bottom": 1325.2,
+        "height": 56,
+        "left": 44,
+        "right": 276.4,
+        "top": 1269.2,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 46.8,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Today tab | bottom-tab-today | Today",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 25,
+      "intersectsViewport": true,
+      "label": "Today tab | bottom-tab-today | Today",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 9,
+        "right": 84.6,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 122.4,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress tab | bottom-tab-progress | Progress",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 26,
+      "intersectsViewport": true,
+      "label": "Progress tab | bottom-tab-progress | Progress",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 84.6,
+        "right": 160.2,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 198,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab | bottom-tab-shelf | Shelf",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 27,
+      "intersectsViewport": true,
+      "label": "Shelf tab | bottom-tab-shelf | Shelf",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 160.2,
+        "right": 235.8,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 273.6,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "You tab | bottom-tab-you | You",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 28,
+      "intersectsViewport": true,
+      "label": "You tab | bottom-tab-you | You",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 235.8,
+        "right": 311.4,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/you?section=privacy",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to request and read your export. > YOUR DATA Export my data Delete account Photos stay on your device by default. No ads, no data sales. RoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Today Progress Shelf You",
+  "jsDialog": null
+}

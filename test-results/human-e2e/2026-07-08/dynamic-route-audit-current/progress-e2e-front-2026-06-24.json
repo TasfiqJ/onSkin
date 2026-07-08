@@ -1,0 +1,90 @@
+{
+  "actualPath": "/progress/e2e-front-2026-06-24",
+  "badPlaceholder": false,
+  "controls": [
+    {
+      "aria": "Back",
+      "rect": {
+        "bottom": 59.99696731567383,
+        "height": 47.99757385253906,
+        "right": 71.9963607788086,
+        "width": 47.99757385253906,
+        "x": 23.99878692626953,
+        "y": 11.999393463134766
+      },
+      "role": "button",
+      "testId": null,
+      "text": "<"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 431.9174919128418,
+        "height": 39.98786544799805,
+        "right": 280.4004936218262,
+        "width": 240.41262817382812,
+        "x": 39.98786544799805,
+        "y": 391.92962646484375
+      },
+      "role": "textarea",
+      "testId": null,
+      "text": "Add a note. “started retinol”, “travel breakout”"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 548.9381256103516,
+        "height": 47.99757385253906,
+        "right": 184.40534210205078,
+        "width": 160.40655517578125,
+        "x": 23.99878692626953,
+        "y": 500.9405517578125
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Set as reference"
+    },
+    {
+      "aria": "Share photo",
+      "rect": {
+        "bottom": 548.9381256103516,
+        "height": 47.99757385253906,
+        "right": 240.3974609375,
+        "width": 47.99757385253906,
+        "x": 192.39988708496094,
+        "y": 500.9405517578125
+      },
+      "role": "button",
+      "testId": null,
+      "text": "↗"
+    },
+    {
+      "aria": "Delete photo",
+      "rect": {
+        "bottom": 548.9381256103516,
+        "height": 47.99757385253906,
+        "right": 296.3895721435547,
+        "width": 47.99757385253906,
+        "x": 248.39199829101562,
+        "y": 500.9405517578125
+      },
+      "role": "button",
+      "testId": null,
+      "text": "🗑"
+    }
+  ],
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "mojibake": false,
+  "rawLeaks": [],
+  "route": "/progress/e2e-front-2026-06-24",
+  "tabOverlaps": [],
+  "textSample": "< June 24 your photo Aligned · well-lit morning YOUR NOTE Set as reference ↗ 🗑",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleAlerts": [],
+  "hasJsDialog": false
+}

@@ -1,0 +1,27 @@
+{
+  "url": "http://localhost:19170/routine/plan",
+  "text": "<\nEXAMPLE ROUTINE\nYour routine, in order.\nFIRST INSIGHT\nExample only\nAdd products to see an insight from your own shelf.\nMORNING\n1\nCream cleanser\n2\nVitamin C serum\n3\nCeramide moisturizer\nEVENING SKIN CYCLING\nNight 1\nGlycolic 7%\nexfoliate\nNight 2\nRetinol 0.3%\n2 times/week to start\nNights 3-4\nRecover\nmoisturiser only\nA daily SPF would round this out. It’s the highest-impact morning step.\nStart today",
+  "horizontalOverflow": 0,
+  "storage": {
+    "profile": null,
+    "shelf": "[]"
+  },
+  "buttons": [
+    {
+      "text": "<",
+      "label": "Back",
+      "width": 48,
+      "height": 48,
+      "top": 0,
+      "bottom": 48
+    },
+    {
+      "text": "Start today",
+      "label": "",
+      "width": 272,
+      "height": 56,
+      "top": 496,
+      "bottom": 552
+    }
+  ]
+}

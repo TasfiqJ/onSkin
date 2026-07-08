@@ -1,0 +1,55 @@
+{
+  "bodyTextSample": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice. Back to Shelf Add a product",
+  "buttons": [
+    {
+      "bottom": 503,
+      "height": 56,
+      "label": "Back to Shelf",
+      "role": "button",
+      "tag": "BUTTON",
+      "top": 447,
+      "visible": true,
+      "width": 264
+    },
+    {
+      "bottom": 559,
+      "height": 48,
+      "label": "Add a product",
+      "role": "button",
+      "tag": "BUTTON",
+      "top": 511,
+      "visible": true,
+      "width": 264
+    }
+  ],
+  "dialogs": [
+    {
+      "ariaLabel": "Timing note unavailable",
+      "ariaModal": "true",
+      "bottom": 570,
+      "height": 524,
+      "maxHeight": "524px",
+      "overflowY": "visible",
+      "tag": "DIV",
+      "text": "Shelf updatedThis timing note is no longer active.Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine.We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice.Back to ShelfAdd a product",
+      "top": 46,
+      "width": 320
+    }
+  ],
+  "hasAddProduct": true,
+  "hasBackToShelf": true,
+  "hasMissingState": true,
+  "hasMojibake": false,
+  "href": "http://localhost:19141/conflict/missing-rule-e2e",
+  "overflow": {
+    "clientWidth": 320,
+    "horizontalOverflow": false,
+    "scrollWidth": 320
+  },
+  "reloadError": null,
+  "title": "",
+  "viewport": {
+    "height": 570,
+    "width": 320
+  }
+}

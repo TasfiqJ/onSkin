@@ -1,0 +1,1542 @@
+[
+  {
+    "route": "/today",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You",
+    "title": "",
+    "under44": [],
+    "url": "/today",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/progress",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "Progress ＋ Photo 12 weeks · 3 photos · all on this phone Same light, same angle. Honestly comparable. No scores, no AI grades. Compare Timeline No scores ⓘ Side-by-side your photo your photo ‹ › Apr 1 Jun 24 drag to wipe · tap a date to change No “improvement %.” Just your two photos and their dates. You decide. Today Progress Shelf You",
+    "title": "",
+    "under44": [],
+    "url": "/progress",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/progress/capture",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 465.9,
+            "height": 52,
+            "left": 28,
+            "right": 292.4,
+            "top": 413.9,
+            "width": 264.4
+          },
+          "text": "Take photos. On device only"
+        },
+        "hit": {
+          "hitTag": "button",
+          "hitText": "Not now",
+          "owned": true,
+          "x": 160.2,
+          "y": 479
+        },
+        "rect": {
+          "bottom": 517.9,
+          "height": 48,
+          "left": 28,
+          "right": 292.4,
+          "top": 469.9,
+          "width": 264.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Not now"
+      }
+    ],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Clean skin, no makeup, hair back. Same time of day as last week. Take photos. On device only Not now",
+    "title": "",
+    "under44": [],
+    "url": "/progress/capture",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/progress/review",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 396.6,
+            "height": 56,
+            "left": 24,
+            "right": 296.4,
+            "top": 340.6,
+            "width": 272.4
+          },
+          "text": "Take photo"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Back to Progress",
+          "owned": true,
+          "x": 160.2,
+          "y": 436.6
+        },
+        "rect": {
+          "bottom": 464.6,
+          "height": 56,
+          "left": 24,
+          "right": 296.4,
+          "top": 408.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Back to Progress"
+      }
+    ],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress",
+    "title": "",
+    "under44": [],
+    "url": "/progress/review",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/shelf",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You",
+    "title": "",
+    "under44": [],
+    "url": "/shelf",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/shelf/manual",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 410.7,
+            "height": 64.8,
+            "left": 24,
+            "right": 296.4,
+            "top": 345.9,
+            "width": 272.4
+          },
+          "text": "Ingredients"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Continue",
+          "owned": true,
+          "x": 160.2,
+          "y": 440.6
+        },
+        "rect": {
+          "bottom": 468.6,
+          "height": 56,
+          "left": 24,
+          "right": 296.4,
+          "top": 412.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Continue"
+      }
+    ],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+    "title": "",
+    "under44": [],
+    "url": "/shelf/manual",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/shelf/search",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+    "title": "",
+    "under44": [],
+    "url": "/shelf/search",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/shelf/scan",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+    "title": "",
+    "under44": [],
+    "url": "/shelf/scan",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/shelf/ocr",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+    "title": "",
+    "under44": [],
+    "url": "/shelf/ocr",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/routine/plan",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< EXAMPLE ROUTINE Your routine, in order. FIRST INSIGHT Example only Add products to see an insight from your own shelf. MORNING 1 Cream cleanser 2 Vitamin C serum 3 Ceramide moisturizer EVENING SKIN CYCLING Night 1 Glycolic 7% exfoliate Night 2 Retinol 0.3% 2 times/week to start Nights 3-4 Recover moisturiser only A daily SPF would round this out. It’s the highest-impact morning step. Start today",
+    "title": "",
+    "under44": [],
+    "url": "/routine/plan",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/recommendations",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+    "title": "",
+    "under44": [],
+    "url": "/recommendations",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/recommendations/preferences",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 385.9,
+            "height": 48,
+            "left": 24,
+            "right": 187.7,
+            "top": 337.9,
+            "width": 163.7
+          },
+          "text": "Non-comedogenic"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Sustainable",
+          "owned": true,
+          "x": 82.6,
+          "y": 417.9
+        },
+        "rect": {
+          "bottom": 441.9,
+          "height": 48,
+          "left": 24,
+          "right": 141.2,
+          "top": 393.9,
+          "width": 117.2
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Sustainable"
+      }
+    ],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+    "title": "",
+    "under44": [],
+    "url": "/recommendations/preferences",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/ask",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 389.9,
+            "height": 48,
+            "left": 24,
+            "right": 296.4,
+            "top": 341.9,
+            "width": 272.4
+          },
+          "text": "What should I do tonight? ›"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "↑ AI advisor · disclosed honestly · your context stays on this device",
+          "owned": false,
+          "x": 160.2,
+          "y": 421.9
+        },
+        "rect": {
+          "bottom": 445.9,
+          "height": 48,
+          "left": 24,
+          "right": 296.4,
+          "top": 397.9,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Is this product a fit for me? ›"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 389.9,
+            "height": 48,
+            "left": 24,
+            "right": 296.4,
+            "top": 341.9,
+            "width": 272.4
+          },
+          "text": "What should I do tonight? ›"
+        },
+        "hit": {
+          "hitTag": "input",
+          "hitText": "Ask a question about your shelf",
+          "owned": true,
+          "x": 131.2,
+          "y": 385.6
+        },
+        "rect": {
+          "bottom": 409.6,
+          "height": 48,
+          "left": 39,
+          "right": 223.4,
+          "top": 361.6,
+          "width": 184.5
+        },
+        "role": "",
+        "tag": "input",
+        "text": "Ask a question about your shelf"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 389.9,
+            "height": 48,
+            "left": 24,
+            "right": 296.4,
+            "top": 341.9,
+            "width": 272.4
+          },
+          "text": "What should I do tonight? ›"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "↑",
+          "owned": true,
+          "x": 257.4,
+          "y": 385.6
+        },
+        "rect": {
+          "bottom": 409.6,
+          "height": 48,
+          "left": 233.4,
+          "right": 281.4,
+          "top": 361.6,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Send"
+      }
+    ],
+    "hitBlocked": [
+      {
+        "hit": {
+          "hitTag": "input",
+          "hitText": "Ask a question about your shelf",
+          "owned": false,
+          "x": 160.2,
+          "y": 365.9
+        },
+        "rect": {
+          "bottom": 389.9,
+          "height": 48,
+          "left": 24,
+          "right": 296.4,
+          "top": 341.9,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "What should I do tonight? ›"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "↑ AI advisor · disclosed honestly · your context stays on this device",
+          "owned": false,
+          "x": 160.2,
+          "y": 421.9
+        },
+        "rect": {
+          "bottom": 445.9,
+          "height": 48,
+          "left": 24,
+          "right": 296.4,
+          "top": 397.9,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Is this product a fit for me? ›"
+      }
+    ],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< ✦ Ask RoutineKind knows your shelf evidence-grounded private Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › Is this product a fit for me? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+    "title": "",
+    "under44": [],
+    "url": "/ask",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/ask/consent",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship. Back to Ask",
+    "title": "",
+    "under44": [],
+    "url": "/ask/consent",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/privacy",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription RoutineKind Pro · active > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How ",
+    "title": "",
+    "under44": [],
+    "url": "/you?section=privacy",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/subscription",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 389.7,
+            "height": 52.9,
+            "left": 38,
+            "right": 282.4,
+            "top": 336.8,
+            "width": 244.4
+          },
+          "text": "Terms ›"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Restore purchases",
+          "owned": true,
+          "x": 160.2,
+          "y": 310.3
+        },
+        "rect": {
+          "bottom": 336.8,
+          "height": 52.9,
+          "left": 38,
+          "right": 282.4,
+          "top": 283.8,
+          "width": 244.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Restore purchases ›"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 389.7,
+            "height": 52.9,
+            "left": 38,
+            "right": 282.4,
+            "top": 336.8,
+            "width": 244.4
+          },
+          "text": "Terms ›"
+        },
+        "hit": {
+          "hitTag": "button",
+          "hitText": "Privacy ›",
+          "owned": true,
+          "x": 160.2,
+          "y": 415.7
+        },
+        "rect": {
+          "bottom": 441.7,
+          "height": 52,
+          "left": 38,
+          "right": 282.4,
+          "top": 389.7,
+          "width": 244.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Privacy ›"
+      }
+    ],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Subscription RoutineKind Pro Active Plan RoutineKind Pro · $49.99/year Renews July 15, 2026 Manage in App Store › Restore purchases › Terms › Privacy › Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls.",
+    "title": "",
+    "under44": [],
+    "url": "/settings/subscription",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/notifications",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+    "title": "",
+    "under44": [],
+    "url": "/settings/notifications",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/timing",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen",
+    "title": "",
+    "under44": [],
+    "url": "/settings/timing",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/paywall/reoffer",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 390.6,
+            "height": 54,
+            "left": 24,
+            "right": 296.4,
+            "top": 336.6,
+            "width": 272.4
+          },
+          "text": "Keep my full routine"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+          "owned": false,
+          "x": 86.1,
+          "y": 393.8
+        },
+        "rect": {
+          "bottom": 417.8,
+          "height": 48,
+          "left": 62.1,
+          "right": 110.1,
+          "top": 369.8,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Terms"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 390.6,
+            "height": 54,
+            "left": 24,
+            "right": 296.4,
+            "top": 336.6,
+            "width": 272.4
+          },
+          "text": "Keep my full routine"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+          "owned": false,
+          "x": 159.5,
+          "y": 393.8
+        },
+        "rect": {
+          "bottom": 417.8,
+          "height": 48,
+          "left": 135.5,
+          "right": 183.5,
+          "top": 369.8,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Privacy"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 390.6,
+            "height": 54,
+            "left": 24,
+            "right": 296.4,
+            "top": 336.6,
+            "width": 272.4
+          },
+          "text": "Keep my full routine"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+          "owned": false,
+          "x": 233.5,
+          "y": 393.8
+        },
+        "rect": {
+          "bottom": 417.8,
+          "height": 48,
+          "left": 208.8,
+          "right": 258.3,
+          "top": 369.8,
+          "width": 49.5
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Restore"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 390.6,
+            "height": 54,
+            "left": 24,
+            "right": 296.4,
+            "top": 336.6,
+            "width": 272.4
+          },
+          "text": "Keep my full routine"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Continue on free",
+          "owned": true,
+          "x": 160.2,
+          "y": 424.6
+        },
+        "rect": {
+          "bottom": 448.6,
+          "height": 48,
+          "left": 24,
+          "right": 296.4,
+          "top": 400.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Continue on free"
+      }
+    ],
+    "hitBlocked": [
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+          "owned": false,
+          "x": 86.1,
+          "y": 393.8
+        },
+        "rect": {
+          "bottom": 417.8,
+          "height": 48,
+          "left": 62.1,
+          "right": 110.1,
+          "top": 369.8,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Terms"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+          "owned": false,
+          "x": 159.5,
+          "y": 393.8
+        },
+        "rect": {
+          "bottom": 417.8,
+          "height": 48,
+          "left": 135.5,
+          "right": 183.5,
+          "top": 369.8,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Privacy"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+          "owned": false,
+          "x": 233.5,
+          "y": 393.8
+        },
+        "rect": {
+          "bottom": 417.8,
+          "height": 48,
+          "left": 208.8,
+          "right": 258.3,
+          "top": 369.8,
+          "width": 49.5
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Restore"
+      }
+    ],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Terms · Privacy · Restore Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on free",
+    "title": "",
+    "under44": [],
+    "url": "/paywall/reoffer",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/paywall/winback",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 406.6,
+            "height": 54,
+            "left": 30,
+            "right": 290.4,
+            "top": 352.6,
+            "width": 260.4
+          },
+          "text": "See current Pro plan"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+          "owned": false,
+          "x": 86.1,
+          "y": 346.9
+        },
+        "rect": {
+          "bottom": 370.9,
+          "height": 48,
+          "left": 62.1,
+          "right": 110.1,
+          "top": 322.9,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Terms"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 406.6,
+            "height": 54,
+            "left": 30,
+            "right": 290.4,
+            "top": 352.6,
+            "width": 260.4
+          },
+          "text": "See current Pro plan"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+          "owned": false,
+          "x": 159.5,
+          "y": 346.9
+        },
+        "rect": {
+          "bottom": 370.9,
+          "height": 48,
+          "left": 135.5,
+          "right": 183.5,
+          "top": 322.9,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Privacy"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 406.6,
+            "height": 54,
+            "left": 30,
+            "right": 290.4,
+            "top": 352.6,
+            "width": 260.4
+          },
+          "text": "See current Pro plan"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+          "owned": false,
+          "x": 233.5,
+          "y": 346.9
+        },
+        "rect": {
+          "bottom": 370.9,
+          "height": 48,
+          "left": 208.8,
+          "right": 258.3,
+          "top": 322.9,
+          "width": 49.5
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Restore"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 406.6,
+            "height": 54,
+            "left": 30,
+            "right": 290.4,
+            "top": 352.6,
+            "width": 260.4
+          },
+          "text": "See current Pro plan"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "No thanks",
+          "owned": true,
+          "x": 160.2,
+          "y": 440.6
+        },
+        "rect": {
+          "bottom": 464.6,
+          "height": 48,
+          "left": 30,
+          "right": 290.4,
+          "top": 416.6,
+          "width": 260.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "No thanks"
+      }
+    ],
+    "hitBlocked": [
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+          "owned": false,
+          "x": 86.1,
+          "y": 346.9
+        },
+        "rect": {
+          "bottom": 370.9,
+          "height": 48,
+          "left": 62.1,
+          "right": 110.1,
+          "top": 322.9,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Terms"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+          "owned": false,
+          "x": 159.5,
+          "y": 346.9
+        },
+        "rect": {
+          "bottom": 370.9,
+          "height": 48,
+          "left": 135.5,
+          "right": 183.5,
+          "top": 322.9,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Privacy"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+          "owned": false,
+          "x": 233.5,
+          "y": 346.9
+        },
+        "rect": {
+          "bottom": 370.9,
+          "height": 48,
+          "left": 208.8,
+          "right": 258.3,
+          "top": 322.9,
+          "width": 49.5
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Restore"
+      }
+    ],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+    "title": "",
+    "under44": [],
+    "url": "/paywall/winback",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/paywall/success",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year/year. Cancel anytime. active until July 15 renews $49.99/year/yr See tonight’s routine",
+    "title": "",
+    "under44": [],
+    "url": "/paywall/success",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/onboarding/age",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "First, your date of birth. RoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date. DAY MONTH YEAR Continue",
+    "title": "",
+    "under44": [],
+    "url": "/onboarding/age",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/onboarding/goals",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 433.1,
+            "height": 55.8,
+            "left": 24,
+            "right": 296.4,
+            "top": 377.3,
+            "width": 272.4
+          },
+          "text": "Sensitivity. Stinging & flushing"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Fine lines",
+          "owned": true,
+          "x": 160.2,
+          "y": 345.4
+        },
+        "rect": {
+          "bottom": 373.3,
+          "height": 55.8,
+          "left": 24,
+          "right": 296.4,
+          "top": 317.4,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Fine lines. Firmness & elasticity"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 433.1,
+            "height": 55.8,
+            "left": 24,
+            "right": 296.4,
+            "top": 377.3,
+            "width": 272.4
+          },
+          "text": "Sensitivity. Stinging & flushing"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Continue",
+          "owned": false,
+          "x": 160.2,
+          "y": 465
+        },
+        "rect": {
+          "bottom": 492.9,
+          "height": 55.8,
+          "left": 24,
+          "right": 296.4,
+          "top": 437.1,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Barrier repair. Redness & reactivity"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 433.1,
+            "height": 55.8,
+            "left": 24,
+            "right": 296.4,
+            "top": 377.3,
+            "width": 272.4
+          },
+          "text": "Sensitivity. Stinging & flushing"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Continue",
+          "owned": true,
+          "x": 160.2,
+          "y": 436.6
+        },
+        "rect": {
+          "bottom": 464.6,
+          "height": 56,
+          "left": 24,
+          "right": 296.4,
+          "top": 408.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Continue"
+      }
+    ],
+    "hitBlocked": [
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Continue",
+          "owned": false,
+          "x": 160.2,
+          "y": 405.2
+        },
+        "rect": {
+          "bottom": 433.1,
+          "height": 55.8,
+          "left": 24,
+          "right": 296.4,
+          "top": 377.3,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Sensitivity. Stinging & flushing"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Continue",
+          "owned": false,
+          "x": 160.2,
+          "y": 465
+        },
+        "rect": {
+          "bottom": 492.9,
+          "height": 55.8,
+          "left": 24,
+          "right": 296.4,
+          "top": 437.1,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Barrier repair. Redness & reactivity"
+      }
+    ],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "What brings you here? Choose up to two. This shapes your plan. Clear skin Breakouts & congestion Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity Continue",
+    "title": "",
+    "under44": [],
+    "url": "/onboarding/goals",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/onboarding/consent",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 412.6,
+            "height": 48,
+            "left": 24,
+            "right": 296.4,
+            "top": 364.6,
+            "width": 272.4
+          },
+          "text": "I don't agree"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Read the health data policy",
+          "owned": true,
+          "x": 160.2,
+          "y": 440.6
+        },
+        "rect": {
+          "bottom": 464.6,
+          "height": 48,
+          "left": 24,
+          "right": 296.4,
+          "top": 416.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Read the health data policy"
+      }
+    ],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+    "title": "",
+    "under44": [],
+    "url": "/onboarding/consent",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/onboarding/products",
+    "bottomZoneControls": [
+      {
+        "footer": {
+          "rect": {
+            "bottom": 385.8,
+            "height": 53.9,
+            "left": 44,
+            "right": 276.4,
+            "top": 331.9,
+            "width": 232.4
+          },
+          "text": "Product name"
+        },
+        "hit": {
+          "hitTag": "button",
+          "hitText": "Skip for now",
+          "owned": false,
+          "x": 160.2,
+          "y": 450.7
+        },
+        "rect": {
+          "bottom": 475.7,
+          "height": 49.9,
+          "left": 44,
+          "right": 276.4,
+          "top": 425.8,
+          "width": 232.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Choose product category"
+      },
+      {
+        "footer": {
+          "rect": {
+            "bottom": 385.8,
+            "height": 53.9,
+            "left": 44,
+            "right": 276.4,
+            "top": 331.9,
+            "width": 232.4
+          },
+          "text": "Product name"
+        },
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Skip for now",
+          "owned": true,
+          "x": 160.2,
+          "y": 436.6
+        },
+        "rect": {
+          "bottom": 464.6,
+          "height": 56,
+          "left": 24,
+          "right": 296.4,
+          "top": 408.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Skip for now"
+      }
+    ],
+    "hitBlocked": [
+      {
+        "hit": {
+          "hitTag": "button",
+          "hitText": "Skip for now",
+          "owned": false,
+          "x": 160.2,
+          "y": 450.7
+        },
+        "rect": {
+          "bottom": 475.7,
+          "height": 49.9,
+          "left": 44,
+          "right": 276.4,
+          "top": 425.8,
+          "width": 232.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Choose product category"
+      }
+    ],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Choose category > Skip for now",
+    "title": "",
+    "under44": [],
+    "url": "/onboarding/products",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/commerce/stacks",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "title": "",
+    "under44": [],
+    "url": "/commerce/stacks",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/community/notes",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [
+      {
+        "rect": {
+          "bottom": 291.6,
+          "height": 128,
+          "left": -19.3,
+          "right": 339.7,
+          "top": 163.6,
+          "width": 359
+        },
+        "role": "heading",
+        "tag": "h1",
+        "text": "Unmatched Route"
+      }
+    ],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "Unmatched Route Page could not be found. http://localhost:8174/community/notes Go back • Sitemap",
+    "title": "",
+    "under44": [
+      {
+        "hit": {
+          "hitTag": "span",
+          "hitText": "http://localhost:8174/community/notes",
+          "owned": true,
+          "x": 160.2,
+          "y": 408.8
+        },
+        "rect": {
+          "bottom": 418.8,
+          "height": 20,
+          "left": 38.8,
+          "right": 281.6,
+          "top": 398.8,
+          "width": 242.8
+        },
+        "role": "link",
+        "tag": "a",
+        "text": "http://localhost:8174/community/notes"
+      },
+      {
+        "hit": {
+          "hitTag": "span",
+          "hitText": "http://localhost:8174/community/notes",
+          "owned": true,
+          "x": 160.2,
+          "y": 408.8
+        },
+        "rect": {
+          "bottom": 418.8,
+          "height": 20,
+          "left": 38.8,
+          "right": 281.6,
+          "top": 398.8,
+          "width": 242.8
+        },
+        "role": "",
+        "tag": "div",
+        "text": "http://localhost:8174/community/notes"
+      },
+      {
+        "hit": {
+          "hitTag": "div",
+          "hitText": "Go back",
+          "owned": true,
+          "x": 108.2,
+          "y": 459.9
+        },
+        "rect": {
+          "bottom": 473,
+          "height": 26.2,
+          "left": 72.2,
+          "right": 144.2,
+          "top": 446.8,
+          "width": 72
+        },
+        "role": "",
+        "tag": "div",
+        "text": "Go back"
+      },
+      {
+        "hit": {
+          "hitTag": "span",
+          "hitText": "Sitemap",
+          "owned": true,
+          "x": 212.3,
+          "y": 459.9
+        },
+        "rect": {
+          "bottom": 473,
+          "height": 26.2,
+          "left": 176.3,
+          "right": 248.2,
+          "top": 446.8,
+          "width": 71.8
+        },
+        "role": "link",
+        "tag": "a",
+        "text": "Sitemap"
+      },
+      {
+        "hit": {
+          "hitTag": "span",
+          "hitText": "Sitemap",
+          "owned": true,
+          "x": 212.3,
+          "y": 459.9
+        },
+        "rect": {
+          "bottom": 473,
+          "height": 26.2,
+          "left": 176.3,
+          "right": 248.2,
+          "top": 446.8,
+          "width": 71.8
+        },
+        "role": "",
+        "tag": "div",
+        "text": "Sitemap"
+      }
+    ],
+    "url": "/community/notes",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/trend/optin",
+    "bottomZoneControls": [],
+    "hitBlocked": [],
+    "overflows": [],
+    "placeholders": [],
+    "rawLeaks": [],
+    "sampleText": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress",
+    "title": "",
+    "under44": [],
+    "url": "/trend/optin",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "bottomZoneControls": [],
+  "hitBlocked": [],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year/year. Cancel anytime. active until July 15 renews $49.99/year/yr See tonight’s routine",
+  "title": "",
+  "under44": [],
+  "url": "/paywall/success",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

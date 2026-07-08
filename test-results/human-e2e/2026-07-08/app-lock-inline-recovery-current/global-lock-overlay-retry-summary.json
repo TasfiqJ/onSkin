@@ -1,0 +1,36 @@
+{
+  "unlockCount": 1,
+  "afterRetry": {
+    "alerts": [
+      {
+        "height": 40,
+        "inViewport": true,
+        "text": "App lock is not available on this device right now.",
+        "width": 230,
+        "x": 45,
+        "y": 280
+      }
+    ],
+    "bodyIncludesAppLockFailure": true,
+    "bodyIncludesLockedCopy": true,
+    "overflowX": 0,
+    "unlockButtons": [
+      {
+        "ariaLabel": null,
+        "height": 48,
+        "inViewport": true,
+        "role": "button",
+        "text": "Unlock",
+        "width": 106,
+        "x": 107,
+        "y": 357
+      }
+    ],
+    "url": "http://localhost:8158/today",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "dialogType": null
+}

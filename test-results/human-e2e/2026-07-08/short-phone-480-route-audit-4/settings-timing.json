@@ -1,0 +1,152 @@
+{
+  "bottomZoneControls": [],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 244.8,
+        "y": 102
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "7:30 AM",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Morning reminder time, 7:30 AM | 7:30 AM",
+      "rect": {
+        "bottom": 126,
+        "height": 48,
+        "left": 207.2,
+        "right": 282.4,
+        "top": 78,
+        "width": 75.2
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 245.4,
+        "y": 178.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "9:30 PM",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Evening reminder time, 9:30 PM | 9:30 PM",
+      "rect": {
+        "bottom": 202.9,
+        "height": 48,
+        "left": 208.4,
+        "right": 282.4,
+        "top": 154.9,
+        "width": 74
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 78.9,
+        "y": 336.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "10:00 PM",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Quiet hours start, 10:00 PM | 10:00 PM",
+      "rect": {
+        "bottom": 360.9,
+        "height": 48,
+        "left": 38,
+        "right": 119.9,
+        "top": 312.9,
+        "width": 81.9
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 191.1,
+        "y": 336.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "7:00 AM",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 4,
+      "intersectsViewport": true,
+      "label": "Quiet hours end, 7:00 AM | 7:00 AM",
+      "rect": {
+        "bottom": 360.9,
+        "height": 48,
+        "left": 153.5,
+        "right": 228.7,
+        "top": 312.9,
+        "width": 75.2
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/settings/timing",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen",
+  "jsDialog": null
+}

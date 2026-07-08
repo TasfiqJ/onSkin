@@ -1,0 +1,37 @@
+{
+  "date": "2026-07-08",
+  "feature": "Skin Notes share failure recovery",
+  "surface": "Expo web in Codex in-app browser",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1 npm --workspace apps/mobile run web -- --port 19149 --host localhost",
+  "route": "http://localhost:19149/community/note/note-niacinamide-vitc",
+  "result": "pass",
+  "assertions": {
+    "startingScreenVisible": true,
+    "claimVisible": true,
+    "shareControlVisible": true,
+    "shareControlSize": {
+      "width": 128,
+      "height": 48
+    },
+    "failedShareFeedbackVisible": true,
+    "failedShareFeedbackRole": "alert",
+    "routeStayedOnNote": true,
+    "horizontalOverflow": 0
+  },
+  "evidence": {
+    "beforeScreenshot": "01-before-share.png",
+    "afterScreenshot": "02-after-share-failure.png",
+    "startingState": "starting-state.json",
+    "afterState": "after-state.json",
+    "browserLogs": "browser-logs.json"
+  },
+  "knownLocalWarnings": [
+    "Missing local Supabase URL/key placeholders for B-SUPABASE",
+    "expo-notifications push token listener warning on web"
+  ],
+  "remainingRisk": "Native iOS/Android OS share-sheet cancellation and target-specific errors still need simulator/device QA."
+}

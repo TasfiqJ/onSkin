@@ -1,0 +1,48 @@
+{
+  "alerts": [],
+  "controls": [
+    {
+      "aria": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 4
+      },
+      "role": "button",
+      "text": "<"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 850,
+        "height": 48,
+        "width": 132,
+        "x": 24,
+        "y": 802
+      },
+      "role": "button",
+      "text": "♥This helped"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 850,
+        "height": 48,
+        "width": 128,
+        "x": 168,
+        "y": 802
+      },
+      "role": "button",
+      "text": "Share note"
+    }
+  ],
+  "horizontalOverflow": 0,
+  "text": "<\nSkin Note\nTHE CLAIM\n“Niacinamide and vitamin C cancel each other out.”\nRefuted myth\nSafe to combine\nWHY\nThe myth traces to decades-old studies on raw, unformulated ingredients at high heat. In modern formulas the two are widely used together and can support a brighter-looking, more even complexion.\nEvidence grade\nRefuted · broad consensus\nReviewed by a board-certified dermatologist. Source: Peer-reviewed formulation literature.\n✦\nGeneral cosmetic information. For the appearance of skin, not medical advice.\n♥\nThis helped\nShare note",
+  "url": "http://localhost:19171/community/note/note-niacinamide-vitc",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

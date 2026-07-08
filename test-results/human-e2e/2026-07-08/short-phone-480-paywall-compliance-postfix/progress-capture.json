@@ -1,0 +1,175 @@
+{
+  "clippedControls": [],
+  "controls": [
+    {
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 313.8804702758789
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Start free trial",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "label": "Start free trial",
+      "rect": {
+        "bottom": 337.87925720214844,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 289.8816833496094,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 371.83708572387695
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "No credit card. See your routine work, then decide.",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 2,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "bottom": 399.8028030395508,
+        "height": 55.931434631347656,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 343.8713684082031,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 423.8015823364258
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "label": "Terms",
+      "rect": {
+        "bottom": 447.8003692626953,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 399.80279541015625,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 423.8015823364258
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 447.8003692626953,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 399.80279541015625,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 423.8015823364258
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 5,
+      "label": "Restore",
+      "rect": {
+        "bottom": 447.8003692626953,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 399.80279541015625,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/progress/capture",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleCompliance": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "visibleText": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+  "jsDialog": null
+}

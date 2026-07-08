@@ -1,0 +1,530 @@
+[
+  {
+    "actualPath": "/progress/e2e-front-2026-04-01",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 59.99696731567383,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 11.999393463134766
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 477.8974723815918,
+          "height": 39.98786544799805,
+          "right": 280.4004936218262,
+          "width": 240.41262817382812,
+          "x": 39.98786544799805,
+          "y": 437.90960693359375
+        },
+        "role": "textarea",
+        "testId": null,
+        "text": "Add a note. “started retinol”, “travel breakout”"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 557.8732147216797,
+          "height": 47.99757385253906,
+          "right": 184.40534210205078,
+          "width": 160.40655517578125,
+          "x": 23.99878692626953,
+          "y": 509.8756408691406
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Set as reference"
+      },
+      {
+        "aria": "Share photo",
+        "rect": {
+          "bottom": 557.8732147216797,
+          "height": 47.99757385253906,
+          "right": 240.3974609375,
+          "width": 47.99757385253906,
+          "x": 192.39988708496094,
+          "y": 509.8756408691406
+        },
+        "role": "button",
+        "testId": null,
+        "text": "↗"
+      },
+      {
+        "aria": "Delete photo",
+        "rect": {
+          "bottom": 557.8732147216797,
+          "height": 47.99757385253906,
+          "right": 296.3895721435547,
+          "width": 47.99757385253906,
+          "x": 248.39199829101562,
+          "y": 509.8756408691406
+        },
+        "role": "button",
+        "testId": null,
+        "text": "🗑"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/progress/e2e-front-2026-04-01",
+    "tabOverlaps": [],
+    "textSample": "< April 1 your photo Aligned · well-lit morning reference YOUR NOTE Set as reference ↗ 🗑",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/progress/e2e-front-2026-06-24",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 59.99696731567383,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 11.999393463134766
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 431.9174919128418,
+          "height": 39.98786544799805,
+          "right": 280.4004936218262,
+          "width": 240.41262817382812,
+          "x": 39.98786544799805,
+          "y": 391.92962646484375
+        },
+        "role": "textarea",
+        "testId": null,
+        "text": "Add a note. “started retinol”, “travel breakout”"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 548.9381256103516,
+          "height": 47.99757385253906,
+          "right": 184.40534210205078,
+          "width": 160.40655517578125,
+          "x": 23.99878692626953,
+          "y": 500.9405517578125
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Set as reference"
+      },
+      {
+        "aria": "Share photo",
+        "rect": {
+          "bottom": 548.9381256103516,
+          "height": 47.99757385253906,
+          "right": 240.3974609375,
+          "width": 47.99757385253906,
+          "x": 192.39988708496094,
+          "y": 500.9405517578125
+        },
+        "role": "button",
+        "testId": null,
+        "text": "↗"
+      },
+      {
+        "aria": "Delete photo",
+        "rect": {
+          "bottom": 548.9381256103516,
+          "height": 47.99757385253906,
+          "right": 296.3895721435547,
+          "width": 47.99757385253906,
+          "x": 248.39199829101562,
+          "y": 500.9405517578125
+        },
+        "role": "button",
+        "testId": null,
+        "text": "🗑"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/progress/e2e-front-2026-06-24",
+    "tabOverlaps": [],
+    "textSample": "< June 24 your photo Aligned · well-lit morning YOUR NOTE Set as reference ↗ 🗑",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/community/note/note-niacinamide-vitc",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/community/note/note-niacinamide-vitc",
+    "tabOverlaps": [],
+    "textSample": "< Skin Note THE CLAIM “Niacinamide and vitamin C cancel each other out.” Refuted myth Safe to combine WHY The myth traces to decades-old studies on raw, unformulated ingredients at high heat. In modern formulas the two are widely used together and can support a brighter-looking, more even complexion. Evidence grade Refuted · broad consensus Reviewed by a board-certified dermatologist. Source: Peer-reviewed formulation literature. ✦ General cosmetic information. For the appearance of skin, not medical advice. ♥ This helped Share note",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/community/note/note-glass-skin",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/community/note/note-glass-skin",
+    "tabOverlaps": [],
+    "textSample": "< Skin Note THE CLAIM “A 10-step ‘glass skin’ routine is better for your skin.” Contested Fewer is often smarter WHY For sensitive or reactive skin, more steps and more actives raise the chance of irritation. A short, considered routine. Cleanse, treat, moisturise, protect. Is usually kinder and just as effective. Evidence grade Contested · SORT C Reviewed by a board-certified dermatologist. Source: Dermatology consensus; skinimalism literature. ✦ General cosmetic information. For the appearance of skin, not medical advice. ♥ This helped Share note",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/commerce/stack/sensitive-skin-starter-set",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 532.9338874816895,
+          "height": 55.99211502075195,
+          "right": 296.38956451416016,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 476.9417724609375
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Back to You"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/commerce/stack/sensitive-skin-starter-set",
+    "tabOverlaps": [],
+    "textSample": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/recommendations/routine_completion%3Amineral_spf",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/recommendations/routine_completion%3Amineral_spf",
+    "tabOverlaps": [],
+    "textSample": "< Recommendation WHAT A mineral SPF 30+ e.g. a zinc-based daily SPF 30 specific products, ranked by fit WHY Your morning routine has no SPF, and daily SPF is the single highest-impact step. HOW WE DECIDED profile Your skin the gap No SPF in your routine evidence Daily SPF. Broad consensus fit Matched to your profile caveat Mineral SPF can leave a slight white cast Add to shelf Not for me A suggestion, not a must, and we won’t keep asking.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/recommendations/routine_completion%3Aceramide_moisturiser",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/recommendations/routine_completion%3Aceramide_moisturiser",
+    "tabOverlaps": [],
+    "textSample": "< Recommendation WHAT A ceramide moisturiser e.g. a fragrance-free ceramide cream specific products, ranked by fit WHY Your routine has no moisturiser. It helps seal everything in and support your barrier. HOW WE DECIDED profile Your skin the gap No moisturiser yet evidence Barrier support. Well established fit Matched to your profile Add to shelf Not for me A suggestion, not a must, and we won’t keep asking.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/recommendations/routine_completion%3Afragrance_free_cleanser",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": "Back",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "right": 71.9963607788086,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "testId": null,
+        "text": "<"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 382.4484405517578,
+          "height": 47.99757385253906,
+          "right": 216.99030303955078,
+          "width": 113.59223937988281,
+          "x": 103.39806365966797,
+          "y": 334.45086669921875
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Back to For you"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/recommendations/routine_completion%3Afragrance_free_cleanser",
+    "tabOverlaps": [],
+    "textSample": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/conflict/00000000-0000-4000-8000-000000000004",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 500.8647041320801,
+          "height": 55.99211502075195,
+          "right": 292.3998794555664,
+          "width": 264.4114074707031,
+          "x": 27.98847198486328,
+          "y": 444.8725891113281
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Back to Shelf"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 556.8568267822266,
+          "height": 47.99757385253906,
+          "right": 292.3998794555664,
+          "width": 264.4114074707031,
+          "x": 27.98847198486328,
+          "y": 508.8592529296875
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Add a product"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/conflict/00000000-0000-4000-8000-000000000004",
+    "tabOverlaps": [],
+    "textSample": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice. Back to Shelf Add a product",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/share/conflict/00000000-0000-4000-8000-000000000004",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 532.9338874816895,
+          "height": 55.99211502075195,
+          "right": 296.38956451416016,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 476.9417724609375
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Back to Shelf"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/share/conflict/00000000-0000-4000-8000-000000000004",
+    "tabOverlaps": [],
+    "textSample": "BETA Share cards are not ready yet A card can be shared only for a real owned-product interaction backed by a reviewed rule and final brand domain. This prevents unreviewed ingredient guidance from becoming a growth artifact. Back to Shelf",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/s/e2e-share-card",
+    "badPlaceholder": false,
+    "controls": [
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 387.45451736450195,
+          "height": 55.99211502075195,
+          "right": 296.38956451416016,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 331.46240234375
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Scan a product"
+      },
+      {
+        "aria": null,
+        "rect": {
+          "bottom": 455.4460029602051,
+          "height": 55.99211502075195,
+          "right": 296.38956451416016,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 399.4538879394531
+        },
+        "role": "button",
+        "testId": null,
+        "text": "Add manually"
+      }
+    ],
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "mojibake": false,
+    "rawLeaks": [],
+    "route": "/s/e2e-share-card",
+    "tabOverlaps": [],
+    "textSample": "SHELF CHECK Check your own shelf. Shared cards open to a fresh shelf check. RoutineKind never puts product names, profile details, photos, or health context in public links. Scan a product Add manually",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleAlerts": [],
+    "hasJsDialog": false
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "buttons": {
+    "Manage in App Store": {
+      "x": 38,
+      "y": 231,
+      "width": 244,
+      "height": 53
+    },
+    "Restore purchases": {
+      "x": 38,
+      "y": 284,
+      "width": 244,
+      "height": 53
+    },
+    "Terms": {
+      "x": 38,
+      "y": 337,
+      "width": 244,
+      "height": 53
+    },
+    "Privacy": {
+      "x": 38,
+      "y": 390,
+      "width": 244,
+      "height": 52
+    }
+  },
+  "overflow": {
+    "documentOverflowX": 0,
+    "bodyOverflowX": 0,
+    "scrollWidth": 320,
+    "clientWidth": 320
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "url": "http://localhost:19145/s/sharetest12345678",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "text": "SHELF CHECK\nCheck your own  helf.\nShared card  open to a fre h  helf check. RoutineKind never put  product name , profile detail , photo , or health context in public link .\nScan a product\nAdd manually",
+  "bodyBox": {
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "scrollHeight": 568,
+    "clientHeight": 568
+  },
+  "horizontalOverflow": false,
+  "title": {
+    "top": 141,
+    "bottom": 175,
+    "left": 24,
+    "right": 296,
+    "width": 272,
+    "height": 34,
+    "visible": true,
+    "fullyVisible": true
+  },
+  "body": {
+    "top": 187,
+    "bottom": 307,
+    "left": 24,
+    "right": 296,
+    "width": 272,
+    "height": 120,
+    "visible": true,
+    "fullyVisible": true
+  },
+  "controls": [
+    {
+      "text": "Scan a product",
+      "top": 331,
+      "bottom": 387,
+      "left": 24,
+      "right": 296,
+      "width": 272,
+      "height": 56,
+      "visible": true,
+      "fullyVisible": true
+    },
+    {
+      "text": "Add manually",
+      "top": 399,
+      "bottom": 455,
+      "left": 24,
+      "right": 296,
+      "width": 272,
+      "height": 56,
+      "visible": true,
+      "fullyVisible": true
+    }
+  ],
+  "smallControls": [],
+  "clippedControls": [],
+  "scrollables": []
+}

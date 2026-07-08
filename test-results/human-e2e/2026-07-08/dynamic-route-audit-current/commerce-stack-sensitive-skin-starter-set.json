@@ -1,0 +1,34 @@
+{
+  "actualPath": "/commerce/stack/sensitive-skin-starter-set",
+  "badPlaceholder": false,
+  "controls": [
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 532.9338874816895,
+        "height": 55.99211502075195,
+        "right": 296.38956451416016,
+        "width": 272.3907775878906,
+        "x": 23.99878692626953,
+        "y": 476.9417724609375
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Back to You"
+    }
+  ],
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "mojibake": false,
+  "rawLeaks": [],
+  "route": "/commerce/stack/sensitive-skin-starter-set",
+  "tabOverlaps": [],
+  "textSample": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleAlerts": [],
+  "hasJsDialog": false
+}

@@ -1,0 +1,28 @@
+{
+  "url": "http://localhost:19145/recommendations",
+  "viewportWidth": 320,
+  "viewportHeight": 568,
+  "overflowX": 0,
+  "scrollY": 0,
+  "bodyText": "<\nPreferences\nFor you\nRanked by fit and evidence,\nnever by commission.\n✓\nYour routine looks complete.\nCleanser, treatment, moisturiser and SPF. All covered, conflict-free, and matched to your goals. Nothing to add right now.\n✓\nCleanser · treatment · moisturiser · SPF\n✓\nNo unresolved conflicts\nwe’ll tell you the moment that changes, never before",
+  "controls": [
+    {
+      "role": "button",
+      "label": "Back",
+      "width": 48,
+      "height": 48,
+      "top": 4,
+      "left": 24,
+      "visible": true
+    },
+    {
+      "role": "button",
+      "label": "Preferences",
+      "width": 101,
+      "height": 48,
+      "top": 4,
+      "left": 195,
+      "visible": true
+    }
+  ]
+}

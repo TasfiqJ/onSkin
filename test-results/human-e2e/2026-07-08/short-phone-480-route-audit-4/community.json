@@ -1,0 +1,223 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+      "label": "Is a 10-step “glass skin” routine better?. Contested. | Is a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats mo",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Is “natural” always gentler for sensitive skin?",
+      "label": "Is “natural” always gentler for sensitive skin?. Contested. | Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and e",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [
+    {
+      "centerInsideViewport": true,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested. | Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and e",
+      "rect": "[Circular]"
+    }
+  ],
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 209.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Can you use niacinamide with vitamin C?",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Can you use niacinamide with vitamin C?. Refuted. | Can you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredi",
+      "rect": {
+        "bottom": 267.9,
+        "height": 115.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 152,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 349.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Is a 10-step “glass skin” routine better?. Contested. | Is a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats mo",
+      "rect": {
+        "bottom": 399.8,
+        "height": 99.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 299.9,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 456.8
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": true,
+      "hitBlocked": false,
+      "hitLabel": "Is “natural” always gentler for sensitive skin?",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested. | Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and e",
+      "rect": {
+        "bottom": 507.8,
+        "height": 101.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 405.8,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Not necessarily. Some plant extracts and essential oils are common irritants.",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 4,
+      "intersectsViewport": false,
+      "label": "Does retinol thin your skin?. Refuted. | Does retinol thin your skin?RefutedIt thickens the deeper dermis over time; surface flaking early on is not thinning.",
+      "rect": {
+        "bottom": 685.7,
+        "height": 85.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 599.7,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Not necessarily. Some plant extracts and essential oils are common irritants.",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 5,
+      "intersectsViewport": false,
+      "label": "Do you have to wait between skincare steps?. Refuted. | Do you have to wait between skincare steps?RefutedMostly no. Layering onto slightly damp skin is fine fo",
+      "rect": {
+        "bottom": 819.6,
+        "height": 101.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 717.7,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Not necessarily. Some plant extracts and essential oils are common irritants.",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 6,
+      "intersectsViewport": false,
+      "label": "Is homemade sunscreen as protective as store-bought?. Refuted. | Is homemade sunscreen as protective as store-bought?RefutedNo. Homemade mixes can’t be measured",
+      "rect": {
+        "bottom": 957.5,
+        "height": 131.9,
+        "left": 24,
+        "right": 296.4,
+        "top": 825.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/community",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. Use a tested SPF. a library, not a feed. No likes, no authors to follow, no ranking by popularity",
+  "jsDialog": null
+}

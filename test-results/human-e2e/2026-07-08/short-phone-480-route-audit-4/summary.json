@@ -1,0 +1,635 @@
+[
+  {
+    "route": "/settings/subscription",
+    "href": "http://localhost:8185/settings/subscription",
+    "text": "< Subscription You’re on the free plan The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime. See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+    "controls": 5,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Terms›",
+        "label": "Terms›",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Privacy›",
+        "label": "Privacy›",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-subscription.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-subscription.json"
+  },
+  {
+    "route": "/settings/notifications",
+    "href": "http://localhost:8185/settings/notifications",
+    "text": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stac",
+    "controls": 9,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Replenishment",
+        "label": "Replenishment",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-notifications.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-notifications.json"
+  },
+  {
+    "route": "/settings/timing",
+    "href": "http://localhost:8185/settings/timing",
+    "text": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay i",
+    "controls": 5,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-timing.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-timing.json"
+  },
+  {
+    "route": "/settings/privacy",
+    "href": "http://localhost:8185/you?section=privacy",
+    "text": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Sk",
+    "controls": 29,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Today tab | bottom-tab-today | Today",
+        "label": "Today tab | bottom-tab-today | Today",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Progress tab | bottom-tab-progress | Progress",
+        "label": "Progress tab | bottom-tab-progress | Progress",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Shelf tab | bottom-tab-shelf | Shelf",
+        "label": "Shelf tab | bottom-tab-shelf | Shelf",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "You tab | bottom-tab-you | You",
+        "label": "You tab | bottom-tab-you | You",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-privacy.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\settings-privacy.json"
+  },
+  {
+    "route": "/recommendations",
+    "href": "http://localhost:8185/recommendations",
+    "text": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser S",
+    "controls": 5,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [
+      {
+        "centerInsideViewport": true,
+        "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier. | ✦A ceramide moisturiserStrong fitYour routine h",
+        "rect": "[Circular]"
+      }
+    ],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+        "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier. | ✦A ceramide moisturiserStrong fitYour routine h",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\recommendations.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\recommendations.json"
+  },
+  {
+    "route": "/recommendations/preferences",
+    "href": "http://localhost:8185/recommendations/preferences",
+    "text": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options t",
+    "controls": 14,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Non-comedogenic",
+        "label": "Non-comedogenic",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Sustainable",
+        "label": "Sustainable",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\recommendations-preferences.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\recommendations-preferences.json"
+  },
+  {
+    "route": "/recommendations/detail/seed-cleanser",
+    "href": "http://localhost:8185/recommendations/detail/seed-cleanser",
+    "text": "Unmatched Route Page could not be found. http://localhost:8185/recommendations/detail/seed-cleanser Go back • Sitemap",
+    "controls": 3,
+    "hitBlocked": [],
+    "under44": [
+      {
+        "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "rect": "[Circular]"
+      },
+      {
+        "label": "Sitemap",
+        "rect": "[Circular]"
+      }
+    ],
+    "clippedVisible": [
+      {
+        "centerInsideViewport": true,
+        "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "rect": "[Circular]"
+      },
+      {
+        "centerInsideViewport": true,
+        "label": "Sitemap",
+        "rect": "[Circular]"
+      }
+    ],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Unmatched Route",
+        "label": "expo-router-unmatched | Unmatched RoutePage could not be found.http://localhost:8185/recommendations/detail/seed-cleanserGo back•Sitemap",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Sitemap",
+        "label": "Sitemap",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [
+      {
+        "label": "Unmatched Route",
+        "left": -19.3,
+        "right": 339.7,
+        "tag": "h1",
+        "width": 359
+      },
+      {
+        "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "left": -2.3,
+        "right": 322.7,
+        "tag": "a",
+        "width": 325
+      },
+      {
+        "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "left": -2.3,
+        "right": 322.7,
+        "tag": "div",
+        "width": 325
+      },
+      {
+        "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+        "left": -2.3,
+        "right": 322.7,
+        "tag": "span",
+        "width": 325
+      }
+    ],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 482,
+      "documentHeight": 483,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\recommendations-detail-seed-cleanser.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\recommendations-detail-seed-cleanser.json"
+  },
+  {
+    "route": "/trend/optin",
+    "href": "http://localhost:8185/trend/optin",
+    "text": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progr",
+    "controls": 1,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Back to Progress",
+        "label": "Back to Progress",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\trend-optin.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\trend-optin.json"
+  },
+  {
+    "route": "/trend",
+    "href": "http://localhost:8185/trend",
+    "text": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progr",
+    "controls": 1,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Back to Progress",
+        "label": "Back to Progress",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\trend.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\trend.json"
+  },
+  {
+    "route": "/community",
+    "href": "http://localhost:8185/community",
+    "text": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “gla",
+    "controls": 7,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [
+      {
+        "centerInsideViewport": true,
+        "label": "Is “natural” always gentler for sensitive skin?. Contested. | Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and e",
+        "rect": "[Circular]"
+      }
+    ],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+        "label": "Is a 10-step “glass skin” routine better?. Contested. | Is a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats mo",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Is “natural” always gentler for sensitive skin?",
+        "label": "Is “natural” always gentler for sensitive skin?. Contested. | Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and e",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\community.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\community.json"
+  },
+  {
+    "route": "/community/ask",
+    "href": "http://localhost:8185/community/ask",
+    "text": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved.",
+    "controls": 1,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Back to Skin Notes",
+        "label": "Back to Skin Notes",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\community-ask.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\community-ask.json"
+  },
+  {
+    "route": "/community/note/missing-note-e2e",
+    "href": "http://localhost:8185/community/note/missing-note-e2e",
+    "text": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes",
+    "controls": 2,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Back to Skin Notes",
+        "label": "Back to Skin Notes",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\community-note-missing-note-e2e.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\community-note-missing-note-e2e.json"
+  },
+  {
+    "route": "/commerce/consent",
+    "href": "http://localhost:8185/commerce/consent",
+    "text": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "controls": 1,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Back to You",
+        "label": "Back to You",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\commerce-consent.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\commerce-consent.json"
+  },
+  {
+    "route": "/commerce/stacks",
+    "href": "http://localhost:8185/commerce/stacks",
+    "text": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "controls": 1,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Back to You",
+        "label": "Back to You",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\commerce-stacks.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\commerce-stacks.json"
+  },
+  {
+    "route": "/shelf/search",
+    "href": "http://localhost:8185/shelf/search",
+    "text": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+    "controls": 4,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Add by hand",
+        "label": "Add by hand",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-search.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-search.json"
+  },
+  {
+    "route": "/shelf/scan",
+    "href": "http://localhost:8185/shelf/scan",
+    "text": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR",
+    "controls": 4,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Add it by hand",
+        "label": "+Add it by handAlways works offline",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-scan.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-scan.json"
+  },
+  {
+    "route": "/shelf/ocr",
+    "href": "http://localhost:8185/shelf/ocr",
+    "text": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredient",
+    "controls": 2,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Continue with manual text",
+        "label": "Continue with manual text",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-ocr.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-ocr.json"
+  },
+  {
+    "route": "/shelf/no-match",
+    "href": "http://localhost:8185/shelf/no-match",
+    "text": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it",
+    "controls": 4,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [
+      {
+        "centerInsideViewport": false,
+        "label": "+Add it by handAlways works, even offline",
+        "rect": "[Circular]"
+      }
+    ],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Scan the ingredient list",
+        "label": "IScan the ingredient listWe'll read the INCI text",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch",
+        "label": "+Add it by handAlways works, even offline",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-no-match.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-no-match.json"
+  },
+  {
+    "route": "/shelf/manual",
+    "href": "http://localhost:8185/shelf/manual",
+    "text": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+    "controls": 6,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedVisible": [],
+    "bottomZoneControls": [
+      {
+        "hitBlocked": false,
+        "hitLabel": "Ingredients | Paste or type the INCI list…",
+        "label": "Ingredients | Paste or type the INCI list…",
+        "rect": "[Circular]"
+      },
+      {
+        "hitBlocked": false,
+        "hitLabel": "Continue",
+        "label": "Continue",
+        "rect": "[Circular]"
+      }
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "scroll": {
+      "bodyHeight": 481,
+      "documentHeight": 481,
+      "x": 0,
+      "y": 0
+    },
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-manual.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-route-audit-4\\shelf-manual.json"
+  }
+]

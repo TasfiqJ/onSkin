@@ -1,0 +1,52 @@
+{
+  "actionControls": [
+    {
+      "rect": {
+        "bottom": 536,
+        "fullyVisibleInViewport": true,
+        "height": 48,
+        "top": 488,
+        "width": 132,
+        "x": 24,
+        "y": 488
+      },
+      "text": "♥This helped"
+    },
+    {
+      "rect": {
+        "bottom": 536,
+        "fullyVisibleInViewport": true,
+        "height": 48,
+        "top": 488,
+        "width": 128,
+        "x": 168,
+        "y": 488
+      },
+      "text": "Share note"
+    }
+  ],
+  "alerts": [
+    {
+      "rect": {
+        "bottom": 476,
+        "fullyVisibleInViewport": true,
+        "height": 36,
+        "top": 440,
+        "width": 272,
+        "x": 24,
+        "y": 440
+      },
+      "text": "We couldn't open the share sheet. You can still read this note in Skin Notes."
+    }
+  ],
+  "hasExpectedRecoveryCopy": true,
+  "horizontalOverflow": 0,
+  "ready": true,
+  "scrollY": 0,
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "url": "http://localhost:19171/community/note/note-niacinamide-vitc",
+  "activeDialog": null
+}

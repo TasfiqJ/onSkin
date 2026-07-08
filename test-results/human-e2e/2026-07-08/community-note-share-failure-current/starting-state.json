@@ -1,0 +1,37 @@
+{
+  "controls": [
+    {
+      "height": 48,
+      "left": 24,
+      "role": "button",
+      "text": "<",
+      "top": 4,
+      "visible": true,
+      "width": 48
+    },
+    {
+      "height": 48,
+      "left": 24,
+      "role": "button",
+      "text": "♥This helped",
+      "top": 802,
+      "visible": true,
+      "width": 132
+    },
+    {
+      "height": 48,
+      "left": 168,
+      "role": "button",
+      "text": "Share note",
+      "top": 802,
+      "visible": true,
+      "width": 128
+    }
+  ],
+  "hasClaim": true,
+  "hasShareNote": true,
+  "hasSkinNote": true,
+  "horizontalOverflow": 0,
+  "title": "",
+  "url": "http://localhost:19149/community/note/note-niacinamide-vitc"
+}

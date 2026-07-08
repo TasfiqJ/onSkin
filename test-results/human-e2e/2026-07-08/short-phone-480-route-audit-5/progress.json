@@ -1,0 +1,258 @@
+{
+  "route": "/progress",
+  "bottomZoneControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 160.2,
+        "y": 427.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": true,
+      "hitLabel": "Shelf tab",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Take my first photo",
+      "rect": {
+        "bottom": 455.9,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 399.9,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false,
+      "visible": {
+        "height": 56,
+        "width": 272.4
+      }
+    },
+    {
+      "center": {
+        "x": 46.8,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Today tab",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 9,
+        "right": 84.6,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false,
+      "visible": {
+        "height": 54,
+        "width": 75.6
+      }
+    },
+    {
+      "center": {
+        "x": 122.4,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress tab",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 84.6,
+        "right": 160.2,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false,
+      "visible": {
+        "height": 54,
+        "width": 75.6
+      }
+    },
+    {
+      "center": {
+        "x": 198,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 160.2,
+        "right": 235.8,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false,
+      "visible": {
+        "height": 54,
+        "width": 75.6
+      }
+    },
+    {
+      "center": {
+        "x": 273.6,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "You tab",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "intersectsViewport": true,
+      "label": "You tab",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 235.8,
+        "right": 311.4,
+        "top": 406.6,
+        "width": 75.6
+      },
+      "role": "tab",
+      "tag": "div",
+      "under44": false,
+      "visible": {
+        "height": 54,
+        "width": 75.6
+      }
+    }
+  ],
+  "hitBlocked": [
+    "[Circular]"
+  ],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8201/progress",
+  "rawErrorMarkers": [],
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "fullHeight": 481,
+    "fullWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. Take my first photo Today Progress Shelf You",
+  "jsDialog": null,
+  "currentRouteLogs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:55:38.576Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:55:38.576Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:55:38.591Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:35.475Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:35.476Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:35.480Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:37.648Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:37.648Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:37.652Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:39.985Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:56:39.986Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:56:39.990Z",
+      "url": "http://localhost:8201/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

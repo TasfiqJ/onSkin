@@ -1,0 +1,359 @@
+{
+  "width": 390,
+  "height": 568,
+  "state": {
+    "href": "http://localhost:19142/today",
+    "viewport": {
+      "width": 390,
+      "height": 568
+    },
+    "bodyTextSample": "TUESDAY, JULY 7 · 9:16 PM Good evening. Evening routine 0 of 2 Cream cleanser Dry skin first. NEXT Ceramide moisturizer Generous layer tonight Today Progress Shelf You",
+    "tablist": {
+      "left": 8,
+      "right": 382,
+      "top": 488,
+      "bottom": 554,
+      "width": 374,
+      "height": 66
+    },
+    "tabs": [
+      {
+        "testId": "bottom-tab-today",
+        "ariaLabel": "Today tab",
+        "ariaSelected": "true",
+        "text": "Today",
+        "left": 9,
+        "right": 102,
+        "top": 494,
+        "bottom": 548,
+        "width": 93,
+        "height": 54,
+        "backgroundColor": "rgb(32, 27, 21)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 39,
+          "right": 72,
+          "top": 526,
+          "bottom": 543,
+          "width": 34,
+          "height": 17,
+          "color": "rgb(255, 255, 255)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_700Bold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-today"
+      },
+      {
+        "testId": "bottom-tab-progress",
+        "ariaLabel": "Progress tab",
+        "ariaSelected": "false",
+        "text": "Progress",
+        "left": 102,
+        "right": 195,
+        "top": 494,
+        "bottom": 548,
+        "width": 93,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 124,
+          "right": 173,
+          "top": 526,
+          "bottom": 543,
+          "width": 49,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-progress"
+      },
+      {
+        "testId": "bottom-tab-shelf",
+        "ariaLabel": "Shelf tab",
+        "ariaSelected": "false",
+        "text": "Shelf",
+        "left": 195,
+        "right": 288,
+        "top": 494,
+        "bottom": 548,
+        "width": 93,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 227,
+          "right": 256,
+          "top": 526,
+          "bottom": 543,
+          "width": 28,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-shelf"
+      },
+      {
+        "testId": "bottom-tab-you",
+        "ariaLabel": "You tab",
+        "ariaSelected": "false",
+        "text": "You",
+        "left": 288,
+        "right": 381,
+        "top": 494,
+        "bottom": 548,
+        "width": 93,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 324,
+          "right": 345,
+          "top": 526,
+          "bottom": 543,
+          "width": 21,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-you"
+      }
+    ],
+    "selectedCount": 1,
+    "selectedTestIds": [
+      "bottom-tab-today"
+    ],
+    "allLabelsVisible": true,
+    "allLabelsInside": true,
+    "allCentersHitSelf": true,
+    "allTargetsAtLeast52": true,
+    "horizontalOverflow": false,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "bottomSamples": [
+      {
+        "x": 195,
+        "y": 560,
+        "tag": "DIV",
+        "role": null,
+        "testId": null,
+        "backgroundColor": "rgb(27, 24, 19)"
+      },
+      {
+        "x": 195,
+        "y": 544,
+        "tag": "DIV",
+        "role": "tablist",
+        "testId": null,
+        "backgroundColor": "rgb(255, 255, 255)"
+      },
+      {
+        "x": 16,
+        "y": 544,
+        "tag": "DIV",
+        "role": null,
+        "testId": null,
+        "backgroundColor": "rgb(27, 24, 19)"
+      },
+      {
+        "x": 374,
+        "y": 544,
+        "tag": "DIV",
+        "role": null,
+        "testId": null,
+        "backgroundColor": "rgb(27, 24, 19)"
+      }
+    ],
+    "hasMojibake": false
+  },
+  "clickResults": [
+    {
+      "id": "bottom-tab-progress",
+      "href": "http://localhost:19142/progress",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-progress"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true,
+      "bottomSamples": [
+        {
+          "x": 195,
+          "y": 560,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        },
+        {
+          "x": 195,
+          "y": 544,
+          "tag": "DIV",
+          "role": "tablist",
+          "testId": null,
+          "backgroundColor": "rgb(255, 255, 255)"
+        },
+        {
+          "x": 16,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        },
+        {
+          "x": 374,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        }
+      ]
+    },
+    {
+      "id": "bottom-tab-shelf",
+      "href": "http://localhost:19142/shelf",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-shelf"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true,
+      "bottomSamples": [
+        {
+          "x": 195,
+          "y": 560,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        },
+        {
+          "x": 195,
+          "y": 544,
+          "tag": "DIV",
+          "role": "tablist",
+          "testId": null,
+          "backgroundColor": "rgb(255, 255, 255)"
+        },
+        {
+          "x": 16,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        },
+        {
+          "x": 374,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        }
+      ]
+    },
+    {
+      "id": "bottom-tab-you",
+      "href": "http://localhost:19142/you",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-you"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true,
+      "bottomSamples": [
+        {
+          "x": 195,
+          "y": 560,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        },
+        {
+          "x": 195,
+          "y": 544,
+          "tag": "DIV",
+          "role": "tablist",
+          "testId": null,
+          "backgroundColor": "rgb(255, 255, 255)"
+        },
+        {
+          "x": 16,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        },
+        {
+          "x": 374,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(250, 247, 242)"
+        }
+      ]
+    },
+    {
+      "id": "bottom-tab-today",
+      "href": "http://localhost:19142/today",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-today"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true,
+      "bottomSamples": [
+        {
+          "x": 195,
+          "y": 560,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(27, 24, 19)"
+        },
+        {
+          "x": 195,
+          "y": 544,
+          "tag": "DIV",
+          "role": "tablist",
+          "testId": null,
+          "backgroundColor": "rgb(255, 255, 255)"
+        },
+        {
+          "x": 16,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(27, 24, 19)"
+        },
+        {
+          "x": 374,
+          "y": 544,
+          "tag": "DIV",
+          "role": null,
+          "testId": null,
+          "backgroundColor": "rgb(27, 24, 19)"
+        }
+      ]
+    }
+  ],
+  "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\navigation-tabbar-polish\\tabbar-390x568-after.png"
+}

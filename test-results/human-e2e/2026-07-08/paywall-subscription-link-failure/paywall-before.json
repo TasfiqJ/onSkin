@@ -1,0 +1,29 @@
+{
+  "buttons": {
+    "Start free trial": null,
+    "Terms": {
+      "x": 62,
+      "y": 440,
+      "width": 48,
+      "height": 48
+    },
+    "Privacy": {
+      "x": 135,
+      "y": 440,
+      "width": 48,
+      "height": 48
+    },
+    "Restore": {
+      "x": 209,
+      "y": 440,
+      "width": 49,
+      "height": 48
+    }
+  },
+  "overflow": {
+    "documentOverflowX": 0,
+    "bodyOverflowX": 0,
+    "scrollWidth": 320,
+    "clientWidth": 320
+  }
+}

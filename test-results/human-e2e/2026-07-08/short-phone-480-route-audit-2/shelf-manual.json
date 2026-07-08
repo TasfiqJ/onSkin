@@ -1,0 +1,48 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 410.7,
+          "height": 64.8,
+          "left": 24,
+          "right": 296.4,
+          "top": 345.9,
+          "width": 272.4
+        },
+        "text": "Ingredients"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Continue",
+        "owned": true,
+        "x": 160.2,
+        "y": 440.6
+      },
+      "rect": {
+        "bottom": 468.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 412.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Continue"
+    }
+  ],
+  "hitBlocked": [],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "title": "",
+  "under44": [],
+  "url": "/shelf/manual",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

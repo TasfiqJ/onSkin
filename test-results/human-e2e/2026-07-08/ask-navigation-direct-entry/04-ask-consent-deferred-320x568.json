@@ -1,0 +1,19 @@
+{
+  "url": "http://localhost:19143/ask/consent",
+  "viewportWidth": 320,
+  "viewportHeight": 568,
+  "overflowX": 0,
+  "scrollY": 0,
+  "bodyText": "BETA\nAsk RoutineKind is not in this beta\nThe launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls.\nA cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship.\nBack to Ask",
+  "controls": [
+    {
+      "role": "button",
+      "label": "Back to Ask",
+      "width": 272,
+      "height": 56,
+      "top": 476,
+      "left": 24,
+      "visible": true
+    }
+  ]
+}

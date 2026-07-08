@@ -1,0 +1,526 @@
+{
+  "baseUrl": "http://localhost:19148",
+  "dialogs": [],
+  "interactions": [
+    {
+      "surface": "paywall",
+      "action": "Terms",
+      "found": true,
+      "label": "Terms",
+      "text": "Terms",
+      "box": {
+        "top": 440,
+        "left": 62,
+        "bottom": 488,
+        "right": 110,
+        "width": 48,
+        "height": 48
+      },
+      "after": {
+        "url": "http://localhost:19148/paywall/upsell?feature=full_routine",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "Unlock your full routine.\nThe complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nTerms\n·\nPrivacy\n·\nRestore\nLink unavailable. We could not open this policy link. Please try again.\nMaybe later",
+        "controls": [
+          {
+            "text": "Terms",
+            "top": 400,
+            "left": 62,
+            "bottom": 448,
+            "right": 110,
+            "width": 48,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 448,
+            "left": 28,
+            "width": 264,
+            "height": 40,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "surface": "paywall",
+      "action": "Privacy",
+      "found": true,
+      "label": "Privacy",
+      "text": "Privacy",
+      "box": {
+        "top": 400,
+        "left": 135,
+        "bottom": 448,
+        "right": 183,
+        "width": 48,
+        "height": 48
+      },
+      "after": {
+        "url": "http://localhost:19148/paywall/upsell?feature=full_routine",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "Unlock your full routine.\nThe complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nTerms\n·\nPrivacy\n·\nRestore\nLink unavailable. We could not open this policy link. Please try again.\nMaybe later",
+        "controls": [
+          {
+            "text": "Privacy",
+            "top": 400,
+            "left": 135,
+            "bottom": 448,
+            "right": 183,
+            "width": 48,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 448,
+            "left": 28,
+            "width": 264,
+            "height": 40,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "surface": "paywall",
+      "action": "Restore",
+      "found": true,
+      "label": "Restore",
+      "text": "Restore",
+      "box": {
+        "top": 400,
+        "left": 209,
+        "bottom": 448,
+        "right": 258,
+        "width": 49,
+        "height": 48
+      },
+      "after": {
+        "url": "http://localhost:19148/paywall/upsell?feature=full_routine",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "Unlock your full routine.\nThe complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nTerms\n·\nPrivacy\n·\nRestore\nNo active subscription was found for this account.\nMaybe later",
+        "controls": [
+          {
+            "text": "Restore",
+            "top": 400,
+            "left": 209,
+            "bottom": 448,
+            "right": 258,
+            "width": 49,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "No active subscription was found for this account.",
+            "top": 448,
+            "left": 28,
+            "width": 264,
+            "height": 40,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "surface": "settings",
+      "action": "Manage in App Store",
+      "found": true,
+      "label": "Manage in App Store",
+      "text": "Manage in App Store›",
+      "box": {
+        "top": 231,
+        "left": 38,
+        "bottom": 284,
+        "right": 282,
+        "width": 244,
+        "height": 53
+      },
+      "after": {
+        "url": "http://localhost:19148/settings/subscription",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "<\nSubscription\nRoutineKind Pro\nActive\nPlan\nRoutineKind Pro · $49.99/year\nRenews\nJuly 14, 2026\nManage in App Store\n›\nRestore purchases\n›\nTerms\n›\nPrivacy\n›\nWe could not open subscription management. You can manage billing from your App Store or Google Play account settings.\nCancelling is one tap in your App Store settings, and you keep Pro until July 14, 2026. No maze, no calls.",
+        "controls": [
+          {
+            "text": "Manage in App Store›",
+            "top": 231,
+            "left": 38,
+            "bottom": 284,
+            "right": 282,
+            "width": 244,
+            "height": 53,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "We could not open subscription management. You can manage billing from your App Store or Google Play account settings.",
+            "top": 442,
+            "left": 38,
+            "width": 244,
+            "height": 96,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "surface": "settings",
+      "action": "Terms",
+      "found": true,
+      "label": "Terms",
+      "text": "Terms›",
+      "box": {
+        "top": 257,
+        "left": 38,
+        "bottom": 310,
+        "right": 282,
+        "width": 244,
+        "height": 53
+      },
+      "after": {
+        "url": "http://localhost:19148/settings/subscription",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "<\nSubscription\nRoutineKind Pro\nActive\nPlan\nRoutineKind Pro · $49.99/year\nRenews\nJuly 14, 2026\nManage in App Store\n›\nRestore purchases\n›\nTerms\n›\nPrivacy\n›\nLink unavailable. We could not open this policy link. Please try again.\nCancelling is one tap in your App Store settings, and you keep Pro until July 14, 2026. No maze, no calls.",
+        "controls": [
+          {
+            "text": "Terms›",
+            "top": 257,
+            "left": 38,
+            "bottom": 310,
+            "right": 282,
+            "width": 244,
+            "height": 53,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 362,
+            "left": 38,
+            "width": 244,
+            "height": 56,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "surface": "settings",
+      "action": "Privacy",
+      "found": true,
+      "label": "Privacy",
+      "text": "Privacy›",
+      "box": {
+        "top": 294,
+        "left": 38,
+        "bottom": 346,
+        "right": 282,
+        "width": 244,
+        "height": 52
+      },
+      "after": {
+        "url": "http://localhost:19148/settings/subscription",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "<\nSubscription\nRoutineKind Pro\nActive\nPlan\nRoutineKind Pro · $49.99/year\nRenews\nJuly 14, 2026\nManage in App Store\n›\nRestore purchases\n›\nTerms\n›\nPrivacy\n›\nLink unavailable. We could not open this policy link. Please try again.\nCancelling is one tap in your App Store settings, and you keep Pro until July 14, 2026. No maze, no calls.",
+        "controls": [
+          {
+            "text": "Privacy›",
+            "top": 294,
+            "left": 38,
+            "bottom": 346,
+            "right": 282,
+            "width": 244,
+            "height": 52,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 346,
+            "left": 38,
+            "width": 244,
+            "height": 56,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "surface": "settings",
+      "action": "Restore purchases",
+      "found": true,
+      "label": "Restore purchases",
+      "text": "Restore purchases›",
+      "box": {
+        "top": 257,
+        "left": 38,
+        "bottom": 310,
+        "right": 282,
+        "width": 244,
+        "height": 53
+      },
+      "after": {
+        "url": "http://localhost:19148/settings/subscription",
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "body": {
+          "scrollWidth": 320,
+          "clientWidth": 320,
+          "scrollHeight": 568,
+          "clientHeight": 568
+        },
+        "horizontalOverflow": 0,
+        "visibleText": "<\nSubscription\nRoutineKind Pro\nActive\nPlan\nRoutineKind Pro · $49.99/year\nRenews\nJuly 14, 2026\nManage in App Store\n›\nRestore purchases\n›\nTerms\n›\nPrivacy\n›\nNo active subscription was found for this account.\nCancelling is one tap in your App Store settings, and you keep Pro until July 14, 2026. No maze, no calls.",
+        "controls": [
+          {
+            "text": "Restore purchases›",
+            "top": 257,
+            "left": 38,
+            "bottom": 310,
+            "right": 282,
+            "width": 244,
+            "height": 53,
+            "visible": true
+          }
+        ],
+        "alerts": [
+          {
+            "text": "No active subscription was found for this account.",
+            "top": 415,
+            "left": 38,
+            "width": 244,
+            "height": 56,
+            "visible": true
+          }
+        ]
+      }
+    }
+  ],
+  "snapshots": {
+    "paywall": {
+      "url": "http://localhost:19148/paywall/upsell?feature=full_routine",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "body": {
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 568,
+        "clientHeight": 568
+      },
+      "horizontalOverflow": 0,
+      "visibleText": "Unlock your full routine.\nThe complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nTerms\n·\nPrivacy\n·\nRestore\nNo active subscription was found for this account.\nMaybe later",
+      "controls": [
+        {
+          "text": "Start free trial",
+          "top": 346,
+          "left": 28,
+          "bottom": 400,
+          "right": 292,
+          "width": 264,
+          "height": 54,
+          "visible": true
+        },
+        {
+          "text": "Terms",
+          "top": 400,
+          "left": 62,
+          "bottom": 448,
+          "right": 110,
+          "width": 48,
+          "height": 48,
+          "visible": true
+        },
+        {
+          "text": "Privacy",
+          "top": 400,
+          "left": 135,
+          "bottom": 448,
+          "right": 183,
+          "width": 48,
+          "height": 48,
+          "visible": true
+        },
+        {
+          "text": "Restore",
+          "top": 400,
+          "left": 209,
+          "bottom": 448,
+          "right": 258,
+          "width": 49,
+          "height": 48,
+          "visible": true
+        },
+        {
+          "text": "Maybe later",
+          "top": 488,
+          "left": 28,
+          "bottom": 536,
+          "right": 292,
+          "width": 264,
+          "height": 48,
+          "visible": true
+        }
+      ],
+      "alerts": [
+        {
+          "text": "No active subscription was found for this account.",
+          "top": 448,
+          "left": 28,
+          "width": 264,
+          "height": 40,
+          "visible": true
+        }
+      ]
+    },
+    "settings": {
+      "url": "http://localhost:19148/settings/subscription",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "body": {
+        "scrollWidth": 320,
+        "clientWidth": 320,
+        "scrollHeight": 568,
+        "clientHeight": 568
+      },
+      "horizontalOverflow": 0,
+      "visibleText": "<\nSubscription\nRoutineKind Pro\nActive\nPlan\nRoutineKind Pro · $49.99/year\nRenews\nJuly 14, 2026\nManage in App Store\n›\nRestore purchases\n›\nTerms\n›\nPrivacy\n›\nNo active subscription was found for this account.\nCancelling is one tap in your App Store settings, and you keep Pro until July 14, 2026. No maze, no calls.",
+      "controls": [
+        {
+          "text": "Back",
+          "top": -23,
+          "left": 20,
+          "bottom": 25,
+          "right": 68,
+          "width": 48,
+          "height": 48,
+          "visible": true
+        },
+        {
+          "text": "Manage in App Store›",
+          "top": 204,
+          "left": 38,
+          "bottom": 257,
+          "right": 282,
+          "width": 244,
+          "height": 53,
+          "visible": true
+        },
+        {
+          "text": "Restore purchases›",
+          "top": 257,
+          "left": 38,
+          "bottom": 310,
+          "right": 282,
+          "width": 244,
+          "height": 53,
+          "visible": true
+        },
+        {
+          "text": "Terms›",
+          "top": 310,
+          "left": 38,
+          "bottom": 363,
+          "right": 282,
+          "width": 244,
+          "height": 53,
+          "visible": true
+        },
+        {
+          "text": "Privacy›",
+          "top": 363,
+          "left": 38,
+          "bottom": 415,
+          "right": 282,
+          "width": 244,
+          "height": 52,
+          "visible": true
+        }
+      ],
+      "alerts": [
+        {
+          "text": "No active subscription was found for this account.",
+          "top": 415,
+          "left": 38,
+          "width": 244,
+          "height": 56,
+          "visible": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,567 @@
+{
+  "width": 320,
+  "height": 568,
+  "before": {
+    "href": "http://localhost:19142/today",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "title": "",
+    "bodyTextSample": "TUESDAY, JULY 7 · 9:13 PM Good evening. Evening routine 0 of 2 Cream cleanser Dry skin first. NEXT Ceramide moisturizer Generous layer tonight Today Progress Shelf You",
+    "tablist": {
+      "left": 8,
+      "right": 312,
+      "top": 488,
+      "bottom": 554,
+      "width": 304,
+      "height": 66
+    },
+    "tabs": [
+      {
+        "testId": "bottom-tab-today",
+        "ariaLabel": "Today tab",
+        "ariaSelected": "true",
+        "text": "Today",
+        "left": 9,
+        "right": 85,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgb(32, 27, 21)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 30,
+          "right": 64,
+          "top": 526,
+          "bottom": 543,
+          "width": 34,
+          "height": 17,
+          "color": "rgb(255, 255, 255)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_700Bold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-today"
+      },
+      {
+        "testId": "bottom-tab-progress",
+        "ariaLabel": "Progress tab",
+        "ariaSelected": "false",
+        "text": "Progress",
+        "left": 85,
+        "right": 160,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 98,
+          "right": 147,
+          "top": 526,
+          "bottom": 543,
+          "width": 49,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-progress"
+      },
+      {
+        "testId": "bottom-tab-shelf",
+        "ariaLabel": "Shelf tab",
+        "ariaSelected": "false",
+        "text": "Shelf",
+        "left": 160,
+        "right": 236,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 184,
+          "right": 212,
+          "top": 526,
+          "bottom": 543,
+          "width": 28,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-shelf"
+      },
+      {
+        "testId": "bottom-tab-you",
+        "ariaLabel": "You tab",
+        "ariaSelected": "false",
+        "text": "You",
+        "left": 236,
+        "right": 311,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 263,
+          "right": 284,
+          "top": 526,
+          "bottom": 543,
+          "width": 21,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-you"
+      }
+    ],
+    "selectedCount": 1,
+    "selectedTestIds": [
+      "bottom-tab-today"
+    ],
+    "allLabelsVisible": true,
+    "allLabelsInside": true,
+    "allCentersHitSelf": true,
+    "allTargetsAtLeast52": true,
+    "horizontalOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "nonTabControlsInZone": [],
+    "hasMojibake": false
+  },
+  "clickResults": [
+    {
+      "id": "bottom-tab-progress",
+      "href": "http://localhost:19142/progress",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-progress"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true
+    },
+    {
+      "id": "bottom-tab-shelf",
+      "href": "http://localhost:19142/shelf",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-shelf"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true
+    },
+    {
+      "id": "bottom-tab-you",
+      "href": "http://localhost:19142/you",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-you"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true
+    },
+    {
+      "id": "bottom-tab-today",
+      "href": "http://localhost:19142/today",
+      "selectedCount": 1,
+      "selectedTestIds": [
+        "bottom-tab-today"
+      ],
+      "allLabelsInside": true,
+      "allCentersHitSelf": true
+    }
+  ],
+  "afterClicks": {
+    "href": "http://localhost:19142/today",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "title": "",
+    "bodyTextSample": "TUESDAY, JULY 7 · 9:13 PM Good evening. Evening routine 0 of 2 Cream cleanser Dry skin first. NEXT Ceramide moisturizer Generous layer tonight Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > R",
+    "tablist": {
+      "left": 8,
+      "right": 312,
+      "top": 488,
+      "bottom": 554,
+      "width": 304,
+      "height": 66
+    },
+    "tabs": [
+      {
+        "testId": "bottom-tab-today",
+        "ariaLabel": "Today tab",
+        "ariaSelected": "true",
+        "text": "Today",
+        "left": 9,
+        "right": 85,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgb(32, 27, 21)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 30,
+          "right": 64,
+          "top": 526,
+          "bottom": 543,
+          "width": 34,
+          "height": 17,
+          "color": "rgb(255, 255, 255)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_700Bold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-today"
+      },
+      {
+        "testId": "bottom-tab-progress",
+        "ariaLabel": "Progress tab",
+        "ariaSelected": "false",
+        "text": "Progress",
+        "left": 85,
+        "right": 160,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 98,
+          "right": 147,
+          "top": 526,
+          "bottom": 543,
+          "width": 49,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-progress"
+      },
+      {
+        "testId": "bottom-tab-shelf",
+        "ariaLabel": "Shelf tab",
+        "ariaSelected": "false",
+        "text": "Shelf",
+        "left": 160,
+        "right": 236,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 184,
+          "right": 212,
+          "top": 526,
+          "bottom": 543,
+          "width": 28,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-shelf"
+      },
+      {
+        "testId": "bottom-tab-you",
+        "ariaLabel": "You tab",
+        "ariaSelected": "false",
+        "text": "You",
+        "left": 236,
+        "right": 311,
+        "top": 494,
+        "bottom": 548,
+        "width": 76,
+        "height": 54,
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "24px",
+        "label": {
+          "left": 263,
+          "right": 284,
+          "top": 526,
+          "bottom": 543,
+          "width": 21,
+          "height": 17,
+          "color": "rgb(111, 103, 89)",
+          "fontSize": "12.5px",
+          "lineHeight": "16px",
+          "fontFamily": "HankenGrotesk_600SemiBold"
+        },
+        "labelInside": true,
+        "centerHitTestId": "bottom-tab-you"
+      }
+    ],
+    "selectedCount": 1,
+    "selectedTestIds": [
+      "bottom-tab-today"
+    ],
+    "allLabelsVisible": true,
+    "allLabelsInside": true,
+    "allCentersHitSelf": true,
+    "allTargetsAtLeast52": true,
+    "horizontalOverflow": false,
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "nonTabControlsInZone": [
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Retinoid ramp",
+        "left": 44,
+        "right": 276,
+        "top": 584,
+        "bottom": 632,
+        "width": 232,
+        "height": 48
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Streak & adherence",
+        "left": 44,
+        "right": 276,
+        "top": 632,
+        "bottom": 680,
+        "width": 232,
+        "height": 48
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Weekly check-in",
+        "left": 44,
+        "right": 276,
+        "top": 680,
+        "bottom": 728,
+        "width": 232,
+        "height": 48
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Recent changes",
+        "left": 44,
+        "right": 276,
+        "top": 728,
+        "bottom": 776,
+        "width": 232,
+        "height": 48
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Recommendations",
+        "left": 44,
+        "right": 276,
+        "top": 1076,
+        "bottom": 1136,
+        "width": 232,
+        "height": 60
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Recommendation preferences",
+        "left": 44,
+        "right": 276,
+        "top": 1136,
+        "bottom": 1200,
+        "width": 232,
+        "height": 64
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Skin Notes. Myth vs evidence, reviewed and claim-safe.",
+        "left": 44,
+        "right": 276,
+        "top": 1200,
+        "bottom": 1282,
+        "width": 232,
+        "height": 82
+      },
+      {
+        "tag": "DIV",
+        "role": "switch",
+        "label": "App lock",
+        "left": 224,
+        "right": 276,
+        "top": 1385,
+        "bottom": 1433,
+        "width": 52,
+        "height": 48
+      },
+      {
+        "tag": "DIV",
+        "role": "switch",
+        "label": "Encrypted cloud backup",
+        "left": 224,
+        "right": 276,
+        "top": 1499,
+        "bottom": 1547,
+        "width": 52,
+        "height": 48
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Reminders & notifications. Tiered, capped, at times you choose. Quiet hours & lock-screen discretion",
+        "left": 44,
+        "right": 276,
+        "top": 1662,
+        "bottom": 1788,
+        "width": 232,
+        "height": 126
+      },
+      {
+        "tag": "DIV",
+        "role": "switch",
+        "label": "Marketing emails",
+        "left": 224,
+        "right": 276,
+        "top": 1881,
+        "bottom": 1929,
+        "width": 52,
+        "height": 48
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Photos & the no-AI-score promise",
+        "left": 44,
+        "right": 276,
+        "top": 1946,
+        "bottom": 2010,
+        "width": 232,
+        "height": 64
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collect",
+        "left": 44,
+        "right": 276,
+        "top": 2010,
+        "bottom": 2156,
+        "width": 232,
+        "height": 146
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Privacy policy. What data we collect, use, and share.",
+        "left": 44,
+        "right": 276,
+        "top": 2232,
+        "bottom": 2302,
+        "width": 232,
+        "height": 70
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Consumer health privacy. Consumer health data notice and rights.",
+        "left": 44,
+        "right": 276,
+        "top": 2302,
+        "bottom": 2396,
+        "width": 232,
+        "height": 94
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Terms. Rules for using RoutineKind and subscription terms.",
+        "left": 44,
+        "right": 276,
+        "top": 2396,
+        "bottom": 2466,
+        "width": 232,
+        "height": 70
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Support. Help with accounts, billing, deletion, or export.",
+        "left": 44,
+        "right": 276,
+        "top": 2466,
+        "bottom": 2536,
+        "width": 232,
+        "height": 70
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Account deletion. How account deletion works before and after deleting in app.",
+        "left": 44,
+        "right": 276,
+        "top": 2536,
+        "bottom": 2626,
+        "width": 232,
+        "height": 90
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Data export. How to request and read your export.",
+        "left": 44,
+        "right": 276,
+        "top": 2626,
+        "bottom": 2696,
+        "width": 232,
+        "height": 70
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Export my data",
+        "left": 44,
+        "right": 276,
+        "top": 2780,
+        "bottom": 2836,
+        "width": 232,
+        "height": 56
+      },
+      {
+        "tag": "BUTTON",
+        "role": "button",
+        "label": "Delete account",
+        "left": 44,
+        "right": 276,
+        "top": 2844,
+        "bottom": 2900,
+        "width": 232,
+        "height": 56
+      }
+    ],
+    "hasMojibake": false
+  },
+  "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\navigation-tabbar-polish\\tabbar-320x568.png"
+}

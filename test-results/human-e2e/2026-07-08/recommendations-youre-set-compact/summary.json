@@ -1,0 +1,29 @@
+{
+  "initialTargets": [
+    {
+      "name": "Back",
+      "role": "button",
+      "label": "Back",
+      "width": 48,
+      "height": 48,
+      "top": 4,
+      "left": 24,
+      "visible": true
+    },
+    {
+      "name": "Preferences",
+      "role": "button",
+      "label": "Preferences",
+      "width": 101,
+      "height": 48,
+      "top": 4,
+      "left": 195,
+      "visible": true
+    }
+  ],
+  "initialUrl": "http://localhost:19145/recommendations",
+  "scrolledUrl": "http://localhost:19145/recommendations",
+  "initialOverflowX": 0,
+  "scrolledOverflowX": 0,
+  "visibleFooterAfterScroll": true
+}

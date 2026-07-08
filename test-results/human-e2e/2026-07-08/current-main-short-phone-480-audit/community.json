@@ -1,0 +1,120 @@
+{
+  "route": "/community",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "rect": {
+        "bottom": 267.91566467285156,
+        "height": 115.94357299804688,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 151.9720916748047,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 115.94357299804688,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 2,
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "rect": {
+        "bottom": 399.8331527709961,
+        "height": 99.93932342529297,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 299.8938293457031,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 99.93932342529297,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": true,
+      "hitBlocked": false,
+      "index": 3,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "rect": {
+        "bottom": 507.76700592041016,
+        "height": 101.9417495727539,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 405.82525634765625,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 75.17474365234375,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": "[Circular]",
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "tabTop": 481,
+      "type": "clipped-control"
+    }
+  ],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/community",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “gla"
+}

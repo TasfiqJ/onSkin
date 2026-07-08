@@ -1,0 +1,29 @@
+{
+  "bottomOverlaps": [
+    {
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 408.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Continue"
+    }
+  ],
+  "overflows": [],
+  "placeholderMatches": [],
+  "rawLeakMatches": [],
+  "sampleText": "First, your date of birth. RoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date. DAY MONTH YEAR Continue",
+  "title": "",
+  "under44": [],
+  "url": "/onboarding/age",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

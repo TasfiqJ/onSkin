@@ -1,0 +1,81 @@
+{
+  "url": "http://localhost:19144/recommendations",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "bodyBox": {
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "clientHeight": 480
+  },
+  "horizontalOverflow": false,
+  "title": {
+    "top": 240,
+    "bottom": 308,
+    "left": 32,
+    "right": 288,
+    "width": 256,
+    "height": 68,
+    "visible": true
+  },
+  "subtitleTail": {
+    "top": 122,
+    "bottom": 142,
+    "left": 24,
+    "right": 159.140625,
+    "width": 135.140625,
+    "height": 20,
+    "visible": true
+  },
+  "foot": {
+    "top": 560,
+    "bottom": 600,
+    "left": 32,
+    "right": 288,
+    "width": 256,
+    "height": 40,
+    "visible": false
+  },
+  "titleClearsSubtitle": true,
+  "footVisible": false,
+  "controls": [
+    {
+      "text": "<",
+      "top": 4,
+      "bottom": 52,
+      "left": 24,
+      "width": 48,
+      "height": 48,
+      "visible": true
+    },
+    {
+      "text": "Preference",
+      "top": 4,
+      "bottom": 52,
+      "left": 194.515625,
+      "width": 101.484375,
+      "height": 48,
+      "visible": true
+    }
+  ],
+  "smallControls": [],
+  "scrollables": [
+    {
+      "index": 55,
+      "tag": "DIV",
+      "role": null,
+      "text": "✓\nYour routine look  complete.\nClean er, treatment, moi turi er and SPF. All cov",
+      "top": 142,
+      "bottom": 480,
+      "width": 272,
+      "height": 338,
+      "clientHeight": 338,
+      "scrollHeight": 570,
+      "scrollTop": 0,
+      "overflowY": "auto"
+    }
+  ],
+  "checkGlyphs": []
+}

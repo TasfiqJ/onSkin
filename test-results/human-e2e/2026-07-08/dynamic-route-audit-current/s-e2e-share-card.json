@@ -1,0 +1,48 @@
+{
+  "actualPath": "/s/e2e-share-card",
+  "badPlaceholder": false,
+  "controls": [
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 387.45451736450195,
+        "height": 55.99211502075195,
+        "right": 296.38956451416016,
+        "width": 272.3907775878906,
+        "x": 23.99878692626953,
+        "y": 331.46240234375
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Scan a product"
+    },
+    {
+      "aria": null,
+      "rect": {
+        "bottom": 455.4460029602051,
+        "height": 55.99211502075195,
+        "right": 296.38956451416016,
+        "width": 272.3907775878906,
+        "x": 23.99878692626953,
+        "y": 399.4538879394531
+      },
+      "role": "button",
+      "testId": null,
+      "text": "Add manually"
+    }
+  ],
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "mojibake": false,
+  "rawLeaks": [],
+  "route": "/s/e2e-share-card",
+  "tabOverlaps": [],
+  "textSample": "SHELF CHECK Check your own shelf. Shared cards open to a fresh shelf check. RoutineKind never puts product names, profile details, photos, or health context in public links. Scan a product Add manually",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleAlerts": [],
+  "hasJsDialog": false
+}

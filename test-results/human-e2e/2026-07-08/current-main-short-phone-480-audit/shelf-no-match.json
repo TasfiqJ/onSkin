@@ -1,0 +1,114 @@
+{
+  "route": "/shelf/no-match",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Close",
+      "rect": {
+        "bottom": 118.64381408691406,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 70.646240234375,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "S Search catalog Try name or brand instead",
+      "rect": {
+        "bottom": 340.594669342041,
+        "height": 54.00485610961914,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 286.5898132324219,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 54.00485610961914,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 2,
+      "label": "I Scan the ingredient list We'll read the INCI text",
+      "rect": {
+        "bottom": 400.59164810180664,
+        "height": 54.00485610961914,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 346.5867919921875,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 54.00485610961914,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 3,
+      "label": "+ Add it by hand Always works, even offline",
+      "rect": {
+        "bottom": 460.58862686157227,
+        "height": 54.00485610961914,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 406.5837707519531,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 54.00485610961914,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/shelf/no-match",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it"
+}

@@ -1,0 +1,68 @@
+{
+  "route": "/cycle/why-tonight",
+  "bottomControls": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Dismiss",
+      "rect": {
+        "bottom": 247.63351440429688,
+        "height": 247.63351440429688,
+        "left": 0,
+        "right": 320.38836669921875,
+        "top": 0,
+        "width": 320.38836669921875
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 247.63351440429688,
+      "visibleWidth": 320
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Got it",
+      "rect": {
+        "bottom": 440.5946846008301,
+        "height": 55.99211502075195,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 384.6025695800781,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/cycle/why-tonight",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "No cycle is running yet. Add an active to get started. Got it"
+}

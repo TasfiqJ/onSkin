@@ -1,0 +1,263 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Replenishment",
+      "label": "Replenishment",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 134.2,
+        "y": 141.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "7:30 AM",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Morning routine 7:30 AM",
+      "rect": {
+        "bottom": 173.9,
+        "height": 64,
+        "left": 38,
+        "right": 230.4,
+        "top": 110,
+        "width": 192.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 256.4,
+        "y": 141.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Morning routine",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Morning routine",
+      "rect": {
+        "bottom": 165.9,
+        "height": 48,
+        "left": 230.4,
+        "right": 282.4,
+        "top": 117.9,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 134.2,
+        "y": 234.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "9:30 PM",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Evening · tonight’s step 9:30 PM",
+      "rect": {
+        "bottom": 266.9,
+        "height": 64,
+        "left": 38,
+        "right": 230.4,
+        "top": 202.9,
+        "width": 192.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 256.4,
+        "y": 234.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Evening · tonight’s step",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 4,
+      "intersectsViewport": true,
+      "label": "Evening · tonight’s step",
+      "rect": {
+        "bottom": 258.9,
+        "height": 48,
+        "left": 230.4,
+        "right": 282.4,
+        "top": 210.9,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 256.4,
+        "y": 358.8
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Streak & adherence",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 5,
+      "intersectsViewport": true,
+      "label": "Streak & adherence",
+      "rect": {
+        "bottom": 382.8,
+        "height": 48,
+        "left": 230.4,
+        "right": 282.4,
+        "top": 334.8,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 256.4,
+        "y": 435.8
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Replenishment",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 6,
+      "intersectsViewport": true,
+      "label": "Replenishment",
+      "rect": {
+        "bottom": 459.8,
+        "height": 48,
+        "left": 230.4,
+        "right": 282.4,
+        "top": 411.8,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 256.4,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress-photo nudge",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 7,
+      "intersectsViewport": false,
+      "label": "Progress-photo nudge",
+      "rect": {
+        "bottom": 536.7,
+        "height": 48,
+        "left": 230.4,
+        "right": 282.4,
+        "top": 488.7,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 256.4,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress-photo nudge",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 8,
+      "intersectsViewport": false,
+      "label": "Tips & announcements",
+      "rect": {
+        "bottom": 660.7,
+        "height": 48,
+        "left": 230.4,
+        "right": 282.4,
+        "top": 612.7,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "div",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/settings/notifications",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+  "jsDialog": null
+}

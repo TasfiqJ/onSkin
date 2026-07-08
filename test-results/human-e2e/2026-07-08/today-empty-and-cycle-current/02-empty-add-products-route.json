@@ -1,0 +1,32 @@
+{
+  "path": "/shelf/manual",
+  "search": "",
+  "text": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nPRODUCT NAME\nBRAND\nCATEGORY\nChoose\n▾\nINGREDIENTS · optional, we’ll find the actives\nPick a category and we'll estimate the PAO. You can change it next.\nContinue",
+  "overflowX": 0,
+  "visibleControls": [
+    {
+      "text": "x",
+      "width": 48,
+      "height": 48,
+      "top": 8,
+      "bottom": 56,
+      "visible": true
+    },
+    {
+      "text": "Choose▾",
+      "width": 136,
+      "height": 50,
+      "top": 230,
+      "bottom": 280,
+      "visible": true
+    },
+    {
+      "text": "Continue",
+      "width": 272,
+      "height": 56,
+      "top": 500,
+      "bottom": 556,
+      "visible": true
+    }
+  ]
+}

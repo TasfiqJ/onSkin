@@ -1,0 +1,76 @@
+{
+  "route": "/today?routine=PM",
+  "bottomControls": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "You're exploring Pro. Manage your plan",
+      "rect": {
+        "bottom": 73.9381103515625,
+        "height": 73.9381103515625,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 0,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 73.9381103515625,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Add products",
+      "rect": {
+        "bottom": 360.9071846008301,
+        "height": 55.99211502075195,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 304.9150695800781,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 232.40292358398438
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": {
+    "bottom": 466.5958938598633,
+    "height": 65.98908233642578,
+    "left": 7.994539260864258,
+    "right": 312.39383125305176,
+    "text": "Today Progress Shelf You",
+    "top": 400.6068115234375,
+    "width": 304.3992919921875
+  },
+  "url": "http://localhost:8205/today?routine=PM",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 · 9:09 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+}

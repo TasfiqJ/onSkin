@@ -1,0 +1,34 @@
+{
+  "actualPath": "/recommendations/routine_completion%3Amineral_spf",
+  "badPlaceholder": false,
+  "controls": [
+    {
+      "aria": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "right": 71.9963607788086,
+        "width": 47.99757385253906,
+        "x": 23.99878692626953,
+        "y": 3.989684581756592
+      },
+      "role": "button",
+      "testId": null,
+      "text": "<"
+    }
+  ],
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "mojibake": false,
+  "rawLeaks": [],
+  "route": "/recommendations/routine_completion%3Amineral_spf",
+  "tabOverlaps": [],
+  "textSample": "< Recommendation WHAT A mineral SPF 30+ e.g. a zinc-based daily SPF 30 specific products, ranked by fit WHY Your morning routine has no SPF, and daily SPF is the single highest-impact step. HOW WE DECIDED profile Your skin the gap No SPF in your routine evidence Daily SPF. Broad consensus fit Matched to your profile caveat Mineral SPF can leave a slight white cast Add to shelf Not for me A suggestion, not a must, and we won’t keep asking.",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleAlerts": [],
+  "hasJsDialog": false
+}

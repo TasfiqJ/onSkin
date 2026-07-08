@@ -1,0 +1,165 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Terms›",
+      "label": "Terms›",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Privacy›",
+      "label": "Privacy›",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 222.9
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "See RoutineKind Pro",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "See RoutineKind Pro",
+      "rect": {
+        "bottom": 247.9,
+        "height": 50,
+        "left": 41,
+        "right": 279.4,
+        "top": 197.9,
+        "width": 238.5
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 311.3
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore purchases",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Restore purchases›",
+      "rect": {
+        "bottom": 337.8,
+        "height": 52.9,
+        "left": 38,
+        "right": 282.4,
+        "top": 284.9,
+        "width": 244.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 364.3
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms›",
+      "hitTag": "button",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Terms›",
+      "rect": {
+        "bottom": 390.8,
+        "height": 52.9,
+        "left": 38,
+        "right": 282.4,
+        "top": 337.8,
+        "width": 244.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 416.7
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy›",
+      "hitTag": "button",
+      "inBottom96": true,
+      "index": 4,
+      "intersectsViewport": true,
+      "label": "Privacy›",
+      "rect": {
+        "bottom": 442.7,
+        "height": 52,
+        "left": 38,
+        "right": 282.4,
+        "top": 390.8,
+        "width": 244.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/settings/subscription",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Subscription You’re on the free plan The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime. See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+  "jsDialog": null
+}

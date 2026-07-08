@@ -1,0 +1,106 @@
+{
+  "commerceGoto2": {
+    "ok": true,
+    "error": null
+  },
+  "commerceState2": {
+    "href": "http://localhost:19140/commerce/consent",
+    "viewport": {
+      "clientHeight": 571,
+      "clientWidth": 320,
+      "innerHeight": 571,
+      "innerWidth": 320,
+      "scrollHeight": 571,
+      "scrollWidth": 320
+    },
+    "textChecks": {
+      "hasAllow": true,
+      "hasBody": true,
+      "hasDecline": true,
+      "hasMojibake": false,
+      "hasTitle": true
+    },
+    "dialog": {
+      "ariaHidden": null,
+      "ariaModal": "true",
+      "bottom": 571,
+      "height": 527,
+      "label": "Before we show where to buy",
+      "left": 0,
+      "maxHeight": "527px",
+      "overflowY": "hidden",
+      "paddingBottom": "0px",
+      "right": 320,
+      "role": "dialog",
+      "tabIndex": null,
+      "tag": "div",
+      "top": 44,
+      "visible": true,
+      "width": 320
+    },
+    "footer": {
+      "ariaHidden": null,
+      "ariaModal": null,
+      "bottom": 491,
+      "height": 54,
+      "label": "Allow where-to-buy links",
+      "left": 28,
+      "maxHeight": "none",
+      "overflowY": "visible",
+      "paddingBottom": "0px",
+      "right": 292,
+      "role": "button",
+      "tabIndex": "0",
+      "tag": "button",
+      "top": 437,
+      "visible": true,
+      "width": 264
+    },
+    "controls": [
+      {
+        "label": "Before we show where to buy",
+        "role": "dialog",
+        "ariaModal": "true",
+        "ariaHidden": null,
+        "tabIndex": null,
+        "width": 320,
+        "height": 527,
+        "top": 44,
+        "bottom": 571,
+        "maxHeight": "527px",
+        "paddingBottom": "0px"
+      },
+      {
+        "label": "Dismiss",
+        "role": "button",
+        "ariaModal": null,
+        "ariaHidden": null,
+        "tabIndex": "0",
+        "width": 48,
+        "height": 48,
+        "top": 60,
+        "bottom": 108,
+        "maxHeight": "none",
+        "paddingBottom": "0px"
+      },
+      {
+        "label": "Not now",
+        "role": "button",
+        "ariaModal": null,
+        "ariaHidden": null,
+        "tabIndex": "0",
+        "width": 264,
+        "height": 48,
+        "top": 491,
+        "bottom": 539,
+        "maxHeight": "none",
+        "paddingBottom": "0px"
+      }
+    ],
+    "horizontalOverflow": 0
+  },
+  "screenshotResult": {
+    "ok": false,
+    "error": "Unable to capture screenshot"
+  }
+}

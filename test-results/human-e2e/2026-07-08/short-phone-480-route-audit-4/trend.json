@@ -1,0 +1,55 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Back to Progress",
+      "label": "Back to Progress",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 160.2,
+        "y": 416.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to Progress",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Back to Progress",
+      "rect": {
+        "bottom": 444.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 388.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/trend",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress",
+  "jsDialog": null
+}

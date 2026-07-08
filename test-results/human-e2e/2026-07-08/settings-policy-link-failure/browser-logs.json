@@ -1,0 +1,82 @@
+{
+  "browserLogs": [
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "location": {
+        "url": "http://localhost:19146/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+        "line": 70869,
+        "column": 25,
+        "lineNumber": 70869,
+        "columnNumber": 25
+      }
+    },
+    {
+      "type": "log",
+      "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "location": {
+        "url": "http://localhost:19146/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+        "line": 70869,
+        "column": 25,
+        "lineNumber": 70869,
+        "columnNumber": 25
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "location": {
+        "url": "http://localhost:19146/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+        "line": 70869,
+        "column": 25,
+        "lineNumber": 70869,
+        "columnNumber": 25
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "location": {
+        "url": "http://localhost:19146/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+        "line": 70869,
+        "column": 25,
+        "lineNumber": 70869,
+        "columnNumber": 25
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "location": {
+        "url": "http://localhost:19146/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true",
+        "line": 70869,
+        "column": 25,
+        "lineNumber": 70869,
+        "columnNumber": 25
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "location": {
+        "url": "https://blocked-supabase-url.invalid/rest/v1/consents?select=consent_type%2Cgranted%2Cgranted_at&order=granted_at.desc",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+      "location": {
+        "url": "https://blocked-supabase-url.invalid/rest/v1/consents?select=consent_type%2Cgranted%2Cgranted_at&order=granted_at.desc",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "pageErrors": []
+}

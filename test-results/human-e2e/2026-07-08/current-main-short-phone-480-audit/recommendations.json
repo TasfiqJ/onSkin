@@ -1,0 +1,120 @@
+{
+  "route": "/recommendations",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Preferences",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.9180908203125,
+        "right": 296.3895797729492,
+        "top": 3.989684581756592,
+        "width": 101.47148895263672
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 101.47148895263672
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 2,
+      "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "rect": {
+        "bottom": 354.8240509033203,
+        "height": 170.87379455566406,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 183.95025634765625,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 170.87379455566406,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": true,
+      "hitBlocked": false,
+      "index": 3,
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "rect": {
+        "bottom": 537.6972198486328,
+        "height": 170.87379455566406,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 366.82342529296875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 114.17657470703125,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": "[Circular]",
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "tabTop": 481,
+      "type": "clipped-control"
+    }
+  ],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/recommendations",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser S"
+}

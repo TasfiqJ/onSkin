@@ -1,0 +1,168 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Unmatched Route",
+      "label": "expo-router-unmatched | Unmatched RoutePage could not be found.http://localhost:8185/recommendations/detail/seed-cleanserGo back•Sitemap",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Sitemap",
+      "label": "Sitemap",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [
+    {
+      "centerInsideViewport": true,
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "rect": "[Circular]"
+    },
+    {
+      "centerInsideViewport": true,
+      "label": "Sitemap",
+      "rect": "[Circular]"
+    }
+  ],
+  "controls": [
+    {
+      "center": {
+        "x": 160.2,
+        "y": 240.3
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Unmatched Route",
+      "hitTag": "h1",
+      "inBottom96": true,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "expo-router-unmatched | Unmatched RoutePage could not be found.http://localhost:8185/recommendations/detail/seed-cleanserGo back•Sitemap",
+      "rect": {
+        "bottom": 480.6,
+        "height": 480.6,
+        "left": 0,
+        "right": 320.4,
+        "top": 0,
+        "width": 320.4
+      },
+      "role": "",
+      "tag": "div",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 408.8
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": true,
+      "hitBlocked": false,
+      "hitLabel": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "hitTag": "span",
+      "inBottom96": true,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "rect": {
+        "bottom": 428.2,
+        "height": 38.8,
+        "left": -2.3,
+        "right": 322.7,
+        "top": 389.4,
+        "width": 325
+      },
+      "role": "link",
+      "tag": "a",
+      "under44": true
+    },
+    {
+      "center": {
+        "x": 212.3,
+        "y": 469.3
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": true,
+      "hitBlocked": false,
+      "hitLabel": "Sitemap",
+      "hitTag": "span",
+      "inBottom96": true,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Sitemap",
+      "rect": {
+        "bottom": 482.4,
+        "height": 26.2,
+        "left": 176.3,
+        "right": 248.2,
+        "top": 456.2,
+        "width": 71.8
+      },
+      "role": "link",
+      "tag": "a",
+      "under44": true
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [
+    {
+      "label": "Unmatched Route",
+      "left": -19.3,
+      "right": 339.7,
+      "tag": "h1",
+      "width": 359
+    },
+    {
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "left": -2.3,
+      "right": 322.7,
+      "tag": "a",
+      "width": 325
+    },
+    {
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "left": -2.3,
+      "right": 322.7,
+      "tag": "div",
+      "width": 325
+    },
+    {
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "left": -2.3,
+      "right": 322.7,
+      "tag": "span",
+      "width": 325
+    }
+  ],
+  "href": "http://localhost:8185/recommendations/detail/seed-cleanser",
+  "scroll": {
+    "bodyHeight": 482,
+    "documentHeight": 483,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [
+    {
+      "label": "http://localhost:8185/recommendations/detail/seed-cleanser",
+      "rect": "[Circular]"
+    },
+    {
+      "label": "Sitemap",
+      "rect": "[Circular]"
+    }
+  ],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Unmatched Route Page could not be found. http://localhost:8185/recommendations/detail/seed-cleanser Go back • Sitemap",
+  "jsDialog": null
+}

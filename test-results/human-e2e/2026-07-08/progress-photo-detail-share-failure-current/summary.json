@@ -1,0 +1,37 @@
+{
+  "date": "2026-07-08",
+  "feature": "Progress photo detail share failure recovery",
+  "surface": "Expo web in Codex in-app browser",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1 npm --workspace apps/mobile run web -- --port 19163 --host localhost",
+  "route": "http://localhost:19163/progress/e2e-front-2026-04-01",
+  "result": "pass",
+  "assertions": {
+    "startingScreenVisible": true,
+    "shareIconVisible": true,
+    "shareIconSize": {
+      "width": 48,
+      "height": 48
+    },
+    "confirmationPanelVisible": true,
+    "confirmationControlsFullyVisible": true,
+    "failedShareFeedbackVisible": true,
+    "failedShareFeedbackRole": "alert",
+    "routeStayedOnPhotoDetail": true,
+    "horizontalOverflow": 0,
+    "browserWarnErrorLogs": 0
+  },
+  "evidence": {
+    "beforeScreenshot": "01-before-share.png",
+    "confirmationScreenshot": "02-share-confirmation.png",
+    "afterScreenshot": "03-after-share-failure.png",
+    "beforeState": "before-state.json",
+    "confirmationState": "confirmation-state.json",
+    "afterState": "after-state.json",
+    "browserLogs": "browser-logs.json"
+  },
+  "remainingRisk": "Native iOS/Android share sheet rejection after decrypting a real encrypted photo export still needs device QA."
+}

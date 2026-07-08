@@ -1,0 +1,202 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 390.6,
+          "height": 54,
+          "left": 24,
+          "right": 296.4,
+          "top": 336.6,
+          "width": 272.4
+        },
+        "text": "Keep my full routine"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+        "owned": false,
+        "x": 86.1,
+        "y": 393.8
+      },
+      "rect": {
+        "bottom": 417.8,
+        "height": 48,
+        "left": 62.1,
+        "right": 110.1,
+        "top": 369.8,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Terms"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 390.6,
+          "height": 54,
+          "left": 24,
+          "right": 296.4,
+          "top": 336.6,
+          "width": 272.4
+        },
+        "text": "Keep my full routine"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+        "owned": false,
+        "x": 159.5,
+        "y": 393.8
+      },
+      "rect": {
+        "bottom": 417.8,
+        "height": 48,
+        "left": 135.5,
+        "right": 183.5,
+        "top": 369.8,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Privacy"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 390.6,
+          "height": 54,
+          "left": 24,
+          "right": 296.4,
+          "top": 336.6,
+          "width": 272.4
+        },
+        "text": "Keep my full routine"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+        "owned": false,
+        "x": 233.5,
+        "y": 393.8
+      },
+      "rect": {
+        "bottom": 417.8,
+        "height": 48,
+        "left": 208.8,
+        "right": 258.3,
+        "top": 369.8,
+        "width": 49.5
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Restore"
+    },
+    {
+      "footer": {
+        "rect": {
+          "bottom": 390.6,
+          "height": 54,
+          "left": 24,
+          "right": 296.4,
+          "top": 336.6,
+          "width": 272.4
+        },
+        "text": "Keep my full routine"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Continue on free",
+        "owned": true,
+        "x": 160.2,
+        "y": 424.6
+      },
+      "rect": {
+        "bottom": 448.6,
+        "height": 48,
+        "left": 24,
+        "right": 296.4,
+        "top": 400.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Continue on free"
+    }
+  ],
+  "hitBlocked": [
+    {
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+        "owned": false,
+        "x": 86.1,
+        "y": 393.8
+      },
+      "rect": {
+        "bottom": 417.8,
+        "height": 48,
+        "left": 62.1,
+        "right": 110.1,
+        "top": 369.8,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Terms"
+    },
+    {
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+        "owned": false,
+        "x": 159.5,
+        "y": 393.8
+      },
+      "rect": {
+        "bottom": 417.8,
+        "height": 48,
+        "left": 135.5,
+        "right": 183.5,
+        "top": 369.8,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Privacy"
+    },
+    {
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on",
+        "owned": false,
+        "x": 233.5,
+        "y": 393.8
+      },
+      "rect": {
+        "bottom": 417.8,
+        "height": 48,
+        "left": 208.8,
+        "right": 258.3,
+        "top": 369.8,
+        "width": 49.5
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Restore"
+    }
+  ],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Terms · Privacy · Restore Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on free",
+  "title": "",
+  "under44": [],
+  "url": "/paywall/reoffer",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

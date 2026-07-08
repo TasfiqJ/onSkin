@@ -1,0 +1,180 @@
+{
+  "dialogs": [],
+  "geometries": [
+    {
+      "label": "Privacy policy",
+      "box": {
+        "x": 44,
+        "y": 197,
+        "width": 232,
+        "height": 70
+      }
+    },
+    {
+      "label": "Consumer health privacy",
+      "box": {
+        "x": 44,
+        "y": 315,
+        "width": 232,
+        "height": 94
+      }
+    },
+    {
+      "label": "Terms",
+      "box": {
+        "x": 44,
+        "y": 197,
+        "width": 232,
+        "height": 70
+      }
+    },
+    {
+      "label": "Support",
+      "box": {
+        "x": 44,
+        "y": 267,
+        "width": 232,
+        "height": 70
+      }
+    },
+    {
+      "label": "Account deletion",
+      "box": {
+        "x": 44,
+        "y": 337,
+        "width": 232,
+        "height": 90
+      }
+    },
+    {
+      "label": "Data export",
+      "box": {
+        "x": 44,
+        "y": 394,
+        "width": 232,
+        "height": 70
+      }
+    }
+  ],
+  "feedbackSnapshots": [
+    {
+      "label": "Privacy policy",
+      "feedbackBox": {
+        "x": 44,
+        "y": 267,
+        "width": 232,
+        "height": 48
+      }
+    },
+    {
+      "label": "Consumer health privacy",
+      "feedbackBox": {
+        "x": 44,
+        "y": 416,
+        "width": 232,
+        "height": 48
+      }
+    },
+    {
+      "label": "Terms",
+      "feedbackBox": {
+        "x": 44,
+        "y": 219,
+        "width": 232,
+        "height": 48
+      }
+    },
+    {
+      "label": "Support",
+      "feedbackBox": {
+        "x": 44,
+        "y": 289,
+        "width": 232,
+        "height": 48
+      }
+    },
+    {
+      "label": "Account deletion",
+      "feedbackBox": {
+        "x": 44,
+        "y": 379,
+        "width": 232,
+        "height": 48
+      }
+    },
+    {
+      "label": "Data export",
+      "feedbackBox": {
+        "x": 44,
+        "y": 416,
+        "width": 232,
+        "height": 48
+      }
+    }
+  ],
+  "summary": {
+    "url": "http://localhost:19146/you?section=privacy",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "body": {
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollHeight": 568,
+      "clientHeight": 568
+    },
+    "horizontalOverflow": 0,
+    "visibleText": "You\nACCOUNT\nSigned in\nSign out\nSUBSCRIPTION\nManage subscription\nFree plan\n>\nYOUR ROUTINE\nYour plan\n>\nEdit the order\n>\nMORE ROUTINE\nRetinoid ramp\n>\nStreak & adherence\n>\nWeekly check-in\n>\nRecent changes\n>\nFOR YOU\nRecommendations\n>\nRecommendation preferences\n>\nSkin Notes\nMyth vs evidence, reviewed and claim-safe.\n>\nSECURITY\nApp lock\nRequire your phone's unlock to open the app and your photo timeline.\nEncrypted cloud backup\nOff by default. A separate choice. Photos stay on this phone until you turn it on.\nREMINDERS\nReminders & notifications\nTiered, capped, at times you choose. Quiet hours & lock-screen discretion.\n>\nPRIVACY & CONSENT\nMarketing emails\nOff by default. Opt in anytime.\nPhotos & the no-AI-score promise\n>\nWithdraw health-data consent\nRecords your withdrawal in the consent ledger and deletes your collected health data.\n>\nPOLICIES\nPrivacy policy\nWhat data we collect, use, and share.\n>\nConsumer health privacy\nConsumer health data notice and rights.\n>\nTerms\nRules for using RoutineKind and subscription terms.\n>\nSupport\nHelp with accounts, billing, deletion, or export.\n>\nAccount deletion\nHow account deletion works before and after deleting in app.\n>\nData export\nHow to request and read your export.\n>\nLink unavailable. We could not open this policy link. Please try again.\nYOUR DATA\nExport my data\nDelete account\nPhotos stay on your device by default. No ads, no data sales.\nRoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist.\nToday\nProgress\nShelf\nYou",
+    "buttons": [
+      {
+        "text": "Privacy policy. What data we collect, use, and share.",
+        "top": -48,
+        "left": 44,
+        "width": 232,
+        "height": 70,
+        "visible": true
+      },
+      {
+        "text": "Consumer health privacy. Consumer health data notice and rights.",
+        "top": 22,
+        "left": 44,
+        "width": 232,
+        "height": 94,
+        "visible": true
+      },
+      {
+        "text": "Terms. Rules for using RoutineKind and subscription terms.",
+        "top": 116,
+        "left": 44,
+        "width": 232,
+        "height": 70,
+        "visible": true
+      },
+      {
+        "text": "Support. Help with accounts, billing, deletion, or export.",
+        "top": 186,
+        "left": 44,
+        "width": 232,
+        "height": 70,
+        "visible": true
+      },
+      {
+        "text": "Account deletion. How account deletion works before and after deleting in app.",
+        "top": 256,
+        "left": 44,
+        "width": 232,
+        "height": 90,
+        "visible": true
+      },
+      {
+        "text": "Data export. How to request and read your export.",
+        "top": 346,
+        "left": 44,
+        "width": 232,
+        "height": 70,
+        "visible": true
+      }
+    ]
+  }
+}

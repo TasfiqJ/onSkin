@@ -1,0 +1,159 @@
+{
+  "appSurface": "Expo web static export served locally",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "ask": {
+    "alertCount": 1,
+    "alertText": "Choice not savedWe could not save that Ask RoutineKind choice. Please try again.",
+    "controls": [
+      {
+        "ariaChecked": null,
+        "ariaDisabled": null,
+        "label": "Back",
+        "rect": {
+          "h": 48,
+          "w": 48,
+          "x": 24,
+          "y": 4
+        },
+        "role": "button",
+        "text": "<"
+      },
+      {
+        "ariaChecked": "false",
+        "ariaDisabled": null,
+        "label": "Enable Ask RoutineKind",
+        "rect": {
+          "h": 48,
+          "w": 52,
+          "x": 224,
+          "y": 185
+        },
+        "role": "switch",
+        "text": ""
+      },
+      {
+        "ariaChecked": null,
+        "ariaDisabled": null,
+        "label": null,
+        "rect": {
+          "h": 56,
+          "w": 272,
+          "x": 24,
+          "y": 481
+        },
+        "role": "button",
+        "text": "Open Ask RoutineKind"
+      }
+    ],
+    "dialogCount": 0,
+    "overflowX": 0,
+    "rawProviderErrorShown": false,
+    "route": "/ask/consent",
+    "switchChecked": "false",
+    "textIncludesFailure": true,
+    "hasJsDialog": false
+  },
+  "shelf": {
+    "alertCount": 0,
+    "controls": [
+      {
+        "label": "Close",
+        "rect": {
+          "h": 48,
+          "w": 48,
+          "x": 24,
+          "y": 8
+        },
+        "role": "button",
+        "text": "x"
+      },
+      {
+        "label": null,
+        "rect": {
+          "h": 48,
+          "w": 57,
+          "x": 239,
+          "y": 8
+        },
+        "role": "switch",
+        "text": "torch"
+      },
+      {
+        "label": null,
+        "rect": {
+          "h": 76,
+          "w": 280,
+          "x": 20,
+          "y": 297
+        },
+        "role": "button",
+        "text": "=Scan ingredient labelReview editable OCR"
+      },
+      {
+        "label": null,
+        "rect": {
+          "h": 76,
+          "w": 280,
+          "x": 20,
+          "y": 383
+        },
+        "role": "button",
+        "text": "SSearch catalogUse reviewed matches"
+      },
+      {
+        "label": null,
+        "rect": {
+          "h": 76,
+          "w": 280,
+          "x": 20,
+          "y": 469
+        },
+        "role": "button",
+        "text": "+Add it by handAlways works offline"
+      }
+    ],
+    "dialogCount": 0,
+    "hasCameraPermissionFallback": true,
+    "hasManualFallback": true,
+    "hasOcrFallback": true,
+    "hasOfflineCopy": true,
+    "hasSearchFallback": true,
+    "overflowX": 0,
+    "route": "/shelf/scan"
+  },
+  "logs": [
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T03:59:41.731Z",
+      "url": "http://127.0.0.1:8132/_expo/static/js/web/entry-9fd8c8281629c7e12bf4576cac28e775.js"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T04:01:15.201Z",
+      "url": "http://127.0.0.1:8132/_expo/static/js/web/entry-619aa549e684854320882eb2704aaaf9.js"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T04:02:15.339Z",
+      "url": "http://127.0.0.1:8132/_expo/static/js/web/entry-619aa549e684854320882eb2704aaaf9.js"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T04:03:09.509Z",
+      "url": "http://127.0.0.1:8132/_expo/static/js/web/entry-619aa549e684854320882eb2704aaaf9.js"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T04:03:11.798Z",
+      "url": "http://127.0.0.1:8132/_expo/static/js/web/entry-619aa549e684854320882eb2704aaaf9.js"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "route": "/recommendations/preferences",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Fragrance-free",
+      "rect": {
+        "bottom": 273.93812561035156,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 164.71480560302734,
+        "top": 225.9405517578125,
+        "width": 140.7160186767578
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 140.7160186767578
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 2,
+      "label": "Vegan",
+      "rect": {
+        "bottom": 273.93812561035156,
+        "height": 47.99757385253906,
+        "left": 172.7093505859375,
+        "right": 250.42476654052734,
+        "top": 225.9405517578125,
+        "width": 77.71541595458984
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 77.71541595458984
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 3,
+      "label": "Cruelty-free",
+      "rect": {
+        "bottom": 329.9302215576172,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 145.67658233642578,
+        "top": 281.9326477050781,
+        "width": 121.67779541015625
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 121.67779541015625
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 4,
+      "label": "Non-comedogenic",
+      "rect": {
+        "bottom": 385.92234802246094,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 187.69721221923828,
+        "top": 337.9247741699219,
+        "width": 163.69842529296875
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 163.69842529296875
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 5,
+      "label": "Sustainable",
+      "rect": {
+        "bottom": 441.9144744873047,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 141.2166290283203,
+        "top": 393.9169006347656,
+        "width": 117.21784210205078
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 117.21784210205078
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/recommendations/preferences",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options t"
+}

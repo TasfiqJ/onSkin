@@ -1,0 +1,315 @@
+{
+  "feature": "Onboarding product category absolute overlay sheet current compact pass",
+  "surface": "Codex in-app browser Expo web",
+  "url": "http://localhost:8233/onboarding/products",
+  "viewport": "320x480 override (reported 320x481)",
+  "command": "npm --workspace apps/mobile run web -- --port 8233 --clear",
+  "screenshots": [
+    "01-initial-320x480.png",
+    "02-product-typed-320x480.png",
+    "03-absolute-sheet-open-320x480.png",
+    "04-serum-selected-320x480.png",
+    "05-product-added-320x480.png"
+  ],
+  "checks": {
+    "initialOverflowX": 0,
+    "typedProductName": true,
+    "categoryButtonVisibleAfterTyping": true,
+    "namedSheetDialogCount": 1,
+    "sheetDialogLabel": "Choose product category",
+    "serumChipSelected": true,
+    "collapsedCategoryLabelPresent": true,
+    "productAdded": true,
+    "finalOverflowX": 0,
+    "openMinVisibleControlHeight": 47.6,
+    "finalMinVisibleControlHeight": 48,
+    "openBlockedControlCount": 3,
+    "finalBlockedControlCount": 0,
+    "jsDialogOpen": false,
+    "unexpectedCurrentOriginWarnErrorCount": 0
+  },
+  "expectedLocalWarnings": [],
+  "initial": {
+    "bodyText": "What's on your shelf?\nAdd the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf.\n0 OF 3 PRODUCTS\nThree products gives your first routine enough context to spot useful gaps or timing notes.\nPRODUCT NAME\nSkip for now",
+    "dialogCount": 0,
+    "href": "http://localhost:8233/onboarding/products",
+    "overflowX": 0,
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  },
+  "openState": {
+    "blockedControls": [
+      {
+        "aria": "Product name",
+        "hitSelfOrChild": false,
+        "rect": {
+          "h": 53.9,
+          "w": 232.4,
+          "x": 44,
+          "y": 215.4
+        },
+        "role": null,
+        "tag": "INPUT",
+        "text": ""
+      },
+      {
+        "aria": "Choose product category",
+        "hitSelfOrChild": false,
+        "rect": {
+          "h": 67.9,
+          "w": 272.4,
+          "x": 24,
+          "y": 332.7
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "CATEGORY · OPTIONAL Choose category >"
+      },
+      {
+        "aria": null,
+        "hitSelfOrChild": false,
+        "rect": {
+          "h": 56,
+          "w": 272.4,
+          "x": 24,
+          "y": 408.6
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Add to shelf"
+      }
+    ],
+    "controls": [
+      "[Circular]",
+      {
+        "aria": "Dismiss category picker",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 47.6,
+          "w": 320.4,
+          "x": 0,
+          "y": 0
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": ""
+      },
+      {
+        "aria": "Choose product category",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 433,
+          "w": 320.4,
+          "x": 0,
+          "y": 47.6
+        },
+        "role": "dialog",
+        "tag": "DIV",
+        "text": "Product category Close Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm"
+      },
+      {
+        "aria": "Close category picker",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 64,
+          "x": 232.4,
+          "y": 84.6
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Close"
+      },
+      {
+        "aria": "Cleanser",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 90.4,
+          "x": 24,
+          "y": 148.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Cleanser"
+      },
+      {
+        "aria": "Toner",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 70,
+          "x": 122.4,
+          "y": 148.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Toner"
+      },
+      {
+        "aria": "Serum",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 74.6,
+          "x": 200.4,
+          "y": 148.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Serum"
+      },
+      {
+        "aria": "Treatment",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 98.3,
+          "x": 24,
+          "y": 204.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Treatment"
+      },
+      {
+        "aria": "Moisturiser",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 105.3,
+          "x": 130.3,
+          "y": 204.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Moisturiser"
+      },
+      {
+        "aria": "SPF",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 57.6,
+          "x": 24,
+          "y": 260.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "SPF"
+      },
+      {
+        "aria": "Oil / balm",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 95.7,
+          "x": 89.5,
+          "y": 260.5
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Oil / balm"
+      },
+      "[Circular]",
+      "[Circular]"
+    ],
+    "dialogCount": 1,
+    "dialogs": [
+      {
+        "aria": "Choose product category",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 433,
+          "w": 320.4,
+          "x": 0,
+          "y": 47.6
+        },
+        "role": "dialog",
+        "tag": "DIV",
+        "text": "Product category Close Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm"
+      }
+    ],
+    "href": "http://localhost:8233/onboarding/products",
+    "minVisibleControlHeight": 47.6,
+    "overflowX": 0,
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  },
+  "selectedState": {
+    "bodyText": "What's on your shelf?\nAdd the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf.\n0 OF 3 PRODUCTS\nThree products gives your first routine enough context to spot useful gaps or timing notes.\nPRODUCT NAME\nCATEGORY · OPTIONAL\nSerum\n>\nAdd to shelf",
+    "categoryLabelPresent": true,
+    "dialogCount": 0,
+    "overflowX": 0
+  },
+  "finalMetrics": {
+    "blockedControls": [],
+    "bodyText": "What's on your shelf?\nAdd the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf.\n1 OF 3 PRODUCTS\n2 more products gives your first insight more to work with.\nPRODUCT NAME\n1 ON YOUR SHELF\nRetinol serum\n×\nAdd 2 more\nContinue with 1 product",
+    "controls": [
+      {
+        "aria": "Product name",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 53.9,
+          "w": 232.4,
+          "x": 44,
+          "y": 118.7
+        },
+        "role": null,
+        "text": "Product name",
+        "visible": true
+      },
+      {
+        "aria": "Remove Retinol serum",
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 48,
+          "w": 48,
+          "x": 231.4,
+          "y": 249.5
+        },
+        "role": "button",
+        "text": "×",
+        "visible": true
+      },
+      {
+        "aria": null,
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 56,
+          "w": 272.4,
+          "x": 24,
+          "y": 348.6
+        },
+        "role": "button",
+        "text": "Add 2 more",
+        "visible": true
+      },
+      {
+        "aria": null,
+        "hitSelfOrChild": true,
+        "rect": {
+          "h": 56,
+          "w": 272.4,
+          "x": 24,
+          "y": 408.6
+        },
+        "role": "button",
+        "text": "Continue with 1 product",
+        "visible": true
+      }
+    ],
+    "dialogCount": 0,
+    "href": "http://localhost:8233/onboarding/products",
+    "minVisibleControlHeight": 48,
+    "overflowX": 0,
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  }
+}

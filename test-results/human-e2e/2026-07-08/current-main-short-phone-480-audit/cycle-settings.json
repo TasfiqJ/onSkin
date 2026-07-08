@@ -1,0 +1,110 @@
+{
+  "route": "/cycle/settings",
+  "bottomControls": [],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Done",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Gentle. more recovery",
+      "rect": {
+        "bottom": 180.4763412475586,
+        "height": 83.93507385253906,
+        "left": 23.99878692626953,
+        "right": 109.46602630615234,
+        "top": 96.54126739501953,
+        "width": 85.46723937988281
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 83.93507385253906,
+      "visibleWidth": 85.46723937988281
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 2,
+      "label": "Classic. balanced rest",
+      "rect": {
+        "bottom": 180.4763412475586,
+        "height": 83.93507385253906,
+        "left": 117.46056365966797,
+        "right": 202.92780303955078,
+        "top": 96.54126739501953,
+        "width": 85.46723937988281
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 83.93507385253906,
+      "visibleWidth": 85.46723937988281
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 3,
+      "label": "Advanced. fewer rest",
+      "rect": {
+        "bottom": 180.4763412475586,
+        "height": 83.93507385253906,
+        "left": 210.92233276367188,
+        "right": 296.3895721435547,
+        "top": 96.54126739501953,
+        "width": 85.46723937988281
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 83.93507385253906,
+      "visibleWidth": 85.46723937988281
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/cycle/settings",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "x Cycle settings VARIANT Gentle more recovery Classic balanced rest Advanced fewer rest Add a retinoid or an exfoliating acid to your shelf and we'll build your cycle here."
+}

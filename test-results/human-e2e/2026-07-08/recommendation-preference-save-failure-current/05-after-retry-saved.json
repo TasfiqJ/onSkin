@@ -1,0 +1,147 @@
+{
+  "url": "http://localhost:19166/recommendations/preferences",
+  "text": "<\nPreferences\nRecommendation preferences\nThese shape what fits you. They never change what sells.\nVALUES\nFragrance-free\nVegan\nCruelty-free\nNon-comedogenic\nSustainable\nBUDGET\nDrugstore\nMid-range\nPremium\nTEXTURE\nGel\nCream\nFluid\nBalm\nOil\n✦\nWe prioritise options that fit these.",
+  "horizontalOverflow": 0,
+  "buttons": [
+    {
+      "text": "<",
+      "label": "Back",
+      "selected": null,
+      "disabled": null,
+      "width": 48,
+      "height": 48,
+      "top": 4,
+      "bottom": 52
+    },
+    {
+      "text": "Fragrance-free",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 141,
+      "height": 48,
+      "top": 226,
+      "bottom": 274
+    },
+    {
+      "text": "Vegan",
+      "label": "",
+      "selected": "true",
+      "disabled": null,
+      "width": 78,
+      "height": 48,
+      "top": 226,
+      "bottom": 274
+    },
+    {
+      "text": "Cruelty-free",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 122,
+      "height": 48,
+      "top": 282,
+      "bottom": 330
+    },
+    {
+      "text": "Non-comedogenic",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 164,
+      "height": 48,
+      "top": 338,
+      "bottom": 386
+    },
+    {
+      "text": "Sustainable",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 117,
+      "height": 48,
+      "top": 394,
+      "bottom": 442
+    },
+    {
+      "text": "Drugstore",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 85,
+      "height": 48,
+      "top": 486,
+      "bottom": 534
+    },
+    {
+      "text": "Mid-range",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 85,
+      "height": 48,
+      "top": 486,
+      "bottom": 534
+    },
+    {
+      "text": "Premium",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 85,
+      "height": 48,
+      "top": 486,
+      "bottom": 534
+    },
+    {
+      "text": "Gel",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 48,
+      "height": 48,
+      "top": 578,
+      "bottom": 626
+    },
+    {
+      "text": "Cream",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 65,
+      "height": 48,
+      "top": 578,
+      "bottom": 626
+    },
+    {
+      "text": "Fluid",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 55,
+      "height": 48,
+      "top": 578,
+      "bottom": 626
+    },
+    {
+      "text": "Balm",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 55,
+      "height": 48,
+      "top": 578,
+      "bottom": 626
+    },
+    {
+      "text": "Oil",
+      "label": "",
+      "selected": "false",
+      "disabled": null,
+      "width": 48,
+      "height": 48,
+      "top": 634,
+      "bottom": 682
+    }
+  ]
+}

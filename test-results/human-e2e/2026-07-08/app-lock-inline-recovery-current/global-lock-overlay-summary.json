@@ -1,0 +1,102 @@
+{
+  "afterAutoPrompt": {
+    "alerts": [
+      {
+        "height": 40,
+        "inViewport": true,
+        "text": "App lock is not available on this device right now.",
+        "width": 230,
+        "x": 45,
+        "y": 280
+      }
+    ],
+    "bodyIncludesBrand": true,
+    "bodyIncludesLockedCopy": true,
+    "bodyIncludesTodayContent": true,
+    "controls": [
+      {
+        "ariaLabel": null,
+        "height": 56,
+        "inViewport": true,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Add products",
+        "visible": true,
+        "width": 230,
+        "x": 45,
+        "y": 246
+      },
+      {
+        "ariaLabel": "Today tab",
+        "height": 54,
+        "inViewport": true,
+        "role": "tab",
+        "tag": "DIV",
+        "text": "Today",
+        "visible": true,
+        "width": 76,
+        "x": 9,
+        "y": 495
+      },
+      {
+        "ariaLabel": "Progress tab",
+        "height": 54,
+        "inViewport": true,
+        "role": "tab",
+        "tag": "DIV",
+        "text": "Progress",
+        "visible": true,
+        "width": 76,
+        "x": 85,
+        "y": 495
+      },
+      {
+        "ariaLabel": "Shelf tab",
+        "height": 54,
+        "inViewport": true,
+        "role": "tab",
+        "tag": "DIV",
+        "text": "Shelf",
+        "visible": true,
+        "width": 76,
+        "x": 160,
+        "y": 495
+      },
+      {
+        "ariaLabel": "You tab",
+        "height": 54,
+        "inViewport": true,
+        "role": "tab",
+        "tag": "DIV",
+        "text": "You",
+        "visible": true,
+        "width": 76,
+        "x": 236,
+        "y": 495
+      },
+      {
+        "ariaLabel": null,
+        "height": 48,
+        "inViewport": true,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Unlock",
+        "visible": true,
+        "width": 106,
+        "x": 107,
+        "y": 357
+      }
+    ],
+    "overflowX": 0,
+    "unlockControls": [
+      "[Circular]"
+    ],
+    "url": "http://localhost:8158/today",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "dialogType": null,
+  "currentPortLogs": []
+}

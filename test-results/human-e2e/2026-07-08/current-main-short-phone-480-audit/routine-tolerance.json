@@ -1,0 +1,114 @@
+{
+  "route": "/routine/tolerance",
+  "bottomControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Skip tolerance check-in",
+      "rect": {
+        "bottom": 100.5612907409668,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 52.563716888427734,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Comfortable. We may offer a small step-up",
+      "rect": {
+        "bottom": 320.5400619506836,
+        "height": 71.9963607788086,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 248.543701171875,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 71.9963607788086,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 2,
+      "label": "A bit dry. We'll hold your pace steady",
+      "rect": {
+        "bottom": 400.53096771240234,
+        "height": 71.9963607788086,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 328.53460693359375,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 71.9963607788086,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 3,
+      "label": "Irritated. We'll add recovery nights & ease off",
+      "rect": {
+        "bottom": 480.5218734741211,
+        "height": 71.9963607788086,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 408.5255126953125,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 71.9963607788086,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/routine/tolerance",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save"
+}

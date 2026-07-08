@@ -1,0 +1,48 @@
+{
+  "bottomZoneControls": [
+    {
+      "footer": {
+        "rect": {
+          "bottom": 385.9,
+          "height": 48,
+          "left": 24,
+          "right": 187.7,
+          "top": 337.9,
+          "width": 163.7
+        },
+        "text": "Non-comedogenic"
+      },
+      "hit": {
+        "hitTag": "div",
+        "hitText": "Sustainable",
+        "owned": true,
+        "x": 82.6,
+        "y": 417.9
+      },
+      "rect": {
+        "bottom": 441.9,
+        "height": 48,
+        "left": 24,
+        "right": 141.2,
+        "top": 393.9,
+        "width": 117.2
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Sustainable"
+    }
+  ],
+  "hitBlocked": [],
+  "overflows": [],
+  "placeholders": [],
+  "rawLeaks": [],
+  "sampleText": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "title": "",
+  "under44": [],
+  "url": "/recommendations/preferences",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

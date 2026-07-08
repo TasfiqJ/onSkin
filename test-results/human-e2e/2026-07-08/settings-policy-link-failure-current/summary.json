@@ -1,0 +1,249 @@
+{
+  "targetUrl": "http://localhost:19147/settings/privacy",
+  "dialogs": [],
+  "interactions": [
+    {
+      "found": true,
+      "label": "Privacy policy",
+      "text": "Privacy policy. What data we collect, use, and share.",
+      "before": {
+        "top": 197,
+        "left": 44,
+        "bottom": 267,
+        "right": 276,
+        "width": 232,
+        "height": 70
+      },
+      "after": {
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 267,
+            "left": 44,
+            "width": 232,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "scrollY": 0
+      }
+    },
+    {
+      "found": true,
+      "label": "Consumer health privacy",
+      "text": "Consumer health privacy. Consumer health data notice and rights.",
+      "before": {
+        "top": 185,
+        "left": 44,
+        "bottom": 279,
+        "right": 276,
+        "width": 232,
+        "height": 94
+      },
+      "after": {
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 231,
+            "left": 44,
+            "width": 232,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "scrollY": 0
+      }
+    },
+    {
+      "found": true,
+      "label": "Terms",
+      "text": "Terms. Rules for using RoutineKind and subscription terms.",
+      "before": {
+        "top": 197,
+        "left": 44,
+        "bottom": 267,
+        "right": 276,
+        "width": 232,
+        "height": 70
+      },
+      "after": {
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 219,
+            "left": 44,
+            "width": 232,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "scrollY": 0
+      }
+    },
+    {
+      "found": true,
+      "label": "Support",
+      "text": "Support. Help with accounts, billing, deletion, or export.",
+      "before": {
+        "top": 197,
+        "left": 44,
+        "bottom": 267,
+        "right": 276,
+        "width": 232,
+        "height": 70
+      },
+      "after": {
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 219,
+            "left": 44,
+            "width": 232,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "scrollY": 0
+      }
+    },
+    {
+      "found": true,
+      "label": "Account deletion",
+      "text": "Account deletion. How account deletion works before and after deleting in app.",
+      "before": {
+        "top": 187,
+        "left": 44,
+        "bottom": 277,
+        "right": 276,
+        "width": 232,
+        "height": 90
+      },
+      "after": {
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 229,
+            "left": 44,
+            "width": 232,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "scrollY": 0
+      }
+    },
+    {
+      "found": true,
+      "label": "Data export",
+      "text": "Data export. How to request and read your export.",
+      "before": {
+        "top": 197,
+        "left": 44,
+        "bottom": 267,
+        "right": 276,
+        "width": 232,
+        "height": 70
+      },
+      "after": {
+        "alerts": [
+          {
+            "text": "Link unavailable. We could not open this policy link. Please try again.",
+            "top": 219,
+            "left": 44,
+            "width": 232,
+            "height": 48,
+            "visible": true
+          }
+        ],
+        "scrollY": 0
+      }
+    }
+  ],
+  "summary": {
+    "url": "http://localhost:19147/you?section=privacy",
+    "viewport": {
+      "width": 320,
+      "height": 568
+    },
+    "body": {
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollHeight": 568,
+      "clientHeight": 568
+    },
+    "horizontalOverflow": 0,
+    "visibleText": "You\nACCOUNT\nSigned in\nSign out\nSUBSCRIPTION\nManage subscription\nFree plan\n>\nYOUR ROUTINE\nYour plan\n>\nEdit the order\n>\nMORE ROUTINE\nRetinoid ramp\n>\nStreak & adherence\n>\nWeekly check-in\n>\nRecent changes\n>\nFOR YOU\nRecommendations\n>\nRecommendation preferences\n>\nSkin Notes\nMyth vs evidence, reviewed and claim-safe.\n>\nSECURITY\nApp lock\nRequire your phone's unlock to open the app and your photo timeline.\nEncrypted cloud backup\nOff by default. A separate choice. Photos stay on this phone until you turn it on.\nREMINDERS\nReminders & notifications\nTiered, capped, at times you choose. Quiet hours & lock-screen discretion.\n>\nPRIVACY & CONSENT\nMarketing emails\nOff by default. Opt in anytime.\nPhotos & the no-AI-score promise\n>\nWithdraw health-data consent\nRecords your withdrawal in the consent ledger and deletes your collected health data.\n>\nPOLICIES\nPrivacy policy\nWhat data we collect, use, and share.\n>\nConsumer health privacy\nConsumer health data notice and rights.\n>\nTerms\nRules for using RoutineKind and subscription terms.\n>\nSupport\nHelp with accounts, billing, deletion, or export.\n>\nAccount deletion\nHow account deletion works before and after deleting in app.\n>\nData export\nHow to request and read your export.\n>\nLink unavailable. We could not open this policy link. Please try again.\nYOUR DATA\nExport my data\nDelete account\nPhotos stay on your device by default. No ads, no data sales.\nRoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist.\nToday\nProgress\nShelf\nYou",
+    "buttons": [
+      {
+        "text": "Privacy policy. What data we collect, use, and share.",
+        "top": -245,
+        "left": 44,
+        "bottom": -175,
+        "right": 276,
+        "width": 232,
+        "height": 70,
+        "visible": false
+      },
+      {
+        "text": "Consumer health privacy. Consumer health data notice and rights.",
+        "top": -175,
+        "left": 44,
+        "bottom": -81,
+        "right": 276,
+        "width": 232,
+        "height": 94,
+        "visible": false
+      },
+      {
+        "text": "Terms. Rules for using RoutineKind and subscription terms.",
+        "top": -81,
+        "left": 44,
+        "bottom": -11,
+        "right": 276,
+        "width": 232,
+        "height": 70,
+        "visible": false
+      },
+      {
+        "text": "Support. Help with accounts, billing, deletion, or export.",
+        "top": -11,
+        "left": 44,
+        "bottom": 59,
+        "right": 276,
+        "width": 232,
+        "height": 70,
+        "visible": true
+      },
+      {
+        "text": "Account deletion. How account deletion works before and after deleting in app.",
+        "top": 59,
+        "left": 44,
+        "bottom": 149,
+        "right": 276,
+        "width": 232,
+        "height": 90,
+        "visible": true
+      },
+      {
+        "text": "Data export. How to request and read your export.",
+        "top": 149,
+        "left": 44,
+        "bottom": 219,
+        "right": 276,
+        "width": 232,
+        "height": 70,
+        "visible": true
+      }
+    ],
+    "alerts": [
+      {
+        "text": "Link unavailable. We could not open this policy link. Please try again.",
+        "top": 219,
+        "left": 44,
+        "width": 232,
+        "height": 48,
+        "visible": true
+      }
+    ]
+  }
+}

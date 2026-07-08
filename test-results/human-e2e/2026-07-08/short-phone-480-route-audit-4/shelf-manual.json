@@ -1,0 +1,191 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Ingredients | Paste or type the INCI list…",
+      "label": "Ingredients | Paste or type the INCI list…",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Continue",
+      "label": "Continue",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Cancel | x",
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 171
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Product name | e.g. Gentle Retinol Night Serum",
+      "hitTag": "input",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "Product name | e.g. Gentle Retinol Night Serum",
+      "rect": {
+        "bottom": 196,
+        "height": 50,
+        "left": 24,
+        "right": 296.4,
+        "top": 146,
+        "width": 272.4
+      },
+      "role": "",
+      "tag": "input",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 86,
+        "y": 255
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Brand | Brand",
+      "hitTag": "input",
+      "inBottom96": false,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "Brand | Brand",
+      "rect": {
+        "bottom": 280,
+        "height": 50,
+        "left": 24,
+        "right": 148,
+        "top": 230,
+        "width": 124
+      },
+      "role": "",
+      "tag": "input",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 228.2,
+        "y": 255
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Choose",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "Category | Choose▾",
+      "rect": {
+        "bottom": 280,
+        "height": 50,
+        "left": 160,
+        "right": 296.4,
+        "top": 230,
+        "width": 136.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 378.3
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Ingredients | Paste or type the INCI list…",
+      "hitTag": "textarea",
+      "inBottom96": true,
+      "index": 4,
+      "intersectsViewport": true,
+      "label": "Ingredients | Paste or type the INCI list…",
+      "rect": {
+        "bottom": 410.7,
+        "height": 64.8,
+        "left": 24,
+        "right": 296.4,
+        "top": 345.9,
+        "width": 272.4
+      },
+      "role": "",
+      "tag": "textarea",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 440.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Continue",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 5,
+      "intersectsViewport": true,
+      "label": "Continue",
+      "rect": {
+        "bottom": 468.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 412.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/shelf/manual",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "jsDialog": null
+}

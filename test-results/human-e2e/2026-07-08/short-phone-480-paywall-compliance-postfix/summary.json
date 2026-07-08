@@ -1,0 +1,86 @@
+[
+  {
+    "route": "/progress/capture",
+    "href": "http://localhost:8184/progress/capture",
+    "visibleCompliance": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\progress-capture.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\progress-capture.json"
+  },
+  {
+    "route": "/progress/review",
+    "href": "http://localhost:8184/progress/review",
+    "visibleCompliance": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\progress-review.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\progress-review.json"
+  },
+  {
+    "route": "/paywall/winback",
+    "href": "http://localhost:8184/paywall/winback",
+    "visibleCompliance": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\paywall-winback.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\paywall-winback.json"
+  },
+  {
+    "route": "/paywall/downgrade",
+    "href": "http://localhost:8184/paywall/downgrade",
+    "visibleCompliance": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\paywall-downgrade.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\paywall-downgrade.json"
+  },
+  {
+    "route": "/paywall/reoffer",
+    "href": "http://localhost:8184/paywall/reoffer",
+    "visibleCompliance": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "hitBlocked": [
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\paywall-reoffer.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-paywall-compliance-postfix\\paywall-reoffer.json"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "path": "/today",
+  "search": "?routine=AM",
+  "text": "TUESDAY, JULY 7\nGood morning.\nNO ROUTINE YET\nBuild a routine from your shelf.\nAdd the products you use and Today will become your AM/PM checklist.\nAdd products\nToday\nProgress\nShelf\nYou",
+  "overflowX": 0,
+  "visibleControls": [
+    {
+      "text": "Add products",
+      "width": 230,
+      "height": 56,
+      "top": 246,
+      "bottom": 302,
+      "visible": true
+    }
+  ]
+}
