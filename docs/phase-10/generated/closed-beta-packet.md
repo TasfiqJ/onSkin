@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-08T18:40:09.825Z
+Generated: 2026-07-08T18:53:56.294Z
 Status: blocked
-Git SHA: 3a2a675734496930050afa25c69a011cb58f5f79
+Git SHA: 76e8657b26944d00082103dc74047cdfd0d38bbb
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -62,8 +62,8 @@ Phase 9 packet status: blocked
 - `scripts/phase9/lib.mjs`: `d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `e1b2895dabe89a004bd01844d6c705fbafe303c7ddab9cd28eee5b94a7c71f24`
 - `scripts/phase10-11/public-contact-smoke.mjs`: `630ad5c5ff818df209ef7bfa990f2bf64fb22a257ca22acb0fd09fad782801e4`
-- `scripts/phase10/lib.mjs`: `f7603dc439343586c1aa6b254dd6200ec49ee3348b4de259f15340f1ca2cca2a`
-- `scripts/phase10/beta-readiness.mjs`: `0a5a07490b62e349c3b598c75b47b5b7625e737d5942893030c5ff174d539726`
+- `scripts/phase10/lib.mjs`: `9040fcc4eff8e848a72e953ded1318a87aea4b04d0f1102936336efe095ef85a`
+- `scripts/phase10/beta-readiness.mjs`: `f23f2b39deb6e7c9fa03e43186664e04e823911be871bdc5f536922f438a4b85`
 - `scripts/phase10/beta-analytics-audit.mjs`: `38e0ab4ac720d35035a83a6ee7120174aedd6afffc97f1228f69ec0f51f45201`
 - `scripts/phase10/build-beta-packet.mjs`: `0b58fb95a27b57c06156dc8993a62bd387943a022a139ee239ff8f2aa7a5f896`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
@@ -72,7 +72,8 @@ Phase 9 packet status: blocked
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
 - `docs/phase-9/generated/release-engineering-qa-packet.json`: `a3115f2adad9d48d6d43be417ae6072240e60de49a1045c41e32cebadc20f37f`
-- `docs/phase-10/beta-source-of-truth.md`: `3393c8a0e9e93e292de7f1f5a22459697aba4f5e2c768863309c8d644090eaf1`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `a09ce32d83dfaafd1cba4b78e7fbfc476f137001cba1661999fb9bec1c8358c5`
+- `docs/phase-10/beta-source-of-truth.md`: `0cb11a58751407ffdfcc836e2373cb6d39d1faf93874d23a817098dc3b68e530`
 - `docs/phase-10/tester-recruitment-sheet.md`: `ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
 - `docs/phase-10/testflight-packet.md`: `ff94ad4bebe828ee607ccb0dd1b6455d2102aebf2acf0e541f435aede887225c`
