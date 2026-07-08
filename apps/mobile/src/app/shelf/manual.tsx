@@ -282,7 +282,7 @@ export default function ManualAddScreen() {
               splitShortPhone
                 ? { marginTop: 152 }
                 : compactManualPhone
-                  ? { marginTop: 176 }
+                  ? { marginTop: 344 }
                   : undefined
             }
           >

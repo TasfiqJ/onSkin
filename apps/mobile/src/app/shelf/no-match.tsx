@@ -149,7 +149,7 @@ export default function NoMatchScreen() {
             microShortPhone
               ? { marginTop: 40 }
               : compactPressurePhone
-                ? { marginTop: 80 }
+                ? { marginTop: 32 }
                 : undefined
           }
         >

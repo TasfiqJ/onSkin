@@ -162,7 +162,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("? 'mt-2 gap-1'");
     expect(source).toContain('style={');
     expect(source).toContain('compactPressurePhone');
-    expect(source).toContain('? { marginTop: 80 }');
+    expect(source).toContain('? { marginTop: 32 }');
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={shortPhone}');
     expect(source).toContain('hideSubtitle={compactPressurePhone}');
@@ -527,7 +527,7 @@ describe('Shelf route mobile contracts', () => {
       "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
     );
     expect(source).toContain('compactManualPhone');
-    expect(source).toContain('? { marginTop: 176 }');
+    expect(source).toContain('? { marginTop: 344 }');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',

@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the harsher 320 x 568 / 170% compact text-pressure route audit.
+  The first sweep found floating-tab `Progress` label overflow, Shelf filter
+  clipping, and Shelf no-match recovery peeking; iterative reruns also exposed
+  Shelf scan/manual, Ask header, Skin Notes hub, and missing-note recovery
+  clearance at the same pressure. Compact phone layouts now shorten visible
+  labels while preserving full accessibility labels, defer optional/lower
+  priority controls below the first viewport, and keep Community recovery
+  actions complete on narrow phones. Focused Ask/Community/Shelf/navigation/chip
+  contracts pass, and the final 49-route sweep reports zero failed routes with
+  evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-170-compact-568-postfix-8/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-170-compact-568-clearance.md`.
+
 - Cleared the 320 x 390 / 150% split-short text-pressure route audit after
   the harsher scale exposed issues not present at 320 x 568 or 320 x 430.
   Recommendation Preferences now moves the last value-filter row fully below
@@ -20,7 +34,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   warning from decoration-only layers.
   Focused Shelf/Settings/Recommendations/TabBar/ToggleSwitch contracts pass,
   and the final 49-route sweep reports zero failed routes with evidence in
-  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-11/`
+  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-13/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-150-split-short-390-clearance.md`.
 

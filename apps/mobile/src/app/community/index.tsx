@@ -211,10 +211,17 @@ export default function SkinNotesHub() {
                 </Text>
                 {g.notes.map((note, noteIndex) => {
                   const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;
+                  const keepNarrowNextNoteBelowFold = narrowCompactCommunity && noteIndex > 0;
                   return (
                     <View
                       key={note.id}
-                      style={keepNextNoteBelowFold ? { marginTop: 72 } : undefined}
+                      style={
+                        keepNextNoteBelowFold
+                          ? { marginTop: 72 }
+                          : keepNarrowNextNoteBelowFold
+                            ? { marginTop: 112 }
+                            : undefined
+                      }
                     >
                       <NoteCard note={note} compact={compactCommunity} short={shortCommunity} />
                     </View>
