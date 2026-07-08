@@ -1,9 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
+import { CommerceLinkNotice, type CommerceLinkFeedback } from '@/features/commerce/CommerceLinkNotice';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
@@ -25,6 +26,7 @@ export default function StackDetailScreen() {
   const stack = slug ? stackBySlug(slug) : undefined;
   const { data: consented } = useCommerceConsent();
   const compactMissingStack = height < 640;
+  const [linkFeedback, setLinkFeedback] = useState<CommerceLinkFeedback | null>(null);
 
   useEffect(() => {
     if (stack) track('stack_viewed', { source: 'stack' });
@@ -32,6 +34,7 @@ export default function StackDetailScreen() {
 
   const tapItem = async (item: StackItem) => {
     haptics.select();
+    setLinkFeedback(null);
     if (!consented) {
       router.push('/commerce/consent');
       await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
@@ -47,9 +50,10 @@ export default function StackDetailScreen() {
     });
     // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Resolve + open the real retailer link here
     // (opaque token only). Until then, the honest stub.
-    Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [
-      { text: 'OK' },
-    ]);
+    setLinkFeedback({
+      title: COMMERCE_COPY.whereToBuy.stubTitle,
+      body: COMMERCE_COPY.whereToBuy.stubBody,
+    });
   };
 
   return (
@@ -134,6 +138,7 @@ export default function StackDetailScreen() {
             {stack.subtitle} {COMMERCE_COPY.stack.subtitle}
           </Text>
 
+          {linkFeedback ? <CommerceLinkNotice feedback={linkFeedback} /> : null}
           <View className="mt-4 gap-2.5">
             {stack.items.map((item) => (
               <Pressable

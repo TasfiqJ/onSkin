@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened commerce paid-link recovery for compact phones. The recommendation
+  where-to-buy and shoppable stack paid-link paths now use a route-owned
+  accessible commerce notice instead of native `Alert.alert`; the notice renders
+  before paid-link rows so a first-row tap is immediately visible at 320 px.
+  Codex in-app browser Expo web at 320 x 568 with commerce enabled verifies the
+  stack paid-link stub stays on `/commerce/stack/sensitive-skin-starter-set`,
+  opens no dialog, shows `Where to buy` inline at viewport y=242-408, keeps the
+  paid row touchable, and preserves zero horizontal overflow. Evidence and bug
+  report:
+  `test-results/human-e2e/2026-07-08/commerce-link-recovery-alert-prefix/`,
+  `docs/e2e-bug-reports/2026-07-08-commerce-paid-link-inline-recovery.md`.
+
 - Verified the remaining full-routine intelligence direct-route gate on `main`.
   Codex in-app browser Expo web at 320 x 568 confirms fresh free direct
   `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, and

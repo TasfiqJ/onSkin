@@ -151,4 +151,19 @@ describe('Commerce route contracts', () => {
     );
     expect(source).toContain('style={{ minHeight: 48, backgroundColor: colors.clayTint }}');
   });
+
+  it('keeps paid-link recovery inline instead of native blocking alerts', () => {
+    const whereToBuy = readFeatureFile('WhereToBuy.tsx');
+    const stackDetail = readAppRoute('commerce/stack/[slug].tsx');
+    const notice = readFeatureFile('CommerceLinkNotice.tsx');
+
+    expect(whereToBuy).not.toContain('Alert');
+    expect(stackDetail).not.toContain('Alert');
+    expect(whereToBuy).toContain('CommerceLinkNotice');
+    expect(stackDetail).toContain('CommerceLinkNotice');
+    expect(whereToBuy).toContain('setLinkFeedback');
+    expect(stackDetail).toContain('setLinkFeedback');
+    expect(notice).toContain('accessibilityRole="alert"');
+    expect(notice).toContain('colors.clayTint');
+  });
 });

@@ -888,7 +888,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: With commerce consent on and a real HTTPS retailer URL available, simulate the OS refusing to open the external URL.
   - Expected result: The app shows a calm Link unavailable message, does not appear inert, and the user remains in the recommendation context.
-  - Evidence: Open. The 2026-07-07 local run reaches the consent-allowed catalog-blocked empty state because source-cleared retailer links and affiliate partner rails are not approved yet.
+  - Evidence: Partial. The 2026-07-07 local run reaches the consent-allowed catalog-blocked empty state because source-cleared retailer links and affiliate partner rails are not approved yet. 2026-07-08 Codex in-app browser Expo web at 320 x 568 with commerce enabled verified the stack paid-link stub path stays on `/commerce/stack/sensitive-skin-starter-set`, opens no dialog, renders a visible route-owned `role="alert"` message at viewport y=242-408 before the paid-link rows, keeps the paid-link row touchable, and keeps zero horizontal overflow. Source contracts now reject native `Alert` calls in `WhereToBuy` and stack paid-link recovery. Real retailer URL OS-refusal remains open until approved HTTPS retailer links are available.
 
 ## Flow: Skin Notes Community Trust Layer
 

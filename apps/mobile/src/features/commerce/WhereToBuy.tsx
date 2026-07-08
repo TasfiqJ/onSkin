@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
-import { Alert, Pressable, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
@@ -10,6 +11,7 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 import { COMMERCE_COPY } from './copy';
+import { CommerceLinkNotice, type CommerceLinkFeedback } from './CommerceLinkNotice';
 import { LockGlyph } from './LockGlyph';
 import { formatPrice, outboundFor, type WhereToBuyOption } from './links';
 import { buildClickToken, recordClick } from './store';
@@ -74,18 +76,24 @@ function OptionRow({ option, onPress }: { option: WhereToBuyOption; onPress: () 
 function EnabledWhereToBuy({ productType }: { productType: string }) {
   const { data: consented } = useCommerceConsent();
   const { data: options } = useWhereToBuy(consented ? productType : null);
+  const [linkFeedback, setLinkFeedback] = useState<CommerceLinkFeedback | null>(null);
 
   const openConsent = () => {
     haptics.select();
+    setLinkFeedback(null);
     router.push('/commerce/consent');
   };
 
   const tapOption = async (option: WhereToBuyOption) => {
     haptics.select();
+    setLinkFeedback(null);
     const token = buildClickToken();
     const outboundUrl = outboundFor(option, token);
     if (!outboundUrl) {
-      Alert.alert('Link unavailable', 'This retailer link is not available right now.');
+      setLinkFeedback({
+        title: 'Link unavailable',
+        body: 'This retailer link is not available right now.',
+      });
       return;
     }
     track('where_to_buy_clicked', { source: option.source });
@@ -94,9 +102,10 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
     // retailer links open only after the HTTPS URL guard appends the opaque token.
     const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
     if (isDev && option.url.startsWith('https://example.com')) {
-      Alert.alert(COMMERCE_COPY.whereToBuy.stubTitle, COMMERCE_COPY.whereToBuy.stubBody, [
-        { text: 'OK' },
-      ]);
+      setLinkFeedback({
+        title: COMMERCE_COPY.whereToBuy.stubTitle,
+        body: COMMERCE_COPY.whereToBuy.stubBody,
+      });
     } else {
       const opened = await openExternalHttpsUrl(outboundUrl, {
         mode: 'linking',
@@ -105,6 +114,10 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
       });
       if (!opened) {
         track('where_to_buy_link_failed', { source: option.source });
+        setLinkFeedback({
+          title: 'Link unavailable',
+          body: 'We could not open this retailer link. Please try again.',
+        });
       }
     }
   };
@@ -147,6 +160,7 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
         </>
       ) : options && options.length > 0 ? (
         <>
+          {linkFeedback ? <CommerceLinkNotice feedback={linkFeedback} /> : null}
           <View className="gap-2.5">
             {options.map((o) => (
               <OptionRow key={o.id} option={o} onPress={() => void tapOption(o)} />
