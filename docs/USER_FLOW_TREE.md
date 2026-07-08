@@ -592,7 +592,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Enable app lock, open the app-wide lock overlay or the locked Progress timeline, and force the local-auth prompt to reject or become unavailable.
   - Expected result: The app stays locked, shows stable app-lock-unavailable copy only for native prompt failure, keeps user cancellation quiet, leaves the Unlock control available for retry, and uses device-neutral copy that reads correctly on iOS and Android.
-  - Evidence: Alert text, route state, native auth log, and helper status assertion.
+  - Evidence: Inline alert text, route state, native auth log, and helper status assertion.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_APP_LOCK_ENABLED=true`, `EXPO_PUBLIC_E2E_APP_LOCK_AUTH=unavailable`, `EXPO_PUBLIC_E2E_APP_LOCK_READY=available`, populated Progress photos, and store Pro entitlement opens `/progress`, keeps the app-wide lock overlay visible, renders route-owned `App lock is not available on this device right now.` feedback, leaves the topmost Unlock button 106 x 48 px, opens no JavaScript/native dialog on initial prompt or retry, and keeps horizontal overflow at zero. A second run with app lock disabled and `EXPO_PUBLIC_E2E_APP_LOCK_READY=unavailable` verifies the You-tab App lock switch remains off, renders row-local `Choice not saved` / app-lock-unavailable copy, leaks no raw native/provider text, opens no dialog, and keeps the switch 52 x 48 px. Evidence is in `test-results/human-e2e/2026-07-08/app-lock-inline-recovery-current/`.
 
 ## Flow: Photo Trend Insights
 

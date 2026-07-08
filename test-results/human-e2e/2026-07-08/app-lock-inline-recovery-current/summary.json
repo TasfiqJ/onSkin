@@ -1,0 +1,179 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web in-app browser",
+  "viewport": "320x568",
+  "fixtures": {
+    "overlay": {
+      "EXPO_PUBLIC_E2E_APP_LOCK_ENABLED": "true",
+      "EXPO_PUBLIC_E2E_APP_LOCK_AUTH": "unavailable",
+      "EXPO_PUBLIC_E2E_APP_LOCK_READY": "available",
+      "EXPO_PUBLIC_E2E_PROGRESS_PHOTOS": "populated",
+      "EXPO_PUBLIC_E2E_ENTITLEMENT": "store_pro"
+    },
+    "settingsToggle": {
+      "EXPO_PUBLIC_E2E_APP_LOCK_ENABLED": "false",
+      "EXPO_PUBLIC_E2E_APP_LOCK_AUTH": "success",
+      "EXPO_PUBLIC_E2E_APP_LOCK_READY": "unavailable",
+      "EXPO_PUBLIC_E2E_PROGRESS_PHOTOS": "populated",
+      "EXPO_PUBLIC_E2E_ENTITLEMENT": "store_pro"
+    }
+  },
+  "overlayInitial": {
+    "alertRect": {
+      "height": 39.98786544799805,
+      "width": 230.49151611328125,
+      "x": 44.94842529296875,
+      "y": 221.4805908203125
+    },
+    "alertText": "App lock is not available on this device right now.",
+    "bodyText": "🔒\nYour timeline is locked.\nUse your phone's unlock to keep your photos for your eyes only. They live on this phone, encrypted.\nApp lock is not available on this device right now.\n⊡\nUnlock\nEncrypted cloud backup\nOff. A separate choice. Photos stay on-device until you turn it on.\n›\nToday\nProgress\nShelf\nYou\nRoutineKind\nLocked. Unlock to continue\nApp lock is not available on this device right now.\nUnlock",
+    "horizontalOverflow": 0,
+    "unlockRect": {
+      "height": 55.97694396972656,
+      "width": 138.69842529296875,
+      "x": 90.8373794555664,
+      "y": 294.4326477050781
+    },
+    "url": "http://localhost:8100/progress",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "overlayRetry": {
+    "dialogBefore": null,
+    "dialogAfter": null,
+    "retryState": {
+      "alerts": [
+        {
+          "rect": {
+            "height": 39.98786544799805,
+            "width": 230.49151611328125,
+            "x": 44.94842529296875,
+            "y": 221.4805908203125
+          },
+          "text": "App lock is not available on this device right now.",
+          "topMost": false,
+          "visible": true
+        },
+        {
+          "rect": {
+            "height": 39.98786544799805,
+            "width": 230.49151611328125,
+            "x": 44.94842529296875,
+            "y": 280.2032775878906
+          },
+          "text": "App lock is not available on this device right now.",
+          "topMost": true,
+          "visible": true
+        }
+      ],
+      "horizontalOverflow": 0,
+      "unlocks": [
+        {
+          "rect": {
+            "height": 55.97694396972656,
+            "width": 138.69842529296875,
+            "x": 90.8373794555664,
+            "y": 294.4326477050781
+          },
+          "text": "⊡Unlock",
+          "topMost": false
+        },
+        {
+          "rect": {
+            "height": 48.36165237426758,
+            "width": 106.12864685058594,
+            "x": 107.1298599243164,
+            "y": 357.1450500488281
+          },
+          "text": "Unlock",
+          "topMost": true
+        }
+      ],
+      "url": "http://localhost:8100/progress",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    }
+  },
+  "settingsToggle": {
+    "dialogBefore": null,
+    "dialogAfter": null,
+    "state": {
+      "alertRect": {
+        "height": 67.9763412475586,
+        "width": 232.40292358398438,
+        "x": 43.99272155761719,
+        "y": 283.9350891113281
+      },
+      "alertText": "Choice not saved\nApp lock is not available on this device right now.",
+      "bodyIncludesRawNative": false,
+      "horizontalOverflow": 0,
+      "scrollY": 0,
+      "switchChecked": "false",
+      "switchDisabled": null,
+      "switchRect": {
+        "height": 47.99757385253906,
+        "width": 51.98725891113281,
+        "x": 224.40838623046875,
+        "y": 208.95025634765625
+      },
+      "url": "http://localhost:8100/you",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    }
+  },
+  "logs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T08:56:53.472Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T08:56:53.472Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T08:56:53.484Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "Disconnected from Metro (1006)\nTo reconnect:\n- Ensure that Metro is running and available on the same network\n- Reload this app (will trigger further help if Metro cannot be connected to)",
+      "timestamp": "2026-07-08T08:57:57.427Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T08:58:47.834Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T08:58:47.834Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T08:58:47.847Z",
+      "url": "http://localhost:8100/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "screenshots": [
+    "01-app-lock-overlay-inline-feedback.png",
+    "02-app-lock-retry-no-dialog.png",
+    "03-you-app-lock-toggle-inline-feedback.png"
+  ]
+}

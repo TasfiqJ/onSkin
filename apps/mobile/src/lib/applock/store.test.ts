@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAppLockEnabled, setAppLockEnabledStored } from './store';
 
@@ -14,11 +14,22 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 const KEY = 'onskin.appLock.enabled';
+const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
+const originalDev = runtime.__DEV__;
 
 describe('app lock preference storage', () => {
   beforeEach(() => {
     mocks.privateKV.clear();
     vi.clearAllMocks();
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED;
+  });
+
+  afterEach(() => {
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED;
   });
 
   it('roundtrips the stored app-lock setting', async () => {
@@ -74,5 +85,24 @@ describe('app lock preference storage', () => {
 
     await expect(getAppLockEnabled()).resolves.toBe(false);
     expect(mocks.privateKV.get(KEY)).toBeUndefined();
+  });
+
+  it('uses the dev-only E2E fixture before private storage', async () => {
+    runtime.__DEV__ = true;
+    mocks.privateKV.set(KEY, '0');
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'enabled';
+
+    await expect(getAppLockEnabled()).resolves.toBe(true);
+
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'disabled';
+    await expect(getAppLockEnabled()).resolves.toBe(false);
+    expect(mocks.privateKV.get(KEY)).toBe('0');
+  });
+
+  it('ignores the E2E app-lock fixture outside dev builds', async () => {
+    runtime.__DEV__ = false;
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'enabled';
+
+    await expect(getAppLockEnabled()).resolves.toBe(false);
   });
 });

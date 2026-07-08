@@ -61,7 +61,7 @@ const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 
 type StaticRouteHref = Extract<Href, string>;
-type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup';
+type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';
 type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';
 
 function Row({
@@ -179,6 +179,7 @@ export default function YouScreen() {
     placement: PrivacyFeedbackPlacement;
     message: string;
   } | null>(null);
+  const [savingAppLock, setSavingAppLock] = useState(false);
   const [exportFeedback, setExportFeedback] = useState<string | null>(null);
   const [policyFeedback, setPolicyFeedback] = useState<{
     key: PolicyLinkKey;
@@ -188,6 +189,7 @@ export default function YouScreen() {
   const scrollRef = useRef<ScrollView>(null);
   const privacyCardY = useRef(0);
   const savingPrivacyRef = useRef(false);
+  const savingAppLockRef = useRef(false);
 
   const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
   // The RESOLVED commerce data-sharing consent (ledger-if-present, else the local
@@ -383,6 +385,26 @@ export default function YouScreen() {
     } finally {
       savingPrivacyRef.current = false;
       setSavingPrivacy(null);
+    }
+  }
+
+  async function setAppLockChoice(enabled: boolean) {
+    if (savingAppLockRef.current) return;
+    savingAppLockRef.current = true;
+    setSavingAppLock(true);
+    setPrivacyFeedback(null);
+    try {
+      await setLockEnabled(enabled);
+      setPrivacyFeedback(null);
+    } catch {
+      setPrivacyFeedback({
+        key: 'app_lock',
+        placement: 'security',
+        message: appLockUserMessage(),
+      });
+    } finally {
+      savingAppLockRef.current = false;
+      setSavingAppLock(false);
     }
   }
 
@@ -609,11 +631,11 @@ export default function YouScreen() {
             <Toggle
               accessibilityLabel="App lock"
               value={lockEnabled}
-              onChange={(v) =>
-                void setLockEnabled(v).catch(() => Alert.alert('App lock', appLockUserMessage()))
-              }
+              disabled={savingAppLock}
+              onChange={(v) => void setAppLockChoice(v)}
             />
           </Row>
+          {renderPrivacyFeedback('app_lock', 'security')}
           <Row
             label="Encrypted cloud backup"
             hint="Off by default. A separate choice. Photos stay on this phone until you turn it on."

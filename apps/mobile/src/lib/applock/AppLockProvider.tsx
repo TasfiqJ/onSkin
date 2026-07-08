@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { Alert, AppState, Pressable, Text, View, type AppStateStatus } from 'react-native';
+import { AppState, Pressable, Text, View, type AppStateStatus } from 'react-native';
 
 import { BRAND } from '@/lib/brand';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
@@ -28,7 +28,7 @@ type AppLockContextValue = {
 
 const AppLockContext = createContext<AppLockContextValue | undefined>(undefined);
 
-function LockOverlay({ onUnlock }: { onUnlock: () => void }) {
+function LockOverlay({ onUnlock, feedback }: { onUnlock: () => void; feedback: string | null }) {
   return (
     <View
       style={{
@@ -37,10 +37,13 @@ function LockOverlay({ onUnlock }: { onUnlock: () => void }) {
         bottom: 0,
         left: 0,
         right: 0,
+        zIndex: 1000,
+        elevation: 1000,
         backgroundColor: colors.paper,
         alignItems: 'center',
         justifyContent: 'center',
         gap: 16,
+        paddingHorizontal: 28,
       }}
     >
       <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 40, color: colors.ink }}>
@@ -49,6 +52,32 @@ function LockOverlay({ onUnlock }: { onUnlock: () => void }) {
       <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 15, color: colors.muted }}>
         Locked. Unlock to continue
       </Text>
+      {feedback ? (
+        <View
+          style={{
+            maxWidth: 320,
+            borderRadius: 18,
+            borderWidth: 1,
+            borderColor: colors.hairlineStrong,
+            backgroundColor: colors.clayTint,
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+          }}
+        >
+          <Text
+            accessibilityRole="alert"
+            style={{
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 14,
+              lineHeight: 20,
+              textAlign: 'center',
+              color: colors.clayDeep,
+            }}
+          >
+            {feedback}
+          </Text>
+        </View>
+      ) : null}
       <Pressable
         accessibilityRole="button"
         onPress={onUnlock}
@@ -100,6 +129,7 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   const [enabled, setEnabledState] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [lockFeedback, setLockFeedback] = useState<string | null>(null);
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
 
   useEffect(() => {
@@ -124,18 +154,27 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, [enabled]);
 
-  const authenticate = useCallback(() => {
+  const requestUnlock = useCallback(() => {
     void authenticateAppLock(BRAND.appLockPrompt).then((status) => {
-      if (status === 'success') setLocked(false);
-      else if (status === 'unavailable') Alert.alert('App lock', appLockUserMessage());
+      if (status === 'success') {
+        setLockFeedback(null);
+        setLocked(false);
+      } else if (status === 'unavailable') {
+        setLockFeedback(appLockUserMessage());
+      }
     });
   }, []);
+
+  const authenticate = useCallback(() => {
+    setLockFeedback(null);
+    requestUnlock();
+  }, [requestUnlock]);
 
   // Auto-prompt whenever we are active and locked. Do not launch biometrics while
   // the OS is taking an app-switcher snapshot or the app is backgrounded.
   useEffect(() => {
-    if (locked && appState === 'active') authenticate();
-  }, [locked, appState, authenticate]);
+    if (locked && appState === 'active') requestUnlock();
+  }, [locked, appState, requestUnlock]);
 
   const setEnabled = useCallback(async (v: boolean) => {
     if (v) {
@@ -146,6 +185,7 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
       if (status !== 'success') return;
     }
     await setAppLockEnabledStored(v);
+    setLockFeedback(null);
     setEnabledState(v);
   }, []);
 
@@ -159,7 +199,9 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
     <AppLockContext.Provider value={value}>
       {children}
       {showPrivacyShield ? <PrivacyShield /> : null}
-      {!showPrivacyShield && loaded && locked ? <LockOverlay onUnlock={authenticate} /> : null}
+      {!showPrivacyShield && loaded && locked ? (
+        <LockOverlay feedback={lockFeedback} onUnlock={authenticate} />
+      ) : null}
     </AppLockContext.Provider>
   );
 }

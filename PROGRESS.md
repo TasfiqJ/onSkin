@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened biometric app-lock recovery across the global lock overlay, locked
+  Progress timeline, and You-tab security switch. Native auth unavailable states
+  now render stable in-app `role="alert"` feedback while user cancellation stays
+  quiet and retry remains available. Added dev-only app-lock auth/readiness/enabled
+  fixtures for reproducible E2E coverage, updated source contracts, and captured
+  Codex in-app browser evidence at 320 x 568 for the locked overlay retry path and
+  the You-tab App lock switch failure with no dialog, no raw native/provider text,
+  48 px+ controls, and zero horizontal overflow. Native iOS/Android biometric
+  prompt chrome remains a device QA follow-up.
+
 - Hardened subscription/paywall recovery to stay route-owned instead of stacking
   native alerts over polished paywall surfaces. Contextual, onboarding, re-offer,
   downgrade, win-back, subscription settings, compliance restore, policy-link,

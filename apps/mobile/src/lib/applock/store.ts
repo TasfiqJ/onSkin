@@ -4,6 +4,16 @@ import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 // the lock state itself is in-memory in AppLockProvider.
 const KEY = 'onskin.appLock.enabled';
 
+function e2eAppLockEnabled(): boolean | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+
+  const fixture = process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED?.trim().toLowerCase();
+  if (fixture === '1' || fixture === 'true' || fixture === 'enabled') return true;
+  if (fixture === '0' || fixture === 'false' || fixture === 'disabled') return false;
+
+  return null;
+}
+
 async function repairStoredValue(value: '0' | '1'): Promise<void> {
   try {
     await setPrivateItem(KEY, value);
@@ -28,6 +38,9 @@ async function normalizeStoredValue(value: string): Promise<boolean> {
 }
 
 export async function getAppLockEnabled(): Promise<boolean> {
+  const fixture = e2eAppLockEnabled();
+  if (fixture !== null) return fixture;
+
   try {
     const value = await getPrivateItem(KEY);
     if (value == null) return false;

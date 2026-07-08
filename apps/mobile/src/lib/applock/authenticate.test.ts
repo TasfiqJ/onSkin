@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { BRAND } from '@/lib/brand';
@@ -8,6 +8,8 @@ import { BRAND } from '@/lib/brand';
 import { authenticateAppLock, canUseAppLock } from './authenticate';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
+const originalDev = runtime.__DEV__;
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
@@ -30,6 +32,17 @@ describe('app lock local authentication', () => {
     mocks.authenticateAsync.mockReset();
     mocks.hasHardwareAsync.mockReset();
     mocks.isEnrolledAsync.mockReset();
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY;
+  });
+
+  afterEach(() => {
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY;
   });
 
   it('returns success when the native prompt authenticates', async () => {
@@ -52,6 +65,31 @@ describe('app lock local authentication', () => {
     await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('unavailable');
   });
 
+  it('uses dev-only E2E auth and readiness fixtures without opening native auth', async () => {
+    runtime.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH = 'unavailable';
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY = 'available';
+
+    await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('unavailable');
+    await expect(canUseAppLock()).resolves.toBe(true);
+
+    expect(mocks.authenticateAsync).not.toHaveBeenCalled();
+    expect(mocks.hasHardwareAsync).not.toHaveBeenCalled();
+    expect(mocks.isEnrolledAsync).not.toHaveBeenCalled();
+  });
+
+  it('ignores E2E app-lock fixtures outside dev builds', async () => {
+    runtime.__DEV__ = false;
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH = 'unavailable';
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY = 'unavailable';
+    mocks.authenticateAsync.mockResolvedValueOnce({ success: true });
+    mocks.hasHardwareAsync.mockResolvedValueOnce(true);
+    mocks.isEnrolledAsync.mockResolvedValueOnce(true);
+
+    await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('success');
+    await expect(canUseAppLock()).resolves.toBe(true);
+  });
+
   it('checks hardware and enrollment without leaking native failures', async () => {
     mocks.hasHardwareAsync.mockResolvedValueOnce(true);
     mocks.isEnrolledAsync.mockResolvedValueOnce(true);
@@ -69,14 +107,26 @@ describe('app lock local authentication', () => {
   it('keeps lock overlays on the failure-handled helper', () => {
     const provider = readSource('lib/applock/AppLockProvider.tsx');
     const progress = readSource('app/(tabs)/progress.tsx');
+    const youTab = readSource('app/(tabs)/you.tsx');
 
     expect(provider).toContain('authenticateAppLock(BRAND.appLockPrompt)');
-    expect(provider).toContain("Alert.alert('App lock', appLockUserMessage())");
+    expect(provider).toContain('const [lockFeedback, setLockFeedback] = useState<string | null>(null);');
+    expect(provider).toContain('setLockFeedback(appLockUserMessage());');
+    expect(provider).toContain('<LockOverlay feedback={lockFeedback} onUnlock={authenticate} />');
+    expect(provider).toContain('accessibilityRole="alert"');
+    expect(provider).not.toContain("Alert.alert('App lock'");
     expect(provider).not.toContain('LocalAuthentication.authenticateAsync');
 
     expect(progress).toContain("authenticateAppLock('Unlock your photo timeline')");
-    expect(progress).toContain("Alert.alert('Photo timeline locked', appLockUserMessage())");
+    expect(progress).toContain('setLockFeedback(appLockUserMessage());');
+    expect(progress).toContain('accessibilityRole="alert"');
+    expect(progress).not.toContain("Alert.alert('Photo timeline locked'");
     expect(progress).not.toContain('LocalAuthentication.authenticateAsync');
+
+    expect(youTab).toContain('async function setAppLockChoice(enabled: boolean)');
+    expect(youTab).toContain("key: 'app_lock'");
+    expect(youTab).toContain("renderPrivacyFeedback('app_lock', 'security')");
+    expect(youTab).not.toContain("Alert.alert('App lock'");
   });
 
   it('keeps app-lock copy neutral across iOS and Android devices', () => {

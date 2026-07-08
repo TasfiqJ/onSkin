@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -332,18 +332,27 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
 // ── Biometric gallery lock (design screen 08) ────────────────────────────────
 function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
   const insets = useSafeAreaInsets();
-  const authenticate = () => {
+  const [lockFeedback, setLockFeedback] = useState<string | null>(null);
+
+  const requestUnlock = useCallback(() => {
     void authenticateAppLock('Unlock your photo timeline').then((status) => {
-      if (status === 'success') onUnlock();
-      else if (status === 'unavailable') {
-        Alert.alert('Photo timeline locked', appLockUserMessage());
+      if (status === 'success') {
+        setLockFeedback(null);
+        onUnlock();
+      } else if (status === 'unavailable') {
+        setLockFeedback(appLockUserMessage());
       }
     });
+  }, [onUnlock]);
+
+  const authenticate = () => {
+    setLockFeedback(null);
+    requestUnlock();
   };
+
   useEffect(() => {
-    authenticate(); // auto-prompt when the gate appears
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    requestUnlock(); // auto-prompt when the gate appears
+  }, [requestUnlock]);
   // Full-bleed #16130F incl. the safe-area bands (design screen 08). No night sliver.
   return (
     <View className="flex-1" style={{ backgroundColor: BG, paddingTop: insets.top, paddingBottom: insets.bottom }}>
@@ -357,10 +366,30 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
         <Text variant="bodySm" className="mt-2.5 text-center" style={{ color: 'rgba(244,239,231,0.6)', maxWidth: 280, lineHeight: 21 }}>
           {PHOTO_COPY.lock.body}
         </Text>
+        {lockFeedback ? (
+          <View
+            className="mt-4 rounded-[16px] px-4 py-3"
+            style={{
+              maxWidth: 300,
+              borderWidth: 1,
+              borderColor: 'rgba(244,239,231,0.16)',
+              backgroundColor: 'rgba(244,239,231,0.1)',
+            }}
+          >
+            <Text
+              accessibilityRole="alert"
+              variant="bodySm"
+              className="text-center"
+              style={{ color: colors.cream, lineHeight: 20 }}
+            >
+              {lockFeedback}
+            </Text>
+          </View>
+        ) : null}
         <Pressable
           accessibilityRole="button"
           onPress={authenticate}
-          className="mt-7 flex-row items-center gap-2.5 rounded-pill px-8 py-4"
+          className={`${lockFeedback ? 'mt-5' : 'mt-7'} flex-row items-center gap-2.5 rounded-pill px-8 py-4`}
           style={{ backgroundColor: colors.cream }}>
           <Text style={{ color: BG, fontSize: 15 }}>⊡</Text>
           <Text className="font-sans-semibold" style={{ color: BG, fontSize: 16 }}>
