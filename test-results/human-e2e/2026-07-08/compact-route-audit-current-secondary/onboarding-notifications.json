@@ -1,0 +1,16 @@
+{
+  "actualPath": "/onboarding/notifications",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/onboarding/notifications",
+  "tabOverlaps": [],
+  "textSample": "A gentle nudge at your routine times? You pick the moments. Morning and evening, and we’ll quietly remind you. No noise, no pressure, and you can change it anytime. ✓ Only at times you choose ✓ Discreet on your lock screen ✓ Off in one tap, whenever Yes, remind me Not now",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

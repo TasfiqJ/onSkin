@@ -1,0 +1,16 @@
+{
+  "actualPath": "/routine/reorder",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/routine/reorder",
+  "tabOverlaps": [],
+  "textSample": "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

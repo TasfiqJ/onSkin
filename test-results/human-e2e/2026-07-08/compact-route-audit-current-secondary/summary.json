@@ -1,0 +1,722 @@
+[
+  {
+    "actualPath": "/",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/",
+    "tabOverlaps": [],
+    "textSample": "Healthier skin in eight weeks, built around your skin. A routine that fits what's already on your shelf. And photos that never leave your phone. Begin I already have an account No ads · no data sales · photos stay on device",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/onboarding/account",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/onboarding/account",
+    "tabOverlaps": [],
+    "textSample": "Save your plan, keep it private. Create an account so your routine and progress are yours on any device. Your photos still stay on this phone. Account sign-in is not available right now. You can continue without an account. Continue with Google OR WITH EMAIL Email me a code Not now",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/onboarding/notifications",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/onboarding/notifications",
+    "tabOverlaps": [],
+    "textSample": "A gentle nudge at your routine times? You pick the moments. Morning and evening, and we’ll quietly remind you. No noise, no pressure, and you can change it anytime. ✓ Only at times you choose ✓ Discreet on your lock screen ✓ Off in one tap, whenever Yes, remind me Not now",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/onboarding/consent",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/onboarding/analyzing",
+    "tabOverlaps": [],
+    "textSample": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/onboarding/reveal",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/onboarding/reveal",
+    "tabOverlaps": [],
+    "textSample": "PROFILE PAUSED Finish the quiz to see your profile. Your reveal needs the quiz answers first, so the result reflects your skin. Back to quiz",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/onboarding/consent",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/onboarding/quiz",
+    "tabOverlaps": [],
+    "textSample": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/onboarding/paywall",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/onboarding/paywall",
+    "tabOverlaps": [],
+    "textSample": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours be",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/adaptation",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/adaptation",
+    "tabOverlaps": [],
+    "textSample": "EXAMPLE ROUTINE Here's what changed. This preview shows the explanation style until your shelf has products. + Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence. Active nights stay separated Retinol 0.3% and Glycolic 7% Toner stay scheduled away from recovery nights where needed. Your choices stay in control This is an example preview. Add products to your shelf to see live adaptation notes. Looks good ↺",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/streak",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/streak",
+    "tabOverlaps": [],
+    "textSample": "< STREAK & ADHERENCE Showing up beats being perfect. Your nights, no pressure. This week 0 of 7 nights M T W T F S S July less more",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/reorder",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/reorder",
+    "tabOverlaps": [],
+    "textSample": "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/ramp",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/ramp",
+    "tabOverlaps": [],
+    "textSample": "< RETINOID · RAMP-UP Low and slow, on your terms. Consistency matters more than frequency. We only ever offer a step-up. Never increase it for you. Nights per week 2 of 3 wk1 wk2 wk3 now next? You're at 2 of 3 nights a week. We will check in as your skin settles, and offer a step-up only when it is comfortable.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/welcome-back",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/welcome-back",
+    "tabOverlaps": [],
+    "textSample": "✓ Welcome back. It’s been a few days. That’s okay. Start again tonight; consistency over time is what counts, not a perfect chain. Tonight’s step",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/tolerance",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/tolerance",
+    "tabOverlaps": [],
+    "textSample": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/routine/widgets",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/routine/widgets",
+    "tabOverlaps": [],
+    "textSample": "BETA Widgets are not in this beta Today check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA. The beta should prove the core habit loop before adding OS-level surfaces. Back to Today",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/procedure",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/procedure",
+    "tabOverlaps": [],
+    "textSample": "< ◇ Let's give your skin a few days. After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in. HOW LONG TO REST? 3 days 5 days 7 days WHILE YOU RECOVER ✓ Gentle cleanser ✓ Barrier moisturizer. Ceramides ✓ SPF every morning Start recovery",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/phased-intro",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/phased-intro",
+    "tabOverlaps": [],
+    "textSample": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its own night Then. Your full cycle Both, safely alternated Sounds good Add it now anyway",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/disruption",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/disruption",
+    "tabOverlaps": [],
+    "textSample": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/week",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/week",
+    "tabOverlaps": [],
+    "textSample": "< Settings YOUR CYCLE · SIMPLE DAILY This week, by night. EVERY AM moisturizer → SPF stable No actives to cycle yet. Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating acid and we'll build your cycle.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/settings",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/settings",
+    "tabOverlaps": [],
+    "textSample": "x Cycle settings VARIANT Gentle more recovery Classic balanced rest Advanced fewer rest Add a retinoid or an exfoliating acid to your shelf and we'll build your cycle here.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/recovery",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/recovery",
+    "tabOverlaps": [],
+    "textSample": "< No recovery in progress. Your cycle is running normally.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/cycle/why-tonight",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/cycle/why-tonight",
+    "tabOverlaps": [],
+    "textSample": "No cycle is running yet. Add an active to get started. Got it",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/progress/capture",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/progress/capture",
+    "tabOverlaps": [],
+    "textSample": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Clean skin, no makeup, hair back. Same time of day as last week. Take photos. On device only Not now",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/progress/about",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/progress/about",
+    "tabOverlaps": [],
+    "textSample": "x ⊘ We’ll never give your skin a score. A number from a phone selfie is mostly lighting and angle. False precision dressed up as objectivity, so we don’t. You get genuinely comparable photos and your own judgment, which is both more honest and more accurate. ✓ No “skin age,” no grade, no improvement %. ✓ No anxiety-inducing number to watch go up or down. ✓ Honest about phone-photo limits. White light reads tone & redness poorly, especially in deeper skin. If we ever add analysis, it’ll be separate, consented, fairness-checked, and never a hazard score.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/progress/review",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/progress/review",
+    "tabOverlaps": [],
+    "textSample": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/progress/capture",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/photos/capture",
+    "tabOverlaps": [],
+    "textSample": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Clean skin, no makeup, hair back. Same time of day as last week. Take photos. On device only Not now",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/progress/review",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/photos/review",
+    "tabOverlaps": [],
+    "textSample": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/commerce/stacks",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/commerce/stacks",
+    "tabOverlaps": [],
+    "textSample": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/commerce/transparency",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/commerce/transparency",
+    "tabOverlaps": [],
+    "textSample": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/community/people-like-you",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/community/people-like-you",
+    "tabOverlaps": [],
+    "textSample": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/paywall/downgrade",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/paywall/downgrade",
+    "tabOverlaps": [],
+    "textSample": "Pro ended · you’re on the free plan Everything you made is still here. Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up. ✓ Your routine & cycle. Kept ✓ Your photos. On your phone ✓ Your shelf & streak. Kept On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do. Terms · Privacy · Restore Store checkout is unavailable in this preview. You can keep exploring. Renew Pro Keep using free",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/trend/fairness",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/trend/fairness",
+    "tabOverlaps": [],
+    "textSample": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/recommendations",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/recommendations",
+    "tabOverlaps": [],
+    "textSample": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/paywall/reoffer",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/paywall/reoffer",
+    "tabOverlaps": [],
+    "textSample": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Terms · Privacy · Restore Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Keep my full routine Continue on free",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/paywall/success",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/paywall/success",
+    "tabOverlaps": [],
+    "textSample": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year/year. Cancel anytime. active until July 15 renews $49.99/year/yr See tonight’s routine",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/paywall/upsell",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/paywall/upsell",
+    "tabOverlaps": [],
+    "textSample": "Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/paywall/winback",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/paywall/winback",
+    "tabOverlaps": [],
+    "textSample": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/archive",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/archive",
+    "tabOverlaps": [],
+    "textSample": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here.",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/manual",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/add",
+    "tabOverlaps": [],
+    "textSample": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/manual",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/manual",
+    "tabOverlaps": [],
+    "textSample": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/no-match",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/no-match",
+    "tabOverlaps": [],
+    "textSample": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline manual fallback keeps the shelf working",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/ocr",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/ocr",
+    "tabOverlaps": [],
+    "textSample": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/scan",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/scan",
+    "tabOverlaps": [],
+    "textSample": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/replenish",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/replenish",
+    "tabOverlaps": [],
+    "textSample": "SHELF UPDATED This replacement prompt is no longer active. That product was removed or archived on this device, so we won't reuse its freshness or shopping prompt. Review your current shelf, or add the product again if it still belongs in your routine. Back to Shelf Add a product",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/opened",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/opened",
+    "tabOverlaps": [],
+    "textSample": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  },
+  {
+    "actualPath": "/shelf/search",
+    "badPlaceholder": false,
+    "documentWidth": 320,
+    "horizontalOverflow": 0,
+    "rawLeaks": [],
+    "route": "/shelf/search",
+    "tabOverlaps": [],
+    "textSample": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+    "under44": [],
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "hasJsDialog": false
+  }
+]

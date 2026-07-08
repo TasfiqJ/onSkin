@@ -1,0 +1,109 @@
+{
+  "barRect": {
+    "bottom": 548.953311920166,
+    "right": 311.4229507446289,
+    "x": 8.965413093566895,
+    "y": 494.963623046875
+  },
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "label": "01-today-320",
+  "nonTabOverlaps": [],
+  "selectedCount": 1,
+  "tabs": [
+    {
+      "ariaSelected": "true",
+      "backgroundColor": "rgb(32, 27, 21)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-today",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.60679626464844,
+        "x": 8.965413093566895,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-today",
+      "text": "Today",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 71.69296264648438,
+        "x": 10.922330856323242,
+        "y": 527.9429931640625
+      }
+    },
+    {
+      "ariaSelected": "false",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-progress",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.6219711303711,
+        "x": 84.57221221923828,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-progress",
+      "text": "Progress",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 71.70813751220703,
+        "x": 86.52912902832031,
+        "y": 527.9429931640625
+      }
+    },
+    {
+      "ariaSelected": "false",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-shelf",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.60679626464844,
+        "x": 160.19418334960938,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-shelf",
+      "text": "Shelf",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 71.69296264648438,
+        "x": 162.15109252929688,
+        "y": 527.9429931640625
+      }
+    },
+    {
+      "ariaSelected": "false",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-you",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.6219711303711,
+        "x": 235.8009796142578,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-you",
+      "text": "You",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 71.70813751220703,
+        "x": 237.75790405273438,
+        "y": 527.9429931640625
+      }
+    }
+  ],
+  "url": "http://localhost:8171/today",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": "WEDNESDAY, JULY 8\nGood morning.\nNO ROUTINE YET\nBuild a routine from your shelf.\nAdd the products you use and Today will become your AM/PM checklist.\nAdd products\nToday\nProgress\nShelf\nYou"
+}

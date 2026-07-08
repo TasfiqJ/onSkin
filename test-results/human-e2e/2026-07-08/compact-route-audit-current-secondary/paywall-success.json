@@ -1,0 +1,16 @@
+{
+  "actualPath": "/paywall/success",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/paywall/success",
+  "tabOverlaps": [],
+  "textSample": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year/year. Cancel anytime. active until July 15 renews $49.99/year/yr See tonight’s routine",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

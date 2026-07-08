@@ -1,0 +1,18 @@
+{
+  "actualPath": "/settings/notifications",
+  "barRect": null,
+  "documentWidth": 320,
+  "headingSample": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/settings/notifications",
+  "selectedTabCount": 0,
+  "tabOverlaps": [],
+  "tabSummary": [],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

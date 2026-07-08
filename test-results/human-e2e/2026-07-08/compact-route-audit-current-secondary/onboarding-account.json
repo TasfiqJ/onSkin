@@ -1,0 +1,16 @@
+{
+  "actualPath": "/onboarding/account",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/onboarding/account",
+  "tabOverlaps": [],
+  "textSample": "Save your plan, keep it private. Create an account so your routine and progress are yours on any device. Your photos still stay on this phone. Account sign-in is not available right now. You can continue without an account. Continue with Google OR WITH EMAIL Email me a code Not now",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

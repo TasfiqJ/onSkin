@@ -43,6 +43,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Evidence: Screenshot and tab geometry snapshot.
    Current local evidence: 2026-07-07 Chrome CDP Expo web run at 320 x 568 and 390 x 568 starts on `/today`, clicks Progress, Shelf, and You through the floating tab bar, and verifies exactly one selected tab after each switch, all four visible labels, 54 px tab targets, center hit-tests inside each tab, zero horizontal overflow, no non-tab controls in the floating-bar zone, and zero browser console errors.
    Current polish evidence: 2026-07-08 headless Chrome Expo web at 320 x 568 and 390 x 568 caught PM Today's floating tab bar sitting over a light scene-clearance band even though the dark screen was active. After the route-aware scene background fix, PM Today samples dark behind the bar, Progress/Shelf/You sample paper, all labels remain visible, exactly one tab is selected after each switch, centers hit the expected tab, targets are 54 px tall, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`.
+   Current resume evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 and 390 x 568 re-opened `/today`, clicked Progress, Shelf, You, and Today from the floating bar, verified exactly one selected tab after each switch, 53.99 px tab targets, center hit-tests resolving to the intended tab, zero horizontal overflow, no non-tab controls in the bar zone, and only expected local placeholder warnings. Evidence is in `test-results/human-e2e/2026-07-08/navigation-tabbar-resume-current/`.
 
 ### Branches
 
@@ -54,6 +55,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Phone-width screenshots and DOM/native geometry snapshot.
   - Current local evidence: 2026-07-07 Chrome CDP Expo web screenshots and geometry snapshots at 320 x 568 and 390 x 568 show Today, Progress, Shelf, and You labels inside their tab bounds, all tab targets at least 54 px tall, tab widths 75.5 px at 320 and 93 px at 390, and no horizontal overflow.
   - Current polish evidence: 2026-07-08 headless Chrome screenshots confirm the Wealthsimple-style white floating bar remains readable while PM Today now keeps the surrounding bottom clearance dark instead of showing a light slab.
+  - Current resume evidence: 2026-07-08 in-app browser screenshots and geometry snapshots confirm Today, Progress, Shelf, and You labels remain visible at 320 x 568 and 390 x 568, with tab widths of about 75.6 px and 93.1 px respectively, 53.99 px heights, successful center hit-tests, and zero horizontal overflow.
 - Branch: content clearance beneath floating tab bar
   - Priority: Critical
   - Automate later: Yes

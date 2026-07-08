@@ -1,0 +1,16 @@
+{
+  "actualPath": "/shelf/archive",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/shelf/archive",
+  "tabOverlaps": [],
+  "textSample": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here.",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

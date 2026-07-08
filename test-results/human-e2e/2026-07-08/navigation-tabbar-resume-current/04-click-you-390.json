@@ -1,0 +1,109 @@
+{
+  "barRect": {
+    "bottom": 548.953311920166,
+    "right": 381.3258819580078,
+    "x": 8.965413093566895,
+    "y": 494.963623046875
+  },
+  "documentWidth": 390,
+  "horizontalOverflow": 0,
+  "label": "04-click-you-390",
+  "nonTabOverlaps": [],
+  "selectedCount": 1,
+  "tabs": [
+    {
+      "ariaSelected": "false",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-today",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 93.08252716064453,
+        "x": 8.965413093566895,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-today",
+      "text": "Today",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 89.16869354248047,
+        "x": 10.922330856323242,
+        "y": 527.9429931640625
+      }
+    },
+    {
+      "ariaSelected": "false",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-progress",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 93.09770202636719,
+        "x": 102.04794311523438,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-progress",
+      "text": "Progress",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 89.1838607788086,
+        "x": 104.0048599243164,
+        "y": 527.9429931640625
+      }
+    },
+    {
+      "ariaSelected": "false",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-shelf",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 93.08252716064453,
+        "x": 195.14564514160156,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-shelf",
+      "text": "Shelf",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 89.16869354248047,
+        "x": 197.10255432128906,
+        "y": 527.9429931640625
+      }
+    },
+    {
+      "ariaSelected": "true",
+      "backgroundColor": "rgb(32, 27, 21)",
+      "borderRadius": "24px",
+      "centerHitTestId": "bottom-tab-you",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 93.09770202636719,
+        "x": 288.2281799316406,
+        "y": 494.963623046875
+      },
+      "testId": "bottom-tab-you",
+      "text": "You",
+      "textRect": {
+        "bottom": 544.9332847595215,
+        "height": 16.990291595458984,
+        "width": 89.1838607788086,
+        "x": 290.1850891113281,
+        "y": 527.9429931640625
+      }
+    }
+  ],
+  "url": "http://localhost:8171/you",
+  "viewport": {
+    "height": 569,
+    "width": 390
+  },
+  "visibleText": "WEDNESDAY, JULY 8\nGood morning.\nNO ROUTINE YET\nBuild a routine from your shelf.\nAdd the products you use and Today will become your AM/PM checklist.\nAdd products\nShelf\nempty for now\nLet's build your cabinet.\nAdd what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.\nScan a barcode\nAdd by hand\nYou\nACCOUNT\nSigned in\nSign out\nSUBSCRIPTION\nManage subscription\nRoutineKind Pro · active\n>\nYOUR ROUTINE\nYour plan\n>\nEdit the order\n>\nMORE ROUTINE\nRetinoid ramp\n>\nStreak & adherence\n>\nWeekly check-in\n>\nRecent changes\n>\nFOR YOU\nRecommendations\n>\nRecommendation preferences\n>\nSkin Notes\nMyth vs evidence, reviewed and claim-safe.\n>\nSECURITY\nApp lock\nRequire your phone's unlock to open the app and your photo timeline.\nEncrypted cloud backup\nOff by default. A separate choice. Photos stay on this phone until you turn it on.\nREMINDERS\nReminders & notifications\nTiered, ca"
+}

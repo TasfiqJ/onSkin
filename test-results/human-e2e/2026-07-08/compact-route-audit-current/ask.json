@@ -1,0 +1,18 @@
+{
+  "actualPath": "/ask",
+  "barRect": null,
+  "documentWidth": 320,
+  "headingSample": "< ✦ Ask RoutineKind knows your shelf evidence-grounded private Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › Is this product a fit for me? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/ask",
+  "selectedTabCount": 0,
+  "tabOverlaps": [],
+  "tabSummary": [],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

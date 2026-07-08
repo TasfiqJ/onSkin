@@ -1,0 +1,16 @@
+{
+  "actualPath": "/cycle/why-tonight",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/cycle/why-tonight",
+  "tabOverlaps": [],
+  "textSample": "No cycle is running yet. Add an active to get started. Got it",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

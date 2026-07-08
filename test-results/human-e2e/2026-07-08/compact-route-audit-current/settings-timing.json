@@ -1,0 +1,18 @@
+{
+  "actualPath": "/settings/timing",
+  "barRect": null,
+  "documentWidth": 320,
+  "headingSample": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/settings/timing",
+  "selectedTabCount": 0,
+  "tabOverlaps": [],
+  "tabSummary": [],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

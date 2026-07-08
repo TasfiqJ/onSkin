@@ -1,0 +1,18 @@
+{
+  "actualPath": "/settings/subscription",
+  "barRect": null,
+  "documentWidth": 320,
+  "headingSample": "< Subscription RoutineKind Pro Active Plan RoutineKind Pro · $49.99/year Renews July 15, 2026 Manage in App Store › Restore purchases › Terms › Privacy › Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls.",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/settings/subscription",
+  "selectedTabCount": 0,
+  "tabOverlaps": [],
+  "tabSummary": [],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

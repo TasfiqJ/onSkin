@@ -1,0 +1,16 @@
+{
+  "actualPath": "/shelf/replenish",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/shelf/replenish",
+  "tabOverlaps": [],
+  "textSample": "SHELF UPDATED This replacement prompt is no longer active. That product was removed or archived on this device, so we won't reuse its freshness or shopping prompt. Review your current shelf, or add the product again if it still belongs in your routine. Back to Shelf Add a product",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

@@ -1,0 +1,16 @@
+{
+  "actualPath": "/cycle/recovery",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/cycle/recovery",
+  "tabOverlaps": [],
+  "textSample": "< No recovery in progress. Your cycle is running normally.",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

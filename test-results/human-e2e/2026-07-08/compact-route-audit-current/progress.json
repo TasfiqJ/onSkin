@@ -1,0 +1,72 @@
+{
+  "actualPath": "/progress",
+  "barRect": {
+    "bottom": 548.953311920166,
+    "right": 311.4229507446289,
+    "x": 8.965413093566895,
+    "y": 494.963623046875
+  },
+  "documentWidth": 320,
+  "headingSample": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. Take my first photo Today Progress Shelf You",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/progress",
+  "selectedTabCount": 1,
+  "tabOverlaps": [],
+  "tabSummary": [
+    {
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.60679626464844,
+        "x": 8.965413093566895,
+        "y": 494.963623046875
+      },
+      "selected": "false",
+      "testId": "bottom-tab-today",
+      "text": "Today"
+    },
+    {
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.6219711303711,
+        "x": 84.57221221923828,
+        "y": 494.963623046875
+      },
+      "selected": "true",
+      "testId": "bottom-tab-progress",
+      "text": "Progress"
+    },
+    {
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.60679626464844,
+        "x": 160.19418334960938,
+        "y": 494.963623046875
+      },
+      "selected": "false",
+      "testId": "bottom-tab-shelf",
+      "text": "Shelf"
+    },
+    {
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "width": 75.6219711303711,
+        "x": 235.8009796142578,
+        "y": 494.963623046875
+      },
+      "selected": "false",
+      "testId": "bottom-tab-you",
+      "text": "You"
+    }
+  ],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

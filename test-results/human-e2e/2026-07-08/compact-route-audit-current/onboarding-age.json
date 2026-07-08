@@ -1,0 +1,18 @@
+{
+  "actualPath": "/onboarding/age",
+  "barRect": null,
+  "documentWidth": 320,
+  "headingSample": "First, your date of birth. RoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date. DAY MONTH YEAR Continue",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/onboarding/age",
+  "selectedTabCount": 0,
+  "tabOverlaps": [],
+  "tabSummary": [],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

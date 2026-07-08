@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added a production dialog contract test that scans mobile source files and
+  rejects native `Alert` imports/calls plus explicit browser `window` /
+  `globalThis` alert, confirm, or prompt calls. This locks in the route-owned
+  recovery work so future launch surfaces cannot silently reintroduce blocking
+  system dialogs over polished in-app failure states.
+
 - Removed the last production native-alert calls from shared navigation helpers.
   `openExternalHttpsUrl` and `openAppSettings` now stay UI-free and return
   `false` for invalid links, browser/linking failures, settings failures, and
@@ -4529,6 +4535,31 @@ and
 `docs/e2e-bug-reports/2026-07-08-progress-photo-detail-native-alerts.md`.
 Native iOS/Android share-sheet rejection chrome, screen-reader order, Dynamic
 Type, and real encrypted-file deletion failure remain device QA follow-up.
+
+### Navigation tab-bar resume audit and lint gate repair (2026-07-08)
+
+Re-ran the floating bottom tab bar on the current `main` state in the Codex
+in-app browser at 320 x 568 and 390 x 568. `/today` switched through Progress,
+Shelf, You, and back to Today with exactly one selected tab after each tap, 53.99
+px tab targets, successful center hit-tests for every tab, zero horizontal
+overflow, no non-tab controls intersecting the floating-bar zone, and only
+expected local placeholder Supabase / Expo notifications web warnings. Evidence
+is in
+`test-results/human-e2e/2026-07-08/navigation-tabbar-resume-current/`.
+
+Also swept compact 320 x 568 core and secondary routes for horizontal overflow,
+visible sub-44 px controls, floating-tab overlap, raw error leakage,
+placeholder/TODO copy, and JavaScript dialogs. No issues were reported in
+`test-results/human-e2e/2026-07-08/compact-route-audit-current/` or
+`test-results/human-e2e/2026-07-08/compact-route-audit-current-secondary/`.
+
+The mobile lint gate exposed one real repo issue:
+`apps/mobile/src/features/navigation/dialogContracts.test.ts` used the forbidden
+`Array<T>` style while lint runs with `--max-warnings=0`. Changed that local
+type annotation to `T[]`. `npm --workspace apps/mobile run typecheck`, `npm
+--workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`, and
+`npm --workspace apps/mobile run test -- src/features/navigation/dialogContracts.test.ts src/features/navigation/tabBar.test.ts`
+pass.
 
 ## Open questions for the founder
 

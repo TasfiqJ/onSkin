@@ -1,0 +1,18 @@
+{
+  "actualPath": "/onboarding/products",
+  "barRect": null,
+  "documentWidth": 320,
+  "headingSample": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Choose category > Skip for now",
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/onboarding/products",
+  "selectedTabCount": 0,
+  "tabOverlaps": [],
+  "tabSummary": [],
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

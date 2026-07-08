@@ -1,0 +1,16 @@
+{
+  "actualPath": "/onboarding/reveal",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/onboarding/reveal",
+  "tabOverlaps": [],
+  "textSample": "PROFILE PAUSED Finish the quiz to see your profile. Your reveal needs the quiz answers first, so the result reflects your skin. Back to quiz",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}

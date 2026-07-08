@@ -1,0 +1,16 @@
+{
+  "actualPath": "/routine/welcome-back",
+  "badPlaceholder": false,
+  "documentWidth": 320,
+  "horizontalOverflow": 0,
+  "rawLeaks": [],
+  "route": "/routine/welcome-back",
+  "tabOverlaps": [],
+  "textSample": "✓ Welcome back. It’s been a few days. That’s okay. Start again tonight; consistency over time is what counts, not a perfect chain. Tonight’s step",
+  "under44": [],
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "hasJsDialog": false
+}
