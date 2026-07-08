@@ -29,6 +29,19 @@ export type CatalogLookupResponse =
   | { result: 'matched' | 'external_candidate'; product: CatalogProductSummary }
   | { result: 'no_match' | 'too_short' | 'offline' | 'error'; products?: CatalogProductSummary[]; manualFallback?: boolean };
 
+function isDevRuntime(): boolean {
+  return typeof __DEV__ !== 'undefined' && __DEV__;
+}
+
+function devCatalogSearchFixture():
+  | (CatalogLookupResponse & { products?: CatalogProductSummary[] })
+  | null {
+  if (!isDevRuntime()) return null;
+  const fixture = process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT?.trim().toLowerCase();
+  if (fixture === 'no_match') return { result: 'no_match', products: [], manualFallback: true };
+  return null;
+}
+
 export async function lookupBarcode(barcode: string): Promise<CatalogLookupResponse> {
   if (!isSupabaseConfigured) return { result: 'offline', manualFallback: true };
   const { data, error } = await supabase.functions.invoke('catalog-lookup', { body: { barcode } });
@@ -38,6 +51,11 @@ export async function lookupBarcode(barcode: string): Promise<CatalogLookupRespo
 }
 
 export async function searchCatalog(query: string): Promise<CatalogLookupResponse & { products?: CatalogProductSummary[] }> {
+  const fixture = devCatalogSearchFixture();
+  if (fixture) {
+    track('catalog_search', { result: fixture.result });
+    return fixture;
+  }
   if (!isSupabaseConfigured) return { result: 'offline', products: [], manualFallback: true };
   const { data, error } = await supabase.functions.invoke('catalog-search', {
     body: { query, limit: 12 },

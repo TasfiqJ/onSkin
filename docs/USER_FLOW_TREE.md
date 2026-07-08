@@ -1076,6 +1076,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot and visible-text snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask RoutineKind is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
   - Current navigation evidence: 2026-07-08 system Chrome Expo web at 320 x 568 directly opens `/ask/consent`, verifies the cloud Ask deferred beta surface with a 272 x 56 `Back to Ask` CTA, then taps it and recovers to `/ask` with zero horizontal overflow and no browser errors. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
+- Branch: cloud consent save or withdrawal failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED=true`, `EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER=local_only`, open `/ask/consent`, toggle `Enable Ask RoutineKind` on, retry the grant, toggle it off, then retry the withdrawal.
+  - Expected result: Failed grant and withdrawal attempts do not open a native or JavaScript dialog, do not flip the visible consent state before persistence, render persistent route-owned `Choice not saved` feedback with `role="alert"`, keep retry possible on a 320 x 568 phone viewport, clear the alert after successful retry, and show no raw backend/provider error.
+  - Evidence: Screenshot sequence, dialog count, compact control geometry, route text snapshot, and browser warn/error logs.
 - Branch: empty shelf state
   - Priority: Important
   - Automate later: Yes

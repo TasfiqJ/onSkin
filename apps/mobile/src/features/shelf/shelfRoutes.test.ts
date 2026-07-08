@@ -248,6 +248,25 @@ describe('Shelf route mobile contracts', () => {
     );
   });
 
+  it('distinguishes true scan no-match from offline lookup recovery', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT');
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain("| { kind: 'offline'; barcode: string }");
+    expect(source).toContain("case 'offline':");
+    expect(source).toContain("return { kind: 'offline', barcode };");
+    expect(source).toContain("if (response.result === 'offline')");
+    expect(source).toContain("setState({ kind: 'offline', barcode: normalized.lookupValue });");
+    expect(source).toContain("Barcode {state.barcode} is not in the catalog yet.");
+    expect(source).toContain("Couldn&apos;t reach the product catalog for barcode {state.barcode}.");
+    expect(source).toContain('the shelf still works offline');
+    expect(source).toContain("{state.kind === 'no_match' && (");
+    expect(source).not.toContain(
+      "response.result === 'no_match' ||\n          response.result === 'too_short' ||\n          response.result === 'offline'",
+    );
+  });
+
   it('keeps the Shelf catalog search row inside narrow phones', () => {
     const source = readAppRoute('shelf/search.tsx');
 

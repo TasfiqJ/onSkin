@@ -1,13 +1,14 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
+import { clearAskStore, setAskConsentLocal } from '@/features/ask/store';
 import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -18,6 +19,28 @@ import { colors } from '@/theme/tokens';
 // deterministic on-device advisor needs no consent; this gate is only for the deeper
 // cloud path (deferred, B-AI-ASSISTANT-VENDOR). Honest posture (the stress-tested §7):
 // a short, consented safety window, NOT "no transcript, ever".
+
+type AskConsentFailureModes = {
+  grantOnce: boolean;
+  ledgerLocalOnly: boolean;
+  revokeOnce: boolean;
+};
+
+function devAskConsentFailureModes(): AskConsentFailureModes {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) {
+    return { grantOnce: false, ledgerLocalOnly: false, revokeOnce: false };
+  }
+  const modes = new Set(
+    (process.env.EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE ?? '')
+      .split(',')
+      .map((mode) => mode.trim()),
+  );
+  return {
+    grantOnce: modes.has('grant_once') || modes.has('all_once'),
+    ledgerLocalOnly: process.env.EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER === 'local_only',
+    revokeOnce: modes.has('revoke_once') || modes.has('all_once'),
+  };
+}
 
 function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
   const bg = kind === 'keep' ? colors.sageTint : colors.clayTint;
@@ -40,7 +63,14 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 export default function AskConsentScreen() {
   const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [askConsentFailureUsed, setAskConsentFailureUsed] = useState({
+    grant: false,
+    revoke: false,
+  });
   const savingRef = useRef(false);
+  const scrollRef = useRef<ScrollView | null>(null);
+  const failureModes = devAskConsentFailureModes();
   const consented = useQuery({
     queryKey: ['ask_onskin'],
     queryFn: isAskConsented,
@@ -57,21 +87,53 @@ export default function AskConsentScreen() {
       />
     );
 
+  const showSaveFailure = () => {
+    setSaveFailed(true);
+    requestAnimationFrame(() => {
+      scrollRef.current?.scrollToEnd({ animated: true });
+    });
+  };
+
+  const grant = async () => {
+    if (failureModes.grantOnce && !askConsentFailureUsed.grant) {
+      setAskConsentFailureUsed((used) => ({ ...used, grant: true }));
+      throw new Error('E2E_ASK_CONSENT_GRANT_FAILURE');
+    }
+    if (failureModes.ledgerLocalOnly) {
+      await setAskConsentLocal(true);
+      return;
+    }
+    await grantAskConsent();
+  };
+
+  const revoke = async () => {
+    if (failureModes.revokeOnce && !askConsentFailureUsed.revoke) {
+      setAskConsentFailureUsed((used) => ({ ...used, revoke: true }));
+      throw new Error('E2E_ASK_CONSENT_REVOKE_FAILURE');
+    }
+    if (failureModes.ledgerLocalOnly) {
+      await clearAskStore();
+      return;
+    }
+    await revokeAskConsent();
+  };
+
   const onToggle = async (enabled: boolean) => {
     if (savingRef.current) return;
     savingRef.current = true;
+    setSaveFailed(false);
     setSaving(true);
     try {
-      await applyAskConsentChoice(enabled, {
-        grant: grantAskConsent,
-        revoke: revokeAskConsent,
+      const saved = await applyAskConsentChoice(enabled, {
+        grant,
+        revoke,
         onSaved: () => {
           qc.setQueryData(['ask_onskin'], enabled);
         },
-        onFailure: () =>
-          Alert.alert(ASK_COPY.privacy.saveFailedTitle, ASK_COPY.privacy.saveFailedBody),
+        onFailure: showSaveFailure,
         invalidate: () => qc.invalidateQueries({ queryKey: ['ask_onskin'] }),
       });
+      if (saved) setSaveFailed(false);
     } finally {
       savingRef.current = false;
       setSaving(false);
@@ -91,6 +153,7 @@ export default function AskConsentScreen() {
       </View>
 
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerClassName="pb-8"
         className="mt-3"
@@ -141,6 +204,25 @@ export default function AskConsentScreen() {
             onChange={(v) => void onToggle(v)}
           />
         </Card>
+
+        {saveFailed ? (
+          <Card
+            accessibilityRole="alert"
+            className="mt-3"
+            style={{
+              backgroundColor: 'rgba(165,105,75,0.10)',
+              borderWidth: 1,
+              borderColor: 'rgba(165,105,75,0.22)',
+            }}
+          >
+            <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayDeep }}>
+              {ASK_COPY.privacy.saveFailedTitle}
+            </Text>
+            <Text className="mt-1 text-[12px]" tone="muted" style={{ lineHeight: 17 }}>
+              {ASK_COPY.privacy.saveFailedBody}
+            </Text>
+          </Card>
+        ) : null}
 
         <Text
           className="mt-4 text-center font-mono text-[10px]"
