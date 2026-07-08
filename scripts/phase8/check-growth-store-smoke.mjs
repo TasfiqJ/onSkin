@@ -225,6 +225,17 @@ const cases = [
         Boolean(result.packet.sourceHashes['docs/phase-8/store-metadata-source-of-truth.md']) &&
         Boolean(result.packet.sourceHashes['docs/phase-8/support-review-response-playbook.md']) &&
         Boolean(result.packet.sourceHashes['docs/phase-8/public-site/index.html']) &&
+        Boolean(result.packet.sourceHashes['docs/HUMAN_SIMULATED_E2E_TESTING.md']) &&
+        Boolean(result.packet.sourceHashes['docs/E2E_TESTING_CHECKLIST.md']) &&
+        Boolean(result.packet.sourceHashes['docs/USER_FLOW_TREE.md']) &&
+        Boolean(result.packet.sourceHashes['docs/e2e/generated/human-e2e-manifest.json']) &&
+        Boolean(result.packet.sourceHashes['docs/e2e/generated/human-e2e-manifest.md']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-5/generated/device-qa-packet.json']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-5/generated/device-qa-packet.md']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-6/generated/payments-qa-packet.json']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-6/generated/payments-qa-packet.md']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-7/generated/core-loop-qa-packet.json']) &&
+        Boolean(result.packet.sourceHashes['docs/phase-7/generated/core-loop-qa-packet.md']) &&
         Boolean(
           result.packet.sourceHashes[
             'docs/phase-8/public-site/.well-known/apple-app-site-association.template.json'

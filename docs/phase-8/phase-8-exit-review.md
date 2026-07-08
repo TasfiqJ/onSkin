@@ -21,6 +21,10 @@ Status: not launch-ready.
   Universal/App Links templates, store metadata source of truth, support
   playbook, Apple Ads lab, dry-run checklist, and `.env.example`, so the packet
   cannot sign off a stale or partial growth/store source package.
+- Generated QA packets also hash the human-simulated E2E rules/tree/manifest
+  and the generated Phase 5 native-device, Phase 6 payments, and Phase 7
+  core-loop packets, so public-growth signoff cannot drift from prerequisite
+  device, billing, and core-loop evidence.
 
 ## Still Blocked
 

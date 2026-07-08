@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 8 growth/store QA packet provenance against upstream evidence
+  drift. The generated packet now hashes the human-simulated E2E rules/checklist,
+  user-flow tree, generated human-E2E manifest, Phase 5 native-device QA packet,
+  Phase 6 payments QA packet, and Phase 7 core-loop QA packet alongside Phase 8
+  public-site, app-link, store-metadata, support, dashboard, checker, smoke, and
+  packet-builder inputs. The Phase 8 readiness gate enforces those hashes, and
+  smoke coverage proves they appear before public-growth signoff can be trusted.
+
 - Hardened Phase 7 core-loop QA packet provenance. The generated packet now
   hashes the human-simulated E2E rules/checklist, user-flow tree, generated
   human-E2E manifest, Phase 5 native-device QA packet, and Phase 6 payments QA
