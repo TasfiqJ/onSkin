@@ -114,7 +114,11 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('const shortPhone = height < 520');
     expect(home).toContain('const ultraShortPhone = height < 460;');
     expect(home).toContain('const splitShortPhone = height < 410;');
-    expect(home).toContain('const emptyPromptOrder = ultraShortPhone || splitShortPhone');
+    expect(home).toContain("const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;");
+    expect(home).toContain('accessibilityLabel={ASK_COPY.home.title}');
+    expect(home).toContain('{visibleTitle}');
+    expect(home).toContain('const emptyPromptOrder =');
+    expect(home).toContain('ultraShortPhone || splitShortPhone');
     expect(home).toContain('? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain('? SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain(
@@ -124,9 +128,7 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('{!shortPhone ? (');
     expect(home).toContain('{ultraShortPhone ? null : (');
     expect(home).toContain('className="mb-3 flex-row flex-wrap gap-1.5"');
-    expect(home).toContain(
-      "className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}",
-    );
+    expect(home).toContain("className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}");
     expect(home).toContain('style={{ lineHeight: shortPhone ? 18 : 19 }}');
     expect(home).toContain("'mb-1 font-mono text-[9px] uppercase'");
     expect(home).toContain("'mb-1.5 font-mono text-[10px] uppercase'");
@@ -158,7 +160,7 @@ describe('Ask route launch contracts', () => {
       "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
     );
     expect(home).toContain(
-      "pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {\n                      scrollToEnd: false,",
+      'pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {\n                      scrollToEnd: false,',
     );
     expect(home).toContain('{!compactPhone ? (');
   });

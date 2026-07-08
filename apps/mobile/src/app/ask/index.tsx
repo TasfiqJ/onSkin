@@ -284,10 +284,7 @@ function UserBubble({ text, compact = false }: { text: string; compact?: boolean
       }
       style={{ backgroundColor: colors.ink }}
     >
-      <Text
-        className="text-[13px]"
-        style={{ color: colors.cream, lineHeight: compact ? 17 : 18 }}
-      >
+      <Text className="text-[13px]" style={{ color: colors.cream, lineHeight: compact ? 17 : 18 }}>
         {text}
       </Text>
     </View>
@@ -370,11 +367,13 @@ export default function AskScreen() {
   const shortPhone = height < 520;
   const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
-  const emptyPromptOrder = ultraShortPhone || splitShortPhone
-    ? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER
-    : shortPhone
-      ? SHORT_PHONE_EMPTY_PROMPT_ORDER
-      : EMPTY_PROMPT_ORDER;
+  const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;
+  const emptyPromptOrder =
+    ultraShortPhone || splitShortPhone
+      ? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER
+      : shortPhone
+        ? SHORT_PHONE_EMPTY_PROMPT_ORDER
+        : EMPTY_PROMPT_ORDER;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -390,8 +389,14 @@ export default function AskScreen() {
         >
           <Text style={{ color: colors.clayBright, fontSize: 14 }}>✦</Text>
         </View>
-        <Text variant="title" className="text-[24px]" accessibilityRole="header">
-          {ASK_COPY.home.title}
+        <Text
+          variant="title"
+          className="text-[24px]"
+          accessibilityRole="header"
+          accessibilityLabel={ASK_COPY.home.title}
+          numberOfLines={1}
+        >
+          {visibleTitle}
         </Text>
       </View>
 
@@ -411,10 +416,7 @@ export default function AskScreen() {
                     className="rounded-pill px-2.5 py-1"
                     style={{ backgroundColor: colors.greige }}
                   >
-                    <Text
-                      className="font-mono text-[9.5px]"
-                      style={{ color: colors.mutedStrong }}
-                    >
+                    <Text className="font-mono text-[9.5px]" style={{ color: colors.mutedStrong }}>
                       {p}
                     </Text>
                   </View>
@@ -436,8 +438,8 @@ export default function AskScreen() {
                 ultraShortPhone
                   ? 'mb-1 font-mono text-[9px] uppercase'
                   : shortPhone
-                  ? 'mb-1.5 font-mono text-[10px] uppercase'
-                  : 'mb-2 font-mono text-[10px] uppercase'
+                    ? 'mb-1.5 font-mono text-[10px] uppercase'
+                    : 'mb-2 font-mono text-[10px] uppercase'
               }
               style={{ color: colors.mutedLight, letterSpacing: 1 }}
             >

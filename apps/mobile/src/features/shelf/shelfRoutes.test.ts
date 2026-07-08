@@ -225,6 +225,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const shortShelf = height < 520');
     expect(source).toContain('const splitShortShelf = height < 410;');
     expect(source).toContain('const compactFilterLabels = compactShelf;');
+    expect(source).toContain('function SkeletonShelf({ compactFilterLabels }');
+    expect(source).toContain('<SkeletonShelf compactFilterLabels={compactFilterLabels} />');
+    expect(source).toContain("label={compactFilterLabels && l === 'Expiring' ? 'Exp.' : l}");
     expect(source).toContain("? 'Exp.'");
     expect(source).toContain('accessibilityLabel={f ===');
     expect(source).toContain("className={compactFilterLabels ? 'px-3' : undefined}");

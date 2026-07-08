@@ -327,7 +327,7 @@ function SkeletonCard() {
 
 // Cold-load skeleton (docs/04 §5.1/§5.8: skeleton cards, never spinners, and never a
 // flash of "0 products" while the local-first store reads).
-function SkeletonShelf() {
+function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }) {
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
       <View className="mt-2">
@@ -335,9 +335,15 @@ function SkeletonShelf() {
           Shelf
         </Text>
       </View>
-      <View className="mt-3.5 flex-row gap-2.5">
+      <View className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}>
         {(['All', 'Actives', 'Expiring'] as const).map((l, i) => (
-          <SegmentChip key={l} label={l} selected={i === 0} />
+          <SegmentChip
+            key={l}
+            accessibilityLabel={l}
+            label={compactFilterLabels && l === 'Expiring' ? 'Exp.' : l}
+            selected={i === 0}
+            className={compactFilterLabels ? 'px-3' : undefined}
+          />
         ))}
       </View>
       <View className="mt-7 gap-2.5">
@@ -372,7 +378,7 @@ export default function ShelfScreen() {
   return (
     <Screen edges={['top']}>
       {showLoading ? (
-        <SkeletonShelf />
+        <SkeletonShelf compactFilterLabels={compactFilterLabels} />
       ) : isEmpty ? (
         <>
           <View className="mt-2">
