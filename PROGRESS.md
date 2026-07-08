@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Re-ran `npm run phase5:verify` on current `main` after the latest native
+  capture route changes. Phase 5 QA packet smoke, native config check,
+  generated device QA packet, root typecheck, root lint, and the full mobile
+  test suite all pass non-strict verification. The generated Phase 5 packet now
+  hashes the current progress capture route. Strict Phase 5 remains blocked on
+  external/native evidence only: real EAS iOS and Android build IDs, physical
+  iOS and Android device names/OS versions, native camera, photo,
+  notification, share, RevenueCat, Sentry QA, and a real named tester signoff.
+
 - Re-ran `npm run phase8:verify` on current `main` after the current
   growth/share-card route work. Phase 8 smoke, growth/store code gates,
   generated QA packet, root typecheck, root lint, and the full mobile test
@@ -23,7 +32,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   named `Choose product category` dialog, hides background content from the
   accessibility tree while open, pads the internal chip list, and keeps keyboard
   taps handled inside the scroll view. Codex in-app browser Expo web at 320 x
-  480 completed goals, consent, and quiz, typed `Barrier Screen SPF 52`, opened the
+  480 completed goals, consent, and quiz, typed `Barrier Screen SPF`, opened the
   category sheet, verified a single named dialog, 48 px category chips, full
   320 px sheet width, and zero horizontal overflow, selected `SPF`, confirmed
   the collapsed field exposes `Category, SPF`, added the product, and verified

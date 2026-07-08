@@ -36,6 +36,12 @@ Fresh verification on 2026-07-08:
   Universal/App Links, share-card device QA, attribution privacy, store packet,
   creator/support/dashboard/dry-run, Apple Team ID, Android release
   certificate, and named signoff evidence.
+- `npm run phase5:verify` passed non-strict native-build/device-QA code gates
+  and refreshed `docs/phase-5/generated/device-qa-packet.*` for the current
+  progress capture route hash. Strict Phase 5 remains blocked by missing EAS
+  iOS/Android build IDs, physical-device matrix evidence, native
+  camera/photo/notification/share/RevenueCat/Sentry QA, and named tester
+  signoff evidence.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
 - `npm run phase9:verify` passed non-strict release-engineering code gates

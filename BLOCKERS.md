@@ -87,13 +87,15 @@ instead of silently editing implementation around the plan.
 Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
-`npm run phase7:verify`, `npm run brand:audit:strict`,
+`npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
 `npm run phase8:verify`, `npm run phase9:verify`, and
 `npm run phase10-11:verify` pass non-strict code gates. The Phase 7 core-loop
 packet has been refreshed for the current Today and Progress route hashes; the
 Phase 8 growth/store packet has been refreshed for the current share-card and
-conflict-share route hashes; strict Phase 7 and Phase 8 still require the
-founder/reviewer evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
+conflict-share route hashes; the Phase 5 native-device packet has been
+refreshed for the current progress capture route hash; strict Phase 5, Phase 7,
+and Phase 8 still require the founder/reviewer/device evidence listed in
+`docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
 covers 170 test files and 1743 tests. The 2026-07-08 Expo web shortest-phone

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T08:26:22.417Z",
+  "generatedAt": "2026-07-08T14:39:30.183Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
   "buildEvidence": {
     "iosBuildId": "",
@@ -101,8 +101,8 @@
     {
       "path": "apps/mobile/src/app/progress/capture.tsx",
       "exists": true,
-      "bytes": 28120,
-      "sha256": "f759e409ffe37afc6cf4b0fb2bc7d672d717fac22c902e25759edb7c93563647"
+      "bytes": 28389,
+      "sha256": "0771d23296832f316f63d8b274225d5e86d90520fc3160d42740d3e70fd74bbb"
     },
     {
       "path": "apps/mobile/src/app/progress/review.tsx",
