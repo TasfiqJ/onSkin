@@ -13,6 +13,7 @@ import { RecommendationsTeaser } from '@/features/recommendations/Recommendation
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
+import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { currentRoutineType, localClockLabel, localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
@@ -292,14 +293,31 @@ export default function TodayScreen() {
 
   // Persist the check-off to the local-first store, fire the activation metric on the
   // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
-  async function toggle(key: string) {
-    const { done, firstEver } = await toggleCompletion(key, today);
-    if (done) {
+  async function toggle(
+    key: string,
+    context?: { phase: 'AM' | 'PM'; cycleActive: boolean; stepKeys: readonly string[] },
+  ) {
+    const result = await toggleCompletion(key, today);
+    if (result.done) {
       const moment = type.toLowerCase();
       track('routine_checkoff_completed', { moment });
-      if (firstEver) track('first_checkoff_completed', { moment });
+      if (result.firstEver) track('first_checkoff_completed', { moment });
+      const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
+      if (
+        shouldTrackCycleNightCompleted({
+          completedBefore: done,
+          completedKey: key,
+          cycleActive: context?.cycleActive === true,
+          phase: checkoffPhase,
+          stepKeys: context?.stepKeys ?? [],
+          completionDone: result.done,
+        })
+      ) {
+        track('cycle_night_completed', { moment: 'pm', source: 'today' });
+      }
     }
-    if (done && (progress?.streak ?? 0) >= 6) void requestReviewAfterValue('seven_checkoff_days');
+    if (result.done && (progress?.streak ?? 0) >= 6)
+      void requestReviewAfterValue('seven_checkoff_days');
     await qc.invalidateQueries({ queryKey: ['completions', today] });
     await qc.invalidateQueries({ queryKey: ['progress'] });
   }
@@ -479,8 +497,8 @@ export default function TodayScreen() {
   const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
     (a, b) => a.order - b.order,
   );
-  const firstUndonePm =
-    pmSteps.map((s) => stepKey('PM', s.productId)).find((k) => !done.has(k)) ?? null;
+  const pmStepKeys = pmSteps.map((s) => stepKey('PM', s.productId));
+  const firstUndonePm = pmStepKeys.find((k) => !done.has(k)) ?? null;
   const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
   const suppressedAcidName =
     tonightSlot === 'retinoid' && cycle
@@ -639,7 +657,13 @@ export default function TodayScreen() {
                     dark
                     compact={compactPhone}
                     first={i === 0}
-                    onPress={() => void toggle(k)}
+                    onPress={() =>
+                      void toggle(k, {
+                        phase: 'PM',
+                        cycleActive: Boolean(cycle && cTonight),
+                        stepKeys: pmStepKeys,
+                      })
+                    }
                   />
                 );
               })

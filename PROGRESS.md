@@ -6,6 +6,25 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added privacy-safe `cycle_night_completed` instrumentation to the local-first
+  Today PM check-off path. The event is allowlisted, emitted only when the
+  final PM step of an active cycle night completes, and carries only
+  `{ moment: 'pm', source: 'today' }`; product names, cycle slots, skin goals,
+  and step details stay out of the payload. Updated the Phase 7/10 analytics
+  gates and beta dashboard docs to include the event alongside
+  `first_checkoff_completed` and `routine_checkoff_completed`. Also replaced
+  the product-detail literal ellipsis text with an accessible dot glyph while
+  preserving the 48 px More options target. The product-detail scroll region now
+  also respects the bottom lifecycle dock so freshness controls do not sit under
+  the action row. Focused tests and code gates pass, and Codex in-app browser
+  Expo web at 320 x 568 verifies manual shelf seed -> generated routine ->
+  direct Today PM Night 1 check-off from `0 of 1` to
+  `1 of 1`, plus the product-detail More options sheet and best-before row
+  reachability. Evidence:
+  `test-results/human-e2e/2026-07-08/today-cycle-completion-analytics-current/`,
+  `test-results/human-e2e/2026-07-08/shelf-detail-more-options-glyph-current/`,
+  `docs/e2e-bug-reports/2026-07-08-shelf-detail-more-options-glyph-dock.md`.
+
 - Fixed the 320 x 390 onboarding goals footer overlap that remained after the
   480 px compact grid pass. The split-short goals layout now tightens heading
   spacing and uses still-tappable 60 px cards below 420 px height, keeping

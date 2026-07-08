@@ -1,0 +1,203 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Cancel",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 170.9648151397705
+      },
+      "centerBlocked": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 195.96481704711914,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 145.96481323242188,
+        "visibleHeight": 50.000003814697266,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "Product name",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 85.99818420410156,
+        "y": 254.96057319641113
+      },
+      "centerBlocked": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 279.96057510375977,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 147.9975814819336,
+        "top": 229.9605712890625,
+        "visibleHeight": 50.000003814697266,
+        "visibleWidth": 123.99879455566406,
+        "width": 123.99879455566406
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "Brand",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 228.1932830810547,
+        "y": 254.96057319641113
+      },
+      "centerBlocked": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 279.96057510375977,
+        "height": 50.000003814697266,
+        "left": 159.99697875976562,
+        "right": 296.38958740234375,
+        "top": 229.9605712890625,
+        "visibleHeight": 50.000003814697266,
+        "visibleWidth": 136.39260864257812,
+        "width": 136.39260864257812
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Category",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 378.3373908996582
+      },
+      "centerBlocked": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 410.72513580322266,
+        "height": 64.7754898071289,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 345.94964599609375,
+        "visibleHeight": 64.7754898071289,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "TEXTAREA",
+      "text": "Ingredients",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 528.9366092681885
+      },
+      "centerBlocked": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 556.9326667785645,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 500.9405517578125,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 414.0776824951172
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 449.0594787597656,
+        "height": 69.96359252929688,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 379.09588623046875,
+        "visibleHeight": 69.96359252929688,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Edit period after opening",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 501.0543460845947
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 529.0504035949707,
+        "height": 55.99211502075195,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 473.05828857421875,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Add to shelf",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issues": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "text": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue ◴ x When did you open it? This starts the freshness clock. Not sure? We'll estimate from when you added it. ✓ Just opened it Clock starts today Pick a date I opened it earlier Not opened yet No clock. We'll show shelf life PAO not set tap to set ✎ Add to shelf",
+  "url": "http://localhost:8157/shelf/opened",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

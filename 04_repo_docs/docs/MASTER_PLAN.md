@@ -418,8 +418,8 @@ Shelf + reviewed conflict card + AM/PM routine + Today + private progress + annu
 | Scenario                        |                                                           Formula | Subscribers Needed |
 | ------------------------------- | ----------------------------------------------------------------: | -----------------: |
 | $30k/month gross at $49.99/year |                                                   360,000 / 49.99 |        about 7,202 |
-| After 15% store fee             |                                          360,000 / (49.99 * 0.85) |        about 8,473 |
-| After 30% store fee             |                                          360,000 / (49.99 * 0.70) |       about 10,288 |
+| After 15% store fee             |                                         360,000 / (49.99 \* 0.85) |        about 8,473 |
+| After 30% store fee             |                                         360,000 / (49.99 \* 0.70) |       about 10,288 |
 | Safer operating target          | includes refunds, taxes, discounts, churn, failed payments, tools |      10,000-14,000 |
 
 ### Funnel Targets
@@ -855,6 +855,8 @@ RoutineKind Pro:
 - `conflict_detail_viewed`
 - `routine_created`
 - `first_checkoff_completed`
+- `routine_checkoff_completed`
+- `cycle_night_completed`
 - `photo_baseline_added`
 - `paywall_shown`
 - `reverse_trial_started`

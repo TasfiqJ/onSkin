@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-08T16:49:14.753Z
+Generated: 2026-07-08T17:21:00.109Z
 Status: pass
 Strict mode: yes
 
@@ -26,11 +26,11 @@ the top-level packet markdown shape changes without updating the audit.
 | Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
 | ------------------------------ | ------------------ | --------- | --------- | -------------- |
 | ARCHITECTURE.md                | identical          | yes       | yes       | dbcd9f7a2a71   |
-| CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | b5ca8e0d7516   |
+| CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 237c46f8ab33   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
 | DECISIONS.md                   | identical          | yes       | yes       | 28205a421404   |
 | FEATURE_INDEX.md               | identical          | yes       | yes       | 01be02ee0c4e   |
-| MASTER_PLAN.md                 | identical          | yes       | yes       | d6e767a75349   |
+| MASTER_PLAN.md                 | identical          | yes       | yes       | 30bcdf57b71e   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
 | PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | fabb281ce1fa   |
 | ROADMAP.md                     | identical          | yes       | yes       | 1d6a7730199b   |
@@ -50,11 +50,11 @@ the top-level packet markdown shape changes without updating the audit.
 | 04_repo_docs/AGENTS.md                           | 3385  | ef580a3f1d66 |
 | 04_repo_docs/README.md                           | 2924  | b7ebba84d0dd |
 | 04_repo_docs/docs/ARCHITECTURE.md                | 4924  | dbcd9f7a2a71 |
-| 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 7686  | b5ca8e0d7516 |
+| 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 7739  | 237c46f8ab33 |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
 | 04_repo_docs/docs/DECISIONS.md                   | 4315  | 28205a421404 |
 | 04_repo_docs/docs/FEATURE_INDEX.md               | 4833  | 01be02ee0c4e |
-| 04_repo_docs/docs/MASTER_PLAN.md                 | 53806 | d6e767a75349 |
+| 04_repo_docs/docs/MASTER_PLAN.md                 | 53863 | 30bcdf57b71e |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |
 | 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5347  | fabb281ce1fa |
 | 04_repo_docs/docs/ROADMAP.md                     | 3054  | 1d6a7730199b |

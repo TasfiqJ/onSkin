@@ -1,0 +1,97 @@
+{
+  "controls": [
+    {
+      "aria": "Back",
+      "h": 48,
+      "role": "button",
+      "text": "<",
+      "visible": true,
+      "w": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "aria": "More options",
+      "h": 48,
+      "role": "button",
+      "text": "More options",
+      "visible": true,
+      "w": 48,
+      "x": 248,
+      "y": 8
+    },
+    {
+      "aria": null,
+      "h": 48,
+      "role": "button",
+      "text": "Report an issue",
+      "visible": true,
+      "w": 105,
+      "x": 43,
+      "y": 349
+    },
+    {
+      "aria": "Edit opened date",
+      "h": 56,
+      "role": "button",
+      "text": "OpenedJuly 2026 · edit",
+      "visible": true,
+      "w": 234,
+      "x": 43,
+      "y": 429
+    },
+    {
+      "aria": "Set printed best-before date",
+      "h": 56,
+      "role": "button",
+      "text": "Best used byestimated · set",
+      "visible": true,
+      "w": 234,
+      "x": 43,
+      "y": 542
+    },
+    {
+      "aria": "Review routine placement",
+      "h": 114,
+      "role": "button",
+      "text": "Routine roleUsed in your Morning routine.Review the AM/PM plan before you check it off.",
+      "visible": true,
+      "w": 272,
+      "x": 24,
+      "y": 698
+    },
+    {
+      "aria": null,
+      "h": 50,
+      "role": "button",
+      "text": "Replace",
+      "visible": true,
+      "w": 100,
+      "x": 24,
+      "y": 519
+    },
+    {
+      "aria": null,
+      "h": 50,
+      "role": "button",
+      "text": "Mark finished",
+      "visible": true,
+      "w": 102,
+      "x": 134,
+      "y": 519
+    },
+    {
+      "aria": "Remove or discard",
+      "h": 50,
+      "role": "button",
+      "text": "🗑︎",
+      "visible": true,
+      "w": 50,
+      "x": 246,
+      "y": 519
+    }
+  ],
+  "overflow": 0,
+  "text": "<\nMineral SPF 50\nEvidence\ndata / Added by you\nCATALOG\nAdded by you\nManual\nAdded by hand. It can support your shelf and routine, but not high-confidence product recommendations.\ningredients parsed / 92% confidence\nReport an issue\nOpened\nJuly 2026 · edit\nPAO\nunknown\nBest used by\nestimated · set\nWHAT IT CONTRIBUTES\nSunscreen\nphysical_spf\nROUTINE ROLE\nUsed in your Morning routine.\nReview the AM/PM plan before you check it off.\nReplace\nMark finished\n🗑︎",
+  "url": "http://localhost:8154/shelf/4b82c560-9f91-4c84-a12b-07d0afbdd184"
+}

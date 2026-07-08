@@ -17,6 +17,23 @@ clearance and not a real launch catalog.
 
 Fresh verification on 2026-07-08:
 
+- Codex in-app browser Expo web at 320 x 568 verified the new
+  `cycle_night_completed` Today PM instrumentation path through the real UI:
+  manual Shelf seed for `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and
+  `Mineral SPF 50`; generated routine plan with PM skin cycling; direct
+  `/today?routine=PM`; and Night 1 `Glycolic 7% Toner` check-off from `0 of 1`
+  to `1 of 1` with zero horizontal overflow. Source tests and Phase 7/10 gates
+  verify the event only fires after the final active PM cycle-night check-off
+  and uses the privacy-safe payload `{ moment: 'pm', source: 'today' }`.
+  Evidence:
+  `test-results/human-e2e/2026-07-08/today-cycle-completion-analytics-current/`.
+- A follow-up 320 x 568 pass rechecked Shelf product detail after the More
+  options glyph and lifecycle-dock polish: the control remains an accessible
+  48 x 48 `More options` button, the best-before row becomes fully reachable by
+  scroll instead of sitting under the action dock, the named `Remove from shelf?`
+  dialog keeps lifecycle choices 48 px+, horizontal overflow is zero, and no
+  current-origin browser warn/error logs were recorded. Evidence:
+  `test-results/human-e2e/2026-07-08/shelf-detail-more-options-glyph-current/`.
 - Codex in-app browser Expo web at 320 x 390 rechecked the first-run
   `/onboarding/goals` split-short layout after the previous 320 x 480 compact
   pass. Clear skin, Even tone, Hydration, Fine lines, Sensitivity, Barrier

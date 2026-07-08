@@ -206,6 +206,7 @@ const coreLoopEvents = [
   'conflict_detected',
   'routine_checkoff_completed',
   'first_checkoff_completed',
+  'cycle_night_completed',
   'photo_baseline_added',
   'photo_captured',
   'paywall_shown',
@@ -239,6 +240,10 @@ require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
   /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
     todayTab,
   ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
+require(/shouldTrackCycleNightCompleted/.test(todayTab) &&
+  /track\('cycle_night_completed', \{ moment: 'pm', source: 'today' \}/.test(
+    todayTab,
+  ), 'Today PM check-off flow must emit privacy-safe cycle_night_completed when a cycle night is completed.');
 require(/wasEmpty[\s\S]{0,140}track\('first_photo_captured'/.test(progressReview) &&
   /wasEmpty[\s\S]{0,180}track\('photo_baseline_added'/.test(
     progressReview,

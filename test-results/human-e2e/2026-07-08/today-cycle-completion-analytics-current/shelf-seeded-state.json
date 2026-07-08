@@ -1,0 +1,136 @@
+{
+  "controls": [
+    {
+      "aria": "All",
+      "h": 48,
+      "role": "button",
+      "text": "All",
+      "visible": true,
+      "w": 55,
+      "x": 24,
+      "y": 62
+    },
+    {
+      "aria": "Actives",
+      "h": 48,
+      "role": "button",
+      "text": "Actives",
+      "visible": true,
+      "w": 91,
+      "x": 89,
+      "y": 62
+    },
+    {
+      "aria": "Expiring",
+      "h": 48,
+      "role": "button",
+      "text": "Expiring",
+      "visible": true,
+      "w": 97,
+      "x": 190,
+      "y": 62
+    },
+    {
+      "aria": "Review conflict",
+      "h": 146,
+      "role": "button",
+      "text": "Review conflict",
+      "visible": true,
+      "w": 272,
+      "x": 24,
+      "y": 178
+    },
+    {
+      "aria": null,
+      "h": 56,
+      "role": "button",
+      "text": "Build my routine",
+      "visible": true,
+      "w": 238,
+      "x": 41,
+      "y": 479
+    },
+    {
+      "aria": "Mineral SPF 50, PAO est.",
+      "h": 90,
+      "role": "button",
+      "text": "Mineral SPF 50Evidence · opened JulPAO est.",
+      "visible": true,
+      "w": 238,
+      "x": 41,
+      "y": 585
+    },
+    {
+      "aria": "Glycolic 7% Toner, PAO est.",
+      "h": 90,
+      "role": "button",
+      "text": "Glycolic 7% TonerEvidence · opened JulPAO est.",
+      "visible": true,
+      "w": 238,
+      "x": 41,
+      "y": 719
+    },
+    {
+      "aria": "Retinol 0.3% Night Serum, PAO est.",
+      "h": 90,
+      "role": "button",
+      "text": "Retinol 0.3% Night SerumEvidence · opened JulPAO est.",
+      "visible": true,
+      "w": 238,
+      "x": 41,
+      "y": 852
+    },
+    {
+      "aria": null,
+      "h": 52,
+      "role": "button",
+      "text": "Scan a barcode",
+      "visible": true,
+      "w": 168,
+      "x": 76,
+      "y": 983
+    },
+    {
+      "aria": "Today tab",
+      "h": 54,
+      "role": "tab",
+      "text": "Today",
+      "visible": true,
+      "w": 76,
+      "x": 9,
+      "y": 495
+    },
+    {
+      "aria": "Progress tab",
+      "h": 54,
+      "role": "tab",
+      "text": "Progress",
+      "visible": true,
+      "w": 76,
+      "x": 85,
+      "y": 495
+    },
+    {
+      "aria": "Shelf tab",
+      "h": 54,
+      "role": "tab",
+      "text": "Shelf",
+      "visible": true,
+      "w": 76,
+      "x": 160,
+      "y": 495
+    },
+    {
+      "aria": "You tab",
+      "h": 54,
+      "role": "tab",
+      "text": "You",
+      "visible": true,
+      "w": 76,
+      "x": 236,
+      "y": 495
+    }
+  ],
+  "text": "Shelf\n3 products\nAll\nActives\nExpiring\nEverything on your shelf, soonest to replace first.\n2 actives share your PM\nMild\nUse them on alternate nights. Review →\nFIRST ROUTINE\nTurn this insight into a routine.\nWe will place your products around the timing note instead of making you remember it.\nBuild my routine\nMineral SPF 50\nEvidence · opened Jul\nPAO est.\nGlycolic 7% Toner\nEvidence · opened Jul\nPAO est.\nRetinol 0.3% Night Serum\nEvidence · opened Jul\nPAO est.\nScan a barcode\nToday\nProgress\nShelf\nYou",
+  "url": "http://localhost:8154/shelf"
+}

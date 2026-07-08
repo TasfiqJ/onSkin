@@ -1,0 +1,83 @@
+{
+  "afterStart": {
+    "text": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8\nGood morning.\nMorning routine\n0 of 1\nMineral SPF 50\nLast step. Reapply later.\nNEXT\n✦\nA few honest suggestions\n3 things we’d gently suggest\n›\nToday\nProgress\nShelf\nYou",
+    "url": "http://localhost:8154/today"
+  },
+  "pmBefore": {
+    "controls": [
+      {
+        "aria": "You're exploring Pro. Manage your plan",
+        "h": 74,
+        "role": "button",
+        "text": "You’re exploring Pro. 7 days left›",
+        "visible": true,
+        "w": 272,
+        "x": 24,
+        "y": 0
+      },
+      {
+        "aria": "See your cycle week ahead",
+        "h": 139,
+        "role": "button",
+        "text": "Skin cycling · night 1 of 6Week ahead ›Exfol iateRetin oidExfol iateRetin oidReco verReco ver",
+        "visible": true,
+        "w": 272,
+        "x": 24,
+        "y": 170
+      },
+      {
+        "aria": "Glycolic 7% Toner",
+        "h": 56,
+        "role": "checkbox",
+        "text": "Glycolic 7% TonerThin layer tonight.NEXT",
+        "visible": true,
+        "w": 232,
+        "x": 44,
+        "y": 377
+      },
+      {
+        "aria": "Today tab",
+        "h": 54,
+        "role": "tab",
+        "text": "Today",
+        "visible": true,
+        "w": 76,
+        "x": 9,
+        "y": 495
+      },
+      {
+        "aria": "Progress tab",
+        "h": 54,
+        "role": "tab",
+        "text": "Progress",
+        "visible": true,
+        "w": 76,
+        "x": 85,
+        "y": 495
+      },
+      {
+        "aria": "Shelf tab",
+        "h": 54,
+        "role": "tab",
+        "text": "Shelf",
+        "visible": true,
+        "w": 76,
+        "x": 160,
+        "y": 495
+      },
+      {
+        "aria": "You tab",
+        "h": 54,
+        "role": "tab",
+        "text": "You",
+        "visible": true,
+        "w": 76,
+        "x": 236,
+        "y": 495
+      }
+    ],
+    "overflow": 0,
+    "text": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8 · 1:17 PM\nGood evening.\nSKIN CYCLING · NIGHT 1 OF 6\nWeek ahead ›\nExfol\niate\nRetin\noid\nExfol\niate\nRetin\noid\nReco\nver\nReco\nver\nEvening routine\n0 of 1\nGlycolic 7% Toner\nThin layer tonight.\nNEXT\nToday\nProgress\nShelf\nYou",
+    "url": "http://localhost:8154/today?routine=PM"
+  }
+}

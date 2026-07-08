@@ -1,0 +1,237 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Back",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 47.99757385253906,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "center": {
+        "x": 272.39078521728516,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 248.39199829101562,
+        "right": 296.3895721435547,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "More options",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 47.99757385253906,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "center": {
+        "x": 95.69933700561523,
+        "y": 341.4441909790039
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 365.44297790527344,
+        "height": 47.99757385253906,
+        "left": 42.96116638183594,
+        "right": 148.43750762939453,
+        "top": 317.4454040527344,
+        "width": 105.4763412475586
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Report an issue",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 47.99757385253906,
+        "width": 105.4763412475586
+      }
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 425.35650062561035
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 453.3525581359863,
+        "height": 55.99211502075195,
+        "left": 42.96116638183594,
+        "right": 277.4272003173828,
+        "top": 397.3604431152344,
+        "width": 234.46603393554688
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Edit opened date",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 55.99211502075195,
+        "width": 234.46603393554688
+      }
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 538.3116092681885
+      },
+      "centerBlocked": false,
+      "centerExposed": false,
+      "disabled": false,
+      "partialClip": true,
+      "rect": {
+        "bottom": 566.3076667785645,
+        "height": 55.99211502075195,
+        "left": 42.96116638183594,
+        "right": 277.4272003173828,
+        "top": 510.3155517578125,
+        "width": 234.46603393554688
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Set printed best-before date",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 8.616504669189453,
+        "width": 234.46603393554688
+      }
+    },
+    {
+      "center": {
+        "x": 74.11256408691406,
+        "y": 543.9320697784424
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 568.932071685791,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 124.2263412475586,
+        "top": 518.9320678710938,
+        "width": 100.22755432128906
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Replace",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 50,
+        "width": 100.22755432128906
+      }
+    },
+    {
+      "center": {
+        "x": 185.30796432495117,
+        "y": 543.9320697784424
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 568.932071685791,
+        "height": 50.000003814697266,
+        "left": 134.2233123779297,
+        "right": 236.39261627197266,
+        "top": 518.9320678710938,
+        "width": 102.16930389404297
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Mark finished",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 50,
+        "width": 102.16930389404297
+      }
+    },
+    {
+      "center": {
+        "x": 271.3895740509033,
+        "y": 543.9320697784424
+      },
+      "centerBlocked": false,
+      "centerExposed": true,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 568.932071685791,
+        "height": 50.000003814697266,
+        "left": 246.3895721435547,
+        "right": 296.38957595825195,
+        "top": 518.9320678710938,
+        "width": 50.000003814697266
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Remove or discard",
+      "tinyTarget": false,
+      "visible": true,
+      "visibleSize": {
+        "height": 50,
+        "width": 50.000003814697266
+      }
+    }
+  ],
+  "exposedControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "horizontalOverflow": 0,
+  "issues": [],
+  "text": "< Glyph Gel RoutineKind data / Added by you CATALOG Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. Report an issue Opened July 2026 · edit PAO unknown Best used by estimated · set ROUTINE ROLE Not placed in a routine yet. Build an AM/PM draft from your shelf. Replace Mark finished 🗑︎",
+  "url": "http://localhost:8157/shelf/3c14a72e-87d2-412d-b5a3-dfc6c29945c0",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

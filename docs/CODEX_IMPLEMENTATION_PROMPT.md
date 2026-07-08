@@ -127,6 +127,8 @@ Phase H: Beta Readiness
   conflict_detected
   routine_created
   first_checkoff_completed
+  routine_checkoff_completed
+  cycle_night_completed
   photo_baseline_added
   paywall_shown
   reverse_trial_started

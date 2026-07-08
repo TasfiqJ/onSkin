@@ -24,6 +24,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'conflict_overridden',
   'conflict_resolution_chosen',
   'contextual_paywall_shown',
+  'cycle_night_completed',
   'cycle_paused',
   'cycle_recovery_started',
   'cycle_resumed',

@@ -1,0 +1,157 @@
+{
+  "buttons": [
+    {
+      "aria": "All",
+      "h": 0,
+      "role": "button",
+      "text": "All",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Actives",
+      "h": 0,
+      "role": "button",
+      "text": "Actives",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Expiring",
+      "h": 0,
+      "role": "button",
+      "text": "Expiring",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Review conflict",
+      "h": 0,
+      "role": "button",
+      "text": "Review conflict",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": null,
+      "h": 0,
+      "role": "button",
+      "text": "Build my routine",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Mineral SPF 50, PAO est.",
+      "h": 0,
+      "role": "button",
+      "text": "Mineral SPF 50Evidence · opened JulPAO est.",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Glycolic 7% Toner, PAO est.",
+      "h": 0,
+      "role": "button",
+      "text": "Glycolic 7% TonerEvidence · opened JulPAO est.",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Retinol 0.3% Night Serum, PAO est.",
+      "h": 0,
+      "role": "button",
+      "text": "Retinol 0.3% Night SerumEvidence · opened JulPAO est.",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": null,
+      "h": 0,
+      "role": "button",
+      "text": "Scan a barcode",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Today tab",
+      "h": 0,
+      "role": "tab",
+      "text": "Today",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Progress tab",
+      "h": 0,
+      "role": "tab",
+      "text": "Progress",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Shelf tab",
+      "h": 0,
+      "role": "tab",
+      "text": "Shelf",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "You tab",
+      "h": 0,
+      "role": "tab",
+      "text": "You",
+      "visible": false,
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Back",
+      "h": 48,
+      "role": "button",
+      "text": "<",
+      "visible": true,
+      "w": 48,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "aria": null,
+      "h": 56,
+      "role": "button",
+      "text": "Start today",
+      "visible": true,
+      "w": 272,
+      "x": 24,
+      "y": 497
+    }
+  ],
+  "overflow": 0,
+  "text": "<\nBUILT FROM YOUR SHELF\nYour routine, in order.\nFIRST INSIGHT\nTiming handled\nProducts that need different timing are separated before the first check-off.\nMORNING\n1\nMineral SPF 50\nEVENING SKIN CYCLING\nNight 1\nGlycolic 7%\nexfoliate\nNight 2\nRetinol 0.3% Night Serum\n2 times/week to start\nNights 3-4\nRecover\nkeep it simple\nA gentle cleanser would give your routine a clean base.\nStart today",
+  "url": "http://localhost:8154/routine/plan"
+}

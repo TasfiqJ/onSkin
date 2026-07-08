@@ -69,6 +69,20 @@ const CATALOG_REPORT_NOT_SENT: CatalogReportFeedback = {
     'The catalog backend is not configured on this build. You can still keep this product on your shelf.',
 };
 
+function MoreOptionsGlyph() {
+  return (
+    <View
+      className="flex-row items-center gap-1"
+      accessibilityElementsHidden
+      importantForAccessibility="no"
+    >
+      {[0, 1, 2].map((dot) => (
+        <View key={dot} className="h-1 w-1 rounded-full" style={{ backgroundColor: colors.ink }} />
+      ))}
+    </View>
+  );
+}
+
 function shiftMonthsISO(months: number): string {
   const d = new Date();
   d.setMonth(d.getMonth() + months);
@@ -228,8 +242,9 @@ export default function ProductDetailScreen() {
   const [editOpen, setEditOpen] = useState(false);
   const [bestOpen, setBestOpen] = useState(false);
   const [activeSheet, setActiveSheet] = useState<ProductDetailSheet>(null);
-  const [catalogReportFeedback, setCatalogReportFeedback] =
-    useState<CatalogReportFeedback | null>(null);
+  const [catalogReportFeedback, setCatalogReportFeedback] = useState<CatalogReportFeedback | null>(
+    null,
+  );
   const compactMissingDetail = height < 640;
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
@@ -363,284 +378,290 @@ export default function ProductDetailScreen() {
           onPress={confirmRemove}
           className="h-[48px] w-[48px] items-center justify-center rounded-full border border-hairline-strong bg-paper-raised"
         >
-          <Text className="text-[14px] text-ink">...</Text>
+          <MoreOptionsGlyph />
         </Pressable>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
-        {/* Header */}
-        <View className="mt-2 flex-row items-center gap-4">
-          <StripedThumb size={72} radius={18} faded={archived} />
-          <View className="flex-1">
-            <Text variant="titleSm" className="text-[25px] leading-[27px]">
-              {p.name}
-            </Text>
-            {p.brand ? (
-              <Text variant="bodySm" tone="muted" className="mt-0.5">
-                {p.brand}
-              </Text>
-            ) : null}
-            <Text variant="label" className="mt-1" style={{ color: colors.mutedFaint }}>
-              {provenance}
-            </Text>
-          </View>
-        </View>
-
-        {archived ? (
-          <View className="mt-4 rounded-[16px] bg-greige px-4 py-3">
-            <Text variant="bodySm" tone="muted">
-              {p.status === 'finished' ? 'Finished' : 'Discarded'}
-              {p.finishedAt
-                ? ` · ${new Date(p.finishedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`
-                : ''}
-              {p.repurchaseCount > 1 ? ` · bought ${p.repurchaseCount}×` : ''}
-            </Text>
-          </View>
-        ) : null}
-
-        {/* Catalog source and quality disclosure (Phase 4). */}
-        <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px] py-3.5">
-          <View className="flex-row items-start justify-between gap-3">
+      <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-6"
+        >
+          {/* Header */}
+          <View className="mt-2 flex-row items-center gap-4">
+            <StripedThumb size={72} radius={18} faded={archived} />
             <View className="flex-1">
-              <Text variant="eyebrow" tone="clay">
-                Catalog
+              <Text variant="titleSm" className="text-[25px] leading-[27px]">
+                {p.name}
               </Text>
-              <Text variant="bodySm" tone="muted" className="mt-1">
-                {catalogSourceLabel}
-                {sourceDate ? ` / updated ${sourceDate}` : ''}
-              </Text>
-            </View>
-            <View className="rounded-pill bg-greige-chip px-3 py-1.5">
-              <Text variant="label" tone="muted">
-                {qualityLabel}
-              </Text>
-            </View>
-          </View>
-          <Text variant="bodySm" tone="muted" className="mt-2">
-            {catalogQualityCopy(p.catalogMatchQuality)}
-          </Text>
-          <View className="mt-3 gap-1.5">
-            {p.barcode ? (
-              <Text variant="label" tone="muted">
-                barcode {p.barcode}
-              </Text>
-            ) : null}
-            {p.category ? (
-              <Text variant="label" tone="muted">
-                category {p.category}
-              </Text>
-            ) : null}
-            {p.ingredientParseStatus ? (
-              <Text variant="label" tone="muted">
-                ingredients {p.ingredientParseStatus}
-                {p.ingredientParseConfidence != null
-                  ? ` / ${Math.round(p.ingredientParseConfidence * 100)}% confidence`
-                  : ''}
-              </Text>
-            ) : null}
-          </View>
-          <Pressable
-            accessibilityRole="button"
-            onPress={reportIssue}
-            className="mt-3 min-h-[48px] self-start items-center justify-center px-1"
-          >
-            <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-              Report an issue
-            </Text>
-          </Pressable>
-          {catalogReportFeedback ? (
-            <View className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3">
-              <Text variant="label" style={{ color: colors.clayDeep }}>
-                {catalogReportFeedback.title}
-              </Text>
-              <Text
-                accessibilityRole="alert"
-                variant="bodySm"
-                className="mt-1"
-                style={{ color: colors.clayDeep, lineHeight: 19 }}
-              >
-                {catalogReportFeedback.message}
-              </Text>
-            </View>
-          ) : null}
-        </View>
-
-        {/* Freshness block */}
-        <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px]">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Edit opened date"
-            onPress={() => {
-              haptics.select();
-              setEditOpen((o) => !o);
-            }}
-            className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"
-          >
-            <Text variant="bodySm" tone="muted">
-              Opened
-            </Text>
-            <Text variant="bodySm" className="font-sans-semibold">
-              {openedLabel}{' '}
-              <Text variant="bodySm" tone="clay">
-                · edit
-              </Text>
-            </Text>
-          </Pressable>
-          {editOpen ? (
-            <View className="flex-row flex-wrap gap-2 py-3">
-              {RECENT_OPENS.map((o) => (
-                <Pressable
-                  key={o.label}
-                  accessibilityRole="button"
-                  onPress={() => setOpened(o.monthsAgo)}
-                  className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
-                >
-                  <Text className="font-sans-medium text-[13px]">{o.label}</Text>
-                </Pressable>
-              ))}
-            </View>
-          ) : null}
-          <View className="flex-row items-center justify-between border-b border-hairline py-3">
-            <Text variant="bodySm" tone="muted">
-              PAO
-            </Text>
-            <Text variant="bodySm" className="font-sans-semibold">
-              {p.paoMonths != null ? `${p.paoMonths} months` : 'unknown'}
-              {p.paoMonths != null ? (
-                <Text variant="label" tone="muted">
-                  {' '}
-                  {paoSourceLabel(p.paoSource)}
+              {p.brand ? (
+                <Text variant="bodySm" tone="muted" className="mt-0.5">
+                  {p.brand}
                 </Text>
               ) : null}
-            </Text>
+              <Text variant="label" className="mt-1" style={{ color: colors.mutedFaint }}>
+                {provenance}
+              </Text>
+            </View>
           </View>
-          <View className="py-3">
+
+          {archived ? (
+            <View className="mt-4 rounded-[16px] bg-greige px-4 py-3">
+              <Text variant="bodySm" tone="muted">
+                {p.status === 'finished' ? 'Finished' : 'Discarded'}
+                {p.finishedAt
+                  ? ` · ${new Date(p.finishedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`
+                  : ''}
+                {p.repurchaseCount > 1 ? ` · bought ${p.repurchaseCount}×` : ''}
+              </Text>
+            </View>
+          ) : null}
+
+          {/* Catalog source and quality disclosure (Phase 4). */}
+          <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px] py-3.5">
+            <View className="flex-row items-start justify-between gap-3">
+              <View className="flex-1">
+                <Text variant="eyebrow" tone="clay">
+                  Catalog
+                </Text>
+                <Text variant="bodySm" tone="muted" className="mt-1">
+                  {catalogSourceLabel}
+                  {sourceDate ? ` / updated ${sourceDate}` : ''}
+                </Text>
+              </View>
+              <View className="rounded-pill bg-greige-chip px-3 py-1.5">
+                <Text variant="label" tone="muted">
+                  {qualityLabel}
+                </Text>
+              </View>
+            </View>
+            <Text variant="bodySm" tone="muted" className="mt-2">
+              {catalogQualityCopy(p.catalogMatchQuality)}
+            </Text>
+            <View className="mt-3 gap-1.5">
+              {p.barcode ? (
+                <Text variant="label" tone="muted">
+                  barcode {p.barcode}
+                </Text>
+              ) : null}
+              {p.category ? (
+                <Text variant="label" tone="muted">
+                  category {p.category}
+                </Text>
+              ) : null}
+              {p.ingredientParseStatus ? (
+                <Text variant="label" tone="muted">
+                  ingredients {p.ingredientParseStatus}
+                  {p.ingredientParseConfidence != null
+                    ? ` / ${Math.round(p.ingredientParseConfidence * 100)}% confidence`
+                    : ''}
+                </Text>
+              ) : null}
+            </View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Set printed best-before date"
-              onPress={() => {
-                haptics.select();
-                setBestOpen((o) => !o);
-              }}
-              className="min-h-[56px] flex-row items-center justify-between"
+              onPress={reportIssue}
+              className="mt-3 min-h-[48px] self-start items-center justify-center px-1"
             >
-              <Text variant="bodySm" tone="muted">
-                {p.isOpened ? 'Best used by' : 'Shelf life'}
-              </Text>
-              <Text variant="bodySm" className="font-sans-bold text-clay-deep">
-                {best ?? 'estimated'}{' '}
-                <Text variant="bodySm" tone="clay">
-                  · {p.expirySource === 'printed' ? 'edit' : 'set'}
-                </Text>
+              <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+                Report an issue
               </Text>
             </Pressable>
-            {bestOpen ? (
-              <View className="mt-2.5 flex-row flex-wrap items-center gap-2">
-                <Text variant="label" tone="muted" className="w-full">
-                  Printed best-before on the pack?
+            {catalogReportFeedback ? (
+              <View className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3">
+                <Text variant="label" style={{ color: colors.clayDeep }}>
+                  {catalogReportFeedback.title}
                 </Text>
-                {BEST_BEFORE.map((b) => (
-                  <Pressable
-                    key={b.label}
-                    accessibilityRole="button"
-                    onPress={async () => {
-                      await m.edit(id, {
-                        expiryDate: shiftMonthsISO(b.monthsAhead),
-                        expirySource: 'printed',
-                      });
-                      setBestOpen(false);
-                    }}
-                    className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
-                  >
-                    <Text className="font-sans-medium text-[13px]">{b.label}</Text>
-                  </Pressable>
-                ))}
-                {p.expiryDate ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={async () => {
-                      await m.edit(id, {
-                        expiryDate: null,
-                        expirySource:
-                          p.isOpened && p.paoMonths != null ? 'pao_computed' : 'unknown',
-                      });
-                      setBestOpen(false);
-                    }}
-                    className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
-                  >
-                    <Text className="font-sans-medium text-[13px]" tone="muted">
-                      Clear
-                    </Text>
-                  </Pressable>
-                ) : null}
+                <Text
+                  accessibilityRole="alert"
+                  variant="bodySm"
+                  className="mt-1"
+                  style={{ color: colors.clayDeep, lineHeight: 19 }}
+                >
+                  {catalogReportFeedback.message}
+                </Text>
               </View>
             ) : null}
           </View>
-        </View>
 
-        {!p.isOpened ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => m.setOpened(id, { openedAt: localDateString(), isOpened: true })}
-            className="mt-2.5 min-h-[48px] items-center justify-center rounded-[14px] border border-hairline bg-paper-raised py-3"
-          >
-            <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
-              Mark as opened. Start the freshness clock
-            </Text>
-          </Pressable>
-        ) : null}
-
-        {/* What it contributes */}
-        {item.engineProduct.tags.length ? (
-          <>
-            <Text variant="eyebrow" tone="clay" className="mt-5">
-              What it contributes
-            </Text>
-            <View className="mt-2 flex-row flex-wrap gap-2">
-              {item.engineProduct.tags.map((t) => (
-                <View
-                  key={t}
-                  className="rounded-pill border border-hairline bg-paper-raised px-3 py-1.5"
-                >
-                  <Text variant="bodySm" className="font-sans-semibold">
-                    {tagLabel(t)}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </>
-        ) : null}
-
-        {/* Conflicts & pairings */}
-        {conflicts.map((c) => {
-          const reassure =
-            c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
-          return (
+          {/* Freshness block */}
+          <View className="mt-4 rounded-[20px] border border-hairline bg-paper-raised px-[18px]">
             <Pressable
-              key={conflictKey(c)}
               accessibilityRole="button"
-              onPress={() => router.push(`/conflict/${c.rule.id}`)}
-              className="mt-3 flex-row gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5"
+              accessibilityLabel="Edit opened date"
+              onPress={() => {
+                haptics.select();
+                setEditOpen((o) => !o);
+              }}
+              className="min-h-[56px] flex-row items-center justify-between border-b border-hairline py-3"
             >
-              <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-clay" />
-              <Text variant="bodySm" tone="muted" className="flex-1">
-                {reassure ? 'Pairs well with ' : 'Timing note with '}
-                <Text variant="bodySm" className="font-sans-semibold">
-                  {otherName(c)}
-                </Text>
-                {'. '}
-                {bannerSubhead(c)}{' '}
-                <Text variant="bodySm" className="font-sans-bold text-clay-deep">
-                  Review →
+              <Text variant="bodySm" tone="muted">
+                Opened
+              </Text>
+              <Text variant="bodySm" className="font-sans-semibold">
+                {openedLabel}{' '}
+                <Text variant="bodySm" tone="clay">
+                  · edit
                 </Text>
               </Text>
             </Pressable>
-          );
-        })}
+            {editOpen ? (
+              <View className="flex-row flex-wrap gap-2 py-3">
+                {RECENT_OPENS.map((o) => (
+                  <Pressable
+                    key={o.label}
+                    accessibilityRole="button"
+                    onPress={() => setOpened(o.monthsAgo)}
+                    className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
+                  >
+                    <Text className="font-sans-medium text-[13px]">{o.label}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            ) : null}
+            <View className="flex-row items-center justify-between border-b border-hairline py-3">
+              <Text variant="bodySm" tone="muted">
+                PAO
+              </Text>
+              <Text variant="bodySm" className="font-sans-semibold">
+                {p.paoMonths != null ? `${p.paoMonths} months` : 'unknown'}
+                {p.paoMonths != null ? (
+                  <Text variant="label" tone="muted">
+                    {' '}
+                    {paoSourceLabel(p.paoSource)}
+                  </Text>
+                ) : null}
+              </Text>
+            </View>
+            <View className="py-3">
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Set printed best-before date"
+                onPress={() => {
+                  haptics.select();
+                  setBestOpen((o) => !o);
+                }}
+                className="min-h-[56px] flex-row items-center justify-between"
+              >
+                <Text variant="bodySm" tone="muted">
+                  {p.isOpened ? 'Best used by' : 'Shelf life'}
+                </Text>
+                <Text variant="bodySm" className="font-sans-bold text-clay-deep">
+                  {best ?? 'estimated'}{' '}
+                  <Text variant="bodySm" tone="clay">
+                    · {p.expirySource === 'printed' ? 'edit' : 'set'}
+                  </Text>
+                </Text>
+              </Pressable>
+              {bestOpen ? (
+                <View className="mt-2.5 flex-row flex-wrap items-center gap-2">
+                  <Text variant="label" tone="muted" className="w-full">
+                    Printed best-before on the pack?
+                  </Text>
+                  {BEST_BEFORE.map((b) => (
+                    <Pressable
+                      key={b.label}
+                      accessibilityRole="button"
+                      onPress={async () => {
+                        await m.edit(id, {
+                          expiryDate: shiftMonthsISO(b.monthsAhead),
+                          expirySource: 'printed',
+                        });
+                        setBestOpen(false);
+                      }}
+                      className="min-h-[48px] items-center justify-center rounded-pill border border-hairline bg-paper-raised px-3.5 py-2"
+                    >
+                      <Text className="font-sans-medium text-[13px]">{b.label}</Text>
+                    </Pressable>
+                  ))}
+                  {p.expiryDate ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={async () => {
+                        await m.edit(id, {
+                          expiryDate: null,
+                          expirySource:
+                            p.isOpened && p.paoMonths != null ? 'pao_computed' : 'unknown',
+                        });
+                        setBestOpen(false);
+                      }}
+                      className="min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2"
+                    >
+                      <Text className="font-sans-medium text-[13px]" tone="muted">
+                        Clear
+                      </Text>
+                    </Pressable>
+                  ) : null}
+                </View>
+              ) : null}
+            </View>
+          </View>
 
-        {/* Where it's used */}
-        {!archived ? <RoutineUsageCard usage={usage} /> : null}
-      </ScrollView>
+          {!p.isOpened ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => m.setOpened(id, { openedAt: localDateString(), isOpened: true })}
+              className="mt-2.5 min-h-[48px] items-center justify-center rounded-[14px] border border-hairline bg-paper-raised py-3"
+            >
+              <Text variant="bodySm" className="font-sans-semibold text-clay-deep">
+                Mark as opened. Start the freshness clock
+              </Text>
+            </Pressable>
+          ) : null}
+
+          {/* What it contributes */}
+          {item.engineProduct.tags.length ? (
+            <>
+              <Text variant="eyebrow" tone="clay" className="mt-5">
+                What it contributes
+              </Text>
+              <View className="mt-2 flex-row flex-wrap gap-2">
+                {item.engineProduct.tags.map((t) => (
+                  <View
+                    key={t}
+                    className="rounded-pill border border-hairline bg-paper-raised px-3 py-1.5"
+                  >
+                    <Text variant="bodySm" className="font-sans-semibold">
+                      {tagLabel(t)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
+
+          {/* Conflicts & pairings */}
+          {conflicts.map((c) => {
+            const reassure =
+              c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
+            return (
+              <Pressable
+                key={conflictKey(c)}
+                accessibilityRole="button"
+                onPress={() => router.push(`/conflict/${c.rule.id}`)}
+                className="mt-3 flex-row gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5"
+              >
+                <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-clay" />
+                <Text variant="bodySm" tone="muted" className="flex-1">
+                  {reassure ? 'Pairs well with ' : 'Timing note with '}
+                  <Text variant="bodySm" className="font-sans-semibold">
+                    {otherName(c)}
+                  </Text>
+                  {'. '}
+                  {bannerSubhead(c)}{' '}
+                  <Text variant="bodySm" className="font-sans-bold text-clay-deep">
+                    Review →
+                  </Text>
+                </Text>
+              </Pressable>
+            );
+          })}
+
+          {/* Where it's used */}
+          {!archived ? <RoutineUsageCard usage={usage} /> : null}
+        </ScrollView>
+      </View>
 
       {/* Lifecycle actions */}
       {archived ? (

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T16:49:14.753Z",
+  "generatedAt": "2026-07-08T17:21:00.109Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -42,8 +42,8 @@
     },
     {
       "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
-      "bytes": 7686,
-      "sha256": "b5ca8e0d75167d16c4860673c78861663e0702210bd132d12acbe54d23c5f21c"
+      "bytes": 7739,
+      "sha256": "237c46f8ab3321b3305fe687bef050238db2dc7c0cb0a3ae42aa24b3fa1bc54e"
     },
     {
       "path": "04_repo_docs/docs/CODE_REVIEW.md",
@@ -62,8 +62,8 @@
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
-      "bytes": 53806,
-      "sha256": "d6e767a75349b25f6407c37e1cfcf6c8bc09f52fd7644d41e24c515392151a33"
+      "bytes": 53863,
+      "sha256": "30bcdf57b71e4bc724965a6a7eb4f40a0ffdeafcec42ab5b325e13ebc422bc02"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md",
@@ -105,10 +105,10 @@
       "title": "Codex Implementation Prompt",
       "sourcePath": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
       "activePath": "docs/CODEX_IMPLEMENTATION_PROMPT.md",
-      "sourceBytes": 7686,
-      "activeBytes": 7686,
-      "sourceSha256": "b5ca8e0d75167d16c4860673c78861663e0702210bd132d12acbe54d23c5f21c",
-      "activeSha256": "b5ca8e0d75167d16c4860673c78861663e0702210bd132d12acbe54d23c5f21c",
+      "sourceBytes": 7739,
+      "activeBytes": 7739,
+      "sourceSha256": "237c46f8ab3321b3305fe687bef050238db2dc7c0cb0a3ae42aa24b3fa1bc54e",
+      "activeSha256": "237c46f8ab3321b3305fe687bef050238db2dc7c0cb0a3ae42aa24b3fa1bc54e",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -157,10 +157,10 @@
       "title": "Master Plan",
       "sourcePath": "04_repo_docs/docs/MASTER_PLAN.md",
       "activePath": "docs/MASTER_PLAN.md",
-      "sourceBytes": 53806,
-      "activeBytes": 53806,
-      "sourceSha256": "d6e767a75349b25f6407c37e1cfcf6c8bc09f52fd7644d41e24c515392151a33",
-      "activeSha256": "d6e767a75349b25f6407c37e1cfcf6c8bc09f52fd7644d41e24c515392151a33",
+      "sourceBytes": 53863,
+      "activeBytes": 53863,
+      "sourceSha256": "30bcdf57b71e4bc724965a6a7eb4f40a0ffdeafcec42ab5b325e13ebc422bc02",
+      "activeSha256": "30bcdf57b71e4bc724965a6a7eb4f40a0ffdeafcec42ab5b325e13ebc422bc02",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

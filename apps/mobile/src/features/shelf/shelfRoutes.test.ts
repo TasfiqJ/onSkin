@@ -200,10 +200,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('Scan a barcode, or add it by hand.');
     expect(source).toContain("? 'mt-1.5 max-w-[270px] text-center text-[14px] leading-[19px]'");
     expect(source).toContain("compactNoArchiveShort ? 'mt-4 gap-2'");
-    expect(source).toContain('trackProductAddStarted(\'empty_scan\');');
+    expect(source).toContain("trackProductAddStarted('empty_scan');");
     expect(source).toContain("router.push('/shelf/scan');");
     expect(source).toContain('className="h-14 items-center justify-center rounded-pill bg-ink"');
-    expect(source).toContain('trackProductAddStarted(\'empty_manual\');');
+    expect(source).toContain("trackProductAddStarted('empty_manual');");
     expect(source).toContain("router.push('/shelf/manual');");
     expect(source).toContain("? 'h-[48px] items-center justify-center'");
     expect(source).toContain(": 'h-[50px] items-center justify-center'");
@@ -261,8 +261,8 @@ describe('Shelf route mobile contracts', () => {
   it('keeps replenishment copy tied to freshness without manufactured scarcity', () => {
     const source = readAppRoute('shelf/replenish.tsx');
 
-    expect(source).toContain('const expired = item.badge.kind === \'expired\';');
-    expect(source).toContain('const countdown = item.badge.kind === \'countdown\';');
+    expect(source).toContain("const expired = item.badge.kind === 'expired';");
+    expect(source).toContain("const countdown = item.badge.kind === 'countdown';");
     expect(source).toContain('may be past its best');
     expect(source).toContain('PAO or printed date');
     expect(source).toContain('calm replacement reminder, not an alarm');
@@ -276,7 +276,7 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/replenish.tsx');
 
     expect(source).not.toContain('Alert.alert');
-    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('import { Alert');
     expect(source).toContain('CommerceLinkNotice');
     expect(source).toContain('feedback: CommerceLinkFeedback');
     expect(source).toContain('activeSimilarFeedback');
@@ -302,8 +302,12 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
     expect(source).toContain(": 'flex-1 items-center justify-center px-2 pb-16'");
     expect(source).toContain('{!splitShort ? (');
-    expect(source).toContain("compactNoArchiveShort ? 'mb-3' : compactWithArchive ? 'mb-4' : 'mb-7'");
-    expect(source).toContain("compactNoArchiveShort ? 'mt-4 gap-2' : compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'");
+    expect(source).toContain(
+      "compactNoArchiveShort ? 'mb-3' : compactWithArchive ? 'mb-4' : 'mb-7'",
+    );
+    expect(source).toContain(
+      "compactNoArchiveShort ? 'mt-4 gap-2' : compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'",
+    );
     expect(source).toContain('width={compactNoArchiveShort ? 38 : 46}');
     expect(source).toContain('height={compactNoArchiveShort ? 56 : 68}');
     expect(source).toContain('{hasArchive ? (');
@@ -315,7 +319,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('function EmptyShelf()');
     expect(source).not.toContain('<EmptyShelf />');
     expect(source).not.toContain('<EmptyShelf archiveCount={archiveCount} />');
-    expect(source).not.toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
+    expect(source).not.toContain(
+      '<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />',
+    );
     expect(source).not.toContain('className="mt-6 items-center py-2"');
   });
 
@@ -368,8 +374,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("return { kind: 'offline', barcode };");
     expect(source).toContain("if (response.result === 'offline')");
     expect(source).toContain("setState({ kind: 'offline', barcode: normalized.lookupValue });");
-    expect(source).toContain("Barcode {state.barcode} is not in the catalog yet.");
-    expect(source).toContain("Couldn&apos;t reach the product catalog for barcode {state.barcode}.");
+    expect(source).toContain('Barcode {state.barcode} is not in the catalog yet.');
+    expect(source).toContain(
+      'Couldn&apos;t reach the product catalog for barcode {state.barcode}.',
+    );
     expect(source).toContain('the shelf still works offline');
     expect(source).toContain("{state.kind === 'no_match' && (");
     expect(source).not.toContain(
@@ -431,7 +439,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("contentContainerClassName={ultraShortPhone ? 'pb-28' : 'pb-24'}");
     expect(source).toContain('{!ultraShortPhone ? (');
     expect(source).toContain("className={ultraShortPhone ? 'gap-2' : 'gap-3'}");
-    expect(source).toContain("className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}");
+    expect(source).toContain(
+      "className={cn(inputClass, ultraShortPhone ? 'h-[48px]' : 'h-[50px]')}",
+    );
     expect(source).toContain("<View className={ultraShortPhone ? 'pb-2 pt-1' : 'pb-3 pt-1'}>");
     expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain(
@@ -443,9 +453,7 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('<View className="flex-1">');
     expect(source).toContain('<View className="flex-[1.1]">');
-    expect(source).toContain(
-      "ultraShortPhone ? 'h-[48px]' : 'h-[50px]'",
-    );
+    expect(source).toContain("ultraShortPhone ? 'h-[48px]' : 'h-[50px]'");
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
@@ -508,14 +516,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
     expect(source).toContain('const splitShortPhone = viewportHeight < 410;');
-    expect(source).toContain(
-      "state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'",
-    );
+    expect(source).toContain("state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'");
     expect(source).toContain("? 'mt-2 h-[140px]'");
     expect(source).toContain(": ultraShortPhone\n                ? 'mt-3 h-[176px]'");
-    expect(source).toContain(
-      "ultraShortPhone ? 'top-[48px] h-[78px]' : 'top-[64px] h-[96px]'",
-    );
+    expect(source).toContain("ultraShortPhone ? 'top-[48px] h-[78px]' : 'top-[64px] h-[96px]'");
     expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain('{!splitShortPhone ? (');
     expect(source).toContain("{state === 'review' ? (");
@@ -565,6 +569,16 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf product detail management actions above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/[id].tsx');
 
+    expect(source).toContain('function MoreOptionsGlyph');
+    expect(source).toContain('<MoreOptionsGlyph />');
+    expect(source).toContain('accessibilityElementsHidden');
+    expect(source).not.toContain('<Text className="text-[14px] text-ink">...</Text>');
+    expect(source).toContain('className="flex-1 overflow-hidden" style={{ minHeight: 0 }}');
+    expect(source).toContain('contentContainerClassName="pb-6"');
+    expect(source).toContain('className="flex-1"');
+    expect(source).not.toContain(
+      '<ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">',
+    );
     expect(source).toContain('className="h-[48px] w-[48px] items-center justify-center');
     expect(source).toContain('className="mt-3 min-h-[48px] self-start items-center');
     expect(source).toContain('accessibilityLabel="Edit opened date"');
@@ -591,8 +605,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('accessibilityLabel={title}');
     expect(source).toContain('const [activeSheet, setActiveSheet]');
     expect(source).toContain('const [catalogReportFeedback, setCatalogReportFeedback]');
-    expect(source).toContain('setActiveSheet(\'manage\')');
-    expect(source).toContain('setActiveSheet(\'report\')');
+    expect(source).toContain("setActiveSheet('manage')");
+    expect(source).toContain("setActiveSheet('report')");
     expect(source).toContain('Mark discarded');
     expect(source).toContain('Remove completely');
     expect(source).toContain('Wrong product match');
@@ -601,7 +615,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('CATALOG_REPORT_NOT_SENT');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Alert.alert');
-    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('import { Alert');
   });
 
   it('does not describe unresolved product-detail conflicts as already paired', () => {

@@ -133,6 +133,7 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('conflict_detected')).toBe('conflict_detected');
     expect(sanitizeAnalyticsEventName('routine_created')).toBe('routine_created');
     expect(sanitizeAnalyticsEventName('routine_edited')).toBe('routine_edited');
+    expect(sanitizeAnalyticsEventName('cycle_night_completed')).toBe('cycle_night_completed');
     expect(sanitizeAnalyticsEventName('step_reordered')).toBe('step_reordered');
     expect(sanitizeAnalyticsEventName('ramp_step_up_offered')).toBe('ramp_step_up_offered');
     expect(sanitizeAnalyticsEventName('ramp_step_up_accepted')).toBe('ramp_step_up_accepted');

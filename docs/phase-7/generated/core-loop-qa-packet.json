@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T14:09:05.167Z",
+  "generatedAt": "2026-07-08T17:21:53.568Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -66,8 +66,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 10935,
-      "sha256": "c8ebb02c4dd1e0031017d04803d50617975b9023f60f4a37b33daf01150f9f19"
+      "bytes": 11324,
+      "sha256": "1eeae3e44ae91079c226bd7a7e9713aebc0fa812f7d4209077be63f1b54324f6"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -90,8 +90,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/today.tsx",
       "exists": true,
-      "bytes": 26454,
-      "sha256": "81a70bfe5b746bbdbd288e61a2c88d70493dae60473ad8575d2cf975902c15a4"
+      "bytes": 27361,
+      "sha256": "cb2c74598a3555608d103545b05c231f3f489fee5085df3112bceb1577422263"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
@@ -132,8 +132,8 @@
     {
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
-      "bytes": 12093,
-      "sha256": "b7447a14bb15dc30489c98f535552351ea6d081b60594db632fea150b165548a"
+      "bytes": 12382,
+      "sha256": "aaf2f41ef1826afab4dca88f79d2f70d84f6135b6791cdf4b3c6ccb8a19514cf"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",
@@ -162,8 +162,8 @@
     {
       "path": "docs/phase-7/beta-evidence-dashboard.md",
       "exists": true,
-      "bytes": 4164,
-      "sha256": "1bb706d9cdab272dc302acf7c8e70141ffa16675f5e4d6ea3edad118575588ab"
+      "bytes": 4416,
+      "sha256": "21255a254436a75a2765a262ad03a044a29f28ea2adae15a4b833d00871a373e"
     },
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",

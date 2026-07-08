@@ -4,21 +4,21 @@ Purpose: prove whether the V1 loop is valuable enough to keep funding. This is t
 
 ## Activation
 
-| Metric                   | Event(s)                                                             | Target                                                  |
-| ------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------- |
-| Product shelf activation | `product_add_started` to `product_added` by unique product count     | 60% of users add 3+ products within 48 hours            |
-| First value moment       | `first_useful_insight`, `conflict_detected`, and `routine_created`   | 50% reach useful guidance/no-issue within first session |
-| Routine activation       | `first_checkoff_completed` and `routine_checkoff_completed`          | 45% complete at least one check-off within 48 hours     |
-| Photo activation         | `photo_baseline_added`, `first_photo_captured`, and `photo_captured` | 25% capture a baseline photo within 7 days              |
+| Metric                   | Event(s)                                                                              | Target                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Product shelf activation | `product_add_started` to `product_added` by unique product count                      | 60% of users add 3+ products within 48 hours            |
+| First value moment       | `first_useful_insight`, `conflict_detected`, and `routine_created`                    | 50% reach useful guidance/no-issue within first session |
+| Routine activation       | `first_checkoff_completed`, `routine_checkoff_completed`, and `cycle_night_completed` | 45% complete at least one check-off within 48 hours     |
+| Photo activation         | `photo_baseline_added`, `first_photo_captured`, and `photo_captured`                  | 25% capture a baseline photo within 7 days              |
 
 ## Retention
 
-| Metric              | Event(s)                                        | Target                                 |
-| ------------------- | ----------------------------------------------- | -------------------------------------- |
-| D7 routine return   | `routine_checkoff_completed`                    | 25% D7 active                          |
-| D14 habit cohort    | `routine_checkoff_completed`, `timeline_viewed` | 15% D14 active                         |
-| Reminder usefulness | notification open/check-off after reminder      | Positive lift versus no-reminder users |
-| Privacy trust       | export/delete/withdraw support tickets          | No pattern of confusion or panic       |
+| Metric              | Event(s)                                                                 | Target                                 |
+| ------------------- | ------------------------------------------------------------------------ | -------------------------------------- |
+| D7 routine return   | `routine_checkoff_completed`, `cycle_night_completed`                    | 25% D7 active                          |
+| D14 habit cohort    | `routine_checkoff_completed`, `cycle_night_completed`, `timeline_viewed` | 15% D14 active                         |
+| Reminder usefulness | notification open/check-off after reminder                               | Positive lift versus no-reminder users |
+| Privacy trust       | export/delete/withdraw support tickets                                   | No pattern of confusion or panic       |
 
 ## Monetization
 

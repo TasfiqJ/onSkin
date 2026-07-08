@@ -1,0 +1,244 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 51.585256576538086,
+        "y": 85.98301315307617
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 109.9818000793457,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 79.17172622680664,
+        "top": 61.98422622680664,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 55.17293930053711,
+        "width": 55.17293930053711
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "All",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 134.56462860107422,
+        "y": 85.98301315307617
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 109.9818000793457,
+        "height": 47.99757385253906,
+        "left": 89.16869354248047,
+        "right": 179.96056365966797,
+        "top": 61.98422622680664,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 90.7918701171875,
+        "width": 90.7918701171875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Actives",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 238.2812614440918,
+        "y": 85.98301315307617
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 109.9818000793457,
+        "height": 47.99757385253906,
+        "left": 189.95753479003906,
+        "right": 286.60498809814453,
+        "top": 61.98422622680664,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 96.64745330810547,
+        "width": 96.64745330810547
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Expiring",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 344.88018226623535
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 372.8762397766113,
+        "height": 55.99211502075195,
+        "left": 40.958740234375,
+        "right": 279.42962646484375,
+        "top": 316.8841247558594,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 238.47088623046875,
+        "width": 238.47088623046875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Build my routine",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 455.7721710205078
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 488.7591247558594,
+        "height": 65.97390747070312,
+        "left": 40.958740234375,
+        "right": 279.42962646484375,
+        "top": 422.78521728515625,
+        "visibleHeight": 65.97390747070312,
+        "visibleWidth": 238.47088623046875,
+        "width": 238.47088623046875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Glyph Gel, PAO est.",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 555.7039413452148
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": true,
+      "rect": {
+        "bottom": 581.6899871826172,
+        "height": 51.97209167480469,
+        "left": 76.27427673339844,
+        "right": 244.1140899658203,
+        "top": 529.7178955078125,
+        "visibleHeight": 39.2821044921875,
+        "visibleWidth": 167.83981323242188,
+        "width": 167.83981323242188
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Scan a barcode",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 46.76881122589111,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.60679626464844,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "text": "Today tab",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 122.38319778442383,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.6219711303711,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "text": "Progress tab",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 197.9975814819336,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.60679626464844,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "text": "Shelf tab",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 273.61196517944336,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.6219711303711,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "text": "You tab",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issues": [
+    "[Circular]"
+  ],
+  "text": "Shelf 1 product All Actives Expiring Everything on your shelf, soonest to replace first. FIRST ROUTINE Your routine is ready to draft. Even one product can start an honest AM/PM draft. Missing steps stay visible, not invented. Build my routine Glyph Gel RoutineKind · opened Jul PAO est. Scan a barcode Today Progress Shelf You",
+  "url": "http://localhost:8157/shelf",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

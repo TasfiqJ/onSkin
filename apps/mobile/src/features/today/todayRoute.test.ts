@@ -117,4 +117,24 @@ describe('Today route mobile contracts', () => {
     expect(source).not.toContain('minimumFontScale={0.85}');
     expect(source).not.toContain('className="mt-2 text-center text-[10.5px]"');
   });
+
+  it('tracks cycle-night completion from the PM local-first check-off path only', () => {
+    const source = readAppRoute('(tabs)/today.tsx');
+
+    expect(source).toContain(
+      "import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';",
+    );
+    expect(source).toContain("track('routine_checkoff_completed', { moment });");
+    expect(source).toContain("track('first_checkoff_completed', { moment });");
+    expect(source).toContain('shouldTrackCycleNightCompleted({');
+    expect(source).toContain('completedBefore: done');
+    expect(source).toContain('completedKey: key');
+    expect(source).toContain("phase: 'PM'");
+    expect(source).toContain('cycleActive: Boolean(cycle && cTonight)');
+    expect(source).toContain('stepKeys: pmStepKeys');
+    expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
+    const eventIndex = source.indexOf("track('cycle_night_completed'");
+    const eventCall = source.slice(eventIndex, eventIndex + 120);
+    expect(eventCall).not.toMatch(/product|slot|step|skin|goal/i);
+  });
 });

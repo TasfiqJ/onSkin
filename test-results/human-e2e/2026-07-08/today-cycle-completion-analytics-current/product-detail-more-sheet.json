@@ -1,0 +1,161 @@
+{
+  "controls": [
+    {
+      "aria": "Back",
+      "h": 48,
+      "modal": null,
+      "role": "button",
+      "text": "<",
+      "visible": true,
+      "w": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "aria": "More options",
+      "h": 48,
+      "modal": null,
+      "role": "button",
+      "text": "More options",
+      "visible": true,
+      "w": 48,
+      "x": 248,
+      "y": 8
+    },
+    {
+      "aria": null,
+      "h": 48,
+      "modal": null,
+      "role": "button",
+      "text": "Report an issue",
+      "visible": true,
+      "w": 105,
+      "x": 43,
+      "y": 349
+    },
+    {
+      "aria": "Edit opened date",
+      "h": 56,
+      "modal": null,
+      "role": "button",
+      "text": "OpenedJuly 2026 · edit",
+      "visible": true,
+      "w": 234,
+      "x": 43,
+      "y": 429
+    },
+    {
+      "aria": "Set printed best-before date",
+      "h": 56,
+      "modal": null,
+      "role": "button",
+      "text": "Best used byestimated · set",
+      "visible": true,
+      "w": 234,
+      "x": 43,
+      "y": 542
+    },
+    {
+      "aria": "Review routine placement",
+      "h": 114,
+      "modal": null,
+      "role": "button",
+      "text": "Routine roleUsed in your Morning routine.Review the AM/PM plan before you check it off.",
+      "visible": true,
+      "w": 272,
+      "x": 24,
+      "y": 698
+    },
+    {
+      "aria": null,
+      "h": 50,
+      "modal": null,
+      "role": "button",
+      "text": "Replace",
+      "visible": true,
+      "w": 100,
+      "x": 24,
+      "y": 519
+    },
+    {
+      "aria": null,
+      "h": 50,
+      "modal": null,
+      "role": "button",
+      "text": "Mark finished",
+      "visible": true,
+      "w": 102,
+      "x": 134,
+      "y": 519
+    },
+    {
+      "aria": "Remove or discard",
+      "h": 50,
+      "modal": null,
+      "role": "button",
+      "text": "🗑︎",
+      "visible": true,
+      "w": 50,
+      "x": 246,
+      "y": 519
+    },
+    {
+      "aria": "Dismiss Remove from shelf?",
+      "h": 190,
+      "modal": null,
+      "role": "button",
+      "text": "Dismiss Remove from shelf?",
+      "visible": true,
+      "w": 320,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "aria": "Remove from shelf?",
+      "h": 379,
+      "modal": "true",
+      "role": "dialog",
+      "text": "Remove from shelf?Choose what should happen to Mineral SPF 50. Discarding keeps your history; removing deletes this local shelf entry.CloseMark discardedArchive",
+      "visible": true,
+      "w": 320,
+      "x": 0,
+      "y": 190
+    },
+    {
+      "aria": "Close product options",
+      "h": 48,
+      "modal": null,
+      "role": "button",
+      "text": "Close",
+      "visible": true,
+      "w": 64,
+      "x": 232,
+      "y": 227
+    },
+    {
+      "aria": null,
+      "h": 88,
+      "modal": null,
+      "role": "button",
+      "text": "Mark discardedArchive it and keep freshness and repurchase history.",
+      "visible": true,
+      "w": 272,
+      "x": 24,
+      "y": 353
+    },
+    {
+      "aria": null,
+      "h": 88,
+      "modal": null,
+      "role": "button",
+      "text": "Remove completelyDelete this local shelf entry. This cannot be undone.",
+      "visible": true,
+      "w": 272,
+      "x": 24,
+      "y": 449
+    }
+  ],
+  "overflow": 0,
+  "text": "<\nMineral SPF 50\nEvidence\ndata / Added by you\nCATALOG\nAdded by you\nManual\nAdded by hand. It can support your shelf and routine, but not high-confidence product recommendations.\ningredients parsed / 92% confidence\nReport an issue\nOpened\nJuly 2026 · edit\nPAO\nunknown\nBest used by\nestimated · set\nWHAT IT CONTRIBUTES\nSunscreen\nphysical_spf\nROUTINE ROLE\nUsed in your Morning routine.\nReview the AM/PM plan before you check it off.\nReplace\nMark finished\n🗑︎\nRemove from shelf?\nChoose what should happen to Mineral SPF 50. Discarding keeps your history; removing deletes this local shelf entry.\nClose\nMark discarded\nArchive it and keep freshness and repurchase history.\nRemove completely\nDelete this local shelf entry. This cannot be undone.",
+  "url": "http://localhost:8154/shelf/4b82c560-9f91-4c84-a12b-07d0afbdd184"
+}

@@ -19,17 +19,17 @@ documented or allowlisted.
 
 ## Required Dashboards
 
-| Dashboard                  | Required views                                                                                                           |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Enrollment and install     | invited, accepted, installed, first app open by platform/build/wave                                                      |
-| Onboarding and first value | onboarding_started, account_created, product_add_started, product_added, first-value proxy, drop-off                     |
-| Shelf and catalog          | barcode/search/manual mix, no-match, corrections, manual fallback completion                                             |
-| Routine loop               | plan view, routine_created, first_useful_insight, first_checkoff_completed, routine_checkoff_completed, streak milestone |
-| Photo and reminder         | permission prompt, capture, trend/progress usage, reminder opt-in/denial                                                 |
-| Paywall and entitlement    | paywall_shown, contextual_paywall_shown, trial_started, purchase_completed, restore_tapped, manage_subscription_opened   |
-| Privacy and support        | deletion/export requests, consent withdrawal, support categories, privacy escalations                                    |
-| Release health             | crashes, ANRs, app-start, affected users, build adoption                                                                 |
-| Retention cohorts          | D1, D7, D14, D30 by activated/not activated, platform, wave, first-value path                                            |
+| Dashboard                  | Required views                                                                                                                                  |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enrollment and install     | invited, accepted, installed, first app open by platform/build/wave                                                                             |
+| Onboarding and first value | onboarding_started, account_created, product_add_started, product_added, first-value proxy, drop-off                                            |
+| Shelf and catalog          | barcode/search/manual mix, no-match, corrections, manual fallback completion                                                                    |
+| Routine loop               | plan view, routine_created, first_useful_insight, first_checkoff_completed, routine_checkoff_completed, cycle_night_completed, streak milestone |
+| Photo and reminder         | permission prompt, capture, trend/progress usage, reminder opt-in/denial                                                                        |
+| Paywall and entitlement    | paywall_shown, contextual_paywall_shown, trial_started, purchase_completed, restore_tapped, manage_subscription_opened                          |
+| Privacy and support        | deletion/export requests, consent withdrawal, support categories, privacy escalations                                                           |
+| Release health             | crashes, ANRs, app-start, affected users, build adoption                                                                                        |
+| Retention cohorts          | D1, D7, D14, D30 by activated/not activated, platform, wave, first-value path                                                                   |
 
 ## Cohorts
 
@@ -61,6 +61,7 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `conflict_detected`
 - `first_checkoff_completed`
 - `routine_checkoff_completed`
+- `cycle_night_completed`
 - `photo_baseline_added`
 - `photo_captured`
 - `first_photo_captured`
