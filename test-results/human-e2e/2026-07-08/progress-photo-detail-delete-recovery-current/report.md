@@ -24,7 +24,7 @@ Date: 2026-07-08
 
 ## Result
 
-Pass with fixes. Share and delete recovery stay route-owned, remain on /progress/e2e-front-2026-04-01 after forced failures, show one inline alert in the scroll layout without covering the note card, nudge the feedback/action row into view, keep controls at least 48 px tall, and keep horizontal overflow at zero. Browser warn/error logs contain only expected placeholder Supabase and Expo notifications web-support warnings.
+Pass with fixes. Share and delete recovery stay route-owned, remain on /progress/e2e-front-2026-04-01 after forced failures, show one inline alert before the note card without clipping or covering content, keep confirmation controls at least 48 px tall, and keep horizontal overflow at zero. Browser warn/error logs contain only expected placeholder Supabase and Expo notifications web-support warnings.
 
 ## Remaining Risk
 
