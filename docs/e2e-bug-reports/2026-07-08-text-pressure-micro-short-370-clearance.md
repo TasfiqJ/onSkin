@@ -66,7 +66,7 @@ The previous split-short spacing was tuned down to 320 x 390. At 320 x 370 with 
 
 ## Post-Fix Evidence
 
-- Focused contracts: `npm --workspace apps/mobile run test -- src/features/settings/settingsRoutes.test.ts src/features/shelf/shelfRoutes.test.ts src/features/subscription/paywallMobileContracts.test.ts src/features/community/communityRoutes.test.ts`
+- Focused contracts: `npm --workspace apps/mobile run test -- communityRoutes settingsRoutes shelfRoutes paywallMobileContracts`
 - Screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`
 - UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/report.md`
 - Harder screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`
