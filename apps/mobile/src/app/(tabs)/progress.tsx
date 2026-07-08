@@ -69,23 +69,23 @@ function ModeTab({
 function FirstRun({ compact = false }: { compact?: boolean }) {
   return (
     <View className={compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'}>
-      <Card className={compact ? 'mb-3 p-4' : 'mb-5'}>
+      <Card className={compact ? 'mb-2 p-3' : 'mb-5'}>
         <Text
           variant="titleSm"
-          style={{ fontSize: compact ? 24 : 26, lineHeight: compact ? 27 : 30 }}
+          style={{ fontSize: compact ? 22 : 26, lineHeight: compact ? 25 : 30 }}
         >
           {PHOTO_COPY.firstRun.title}
         </Text>
         <Text
           variant="bodySm"
           tone="muted"
-          className={compact ? 'mt-2' : 'mt-3'}
-          style={{ lineHeight: compact ? 19 : 22 }}
+          className={compact ? 'mt-1.5 text-[12.5px]' : 'mt-3'}
+          style={{ lineHeight: compact ? 17 : 22 }}
         >
           {PHOTO_COPY.firstRun.body}
         </Text>
         {/* honest 8-12 week expectation bar */}
-        <View className={compact ? 'mt-3.5 flex-row' : 'mt-5 flex-row'}>
+        <View className={compact ? 'mt-2.5 flex-row' : 'mt-5 flex-row'}>
           <View
             className="h-1.5 flex-1 rounded-l-[3px]"
             style={{ backgroundColor: colors.greigeDeep }}
@@ -104,19 +104,28 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
       <View
         className={
           compact
-            ? 'mb-4 flex-row items-center gap-2.5 px-1'
+            ? 'mb-2 flex-row items-center gap-2.5 px-1'
             : 'mb-7 flex-row items-center gap-2.5 px-1'
         }
       >
         <View className="h-3.5 w-3.5 rounded-full border-2" style={{ borderColor: colors.sage }} />
-        <Text variant="bodySm" tone="muted" style={{ lineHeight: compact ? 18 : undefined }}>
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={compact ? 'text-[12.5px]' : undefined}
+          style={{ lineHeight: compact ? 17 : undefined }}
+        >
           {PHOTO_COPY.firstRun.reassure}
         </Text>
       </View>
       <Pressable
         accessibilityRole="button"
         onPress={() => router.push('/progress/capture')}
-        className="h-14 items-center justify-center rounded-pill"
+        className={
+          compact
+            ? 'h-[52px] items-center justify-center rounded-pill'
+            : 'h-14 items-center justify-center rounded-pill'
+        }
         style={{ backgroundColor: colors.ink }}
       >
         <Text

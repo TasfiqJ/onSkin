@@ -65,6 +65,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current local evidence: 2026-07-07 Chrome CDP Expo web checked `/today`, `/progress`, `/shelf`, and `/you` at 320 x 568 and 390 x 568; the DOM geometry snapshot found no non-tab visible controls intersecting the floating tab-bar zone.
   - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 first swept 41 routes in `test-results/human-e2e/2026-07-08/short-phone-480-route-audit-6/`, then tightened `/today` empty-routine compact spacing after the `Add products` CTA looked crowded near the floating bar. Post-fix `/today` shows `Add products` at 230 x 56 px, y=314-370, with 37 px clearance above the floating tab bar, correct center hit-test, and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/today-empty-short-phone-480-clearance/`.
   - Current shelf/paywall evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 found `/shelf` empty-state `Add by hand` hidden under the floating tab bar and direct `/paywall/upsell?feature=full_routine` `Maybe later` clipped below the viewport. Post-fix `/shelf` shows `Scan a barcode` at 256 x 56 px and `Add by hand` at 256 x 48 px with center hit-tests landing on the buttons, 31 px clearance above the tab bar, and `Add by hand` routing to `/shelf/manual`; the paywall shows `Maybe later` at 264 x 48 px inside the viewport and tapping it dismisses to `/today`. Evidence is in `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`.
+  - Current Progress evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 found `/progress` empty-state `Take my first photo` rendered at y=349-405 with only about 2 px of clearance before the floating tab bar. Post-fix it renders at 272 x 52 px, y=315-367, with 33.6 px clearance, the center hit-tests to `Take my first photo`, tapping routes to `/progress/capture`, and horizontal overflow stays zero. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-empty-short-phone-clearance/` and `docs/e2e-bug-reports/2026-07-08-progress-empty-short-phone-clearance.md`.
 - Branch: PM Today scene background
   - Priority: Important
   - Automate later: Yes
@@ -548,6 +549,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-capture-safe-area/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/progress-compare-picker-safe-area-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/progress-first-photo-short-phone-480/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/progress-empty-short-phone-clearance/`
 
 ### Path A: Happy Path
 
@@ -595,6 +597,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress with no photos.
   - Expected result: Empty state gives a clear next action.
   - Evidence: Screenshot.
+  - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced the empty-state `Take my first photo` CTA sitting visually under the floating tab bar with only about 2 px of clearance. Post-fix, the CTA is 272 x 52 px at y=315-367, has 33.6 px clearance above the floating tab bar, center hit-tests to itself, has zero horizontal overflow, and tapping it opens the `/progress/capture` local-only photo consent gate. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-empty-short-phone-clearance/` and `docs/e2e-bug-reports/2026-07-08-progress-empty-short-phone-clearance.md`.
 - Branch: timeline time-lapse unavailable
   - Priority: Important
   - Automate later: Yes

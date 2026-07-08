@@ -1,0 +1,19 @@
+[
+  {
+    "aria": null,
+    "hitInside": false,
+    "hitText": "ProgressSkin changes slowly. That’s normal.Most actives take 8-12 weeks to show. The mirror hides th",
+    "index": 0,
+    "rect": {
+      "bottom": 404.8998908996582,
+      "height": 55.99211502075195,
+      "left": 23.99878692626953,
+      "right": 296.38956451416016,
+      "top": 348.90777587890625,
+      "width": 272.3907775878906
+    },
+    "role": "button",
+    "tag": "button",
+    "text": "Take my first photo"
+  }
+]

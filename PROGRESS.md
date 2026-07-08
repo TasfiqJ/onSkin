@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the `/progress` empty first-photo CTA on shortest 320 x 480 phones.
+  The compact first-run copy stack was still tall enough for the floating tab
+  bar to cover the lower CTA label, leaving only about 2 px of clearance. The
+  Progress empty state now trims only its compact spacing and keeps the CTA a
+  52 px pill. Post-fix Codex in-app browser evidence shows `Take my first
+  photo` at y=315-367 with 33.6 px clearance above the floating tab bar, correct
+  center hit-test, zero horizontal overflow, and a successful tap into the
+  `/progress/capture` local-only consent gate. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/progress-empty-short-phone-clearance/`,
+  `docs/e2e-bug-reports/2026-07-08-progress-empty-short-phone-clearance.md`.
+
 - Fixed shortest-phone bottom-action clearance for the empty Shelf and
   contextual full-routine paywall. A 320 x 480 route sweep found `/shelf`
   hiding `Add by hand` under the floating tab bar and

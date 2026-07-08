@@ -46,11 +46,19 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}");
     expect(source).toContain('<FirstRun compact={compactFirstRun} />');
     expect(source).toContain("compact ? 'pb-28 pt-1' : 'flex-1 justify-center pb-6'");
-    expect(source).toContain("compact ? 'mb-3 p-4' : 'mb-5'");
-    expect(source).toContain('fontSize: compact ? 24 : 26');
-    expect(source).toContain('lineHeight: compact ? 19 : 22');
-    expect(source).toContain("'mb-4 flex-row items-center gap-2.5 px-1'");
+    expect(source).toContain("compact ? 'mb-2 p-3' : 'mb-5'");
+    expect(source).toContain('fontSize: compact ? 22 : 26');
+    expect(source).toContain("className={compact ? 'mt-1.5 text-[12.5px]' : 'mt-3'}");
+    expect(source).toContain('lineHeight: compact ? 17 : 22');
+    expect(source).toContain("compact ? 'mt-2.5 flex-row' : 'mt-5 flex-row'");
+    expect(source).toContain("'mb-2 flex-row items-center gap-2.5 px-1'");
     expect(source).toContain("'mb-7 flex-row items-center gap-2.5 px-1'");
+    expect(source).toContain("className={compact ? 'text-[12.5px]' : undefined}");
+    expect(source).toContain("'h-[52px] items-center justify-center rounded-pill'");
+    expect(source).toContain("'h-14 items-center justify-center rounded-pill'");
+    expect(source).not.toContain("compact ? 'mb-3 p-4' : 'mb-5'");
+    expect(source).not.toContain('fontSize: compact ? 24 : 26');
+    expect(source).not.toContain("'mb-4 flex-row items-center gap-2.5 px-1'");
   });
 
   it('keeps direct-entry progress exits touchable on phones', () => {
