@@ -13,10 +13,12 @@ function CompactGoalCard({
   goal,
   selected,
   onPress,
+  splitShort,
 }: {
   goal: (typeof GOALS)[number];
   selected: boolean;
   onPress: () => void;
+  splitShort?: boolean;
 }) {
   return (
     <Pressable
@@ -29,28 +31,47 @@ function CompactGoalCard({
         onPress();
       }}
       className={cn(
-        'min-h-[74px] rounded-card border px-3 py-2.5',
+        splitShort
+          ? 'min-h-[60px] rounded-card border px-2.5 py-2'
+          : 'min-h-[74px] rounded-card border px-3 py-2.5',
         selected ? 'border-clay bg-clay/5' : 'border-hairline bg-paper-raised',
       )}
       style={{ width: '48%' }}
     >
-      <View className="flex-row items-start justify-between gap-2">
+      <View
+        className={
+          splitShort
+            ? 'flex-row items-start justify-between gap-1.5'
+            : 'flex-row items-start justify-between gap-2'
+        }
+      >
         <Text
-          className="flex-1 font-sans-medium text-[14px] leading-[17px] text-ink"
-          numberOfLines={2}
+          className={cn(
+            'flex-1 font-sans-medium text-ink',
+            splitShort ? 'text-[13px] leading-[16px]' : 'text-[14px] leading-[17px]',
+          )}
+          numberOfLines={splitShort ? 1 : 2}
         >
           {goal.title}
         </Text>
         <View
           className={cn(
-            'mt-0.5 h-4 w-4 items-center justify-center rounded-full border',
+            splitShort
+              ? 'mt-0.5 h-3.5 w-3.5 items-center justify-center rounded-full border'
+              : 'mt-0.5 h-4 w-4 items-center justify-center rounded-full border',
             selected ? 'border-clay bg-clay' : 'border-greige-deep bg-transparent',
           )}
         >
           {selected ? <View className="h-1.5 w-1.5 rounded-full bg-paper" /> : null}
         </View>
       </View>
-      <Text className="mt-1 font-sans text-[11px] leading-[14px] text-muted" numberOfLines={2}>
+      <Text
+        className={cn(
+          'font-sans text-muted',
+          splitShort ? 'mt-0.5 text-[10px] leading-[12px]' : 'mt-1 text-[11px] leading-[14px]',
+        )}
+        numberOfLines={splitShort ? 1 : 2}
+      >
         {goal.subtitle}
       </Text>
     </Pressable>
@@ -62,6 +83,7 @@ export default function GoalsScreen() {
   const { height } = useWindowDimensions();
   const { goals, quizAnswers, toggleGoal } = useOnboarding();
   const compactPhone = height < 640;
+  const splitShortPhone = height < 420;
   const quizCompletion = getQuizCompletionState(quizAnswers);
 
   return (
@@ -75,20 +97,30 @@ export default function GoalsScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="pb-28"
         >
-          <Text variant="title" className={compactPhone ? 'mt-5' : 'mt-8'}>
+          <Text
+            variant="title"
+            className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-8'}
+          >
             What brings you here?
           </Text>
-          <Text variant="body" tone="muted" className="mt-2">
+          <Text variant="body" tone="muted" className={splitShortPhone ? 'mt-1' : 'mt-2'}>
             Choose up to two. This shapes your plan.
           </Text>
           {compactPhone ? (
-            <View className="mt-4 flex-row flex-wrap gap-2">
+            <View
+              className={
+                splitShortPhone
+                  ? 'mt-2 flex-row flex-wrap gap-1.5'
+                  : 'mt-4 flex-row flex-wrap gap-2'
+              }
+            >
               {GOALS.map((g) => (
                 <CompactGoalCard
                   key={g.id}
                   goal={g}
                   selected={goals.includes(g.id)}
                   onPress={() => toggleGoal(g.id as GoalId)}
+                  splitShort={splitShortPhone}
                 />
               ))}
             </View>

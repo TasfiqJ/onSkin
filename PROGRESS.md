@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the 320 x 390 onboarding goals footer overlap that remained after the
+  480 px compact grid pass. The split-short goals layout now tightens heading
+  spacing and uses still-tappable 60 px cards below 420 px height, keeping
+  Clear skin, Even tone, Hydration, Fine lines, Sensitivity, Barrier repair,
+  and Continue fully readable and center-hit-testable. Codex in-app browser
+  Expo web at 320 x 390 verifies zero clipped, sub-44, or blocked controls,
+  taps the formerly blocked Sensitivity card, and advances to health-data
+  consent. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/onboarding-first-session-390-current/`,
+  `docs/e2e-bug-reports/2026-07-08-onboarding-goals-390-footer-overlap.md`.
+
 - Fixed the 320 x 568 Progress contextual ProGate text-pressure/tabbar
   overlap. A 118% text-pressure audit found `/progress` Terms, Privacy, and
   Restore rendered visibly but with their tap centers intercepted by the
@@ -39,6 +50,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   verifies the expected top-level packet files (`README.md` and `AGENTS.md`),
   and fails strict mode if unexpected top-level packet markdown appears without
   updating the audit.
+
+- Added a strict Tas handoff audit so external launch evidence cannot drift
+  away from the founder todo list. `npm run docs:tas-todo-audit:strict`
+  verifies `docs/FOR_TAS_TO_DO.md` still covers the Phase 2-11 Tas-owned
+  evidence gate groups, extracts the exact key inventory from phase scripts and
+  `.env.example`, and writes `docs/generated/tas-todo-audit.{json,md}`.
 
 - Added a durable local human-E2E evidence manifest gate without adding new
   E2E dependencies. `npm run e2e:human:manifest` now reads the committed

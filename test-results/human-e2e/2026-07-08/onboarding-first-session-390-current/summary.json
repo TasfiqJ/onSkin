@@ -1,0 +1,48 @@
+{
+  "surface": "Expo web",
+  "environment": "Codex in-app browser, localhost:8156, viewport 320x390",
+  "feature": "First-run onboarding goal selection",
+  "date": "2026-07-08",
+  "result": "pass_after_fix",
+  "bug": {
+    "title": "Onboarding goals footer overlap at 320x390",
+    "report": "docs/e2e-bug-reports/2026-07-08-onboarding-goals-390-footer-overlap.md",
+    "preFixEvidence": [
+      "03-after-age.json",
+      "03-after-age.png"
+    ]
+  },
+  "postFix": {
+    "viewport": {
+      "width": 320,
+      "height": 390
+    },
+    "goalsRoute": "http://localhost:8156/onboarding/goals",
+    "selectedGoal": "Sensitivity",
+    "continuedRoute": "http://localhost:8156/onboarding/consent",
+    "visibleControlIssues": 0,
+    "checkedControls": [
+      "Clear skin",
+      "Even tone",
+      "Hydration",
+      "Fine lines",
+      "Sensitivity",
+      "Barrier repair",
+      "Continue"
+    ],
+    "evidence": [
+      "10-postfix-welcome-320x390.json",
+      "10-postfix-welcome-320x390.png",
+      "11-postfix-goals-320x390.json",
+      "11-postfix-goals-320x390.png",
+      "12-postfix-sensitivity-selected-320x390.json",
+      "12-postfix-sensitivity-selected-320x390.png",
+      "13-postfix-after-goals-continue-320x390.json",
+      "13-postfix-after-goals-continue-320x390.png"
+    ]
+  },
+  "notes": [
+    "The local reset fixture displayed the welcome state, then this browser session reached goals directly because age verification remained in local state.",
+    "The affected route was still verified at the exact failing viewport and with the formerly blocked Sensitivity control."
+  ]
+}

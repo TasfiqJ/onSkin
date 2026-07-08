@@ -196,6 +196,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: All six goal choices are visible, readable, and hit-testable above the footer, with no goal card clipped underneath Continue, no horizontal overflow, and no visible control below 44 px.
   - Evidence: Screenshot and small-phone control geometry snapshot.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced goal cards sitting under the fixed Continue footer, then verified the compact two-column goal grid. Post-fix geometry shows all six goal cards at 130.7 px wide and at least 74 px tall, Continue at 56 px tall, zero hit-blocked controls, zero sub-44 controls, and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck/`.
+  - Current split-short evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 390 reproduced Sensitivity and Barrier repair visible under the fixed Continue footer with blocked tap centers. Post-fix split-short density keeps all six goal cards at about 130.7 x 60 px, above Continue, with zero clipped controls, zero sub-44 controls, zero blocked center hit-tests, and a successful Sensitivity selection followed by Continue advancing to health-data consent. Evidence and report are in `test-results/human-e2e/2026-07-08/onboarding-first-session-390-current/` and `docs/e2e-bug-reports/2026-07-08-onboarding-goals-390-footer-overlap.md`.
 - Branch: consent declined
   - Priority: Critical
   - Automate later: Yes

@@ -17,6 +17,14 @@ clearance and not a real launch catalog.
 
 Fresh verification on 2026-07-08:
 
+- Codex in-app browser Expo web at 320 x 390 rechecked the first-run
+  `/onboarding/goals` split-short layout after the previous 320 x 480 compact
+  pass. Clear skin, Even tone, Hydration, Fine lines, Sensitivity, Barrier
+  repair, and Continue are now fully visible, 56-60 px tall, unclipped,
+  center-hit-testable, and at zero horizontal overflow; tapping the formerly
+  blocked Sensitivity card enables Continue and advances to health-data consent.
+  Evidence:
+  `test-results/human-e2e/2026-07-08/onboarding-first-session-390-current/`.
 - Codex in-app browser Expo web at 320 x 480 rechecked the compact
   photo-progress contextual paywall after a dev-only local reset. `/progress`,
   `/progress/capture`, and `/progress/review` keep Terms, Privacy, Restore,
@@ -47,6 +55,11 @@ Fresh verification on 2026-07-08:
   have active `docs/` mirrors, verifies all 10 mirrors are byte-identical, and
   verifies all mirrored packet docs are referenced by the root source-of-truth
   lists in `AGENTS.md` or `CLAUDE.md`.
+- `npm run docs:tas-todo-audit:strict` passed and wrote
+  `docs/generated/tas-todo-audit.{json,md}`. The audit verifies
+  `docs/FOR_TAS_TO_DO.md` still covers the Phase 2-11 Tas-owned launch
+  evidence gate groups and records the exact machine-extracted key inventory
+  from phase scripts and `.env.example`.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 320 x 480 current-main route rerun,

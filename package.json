@@ -113,6 +113,8 @@
     "brand:audit:strict": "node scripts/brand-audit.mjs --strict",
     "docs:source-packet-audit": "node scripts/docs/source-packet-audit.mjs",
     "docs:source-packet-audit:strict": "node scripts/docs/source-packet-audit.mjs --strict",
+    "docs:tas-todo-audit": "node scripts/docs/tas-todo-audit.mjs",
+    "docs:tas-todo-audit:strict": "node scripts/docs/tas-todo-audit.mjs --strict",
     "e2e:human:manifest": "node scripts/e2e/human-e2e-manifest.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\""

@@ -87,6 +87,9 @@ instead of silently editing implementation around the plan.
 `04_repo_docs`, verifies the expected top-level packet files are present,
 verifies all 10 packet docs have active `docs/` mirrors, and verifies those
 mirrors are byte-identical and listed in the root source-of-truth docs.
+`npm run docs:tas-todo-audit:strict` verifies `docs/FOR_TAS_TO_DO.md` still
+covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
+machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
 Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,

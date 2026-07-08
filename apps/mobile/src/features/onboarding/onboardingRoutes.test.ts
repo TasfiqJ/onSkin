@@ -20,7 +20,7 @@ describe('onboarding route contracts', () => {
   it('keeps the first-session E2E local reset dev-only and env-gated', () => {
     const source = readAppRoute('index.tsx');
 
-    expect(source).toContain("useLocalSearchParams<{ e2eReset?: string }>()");
+    expect(source).toContain('useLocalSearchParams<{ e2eReset?: string }>()');
     expect(source).toContain('function shouldRunE2ELocalReset');
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
@@ -61,6 +61,7 @@ describe('onboarding route contracts', () => {
     expect(quiz).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
     expect(products).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
     expect(goals).toContain('const compactPhone = height < 640');
+    expect(goals).toContain('const splitShortPhone = height < 420');
     expect(quiz).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
@@ -72,11 +73,16 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('if (compactPhone) scrollToShelfList()');
     expect(products).toContain('scrollRef.current?.scrollTo({ y: 0, animated: true })');
     expect(products).toContain('inputRef.current?.focus()');
-    expect(goals).toContain("className={compactPhone ? 'mt-5' : 'mt-8'}");
+    expect(goals).toContain("splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-8'");
     expect(goals).toContain('function CompactGoalCard');
     expect(goals).toContain("width: '48%'");
     expect(goals).toContain('min-h-[74px] rounded-card');
-    expect(goals).toContain('<View className="mt-4 flex-row flex-wrap gap-2">');
+    expect(goals).toContain('min-h-[60px] rounded-card');
+    expect(goals).toContain('splitShort?: boolean');
+    expect(goals).toContain('numberOfLines={splitShort ? 1 : 2}');
+    expect(goals).toContain('splitShort={splitShortPhone}');
+    expect(goals).toContain("'mt-4 flex-row flex-wrap gap-2'");
+    expect(goals).toContain("'mt-2 flex-row flex-wrap gap-1.5'");
     expect(goals).toContain('<View className="mt-6 gap-3">');
     expect(quiz).toContain("className={compactPhone ? 'mt-5' : 'mt-7'}");
     expect(quiz).toContain("className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}");

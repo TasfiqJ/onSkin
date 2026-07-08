@@ -1,0 +1,92 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 234.32192420959473
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "display": "flex",
+      "partialClip": false,
+      "pressed": null,
+      "rect": {
+        "bottom": 262.3179817199707,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 206.32586669921875,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": null,
+      "tag": "BUTTON",
+      "text": "I agree. Continue",
+      "tinyTarget": false,
+      "visibility": "visible"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 298.3161392211914
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "display": "flex",
+      "partialClip": false,
+      "pressed": null,
+      "rect": {
+        "bottom": 322.31492614746094,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 274.3173522949219,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": null,
+      "tag": "BUTTON",
+      "text": "I don't agree",
+      "tinyTarget": false,
+      "visibility": "visible"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 350.3034133911133
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "display": "flex",
+      "partialClip": false,
+      "pressed": null,
+      "rect": {
+        "bottom": 374.3022003173828,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 326.30462646484375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": null,
+      "tag": "BUTTON",
+      "text": "Read the health data policy",
+      "tinyTarget": false,
+      "visibility": "visible"
+    }
+  ],
+  "issues": [],
+  "text": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+  "url": "http://localhost:8156/onboarding/consent",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

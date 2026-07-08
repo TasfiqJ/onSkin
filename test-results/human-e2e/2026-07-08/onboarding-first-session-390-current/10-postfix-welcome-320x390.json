@@ -1,0 +1,65 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 246.3061466217041
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "display": "flex",
+      "partialClip": false,
+      "pressed": null,
+      "rect": {
+        "bottom": 274.3022041320801,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 218.31008911132812,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": null,
+      "tag": "BUTTON",
+      "text": "Begin",
+      "tinyTarget": false,
+      "visibility": "visible"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 310.3003921508789
+      },
+      "centerBlocked": false,
+      "disabled": false,
+      "display": "flex",
+      "partialClip": false,
+      "pressed": null,
+      "rect": {
+        "bottom": 334.29917907714844,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 286.3016052246094,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": null,
+      "tag": "BUTTON",
+      "text": "I already have an account",
+      "tinyTarget": false,
+      "visibility": "visible"
+    }
+  ],
+  "issues": [],
+  "text": "Healthier skin in eight weeks, built around your skin. A routine that fits what's already on your shelf. And photos that never leave your phone. Begin I already have an account No ads · no data sales · photos stay on device",
+  "url": "http://localhost:8156/?e2eReset=local",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}
