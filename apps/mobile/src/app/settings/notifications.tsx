@@ -22,7 +22,7 @@ function SectionLabel({ children, compact = false }: { children: string; compact
     <Text
       variant="label"
       tone="muted"
-      className={compact ? 'mb-1 ml-2 mt-3' : 'mb-2 ml-2 mt-4'}
+      className={compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}
       style={{ fontSize: compact ? 9.5 : 10, letterSpacing: 1 }}
     >
       {children}
@@ -51,7 +51,7 @@ function Row({
     <View
       className={
         compact
-          ? 'min-h-[52px] flex-row items-center justify-between py-1.5'
+          ? 'min-h-[48px] flex-row items-center justify-between py-0'
           : 'min-h-[56px] flex-row items-center justify-between py-3.5'
       }
       style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}

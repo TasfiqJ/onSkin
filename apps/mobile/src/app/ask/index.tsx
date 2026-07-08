@@ -27,6 +27,7 @@ type SuggestedPromptKey = 'conflict' | 'tonight' | 'fit';
 
 const EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight', 'fit'];
 const SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'];
+const SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict'];
 
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
   const bg = tone === 'deterministic' ? colors.sageTint : colors.clayTint;
@@ -367,7 +368,12 @@ export default function AskScreen() {
   const empty = messages.length === 0;
   const compactPhone = height < 640;
   const shortPhone = height < 520;
-  const emptyPromptOrder = shortPhone ? SHORT_PHONE_EMPTY_PROMPT_ORDER : EMPTY_PROMPT_ORDER;
+  const splitShortPhone = height < 410;
+  const emptyPromptOrder = splitShortPhone
+    ? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER
+    : shortPhone
+      ? SHORT_PHONE_EMPTY_PROMPT_ORDER
+      : EMPTY_PROMPT_ORDER;
 
   return (
     <Screen edges={['top', 'bottom']}>

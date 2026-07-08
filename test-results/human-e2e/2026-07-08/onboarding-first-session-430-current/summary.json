@@ -1,0 +1,37 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web",
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "server": "http://localhost:8233",
+  "resetHook": "/?e2eReset=local with EXPO_PUBLIC_E2E_LOCAL_RESET=1",
+  "verdict": "pass",
+  "flow": [
+    "Welcome reset rendered Begin/I already have an account",
+    "Onboarding age, goals, consent, and quiz completed",
+    "Products screen started clean at 0 of 3 with Skip for now",
+    "Added Retinol 0.3% Night Serum as Serum; CTA showed Add 2 more / Continue with 1 product",
+    "Added Glycolic 7% Toner as Toner; CTA showed Add 1 more / Continue with 2 products",
+    "Added Mineral SPF 50 as SPF; CTA changed to Continue",
+    "Reveal advanced to notification/account/paywall without credentials",
+    "Paywall preview disabled checkout and exposed Explore first. 7 days of Pro no-card path",
+    "Routine plan placed Mineral SPF 50 in Morning, Glycolic 7% on Night 1, Retinol 0.3% Night Serum on Night 2",
+    "Today morning checkoff completed 1 of 1",
+    "Today PM route showed Night 1 Glycolic 7% Toner and completed 1 of 1"
+  ],
+  "urls": {
+    "finalMorning": "http://localhost:8233/today",
+    "finalPm": "http://localhost:8233/today?routine=PM"
+  },
+  "routeText": {
+    "routinePlan": "<\nBUILT FOR SENSITIVE SKIN\nYour routine, in order.\nFIRST INSIGHT\nTiming handled\nProducts that need different timing are separated before the first check-off.\nMORNING\n1\nMineral SPF 50\nEVENING SKIN CYCLING\nNight 1\nGlycolic 7%\nexfoliate\nNight 2\nRetinol 0.3% Night Serum\n2 times/week to start\nNights 3-4\nRecover\nkeep it simple\nA gentle cleanser would give your routine a clean base.\nStart today",
+    "productsInitial": "<input node_id=26 aria-label=\"Product name\" placeholder=\"e.g. Retinol serum\" />\n<button node_id=27 role=\"button\" type=\"button\">Skip for now</button>",
+    "afterOne": "<input node_id=26 aria-label=\"Product name\" placeholder=\"e.g. Retinol serum\" />\n<button node_id=38 aria-label=\"Remove Retinol 0.3% Night Serum\" role=\"button\" type=\"button\">×</button>\n<button node_id=27 role=\"button\" type=\"button\">Add 2 more</button>\n<button node_id=39 role=\"button\" type=\"button\">Continue with 1 product</button>",
+    "afterTwo": "<button node_id=50 aria-label=\"Remove Glycolic 7% Toner\" role=\"button\" type=\"button\">×</button>\n<button node_id=38 aria-label=\"Remove Retinol 0.3% Night Serum\" role=\"button\" type=\"button\">×</button>\n<button node_id=27 role=\"button\" type=\"button\">Add 1 more</button>\n<button node_id=51 role=\"button\" type=\"button\">Continue with 2 products</button>",
+    "afterThree": "<button node_id=62 aria-label=\"Remove Mineral SPF 50\" role=\"button\" type=\"button\">×</button>\n<button node_id=50 aria-label=\"Remove Glycolic 7% Toner\" role=\"button\" type=\"button\">×</button>\n<button node_id=38 aria-label=\"Remove Retinol 0.3% Night Serum\" role=\"button\" type=\"button\">×</button>\n<button node_id=27 role=\"button\" type=\"button\">Continue</button>",
+    "todayMorningChecked": "<button node_id=74 aria-label=\"You're exploring Pro. Manage your plan\" role=\"button\" type=\"button\">You’re exploring Pro. 7 days left ›</button>\n<button node_id=81 aria-label=\"View your streak and adherence\" role=\"button\" type=\"button\">1 day</button>\n<div node_id=75 aria-label=\"Mineral SPF 50\" role=\"checkbox\">Mineral SPF 50 Last step. Reapply later.</div>\n<button node_id=76 aria-label=\"See your recommendations\" role=\"button\" type=\"button\">✦ A few honest suggestions 4 things we’d gently suggest ›</button>\n<div node_id=77 aria-label=\"Today tab\" role=\"tab\">Today</div>\n<div node_id=78 aria-label=\"Progress tab\" role=\"tab\">Progress</div>\n<div node_id=79 aria-label=\"Shelf tab\" role=\"tab\">Shelf</div>\n<div node_id=80 aria-label=\"You tab\" role=\"tab\">You</div>",
+    "todayPmChecked": "<button node_id=2 aria-label=\"See your cycle week ahead\" role=\"button\" type=\"button\">Skin cycling · night 1 of 6 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver</button>\n<div node_id=3 aria-label=\"Glycolic 7% Toner\" role=\"checkbox\">Glycolic 7% Toner Thin layer tonight.</div>\n<div node_id=4 aria-label=\"Today tab\" role=\"tab\">Today</div>\n<div node_id=5 aria-label=\"Progress tab\" role=\"tab\">Progress</div>\n<div node_id=6 aria-label=\"Shelf tab\" role=\"tab\">Shelf</div>\n<div node_id=7 aria-label=\"You tab\" role=\"tab\">You</div>"
+  }
+}

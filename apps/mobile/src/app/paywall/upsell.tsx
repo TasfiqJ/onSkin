@@ -35,6 +35,7 @@ export default function UpsellSheet() {
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
+  const splitShortPaywall = height < 410;
 
   function onStartTrial() {
     setActionFeedback(null);
@@ -60,7 +61,13 @@ export default function UpsellSheet() {
       scroll
       backdropAccessible={false}
       className={
-        shortPaywall ? 'px-7 pb-5 pt-3' : compactPaywall ? 'px-7 pb-8 pt-4' : undefined
+        splitShortPaywall
+          ? 'px-6 pb-3 pt-2'
+          : shortPaywall
+            ? 'px-7 pb-5 pt-3'
+            : compactPaywall
+              ? 'px-7 pb-8 pt-4'
+              : undefined
       }
       onClose={() => dismissPaywall(router)}
     >
@@ -79,23 +86,25 @@ export default function UpsellSheet() {
       <Text
         variant="title"
         style={{
-          fontSize: shortPaywall ? 27 : longCompactTitle ? 24 : 30,
-          lineHeight: shortPaywall ? 30 : longCompactTitle ? 27 : 34,
+          fontSize: splitShortPaywall ? 24 : shortPaywall ? 27 : longCompactTitle ? 24 : 30,
+          lineHeight: splitShortPaywall ? 27 : shortPaywall ? 30 : longCompactTitle ? 27 : 34,
         }}
       >
         {copy.title}
       </Text>
-      <Text
-        variant="body"
-        tone="muted"
-        className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
-        style={{
-          fontSize: shortPaywall ? 14 : undefined,
-          lineHeight: shortPaywall ? 18 : compactPaywall ? 20 : 24,
-        }}
-      >
-        {copy.body}
-      </Text>
+      {!splitShortPaywall ? (
+        <Text
+          variant="body"
+          tone="muted"
+          className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
+          style={{
+            fontSize: shortPaywall ? 14 : undefined,
+            lineHeight: shortPaywall ? 18 : compactPaywall ? 20 : 24,
+          }}
+        >
+          {copy.body}
+        </Text>
+      ) : null}
       <View
         className={
           shortPaywall

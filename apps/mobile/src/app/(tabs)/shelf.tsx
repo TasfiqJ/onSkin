@@ -135,10 +135,12 @@ function EmptyShelf({
   archiveCount,
   compact,
   shortPhone,
+  splitShort,
 }: {
   archiveCount: number;
   compact: boolean;
   shortPhone: boolean;
+  splitShort: boolean;
 }) {
   const hasArchive = archiveCount > 0;
   const compactWithArchive = compact && hasArchive;
@@ -150,40 +152,44 @@ function EmptyShelf({
         compact
           ? compactWithArchive
             ? 'items-center px-2 pb-28 pt-2'
-            : compactNoArchiveShort
+            : splitShort
+              ? 'items-center px-2 pb-28 pt-0'
+              : compactNoArchiveShort
               ? 'items-center px-2 pb-28 pt-2'
             : 'items-center px-2 pb-24 pt-7'
           : 'flex-1 items-center justify-center px-2 pb-16'
       }
     >
-      <View
-        className={`${
-          compactNoArchiveShort ? 'mb-3' : compactWithArchive ? 'mb-4' : 'mb-7'
-        } flex-row items-end gap-2.5`}
-      >
-        <View className="-rotate-6">
+      {!splitShort ? (
+        <View
+          className={`${
+            compactNoArchiveShort ? 'mb-3' : compactWithArchive ? 'mb-4' : 'mb-7'
+          } flex-row items-end gap-2.5`}
+        >
+          <View className="-rotate-6">
+            <StripedThumb
+              light
+              width={compactNoArchiveShort ? 38 : 46}
+              height={compactNoArchiveShort ? 50 : 60}
+              radius={10}
+            />
+          </View>
           <StripedThumb
             light
             width={compactNoArchiveShort ? 38 : 46}
-            height={compactNoArchiveShort ? 50 : 60}
+            height={compactNoArchiveShort ? 56 : 68}
             radius={10}
           />
+          <View className="rotate-6">
+            <StripedThumb
+              light
+              width={compactNoArchiveShort ? 38 : 46}
+              height={compactNoArchiveShort ? 50 : 60}
+              radius={10}
+            />
+          </View>
         </View>
-        <StripedThumb
-          light
-          width={compactNoArchiveShort ? 38 : 46}
-          height={compactNoArchiveShort ? 56 : 68}
-          radius={10}
-        />
-        <View className="rotate-6">
-          <StripedThumb
-            light
-            width={compactNoArchiveShort ? 38 : 46}
-            height={compactNoArchiveShort ? 50 : 60}
-            radius={10}
-          />
-        </View>
-      </View>
+      ) : null}
       <Text
         variant="title"
         className={
@@ -203,8 +209,14 @@ function EmptyShelf({
             : 'mt-2.5 max-w-[280px] text-center'
         }
       >
-        Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and
-        clashes.
+        {splitShort ? (
+          <>Scan a barcode, or add it by hand.</>
+        ) : (
+          <>
+            Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and
+            clashes.
+          </>
+        )}
       </Text>
       <View
         className={`${
@@ -343,6 +355,7 @@ export default function ShelfScreen() {
   const { height } = useWindowDimensions();
   const compactShelf = height < 640;
   const shortShelf = height < 520;
+  const splitShortShelf = height < 410;
 
   const items = data?.items ?? [];
   const archiveCount = data?.archive.length ?? 0;
@@ -369,7 +382,12 @@ export default function ShelfScreen() {
               empty for now
             </Text>
           </View>
-          <EmptyShelf archiveCount={archiveCount} compact={compactShelf} shortPhone={shortShelf} />
+          <EmptyShelf
+            archiveCount={archiveCount}
+            compact={compactShelf}
+            shortPhone={shortShelf}
+            splitShort={splitShortShelf}
+          />
         </>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">

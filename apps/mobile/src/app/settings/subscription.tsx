@@ -76,6 +76,7 @@ export default function SubscriptionScreen() {
   const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const ultraShortSubscription = height < 460;
+  const splitShortSubscription = height < 410;
   const isPro = data?.isPro ?? false;
 
   async function openStore() {
@@ -279,7 +280,9 @@ export default function SubscriptionScreen() {
           <>
             <View
               className={
-                ultraShortSubscription
+                splitShortSubscription
+                  ? 'mb-2 rounded-card bg-paper-raised p-3'
+                  : ultraShortSubscription
                   ? 'mb-3 rounded-card bg-paper-raised p-4'
                   : 'mb-4 rounded-card bg-paper-raised p-5'
               }
@@ -289,8 +292,8 @@ export default function SubscriptionScreen() {
               <Text
                 variant="bodySm"
                 tone="muted"
-                className={ultraShortSubscription ? 'mt-1.5' : 'mt-2'}
-                style={{ lineHeight: ultraShortSubscription ? 19 : 21 }}
+                className={splitShortSubscription ? 'mt-1' : ultraShortSubscription ? 'mt-1.5' : 'mt-2'}
+                style={{ lineHeight: splitShortSubscription ? 18 : ultraShortSubscription ? 19 : 21 }}
               >
                 {PAYWALL_COPY.manage.freeBody}
               </Text>
@@ -298,7 +301,9 @@ export default function SubscriptionScreen() {
                 accessibilityRole="button"
                 onPress={() => router.push('/paywall/upsell?feature=full_routine')}
                 className={
-                  ultraShortSubscription
+                  splitShortSubscription
+                    ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
+                    : ultraShortSubscription
                     ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
                     : 'mt-4 h-[50px] items-center justify-center rounded-pill'
                 }

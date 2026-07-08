@@ -108,10 +108,14 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain(
       "const SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'];",
     );
-    expect(home).toContain('const shortPhone = height < 520');
     expect(home).toContain(
-      'const emptyPromptOrder = shortPhone ? SHORT_PHONE_EMPTY_PROMPT_ORDER : EMPTY_PROMPT_ORDER;',
+      "const SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict'];",
     );
+    expect(home).toContain('const shortPhone = height < 520');
+    expect(home).toContain('const splitShortPhone = height < 410;');
+    expect(home).toContain('const emptyPromptOrder = splitShortPhone');
+    expect(home).toContain('? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER');
+    expect(home).toContain('? SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain(
       'className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"',
     );

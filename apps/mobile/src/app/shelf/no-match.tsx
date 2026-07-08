@@ -16,6 +16,7 @@ export default function NoMatchScreen() {
   const { height } = useWindowDimensions();
   const shortPhone = height < 520;
   const ultraShortPhone = height < 460;
+  const splitShortPhone = height < 410;
 
   const goOcr = () => {
     haptics.select();
@@ -42,7 +43,15 @@ export default function NoMatchScreen() {
       fallbackRoute={APP_SHELF_ROUTE}
       scroll
       backdropAccessible={false}
-      className={ultraShortPhone ? 'px-6 pb-4 pt-2' : shortPhone ? 'px-6 pb-5 pt-3' : undefined}
+      className={
+        splitShortPhone
+          ? 'px-6 pb-3 pt-2'
+          : ultraShortPhone
+            ? 'px-6 pb-4 pt-2'
+            : shortPhone
+              ? 'px-6 pb-5 pt-3'
+              : undefined
+      }
     >
       <View
         className={cn(
@@ -85,22 +94,34 @@ export default function NoMatchScreen() {
       >
         We don&apos;t have this one yet.
       </Text>
-      <Text
-        variant="body"
-        tone="inverseMuted"
+      {!splitShortPhone ? (
+        <Text
+          variant="body"
+          tone="inverseMuted"
+          className={
+            ultraShortPhone
+              ? 'mt-1 text-[12px] leading-[17px]'
+              : shortPhone
+                ? 'mt-1 text-[13px] leading-[19px]'
+                : 'mt-2'
+          }
+        >
+          That barcode isn&apos;t in our database yet. No problem. Add it another way, then report any
+          wrong details from the product page.
+        </Text>
+      ) : null}
+
+      <View
         className={
-          ultraShortPhone
-            ? 'mt-1 text-[12px] leading-[17px]'
-            : shortPhone
-              ? 'mt-1 text-[13px] leading-[19px]'
-              : 'mt-2'
+          splitShortPhone
+            ? 'mt-2 gap-1'
+            : ultraShortPhone
+              ? 'mt-2 gap-1'
+              : shortPhone
+                ? 'mt-3 gap-1.5'
+                : 'mt-4 gap-2'
         }
       >
-        That barcode isn&apos;t in our database yet. No problem. Add it another way, then report any
-        wrong details from the product page.
-      </Text>
-
-      <View className={ultraShortPhone ? 'mt-2 gap-1' : shortPhone ? 'mt-3 gap-1.5' : 'mt-4 gap-2'}>
         <NoMatchAction
           icon="S"
           title="Search catalog"

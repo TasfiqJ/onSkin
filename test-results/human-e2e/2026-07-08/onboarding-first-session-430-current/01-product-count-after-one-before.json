@@ -1,0 +1,4 @@
+{
+  "url": "http://localhost:8232/onboarding/products",
+  "visibleDom": "<button node_id=49 aria-label=\"Remove Retinol 0.3% Night Serum\" role=\"button\" type=\"button\">×</button>\n<button node_id=38 aria-label=\"Remove Retinol serum\" role=\"button\" type=\"button\">×</button>\n<button node_id=36 role=\"button\" type=\"button\">Add 1 more</button>\n<button node_id=50 role=\"button\" type=\"button\">Continue with 2 products</button>"
+}

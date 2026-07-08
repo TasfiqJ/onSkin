@@ -159,12 +159,15 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-age-gate-live-audit/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-direct-quiz-consent/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/onboarding-consent-quiz-resilience/`, `test-results/human-e2e/2026-07-07/onboarding-profile-save-failure/`, and `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`
+- Current clean first-session evidence: `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`
+- Dev-only reset fixture: start Expo web with `EXPO_PUBLIC_E2E_LOCAL_RESET=1` and open `/?e2eReset=local` to clear local private state plus query cache, then return to `/`.
 
 ### Path A: Happy Path
 
 1. Action: Launch the app, proceed through age, consent, goals, quiz/products, notifications, analyzing, reveal, and account/paywall steps using safe local choices.
    Expected result: Each step advances intentionally, copy stays within approved claims, and the final state is clear.
    Evidence: Screenshot or video of each major transition plus terminal/simulator logs.
+   Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 430 uses the dev-only reset fixture, completes age, goals, health consent, quiz, three-product shelf intake, reveal, notification skip, account skip, and the no-card `Explore first. 7 days of Pro` paywall path. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`.
 
 ### Branches
 
@@ -233,6 +236,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web confirms `/onboarding/products` at 320 px renders the compact collapsed category selector with zero horizontal overflow, a 54 px product-name input, a 50 px `Choose product category` control, and a 56 px footer action in `test-results/human-e2e/2026-07-08/onboarding-product-category-picker-safe-area/`. Source contracts now verify the picker sheet uses a route-local overlay rather than nested React Native `Modal` semantics, native bottom-inset padding when present, a height cap at viewport minus a 52 px dismiss reserve, one named modal dialog on web, hidden background content for accessibility while open, padded internal category chips, handled keyboard taps inside the scroll view, and a shrinkable chip list. Native iOS/Android safe-area and screen-reader QA remain open.
   - Current modal-open evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 completes goals, consent, and quiz to reach `/onboarding/products`, types `Barrier Screen SPF 52`, opens the named `Choose product category` sheet, verifies exactly one `role="dialog"` node with `aria-modal=true`, top=52, width=320, seven 48 px category chips, zero horizontal overflow, selects `SPF`, confirms the collapsed field exposes `Category, SPF`, adds the product, and verifies the 48 x 48 remove control. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-product-category-picker-320x480-postfix/`.
   - Current short-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 found the optional category trigger could occupy the footer zone on `/onboarding/products`. A follow-up 320 x 480 pass now verifies the empty state has no hidden category trigger, `Product name` and `Skip for now` are separated, typing `Retinol serum` renders exactly one visible footer-owned `Choose product category` action above `Add to shelf`, the category sheet opens with 48 px category chips, and selecting `Serum` returns to `/onboarding/products` with `Category, Serum` plus `Add to shelf`. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck/`.
+  - Current clean first-session evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 430 starts from `0 of 3 products` after the reset fixture, shows only `Skip for now`, then adds `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` with categories Serum, Toner, and SPF. The footer correctly advances through `Add 2 more`, `Add 1 more`, and `Continue`, and no persisted prior shelf item appears. Evidence and bug report are in `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/` and `docs/e2e-bug-reports/2026-07-08-onboarding-first-session-local-reset.md`.
 - Branch: back/relaunch during onboarding
   - Priority: Important
   - Automate later: Yes
@@ -313,6 +317,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Common product-name shorthand is enough before catalog seed: Morning shows SPF and not glycolic, Evening shows glycolic as the exfoliant and retinol as the retinoid, Today PM opens to the matching Glycolic check-off, and the first check-off reaches `1 of 1`.
   - Evidence: Pre/post visible-text snapshots, phone screenshots, browser logs, and check-off state.
   - Current local evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 adds `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` through `/onboarding/products`, opens `/routine/plan`, and verifies `BUILT FROM YOUR SHELF`, `Timing handled`, Morning `Mineral SPF 50`, Night 1 `Glycolic 7%`, and Night 2 `Retinol 0.3% Night Serum`. `Start today` opens Today PM on the Glycolic check-off and tapping it reaches `1 of 1` with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`.
+  - Current 320 x 430 evidence: 2026-07-08 Codex in-app browser Expo web covers the same first-session path from a reset install state. The plan places `Mineral SPF 50` in Morning, `Glycolic 7%` on Night 1, and `Retinol 0.3% Night Serum` on Night 2; `Start today` opens the current morning routine and completes `Mineral SPF 50` at `1 of 1`, and direct `/today?routine=PM` shows Night 1 `Glycolic 7% Toner` and completes at `1 of 1`. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`.
 - Branch: sparse shelf without night actives
   - Priority: Critical
   - Automate later: Yes

@@ -128,6 +128,7 @@ export default function ScanScreen() {
     !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
   const canShowCamera = cameraEnabled && permissionGranted;
   const compactScanSurface = height < 640;
+  const splitShortScanSurface = height < 410;
 
   const goManual = () => {
     haptics.select();
@@ -263,7 +264,10 @@ export default function ScanScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
       <View className="flex-1 px-6">
-        <View className="mt-2 flex-row items-center justify-between" style={{ zIndex: 10 }}>
+        <View
+          className="mt-2 flex-row items-center justify-between"
+          style={{ position: 'relative', zIndex: 20 }}
+        >
           <RouteIconButton
             accessibilityLabel="Close"
             glyph="x"
@@ -387,7 +391,9 @@ export default function ScanScreen() {
 
       <View
         className={
-          compactScanSurface
+          splitShortScanSurface
+            ? 'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'
+            : compactScanSurface
             ? 'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'
             : 'rounded-t-sheet bg-night-surface px-7 pb-10 pt-6'
         }
@@ -449,7 +455,7 @@ export default function ScanScreen() {
           </Text>
         )}
 
-        <View className="gap-2.5">
+        <View className={splitShortScanSurface ? 'gap-1.5' : 'gap-2.5'}>
           <FallbackRow
             icon="="
             title="Scan ingredient label"

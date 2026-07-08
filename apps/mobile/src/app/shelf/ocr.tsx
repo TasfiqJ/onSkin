@@ -79,6 +79,7 @@ export default function OcrScreen() {
   const canContinue = rawText.trim().length > 0;
   const { height: viewportHeight } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
+  const splitShortPhone = viewportHeight < 410;
 
   const capture = async () => {
     if ((!cameraRef.current && !simulateCaptureFailureOnce) || state === 'capturing') return;
@@ -164,7 +165,11 @@ export default function OcrScreen() {
       >
         <View
           className={cn(
-            ultraShortPhone ? 'mt-3 h-[176px]' : 'mt-4 h-[230px]',
+            splitShortPhone
+              ? 'mt-2 h-[140px]'
+              : ultraShortPhone
+                ? 'mt-3 h-[176px]'
+                : 'mt-4 h-[230px]',
             'overflow-hidden rounded-[18px] bg-night-elevated',
           )}
         >
@@ -295,17 +300,19 @@ export default function OcrScreen() {
           </View>
         ) : null}
 
-        <View
-          className={cn(
-            ultraShortPhone ? 'mt-2 rounded-[14px] bg-greige-chip p-3' : 'mt-3 rounded-[14px] bg-greige-chip p-3.5',
-          )}
-        >
-          <Text variant="bodySm" tone="muted" style={{ lineHeight: ultraShortPhone ? 18 : 19 }}>
-            {env.nativeOcrEnabled
-              ? 'On-device OCR is enabled for this build. Check the text before saving.'
-              : 'On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.'}
-          </Text>
-        </View>
+        {!splitShortPhone ? (
+          <View
+            className={cn(
+              ultraShortPhone ? 'mt-2 rounded-[14px] bg-greige-chip p-3' : 'mt-3 rounded-[14px] bg-greige-chip p-3.5',
+            )}
+          >
+            <Text variant="bodySm" tone="muted" style={{ lineHeight: ultraShortPhone ? 18 : 19 }}>
+              {env.nativeOcrEnabled
+                ? 'On-device OCR is enabled for this build. Check the text before saving.'
+                : 'On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.'}
+            </Text>
+          </View>
+        ) : null}
 
         {state !== 'review' ? (
           <Button

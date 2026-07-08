@@ -17,6 +17,21 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('â€™');
   });
 
+  it('keeps the first-session E2E local reset dev-only and env-gated', () => {
+    const source = readAppRoute('index.tsx');
+
+    expect(source).toContain("useLocalSearchParams<{ e2eReset?: string }>()");
+    expect(source).toContain('function shouldRunE2ELocalReset');
+    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
+    expect(source).toContain("return value === 'local'");
+    expect(source).toContain('clearLocalPrivateData');
+    expect(source).toContain('queryClient.clear()');
+    expect(source).toContain("router.replace('/')");
+    expect(source).toContain('enabled: !resetting && !!session && !initializing');
+    expect(source).toContain('const deciding = resetting || initializing ||');
+  });
+
   it('keeps onboarding chip and product-remove controls touchable on phones', () => {
     const quiz = readAppRoute('onboarding/quiz.tsx');
     const products = readAppRoute('onboarding/products.tsx');

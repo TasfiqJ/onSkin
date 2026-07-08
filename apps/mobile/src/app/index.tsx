@@ -1,20 +1,54 @@
 import { useQuery } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
+import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { queryClient } from '@/lib/query/queryClient';
 import { supabase } from '@/lib/supabase/client';
+
+function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  if (process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1') return false;
+  return value === 'local';
+}
 
 // 01 · Welcome. The anonymous session starts silently here (docs/01 §1/§2).
 // Also acts as the entry gate: a returning user who already finished onboarding
 // (a completed skin_profile exists) is sent straight to Today.
 export default function WelcomeScreen() {
+  const params = useLocalSearchParams<{ e2eReset?: string }>();
   const { ensureAnonymousSession, session, initializing } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
+
+  useEffect(() => {
+    if (!shouldRunE2ELocalReset(params.e2eReset)) return;
+    let active = true;
+
+    async function resetLocalState() {
+      setResetting(true);
+      try {
+        await clearLocalPrivateData();
+      } catch {
+        // Dev-only E2E fixture reset; keep the app reachable if one cleanup backend is unavailable.
+      }
+      queryClient.clear();
+      if (!active) return;
+      setResetting(false);
+      router.replace('/');
+    }
+
+    void resetLocalState();
+
+    return () => {
+      active = false;
+    };
+  }, [params.e2eReset]);
 
   // Onboarding-completion check as a query (no setState-in-effect). Reads the
   // local-first completion record FIRST (the v1 source of truth, D-029): a
@@ -22,7 +56,7 @@ export default function WelcomeScreen() {
   // absent server write never re-onboards them. Falls back to the server row.
   const onboarded = useQuery({
     queryKey: ['onboarded', session?.user.id],
-    enabled: !!session && !initializing,
+    enabled: !resetting && !!session && !initializing,
     retry: 0,
     queryFn: async () => {
       if (await isOnboardedLocal()) return true;
@@ -53,7 +87,7 @@ export default function WelcomeScreen() {
   }
 
   // Stay on splash while deciding; render nothing while redirecting an onboarded user.
-  const deciding = initializing || (!!session && onboarded.isLoading);
+  const deciding = resetting || initializing || (!!session && onboarded.isLoading);
   if (deciding || onboarded.data === true) return null;
 
   return (

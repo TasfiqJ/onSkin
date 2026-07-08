@@ -123,12 +123,15 @@ export default function PreferencesScreen() {
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
   const ultraShortPreferences = height < 460;
+  const splitShortPreferences = height < 410;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
     : compactPreferences
       ? 'mb-2 mt-5'
       : 'mb-3 mt-7';
-  const sectionLabelClassName = ultraShortPreferences
+  const sectionLabelClassName = splitShortPreferences
+    ? 'mb-1.5 mt-20'
+    : ultraShortPreferences
     ? 'mb-1.5 mt-12'
     : compactPreferences
       ? 'mb-2 mt-5'

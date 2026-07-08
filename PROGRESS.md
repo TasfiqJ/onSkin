@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added a dev-only, env-gated clean first-session reset fixture to the welcome
+  route for repeatable onboarding E2E: `EXPO_PUBLIC_E2E_LOCAL_RESET=1` plus
+  `/?e2eReset=local` clears local private state and query cache, then returns
+  to `/`. This fixes the testability gap where persisted shelf data could make
+  `/onboarding/products` appear to start with existing products during a
+  supposed fresh-install run. Codex in-app browser Expo web at 320 x 430 now
+  verifies the full first-session activation path: welcome reset, age, goals,
+  consent, quiz, three-product intake, reveal, notification/account skips,
+  no-card paywall exploration, generated routine plan, Today AM checkoff, and
+  Today PM Night 1 checkoff. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`,
+  `docs/e2e-bug-reports/2026-07-08-onboarding-first-session-local-reset.md`.
+
 - Cleared the final 320 x 430 route-sweep failures from the post-recommendation
   pass. Subscription Settings now has a sub-460 px density for the free-plan
   card and compliance rows so Restore, Terms, and Privacy remain complete 48 px

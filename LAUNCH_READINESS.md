@@ -89,6 +89,11 @@ Fresh verification on 2026-07-08:
   `/shelf/manual` recovery with zero current-origin warn/error logs. Evidence:
   `test-results/human-e2e/2026-07-08/shelf-manual-category-sheet-current/`,
   `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`.
+- Expo web clean first-session activation evidence at 320 x 430 passed using
+  the new dev-only local reset fixture. The run covers onboarding, three-product
+  shelf intake, no-card paywall exploration, generated routine plan, Today AM
+  checkoff, and Today PM Night 1 checkoff. Evidence:
+  `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`.
 
 Re-run the relevant checks after any production-readiness change.
 
