@@ -404,6 +404,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   continues to `/shelf/opened` with zero horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-07/shelf-manual-category-picker-current/`; it
   does not replace native iOS/Android gesture and Dynamic Type QA.
+- 2026-07-08: Source-contract follow-up hardens `/shelf/manual` category picker
+  safe-area behavior for native gesture insets and very short phones. The
+  route-local sheet now owns its viewport cap, reserves 44 px outside-dismiss
+  space, applies bottom inset padding only when present, and exposes web dialog
+  semantics. In-app browser evidence confirms the compact collapsed route has
+  zero horizontal overflow and 50+ px visible controls at 320 px; browser input
+  dispatch failed before modal-open recapture. Evidence is in
+  `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-safe-area/`;
+  this does not replace native iOS/Android home-indicator, Dynamic Type, or
+  screen-reader QA.
 - 2026-07-07: Codex in-app browser E2E at 320 x 568 covers shared `Sheet`
   safe-area and hidden-backdrop behavior. `/shelf/no-match` exposes one modal
   dialog, a 48 px Close action, no sub-44 exposed controls, a hidden 12 px

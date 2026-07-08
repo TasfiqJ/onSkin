@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
@@ -38,16 +39,20 @@ const inputClass =
 function CategoryPickerSheet({
   visible,
   selectedCategory,
-  sheetMaxHeight,
   onSelect,
   onClose,
 }: {
   visible: boolean;
   selectedCategory: ProductCategory | null;
-  sheetMaxHeight: number;
   onSelect: (category: ProductCategory) => void;
   onClose: () => void;
 }) {
+  const { height: viewportHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const sheetPaddingBottom =
+    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+
   if (!visible) return null;
 
   return (
@@ -64,9 +69,19 @@ function CategoryPickerSheet({
           onPress={onClose}
         />
         <View
+          aria-modal
+          role="dialog"
           accessibilityViewIsModal
           className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"
-          style={{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }}
+          style={
+            sheetPaddingBottom === undefined
+              ? { height: sheetMaxHeight, maxHeight: sheetMaxHeight }
+              : {
+                  height: sheetMaxHeight,
+                  maxHeight: sheetMaxHeight,
+                  paddingBottom: sheetPaddingBottom,
+                }
+          }
         >
           <View
             className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
@@ -116,7 +131,6 @@ function CategoryPickerSheet({
 }
 
 export default function ManualAddScreen() {
-  const { height } = useWindowDimensions();
   const { draft, update } = useIntake();
   // Arriving from an accepted recommendation (docs/09 §11): the rec passes the
   // category so the form is pre-filled. With a preset we start the other fields
@@ -137,7 +151,6 @@ export default function ManualAddScreen() {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const paoFromCategory = reviewedCategoryPao(category);
-  const pickerSheetMaxHeight = Math.max(320, height - 48);
 
   const canContinue = name.trim().length > 0;
 
@@ -293,7 +306,6 @@ export default function ManualAddScreen() {
       <CategoryPickerSheet
         visible={pickerOpen}
         selectedCategory={category}
-        sheetMaxHeight={pickerSheetMaxHeight}
         onSelect={selectCategory}
         onClose={() => setPickerOpen(false)}
       />

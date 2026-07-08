@@ -432,6 +432,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The category picker opens as a named bottom sheet instead of an inline list, category rows remain at least 48 px targets, lower options are reachable by scroll, visible option taps are not intercepted by the fixed Continue footer, and the collapsed category field stays polished on compact phones.
   - Evidence: Screenshot sequence and hit-test geometry.
   - Current local evidence: 2026-07-07 in-app browser E2E at 320 x 568 opens `/shelf/manual`, enters `Barrier Balm` / `RoutineKind Test`, opens the category picker, scrolls the modal sheet to `Something else`, verifies the row is visible and center-tappable, selects it, confirms the collapsed field reads `Other`, and continues to `/shelf/opened` with zero horizontal overflow and no clipped or sub-44 px visible controls.
+  - 2026-07-08 safe-area follow-up: Source contracts now require the route-local sheet to own its viewport height, reserve 44 px outside-dismiss space, add native bottom-inset padding only when present, and expose web dialog semantics. Codex in-app browser confirmed the compact collapsed route at 320 px with zero horizontal overflow and 50+ px visible controls, but browser input dispatch failed before modal-open recapture; native iOS/Android safe-area and accessibility traversal remain open QA.
 - Branch: barcode no-match or offline lookup
   - Priority: Critical
   - Automate later: Yes

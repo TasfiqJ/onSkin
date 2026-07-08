@@ -288,7 +288,13 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('accessibilityLabel="Choose product category"');
     expect(source).toContain('accessibilityLabel="Dismiss category picker"');
     expect(source).toContain('accessibilityLabel="Close category picker"');
-    expect(source).toContain('const pickerSheetMaxHeight = Math.max(320, height - 48);');
+    expect(source).toContain('useSafeAreaInsets');
+    expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(source).toContain('const insets = useSafeAreaInsets();');
+    expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
+    expect(source).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
+    expect(source).toContain('aria-modal');
+    expect(source).toContain('role="dialog"');
     expect(source).toContain('className="flex-1"');
     expect(source).toContain('contentContainerClassName="pb-24"');
     expect(source).toContain('<View className="pb-3 pt-1">');
@@ -305,7 +311,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
     );
-    expect(source).toContain('style={{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }}');
+    expect(source).toContain('{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }');
+    expect(source).toContain('paddingBottom: sheetPaddingBottom');
     expect(source).toContain(
       'className="min-w-0 flex-1 font-sans-medium text-[14px] leading-[18px]"',
     );
@@ -316,6 +323,8 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>');
     expect(source).toContain('<CategoryPickerSheet');
+    expect(source).not.toContain('const pickerSheetMaxHeight = Math.max(320, height - 48);');
+    expect(source).not.toContain('sheetMaxHeight={pickerSheetMaxHeight}');
     expect(source).not.toContain('<View className="flex-[1.3]">');
     expect(source).not.toContain(
       "className={cn(inputClass, 'h-[50px] flex-row items-center justify-between')}",

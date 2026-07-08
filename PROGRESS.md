@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the `/shelf/manual` category picker for native bottom safe areas and
+  very short phone heights. The route-local sheet now owns its viewport cap with
+  `useWindowDimensions()`, reserves a 44 px outside dismiss area, applies
+  `useSafeAreaInsets()` bottom padding only when a real native inset exists,
+  and exposes web modal semantics with `role="dialog"` / `aria-modal`. Focused
+  Shelf route contracts, mobile typecheck/lint/test, and root
+  typecheck/lint/test pass. Codex in-app browser evidence confirms the compact
+  collapsed route at 320 px has zero horizontal
+  overflow and 50+ px visible controls; browser input dispatch failed before
+  modal-open capture, so native home-indicator, Dynamic Type,
+  VoiceOver/TalkBack, and stable picker-open E2E remain follow-up QA. Evidence
+  is in
+  `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-safe-area/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-shelf-manual-category-picker-safe-area.md`.
+
 - Hardened the first-run `/onboarding/products` category picker for native
   bottom safe areas and compact dismiss targets. The hand-built picker now owns
   the same core contract as the shared sheets: compact web keeps the 40 px
