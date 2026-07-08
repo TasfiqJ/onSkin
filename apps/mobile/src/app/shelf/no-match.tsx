@@ -17,6 +17,7 @@ export default function NoMatchScreen() {
   const shortPhone = height < 600;
   const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
+  const microShortPhone = height < 380;
 
   const goOcr = () => {
     haptics.select();
@@ -44,33 +45,40 @@ export default function NoMatchScreen() {
       scroll
       backdropAccessible={false}
       className={
-        splitShortPhone
-          ? 'px-6 pb-3 pt-2'
-          : shortPhone
-            ? 'px-6 pb-4 pt-2'
-            : undefined
+        microShortPhone
+          ? 'px-6 pb-2 pt-2'
+          : splitShortPhone
+            ? 'px-6 pb-3 pt-2'
+            : shortPhone
+              ? 'px-6 pb-4 pt-2'
+              : undefined
       }
     >
       <View
         className={cn(
-          ultraShortPhone ? 'mb-0' : shortPhone ? 'mb-1' : 'mb-4',
-          'flex-row items-start justify-between',
+          microShortPhone
+            ? 'absolute right-0 top-0 z-10'
+            : ultraShortPhone
+              ? 'mb-0'
+              : shortPhone
+                ? 'mb-1'
+                : 'mb-4',
+          microShortPhone ? undefined : 'flex-row items-start justify-between',
         )}
       >
-        <View
-          className={cn(
-            shortPhone ? 'h-9 w-9' : 'h-12 w-12',
-            'items-center justify-center rounded-full',
-          )}
-          style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
-        >
-          <Text
-            className={shortPhone ? 'text-[15px]' : 'text-[18px]'}
-            tone="inverseMuted"
+        {microShortPhone ? null : (
+          <View
+            className={cn(
+              shortPhone ? 'h-9 w-9' : 'h-12 w-12',
+              'items-center justify-center rounded-full',
+            )}
+            style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
           >
-            ?
-          </Text>
-        </View>
+            <Text className={shortPhone ? 'text-[15px]' : 'text-[18px]'} tone="inverseMuted">
+              ?
+            </Text>
+          </View>
+        )}
         <RouteIconButton
           accessibilityLabel="Close"
           glyph="x"
@@ -82,11 +90,13 @@ export default function NoMatchScreen() {
         variant="title"
         tone="inverse"
         className={
-          ultraShortPhone
-            ? 'text-[21px] leading-[24px]'
-            : shortPhone
-              ? 'text-[24px] leading-[27px]'
-            : 'text-[30px] leading-[33px]'
+          microShortPhone
+            ? 'pr-12 text-[19px] leading-[22px]'
+            : ultraShortPhone
+              ? 'text-[21px] leading-[24px]'
+              : shortPhone
+                ? 'text-[24px] leading-[27px]'
+                : 'text-[30px] leading-[33px]'
         }
         accessibilityRole="header"
       >
@@ -96,24 +106,22 @@ export default function NoMatchScreen() {
         <Text
           variant="body"
           tone="inverseMuted"
-          className={
-            shortPhone
-              ? 'mt-1 text-[12px] leading-[17px]'
-              : 'mt-2'
-          }
+          className={shortPhone ? 'mt-1 text-[12px] leading-[17px]' : 'mt-2'}
         >
-          That barcode isn&apos;t in our database yet. No problem. Add it another way, then report any
-          wrong details from the product page.
+          That barcode isn&apos;t in our database yet. No problem. Add it another way, then report
+          any wrong details from the product page.
         </Text>
       ) : null}
 
       <View
         className={
-          splitShortPhone
-            ? 'mt-2 gap-1'
-            : shortPhone
+          microShortPhone
+            ? 'mt-1 gap-1'
+            : splitShortPhone
               ? 'mt-2 gap-1'
-              : 'mt-4 gap-2'
+              : shortPhone
+                ? 'mt-2 gap-1'
+                : 'mt-4 gap-2'
         }
       >
         <NoMatchAction
@@ -134,15 +142,17 @@ export default function NoMatchScreen() {
           hideSubtitle={ultraShortPhone}
           onPress={goOcr}
         />
-        <NoMatchAction
-          icon="+"
-          title="Add it by hand"
-          subtitle="Always works, even offline"
-          compact={shortPhone}
-          ultraCompact={shortPhone}
-          hideSubtitle={ultraShortPhone}
-          onPress={goManual}
-        />
+        <View style={microShortPhone ? { marginTop: 40 } : undefined}>
+          <NoMatchAction
+            icon="+"
+            title="Add it by hand"
+            subtitle="Always works, even offline"
+            compact={shortPhone}
+            ultraCompact={shortPhone}
+            hideSubtitle={ultraShortPhone}
+            onPress={goManual}
+          />
+        </View>
       </View>
 
       {!shortPhone ? (

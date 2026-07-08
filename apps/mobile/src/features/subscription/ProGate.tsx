@@ -32,6 +32,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const compactPaywall = height < 640;
   const shortPaywall = height < 600;
   const ultraShortPaywall = height < 460;
+  const microShortPaywall = height < 380;
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -194,7 +195,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         >
           {copy.title}
         </Text>
-        {splitShortProgressTabPaywall ? null : (
+        {splitShortProgressTabPaywall || microShortPaywall ? null : (
           <Text
             variant="body"
             tone="muted"
@@ -218,7 +219,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <View
           className={
             ultraShortPaywall
-              ? 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
+              ? microShortPaywall
+                ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'
+                : 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
               : shortPaywall
                 ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
                 : compactPaywall
@@ -284,7 +287,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           onPress={onStartTrial}
           className={
             ultraShortPaywall
-              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
+              ? microShortPaywall
+                ? 'mt-0 h-[48px] items-center justify-center rounded-pill'
+                : 'mt-1 h-[48px] items-center justify-center rounded-pill'
               : shortPaywall
                 ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
                 : compactPaywall

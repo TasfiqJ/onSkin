@@ -105,6 +105,7 @@ export default function SkinNotesHub() {
   const shortCommunity = height < 520;
   const ultraShortCommunity = height < 460;
   const splitShortCommunity = height < 410;
+  const microShortCommunity = height < 380;
   const narrowCompactCommunity = compactCommunity && width < 360;
 
   useEffect(() => {
@@ -176,14 +177,21 @@ export default function SkinNotesHub() {
                   : 'pb-10 pt-5'
           }
         >
-          {groups.map((g) => {
+          {groups.map((g, groupIndex) => {
+            const keepSectionBelowFold = microShortCommunity && groupIndex > 0;
             const keepNextSectionBelowFold =
               narrowCompactCommunity && g.topic.slug === 'sensitive-skin';
             return (
               <View
                 key={g.topic.slug}
                 className={shortCommunity ? 'mb-0.5' : compactCommunity ? 'mb-1' : 'mb-3'}
-                style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}
+                style={
+                  keepSectionBelowFold
+                    ? { marginTop: 112 }
+                    : keepNextSectionBelowFold
+                      ? { marginBottom: 64 }
+                      : undefined
+                }
               >
                 <Text
                   variant="label"

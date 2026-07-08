@@ -17,13 +17,21 @@ export function fmtTime(hm: string): string {
   return `${hr}:${String(m ?? 0).padStart(2, '0')} ${ap}`;
 }
 
-function SectionLabel({ children, compact = false }: { children: string; compact?: boolean }) {
+function SectionLabel({
+  children,
+  compact = false,
+  micro = false,
+}: {
+  children: string;
+  compact?: boolean;
+  micro?: boolean;
+}) {
   return (
     <Text
       variant="label"
       tone="muted"
-      className={compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}
-      style={{ fontSize: compact ? 9.5 : 10, letterSpacing: 1 }}
+      className={micro ? 'mb-0.5 ml-2 mt-1' : compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}
+      style={{ fontSize: micro ? 9 : compact ? 9.5 : 10, letterSpacing: 1 }}
     >
       {children}
     </Text>
@@ -123,31 +131,41 @@ export default function NotificationSettingsScreen() {
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
+  const microShortNotifications = height < 380;
   if (!p) return null;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={compactNotifications ? 'px-5 pb-8' : 'px-5 pb-10'}
+        contentContainerClassName={
+          microShortNotifications ? 'px-5 pb-6' : compactNotifications ? 'px-5 pb-8' : 'px-5 pb-10'
+        }
       >
         <View
           className={
-            compactNotifications
-              ? 'mb-0 flex-row items-center gap-3 pt-1'
-              : 'mb-1 flex-row items-center gap-3 pt-1'
+            microShortNotifications
+              ? 'mb-0 flex-row items-center gap-2 pt-0'
+              : compactNotifications
+                ? 'mb-0 flex-row items-center gap-3 pt-1'
+                : 'mb-1 flex-row items-center gap-3 pt-1'
           }
         >
           <RouteIconButton
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           />
-          <Text variant="title" style={{ fontSize: ultraShortNotifications ? 26 : 28 }}>
+          <Text
+            variant="title"
+            style={{ fontSize: microShortNotifications ? 24 : ultraShortNotifications ? 26 : 28 }}
+          >
             Notifications
           </Text>
         </View>
 
-        <SectionLabel compact={compactNotifications}>UTILITY · YOUR ROUTINE</SectionLabel>
+        <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+          UTILITY · YOUR ROUTINE
+        </SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Morning routine"
@@ -168,7 +186,9 @@ export default function NotificationSettingsScreen() {
           />
         </View>
 
-        <SectionLabel compact={compactNotifications}>GENTLE NUDGES · CAPPED</SectionLabel>
+        <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+          GENTLE NUDGES · CAPPED
+        </SectionLabel>
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <Row
             title="Streak &amp; adherence"
@@ -180,19 +200,38 @@ export default function NotificationSettingsScreen() {
             title="Replenishment"
             value={p.replenishmentAlerts}
             onChange={(v) => set({ replenishmentAlerts: v })}
+            last={microShortNotifications}
             compact={compactNotifications}
           />
-          <Row
-            title="Progress-photo nudge"
-            value={p.captureReminders}
-            onChange={(v) => set({ captureReminders: v })}
-            last
-            compact={compactNotifications}
-          />
+          {microShortNotifications ? null : (
+            <Row
+              title="Progress-photo nudge"
+              value={p.captureReminders}
+              onChange={(v) => set({ captureReminders: v })}
+              last
+              compact={compactNotifications}
+            />
+          )}
         </View>
 
+        {microShortNotifications ? (
+          <View style={{ marginTop: 72 }}>
+            <View className="rounded-[18px] bg-paper-raised px-[18px]">
+              <Row
+                title="Progress-photo nudge"
+                value={p.captureReminders}
+                onChange={(v) => set({ captureReminders: v })}
+                last
+                compact={compactNotifications}
+              />
+            </View>
+          </View>
+        ) : null}
+
         <View style={ultraShortNotifications ? { marginTop: 56 } : undefined}>
-          <SectionLabel compact={compactNotifications}>PROMOTIONAL</SectionLabel>
+          <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+            PROMOTIONAL
+          </SectionLabel>
           <View className="rounded-[18px] bg-paper-raised px-[18px]">
             <Row
               title="Tips &amp; announcements"

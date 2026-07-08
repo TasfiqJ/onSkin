@@ -51,8 +51,7 @@ function CategoryPickerSheet({
   const insets = useSafeAreaInsets();
   const ultraShortSheet = viewportHeight < 460;
   const sheetMaxHeight = Math.max(0, viewportHeight - 48);
-  const sheetPaddingBottom =
-    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+  const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
   if (!visible) return null;
 
@@ -157,6 +156,7 @@ export default function ManualAddScreen() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const { height: viewportHeight } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
+  const splitShortPhone = viewportHeight < 380;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -208,7 +208,7 @@ export default function ManualAddScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={ultraShortPhone ? 'pb-28' : 'pb-24'}
+        contentContainerClassName={splitShortPhone ? 'pb-40' : ultraShortPhone ? 'pb-28' : 'pb-24'}
         keyboardShouldPersistTaps="handled"
       >
         {!ultraShortPhone ? (
@@ -245,7 +245,9 @@ export default function ManualAddScreen() {
             <View className="flex-[1.1]">
               <FieldLabel>Category</FieldLabel>
               <Pressable
-                accessibilityLabel={category ? `Category, ${categoryFieldLabel(category)}` : 'Category'}
+                accessibilityLabel={
+                  category ? `Category, ${categoryFieldLabel(category)}` : 'Category'
+                }
                 accessibilityHint="Choose product category"
                 accessibilityRole="button"
                 onPress={() => setPickerOpen((o) => !o)}
@@ -269,7 +271,7 @@ export default function ManualAddScreen() {
             </View>
           </View>
 
-          <View>
+          <View style={splitShortPhone ? { marginTop: 112 } : undefined}>
             <Text variant="label" tone="muted" className="mb-1.5 uppercase">
               Ingredients
               <Text

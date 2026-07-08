@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the harsher 320 x 370 / 130% micro-short text-pressure route audit.
+  The first 49-route sweep found `/settings/notifications` peeking the
+  `Progress-photo nudge` switch and `/shelf/manual` exposing the optional
+  Ingredients textarea under the sticky Continue footer. The fix adds sub-380
+  px density for notification/timing settings, Skin Notes, contextual ProGate
+  paywalls, and shelf no-match recovery, moves lower-priority controls fully
+  below the first viewport, and reserves extra manual-add spacing above the
+  fixed footer. Focused community/paywall/settings/shelf route contracts pass,
+  and the final 49-route sweep reports zero failed routes with
+  evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`,
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`.
+
 - Hardened Phase 8 growth/store QA packet provenance against upstream evidence
   drift. The generated packet now hashes the human-simulated E2E rules/checklist,
   user-flow tree, generated human-E2E manifest, Phase 5 native-device QA packet,

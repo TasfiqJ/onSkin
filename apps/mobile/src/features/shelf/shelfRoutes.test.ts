@@ -139,12 +139,22 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const shortPhone = height < 600');
     expect(source).toContain('const ultraShortPhone = height < 460;');
     expect(source).toContain('const splitShortPhone = height < 410;');
+    expect(source).toContain('const microShortPhone = height < 380;');
+    expect(source).toContain("? 'px-6 pb-2 pt-2'");
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
-    expect(source).toContain(": shortPhone\n            ? 'px-6 pb-4 pt-2'");
-    expect(source).toContain("ultraShortPhone ? 'mb-0' : shortPhone ? 'mb-1' : 'mb-4'");
+    expect(source).toMatch(/:\s*shortPhone\s*\?\s*'px-6 pb-4 pt-2'/);
+    expect(source).toContain("? 'absolute right-0 top-0 z-10'");
+    expect(source).toContain(
+      "microShortPhone ? undefined : 'flex-row items-start justify-between'",
+    );
+    expect(source).toContain('{microShortPhone ? null : (');
+    expect(source).toContain("ultraShortPhone\n              ? 'mb-0'");
     expect(source).toContain('{!shortPhone ? (');
+    expect(source).toContain("? 'pr-12 text-[19px] leading-[22px]'");
     expect(source).toContain("? 'text-[21px] leading-[24px]'");
+    expect(source).toContain("? 'mt-1 gap-1'");
     expect(source).toContain("? 'mt-2 gap-1'");
+    expect(source).toContain('style={microShortPhone ? { marginTop: 40 } : undefined}');
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={shortPhone}');
     expect(source).toContain('hideSubtitle={ultraShortPhone}');
@@ -462,6 +472,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
+    expect(source).toContain('const splitShortPhone = viewportHeight < 380;');
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
@@ -470,7 +481,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('role="dialog"');
     expect(source).toContain('accessibilityLabel="Choose product category"');
     expect(source).toContain('className="flex-1"');
-    expect(source).toContain("contentContainerClassName={ultraShortPhone ? 'pb-28' : 'pb-24'}");
+    expect(source).toContain(
+      "contentContainerClassName={splitShortPhone ? 'pb-40' : ultraShortPhone ? 'pb-28' : 'pb-24'}",
+    );
     expect(source).toContain('{!ultraShortPhone ? (');
     expect(source).toContain("className={ultraShortPhone ? 'gap-2' : 'gap-3'}");
     expect(source).toContain(
@@ -482,12 +495,13 @@ describe('Shelf route mobile contracts', () => {
       "return category === 'other' ? 'Other' : (categoryLabel(category) ?? 'Choose');",
     );
     expect(source).toContain('{categoryFieldLabel(category)}');
-    expect(source).toContain(
-      "accessibilityLabel={category ? `Category, ${categoryFieldLabel(category)}` : 'Category'}",
+    expect(source).toMatch(
+      /accessibilityLabel=\{\s*category\s*\?\s*`Category, \$\{categoryFieldLabel\(category\)\}`\s*:\s*'Category'\s*\}/,
     );
     expect(source).toContain('<View className="flex-1">');
     expect(source).toContain('<View className="flex-[1.1]">');
     expect(source).toContain("ultraShortPhone ? 'h-[48px]' : 'h-[50px]'");
+    expect(source).toContain('style={splitShortPhone ? { marginTop: 112 } : undefined}');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',

@@ -143,6 +143,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain('const shortPaywall = height < 600');
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
+    expect(proGate).toContain('const microShortPaywall = height < 380;');
     expect(proGate).toContain('const splitShortProgressTabPaywall =');
     expect(proGate).toContain(
       "height < 410 && feature === 'photo_timeline' && pathname === '/progress'",
@@ -166,13 +167,13 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('{headerCompliancePaywall ? null : <ComplianceRow />}');
     expect(proGate).toContain('fontSize: ultraShortPaywall ? 24');
     expect(proGate).toContain('lineHeight: ultraShortPaywall ? 27');
-    expect(proGate).toContain('{splitShortProgressTabPaywall ? null : (');
+    expect(proGate).toContain('{splitShortProgressTabPaywall || microShortPaywall ? null : (');
     expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 2 : undefined}');
     expect(proGate).toContain(
-      "ultraShortPaywall\n              ? 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'",
+      "microShortPaywall\n                ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'",
     );
     expect(proGate).toContain(
-      "ultraShortPaywall\n              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'",
+      "microShortPaywall\n                ? 'mt-0 h-[48px] items-center justify-center rounded-pill'",
     );
     expect(proGate).toContain('{annualDisplay.pricePerMonthLabel && !ultraShortPaywall ? (');
     expect(proGate).toContain(

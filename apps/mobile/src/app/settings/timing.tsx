@@ -38,8 +38,7 @@ function TimePickerModal({
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = Math.max(0, viewportHeight - 44);
   const listMaxHeight = Math.min(340, Math.max(160, sheetMaxHeight - 115));
-  const sheetPaddingBottom =
-    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+  const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title =
     field === 'am'
       ? 'Morning reminder'
@@ -137,6 +136,7 @@ function TimePill({
 }
 
 export default function TimingScreen() {
+  const { height } = useWindowDimensions();
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
   const [picking, setPicking] = useState<Field | null>(null);
@@ -153,6 +153,8 @@ export default function TimingScreen() {
   const pmTimeLabel = fmtTime(p.pmTime);
   const quietStartTimeLabel = fmtTime(p.quietStart ?? '22:00');
   const quietEndTimeLabel = fmtTime(p.quietEnd ?? '07:00');
+  const compactTiming = height < 460;
+  const splitShortTiming = height < 380;
 
   function choose(hm: string) {
     if (picking) update.mutate({ [fieldKey[picking]]: hm } as Parameters<typeof update.mutate>[0]);
@@ -163,13 +165,22 @@ export default function TimingScreen() {
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="px-5 pb-10">
-        <View className="mb-3 flex-row items-center gap-3 pt-1">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName={compactTiming ? 'px-5 pb-8' : 'px-5 pb-10'}
+      >
+        <View
+          className={
+            compactTiming
+              ? 'mb-1 flex-row items-center gap-2 pt-0'
+              : 'mb-3 flex-row items-center gap-3 pt-1'
+          }
+        >
           <RouteIconButton
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           />
-          <Text variant="title" style={{ fontSize: 28 }}>
+          <Text variant="title" style={{ fontSize: compactTiming ? 26 : 28 }}>
             Timing
           </Text>
         </View>
@@ -177,7 +188,11 @@ export default function TimingScreen() {
         {/* time pickers */}
         <View className="rounded-[18px] bg-paper-raised px-[18px]">
           <View
-            className="flex-row items-center justify-between py-3.5"
+            className={
+              compactTiming
+                ? 'min-h-[48px] flex-row items-center justify-between py-0'
+                : 'flex-row items-center justify-between py-3.5'
+            }
             style={{ borderBottomWidth: 1, borderBottomColor: 'rgba(32,27,21,0.06)' }}
           >
             <Text variant="body" className="font-sans-semibold">
@@ -189,7 +204,13 @@ export default function TimingScreen() {
               onPress={() => setPicking('am')}
             />
           </View>
-          <View className="flex-row items-center justify-between py-3.5">
+          <View
+            className={
+              compactTiming
+                ? 'min-h-[48px] flex-row items-center justify-between py-0'
+                : 'flex-row items-center justify-between py-3.5'
+            }
+          >
             <Text variant="body" className="font-sans-semibold">
               Evening
             </Text>
@@ -205,14 +226,26 @@ export default function TimingScreen() {
         <Text
           variant="label"
           tone="muted"
-          className="mb-2 ml-2 mt-5"
-          style={{ fontSize: 10, letterSpacing: 1 }}
+          className={
+            splitShortTiming
+              ? 'mb-1 ml-2 mt-2'
+              : compactTiming
+                ? 'mb-1.5 ml-2 mt-3'
+                : 'mb-2 ml-2 mt-5'
+          }
+          style={{ fontSize: compactTiming ? 9.5 : 10, letterSpacing: 1 }}
         >
           QUIET HOURS
         </Text>
-        <View className="rounded-[18px] bg-paper-raised px-[18px] py-4">
+        <View
+          className={
+            compactTiming
+              ? 'rounded-[18px] bg-paper-raised px-[18px] py-2'
+              : 'rounded-[18px] bg-paper-raised px-[18px] py-4'
+          }
+        >
           <View
-            className="gap-3"
+            className={compactTiming ? 'gap-2' : 'gap-3'}
             style={{
               alignItems: 'center',
               flexDirection: 'row',
@@ -241,7 +274,12 @@ export default function TimingScreen() {
               />
             </View>
           </View>
-          <Text variant="bodySm" tone="muted" className="mt-2">
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className={compactTiming ? 'mt-1 text-[12px]' : 'mt-2'}
+            style={compactTiming ? { lineHeight: 15 } : undefined}
+          >
             Nothing fires inside this window. Even your routine reminders wait until morning.
           </Text>
         </View>

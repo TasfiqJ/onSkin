@@ -45,6 +45,7 @@ describe('Community route contracts', () => {
     expect(source).toContain('const shortCommunity = height < 520;');
     expect(source).toContain('const ultraShortCommunity = height < 460;');
     expect(source).toContain('const splitShortCommunity = height < 410;');
+    expect(source).toContain('const microShortCommunity = height < 380;');
     expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
     expect(source).toContain(
       "shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'",
@@ -53,9 +54,12 @@ describe('Community route contracts', () => {
       "shortCommunity ? 'mt-0 text-[12.5px]' : compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'",
     );
     expect(source).toContain('short={shortCommunity}');
+    expect(source).toContain('{groups.map((g, groupIndex) => {');
+    expect(source).toContain('const keepSectionBelowFold = microShortCommunity && groupIndex > 0;');
     expect(source).toContain('const keepNextSectionBelowFold =');
     expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
-    expect(source).toContain('style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}');
+    expect(source).toContain('keepSectionBelowFold\n                    ? { marginTop: 112 }');
+    expect(source).toContain('? { marginBottom: 64 }');
     expect(source).toContain('const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;');
     expect(source).toContain('style={keepNextNoteBelowFold ? { marginTop: 72 } : undefined}');
     expect(source).toContain("short\n          ? 'mb-1 rounded-[14px] bg-paper-raised p-2'");
@@ -141,9 +145,7 @@ describe('Community route contracts', () => {
     expect(source).toContain('const compactMissingNote = height < 640');
     expect(source).toContain('const splitShortMissingNote = height < 410;');
     expect(source).toContain('<ScrollView');
-    expect(source).toContain(
-      "justifyContent: splitShortMissingNote ? 'flex-start' : 'center'",
-    );
+    expect(source).toContain("justifyContent: splitShortMissingNote ? 'flex-start' : 'center'");
     expect(source).toContain(
       'paddingBottom: splitShortMissingNote ? 12 : compactMissingNote ? 24 : 38',
     );

@@ -131,14 +131,44 @@ describe('Settings route contracts', () => {
     expect(timing).toContain('accessibilityHint="Opens time picker"');
     expect(timing).toContain("flexWrap: 'wrap'");
     expect(timing).toContain('style={{ flexShrink: 1, minWidth: 0 }}');
+    expect(timing).toContain('const { height } = useWindowDimensions();');
+    expect(timing).toContain('const compactTiming = height < 460;');
+    expect(timing).toContain('const splitShortTiming = height < 380;');
+    expect(timing).toContain(
+      "contentContainerClassName={compactTiming ? 'px-5 pb-8' : 'px-5 pb-10'}",
+    );
+    expect(timing).toContain("'mb-1 flex-row items-center gap-2 pt-0'");
+    expect(timing).toContain('style={{ fontSize: compactTiming ? 26 : 28 }}');
+    expect(timing).toContain("? 'min-h-[48px] flex-row items-center justify-between py-0'");
+    expect(timing).toContain("? 'rounded-[18px] bg-paper-raised px-[18px] py-2'");
+    expect(timing).toContain("className={compactTiming ? 'gap-2' : 'gap-3'}");
+    expect(timing).toContain("className={compactTiming ? 'mt-1 text-[12px]' : 'mt-2'}");
     expect(notifications).toContain('min-h-[56px] flex-row items-center justify-between py-3.5');
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-3');
     expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
     expect(notifications).toContain('useWindowDimensions');
     expect(notifications).toContain('const compactNotifications = height < 600;');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
+    expect(notifications).toContain('const microShortNotifications = height < 380;');
     expect(notifications).not.toContain('const splitShortNotifications');
-    expect(notifications).toContain("className={compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}");
+    expect(notifications).toContain(
+      "className={micro ? 'mb-0.5 ml-2 mt-1' : compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}",
+    );
+    expect(notifications).toContain(
+      'style={{ fontSize: micro ? 9 : compact ? 9.5 : 10, letterSpacing: 1 }}',
+    );
+    expect(notifications).toContain(
+      "microShortNotifications ? 'px-5 pb-6' : compactNotifications ? 'px-5 pb-8' : 'px-5 pb-10'",
+    );
+    expect(notifications).toContain(
+      "microShortNotifications\n              ? 'mb-0 flex-row items-center gap-2 pt-0'",
+    );
+    expect(notifications).toContain(
+      'style={{ fontSize: microShortNotifications ? 24 : ultraShortNotifications ? 26 : 28 }}',
+    );
+    expect(notifications).toContain(
+      '<SectionLabel compact={compactNotifications} micro={microShortNotifications}>',
+    );
     expect(notifications).toContain('min-h-[48px] flex-row items-center justify-between py-0');
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-2.5');
     expect(notifications).toContain(
@@ -148,6 +178,10 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain(
       'style={ultraShortNotifications ? { marginTop: 56 } : undefined}',
     );
+    expect(notifications).toContain('last={microShortNotifications}');
+    expect(notifications).toContain('{microShortNotifications ? null : (');
+    expect(notifications).toContain('{microShortNotifications ? (');
+    expect(notifications).toContain('<View style={{ marginTop: 72 }}>');
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
   });
