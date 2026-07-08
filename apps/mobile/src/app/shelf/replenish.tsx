@@ -24,17 +24,16 @@ export default function ReplenishScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data } = useShelf();
   const m = useShelfMutations();
-  const [similarFeedback, setSimilarFeedback] = useState<CommerceLinkFeedback | null>(null);
+  const [similarFeedback, setSimilarFeedback] = useState<{
+    itemId: string;
+    feedback: CommerceLinkFeedback;
+  } | null>(null);
 
   const item = data?.items.find((i) => i.id === id);
 
   // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
   useEffect(() => {
     if (item?.id) track('replenishment_nudge_shown', { source: 'shelf' });
-  }, [item?.id]);
-
-  useEffect(() => {
-    setSimilarFeedback(null);
   }, [item?.id]);
 
   if (!item) {
@@ -90,6 +89,8 @@ export default function ReplenishScreen() {
   const similarSub = safety
     ? 'Same protection, claim-safe matches'
     : 'Same role, claim-safe matches';
+  const activeSimilarFeedback =
+    similarFeedback?.itemId === item.id ? similarFeedback.feedback : null;
 
   const reAdd = async () => {
     haptics.select();
@@ -110,8 +111,11 @@ export default function ReplenishScreen() {
       return;
     }
     setSimilarFeedback({
-      title: 'Similar options',
-      body: COMMERCE_COPY.whereToBuy.emptyState,
+      itemId: item.id,
+      feedback: {
+        title: 'Similar options',
+        body: COMMERCE_COPY.whereToBuy.emptyState,
+      },
     });
   };
 
@@ -171,7 +175,7 @@ export default function ReplenishScreen() {
             </Text>
           </View>
         </Pressable>
-        {similarFeedback ? <CommerceLinkNotice feedback={similarFeedback} /> : null}
+        {activeSimilarFeedback ? <CommerceLinkNotice feedback={activeSimilarFeedback} /> : null}
       </View>
 
       <View className="mt-4 flex-row items-center justify-center gap-2">

@@ -220,7 +220,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain("import { Alert");
     expect(source).toContain('CommerceLinkNotice');
-    expect(source).toContain('useState<CommerceLinkFeedback | null>');
+    expect(source).toContain('feedback: CommerceLinkFeedback');
+    expect(source).toContain('activeSimilarFeedback');
     expect(source).toContain('setSimilarFeedback({');
     expect(source).toContain('COMMERCE_COPY.whereToBuy.emptyState');
   });

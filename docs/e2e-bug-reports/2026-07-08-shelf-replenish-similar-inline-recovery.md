@@ -56,8 +56,8 @@ Replace the native alert with the existing `CommerceLinkNotice` inline component
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/06-inline-recovery-patched.png`
-- Logs: `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/browser-warn-error-logs.json`
+- Screenshot: `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/07-inline-recovery-keyed-state-patched.png`
+- Logs: `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/browser-warn-error-logs-keyed-state.json`
 - UI snapshot: one `role="alert"` at x=27.99, y=427.09, w=264.41, h=117.95 inside the 320 x 568 viewport; `scrollWidth=320`; `tab.getJsDialog()` returned `null`.
 - Tests: `npm --workspace apps/mobile run test -- src/features/shelf/shelfRoutes.test.ts`
 
