@@ -108,6 +108,35 @@ require(has(
   'apps/mobile/src/lib/launch/phase7.ts',
   /productionSurfaceReady/,
 ), 'phase7.ts must fail closed for production deferred surfaces.');
+const qaPacketBuilder = read('scripts/phase7/build-core-loop-qa-packet.mjs');
+require(
+  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+    /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
+    /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
+    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
+  'Phase 7 core-loop QA packet must ignore only its own generated outputs when recording Git status.',
+);
+require(
+  /Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
+  'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
+for (const file of [
+  'package.json',
+  'apps/mobile/src/lib/launch/phase7.ts',
+  'apps/mobile/src/lib/launch/phase7.test.ts',
+  'scripts/phase7/build-core-loop-qa-packet.mjs',
+  'scripts/phase7/check-core-loop.mjs',
+  'scripts/phase7/check-core-loop-smoke.mjs',
+  'scripts/phase9/lib.mjs',
+  'docs/phase-7/core-loop-qa-checklist.md',
+  'docs/phase-7/phase-7-exit-review.md',
+]) {
+  require(
+    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
+    `Phase 7 core-loop QA packet must hash ${file}.`,
+  );
+}
 require(has(
   'apps/mobile/src/lib/launch/phase7.test.ts',
   /keeps production Phase 7 surfaces disabled without a final brand domain/,

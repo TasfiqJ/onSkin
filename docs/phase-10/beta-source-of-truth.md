@@ -117,6 +117,8 @@ The generated closed-beta packet must hash the verifier scripts that decide
 readiness, not only the app and documentation inputs. Source hashes include the
 Phase 10 readiness, analytics-audit, packet-builder, shared evidence
 normalization, and public-contact smoke scripts so a release packet can be tied
-to the exact local gates used to produce it. The packet Markdown must also show
-whether it was generated from a clean or dirty Git worktree so reviewers can
-reject stale or mixed-worktree beta evidence.
+to the exact local gates used to produce it. The packet must also hash both the
+Phase 9 generated release QA JSON and Markdown packets so the machine-readable
+status and human-reviewed evidence artifact cannot drift apart. The packet
+Markdown must also show whether it was generated from a clean or dirty Git
+worktree so reviewers can reject stale or mixed-worktree beta evidence.

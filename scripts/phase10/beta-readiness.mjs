@@ -42,6 +42,7 @@ const closedBetaPacketRequiredSourceFiles = [
   'apps/mobile/src/lib/analytics/track.ts',
   'apps/mobile/src/lib/observability/scrub.ts',
   'docs/phase-9/generated/release-engineering-qa-packet.json',
+  'docs/phase-9/generated/release-engineering-qa-packet.md',
   ...phase10RequiredDocs(),
 ];
 
@@ -108,6 +109,11 @@ block(
   errors,
   exists('docs/phase-9/generated/release-engineering-qa-packet.json'),
   'Phase 9 generated release QA packet is missing.',
+);
+block(
+  errors,
+  exists('docs/phase-9/generated/release-engineering-qa-packet.md'),
+  'Phase 9 generated release QA packet Markdown is missing.',
 );
 block(
   errors,

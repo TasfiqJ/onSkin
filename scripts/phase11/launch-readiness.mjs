@@ -43,7 +43,9 @@ const publicLaunchPacketRequiredSourceFiles = [
   'apps/mobile/src/lib/env.ts',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'docs/phase-9/generated/release-engineering-qa-packet.json',
+  'docs/phase-9/generated/release-engineering-qa-packet.md',
   'docs/phase-10/generated/closed-beta-packet.json',
+  'docs/phase-10/generated/closed-beta-packet.md',
   ...phase11RequiredDocs(),
 ];
 
@@ -109,8 +111,18 @@ block(
 );
 block(
   errors,
+  exists('docs/phase-10/generated/closed-beta-packet.md'),
+  'Phase 10 generated closed beta packet Markdown is missing.',
+);
+block(
+  errors,
   exists('docs/phase-9/generated/release-engineering-qa-packet.json'),
   'Phase 9 generated release QA packet is missing.',
+);
+block(
+  errors,
+  exists('docs/phase-9/generated/release-engineering-qa-packet.md'),
+  'Phase 9 generated release QA packet Markdown is missing.',
 );
 block(
   errors,

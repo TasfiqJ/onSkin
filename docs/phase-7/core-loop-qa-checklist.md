@@ -85,6 +85,13 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 
 ## Local regression evidence
 
+- Generated Phase 7 core-loop QA packets must show the source Git SHA and
+  whether they were produced from a clean or dirty Git worktree. Treat a packet
+  with `Git status: DIRTY` as investigation evidence only, not final core-loop
+  signoff. The packet must hash the launch helpers, checker, smoke coverage,
+  Phase 9 shared evidence helpers, and the Phase 7 checklist/exit-review docs
+  so reviewers can tie the packet to the exact local gates that produced it.
+
 - 2026-07-06: Vitest covers `shippableRules()` production withholding/reviewed
   pass-through and `generatePlan()` default production behavior for an unreviewed
   retinoid × glycolic routine. This supports the "unreviewed rules do not

@@ -85,6 +85,7 @@ export function phase10SourceFiles() {
     'apps/mobile/src/lib/analytics/track.ts',
     'apps/mobile/src/lib/observability/scrub.ts',
     'docs/phase-9/generated/release-engineering-qa-packet.json',
+    'docs/phase-9/generated/release-engineering-qa-packet.md',
     ...phase10RequiredDocs(),
   ];
 }

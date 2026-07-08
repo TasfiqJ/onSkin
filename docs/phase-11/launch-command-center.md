@@ -36,9 +36,11 @@ launch readiness, not only the app, generated beta packet, and Phase 11 docs.
 Source hashes include the shared evidence normalization helper, Phase 10 beta
 packet builder, Phase 10/11 public-contact smoke, and Phase 11 readiness, ring,
 and packet scripts so a launch packet is tied to the exact local gates that
-produced it. The packet Markdown must also show whether it was generated from a
-clean or dirty Git worktree so reviewers can reject stale or mixed-worktree
-public-launch evidence.
+produced it. The packet must also hash both JSON and Markdown generated packets
+from Phase 9 and Phase 10 so the machine-readable status and human-reviewed
+evidence artifacts cannot drift apart. The packet Markdown must also show
+whether it was generated from a clean or dirty Git worktree so reviewers can
+reject stale or mixed-worktree public-launch evidence.
 
 ## Launch Rings
 

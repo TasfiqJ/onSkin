@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -87,6 +87,16 @@ function runPacket(extraEnv) {
     return { ...result, packet };
   } finally {
     rmSync(outDir, { force: true, recursive: true });
+  }
+}
+
+function runPacketWithDirtyWorktree(extraEnv) {
+  const markerPath = join(root, `.phase7-smoke-dirty-${process.pid}.tmp`);
+  writeFileSync(markerPath, 'temporary Phase 7 dirty-worktree smoke marker\n');
+  try {
+    return runPacket(extraEnv);
+  } finally {
+    rmSync(markerPath, { force: true });
   }
 }
 
@@ -195,8 +205,26 @@ const cases = [
         result.packet.evidence.onboardingConsentQaPass === true &&
         result.packet.evidence.analyticsQaPass === true &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
+        /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
+        typeof result.packet.gitStatus === 'string' &&
+        result.packet.files.some((file) => file.path === 'scripts/phase7/build-core-loop-qa-packet.mjs') &&
+        result.packet.files.some((file) => file.path === 'scripts/phase7/check-core-loop.mjs') &&
+        result.packet.files.some((file) => file.path === 'scripts/phase7/check-core-loop-smoke.mjs') &&
         result.packet.scenarios.every((scenario) => scenario.evidencePass === true) &&
         !result.packet.blockers.some((blocker) => /PHASE7_SIGNED_OFF_BY/.test(blocker))
+      );
+    },
+  },
+  {
+    name: 'Phase 7 packet warns when generated from a dirty worktree',
+    result: runPacketWithDirtyWorktree({ ...validPublicIdentity, ...validEvidence }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.gitStatus.includes(`.phase7-smoke-dirty-${process.pid}.tmp`) &&
+        result.packet.warnings.includes(
+          'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
+        )
       );
     },
   },

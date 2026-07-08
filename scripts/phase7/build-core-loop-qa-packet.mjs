@@ -2,11 +2,16 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { evidenceFlagEnabled, normalizeNamedSignoff } from '../phase9/lib.mjs';
+import { command, evidenceFlagEnabled, normalizeNamedSignoff } from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
-const outDir = resolve(root, process.env.PHASE7_PACKET_OUT_DIR ?? 'docs/phase-7/generated');
+const packetOutDir = process.env.PHASE7_PACKET_OUT_DIR ?? 'docs/phase-7/generated';
+const outDir = resolve(root, packetOutDir);
+const packetOutputPaths = [
+  `${packetOutDir}/core-loop-qa-packet.json`,
+  `${packetOutDir}/core-loop-qa-packet.md`,
+].map((path) => path.replace(/\\/g, '/'));
 
 const requiredFiles = [
   'package.json',
@@ -122,6 +127,20 @@ for (const scenario of scenarios) {
   evidence[scenario.evidenceKey] = evidenceFlagEnabled(process.env[scenario.envKey]);
 }
 
+function gitStatusExcludingGeneratedPacket() {
+  const excluded = new Set(packetOutputPaths);
+  return command('git', ['status', '--short'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !excluded.has(statusPath);
+    })
+    .join('\n')
+    .trim();
+}
+
 function hashFile(path) {
   const abs = resolve(root, path);
   if (!existsSync(abs)) return { path, exists: false };
@@ -136,6 +155,20 @@ function hashFile(path) {
 
 const files = requiredFiles.map(hashFile);
 const blockers = [];
+const warnings = [];
+let gitSha = 'unknown';
+let gitStatus = 'unknown';
+try {
+  gitSha = command('git', ['rev-parse', 'HEAD']).trim();
+  gitStatus = gitStatusExcludingGeneratedPacket();
+} catch {
+  warnings.push('Git SHA/status could not be captured.');
+}
+if (gitStatus.length > 0) {
+  warnings.push(
+    'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
+  );
+}
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
 for (const [key, value] of Object.entries(evidence)) {
   if (key === 'signedOffBy') {
@@ -148,6 +181,8 @@ for (const [key, value] of Object.entries(evidence)) {
 const packet = {
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 7 closed-beta core-loop launch QA packet.',
+  gitSha,
+  gitStatus,
   evidence,
   scenarios: scenarios.map(({ surface, scenario, evidenceKey, envKey }) => ({
     surface,
@@ -158,6 +193,7 @@ const packet = {
   })),
   files,
   blockers,
+  warnings,
 };
 
 mkdirSync(outDir, { recursive: true });
@@ -184,6 +220,8 @@ writeFileSync(
     '# Generated Phase 7 Core Loop QA Packet',
     '',
     `Generated at: ${packet.generatedAt}`,
+    `Git SHA: ${packet.gitSha}`,
+    `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
     '',
     'Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.',
     '',
@@ -221,6 +259,10 @@ writeFileSync(
     '## Blockers',
     '',
     blockers.length > 0 ? blockers.map((blocker) => `- ${blocker}`).join('\n') : '- none',
+    '',
+    '## Warnings',
+    '',
+    warnings.length > 0 ? warnings.map((warning) => `- ${warning}`).join('\n') : '- none',
     '',
   ].join('\n'),
 );

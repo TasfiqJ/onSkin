@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 7 core-loop QA packet provenance. The generated packet now
+  records the source Git SHA, ignores only its own generated outputs when
+  checking worktree cleanliness, warns when produced from mixed local changes,
+  and shows `Git status: clean` or `DIRTY` in Markdown. The Phase 7 checker now
+  enforces that contract and key packet hash inputs, while smoke coverage proves
+  dirty worktree packet generation records the dirty marker and warning.
+
+- Hardened Phase 10/11 upstream packet provenance. Closed-beta packets now hash
+  both the JSON and Markdown Phase 9 release QA packet, and public-launch
+  packets now hash both JSON and Markdown Phase 9 release QA and Phase 10
+  closed-beta packets. The Phase 10/11 readiness gates now enforce those
+  generated Markdown artifacts so reviewer-facing evidence cannot drift from the
+  machine-readable packet status.
+
 - Hardened the Phase 8 growth/store QA packet provenance. The generated packet
   now records the source Git SHA, ignores only its own generated outputs when
   checking worktree cleanliness, warns when produced from mixed local changes,
