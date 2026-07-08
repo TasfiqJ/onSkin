@@ -1,0 +1,122 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 268,
+        "y": 94
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 0,
+      "isTab": false,
+      "label": "Close",
+      "rect": {
+        "bottom": 118,
+        "height": 48,
+        "left": 244,
+        "right": 292,
+        "top": 70,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 313
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Try name or brand instead",
+      "index": 1,
+      "isTab": false,
+      "label": "SSearch catalogTry name or brand instead",
+      "rect": {
+        "bottom": 340,
+        "height": 54,
+        "left": 28,
+        "right": 292,
+        "top": 286,
+        "width": 264
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 54,
+      "visibleWidth": 264
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 373
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "We'll read the INCI text",
+      "index": 2,
+      "isTab": false,
+      "label": "IScan the ingredient listWe'll read the INCI text",
+      "rect": {
+        "bottom": 400,
+        "height": 54,
+        "left": 28,
+        "right": 292,
+        "top": 346,
+        "width": 264
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 54,
+      "visibleWidth": 264
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 433
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Always works, even offline",
+      "index": 3,
+      "isTab": false,
+      "label": "+Add it by handAlways works, even offline",
+      "rect": {
+        "bottom": 460,
+        "height": 54,
+        "left": 28,
+        "right": 292,
+        "top": 406,
+        "width": 264
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 54,
+      "visibleWidth": 264
+    }
+  ],
+  "currentDialog": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offline",
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/no-match",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offline",
+  "url": "http://localhost:8211/shelf/no-match",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

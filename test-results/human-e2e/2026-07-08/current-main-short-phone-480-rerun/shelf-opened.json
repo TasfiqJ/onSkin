@@ -1,0 +1,98 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 64.5
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Dismiss",
+      "index": 0,
+      "isTab": false,
+      "label": "Dismiss",
+      "rect": {
+        "bottom": 129,
+        "height": 129,
+        "left": 0,
+        "right": 320,
+        "top": 0,
+        "width": 320
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 129,
+      "visibleWidth": 320
+    },
+    {
+      "center": {
+        "x": 268,
+        "y": 194
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 1,
+      "isTab": false,
+      "label": "Close",
+      "rect": {
+        "bottom": 218,
+        "height": 48,
+        "left": 244,
+        "right": 292,
+        "top": 170,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 416
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "index": 2,
+      "isTab": false,
+      "label": "Add product by hand",
+      "rect": {
+        "bottom": 440,
+        "height": 48,
+        "left": 28,
+        "right": 292,
+        "top": 392,
+        "width": 264
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 264
+    }
+  ],
+  "currentDialog": "+xAdd product details first.Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it.Add by hand",
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/opened",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "+xAdd product details first.Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it.Add by hand",
+  "url": "http://localhost:8211/shelf/opened",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

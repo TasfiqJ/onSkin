@@ -1,0 +1,74 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 446
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Continue with manual text",
+      "index": 1,
+      "isTab": false,
+      "label": "Continue with manual text",
+      "rect": {
+        "bottom": 474,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 418,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/ocr",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<Read the labelCapture the ingredient panelCamera permission lets you keep the label beside the editable text. Manual entry still works.On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.Continue with manual text",
+  "url": "http://localhost:8211/shelf/ocr",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

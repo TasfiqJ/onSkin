@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Re-ran the current `main` shortest-phone route sweep after the recent compact
+  route fixes. Expo web at 320 x 480 checked 49 direct-entry routes across
+  Today, Progress, routine, cycle, recommendations, community, commerce,
+  settings, trend, Ask, Shelf, paywall, streak, and widgets. The rerun found
+  zero failed routes, zero visible clipped controls, zero sub-44 user-facing
+  controls, zero blocked hit-tests, zero horizontal overflow, and zero
+  disallowed browser logs. Evidence:
+  `test-results/human-e2e/2026-07-08/current-main-short-phone-480-rerun/`.
+
 - Fixed the `/recommendations` For You hub and `/community` Skin Notes hub on
   shortest 320 x 480 phones. The previous compact layouts still clipped visible
   cards: the second recommendation card before its evidence and `See how` row,

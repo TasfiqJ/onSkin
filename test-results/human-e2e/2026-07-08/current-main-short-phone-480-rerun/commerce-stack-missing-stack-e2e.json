@@ -1,0 +1,50 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 416
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to You",
+      "index": 0,
+      "isTab": false,
+      "label": "Back to You",
+      "rect": {
+        "bottom": 444,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 388,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/commerce/stack/missing-stack-e2e",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "BETAWhere-to-buy is not in this betaRecommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared.This keeps money out of the decision engine while the core routine loop is being validated.Back to You",
+  "url": "http://localhost:8211/commerce/stack/missing-stack-e2e",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

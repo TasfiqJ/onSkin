@@ -1,0 +1,74 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 387
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to Skin Notes",
+      "index": 1,
+      "isTab": false,
+      "label": "Back to Skin Notes",
+      "rect": {
+        "bottom": 415,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 359,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community/note/missing-note-e2e",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<Skin NoteNote unavailableThis Skin Note is not available right now.It may have been updated or removed during expert review. Current Skin Notes are still available in the library.Back to Skin Notes",
+  "url": "http://localhost:8211/community/note/missing-note-e2e",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

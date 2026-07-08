@@ -1,0 +1,74 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 314
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to For you",
+      "index": 1,
+      "isTab": false,
+      "label": "Back to For you",
+      "rect": {
+        "bottom": 338,
+        "height": 48,
+        "left": 103.203125,
+        "right": 216.796875,
+        "top": 290,
+        "width": 113.59375
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 113.59375
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/recommendations/stale-local-rec",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<RecommendationThis suggestion isn’t current anymore. Your routine may have changed.Back to For you",
+  "url": "http://localhost:8211/recommendations/stale-local-rec",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

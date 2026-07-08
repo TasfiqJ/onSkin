@@ -1,0 +1,146 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "index": 0,
+      "isTab": false,
+      "label": "Terms",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 109.359375,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "index": 1,
+      "isTab": false,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 85.359375,
+        "right": 133.359375,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 170.71875,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "index": 2,
+      "isTab": false,
+      "label": "Restore",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 146.71875,
+        "right": 194.71875,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 244.875,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "index": 3,
+      "isTab": false,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 193.75,
+        "right": 296,
+        "top": 4,
+        "width": 102.25
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 102.25
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 332
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "No credit card. See your routine work, then decide.",
+      "index": 5,
+      "isTab": false,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "bottom": 360,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 304,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/routine/reorder",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "Terms·Privacy·RestoreMaybe laterUnlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+  "url": "http://localhost:8211/routine/reorder",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

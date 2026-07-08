@@ -1,0 +1,122 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 0,
+      "isTab": false,
+      "label": "Close",
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 246
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan ingredient label",
+      "index": 1,
+      "isTab": false,
+      "label": "=Scan ingredient labelReview editable OCR",
+      "rect": {
+        "bottom": 284,
+        "height": 76,
+        "left": 20,
+        "right": 300,
+        "top": 208,
+        "width": 280
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 76,
+      "visibleWidth": 280
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 332
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Search catalog",
+      "index": 2,
+      "isTab": false,
+      "label": "SSearch catalogUse reviewed matches",
+      "rect": {
+        "bottom": 370,
+        "height": 76,
+        "left": 20,
+        "right": 300,
+        "top": 294,
+        "width": 280
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 76,
+      "visibleWidth": 280
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 418
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add it by hand",
+      "index": 3,
+      "isTab": false,
+      "label": "+Add it by handAlways works offline",
+      "rect": {
+        "bottom": 456,
+        "height": 76,
+        "left": 20,
+        "right": 300,
+        "top": 380,
+        "width": 280
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 76,
+      "visibleWidth": 280
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/scan",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+  "url": "http://localhost:8211/shelf/scan",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

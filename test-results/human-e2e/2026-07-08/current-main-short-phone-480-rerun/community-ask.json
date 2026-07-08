@@ -1,0 +1,50 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 416
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to Skin Notes",
+      "index": 0,
+      "isTab": false,
+      "label": "Back to Skin Notes",
+      "rect": {
+        "bottom": 444,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 388,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community/ask",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "BETACommunity posting is not in this betaSkin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful.No user post is accepted until the review desk and consent copy are production-approved.Back to Skin Notes",
+  "url": "http://localhost:8211/community/ask",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

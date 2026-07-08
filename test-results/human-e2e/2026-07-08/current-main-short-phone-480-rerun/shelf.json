@@ -1,0 +1,74 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 285
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan a barcode",
+      "index": 0,
+      "isTab": false,
+      "label": "Scan a barcode",
+      "rect": {
+        "bottom": 313,
+        "height": 56,
+        "left": 32,
+        "right": 288,
+        "top": 257,
+        "width": 256
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 256
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 345
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add by hand",
+      "index": 1,
+      "isTab": false,
+      "label": "Add by hand",
+      "rect": {
+        "bottom": 369,
+        "height": 48,
+        "left": 32,
+        "right": 288,
+        "top": 321,
+        "width": 256
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 256
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+  "url": "http://localhost:8211/shelf",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

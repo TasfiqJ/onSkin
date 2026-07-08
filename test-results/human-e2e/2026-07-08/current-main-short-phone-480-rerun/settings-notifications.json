@@ -1,0 +1,98 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 134,
+        "y": 142
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "7:30 AM",
+      "index": 1,
+      "isTab": false,
+      "label": "Morning routine 7:30 AM",
+      "rect": {
+        "bottom": 174,
+        "height": 64,
+        "left": 38,
+        "right": 230,
+        "top": 110,
+        "width": 192
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 64,
+      "visibleWidth": 192
+    },
+    {
+      "center": {
+        "x": 134,
+        "y": 235
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "9:30 PM",
+      "index": 2,
+      "isTab": false,
+      "label": "Evening · tonight’s step 9:30 PM",
+      "rect": {
+        "bottom": 267,
+        "height": 64,
+        "left": 38,
+        "right": 230,
+        "top": 203,
+        "width": 192
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 64,
+      "visibleWidth": 192
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/notifications",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<NotificationsUTILITY · YOUR ROUTINEMorning routine 7:30 AMEvening · tonight’s step 9:30 PMGENTLE NUDGES · CAPPEDStreak & adherenceReplenishmentProgress-photo nudgePROMOTIONALTips & announcements off by defaultwe cap gentle nudges so they never stack up",
+  "url": "http://localhost:8211/settings/notifications",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

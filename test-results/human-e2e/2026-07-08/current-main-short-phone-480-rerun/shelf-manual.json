@@ -1,0 +1,146 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "index": 0,
+      "isTab": false,
+      "label": "Cancel",
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 171
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Product name",
+      "index": 1,
+      "isTab": false,
+      "label": "Product name",
+      "rect": {
+        "bottom": 196,
+        "height": 50,
+        "left": 24,
+        "right": 296,
+        "top": 146,
+        "width": 272
+      },
+      "role": "input",
+      "tinyTarget": false,
+      "visibleHeight": 50,
+      "visibleWidth": 272
+    },
+    {
+      "center": {
+        "x": 85.90625,
+        "y": 255
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Brand",
+      "index": 2,
+      "isTab": false,
+      "label": "Brand",
+      "rect": {
+        "bottom": 280,
+        "height": 50,
+        "left": 24,
+        "right": 147.8125,
+        "top": 230,
+        "width": 123.8125
+      },
+      "role": "input",
+      "tinyTarget": false,
+      "visibleHeight": 50,
+      "visibleWidth": 123.8125
+    },
+    {
+      "center": {
+        "x": 227.90625,
+        "y": 255
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Choose",
+      "index": 3,
+      "isTab": false,
+      "label": "Category",
+      "rect": {
+        "bottom": 280,
+        "height": 50,
+        "left": 159.8125,
+        "right": 296,
+        "top": 230,
+        "width": 136.1875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 50,
+      "visibleWidth": 136.1875
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 379
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Ingredients",
+      "index": 4,
+      "isTab": false,
+      "label": "Ingredients",
+      "rect": {
+        "bottom": 412,
+        "height": 66,
+        "left": 24,
+        "right": 296,
+        "top": 346,
+        "width": 272
+      },
+      "role": "textarea",
+      "tinyTarget": false,
+      "visibleHeight": 66,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/manual",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "xAdd by handThe floor under every other path. This always works, even fully offline.Product nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesPick a category and we'll estimate the PAO. You can change it next.Continue",
+  "url": "http://localhost:8211/shelf/manual",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

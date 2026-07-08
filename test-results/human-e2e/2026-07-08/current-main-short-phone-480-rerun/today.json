@@ -1,0 +1,50 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 256
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add products",
+      "index": 0,
+      "isTab": false,
+      "label": "Add products",
+      "rect": {
+        "bottom": 284,
+        "height": 56,
+        "left": 45,
+        "right": 275,
+        "top": 228,
+        "width": 230
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 230
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/today",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "WEDNESDAY, JULY 8Good morning.No routine yetBuild a routine from your shelf.Add the products you use and Today will become your AM/PM checklist.Add productsTodayProgressShelfYou",
+  "url": "http://localhost:8211/today",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

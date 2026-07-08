@@ -1,0 +1,50 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 436
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "See tonight’s routine",
+      "index": 0,
+      "isTab": false,
+      "label": "See tonight’s routine",
+      "rect": {
+        "bottom": 464,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 408,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/paywall/success",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "✓You’re all set.Pro is active now. Your plan renews at $49.99/year. Cancel anytime.active until July 8renews $49.99/yrSee tonight’s routine",
+  "url": "http://localhost:8211/paywall/success",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

@@ -1,0 +1,122 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 186
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Can you use niacinamide with vitamin C?",
+      "index": 1,
+      "isTab": false,
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "rect": {
+        "bottom": 238,
+        "height": 104,
+        "left": 24,
+        "right": 296,
+        "top": 134,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 104,
+      "visibleWidth": 272
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 308.5
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+      "index": 2,
+      "isTab": false,
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "rect": {
+        "bottom": 353,
+        "height": 89,
+        "left": 24,
+        "right": 296,
+        "top": 264,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 89,
+      "visibleWidth": 272
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 402.5
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Is “natural” always gentler for sensitive skin?",
+      "index": 3,
+      "isTab": false,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "rect": {
+        "bottom": 448,
+        "height": 91,
+        "left": 24,
+        "right": 296,
+        "top": 357,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 91,
+      "visibleWidth": 272
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<Skin NotesMyth vs evidence. Expert-written, evidence-graded, calm.INGREDIENT MYTHSCan you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.SENSITIVE SKINIs a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and essential oils are common irritants.RETINOIDSDoes retinol thin your skin?RefutedIt thickens the deeper dermis over time; surface flaking early on is not thinning.SUNSCREENDo you have to wait between skincare steps?RefutedMostly no. Layering onto slightly damp skin is fine for most routines.Is homemade sunscreen as protective as store-bought?RefutedNo. Homemade mixes can’t be measured for protection. Use a tested SPF.a librar",
+  "url": "http://localhost:8211/community",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

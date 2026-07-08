@@ -1,0 +1,146 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 244.40625,
+        "y": 102
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "7:30 AM",
+      "index": 1,
+      "isTab": false,
+      "label": "Morning reminder time, 7:30 AM",
+      "rect": {
+        "bottom": 126,
+        "height": 48,
+        "left": 206.8125,
+        "right": 282,
+        "top": 78,
+        "width": 75.1875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 75.1875
+    },
+    {
+      "center": {
+        "x": 244.984375,
+        "y": 179
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "9:30 PM",
+      "index": 2,
+      "isTab": false,
+      "label": "Evening reminder time, 9:30 PM",
+      "rect": {
+        "bottom": 203,
+        "height": 48,
+        "left": 207.96875,
+        "right": 282,
+        "top": 155,
+        "width": 74.03125
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 74.03125
+    },
+    {
+      "center": {
+        "x": 78.9375,
+        "y": 337
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "10:00 PM",
+      "index": 3,
+      "isTab": false,
+      "label": "Quiet hours start, 10:00 PM",
+      "rect": {
+        "bottom": 361,
+        "height": 48,
+        "left": 38,
+        "right": 119.875,
+        "top": 313,
+        "width": 81.875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 81.875
+    },
+    {
+      "center": {
+        "x": 191.171875,
+        "y": 337
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "7:00 AM",
+      "index": 4,
+      "isTab": false,
+      "label": "Quiet hours end, 7:00 AM",
+      "rect": {
+        "bottom": 361,
+        "height": 48,
+        "left": 153.578125,
+        "right": 228.765625,
+        "top": 313,
+        "width": 75.1875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 75.1875
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/timing",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<TimingMorning7:30 AMEvening9:30 PMQUIET HOURSNothing fires10:00 PM→7:00 AMNothing fires inside this window. Even your routine reminders wait until morning.LOCK SCREENLock screen privacyAlways generic; product, photo, and condition details stay inside the appOnRoutineKindYour evening routine’s ready.Always generic on the lock screen",
+  "url": "http://localhost:8211/settings/timing",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

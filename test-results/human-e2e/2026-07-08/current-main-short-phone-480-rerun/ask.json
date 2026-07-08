@@ -1,0 +1,146 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 214
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Is there a conflict on my shelf?",
+      "index": 1,
+      "isTab": false,
+      "label": "Is there a conflict on my shelf?›",
+      "rect": {
+        "bottom": 238,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 190,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 272
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 268
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "What should I do tonight?",
+      "index": 2,
+      "isTab": false,
+      "label": "What should I do tonight?›",
+      "rect": {
+        "bottom": 292,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 244,
+        "width": 272
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 272
+    },
+    {
+      "center": {
+        "x": 131,
+        "y": 385
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Ask a question about your shelf",
+      "index": 3,
+      "isTab": false,
+      "label": "Ask a question about your shelf",
+      "rect": {
+        "bottom": 409,
+        "height": 48,
+        "left": 39,
+        "right": 223,
+        "top": 361,
+        "width": 184
+      },
+      "role": "input",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 184
+    },
+    {
+      "center": {
+        "x": 257,
+        "y": 385
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "↑",
+      "index": 4,
+      "isTab": false,
+      "label": "Send",
+      "rect": {
+        "bottom": 409,
+        "height": 48,
+        "left": 233,
+        "right": 281,
+        "top": 361,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/ask",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<✦Ask RoutineKindAsk about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know.Grounded in your shelf right nowIs there a conflict on my shelf?›What should I do tonight?›↑AI advisor · disclosed honestly · your context stays on this device",
+  "url": "http://localhost:8211/ask",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}

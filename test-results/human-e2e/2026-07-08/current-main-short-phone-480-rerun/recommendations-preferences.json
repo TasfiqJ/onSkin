@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "index": 0,
+      "isTab": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "center": {
+        "x": 94.3984375,
+        "y": 250
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Fragrance-free",
+      "index": 1,
+      "isTab": false,
+      "label": "Fragrance-free",
+      "rect": {
+        "bottom": 274,
+        "height": 48,
+        "left": 24,
+        "right": 164.796875,
+        "top": 226,
+        "width": 140.796875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 140.796875
+    },
+    {
+      "center": {
+        "x": 211.6953125,
+        "y": 250
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Vegan",
+      "index": 2,
+      "isTab": false,
+      "label": "Vegan",
+      "rect": {
+        "bottom": 274,
+        "height": 48,
+        "left": 172.796875,
+        "right": 250.59375,
+        "top": 226,
+        "width": 77.796875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 77.796875
+    },
+    {
+      "center": {
+        "x": 84.875,
+        "y": 306
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Cruelty-free",
+      "index": 3,
+      "isTab": false,
+      "label": "Cruelty-free",
+      "rect": {
+        "bottom": 330,
+        "height": 48,
+        "left": 24,
+        "right": 145.75,
+        "top": 282,
+        "width": 121.75
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 121.75
+    },
+    {
+      "center": {
+        "x": 105.890625,
+        "y": 362
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Non-comedogenic",
+      "index": 4,
+      "isTab": false,
+      "label": "Non-comedogenic",
+      "rect": {
+        "bottom": 386,
+        "height": 48,
+        "left": 24,
+        "right": 187.78125,
+        "top": 338,
+        "width": 163.78125
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 163.78125
+    },
+    {
+      "center": {
+        "x": 82.6484375,
+        "y": 418
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Sustainable",
+      "index": 5,
+      "isTab": false,
+      "label": "Sustainable",
+      "rect": {
+        "bottom": 442,
+        "height": 48,
+        "left": 24,
+        "right": 141.296875,
+        "top": 394,
+        "width": 117.296875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 48,
+      "visibleWidth": 117.296875
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/recommendations/preferences",
+  "scroll": {
+    "clientHeight": 480,
+    "clientWidth": 320,
+    "scrollHeight": 480,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabTop": null,
+  "textStart": "<PreferencesRecommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustainableBUDGETDrugstoreMid-rangePremiumTEXTUREGelCreamFluidBalmOil✦We prioritise options that fit these.",
+  "url": "http://localhost:8211/recommendations/preferences",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "disallowedLogs": [],
+  "disallowedLogCount": 0,
+  "browserLogCount": 5
+}
