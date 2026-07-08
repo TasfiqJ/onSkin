@@ -1,0 +1,99 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Maybe later",
+      "w": 102,
+      "x": 194,
+      "y": 4
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "h": 50,
+      "role": "button",
+      "text": "Start free trial",
+      "w": 272,
+      "x": 24,
+      "y": 335
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 60,
+      "role": "button",
+      "text": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "w": 272,
+      "x": 24,
+      "y": 393
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Terms",
+      "w": 48,
+      "x": 62,
+      "y": 453
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Privacy",
+      "w": 48,
+      "x": 135,
+      "y": 453
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Restore",
+      "w": 49,
+      "x": 209,
+      "y": 453
+    }
+  ],
+  "overflowX": 0,
+  "premiumMarkersVisible": [],
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "Maybe later",
+    "Unlock your full routine.",
+    "The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.",
+    "Start 14 days free, then $49.99/year $4.16/mo",
+    "Start 14 days free, then $49.99/year",
+    "Start 14 days free, then",
+    "$49.99/year",
+    "/year",
+    "$4.16/mo",
+    "Store checkout is unavailable in this preview. You can keep exploring.",
+    "Start free trial",
+    "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+    "Explore first. 7 days of Pro No credit card. See your routine work, then decide.",
+    "Explore first. 7 days of Pro",
+    "No credit card. See your routine work, then decide.",
+    "›",
+    "Terms · Privacy · Restore",
+    "Terms",
+    "·",
+    "Privacy",
+    "Restore"
+  ],
+  "title": "",
+  "url": "http://localhost:8154/routine/tolerance",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

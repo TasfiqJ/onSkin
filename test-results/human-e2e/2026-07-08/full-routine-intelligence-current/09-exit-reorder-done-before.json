@@ -1,0 +1,78 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Done",
+      "w": 54,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Save",
+      "w": 51,
+      "x": 246,
+      "y": 8
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 54,
+      "role": "button",
+      "text": "Cream cleanser",
+      "w": 272,
+      "x": 24,
+      "y": 148
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 54,
+      "role": "button",
+      "text": "Vitamin C serum",
+      "w": 272,
+      "x": 24,
+      "y": 210
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 54,
+      "role": "button",
+      "text": "Ceramide moisturizer",
+      "w": 272,
+      "x": 24,
+      "y": 272
+    }
+  ],
+  "overflowX": 0,
+  "premiumMarkersVisible": [],
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer",
+    "Done Example morning Save",
+    "Done",
+    "Example morning",
+    "Save",
+    "This example shows how ordering guidance works. Add products to your shelf for your routine.",
+    "Cream cleanser Vitamin C serum Ceramide moisturizer",
+    "Cream cleanser",
+    "Vitamin C serum",
+    "Ceramide moisturizer"
+  ],
+  "title": "",
+  "url": "http://localhost:8154/routine/reorder",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

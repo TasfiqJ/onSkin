@@ -1,0 +1,57 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 56,
+      "role": "button",
+      "text": "Looks good",
+      "w": 208,
+      "x": 24,
+      "y": 505
+    },
+    {
+      "aria": "Undo",
+      "disabled": null,
+      "h": 54,
+      "role": "button",
+      "text": "↺",
+      "w": 54,
+      "x": 242,
+      "y": 506
+    }
+  ],
+  "overflowX": 0,
+  "premiumMarkersVisible": [
+    "Here's what changed."
+  ],
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "EXAMPLE ROUTINE",
+    "Here's what changed.",
+    "This preview shows the explanation style until your shelf has products.",
+    "+ Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence.",
+    "+",
+    "Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence.",
+    "Example order refreshed",
+    "Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence.",
+    "Active nights stay separated Retinol 0.3% and Glycolic 7% Toner stay scheduled away from recovery nights where needed.",
+    "Active nights stay separated",
+    "Retinol 0.3% and Glycolic 7% Toner stay scheduled away from recovery nights where needed.",
+    "Your choices stay in control This is an example preview. Add products to your shelf to see live adaptation notes.",
+    "Your choices stay in control",
+    "This is an example preview. Add products to your shelf to see live adaptation notes.",
+    "Looks good ↺",
+    "Looks good",
+    "↺"
+  ],
+  "title": "",
+  "url": "http://localhost:8154/routine/adaptation",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

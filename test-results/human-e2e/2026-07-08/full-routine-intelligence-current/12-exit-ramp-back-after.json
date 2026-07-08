@@ -1,0 +1,55 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": "You're exploring Pro. Manage your plan",
+      "disabled": null,
+      "h": 74,
+      "role": "button",
+      "text": "You’re exploring Pro. 7 days left ›",
+      "w": 272,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "h": 56,
+      "role": "button",
+      "text": "Add products",
+      "w": 231,
+      "x": 45,
+      "y": 331
+    }
+  ],
+  "overflowX": 0,
+  "premiumMarkersVisible": [],
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You",
+    "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products",
+    "You’re exploring Pro. 7 days left ›",
+    "You’re exploring Pro. 7 days left",
+    "›",
+    "WEDNESDAY, JULY 8",
+    "Good morning.",
+    "NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products",
+    "NO ROUTINE YET",
+    "Build a routine from your shelf.",
+    "Add the products you use and Today will become your AM/PM checklist.",
+    "Add products",
+    "Today Progress Shelf You",
+    "Today",
+    "Progress",
+    "Shelf",
+    "You"
+  ],
+  "title": "",
+  "url": "http://localhost:8154/today",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

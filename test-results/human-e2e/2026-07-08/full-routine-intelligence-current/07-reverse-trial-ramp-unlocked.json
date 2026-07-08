@@ -1,0 +1,48 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": "Back",
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "<",
+      "w": 48,
+      "x": 24,
+      "y": 8
+    }
+  ],
+  "overflowX": 0,
+  "premiumMarkersVisible": [
+    "Low and slow"
+  ],
+  "scrollHeight": 592,
+  "shortControls": [],
+  "text": [
+    "<",
+    "RETINOID · RAMP-UP",
+    "Low and slow, on your terms.",
+    "Consistency matters more than frequency. We only ever offer a step-up. Never increase it for you.",
+    "offer",
+    "Nights per week 2 of 3 wk1 wk2 wk3 now next?",
+    "Nights per week 2 of 3",
+    "Nights per week",
+    "2 of 3",
+    "wk1 wk2 wk3 now next?",
+    "wk1",
+    "wk2",
+    "wk3",
+    "now",
+    "next?",
+    "You're at 2 of 3 nights a week. We will check in as your skin settles, and offer a step-up only when it is comfortable.",
+    "You're at 2 of 3 nights a week.",
+    "We will check in as your skin settles, and offer a step-up only when it is comfortable."
+  ],
+  "title": "",
+  "url": "http://localhost:8154/routine/ramp",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

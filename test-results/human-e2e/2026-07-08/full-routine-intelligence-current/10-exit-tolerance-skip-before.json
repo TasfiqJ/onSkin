@@ -1,0 +1,85 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": "Skip tolerance check-in",
+      "disabled": null,
+      "h": 48,
+      "role": "button",
+      "text": "Skip",
+      "w": 48,
+      "x": 244,
+      "y": 53
+    },
+    {
+      "aria": "Comfortable. We may offer a small step-up",
+      "disabled": null,
+      "h": 72,
+      "role": "button",
+      "text": "Comfortable We may offer a small step-up",
+      "w": 264,
+      "x": 28,
+      "y": 249
+    },
+    {
+      "aria": "A bit dry. We'll hold your pace steady",
+      "disabled": null,
+      "h": 72,
+      "role": "button",
+      "text": "A bit dry We'll hold your pace steady",
+      "w": 264,
+      "x": 28,
+      "y": 329
+    },
+    {
+      "aria": "Irritated. We'll add recovery nights & ease off",
+      "disabled": null,
+      "h": 72,
+      "role": "button",
+      "text": "Irritated We'll add recovery nights & ease off",
+      "w": 264,
+      "x": 28,
+      "y": 409
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "h": 56,
+      "role": "button",
+      "text": "Save",
+      "w": 264,
+      "x": 28,
+      "y": 493
+    }
+  ],
+  "overflowX": 0,
+  "premiumMarkersVisible": [
+    "How did your skin feel this week?"
+  ],
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "Skip",
+    "ONE QUICK CHECK-IN",
+    "How did your skin feel this week?",
+    "It only tunes your pace. Nothing here is a diagnosis. Optional, always.",
+    "Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off",
+    "Comfortable We may offer a small step-up",
+    "Comfortable",
+    "We may offer a small step-up",
+    "A bit dry We'll hold your pace steady",
+    "A bit dry",
+    "We'll hold your pace steady",
+    "Irritated We'll add recovery nights & ease off",
+    "Irritated",
+    "We'll add recovery nights & ease off",
+    "Save"
+  ],
+  "title": "",
+  "url": "http://localhost:8154/routine/tolerance",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

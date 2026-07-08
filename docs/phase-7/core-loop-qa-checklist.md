@@ -169,6 +169,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`; this
   does not replace native iOS/Android rendering, screen-reader, safe-area,
   RevenueCat, or WidgetKit/Glance/ActivityKit QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers remaining
+  full-routine direct routes. Fresh free `/routine/reorder`, `/routine/ramp`,
+  `/routine/tolerance`, and `/routine/adaptation` all show the full-routine
+  contextual paywall with no premium route-body markers, 48 px+ visible
+  controls, and zero horizontal overflow. Starting the no-card Pro week unlocks
+  the sequencing editor, ramp status, tolerance check-in, and adaptation summary
+  surfaces. Fresh direct-entry exits for `Done`, `Skip`, `Looks good`, and
+  `Back` return to `/today`. Evidence is in
+  `test-results/human-e2e/2026-07-08/full-routine-intelligence-current/`; this
+  does not replace native iOS/Android safe-area, screen-reader, Dynamic Type,
+  RevenueCat, or real non-example shelf/profile beta QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers local Trend route recovery in
   both launch-gated and enabled modes. Default `/trend/optin` and
   `/trend/fairness` show the deferred Trend surface with `Back to Progress` and

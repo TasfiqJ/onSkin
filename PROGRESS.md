@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Verified the remaining full-routine intelligence direct-route gate on `main`.
+  Codex in-app browser Expo web at 320 x 568 confirms fresh free direct
+  `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, and
+  `/routine/adaptation` all show the `Unlock your full routine.` contextual
+  paywall with no premium route-body markers, no sub-44 px visible controls, and
+  zero horizontal overflow. The local no-card Pro week unlocks the sequencing,
+  ramp, tolerance, and adaptation surfaces, and fresh direct-entry exits
+  (`Done`, `Skip`, `Looks good`, `Back`) all return to `/today`. Evidence and
+  report are in
+  `test-results/human-e2e/2026-07-08/full-routine-intelligence-current/`.
+
 - Verified the reminders/streak/widgets direct-entry Pro gate and local
   reverse-trial access on `main`. Codex in-app browser Expo web at 320 x 568
   confirms fresh free direct `/routine/streak`, `/routine/welcome-back`, and
