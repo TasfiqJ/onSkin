@@ -13,8 +13,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   already owns the failure state. Added `PaywallFeedback`, an external-open
   `alertOnFailure: false` opt-out, contract coverage for no native `Alert.alert`
   purchase/restore recovery, and Codex in-app browser evidence for direct
-  `/paywall/upsell?feature=full_routine` restore recovery at 320 x 568 with no
-  dialog, no raw provider text, and zero horizontal overflow.
+  `/paywall/upsell?feature=full_routine` compliance restore plus
+  `/settings/subscription` Manage/Terms/Restore recovery at 320 x 568 with no
+  dialog, route-owned `role="alert"` feedback, no raw provider text, and zero
+  horizontal overflow. Native RevenueCat purchase-sheet failure remains device
+  QA because Expo web disables purchases without live store configuration.
 
 - Hardened Phase 7 and Phase 8 QA packet traceability. Phase 7 core-loop
   packets now hash the Phase 7 verifier scripts, root script manifest, and

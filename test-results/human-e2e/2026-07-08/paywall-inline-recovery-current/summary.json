@@ -1,0 +1,289 @@
+{
+  "date": "2026-07-08",
+  "surface": "Codex in-app browser, Expo web, 320x568",
+  "command": "EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=all npm --workspace apps/mobile run web -- --port 8156 --localhost",
+  "branchMapping": [
+    "docs/USER_FLOW_TREE.md Settings Account Controls > subscription billing and policy handoff failure",
+    "Paywall upsell ComplianceRow recovery"
+  ],
+  "paywall": {
+    "initial": {
+      "bodyScrollWidth": 320,
+      "buttons": [
+        {
+          "disabled": "true",
+          "label": "Start free trial"
+        },
+        {
+          "disabled": false,
+          "label": "Terms"
+        },
+        {
+          "disabled": false,
+          "label": "Privacy"
+        },
+        {
+          "disabled": false,
+          "label": "Restore"
+        },
+        {
+          "disabled": false,
+          "label": "Maybe later"
+        }
+      ],
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "text": "Unlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialTerms·Privacy·RestoreMaybe later",
+      "url": "http://localhost:8156/paywall/upsell?feature=full_routine",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    "after": {
+      "alerts": [
+        {
+          "height": 40.00303649902344,
+          "text": "No active subscription was found for this account.",
+          "width": 264.4114074707031,
+          "x": 27.98847198486328,
+          "y": 448.9381408691406
+        }
+      ],
+      "bodyScrollWidth": 320,
+      "buttons": [
+        {
+          "disabled": "true",
+          "height": 53.989688873291016,
+          "label": "Start free trial",
+          "visible": true,
+          "width": 264.4114074707031,
+          "x": 27.98847198486328,
+          "y": 346.95086669921875
+        },
+        {
+          "disabled": false,
+          "height": 47.99757385253906,
+          "label": "Terms",
+          "visible": true,
+          "width": 47.99757385253906,
+          "x": 62.105587005615234,
+          "y": 400.9405517578125
+        },
+        {
+          "disabled": false,
+          "height": 47.99757385253906,
+          "label": "Privacy",
+          "visible": true,
+          "width": 48.01274490356445,
+          "x": 135.4520721435547,
+          "y": 400.9405517578125
+        },
+        {
+          "disabled": false,
+          "height": 47.99757385253906,
+          "label": "Restore",
+          "visible": true,
+          "width": 49.45388412475586,
+          "x": 208.813720703125,
+          "y": 400.9405517578125
+        },
+        {
+          "disabled": false,
+          "height": 47.99757385253906,
+          "label": "Maybe later",
+          "visible": true,
+          "width": 264.4114074707031,
+          "x": 27.98847198486328,
+          "y": 488.941162109375
+        }
+      ],
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "text": "Unlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialTerms·Privacy·RestoreNo active subscription was found for this account.Maybe later",
+      "url": "http://localhost:8156/paywall/upsell?feature=full_routine",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    }
+  },
+  "subscription": {
+    "initial": {
+      "bodyScrollWidth": 320,
+      "buttons": [
+        {
+          "height": 47.99757385253906,
+          "label": "Back",
+          "visible": true,
+          "width": 47.99757385253906,
+          "x": 19.993932723999023,
+          "y": 3.989684581756592
+        },
+        {
+          "height": 52.942962646484375,
+          "label": "Manage in App Store›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 230.90110778808594
+        },
+        {
+          "height": 52.942962646484375,
+          "label": "Restore purchases›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 283.84405517578125
+        },
+        {
+          "height": 52.942962646484375,
+          "label": "Terms›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 336.7870178222656
+        },
+        {
+          "height": 51.97209167480469,
+          "label": "Privacy›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 389.72998046875
+        }
+      ],
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "text": "<SubscriptionRoutineKind ProActivePlanRoutineKind Pro · $49.99/yearRenewsJuly 15, 2026Manage in App Store›Restore purchases›Terms›Privacy›Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls.",
+      "url": "http://localhost:8156/settings/subscription",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    "afterManage": {
+      "alerts": [
+        {
+          "height": 95.96481323242188,
+          "text": "We could not open subscription management. You can manage billing from your App Store or Google Play account settings.",
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 441.70208740234375
+        }
+      ],
+      "bodyScrollWidth": 320,
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "text": "<SubscriptionRoutineKind ProActivePlanRoutineKind Pro · $49.99/yearRenewsJuly 15, 2026Manage in App Store›Restore purchases›Terms›Privacy›We could not open subscription management. You can manage billing from your App Store or Google Play account settings.Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls."
+    },
+    "afterTerms": {
+      "alerts": [
+        {
+          "height": 55.97694396972656,
+          "text": "Link unavailable. We could not open this policy link. Please try again.",
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 363.0613098144531
+        }
+      ],
+      "bodyScrollWidth": 320,
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "text": "<SubscriptionRoutineKind ProActivePlanRoutineKind Pro · $49.99/yearRenewsJuly 15, 2026Manage in App Store›Restore purchases›Terms›Privacy›Link unavailable. We could not open this policy link. Please try again.Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls."
+    },
+    "afterRestore": {
+      "alerts": [
+        {
+          "height": 55.97694396972656,
+          "text": "No active subscription was found for this account.",
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 415.4884948730469
+        }
+      ],
+      "bodyScrollWidth": 320,
+      "buttons": [
+        {
+          "height": 47.99757385253906,
+          "label": "Back",
+          "visible": true,
+          "width": 47.99757385253906,
+          "x": 19.993932723999023,
+          "y": -22.223909378051758
+        },
+        {
+          "height": 52.942962646484375,
+          "label": "Manage in App Store›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 204.68751525878906
+        },
+        {
+          "height": 52.942962646484375,
+          "label": "Restore purchases›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 257.6304626464844
+        },
+        {
+          "height": 52.942962646484375,
+          "label": "Terms›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 310.57342529296875
+        },
+        {
+          "height": 51.97209167480469,
+          "label": "Privacy›",
+          "visible": true,
+          "width": 244.41748046875,
+          "x": 37.98543930053711,
+          "y": 363.5163879394531
+        }
+      ],
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "text": "<SubscriptionRoutineKind ProActivePlanRoutineKind Pro · $49.99/yearRenewsJuly 15, 2026Manage in App Store›Restore purchases›Terms›Privacy›No active subscription was found for this account.Cancelling is one tap in your App Store settings, and you keep Pro until July 15, 2026. No maze, no calls.",
+      "url": "http://localhost:8156/settings/subscription",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    }
+  },
+  "relevantConsoleWarningsOrErrors": [],
+  "expectedConsoleWarnings": [
+    "Supabase placeholder env warnings",
+    "expo-notifications web listener warning"
+  ],
+  "outOfScope": [
+    "Native RevenueCat purchase sheet failure on iOS/Android remains external/native QA; web preview disables purchase CTA without live store config."
+  ],
+  "evidence": [
+    "01-upsell-before.png",
+    "02-upsell-compliance-inline-feedback.png",
+    "03-subscription-before.png",
+    "04-subscription-manage-inline-feedback.png",
+    "05-subscription-policy-inline-feedback.png",
+    "06-subscription-restore-inline-feedback.png"
+  ],
+  "currentRunConsoleWarningsOrErrors": [],
+  "staleBrowserLogsIgnored": [
+    {
+      "level": "warn",
+      "message": "Disconnected from Metro (1006)\nTo reconnect:\n- Ensure that Metro is running and available on the same network\n- Reload this app (will trigger further help if Metro cannot be connected to)",
+      "timestamp": "2026-07-08T03:45:11.873Z",
+      "url": "http://127.0.0.1:8131/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "Disconnected from Metro (1006)\nTo reconnect:\n- Ensure that Metro is running and available on the same network\n- Reload this app (will trigger further help if Metro cannot be connected to)",
+      "timestamp": "2026-07-08T03:46:43.134Z",
+      "url": "http://localhost:8134/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}
