@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Shelf replenish similar-options recovery after commerce consent.
+  The `/shelf/replenish` `See similar options` consented empty-state branch now
+  uses the shared route-owned `CommerceLinkNotice` instead of `Alert.alert`,
+  keeping the user in the replacement context while the catalogue/partner rail is
+  launch-gated. Codex in-app browser Expo web at 320 x 568 with commerce enabled
+  verifies the boundary product setup, consent sheet, no dialog after the
+  consented retap, one visible `role="alert"` notice at y=427-545, zero
+  horizontal overflow, and empty warn/error logs. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/shelf-replenish-similar-inline-recovery-current/`,
+  `docs/e2e-bug-reports/2026-07-08-shelf-replenish-similar-inline-recovery.md`.
+
 - Hardened the Phase 10 beta analytics audit. `phase10:beta-analytics-audit`
   now parses the minimum beta event list in
   `docs/phase-10/beta-event-schema.md` and blocks if any event is only
