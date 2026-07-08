@@ -1,0 +1,66 @@
+{
+  "bodyText": "x\nAdd by hand\nThe floor under every other path. This always works, even fully offline.\nPRODUCT NAME\nBRAND\nCATEGORY\nChoose\n▾\nINGREDIENTS · optional, we’ll find the actives\nPick a category and we'll estimate the PAO. You can change it next.\nContinue",
+  "buttons": [
+    {
+      "height": 48,
+      "text": "x",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "height": 50,
+      "text": "Choose▾",
+      "visible": true,
+      "width": 136,
+      "x": 160,
+      "y": 230
+    },
+    {
+      "height": 56,
+      "text": "Continue",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 501
+    }
+  ],
+  "hasIngredientCarryover": true,
+  "hasManualSurface": false,
+  "hasRawFixture": false,
+  "inputs": [
+    {
+      "ariaLabel": "Product name",
+      "height": 50,
+      "placeholder": "e.g. Gentle Retinol Night Serum",
+      "value": "",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "ariaLabel": "Brand",
+      "height": 50,
+      "placeholder": "Brand",
+      "value": "",
+      "visible": true,
+      "width": 124,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "ariaLabel": "Ingredients",
+      "height": 65,
+      "placeholder": "Paste or type the INCI list…",
+      "value": "Aqua, Glycerin, Niacinamide",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 346
+    }
+  ],
+  "overflowX": 0,
+  "url": "http://localhost:8147/shelf/manual"
+}

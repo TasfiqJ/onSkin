@@ -4134,6 +4134,32 @@ errors. Evidence is in
 prove native React Native keyboard-hide or platform text-scale behavior, so those
 remain iOS/Android simulator/device QA follow-ups.
 
+### Shelf scan/OCR permission recovery evidence (2026-07-08)
+
+Implemented route-owned recovery for Shelf scan and OCR when camera permission
+is denied and the OS will not prompt again. `/shelf/scan` and `/shelf/ocr` now
+share the camera Settings failure copy, use the shared `openAppSettings` helper
+with `alertOnFailure: false`, and render inline `Camera settings unavailable`
+feedback instead of relying on a native/browser alert. A dev-only
+`EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION=denied_no_retry` fixture makes the
+branch testable through Expo web without pretending web has a native camera.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8147 with
+`EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION=denied_no_retry`,
+`EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and
+`EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. Scan shows one `Open settings` action,
+then inline settings-unavailable recovery with Search catalog, Scan ingredient
+label, and Add it by hand fallbacks still visible. OCR shows one `Open settings`
+action, then inline recovery, preserves `Continue with manual text`, accepts
+`Aqua, Glycerin, Niacinamide`, and carries that text into `/shelf/manual`.
+Across captured states there are no JavaScript dialogs, no raw fixture text,
+zero horizontal overflow, no visible controls below 48 px, and no current-origin
+browser warn/error logs. Evidence and report are in
+`test-results/human-e2e/2026-07-08/shelf-camera-permission-denied-current/`.
+This does not replace native iOS/Android OS permission-sheet, real
+`Linking.openSettings()` handoff, barcode camera, OCR camera, or physical-device
+safe-area QA.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

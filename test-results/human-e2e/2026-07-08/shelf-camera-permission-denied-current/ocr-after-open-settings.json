@@ -1,0 +1,51 @@
+{
+  "dialog": null,
+  "state": {
+    "alerts": [
+      "Camera settings unavailableOpen Settings manually to enable camera access. Search, label scan, and manual add still work."
+    ],
+    "bodyText": "<\nRead the label\nCapture the ingredient panel\nCamera permission lets you keep the label beside the editable text. Manual entry still works.\nOpen settings\nCamera settings unavailable\nOpen Settings manually to enable camera access. Search, label scan, and manual add still work.\nOn-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.\nContinue with manual text",
+    "buttons": [
+      {
+        "height": 48,
+        "href": null,
+        "role": "button",
+        "text": "<",
+        "visible": true,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      {
+        "height": 48,
+        "href": null,
+        "role": "button",
+        "text": "Open settings",
+        "visible": true,
+        "width": 139,
+        "x": 91,
+        "y": 144
+      },
+      {
+        "height": 56,
+        "href": null,
+        "role": "button",
+        "text": "Continue with manual text",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 418
+      }
+    ],
+    "hasManualText": true,
+    "hasRawFixture": false,
+    "hasSettingsBody": true,
+    "hasSettingsUnavailable": true,
+    "overflowX": 0,
+    "url": "http://localhost:8147/shelf/ocr?e2e=shelf-camera-permission-denied",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  }
+}

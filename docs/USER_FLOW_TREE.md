@@ -463,6 +463,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Attempt scan/OCR with camera permission denied.
   - Expected result: The app shows a clear recovery path, including Open settings when the OS will not prompt again; if Settings cannot open, the app shows a stable unavailable alert instead of appearing inert.
   - Evidence: Screenshot, alert text, and simulator permission state.
+  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION=denied_no_retry` and `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1` to cover `/shelf/scan` and `/shelf/ocr`. Both routes show exactly one `Open settings` action, the forced Settings failure renders inline `Camera settings unavailable` recovery with no JavaScript dialog, no raw fixture text, zero horizontal overflow, and 48 px+ visible controls. Scan keeps Search catalog, Scan ingredient label, and Add it by hand fallbacks visible; OCR keeps `Continue with manual text`, accepts `Aqua, Glycerin, Niacinamide`, and carries it into `/shelf/manual`. Evidence and report are in `test-results/human-e2e/2026-07-08/shelf-camera-permission-denied-current/`; physical iOS/Android OS permission-sheet, real Settings handoff, barcode camera, and OCR camera QA remain open.
 - Branch: camera start or label capture failure
   - Priority: Important
   - Automate later: Yes

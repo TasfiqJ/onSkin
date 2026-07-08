@@ -1,0 +1,51 @@
+[
+  {
+    "file": "scan-before-open-settings.json",
+    "url": "http://localhost:8147/shelf/scan?e2e=shelf-camera-permission-denied",
+    "overflowX": 0,
+    "hasRawFixture": false,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "scan-after-open-settings.json",
+    "url": "http://localhost:8147/shelf/scan?e2e=shelf-camera-permission-denied",
+    "overflowX": 0,
+    "hasRawFixture": false,
+    "dialog": null,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "ocr-before-open-settings.json",
+    "url": "http://localhost:8147/shelf/ocr?e2e=shelf-camera-permission-denied",
+    "overflowX": 0,
+    "hasRawFixture": false,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "ocr-after-open-settings.json",
+    "url": "http://localhost:8147/shelf/ocr?e2e=shelf-camera-permission-denied",
+    "overflowX": 0,
+    "hasRawFixture": false,
+    "dialog": null,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "ocr-manual-review.json",
+    "url": "http://localhost:8147/shelf/ocr?e2e=shelf-camera-permission-denied",
+    "overflowX": 0,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  },
+  {
+    "file": "ocr-to-manual-after-continue.json",
+    "url": "http://localhost:8147/shelf/manual",
+    "overflowX": 0,
+    "hasRawFixture": false,
+    "sub44Controls": [],
+    "minVisibleControlHeight": 48
+  }
+]

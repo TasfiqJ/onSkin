@@ -92,8 +92,10 @@ describe('Permission recovery contracts', () => {
     const copy = readSource('features/native/camera/failureCopy.ts');
     const progressCapture = readAppRoute('progress/capture.tsx');
     const shelfOcr = readAppRoute('shelf/ocr.tsx');
+    const shelfScan = readAppRoute('shelf/scan.tsx');
 
     expect(copy).toContain('progressCaptureTitle');
+    expect(copy).toContain('shelfSettingsTitle');
     expect(copy).toContain('labelCaptureTitle');
     expect(progressCapture).toContain('CameraUnavailableGate');
     expect(progressCapture).toContain('setCameraUnavailable(true)');
@@ -117,5 +119,12 @@ describe('Permission recovery contracts', () => {
     expect(shelfOcr).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
     expect(shelfOcr).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelUnavailableTitle');
     expect(shelfOcr).toContain('CAMERA_FAILURE_COPY.labelUnavailableTitle');
+    for (const routeSource of [shelfOcr, shelfScan]) {
+      expect(routeSource).toContain('EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION');
+      expect(routeSource).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');
+      expect(routeSource).toContain('CAMERA_FAILURE_COPY.shelfSettingsBody');
+      expect(routeSource).toContain('setSettingsOpenFailed(true)');
+      expect(routeSource).toContain('alertOnFailure: false');
+    }
   });
 });

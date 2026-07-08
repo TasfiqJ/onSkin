@@ -13,6 +13,7 @@ import {
   shouldSuppressDuplicate,
   type DuplicateBarcodeGate,
 } from '@/features/native/camera/barcode';
+import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import type { ProductCategory } from '@/features/shelf/categories';
@@ -75,6 +76,13 @@ function devShelfScanFixtureState(): ScanState | null {
   }
 }
 
+function devShelfCameraPermissionMode(): 'denied_no_retry' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION === 'denied_no_retry'
+    ? 'denied_no_retry'
+    : null;
+}
+
 function activeIngredients(product: CatalogProductSummary): {
   ingredients: string[];
   status: ReturnType<typeof parseIngredientText>['status'] | null;
@@ -106,10 +114,18 @@ export default function ScanScreen() {
   const [torch, setTorch] = useState(false);
   const [state, setState] = useState<ScanState>(() => devShelfScanFixtureState() ?? { kind: 'idle' });
   const [cameraReady, setCameraReady] = useState(false);
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const lastScan = useRef<DuplicateBarcodeGate | null>(null);
 
+  const cameraPermissionMode = devShelfCameraPermissionMode();
+  const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
-  const permissionGranted = Boolean(permission?.granted);
+  const permissionGranted = forceDeniedCameraPermission ? false : Boolean(permission?.granted);
+  const canAskCameraPermission = forceDeniedCameraPermission
+    ? false
+    : (permission?.canAskAgain ?? true);
+  const canShowPermissionRecovery =
+    !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
   const canShowCamera = cameraEnabled && permissionGranted;
   const compactScanSurface = height < 640;
 
@@ -229,7 +245,19 @@ export default function ScanScreen() {
 
   const requestCamera = () => {
     haptics.select();
+    setSettingsOpenFailed(false);
     void requestPermission();
+  };
+
+  const openShelfCameraSettings = async () => {
+    haptics.select();
+    setSettingsOpenFailed(false);
+    const opened = await openAppSettings({
+      failureTitle: CAMERA_FAILURE_COPY.shelfSettingsTitle,
+      failureMessage: CAMERA_FAILURE_COPY.shelfSettingsBody,
+      alertOnFailure: false,
+    });
+    if (!opened) setSettingsOpenFailed(true);
   };
 
   return (
@@ -293,16 +321,36 @@ export default function ScanScreen() {
                 <Text variant="bodySm" tone="inverseMuted" className="mt-2 text-center">
                   You can still search, scan the label path, or add by hand.
                 </Text>
-                {cameraEnabled && permission && !permission.granted ? (
+                {canShowPermissionRecovery ? (
                   <Pressable
                     accessibilityRole="button"
-                    onPress={permission.canAskAgain ? requestCamera : () => void openAppSettings()}
-                    className="mt-5 rounded-pill bg-paper px-5 py-3"
+                    onPress={
+                      canAskCameraPermission ? requestCamera : () => void openShelfCameraSettings()
+                    }
+                    className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                   >
                     <Text className="font-sans-semibold text-night">
-                      {permission.canAskAgain ? 'Allow camera' : 'Open settings'}
+                      {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
                     </Text>
                   </Pressable>
+                ) : null}
+                {settingsOpenFailed ? (
+                  <View
+                    accessibilityRole="alert"
+                    className="mt-4 w-full rounded-[14px] p-3.5"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: 'rgba(217,161,131,0.45)',
+                      backgroundColor: 'rgba(217,161,131,0.14)',
+                    }}
+                  >
+                    <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+                      {CAMERA_FAILURE_COPY.shelfSettingsTitle}
+                    </Text>
+                    <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+                      {CAMERA_FAILURE_COPY.shelfSettingsBody}
+                    </Text>
+                  </View>
                 ) : null}
               </View>
             )}

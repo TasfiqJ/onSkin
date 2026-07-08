@@ -652,6 +652,21 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `docs/e2e-bug-reports/2026-07-08-shelf-ocr-capture-failure-inline-recovery.md`;
   this does not replace native iOS/Android camera mount, permission-denied, or
   real `takePictureAsync` rejection QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers Shelf scan/OCR
+  camera permission denied recovery with
+  `EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION=denied_no_retry`,
+  `EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE=1`, and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. `/shelf/scan` and `/shelf/ocr` each
+  render one `Open settings` action, the forced Settings failure opens no
+  JavaScript dialog, and both routes show inline `Camera settings unavailable`
+  recovery with no raw fixture text, zero horizontal overflow, and 48 px+
+  visible controls. Scan keeps Search catalog, Scan ingredient label, and Add it
+  by hand available; OCR keeps manual text available, accepts
+  `Aqua, Glycerin, Niacinamide`, and carries it into `/shelf/manual`. Evidence
+  and report are in
+  `test-results/human-e2e/2026-07-08/shelf-camera-permission-denied-current/`;
+  this does not replace native iOS/Android OS permission-sheet, real Settings
+  handoff, barcode camera, OCR camera, or safe-area QA.
 - 2026-07-07: Codex in-app browser E2E at 320 x 568 covers shared `Sheet`
   safe-area and hidden-backdrop behavior. `/shelf/no-match` exposes one modal
   dialog, a 48 px Close action, no sub-44 exposed controls, a hidden 12 px

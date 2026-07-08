@@ -1,0 +1,69 @@
+{
+  "bodyText": "x\ntorch\nCamera permission is needed for barcode scanning.\nYou can still search, scan the label path, or add by hand.\nOpen settings\nScan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app.\n=\nScan ingredient label\nReview editable OCR\nS\nSearch catalog\nUse reviewed matches\n+\nAdd it by hand\nAlways works offline",
+  "buttons": [
+    {
+      "height": 48,
+      "href": null,
+      "role": "button",
+      "text": "x",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "height": 48,
+      "href": null,
+      "role": "button",
+      "text": "Open settings",
+      "visible": true,
+      "width": 139,
+      "x": 91,
+      "y": 163
+    },
+    {
+      "height": 76,
+      "href": null,
+      "role": "button",
+      "text": "=Scan ingredient labelReview editable OCR",
+      "visible": true,
+      "width": 280,
+      "x": 20,
+      "y": 297
+    },
+    {
+      "height": 76,
+      "href": null,
+      "role": "button",
+      "text": "SSearch catalogUse reviewed matches",
+      "visible": true,
+      "width": 280,
+      "x": 20,
+      "y": 383
+    },
+    {
+      "height": 76,
+      "href": null,
+      "role": "button",
+      "text": "+Add it by handAlways works offline",
+      "visible": true,
+      "width": 280,
+      "x": 20,
+      "y": 469
+    }
+  ],
+  "hasAllowCamera": false,
+  "hasCameraPermissionCopy": true,
+  "hasManual": true,
+  "hasOpenSettings": true,
+  "hasRawFixture": false,
+  "hasScanIngredientLabel": true,
+  "hasSearchCatalog": true,
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8147/shelf/scan?e2e=shelf-camera-permission-denied",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

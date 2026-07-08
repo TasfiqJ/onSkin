@@ -27,6 +27,13 @@ function devShelfOcrCaptureFailureMode(): 'once' | null {
   return process.env.EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE === 'once' ? 'once' : null;
 }
 
+function devShelfCameraPermissionMode(): 'denied_no_retry' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION === 'denied_no_retry'
+    ? 'denied_no_retry'
+    : null;
+}
+
 function primaryTag(token: ParsedIngredientToken): string {
   return token.tags[0] ? tagLabel(token.tags[0]) : 'Review';
 }
@@ -38,6 +45,7 @@ export default function OcrScreen() {
   const [state, setState] = useState<CaptureState>('camera');
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [labelCaptureFailed, setLabelCaptureFailed] = useState(false);
+  const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const [capturedUri, setCapturedUri] = useState<string | null>(null);
   const [rawText, setRawText] = useState('');
   const [simulateCaptureFailureOnce, setSimulateCaptureFailureOnce] = useState(
@@ -45,8 +53,16 @@ export default function OcrScreen() {
   );
   const { update } = useIntake();
 
+  const cameraPermissionMode = devShelfCameraPermissionMode();
+  const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
   const cameraEnabled = env.nativeCameraEnabled && Platform.OS !== 'web';
-  const canShowCamera = cameraEnabled && Boolean(permission?.granted) && !cameraUnavailable;
+  const permissionGranted = forceDeniedCameraPermission ? false : Boolean(permission?.granted);
+  const canAskCameraPermission = forceDeniedCameraPermission
+    ? false
+    : (permission?.canAskAgain ?? true);
+  const canShowPermissionRecovery =
+    !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
+  const canShowCamera = cameraEnabled && permissionGranted && !cameraUnavailable;
   const canAttemptCapture = canShowCamera || simulateCaptureFailureOnce;
   const parsed = useMemo(() => parseIngredientText(rawText), [rawText]);
   const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
@@ -97,6 +113,23 @@ export default function OcrScreen() {
     });
     if (capturedUri) void FileSystem.deleteAsync(capturedUri, { idempotent: true });
     router.replace('/shelf/manual');
+  };
+
+  const requestCameraAccess = () => {
+    haptics.select();
+    setSettingsOpenFailed(false);
+    void requestPermission();
+  };
+
+  const openShelfCameraSettings = async () => {
+    haptics.select();
+    setSettingsOpenFailed(false);
+    const opened = await openAppSettings({
+      failureTitle: CAMERA_FAILURE_COPY.shelfSettingsTitle,
+      failureMessage: CAMERA_FAILURE_COPY.shelfSettingsBody,
+      alertOnFailure: false,
+    });
+    if (!opened) setSettingsOpenFailed(true);
   };
 
   return (
@@ -165,27 +198,49 @@ export default function OcrScreen() {
                   ? CAMERA_FAILURE_COPY.labelUnavailableBody
                   : 'Camera permission lets you keep the label beside the editable text. Manual entry still works.'}
               </Text>
-              {cameraEnabled && permission && !permission.granted ? (
+              {canShowPermissionRecovery ? (
                 <Pressable
                   accessibilityRole="button"
                   onPress={
-                    permission.canAskAgain
-                      ? () => void requestPermission()
-                      : () => void openAppSettings()
+                    canAskCameraPermission ? requestCameraAccess : () => void openShelfCameraSettings()
                   }
-                  className="mt-5 rounded-pill bg-paper px-5 py-3"
+                  className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                 >
                   <Text className="font-sans-semibold text-night">
-                    {permission.canAskAgain ? 'Allow camera' : 'Open settings'}
+                    {canAskCameraPermission ? 'Allow camera' : 'Open settings'}
                   </Text>
                 </Pressable>
               ) : null}
+              {settingsOpenFailed ? (
+                <View
+                  accessibilityRole="alert"
+                  className="mt-4 w-full rounded-[14px] p-3.5"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'rgba(217,161,131,0.45)',
+                    backgroundColor: 'rgba(217,161,131,0.14)',
+                  }}
+                >
+                  <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+                    {CAMERA_FAILURE_COPY.shelfSettingsTitle}
+                  </Text>
+                  <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+                    {CAMERA_FAILURE_COPY.shelfSettingsBody}
+                  </Text>
+                </View>
+              ) : null}
             </View>
           )}
-          <View
-            className="absolute left-5 right-5 top-[64px] h-[96px] rounded-[10px]"
-            style={{ pointerEvents: 'none', borderWidth: 2, borderColor: 'rgba(217,161,131,0.65)' }}
-          />
+          {canShowCamera || capturedUri ? (
+            <View
+              className="absolute left-5 right-5 top-[64px] h-[96px] rounded-[10px]"
+              style={{
+                pointerEvents: 'none',
+                borderWidth: 2,
+                borderColor: 'rgba(217,161,131,0.65)',
+              }}
+            />
+          ) : null}
         </View>
 
         {state === 'review' && (labelCaptureFailed || cameraUnavailable) ? (

@@ -6,6 +6,9 @@ export const CAMERA_FAILURE_COPY = {
   progressCaptureBody: 'Try again in a moment. Your timeline is unchanged.',
   progressSettingsTitle: 'Camera settings unavailable',
   progressSettingsBody: 'Open Settings manually to enable camera access. Your timeline is unchanged.',
+  shelfSettingsTitle: 'Camera settings unavailable',
+  shelfSettingsBody:
+    'Open Settings manually to enable camera access. Search, label scan, and manual add still work.',
   labelUnavailableTitle: "Camera couldn't start",
   labelUnavailableBody: 'Use manual text for now. You can still type or paste the ingredient list.',
   labelCaptureTitle: "Label wasn't captured",

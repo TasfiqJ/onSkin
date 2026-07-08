@@ -1,0 +1,37 @@
+{
+  "bodyText": "<\nRead the label\nCapture the ingredient panel\nUse the editable text below to keep adding this product.\nOn-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below.\nEDITABLE LABEL TEXT\nParser confidence: 83%. Low-confidence tokens stay visible for review.\nPARSED ACTIVES\n✓\nNiacinamide\nNiacinamide\nLooks right. Continue",
+  "buttons": [
+    {
+      "height": 48,
+      "text": "<",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "height": 56,
+      "text": "Looks right. Continue",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 513
+    }
+  ],
+  "hasEditableLabelText": false,
+  "hasLooksRight": true,
+  "hasNiacinamide": true,
+  "inputs": [
+    {
+      "ariaLabel": "Ingredient label text",
+      "height": 132,
+      "value": "Aqua, Glycerin, Niacinamide",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 286
+    }
+  ],
+  "overflowX": 0,
+  "url": "http://localhost:8147/shelf/ocr?e2e=shelf-camera-permission-denied"
+}

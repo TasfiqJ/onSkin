@@ -247,6 +247,18 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('subtitle="Review editable OCR"');
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
+    expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION');
+    expect(source).toContain("devShelfCameraPermissionMode(): 'denied_no_retry' | null");
+    expect(source).toContain('const [settingsOpenFailed, setSettingsOpenFailed] = useState(false)');
+    expect(source).toContain('setSettingsOpenFailed(true)');
+    expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');
+    expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsBody');
+    expect(source).toContain('alertOnFailure: false');
+    expect(source).toContain('canShowPermissionRecovery');
+    expect(source).toContain('canAskCameraPermission');
+    expect(source).toContain(
+      'min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3',
+    );
     expect(source).not.toContain('title="Capture the ingredient label"');
     expect(source).not.toContain(
       '<View\n              className="absolute left-8 right-8 top-[118px] h-28 rounded-[18px]"',
@@ -368,14 +380,26 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/ocr.tsx');
 
     expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_OCR_CAPTURE_FAILURE');
+    expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION');
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(source).toContain("new Error('E2E_SHELF_OCR_CAPTURE_FAILURE')");
     expect(source).toContain('const [labelCaptureFailed, setLabelCaptureFailed] = useState(false)');
+    expect(source).toContain('const [settingsOpenFailed, setSettingsOpenFailed] = useState(false)');
     expect(source).toContain('setLabelCaptureFailed(true)');
+    expect(source).toContain('setSettingsOpenFailed(true)');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('CAMERA_FAILURE_COPY.labelCaptureTitle');
     expect(source).toContain('CAMERA_FAILURE_COPY.labelCaptureBody');
+    expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');
+    expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsBody');
     expect(source).toContain('Try label photo again');
+    expect(source).toContain('alertOnFailure: false');
+    expect(source).toContain('canShowPermissionRecovery');
+    expect(source).toContain('canAskCameraPermission');
+    expect(source).toContain(
+      'min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3',
+    );
+    expect(source).toContain('{canShowCamera || capturedUri ? (');
     expect(source).toContain("contentContainerClassName={state === 'review' ? 'pb-24' : 'pb-5'}");
     expect(source).toContain("{state === 'review' ? (");
     expect(source).toMatch(/\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/);

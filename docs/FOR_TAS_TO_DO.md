@@ -123,6 +123,13 @@ Status: needs-device-verification
   like `iPhone model / iOS version`, local build notes, pending IDs, and
   placeholder signoff names are rejected by `phase5:qa-packet:strict`.
 - Verify barcode scan, label capture/manual fallback, progress photo capture, encrypted photo save/restart/delete, notifications, share sheet, RevenueCat sandbox smoke, Sentry native smoke, and Supabase catalog calls.
+- Verify Shelf scan/OCR camera permission recovery on physical iOS and Android:
+  deny camera permission, select "Don't ask again" / OS equivalent where
+  available, tap Open Settings, confirm the real Settings handoff works, and
+  record the behavior if the OS refuses to open Settings. The 2026-07-08 Expo
+  web fixture proves inline app recovery for denied/no-retry plus failed
+  Settings handoff, but it cannot prove native permission sheets or
+  `Linking.openSettings()` success.
 - Verify Shelf OCR label capture recovery on physical iOS and Android:
   permission denied, camera mount failure, real `takePictureAsync` rejection,
   retry, and manual text continuation must stay inline/route-owned with no
