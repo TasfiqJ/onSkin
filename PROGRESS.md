@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed shortest-phone paywall compliance reachability at 320 x 480. Direct
+  `/progress/capture` and `/progress/review` now receive the compact
+  photo-timeline paywall treatment instead of pushing Terms, Privacy, and
+  Restore below the first viewport, and compact lifecycle paywalls
+  `/paywall/reoffer`, `/paywall/downgrade`, and `/paywall/winback` now render
+  the shared compliance row inside the visible fixed action footer. Codex
+  in-app browser E2E verifies all five routes have visible Terms, Privacy, and
+  Restore controls with clean center hit-tests, no sub-44 controls, no visible
+  clipped controls, zero horizontal overflow, and no dialogs. Evidence and bug
+  report:
+  `test-results/human-e2e/2026-07-08/short-phone-480-paywall-compliance-final/`,
+  `docs/e2e-bug-reports/2026-07-08-paywall-compliance-short-phone-480.md`.
+
 - Added current app-surface evidence for the onboarding notification soft-ask
   skip branch. Codex in-app browser Expo web at 320 x 568 verifies
   `/onboarding/notifications` shows the calm soft ask, `Not now` continues to

@@ -1,0 +1,181 @@
+{
+  "bottomZoneControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "clippedControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controlCount": 6,
+  "controls": [
+    {
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 391.85379219055176
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Start free trial",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 1,
+      "label": "Start free trial",
+      "rect": {
+        "bottom": 416.8537940979004,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 366.8537902832031,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 454.81647300720215
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "No credit card. See your routine work, then decide.",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 2,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "bottom": 484.78461837768555,
+        "height": 59.9362907409668,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 424.84832763671875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": true,
+      "hitLabel": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "hitTag": "button",
+      "inBottom96": true,
+      "index": 3,
+      "label": "Terms",
+      "rect": {
+        "bottom": 532.7821807861328,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 484.78460693359375,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": true,
+      "hitLabel": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "hitTag": "button",
+      "inBottom96": true,
+      "index": 4,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 532.7821807861328,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 484.78460693359375,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": true,
+      "hitLabel": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "hitTag": "button",
+      "inBottom96": true,
+      "index": 5,
+      "label": "Restore",
+      "rect": {
+        "bottom": 532.7821807861328,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 484.78460693359375,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/progress/review",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+  "jsDialog": null
+}

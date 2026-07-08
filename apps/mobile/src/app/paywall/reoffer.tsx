@@ -195,7 +195,7 @@ export default function ReofferScreen() {
             {unavailableReason}
           </Text>
         ) : null}
-        <ComplianceRow />
+        {compactPaywall ? null : <ComplianceRow />}
       </ScrollView>
       <View className={compactPaywall ? 'gap-2.5 pb-8' : 'gap-2.5 pb-2'}>
         {compactPaywall ? renderPriceSummary(true) : null}
@@ -209,6 +209,7 @@ export default function ReofferScreen() {
             {unavailableReason}
           </Text>
         ) : null}
+        {compactPaywall ? <ComplianceRow /> : null}
         <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
         <Pressable
           accessibilityRole="button"

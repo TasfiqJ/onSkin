@@ -1,0 +1,378 @@
+{
+  "bottomZoneControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "clippedControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "controlCount": 14,
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 94.35679626464844,
+        "y": 249.93933868408203
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Fragrance-free",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "label": "Fragrance-free",
+      "rect": {
+        "bottom": 273.93812561035156,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 164.71480560302734,
+        "top": 225.9405517578125,
+        "width": 140.7160186767578
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 211.56705856323242,
+        "y": 249.93933868408203
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Vegan",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "label": "Vegan",
+      "rect": {
+        "bottom": 273.93812561035156,
+        "height": 47.99757385253906,
+        "left": 172.7093505859375,
+        "right": 250.42476654052734,
+        "top": 225.9405517578125,
+        "width": 77.71541595458984
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 84.83768463134766,
+        "y": 305.93143463134766
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Cruelty-free",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 3,
+      "label": "Cruelty-free",
+      "rect": {
+        "bottom": 329.9302215576172,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 145.67658233642578,
+        "top": 281.9326477050781,
+        "width": 121.67779541015625
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 105.8479995727539,
+        "y": 361.9235610961914
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Non-comedogenic",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "label": "Non-comedogenic",
+      "rect": {
+        "bottom": 385.92234802246094,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 187.69721221923828,
+        "top": 337.9247741699219,
+        "width": 163.69842529296875
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 82.60770797729492,
+        "y": 417.91568756103516
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Sustainable",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 5,
+      "label": "Sustainable",
+      "rect": {
+        "bottom": 441.9144744873047,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 141.2166290283203,
+        "top": 393.9169006347656,
+        "width": 117.21784210205078
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 66.73240661621094,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 6,
+      "label": "Drugstore",
+      "rect": {
+        "bottom": 533.9047698974609,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 109.46602630615234,
+        "top": 485.9071960449219,
+        "width": 85.46723937988281
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 7,
+      "label": "Mid-range",
+      "rect": {
+        "bottom": 533.9047698974609,
+        "height": 47.99757385253906,
+        "left": 117.46056365966797,
+        "right": 202.92780303955078,
+        "top": 485.9071960449219,
+        "width": 85.46723937988281
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 253.65595245361328,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 8,
+      "label": "Premium",
+      "rect": {
+        "bottom": 533.9047698974609,
+        "height": 47.99757385253906,
+        "left": 210.92233276367188,
+        "right": 296.3895721435547,
+        "top": 485.9071960449219,
+        "width": 85.46723937988281
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 9,
+      "label": "Gel",
+      "rect": {
+        "bottom": 625.8950347900391,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 577.8974609375,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 112.50758743286133,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 10,
+      "label": "Cream",
+      "rect": {
+        "bottom": 625.8950347900391,
+        "height": 47.99757385253906,
+        "left": 79.99089813232422,
+        "right": 145.02427673339844,
+        "top": 577.8974609375,
+        "width": 65.03337860107422
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 180.2943000793457,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 11,
+      "label": "Fluid",
+      "rect": {
+        "bottom": 625.8950347900391,
+        "height": 47.99757385253906,
+        "left": 153.01881408691406,
+        "right": 207.56978607177734,
+        "top": 577.8974609375,
+        "width": 54.55097198486328
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 243.15080070495605,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 12,
+      "label": "Balm",
+      "rect": {
+        "bottom": 625.8950347900391,
+        "height": 47.99757385253906,
+        "left": 215.5643310546875,
+        "right": 270.7372703552246,
+        "top": 577.8974609375,
+        "width": 55.17293930053711
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 480
+      },
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Recommendation preferencesThese shape what fits you. They never change what sells.VALUESFragrance-freeVeganCruelty-freeNon-comedogenicSustai",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 13,
+      "label": "Oil",
+      "rect": {
+        "bottom": 681.8871612548828,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 633.8895874023438,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/recommendations/preferences",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "jsDialog": null
+}

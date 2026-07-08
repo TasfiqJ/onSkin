@@ -146,9 +146,10 @@ export default function WinbackScreen() {
             ) : null}
           </View>
         </View>
-        <ComplianceRow tone="dark" />
+        {compactPaywall ? null : <ComplianceRow tone="dark" />}
       </ScrollView>
       <View className="gap-2.5" style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}>
+        {compactPaywall ? <ComplianceRow tone="dark" /> : null}
         {!canWinBack ? (
           <Text
             variant="label"

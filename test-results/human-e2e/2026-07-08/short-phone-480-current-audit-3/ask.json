@@ -1,0 +1,145 @@
+{
+  "bottomZoneControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "clippedControls": [],
+  "controlCount": 5,
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Back | <",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 213.98665618896484
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Is there a conflict on my shelf?",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "label": "Is there a conflict on my shelf?›",
+      "rect": {
+        "bottom": 237.98544311523438,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 189.9878692626953,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 267.9763412475586
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "What should I do tonight?",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "label": "What should I do tonight?›",
+      "rect": {
+        "bottom": 291.9751281738281,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 243.97755432128906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 131.19691467285156,
+        "y": 385.61893463134766
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Ask a question about your shelf | Ask about your shelf…",
+      "hitTag": "input",
+      "inBottom96": true,
+      "index": 3,
+      "label": "Ask a question about your shelf | Ask about your shelf…",
+      "rect": {
+        "bottom": 409.6177215576172,
+        "height": 47.99757385253906,
+        "left": 38.95631408691406,
+        "right": 223.43751525878906,
+        "top": 361.6201477050781,
+        "width": 184.481201171875
+      },
+      "role": "",
+      "tag": "input",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 257.43326568603516,
+        "y": 385.61893463134766
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "↑",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "label": "Send | ↑",
+      "rect": {
+        "bottom": 409.6177215576172,
+        "height": 47.99757385253906,
+        "left": 233.43447875976562,
+        "right": 281.4320526123047,
+        "top": 361.6201477050781,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/ask",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "jsDialog": null
+}

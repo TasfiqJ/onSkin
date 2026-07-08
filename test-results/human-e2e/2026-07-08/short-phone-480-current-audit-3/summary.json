@@ -1,0 +1,240 @@
+[
+  {
+    "route": "/progress/capture",
+    "href": "http://localhost:8184/progress/capture",
+    "text": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is un",
+    "controlCount": 6,
+    "hitBlocked": [
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "bottomZoneControls": [
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\progress-capture.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\progress-capture.json"
+  },
+  {
+    "route": "/progress/review",
+    "href": "http://localhost:8184/progress/review",
+    "text": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is un",
+    "controlCount": 6,
+    "hitBlocked": [
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [
+      {},
+      {},
+      {},
+      {}
+    ],
+    "bottomZoneControls": [
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\progress-review.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\progress-review.json"
+  },
+  {
+    "route": "/paywall/winback",
+    "href": "http://localhost:8184/paywall/winback",
+    "text": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-",
+    "controlCount": 5,
+    "hitBlocked": [
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [],
+    "bottomZoneControls": [
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\paywall-winback.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\paywall-winback.json"
+  },
+  {
+    "route": "/paywall/reoffer",
+    "href": "http://localhost:8184/paywall/reoffer",
+    "text": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your ",
+    "controlCount": 5,
+    "hitBlocked": [
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [],
+    "bottomZoneControls": [
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\paywall-reoffer.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\paywall-reoffer.json"
+  },
+  {
+    "route": "/paywall/downgrade",
+    "href": "http://localhost:8184/paywall/downgrade",
+    "text": "Pro ended · you’re on the free plan Everything you made is still here. Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up. ",
+    "controlCount": 5,
+    "hitBlocked": [
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [
+      {},
+      {},
+      {}
+    ],
+    "bottomZoneControls": [
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\paywall-downgrade.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\paywall-downgrade.json"
+  },
+  {
+    "route": "/recommendations/preferences",
+    "href": "http://localhost:8184/recommendations/preferences",
+    "text": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream ",
+    "controlCount": 14,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "bottomZoneControls": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\recommendations-preferences.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\recommendations-preferences.json"
+  },
+  {
+    "route": "/settings/privacy",
+    "href": "http://localhost:8184/you?section=privacy",
+    "text": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommend",
+    "controlCount": 29,
+    "hitBlocked": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "under44": [],
+    "clippedControls": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "bottomZoneControls": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\settings-privacy.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\settings-privacy.json"
+  },
+  {
+    "route": "/shelf/manual",
+    "href": "http://localhost:8184/shelf/manual",
+    "text": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You c",
+    "controlCount": 6,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [],
+    "bottomZoneControls": [
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\shelf-manual.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\shelf-manual.json"
+  },
+  {
+    "route": "/ask",
+    "href": "http://localhost:8184/ask",
+    "text": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › Wha",
+    "controlCount": 5,
+    "hitBlocked": [],
+    "under44": [],
+    "clippedControls": [],
+    "bottomZoneControls": [
+      {},
+      {}
+    ],
+    "horizontalOverflow": [],
+    "jsDialog": null,
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\ask.png",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\short-phone-480-current-audit-3\\ask.json"
+  }
+]

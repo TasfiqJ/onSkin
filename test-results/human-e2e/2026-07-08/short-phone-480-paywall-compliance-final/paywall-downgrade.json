@@ -1,0 +1,165 @@
+{
+  "clippedControls": [],
+  "controls": [
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 258.6013412475586
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Terms",
+      "rect": {
+        "bottom": 282.6001281738281,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 234.60255432128906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 258.6013412475586
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 282.6001281738281,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 234.60255432128906,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 258.6013412475586
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "label": "Restore",
+      "rect": {
+        "bottom": 282.6001281738281,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 234.60255432128906,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 363.5998249053955
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Renew Pro",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "label": "Renew Pro",
+      "rect": {
+        "bottom": 390.594669342041,
+        "height": 53.989688873291016,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 336.60498046875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 424.5904312133789
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Keep using free",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "label": "Keep using free",
+      "rect": {
+        "bottom": 448.58921813964844,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 400.5916442871094,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/paywall/downgrade",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleCompliance": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "label": "Terms",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "label": "Privacy",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "label": "Restore",
+      "rect": "[Circular]"
+    }
+  ],
+  "visibleText": "Pro ended · you’re on the free plan Everything you made is still here. Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up. ✓ Your routine & cycle. Kept ✓ Your photos. On your phone ✓ Your shelf & streak. Kept On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do. Terms · Privacy · Restore Store checkout is unavailable in this preview. You can keep exploring. Renew Pro Keep using free",
+  "jsDialog": null
+}

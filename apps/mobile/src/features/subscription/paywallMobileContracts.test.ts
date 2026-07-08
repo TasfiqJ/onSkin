@@ -112,13 +112,13 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const compactPaywall = height < 640');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(proGate).toContain(
-      'paddingBottom: compactTabbedPhotoPaywall ? 144 : compactPaywall ? 112 : 24',
+      'paddingBottom: compactProgressPhotoPaywall ? 144 : compactPaywall ? 112 : 24',
     );
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
 
-  it('keeps compact Progress-tab paywall compliance clear of the floating tab bar', () => {
+  it('keeps compact Progress photo paywall compliance clear of fixed chrome', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const flowTree = readFileSync(`${REPO_DIR}/docs/USER_FLOW_TREE.md`, 'utf8');
 
@@ -130,21 +130,20 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('if (!isFocused) return null;');
     expect(proGate).toContain('const pathname = usePathname();');
+    expect(proGate).toContain('const insideProgressPhotoPaywall =');
+    expect(proGate).toContain("feature === 'photo_timeline' && pathname.startsWith('/progress');");
     expect(proGate).toContain(
-      "const insideTabbedPhotoPaywall = pathname === '/progress' && feature === 'photo_timeline';",
-    );
-    expect(proGate).toContain(
-      'const compactTabbedPhotoPaywall = compactPaywall && insideTabbedPhotoPaywall;',
+      'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
     );
     expect(proGate).not.toContain('compactComplianceSpacer');
     expect(proGate).not.toContain('height: compactComplianceSpacer');
     expect(proGate).toContain(
-      'paddingTop: compactTabbedPhotoPaywall ? 0 : compactPaywall ? 4 : 0,',
+      'paddingTop: compactProgressPhotoPaywall ? 0 : compactPaywall ? 4 : 0,',
     );
     expect(proGate).toContain(
-      'paddingBottom: compactTabbedPhotoPaywall ? 144 : compactPaywall ? 112 : 24,',
+      'paddingBottom: compactProgressPhotoPaywall ? 144 : compactPaywall ? 112 : 24,',
     );
-    expect(proGate).toContain('{compactTabbedPhotoPaywall ? null : (');
+    expect(proGate).toContain('{compactProgressPhotoPaywall ? null : (');
     expect(proGate).toContain(
       "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
@@ -339,6 +338,19 @@ describe('paywall mobile contracts', () => {
     expect(winback, 'dark win-back paywall should render readable compliance controls').toContain(
       '<ComplianceRow tone="dark" />',
     );
+  });
+
+  it('keeps compact lifecycle paywall compliance in the visible action footer', () => {
+    const reoffer = readAppRoute('paywall/reoffer.tsx');
+    const downgrade = readAppRoute('paywall/downgrade.tsx');
+    const winback = readAppRoute('paywall/winback.tsx');
+
+    expect(reoffer).toContain('{compactPaywall ? null : <ComplianceRow />}');
+    expect(reoffer).toContain('{compactPaywall ? <ComplianceRow /> : null}');
+    expect(downgrade).toContain('{compactPaywall ? null : <ComplianceRow />}');
+    expect(downgrade).toContain('{compactPaywall ? <ComplianceRow /> : null}');
+    expect(winback).toContain('{compactPaywall ? null : <ComplianceRow tone="dark" />}');
+    expect(winback).toContain('{compactPaywall ? <ComplianceRow tone="dark" /> : null}');
   });
 
   it('keeps lifecycle paywalls explicit when store pricing disables purchase', () => {

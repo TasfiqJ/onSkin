@@ -1,0 +1,165 @@
+{
+  "clippedControls": [],
+  "controls": [
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 248.60437774658203
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Terms",
+      "rect": {
+        "bottom": 272.60316467285156,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 224.6055908203125,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 248.60437774658203
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 272.60316467285156,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 224.6055908203125,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 248.60437774658203
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "label": "Restore",
+      "rect": {
+        "bottom": 272.60316467285156,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 224.6055908203125,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 379.604097366333
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "See current Pro plan",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "label": "See current Pro plan",
+      "rect": {
+        "bottom": 406.5989418029785,
+        "height": 53.989688873291016,
+        "left": 29.99090003967285,
+        "right": 290.3974552154541,
+        "top": 352.6092529296875,
+        "width": 260.40655517578125
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 440.5946731567383
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "No thanks",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "label": "No thanks",
+      "rect": {
+        "bottom": 464.5934600830078,
+        "height": 47.99757385253906,
+        "left": 29.99090003967285,
+        "right": 290.3974552154541,
+        "top": 416.59588623046875,
+        "width": 260.40655517578125
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/paywall/winback",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleCompliance": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "label": "Terms",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "label": "Privacy",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "label": "Restore",
+      "rect": "[Circular]"
+    }
+  ],
+  "visibleText": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+  "jsDialog": null
+}

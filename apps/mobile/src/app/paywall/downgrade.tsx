@@ -77,9 +77,10 @@ export default function DowngradeScreen() {
         <Text variant="bodySm" tone="muted" className="mt-4" style={{ lineHeight: 19 }}>
           {PAYWALL_COPY.downgrade.floorNote}
         </Text>
-        <ComplianceRow />
+        {compactPaywall ? null : <ComplianceRow />}
       </ScrollView>
       <View className={compactPaywall ? 'gap-2.5 pb-8' : 'gap-3 pb-2'}>
+        {compactPaywall ? <ComplianceRow /> : null}
         {offering.data?.status && offering.data.status !== 'available' ? (
           <Text
             variant="bodySm"

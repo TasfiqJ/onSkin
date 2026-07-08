@@ -1,0 +1,165 @@
+{
+  "clippedControls": [],
+  "controls": [
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 302.6092300415039
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "label": "Terms",
+      "rect": {
+        "bottom": 326.60801696777344,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 278.6104431152344,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 302.6092300415039
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 326.60801696777344,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 278.6104431152344,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 302.6092300415039
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 2,
+      "label": "Restore",
+      "rect": {
+        "bottom": 326.60801696777344,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 278.6104431152344,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 363.5998249053955
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Keep my full routine",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "label": "Keep my full routine",
+      "rect": {
+        "bottom": 390.594669342041,
+        "height": 53.989688873291016,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 336.60498046875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 424.5904312133789
+      },
+      "centerInsideViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Continue on free",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 4,
+      "label": "Continue on free",
+      "rect": {
+        "bottom": 448.58921813964844,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 400.5916442871094,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8184/paywall/reoffer",
+  "scroll": {
+    "bodyHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleCompliance": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "label": "Terms",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "label": "Privacy",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "label": "Restore",
+      "rect": "[Circular]"
+    }
+  ],
+  "visibleText": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Terms · Privacy · Restore Keep my full routine Continue on free",
+  "jsDialog": null
+}
