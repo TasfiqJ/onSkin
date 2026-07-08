@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T19:19:20.369Z",
+  "generatedAt": "2026-07-08T21:21:10.500Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "adbf74640fece7374590988afbf7211a97422d96",
+  "gitSha": "c3ad652bea5e4ea05a1c9ea1885eb362069c8dd5",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -82,8 +82,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 11474,
-      "sha256": "e28da6891b2a246560edf0e39d2a19af46c154d892d9febadeea4204cae14212"
+      "bytes": 12147,
+      "sha256": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -118,8 +118,20 @@
     {
       "path": "apps/mobile/src/app/paywall/upsell.tsx",
       "exists": true,
-      "bytes": 7238,
-      "sha256": "ac7f68cab670ff75a647ee6c8e6499337bd32c60fee189e82a78c63ff7edd859"
+      "bytes": 8330,
+      "sha256": "6297af79efae06dc856f296673c3874c10dece1c379b7837ced7ee066fe3ccfa"
+    },
+    {
+      "path": "apps/mobile/src/app/paywall/reoffer.tsx",
+      "exists": true,
+      "bytes": 8582,
+      "sha256": "36a975b664a43be6713d55746414245aa9f643fc04b66ce8b33765c98db865a6"
+    },
+    {
+      "path": "apps/mobile/src/app/paywall/downgrade.tsx",
+      "exists": true,
+      "bytes": 5065,
+      "sha256": "7804127ff434bac6b0c44c7c5f5e39653a8466c927663fe16121a149ec3b356d"
     },
     {
       "path": "apps/mobile/src/app/paywall/winback.tsx",
@@ -164,6 +176,24 @@
       "sha256": "a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02"
     },
     {
+      "path": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
+      "exists": true,
+      "bytes": 26899,
+      "sha256": "c549c9c75cf8170deb383a1a896903a0f590a46c00118c16c322b8014effb954"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/store.test.ts",
+      "exists": true,
+      "bytes": 9423,
+      "sha256": "0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/entitlement.test.ts",
+      "exists": true,
+      "bytes": 3513,
+      "sha256": "9eacdfb4685fc9a11faa2b65c2becc33f3b3ea7a5b429357f457fb83c2535ed6"
+    },
+    {
       "path": "apps/mobile/src/features/subscription/serverContracts.test.ts",
       "exists": true,
       "bytes": 3019,
@@ -172,20 +202,26 @@
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
       "exists": true,
-      "bytes": 13864,
-      "sha256": "758b94539937e13eb8a13111bf54879d7f6ef484bd7e081d5d6424cfad83c296"
+      "bytes": 14388,
+      "sha256": "6af224fd802aab6b89052093fb17a2b769b01cad126bfb01bec1ac715112c1ef"
     },
     {
       "path": "scripts/phase6/check-payments-env.mjs",
       "exists": true,
-      "bytes": 9189,
-      "sha256": "c06e92d7c35808545c9e1cd72bd7dd5846d1dc8ad33854be783e30fa54d62ce1"
+      "bytes": 10163,
+      "sha256": "4413f6bf9f823cdb72d0f62bf9659737ae696f99f263677856e60d7e7e9a9009"
     },
     {
       "path": "scripts/phase6/check-payments-env-smoke.mjs",
       "exists": true,
-      "bytes": 8751,
-      "sha256": "2f5d3e43dcf43bc3acff647f87d6d80a0f0478add183fc944ba0cb9737728c7e"
+      "bytes": 10114,
+      "sha256": "df4ee4543c815fe726c52ef092caac9e2e56638ac7b1c94b38971f43cee7fe7a"
+    },
+    {
+      "path": "scripts/e2e/human-e2e-manifest.mjs",
+      "exists": true,
+      "bytes": 11741,
+      "sha256": "7bc0332cc266cf02137dc1811e44e638b0a8c73cbdc48e30b41f13a6a13dbad8"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -194,22 +230,52 @@
       "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
     },
     {
+      "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+      "exists": true,
+      "bytes": 9642,
+      "sha256": "e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29"
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "exists": true,
+      "bytes": 3387,
+      "sha256": "ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "exists": true,
+      "bytes": 198146,
+      "sha256": "009fc346db13963af5a96ff4db5581a1f33f3044a7598cfdcb10852cb5447072"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.json",
+      "exists": true,
+      "bytes": 3293,
+      "sha256": "41185e566b49d812d3ec6490b5ca2d2e7265465aced87f8a687e7546bb24ad88"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.md",
+      "exists": true,
+      "bytes": 1774,
+      "sha256": "09bab90c22f06dfcd2648865076aab0dbf004c04c3c2321b1fee007391ab44fe"
+    },
+    {
       "path": "docs/phase-6/payments-runbook.md",
       "exists": true,
-      "bytes": 3857,
-      "sha256": "cbd93c2200e4b39d9984a18dd7644171291086982db22969bd62a75d2e3d6660"
+      "bytes": 3957,
+      "sha256": "8a0c61a484cd2e8fd689c93f96efb2b13ab34eb8ca285ffb80aac8c6b7072fa1"
     },
     {
       "path": "docs/phase-6/payments-qa-checklist.md",
       "exists": true,
-      "bytes": 3642,
-      "sha256": "f214635928c28e742eb357182ba3d440625a06881213ca3a3b61544da8958be0"
+      "bytes": 3683,
+      "sha256": "5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291"
     },
     {
       "path": "docs/phase-6/phase-6-exit-review.md",
       "exists": true,
-      "bytes": 2367,
-      "sha256": "6702047baf4028eab3e49d23bc145afbf689f1f3262263b43020cdffcc720cac"
+      "bytes": 2599,
+      "sha256": "4f096a6c3c698ce428400e9eb88518f353358197e55846ba815a4448b9fa1ea8"
     }
   ],
   "blockers": [
