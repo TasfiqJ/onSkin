@@ -1,0 +1,121 @@
+{
+  "capturedAt": "2026-07-08T17:00:20.313Z",
+  "continueVisible": true,
+  "controls": [
+    {
+      "ariaLabel": "Clear skin. Breakouts & congestion",
+      "ariaPressed": "false",
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 178,
+        "height": 60,
+        "width": 130.7,
+        "x": 24,
+        "y": 118
+      },
+      "role": "button",
+      "text": "Clear skinBreakouts & congestion",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Even tone. Dark spots & texture",
+      "ariaPressed": "false",
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 178,
+        "height": 60,
+        "width": 130.7,
+        "x": 160.7,
+        "y": 118
+      },
+      "role": "button",
+      "text": "Even toneDark spots & texture",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Hydration. Tightness & dullness",
+      "ariaPressed": "false",
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 243.9,
+        "height": 60,
+        "width": 130.7,
+        "x": 24,
+        "y": 184
+      },
+      "role": "button",
+      "text": "HydrationTightness & dullness",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Fine lines. Firmness & elasticity",
+      "ariaPressed": "false",
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 243.9,
+        "height": 60,
+        "width": 130.7,
+        "x": 160.7,
+        "y": 184
+      },
+      "role": "button",
+      "text": "Fine linesFirmness & elasticity",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Sensitivity. Stinging & flushing",
+      "ariaPressed": "false",
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 309.9,
+        "height": 60,
+        "width": 130.7,
+        "x": 24,
+        "y": 249.9
+      },
+      "role": "button",
+      "text": "SensitivityStinging & flushing",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Barrier repair. Redness & reactivity",
+      "ariaPressed": "false",
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 309.9,
+        "height": 60,
+        "width": 130.7,
+        "x": 160.7,
+        "y": 249.9
+      },
+      "role": "button",
+      "text": "Barrier repairRedness & reactivity",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "ariaPressed": null,
+      "centerHitSelf": true,
+      "rect": {
+        "bottom": 374.3,
+        "height": 56,
+        "width": 272.4,
+        "x": 24,
+        "y": 318.3
+      },
+      "role": "button",
+      "text": "Continue",
+      "visible": true
+    }
+  ],
+  "goalControlCount": 6,
+  "hasInstruction": true,
+  "hasTitle": true,
+  "horizontalOverflow": 0,
+  "route": "http://localhost:8154/onboarding/goals",
+  "verdict": "pass",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}
