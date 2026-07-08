@@ -117,7 +117,9 @@ Evidence needed:
 
 - Signed review logs in `docs/phase-3/`.
 - Strict Phase 3 audit passing or explicitly accepted with recorded exceptions.
-- File hashes or generated review packets tied to the exact reviewed build.
+- Generated `docs/phase-3/generated/review-packet.md` with `Git status:
+  clean`, current source hashes, and reviewer signoff tied to the exact
+  reviewed build.
 
 ## P1 - Physical Device QA
 

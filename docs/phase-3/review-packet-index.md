@@ -3,7 +3,19 @@
 Status: packet scaffold implemented; reviewer signoff missing  
 Last updated: 2026-07-04
 
-This index tells reviewers what to inspect. The generated manifest from `npm run phase3:review-packet` records hashes and file sizes for auditability.
+This index tells reviewers what to inspect. The generated manifest from
+`npm run phase3:review-packet` records hashes, file sizes, source Git SHA, and
+Git worktree status for auditability. Final reviewer signoff evidence must use
+a generated packet that shows `Git status: clean`; treat `Git status: DIRTY` as
+investigation evidence only.
+
+## Packet Contract
+
+- `package.json`
+- `scripts/phase3/build-review-packet.mjs`
+- `scripts/phase3/audit-copy.mjs`
+- `scripts/phase9/lib.mjs`
+- `docs/phase-3/review-packet-index.md`
 
 ## Legal/Regulatory Packet
 

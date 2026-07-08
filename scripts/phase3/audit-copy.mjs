@@ -124,6 +124,61 @@ function shouldRunClaimCheck(rel, line) {
 const files = scanRoots.flatMap((scanRoot) => walk(resolve(root, scanRoot))).sort();
 const findings = [];
 
+function addContractFinding(message) {
+  findings.push({
+    file: 'scripts/phase3/build-review-packet.mjs',
+    line: 1,
+    id: 'review-packet-contract',
+    severity: 'blocker',
+    match: 'Phase 3 review packet contract',
+    sample: message,
+  });
+}
+
+function checkReviewPacketContract() {
+  const rel = 'scripts/phase3/build-review-packet.mjs';
+  const abs = resolve(root, rel);
+
+  if (!existsSync(abs)) {
+    addContractFinding('Phase 3 review packet builder is missing.');
+    return;
+  }
+
+  const source = readFileSync(abs, 'utf8');
+  if (
+    !/function gitStatusExcludingGeneratedPacket\(\)/.test(source) ||
+    !/review-packet-manifest\.json/.test(source) ||
+    !/review-packet\.md/.test(source) ||
+    !/gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(source)
+  ) {
+    addContractFinding(
+      'Phase 3 review packet must ignore only its own generated outputs when recording Git status.',
+    );
+  }
+  if (
+    !/Phase 3 review packet generated with a dirty Git worktree/.test(source) ||
+    !/Git status: \$\{manifest\.gitStatus \? 'DIRTY' : 'clean'\}/.test(source)
+  ) {
+    addContractFinding(
+      'Phase 3 review packet must warn on dirty worktrees and expose Git status in Markdown.',
+    );
+  }
+
+  for (const file of [
+    'package.json',
+    'scripts/phase3/build-review-packet.mjs',
+    'scripts/phase3/audit-copy.mjs',
+    'scripts/phase9/lib.mjs',
+    'docs/phase-3/review-packet-index.md',
+  ]) {
+    if (!source.includes(`'${file}'`) && !source.includes(`"${file}"`)) {
+      addContractFinding(`Phase 3 review packet must hash ${file}.`);
+    }
+  }
+}
+
+checkReviewPacketContract();
+
 for (const file of files) {
   const rel = relative(root, file).replaceAll('\\', '/');
   const lines = readFileSync(file, 'utf8').split(/\r?\n/);

@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 3 review-packet provenance. Generated reviewer packets now
+  record the source Git SHA, ignore only their own generated packet outputs
+  when checking worktree cleanliness, warn when generated from a dirty tree, and
+  show `Git status: clean` or `DIRTY` in Markdown. The Phase 3 copy audit now
+  enforces that provenance contract and the packet hashes its own builder,
+  audit gate, shared Git helper, root script manifest, and review-packet index
+  before legal/clinical/cosmetic/IP/privacy reviewers sign off.
+
 - Tightened bottom-tab label geometry after the compact-phone tab bar showed
   too little text line-box clearance on current fonts. The floating tab labels
   now use a 17 px line height with a 19 px protected box, and the navigation
