@@ -99,6 +99,7 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('const compactPaywall = height < 640;');
     expect(upsell).toContain('const shortPaywall = height < 600;');
     expect(upsell).toContain('const splitShortPaywall = height < 410;');
+    expect(upsell).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
     expect(upsell).toContain(
       "const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';",
     );
@@ -110,22 +111,28 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('accessibilityLabel="Maybe later"');
     expect(upsell).toContain('glyph="x"');
     expect(upsell).toContain('tone="muted"');
-    expect(upsell).toContain('fontSize: splitShortPaywall ? 24 : shortPaywall ? 27');
-    expect(upsell).toContain('lineHeight: splitShortPaywall ? 27 : shortPaywall ? 30');
-    expect(upsell).toContain('{!splitShortPaywall ? (');
+    expect(upsell).toMatch(/fontSize:\s*narrowShortPaywall\s*\?\s*22/);
+    expect(upsell).toMatch(/lineHeight:\s*narrowShortPaywall\s*\?\s*25/);
+    expect(upsell).toContain('{!narrowShortPaywall ? (');
     expect(upsell).toContain(
       "className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}",
     );
     expect(upsell).toContain('fontSize: shortPaywall ? 14 : undefined');
     expect(upsell).toContain(
-      "shortPaywall\n            ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'",
+      "narrowShortPaywall\n            ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'",
     );
-    expect(upsell).toContain('fontSize: shortPaywall ? 22 : compactPaywall ? 24 : 26');
+    expect(upsell).toContain('{narrowShortPaywall ? null : (');
+    expect(upsell).toContain('adjustsFontSizeToFit={narrowShortPaywall}');
+    expect(upsell).toContain('minimumFontScale={0.82}');
+    expect(upsell).toContain('numberOfLines={narrowShortPaywall ? 1 : undefined}');
+    expect(upsell).toMatch(/fontSize:\s*narrowShortPaywall\s*\?\s*20/);
+    expect(upsell).toMatch(/lineHeight:\s*narrowShortPaywall\s*\?\s*23/);
+    expect(upsell).toContain('{annualDisplay.pricePerMonthLabel && !narrowShortPaywall ? (');
     expect(upsell).toMatch(
       /compactPaywall\s*\?\s*'mt-2 h-\[54px\] items-center justify-center rounded-pill'/,
     );
     expect(upsell).toContain(
-      "shortPaywall\n            ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'",
+      "narrowShortPaywall\n            ? 'mt-1 h-[48px] items-center justify-center rounded-pill'",
     );
     expect(upsell).toContain(
       '{shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
@@ -144,6 +151,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const shortPaywall = height < 600');
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
     expect(proGate).toContain('const microShortPaywall = height < 380;');
+    expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
     expect(proGate).toContain('const splitShortProgressTabPaywall =');
     expect(proGate).toContain(
       "height < 410 && feature === 'photo_timeline' && pathname === '/progress'",
@@ -154,7 +162,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain("? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-0'");
     expect(proGate).toContain("? 'min-h-[96px] items-stretch pt-0'");
     expect(proGate).toContain("? 'h-[48px] self-end justify-center px-2'");
-    expect(proGate).toContain('{splitShortProgressTabPaywall ? (');
+    expect(proGate).toContain('{splitShortProgressTabPaywall || narrowShortPaywall ? (');
     expect(proGate).toContain('accessibilityLabel="Maybe later"');
     expect(proGate).toContain('glyph="x"');
     expect(proGate).toContain('tone="muted"');
@@ -165,22 +173,32 @@ describe('paywall mobile contracts', () => {
       '{headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}',
     );
     expect(proGate).toContain('{headerCompliancePaywall ? null : <ComplianceRow />}');
-    expect(proGate).toContain('fontSize: ultraShortPaywall ? 24');
-    expect(proGate).toContain('lineHeight: ultraShortPaywall ? 27');
-    expect(proGate).toContain('{splitShortProgressTabPaywall || microShortPaywall ? null : (');
+    expect(proGate).toMatch(/fontSize:\s*narrowShortPaywall\s*\?\s*22/);
+    expect(proGate).toMatch(/lineHeight:\s*narrowShortPaywall\s*\?\s*25/);
+    expect(proGate).toContain(
+      '{splitShortProgressTabPaywall || microShortPaywall || narrowShortPaywall ? null : (',
+    );
     expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 2 : undefined}');
-    expect(proGate).toContain(
-      "microShortPaywall\n                ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'",
+    expect(proGate).toMatch(
+      /microShortPaywall\s*\?\s*'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'/,
     );
     expect(proGate).toContain(
-      "microShortPaywall\n                ? 'mt-0 h-[48px] items-center justify-center rounded-pill'",
+      "narrowShortPaywall\n              ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'",
     );
-    expect(proGate).toContain('{annualDisplay.pricePerMonthLabel && !ultraShortPaywall ? (');
+    expect(proGate).toContain('{narrowShortPaywall ? null : (');
+    expect(proGate).toContain('adjustsFontSizeToFit={narrowShortPaywall}');
+    expect(proGate).toContain('numberOfLines={narrowShortPaywall ? 1 : undefined}');
+    expect(proGate).toMatch(
+      /microShortPaywall\s*\?\s*'mt-0 h-\[48px\] items-center justify-center rounded-pill'/,
+    );
+    expect(proGate).toContain(
+      '{annualDisplay.pricePerMonthLabel && !ultraShortPaywall && !narrowShortPaywall ? (',
+    );
     expect(proGate).toContain(
       "ultraShortPaywall\n                ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
     expect(proGate).toContain('{storeUnavailableReason}');
-    expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall ? (');
+    expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
@@ -217,10 +235,11 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('const shortPaywall = height < 600;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');
+    expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
     expect(proGate).toContain(
       "height < 410 && feature === 'photo_timeline' && pathname === '/progress'",
     );
-    expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall ? (');
+    expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (');
     expect(proGate).toContain('{storeUnavailableReason}');
     expect(proGate).not.toContain('compactComplianceSpacer');
     expect(proGate).not.toContain('height: compactComplianceSpacer');

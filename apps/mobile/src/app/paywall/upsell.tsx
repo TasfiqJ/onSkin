@@ -36,6 +36,7 @@ export default function UpsellSheet() {
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const splitShortPaywall = height < 410;
+  const narrowShortPaywall = shortPaywall && width < 360;
 
   function onStartTrial() {
     setActionFeedback(null);
@@ -110,13 +111,29 @@ export default function UpsellSheet() {
       <Text
         variant="title"
         style={{
-          fontSize: splitShortPaywall ? 24 : shortPaywall ? 27 : longCompactTitle ? 24 : 30,
-          lineHeight: splitShortPaywall ? 27 : shortPaywall ? 30 : longCompactTitle ? 27 : 34,
+          fontSize: narrowShortPaywall
+            ? 22
+            : splitShortPaywall
+              ? 24
+              : shortPaywall
+                ? 27
+                : longCompactTitle
+                  ? 24
+                  : 30,
+          lineHeight: narrowShortPaywall
+            ? 25
+            : splitShortPaywall
+              ? 27
+              : shortPaywall
+                ? 30
+                : longCompactTitle
+                  ? 27
+                  : 34,
         }}
       >
         {copy.title}
       </Text>
-      {!splitShortPaywall ? (
+      {!narrowShortPaywall ? (
         <Text
           variant="body"
           tone="muted"
@@ -131,23 +148,30 @@ export default function UpsellSheet() {
       ) : null}
       <View
         className={
-          shortPaywall
-            ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'
-            : compactPaywall
-              ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised p-3'
-              : 'mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+          narrowShortPaywall
+            ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
+            : shortPaywall
+              ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'
+              : compactPaywall
+                ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised p-3'
+                : 'mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
         }
         style={{ borderWidth: 1, borderColor: colors.hairline }}
       >
         <View>
-          <Text variant="bodySm" tone="muted">
-            {annualDisplay.introLabel}
-          </Text>
+          {narrowShortPaywall ? null : (
+            <Text variant="bodySm" tone="muted">
+              {annualDisplay.introLabel}
+            </Text>
+          )}
           <Text
             variant="title"
+            adjustsFontSizeToFit={narrowShortPaywall}
+            minimumFontScale={0.82}
+            numberOfLines={narrowShortPaywall ? 1 : undefined}
             style={{
-              fontSize: shortPaywall ? 22 : compactPaywall ? 24 : 26,
-              lineHeight: shortPaywall ? 25 : compactPaywall ? 28 : 30,
+              fontSize: narrowShortPaywall ? 20 : shortPaywall ? 22 : compactPaywall ? 24 : 26,
+              lineHeight: narrowShortPaywall ? 23 : shortPaywall ? 25 : compactPaywall ? 28 : 30,
             }}
           >
             {annualDisplay.priceLabel}
@@ -158,7 +182,7 @@ export default function UpsellSheet() {
             ) : null}
           </Text>
         </View>
-        {annualDisplay.pricePerMonthLabel ? (
+        {annualDisplay.pricePerMonthLabel && !narrowShortPaywall ? (
           <Text
             adjustsFontSizeToFit
             minimumFontScale={0.86}
@@ -193,11 +217,13 @@ export default function UpsellSheet() {
         disabled={!canPurchase || startTrial.isPending}
         onPress={onStartTrial}
         className={
-          shortPaywall
-            ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'
-            : compactPaywall
-              ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
-              : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+          narrowShortPaywall
+            ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
+            : shortPaywall
+              ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'
+              : compactPaywall
+                ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
+                : 'mt-4 h-[54px] items-center justify-center rounded-pill'
         }
         style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
       >

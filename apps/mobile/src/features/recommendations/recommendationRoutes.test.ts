@@ -74,8 +74,12 @@ describe('Recommendation route contracts', () => {
     );
     expect(source).toContain('ultraShort={ultraShortHub}');
     expect(source).toContain("ultraShort\n          ? 'mb-1.5 rounded-[12px] bg-paper-raised p-2'");
-    expect(source).toContain("ultraShort\n              ? 'h-6 w-6 items-center justify-center rounded-[7px]'");
-    expect(source).toContain("ultraShort\n            ? 'mt-1 flex-row items-start justify-between gap-2 pt-1'");
+    expect(source).toContain(
+      "ultraShort\n              ? 'h-6 w-6 items-center justify-center rounded-[7px]'",
+    );
+    expect(source).toContain(
+      "ultraShort\n            ? 'mt-1 flex-row items-start justify-between gap-2 pt-1'",
+    );
     expect(source).toContain("short\n          ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'");
     expect(source).toContain('style={{ lineHeight: short ? 14 : compact ? 16 : 18 }}');
     expect(source).toContain('lineHeight: short ? 12 : compact ? 13 : 15');
@@ -145,20 +149,24 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");
+    expect(source).toContain("? 'mb-1.5 mt-20'");
+    expect(source).toContain("? 'mb-1.5 mt-28'");
     expect(source).toContain('const chipGroupClassName = shortPreferences');
     expect(source).toContain("? 'flex-row flex-wrap gap-1'");
     expect(source).toContain('const textureSectionLabelClassName = ultraShortPreferences');
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3 py-2'");
     expect(source).toContain('minHeight: ultraDense ? 48 : undefined');
     expect(source).toContain('const textureSectionLabelStyle = ultraShortPreferences');
-    expect(source).toContain("className={textureSectionLabelClassName}");
+    expect(source).toContain('className={textureSectionLabelClassName}');
     expect(source).toContain('style={textureSectionLabelStyle}');
     expect(source).toContain("contentContainerClassName={compactPreferences ? 'pb-24' : 'pb-10'}");
     expect(source).toContain('fill?: boolean');
     expect(source).toContain('dense?: boolean');
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain('paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined');
+    expect(source).toContain(
+      'paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined',
+    );
     expect(source).toContain('fontSize: fill ? 12 : ultraDense ? 12.5 : dense ? 13 : undefined');
     expect(source).toContain('flexGrow: fill ? 1 : undefined');
     expect(source).toContain('minWidth: fill ? 0 : dense ? 48 : undefined');

@@ -31,9 +31,7 @@ const MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS = 3_000;
 
 function devRecommendationPreferenceFailureMode(): 'once' | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
-  return process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE === 'once'
-    ? 'once'
-    : null;
+  return process.env.EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE === 'once' ? 'once' : null;
 }
 
 function devRecommendationPreferenceDelayMs(): number {
@@ -130,23 +128,25 @@ export default function PreferencesScreen() {
     : shortPreferences
       ? 'mb-1.5 mt-3'
       : compactPreferences
-      ? 'mb-2 mt-5'
-      : 'mb-3 mt-7';
+        ? 'mb-2 mt-5'
+        : 'mb-3 mt-7';
   const sectionLabelClassName = splitShortPreferences
     ? 'mb-1.5 mt-20'
     : ultraShortPreferences
-    ? 'mb-1.5 mt-12'
-    : shortPreferences
       ? 'mb-1.5 mt-12'
-      : compactPreferences
-      ? 'mb-2 mt-5'
-      : 'mb-3 mt-7';
+      : shortPreferences
+        ? 'mb-1.5 mt-20'
+        : compactPreferences
+          ? 'mb-2 mt-5'
+          : 'mb-3 mt-7';
   const chipGroupClassName = shortPreferences
     ? 'flex-row flex-wrap gap-1'
     : 'flex-row flex-wrap gap-2';
   const textureSectionLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-7'
-    : sectionLabelClassName;
+    : shortPreferences
+      ? 'mb-1.5 mt-28'
+      : sectionLabelClassName;
   const textureSectionLabelStyle = ultraShortPreferences
     ? { marginBottom: 6, marginTop: 44 }
     : undefined;
@@ -214,14 +214,20 @@ export default function PreferencesScreen() {
       >
         <Text
           variant="title"
-          className={ultraShortPreferences || shortPreferences ? 'mt-1 text-[30px] leading-[32px]' : 'mt-2'}
+          className={
+            ultraShortPreferences || shortPreferences ? 'mt-1 text-[30px] leading-[32px]' : 'mt-2'
+          }
         >
           {REC_COPY.preferences.title}
         </Text>
         <Text
           variant="bodySm"
           tone="muted"
-          className={ultraShortPreferences || shortPreferences ? 'mt-1 text-[12.5px] leading-[16px]' : 'mt-1.5'}
+          className={
+            ultraShortPreferences || shortPreferences
+              ? 'mt-1 text-[12.5px] leading-[16px]'
+              : 'mt-1.5'
+          }
         >
           {REC_COPY.preferences.subtitle}
         </Text>
@@ -296,7 +302,13 @@ export default function PreferencesScreen() {
           ))}
         </View>
 
-        <View className={compactPreferences ? 'mt-7 flex-row items-center justify-center gap-2' : 'mt-9 flex-row items-center justify-center gap-2'}>
+        <View
+          className={
+            compactPreferences
+              ? 'mt-7 flex-row items-center justify-center gap-2'
+              : 'mt-9 flex-row items-center justify-center gap-2'
+          }
+        >
           <Text tone="muted" className="text-[12px]">
             ✦
           </Text>

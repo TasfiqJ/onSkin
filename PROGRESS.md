@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared a harsher 320 x 568 / 140% text-pressure route audit. The sweep first
+  clipped the direct upsell `Start free trial` CTA, then exposed shared ProGate
+  routine paywalls where `Maybe later` overlapped `Restore` and the
+  monthly-equivalent price overflowed, plus Recommendation Preferences chip
+  groups peeking as partial controls. Direct upsell and ProGate now use a
+  320 px narrow-short density tier with icon dismiss, hidden nonessential body
+  copy, hidden monthly-equivalent labels, and tighter one-line price/CTA blocks;
+  Recommendation Preferences moves lower chip groups fully below the first
+  viewport. Focused subscription/recommendation route contracts pass, and the
+  final 49-route sweep reports zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-140-compact-568-clearance.md`.
+
 - Tightened the Tas-owned launch handoff so the exact strict evidence key
   inventory is named directly in `docs/FOR_TAS_TO_DO.md`. The new section lists
   the previously audit-only Phase 2/4/6/7/8/9/10/11 env, proof, live-run, and
@@ -18,14 +32,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `Progress-photo nudge` switch and `/shelf/manual` exposing the optional
   Ingredients textarea under the sticky Continue footer. The fix adds sub-380
   px density for notification/timing settings, Skin Notes, contextual ProGate
-  paywalls, and shelf no-match recovery, moves lower-priority controls fully
-  below the first viewport, and reserves extra manual-add spacing above the
-  fixed footer. Focused community/paywall/settings/shelf route contracts pass,
+  paywalls, the direct upsell sheet, Recommendation Preferences, and shelf
+  no-match recovery, moves lower-priority controls fully below the first
+  viewport, and reserves extra manual-add spacing above the fixed footer.
+  Focused community/paywall/recommendation/settings/shelf route contracts pass,
   and the final 49-route sweep reports zero failed routes with
   evidence in
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`,
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`.
 

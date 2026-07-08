@@ -21,7 +21,7 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // paywall framed around THIS feature, with the same compliance posture. Dismissible,
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const isFocused = useIsFocused();
   const pathname = usePathname();
   const { data, isLoading } = useEntitlement();
@@ -33,6 +33,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const shortPaywall = height < 600;
   const ultraShortPaywall = height < 460;
   const microShortPaywall = height < 380;
+  const narrowShortPaywall = shortPaywall && width < 360;
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -125,14 +126,16 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           headerCompliancePaywall
             ? splitShortProgressTabPaywall
               ? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-0'
-              : ultraShortPaywall
-                ? 'min-h-[96px] items-stretch pt-0'
-                : 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
+              : narrowShortPaywall
+                ? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-0'
+                : ultraShortPaywall
+                  ? 'min-h-[96px] items-stretch pt-0'
+                  : 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
             : 'flex-row justify-end pt-1'
         }
       >
         {headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}
-        {splitShortProgressTabPaywall ? (
+        {splitShortProgressTabPaywall || narrowShortPaywall ? (
           <RouteIconButton
             accessibilityLabel="Maybe later"
             glyph="x"
@@ -189,13 +192,29 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Text
           variant="title"
           style={{
-            fontSize: ultraShortPaywall ? 24 : shortPaywall ? 26 : compactPaywall ? 28 : 32,
-            lineHeight: ultraShortPaywall ? 27 : shortPaywall ? 29 : compactPaywall ? 32 : 36,
+            fontSize: narrowShortPaywall
+              ? 22
+              : ultraShortPaywall
+                ? 24
+                : shortPaywall
+                  ? 26
+                  : compactPaywall
+                    ? 28
+                    : 32,
+            lineHeight: narrowShortPaywall
+              ? 25
+              : ultraShortPaywall
+                ? 27
+                : shortPaywall
+                  ? 29
+                  : compactPaywall
+                    ? 32
+                    : 36,
           }}
         >
           {copy.title}
         </Text>
-        {splitShortProgressTabPaywall || microShortPaywall ? null : (
+        {splitShortProgressTabPaywall || microShortPaywall || narrowShortPaywall ? null : (
           <Text
             variant="body"
             tone="muted"
@@ -218,27 +237,34 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         )}
         <View
           className={
-            ultraShortPaywall
-              ? microShortPaywall
-                ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'
-                : 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
-              : shortPaywall
-                ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
-                : compactPaywall
-                  ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
-                  : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+            narrowShortPaywall
+              ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
+              : ultraShortPaywall
+                ? microShortPaywall
+                  ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'
+                  : 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
+                : shortPaywall
+                  ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
+                  : compactPaywall
+                    ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
+                    : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
           }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
           <View>
-            <Text variant="bodySm" tone="muted">
-              {priceIntroLabel}
-            </Text>
+            {narrowShortPaywall ? null : (
+              <Text variant="bodySm" tone="muted">
+                {priceIntroLabel}
+              </Text>
+            )}
             <Text
               variant="title"
+              adjustsFontSizeToFit={narrowShortPaywall}
+              minimumFontScale={0.82}
+              numberOfLines={narrowShortPaywall ? 1 : undefined}
               style={{
-                fontSize: shortPaywall ? 22 : compactPaywall ? 24 : 26,
-                lineHeight: shortPaywall ? 25 : compactPaywall ? 28 : 30,
+                fontSize: narrowShortPaywall ? 20 : shortPaywall ? 22 : compactPaywall ? 24 : 26,
+                lineHeight: narrowShortPaywall ? 23 : shortPaywall ? 25 : compactPaywall ? 28 : 30,
               }}
             >
               {annualDisplay.priceLabel}
@@ -249,7 +275,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               ) : null}
             </Text>
           </View>
-          {annualDisplay.pricePerMonthLabel && !ultraShortPaywall ? (
+          {annualDisplay.pricePerMonthLabel && !ultraShortPaywall && !narrowShortPaywall ? (
             <Text
               adjustsFontSizeToFit
               minimumFontScale={0.86}
@@ -265,17 +291,35 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             variant="bodySm"
             tone="muted"
             className={
-              ultraShortPaywall
+              narrowShortPaywall
                 ? 'mt-0.5 text-center'
-                : shortPaywall
-                  ? 'mt-1 text-center'
-                  : compactPaywall
+                : ultraShortPaywall
+                  ? 'mt-0.5 text-center'
+                  : shortPaywall
                     ? 'mt-1 text-center'
-                    : 'mt-2 text-center'
+                    : compactPaywall
+                      ? 'mt-1 text-center'
+                      : 'mt-2 text-center'
             }
             style={{
-              fontSize: ultraShortPaywall ? 10 : shortPaywall ? 10.5 : compactPaywall ? 11 : 12,
-              lineHeight: ultraShortPaywall ? 12 : shortPaywall ? 14 : compactPaywall ? 15 : 17,
+              fontSize: narrowShortPaywall
+                ? 10
+                : ultraShortPaywall
+                  ? 10
+                  : shortPaywall
+                    ? 10.5
+                    : compactPaywall
+                      ? 11
+                      : 12,
+              lineHeight: narrowShortPaywall
+                ? 12
+                : ultraShortPaywall
+                  ? 12
+                  : shortPaywall
+                    ? 14
+                    : compactPaywall
+                      ? 15
+                      : 17,
             }}
           >
             {storeUnavailableReason}
@@ -286,15 +330,17 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className={
-            ultraShortPaywall
-              ? microShortPaywall
-                ? 'mt-0 h-[48px] items-center justify-center rounded-pill'
-                : 'mt-1 h-[48px] items-center justify-center rounded-pill'
-              : shortPaywall
-                ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
-                : compactPaywall
-                  ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
-                  : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+            narrowShortPaywall
+              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
+              : ultraShortPaywall
+                ? microShortPaywall
+                  ? 'mt-0 h-[48px] items-center justify-center rounded-pill'
+                  : 'mt-1 h-[48px] items-center justify-center rounded-pill'
+                : shortPaywall
+                  ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
+                  : compactPaywall
+                    ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
+                    : 'mt-4 h-[54px] items-center justify-center rounded-pill'
           }
           style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
         >
@@ -302,7 +348,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             {primaryCtaLabel}
           </Text>
         </Pressable>
-        {showExploreFirst && !ultraShortPaywall ? (
+        {showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (
           <Pressable
             accessibilityRole="button"
             disabled={startReverseTrial.isPending}
