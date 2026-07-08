@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
 import { randomUUID } from 'expo-crypto';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -34,6 +34,11 @@ const NIGHT_CONSENT_OVERLAY_BG = '#100D0A';
 function devPhotoConsentFailureMode(): 'once' | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
   return process.env.EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE === 'once' ? 'once' : null;
+}
+
+function devProgressCaptureFailureMode(): 'once' | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  return process.env.EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE === 'once' ? 'once' : null;
 }
 
 function CaptureOverlay({
@@ -244,6 +249,7 @@ function CameraUnavailableGate({
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
           fontSize: 30,
+          lineHeight: 34,
           color: '#F4EFE7',
           marginBottom: 12,
         }}
@@ -302,6 +308,80 @@ function CameraUnavailableGate({
   );
 }
 
+function PhotoCaptureFailureGate({
+  onRetry,
+  onCancel,
+}: {
+  onRetry: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <CaptureOverlay>
+      <View accessibilityRole="alert">
+        <Text
+          style={{
+            fontFamily: 'InstrumentSerif_400Regular',
+            fontSize: 30,
+            lineHeight: 34,
+            color: '#F4EFE7',
+            marginBottom: 12,
+          }}
+        >
+          {CAMERA_FAILURE_COPY.progressCaptureTitle}
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_400Regular',
+            fontSize: 14.5,
+            color: 'rgba(244,239,231,0.78)',
+            lineHeight: 21,
+            marginBottom: 22,
+          }}
+        >
+          {CAMERA_FAILURE_COPY.progressCaptureBody}
+        </Text>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onRetry}
+        style={{
+          height: 56,
+          borderRadius: 999,
+          backgroundColor: '#F4EFE7',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+          Try photo again
+        </Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onCancel}
+        style={{
+          height: 48,
+          marginTop: 8,
+          borderRadius: 999,
+          backgroundColor: NIGHT_SECONDARY_ACTION_BG,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: 'HankenGrotesk_500Medium',
+            fontSize: 15,
+            color: NIGHT_SECONDARY_ACTION_TEXT,
+          }}
+        >
+          Not now
+        </Text>
+      </Pressable>
+    </CaptureOverlay>
+  );
+}
+
 function PermissionGate({
   canAskAgain,
   onAsk,
@@ -317,6 +397,7 @@ function PermissionGate({
         style={{
           fontFamily: 'InstrumentSerif_400Regular',
           fontSize: 30,
+          lineHeight: 34,
           color: '#F4EFE7',
           marginBottom: 12,
         }}
@@ -383,11 +464,15 @@ function CaptureScreenContent() {
   const [consented, setConsented] = useState<boolean | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
+  const [photoCaptureFailed, setPhotoCaptureFailed] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [grantingConsent, setGrantingConsent] = useState(false);
   const [consentSaveFailed, setConsentSaveFailed] = useState(false);
   const simulatedPhotoConsentFailureUsed = useRef(false);
   const photoConsentFailureMode = devPhotoConsentFailureMode();
+  const [simulateProgressCaptureFailureOnce, setSimulateProgressCaptureFailureOnce] = useState(
+    () => devProgressCaptureFailureMode() === 'once',
+  );
   const { data } = usePhotos('front');
 
   useEffect(() => {
@@ -400,6 +485,9 @@ function CaptureScreenContent() {
     Platform.OS !== 'web' &&
     Boolean(permission?.granted) &&
     !cameraUnavailable;
+  const canAttemptCapture = canShowCamera || simulateProgressCaptureFailureOnce;
+  const captureReady =
+    (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
   const { signals, ready } = useGuidedCaptureSignals(cameraReady && canShowCamera);
   const coaching = coachingLine(signals);
   const light = lightingState(signals);
@@ -407,10 +495,22 @@ function CaptureScreenContent() {
   const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
   async function capture() {
-    if (consented !== true || !cameraRef.current || !canShowCamera || capturing) return;
+    if (
+      consented !== true ||
+      (!cameraRef.current && !simulateProgressCaptureFailureOnce) ||
+      !canAttemptCapture ||
+      capturing
+    ) {
+      return;
+    }
     setCapturing(true);
+    setPhotoCaptureFailed(false);
     try {
-      const shot = await cameraRef.current.takePictureAsync({
+      if (simulateProgressCaptureFailureOnce) {
+        setSimulateProgressCaptureFailureOnce(false);
+        throw new Error('E2E_PROGRESS_CAPTURE_FAILURE');
+      }
+      const shot = await cameraRef.current!.takePictureAsync({
         quality: 0.76,
         base64: false,
         exif: false,
@@ -435,10 +535,7 @@ function CaptureScreenContent() {
       });
     } catch {
       setCapturing(false);
-      Alert.alert(
-        CAMERA_FAILURE_COPY.progressCaptureTitle,
-        CAMERA_FAILURE_COPY.progressCaptureBody,
-      );
+      setPhotoCaptureFailed(true);
     }
   }
 
@@ -699,7 +796,7 @@ function CaptureScreenContent() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Capture photo"
-            disabled={!canShowCamera || !cameraReady || capturing}
+            disabled={!captureReady || capturing}
             onPress={() => void capture()}
             style={{
               width: 78,
@@ -709,7 +806,7 @@ function CaptureScreenContent() {
               borderColor: READY,
               alignItems: 'center',
               justifyContent: 'center',
-              opacity: canShowCamera && cameraReady && !capturing ? 1 : 0.55,
+              opacity: captureReady && !capturing ? 1 : 0.55,
             }}
           >
             <View
@@ -750,7 +847,14 @@ function CaptureScreenContent() {
         </View>
       </View>
 
-      {cameraUnavailable ? (
+      {photoCaptureFailed ? (
+        <PhotoCaptureFailureGate
+          onRetry={() => {
+            setPhotoCaptureFailed(false);
+          }}
+          onCancel={closeToProgress}
+        />
+      ) : cameraUnavailable ? (
         <CameraUnavailableGate
           onRetry={() => {
             setCameraUnavailable(false);
@@ -758,7 +862,7 @@ function CaptureScreenContent() {
           }}
           onCancel={closeToProgress}
         />
-      ) : !canShowCamera ? (
+      ) : !canAttemptCapture ? (
         <PermissionGate
           canAskAgain={permission?.canAskAgain ?? true}
           onAsk={() => void requestPermission()}

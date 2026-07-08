@@ -79,7 +79,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('paddingTop: insets.top + (compact ? 16 : 28)');
     expect(source).toContain('paddingBottom: insets.bottom + (compact ? 20 : 28)');
     expect(source).toContain('useWindowDimensions().height < 640');
-    expect(source.match(/height: 48/g)).toHaveLength(4);
+    expect(source.match(/height: 48/g)).toHaveLength(5);
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)'");
     expect(source).toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)'");
@@ -88,6 +88,11 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain("color: 'rgba(244,239,231,0.9)'");
     expect(source).toContain("color: 'rgba(244,239,231,0.88)'");
     expect(source).toContain('height: compact ? 52 : 56');
+    expect(source).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE');
+    expect(source).toContain('PhotoCaptureFailureGate');
+    expect(source).toContain('setPhotoCaptureFailed(true)');
+    expect(source).toContain('Try photo again');
+    expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(source).not.toContain('backgroundColor="rgba(10,8,6,0.92)"');
     expect(source).not.toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.64)'");
     expect(source).not.toContain("fontSize: 15,\n            color: 'rgba(244,239,231,0.6)'");

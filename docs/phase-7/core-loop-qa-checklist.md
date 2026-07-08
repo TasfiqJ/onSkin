@@ -175,11 +175,29 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   retry CTA at 52 px and `Not now` at 48 px inside the viewport, shows no raw
   fixture error, has zero horizontal overflow, and retry reaches the normal web
   camera-permission gate. The same slice removed the leftover native
-  `Alert.alert` call from the consent persistence failure path while preserving
-  the separate camera-capture failure alert. Evidence is in
+  `Alert.alert` call from the consent persistence failure path; the separate
+  camera-capture failure branch was later converted to route-owned recovery as
+  recorded below. Evidence is in
   `test-results/human-e2e/2026-07-08/progress-photo-consent-failure-current/`;
   it does not replace native iOS/Android system-alert, camera-permission,
   restart-persistence, safe-area, or real camera-start QA.
+- 2026-07-08: Codex in-app browser Expo web E2E at 320 x 568 covers
+  `/progress/capture` still-photo rejection with
+  `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. The capture surface exposes one
+  enabled `Capture photo` action, the forced rejection opens no JavaScript
+  dialog, and the route renders inline `Photo wasn't captured` recovery with
+  `role="alert"`, a 56 px `Try photo again` action, a 48 px `Not now` exit, a
+  disabled background shutter, no raw fixture error, and zero current-origin
+  browser logs. Retrying consumes the fixture and shows the normal web
+  permission gate; the compact permission heading has explicit line height so
+  wrapped serif copy does not overlap. Evidence and the bug report are in
+  `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-progress-photo-capture-failure-inline-recovery.md`;
+  this does not replace native iOS/Android camera mount, real
+  `takePictureAsync` rejection, permission-denied, encrypted image persistence,
+  or safe-area QA.
 - 2026-07-07: Codex in-app browser Expo web E2E with
   `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated` covers the populated Progress
   comparison picker after safe-area and compact-dismiss hardening. The local

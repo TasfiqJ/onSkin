@@ -97,10 +97,15 @@ describe('Permission recovery contracts', () => {
     expect(copy).toContain('labelCaptureTitle');
     expect(progressCapture).toContain('CameraUnavailableGate');
     expect(progressCapture).toContain('setCameraUnavailable(true)');
-    expect(progressCapture).toContain('Alert.alert(');
+    expect(progressCapture).toContain('PhotoCaptureFailureGate');
+    expect(progressCapture).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE');
+    expect(progressCapture).toContain('setPhotoCaptureFailed(true)');
+    expect(progressCapture).toContain('accessibilityRole="alert"');
+    expect(progressCapture).toContain('Try photo again');
     expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(progressCapture).toContain('CAMERA_FAILURE_COPY.progressCaptureBody');
-    expect(progressCapture).toContain('disabled={!canShowCamera || !cameraReady || capturing}');
+    expect(progressCapture).toContain('disabled={!captureReady || capturing}');
+    expect(progressCapture).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.progressCaptureTitle');
     expect(shelfOcr).toContain('setCameraUnavailable(true)');
     expect(shelfOcr).toContain('setLabelCaptureFailed(true)');
     expect(shelfOcr).toContain('accessibilityRole="alert"');

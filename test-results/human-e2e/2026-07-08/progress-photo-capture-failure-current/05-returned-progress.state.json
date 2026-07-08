@@ -1,0 +1,41 @@
+{
+  "bodyTextExcerpt": "Progress\nSkin changes slowly. That’s normal.\nMost actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early.\nweek 1\nweek 6\nweek 12\nGuided, on your phone, and never scored.\nTake my first photo\nToday\nProgress\nShelf\nYou",
+  "controls": [
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "bottom": 456,
+        "height": 56,
+        "width": 272,
+        "x": 24,
+        "y": 400
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Take my first photo",
+      "visible": true
+    }
+  ],
+  "documentSize": {
+    "height": 569,
+    "width": 320
+  },
+  "href": "http://localhost:8144/progress",
+  "overflowX": false,
+  "textIncludes": {
+    "cameraAccessNeeded": false,
+    "capturePhoto": false,
+    "captureTryAgain": false,
+    "consentGate": false,
+    "frontWeekly": false,
+    "photoWasntCaptured": false,
+    "progressRoute": true,
+    "rawFixtureError": false,
+    "takePhotosConsent": false
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

@@ -141,6 +141,10 @@ Status: needs-device-verification
   insets: notch/status bar, home indicator/gesture nav, and short-screen
   layouts must keep the primary action and `Not now` exit fully visible and
   tappable.
+- Verify real Progress still-photo capture rejection on physical iOS and
+  Android: `takePictureAsync` failure must show inline `Photo wasn't captured`
+  recovery, leave the timeline unchanged, keep retry/exit actions tappable, and
+  avoid duplicate native/system alerts.
 - Verify shared bottom sheets on physical iOS and Android devices with real
   safe-area insets and screen readers: no-match, opened-date, replenish,
   cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets

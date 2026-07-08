@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Progress still-photo capture failure recovery. `/progress/capture`
+  now converts `takePictureAsync` rejection into route-owned `Photo wasn't
+  captured` recovery instead of a platform alert, with a foreground retry, a
+  `Not now` exit, disabled background shutter, and explicit compact heading
+  line heights for wrapped recovery copy. In-app browser Expo web E2E at
+  320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` verifies no dialog, no raw fixture
+  error, 56 px retry, 48 px exit, retry into the normal permission gate,
+  recovery to `/progress`, and zero current-origin browser logs. Evidence and
+  bug report:
+  `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`,
+  `docs/e2e-bug-reports/2026-07-08-progress-photo-capture-failure-inline-recovery.md`.
+
 - Hardened Shelf OCR label-capture failure recovery. `/shelf/ocr` now keeps
   capture rejection and camera-unavailable states in route-owned review/manual
   fallback UI instead of relying on Shelf OCR native alert calls, exposes

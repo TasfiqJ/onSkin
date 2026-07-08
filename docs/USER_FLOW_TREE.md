@@ -543,6 +543,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress capture on a device where the camera cannot start, or force the still photo capture call to reject.
   - Expected result: The app shows stable camera-unavailable or photo-not-captured copy, keeps the timeline unchanged, and does not leave a tappable shutter that appears inert.
   - Evidence: Alert text, visible fallback state, and route snapshot.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` forces `/progress/capture` still-photo rejection from the capture surface. The route opens no dialog, renders inline `Photo wasn't captured` copy with `role="alert"`, foregrounds 56 px `Try photo again` and 48 px `Not now` controls while the background shutter is disabled, hides the raw fixture error, and logs no current-origin browser errors. Tapping retry consumes the fixture and shows the normal web permission gate with readable wrapped heading copy; `Not now` returns to `/progress`. Evidence and report are in `test-results/human-e2e/2026-07-08/progress-photo-capture-failure-current/`; physical iOS/Android camera mount, permission-denied, real `takePictureAsync` rejection, and encrypted image persistence QA remain open.
 - Branch: empty timeline
   - Priority: Important
   - Automate later: Yes

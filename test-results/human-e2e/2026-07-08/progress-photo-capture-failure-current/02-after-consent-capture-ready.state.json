@@ -1,0 +1,56 @@
+{
+  "bodyTextExcerpt": "x\nFront · weekly\nalign to the ghost of last week\npreview quality estimate\nCenter your face in the guide\nLighting\nGood\nauto ready\non device · never uploaded · no faceprint",
+  "controls": [
+    {
+      "ariaLabel": "Close",
+      "disabled": false,
+      "rect": {
+        "bottom": 64,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 16
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "x",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Capture photo",
+      "disabled": false,
+      "rect": {
+        "bottom": 545,
+        "height": 78,
+        "width": 78,
+        "x": 92,
+        "y": 467
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "auto ready",
+      "visible": true
+    }
+  ],
+  "documentSize": {
+    "height": 569,
+    "width": 320
+  },
+  "href": "http://localhost:8144/progress/capture?e2e=progress-capture-failure-final",
+  "overflowX": false,
+  "textIncludes": {
+    "cameraAccessNeeded": false,
+    "capturePhoto": true,
+    "captureTryAgain": false,
+    "consentGate": false,
+    "frontWeekly": true,
+    "photoWasntCaptured": false,
+    "progressRoute": false,
+    "rawFixtureError": false,
+    "takePhotosConsent": false
+  },
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

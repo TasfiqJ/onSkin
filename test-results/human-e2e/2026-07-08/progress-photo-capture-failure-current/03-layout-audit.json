@@ -1,0 +1,91 @@
+{
+  "checks": {
+    "disabledCaptureStillInBackground": true,
+    "foregroundNotNowVisible": true,
+    "foregroundRetryVisible": true,
+    "notNowHeight": 47.99757385253906,
+    "retryHeight": 55.99211502075195
+  },
+  "controls": [
+    {
+      "ariaLabel": "Close",
+      "disabled": false,
+      "rect": {
+        "bottom": 63.98665237426758,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 15.989078521728516,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "x",
+      "visible": true
+    },
+    {
+      "ariaLabel": "Capture photo",
+      "disabled": true,
+      "rect": {
+        "bottom": 544.9332656860352,
+        "height": 77.98847198486328,
+        "left": 92.20267486572266,
+        "right": 170.19114685058594,
+        "top": 466.9447937011719,
+        "width": 77.98847198486328
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "auto ready",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "bottom": 283.4648208618164,
+        "height": 109.98180389404297,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 173.48301696777344,
+        "width": 264.4114074707031
+      },
+      "role": "alert",
+      "tag": "div",
+      "text": "Photo wasn't captured Try again in a moment. Your timeline is unchanged.",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "bottom": 339.4569282531738,
+        "height": 55.99211502075195,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 283.4648132324219,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Try photo again",
+      "visible": true
+    },
+    {
+      "ariaLabel": null,
+      "disabled": false,
+      "rect": {
+        "bottom": 395.4490509033203,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 347.45147705078125,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Not now",
+      "visible": true
+    }
+  ]
+}
