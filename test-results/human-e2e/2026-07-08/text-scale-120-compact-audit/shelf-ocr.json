@@ -1,0 +1,67 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 445.9117374420166
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue with manual text",
+      "label": "Continue with manual text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 473.9077949523926,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 417.9156799316406,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/ocr",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+  "url": "http://localhost:8223/shelf/ocr",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

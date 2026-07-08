@@ -1,0 +1,92 @@
+[
+  {
+    "route": "/progress",
+    "issueCount": 3,
+    "issues": [
+      {
+        "control": {
+          "center": {
+            "x": 86.10437393188477,
+            "y": 508.7833938598633
+          },
+          "centerBlocked": true,
+          "hitInside": false,
+          "hitTag": "DIV",
+          "hitText": "Progress tab Progress",
+          "label": "Terms",
+          "partialClip": false,
+          "rect": {
+            "bottom": 532.7821807861328,
+            "height": 47.99757385253906,
+            "left": 62.105587005615234,
+            "right": 110.1031608581543,
+            "top": 484.78460693359375,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 47.99757385253906,
+            "width": 47.99757385253906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false
+        },
+        "type": "centerBlocked"
+      },
+      {
+        "control": {
+          "center": {
+            "x": 159.4584445953369,
+            "y": 508.7833938598633
+          },
+          "centerBlocked": true,
+          "hitInside": false,
+          "hitTag": "DIV",
+          "hitText": "TodayProgressShelfYou",
+          "label": "Privacy",
+          "partialClip": false,
+          "rect": {
+            "bottom": 532.7821807861328,
+            "height": 47.99757385253906,
+            "left": 135.4520721435547,
+            "right": 183.46481704711914,
+            "top": 484.78460693359375,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 48.01274490356445,
+            "width": 48.01274490356445
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false
+        },
+        "type": "centerBlocked"
+      },
+      {
+        "control": {
+          "center": {
+            "x": 233.54066276550293,
+            "y": 508.7833938598633
+          },
+          "centerBlocked": true,
+          "hitInside": false,
+          "hitTag": "DIV",
+          "hitText": "Shelf tab Shelf",
+          "label": "Restore",
+          "partialClip": false,
+          "rect": {
+            "bottom": 532.7821807861328,
+            "height": 47.99757385253906,
+            "left": 208.813720703125,
+            "right": 258.26760482788086,
+            "top": 484.78460693359375,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 49.45388412475586,
+            "width": 49.45388412475586
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false
+        },
+        "type": "centerBlocked"
+      }
+    ]
+  }
+]

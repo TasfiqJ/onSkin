@@ -1,0 +1,217 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 43.992719650268555,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 134.2005500793457,
+        "y": 141.94478797912598
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "7:30 AM",
+      "label": "Morning routine 7:30 AM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 173.93811416625977,
+        "height": 63.98665237426758,
+        "left": 37.98543930053711,
+        "right": 230.4156608581543,
+        "top": 109.95146179199219,
+        "visibleHeight": 63.98665237426758,
+        "visibleWidth": 192.4302215576172,
+        "width": 192.4302215576172
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 141.94478607177734
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Morning routine",
+      "label": "Morning routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 165.94357299804688,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 117.94599914550781,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 134.2005500793457,
+        "y": 234.87561988830566
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "9:30 PM",
+      "label": "Evening · tonight’s step 9:30 PM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 266.86894607543945,
+        "height": 63.98665237426758,
+        "left": 37.98543930053711,
+        "right": 230.4156608581543,
+        "top": 202.88229370117188,
+        "visibleHeight": 63.98665237426758,
+        "visibleWidth": 192.4302215576172,
+        "width": 192.4302215576172
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 234.87561798095703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Evening · tonight’s step",
+      "label": "Evening · tonight’s step",
+      "partialClip": false,
+      "rect": {
+        "bottom": 258.87440490722656,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 210.8768310546875,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 358.82889556884766
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Streak & adherence",
+      "label": "Streak & adherence",
+      "partialClip": false,
+      "rect": {
+        "bottom": 382.8276824951172,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 334.8301086425781,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 435.77063751220703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Replenishment",
+      "label": "Replenishment",
+      "partialClip": false,
+      "rect": {
+        "bottom": 459.76942443847656,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 411.7718505859375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 512.7124099731445
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Progress-photo nudge",
+      "label": "Progress-photo nudge",
+      "partialClip": false,
+      "rect": {
+        "bottom": 536.7111968994141,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 488.713623046875,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/notifications",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+  "url": "http://localhost:8223/settings/notifications",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

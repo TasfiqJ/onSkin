@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-07-08T16:42:44.130Z",
+  "status": "pass",
+  "strict": true,
+  "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
+  "sourceRoot": "04_repo_docs",
+  "activeDocsDir": "docs",
+  "topLevelPacketFiles": [
+    {
+      "name": "README.md",
+      "path": "04_repo_docs/README.md",
+      "exists": true,
+      "bytes": 2924,
+      "sha256": "b7ebba84d0dd0f7aa0b4a285762640838a31277b944f1d3c5c7f978c0a925e4c",
+      "title": "RoutineKind"
+    },
+    {
+      "name": "AGENTS.md",
+      "path": "04_repo_docs/AGENTS.md",
+      "exists": true,
+      "bytes": 3385,
+      "sha256": "ef580a3f1d66e9e5a5f0792549613a6f0bc14a87c3697848c98cdf91c7dfdc95",
+      "title": "Agent Instructions"
+    }
+  ],
+  "docs": [
+    {
+      "name": "ARCHITECTURE.md",
+      "title": "Architecture",
+      "sourcePath": "04_repo_docs/docs/ARCHITECTURE.md",
+      "activePath": "docs/ARCHITECTURE.md",
+      "sourceBytes": 4924,
+      "activeBytes": 4924,
+      "sourceSha256": "dbcd9f7a2a7177f6df64ec16add7ad66b65a7f3ec47d43510ca4136a49032b92",
+      "activeSha256": "dbcd9f7a2a7177f6df64ec16add7ad66b65a7f3ec47d43510ca4136a49032b92",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "CODEX_IMPLEMENTATION_PROMPT.md",
+      "title": "Codex Implementation Prompt",
+      "sourcePath": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
+      "activePath": "docs/CODEX_IMPLEMENTATION_PROMPT.md",
+      "sourceBytes": 7686,
+      "activeBytes": 7686,
+      "sourceSha256": "b5ca8e0d75167d16c4860673c78861663e0702210bd132d12acbe54d23c5f21c",
+      "activeSha256": "b5ca8e0d75167d16c4860673c78861663e0702210bd132d12acbe54d23c5f21c",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "CODE_REVIEW.md",
+      "title": "Code Review Checklist",
+      "sourcePath": "04_repo_docs/docs/CODE_REVIEW.md",
+      "activePath": "docs/CODE_REVIEW.md",
+      "sourceBytes": 1985,
+      "activeBytes": 1985,
+      "sourceSha256": "83db5ca6e5ad2289cedbcedf24574f134b4fe63907464d1b34dad2456200f64a",
+      "activeSha256": "83db5ca6e5ad2289cedbcedf24574f134b4fe63907464d1b34dad2456200f64a",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "DECISIONS.md",
+      "title": "Decisions",
+      "sourcePath": "04_repo_docs/docs/DECISIONS.md",
+      "activePath": "docs/DECISIONS.md",
+      "sourceBytes": 4315,
+      "activeBytes": 4315,
+      "sourceSha256": "28205a4214040bcf596bd005a4f5e093331d01866e9d2d365eb098dcb4b5c831",
+      "activeSha256": "28205a4214040bcf596bd005a4f5e093331d01866e9d2d365eb098dcb4b5c831",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "FEATURE_INDEX.md",
+      "title": "Feature Index",
+      "sourcePath": "04_repo_docs/docs/FEATURE_INDEX.md",
+      "activePath": "docs/FEATURE_INDEX.md",
+      "sourceBytes": 4833,
+      "activeBytes": 4833,
+      "sourceSha256": "01be02ee0c4e233f09cf0a026d94d75a6f51c3c6127f475b63d016f9960245c6",
+      "activeSha256": "01be02ee0c4e233f09cf0a026d94d75a6f51c3c6127f475b63d016f9960245c6",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "MASTER_PLAN.md",
+      "title": "Master Plan",
+      "sourcePath": "04_repo_docs/docs/MASTER_PLAN.md",
+      "activePath": "docs/MASTER_PLAN.md",
+      "sourceBytes": 53806,
+      "activeBytes": 53806,
+      "sourceSha256": "d6e767a75349b25f6407c37e1cfcf6c8bc09f52fd7644d41e24c515392151a33",
+      "activeSha256": "d6e767a75349b25f6407c37e1cfcf6c8bc09f52fd7644d41e24c515392151a33",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "MASTER_PLAN_UPDATE_PATCH.md",
+      "title": "Master Plan Update Patch",
+      "sourcePath": "04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md",
+      "activePath": "docs/MASTER_PLAN_UPDATE_PATCH.md",
+      "sourceBytes": 1473,
+      "activeBytes": 1473,
+      "sourceSha256": "634edff435fa8ba2bb51e8fe8be4933da125946c1c34feed13d7be442e0fd741",
+      "activeSha256": "634edff435fa8ba2bb51e8fe8be4933da125946c1c34feed13d7be442e0fd741",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "PRODUCT_REQUIREMENTS.md",
+      "title": "Product Requirements",
+      "sourcePath": "04_repo_docs/docs/PRODUCT_REQUIREMENTS.md",
+      "activePath": "docs/PRODUCT_REQUIREMENTS.md",
+      "sourceBytes": 5347,
+      "activeBytes": 5347,
+      "sourceSha256": "fabb281ce1fa670904321cde0ffdb3eb59a164553b99d72ba7c124b7de81676e",
+      "activeSha256": "fabb281ce1fa670904321cde0ffdb3eb59a164553b99d72ba7c124b7de81676e",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "ROADMAP.md",
+      "title": "Roadmap",
+      "sourcePath": "04_repo_docs/docs/ROADMAP.md",
+      "activePath": "docs/ROADMAP.md",
+      "sourceBytes": 3054,
+      "activeBytes": 3054,
+      "sourceSha256": "1d6a7730199b83c79b820e59a7a55be5b821927b34c96529fd2eb70913183847",
+      "activeSha256": "1d6a7730199b83c79b820e59a7a55be5b821927b34c96529fd2eb70913183847",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    },
+    {
+      "name": "TESTING_STRATEGY.md",
+      "title": "Testing Strategy",
+      "sourcePath": "04_repo_docs/docs/TESTING_STRATEGY.md",
+      "activePath": "docs/TESTING_STRATEGY.md",
+      "sourceBytes": 2654,
+      "activeBytes": 2654,
+      "sourceSha256": "7cf53f0ccfc2f77917802ebf217ba1f262d3675a3406c1b52128577deb6f59aa",
+      "activeSha256": "7cf53f0ccfc2f77917802ebf217ba1f262d3675a3406c1b52128577deb6f59aa",
+      "identical": true,
+      "mentionedInRootAgents": true,
+      "mentionedInClaude": true
+    }
+  ],
+  "summary": {
+    "sourceDocCount": 10,
+    "activeMirrorCount": 10,
+    "identicalMirrorCount": 10,
+    "blockerCount": 0,
+    "warningCount": 0
+  },
+  "blockers": [],
+  "warnings": []
+}

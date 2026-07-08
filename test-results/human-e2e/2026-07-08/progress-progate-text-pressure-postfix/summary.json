@@ -1,0 +1,397 @@
+﻿{
+    "generatedAt":  "2026-07-08T16:38:16.168Z",
+    "surface":  "Codex in-app browser Expo web",
+    "viewport":  {
+                     "width":  320,
+                     "height":  568
+                 },
+    "note":  "Browser security policy blocked JavaScript text-scale URL injection; source contracts enforce the compact progress paywall header-compliance path, and this run verifies the resulting visible geometry on the actual app surface. Browser warn/error logs are known local Supabase placeholder, Expo web notification, or inherited Metro dev-session warnings.",
+    "routeCount":  3,
+    "failureCount":  0,
+    "routes":  [
+                   {
+                       "route":  "/progress",
+                       "failureCount":  0,
+                       "viewport":  {
+                                        "devicePixelRatio":  1.0299999713897705,
+                                        "height":  569,
+                                        "visualHeight":  568.9320678710938,
+                                        "visualWidth":  320.38836669921875,
+                                        "width":  320
+                                    },
+                       "targets":  [
+                                       {
+                                           "target":  "Terms",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  23.99878692626953,
+                                                             "right":  71.9963607788086,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Privacy",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  85.3307113647461,
+                                                             "right":  133.32828521728516,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Restore",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  146.66262817382812,
+                                                             "right":  194.6602020263672,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Maybe later",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  194.1595916748047,
+                                                             "right":  296.3895721435547,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  102.22998046875,
+                                                             "width":  102.22998046875
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Start free trial",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  416.8537940979004,
+                                                             "height":  50.000003814697266,
+                                                             "left":  23.99878692626953,
+                                                             "right":  296.38956451416016,
+                                                             "top":  366.8537902832031,
+                                                             "visibleHeight":  50.000003814697266,
+                                                             "visibleWidth":  272.3907775878906,
+                                                             "width":  272.3907775878906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Explore first. 7 days of Pro",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  484.78461837768555,
+                                                             "height":  59.9362907409668,
+                                                             "left":  23.99878692626953,
+                                                             "right":  296.38956451416016,
+                                                             "top":  424.84832763671875,
+                                                             "visibleHeight":  59.9362907409668,
+                                                             "visibleWidth":  272.3907775878906,
+                                                             "width":  272.3907775878906
+                                                         }
+                                                     ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "route":  "/progress/capture",
+                       "failureCount":  0,
+                       "viewport":  {
+                                        "devicePixelRatio":  1.0299999713897705,
+                                        "height":  569,
+                                        "visualHeight":  568.9320678710938,
+                                        "visualWidth":  320.38836669921875,
+                                        "width":  320
+                                    },
+                       "targets":  [
+                                       {
+                                           "target":  "Terms",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  23.99878692626953,
+                                                             "right":  71.9963607788086,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Privacy",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  85.3307113647461,
+                                                             "right":  133.32828521728516,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Restore",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  146.66262817382812,
+                                                             "right":  194.6602020263672,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Maybe later",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  194.1595916748047,
+                                                             "right":  296.3895721435547,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  102.22998046875,
+                                                             "width":  102.22998046875
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Start free trial",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  416.8537940979004,
+                                                             "height":  50.000003814697266,
+                                                             "left":  23.99878692626953,
+                                                             "right":  296.38956451416016,
+                                                             "top":  366.8537902832031,
+                                                             "visibleHeight":  50.000003814697266,
+                                                             "visibleWidth":  272.3907775878906,
+                                                             "width":  272.3907775878906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Explore first. 7 days of Pro",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  484.78461837768555,
+                                                             "height":  59.9362907409668,
+                                                             "left":  23.99878692626953,
+                                                             "right":  296.38956451416016,
+                                                             "top":  424.84832763671875,
+                                                             "visibleHeight":  59.9362907409668,
+                                                             "visibleWidth":  272.3907775878906,
+                                                             "width":  272.3907775878906
+                                                         }
+                                                     ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "route":  "/progress/review",
+                       "failureCount":  0,
+                       "viewport":  {
+                                        "devicePixelRatio":  1.0299999713897705,
+                                        "height":  569,
+                                        "visualHeight":  568.9320678710938,
+                                        "visualWidth":  320.38836669921875,
+                                        "width":  320
+                                    },
+                       "targets":  [
+                                       {
+                                           "target":  "Terms",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  23.99878692626953,
+                                                             "right":  71.9963607788086,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Privacy",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  85.3307113647461,
+                                                             "right":  133.32828521728516,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Restore",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  146.66262817382812,
+                                                             "right":  194.6602020263672,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  47.99757385253906,
+                                                             "width":  47.99757385253906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Maybe later",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  51.987258434295654,
+                                                             "height":  47.99757385253906,
+                                                             "left":  194.1595916748047,
+                                                             "right":  296.3895721435547,
+                                                             "top":  3.989684581756592,
+                                                             "visibleHeight":  47.99757385253906,
+                                                             "visibleWidth":  102.22998046875,
+                                                             "width":  102.22998046875
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Start free trial",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  416.8537940979004,
+                                                             "height":  50.000003814697266,
+                                                             "left":  23.99878692626953,
+                                                             "right":  296.38956451416016,
+                                                             "top":  366.8537902832031,
+                                                             "visibleHeight":  50.000003814697266,
+                                                             "visibleWidth":  272.3907775878906,
+                                                             "width":  272.3907775878906
+                                                         }
+                                                     ]
+                                       },
+                                       {
+                                           "target":  "Explore first. 7 days of Pro",
+                                           "count":  1,
+                                           "blocked":  [
+                                                           false
+                                                       ],
+                                           "rects":  [
+                                                         {
+                                                             "bottom":  484.78461837768555,
+                                                             "height":  59.9362907409668,
+                                                             "left":  23.99878692626953,
+                                                             "right":  296.38956451416016,
+                                                             "top":  424.84832763671875,
+                                                             "visibleHeight":  59.9362907409668,
+                                                             "visibleWidth":  272.3907775878906,
+                                                             "width":  272.3907775878906
+                                                         }
+                                                     ]
+                                       }
+                                   ]
+                   }
+               ],
+    "logCount":  1,
+    "unexpectedLogCount":  0,
+    "knownDevLogCount":  1
+}

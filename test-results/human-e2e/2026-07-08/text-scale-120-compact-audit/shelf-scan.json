@@ -1,0 +1,142 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close x",
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 267.8929195404053,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "torch",
+      "label": "torch",
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 239.39625549316406,
+        "right": 296.3895835876465,
+        "top": 7.994539260864258,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 56.99332809448242,
+        "width": 56.99332809448242
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19418907165527,
+        "y": 335.0121421813965
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan ingredient label",
+      "label": "=Scan ingredient labelReview editable OCR",
+      "partialClip": false,
+      "rect": {
+        "bottom": 372.9975814819336,
+        "height": 75.97087860107422,
+        "left": 19.993932723999023,
+        "right": 300.3944454193115,
+        "top": 297.0267028808594,
+        "visibleHeight": 75.97087860107422,
+        "visibleWidth": 280.4005126953125,
+        "width": 280.4005126953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19418907165527,
+        "y": 420.98000717163086
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "SSearch catalogUse reviewed matches",
+      "partialClip": false,
+      "rect": {
+        "bottom": 458.96544647216797,
+        "height": 75.97087860107422,
+        "left": 19.993932723999023,
+        "right": 300.3944454193115,
+        "top": 382.99456787109375,
+        "visibleHeight": 75.97087860107422,
+        "visibleWidth": 280.4005126953125,
+        "width": 280.4005126953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19418907165527,
+        "y": 506.9478416442871
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "+Add it by handAlways works offline",
+      "partialClip": false,
+      "rect": {
+        "bottom": 544.9332809448242,
+        "height": 75.97087860107422,
+        "left": 19.993932723999023,
+        "right": 300.3944454193115,
+        "top": 468.96240234375,
+        "visibleHeight": 75.97087860107422,
+        "visibleWidth": 280.4005126953125,
+        "width": 280.4005126953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/scan",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+  "url": "http://localhost:8223/shelf/scan",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

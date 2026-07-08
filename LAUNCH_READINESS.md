@@ -33,6 +33,11 @@ Fresh verification on 2026-07-08:
   `npm run phase2:rls-smoke` still fail without Tas-owned final environment
   values and live Supabase credentials, which is expected until production
   account setup is complete.
+- `npm run docs:source-packet-audit:strict` passed and wrote
+  `docs/generated/source-packet-audit.{json,md}`. The audit verifies all 10
+  `04_repo_docs/docs/*.md` strategy-packet docs have active `docs/` mirrors,
+  all 10 mirrors are byte-identical, and all mirrored packet docs are referenced
+  by the root source-of-truth lists in `AGENTS.md` or `CLAUDE.md`.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 320 x 480 current-main route rerun,
@@ -82,6 +87,15 @@ Fresh verification on 2026-07-08:
   warn/error logs. Tapping Explore first unlocks the Progress photo surface
   without store checkout. Evidence:
   `test-results/human-e2e/2026-07-08/progress-progate-short-phone-430-clearance/`.
+- Expo web `/progress*` contextual ProGate evidence at 320 x 568 now covers the
+  text-pressure/tabbar overlap caught by the 118% audit. Compact Progress photo
+  paywalls use header compliance, and `/progress`, `/progress/capture`, and
+  `/progress/review` keep Terms, Privacy, Restore, Maybe later, Start free
+  trial, and Explore first visible, 48 px+, unclipped, and center-hit-testable
+  above the floating tab bar. Evidence:
+  `test-results/human-e2e/2026-07-08/text-scale-120-compact-audit/`,
+  `test-results/human-e2e/2026-07-08/progress-progate-text-pressure-postfix/`.
+  Native iOS/Android Dynamic Type remains part of device QA.
 - Expo web personalized recommendations evidence at 320 x 430 passed the
   ultra-short hub/preferences gate: `/recommendations` and
   `/recommendations/preferences` have zero clipped controls, zero sub-44

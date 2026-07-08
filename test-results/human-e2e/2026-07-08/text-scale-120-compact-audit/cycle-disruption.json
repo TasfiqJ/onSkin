@@ -1,0 +1,167 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Maybe later",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 102.22998046875,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 391.85379219055176
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 416.8537940979004,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 366.8537902832031,
+        "visibleHeight": 50.000003814697266,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 454.81647300720215
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No credit card. See your routine work, then decide.",
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 484.78461837768555,
+        "height": 59.9362907409668,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 424.84832763671875,
+        "visibleHeight": 59.9362907409668,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 508.7833938598633
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 532.7821807861328,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 484.78460693359375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 508.7833938598633
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 532.7821807861328,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 484.78460693359375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 48.01274490356445,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 508.7833938598633
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 532.7821807861328,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 484.78460693359375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 49.45388412475586,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/cycle/disruption",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+  "url": "http://localhost:8223/cycle/disruption",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

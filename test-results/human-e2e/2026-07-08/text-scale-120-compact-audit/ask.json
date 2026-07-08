@@ -1,0 +1,167 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 309.87561798095703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is there a conflict on my shelf?",
+      "label": "Is there a conflict on my shelf?›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 333.87440490722656,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 285.8768310546875,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 365.8677444458008
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "What should I do tonight?",
+      "label": "What should I do tonight?›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 389.8665313720703,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 341.86895751953125,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 421.8598403930664
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is this product a fit for me?",
+      "label": "Is this product a fit for me?›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 445.85862731933594,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 397.8610534667969,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 131.19691467285156,
+        "y": 473.9684829711914
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "Ask a question about your shelf",
+      "label": "Ask a question about your shelf Ask about your shelf…",
+      "partialClip": false,
+      "rect": {
+        "bottom": 497.96726989746094,
+        "height": 47.99757385253906,
+        "left": 38.95631408691406,
+        "right": 223.43751525878906,
+        "top": 449.9696960449219,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 184.481201171875,
+        "width": 184.481201171875
+      },
+      "role": null,
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 257.43326568603516,
+        "y": 473.9684829711914
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "↑",
+      "label": "Send ↑",
+      "partialClip": false,
+      "rect": {
+        "bottom": 497.96726989746094,
+        "height": 47.99757385253906,
+        "left": 233.43447875976562,
+        "right": 281.4320526123047,
+        "top": 449.9696960449219,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/ask",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "< ✦ Ask RoutineKind knows your shelf evidence-grounded private Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › Is this product a fit for me? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "url": "http://localhost:8223/ask",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

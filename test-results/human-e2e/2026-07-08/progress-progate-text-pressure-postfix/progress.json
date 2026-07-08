@@ -1,0 +1,208 @@
+{
+  "bodySample": "Terms · Privacy · Restore Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Today Progress Shelf You",
+  "failureCount": 0,
+  "generatedAt": "2026-07-08T16:38:13.925Z",
+  "issues": [],
+  "targetControls": [
+    {
+      "matches": [
+        {
+          "center": {
+            "x": 47.99757385253906,
+            "y": 27.988471508026123
+          },
+          "centerBlocked": false,
+          "centerInViewport": true,
+          "hitInside": true,
+          "hitTag": "DIV",
+          "hitText": "Terms",
+          "label": "Terms",
+          "partialClip": false,
+          "rect": {
+            "bottom": 51.987258434295654,
+            "height": 47.99757385253906,
+            "left": 23.99878692626953,
+            "right": 71.9963607788086,
+            "top": 3.989684581756592,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 47.99757385253906,
+            "width": 47.99757385253906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false,
+          "visible": true
+        }
+      ],
+      "target": "Terms"
+    },
+    {
+      "matches": [
+        {
+          "center": {
+            "x": 109.32949829101562,
+            "y": 27.988471508026123
+          },
+          "centerBlocked": false,
+          "centerInViewport": true,
+          "hitInside": true,
+          "hitTag": "DIV",
+          "hitText": "Privacy",
+          "label": "Privacy",
+          "partialClip": false,
+          "rect": {
+            "bottom": 51.987258434295654,
+            "height": 47.99757385253906,
+            "left": 85.3307113647461,
+            "right": 133.32828521728516,
+            "top": 3.989684581756592,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 47.99757385253906,
+            "width": 47.99757385253906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false,
+          "visible": true
+        }
+      ],
+      "target": "Privacy"
+    },
+    {
+      "matches": [
+        {
+          "center": {
+            "x": 170.66141510009766,
+            "y": 27.988471508026123
+          },
+          "centerBlocked": false,
+          "centerInViewport": true,
+          "hitInside": true,
+          "hitTag": "DIV",
+          "hitText": "Restore",
+          "label": "Restore",
+          "partialClip": false,
+          "rect": {
+            "bottom": 51.987258434295654,
+            "height": 47.99757385253906,
+            "left": 146.66262817382812,
+            "right": 194.6602020263672,
+            "top": 3.989684581756592,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 47.99757385253906,
+            "width": 47.99757385253906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false,
+          "visible": true
+        }
+      ],
+      "target": "Restore"
+    },
+    {
+      "matches": [
+        {
+          "center": {
+            "x": 245.2745819091797,
+            "y": 27.988471508026123
+          },
+          "centerBlocked": false,
+          "centerInViewport": true,
+          "hitInside": true,
+          "hitTag": "DIV",
+          "hitText": "Maybe later",
+          "label": "Maybe later",
+          "partialClip": false,
+          "rect": {
+            "bottom": 51.987258434295654,
+            "height": 47.99757385253906,
+            "left": 194.1595916748047,
+            "right": 296.3895721435547,
+            "top": 3.989684581756592,
+            "visibleHeight": 47.99757385253906,
+            "visibleWidth": 102.22998046875,
+            "width": 102.22998046875
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false,
+          "visible": true
+        }
+      ],
+      "target": "Maybe later"
+    },
+    {
+      "matches": [
+        {
+          "center": {
+            "x": 160.19417572021484,
+            "y": 391.85379219055176
+          },
+          "centerBlocked": false,
+          "centerInViewport": true,
+          "hitInside": true,
+          "hitTag": "DIV",
+          "hitText": "Start free trial",
+          "label": "Start free trial",
+          "partialClip": false,
+          "rect": {
+            "bottom": 416.8537940979004,
+            "height": 50.000003814697266,
+            "left": 23.99878692626953,
+            "right": 296.38956451416016,
+            "top": 366.8537902832031,
+            "visibleHeight": 50.000003814697266,
+            "visibleWidth": 272.3907775878906,
+            "width": 272.3907775878906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false,
+          "visible": true
+        }
+      ],
+      "target": "Start free trial"
+    },
+    {
+      "matches": [
+        {
+          "center": {
+            "x": 160.19417572021484,
+            "y": 454.81647300720215
+          },
+          "centerBlocked": false,
+          "centerInViewport": true,
+          "hitInside": true,
+          "hitTag": "DIV",
+          "hitText": "No credit card. See your routine work, then decide.",
+          "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+          "partialClip": false,
+          "rect": {
+            "bottom": 484.78461837768555,
+            "height": 59.9362907409668,
+            "left": 23.99878692626953,
+            "right": 296.38956451416016,
+            "top": 424.84832763671875,
+            "visibleHeight": 59.9362907409668,
+            "visibleWidth": 272.3907775878906,
+            "width": 272.3907775878906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "tinyTarget": false,
+          "visible": true
+        }
+      ],
+      "target": "Explore first. 7 days of Pro"
+    }
+  ],
+  "url": "http://localhost:8223/progress",
+  "viewport": {
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 569,
+    "visualHeight": 568.9320678710938,
+    "visualWidth": 320.38836669921875,
+    "width": 320
+  }
+}

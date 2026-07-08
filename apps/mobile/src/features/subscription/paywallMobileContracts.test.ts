@@ -132,8 +132,10 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toMatch(
       /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
-    expect(proGate).toContain('{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}');
-    expect(proGate).toContain('{shortPaywall ? null : <ComplianceRow />}');
+    expect(proGate).toContain(
+      '{headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}',
+    );
+    expect(proGate).toContain('{headerCompliancePaywall ? null : <ComplianceRow />}');
     expect(proGate).toContain('fontSize: ultraShortPaywall ? 24');
     expect(proGate).toContain('lineHeight: ultraShortPaywall ? 27');
     expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 2 : undefined}');
@@ -155,10 +157,10 @@ describe('paywall mobile contracts', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const flowTree = readFileSync(`${REPO_DIR}/docs/USER_FLOW_TREE.md`, 'utf8');
     const headerCompliance = proGate.indexOf(
-      '{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
+      '{headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}',
     );
     const scrollBody = proGate.indexOf('<ScrollView');
-    const bottomCompliance = proGate.indexOf('{shortPaywall ? null : <ComplianceRow />}');
+    const bottomCompliance = proGate.indexOf('{headerCompliancePaywall ? null : <ComplianceRow />}');
     const feedback = proGate.indexOf('<PaywallFeedback');
 
     expect(proGate).toContain("import { router, useIsFocused, usePathname } from 'expo-router';");
@@ -175,6 +177,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain("feature === 'photo_timeline' && pathname.startsWith('/progress');");
     expect(proGate).toContain(
       'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
+    );
+    expect(proGate).toContain(
+      'const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;',
     );
     expect(proGate).toContain('const shortPaywall = height < 520;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');
@@ -194,8 +199,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
-    expect(proGate).toContain('{shortPaywall ? null : <ComplianceRow />}');
+    expect(proGate).toContain('{headerCompliancePaywall ? null : <ComplianceRow />}');
     expect(flowTree).toContain('320 x 480 contextual ProGate follow-up');
+    expect(flowTree).toContain('320 x 568 text-pressure follow-up');
   });
 
   it('keeps compact monthly equivalent labels on one readable line', () => {

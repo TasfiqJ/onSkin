@@ -1,0 +1,117 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 119.15200805664062,
+        "y": 96.9811954498291
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "Catalog search query",
+      "label": "Catalog search query Brand or product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 121.98119735717773,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 214.30522918701172,
+        "top": 71.98119354248047,
+        "visibleHeight": 50.000003814697266,
+        "visibleWidth": 190.3064422607422,
+        "width": 190.3064422607422
+      },
+      "role": null,
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 259.34467697143555,
+        "y": 96.9811954498291
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search",
+      "label": "Search",
+      "partialClip": false,
+      "rect": {
+        "bottom": 121.98119735717773,
+        "height": 50.000003814697266,
+        "left": 222.29977416992188,
+        "right": 296.3895797729492,
+        "top": 71.98119354248047,
+        "visibleHeight": 50.000003814697266,
+        "visibleWidth": 74.08980560302734,
+        "width": 74.08980560302734
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 508.94268226623535
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add by hand",
+      "label": "Add by hand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 536.9387397766113,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 480.9466247558594,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/search",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+  "url": "http://localhost:8223/shelf/search",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

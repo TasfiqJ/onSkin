@@ -6,6 +6,30 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the 320 x 568 Progress contextual ProGate text-pressure/tabbar
+  overlap. A 118% text-pressure audit found `/progress` Terms, Privacy, and
+  Restore rendered visibly but with their tap centers intercepted by the
+  floating tab bar. Compact Progress photo paywalls now use the same header
+  compliance treatment as short paywalls, keeping Terms, Privacy, Restore, and
+  Maybe later in the top action band and suppressing the duplicate bottom
+  compliance row. Codex in-app browser Expo web verifies `/progress`,
+  `/progress/capture`, and `/progress/review` at 320 x 568 with zero clipped,
+  sub-44, or center-blocked paywall controls; native iOS/Android Dynamic Type
+  remains device QA. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/text-scale-120-compact-audit/`,
+  `test-results/human-e2e/2026-07-08/progress-progate-text-pressure-postfix/`,
+  `docs/e2e-bug-reports/2026-07-08-progress-progate-text-pressure-tabbar-overlap.md`.
+
+- Added a strict `04_repo_docs` source-packet audit for the original strategy
+  packet. `npm run docs:source-packet-audit:strict` now verifies all 10
+  `04_repo_docs/docs/*.md` packet docs have active `docs/` mirrors, all mirrors
+  are byte-identical, and every mirrored packet doc is referenced by the root
+  source-of-truth lists in `AGENTS.md` or `CLAUDE.md`. The first run exposed
+  `docs/CODEX_IMPLEMENTATION_PROMPT.md` as mirrored but missing from the root
+  lists, so both root instruction files now include it. The strict audit now
+  passes with 10/10 active mirrors, 10/10 identical mirrors, 0 blockers, and 0
+  warnings, writing `docs/generated/source-packet-audit.{json,md}`.
+
 - Added a durable local human-E2E evidence manifest gate without adding new
   E2E dependencies. `npm run e2e:human:manifest` now reads the committed
   2026-07-08 Expo web evidence for the 320 x 480 route rerun, 320 x 430 final

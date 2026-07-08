@@ -1,0 +1,142 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 246.97361183166504
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add products",
+      "label": "Add products",
+      "partialClip": false,
+      "rect": {
+        "bottom": 274.969669342041,
+        "height": 55.99211502075195,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 218.97755432128906,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 232.40292358398438,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 46.76881122589111,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today tab Today",
+      "label": "Today tab Today",
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.60679626464844,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 122.38319778442383,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Progress tab Progress",
+      "label": "Progress tab Progress",
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.6219711303711,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 197.9975814819336,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf tab Shelf",
+      "label": "Shelf tab Shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.60679626464844,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 273.61196517944336,
+        "y": 521.9584674835205
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You tab You",
+      "label": "You tab You",
+      "partialClip": false,
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 494.963623046875,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.6219711303711,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/today?routine=PM",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "WEDNESDAY, JULY 8 · 12:28 PM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You",
+  "url": "http://localhost:8223/today?routine=PM",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

@@ -35,6 +35,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
+  const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
   const lapsedEntitlement = data?.expired === true;
   const lapsedReverseTrial = lapsedEntitlement && data?.priorPeriodType === 'reverse_trial';
@@ -114,12 +115,12 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     <Screen edges={['top', 'bottom']}>
       <View
         className={
-          shortPaywall
+          headerCompliancePaywall
             ? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
             : 'flex-row justify-end pt-1'
         }
       >
-        {shortPaywall ? <ComplianceRow density="compactHeader" /> : null}
+        {headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}
         <Pressable
           accessibilityRole="button"
           onPress={() => dismissPaywall(router, paywallDismissFallback)}
@@ -339,7 +340,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 : undefined
           }
         />
-        {shortPaywall ? null : <ComplianceRow />}
+        {headerCompliancePaywall ? null : <ComplianceRow />}
       </ScrollView>
     </Screen>
   );

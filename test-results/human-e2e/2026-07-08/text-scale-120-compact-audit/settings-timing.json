@@ -1,0 +1,142 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 43.992719650268555,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 244.80432510375977,
+        "y": 101.97209167480469
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "7:30 AM",
+      "label": "Morning reminder time, 7:30 AM 7:30 AM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 125.97087860107422,
+        "height": 47.99757385253906,
+        "left": 207.20571899414062,
+        "right": 282.4029312133789,
+        "top": 77.97330474853516,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 75.19721221923828,
+        "width": 75.19721221923828
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 245.38835906982422,
+        "y": 178.9138412475586
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "9:30 PM",
+      "label": "Evening reminder time, 9:30 PM 9:30 PM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 202.91262817382812,
+        "height": 47.99757385253906,
+        "left": 208.37379455566406,
+        "right": 282.4029235839844,
+        "top": 154.91505432128906,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 74.02912902832031,
+        "width": 74.02912902832031
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 78.92142486572266,
+        "y": 336.87805938720703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "10:00 PM",
+      "label": "Quiet hours start, 10:00 PM 10:00 PM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 360.87684631347656,
+        "height": 47.99757385253906,
+        "left": 37.98543930053711,
+        "right": 119.8574104309082,
+        "top": 312.8792724609375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 81.8719711303711,
+        "width": 81.8719711303711
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 191.14836502075195,
+        "y": 336.87805938720703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "7:00 AM",
+      "label": "Quiet hours end, 7:00 AM 7:00 AM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 360.87684631347656,
+        "height": 47.99757385253906,
+        "left": 153.5497589111328,
+        "right": 228.7469711303711,
+        "top": 312.8792724609375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 75.19721221923828,
+        "width": 75.19721221923828
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/timing",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen",
+  "url": "http://localhost:8223/settings/timing",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

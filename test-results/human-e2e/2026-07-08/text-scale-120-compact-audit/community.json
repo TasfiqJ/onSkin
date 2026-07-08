@@ -1,0 +1,117 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 209.94387817382812
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Can you use niacinamide with vitamin C?",
+      "label": "Can you use niacinamide with vitamin C?. Refuted. Can you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredient research. Safe to ",
+      "partialClip": false,
+      "rect": {
+        "bottom": 267.91566467285156,
+        "height": 115.94357299804688,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 151.9720916748047,
+        "visibleHeight": 115.94357299804688,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 349.8634910583496
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+      "label": "Is a 10-step “glass skin” routine better?. Contested. Is a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats more. Layering raises ir",
+      "partialClip": false,
+      "rect": {
+        "bottom": 399.8331527709961,
+        "height": 99.93932342529297,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 299.8938293457031,
+        "visibleHeight": 99.93932342529297,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 456.7961311340332
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is “natural” always gentler for sensitive skin?",
+      "label": "Is “natural” always gentler for sensitive skin?. Contested. Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and essential oils are comm",
+      "partialClip": false,
+      "rect": {
+        "bottom": 507.76700592041016,
+        "height": 101.9417495727539,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 405.82525634765625,
+        "visibleHeight": 101.9417495727539,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community",
+  "scaledCount": 0,
+  "scaledSample": [],
+  "textScale": 1.18,
+  "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils ",
+  "url": "http://localhost:8223/community",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}
