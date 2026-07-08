@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-08T19:38:30.333Z
+Generated: 2026-07-08T19:44:39.914Z
 
-Git SHA: eb2cc238c4a29a38bb381d6dadc905dabf106a59
+Git SHA: ab59f9d77f25dd94558aeeb249a883ac70f3e65a
 
 Git status: clean
 
@@ -30,13 +30,14 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 11589 | 945c80117147add0ca8487f1eecda2b85848f518d1bb97e7d53279c3dff2d93b |
-| scripts/phase4/catalog-qa-report.mjs | present | 6396 | 092db6de53544d1076c78dc261cabef311b4ee55618d538f8fb6063dcd6b9138 |
-| scripts/phase4/import-obf-snapshot.mjs | present | 4083 | 5f9767fabd388ea4881e4a3ebba8e30a821b1e224321ea9caee6e0299bb0be71 |
-| scripts/phase4/import-cosing-dictionary.mjs | present | 3111 | 6a5424a5d69eec44d32e2e4f8e023362a69e19de2abf20e8c503709c03dd220b |
+| package.json | present | 11711 | 39f599228db019b4904b28409967227a02d8de521af1e01605be874a1548d96a |
+| scripts/phase4/catalog-qa-report.mjs | present | 6441 | 01dbbdeefc517f00a3a68975497aaa26a764059850eb05ab76900bc9f4e7c0eb |
+| scripts/phase4/import-obf-snapshot.mjs | present | 4814 | 437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af |
+| scripts/phase4/import-cosing-dictionary.mjs | present | 4025 | 07918f71f397b59c5889995c479d6d1757f216edcaec0b8ac19fa64a9dc5e4b0 |
+| scripts/phase4/import-fixture-smoke.mjs | present | 4130 | 7feac7eedd5f024a8b0e5f0783612d46511b60e83a715afd9ca291e956555eea |
 | scripts/phase4/check-source-env.mjs | present | 3454 | 1b459b27d2ffae6220523741099e72fd57911b53e36b4c0beeb93eb2ea0103a4 |
 | scripts/phase4/check-source-env-smoke.mjs | present | 3992 | ae38709e83827c30bfbc2c52b4d4165a0ada5bc1ab36f9cc2a37cdc986f40149 |
-| scripts/phase4/catalog-qa-report-smoke.mjs | present | 5088 | 22bdd265c45db86a2f87d8d60fda35c1f6618e4408cc368564c2ba5da4b1e512 |
+| scripts/phase4/catalog-qa-report-smoke.mjs | present | 5133 | a874236beacddd7dd8c83b5d8688e494c9cf9793f271bca1473241ae2cb7ad19 |
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
 | docs/FOR_TAS_TO_DO.md | present | 25105 | d873b96382955b1348c79f90a5c1ced2662371336bd3c99fa964e967b4f2ebf3 |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2022 | 313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78 |

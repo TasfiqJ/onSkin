@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T19:38:30.333Z",
+  "generatedAt": "2026-07-08T19:44:39.914Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "eb2cc238c4a29a38bb381d6dadc905dabf106a59",
+  "gitSha": "ab59f9d77f25dd94558aeeb249a883ac70f3e65a",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -15,26 +15,32 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 11589,
-      "sha256": "945c80117147add0ca8487f1eecda2b85848f518d1bb97e7d53279c3dff2d93b"
+      "bytes": 11711,
+      "sha256": "39f599228db019b4904b28409967227a02d8de521af1e01605be874a1548d96a"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 6396,
-      "sha256": "092db6de53544d1076c78dc261cabef311b4ee55618d538f8fb6063dcd6b9138"
+      "bytes": 6441,
+      "sha256": "01dbbdeefc517f00a3a68975497aaa26a764059850eb05ab76900bc9f4e7c0eb"
     },
     {
       "path": "scripts/phase4/import-obf-snapshot.mjs",
       "exists": true,
-      "bytes": 4083,
-      "sha256": "5f9767fabd388ea4881e4a3ebba8e30a821b1e224321ea9caee6e0299bb0be71"
+      "bytes": 4814,
+      "sha256": "437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af"
     },
     {
       "path": "scripts/phase4/import-cosing-dictionary.mjs",
       "exists": true,
-      "bytes": 3111,
-      "sha256": "6a5424a5d69eec44d32e2e4f8e023362a69e19de2abf20e8c503709c03dd220b"
+      "bytes": 4025,
+      "sha256": "07918f71f397b59c5889995c479d6d1757f216edcaec0b8ac19fa64a9dc5e4b0"
+    },
+    {
+      "path": "scripts/phase4/import-fixture-smoke.mjs",
+      "exists": true,
+      "bytes": 4130,
+      "sha256": "7feac7eedd5f024a8b0e5f0783612d46511b60e83a715afd9ca291e956555eea"
     },
     {
       "path": "scripts/phase4/check-source-env.mjs",
@@ -51,8 +57,8 @@
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
       "exists": true,
-      "bytes": 5088,
-      "sha256": "22bdd265c45db86a2f87d8d60fda35c1f6618e4408cc368564c2ba5da4b1e512"
+      "bytes": 5133,
+      "sha256": "a874236beacddd7dd8c83b5d8688e494c9cf9793f271bca1473241ae2cb7ad19"
     },
     {
       "path": "scripts/phase9/lib.mjs",
