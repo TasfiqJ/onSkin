@@ -14,12 +14,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Ingredients, Shelf scan shortens fallback rows on compact scan surfaces while
   preserving the full accessibility label, Shelf no-match and Ask use shorter
   compact visible copy with full accessibility labels, Shelf skeleton filters
-  match the loaded compact labels, the 320 px tab bar abbreviates only the
-  visible Progress label, and rendered web chrome no longer emits the
-  pointer-events warning from decoration-only layers.
+  match the loaded compact labels, Community pushes later narrow sections fully
+  below the first viewport, the 320 px tab bar abbreviates only the visible
+  Progress label, and rendered web chrome no longer emits the pointer-events
+  warning from decoration-only layers.
   Focused Shelf/Settings/Recommendations/TabBar/ToggleSwitch contracts pass,
   and the final 49-route sweep reports zero failed routes with evidence in
-  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-9/`
+  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-11/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-150-split-short-390-clearance.md`.
 
