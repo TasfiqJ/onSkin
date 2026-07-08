@@ -1,6 +1,8 @@
 {
-  "generatedAt": "2026-07-08T18:14:12.845Z",
+  "generatedAt": "2026-07-08T18:53:00.898Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
+  "gitSha": "48afa938fa9b40cee2b50e2189daa7bf3e2d7910",
+  "gitStatus": "",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -174,20 +176,20 @@
     {
       "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
       "exists": true,
-      "bytes": 8548,
-      "sha256": "4febe8e73c323cb16c738ce8512b6cedf117739eca5077064059a1bc0203f00b"
+      "bytes": 9809,
+      "sha256": "e1ea6e596d962c67af726fb6a8cac773c3499d54bb0a95f7a0f9682acf459b31"
     },
     {
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
-      "bytes": 12803,
-      "sha256": "382eb4015ebda261599d37f48526876ced603782560bc9e2d64097875c23bc50"
+      "bytes": 14089,
+      "sha256": "d55d32b8762d00ab70c09a695e3eb8476e50ab15bda4f50a17f69ff747ce9133"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",
       "exists": true,
-      "bytes": 7858,
-      "sha256": "6c3246a90a3d300117b68ab73f1b9b0b320ba8296e78262a76f41e253f25c943"
+      "bytes": 9106,
+      "sha256": "757a489d6ad9b572859c244da99c1bc6261537842a410e13abad7bbd60bcf4b2"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -216,8 +218,8 @@
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",
       "exists": true,
-      "bytes": 59707,
-      "sha256": "ba957d8b4e43830af82a82e571034d9f39898f4d37016d784a91218306675ad7"
+      "bytes": 60173,
+      "sha256": "e9febe41e458fc2b3ef02093d3a7e27dd221d788892d75c09e4cdb04f16de344"
     },
     {
       "path": "docs/phase-7/phase-7-exit-review.md",
@@ -248,5 +250,6 @@
     "Missing shareCardQaPass evidence.",
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
-  ]
+  ],
+  "warnings": []
 }

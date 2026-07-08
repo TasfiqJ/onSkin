@@ -1,6 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-08T18:14:12.845Z
+Generated at: 2026-07-08T18:53:00.898Z
+Git SHA: 48afa938fa9b40cee2b50e2189daa7bf3e2d7910
+Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -62,14 +64,14 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 5773 | 2d3372b7a4d726109665bbe067ac38bf4866f5a4daf3a539c52a322e860dd240 |
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 24700 | 61d0ca03d82d58b972df8bb0f6dd4a5a480f7db6eef75be8f45bbf9abc53038a |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 8380 | 236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 8548 | 4febe8e73c323cb16c738ce8512b6cedf117739eca5077064059a1bc0203f00b |
-| scripts/phase7/check-core-loop.mjs | present | 12803 | 382eb4015ebda261599d37f48526876ced603782560bc9e2d64097875c23bc50 |
-| scripts/phase7/check-core-loop-smoke.mjs | present | 7858 | 6c3246a90a3d300117b68ab73f1b9b0b320ba8296e78262a76f41e253f25c943 |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 9809 | e1ea6e596d962c67af726fb6a8cac773c3499d54bb0a95f7a0f9682acf459b31 |
+| scripts/phase7/check-core-loop.mjs | present | 14089 | d55d32b8762d00ab70c09a695e3eb8476e50ab15bda4f50a17f69ff747ce9133 |
+| scripts/phase7/check-core-loop-smoke.mjs | present | 9106 | 757a489d6ad9b572859c244da99c1bc6261537842a410e13abad7bbd60bcf4b2 |
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4416 | 21255a254436a75a2765a262ad03a044a29f28ea2adae15a4b833d00871a373e |
-| docs/phase-7/core-loop-qa-checklist.md | present | 59707 | ba957d8b4e43830af82a82e571034d9f39898f4d37016d784a91218306675ad7 |
+| docs/phase-7/core-loop-qa-checklist.md | present | 60173 | e9febe41e458fc2b3ef02093d3a7e27dd221d788892d75c09e4cdb04f16de344 |
 | docs/phase-7/phase-7-exit-review.md | present | 3218 | 2b4f7601bd8165061ac3e8cb2e4c05726a865218dd1dd50867458dbdddfbed82 |
 
 ## Blockers
@@ -95,3 +97,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 - Missing shareCardQaPass evidence.
 - Missing deferredSurfacesQaPass evidence.
 - Missing analyticsQaPass evidence.
+
+## Warnings
+
+- none
