@@ -1,0 +1,228 @@
+{
+  "currentUrl": "http://localhost:8182/settings/notifications",
+  "morningSwitchCount": 1,
+  "eveningSwitchCount": 1,
+  "morningAriaChecked": "false",
+  "eveningAriaChecked": "false",
+  "jsDialogOpen": null,
+  "finalState": {
+    "controls": [
+      {
+        "ariaChecked": null,
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Back",
+        "role": "button",
+        "tag": "BUTTON",
+        "visible": true,
+        "width": 48,
+        "x": 20,
+        "y": 4
+      },
+      {
+        "ariaChecked": null,
+        "ariaDisabled": null,
+        "height": 64,
+        "name": "Morning routine 7:30 AM",
+        "role": "button",
+        "tag": "BUTTON",
+        "visible": true,
+        "width": 192.4,
+        "x": 38,
+        "y": 110
+      },
+      {
+        "ariaChecked": "false",
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Morning routine",
+        "role": "switch",
+        "tag": "DIV",
+        "visible": true,
+        "width": 52,
+        "x": 230.4,
+        "y": 117.9
+      },
+      {
+        "ariaChecked": null,
+        "ariaDisabled": null,
+        "height": 64,
+        "name": "Evening · tonight’s step 9:30 PM",
+        "role": "button",
+        "tag": "BUTTON",
+        "visible": true,
+        "width": 192.4,
+        "x": 38,
+        "y": 202.9
+      },
+      {
+        "ariaChecked": "false",
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Evening · tonight’s step",
+        "role": "switch",
+        "tag": "DIV",
+        "visible": true,
+        "width": 52,
+        "x": 230.4,
+        "y": 210.9
+      },
+      {
+        "ariaChecked": "true",
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Streak & adherence",
+        "role": "switch",
+        "tag": "DIV",
+        "visible": true,
+        "width": 52,
+        "x": 230.4,
+        "y": 334.8
+      },
+      {
+        "ariaChecked": "true",
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Replenishment",
+        "role": "switch",
+        "tag": "DIV",
+        "visible": true,
+        "width": 52,
+        "x": 230.4,
+        "y": 411.8
+      },
+      {
+        "ariaChecked": "false",
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Progress-photo nudge",
+        "role": "switch",
+        "tag": "DIV",
+        "visible": true,
+        "width": 52,
+        "x": 230.4,
+        "y": 488.7
+      },
+      {
+        "ariaChecked": "false",
+        "ariaDisabled": null,
+        "height": 48,
+        "name": "Tips & announcements",
+        "role": "switch",
+        "tag": "DIV",
+        "visible": true,
+        "width": 52,
+        "x": 230.4,
+        "y": 612.7
+      }
+    ],
+    "hasCapNote": true,
+    "hasNotificationsHeading": true,
+    "horizontalOverflow": 0,
+    "scrollWidth": 320,
+    "textPreview": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+    "url": "http://localhost:8182/settings/notifications",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "logs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:07.901Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:07.902Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:29:07.914Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:09.335Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:09.336Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:29:09.340Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:57.745Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:57.746Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:29:57.749Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:58.974Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:29:58.975Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:29:58.980Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:30:03.529Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:30:03.530Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:30:03.533Z",
+      "url": "http://localhost:8182/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "screenshots": [
+    "01-soft-ask-skip-visible-viewport.png",
+    "02-after-skip-account-viewport.png",
+    "03-settings-routine-reminders-off-viewport-rerun.png"
+  ],
+  "note": "Browser storage is not exposed in this runtime; same-session settings switches are the app-surface proof that skipped onboarding persisted routine reminders off."
+}

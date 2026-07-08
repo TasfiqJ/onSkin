@@ -1,6 +1,6 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-08T11:21:15.830Z
+Generated at: 2026-07-08T11:33:06.367Z
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -54,7 +54,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4164 | 1bb706d9cdab272dc302acf7c8e70141ffa16675f5e4d6ea3edad118575588ab |
-| docs/phase-7/core-loop-qa-checklist.md | present | 58364 | 7f74a7195b89549bcf61c13f928ea44a632c8749e3b81de5214260fec2390f0d |
+| docs/phase-7/core-loop-qa-checklist.md | present | 59069 | 72d4a2ca908b7d626c2de415bb8cd02840e6dc88a4981983f11879e38fa0bcde |
 | docs/phase-7/phase-7-exit-review.md | present | 2844 | 9d2195e36d9696484386f9d1abf5d59cd4853eda3ea36136c89a313a86b44fc0 |
 
 ## Blockers

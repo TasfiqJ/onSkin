@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added current app-surface evidence for the onboarding notification soft-ask
+  skip branch. Codex in-app browser Expo web at 320 x 568 verifies
+  `/onboarding/notifications` shows the calm soft ask, `Not now` continues to
+  `/onboarding/account`, and the same session's `/settings/notifications`
+  renders both routine reminder switches off (`aria-checked=false`) with 48 px
+  switch targets, zero horizontal overflow, and no JavaScript dialog. Focused
+  notification onboarding tests already cover the OS-denied branch source
+  contract. Evidence:
+  `test-results/human-e2e/2026-07-08/onboarding-notification-skip-current/`.
+
 - Fixed `/ask` on shortest 320 x 480 phones. The empty Ask state now uses a
   stricter `height < 520` layout: decorative pills are hidden, the top two
   prompt buttons stay above the fixed composer, and the first-answer user

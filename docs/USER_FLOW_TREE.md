@@ -203,6 +203,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Deny notification permission or skip notification setup.
   - Expected result: User can continue without pressure, and routine reminder preferences remain off instead of later appearing enabled.
   - Evidence: Screenshot or simulator permission state.
+  - Current skip evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 opens `/onboarding/notifications`, verifies the soft-ask plus `Not now`, taps skip, reaches `/onboarding/account`, then opens `/settings/notifications` in the same session and verifies `Morning routine` and `Evening · tonight's step` switches both have `aria-checked=false`, 48 px switch targets, zero horizontal overflow, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-notification-skip-current/`. Native iOS/Android OS prompt denial remains device QA.
 - Branch: quiz and reveal draft copy
   - Priority: Critical
   - Automate later: Yes

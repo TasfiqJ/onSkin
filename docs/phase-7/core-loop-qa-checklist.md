@@ -126,6 +126,16 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/onboarding-direct-no-goals-recovery/`; it
   does not replace native keyboard/accessibility QA or final legal quiz-copy
   review.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 plus focused
+  notification onboarding tests cover the notification soft-ask skip path.
+  `/onboarding/notifications` renders the calm soft ask, `Not now` continues to
+  `/onboarding/account`, and the same session's `/settings/notifications`
+  shows `Morning routine` and `Evening · tonight's step` switches both off
+  (`aria-checked=false`) with 48 px switch targets, zero horizontal overflow,
+  and no JavaScript dialog. Evidence is in
+  `test-results/human-e2e/2026-07-08/onboarding-notification-skip-current/`;
+  this does not replace native iOS/Android OS notification denial, system-prompt,
+  permission-state, or scheduled-notification QA.
 - 2026-07-08: Codex in-app browser Expo web at 320 px plus focused onboarding
   route contracts cover the compact `/onboarding/products` category selector
   after native safe-area hardening. The collapsed route has zero horizontal

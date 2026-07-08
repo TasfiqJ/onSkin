@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T11:21:15.830Z",
+  "generatedAt": "2026-07-08T11:33:06.367Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
   "evidence": {
     "brandReady": false,
@@ -168,8 +168,8 @@
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",
       "exists": true,
-      "bytes": 58364,
-      "sha256": "7f74a7195b89549bcf61c13f928ea44a632c8749e3b81de5214260fec2390f0d"
+      "bytes": 59069,
+      "sha256": "72d4a2ca908b7d626c2de415bb8cd02840e6dc88a4981983f11879e38fa0bcde"
     },
     {
       "path": "docs/phase-7/phase-7-exit-review.md",
