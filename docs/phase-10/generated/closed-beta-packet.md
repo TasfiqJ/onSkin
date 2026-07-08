@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-08T18:54:11.717Z
+Generated: 2026-07-08T23:07:56.803Z
 Status: blocked
-Git SHA: 76e8657b26944d00082103dc74047cdfd0d38bbb
+Git SHA: 9ea2da180a26ebe4e0dd3938d493a5d5a025e5c6
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -56,7 +56,7 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd`
+- `package.json`: `bf030e5250bd594e49762bd3e759a7f027631747164234dadf096f5150b61fc7`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
 - `scripts/phase9/lib.mjs`: `d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752`
@@ -71,8 +71,8 @@ Phase 9 packet status: blocked
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `a3115f2adad9d48d6d43be417ae6072240e60de49a1045c41e32cebadc20f37f`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `a09ce32d83dfaafd1cba4b78e7fbfc476f137001cba1661999fb9bec1c8358c5`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `0b838449fa915a1aae62e04b6b37fe3be5c8e2055c82b28d48b99be0de1afb2a`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `c1ff5e2b24b188c581947ff1b4463a3ac90d32cd10c0d6b8aab6094ae05d97ae`
 - `docs/phase-10/beta-source-of-truth.md`: `0cb11a58751407ffdfcc836e2373cb6d39d1faf93874d23a817098dc3b68e530`
 - `docs/phase-10/tester-recruitment-sheet.md`: `ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
