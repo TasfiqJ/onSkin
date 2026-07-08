@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Tightened the Tas-owned launch handoff so the exact strict evidence key
+  inventory is named directly in `docs/FOR_TAS_TO_DO.md`. The new section lists
+  the previously audit-only Phase 2/4/6/7/8/9/10/11 env, proof, live-run, and
+  signoff keys verbatim, making the founder/account-owner work machine-checkable
+  without pretending Codex can provide credentials, stores, reviewers, devices,
+  beta users, or production signoffs.
+
 - Cleared the harsher 320 x 370 and 320 x 360 / 130% micro-short text-pressure route audits.
   The first 49-route sweep found `/settings/notifications` peeking the
   `Progress-photo nudge` switch and `/shelf/manual` exposing the optional

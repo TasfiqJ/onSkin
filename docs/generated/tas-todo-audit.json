@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T22:02:45.913Z",
+  "generatedAt": "2026-07-08T22:11:57.864Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -13,10 +13,10 @@
     "coveredGateGroupCount": 10,
     "extractedKeyCount": 233,
     "localOnlyKeyCount": 10,
-    "keyMentionCount": 56,
-    "keyNotMentionedCount": 177,
+    "keyMentionCount": 233,
+    "keyNotMentionedCount": 0,
     "blockerCount": 0,
-    "warningCount": 8
+    "warningCount": 0
   },
   "groups": [
     {
@@ -95,40 +95,38 @@
       ],
       "keysMentionedInForTas": [
         "APP_VARIANT",
-        "BRAND_LEGAL_CLEARANCE",
-        "EXPO_PUBLIC_ACCOUNT_DELETION_URL",
-        "EXPO_PUBLIC_APP_STORE_URL",
-        "EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL",
-        "EXPO_PUBLIC_DATA_EXPORT_URL",
-        "EXPO_PUBLIC_PRIVACY_URL",
-        "EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID",
-        "EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID",
-        "EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID",
-        "EXPO_PUBLIC_SUPPORT_EMAIL",
-        "EXPO_PUBLIC_SUPPORT_URL",
-        "EXPO_PUBLIC_TERMS_URL"
-      ],
-      "keysNotMentionedInForTas": [
         "APPLE_SIWA_CLIENT_ID",
         "APPLE_SIWA_KEY_ID",
         "APPLE_SIWA_PRIVATE_KEY",
         "APPLE_SIWA_SERVICE_ID",
         "APPLE_TEAM_ID",
+        "BRAND_LEGAL_CLEARANCE",
+        "EXPO_PUBLIC_ACCOUNT_DELETION_URL",
         "EXPO_PUBLIC_APP_DISPLAY_NAME",
         "EXPO_PUBLIC_APP_ENV",
         "EXPO_PUBLIC_APP_SCHEME",
+        "EXPO_PUBLIC_APP_STORE_URL",
+        "EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL",
+        "EXPO_PUBLIC_DATA_EXPORT_URL",
         "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID",
         "EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID",
         "EXPO_PUBLIC_POSTHOG_HOST",
         "EXPO_PUBLIC_POSTHOG_KEY",
+        "EXPO_PUBLIC_PRIVACY_URL",
         "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY",
+        "EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID",
         "EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID",
         "EXPO_PUBLIC_REVENUECAT_IOS_KEY",
+        "EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID",
+        "EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID",
         "EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY",
         "EXPO_PUBLIC_SENTRY_DSN",
         "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
         "EXPO_PUBLIC_SUPABASE_URL",
+        "EXPO_PUBLIC_SUPPORT_EMAIL",
+        "EXPO_PUBLIC_SUPPORT_URL",
+        "EXPO_PUBLIC_TERMS_URL",
         "EXPO_PUBLIC_TURNSTILE_SITE_KEY",
         "PHASE2_ALLOW_PRODUCTION_SMOKE",
         "POSTHOG_API_HOST",
@@ -149,7 +147,8 @@
         "SUPABASE_SECRET_KEY",
         "SUPABASE_SERVICE_ROLE_KEY",
         "SUPABASE_URL"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase3",
@@ -205,16 +204,15 @@
         "CATALOG_APP_VERSION",
         "CATALOG_ATTRIBUTION_URL",
         "CATALOG_CONTACT_EMAIL",
-        "OBF_USER_AGENT",
-        "PHASE4_BETA_COVERAGE_INPUT"
-      ],
-      "keysNotMentionedInForTas": [
         "CATALOG_RATE_LIMIT_MAX",
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
         "OBF_API_ENABLED",
         "OBF_CONTRIBUTION_ENABLED",
+        "OBF_USER_AGENT",
+        "PHASE4_BETA_COVERAGE_INPUT",
         "PHASE4_BETA_COVERAGE_REPORT"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase5",
@@ -320,27 +318,26 @@
         "REVENUECAT_WEBHOOK_SIGNING_SECRET"
       ],
       "keysMentionedInForTas": [
-        "EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID",
-        "EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID",
-        "EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID",
-        "PHASE6_SIGNED_OFF_BY"
-      ],
-      "keysNotMentionedInForTas": [
         "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY",
+        "EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID",
         "EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID",
         "EXPO_PUBLIC_REVENUECAT_IOS_KEY",
+        "EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID",
+        "EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID",
         "EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY",
         "PHASE6_ANDROID_LICENSE_TEST_PASS",
         "PHASE6_FINANCE_SIGNOFF",
         "PHASE6_IOS_SANDBOX_RESTORE_PASS",
         "PHASE6_RC_OFFERING_REVIEWED",
+        "PHASE6_SIGNED_OFF_BY",
         "PHASE6_WEBHOOK_HMAC_TEST_PASS",
         "REVENUECAT_SECRET_API_KEY",
         "REVENUECAT_WEBHOOK_AUTH",
         "REVENUECAT_WEBHOOK_MAX_BYTES",
         "REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS",
         "REVENUECAT_WEBHOOK_SIGNING_SECRET"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase7",
@@ -393,21 +390,6 @@
         "PHASE7_TODAY_CHECKOFF_QA_PASS"
       ],
       "keysMentionedInForTas": [
-        "PHASE7_ANALYTICS_QA_PASS",
-        "PHASE7_DEFERRED_SURFACES_QA_PASS",
-        "PHASE7_ONBOARDING_CONSENT_QA_PASS",
-        "PHASE7_PAYMENTS_LIFECYCLE_QA_PASS",
-        "PHASE7_PHOTOS_PRIVACY_QA_PASS",
-        "PHASE7_PRIVACY_CONTROLS_QA_PASS",
-        "PHASE7_REMINDERS_QA_PASS",
-        "PHASE7_REVIEWED_GUIDANCE_QA_PASS",
-        "PHASE7_ROUTINE_BUILDER_QA_PASS",
-        "PHASE7_SHARE_CARD_QA_PASS",
-        "PHASE7_SHELF_INTAKE_QA_PASS",
-        "PHASE7_SIGNED_OFF_BY",
-        "PHASE7_TODAY_CHECKOFF_QA_PASS"
-      ],
-      "keysNotMentionedInForTas": [
         "EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED",
         "EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED",
         "EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED",
@@ -416,15 +398,29 @@
         "EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED",
         "EXPO_PUBLIC_PHASE7_TREND_ENABLED",
         "EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED",
+        "PHASE7_ANALYTICS_QA_PASS",
         "PHASE7_BETA_DASHBOARD_READY",
         "PHASE7_BRAND_READY",
         "PHASE7_CATALOG_BETA_IMPORT_PASS",
         "PHASE7_CLINICAL_REVIEW_PASS",
+        "PHASE7_DEFERRED_SURFACES_QA_PASS",
         "PHASE7_DEVICE_QA_PASS",
+        "PHASE7_ONBOARDING_CONSENT_QA_PASS",
+        "PHASE7_PAYMENTS_LIFECYCLE_QA_PASS",
+        "PHASE7_PHOTOS_PRIVACY_QA_PASS",
+        "PHASE7_PRIVACY_CONTROLS_QA_PASS",
         "PHASE7_PRIVACY_EXPORT_DELETE_PASS",
+        "PHASE7_REMINDERS_QA_PASS",
         "PHASE7_REVENUECAT_QA_PASS",
-        "PHASE7_SUPABASE_RLS_PASS"
-      ]
+        "PHASE7_REVIEWED_GUIDANCE_QA_PASS",
+        "PHASE7_ROUTINE_BUILDER_QA_PASS",
+        "PHASE7_SHARE_CARD_QA_PASS",
+        "PHASE7_SHELF_INTAKE_QA_PASS",
+        "PHASE7_SIGNED_OFF_BY",
+        "PHASE7_SUPABASE_RLS_PASS",
+        "PHASE7_TODAY_CHECKOFF_QA_PASS"
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase8",
@@ -466,8 +462,7 @@
         "PHASE8_SIGNED_OFF_BY",
         "PHASE8_SUPPORT_RESPONSE_PASS"
       ],
-      "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
+      "keysMentionedInForTas": [
         "ANDROID_CERT_SHA256_FINGERPRINTS",
         "APPLE_TEAM_ID",
         "EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED",
@@ -487,7 +482,8 @@
         "PHASE8_SHARE_CARD_DEVICE_QA_PASS",
         "PHASE8_SIGNED_OFF_BY",
         "PHASE8_SUPPORT_RESPONSE_PASS"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase9",
@@ -563,8 +559,7 @@
         "PHASE9_SIGNED_OFF_BY",
         "PHASE9_TURNSTILE_VALID_TOKEN"
       ],
-      "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
+      "keysMentionedInForTas": [
         "PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT",
         "PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL",
         "PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS",
@@ -618,7 +613,8 @@
         "PHASE9_RUN_NPM_AUDIT",
         "PHASE9_SIGNED_OFF_BY",
         "PHASE9_TURNSTILE_VALID_TOKEN"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase10",
@@ -656,8 +652,7 @@
         "PHASE10_SUPPORT_DESK_PASS",
         "PHASE10_TESTFLIGHT_READY"
       ],
-      "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
+      "keysMentionedInForTas": [
         "PHASE10_BETA_IDENTITY_PASS",
         "PHASE10_BETA_TERMS_PASS",
         "PHASE10_CATALOG_BETA_PASS",
@@ -673,7 +668,8 @@
         "PHASE10_SIGNED_OFF_BY",
         "PHASE10_SUPPORT_DESK_PASS",
         "PHASE10_TESTFLIGHT_READY"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase11",
@@ -711,8 +707,7 @@
         "PHASE11_SUPPORT_READY",
         "PHASE11_WEEK1_DECISION_PASS"
       ],
-      "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
+      "keysMentionedInForTas": [
         "PHASE11_ASO_REVIEW_PASS",
         "PHASE11_CREATOR_DISCLOSURE_PASS",
         "PHASE11_INCIDENT_ROLLBACK_PASS",
@@ -728,18 +723,10 @@
         "PHASE11_STORE_APPROVAL_PASS",
         "PHASE11_SUPPORT_READY",
         "PHASE11_WEEK1_DECISION_PASS"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 4 catalog source posture has 5 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 6 payments and RevenueCat has 14 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 7 core loop launch gates has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 8 growth and store readiness has 19 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 9 release engineering has 53 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 10 closed beta has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 11 public launch has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
-  ]
+  "warnings": []
 }

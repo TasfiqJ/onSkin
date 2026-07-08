@@ -1,6 +1,6 @@
 # For Tas To Do
 
-Date: 2026-07-07
+Date: 2026-07-08
 
 Purpose: track work Codex must not guess or fake. These items require a founder decision, account owner, credential, payment method, counsel/reviewer signoff, physical device, or real beta users. Codex can keep building around them, but launch readiness cannot close until evidence is attached.
 
@@ -117,9 +117,8 @@ Evidence needed:
 
 - Signed review logs in `docs/phase-3/`.
 - Strict Phase 3 audit passing or explicitly accepted with recorded exceptions.
-- Generated `docs/phase-3/generated/review-packet.md` with `Git status:
-  clean`, current source hashes, and reviewer signoff tied to the exact
-  reviewed build.
+- Generated `docs/phase-3/generated/review-packet.md` with clean Git status,
+  current source hashes, and reviewer signoff tied to the exact reviewed build.
 
 ## P1 - Physical Device QA
 
@@ -270,18 +269,242 @@ Evidence needed:
 
 These are the exact external proof switches surfaced by the local launch gates on 2026-07-07. Do not set any of them to `true` until the matching evidence exists.
 
-| Gate                                                            | Evidence Tas must provide                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `phase2:check-env:strict`                                       | Final app identity, production HTTPS policy URLs, production Supabase project URL, RevenueCat, OAuth, production PostHog host, production Sentry DSN, Turnstile, body-limit, rate-limit, and secret-storage values configured outside git.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `phase3:audit-copy:strict`                                      | Final legal/privacy/consent copy plus clinical and cosmetic reviewer signoff for rules, routines, PAO defaults, recommendations, Skin Notes, Ask, community, and commerce-adjacent copy.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `phase4:check-source-env`                                       | Final catalog/source identity values: `CATALOG_APP_NAME`, `CATALOG_APP_VERSION`, production `CATALOG_CONTACT_EMAIL`, production HTTPS `CATALOG_ATTRIBUTION_URL`, and `OBF_USER_AGENT` with a production contact email. These must not use the uncleared legacy brand and should match the final support/domain identity.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `phase5:check-native-config:strict` / `phase5:qa-packet:strict` | iOS and Android build IDs, physical device names/OS versions, native camera/OCR/photo/notification/share-sheet QA, and named tester signoff. Evidence flags are trimmed/case-normalized, but only `true` passes, and `PHASE5_SIGNED_OFF_BY` must be a real named signoff, not a placeholder or generic tester label.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `phase6:check-payments-env:strict`                              | Final RevenueCat annual/monthly/reverse-trial product IDs plus sandbox evidence for purchase, restore, trial/reverse-trial, expiry, refund/grace states, win-back eligibility/ineligible fallback, webhook verification, finance reconciliation, and store product setup. Evidence flags are trimmed/case-normalized, but only `true` passes, and `PHASE6_SIGNED_OFF_BY` must be a real named signoff, not a placeholder or `example.com` email.                                                                                                                                                                                                                                                                                                                                                          |
+| Gate                                                            | Evidence Tas must provide                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `phase2:check-env:strict`                                       | Final app identity, production HTTPS policy URLs, production Supabase project URL, RevenueCat, OAuth, production PostHog host, production Sentry DSN, Turnstile, body-limit, rate-limit, and secret-storage values configured outside git.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `phase3:audit-copy:strict`                                      | Final legal/privacy/consent copy plus clinical and cosmetic reviewer signoff for rules, routines, PAO defaults, recommendations, Skin Notes, Ask, community, and commerce-adjacent copy.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `phase4:check-source-env`                                       | Final catalog/source identity values: `CATALOG_APP_NAME`, `CATALOG_APP_VERSION`, production `CATALOG_CONTACT_EMAIL`, production HTTPS `CATALOG_ATTRIBUTION_URL`, and `OBF_USER_AGENT` with a production contact email. These must not use the uncleared legacy brand and should match the final support/domain identity.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `phase5:check-native-config:strict` / `phase5:qa-packet:strict` | iOS and Android build IDs, physical device names/OS versions, native camera/OCR/photo/notification/share-sheet QA, and named tester signoff. Evidence flags are trimmed/case-normalized, but only `true` passes, and `PHASE5_SIGNED_OFF_BY` must be a real named signoff, not a placeholder or generic tester label.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `phase6:check-payments-env:strict`                              | Final RevenueCat annual/monthly/reverse-trial product IDs plus sandbox evidence for purchase, restore, trial/reverse-trial, expiry, refund/grace states, win-back eligibility/ineligible fallback, webhook verification, finance reconciliation, and store product setup. Evidence flags are trimmed/case-normalized, but only `true` passes, and `PHASE6_SIGNED_OFF_BY` must be a real named signoff, not a placeholder or `example.com` email.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `phase7:check-core-loop:strict` / `phase7:qa-packet:strict`     | Final brand domain, production privacy/terms/support/export/delete/consumer-health URLs, final privacy and consent copy, reviewed conflict/routine/recommendation evidence, Supabase RLS evidence, catalog beta import evidence, physical-device QA, RevenueCat QA, privacy export/delete QA, beta dashboard readiness, and named Phase 7 signoff via `PHASE7_SIGNED_OFF_BY`. Strict scenario evidence must also set `PHASE7_ONBOARDING_CONSENT_QA_PASS`, `PHASE7_SHELF_INTAKE_QA_PASS`, `PHASE7_REVIEWED_GUIDANCE_QA_PASS`, `PHASE7_ROUTINE_BUILDER_QA_PASS`, `PHASE7_TODAY_CHECKOFF_QA_PASS`, `PHASE7_PHOTOS_PRIVACY_QA_PASS`, `PHASE7_REMINDERS_QA_PASS`, `PHASE7_PAYMENTS_LIFECYCLE_QA_PASS`, `PHASE7_PRIVACY_CONTROLS_QA_PASS`, `PHASE7_SHARE_CARD_QA_PASS`, `PHASE7_DEFERRED_SURFACES_QA_PASS`, and `PHASE7_ANALYTICS_QA_PASS`. Evidence flags are trimmed/case-normalized, but only `true` passes. Generic signoffs like `Tester Name`, `TBD`, or `example.com` emails are rejected. |
-| `phase8:verify` strict gates                                    | Final brand domain, production marketing/support URLs, App Store and Play URLs, DNS, Universal Links/App Links, share-card device QA, attribution privacy review, store packets, creator compliance, support responses, launch dashboard, dry run, Apple Team ID, Android release certificate fingerprint, and named signoff. Evidence flags are trimmed/case-normalized, but only `true` passes. Apple Team ID must be a real 10-character non-placeholder team ID, Android release certificate evidence must be real SHA-256 fingerprint(s), and generic signoffs are rejected.                                                                                                                                                                                                                         |
-| `phase9:verify` strict gates                                    | Live Supabase, RLS staging/production, Edge auth, public forms, catalog rate limits, order-report polling, data export/delete, consent withdrawal, observability payload approval, store build inspection, dependency audit, rollback drill, incident response, and beta evidence. Phase 9 release evidence, individual Phase 9 sub-gates, and the production Phase 7 surface bridge use the same normalized evidence rule: whitespace/case are tolerated, but only `true` passes. Real named signoffs are required where requested, and placeholder signoffs are rejected.                                                                                                                                                                                                                               |
-| `phase10:verify` strict gates                                   | Final beta identity/policy values (`EXPO_PUBLIC_PRIVACY_URL`, `EXPO_PUBLIC_TERMS_URL`, `EXPO_PUBLIC_SUPPORT_URL`, `EXPO_PUBLIC_ACCOUNT_DELETION_URL`, `EXPO_PUBLIC_DATA_EXPORT_URL`, `EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN`, `EXPO_PUBLIC_MARKETING_URL`, `EXPO_PUBLIC_SUPPORT_EMAIL`), closed beta identity, TestFlight, Play closed test including 12 testers for 14 days where required, recruiting, beta terms, dashboards, support desk, privacy-payload approval, payment QA, catalog beta report, retention report, public-launch decision (`go` or `limited`), and real named signoff. Phase 10 readiness, beta analytics, and packet gates all require normalized `true`; generic signoffs like `Tester Name`, `TBD`, or `example.com` emails are rejected. |
-| `phase11:verify` strict gates                                   | Final public launch values (`EXPO_PUBLIC_PRIVACY_URL`, `EXPO_PUBLIC_TERMS_URL`, `EXPO_PUBLIC_SUPPORT_URL`, `EXPO_PUBLIC_ACCOUNT_DELETION_URL`, `EXPO_PUBLIC_DATA_EXPORT_URL`, `EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN`, `EXPO_PUBLIC_MARKETING_URL`, `EXPO_PUBLIC_SUPPORT_EMAIL`, `EXPO_PUBLIC_APP_STORE_URL`, `EXPO_PUBLIC_PLAY_STORE_URL`), Phase 10 exit review, RC signoff, store approval, production environment, RevenueCat production verification, monitoring, support readiness, incident/rollback drill, launch ring reports, ASO review, creator disclosure review, revenue reconciliation, week-1 decision, and real named launch signoff. Generic signoffs are rejected.                                                                                 |
+| `phase8:verify` strict gates                                    | Final brand domain, production marketing/support URLs, App Store and Play URLs, DNS, Universal Links/App Links, share-card device QA, attribution privacy review, store packets, creator compliance, support responses, launch dashboard, dry run, Apple Team ID, Android release certificate fingerprint, and named signoff. Evidence flags are trimmed/case-normalized, but only `true` passes. Apple Team ID must be a real 10-character non-placeholder team ID, Android release certificate evidence must be real SHA-256 fingerprint(s), and generic signoffs are rejected.                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `phase9:verify` strict gates                                    | Live Supabase, RLS staging/production, Edge auth, public forms, catalog rate limits, order-report polling, data export/delete, consent withdrawal, observability payload approval, store build inspection, dependency audit, rollback drill, incident response, and beta evidence. Phase 9 release evidence, individual Phase 9 sub-gates, and the production Phase 7 surface bridge use the same normalized evidence rule: whitespace/case are tolerated, but only `true` passes. Real named signoffs are required where requested, and placeholder signoffs are rejected.                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `phase10:verify` strict gates                                   | Final beta identity/policy values (`EXPO_PUBLIC_PRIVACY_URL`, `EXPO_PUBLIC_TERMS_URL`, `EXPO_PUBLIC_SUPPORT_URL`, `EXPO_PUBLIC_ACCOUNT_DELETION_URL`, `EXPO_PUBLIC_DATA_EXPORT_URL`, `EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN`, `EXPO_PUBLIC_MARKETING_URL`, `EXPO_PUBLIC_SUPPORT_EMAIL`), closed beta identity, TestFlight, Play closed test including 12 testers for 14 days where required, recruiting, beta terms, dashboards, support desk, privacy-payload approval, payment QA, catalog beta report, retention report, public-launch decision (`go` or `limited`), and real named signoff. Phase 10 readiness, beta analytics, and packet gates all require normalized `true`; generic signoffs like `Tester Name`, `TBD`, or `example.com` emails are rejected.                                                                                                                                                                                   |
+| `phase11:verify` strict gates                                   | Final public launch values (`EXPO_PUBLIC_PRIVACY_URL`, `EXPO_PUBLIC_TERMS_URL`, `EXPO_PUBLIC_SUPPORT_URL`, `EXPO_PUBLIC_ACCOUNT_DELETION_URL`, `EXPO_PUBLIC_DATA_EXPORT_URL`, `EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN`, `EXPO_PUBLIC_MARKETING_URL`, `EXPO_PUBLIC_SUPPORT_EMAIL`, `EXPO_PUBLIC_APP_STORE_URL`, `EXPO_PUBLIC_PLAY_STORE_URL`), Phase 10 exit review, RC signoff, store approval, production environment, RevenueCat production verification, monitoring, support readiness, incident/rollback drill, launch ring reports, ASO review, creator disclosure review, revenue reconciliation, week-1 decision, and real named launch signoff. Generic signoffs are rejected.                                                                                                                                                                                                                                                                   |
+
+## Exact Strict Evidence Key Inventory
+
+The generated Tas audit also checks that this handoff names every strict
+external evidence key verbatim. These keys are not values, approvals, or
+evidence. Tas must provide real values, live console configuration, named
+signoff, or captured proof before any matching gate can be closed.
+
+### Phase 2 environment and RLS
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `APPLE_SIWA_CLIENT_ID`
+- `APPLE_SIWA_KEY_ID`
+- `APPLE_SIWA_PRIVATE_KEY`
+- `APPLE_SIWA_SERVICE_ID`
+- `APPLE_TEAM_ID`
+- `EXPO_PUBLIC_APP_DISPLAY_NAME`
+- `EXPO_PUBLIC_APP_ENV`
+- `EXPO_PUBLIC_APP_SCHEME`
+- `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`
+- `EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME`
+- `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`
+- `EXPO_PUBLIC_POSTHOG_HOST`
+- `EXPO_PUBLIC_POSTHOG_KEY`
+- `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`
+- `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID`
+- `EXPO_PUBLIC_REVENUECAT_IOS_KEY`
+- `EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY`
+- `EXPO_PUBLIC_SENTRY_DSN`
+- `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `EXPO_PUBLIC_SUPABASE_URL`
+- `EXPO_PUBLIC_TURNSTILE_SITE_KEY`
+- `PHASE2_ALLOW_PRODUCTION_SMOKE`
+- `POSTHOG_API_HOST`
+- `POSTHOG_DELETION_APPROVED_ALTERNATE`
+- `POSTHOG_PERSONAL_API_KEY`
+- `POSTHOG_PROJECT_ID`
+- `REVENUECAT_SECRET_API_KEY`
+- `REVENUECAT_WEBHOOK_AUTH`
+- `REVENUECAT_WEBHOOK_MAX_BYTES`
+- `REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS`
+- `REVENUECAT_WEBHOOK_SIGNING_SECRET`
+- `SENTRY_AUTH_TOKEN`
+- `SENTRY_ORG`
+- `SENTRY_PROJECT`
+- `SUPABASE_ANON_KEY`
+- `SUPABASE_PROJECT_REF`
+- `SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SECRET_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_URL`
+
+### Phase 4 catalog source posture
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `CATALOG_RATE_LIMIT_MAX`
+- `CATALOG_RATE_LIMIT_WINDOW_SECONDS`
+- `OBF_API_ENABLED`
+- `OBF_CONTRIBUTION_ENABLED`
+- `PHASE4_BETA_COVERAGE_REPORT`
+
+### Phase 6 payments and RevenueCat
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`
+- `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID`
+- `EXPO_PUBLIC_REVENUECAT_IOS_KEY`
+- `EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY`
+- `PHASE6_ANDROID_LICENSE_TEST_PASS`
+- `PHASE6_FINANCE_SIGNOFF`
+- `PHASE6_IOS_SANDBOX_RESTORE_PASS`
+- `PHASE6_RC_OFFERING_REVIEWED`
+- `PHASE6_WEBHOOK_HMAC_TEST_PASS`
+- `REVENUECAT_SECRET_API_KEY`
+- `REVENUECAT_WEBHOOK_AUTH`
+- `REVENUECAT_WEBHOOK_MAX_BYTES`
+- `REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS`
+- `REVENUECAT_WEBHOOK_SIGNING_SECRET`
+
+### Phase 7 core loop launch gates
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED`
+- `EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED`
+- `EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED`
+- `EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED`
+- `EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED`
+- `EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED`
+- `EXPO_PUBLIC_PHASE7_TREND_ENABLED`
+- `EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED`
+- `PHASE7_BETA_DASHBOARD_READY`
+- `PHASE7_BRAND_READY`
+- `PHASE7_CATALOG_BETA_IMPORT_PASS`
+- `PHASE7_CLINICAL_REVIEW_PASS`
+- `PHASE7_DEVICE_QA_PASS`
+- `PHASE7_PRIVACY_EXPORT_DELETE_PASS`
+- `PHASE7_REVENUECAT_QA_PASS`
+- `PHASE7_SUPABASE_RLS_PASS`
+
+### Phase 8 growth and store readiness
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `ANDROID_CERT_SHA256_FINGERPRINTS`
+- `APPLE_TEAM_ID`
+- `EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED`
+- `EXPO_PUBLIC_PHASE8_PAID_MEASUREMENT_ENABLED`
+- `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED`
+- `EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED`
+- `PHASE8_ANDROID_APP_LINKS_PASS`
+- `PHASE8_APP_STORE_PACKET_PASS`
+- `PHASE8_ATTRIBUTION_PRIVACY_PASS`
+- `PHASE8_BRAND_SOURCE_OF_TRUTH_PASS`
+- `PHASE8_CREATOR_COMPLIANCE_PASS`
+- `PHASE8_DOMAIN_DNS_PASS`
+- `PHASE8_DRY_RUN_PASS`
+- `PHASE8_IOS_UNIVERSAL_LINKS_PASS`
+- `PHASE8_LAUNCH_DASHBOARD_READY`
+- `PHASE8_PLAY_STORE_PACKET_PASS`
+- `PHASE8_SHARE_CARD_DEVICE_QA_PASS`
+- `PHASE8_SIGNED_OFF_BY`
+- `PHASE8_SUPPORT_RESPONSE_PASS`
+
+### Phase 9 release engineering
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_ORDER_REPORT_POLL`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_PUBLIC_FORMS`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_REVENUECAT_WEBHOOK`
+- `PHASE9_ALLOW_PRODUCTION_LIVE_SUPABASE_ADVERSARIAL`
+- `PHASE9_ANDROID_16KB_PASS`
+- `PHASE9_ANDROID_ARTIFACT`
+- `PHASE9_ANDROID_CLOSED_TEST_PASS`
+- `PHASE9_ANDROID_TARGET_API_PASS`
+- `PHASE9_APP_STORE_PACKET_PASS`
+- `PHASE9_BETA_EVIDENCE_PASS`
+- `PHASE9_CATALOG_RATE_LIMIT_PASS`
+- `PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX`
+- `PHASE9_CONSENT_WITHDRAWAL_PASS`
+- `PHASE9_DATA_EXPORT_DELETE_PASS`
+- `PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX`
+- `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK`
+- `PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS`
+- `PHASE9_DEPENDENCY_AUDIT_PASS`
+- `PHASE9_DEVICE_QA_PASS`
+- `PHASE9_EDGE_AUTH_PASS`
+- `PHASE9_FINAL_IDENTITY_PASS`
+- `PHASE9_INCIDENT_RESPONSE_PASS`
+- `PHASE9_IOS_ARTIFACT`
+- `PHASE9_IOS_PRIVACY_REPORT_PASS`
+- `PHASE9_IOS_TESTFLIGHT_PASS`
+- `PHASE9_LIVE_SUPABASE_PASS`
+- `PHASE9_OBSERVABILITY_PAYLOAD_PASS`
+- `PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED`
+- `PHASE9_ORDER_REPORT_POLL_PASS`
+- `PHASE9_PLAY_PACKET_PASS`
+- `PHASE9_PUBLIC_FORMS_PASS`
+- `PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX`
+- `PHASE9_REVENUECAT_NATIVE_QA_PASS`
+- `PHASE9_REVENUECAT_WEBHOOK_PASS`
+- `PHASE9_RLS_PRODUCTION_PASS`
+- `PHASE9_RLS_STAGING_PASS`
+- `PHASE9_ROLLBACK_DRILL_PASS`
+- `PHASE9_RUN_LIVE_CATALOG_RATE_LIMIT`
+- `PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL`
+- `PHASE9_RUN_LIVE_DATA_RIGHTS`
+- `PHASE9_RUN_LIVE_EDGE_AUTH`
+- `PHASE9_RUN_LIVE_ORDER_REPORT_POLL`
+- `PHASE9_RUN_LIVE_PUBLIC_FORMS`
+- `PHASE9_RUN_LIVE_REVENUECAT_WEBHOOK`
+- `PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL`
+- `PHASE9_RUN_LIVE_SUPABASE_CHECK`
+- `PHASE9_RUN_NPM_AUDIT`
+- `PHASE9_SIGNED_OFF_BY`
+- `PHASE9_TURNSTILE_VALID_TOKEN`
+
+### Phase 10 closed beta
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `PHASE10_BETA_IDENTITY_PASS`
+- `PHASE10_BETA_TERMS_PASS`
+- `PHASE10_CATALOG_BETA_PASS`
+- `PHASE10_DASHBOARDS_PASS`
+- `PHASE10_PAYMENT_QA_PASS`
+- `PHASE10_PHASE9_BETA_CANDIDATE_PASS`
+- `PHASE10_PLAY_12_TESTERS_14_DAYS_SCHEDULED`
+- `PHASE10_PLAY_CLOSED_TEST_READY`
+- `PHASE10_PRIVACY_PAYLOAD_PASS`
+- `PHASE10_PUBLIC_LAUNCH_DECISION`
+- `PHASE10_RECRUITING_PASS`
+- `PHASE10_RETENTION_REPORT_PASS`
+- `PHASE10_SIGNED_OFF_BY`
+- `PHASE10_SUPPORT_DESK_PASS`
+- `PHASE10_TESTFLIGHT_READY`
+
+### Phase 11 public launch
+
+Tas must provide real values/evidence for these exact keys before this gate can close:
+
+- `PHASE11_ASO_REVIEW_PASS`
+- `PHASE11_CREATOR_DISCLOSURE_PASS`
+- `PHASE11_INCIDENT_ROLLBACK_PASS`
+- `PHASE11_MONITORING_PASS`
+- `PHASE11_PHASE10_EXIT_PASS`
+- `PHASE11_PHASE9_RC_SIGNOFF_PASS`
+- `PHASE11_PRODUCTION_ENV_PASS`
+- `PHASE11_REVENUE_RECON_PASS`
+- `PHASE11_REVENUECAT_PROD_PASS`
+- `PHASE11_RING0_PASS`
+- `PHASE11_RING1_72H_REPORT_PASS`
+- `PHASE11_SIGNED_OFF_BY`
+- `PHASE11_STORE_APPROVAL_PASS`
+- `PHASE11_SUPPORT_READY`
+- `PHASE11_WEEK1_DECISION_PASS`
 
 ## How Codex Should Use This
 
