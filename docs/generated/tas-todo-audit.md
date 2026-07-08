@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-08T19:25:40.819Z
+Generated: 2026-07-08T19:30:40.430Z
 Status: pass
 Strict mode: yes
 
@@ -15,18 +15,18 @@ canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 240
+- Extracted keys: 241
 - Keys named verbatim in FOR_TAS_TO_DO.md: 55
-- Keys only in generated inventory: 185
+- Keys only in generated inventory: 186
 - Blockers: 0
-- Warnings: 9
+- Warnings: 10
 
 ## Gate Coverage
 
 | Gate    | FOR_TAS coverage | Package script evidence                                    | Keys | Keys only in generated inventory |
 | ------- | ---------------- | ---------------------------------------------------------- | ---- | -------------------------------- |
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 40                               |
-| phase3  | yes              | phase3:audit-copy:strict                                   | 0    | 0                                |
+| phase3  | yes              | phase3:audit-copy:strict                                   | 1    | 1                                |
 | phase4  | yes              | phase4:check-source-env:strict                             | 9    | 4                                |
 | phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 21   | 1                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 19   | 15                               |
@@ -102,7 +102,9 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
 Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
-- No machine-detected external evidence keys in this group.
+| Extracted key                | Named in FOR_TAS_TO_DO.md |
+| ---------------------------- | ------------------------- |
+| PHASE3_REVIEW_PACKET_OUT_DIR | no                        |
 
 ### Phase 4 catalog source posture
 
@@ -354,6 +356,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 ## Warnings
 
 - Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
+- Phase 3 legal and reviewer signoff has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 5 native build and device QA has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.

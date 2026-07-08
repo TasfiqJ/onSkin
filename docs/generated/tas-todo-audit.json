@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T19:25:40.819Z",
+  "generatedAt": "2026-07-08T19:30:40.430Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,11 +11,11 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 240,
+    "extractedKeyCount": 241,
     "keyMentionCount": 55,
-    "keyNotMentionedCount": 185,
+    "keyNotMentionedCount": 186,
     "blockerCount": 0,
-    "warningCount": 9
+    "warningCount": 10
   },
   "groups": [
     {
@@ -166,9 +166,13 @@
         "phase3:audit-copy:strict"
       ],
       "forTasCovered": true,
-      "keys": [],
+      "keys": [
+        "PHASE3_REVIEW_PACKET_OUT_DIR"
+      ],
       "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": []
+      "keysNotMentionedInForTas": [
+        "PHASE3_REVIEW_PACKET_OUT_DIR"
+      ]
     },
     {
       "id": "phase4",
@@ -748,6 +752,7 @@
   "blockers": [],
   "warnings": [
     "Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 3 legal and reviewer signoff has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 5 native build and device QA has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
