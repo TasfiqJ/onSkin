@@ -207,9 +207,14 @@ describe('Shelf route mobile contracts', () => {
       'function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: boolean })',
     );
     expect(source).toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
-    expect(source).toContain("? 'items-center px-2 pb-24 pt-7'");
+    expect(source).toContain('const hasArchive = archiveCount > 0;');
+    expect(source).toContain('const compactWithArchive = compact && hasArchive;');
+    expect(source).toContain("? 'items-center px-2 pb-28 pt-2'");
+    expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
     expect(source).toContain(": 'flex-1 items-center justify-center px-2 pb-16'");
-    expect(source).toContain('{archiveCount > 0 ? (');
+    expect(source).toContain("`${compactWithArchive ? 'mb-4' : 'mb-7'} flex-row items-end gap-2.5`");
+    expect(source).toContain("`${compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'} w-full max-w-[300px]`");
+    expect(source).toContain('{hasArchive ? (');
     expect(source).toContain('accessibilityLabel={`View archive, ${archiveCount} archived ${');
     expect(source).toContain("archiveCount === 1 ? 'product' : 'products'");
     expect(source).toContain("router.push('/shelf/archive');");

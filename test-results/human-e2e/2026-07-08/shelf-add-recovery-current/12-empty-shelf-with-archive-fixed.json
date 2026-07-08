@@ -1,0 +1,94 @@
+{
+  "bodyText": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand View archive (1) → Today Progress Shelf You",
+  "controls": [
+    {
+      "aria": null,
+      "disabled": false,
+      "height": 56,
+      "role": "button",
+      "text": "Scan a barcode",
+      "visible": true,
+      "width": 256,
+      "x": 32,
+      "y": 296
+    },
+    {
+      "aria": null,
+      "disabled": false,
+      "height": 50,
+      "role": "button",
+      "text": "Add by hand",
+      "visible": true,
+      "width": 256,
+      "x": 32,
+      "y": 360
+    },
+    {
+      "aria": "View archive, 1 archived product",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "View archive (1) →",
+      "visible": true,
+      "width": 256,
+      "x": 32,
+      "y": 418
+    },
+    {
+      "aria": "Today tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "Today",
+      "visible": true,
+      "width": 76,
+      "x": 9,
+      "y": 495
+    },
+    {
+      "aria": "Progress tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "Progress",
+      "visible": true,
+      "width": 76,
+      "x": 85,
+      "y": 495
+    },
+    {
+      "aria": "Shelf tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "Shelf",
+      "visible": true,
+      "width": 76,
+      "x": 160,
+      "y": 495
+    },
+    {
+      "aria": "You tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "You",
+      "visible": true,
+      "width": 76,
+      "x": 236,
+      "y": 495
+    }
+  ],
+  "overflowX": 0,
+  "scroll": {
+    "maxY": 0,
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

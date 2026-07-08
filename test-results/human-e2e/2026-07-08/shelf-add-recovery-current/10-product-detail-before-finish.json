@@ -1,0 +1,105 @@
+{
+  "bodyText": "< ... E2E Archive Balm RoutineKind Test data / Added by you CATALOG Added by you Manual Added by hand. It can support your shelf and routine, but not high-confidence product recommendations. Report an issue Opened July 2026 · edit PAO unknown Best used by estimated · set ROUTINE ROLE Used in your Evening routine. Review the AM/PM plan before you check it off. Replace Mark finished 🗑︎",
+  "controls": [
+    {
+      "aria": "Back",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "<",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "aria": "More options",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "...",
+      "visible": true,
+      "width": 48,
+      "x": 248,
+      "y": 8
+    },
+    {
+      "aria": null,
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "Report an issue",
+      "visible": true,
+      "width": 105,
+      "x": 43,
+      "y": 317
+    },
+    {
+      "aria": "Edit opened date",
+      "disabled": false,
+      "height": 56,
+      "role": "button",
+      "text": "Opened July 2026 · edit",
+      "visible": true,
+      "width": 234,
+      "x": 43,
+      "y": 397
+    },
+    {
+      "aria": "Set printed best-before date",
+      "disabled": false,
+      "height": 56,
+      "role": "button",
+      "text": "Best used by estimated · set",
+      "visible": true,
+      "width": 234,
+      "x": 43,
+      "y": 510
+    },
+    {
+      "aria": null,
+      "disabled": false,
+      "height": 50,
+      "role": "button",
+      "text": "Replace",
+      "visible": true,
+      "width": 100,
+      "x": 24,
+      "y": 519
+    },
+    {
+      "aria": null,
+      "disabled": false,
+      "height": 50,
+      "role": "button",
+      "text": "Mark finished",
+      "visible": true,
+      "width": 102,
+      "x": 134,
+      "y": 519
+    },
+    {
+      "aria": "Remove or discard",
+      "disabled": false,
+      "height": 50,
+      "role": "button",
+      "text": "🗑︎",
+      "visible": true,
+      "width": 50,
+      "x": 246,
+      "y": 519
+    }
+  ],
+  "overflowX": 0,
+  "scroll": {
+    "maxY": 0,
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf/651fef11-d870-4619-8c37-8f7fda9db2ad",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

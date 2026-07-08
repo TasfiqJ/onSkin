@@ -1,0 +1,39 @@
+{
+  "bodyText": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished E2E Archive Balm finished Jul archived",
+  "controls": [
+    {
+      "aria": "Back",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "<",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "aria": "E2E Archive Balm, finished Jul",
+      "disabled": false,
+      "height": 86,
+      "role": "button",
+      "text": "E2E Archive Balm finished Jul archived",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 204
+    }
+  ],
+  "overflowX": 0,
+  "scroll": {
+    "maxY": 0,
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf/archive",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

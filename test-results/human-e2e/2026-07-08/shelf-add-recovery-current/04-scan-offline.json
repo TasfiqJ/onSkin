@@ -1,0 +1,122 @@
+{
+  "body": {
+    "clientWidth": 320,
+    "scrollHeight": 569,
+    "scrollWidth": 320
+  },
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "label": "Close",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": "true",
+      "height": 48,
+      "label": "torch",
+      "role": "switch",
+      "tag": "DIV",
+      "visible": true,
+      "width": 57,
+      "x": 239,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 76,
+      "label": "=Scan ingredient labelReview editable OCR",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 280,
+      "x": 20,
+      "y": 297
+    },
+    {
+      "disabled": false,
+      "height": 76,
+      "label": "SSearch catalogUse reviewed matches",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 280,
+      "x": 20,
+      "y": 383
+    },
+    {
+      "disabled": false,
+      "height": 76,
+      "label": "+Add it by handAlways works offline",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 280,
+      "x": 20,
+      "y": 469
+    }
+  ],
+  "horizontalOverflow": 0,
+  "scroll": {
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf/scan",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": [
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "xtorchCamera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.",
+    "xtorch",
+    "x",
+    "x",
+    "torch",
+    "torch",
+    "Camera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.",
+    "Camera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.",
+    "Camera permission is needed for barcode scanning.You can still search, scan the label path, or add by hand.",
+    "Camera permission is needed for barcode scanning.",
+    "You can still search, scan the label path, or add by hand.",
+    "Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "Couldn't reach the product catalog for barcode 012345678905. Search by name, scan the label, or add it by hand; the shelf still works offline.",
+    "=Scan ingredient labelReview editable OCRSSearch catalogUse reviewed matches+Add it by handAlways works offline",
+    "=Scan ingredient labelReview editable OCR",
+    "=",
+    "=",
+    "Scan ingredient labelReview editable OCR",
+    "Scan ingredient label",
+    "Review editable OCR",
+    "SSearch catalogUse reviewed matches",
+    "S",
+    "S",
+    "Search catalogUse reviewed matches",
+    "Search catalog",
+    "Use reviewed matches",
+    "+Add it by handAlways works offline",
+    "+",
+    "+",
+    "Add it by handAlways works offline",
+    "Add it by hand",
+    "Always works offline"
+  ]
+}

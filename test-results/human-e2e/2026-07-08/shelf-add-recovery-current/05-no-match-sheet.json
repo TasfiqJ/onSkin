@@ -1,0 +1,110 @@
+{
+  "body": {
+    "clientWidth": 320,
+    "scrollHeight": 569,
+    "scrollWidth": 320
+  },
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "label": "Close",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 48,
+      "x": 244,
+      "y": 53
+    },
+    {
+      "disabled": false,
+      "height": 68,
+      "label": "SSearch catalogTry name or brand instead",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 305
+    },
+    {
+      "disabled": false,
+      "height": 68,
+      "label": "IScan the ingredient listWe'll read the INCI text",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 381
+    },
+    {
+      "disabled": false,
+      "height": 68,
+      "label": "+Add it by handAlways works, even offline",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 264,
+      "x": 28,
+      "y": 457
+    }
+  ],
+  "horizontalOverflow": 0,
+  "scroll": {
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf/no-match",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": [
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working .__expo_fast_refresh { position: fixed; pointer-events: none; bottom: 8px; left: 8px; z-index: 9999; display: flex; background-color: #1B1D1E; border: 1px solid #4D5155; padding: 8px; border-radius: 8px; transition: all 150ms; opacity: 0; filter: blur(4px); transform: translateY(20%); } .__expo_fast_refresh_show { opacity: 1; filter: blur(0); transform: scale(1); }",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working",
+    "?x",
+    "?",
+    "?",
+    "x",
+    "x",
+    "We don't have this one yet.",
+    "That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.",
+    "SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offline",
+    "SSearch catalogTry name or brand instead",
+    "S",
+    "S",
+    "Search catalogTry name or brand instead",
+    "Search catalog",
+    "Try name or brand instead",
+    "IScan the ingredient listWe'll read the INCI text",
+    "I",
+    "I",
+    "Scan the ingredient listWe'll read the INCI text",
+    "Scan the ingredient list",
+    "We'll read the INCI text",
+    "+Add it by handAlways works, even offline",
+    "+",
+    "+",
+    "Add it by handAlways works, even offline",
+    "Add it by hand",
+    "Always works, even offline",
+    "manual fallback keeps the shelf working",
+    "manual fallback keeps the shelf working"
+  ]
+}

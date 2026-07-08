@@ -54,6 +54,11 @@ Evidence needed:
 Status: launch-blocked
 
 - Supabase staging and production projects.
+- Supabase live Shelf scan-log evidence: attach staging/production proof that
+  barcode outcomes insert owner-scoped `shelf_scans` rows for matched,
+  no-match, and offline/queued outcomes under RLS. The 2026-07-08 Codex pass can
+  prove the local Expo web fallback UI, but it cannot prove live Supabase writes
+  without Tas-owned Supabase/auth credentials.
 - Supabase anonymous auth and consent-ledger QA for the local-first
   `photo_capture` path: attach evidence that first-use photo capture can save
   a local proof offline/pre-account and that staging/production sessions insert

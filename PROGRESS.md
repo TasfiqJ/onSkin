@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Shelf add recovery on compact phones. In-app browser Expo web E2E at
+  320 x 568 now covers catalog search no-match to manual add, barcode offline
+  fallback copy with search/OCR/manual options, the no-match sheet routes, and
+  finishing a manually added product into the archive. The run found and fixed
+  a compact empty-Shelf bug where `View archive (1)` was covered by the
+  floating tab bar; the archive action now renders as a visible 48 px target and
+  opens `/shelf/archive` with the finished product visible. Evidence and bug
+  report:
+  `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`.
+
 - Hardened the Today empty-routine and compact PM cycle-strip states. Today no
   longer treats the routine-plan example preview as real check-off data: when
   the local shelf has no real routine, it shows `No routine yet` with a direct

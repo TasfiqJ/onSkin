@@ -1,0 +1,83 @@
+{
+  "body": {
+    "clientWidth": 320,
+    "scrollHeight": 569,
+    "scrollWidth": 320
+  },
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "label": "Scan a barcode",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 256,
+      "x": 32,
+      "y": 340
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "label": "Add by hand",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 256,
+      "x": 32,
+      "y": 408
+    }
+  ],
+  "horizontalOverflow": 0,
+  "scroll": {
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": [
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by handTodayProgressShelfYou",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Shelfempty for nowLet's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Shelfempty for now",
+    "Shelf",
+    "empty for now",
+    "Let's build your cabinet.Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.Scan a barcodeAdd by hand",
+    "Let's build your cabinet.",
+    "Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.",
+    "Scan a barcodeAdd by hand",
+    "Scan a barcode",
+    "Scan a barcode",
+    "Add by hand",
+    "Add by hand",
+    "TodayProgressShelfYou",
+    "Today",
+    "Today",
+    "Today",
+    "Progress",
+    "Progress",
+    "Progress",
+    "Shelf",
+    "Shelf",
+    "Shelf",
+    "You",
+    "You",
+    "You"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "bodyText": "Shelf 1 product All Actives Expiring Everything on your shelf, soonest to replace first. FIRST ROUTINE Your routine is ready to draft. Even one product can start an honest AM/PM draft. Missing steps stay visible, not invented. Build my routine E2E Archive Balm RoutineKind Test · opened Jul PAO est. Scan a barcode Today Progress Shelf You",
+  "controls": [
+    {
+      "aria": "All",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "All",
+      "visible": true,
+      "width": 55,
+      "x": 24,
+      "y": 62
+    },
+    {
+      "aria": "Actives",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "Actives",
+      "visible": true,
+      "width": 91,
+      "x": 89,
+      "y": 62
+    },
+    {
+      "aria": "Expiring",
+      "disabled": false,
+      "height": 48,
+      "role": "button",
+      "text": "Expiring",
+      "visible": true,
+      "width": 97,
+      "x": 190,
+      "y": 62
+    },
+    {
+      "aria": null,
+      "disabled": false,
+      "height": 56,
+      "role": "button",
+      "text": "Build my routine",
+      "visible": true,
+      "width": 238,
+      "x": 41,
+      "y": 317
+    },
+    {
+      "aria": "E2E Archive Balm, PAO est.",
+      "disabled": false,
+      "height": 110,
+      "role": "button",
+      "text": "E2E Archive Balm RoutineKind Test · opened Jul PAO est.",
+      "visible": true,
+      "width": 238,
+      "x": 41,
+      "y": 423
+    },
+    {
+      "aria": "Today tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "Today",
+      "visible": true,
+      "width": 76,
+      "x": 9,
+      "y": 495
+    },
+    {
+      "aria": "Progress tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "Progress",
+      "visible": true,
+      "width": 76,
+      "x": 85,
+      "y": 495
+    },
+    {
+      "aria": "Shelf tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "Shelf",
+      "visible": true,
+      "width": 76,
+      "x": 160,
+      "y": 495
+    },
+    {
+      "aria": "You tab",
+      "disabled": false,
+      "height": 54,
+      "role": "tab",
+      "text": "You",
+      "visible": true,
+      "width": 76,
+      "x": 236,
+      "y": 495
+    }
+  ],
+  "overflowX": 0,
+  "scroll": {
+    "maxY": 0,
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

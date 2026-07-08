@@ -565,6 +565,19 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-08/shelf-manual-category-picker-safe-area/`;
   this does not replace native iOS/Android home-indicator, Dynamic Type, or
   screen-reader QA.
+- 2026-07-08: In-app browser Expo web E2E at 320 x 568 covers Shelf add
+  recovery across search no-match, barcode/offline fallback, no-match sheet
+  routing, and archive recovery after finishing a product. Local fixtures force
+  catalog search no-match and barcode offline states; the run verifies manual,
+  search, and label-scan fallbacks without contribution-back promises, adds
+  `E2E Archive Balm`, marks it finished, fixes the discovered compact empty
+  Shelf bug where `View archive (1)` was covered by the floating tab bar, and
+  reruns the archive path so `/shelf/archive` opens with the finished product
+  visible. Evidence and the bug report are in
+  `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; this does
+  not replace native barcode camera/OCR QA, live Open Beauty Facts lookup,
+  Supabase `shelf_scans` insert/RLS evidence, or real-device safe-area and
+  screen-reader QA.
 - 2026-07-07: Codex in-app browser E2E at 320 x 568 covers shared `Sheet`
   safe-area and hidden-backdrop behavior. `/shelf/no-match` exposes one modal
   dialog, a 48 px Close action, no sub-44 exposed controls, a hidden 12 px

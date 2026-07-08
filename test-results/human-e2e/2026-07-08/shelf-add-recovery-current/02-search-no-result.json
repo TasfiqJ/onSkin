@@ -1,0 +1,95 @@
+{
+  "body": {
+    "clientWidth": 320,
+    "scrollHeight": 569,
+    "scrollWidth": 320
+  },
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "label": "Back",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "label": "Catalog search query",
+      "role": null,
+      "tag": "INPUT",
+      "visible": true,
+      "width": 190,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "label": "Search",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 74,
+      "x": 222,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "label": "Add by hand",
+      "role": "button",
+      "tag": "BUTTON",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 481
+    }
+  ],
+  "horizontalOverflow": 0,
+  "scroll": {
+    "x": 0,
+    "y": 0
+  },
+  "title": "",
+  "url": "http://localhost:8138/shelf/search",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleText": [
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalogSearchSearch uses the RoutineKind catalog only. Public API search is not used for live typing.No catalog match yet. Add it by hand for now.Add by hand",
+    "<Search catalog",
+    "<",
+    "<",
+    "Search catalog",
+    "Search",
+    "Search",
+    "Search",
+    "Search uses the RoutineKind catalog only. Public API search is not used for live typing.",
+    "No catalog match yet. Add it by hand for now.",
+    "No catalog match yet. Add it by hand for now.",
+    "No catalog match yet. Add it by hand for now.",
+    "No catalog match yet. Add it by hand for now.",
+    "Add by hand",
+    "Add by hand",
+    "Add by hand"
+  ]
+}

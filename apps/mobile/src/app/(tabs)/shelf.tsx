@@ -132,15 +132,20 @@ function ProductCard({ item }: { item: ShelfItem }) {
 }
 
 function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: boolean }) {
+  const hasArchive = archiveCount > 0;
+  const compactWithArchive = compact && hasArchive;
+
   return (
     <View
       className={
         compact
-          ? 'items-center px-2 pb-24 pt-7'
+          ? compactWithArchive
+            ? 'items-center px-2 pb-28 pt-2'
+            : 'items-center px-2 pb-24 pt-7'
           : 'flex-1 items-center justify-center px-2 pb-16'
       }
     >
-      <View className="mb-7 flex-row items-end gap-2.5">
+      <View className={`${compactWithArchive ? 'mb-4' : 'mb-7'} flex-row items-end gap-2.5`}>
         <View className="-rotate-6">
           <StripedThumb light width={46} height={60} radius={10} />
         </View>
@@ -156,7 +161,7 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
         Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and
         clashes.
       </Text>
-      <View className="mt-8 w-full max-w-[300px] gap-3">
+      <View className={`${compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'} w-full max-w-[300px]`}>
         <Pressable
           accessibilityRole="button"
           onPress={() => {
@@ -181,7 +186,7 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
             Add by hand
           </Text>
         </Pressable>
-        {archiveCount > 0 ? (
+        {hasArchive ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`View archive, ${archiveCount} archived ${

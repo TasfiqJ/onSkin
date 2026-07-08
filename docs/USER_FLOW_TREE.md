@@ -434,6 +434,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Search for a product that should not match.
   - Expected result: No-match state offers manual add or safe next steps.
   - Evidence: Screenshot.
+  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match`, searches `definitely missing sunscreen`, verifies the no-match copy offers `Add by hand`, and confirms the fallback opens `/shelf/manual` with zero horizontal overflow and 50 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`.
 - Branch: empty Shelf compact phone overflow
   - Priority: Important
   - Automate later: Yes
@@ -455,6 +456,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Scan a barcode that returns no catalog match, an external candidate, or an offline/failed lookup.
   - Expected result: The scan sheet never dead-ends; it shows a matched candidate, no-match copy, or manual/search/OCR fallbacks, logs the owner-scoped `shelf_scans` outcome when Supabase is available, and tracks only privacy-safe scan-funnel metadata.
   - Evidence: Screenshot, console/network or Supabase/mock insert evidence, and analytics payload assertion.
+  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_SHELF_SCAN_RESULT=offline`, verifies `/shelf/scan` shows offline catalog copy plus Scan ingredient label, Search catalog, and Add it by hand fallbacks, and verifies `/shelf/no-match` exposes search, label-scan, and manual routes without promising contribution-back or showing unsafe source claims. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`; live Supabase `shelf_scans`, real OBF lookup, native barcode camera, and OCR device capture remain device/backend QA.
 - Branch: camera permission denied
   - Priority: Important
   - Automate later: Yes
@@ -479,6 +481,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Add one product, mark it finished or discarded, then return to the Shelf tab with no active products.
   - Expected result: The empty Shelf still exposes a `View archive` action with the archived count, the action meets the 44 pt phone touch target, and tapping it opens the archive with the finished/discarded product visible.
   - Evidence: Screenshot sequence, visible route snapshot, and touch target measurement.
+  - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 adds `E2E Archive Balm` manually, opens product detail, taps `Mark finished`, and verifies the empty Shelf exposes a fully visible 48 px `View archive (1)` action above the floating tab bar with zero horizontal overflow. The first pass found the archive action covered by the tab bar; `bug-001-empty-shelf-archive-covered.md` records the bug and the layout fix. Post-fix, tapping the archive action opens `/shelf/archive` with `E2E Archive Balm` visible. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`.
 - Branch: direct-entry back or close navigation
   - Priority: Important
   - Automate later: Yes
