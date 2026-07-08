@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T08:16:44.808Z",
+  "generatedAt": "2026-07-08T08:52:08.498Z",
   "status": "blocked",
-  "gitSha": "fe268e04dd2205164f348dee8814a01097bf4a91",
-  "gitStatus": "M PROGRESS.md\n M docs/phase-11/generated/public-launch-packet.json\n M docs/phase-11/generated/public-launch-packet.md\n M docs/phase-11/launch-command-center.md\n M scripts/phase11/launch-ring-gates.mjs\n M scripts/phase11/lib.mjs\n M scripts/phase9/evidence-normalization-smoke.mjs",
+  "gitSha": "cdf069ff022b65df2057ff92bc8e5a14b09714c4",
+  "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",
@@ -32,7 +32,7 @@
     "turbo.json": "66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57",
     ".env.example": "08289db78a4388aed718466d895fe090f87f707c9752169fa9696df3c924c92b",
     "scripts/phase9/lib.mjs": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752",
-    "scripts/phase9/evidence-normalization-smoke.mjs": "9fd6d2a083530607d89d82c95214cf8adc0cb00ee3210aa7a5f686236a978a0b",
+    "scripts/phase9/evidence-normalization-smoke.mjs": "e1b2895dabe89a004bd01844d6c705fbafe303c7ddab9cd28eee5b94a7c71f24",
     "scripts/phase10-11/public-contact-smoke.mjs": "630ad5c5ff818df209ef7bfa990f2bf64fb22a257ca22acb0fd09fad782801e4",
     "scripts/phase10/lib.mjs": "f7603dc439343586c1aa6b254dd6200ec49ee3348b4de259f15340f1ca2cca2a",
     "scripts/phase10/beta-readiness.mjs": "85a4ccc8cb2323654f2cf2e43a3281b75327dbaef452d26a1cec28c2c5312008",
