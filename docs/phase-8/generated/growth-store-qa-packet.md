@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-08T23:51:05.739Z
+Generated: 2026-07-08T23:58:04.868Z
 Status: blocked
-Git SHA: 96d4bec46cb88ba79378270092439ce5b2e8b276
+Git SHA: a75a058b443a666a774bb817de649029c8735dce
 Git status: clean
 
 ## Public Identity
@@ -107,15 +107,15 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29`
 - `docs/E2E_TESTING_CHECKLIST.md`: `ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812`
-- `docs/USER_FLOW_TREE.md`: `f73c0ba7c6ea2b4dadb861ce25eedf7d88c675f89eaf694de3cd4f39d3fb57ca`
+- `docs/USER_FLOW_TREE.md`: `615cc87c27dbcb621b82074e37c0f06cc1834e4fff47c65bed6565dd4ef92edf`
 - `docs/e2e/generated/human-e2e-manifest.json`: `ad0d12e606ffd0aa0208f32b6f8ef7a8cbd6524862457a44e4f04309717b084a`
 - `docs/e2e/generated/human-e2e-manifest.md`: `26aacc11184de5901d7ed788ca0c9d33c27cc71fc8856b574c5a98924f4264fd`
 - `docs/phase-5/generated/device-qa-packet.json`: `b9acc9c60d854c4bfd50336e3272fbe36a9b3ce98a882732c60de652fb9ab3a3`
 - `docs/phase-5/generated/device-qa-packet.md`: `bdd18830f5043a11073d1fa313550bc1b6de93529c891374c080fa3143e4dae3`
 - `docs/phase-6/generated/payments-qa-packet.json`: `c3be839de5f9d9d3682105ddcc6fd66ac42a0f67e03f823b19ce0fe8fbee34c8`
 - `docs/phase-6/generated/payments-qa-packet.md`: `170cd677c274aa92d5f6cea9e3ecfe1b4cef3d8fa91618bdbd8115405fd431df`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `09b9afd1e1f7631bda94c9b4c99e9f76742a7d8764c46089e1eeaaa36dee0d05`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `45f24ffc4001f74ab90863bb70ca6920da5f610a2e674a26a8c87347c9fed0dc`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `4a12454a007a58655daeedc6498632fd47b438cbfdda7b0a376cda87812139db`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `a6d419d9de7f1f021f62f2b4a2fcb797c690a0c4efe44ccaf27024cea1c7d131`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `b37bac340e6a3eb04bed69da644016e2b7c46cd9ce62d2138eab3999da7a21fa`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `4834bd091ad32284ed8c7022cacddb31346574c362fabaf687f4714ebe31817c`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
