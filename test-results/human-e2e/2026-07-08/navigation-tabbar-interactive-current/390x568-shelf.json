@@ -1,0 +1,163 @@
+{
+  "horizontalOverflow": 0,
+  "innerHeight": 569,
+  "innerWidth": 390,
+  "location": "http://localhost:8185/shelf",
+  "selectedCount": 1,
+  "tabList": {
+    "bottom": 554.9454116821289,
+    "height": 65.98908233642578,
+    "left": 7.994539260864258,
+    "right": 382.29675483703613,
+    "top": 488.9563293457031,
+    "width": 374.3022155761719,
+    "x": 7.994539260864258,
+    "y": 488.9563293457031
+  },
+  "tabs": [
+    {
+      "ariaLabel": "Today tab",
+      "center": {
+        "x": 55.50667667388916,
+        "y": 521.9584674835205
+      },
+      "centerHitContains": true,
+      "centerHitText": "Today",
+      "id": "bottom-tab-today",
+      "label": "Today",
+      "labelClientWidth": 89,
+      "labelRect": {
+        "bottom": 545.934492111206,
+        "height": 18.992719650268555,
+        "left": 10.922330856323242,
+        "right": 100.09102439880371,
+        "top": 526.9417724609375,
+        "width": 89.16869354248047,
+        "x": 10.922330856323242,
+        "y": 526.9417724609375
+      },
+      "labelScrollWidth": 89,
+      "labelText": "Today",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 102.04794025421143,
+        "top": 494.963623046875,
+        "width": 93.08252716064453,
+        "x": 8.965413093566895,
+        "y": 494.963623046875
+      },
+      "selected": false,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "center": {
+        "x": 148.59679412841797,
+        "y": 521.9584674835205
+      },
+      "centerHitContains": true,
+      "centerHitText": "Progress",
+      "id": "bottom-tab-progress",
+      "label": "Progress",
+      "labelClientWidth": 89,
+      "labelRect": {
+        "bottom": 545.934492111206,
+        "height": 18.992719650268555,
+        "left": 104.0048599243164,
+        "right": 193.188720703125,
+        "top": 526.9417724609375,
+        "width": 89.1838607788086,
+        "x": 104.0048599243164,
+        "y": 526.9417724609375
+      },
+      "labelScrollWidth": 89,
+      "labelText": "Progress",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 102.04794311523438,
+        "right": 195.14564514160156,
+        "top": 494.963623046875,
+        "width": 93.09770202636719,
+        "x": 102.04794311523438,
+        "y": 494.963623046875
+      },
+      "selected": false,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "center": {
+        "x": 241.68690872192383,
+        "y": 521.9584674835205
+      },
+      "centerHitContains": true,
+      "centerHitText": "Shelf",
+      "id": "bottom-tab-shelf",
+      "label": "Shelf",
+      "labelClientWidth": 89,
+      "labelRect": {
+        "bottom": 545.934492111206,
+        "height": 18.992719650268555,
+        "left": 197.10255432128906,
+        "right": 286.27124786376953,
+        "top": 526.9417724609375,
+        "width": 89.16869354248047,
+        "x": 197.10255432128906,
+        "y": 526.9417724609375
+      },
+      "labelScrollWidth": 89,
+      "labelText": "Shelf",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 195.14564514160156,
+        "right": 288.2281723022461,
+        "top": 494.963623046875,
+        "width": 93.08252716064453,
+        "x": 195.14564514160156,
+        "y": 494.963623046875
+      },
+      "selected": true,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": "You tab",
+      "center": {
+        "x": 334.7770309448242,
+        "y": 521.9584674835205
+      },
+      "centerHitContains": true,
+      "centerHitText": "You",
+      "id": "bottom-tab-you",
+      "label": "You",
+      "labelClientWidth": 89,
+      "labelRect": {
+        "bottom": 545.934492111206,
+        "height": 18.992719650268555,
+        "left": 290.1850891113281,
+        "right": 379.3689498901367,
+        "top": 526.9417724609375,
+        "width": 89.1838607788086,
+        "x": 290.1850891113281,
+        "y": 526.9417724609375
+      },
+      "labelScrollWidth": 89,
+      "labelText": "You",
+      "rect": {
+        "bottom": 548.953311920166,
+        "height": 53.989688873291016,
+        "left": 288.2281799316406,
+        "right": 381.3258819580078,
+        "top": 494.963623046875,
+        "width": 93.09770202636719,
+        "x": 288.2281799316406,
+        "y": 494.963623046875
+      },
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}
