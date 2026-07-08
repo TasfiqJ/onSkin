@@ -10,17 +10,24 @@ import { Text } from './Text';
 // multi-select Chip (which fills clay-tint).
 export type SegmentChipProps = {
   label: string;
+  accessibilityLabel?: string;
   selected?: boolean;
   onPress?: () => void;
   className?: string;
 };
 
-export function SegmentChip({ label, selected = false, onPress, className }: SegmentChipProps) {
+export function SegmentChip({
+  label,
+  accessibilityLabel,
+  selected = false,
+  onPress,
+  className,
+}: SegmentChipProps) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       aria-pressed={selected}
       onPress={() => {
         haptics.select();

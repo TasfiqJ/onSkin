@@ -20,7 +20,8 @@ describe('Chip controls', () => {
     const source = readFileSync(`${UI_DIR}/SegmentChip.tsx`, 'utf8');
 
     expect(source).toContain('accessibilityRole="button"');
-    expect(source).toContain('accessibilityLabel={label}');
+    expect(source).toContain('accessibilityLabel={accessibilityLabel ?? label}');
+    expect(source).toContain('accessibilityLabel?: string;');
     expect(source).toContain('aria-pressed={selected}');
     expect(source).toContain('style={{ minHeight: 48 }}');
     expect(source).toContain('min-h-[48px] justify-center');

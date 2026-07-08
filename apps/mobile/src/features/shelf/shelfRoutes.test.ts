@@ -141,6 +141,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const ultraShortPhone = height < 460;');
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain('const microShortPhone = height < 380;');
+    expect(source).toContain('const compactPressurePhone = shortPhone;');
     expect(source).toContain("? 'px-6 pb-2 pt-2'");
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
     expect(source).toMatch(/:\s*shortPhone\s*\?\s*'px-6 pb-4 pt-2'/);
@@ -151,18 +152,30 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('{microShortPhone ? null : (');
     expect(source).toContain("ultraShortPhone\n              ? 'mb-0'");
     expect(source).toContain('{!shortPhone ? (');
+    expect(source).toContain(
+      "{compactPressurePhone ? 'Not found yet.' : 'We don&apos;t have this one yet.'}",
+    );
     expect(source).toContain("? 'pr-12 text-[19px] leading-[22px]'");
     expect(source).toContain("? 'text-[21px] leading-[24px]'");
     expect(source).toContain("? 'mt-1 gap-1'");
     expect(source).toContain("? 'mt-2 gap-1'");
-    expect(source).toContain('style={microShortPhone ? { marginTop: 40 } : undefined}');
+    expect(source).toContain('style={');
+    expect(source).toContain('compactPressurePhone');
+    expect(source).toContain('? { marginTop: 80 }');
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={shortPhone}');
-    expect(source).toContain('hideSubtitle={ultraShortPhone}');
+    expect(source).toContain('hideSubtitle={compactPressurePhone}');
     expect(source).toContain('hideSubtitle?: boolean;');
     expect(source).toContain('{hideSubtitle ? null : (');
+    expect(source).toContain(
+      "title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}",
+    );
+    expect(source).toContain(
+      'accessibilityLabel="Scan the ingredient list. We\'ll read the INCI text"',
+    );
+    expect(source).toContain('accessibilityLabel?: string;');
+    expect(source).toContain('accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}');
     expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'");
-    expect(source).toContain('accessibilityLabel={`${title}. ${subtitle}`}');
     expect(source).toContain('min-h-[54px]');
     expect(source).toContain('!shortPhone ? (');
   });
@@ -210,6 +223,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const compactShelf = height < 640');
     expect(source).toContain('const shortShelf = height < 520');
     expect(source).toContain('const splitShortShelf = height < 410;');
+    expect(source).toContain('const compactFilterLabels = compactShelf;');
+    expect(source).toContain("? 'Exp.'");
+    expect(source).toContain('accessibilityLabel={f ===');
+    expect(source).toContain("className={compactFilterLabels ? 'px-3' : undefined}");
     expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
     expect(source).toContain('splitShort: boolean;');
     expect(source).toContain('splitShort={splitShortShelf}');
@@ -223,9 +240,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('height={compactNoArchiveShort ? 56 : 68}');
     expect(source).toContain('Let&apos;s build your cabinet.');
     expect(source).toContain("? 'max-w-[280px] text-center text-[25px] leading-[29px]'");
-    expect(source).toContain(
-      'Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and',
-    );
+    expect(source).toContain('Add what you already use. Scan a barcode, or add it by hand.');
+    expect(source).toContain('We&apos;ll handle freshness');
     expect(source).toContain('Scan a barcode, or add it by hand.');
     expect(source).toContain("? 'mt-1.5 max-w-[270px] text-center text-[14px] leading-[19px]'");
     expect(source).toContain("compactNoArchiveShort ? 'mt-4 gap-2'");

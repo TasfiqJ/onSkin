@@ -155,8 +155,8 @@ function EmptyShelf({
             : splitShort
               ? 'items-center px-2 pb-28 pt-0'
               : compactNoArchiveShort
-              ? 'items-center px-2 pb-28 pt-2'
-            : 'items-center px-2 pb-24 pt-7'
+                ? 'items-center px-2 pb-28 pt-2'
+                : 'items-center px-2 pb-24 pt-7'
           : 'flex-1 items-center justify-center px-2 pb-16'
       }
     >
@@ -213,8 +213,8 @@ function EmptyShelf({
           <>Scan a barcode, or add it by hand.</>
         ) : (
           <>
-            Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and
-            clashes.
+            Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness
+            and clashes.
           </>
         )}
       </Text>
@@ -356,6 +356,7 @@ export default function ShelfScreen() {
   const compactShelf = height < 640;
   const shortShelf = height < 520;
   const splitShortShelf = height < 410;
+  const compactFilterLabels = compactShelf;
 
   const items = data?.items ?? [];
   const archiveCount = data?.archive.length ?? 0;
@@ -400,12 +401,24 @@ export default function ShelfScreen() {
             </Text>
           </View>
 
-          <View className="mt-3.5 flex-row gap-2.5">
+          <View
+            className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}
+          >
             {(['all', 'actives', 'expiring'] as Filter[]).map((f) => (
               <SegmentChip
                 key={f}
-                label={f === 'all' ? 'All' : f === 'actives' ? 'Actives' : 'Expiring'}
+                accessibilityLabel={f === 'all' ? 'All' : f === 'actives' ? 'Actives' : 'Expiring'}
+                label={
+                  f === 'all'
+                    ? 'All'
+                    : f === 'actives'
+                      ? 'Actives'
+                      : compactFilterLabels
+                        ? 'Exp.'
+                        : 'Expiring'
+                }
                 selected={filter === f}
+                className={compactFilterLabels ? 'px-3' : undefined}
                 onPress={() => setFilter(f)}
               />
             ))}

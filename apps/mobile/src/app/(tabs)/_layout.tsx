@@ -192,6 +192,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
     FLOATING_TAB_BAR_SIDE_MARGIN,
     (viewportWidth - tabBarWidth) / 2,
   );
+  const narrowTabLabels = viewportWidth <= 340;
 
   if (keyboardVisible) {
     return null;
@@ -211,6 +212,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const { options } = descriptors[route.key];
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
+        const visibleLabel = narrowTabLabels && route.name === 'progress' ? 'Prog.' : displayLabel;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
         const labelColor = focused ? colors.paperRaised : colors.mutedStrong;
 
@@ -270,7 +272,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
                   { color: labelColor },
                 ]}
               >
-                {displayLabel}
+                {visibleLabel}
               </Text>
             </View>
           </Pressable>

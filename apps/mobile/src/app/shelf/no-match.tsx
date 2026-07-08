@@ -18,6 +18,7 @@ export default function NoMatchScreen() {
   const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
   const microShortPhone = height < 380;
+  const compactPressurePhone = shortPhone;
 
   const goOcr = () => {
     haptics.select();
@@ -100,7 +101,7 @@ export default function NoMatchScreen() {
         }
         accessibilityRole="header"
       >
-        We don&apos;t have this one yet.
+        {compactPressurePhone ? 'Not found yet.' : 'We don&apos;t have this one yet.'}
       </Text>
       {!shortPhone ? (
         <Text
@@ -135,14 +136,23 @@ export default function NoMatchScreen() {
         />
         <NoMatchAction
           icon="I"
-          title="Scan the ingredient list"
+          title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
           subtitle="We'll read the INCI text"
+          accessibilityLabel="Scan the ingredient list. We'll read the INCI text"
           compact={shortPhone}
           ultraCompact={shortPhone}
-          hideSubtitle={ultraShortPhone}
+          hideSubtitle={compactPressurePhone}
           onPress={goOcr}
         />
-        <View style={microShortPhone ? { marginTop: 40 } : undefined}>
+        <View
+          style={
+            microShortPhone
+              ? { marginTop: 40 }
+              : compactPressurePhone
+                ? { marginTop: 80 }
+                : undefined
+          }
+        >
           <NoMatchAction
             icon="+"
             title="Add it by hand"
@@ -174,6 +184,7 @@ function NoMatchAction({
   icon,
   title,
   subtitle,
+  accessibilityLabel,
   compact,
   ultraCompact,
   hideSubtitle = false,
@@ -182,6 +193,7 @@ function NoMatchAction({
   icon: string;
   title: string;
   subtitle: string;
+  accessibilityLabel?: string;
   compact: boolean;
   ultraCompact: boolean;
   hideSubtitle?: boolean;
@@ -190,7 +202,7 @@ function NoMatchAction({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${title}. ${subtitle}`}
+      accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}
       onPress={onPress}
       className={cn(
         ultraCompact

@@ -33,6 +33,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('tabBarHorizontalInset');
+    expect(source).toContain('const narrowTabLabels = viewportWidth <= 340;');
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');
@@ -117,7 +118,10 @@ describe('tab bar treatment', () => {
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
     expect(source).toContain('minimumFontScale={0.86}');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain('{displayLabel}');
+    expect(source).toContain(
+      "narrowTabLabels && route.name === 'progress' ? 'Prog.' : displayLabel",
+    );
+    expect(source).toContain('{visibleLabel}');
     expect(source).toContain('TAB_ICON_BY_ROUTE');
     expect(source).toContain('flexShrink: 1');
     expect(source).toContain('fontSize: 12.5');
