@@ -10,6 +10,7 @@ const sourceDocsDir = `${sourceRoot}/docs`;
 const activeDocsDir = 'docs';
 const outJson = process.env.SOURCE_PACKET_AUDIT_JSON ?? 'docs/generated/source-packet-audit.json';
 const outMd = process.env.SOURCE_PACKET_AUDIT_MD ?? 'docs/generated/source-packet-audit.md';
+const expectedTopLevelPacketFileNames = ['README.md', 'AGENTS.md'];
 
 function abs(path) {
   return resolve(root, path);
@@ -35,6 +36,17 @@ function hash(path) {
 
 function bytes(path) {
   return readFileSync(abs(path)).length;
+}
+
+function walkFiles(path) {
+  if (!exists(path)) return [];
+  const entries = readdirSync(abs(path), { withFileTypes: true });
+  return entries.flatMap((entry) => {
+    const child = `${path}/${entry.name}`;
+    if (entry.isDirectory()) return walkFiles(child);
+    if (entry.isFile()) return [child];
+    return [];
+  });
 }
 
 function markdownTable(headers, rows) {
@@ -71,6 +83,24 @@ const sourceDocNames = exists(sourceDocsDir)
       .filter((name) => name.endsWith('.md'))
       .sort()
   : [];
+
+const sourcePacketFiles = walkFiles(sourceRoot).sort();
+const topLevelMarkdownNames = exists(sourceRoot)
+  ? readdirSync(abs(sourceRoot), { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+      .map((entry) => entry.name)
+      .sort()
+  : [];
+const unexpectedTopLevelMarkdownNames = topLevelMarkdownNames.filter(
+  (name) => !expectedTopLevelPacketFileNames.includes(name),
+);
+if (strict && unexpectedTopLevelMarkdownNames.length > 0) {
+  blockers.push(
+    `Unexpected top-level packet markdown files: ${unexpectedTopLevelMarkdownNames
+      .map((name) => `${sourceRoot}/${name}`)
+      .join(', ')}.`,
+  );
+}
 
 const rootAgentsText = exists('AGENTS.md') ? read('AGENTS.md') : '';
 const claudeText = exists('CLAUDE.md') ? read('CLAUDE.md') : '';
@@ -113,7 +143,7 @@ const docs = sourceDocNames.map((name) => {
   };
 });
 
-const topLevelPacketFiles = ['README.md', 'AGENTS.md'].map((name) => {
+const topLevelPacketFiles = expectedTopLevelPacketFileNames.map((name) => {
   const path = `${sourceRoot}/${name}`;
   if (!exists(path)) blockers.push(`Missing ${path}.`);
   return {
@@ -128,6 +158,12 @@ const topLevelPacketFiles = ['README.md', 'AGENTS.md'].map((name) => {
 
 if (docs.length === 0) blockers.push(`No markdown docs found under ${sourceDocsDir}.`);
 
+const packetFiles = sourcePacketFiles.map((path) => ({
+  path,
+  bytes: bytes(path),
+  sha256: hash(path),
+}));
+
 const packet = {
   generatedAt: new Date().toISOString(),
   status: blockers.length === 0 ? 'pass' : 'blocked',
@@ -137,8 +173,14 @@ const packet = {
   sourceRoot,
   activeDocsDir,
   topLevelPacketFiles,
+  unexpectedTopLevelMarkdownNames,
+  packetFiles,
   docs,
   summary: {
+    totalPacketFileCount: sourcePacketFiles.length,
+    topLevelPacketFileCount: topLevelPacketFiles.filter((file) => file.exists).length,
+    expectedTopLevelPacketFileCount: expectedTopLevelPacketFileNames.length,
+    unexpectedTopLevelMarkdownCount: unexpectedTopLevelMarkdownNames.length,
     sourceDocCount: docs.length,
     activeMirrorCount: docs.filter((doc) => doc.activeSha256).length,
     identicalMirrorCount: docs.filter((doc) => doc.identical).length,
@@ -169,13 +211,17 @@ writeFileSync(
     `Status: ${packet.status}`,
     `Strict mode: ${strict ? 'yes' : 'no'}`,
     '',
-    'This generated audit checks that the original `04_repo_docs/docs` strategy',
-    'packet is represented in the active `docs/` tree. Non-strict mode fails',
-    'only on missing packet or active mirror files; strict mode also fails if a',
-    'mirrored active doc differs from the packet copy.',
+    'This generated audit checks the original `04_repo_docs` source packet and',
+    'verifies that its strategy docs are represented in the active `docs/` tree.',
+    'Non-strict mode fails on missing packet files or active mirror files; strict',
+    'mode also fails if a mirrored active doc differs from the packet copy, or if',
+    'the top-level packet markdown shape changes without updating the audit.',
     '',
     '## Summary',
     '',
+    `- Total packet files: ${packet.summary.totalPacketFileCount}`,
+    `- Expected top-level packet files: ${packet.summary.topLevelPacketFileCount}/${packet.summary.expectedTopLevelPacketFileCount}`,
+    `- Unexpected top-level packet markdown files: ${packet.summary.unexpectedTopLevelMarkdownCount}`,
     `- Source docs: ${packet.summary.sourceDocCount}`,
     `- Active mirrors: ${packet.summary.activeMirrorCount}`,
     `- Identical mirrors: ${packet.summary.identicalMirrorCount}`,
@@ -199,6 +245,13 @@ writeFileSync(
         file.bytes ?? '',
         file.sha256?.slice(0, 12) ?? '',
       ]),
+    ),
+    '',
+    '## Full Packet Inventory',
+    '',
+    markdownTable(
+      ['Packet file', 'Bytes', 'SHA-256'],
+      packetFiles.map((file) => [file.path, file.bytes, file.sha256.slice(0, 12)]),
     ),
     '',
     '## Blockers',

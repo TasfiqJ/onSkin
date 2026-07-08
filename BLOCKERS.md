@@ -83,6 +83,10 @@ The `04_repo_docs` strategy packet has also been copied into active docs as
 `docs/CODEX_IMPLEMENTATION_PROMPT.md`. Future strategy, pricing, launch,
 privacy, or architecture changes should use the master-plan patch process
 instead of silently editing implementation around the plan.
+`npm run docs:source-packet-audit:strict` now inventories all 12 files under
+`04_repo_docs`, verifies the expected top-level packet files are present,
+verifies all 10 packet docs have active `docs/` mirrors, and verifies those
+mirrors are byte-identical and listed in the root source-of-truth docs.
 
 Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,

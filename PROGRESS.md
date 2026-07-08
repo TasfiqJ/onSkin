@@ -35,6 +35,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   lists, so both root instruction files now include it. The strict audit now
   passes with 10/10 active mirrors, 10/10 identical mirrors, 0 blockers, and 0
   warnings, writing `docs/generated/source-packet-audit.{json,md}`.
+  Follow-up hardening now inventories all 12 files under `04_repo_docs`,
+  verifies the expected top-level packet files (`README.md` and `AGENTS.md`),
+  and fails strict mode if unexpected top-level packet markdown appears without
+  updating the audit.
 
 - Added a durable local human-E2E evidence manifest gate without adding new
   E2E dependencies. `npm run e2e:human:manifest` now reads the committed

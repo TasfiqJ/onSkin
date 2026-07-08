@@ -41,10 +41,12 @@ Fresh verification on 2026-07-08:
   values and live Supabase credentials, which is expected until production
   account setup is complete.
 - `npm run docs:source-packet-audit:strict` passed and wrote
-  `docs/generated/source-packet-audit.{json,md}`. The audit verifies all 10
-  `04_repo_docs/docs/*.md` strategy-packet docs have active `docs/` mirrors,
-  all 10 mirrors are byte-identical, and all mirrored packet docs are referenced
-  by the root source-of-truth lists in `AGENTS.md` or `CLAUDE.md`.
+  `docs/generated/source-packet-audit.{json,md}`. The audit now inventories all
+  12 files under `04_repo_docs`, verifies the expected top-level packet files
+  are present, verifies all 10 `04_repo_docs/docs/*.md` strategy-packet docs
+  have active `docs/` mirrors, verifies all 10 mirrors are byte-identical, and
+  verifies all mirrored packet docs are referenced by the root source-of-truth
+  lists in `AGENTS.md` or `CLAUDE.md`.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 320 x 480 current-main route rerun,
