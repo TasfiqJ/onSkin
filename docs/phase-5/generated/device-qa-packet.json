@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T19:19:02.870Z",
+  "generatedAt": "2026-07-08T21:06:52.994Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "ddfd4d89ca45e05c02c4a3bcd1ff3e57d164a051",
+  "gitSha": "d1528f56d6ce2c55970287dfc100848906d41881",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -137,8 +137,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 11474,
-      "sha256": "e28da6891b2a246560edf0e39d2a19af46c154d892d9febadeea4204cae14212"
+      "bytes": 12147,
+      "sha256": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -167,8 +167,8 @@
     {
       "path": "apps/mobile/src/app/shelf/scan.tsx",
       "exists": true,
-      "bytes": 20140,
-      "sha256": "14b203f12374f3b7a1bf843daa2425dd5b440c5685c9e9fb42078358ff2c8f61"
+      "bytes": 21389,
+      "sha256": "b1b1902171787d6103474fc1d0f3d8fb717805ecd48b8f17665799c2a42b8dcf"
     },
     {
       "path": "apps/mobile/src/app/shelf/ocr.tsx",
@@ -221,20 +221,26 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 12823,
-      "sha256": "e13961b392af213de666a3395af039320d1217051ba28537b8b319c84bf2a4c9"
+      "bytes": 13061,
+      "sha256": "56491433cb97218cf28f2cb40dbbec0337bc6e4cdc96d63355b9231ebbb8d201"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 5918,
-      "sha256": "aabc83b18912fb80076e8c0b659fa407813f2c311d438405c18c19fd662e4adb"
+      "bytes": 6156,
+      "sha256": "68aa32c42c65c286d7756ee383ea0687db3413edf9c334ee431e3d2927e31c8e"
     },
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 8410,
-      "sha256": "05966f96f3b0c8348ff94eb73c7f96840810cd3c412078a5156c311b30894e83"
+      "bytes": 8954,
+      "sha256": "4becdce2a2d0c200d976bbe900bc10b0fbf9f7d5035d374b2eb46b529b325a8a"
+    },
+    {
+      "path": "scripts/e2e/human-e2e-manifest.mjs",
+      "exists": true,
+      "bytes": 11741,
+      "sha256": "7bc0332cc266cf02137dc1811e44e638b0a8c73cbdc48e30b41f13a6a13dbad8"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -243,22 +249,52 @@
       "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
     },
     {
+      "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+      "exists": true,
+      "bytes": 9642,
+      "sha256": "e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29"
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "exists": true,
+      "bytes": 3387,
+      "sha256": "ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "exists": true,
+      "bytes": 195660,
+      "sha256": "621f8a010f8fab2b8ce90d968776a43b91ac4b50a90e0c17161192e2193e25aa"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.json",
+      "exists": true,
+      "bytes": 3293,
+      "sha256": "4e366829d7a339064320522e71d2317222ca53c3a650a2920e5401197b131602"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.md",
+      "exists": true,
+      "bytes": 1774,
+      "sha256": "a086173bac459e9d547841030aef9efcbebba95be4a704b56413abcdeb5bb3cd"
+    },
+    {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 3288,
-      "sha256": "5700bd58909f709b425219330dc78c178461858d349ff68ac3ea9e9ba8ed2117"
+      "bytes": 3352,
+      "sha256": "d370d8b93d92f3fc2e3a8279713b7e60a484cd28230ce26d0fba2a2e60f6bcb1"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 4319,
-      "sha256": "baf131a4949b7d1c5a328d262c8095645fa5b9f09064b28b25276c0b2e5c2681"
+      "bytes": 4354,
+      "sha256": "cec3481f41076f24add2a183371a9e7c59c4dc60fd5967fae2b371f48f85eb71"
     },
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 2202,
-      "sha256": "96c08ee081bd9f2f4eb87f80cbe51c3e0e1905c8acc84a4a699c2f8b75828f80"
+      "bytes": 2424,
+      "sha256": "112d727debcb434fd2ebae5559ad163d86f17544af30e6ae958be65f4f23558f"
     }
   ],
   "blockers": [
