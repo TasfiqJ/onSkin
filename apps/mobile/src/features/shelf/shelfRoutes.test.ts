@@ -76,7 +76,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const splitShortScanSurface = height < 460;');
     expect(source).toContain('hideSubtitle={splitShortScanSurface}');
     expect(source).toContain('hideSubtitle?: boolean;');
-    expect(source).toContain('accessibilityLabel={`${title}. ${subtitle}`}');
+    expect(source).toContain('accessibilityLabel?: string;');
+    expect(source).toContain('accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}');
     expect(source).toContain(
       "compact\n          ? 'min-h-[48px] flex-row items-center gap-2.5 rounded-[15px] px-2.5 py-1.5'",
     );
@@ -369,6 +370,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const showScanPreview = !splitShortScanSurface || canShowCamera;');
     expect(source).toContain('style={splitShortScanSurface ? { minHeight: 68 } : undefined}');
     expect(source).toContain('{showScanPreview ? (');
+    expect(source).toContain(
+      "title={splitShortScanSurface ? 'Scan label' : 'Scan ingredient label'}",
+    );
+    expect(source).toContain('accessibilityLabel="Scan ingredient label. Review editable OCR"');
     expect(source).toContain("'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'");
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
     expect(source).toContain('{canShowCamera ? (');
@@ -377,7 +382,6 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('!compactScanSurface ? (');
     expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'");
     expect(source).toContain("className={splitShortScanSurface ? 'gap-1.5' : 'gap-2.5'}");
-    expect(source).toContain('title="Scan ingredient label"');
     expect(source).toContain('subtitle="Review editable OCR"');
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
@@ -472,7 +476,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
-    expect(source).toContain('const splitShortPhone = viewportHeight < 380;');
+    expect(source).toContain('const splitShortPhone = viewportHeight < 410;');
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
@@ -501,7 +505,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('<View className="flex-1">');
     expect(source).toContain('<View className="flex-[1.1]">');
     expect(source).toContain("ultraShortPhone ? 'h-[48px]' : 'h-[50px]'");
-    expect(source).toContain('style={splitShortPhone ? { marginTop: 112 } : undefined}');
+    expect(source).toContain('style={splitShortPhone ? { marginTop: 152 } : undefined}');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',

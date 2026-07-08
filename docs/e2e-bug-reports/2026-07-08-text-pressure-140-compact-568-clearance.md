@@ -47,7 +47,7 @@ The compact paywall density handled 120-130% and ultra-short heights, but a norm
 
 ## Minimal Fix Recommendation
 
-Add a narrow-short density tier for 320 px short paywalls: use an icon dismiss, omit nonessential body copy, hide monthly-equivalent labels, keep the annual price and primary CTA tight and one-line where needed, and move lower recommendation preference chip groups fully below the first viewport.
+Add a narrow-short density tier for 320 px short paywalls: use an icon dismiss, omit nonessential body copy, hide monthly-equivalent labels, keep the annual price and primary CTA tight and one-line where needed, and move lower Recommendation Preferences chip groups fully below the first viewport without stretching visible chip hit targets.
 
 ## Verification Flow After Fix
 
@@ -59,6 +59,8 @@ Add a narrow-short density tier for 320 px short paywalls: use an icon dismiss, 
 
 - Screenshot/UI snapshots: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`
 - Report: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/report.md`
+- Latest screenshot/UI snapshots: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-5/`
+- Latest report: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-5/report.md`
 - Terminal transcript: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts src/features/recommendations/recommendationRoutes.test.ts`
 
 ## Remaining Risk

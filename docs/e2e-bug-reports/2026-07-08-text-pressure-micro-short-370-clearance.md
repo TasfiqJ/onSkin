@@ -33,7 +33,7 @@ The harder 320 x 360 / 130% follow-up also exposed first-viewport partial target
 - Final passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`
 - Harder final passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`
 - Latest direct-upsell passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`
-- Latest Recommendation Preferences passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`
+- Latest split-short passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/`
 - Terminal transcript: `npm run e2e:text-pressure`
 
 ## Frequency
@@ -53,13 +53,13 @@ The previous split-short spacing was tuned down to 320 x 390. At 320 x 370 with 
 
 ## Minimal Fix
 
-- Added a micro-short notifications band below 380 px that tightens the header, section labels, and scroll padding, keeps visible switches complete, and moves `Progress-photo nudge` fully below the first viewport.
+- Extended the notifications split-short band below 410 px so visible switches stay complete and `Progress-photo nudge` moves fully below the first viewport.
 - Added a micro-short timing density so quiet-hours controls stay complete.
-- Increased the split-short Shelf manual spacing before the optional Ingredients textarea so the fixed Continue footer no longer intercepts the textarea center.
+- Increased the split-short Shelf manual spacing below 410 px before the optional Ingredients textarea so the fixed Continue footer no longer intercepts the textarea center.
 - Tightened Shelf no-match recovery so lower-priority manual fallback no longer peeks as a partial target.
 - Tightened sub-380 px contextual ProGate paywalls by dropping nonessential body copy and reducing price/CTA spacing while preserving compliance and the 48 px CTA.
 - Tightened the direct contextual upsell sheet below 360 px width by dropping nonessential body copy/monthly-equivalent price, scaling the annual price, and preserving the compact compliance/header controls plus 48 px CTA.
-- Pushed short-height Recommendation Preferences budget and texture sections below the first viewport so visible value chips stay complete and lower-priority chips do not peek as partial targets.
+- Split Recommendation Preferences value chips into first-viewport and below-fold groups so visible value chips stay complete at 48 px and lower-priority chips do not peek as partial targets.
 - Pushed later Skin Notes topic sections below the first viewport on micro-short screens.
 
 ## Verification Flow After Fix
@@ -79,6 +79,8 @@ The previous split-short spacing was tuned down to 320 x 390. At 320 x 370 with 
 - Direct-upsell UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/report.md`
 - Recommendation Preferences screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`
 - Recommendation Preferences UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/report.md`
+- Latest split-short screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/`
+- Latest split-short UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/report.md`
 
 The final audits passed 49 / 49 routes with zero clipped visible controls, zero sub-44 px visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs.
 

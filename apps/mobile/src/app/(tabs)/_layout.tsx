@@ -436,7 +436,6 @@ const styles = StyleSheet.create({
   tabItemContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    pointerEvents: 'none',
     width: '100%',
   },
   tabItemActive: {

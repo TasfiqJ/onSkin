@@ -14,6 +14,11 @@ const TOUCH_TARGET_STYLE = {
   justifyContent: 'center',
 } satisfies ViewStyle;
 
+const DECORATION_POINTER_EVENTS_STYLE = Platform.select({
+  web: undefined,
+  default: { pointerEvents: 'none' },
+}) satisfies ViewStyle | undefined;
+
 export type ToggleSwitchProps = Omit<
   PressableProps,
   'accessibilityRole' | 'accessibilityState' | 'children' | 'onPress' | 'style'
@@ -78,18 +83,20 @@ export function ToggleSwitch({
     >
       <View
         className="h-[24px] w-[42px] justify-center rounded-pill px-0.5"
-        style={{
-          backgroundColor: value ? activeTrackColor : inactiveTrackColor,
-          pointerEvents: 'none',
-        }}
+        style={[
+          { backgroundColor: value ? activeTrackColor : inactiveTrackColor },
+          DECORATION_POINTER_EVENTS_STYLE,
+        ]}
       >
         <View
           className="h-[20px] w-[20px] rounded-full"
-          style={{
-            backgroundColor: thumbColor,
-            pointerEvents: 'none',
-            transform: [{ translateX: value ? 18 : 0 }],
-          }}
+          style={[
+            {
+              backgroundColor: thumbColor,
+              transform: [{ translateX: value ? 18 : 0 }],
+            },
+            DECORATION_POINTER_EVENTS_STYLE,
+          ]}
         />
       </View>
     </Pressable>

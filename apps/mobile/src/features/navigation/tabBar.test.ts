@@ -102,7 +102,9 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
     expect(source).not.toContain('backgroundColor: colors.greigeChip');
-    expect(source).not.toContain('sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]');
+    expect(source).not.toContain(
+      'sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]',
+    );
   });
 
   it('renders tab labels directly inside protected one-line phone geometry', () => {
@@ -124,7 +126,6 @@ describe('tab bar treatment', () => {
     expect(source).toContain('minHeight: 19');
     expect(source).toContain('height: TAB_ITEM_HEIGHT');
     expect(source).toContain('minWidth: 0');
-    expect(source).toContain("pointerEvents: 'none'");
     expect(source).toContain("width: '100%'");
     expect(source).toContain("textAlign: 'center'");
     expect(source).toContain("textAlignVertical: 'center'");

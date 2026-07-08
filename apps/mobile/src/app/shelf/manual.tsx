@@ -156,7 +156,7 @@ export default function ManualAddScreen() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const { height: viewportHeight } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
-  const splitShortPhone = viewportHeight < 380;
+  const splitShortPhone = viewportHeight < 410;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -271,7 +271,7 @@ export default function ManualAddScreen() {
             </View>
           </View>
 
-          <View style={splitShortPhone ? { marginTop: 112 } : undefined}>
+          <View style={splitShortPhone ? { marginTop: 152 } : undefined}>
             <Text variant="label" tone="muted" className="mb-1.5 uppercase">
               Ingredients
               <Text

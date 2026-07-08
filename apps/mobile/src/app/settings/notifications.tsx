@@ -131,6 +131,7 @@ export default function NotificationSettingsScreen() {
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
+  const splitShortNotifications = height < 410;
   const microShortNotifications = height < 380;
   if (!p) return null;
 
@@ -200,10 +201,10 @@ export default function NotificationSettingsScreen() {
             title="Replenishment"
             value={p.replenishmentAlerts}
             onChange={(v) => set({ replenishmentAlerts: v })}
-            last={microShortNotifications}
+            last={splitShortNotifications}
             compact={compactNotifications}
           />
-          {microShortNotifications ? null : (
+          {splitShortNotifications ? null : (
             <Row
               title="Progress-photo nudge"
               value={p.captureReminders}
@@ -214,8 +215,8 @@ export default function NotificationSettingsScreen() {
           )}
         </View>
 
-        {microShortNotifications ? (
-          <View style={{ marginTop: 72 }}>
+        {splitShortNotifications ? (
+          <View style={{ marginTop: microShortNotifications ? 72 : 88 }}>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
               <Row
                 title="Progress-photo nudge"

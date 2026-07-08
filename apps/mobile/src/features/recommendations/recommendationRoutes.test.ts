@@ -164,6 +164,11 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('dense?: boolean');
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
+    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };');
+    expect(source).toContain('const renderValueToggle = (v: ValuesFilter) => (');
+    expect(source).toContain('VALUES_FILTERS.slice(0, 3).map(renderValueToggle)');
+    expect(source).toContain('VALUES_FILTERS.slice(3).map(renderValueToggle)');
+    expect(source).toContain('style={splitShortPreferenceDeferredGroupStyle}');
     expect(source).toContain(
       'paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined',
     );

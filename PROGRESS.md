@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the 320 x 390 / 150% split-short text-pressure route audit after
+  the harsher scale exposed issues not present at 320 x 568 or 320 x 430.
+  Recommendation Preferences now moves the last value-filter row fully below
+  the first viewport, Settings Notifications moves the progress-photo nudge to
+  a below-fold card, Shelf manual add reserves fixed-footer clearance before
+  Ingredients, Shelf scan shortens the fallback row label only in split-short
+  mode while preserving the full accessibility label, and rendered web chrome
+  no longer emits the pointer-events warning from decoration-only layers.
+  Focused Shelf/Settings/Recommendations/TabBar/ToggleSwitch contracts pass,
+  and the final 49-route sweep reports zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-150-split-short-390-postfix-5/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-150-split-short-390-clearance.md`.
+
 - Added non-mutating freshness checks for the `04_repo_docs` source-packet
   audit and Tas strict-evidence handoff audit. `docs:source-packet-audit:check`
   now verifies the active `docs/` mirrors still match the original strategy
@@ -20,10 +34,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   groups peeking as partial controls. Direct upsell and ProGate now use a
   320 px narrow-short density tier with icon dismiss, hidden nonessential body
   copy, hidden monthly-equivalent labels, and tighter one-line price/CTA blocks;
-  Recommendation Preferences moves lower chip groups fully below the first
-  viewport. Focused subscription/recommendation route contracts pass, and the
-  final 49-route sweep reports zero failed routes with evidence in
-  `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`
+  Recommendation Preferences now uses an inert split-short spacer so visible
+  chips remain 48 px and lower chip groups stay fully below the first viewport.
+  Focused subscription/recommendation route contracts pass, and the final
+  49-route sweeps report zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-5/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-140-compact-568-clearance.md`.
 
@@ -38,18 +54,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   The first 49-route sweep found `/settings/notifications` peeking the
   `Progress-photo nudge` switch and `/shelf/manual` exposing the optional
   Ingredients textarea under the sticky Continue footer. The fix adds sub-380
-  px density for notification/timing settings, Skin Notes, contextual ProGate
-  paywalls, the direct upsell sheet, Recommendation Preferences, and shelf
-  no-match recovery, moves lower-priority controls fully below the first
-  viewport, and reserves extra manual-add spacing above the fixed footer.
+  px density for timing settings, Skin Notes, contextual ProGate paywalls, the
+  direct upsell sheet, and shelf no-match recovery; extends split-short
+  notification/manual-add spacing below 410 px; adds an inert Recommendation
+  Preferences spacer; moves lower-priority controls fully below the first
+  viewport; and reserves extra manual-add spacing above the fixed footer.
   Focused community/paywall/recommendation/settings/shelf route contracts pass,
-  and the final 49-route sweep reports zero failed routes with
-  evidence in
+  and the final 49-route sweeps report zero failed routes with evidence in
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/`,
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`.
 

@@ -150,6 +150,7 @@ export default function PreferencesScreen() {
   const textureSectionLabelStyle = ultraShortPreferences
     ? { marginBottom: 6, marginTop: 44 }
     : undefined;
+  const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
     if (preferenceDelayMs > 0) await wait(preferenceDelayMs);
@@ -195,6 +196,16 @@ export default function PreferencesScreen() {
       ...p,
       formats: p.formats.includes(f) ? p.formats.filter((x) => x !== f) : [...p.formats, f],
     });
+  const renderValueToggle = (v: ValuesFilter) => (
+    <Toggle
+      key={v}
+      ultraDense={ultraShortPreferences || shortPreferences}
+      label={VALUES_LABEL[v] ?? v}
+      active={p.values.includes(v)}
+      disabled={controlsDisabled}
+      onPress={() => void toggleValue(v)}
+    />
+  );
 
   return (
     <Screen edges={['top']}>
@@ -249,18 +260,18 @@ export default function PreferencesScreen() {
         <Text variant="label" tone="muted" className={valuesLabelClassName}>
           {REC_COPY.preferences.valuesLabel.toUpperCase()}
         </Text>
-        <View className={chipGroupClassName}>
-          {VALUES_FILTERS.map((v) => (
-            <Toggle
-              key={v}
-              ultraDense={ultraShortPreferences || shortPreferences}
-              label={VALUES_LABEL[v] ?? v}
-              active={p.values.includes(v)}
-              disabled={controlsDisabled}
-              onPress={() => void toggleValue(v)}
-            />
-          ))}
-        </View>
+        {splitShortPreferences ? (
+          <>
+            <View className={chipGroupClassName}>
+              {VALUES_FILTERS.slice(0, 3).map(renderValueToggle)}
+            </View>
+            <View className={chipGroupClassName} style={splitShortPreferenceDeferredGroupStyle}>
+              {VALUES_FILTERS.slice(3).map(renderValueToggle)}
+            </View>
+          </>
+        ) : (
+          <View className={chipGroupClassName}>{VALUES_FILTERS.map(renderValueToggle)}</View>
+        )}
 
         <Text variant="label" tone="muted" className={sectionLabelClassName}>
           {REC_COPY.preferences.budgetLabel.toUpperCase()}

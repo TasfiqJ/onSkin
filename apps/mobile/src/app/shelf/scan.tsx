@@ -466,8 +466,9 @@ export default function ScanScreen() {
         <View className={splitShortScanSurface ? 'gap-1.5' : 'gap-2.5'}>
           <FallbackRow
             icon="="
-            title="Scan ingredient label"
+            title={splitShortScanSurface ? 'Scan label' : 'Scan ingredient label'}
             subtitle="Review editable OCR"
+            accessibilityLabel="Scan ingredient label. Review editable OCR"
             compact={splitShortScanSurface}
             hideSubtitle={splitShortScanSurface}
             onPress={goOcr}
@@ -512,6 +513,7 @@ function FallbackRow({
   icon,
   title,
   subtitle,
+  accessibilityLabel,
   compact,
   hideSubtitle,
   onPress,
@@ -519,6 +521,7 @@ function FallbackRow({
   icon: string;
   title: string;
   subtitle: string;
+  accessibilityLabel?: string;
   compact?: boolean;
   hideSubtitle?: boolean;
   onPress: () => void;
@@ -526,7 +529,7 @@ function FallbackRow({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${title}. ${subtitle}`}
+      accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}
       onPress={onPress}
       className={
         compact
