@@ -13,9 +13,10 @@ describe('ToggleSwitch', () => {
     expect(source).toContain('accessibilityState={{ checked: value, disabled: !!disabled }}');
     expect(source).toContain('aria-checked={value}');
     expect(source).toContain("Platform.OS === 'web'");
-    expect(source).toContain("event.key !== ' ' && event.key !== 'Spacebar'");
+    expect(source).toContain("event.key !== ' ' && event.key !== 'Spacebar' && event.key !== 'Enter'");
     expect(source).toContain('tabIndex: disabled ? -1 : 0');
     expect(source).toContain('onPress={activate}');
+    expect(source).not.toContain('onClick:');
     expect(source).not.toContain("onPress={Platform.OS === 'web' ? undefined : activate}");
     expect(source).toContain('width: 52');
     expect(source).toContain('height: 48');

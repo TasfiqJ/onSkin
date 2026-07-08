@@ -1038,6 +1038,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app shows a clear unavailable alert or row-local recovery message instead of swallowing the failed handoff, keeps the user on Settings, and keeps policy/help rows at least 44 px tall on compact phones.
   - Evidence: Alert text or row-local feedback, visible route snapshot, and control-geometry snapshot.
   - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser` opens `/settings/privacy`, taps Privacy policy, Consumer health privacy, Terms, Support, Account deletion, and Data export, and verifies each failed handoff renders row-local `Link unavailable` recovery copy. All six rows are 70-94 px tall, each recovery message is 48 px tall, horizontal overflow is zero, and the route remains `/you?section=privacy`. Browser logs include expected Supabase placeholder network failures because live backend remains blocked.
+- Branch: privacy and security choice save failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/settings/privacy` on a compact phone viewport, tap the Marketing emails switch while consent persistence is unavailable, then repeat with keyboard activation.
+  - Expected result: The switch uses a real 44 pt or larger touch target, failed persistence does not silently flip visible state, no native or JavaScript dialog blocks the user, row-local `Choice not saved` recovery copy appears near the changed control, no raw backend/provider error leaks, and the layout keeps zero horizontal overflow.
+  - Evidence: Screenshot sequence, dialog-state check, switch state, alert-region geometry, and horizontal-overflow snapshot.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with local Supabase placeholders unavailable verifies `/settings/privacy` redirects to `/you?section=privacy`, the Marketing emails switch is 52 x 48 px and unchecked before interaction, pointer tap and keyboard activation both render an inline `role="alert"` message (`Choice not saved` / retry copy), the switch remains unchecked, no JS dialog appears, the alert is 232 x 68 px between the marketing row and the next privacy row, raw backend text is hidden, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/settings-privacy-choice-inline-feedback/`. Native iOS/Android switch and consent-service evidence remain device QA.
 - Branch: data export share unavailable
   - Priority: Critical
   - Automate later: Yes

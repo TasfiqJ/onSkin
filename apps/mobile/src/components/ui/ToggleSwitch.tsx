@@ -41,7 +41,7 @@ export function ToggleSwitch({
   const activate = () => {
     if (!disabled) onChange(!value);
   };
-  const webFocusProps =
+  const webActivationProps =
     Platform.OS === 'web'
       ? ({
           onKeyDown: (event: {
@@ -49,7 +49,7 @@ export function ToggleSwitch({
             preventDefault?: () => void;
             stopPropagation?: () => void;
           }) => {
-            if (event.key !== ' ' && event.key !== 'Spacebar') return;
+            if (event.key !== ' ' && event.key !== 'Spacebar' && event.key !== 'Enter') return;
             event.preventDefault?.();
             event.stopPropagation?.();
             activate();
@@ -74,7 +74,7 @@ export function ToggleSwitch({
         state.pressed && !disabled ? { opacity: 0.82 } : null,
         typeof style === 'function' ? style(state) : style,
       ]}
-      {...webFocusProps}
+      {...webActivationProps}
     >
       <View
         className="h-[24px] w-[42px] justify-center rounded-pill px-0.5"
