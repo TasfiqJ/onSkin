@@ -383,6 +383,14 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   CTA that returns to `/ask`. Evidence is in
   `test-results/human-e2e/2026-07-07/ask-current-compact-advisor/`; it does not
   replace native-device QA.
+- 2026-07-08: System Chrome E2E at 320 x 568 covers the Ask direct-entry
+  navigation follow-up. Direct `/ask` renders the deterministic advisor, reload
+  preserves the advisor, the 48 px Back control routes to `/today`, direct
+  `/ask/consent` renders the deferred cloud Ask beta surface, and its 272 x
+  56 px `Back to Ask` CTA routes back to `/ask`. All five captured states have
+  zero horizontal overflow and no browser errors. Evidence is in
+  `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`; it does not
+  replace native keyboard, screen-reader, or OS back-swipe QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Ask first-prompt and
   typed active-frequency branch: tapping `Is there a conflict on my shelf?`
   keeps the empty-shelf deterministic answer, report control, fixed composer,

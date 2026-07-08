@@ -1044,6 +1044,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The route shows the cloud Ask deferred screen and does not offer a usable consent toggle for an unavailable cloud feature. Its `Back to Ask` deferred CTA returns to `/ask` on direct entry.
   - Evidence: Screenshot and visible-text snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `Ask RoutineKind is not in this beta`, privacy/model/support/observability readiness copy, a 56 px `Back to Ask` CTA, and the CTA returns to `/ask` with zero horizontal overflow.
+  - Current navigation evidence: 2026-07-08 system Chrome Expo web at 320 x 568 directly opens `/ask/consent`, verifies the cloud Ask deferred beta surface with a 272 x 56 `Back to Ask` CTA, then taps it and recovers to `/ask` with zero horizontal overflow and no browser errors. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
 - Branch: empty shelf state
   - Priority: Important
   - Automate later: Yes
@@ -1063,6 +1064,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Refresh `/ask`, directly open `/ask` and use the Back control, then directly open `/ask/consent` and use the deferred Back CTA.
   - Expected result: Deterministic Ask remains reachable, only the cloud consent route is deferred while the flag is off, and direct-entry Back controls return to a safe app surface instead of no-oping. Visible Ask Back, report-answer, CTA, and send controls meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence and small-phone button-geometry snapshot.
+  - Current local evidence: 2026-07-08 system Chrome Expo web at 320 x 568 verifies direct `/ask` renders Ask RoutineKind, reload preserves the deterministic advisor, the 48 px Back control routes to `/today`, direct `/ask/consent` shows the deferred cloud surface, and its 272 x 56 `Back to Ask` CTA routes to `/ask`. Ask Back, composer, and Send controls are 48 px tall, horizontal overflow is zero in all five states, and no browser errors were recorded. Evidence is in `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
 - Branch: accessibility and keyboard
   - Priority: Important
   - Automate later: Yes

@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added fresh Ask direct-entry navigation evidence for the deterministic/free
+  advisor and deferred cloud Ask route. System Chrome Expo web at 320 x 568
+  verifies direct `/ask`, reload, Back recovery to `/today`, direct
+  `/ask/consent`, and `Back to Ask` recovery to `/ask`, with 48+ px controls,
+  zero horizontal overflow, and no browser errors. Evidence is in
+  `test-results/human-e2e/2026-07-08/ask-navigation-direct-entry/`.
+
 - Refreshed closed-beta/public-launch readiness evidence after the latest safe-
   area and packet commits. `npm run phase10-11:verify` passes non-strict code
   gates, while the generated Phase 10 and Phase 11 packets remain correctly
