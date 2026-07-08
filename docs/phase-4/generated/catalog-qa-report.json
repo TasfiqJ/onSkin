@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T19:44:39.914Z",
+  "generatedAt": "2026-07-08T20:55:50.074Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "ab59f9d77f25dd94558aeeb249a883ac70f3e65a",
+  "gitSha": "bfb4c68b5907e8d3b49ddfe5267ba62cf80df0b5",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -15,14 +15,26 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 11711,
-      "sha256": "39f599228db019b4904b28409967227a02d8de521af1e01605be874a1548d96a"
+      "bytes": 12147,
+      "sha256": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 6441,
-      "sha256": "01dbbdeefc517f00a3a68975497aaa26a764059850eb05ab76900bc9f4e7c0eb"
+      "bytes": 6579,
+      "sha256": "cfb7d04ab9b1a0a940c186bd5b6921edca30e8447f5345aab7ccaefb4b8b0202"
+    },
+    {
+      "path": "scripts/phase4/beta-coverage-report.mjs",
+      "exists": true,
+      "bytes": 21304,
+      "sha256": "17db7bc6e862bc6fb065b5e740b12da8f3634adfaefb80b8c05393e39690a3de"
+    },
+    {
+      "path": "scripts/phase4/beta-coverage-report-smoke.mjs",
+      "exists": true,
+      "bytes": 7116,
+      "sha256": "a7f0280c06c6247c5cbccf806403f7960636cc85fdb5f9223d03ad517f8ca558"
     },
     {
       "path": "scripts/phase4/import-obf-snapshot.mjs",
@@ -57,8 +69,8 @@
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
       "exists": true,
-      "bytes": 5133,
-      "sha256": "a874236beacddd7dd8c83b5d8688e494c9cf9793f271bca1473241ae2cb7ad19"
+      "bytes": 5271,
+      "sha256": "6cf01a6d0303828a2b5b6aaddcd6cad662c9aeb3098700de431cf12ff182ab35"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -69,8 +81,14 @@
     {
       "path": "docs/FOR_TAS_TO_DO.md",
       "exists": true,
-      "bytes": 25105,
-      "sha256": "d873b96382955b1348c79f90a5c1ced2662371336bd3c99fa964e967b4f2ebf3"
+      "bytes": 25928,
+      "sha256": "d5f9ed016f03f916c252597de0098afd449152ea08374b0d2226c5b07826d73b"
+    },
+    {
+      "path": "docs/phase-4/beta-coverage-report.md",
+      "exists": true,
+      "bytes": 1854,
+      "sha256": "5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6"
     },
     {
       "path": "docs/phase-4/catalog-source-memo-cosing.md",
@@ -93,8 +111,8 @@
     {
       "path": "docs/phase-4/phase-4-exit-review.md",
       "exists": true,
-      "bytes": 2101,
-      "sha256": "26b09472cec790342ef1e17e2ed0951e618a36e667969938b77e7f02034b0be5"
+      "bytes": 2235,
+      "sha256": "1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3"
     }
   ],
   "totals": {
