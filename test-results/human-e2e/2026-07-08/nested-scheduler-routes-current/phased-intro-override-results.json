@@ -1,0 +1,12 @@
+{
+  "phasedBefore": {
+    "overflow": 0,
+    "text": "ONE AT A TIME\nLet's not start everything at once.\nYou added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it.\n✓\nThis week. Your current actives\nSettling in\nNext week. Add new active\nOn its own night\nThen. Your full cycle\nBoth, safely alternated\nSounds good\nAdd it now anyway",
+    "url": "http://localhost:8155/cycle/phased-intro"
+  },
+  "addNowCount": 1,
+  "phasedAfter": {
+    "text": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8\nGood morning.\nMorning routine\n0 of 0\nSPF\nNo SPF this morning\nSee why\nx\nToday\nProgress\nShelf\nYou",
+    "url": "http://localhost:8155/today"
+  }
+}

@@ -421,6 +421,21 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`; this
   does not replace native iOS/Android bottom-sheet, safe-area, screen-reader,
   or reviewer-signoff QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the full nested
+  scheduler route group. Fresh free direct `/cycle/settings`,
+  `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`,
+  `/cycle/phased-intro`, and `/cycle/procedure` all render the scheduler
+  contextual paywall with no route-body content, zero horizontal overflow, and
+  no sub-44 px visible controls. The local no-card reverse trial unlocks the
+  same route group; a manual retinol plus glycolic shelf fixture and the
+  phased-intro `Add it now anyway` override produce scheduled settings rows
+  (`Night 1` glycolic, `Night 2` retinol), Why Tonight APART trace copy,
+  disruption options, phased-intro/procedure surfaces, empty recovery, and
+  active recovery after `Start recovery`. `Ease back in` returns to `/today`.
+  Evidence is in
+  `test-results/human-e2e/2026-07-08/nested-scheduler-routes-current/`; this
+  does not replace native iOS/Android bottom-sheet, safe-area, Dynamic Type,
+  screen-reader, or live RevenueCat/Supabase entitlement QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Today AM check-off
   loop with a local shelf routine: complete `Mineral SPF 50`, undo back to
   `0 of 1`, re-complete, reload Today, and verify the checked `1 of 1` state

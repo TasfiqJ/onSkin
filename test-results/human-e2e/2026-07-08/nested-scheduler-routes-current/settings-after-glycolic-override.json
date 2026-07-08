@@ -1,0 +1,12 @@
+{
+  "addNowAgainCount": 1,
+  "settingsAfterOverride": {
+    "hasGlycolic": true,
+    "hasPaywall": false,
+    "hasRetinol": true,
+    "hasScheduled": true,
+    "overflow": 0,
+    "text": "x\nCycle settings\nVARIANT\nGentle\nmore recovery\nClassic\n6 nights generated\nAdvanced\nfewer rest\nACTIVES ON YOUR NIGHTS\nNight 1\nGlycolic Acid 7% Toner exfoliate\nScheduled\nNight 2\nRetinol 0.2% Night Serum retinoid\nScheduled\nNight 3\nGlycolic Acid 7% Toner exfoliate\nScheduled\nNight 4\nRetinol 0.2% Night Serum retinoid\nScheduled\nWe keep acids and retinol on separate nights to protect your barrier. The one rule we hold firm. Everything else is a recommendation you can change.\nVariant changes recalculate your active nights from the products on your shelf. We keep the barrier-safety rule firm in every version.",
+    "url": "http://localhost:8155/cycle/settings"
+  }
+}

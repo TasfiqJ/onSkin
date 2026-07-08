@@ -1,0 +1,329 @@
+{
+  "finalUnlocked": [
+    {
+      "route": "/cycle/settings",
+      "screenshot": "reverse-cycle-settings-final.png",
+      "hasPaywall": false,
+      "horizontalOverflow": 0,
+      "includes": {
+        "6 nights generated": true,
+        "Classic": true,
+        "Cycle settings": true,
+        "Glycolic Acid 7% Toner": true,
+        "Night 1": true,
+        "Night 2": true,
+        "Retinol 0.2% Night Serum": true,
+        "Scheduled": true
+      },
+      "noDeferredDragCopy": true,
+      "sub44VisibleControls": [],
+      "text": "x\nCycle settings\nVARIANT\nGentle\nmore recovery\nClassic\n6 nights generated\nAdvanced\nfewer rest\nACTIVES ON YOUR NIGHTS\nNight 1\nGlycolic Acid 7% Toner exfoliate\nScheduled\nNight 2\nRetinol 0.2% Night Serum retinoid\nScheduled\nNight 3\nGlycolic Acid 7% Toner exfoliate\nScheduled\nNight 4\nRetinol 0.2% Night Serum retinoid\nScheduled\nWe keep acids and retinol on separate nights to protect your barrier. The one rule we hold firm. Everything else is a recommendation you can change.\nVariant changes recalculate your active nights from the products on your shelf. We keep the barrier-safety rule firm in every version.",
+      "url": "http://localhost:8155/cycle/settings",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControls": [
+        {
+          "aria": "Done",
+          "height": 48,
+          "role": "button",
+          "text": "x",
+          "visible": true,
+          "width": 48
+        },
+        {
+          "aria": "Gentle. more recovery",
+          "height": 86,
+          "role": "button",
+          "text": "Gentlemore recovery",
+          "visible": true,
+          "width": 85
+        },
+        {
+          "aria": "Classic. 6 nights generated",
+          "height": 86,
+          "role": "button",
+          "text": "Classic6 nights generated",
+          "visible": true,
+          "width": 87
+        },
+        {
+          "aria": "Advanced. fewer rest",
+          "height": 86,
+          "role": "button",
+          "text": "Advancedfewer rest",
+          "visible": true,
+          "width": 85
+        }
+      ]
+    },
+    {
+      "route": "/cycle/why-tonight",
+      "screenshot": "reverse-cycle-why-tonight-final.png",
+      "hasPaywall": false,
+      "horizontalOverflow": 0,
+      "includes": {
+        "Every step here is traceable": true,
+        "Glycolic Acid 7% Toner": true,
+        "Recommendation, not a rule": true,
+        "WHY THIS": true,
+        "retinoid": true
+      },
+      "noDeferredDragCopy": true,
+      "sub44VisibleControls": [],
+      "text": "WHY THIS, TONIGHT?\nTonight is exfoliation night.\nCYCLE\nYou're on night 1 of your classic cycle. The exfoliate slot.\nAPART\nYour Glycolic Acid 7% Toner is on alternate nights so it and your retinoid don't compound irritation. Recommendation, not a rule.\nPACE\n2 retinoid nights per cycle while your skin builds tolerance.\nEvery step here is traceable to a rule, your profile, or a choice you made. Never a black box.\nGot it",
+      "url": "http://localhost:8155/cycle/why-tonight",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControls": [
+        {
+          "aria": "Dismiss",
+          "height": 48,
+          "role": "button",
+          "text": "Dismiss",
+          "visible": true,
+          "width": 320
+        },
+        {
+          "aria": null,
+          "height": 56,
+          "role": "button",
+          "text": "Got it",
+          "visible": true,
+          "width": 264
+        }
+      ]
+    },
+    {
+      "route": "/cycle/disruption",
+      "screenshot": "reverse-cycle-disruption-final.png",
+      "hasPaywall": false,
+      "horizontalOverflow": 0,
+      "includes": {
+        "I had a facial or peel": true,
+        "Life happens.": true,
+        "Pause my routine": true,
+        "Skip tonight": true,
+        "Travel mode": true
+      },
+      "noDeferredDragCopy": true,
+      "sub44VisibleControls": [],
+      "text": "Life happens.\nTake a break whenever you need. Nothing breaks, and we'll pick up right where you left off.\n‖\nSkip tonight\nJust this once. The cycle continues\n◴\nPause my routine\nVacation, illness, a break\n→\nTravel mode\nTrim to essentials while away\n◇\nI had a facial or peel\nPause actives, let skin recover",
+      "url": "http://localhost:8155/cycle/disruption",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControls": [
+        {
+          "aria": "Skip tonight. Just this once. The cycle continues",
+          "height": 90,
+          "role": "button",
+          "text": "‖Skip tonightJust this once. The cycle continues",
+          "visible": true,
+          "width": 264
+        },
+        {
+          "aria": "Pause my routine. Vacation, illness, a break",
+          "height": 72,
+          "role": "button",
+          "text": "◴Pause my routineVacation, illness, a break",
+          "visible": true,
+          "width": 264
+        },
+        {
+          "aria": "Travel mode. Trim to essentials while away",
+          "height": 72,
+          "role": "button",
+          "text": "→Travel modeTrim to essentials while away",
+          "visible": true,
+          "width": 264
+        },
+        {
+          "aria": "I had a facial or peel. Pause actives, let skin recover",
+          "height": 72,
+          "role": "button",
+          "text": "◇I had a facial or peelPause actives, let skin recover",
+          "visible": true,
+          "width": 264
+        }
+      ]
+    },
+    {
+      "route": "/cycle/phased-intro",
+      "screenshot": "reverse-cycle-phased-intro-final.png",
+      "hasPaywall": false,
+      "horizontalOverflow": 0,
+      "includes": {
+        "Add it now anyway": true,
+        "Let's not start everything at once.": true,
+        "ONE AT A TIME": true,
+        "Sounds good": true
+      },
+      "noDeferredDragCopy": true,
+      "sub44VisibleControls": [],
+      "text": "ONE AT A TIME\nLet's not start everything at once.\nYou added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it.\n✓\nThis week. Your current actives\nSettling in\nNext week. Add new active\nOn its own night\nThen. Your full cycle\nBoth, safely alternated\nSounds good\nAdd it now anyway",
+      "url": "http://localhost:8155/cycle/phased-intro",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControls": [
+        {
+          "aria": null,
+          "height": 56,
+          "role": "button",
+          "text": "Sounds good",
+          "visible": true,
+          "width": 264
+        },
+        {
+          "aria": null,
+          "height": 48,
+          "role": "button",
+          "text": "Add it now anyway",
+          "visible": true,
+          "width": 264
+        }
+      ]
+    },
+    {
+      "route": "/cycle/procedure",
+      "screenshot": "reverse-cycle-procedure-final.png",
+      "hasPaywall": false,
+      "horizontalOverflow": 0,
+      "includes": {
+        "Gentle cleanser": true,
+        "HOW LONG TO REST?": true,
+        "Let's give your skin a few days.": true,
+        "SPF every morning": true,
+        "Start recovery": true
+      },
+      "noDeferredDragCopy": true,
+      "sub44VisibleControls": [],
+      "text": "<\n◇\nLet's give your skin a few days.\nAfter a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in.\nHOW LONG TO REST?\n3\ndays\n5\ndays\n7\ndays\nWHILE YOU RECOVER\n✓\nGentle cleanser\n✓\nBarrier moisturizer. Ceramides\n✓\nSPF every morning\nStart recovery",
+      "url": "http://localhost:8155/cycle/procedure",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControls": [
+        {
+          "aria": "Back",
+          "height": 48,
+          "role": "button",
+          "text": "<",
+          "visible": true,
+          "width": 48
+        },
+        {
+          "aria": null,
+          "height": 76,
+          "role": "button",
+          "text": "3days",
+          "visible": true,
+          "width": 85
+        },
+        {
+          "aria": null,
+          "height": 76,
+          "role": "button",
+          "text": "5days",
+          "visible": true,
+          "width": 87
+        },
+        {
+          "aria": null,
+          "height": 76,
+          "role": "button",
+          "text": "7days",
+          "visible": true,
+          "width": 85
+        },
+        {
+          "aria": null,
+          "height": 56,
+          "role": "button",
+          "text": "Start recovery",
+          "visible": true,
+          "width": 272
+        }
+      ]
+    },
+    {
+      "route": "/cycle/recovery",
+      "screenshot": "reverse-cycle-recovery-empty-final.png",
+      "hasPaywall": false,
+      "horizontalOverflow": 0,
+      "includes": {
+        "No recovery in progress. Your cycle is running normally.": true
+      },
+      "noDeferredDragCopy": true,
+      "sub44VisibleControls": [],
+      "text": "<\nNo recovery in progress. Your cycle is running normally.",
+      "url": "http://localhost:8155/cycle/recovery",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControls": [
+        {
+          "aria": "Back",
+          "height": 48,
+          "role": "button",
+          "text": "<",
+          "visible": true,
+          "width": 48
+        }
+      ]
+    }
+  ],
+  "startRecoveryCount": 1,
+  "recoveryActive": {
+    "screenshot": "reverse-cycle-recovery-active-final.png",
+    "hasPaywall": false,
+    "horizontalOverflow": 0,
+    "includes": {
+      "dayOneOfFive": true,
+      "easeBackIn": true,
+      "easedOff": true,
+      "glycolicPaused": true,
+      "recoveryMode": true,
+      "retinolPaused": true
+    },
+    "route": "/cycle/procedure -> /cycle/recovery",
+    "sub44VisibleControls": [],
+    "text": "<\nRecovery mode · day 1 of 5\nWe've eased off for now.\nAfter your treatment, we paused your actives and switched to barrier repair. We’ll ease back in gently.\nResting your barrier\n1 / 5\nPaused actives\nReintroduce gradually →\nPaused until you're comfortable\nGlycolic Acid 7% Toner\nRetinol 0.2% Night Serum\nFeeling better already? You can ease back in early. We'll start with one active.\nEase back in",
+    "url": "http://localhost:8155/cycle/recovery",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "aria": "Back",
+        "height": 48,
+        "role": "button",
+        "text": "<",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 56,
+        "role": "button",
+        "text": "Ease back in",
+        "visible": true,
+        "width": 272
+      }
+    ]
+  },
+  "easeBackInCount": 1,
+  "afterEase": {
+    "text": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8\nGood morning.\nMorning routine\n0 of 0\nSPF\nNo SPF this morning\nSee why\nx\nToday\nProgress\nShelf\nYou",
+    "url": "http://localhost:8155/today"
+  }
+}

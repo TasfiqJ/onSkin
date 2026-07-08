@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Verified the full nested scheduler route group on `main`. Codex in-app
+  browser Expo web at 320 x 568 confirms fresh free direct `/cycle/settings`,
+  `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`,
+  `/cycle/phased-intro`, and `/cycle/procedure` all show the scheduler
+  contextual paywall with no nested route content, no sub-44 px visible
+  controls, and zero horizontal overflow. The same paywall's no-card Pro week
+  unlocks the route group; a manual retinol plus glycolic shelf fixture and the
+  phased-intro `Add it now anyway` override verify scheduled glycolic/retinol
+  settings rows, APART explainability copy, disruption/procedure/phased-intro
+  surfaces, empty recovery, active recovery after `Start recovery`, and
+  `Ease back in` returning to `/today`. Evidence and report are in
+  `test-results/human-e2e/2026-07-08/nested-scheduler-routes-current/`.
+
 - Hardened commerce paid-link recovery for compact phones. The recommendation
   where-to-buy and shoppable stack paid-link paths now use a route-owned
   accessible commerce notice instead of native `Alert.alert`; the notice renders

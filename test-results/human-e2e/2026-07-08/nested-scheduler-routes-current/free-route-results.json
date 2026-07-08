@@ -1,0 +1,362 @@
+[
+  {
+    "route": "/cycle/settings",
+    "screenshot": "free-cycle-settings.png",
+    "hasExploreFirst": true,
+    "hasMaybeLater": true,
+    "hasRouteSpecificContent": false,
+    "hasSchedulerPaywall": true,
+    "horizontalOverflow": 0,
+    "sub44VisibleButtons": [],
+    "text": "Maybe later\nUnlock your full skin-cycling scheduler.\nTonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+    "url": "http://127.0.0.1:8155/cycle/settings",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleButtons": [
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Maybe later",
+        "visible": true,
+        "width": 102
+      },
+      {
+        "aria": null,
+        "height": 50,
+        "text": "Start free trial",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 60,
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Terms",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Privacy",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Restore",
+        "visible": true,
+        "width": 49
+      }
+    ]
+  },
+  {
+    "route": "/cycle/disruption",
+    "screenshot": "free-cycle-disruption.png",
+    "hasExploreFirst": true,
+    "hasMaybeLater": true,
+    "hasRouteSpecificContent": false,
+    "hasSchedulerPaywall": true,
+    "horizontalOverflow": 0,
+    "sub44VisibleButtons": [],
+    "text": "Maybe later\nUnlock your full skin-cycling scheduler.\nTonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+    "url": "http://127.0.0.1:8155/cycle/disruption",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleButtons": [
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Maybe later",
+        "visible": true,
+        "width": 102
+      },
+      {
+        "aria": null,
+        "height": 50,
+        "text": "Start free trial",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 60,
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Terms",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Privacy",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Restore",
+        "visible": true,
+        "width": 49
+      }
+    ]
+  },
+  {
+    "route": "/cycle/recovery",
+    "screenshot": "free-cycle-recovery.png",
+    "hasExploreFirst": true,
+    "hasMaybeLater": true,
+    "hasRouteSpecificContent": false,
+    "hasSchedulerPaywall": true,
+    "horizontalOverflow": 0,
+    "sub44VisibleButtons": [],
+    "text": "Maybe later\nUnlock your full skin-cycling scheduler.\nTonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+    "url": "http://127.0.0.1:8155/cycle/recovery",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleButtons": [
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Maybe later",
+        "visible": true,
+        "width": 102
+      },
+      {
+        "aria": null,
+        "height": 50,
+        "text": "Start free trial",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 60,
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Terms",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Privacy",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Restore",
+        "visible": true,
+        "width": 49
+      }
+    ]
+  },
+  {
+    "route": "/cycle/why-tonight",
+    "screenshot": "free-cycle-why-tonight.png",
+    "hasExploreFirst": true,
+    "hasMaybeLater": true,
+    "hasRouteSpecificContent": false,
+    "hasSchedulerPaywall": true,
+    "horizontalOverflow": 0,
+    "sub44VisibleButtons": [],
+    "text": "Maybe later\nUnlock your full skin-cycling scheduler.\nTonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+    "url": "http://127.0.0.1:8155/cycle/why-tonight",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleButtons": [
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Maybe later",
+        "visible": true,
+        "width": 102
+      },
+      {
+        "aria": null,
+        "height": 50,
+        "text": "Start free trial",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 60,
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Terms",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Privacy",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Restore",
+        "visible": true,
+        "width": 49
+      }
+    ]
+  },
+  {
+    "route": "/cycle/phased-intro",
+    "screenshot": "free-cycle-phased-intro.png",
+    "hasExploreFirst": true,
+    "hasMaybeLater": true,
+    "hasRouteSpecificContent": false,
+    "hasSchedulerPaywall": true,
+    "horizontalOverflow": 0,
+    "sub44VisibleButtons": [],
+    "text": "Maybe later\nUnlock your full skin-cycling scheduler.\nTonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+    "url": "http://127.0.0.1:8155/cycle/phased-intro",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleButtons": [
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Maybe later",
+        "visible": true,
+        "width": 102
+      },
+      {
+        "aria": null,
+        "height": 50,
+        "text": "Start free trial",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 60,
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Terms",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Privacy",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Restore",
+        "visible": true,
+        "width": 49
+      }
+    ]
+  },
+  {
+    "route": "/cycle/procedure",
+    "screenshot": "free-cycle-procedure.png",
+    "hasExploreFirst": true,
+    "hasMaybeLater": true,
+    "hasRouteSpecificContent": false,
+    "hasSchedulerPaywall": true,
+    "horizontalOverflow": 0,
+    "sub44VisibleButtons": [],
+    "text": "Maybe later\nUnlock your full skin-cycling scheduler.\nTonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+    "url": "http://127.0.0.1:8155/cycle/procedure",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleButtons": [
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Maybe later",
+        "visible": true,
+        "width": 102
+      },
+      {
+        "aria": null,
+        "height": 50,
+        "text": "Start free trial",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 60,
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true,
+        "width": 272
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Terms",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Privacy",
+        "visible": true,
+        "width": 48
+      },
+      {
+        "aria": null,
+        "height": 48,
+        "text": "Restore",
+        "visible": true,
+        "width": 49
+      }
+    ]
+  }
+]
