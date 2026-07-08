@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Screen, Text } from '@/components/ui';
@@ -12,8 +12,19 @@ import { track } from '@/lib/analytics/track';
 import { shareCardUserMessage } from '@/lib/errors/userFacing';
 import { canShareConflictCard, phase7Flags } from '@/lib/launch/phase7';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { colors } from '@/theme/tokens';
 
 const CREATIVE_VARIANT = 'story-v1';
+const SHARE_LINK_UNAVAILABLE_TITLE = 'Sharing is not ready';
+const SHARE_LINK_UNAVAILABLE_MESSAGE =
+  'The public share link must be configured before this card can be exported.';
+const SHARE_UNAVAILABLE_TITLE = 'Sharing unavailable';
+const SHARE_UNAVAILABLE_MESSAGE = "Sharing isn't available on this device right now.";
+
+type ShareFeedback = {
+  title: string;
+  message: string;
+};
 
 function nextFrame(): Promise<void> {
   return new Promise((resolve) => requestAnimationFrame(() => resolve()));
@@ -28,6 +39,7 @@ export default function ShareConflictScreen() {
   const cardRef = useRef<View>(null);
   const [busy, setBusy] = useState(false);
   const [shareLink, setShareLink] = useState<ConflictShareLink | null>(null);
+  const [shareFeedback, setShareFeedback] = useState<ShareFeedback | null>(null);
   const conflict = data?.conflicts.find((c) => c.rule.id === ruleId) ?? null;
 
   if (!phase7Flags.shareCard) {
@@ -43,6 +55,7 @@ export default function ShareConflictScreen() {
   async function onShare() {
     if (!canShareConflictCard(conflict)) return;
     setBusy(true);
+    setShareFeedback(null);
     try {
       track('share_card_export_started', { creative_variant: CREATIVE_VARIANT });
       const link = await createConflictShareLink({ creativeVariant: CREATIVE_VARIANT });
@@ -51,10 +64,10 @@ export default function ShareConflictScreen() {
           creative_variant: CREATIVE_VARIANT,
           reason: 'public_link_unavailable',
         });
-        Alert.alert(
-          'Sharing is not ready',
-          'The public share link must be configured before this card can be exported.',
-        );
+        setShareFeedback({
+          title: SHARE_LINK_UNAVAILABLE_TITLE,
+          message: SHARE_LINK_UNAVAILABLE_MESSAGE,
+        });
         return;
       }
 
@@ -85,14 +98,20 @@ export default function ShareConflictScreen() {
           share_id: link.shareId,
           reason: 'share_unavailable',
         });
-        Alert.alert('Sharing', "Sharing isn't available on this device.");
+        setShareFeedback({
+          title: SHARE_UNAVAILABLE_TITLE,
+          message: SHARE_UNAVAILABLE_MESSAGE,
+        });
       }
     } catch {
       track('share_card_export_failed', {
         creative_variant: CREATIVE_VARIANT,
         reason: 'exception',
       });
-      Alert.alert("Couldn't create the card", shareCardUserMessage());
+      setShareFeedback({
+        title: "Couldn't create the card",
+        message: shareCardUserMessage(),
+      });
     } finally {
       setBusy(false);
     }
@@ -114,6 +133,20 @@ export default function ShareConflictScreen() {
         )}
       </View>
       <View className="gap-2 pb-4">
+        {shareFeedback ? (
+          <View className="rounded-[16px] bg-clay-tint px-4 py-3">
+            <Text
+              accessibilityRole="alert"
+              variant="bodySm"
+              className="text-center"
+              style={{ color: colors.clayDeep, lineHeight: 20 }}
+            >
+              {shareFeedback.title}
+              {'\n'}
+              {shareFeedback.message}
+            </Text>
+          </View>
+        ) : null}
         <Button
           label={busy ? 'Preparing...' : 'Share to Stories'}
           disabled={busy || !canShareConflictCard(conflict)}

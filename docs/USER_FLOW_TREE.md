@@ -561,6 +561,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open Progress with no photos.
   - Expected result: Empty state gives a clear next action.
   - Evidence: Screenshot.
+- Branch: timeline time-lapse unavailable
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open Progress with populated local photos, switch to Timeline, and tap `Play`.
+  - Expected result: The Play affordance does not open a native or JavaScript dialog, does not appear inert, and renders stable timeline-local copy explaining that the gentle flip-through arrives with on-device capture while the dated timeline remains usable.
+  - Evidence: Screenshot, route state, dialog check, and geometry snapshot.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, and app lock disabled opens `/progress`, switches to Timeline, verifies Play is 82 x 48 px, taps Play, renders route-owned time-lapse copy at 242 x 76 px, opens no JavaScript/native dialog, keeps horizontal overflow at zero, and keeps no-score copy visible. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
 - Branch: contextual photo-timeline paywall on short phones
   - Priority: Important
   - Automate later: Yes
@@ -1001,6 +1008,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Attempt to export a reviewed share card on a surface without native sharing support.
   - Expected result: The app explains sharing is unavailable without losing the user or exposing sensitive shelf details.
   - Evidence: Screenshot or platform log.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED=true`, `EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED=true`, `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED=true`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, `EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING=true`, and `EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT=unavailable` adds real Retinol 0.3% and Glycolic 7% products through manual shelf intake, opens the reviewed conflict share route, verifies the share card is present with a 272 x 56 Share to Stories control and 272 x 48 Done control, taps Share to Stories, renders inline `Sharing unavailable` recovery, opens no JavaScript/native dialog, leaks no raw native/provider text, and keeps horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 opened a seeded reviewed conflict share card, tapped `Share to Stories` with native sharing forced unavailable, verified no native/browser dialog, kept the branded card and controls visible, and rendered inline `Sharing unavailable` feedback above the export action. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
 
 ## Flow: Settings Account Controls
 

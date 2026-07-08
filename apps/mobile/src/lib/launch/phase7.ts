@@ -103,8 +103,17 @@ export function isPhase7SurfaceEnabled(surface: DeferredSurfaceKind): boolean {
   return SURFACE_TO_FLAG[surface];
 }
 
+function e2eReviewedConflictSharingEnabled(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+
+  const fixture = process.env.EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING?.trim().toLowerCase();
+  return fixture === '1' || fixture === 'true' || fixture === 'enabled';
+}
+
 export function isReviewedConflict(conflict: DetectedConflict | null | undefined): boolean {
-  return conflict ? isReviewedRule(conflict.rule) : false;
+  if (!conflict) return false;
+  if (e2eReviewedConflictSharingEnabled()) return true;
+  return isReviewedRule(conflict.rule);
 }
 
 export function canShareConflictCard(

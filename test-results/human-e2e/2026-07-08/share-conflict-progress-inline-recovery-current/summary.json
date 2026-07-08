@@ -1,0 +1,25 @@
+{
+  "surface": "Expo web",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "date": "2026-07-08",
+  "flow": "reviewed conflict share-card export unavailable",
+  "result": "pass_with_fix",
+  "checks": {
+    "inline_feedback_visible": true,
+    "native_or_browser_dialog_opened": false,
+    "share_card_remained_visible": true,
+    "route_remained_usable": true
+  },
+  "evidence": [
+    "01-shelf-conflict-seeded.png",
+    "02-share-card-before-export.png",
+    "03-share-card-inline-feedback.png",
+    "04-progress-before-timelapse.png",
+    "04-progress-timeline-before-timelapse.png",
+    "05-progress-timelapse-inline-feedback.png"
+  ],
+  "remaining_risk": "Physical iOS and Android native share-sheet success/rejection branches still need device QA before public launch."
+}

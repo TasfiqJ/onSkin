@@ -220,7 +220,7 @@ describe('Progress route mobile contracts', () => {
       'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
     );
     expect(source).toContain(
-      "import { Alert, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
+      "import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
     );
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
@@ -239,6 +239,19 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('role="dialog"');
     expect(source).not.toContain('aria-modal');
     expect(source).not.toContain('onPress={() => {}}');
+  });
+
+  it('keeps the timeline time-lapse preview route-owned instead of using native alerts', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+
+    expect(source).toContain('const TIMELAPSE_UNAVAILABLE_TITLE');
+    expect(source).toContain('const TIMELAPSE_UNAVAILABLE_BODY');
+    expect(source).toContain('const [timelapseFeedbackVisible, setTimelapseFeedbackVisible] = useState(false);');
+    expect(source).toContain('accessibilityLabel="Play a quiet time-lapse of your series"');
+    expect(source).toContain('onPress={() => setTimelapseFeedbackVisible(true)}');
+    expect(source).toContain('{timelapseFeedbackVisible ? (');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).not.toContain("Alert.alert('Quiet time-lapse'");
   });
 
   it('buffers populated comparison controls on small phones', () => {

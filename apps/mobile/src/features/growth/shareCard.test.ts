@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import type { View } from 'react-native';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { shareConflictCard } from './shareCard';
 
@@ -28,6 +28,9 @@ function mountedRef(): RefObject<View | null> {
   return { current: {} as View };
 }
 
+const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
+const originalDev = runtime.__DEV__;
+
 describe('conflict share-card export', () => {
   beforeEach(() => {
     mocks.captureRef.mockReset();
@@ -35,6 +38,15 @@ describe('conflict share-card export', () => {
     mocks.isAvailableAsync.mockReset();
     mocks.shareAsync.mockReset();
     mocks.deleteAsync.mockResolvedValue(undefined);
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT;
+  });
+
+  afterEach(() => {
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT;
   });
 
   it('returns false without capture when the card view is not mounted', async () => {
@@ -94,6 +106,34 @@ describe('conflict share-card export', () => {
     expect(mocks.shareAsync).not.toHaveBeenCalled();
     expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/conflict-card.png', {
       idempotent: true,
+    });
+  });
+
+  it('uses the dev-only E2E unavailable fixture without opening native sharing', async () => {
+    runtime.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT = 'unavailable';
+
+    await expect(shareConflictCard(mountedRef())).resolves.toBe(false);
+
+    expect(mocks.captureRef).not.toHaveBeenCalled();
+    expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+  });
+
+  it('ignores the E2E share-card fixture outside dev builds', async () => {
+    runtime.__DEV__ = false;
+    process.env.EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT = 'unavailable';
+    mocks.captureRef.mockResolvedValueOnce('file://cache/conflict-card.png');
+    mocks.isAvailableAsync.mockResolvedValueOnce(true);
+    mocks.shareAsync.mockResolvedValueOnce(undefined);
+
+    await expect(shareConflictCard(mountedRef())).resolves.toBe(true);
+
+    expect(mocks.shareAsync).toHaveBeenCalledWith('file://cache/conflict-card.png', {
+      mimeType: 'image/png',
+      dialogTitle: 'Share your shelf check',
+      UTI: 'public.png',
     });
   });
 

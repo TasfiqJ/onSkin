@@ -6,6 +6,24 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Replaced the reviewed conflict share-card export failure `Alert.alert` paths
+  with route-owned inline feedback. Added dev-only E2E fixtures for reviewed
+  conflict sharing and native share unavailability, kept production review gates
+  unchanged, and captured 320 x 568 in-app browser evidence showing the branded
+  share card remains visible while the unavailable state stays in-screen.
+
+- Replaced two remaining non-destructive native-alert fallbacks with route-owned
+  inline recovery. The reviewed conflict share-card export path now renders
+  durable `role="alert"` feedback when native sharing is unavailable, keeps Share
+  to Stories and Done visible, and uses dev-only fixtures for reviewed-conflict
+  and native-share failure coverage without weakening production review gates.
+  Progress Timeline `Play` now keeps the user on the dated timeline with calm
+  inline copy about on-device capture, no autoplay, and no AI scores. Codex
+  in-app browser evidence at 320 x 568 covers both flows with no JavaScript
+  dialog, no raw provider/native text, 48 px+ controls, and zero horizontal
+  overflow. Native iOS/Android share sheet, screen-reader, and Dynamic Type
+  evidence remain device QA follow-up.
+
 - Hardened biometric app-lock recovery across the global lock overlay, locked
   Progress timeline, and You-tab security switch. Native auth unavailable states
   now render stable in-app `role="alert"` feedback while user cancellation stays

@@ -13,6 +13,7 @@ const ENV_KEYS = [
   'EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED',
   'EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED',
   'EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED',
+  'EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING',
 ] as const;
 
 type EnvKey = (typeof ENV_KEYS)[number];
@@ -28,13 +29,16 @@ function setEnv(name: EnvKey, value: string | undefined): void {
   else process.env[name] = value;
 }
 
-async function loadPhase7With(overrides: Partial<Record<EnvKey, string>>) {
+async function loadPhase7With(
+  overrides: Partial<Record<EnvKey, string>>,
+  { dev = false }: { dev?: boolean } = {},
+) {
   vi.resetModules();
   for (const key of ENV_KEYS) setEnv(key, undefined);
   for (const [key, value] of Object.entries(overrides) as [EnvKey, string | undefined][]) {
     setEnv(key, value);
   }
-  (globalThis as { __DEV__?: boolean }).__DEV__ = false;
+  (globalThis as { __DEV__?: boolean }).__DEV__ = dev;
   return import('./phase7');
 }
 
@@ -194,5 +198,23 @@ describe('Phase 7 share-card eligibility', () => {
       ),
     ).toBe(false);
     expect(canShareConflictCard(reviewedConflict({ productAId: null }))).toBe(false);
+  });
+
+  it('allows dev-only reviewed-conflict sharing fixtures without changing production review gates', async () => {
+    const flags = {
+      EXPO_PUBLIC_APP_ENV: 'development',
+      EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
+      ...enableAllPhase7Flags(),
+      EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING: 'true',
+    };
+    const unreviewed = reviewedConflict({
+      rule: { ...reviewedConflict().rule, reviewedBy: null },
+    });
+
+    const devModule = await loadPhase7With(flags, { dev: true });
+    expect(devModule.canShareConflictCard(unreviewed)).toBe(true);
+
+    const productionModule = await loadPhase7With(flags, { dev: false });
+    expect(productionModule.canShareConflictCard(unreviewed)).toBe(false);
   });
 });

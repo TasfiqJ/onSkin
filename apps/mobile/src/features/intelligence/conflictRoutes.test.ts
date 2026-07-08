@@ -33,6 +33,18 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('fallbackLabel="Back to Shelf"');
   });
 
+  it('keeps share-card export recovery inline on the share route', () => {
+    const source = readAppRoute('share/conflict/[ruleId].tsx');
+
+    expect(source).toContain('const [shareFeedback, setShareFeedback]');
+    expect(source).toContain('SHARE_LINK_UNAVAILABLE_MESSAGE');
+    expect(source).toContain('SHARE_UNAVAILABLE_MESSAGE');
+    expect(source).toContain('setShareFeedback({');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('shareCardUserMessage()');
+    expect(source).not.toContain('Alert.alert');
+  });
+
   it('recovers missing conflict-detail routes without stale guidance', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 

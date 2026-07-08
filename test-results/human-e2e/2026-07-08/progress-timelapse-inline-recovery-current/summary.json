@@ -1,0 +1,145 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web in-app browser",
+  "viewport": "320x568",
+  "fixtures": {
+    "EXPO_PUBLIC_E2E_ENTITLEMENT": "store_pro",
+    "EXPO_PUBLIC_E2E_PROGRESS_PHOTOS": "populated",
+    "EXPO_PUBLIC_E2E_APP_LOCK_ENABLED": "false"
+  },
+  "start": {
+    "bodyText": "Progress\n＋\nPhoto\n12 weeks · 3 photos · all on this phone\nSame light, same angle. Honestly comparable. No scores, no AI grades.\nCompare\nTimeline\nNo scores ⓘ\nSide-by-side\nyour photo\nyour photo\n‹\n›\nApr 1\nJun 24\ndrag to wipe · tap a date to change\nNo “improvement %.” Just your two photos and their dates. You decide.\nToday\nProgress\nShelf\nYou",
+    "controls": [
+      {
+        "label": "Take a progress photo",
+        "rect": {
+          "height": 47.99757385253906,
+          "width": 92.9763412475586,
+          "x": 203.41323852539062,
+          "y": 11.999393463134766
+        },
+        "text": "＋Photo"
+      },
+      {
+        "label": null,
+        "rect": {
+          "height": 47.99757385253906,
+          "width": 95.99514770507812,
+          "x": 23.99878692626953,
+          "y": 145.94964599609375
+        },
+        "text": "Compare"
+      },
+      {
+        "label": null,
+        "rect": {
+          "height": 47.99757385253906,
+          "width": 95.99514770507812,
+          "x": 129.99090576171875,
+          "y": 145.94964599609375
+        },
+        "text": "Timeline"
+      },
+      {
+        "label": null,
+        "rect": {
+          "height": 47.99757385253906,
+          "width": 132.3270721435547,
+          "x": 164.06251525878906,
+          "y": 259.9363098144531
+        },
+        "text": "Side-by-side"
+      },
+      {
+        "label": "Change to a different date (currently Apr 1)",
+        "rect": {
+          "height": 47.99757385253906,
+          "width": 71.9963607788086,
+          "x": 38.95631408691406,
+          "y": 334.8907775878906
+        },
+        "text": "Apr 1"
+      },
+      {
+        "label": "Change to a different date (currently Jun 24)",
+        "rect": {
+          "height": 47.99757385253906,
+          "width": 75.36408233642578,
+          "x": 206.06797790527344,
+          "y": 334.8907775878906
+        },
+        "text": "Jun 24"
+      }
+    ],
+    "horizontalOverflow": 0,
+    "url": "http://localhost:8101/progress",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "beforePlay": {
+    "hasTimelapseFeedback": false,
+    "hasTimelineText": true,
+    "horizontalOverflow": 0,
+    "playRect": {
+      "height": 47.99757385253906,
+      "width": 82.2057113647461,
+      "x": 214.18386840820312,
+      "y": 259.9363098144531
+    },
+    "url": "http://localhost:8101/progress"
+  },
+  "afterPlay": {
+    "playCount": 1,
+    "dialogBefore": null,
+    "dialogAfter": null,
+    "state": {
+      "alertRect": {
+        "height": 75.97087860107422,
+        "width": 242.47573852539062,
+        "x": 38.95631408691406,
+        "y": 319.4326477050781
+      },
+      "alertText": "Your timeline is ready to browse by date now. The gentle flip-through arrives with on-device capture, without autoplay or AI scores.",
+      "bodyIncludesNativeAlertTitle": false,
+      "horizontalOverflow": 0,
+      "playRect": {
+        "height": 47.99757385253906,
+        "width": 82.2057113647461,
+        "x": 214.18386840820312,
+        "y": 208.47998046875
+      },
+      "url": "http://localhost:8101/progress",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    }
+  },
+  "logs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T09:12:15.962Z",
+      "url": "http://localhost:8101/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T09:12:15.963Z",
+      "url": "http://localhost:8101/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T09:12:15.980Z",
+      "url": "http://localhost:8101/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "screenshots": [
+    "01-progress-compare-start.png",
+    "02-timeline-before-play.png",
+    "03-timelapse-inline-feedback.png"
+  ]
+}
