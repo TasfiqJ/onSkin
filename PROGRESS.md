@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the `/cycle/disruption` sheet on shortest 320 x 480 phones. The fourth
+  choice, `I had a facial or peel`, was clipped to a 42.6 px visible bottom
+  sliver while the sheet had no useful page scroll. The route now adds a
+  sub-520 px sheet density that preserves the same four choices and accessibility
+  labels while reducing row padding, title/body leading, icon size, and sheet
+  spacing. Codex in-app browser Expo web verifies all four choices are fully
+  visible with 56 px+ hit targets, zero horizontal overflow, zero blocked
+  controls, and zero sub-44 visible controls at 320 x 480; tapping the formerly
+  clipped facial/peel option routes to `/cycle/procedure`. Evidence and bug
+  report:
+  `test-results/human-e2e/2026-07-08/cycle-disruption-short-phone-480/`,
+  `docs/e2e-bug-reports/2026-07-08-cycle-disruption-short-phone-choice-clipping.md`.
+
 - Fixed and verified the Today SPF gap prompt on compact phones. The compact
   prompt now exposes a visible `Not now` dismissal instead of an icon-only
   close affordance, and the SPF headline can wrap to two lines instead of

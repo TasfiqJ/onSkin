@@ -1,0 +1,124 @@
+{
+  "blockedControls": [],
+  "documentSize": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320
+  },
+  "horizontalOverflow": 0,
+  "route": "/cycle/disruption",
+  "targets": [
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 245.16839218139648
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Just this once. The cycle continues",
+        "label": "Skip tonight. Just this once. The cycle continues",
+        "rect": {
+          "bottom": 282.6304702758789,
+          "height": 74.92415618896484,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 207.70631408691406,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 74.92415618896484,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Skip tonight",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 316.6186466217041
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Vacation, illness, a break",
+        "label": "Pause my routine. Vacation, illness, a break",
+        "rect": {
+          "bottom": 344.6147041320801,
+          "height": 55.99211502075195,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 288.6225891113281,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Pause my routine",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 378.6028690338135
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Trim to essentials while away",
+        "label": "Travel mode. Trim to essentials while away",
+        "rect": {
+          "bottom": 406.59892654418945,
+          "height": 55.99211502075195,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 350.6068115234375,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Travel mode",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 440.58709144592285
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Pause actives, let skin recover",
+        "label": "I had a facial or peel. Pause actives, let skin recover",
+        "rect": {
+          "bottom": 468.5831489562988,
+          "height": 55.99211502075195,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 412.5910339355469,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "I had a facial or peel",
+      "pass": true
+    }
+  ],
+  "under44VisibleControls": [],
+  "url": "http://localhost:8201/cycle/disruption",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover"
+}

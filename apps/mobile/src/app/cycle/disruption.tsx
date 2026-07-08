@@ -17,6 +17,7 @@ function Option({
   sub,
   firm,
   compact,
+  short,
   onPress,
 }: {
   glyph: string;
@@ -24,6 +25,7 @@ function Option({
   sub: string;
   firm?: boolean;
   compact?: boolean;
+  short?: boolean;
   onPress: () => void;
 }) {
   return (
@@ -36,26 +38,41 @@ function Option({
       accessibilityLabel={`${title}. ${sub}`}
       className={cn(
         'flex-row items-center rounded-[18px] bg-paper-raised',
-        compact ? 'min-h-[72px] gap-3 px-3.5 py-3' : 'gap-3.5 p-4',
+        short
+          ? 'min-h-[56px] gap-2.5 px-3 py-2'
+          : compact
+            ? 'min-h-[72px] gap-3 px-3.5 py-3'
+            : 'gap-3.5 p-4',
         firm ? 'border border-amber/40' : 'border border-hairline',
       )}
     >
       <View
         className={cn(
           'items-center justify-center rounded-xl',
-          compact ? 'h-[34px] w-[34px]' : 'h-[38px] w-[38px]',
+          short ? 'h-[30px] w-[30px]' : compact ? 'h-[34px] w-[34px]' : 'h-[38px] w-[38px]',
         )}
         style={{ backgroundColor: firm ? 'rgba(176,122,60,0.14)' : '#F1ECE3' }}
       >
-        <Text className="text-[16px]" style={{ color: firm ? '#B07A3C' : '#8A8071' }}>
+        <Text
+          className={short ? 'text-[14px]' : 'text-[16px]'}
+          style={{ color: firm ? '#B07A3C' : '#8A8071' }}
+        >
           {glyph}
         </Text>
       </View>
       <View className="flex-1">
-        <Text variant="body" className="font-sans-bold">
+        <Text
+          variant="body"
+          className={cn('font-sans-bold', short ? 'text-[13.5px] leading-[17px]' : undefined)}
+        >
           {title}
         </Text>
-        <Text variant="bodySm" tone="muted">
+        <Text
+          variant="bodySm"
+          tone="muted"
+          numberOfLines={short ? 2 : undefined}
+          className={short ? 'text-[12px] leading-[15px]' : undefined}
+        >
           {sub}
         </Text>
       </View>
@@ -67,6 +84,7 @@ export default function DisruptionScreen() {
   const { height } = useWindowDimensions();
   const m = useCycleMutations();
   const compactSheet = height < 640;
+  const shortSheet = height < 520;
 
   const act = async (fn: () => Promise<void>) => {
     await fn();
@@ -80,24 +98,37 @@ export default function DisruptionScreen() {
       fallbackRoute={APP_HOME_ROUTE}
       scroll
       backdropAccessible={!compactSheet}
-      className={compactSheet ? 'pb-6' : undefined}
+      className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}
     >
       <Text
         variant="title"
-        className={compactSheet ? 'text-[28px] leading-[31px]' : 'text-[30px] leading-[34px]'}
+        className={
+          shortSheet
+            ? 'text-[25px] leading-[27px]'
+            : compactSheet
+              ? 'text-[28px] leading-[31px]'
+              : 'text-[30px] leading-[34px]'
+        }
         accessibilityRole="header"
       >
         Life happens.
       </Text>
-      <Text variant="body" tone="muted" className={compactSheet ? 'mt-1.5' : 'mt-2'}>
+      <Text
+        variant={shortSheet ? 'bodySm' : 'body'}
+        tone="muted"
+        className={
+          shortSheet ? 'mt-1 text-[13px] leading-[17px]' : compactSheet ? 'mt-1.5' : 'mt-2'
+        }
+      >
         Take a break whenever you need. Nothing breaks, and we&apos;ll pick up right where you left
         off.
       </Text>
 
-      <View className={compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}>
+      <View className={shortSheet ? 'mt-3 gap-1.5' : compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}>
         <Option
           glyph="‖"
           compact={compactSheet}
+          short={shortSheet}
           title="Skip tonight"
           sub="Just this once. The cycle continues"
           onPress={() => act(m.skip)}
@@ -105,6 +136,7 @@ export default function DisruptionScreen() {
         <Option
           glyph="◴"
           compact={compactSheet}
+          short={shortSheet}
           title="Pause my routine"
           sub="Vacation, illness, a break"
           onPress={() => pause('break')}
@@ -112,6 +144,7 @@ export default function DisruptionScreen() {
         <Option
           glyph="→"
           compact={compactSheet}
+          short={shortSheet}
           title="Travel mode"
           sub="Trim to essentials while away"
           onPress={() => pause('travel')}
@@ -119,6 +152,7 @@ export default function DisruptionScreen() {
         <Option
           glyph="◇"
           compact={compactSheet}
+          short={shortSheet}
           title="I had a facial or peel"
           sub="Pause actives, let skin recover"
           firm

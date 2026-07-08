@@ -109,10 +109,13 @@ describe('Pro-gated route contracts', () => {
     );
 
     const ramp = readAppRoute('routine/ramp.tsx');
-    expect(ramp, 'routine/ramp.tsx offer actions should stay above compact phone minimums').toContain(
-      'className="min-h-[48px] flex-1 items-center justify-center rounded-xl"',
+    expect(
+      ramp,
+      'routine/ramp.tsx offer actions should stay above compact phone minimums',
+    ).toContain('className="min-h-[48px] flex-1 items-center justify-center rounded-xl"');
+    expect(ramp).not.toContain(
+      'className="h-[46px] flex-1 items-center justify-center rounded-xl"',
     );
-    expect(ramp).not.toContain('className="h-[46px] flex-1 items-center justify-center rounded-xl"');
   });
 
   it('keeps the welcome-back primary action buffered above the phone bottom edge', () => {
@@ -141,7 +144,7 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('useWindowDimensions');
     expect(plan).toContain('const compactPlan = height < 640');
     expect(plan).toContain('const planScrollBottomPadding = compactPlan ? 144 : 112');
-    expect(plan).toContain("import {\n  routineFirstInsightCopy,");
+    expect(plan).toContain('import {\n  routineFirstInsightCopy,');
     expect(plan).toContain('function FirstInsightCard');
     expect(plan).toContain(
       'const firstInsight = plan ? routineFirstInsightCopy(plan, data?.isExample ?? true) : null;',
@@ -227,10 +230,17 @@ describe('Pro-gated route contracts', () => {
     const disruption = readAppRoute('cycle/disruption.tsx');
     expect(disruption).toContain('useWindowDimensions');
     expect(disruption).toContain('const compactSheet = height < 640');
+    expect(disruption).toContain('const shortSheet = height < 520');
     expect(disruption).toContain('backdropAccessible={!compactSheet}');
-    expect(disruption).toContain("className={compactSheet ? 'pb-6' : undefined}");
-    expect(disruption).toContain("className={compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}");
+    expect(disruption).toContain(
+      "className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}",
+    );
+    expect(disruption).toContain(
+      "className={shortSheet ? 'mt-3 gap-1.5' : compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}",
+    );
+    expect(disruption).toContain("'min-h-[56px] gap-2.5 px-3 py-2'");
     expect(disruption).toContain("'min-h-[72px] gap-3 px-3.5 py-3'");
+    expect(disruption).toContain('short={shortSheet}');
     expect(disruption).toContain('accessibilityLabel={`${title}. ${sub}`}');
     expect(disruption).toContain('compact={compactSheet}');
     expect(disruption).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');

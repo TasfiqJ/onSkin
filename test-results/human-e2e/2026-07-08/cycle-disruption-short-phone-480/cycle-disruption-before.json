@@ -1,0 +1,126 @@
+{
+  "blockedControls": [],
+  "documentSize": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320
+  },
+  "horizontalOverflow": 0,
+  "route": "/cycle/disruption",
+  "targets": [
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 225.5006103515625
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Just this once. The cycle continues",
+        "label": "Skip tonight. Just this once. The cycle continues",
+        "rect": {
+          "bottom": 270.4642028808594,
+          "height": 89.92718505859375,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 180.53701782226562,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 89.92718505859375,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Skip tonight",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 314.4569206237793
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Pause my routine",
+        "label": "Pause my routine. Vacation, illness, a break",
+        "rect": {
+          "bottom": 350.4551010131836,
+          "height": 71.9963607788086,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 278.458740234375,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 71.9963607788086,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Pause my routine",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 394.44782638549805
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Travel mode",
+        "label": "Travel mode. Trim to essentials while away",
+        "rect": {
+          "bottom": 430.44600677490234,
+          "height": 71.9963607788086,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 358.44964599609375,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 71.9963607788086,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "Travel mode",
+      "pass": true
+    },
+    {
+      "found": {
+        "center": {
+          "x": 160.19417572021484,
+          "y": 474.4387321472168
+        },
+        "centerInViewport": true,
+        "hitBlocked": false,
+        "hitLabel": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover",
+        "label": "I had a facial or peel. Pause actives, let skin recover",
+        "rect": {
+          "bottom": 510.4369125366211,
+          "height": 71.9963607788086,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 438.4405517578125,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "visibleHeight": 42.5594482421875,
+        "visibleWidth": 264.4114074707031
+      },
+      "needle": "I had a facial or peel",
+      "pass": false
+    }
+  ],
+  "under44VisibleControls": [
+    "[Circular]"
+  ],
+  "url": "http://localhost:8201/cycle/disruption",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover"
+}
