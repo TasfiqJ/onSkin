@@ -93,6 +93,31 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+async function settleWithin(action, timeoutMs, label) {
+  const task = Promise.resolve().then(action);
+  task.catch(() => undefined);
+  const result = await Promise.race([
+    task.then(
+      () => ({ status: 'done' }),
+      (error) => ({ error, status: 'error' }),
+    ),
+    delay(timeoutMs).then(() => ({ status: 'timeout' })),
+  ]);
+
+  if (result.status === 'timeout') {
+    console.warn(`WARN Timed out while ${label}.`);
+    return;
+  }
+
+  if (result.status === 'error') {
+    console.warn(
+      `WARN Failed while ${label}: ${
+        result.error instanceof Error ? result.error.message : String(result.error)
+      }`,
+    );
+  }
+}
+
 function browserPathCandidates() {
   return [
     process.env.CHROME_PATH,
@@ -351,7 +376,15 @@ async function evaluate(client, expression) {
   });
 
   if (result.exceptionDetails) {
-    throw new Error(result.exceptionDetails.text ?? 'Evaluation failed.');
+    const details = result.exceptionDetails;
+    const exception = details.exception;
+    const message =
+      exception?.description ??
+      exception?.value ??
+      exception?.className ??
+      details.text ??
+      'Evaluation failed.';
+    throw new Error(message);
   }
 
   return result.result?.value;
@@ -605,6 +638,38 @@ async function auditRoute(client, route) {
   return result;
 }
 
+async function auditRouteWithRetry(client, route) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      return await auditRoute(client, route);
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) {
+        await delay(500);
+      }
+    }
+  }
+
+  const url = new URL(route, baseUrl).toString();
+  const message = lastError instanceof Error ? lastError.message : String(lastError);
+  return {
+    controls: [],
+    horizontalOverflow: 0,
+    issueCount: 1,
+    issues: [{ message, type: 'routeAuditError' }],
+    location: null,
+    route,
+    scaledCount: 0,
+    textOverflows: [],
+    textScale: scale,
+    textStart: '',
+    url,
+    viewport,
+  };
+}
+
 async function run() {
   clearPreviousEvidence();
 
@@ -647,7 +712,7 @@ async function run() {
     for (const route of routes) {
       const name = routeToFileStem(route);
       const beforeEventIndex = client.events.length;
-      const result = await auditRoute(client, route);
+      const result = await auditRouteWithRetry(client, route);
       const routeLogs = collectProblemLogs(client.events.slice(beforeEventIndex));
       const disallowedLogs = routeLogs.filter(disallowedLog);
       result.disallowedLogCount = disallowedLogs.length;
@@ -657,7 +722,15 @@ async function run() {
         result.issueCount = result.issues.length;
       }
 
-      await screenshot(client, name);
+      try {
+        await screenshot(client, name);
+      } catch (error) {
+        result.issues.push({
+          message: error instanceof Error ? error.message : String(error),
+          type: 'screenshotError',
+        });
+        result.issueCount = result.issues.length;
+      }
       writeJson(`${name}.json`, result);
       results.push({
         disallowedLogCount: result.disallowedLogCount,
@@ -714,9 +787,9 @@ async function run() {
     writeJson('summary.json', summary);
     throw error;
   } finally {
-    await client?.close();
-    await stopProcess(browser);
-    await stopProcess(server);
+    await settleWithin(() => client?.close(), 3_000, 'closing the browser CDP client');
+    await settleWithin(() => stopProcess(browser), 5_000, 'stopping the headless browser');
+    await settleWithin(() => stopProcess(server), 5_000, 'stopping Expo web');
     try {
       rmSync(userDataDir, { force: true, maxRetries: 5, recursive: true, retryDelay: 250 });
     } catch (error) {
