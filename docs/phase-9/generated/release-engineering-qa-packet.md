@@ -1,9 +1,9 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-07T12:06:45.119Z
+Generated: 2026-07-08T00:04:36.604Z
 Status: blocked
-Git SHA: 957f798eee4779d4659048ae8fa77febc5caf860
-Git status: clean
+Git SHA: af8f3c095e09ca59344e9cdb4c1705a9c555593c
+Git status: DIRTY
 
 ## Release Identity
 
@@ -22,6 +22,7 @@ Git status: clean
 
 ## Warnings
 
+- Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.
 - External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.
 - External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.
 - External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.

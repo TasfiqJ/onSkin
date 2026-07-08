@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-07
 
+- Ran the Phase 9 release-engineering verification suite. `npm run
+  phase9:verify` passes non-strict across release contact smoke, evidence
+  normalization, release smoke, RLS/policy checks, Edge/public-form/live-harness
+  guards, data-rights and consent-withdrawal smoke, privacy-payload audit,
+  store-build inspect, dependency inventory/SBOM, QA packet generation, root
+  typecheck, root lint, and root tests. The generated Phase 9 packet remains
+  `DIRTY` because support artifacts are produced earlier in the same local run;
+  it is not final RC evidence. Strict Phase 9 remains blocked on Tas-owned live
+  Supabase/Edge/RevenueCat/store/native-build/security/beta evidence and named
+  release signoff.
+
 - Ran the Phase 8 growth/store verification suite after the Phase 7 picker
   hardening work. `npm run phase8:verify` passes non-strict: smoke checks,
   growth/store readiness, QA packet generation, root typecheck, root lint, and
