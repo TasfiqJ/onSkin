@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T23:51:05.215Z",
+  "generatedAt": "2026-07-08T23:57:43.874Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "ed41775936497986a6feabd5eb8ae13014413c18",
+  "gitSha": "ed64e1a3dbd7dbd9622e810f3d6527e9a8c8a3b9",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -152,8 +152,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 32979,
-      "sha256": "34f8507abf0482b84b8b08e46f36975d66acc6ff1a541cbb4db45efd4b6c9030"
+      "bytes": 33182,
+      "sha256": "7d1e90f257aa92b11844c67eb97cb1fc12ca148473446a65fbf3baf2722aec8d"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
@@ -218,8 +218,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 210906,
-      "sha256": "f73c0ba7c6ea2b4dadb861ce25eedf7d88c675f89eaf694de3cd4f39d3fb57ca"
+      "bytes": 211779,
+      "sha256": "615cc87c27dbcb621b82074e37c0f06cc1834e4fff47c65bed6565dd4ef92edf"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
