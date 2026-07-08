@@ -6,6 +6,27 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Made Today check-offs match the append-only routine-completion contract from
+  docs/01 and docs/03. Repeated taps on an already-completed row now preserve
+  the local completion instead of toggling it off, and completed rows no-op in
+  the UI so duplicate taps do not re-trigger analytics. Added focused
+  completion-store regressions, fixed the test clock around the 48-hour
+  backfill window, updated Phase 7 QA wording from undoable to append-only, and
+  captured Codex in-app browser evidence at 320 x 568 for first check-off,
+  repeat tap, and reload persistence in
+  `test-results/human-e2e/2026-07-08/today-checkoff-append-only/`.
+
+- Tightened the shortest-phone onboarding footer experience at 320 x 480.
+  Goal selection now switches to a compact two-column card grid so all six
+  choices remain visible and hit-testable above the fixed Continue footer.
+  Product intake no longer leaves an optional category trigger clipped behind
+  `Skip for now`; on compact phones the category picker appears as a visible
+  footer action only after a product name exists. Added onboarding route
+  contracts and Codex in-app browser evidence covering `/onboarding/goals`,
+  `/onboarding/products`, typed product entry, category sheet open, and `Serum`
+  selection with zero hit-blocked controls, zero sub-44 controls, and zero
+  horizontal overflow.
+
 - Added a production dialog contract test that scans mobile source files and
   rejects native `Alert` imports/calls plus explicit browser `window` /
   `globalThis` alert, confirm, or prompt calls. This locks in the route-owned

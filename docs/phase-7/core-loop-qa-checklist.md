@@ -443,6 +443,15 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in
   `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`; it does not
   replace real iOS/Android beta-device QA.
+- 2026-07-08: Codex in-app browser Expo web E2E at 320 x 568 covers the current
+  append-only Today AM check-off contract with a local manual shelf product:
+  add `Cream cleanser`, open `/today?routine=AM`, verify `0 of 1`, complete the
+  row to `1 of 1`, tap the completed row again, reload Today, and verify the
+  row remains `aria-checked=true` / `1 of 1` with zero horizontal overflow and
+  no current-origin warning/error logs. Evidence is in
+  `test-results/human-e2e/2026-07-08/today-checkoff-append-only/`; it does not
+  replace native iOS/Android beta-device QA, offline sync QA, or secure-storage
+  timing checks.
 - 2026-07-08: System Chrome Expo web E2E at 320 x 568 covers Today empty-routine
   recovery and compact PM cycle-strip readability. Empty local state now shows
   `No routine yet`, `Build a routine from your shelf.`, and a 56 px `Add

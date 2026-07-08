@@ -1,0 +1,37 @@
+{
+  "body": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Choose category > Add to shelf",
+  "chooseCount": 1,
+  "controls": [
+    {
+      "hitOwned": true,
+      "hitText": "Product name",
+      "rect": {
+        "bottom": 269.3,
+        "height": 53.9,
+        "top": 215.4
+      },
+      "text": "Product name"
+    },
+    {
+      "hitOwned": true,
+      "hitText": "Choose category",
+      "rect": {
+        "bottom": 400.6,
+        "height": 67.9,
+        "top": 332.7
+      },
+      "text": "Choose product category"
+    },
+    {
+      "hitOwned": true,
+      "hitText": "Add to shelf",
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "top": 408.6
+      },
+      "text": "Add to shelf"
+    }
+  ],
+  "hitBlocked": []
+}

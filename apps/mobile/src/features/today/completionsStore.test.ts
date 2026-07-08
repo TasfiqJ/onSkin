@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   getCompletedSteps,
@@ -24,10 +24,17 @@ vi.mock('@/lib/storage/privateKV', () => ({
 const KEY = 'onskin.completions.v1';
 const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
 const DAY = '2026-07-07';
+const NOW = new Date('2026-07-08T16:00:00.000Z');
 
 describe('today completion persistence', () => {
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
     mocks.storage.clear();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('clears malformed completion logs and returns an empty day', async () => {
@@ -61,14 +68,10 @@ describe('today completion persistence', () => {
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
   });
 
-  it('does not re-fire first-ever activation after the user undoes every completion', async () => {
+  it('preserves an existing completion and does not re-fire first-ever activation', async () => {
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
       firstEver: true,
-    });
-    await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
-      done: false,
-      firstEver: false,
     });
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
@@ -76,13 +79,15 @@ describe('today completion persistence', () => {
     });
 
     expect(mocks.storage.get(FIRST_COMPLETION_KEY)).toBe('true');
+    await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser']));
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
   });
 
   it('marks legacy completion logs as already activated before future toggles', async () => {
     mocks.storage.set(KEY, JSON.stringify({ [DAY]: ['AM:cleanser'] }));
 
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
-      done: false,
+      done: true,
       firstEver: false,
     });
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
@@ -91,6 +96,7 @@ describe('today completion persistence', () => {
     });
 
     expect(mocks.storage.get(FIRST_COMPLETION_KEY)).toBe('true');
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ [DAY]: ['AM:cleanser'] });
   });
 
   it('normalizes padded and duplicate step keys before Today reads them', async () => {

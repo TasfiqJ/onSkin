@@ -1,0 +1,167 @@
+{
+  "controls": [
+    {
+      "computedWidth": "130.734px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Breakouts & congestion",
+        "x": 89.4,
+        "y": 175
+      },
+      "rect": {
+        "bottom": 212,
+        "height": 74,
+        "left": 24,
+        "right": 154.7,
+        "top": 138,
+        "width": 130.7
+      },
+      "role": "button",
+      "styleAttr": "width: 48%;",
+      "tag": "button",
+      "text": "Clear skin. Breakouts & congestion"
+    },
+    {
+      "computedWidth": "130.734px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Dark spots & texture",
+        "x": 228.1,
+        "y": 175
+      },
+      "rect": {
+        "bottom": 212,
+        "height": 74,
+        "left": 162.7,
+        "right": 293.5,
+        "top": 138,
+        "width": 130.7
+      },
+      "role": "button",
+      "styleAttr": "width: 48%;",
+      "tag": "button",
+      "text": "Even tone. Dark spots & texture"
+    },
+    {
+      "computedWidth": "130.734px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Tightness & dullness",
+        "x": 89.4,
+        "y": 256.9
+      },
+      "rect": {
+        "bottom": 293.9,
+        "height": 74,
+        "left": 24,
+        "right": 154.7,
+        "top": 219.9,
+        "width": 130.7
+      },
+      "role": "button",
+      "styleAttr": "width: 48%;",
+      "tag": "button",
+      "text": "Hydration. Tightness & dullness"
+    },
+    {
+      "computedWidth": "130.734px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Firmness & elasticity",
+        "x": 228.1,
+        "y": 256.9
+      },
+      "rect": {
+        "bottom": 293.9,
+        "height": 74,
+        "left": 162.7,
+        "right": 293.5,
+        "top": 219.9,
+        "width": 130.7
+      },
+      "role": "button",
+      "styleAttr": "width: 48%;",
+      "tag": "button",
+      "text": "Fine lines. Firmness & elasticity"
+    },
+    {
+      "computedWidth": "130.734px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Stinging & flushing",
+        "x": 89.4,
+        "y": 345.9
+      },
+      "rect": {
+        "bottom": 389.9,
+        "height": 87.9,
+        "left": 24,
+        "right": 154.7,
+        "top": 301.9,
+        "width": 130.7
+      },
+      "role": "button",
+      "styleAttr": "width: 48%;",
+      "tag": "button",
+      "text": "Sensitivity. Stinging & flushing"
+    },
+    {
+      "computedWidth": "130.734px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Barrier repair",
+        "x": 228.1,
+        "y": 345.9
+      },
+      "rect": {
+        "bottom": 389.9,
+        "height": 87.9,
+        "left": 162.7,
+        "right": 293.5,
+        "top": 301.9,
+        "width": 130.7
+      },
+      "role": "button",
+      "styleAttr": "width: 48%;",
+      "tag": "button",
+      "text": "Barrier repair. Redness & reactivity"
+    },
+    {
+      "computedWidth": "272.391px",
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Continue",
+        "x": 160.2,
+        "y": 436.6
+      },
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 408.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "styleAttr": null,
+      "tag": "button",
+      "text": "Continue"
+    }
+  ],
+  "hitBlocked": [],
+  "overflows": [],
+  "route": "/onboarding/goals",
+  "sampleText": "What brings you here? Choose up to two. This shapes your plan. Clear skin Breakouts & congestion Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity Continue",
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

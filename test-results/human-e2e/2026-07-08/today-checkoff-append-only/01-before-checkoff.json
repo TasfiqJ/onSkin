@@ -1,0 +1,73 @@
+{
+  "buttons": [
+    {
+      "checked": null,
+      "label": "You're exploring Pro. Manage your plan",
+      "role": "button",
+      "selected": null,
+      "text": "You’re exploring Pro. 7 days left›"
+    },
+    {
+      "checked": "false",
+      "label": "Cream cleanser",
+      "role": "checkbox",
+      "selected": null,
+      "text": "Cream cleanserClean base first.NEXT"
+    },
+    {
+      "checked": null,
+      "label": "See why",
+      "role": "button",
+      "selected": null,
+      "text": "SPFNo SPF this morningSee why"
+    },
+    {
+      "checked": null,
+      "label": "Not now",
+      "role": "button",
+      "selected": null,
+      "text": "x"
+    },
+    {
+      "checked": null,
+      "label": "Today tab",
+      "role": "tab",
+      "selected": "true",
+      "text": "Today"
+    },
+    {
+      "checked": null,
+      "label": "Progress tab",
+      "role": "tab",
+      "selected": "false",
+      "text": "Progress"
+    },
+    {
+      "checked": null,
+      "label": "Shelf tab",
+      "role": "tab",
+      "selected": "false",
+      "text": "Shelf"
+    },
+    {
+      "checked": null,
+      "label": "You tab",
+      "role": "tab",
+      "selected": "false",
+      "text": "You"
+    }
+  ],
+  "clientWidth": 320,
+  "height": 569,
+  "href": "http://localhost:8170/today?routine=AM",
+  "rows": [
+    {
+      "checked": "false",
+      "label": "Cream cleanser",
+      "text": "Cream cleanserClean base first.NEXT"
+    }
+  ],
+  "scrollWidth": 320,
+  "text": "You’re exploring Pro. 7 days left\n›\nWEDNESDAY, JULY 8\nGood morning.\nMorning routine\n0 of 1\nCream cleanser\nClean base first.\nNEXT\nSPF\nNo SPF this morning\nSee why\nx\nToday\nProgress\nShelf\nYou",
+  "width": 320
+}

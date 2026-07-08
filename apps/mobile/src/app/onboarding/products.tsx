@@ -29,8 +29,7 @@ function CategoryPickerSheet({
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = Math.max(280, viewportHeight - 44);
-  const sheetPaddingBottom =
-    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+  const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
   return (
     <Modal
@@ -118,6 +117,7 @@ export default function ProductsScreen() {
   const added = data?.items ?? [];
   const compactPhone = height < 640;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
+  const showCompactCategoryFooter = compactFooterAdds;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
   const hasTargetProducts = remainingToTarget === 0;
   const showContinueAnyway = added.length > 0 && !hasTargetProducts && !compactFooterAdds;
@@ -244,48 +244,23 @@ export default function ProductsScreen() {
               returnKeyType="done"
               onSubmitEditing={() => void add()}
             />
-            <Text variant="label" tone="muted" className="mb-2 mt-4">
-              CATEGORY · OPTIONAL
-            </Text>
-            {compactPhone ? (
+            {!compactPhone ? (
               <>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    selectedCategoryLabel
-                      ? `Category, ${selectedCategoryLabel}`
-                      : 'Choose product category'
-                  }
-                  onPress={() => setCategoryPickerOpen((open) => !open)}
-                  className="min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
-                  style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
-                >
-                  <Text variant="body" className="font-sans-medium">
-                    {selectedCategoryLabel ?? 'Choose category'}
-                  </Text>
-                  <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
-                    &gt;
-                  </Text>
-                </Pressable>
-                <CategoryPickerSheet
-                  visible={categoryPickerOpen}
-                  selectedCategory={category}
-                  onSelect={selectCategory}
-                  onClose={() => setCategoryPickerOpen(false)}
-                />
+                <Text variant="label" tone="muted" className="mb-2 mt-4">
+                  CATEGORY · OPTIONAL
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
+                    <Chip
+                      key={c.id}
+                      label={c.label}
+                      selected={category === c.id}
+                      onPress={() => setCategory(category === c.id ? null : c.id)}
+                    />
+                  ))}
+                </View>
               </>
-            ) : (
-              <View className="flex-row flex-wrap gap-2">
-                {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (
-                  <Chip
-                    key={c.id}
-                    label={c.label}
-                    selected={category === c.id}
-                    onPress={() => setCategory(category === c.id ? null : c.id)}
-                  />
-                ))}
-              </View>
-            )}
+            ) : null}
             {!compactPhone ? (
               <Button
                 className="mt-4"
@@ -331,7 +306,40 @@ export default function ProductsScreen() {
         </ScrollView>
       </View>
 
+      {compactPhone ? (
+        <CategoryPickerSheet
+          visible={categoryPickerOpen}
+          selectedCategory={category}
+          onSelect={selectCategory}
+          onClose={() => setCategoryPickerOpen(false)}
+        />
+      ) : null}
       <View className="bg-paper pb-4 pt-2">
+        {showCompactCategoryFooter ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={
+              selectedCategoryLabel
+                ? `Category, ${selectedCategoryLabel}`
+                : 'Choose product category'
+            }
+            onPress={() => setCategoryPickerOpen((open) => !open)}
+            className="mb-2 min-h-[48px] flex-row items-center justify-between rounded-card border border-hairline bg-paper-raised px-4 py-3"
+            style={({ pressed }) => (pressed ? { opacity: 0.82 } : undefined)}
+          >
+            <View className="flex-1 pr-3">
+              <Text variant="label" tone="muted">
+                CATEGORY · OPTIONAL
+              </Text>
+              <Text variant="body" className="mt-0.5 font-sans-medium">
+                {selectedCategoryLabel ?? 'Choose category'}
+              </Text>
+            </View>
+            <Text variant="body" tone="muted" style={{ fontSize: 18 }}>
+              &gt;
+            </Text>
+          </Pressable>
+        ) : null}
         <Button label={footerPrimaryLabel} onPress={footerAction} />
         {showContinueAnyway ? (
           <Button

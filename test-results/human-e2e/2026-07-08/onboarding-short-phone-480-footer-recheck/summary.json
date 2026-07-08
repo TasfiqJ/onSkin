@@ -1,0 +1,160 @@
+{
+  "evidenceDir": "C:/Users/jasim/Desktop/onSkin/test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "routes": {
+    "goals": {
+      "screenshot": "onboarding-goals-after-plain-width.png",
+      "geometry": "onboarding-goals-after-plain-width.json",
+      "hitBlockedCount": 0,
+      "under44Count": 0,
+      "overflowCount": 0,
+      "visibleControls": [
+        {
+          "text": "Clear skin. Breakouts & congestion",
+          "rect": {
+            "bottom": 212,
+            "height": 74,
+            "left": 24,
+            "right": 154.7,
+            "top": 138,
+            "width": 130.7
+          },
+          "hitOwned": true
+        },
+        {
+          "text": "Even tone. Dark spots & texture",
+          "rect": {
+            "bottom": 212,
+            "height": 74,
+            "left": 162.7,
+            "right": 293.5,
+            "top": 138,
+            "width": 130.7
+          },
+          "hitOwned": true
+        },
+        {
+          "text": "Hydration. Tightness & dullness",
+          "rect": {
+            "bottom": 293.9,
+            "height": 74,
+            "left": 24,
+            "right": 154.7,
+            "top": 219.9,
+            "width": 130.7
+          },
+          "hitOwned": true
+        },
+        {
+          "text": "Fine lines. Firmness & elasticity",
+          "rect": {
+            "bottom": 293.9,
+            "height": 74,
+            "left": 162.7,
+            "right": 293.5,
+            "top": 219.9,
+            "width": 130.7
+          },
+          "hitOwned": true
+        },
+        {
+          "text": "Sensitivity. Stinging & flushing",
+          "rect": {
+            "bottom": 389.9,
+            "height": 87.9,
+            "left": 24,
+            "right": 154.7,
+            "top": 301.9,
+            "width": 130.7
+          },
+          "hitOwned": true
+        },
+        {
+          "text": "Barrier repair. Redness & reactivity",
+          "rect": {
+            "bottom": 389.9,
+            "height": 87.9,
+            "left": 162.7,
+            "right": 293.5,
+            "top": 301.9,
+            "width": 130.7
+          },
+          "hitOwned": true
+        },
+        {
+          "text": "Continue",
+          "rect": {
+            "bottom": 464.6,
+            "height": 56,
+            "left": 24,
+            "right": 296.4,
+            "top": 408.6,
+            "width": 272.4
+          },
+          "hitOwned": true
+        }
+      ]
+    },
+    "productsInitial": {
+      "screenshot": "onboarding-products.png",
+      "geometry": "onboarding-products.json",
+      "hitBlockedCount": 0,
+      "under44Count": 0,
+      "overflowCount": 0,
+      "sampleText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME Skip for now"
+    },
+    "productsNameEntered": {
+      "screenshot": "onboarding-products-name-entered.png",
+      "geometry": "onboarding-products-name-entered.json",
+      "chooseCategoryButtonCount": 1,
+      "hitBlockedCount": 0,
+      "controls": [
+        {
+          "hitOwned": true,
+          "hitText": "Product name",
+          "rect": {
+            "bottom": 269.3,
+            "height": 53.9,
+            "top": 215.4
+          },
+          "text": "Product name"
+        },
+        {
+          "hitOwned": true,
+          "hitText": "Choose category",
+          "rect": {
+            "bottom": 400.6,
+            "height": 67.9,
+            "top": 332.7
+          },
+          "text": "Choose product category"
+        },
+        {
+          "hitOwned": true,
+          "hitText": "Add to shelf",
+          "rect": {
+            "bottom": 464.6,
+            "height": 56,
+            "top": 408.6
+          },
+          "text": "Add to shelf"
+        }
+      ]
+    },
+    "productsCategorySheet": {
+      "screenshot": "onboarding-products-category-sheet.png"
+    },
+    "productsCategorySelected": {
+      "screenshot": "onboarding-products-category-selected.png",
+      "geometry": "onboarding-products-category-selected.json",
+      "chooseButtons": [
+        "Category, Serum",
+        "Add to shelf"
+      ],
+      "url": "/onboarding/products"
+    }
+  }
+}

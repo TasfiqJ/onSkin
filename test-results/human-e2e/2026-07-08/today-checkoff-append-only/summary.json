@@ -1,0 +1,67 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web in-app browser",
+  "port": 8170,
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "fixture": "Added local manual shelf product via UI: Fixture Cream cleanser, category Cleanser, default PAO/opened state.",
+  "flow": [
+    "Opened /today?routine=AM empty state",
+    "Tapped Add products and added Cream cleanser through /shelf/manual and /shelf/opened",
+    "Opened /today?routine=AM and verified Morning routine 0 of 1 with unchecked Cream cleanser",
+    "Tapped Cream cleanser once and verified 1 of 1 with aria-checked=true",
+    "Tapped completed Cream cleanser again and verified it remained 1 of 1 with aria-checked=true",
+    "Reloaded Today and verified it remained 1 of 1 with aria-checked=true"
+  ],
+  "verdict": "Pass",
+  "overflowPx": {
+    "before": 0,
+    "afterFirst": 0,
+    "afterRepeat": 0,
+    "afterReload": 0
+  },
+  "rows": {
+    "before": [
+      {
+        "checked": "false",
+        "label": "Cream cleanser",
+        "text": "Cream cleanserClean base first.NEXT"
+      }
+    ],
+    "afterFirst": [
+      {
+        "checked": "true",
+        "label": "Cream cleanser",
+        "text": "Cream cleanserClean base first."
+      }
+    ],
+    "afterRepeat": [
+      {
+        "checked": "true",
+        "label": "Cream cleanser",
+        "text": "Cream cleanserClean base first."
+      }
+    ],
+    "afterReload": [
+      {
+        "checked": "true",
+        "label": "Cream cleanser",
+        "text": "Cream cleanserClean base first."
+      }
+    ]
+  },
+  "currentOriginLogs": [],
+  "evidence": [
+    "01-before-checkoff.png",
+    "01-before-checkoff.json",
+    "02-after-first-checkoff.png",
+    "02-after-first-checkoff.json",
+    "03-after-repeat-tap.png",
+    "03-after-repeat-tap.json",
+    "04-after-reload.png",
+    "04-after-reload.json",
+    "browser-current-origin-warn-error-logs.json"
+  ]
+}

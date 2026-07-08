@@ -176,6 +176,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The copy says `We don't store your birth date.` with no mojibake punctuation, no clipped text, and the date fields plus Continue action remain visible and usable.
   - Evidence: Screenshot and text snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `We don't store your birth date.` with no mojibake, complete day/month/year fields, a visible Continue control, zero horizontal overflow, and no visible sub-44 px controls.
+- Branch: goal selection on shortest phone
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/onboarding/goals` on a 320 x 480 phone viewport and inspect all goal cards plus the fixed Continue action.
+  - Expected result: All six goal choices are visible, readable, and hit-testable above the footer, with no goal card clipped underneath Continue, no horizontal overflow, and no visible control below 44 px.
+  - Evidence: Screenshot and small-phone control geometry snapshot.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced goal cards sitting under the fixed Continue footer, then verified the compact two-column goal grid. Post-fix geometry shows all six goal cards at 130.7 px wide and at least 74 px tall, Continue at 56 px tall, zero hit-blocked controls, zero sub-44 controls, and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck/`.
 - Branch: consent declined
   - Priority: Critical
   - Automate later: Yes
@@ -217,7 +224,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Products are added once, the product-name placeholder fits without truncation on compact phones, the selected category uses a canonical shelf ID, PAO/default metadata is preserved rather than degrading to unknown because of a mismatched onboarding-only category, compact phones use a collapsed category selector that opens a dimmed bottom sheet with 48 px category chips instead of clipping under the fixed footer, the visible remove-product control is at least 44 x 44, the primary footer nudges toward the documented three-product first-insight target until three products are added, and a secondary continue path remains visible for users who choose to proceed with fewer products.
   - Evidence: Screenshot sequence, local shelf state or product metadata snapshot, and small-phone control-geometry snapshot.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web confirms `/onboarding/products` at 320 px renders the compact collapsed category selector with zero horizontal overflow, a 54 px product-name input, a 50 px `Choose product category` control, and a 56 px footer action in `test-results/human-e2e/2026-07-08/onboarding-product-category-picker-safe-area/`. Source contracts now verify the picker sheet uses native bottom-inset padding when present, caps height at viewport minus a 44 px dismiss reserve, exposes modal-dialog semantics on web, and keeps category chips inside a shrinkable scroll view. Browser modal-open and screenshot evidence could not be captured because the in-app browser timed out; native iOS/Android safe-area and screen-reader QA remain open.
-  - Current short-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 found the optional category trigger could occupy the footer zone on `/onboarding/products`. After adding a shrink constraint to the product-intake scroll wrapper, the initial state keeps the product-name input and `Skip for now` footer visually separate, a normal scroll brings `Choose category` fully above the footer, the category picker opens with 48 px category chips, and selecting `Serum` plus adding `Retinol serum` renders `1 ON YOUR SHELF` with compact footer actions. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-products-short-phone-footer-fix/`.
+  - Current short-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 found the optional category trigger could occupy the footer zone on `/onboarding/products`. A follow-up 320 x 480 pass now verifies the empty state has no hidden category trigger, `Product name` and `Skip for now` are separated, typing `Retinol serum` renders exactly one visible footer-owned `Choose product category` action above `Add to shelf`, the category sheet opens with 48 px category chips, and selecting `Serum` returns to `/onboarding/products` with `Category, Serum` plus `Add to shelf`. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-short-phone-480-footer-recheck/`.
 - Branch: back/relaunch during onboarding
   - Priority: Important
   - Automate later: Yes
@@ -367,12 +374,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/today/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/today-checkoff-append-only/`
 
 ### Path A: Happy Path
 
-1. Action: Open Today, review routine steps, complete a step, undo it, complete it again, and verify the completed state.
-   Expected result: Completion is responsive, visually clear, and persists after navigation away and back. The first check-off activation event can fire only once, including after undo/recheck or legacy completion logs. Routine product names remain readable without visual ellipses for normal shelf names, and routine instruction lines remain complete or use concise display copy on compact phones. When a streak is visible, the Today streak/adherence pill shows singular/plural copy correctly, remains a buffered 48 px phone target, and opens the adherence surface, or its contextual Pro gate for free users.
-   Evidence: Screenshot before completion, after completion, after undo, after re-completion, and after navigation or reload.
+1. Action: Open Today, review routine steps, complete a step, tap the completed row again, navigate away/back or reload, and verify the completed state.
+   Expected result: Completion is responsive, visually clear, append-only, and persists after navigation away and back. A repeated tap on an already-completed row does not remove the completion and does not re-trigger the first check-off activation path. Legacy completion logs still mark the install/account as already activated before future check-offs. Routine product names remain readable without visual ellipses for normal shelf names, and routine instruction lines remain complete or use concise display copy on compact phones. When a streak is visible, the Today streak/adherence pill shows singular/plural copy correctly, remains a buffered 48 px phone target, and opens the adherence surface, or its contextual Pro gate for free users.
+   Evidence: Screenshot before completion, after completion, after repeated tap, and after navigation or reload.
 
 ### Branches
 

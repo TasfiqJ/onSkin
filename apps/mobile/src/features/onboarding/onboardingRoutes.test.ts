@@ -33,9 +33,11 @@ describe('onboarding route contracts', () => {
     const quiz = readAppRoute('onboarding/quiz.tsx');
     const products = readAppRoute('onboarding/products.tsx');
 
-    expect(goals).toContain('<View className="flex-1 overflow-hidden">');
+    expect(goals).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
     expect(quiz).toContain('<View className="flex-1 overflow-hidden">');
-    expect(products).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
+    expect(products).toContain(
+      '<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>',
+    );
     expect(goals).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
     expect(quiz).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
     expect(products).toMatch(
@@ -54,20 +56,29 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
     expect(products).toContain('if (compactPhone) scrollToShelfList()');
-    expect(products).toContain("scrollRef.current?.scrollTo({ y: 0, animated: true })");
+    expect(products).toContain('scrollRef.current?.scrollTo({ y: 0, animated: true })');
     expect(products).toContain('inputRef.current?.focus()');
     expect(goals).toContain("className={compactPhone ? 'mt-5' : 'mt-8'}");
-    expect(goals).toContain("className={compactPhone ? 'mt-4 gap-1' : 'mt-6 gap-3'}");
+    expect(goals).toContain('function CompactGoalCard');
+    expect(goals).toContain("width: '48%'");
+    expect(goals).toContain('min-h-[74px] rounded-card');
+    expect(goals).toContain('<View className="mt-4 flex-row flex-wrap gap-2">');
+    expect(goals).toContain('<View className="mt-6 gap-3">');
     expect(quiz).toContain("className={compactPhone ? 'mt-5' : 'mt-7'}");
     expect(quiz).toContain("className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}");
     expect(products).toContain("className={compactPhone ? 'mt-4' : 'mt-6'}");
     expect(products).toContain("className={compactPhone ? 'mt-4 p-4' : 'mt-6'}");
-    expect(products).toContain('const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);');
+    expect(products).toContain(
+      'const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);',
+    );
     expect(products).toContain('const selectedCategoryLabel =');
     expect(products).toContain('setCategoryPickerOpen(false);');
     expect(products).toContain('accessibilityLabel={');
+    expect(products).toContain('const showCompactCategoryFooter = compactFooterAdds');
     expect(products).toContain("'Choose product category'");
-    expect(products).toContain("className=\"min-h-[48px] flex-row items-center justify-between");
+    expect(products).toContain(
+      'className="mb-2 min-h-[48px] flex-row items-center justify-between',
+    );
     expect(products).toContain('<CategoryPickerSheet');
     expect(products).toContain('visible={categoryPickerOpen}');
     expect(products).toContain('animationType="slide"');
@@ -80,7 +91,9 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
     expect(products).toContain('aria-modal');
     expect(products).toContain('role="dialog"');
-    expect(products).toContain('className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"');
+    expect(products).toContain(
+      'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
+    );
     expect(products).toContain('paddingBottom: sheetPaddingBottom');
     expect(products).toContain('showsVerticalScrollIndicator={false}');
     expect(products).toContain('style={{ flexShrink: 1 }}');
@@ -89,9 +102,9 @@ describe('onboarding route contracts', () => {
     expect(products).not.toContain('contentContainerStyle={{ gap: 4, paddingRight: 8 }}');
     expect(products).not.toContain('className="mt-2 flex-row flex-wrap gap-1.5"');
     expect(products).toContain('<View className="flex-row flex-wrap gap-2">');
-    expect(goals).toContain('compact={compactPhone}');
+    expect(goals).not.toContain('compact={compactPhone}');
     expect(quiz).toContain('compact={compactPhone}');
-    expect(goals).toContain('tight={compactPhone}');
+    expect(goals).not.toContain('tight={compactPhone}');
     expect(quiz).toContain('tight={compactPhone}');
     expect(goals).toContain('contentContainerClassName="pb-28"');
     expect(quiz).toContain('contentContainerClassName="pb-28"');
@@ -125,7 +138,9 @@ describe('onboarding route contracts', () => {
     const products = readAppRoute('onboarding/products.tsx');
 
     expect(products).toContain('const ONBOARDING_PRODUCT_TARGET = 3');
-    expect(products).toContain('const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0)');
+    expect(products).toContain(
+      'const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0)',
+    );
     expect(products).toContain('const hasTargetProducts = remainingToTarget === 0');
     expect(products).toContain(
       'const showContinueAnyway = added.length > 0 && !hasTargetProducts && !compactFooterAdds',
@@ -137,7 +152,7 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('PRODUCTS');
     expect(products).toContain('function footerAction()');
     expect(products).toContain('focusNextProduct();');
-    expect(products).toContain("label={continueAnywayLabel}");
+    expect(products).toContain('label={continueAnywayLabel}');
   });
 
   it('keeps health-data consent fail-closed before quiz access', () => {
@@ -181,7 +196,9 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('const { goals } = useOnboarding();');
     expect(products).toContain('if (goals.length === 0)');
     expect(products).toContain("router.replace('/onboarding/goals')");
-    expect(analyzing).toContain('const { goals, persistSkinProfile, quizAnswers } = useOnboarding();');
+    expect(analyzing).toContain(
+      'const { goals, persistSkinProfile, quizAnswers } = useOnboarding();',
+    );
     expect(analyzing).toContain('if (goals.length === 0)');
     expect(analyzing).toContain("router.replace('/onboarding/goals')");
     expect(analyzing).toContain('goals.length');

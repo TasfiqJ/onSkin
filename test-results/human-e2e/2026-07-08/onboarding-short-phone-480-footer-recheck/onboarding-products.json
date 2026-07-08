@@ -1,0 +1,54 @@
+{
+  "controls": [
+    {
+      "hit": {
+        "owned": true,
+        "tag": "input",
+        "text": "Product name",
+        "x": 160.2,
+        "y": 358.8
+      },
+      "rect": {
+        "bottom": 385.8,
+        "height": 53.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 331.9,
+        "width": 232.4
+      },
+      "role": "",
+      "tag": "input",
+      "text": "Product name"
+    },
+    {
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Skip for now",
+        "x": 160.2,
+        "y": 436.6
+      },
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 408.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Skip for now"
+    }
+  ],
+  "hitBlocked": [],
+  "jsDialog": false,
+  "overflows": [],
+  "route": "/onboarding/products",
+  "sampleText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME Skip for now",
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

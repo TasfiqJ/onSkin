@@ -194,7 +194,8 @@ function CheckRow({
       accessibilityLabel={name}
       aria-checked={state === 'done'}
       onPress={() => {
-        if (state !== 'done') haptics.success();
+        if (state === 'done') return;
+        haptics.success();
         onPress();
       }}
       className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}
@@ -621,10 +622,7 @@ export default function TodayScreen() {
                 Evening routine
               </Text>
               {pmSteps.length ? (
-                <Text
-                  className="font-mono text-[12px]"
-                  style={{ color: 'rgba(244,239,231,0.45)' }}
-                >
+                <Text className="font-mono text-[12px]" style={{ color: 'rgba(244,239,231,0.45)' }}>
                   {donePm} of {pmSteps.length}
                 </Text>
               ) : null}
@@ -650,10 +648,7 @@ export default function TodayScreen() {
                 <Text className="font-sans-medium text-[15px]" style={{ color: colors.cream }}>
                   No evening steps yet.
                 </Text>
-                <Text
-                  className="mt-1 text-[12.5px]"
-                  style={{ color: 'rgba(244,239,231,0.5)' }}
-                >
+                <Text className="mt-1 text-[12.5px]" style={{ color: 'rgba(244,239,231,0.5)' }}>
                   Add a cleanser, moisturiser, or night product to build this out.
                 </Text>
               </View>

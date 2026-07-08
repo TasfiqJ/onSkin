@@ -121,9 +121,10 @@ export function isBeyondBackfillCap(date: string, today: string = localDateStrin
   return normalizedDate < cutoff || normalizedDate > maxFuture;
 }
 
-/** Toggle a step's completion for a day. Returns whether it is now done and whether
- *  this was the user's first-ever completion (the north-star activation moment).
+/** Idempotently record a step's completion for a day. Returns whether it is done and
+ *  whether this was the user's first-ever completion (the north-star activation moment).
  *  Dates outside the server completion window (docs/03 §6) are rejected. */
+// Repeated check-offs preserve the row because v1 completions are append-only.
 export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
@@ -140,20 +141,18 @@ export async function toggleCompletion(
   const firstCompletionAlreadyMarked = await hasFirstCompletionMarker();
   if (hadAny && !firstCompletionAlreadyMarked) await markFirstCompletion();
   const day = new Set(log[normalizedDate] ?? []);
-  let done: boolean;
   if (day.has(normalizedKey)) {
-    day.delete(normalizedKey);
-    done = false;
-  } else {
-    day.add(normalizedKey);
-    done = true;
+    log[normalizedDate] = [...day];
+    await save(log);
+    return { done: true, firstEver: false };
   }
-  if (day.size > 0) log[normalizedDate] = [...day];
-  else delete log[normalizedDate];
+
+  day.add(normalizedKey);
+  log[normalizedDate] = [...day];
   await save(log);
-  const firstEver = done && !hadAny && !firstCompletionAlreadyMarked;
+  const firstEver = !hadAny && !firstCompletionAlreadyMarked;
   if (firstEver) await markFirstCompletion();
-  return { done, firstEver };
+  return { done: true, firstEver };
 }
 
 /** Dates with at least one completion (the streak's "completion days"). */

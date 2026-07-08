@@ -41,7 +41,7 @@ const scenarios = [
     'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden',
   ],
   ['Routine builder', 'AM/PM routine persists across restart, offline, timezone rollover'],
-  ['Today check-off', 'offline/online check-off is idempotent and undoable'],
+  ['Today check-off', 'offline/online check-off is idempotent and append-only'],
   [
     'Photos',
     'baseline capture renders locally; app lock gates timeline; cloud backup remains off by default',

@@ -23,7 +23,8 @@ export function StepRow({ name, instruction, done, isNext, dark, onPress }: Step
       accessibilityLabel={name}
       aria-checked={done}
       onPress={() => {
-        if (!done) haptics.success();
+        if (done) return;
+        haptics.success();
         onPress();
       }}
       className="flex-row items-start border-t py-4"
