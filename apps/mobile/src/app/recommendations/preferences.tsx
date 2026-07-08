@@ -122,7 +122,7 @@ export default function PreferencesScreen() {
   const compactPreferences = height < 640;
   const shortPreferences = height < 600;
   const ultraShortPreferences = height < 460;
-  const splitShortPreferences = height < 410;
+  const splitShortPreferences = height < 460;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
     : shortPreferences
