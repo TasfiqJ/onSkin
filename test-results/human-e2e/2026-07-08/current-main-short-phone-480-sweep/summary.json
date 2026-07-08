@@ -1,0 +1,656 @@
+[
+  {
+    "route": "/today",
+    "url": "http://localhost:8204/today",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\today.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\today.png"
+  },
+  {
+    "route": "/today?routine=PM",
+    "url": "http://localhost:8204/today?routine=PM",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "WEDNESDAY, JULY 8 · 9:07 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\today-routine-PM.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\today-routine-PM.png"
+  },
+  {
+    "route": "/progress",
+    "url": "http://localhost:8204/progress",
+    "issueCount": 7,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "hit-blocked-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "hit-blocked-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "hit-blocked-control"
+      },
+      {
+        "control": "[Circular]",
+        "tabTop": 406.6141052246094,
+        "type": "control-near-tabbar-bottom"
+      },
+      {
+        "control": "[Circular]",
+        "tabTop": 406.6141052246094,
+        "type": "control-near-tabbar-bottom"
+      },
+      {
+        "control": "[Circular]",
+        "tabTop": 406.6141052246094,
+        "type": "control-near-tabbar-bottom"
+      },
+      {
+        "control": "[Circular]",
+        "tabTop": 406.6141052246094,
+        "type": "control-near-tabbar-bottom"
+      }
+    ],
+    "textStart": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Today Progress Shelf You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\progress.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\progress.png"
+  },
+  {
+    "route": "/progress/capture",
+    "url": "http://localhost:8204/progress/capture",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\progress-capture.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\progress-capture.png"
+  },
+  {
+    "route": "/progress/review",
+    "url": "http://localhost:8204/progress/review",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\progress-review.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\progress-review.png"
+  },
+  {
+    "route": "/routine/plan",
+    "url": "http://localhost:8204/routine/plan",
+    "issueCount": 6,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-plan.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-plan.png"
+  },
+  {
+    "route": "/routine/ramp",
+    "url": "http://localhost:8204/routine/ramp",
+    "issueCount": 6,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-ramp.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-ramp.png"
+  },
+  {
+    "route": "/routine/tolerance",
+    "url": "http://localhost:8204/routine/tolerance",
+    "issueCount": 6,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-tolerance.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-tolerance.png"
+  },
+  {
+    "route": "/routine/reorder",
+    "url": "http://localhost:8204/routine/reorder",
+    "issueCount": 6,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-reorder.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-reorder.png"
+  },
+  {
+    "route": "/routine/adaptation",
+    "url": "http://localhost:8204/routine/adaptation",
+    "issueCount": 6,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "tiny-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      },
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-adaptation.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-adaptation.png"
+  },
+  {
+    "route": "/cycle/settings",
+    "url": "http://localhost:8204/cycle/settings",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-settings.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-settings.png"
+  },
+  {
+    "route": "/cycle/disruption",
+    "url": "http://localhost:8204/cycle/disruption",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-disruption.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-disruption.png"
+  },
+  {
+    "route": "/cycle/procedure",
+    "url": "http://localhost:8204/cycle/procedure",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-procedure.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-procedure.png"
+  },
+  {
+    "route": "/cycle/phased-intro",
+    "url": "http://localhost:8204/cycle/phased-intro",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-phased-intro.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-phased-intro.png"
+  },
+  {
+    "route": "/cycle/recovery",
+    "url": "http://localhost:8204/cycle/recovery",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-recovery.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-recovery.png"
+  },
+  {
+    "route": "/cycle/why-tonight",
+    "url": "http://localhost:8204/cycle/why-tonight",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-why-tonight.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-why-tonight.png"
+  },
+  {
+    "route": "/recommendations",
+    "url": "http://localhost:8204/recommendations",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\recommendations.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\recommendations.png"
+  },
+  {
+    "route": "/recommendations/preferences",
+    "url": "http://localhost:8204/recommendations/preferences",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\recommendations-preferences.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\recommendations-preferences.png"
+  },
+  {
+    "route": "/recommendations/stale-local-rec",
+    "url": "http://localhost:8204/recommendations/stale-local-rec",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\recommendations-stale-local-rec.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\recommendations-stale-local-rec.png"
+  },
+  {
+    "route": "/community",
+    "url": "http://localhost:8204/community",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community.png"
+  },
+  {
+    "route": "/community/note/missing-note-e2e",
+    "url": "http://localhost:8204/community/note/missing-note-e2e",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community-note-missing-note-e2e.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community-note-missing-note-e2e.png"
+  },
+  {
+    "route": "/community/ask",
+    "url": "http://localhost:8204/community/ask",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community-ask.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community-ask.png"
+  },
+  {
+    "route": "/community/people-like-you",
+    "url": "http://localhost:8204/community/people-like-you",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community-people-like-you.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\community-people-like-you.png"
+  },
+  {
+    "route": "/commerce/consent",
+    "url": "http://localhost:8204/commerce/consent",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-consent.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-consent.png"
+  },
+  {
+    "route": "/commerce/stacks",
+    "url": "http://localhost:8204/commerce/stacks",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-stacks.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-stacks.png"
+  },
+  {
+    "route": "/commerce/stack/barrier-basics",
+    "url": "http://localhost:8204/commerce/stack/barrier-basics",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-stack-barrier-basics.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-stack-barrier-basics.png"
+  },
+  {
+    "route": "/commerce/stack/missing-stack-e2e",
+    "url": "http://localhost:8204/commerce/stack/missing-stack-e2e",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-stack-missing-stack-e2e.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-stack-missing-stack-e2e.png"
+  },
+  {
+    "route": "/commerce/transparency",
+    "url": "http://localhost:8204/commerce/transparency",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-transparency.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\commerce-transparency.png"
+  },
+  {
+    "route": "/settings/subscription",
+    "url": "http://localhost:8204/settings/subscription",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Subscription You’re on the free plan The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime. See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-subscription.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-subscription.png"
+  },
+  {
+    "route": "/settings/notifications",
+    "url": "http://localhost:8204/settings/notifications",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-notifications.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-notifications.png"
+  },
+  {
+    "route": "/settings/timing",
+    "url": "http://localhost:8204/settings/timing",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-timing.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-timing.png"
+  },
+  {
+    "route": "/settings/privacy",
+    "url": "http://localhost:8204/you?section=privacy",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share.",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-privacy.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\settings-privacy.png"
+  },
+  {
+    "route": "/trend/optin",
+    "url": "http://localhost:8204/trend/optin",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\trend-optin.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\trend-optin.png"
+  },
+  {
+    "route": "/trend/fairness",
+    "url": "http://localhost:8204/trend/fairness",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\trend-fairness.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\trend-fairness.png"
+  },
+  {
+    "route": "/ask",
+    "url": "http://localhost:8204/ask",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\ask.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\ask.png"
+  },
+  {
+    "route": "/ask/consent",
+    "url": "http://localhost:8204/ask/consent",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship. Back to Ask",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\ask-consent.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\ask-consent.png"
+  },
+  {
+    "route": "/shelf",
+    "url": "http://localhost:8204/shelf",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf.png"
+  },
+  {
+    "route": "/shelf/search",
+    "url": "http://localhost:8204/shelf/search",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-search.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-search.png"
+  },
+  {
+    "route": "/shelf/no-match",
+    "url": "http://localhost:8204/shelf/no-match",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-no-match.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-no-match.png"
+  },
+  {
+    "route": "/shelf/scan",
+    "url": "http://localhost:8204/shelf/scan",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-scan.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-scan.png"
+  },
+  {
+    "route": "/shelf/ocr",
+    "url": "http://localhost:8204/shelf/ocr",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-ocr.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-ocr.png"
+  },
+  {
+    "route": "/shelf/manual",
+    "url": "http://localhost:8204/shelf/manual",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-manual.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-manual.png"
+  },
+  {
+    "route": "/shelf/archive",
+    "url": "http://localhost:8204/shelf/archive",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here.",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-archive.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-archive.png"
+  },
+  {
+    "route": "/shelf/opened",
+    "url": "http://localhost:8204/shelf/opened",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-opened.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\shelf-opened.png"
+  },
+  {
+    "route": "/paywall/upsell?feature=full_routine",
+    "url": "http://localhost:8204/paywall/upsell?feature=full_routine",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\paywall-upsell-feature-full_routine.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\paywall-upsell-feature-full_routine.png"
+  },
+  {
+    "route": "/paywall/success",
+    "url": "http://localhost:8204/paywall/success",
+    "issueCount": 0,
+    "issues": [],
+    "textStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 8 renews $49.99/yr See tonight’s routine",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\paywall-success.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\paywall-success.png"
+  },
+  {
+    "route": "/routine/streak",
+    "url": "http://localhost:8204/routine/streak",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Reminders, streaks & home-screen widgets. Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-streak.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-streak.png"
+  },
+  {
+    "route": "/routine/widgets",
+    "url": "http://localhost:8204/routine/widgets",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Reminders, streaks & home-screen widgets. Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-widgets.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\routine-widgets.png"
+  },
+  {
+    "route": "/cycle/week",
+    "url": "http://localhost:8204/cycle/week",
+    "issueCount": 1,
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-visible-control"
+      }
+    ],
+    "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "json": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-week.json",
+    "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\current-main-short-phone-480-sweep\\cycle-week.png"
+  }
+]

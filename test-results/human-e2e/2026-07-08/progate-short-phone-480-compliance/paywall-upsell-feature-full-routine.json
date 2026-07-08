@@ -1,0 +1,374 @@
+{
+  "route": "/paywall/upsell?feature=full_routine",
+  "url": "http://localhost:8204/paywall/upsell?feature=full_routine",
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\progate-short-phone-480-compliance\\paywall-upsell-feature-full-routine.png",
+  "failed": false,
+  "dialogs": [],
+  "logs": [
+    {
+      "level": "info",
+      "message": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "log",
+      "message": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warning",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warning",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warning",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "disallowedLogs": [],
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "body": {
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "horizontalOverflow": 0
+  },
+  "titleText": "Unlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialTerms·Privacy·RestoreMaybe later",
+  "visibleText": "Unlock your full routine.The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialTerms·Privacy·RestoreMaybe later",
+  "tabTop": null,
+  "controls": [
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "-1",
+      "disabled": true,
+      "text": "Start free trial",
+      "rect": {
+        "left": 28,
+        "top": 312,
+        "right": 292,
+        "bottom": 364,
+        "width": 264,
+        "height": 52
+      },
+      "visibleRect": {
+        "left": 28,
+        "top": 312,
+        "right": 292,
+        "bottom": 364,
+        "width": 264,
+        "height": 52
+      },
+      "center": {
+        "x": 160,
+        "y": 338
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Start free trial",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Terms",
+      "rect": {
+        "left": 61.890625,
+        "top": 364,
+        "right": 109.890625,
+        "bottom": 412,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 61.890625,
+        "top": 364,
+        "right": 109.890625,
+        "bottom": 412,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 85.890625,
+        "y": 388
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Terms",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Privacy",
+      "rect": {
+        "left": 135.25,
+        "top": 364,
+        "right": 183.28125,
+        "bottom": 412,
+        "width": 48.03125,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 135.25,
+        "top": 364,
+        "right": 183.28125,
+        "bottom": 412,
+        "width": 48.03125,
+        "height": 48
+      },
+      "center": {
+        "x": 159.265625,
+        "y": 388
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Privacy",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Restore",
+      "rect": {
+        "left": 208.640625,
+        "top": 364,
+        "right": 258.109375,
+        "bottom": 412,
+        "width": 49.46875,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 208.640625,
+        "top": 364,
+        "right": 258.109375,
+        "bottom": 412,
+        "width": 49.46875,
+        "height": 48
+      },
+      "center": {
+        "x": 233.375,
+        "y": 388
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Restore",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Maybe later",
+      "rect": {
+        "left": 28,
+        "top": 412,
+        "right": 292,
+        "bottom": 460,
+        "width": 264,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 28,
+        "top": 412,
+        "right": 292,
+        "bottom": 460,
+        "width": 264,
+        "height": 48
+      },
+      "center": {
+        "x": 160,
+        "y": 436
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Maybe later",
+      "hitTag": "div"
+    }
+  ],
+  "targets": [
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "-1",
+      "disabled": true,
+      "text": "Start free trial",
+      "rect": {
+        "left": 28,
+        "top": 312,
+        "right": 292,
+        "bottom": 364,
+        "width": 264,
+        "height": 52
+      },
+      "visibleRect": {
+        "left": 28,
+        "top": 312,
+        "right": 292,
+        "bottom": 364,
+        "width": 264,
+        "height": 52
+      },
+      "center": {
+        "x": 160,
+        "y": 338
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Start free trial",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Terms",
+      "rect": {
+        "left": 61.890625,
+        "top": 364,
+        "right": 109.890625,
+        "bottom": 412,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 61.890625,
+        "top": 364,
+        "right": 109.890625,
+        "bottom": 412,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 85.890625,
+        "y": 388
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Terms",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Privacy",
+      "rect": {
+        "left": 135.25,
+        "top": 364,
+        "right": 183.28125,
+        "bottom": 412,
+        "width": 48.03125,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 135.25,
+        "top": 364,
+        "right": 183.28125,
+        "bottom": 412,
+        "width": 48.03125,
+        "height": 48
+      },
+      "center": {
+        "x": 159.265625,
+        "y": 388
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Privacy",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Restore",
+      "rect": {
+        "left": 208.640625,
+        "top": 364,
+        "right": 258.109375,
+        "bottom": 412,
+        "width": 49.46875,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 208.640625,
+        "top": 364,
+        "right": 258.109375,
+        "bottom": 412,
+        "width": 49.46875,
+        "height": 48
+      },
+      "center": {
+        "x": 233.375,
+        "y": 388
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Restore",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Maybe later",
+      "rect": {
+        "left": 28,
+        "top": 412,
+        "right": 292,
+        "bottom": 460,
+        "width": 264,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 28,
+        "top": 412,
+        "right": 292,
+        "bottom": 460,
+        "width": 264,
+        "height": 48
+      },
+      "center": {
+        "x": 160,
+        "y": 436
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Maybe later",
+      "hitTag": "div"
+    }
+  ],
+  "missingRequiredLabels": [],
+  "targetIssues": [],
+  "allVisibleControlIssues": []
+}

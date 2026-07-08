@@ -1,0 +1,53 @@
+{
+  "route": "/cycle/phased-intro",
+  "bottomControls": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": true,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Sounds good",
+      "rect": {
+        "bottom": 484.49638748168945,
+        "height": 55.99211502075195,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 428.5042724609375,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "testId": "",
+      "tinyTarget": false,
+      "visibleHeight": 52.4957275390625,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": "[Circular]",
+      "label": "Sounds good",
+      "tabTop": 481,
+      "type": "clipped-control"
+    }
+  ],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "tabBar": null,
+  "url": "http://localhost:8205/cycle/phased-intro",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its ow"
+}

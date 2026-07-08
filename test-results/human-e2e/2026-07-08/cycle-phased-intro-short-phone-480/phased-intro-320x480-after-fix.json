@@ -1,0 +1,78 @@
+{
+  "controls": [
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 0,
+      "label": "Sounds good",
+      "rect": {
+        "bottom": 420.58558654785156,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 372.5880126953125,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    },
+    {
+      "blockedBy": "",
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "index": 1,
+      "label": "Add it now anyway",
+      "rect": {
+        "bottom": 468.58314514160156,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 420.5855712890625,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 264.4114074707031
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "requiredLabels": [
+    {
+      "controls": [
+        "[Circular]"
+      ],
+      "found": true,
+      "label": "Sounds good"
+    },
+    {
+      "controls": [
+        "[Circular]"
+      ],
+      "found": true,
+      "label": "Add it now anyway"
+    }
+  ],
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "top": 0
+  },
+  "url": "http://localhost:8205/cycle/phased-intro",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its own night Then. Your full cycle Both, safely alternated Sounds good Add it now anyway"
+}

@@ -6,6 +6,29 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed shared contextual ProGate compliance on shortest 320 x 480 phones.
+  The shared paywall body could push Terms, Privacy, and Restore below direct
+  routine/cycle/streak/widget routes, while the tabbed Progress paywall could
+  place those controls under the floating tab bar. The sub-520 px ProGate
+  treatment now moves compliance into the top row beside the 48 px `Maybe later`
+  exit, hides the duplicate bottom compliance row, and trims only body
+  spacing. Codex evidence checked 16 contextual ProGate routes with zero clipped
+  controls, zero sub-44 controls, zero blocked center hit-tests, zero horizontal
+  overflow, and zero dialogs. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/progate-short-phone-480-compliance/`,
+  `docs/e2e-bug-reports/2026-07-08-progate-short-phone-compliance-clipping.md`.
+
+- Fixed the `/cycle/phased-intro` action sheet on shortest 320 x 480
+  phones. The primary `Sounds good` button clipped below the viewport and the
+  secondary override was pushed out of the first view. The sheet now uses a
+  sub-520 px density for copy, timeline spacing, and actions while preserving
+  48 px tap targets. Codex in-app browser evidence verifies `Sounds good` and
+  `Add it now anyway` are both fully visible and hit-test clean, with zero
+  horizontal overflow, and tapping `Sounds good` returns direct entries to
+  `/today`. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/cycle-phased-intro-short-phone-480/`,
+  `docs/e2e-bug-reports/2026-07-08-cycle-phased-intro-short-phone-action-clipping.md`.
+
 - Fixed the `/progress` empty first-photo CTA on shortest 320 x 480 phones.
   The compact first-run copy stack was still tall enough for the floating tab
   bar to cover the lower CTA label, leaving only about 2 px of clearance. The

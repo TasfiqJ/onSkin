@@ -11,11 +11,7 @@ import { ComplianceRow } from './ComplianceRow';
 import { PAYWALL_COPY, UPSELL_COPY } from './copy';
 import { dismissPaywall, paywallDismissFallbackForFeature } from './dismissPaywall';
 import { canStartContextualReverseTrial } from './entitlement';
-import {
-  PAYWALL_FEEDBACK,
-  PaywallFeedback,
-  type PaywallFeedbackState,
-} from './PaywallFeedback';
+import { PAYWALL_FEEDBACK, PaywallFeedback, type PaywallFeedbackState } from './PaywallFeedback';
 import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
 import { useSubscriptionOffering } from './useSubscriptionOffering';
@@ -34,6 +30,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;
+  const shortPaywall = height < 520;
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
@@ -114,7 +111,14 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
 
   return (
     <Screen edges={['top', 'bottom']}>
-      <View className="flex-row justify-end pt-1">
+      <View
+        className={
+          shortPaywall
+            ? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
+            : 'flex-row justify-end pt-1'
+        }
+      >
+        {shortPaywall ? <ComplianceRow density="compactHeader" /> : null}
         <Pressable
           accessibilityRole="button"
           onPress={() => dismissPaywall(router, paywallDismissFallback)}
@@ -131,11 +135,17 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: compactPaywall ? 'flex-start' : 'center',
-          paddingTop: compactProgressPhotoPaywall ? 0 : compactPaywall ? 4 : 0,
-          paddingBottom: compactProgressPhotoPaywall ? 144 : compactPaywall ? 112 : 24,
+          paddingTop: shortPaywall ? 0 : compactPaywall ? 4 : 0,
+          paddingBottom: compactProgressPhotoPaywall
+            ? 96
+            : shortPaywall
+              ? 16
+              : compactPaywall
+                ? 112
+                : 24,
         }}
       >
-        {compactProgressPhotoPaywall ? null : (
+        {shortPaywall ? null : (
           <View
             className={
               compactPaywall
@@ -145,9 +155,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             style={{ backgroundColor: colors.clayTint }}
           >
             <View
-              className={
-                compactPaywall ? 'h-2.5 w-2.5 rounded-full' : 'h-3.5 w-3.5 rounded-full'
-              }
+              className={compactPaywall ? 'h-2.5 w-2.5 rounded-full' : 'h-3.5 w-3.5 rounded-full'}
               style={{ backgroundColor: colors.clay }}
             />
           </View>
@@ -155,8 +163,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Text
           variant="title"
           style={{
-            fontSize: compactProgressPhotoPaywall ? 26 : compactPaywall ? 28 : 32,
-            lineHeight: compactProgressPhotoPaywall ? 29 : compactPaywall ? 32 : 36,
+            fontSize: shortPaywall ? 26 : compactPaywall ? 28 : 32,
+            lineHeight: shortPaywall ? 29 : compactPaywall ? 32 : 36,
           }}
         >
           {copy.title}
@@ -164,18 +172,18 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Text
           variant="body"
           tone="muted"
-          className={compactPaywall ? 'mt-2' : 'mt-3'}
+          className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
           style={{
-            fontSize: compactProgressPhotoPaywall ? 14 : compactPaywall ? 15 : undefined,
-            lineHeight: compactProgressPhotoPaywall ? 19 : compactPaywall ? 21 : 24,
+            fontSize: shortPaywall ? 14 : compactPaywall ? 15 : undefined,
+            lineHeight: shortPaywall ? 18 : compactPaywall ? 21 : 24,
           }}
         >
           {copy.body}
         </Text>
         <View
           className={
-            compactProgressPhotoPaywall
-              ? 'mt-2.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2.5'
+            shortPaywall
+              ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
               : compactPaywall
                 ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
                 : 'mt-7 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
@@ -189,8 +197,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             <Text
               variant="title"
               style={{
-                fontSize: compactProgressPhotoPaywall ? 22 : compactPaywall ? 24 : 26,
-                lineHeight: compactProgressPhotoPaywall ? 25 : compactPaywall ? 28 : 30,
+                fontSize: shortPaywall ? 22 : compactPaywall ? 24 : 26,
+                lineHeight: shortPaywall ? 25 : compactPaywall ? 28 : 30,
               }}
             >
               {annualDisplay.priceLabel}
@@ -216,10 +224,16 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           <Text
             variant="bodySm"
             tone="muted"
-            className={compactPaywall ? 'mt-1 text-center' : 'mt-2 text-center'}
+            className={
+              shortPaywall
+                ? 'mt-1 text-center'
+                : compactPaywall
+                  ? 'mt-1 text-center'
+                  : 'mt-2 text-center'
+            }
             style={{
-              fontSize: compactProgressPhotoPaywall ? 10.5 : compactPaywall ? 11 : 12,
-              lineHeight: compactProgressPhotoPaywall ? 14 : compactPaywall ? 15 : 17,
+              fontSize: shortPaywall ? 10.5 : compactPaywall ? 11 : 12,
+              lineHeight: shortPaywall ? 14 : compactPaywall ? 15 : 17,
             }}
           >
             {offering.data.reason}
@@ -230,7 +244,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           disabled={!canPurchase || startTrial.isPending}
           onPress={onStartTrial}
           className={
-            compactProgressPhotoPaywall
+            shortPaywall
               ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
               : compactPaywall
                 ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
@@ -248,7 +262,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             disabled={startReverseTrial.isPending}
             onPress={onStartReverseTrial}
             className={
-              compactProgressPhotoPaywall
+              shortPaywall
                 ? 'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'
                 : compactPaywall
                   ? 'mt-2 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-2'
@@ -303,14 +317,14 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           compact={compactPaywall}
           feedback={actionFeedback}
           className={
-            compactProgressPhotoPaywall
+            shortPaywall
               ? 'mt-1.5 rounded-card px-3 py-2'
               : compactPaywall
                 ? 'mt-2 rounded-card px-3 py-2'
                 : undefined
           }
         />
-        <ComplianceRow />
+        {shortPaywall ? null : <ComplianceRow />}
       </ScrollView>
     </Screen>
   );

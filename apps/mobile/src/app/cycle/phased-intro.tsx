@@ -6,29 +6,32 @@ import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 
-// Phased introduction (design screen 07, docs/05 §4). Don't start every active at
-// once. A new active is staged in next, on its own night, so any reaction is
-// attributable (the dermatologist "one at a time" rule made into product
-// behaviour). Staging is automatic (orchestrate marks recently-added actives);
-// this surface explains it.
+// Phased introduction (design screen 07, docs/05 section 4). Don't start every
+// active at once. A new active is staged next, on its own night, so any reaction
+// is attributable. Staging is automatic; this surface explains it.
 function Step({
   state,
   title,
   sub,
   last,
   compact,
+  short,
 }: {
   state: 'done' | 'next' | 'pending';
   title: string;
   sub: string;
   last?: boolean;
   compact?: boolean;
+  short?: boolean;
 }) {
   return (
-    <View className="flex-row gap-3.5">
+    <View className={cn('flex-row', short ? 'gap-2.5' : 'gap-3.5')}>
       <View className="items-center">
         <View
-          className="h-6 w-6 items-center justify-center rounded-full"
+          className={cn(
+            'items-center justify-center rounded-full',
+            short ? 'h-5 w-5' : 'h-6 w-6',
+          )}
           style={
             state === 'done'
               ? { backgroundColor: '#A5694B' }
@@ -41,25 +44,37 @@ function Step({
                   }
           }
         >
-          {state === 'done' ? <Text className="text-[11px] text-paper">✓</Text> : null}
-          {state === 'next' ? <View className="h-[7px] w-[7px] rounded-full bg-clay" /> : null}
+          {state === 'done' ? (
+            <Text className={cn('text-paper', short ? 'text-[10px]' : 'text-[11px]')}>
+              {'\u2713'}
+            </Text>
+          ) : null}
+          {state === 'next' ? (
+            <View
+              className={cn('rounded-full bg-clay', short ? 'h-1.5 w-1.5' : 'h-[7px] w-[7px]')}
+            />
+          ) : null}
         </View>
         {!last ? (
           <View
-            className="my-1 w-[2px] flex-1 bg-greige-deep"
-            style={{ minHeight: compact ? 14 : 24 }}
+            className={cn('w-[2px] flex-1 bg-greige-deep', short ? 'my-0.5' : 'my-1')}
+            style={{ minHeight: short ? 8 : compact ? 14 : 24 }}
           />
         ) : null}
       </View>
-      <View className={compact ? 'pb-2.5' : 'pb-4'}>
+      <View className={short ? 'pb-1.5' : compact ? 'pb-2.5' : 'pb-4'}>
         <Text
           variant="body"
-          className="font-sans-bold"
+          className={cn('font-sans-bold', short ? 'text-[13.5px] leading-[17px]' : undefined)}
           tone={state === 'pending' ? 'muted' : 'ink'}
         >
           {title}
         </Text>
-        <Text variant="bodySm" tone="muted">
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={short ? 'text-[12px] leading-[15px]' : undefined}
+        >
           {sub}
         </Text>
       </View>
@@ -72,13 +87,11 @@ export default function PhasedIntroScreen() {
   const { data } = useCycle();
   const { overrideStaging } = useCycleMutations();
   const compactSheet = height < 640;
-  // The staged active's name comes from the orchestration note when present.
+  const shortSheet = height < 520;
   const note = data?.notes.find((n) => /add your/i.test(n));
   const newName = note?.match(/add your (.+?) next week/i)?.[1] ?? 'new active';
   const stagedIds = data?.stagedActiveIds ?? [];
 
-  // "Add it now anyway" (docs/05 §6.2): opt the staged active(s) out of phasing
-  // so the next orchestration brings them straight into the cycle.
   async function addNow() {
     await Promise.all(stagedIds.map((id) => overrideStaging(id)));
     backOrReplace(router);
@@ -89,41 +102,54 @@ export default function PhasedIntroScreen() {
       fallbackRoute={APP_HOME_ROUTE}
       scroll
       backdropAccessible={!compactSheet}
-      className={compactSheet ? 'pb-6' : undefined}
+      className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}
     >
-      <Text variant="label" tone="clay" className="mb-2.5">
+      <Text variant="label" tone="clay" className={shortSheet ? 'mb-1.5' : 'mb-2.5'}>
         ONE AT A TIME
       </Text>
       <Text
         variant="title"
-        className={compactSheet ? 'text-[28px] leading-[31px]' : 'text-[30px] leading-[34px]'}
+        className={
+          shortSheet
+            ? 'text-[25px] leading-[27px]'
+            : compactSheet
+              ? 'text-[28px] leading-[31px]'
+              : 'text-[30px] leading-[34px]'
+        }
         accessibilityRole="header"
       >
         Let&apos;s not start everything at once.
       </Text>
-      <Text variant="body" tone="muted" className={compactSheet ? 'mt-2' : 'mt-3'}>
+      <Text
+        variant={shortSheet ? 'bodySm' : 'body'}
+        tone="muted"
+        className={shortSheet ? 'mt-1 text-[13px] leading-[17px]' : compactSheet ? 'mt-2' : 'mt-3'}
+      >
         You added {newName}. We&apos;ll bring it in{' '}
-        <Text variant="body" className="font-sans-semibold">
+        <Text variant={shortSheet ? 'bodySm' : 'body'} className="font-sans-semibold">
           next week
         </Text>
         , once your routine settles. So if anything reacts, you&apos;ll know what caused it.
       </Text>
 
-      <View className={compactSheet ? 'mt-4' : 'mt-6'}>
+      <View className={shortSheet ? 'mt-3' : compactSheet ? 'mt-4' : 'mt-6'}>
         <Step
           compact={compactSheet}
+          short={shortSheet}
           state="done"
           title="This week. Your current actives"
           sub="Settling in"
         />
         <Step
           compact={compactSheet}
+          short={shortSheet}
           state="next"
           title={`Next week. Add ${newName}`}
           sub="On its own night"
         />
         <Step
           compact={compactSheet}
+          short={shortSheet}
           state="pending"
           title="Then. Your full cycle"
           sub="Both, safely alternated"
@@ -132,13 +158,18 @@ export default function PhasedIntroScreen() {
       </View>
 
       <Button
-        className={compactSheet ? 'min-h-[48px] py-3' : undefined}
+        className={shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined}
         label="Sounds good"
         onPress={() => backOrReplace(router)}
+        style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}
       />
       <Pressable
         accessibilityRole="button"
-        className={cn('min-h-[48px] items-center justify-center', compactSheet ? 'pt-1' : null)}
+        className={cn(
+          'items-center justify-center',
+          'min-h-[48px]',
+          compactSheet && !shortSheet ? 'pt-1' : null,
+        )}
         onPress={() => void addNow()}
       >
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">

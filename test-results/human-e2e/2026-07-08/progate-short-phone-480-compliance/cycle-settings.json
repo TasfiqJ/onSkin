@@ -1,0 +1,438 @@
+{
+  "route": "/cycle/settings",
+  "url": "http://localhost:8204/cycle/settings",
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\progate-short-phone-480-compliance\\cycle-settings.png",
+  "failed": false,
+  "dialogs": [],
+  "logs": [
+    {
+      "level": "info",
+      "message": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "log",
+      "message": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF.",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warning",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warning",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warning",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "url": "http://localhost:8204/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "disallowedLogs": [],
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "body": {
+    "scrollWidth": 320,
+    "clientWidth": 320,
+    "horizontalOverflow": 0
+  },
+  "titleText": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+  "visibleText": "Terms·Privacy·RestoreMaybe laterUnlock your full skin-cycling scheduler.Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+  "tabTop": null,
+  "controls": [
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Terms",
+      "rect": {
+        "left": 24,
+        "top": 4,
+        "right": 72,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 24,
+        "top": 4,
+        "right": 72,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Terms",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Privacy",
+      "rect": {
+        "left": 85.359375,
+        "top": 4,
+        "right": 133.359375,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 85.359375,
+        "top": 4,
+        "right": 133.359375,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 109.359375,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Privacy",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Restore",
+      "rect": {
+        "left": 146.71875,
+        "top": 4,
+        "right": 194.71875,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 146.71875,
+        "top": 4,
+        "right": 194.71875,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 170.71875,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Restore",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Maybe later",
+      "rect": {
+        "left": 193.75,
+        "top": 4,
+        "right": 296,
+        "bottom": 52,
+        "width": 102.25,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 193.75,
+        "top": 4,
+        "right": 296,
+        "bottom": 52,
+        "width": 102.25,
+        "height": 48
+      },
+      "center": {
+        "x": 244.875,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Maybe later",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "-1",
+      "disabled": true,
+      "text": "Start free trial",
+      "rect": {
+        "left": 24,
+        "top": 279,
+        "right": 296,
+        "bottom": 327,
+        "width": 272,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 24,
+        "top": 279,
+        "right": 296,
+        "bottom": 327,
+        "width": 272,
+        "height": 48
+      },
+      "center": {
+        "x": 160,
+        "y": 303
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Start free trial",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "left": 24,
+        "top": 333,
+        "right": 296,
+        "bottom": 389,
+        "width": 272,
+        "height": 56
+      },
+      "visibleRect": {
+        "left": 24,
+        "top": 333,
+        "right": 296,
+        "bottom": 389,
+        "width": 272,
+        "height": 56
+      },
+      "center": {
+        "x": 160,
+        "y": 361
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "No credit card. See your routine work, then decide.",
+      "hitTag": "div"
+    }
+  ],
+  "targets": [
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Terms",
+      "rect": {
+        "left": 24,
+        "top": 4,
+        "right": 72,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 24,
+        "top": 4,
+        "right": 72,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Terms",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Privacy",
+      "rect": {
+        "left": 85.359375,
+        "top": 4,
+        "right": 133.359375,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 85.359375,
+        "top": 4,
+        "right": 133.359375,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 109.359375,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Privacy",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Restore",
+      "rect": {
+        "left": 146.71875,
+        "top": 4,
+        "right": 194.71875,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 146.71875,
+        "top": 4,
+        "right": 194.71875,
+        "bottom": 52,
+        "width": 48,
+        "height": 48
+      },
+      "center": {
+        "x": 170.71875,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Restore",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Maybe later",
+      "rect": {
+        "left": 193.75,
+        "top": 4,
+        "right": 296,
+        "bottom": 52,
+        "width": 102.25,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 193.75,
+        "top": 4,
+        "right": 296,
+        "bottom": 52,
+        "width": 102.25,
+        "height": 48
+      },
+      "center": {
+        "x": 244.875,
+        "y": 28
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Maybe later",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "-1",
+      "disabled": true,
+      "text": "Start free trial",
+      "rect": {
+        "left": 24,
+        "top": 279,
+        "right": 296,
+        "bottom": 327,
+        "width": 272,
+        "height": 48
+      },
+      "visibleRect": {
+        "left": 24,
+        "top": 279,
+        "right": 296,
+        "bottom": 327,
+        "width": 272,
+        "height": 48
+      },
+      "center": {
+        "x": 160,
+        "y": 303
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "Start free trial",
+      "hitTag": "div"
+    },
+    {
+      "tag": "button",
+      "role": "button",
+      "ariaHidden": null,
+      "tabIndex": "0",
+      "disabled": false,
+      "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "left": 24,
+        "top": 333,
+        "right": 296,
+        "bottom": 389,
+        "width": 272,
+        "height": 56
+      },
+      "visibleRect": {
+        "left": 24,
+        "top": 333,
+        "right": 296,
+        "bottom": 389,
+        "width": 272,
+        "height": 56
+      },
+      "center": {
+        "x": 160,
+        "y": 361
+      },
+      "centerInViewport": true,
+      "hitOk": true,
+      "hitText": "No credit card. See your routine work, then decide.",
+      "hitTag": "div"
+    }
+  ],
+  "missingRequiredLabels": [],
+  "targetIssues": [],
+  "allVisibleControlIssues": []
+}

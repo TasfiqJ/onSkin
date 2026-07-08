@@ -248,13 +248,22 @@ describe('Pro-gated route contracts', () => {
     const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
     expect(phasedIntro).toContain('useWindowDimensions');
     expect(phasedIntro).toContain('const compactSheet = height < 640');
+    expect(phasedIntro).toContain('const shortSheet = height < 520');
     expect(phasedIntro).toContain('backdropAccessible={!compactSheet}');
-    expect(phasedIntro).toContain("className={compactSheet ? 'pb-6' : undefined}");
-    expect(phasedIntro).toContain("className={compactSheet ? 'mt-4' : 'mt-6'}");
-    expect(phasedIntro).toContain("className={compactSheet ? 'min-h-[48px] py-3' : undefined}");
+    expect(phasedIntro).toContain(
+      "className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}",
+    );
+    expect(phasedIntro).toContain("className={shortSheet ? 'mt-3' : compactSheet ? 'mt-4' : 'mt-6'}");
+    expect(phasedIntro).toContain(
+      "className={shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined}",
+    );
+    expect(phasedIntro).toContain(
+      'style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}',
+    );
     expect(phasedIntro).toContain('compact={compactSheet}');
-    expect(phasedIntro).toContain('min-h-[48px] items-center justify-center');
-    expect(phasedIntro).not.toContain('min-h-[44px] items-center justify-center');
+    expect(phasedIntro).toContain('short={shortSheet}');
+    expect(phasedIntro).toContain("'min-h-[48px]'");
+    expect(phasedIntro).not.toContain("'min-h-[44px]'");
     expect(phasedIntro).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
 
     const recovery = readAppRoute('cycle/recovery.tsx');

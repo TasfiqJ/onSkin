@@ -40,9 +40,10 @@ describe('paywall mobile contracts', () => {
       expect(source, `${route} should give compact decline actions a 32px bottom buffer`).toContain(
         "className={compactPaywall ? 'gap-2.5 pb-8'",
       );
-      expect(source, `${route} should not keep compact footer actions at an 8px bottom edge`).not.toContain(
-        'className="gap-2.5 pb-2"',
-      );
+      expect(
+        source,
+        `${route} should not keep compact footer actions at an 8px bottom edge`,
+      ).not.toContain('className="gap-2.5 pb-2"');
     }
   });
 
@@ -104,7 +105,9 @@ describe('paywall mobile contracts', () => {
     );
     expect(upsell).toContain('{shortPaywall ? null : (');
     expect(upsell).toContain('fontSize: shortPaywall ? 27 : longCompactTitle ? 24 : 30');
-    expect(upsell).toContain("className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}");
+    expect(upsell).toContain(
+      "className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}",
+    );
     expect(upsell).toContain('fontSize: shortPaywall ? 14 : undefined');
     expect(upsell).toContain(
       "shortPaywall\n            ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'",
@@ -123,21 +126,32 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('dismissPaywall(router, paywallDismissFallback)');
     expect(proGate).toContain('useWindowDimensions');
     expect(proGate).toContain('const compactPaywall = height < 640');
+    expect(proGate).toContain('const shortPaywall = height < 520');
     expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
-    expect(proGate).toContain(
-      'paddingBottom: compactProgressPhotoPaywall ? 144 : compactPaywall ? 112 : 24',
+    expect(proGate).toMatch(
+      /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
+    expect(proGate).toContain('{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}');
+    expect(proGate).toContain('{shortPaywall ? null : <ComplianceRow />}');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
 
-  it('keeps compact Progress photo paywall compliance clear of fixed chrome', () => {
+  it('keeps shortest contextual paywall compliance clear of fixed chrome', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const flowTree = readFileSync(`${REPO_DIR}/docs/USER_FLOW_TREE.md`, 'utf8');
+    const headerCompliance = proGate.indexOf(
+      '{shortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
+    );
+    const scrollBody = proGate.indexOf('<ScrollView');
+    const bottomCompliance = proGate.indexOf('{shortPaywall ? null : <ComplianceRow />}');
+    const feedback = proGate.indexOf('<PaywallFeedback');
 
     expect(proGate).toContain("import { router, useIsFocused, usePathname } from 'expo-router';");
     expect(proGate).toContain('const isFocused = useIsFocused();');
-    expect(proGate).toContain("if (isFocused && locked) track('contextual_paywall_shown', { feature });");
+    expect(proGate).toContain(
+      "if (isFocused && locked) track('contextual_paywall_shown', { feature });",
+    );
     expect(proGate.indexOf('if (!isFocused) return null;')).toBeLessThan(
       proGate.indexOf('if (isLoading || !data)'),
     );
@@ -148,22 +162,25 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
     );
+    expect(proGate).toContain('const shortPaywall = height < 520;');
     expect(proGate).not.toContain('compactComplianceSpacer');
     expect(proGate).not.toContain('height: compactComplianceSpacer');
-    expect(proGate).toContain(
-      'paddingTop: compactProgressPhotoPaywall ? 0 : compactPaywall ? 4 : 0,',
+    expect(proGate).toContain('paddingTop: shortPaywall ? 0 : compactPaywall ? 4 : 0,');
+    expect(proGate).toMatch(
+      /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
-    expect(proGate).toContain(
-      'paddingBottom: compactProgressPhotoPaywall ? 144 : compactPaywall ? 112 : 24,',
-    );
-    expect(proGate).toContain('{compactProgressPhotoPaywall ? null : (');
+    expect(headerCompliance).toBeGreaterThan(-1);
+    expect(scrollBody).toBeGreaterThan(-1);
+    expect(bottomCompliance).toBeGreaterThan(-1);
+    expect(feedback).toBeGreaterThan(-1);
+    expect(headerCompliance).toBeLessThan(scrollBody);
+    expect(bottomCompliance).toBeGreaterThan(feedback);
+    expect(proGate).toContain('{shortPaywall ? null : (');
     expect(proGate).toContain(
       "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
-    expect(proGate).toContain('<ComplianceRow />');
-    expect(flowTree).toContain(
-      'including when store pricing is unavailable and the disabled-pricing reason is visible.',
-    );
+    expect(proGate).toContain('{shortPaywall ? null : <ComplianceRow />}');
+    expect(flowTree).toContain('320 x 480 contextual ProGate follow-up');
   });
 
   it('keeps compact monthly equivalent labels on one readable line', () => {
@@ -226,7 +243,9 @@ describe('paywall mobile contracts', () => {
     expect(useEntitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(useEntitlement).toContain("if (fixture === 'expired_store')");
     expect(useEntitlement).toContain("if (fixture === 'expired_reverse_trial')");
-    expect(useEntitlement).toContain("const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();");
+    expect(useEntitlement).toContain(
+      'const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();',
+    );
   });
 
   it('keeps gated content hidden while entitlement is still resolving', () => {
@@ -249,9 +268,15 @@ describe('paywall mobile contracts', () => {
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {
     const source = readSource('features/subscription/ComplianceRow.tsx');
 
-    expect(source).toContain('className="min-h-[48px] flex-row');
+    expect(source).toContain("density?: 'default' | 'compactHeader';");
+    expect(source).toContain("const compactHeader = density === 'compactHeader';");
+    expect(source).toContain("'min-h-[48px] flex-row items-center justify-start gap-1'");
+    expect(source).toContain("'min-h-[48px] flex-row items-center justify-center gap-2.5'");
     expect(
-      source.match(/className="min-h-\[48px\] min-w-\[48px\] items-center justify-center px-1"/g),
+      source.match(/'min-h-\[48px\] min-w-\[48px\] items-center justify-center px-0'/g),
+    ).toHaveLength(3);
+    expect(
+      source.match(/'min-h-\[48px\] min-w-\[48px\] items-center justify-center px-1'/g),
     ).toHaveLength(3);
     expect(source.match(/style=\{\{ minHeight: 48, minWidth: 48 \}\}/g)).toHaveLength(3);
     expect(source).not.toContain('hitSlop={8}');
@@ -271,9 +296,10 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('function restoreFeedbackMessage(active: boolean): string');
     expect(source).toContain('setFeedback(message);');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('className="px-4 pb-2 text-center"');
+    expect(source).toContain("'pb-1 pr-2 text-left'");
+    expect(source).toContain("'px-4 pb-2 text-center'");
     expect(source).not.toContain('Alert.alert');
-    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('import { Alert');
     expect(entitlement).toContain("fixture !== 'expired_store'");
     expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(entitlement).toContain("periodType: 'normal'");
@@ -289,7 +315,7 @@ describe('paywall mobile contracts', () => {
     expect(feedback).toContain('PAYWALL_FEEDBACK');
     expect(externalOpen).toContain('alertOnFailure?: boolean');
     expect(externalOpen).not.toContain('Alert.alert');
-    expect(externalOpen).not.toContain("import { Alert");
+    expect(externalOpen).not.toContain('import { Alert');
 
     for (const route of [
       'onboarding/paywall.tsx',
@@ -312,7 +338,7 @@ describe('paywall mobile contracts', () => {
       expect(source, `${route} should not use native alerts for purchase recovery`).not.toContain(
         'Alert.alert',
       );
-      expect(source, `${route} should not import native Alert`).not.toContain("import { Alert");
+      expect(source, `${route} should not import native Alert`).not.toContain('import { Alert');
     }
 
     const proGate = readSource('features/subscription/ProGate.tsx');
@@ -320,14 +346,14 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('setActionFeedback(null);');
     expect(proGate).toContain('PAYWALL_FEEDBACK');
     expect(proGate).not.toContain('Alert.alert');
-    expect(proGate).not.toContain("import { Alert");
+    expect(proGate).not.toContain('import { Alert');
 
     const subscriptionSettings = readAppRoute('settings/subscription.tsx');
     expect(subscriptionSettings).toContain('alertOnFailure: false');
     expect(subscriptionSettings).toContain('setSubscriptionFeedback(message);');
     expect(subscriptionSettings).toContain('setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);');
     expect(subscriptionSettings).not.toContain('Alert.alert');
-    expect(subscriptionSettings).not.toContain("import { Alert");
+    expect(subscriptionSettings).not.toContain('import { Alert');
   });
 
   it('keeps purchase-capable lifecycle paywalls compliant with Terms, Privacy, and Restore', () => {
@@ -414,7 +440,9 @@ describe('paywall mobile contracts', () => {
     expect(winback).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(winback).toContain('const unavailableOfferCopy =');
     expect(winback).toContain('className="gap-2.5"');
-    expect(winback).toContain('style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}');
+    expect(winback).toContain(
+      'style={{ backgroundColor: BG, paddingTop: compactPaywall ? 8 : 0 }}',
+    );
     expect(winback).toContain('className="px-2 text-center"');
     expect(winback).toContain('{unavailableOfferCopy}');
     expect(winback).toContain("{canWinBack ? PAYWALL_COPY.winback.cta : 'See current Pro plan'}");

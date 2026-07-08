@@ -36,8 +36,15 @@ export function openPolicy(url: string): Promise<boolean> {
   });
 }
 
-export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
+export function ComplianceRow({
+  tone = 'light',
+  density = 'default',
+}: {
+  tone?: 'light' | 'dark';
+  density?: 'default' | 'compactHeader';
+}) {
   const { restore } = useEntitlementActions();
+  const compactHeader = density === 'compactHeader';
   const color = tone === 'dark' ? 'rgba(244,239,231,0.7)' : colors.muted;
   const sep = tone === 'dark' ? 'rgba(244,239,231,0.3)' : colors.greigeDeep;
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -63,18 +70,28 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   }
 
   const label = (text: string) => (
-    <Text className="font-sans-semibold" style={{ fontSize: 12, color }}>
+    <Text className="font-sans-semibold" style={{ fontSize: compactHeader ? 11 : 12, color }}>
       {text}
     </Text>
   );
 
   return (
-    <View className="items-center">
-      <View className="min-h-[48px] flex-row items-center justify-center gap-2.5">
+    <View className={compactHeader ? 'flex-1 items-start' : 'items-center'}>
+      <View
+        className={
+          compactHeader
+            ? 'min-h-[48px] flex-row items-center justify-start gap-1'
+            : 'min-h-[48px] flex-row items-center justify-center gap-2.5'
+        }
+      >
         <Pressable
           accessibilityRole="button"
           onPress={() => void onPolicy(TERMS_URL)}
-          className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+          className={
+            compactHeader
+              ? 'min-h-[48px] min-w-[48px] items-center justify-center px-0'
+              : 'min-h-[48px] min-w-[48px] items-center justify-center px-1'
+          }
           style={{ minHeight: 48, minWidth: 48 }}
         >
           {label('Terms')}
@@ -83,7 +100,11 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
         <Pressable
           accessibilityRole="button"
           onPress={() => void onPolicy(PRIVACY_URL)}
-          className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+          className={
+            compactHeader
+              ? 'min-h-[48px] min-w-[48px] items-center justify-center px-0'
+              : 'min-h-[48px] min-w-[48px] items-center justify-center px-1'
+          }
           style={{ minHeight: 48, minWidth: 48 }}
         >
           {label('Privacy')}
@@ -92,7 +113,11 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
         <Pressable
           accessibilityRole="button"
           onPress={onRestore}
-          className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+          className={
+            compactHeader
+              ? 'min-h-[48px] min-w-[48px] items-center justify-center px-0'
+              : 'min-h-[48px] min-w-[48px] items-center justify-center px-1'
+          }
           style={{ minHeight: 48, minWidth: 48 }}
         >
           {label('Restore')}
@@ -102,8 +127,12 @@ export function ComplianceRow({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
         <Text
           accessibilityRole="alert"
           variant="bodySm"
-          className="px-4 pb-2 text-center"
-          style={{ color, fontSize: 12, lineHeight: 16 }}
+          className={compactHeader ? 'pb-1 pr-2 text-left' : 'px-4 pb-2 text-center'}
+          style={{
+            color,
+            fontSize: compactHeader ? 10.5 : 12,
+            lineHeight: compactHeader ? 14 : 16,
+          }}
         >
           {feedback}
         </Text>

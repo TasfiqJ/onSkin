@@ -73,6 +73,20 @@ describe('cycle week route scheduler notes', () => {
     expect(source).not.toContain('className="mt-6 min-h-[44px] items-center justify-center py-2"');
   });
 
+  it('keeps phased-intro actions visible on the shortest phone sheet', () => {
+    const source = readAppRoute('cycle/phased-intro.tsx');
+
+    expect(source).toContain('const shortSheet = height < 520;');
+    expect(source).toContain("shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined");
+    expect(source).toContain("'text-[25px] leading-[27px]'");
+    expect(source).toContain("shortSheet ? 'mt-3' : compactSheet ? 'mt-4' : 'mt-6'");
+    expect(source).toContain('short={shortSheet}');
+    expect(source).toContain("shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined");
+    expect(source).toContain('style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}');
+    expect(source).toContain("'min-h-[48px]'");
+    expect(source).not.toContain("className={compactSheet ? 'pb-6' : undefined}");
+  });
+
   it('keeps cycle settings free of deferred drag affordances', () => {
     const source = readAppRoute('cycle/settings.tsx');
 
