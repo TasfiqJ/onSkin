@@ -1,0 +1,192 @@
+{
+  "controls": [
+    {
+      "aria": "Choose product category",
+      "rect": {
+        "bottom": 296.1,
+        "height": 49.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 246.2,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Choose category >"
+    },
+    {
+      "aria": "",
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 408.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Skip for now"
+    },
+    "[Circular]",
+    {
+      "aria": "Dismiss category picker",
+      "rect": {
+        "bottom": 175.7,
+        "height": 175.7,
+        "left": 0,
+        "right": 320.4,
+        "top": 0,
+        "width": 320.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": ""
+    },
+    {
+      "aria": "",
+      "rect": {
+        "bottom": 480.6,
+        "height": 304.9,
+        "left": 0,
+        "right": 320.4,
+        "top": 175.7,
+        "width": 320.4
+      },
+      "role": "dialog",
+      "tag": "div",
+      "text": "Product category Close Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm"
+    },
+    {
+      "aria": "Close category picker",
+      "rect": {
+        "bottom": 260.6,
+        "height": 48,
+        "left": 232.4,
+        "right": 296.4,
+        "top": 212.6,
+        "width": 64
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Close"
+    },
+    {
+      "aria": "Cleanser",
+      "rect": {
+        "bottom": 324.6,
+        "height": 48,
+        "left": 24,
+        "right": 114.4,
+        "top": 276.6,
+        "width": 90.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Cleanser"
+    },
+    {
+      "aria": "Toner",
+      "rect": {
+        "bottom": 324.6,
+        "height": 48,
+        "left": 122.4,
+        "right": 192.4,
+        "top": 276.6,
+        "width": 70
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Toner"
+    },
+    {
+      "aria": "Serum",
+      "rect": {
+        "bottom": 324.6,
+        "height": 48,
+        "left": 200.4,
+        "right": 275,
+        "top": 276.6,
+        "width": 74.6
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Serum"
+    },
+    {
+      "aria": "Treatment",
+      "rect": {
+        "bottom": 380.6,
+        "height": 48,
+        "left": 24,
+        "right": 122.3,
+        "top": 332.6,
+        "width": 98.3
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Treatment"
+    },
+    {
+      "aria": "Moisturiser",
+      "rect": {
+        "bottom": 380.6,
+        "height": 48,
+        "left": 130.3,
+        "right": 235.6,
+        "top": 332.6,
+        "width": 105.3
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Moisturiser"
+    },
+    {
+      "aria": "SPF",
+      "rect": {
+        "bottom": 436.6,
+        "height": 48,
+        "left": 24,
+        "right": 81.6,
+        "top": 388.6,
+        "width": 57.6
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "SPF"
+    },
+    {
+      "aria": "Oil / balm",
+      "rect": {
+        "bottom": 436.6,
+        "height": 48,
+        "left": 89.5,
+        "right": 185.3,
+        "top": 388.6,
+        "width": 95.7
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Oil / balm"
+    }
+  ],
+  "dialog": {
+    "aria": "Choose product category",
+    "rect": {
+      "bottom": 480.6,
+      "height": 480.6,
+      "left": 0,
+      "right": 320.4,
+      "top": 0,
+      "width": 320.4
+    },
+    "role": "dialog",
+    "tag": "div",
+    "text": "Product category Close Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm"
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

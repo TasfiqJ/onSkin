@@ -1,0 +1,264 @@
+[
+  {
+    "route": "/today",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/today",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/progress",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/progress",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/shelf",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/shelf",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/you",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/you",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/privacy",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/settings/privacy",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/subscription",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/settings/subscription",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/notifications",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/settings/notifications",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/settings/timing",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/settings/timing",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/routine/plan",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/routine/plan",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/ask",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/ask",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/ask/consent",
+    "bottomOverlaps": [],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "",
+    "title": "",
+    "under44": [],
+    "url": "/ask/consent",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/onboarding/products",
+    "bottomOverlaps": [
+      {
+        "rect": {
+          "bottom": 385.8,
+          "height": 53.9,
+          "left": 44,
+          "right": 276.4,
+          "top": 331.9,
+          "width": 232.4
+        },
+        "role": "",
+        "tag": "input",
+        "text": "Product name"
+      },
+      {
+        "rect": {
+          "bottom": 475.7,
+          "height": 49.9,
+          "left": 44,
+          "right": 276.4,
+          "top": 425.8,
+          "width": 232.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Choose product category"
+      },
+      {
+        "rect": {
+          "bottom": 464.6,
+          "height": 56,
+          "left": 24,
+          "right": 296.4,
+          "top": 408.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Skip for now"
+      }
+    ],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Choose category > Skip for now",
+    "title": "",
+    "under44": [],
+    "url": "/onboarding/products",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  },
+  {
+    "route": "/onboarding/age",
+    "bottomOverlaps": [
+      {
+        "rect": {
+          "bottom": 464.6,
+          "height": 56,
+          "left": 24,
+          "right": 296.4,
+          "top": 408.6,
+          "width": 272.4
+        },
+        "role": "button",
+        "tag": "button",
+        "text": "Continue"
+      }
+    ],
+    "overflows": [],
+    "placeholderMatches": [],
+    "rawLeakMatches": [],
+    "sampleText": "First, your date of birth. RoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date. DAY MONTH YEAR Continue",
+    "title": "",
+    "under44": [],
+    "url": "/onboarding/age",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "jsDialog": false
+  }
+]

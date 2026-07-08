@@ -49,6 +49,12 @@ const DICTIONARY: Record<string, TagDef[]> = {
   'titanium dioxide': [{ tag: 'sunscreen' }, { tag: 'physical_spf' }],
   avobenzone: [{ tag: 'sunscreen' }, { tag: 'chemical_spf' }],
   octinoxate: [{ tag: 'sunscreen' }, { tag: 'chemical_spf' }],
+  // Hydrating / barrier support
+  'hyaluronic acid': [{ tag: 'humectant' }],
+  'sodium hyaluronate': [{ tag: 'humectant' }],
+  glycerin: [{ tag: 'humectant' }],
+  panthenol: [{ tag: 'humectant' }, { tag: 'barrier' }],
+  'beta-glucan': [{ tag: 'humectant' }, { tag: 'barrier' }],
   // Barrier / soothing
   'ceramide np': [{ tag: 'ceramide' }, { tag: 'barrier' }],
   ceramide: [{ tag: 'ceramide' }, { tag: 'barrier' }],

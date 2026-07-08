@@ -170,7 +170,7 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain("{hasBarrierStep ? 'moisturiser only' : 'keep it simple'}");
     expect(plan).toContain('No night steps yet.');
     expect(plan).not.toContain('suffix="ceramide only"');
-    expect(plan).toContain('style={{ overflow:');
+    expect(plan).toContain("style={{ minHeight: 0, overflow: 'hidden' }}");
     expect(plan).toContain(
       'contentContainerStyle={{ flexGrow: 1, paddingBottom: planScrollBottomPadding }}',
     );

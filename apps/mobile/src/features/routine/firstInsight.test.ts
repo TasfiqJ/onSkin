@@ -10,6 +10,7 @@ const basePlan: GeneratedPlan = {
   pm: [],
   cycle: null,
   ramp: [],
+  unplacedProducts: [],
   gaps: [],
   conflicts: [],
 };
@@ -73,6 +74,22 @@ describe('routine first insight copy', () => {
     ).toMatchObject({
       title: 'No extra separation',
       body: 'Compatible pairings stay together instead of adding unnecessary rules.',
+    });
+  });
+
+  it('prioritizes unplaced shelf items before generic gaps or reassurance', () => {
+    expect(
+      routineFirstInsightCopy(
+        plan({
+          unplacedProducts: [{ productId: 'unknown', name: 'Mystery drops' }],
+          gaps: ['A gentle cleanser would give your routine a clean base.'],
+          conflicts: [conflict(ruleFor('synergy'))],
+        }),
+        false,
+      ),
+    ).toMatchObject({
+      title: 'Product needs details',
+      body: 'Mystery drops needs a category or ingredient clue before it can be placed.',
     });
   });
 

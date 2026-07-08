@@ -4,6 +4,7 @@ import { resolvePaoMonths } from '@/features/intelligence/pao';
 
 import {
   categoryLabel,
+  functionalTagsForCategory,
   isSafetyCriticalCategory,
   PRODUCT_CATEGORIES,
   usesPrintedExpiry,
@@ -32,6 +33,15 @@ describe('shelf categories (docs/04 §4.4)', () => {
   it('only sunscreen defers to a printed expiry (OTC drug)', () => {
     expect(usesPrintedExpiry('spf')).toBe(true);
     expect(usesPrintedExpiry('serum')).toBe(false);
+  });
+
+  it('derives only review-safe functional tags from explicit category picks', () => {
+    expect(functionalTagsForCategory('retinoid_serum')).toEqual(['retinoid']);
+    expect(functionalTagsForCategory('vitamin_c_serum')).toEqual(['vitamin_c']);
+    expect(functionalTagsForCategory('benzoyl_peroxide')).toEqual(['benzoyl_peroxide']);
+    expect(functionalTagsForCategory('serum')).toEqual([]);
+    expect(functionalTagsForCategory('other')).toEqual([]);
+    expect(functionalTagsForCategory(null)).toEqual([]);
   });
 
   it('each non-"other" category has a PAO default to pre-fill manual intake', () => {

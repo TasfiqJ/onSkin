@@ -1,0 +1,29 @@
+{
+  "category": {
+    "bottom": 296.1,
+    "centerX": 160.2,
+    "centerY": 271.1,
+    "height": 49.9,
+    "left": 44,
+    "right": 276.4,
+    "top": 246.2,
+    "width": 232.4
+  },
+  "centerHitTag": "div",
+  "centerHitText": "Choose category",
+  "footer": {
+    "bottom": 464.6,
+    "centerX": 160.2,
+    "centerY": 436.6,
+    "height": 56,
+    "left": 24,
+    "right": 296.4,
+    "top": 408.6,
+    "width": 272.4
+  },
+  "scrollY": 0,
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

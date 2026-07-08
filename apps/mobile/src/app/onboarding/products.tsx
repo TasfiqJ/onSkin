@@ -198,7 +198,7 @@ export default function ProductsScreen() {
 
   return (
     <Screen>
-      <View className="flex-1 overflow-hidden">
+      <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
         <ScrollView
           ref={scrollRef}
           className="flex-1"

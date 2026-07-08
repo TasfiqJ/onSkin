@@ -4561,6 +4561,55 @@ type annotation to `T[]`. `npm --workspace apps/mobile run typecheck`, `npm
 `npm --workspace apps/mobile run test -- src/features/navigation/dialogContracts.test.ts src/features/navigation/tabBar.test.ts`
 pass.
 
+### Onboarding products short-phone footer clearance (2026-07-08)
+
+Found a 320 x 480 onboarding product-intake layout issue in the Codex in-app
+browser: the optional `Choose product category` trigger could occupy the same
+footer zone as the fixed `Skip for now` action on `/onboarding/products`.
+Added an explicit shrink constraint to the product-intake scroll wrapper so
+overflow content clips and scrolls above the fixed footer on short web
+viewports. Added a source contract covering the new wrapper.
+
+Post-fix human-simulated E2E at 320 x 480 verifies the initial state keeps the
+product-name input and `Skip for now` footer visually separate, a normal scroll
+brings `Choose category` fully above the footer, the category picker opens with
+48 px category chips, selecting `Serum` persists the category, and adding
+`Retinol serum` renders `1 ON YOUR SHELF` with compact footer actions. Evidence
+and bug report are in
+`test-results/human-e2e/2026-07-08/onboarding-products-short-phone-footer-fix/`
+and
+`docs/e2e-bug-reports/2026-07-08-onboarding-products-short-phone-footer-overlap.md`.
+Native iOS/Android keyboard, Dynamic Type, and home-indicator safe-area QA
+remain device follow-up.
+
+### Routine plan unplaced shelf item guardrail (2026-07-08)
+
+Hardened the routine generator so products with no review-safe category, tag,
+ingredient, or name signal are no longer silently treated as hydrating serums.
+Manual category picks now contribute only explicit review-safe functional tags
+for known actives such as SPF, vitamin C, retinoids, and benzoyl peroxide, while
+common hydrating/barrier INCI cues map through the tag dictionary. Unknown shelf
+items are reported on the generated plan as `unplacedProducts`; AM/PM sequencing
+and recommendation inputs skip them until the user adds a category or ingredient
+clue.
+
+During compact E2E, the original item-specific bottom note exposed a clipped
+text sliver near the fixed `Start today` action. The specific product guidance
+now lives in the first insight card, and bottom gap notes stay suppressed while
+unplaced products are the primary issue.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8173 by
+adding `Mystery drops` with no category through `/onboarding/products`, then
+opening `/routine/plan`. The route shows `Product needs details`, names
+`Mystery drops` as needing a category or ingredient clue, keeps the product out
+of Morning and Evening rows, keeps `Start today` visible, and has zero
+horizontal overflow, no raw error text, no JavaScript dialog, and no
+product-note footer sliver. Evidence and bug report are in
+`test-results/human-e2e/2026-07-08/routine-plan-unplaced-product/` and
+`docs/e2e-bug-reports/2026-07-08-routine-plan-unclassified-product.md`.
+Native iOS/Android screen-reader, Dynamic Type, and production entitlement QA
+remain device follow-up.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

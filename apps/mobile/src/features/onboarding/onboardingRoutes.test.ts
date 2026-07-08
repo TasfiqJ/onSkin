@@ -35,7 +35,7 @@ describe('onboarding route contracts', () => {
 
     expect(goals).toContain('<View className="flex-1 overflow-hidden">');
     expect(quiz).toContain('<View className="flex-1 overflow-hidden">');
-    expect(products).toContain('<View className="flex-1 overflow-hidden">');
+    expect(products).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
     expect(goals).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
     expect(quiz).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
     expect(products).toMatch(

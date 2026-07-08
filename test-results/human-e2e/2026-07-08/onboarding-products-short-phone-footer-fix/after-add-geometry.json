@@ -1,0 +1,63 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 1 OF 3 PRODUCTS 2 more products gives your first insight more to work with. PRODUCT NAME CATEGORY · OPTIONAL Choose category > 1 ON YOUR SHELF Retinol serum × Add 2 more Continue with 1 product",
+  "buttons": [
+    {
+      "aria": "Choose product category",
+      "rect": {
+        "bottom": 58.6,
+        "height": 49.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 8.7,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Choose category >"
+    },
+    {
+      "aria": "Remove Retinol serum",
+      "rect": {
+        "bottom": 183.6,
+        "height": 48,
+        "left": 231.4,
+        "right": 279.4,
+        "top": 135.6,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "×"
+    },
+    {
+      "aria": "",
+      "rect": {
+        "bottom": 404.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 348.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Add 2 more"
+    },
+    {
+      "aria": "",
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 408.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Continue with 1 product"
+    }
+  ],
+  "hasProduct": true,
+  "hasShelfCount": true
+}

@@ -2,6 +2,8 @@
 // default PAO via CATEGORY_PAO_DEFAULTS (docs/04 §3 waterfall step 2) and the
 // safety-critical / printed-expiry exceptions. Labels are the UI strings.
 
+import type { FunctionalTag } from '@onskin/types';
+
 export type ProductCategory =
   | 'cleanser'
   | 'toner'
@@ -53,4 +55,21 @@ export function isSafetyCriticalCategory(category: string | null | undefined): b
  *  a PAO estimate (docs/04 §3). */
 export function usesPrintedExpiry(category: string | null | undefined): boolean {
   return category === 'spf';
+}
+
+export function functionalTagsForCategory(
+  category: string | null | undefined,
+): FunctionalTag[] {
+  switch (category) {
+    case 'vitamin_c_serum':
+      return ['vitamin_c'];
+    case 'retinoid_serum':
+      return ['retinoid'];
+    case 'spf':
+      return ['sunscreen'];
+    case 'benzoyl_peroxide':
+      return ['benzoyl_peroxide'];
+    default:
+      return [];
+  }
 }

@@ -1,0 +1,50 @@
+{
+  "items": [
+    {
+      "aria": "Product name",
+      "rect": {
+        "bottom": 227.5,
+        "height": 53.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 173.6,
+        "width": 232.4
+      },
+      "role": "",
+      "tag": "input",
+      "text": "",
+      "value": "Retinol serum"
+    },
+    {
+      "aria": "Category, Serum",
+      "rect": {
+        "bottom": 317.5,
+        "height": 49.9,
+        "left": 44,
+        "right": 276.4,
+        "top": 267.5,
+        "width": 232.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Serum >",
+      "value": ""
+    },
+    {
+      "aria": "",
+      "rect": {
+        "bottom": 464.6,
+        "height": 56,
+        "left": 24,
+        "right": 296.4,
+        "top": 408.6,
+        "width": 272.4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Add to shelf",
+      "value": ""
+    }
+  ],
+  "text": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Serum > Add to shelf"
+}

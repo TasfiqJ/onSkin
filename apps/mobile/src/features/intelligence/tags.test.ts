@@ -28,4 +28,11 @@ describe('front-label tag aliases', () => {
     expect(tagsFor('Daily Sunscreen').has('sunscreen')).toBe(true);
     expect(tagsFor('Sport Sun Screen Lotion').has('sunscreen')).toBe(true);
   });
+
+  it('recognises common hydrating and barrier support ingredients', () => {
+    expect(tagsFor('Hyaluronic Acid').has('humectant')).toBe(true);
+    expect(tagsFor('Sodium Hyaluronate').has('humectant')).toBe(true);
+    expect(tagsFor('Panthenol').has('barrier')).toBe(true);
+    expect(tagsFor('Beta-glucan').has('humectant')).toBe(true);
+  });
 });

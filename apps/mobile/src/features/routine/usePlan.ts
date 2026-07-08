@@ -37,6 +37,7 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
       id: i.engineProduct.id,
       name: i.engineProduct.name,
       tags: i.engineProduct.tags,
+      category: i.category,
       concentration: i.engineProduct.concentration,
     }));
     // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours

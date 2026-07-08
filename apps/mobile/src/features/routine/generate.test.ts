@@ -8,14 +8,24 @@ import { generatePlan, type RoutineProduct } from './generate';
 import { applyTolerance, deEscalate, initRamp, shouldOfferStepUp } from './ramp';
 import { classifyRole } from './sequencing';
 
-function product(id: string, name: string, ingredients: string[] = []): RoutineProduct {
+function product(
+  id: string,
+  name: string,
+  ingredients: string[] = [],
+  category: string | null = null,
+): RoutineProduct {
   const { tags } = tagsForIngredientList(ingredients);
-  return { id, name, tags: [...tags] };
+  return { id, name, tags: [...tags], category };
 }
 
-function shelfNameProduct(id: string, name: string, ingredients: string[] = []): RoutineProduct {
+function shelfNameProduct(
+  id: string,
+  name: string,
+  ingredients: string[] = [],
+  category: string | null = null,
+): RoutineProduct {
   const { tags } = tagsForIngredientList([name, ...ingredients]);
-  return { id, name, tags: [...tags] };
+  return { id, name, tags: [...tags], category };
 }
 
 function withDevFlag<T>(value: boolean, run: () => T): T {
@@ -55,6 +65,14 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
   it('falls back to name keywords for non-actives', () => {
     expect(classifyRole(product('e', 'Cream cleanser'))).toBe('cleanser');
     expect(classifyRole(product('f', 'Ceramide moisturizer', ['Ceramide NP']))).toBe('moisturiser');
+  });
+  it('uses explicit intake category before guessing from unknown names', () => {
+    expect(classifyRole(product('g', 'Night bottle', [], 'retinoid_serum'))).toBe('treatment');
+    expect(classifyRole(product('h', 'Plain bottle', [], 'serum'))).toBe('hydrating_serum');
+  });
+  it('does not invent a hydrating-serum role for unknown products', () => {
+    expect(classifyRole(product('i', 'Mystery drops'))).toBeNull();
+    expect(classifyRole(product('j', 'Mystery drops', [], 'other'))).toBeNull();
   });
 });
 
@@ -104,6 +122,10 @@ describe('Maya plan generation (docs/03 §2 worked example)', () => {
   it('shows no gap notes (Maya owns cleanser, moisturiser, SPF)', () => {
     expect(plan.gaps).toEqual([]);
   });
+
+  it('has no unplaced products when the shelf is classifiable', () => {
+    expect(plan.unplacedProducts).toEqual([]);
+  });
 });
 
 describe('gap notes (docs/03 §2. Never fabricate a product)', () => {
@@ -114,6 +136,18 @@ describe('gap notes (docs/03 §2. Never fabricate a product)', () => {
       goals: [],
     });
     expect(plan.gaps.some((g) => g.toLowerCase().includes('spf'))).toBe(true);
+  });
+
+  it('leaves unclassified products out of AM/PM rows and records why', () => {
+    const plan = generatePlan([product('unknown', 'Mystery drops')], {
+      sensitivity: 'neutral',
+      pregnancy: false,
+      goals: [],
+    });
+
+    expect(plan.am).toEqual([]);
+    expect(plan.pm).toEqual([]);
+    expect(plan.unplacedProducts).toEqual([{ productId: 'unknown', name: 'Mystery drops' }]);
   });
 });
 

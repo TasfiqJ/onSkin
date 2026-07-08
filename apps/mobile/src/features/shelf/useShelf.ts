@@ -17,7 +17,7 @@ import { localDateString } from '@/features/today/useToday';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
-import { isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
+import { functionalTagsForCategory, isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
 import { surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
@@ -105,7 +105,7 @@ export function useShelf() {
 
       const engineProducts: EngineProduct[] = active.map((p) => {
         const { tags, subflags } = tagsForIngredientList([p.name, ...p.ingredients]);
-        const tagArr = [...tags];
+        const tagArr = [...new Set([...tags, ...functionalTagsForCategory(p.category)])];
         // Coarse concentration band from the name/INCI percent (docs/02 §4.2) so the
         // engine escalates high-dose severity and the high-dose pregnancy safety rule
         // can fire. Was never populated before (review fix); B-CATALOG-SEED upgrades it.

@@ -30,6 +30,20 @@ export function routineFirstInsightCopy(
     };
   }
 
+  if (plan.unplacedProducts.length > 0) {
+    const firstName = plan.unplacedProducts[0]?.name ?? 'One shelf item';
+    return {
+      eyebrow: 'First insight',
+      title: 'Product needs details',
+      body:
+        plan.unplacedProducts.length === 1
+          ? `${firstName} needs a category or ingredient clue before it can be placed.`
+          : `${firstName} and ${plan.unplacedProducts.length - 1} more shelf item${
+              plan.unplacedProducts.length === 2 ? '' : 's'
+            } need categories or ingredient clues before they can be placed.`,
+    };
+  }
+
   const reassuringCount = plan.conflicts.length - actionableConflictCount;
   if (reassuringCount > 0) {
     return {

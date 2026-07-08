@@ -185,7 +185,8 @@ export default function PlanScreen() {
     trackedPlanView.current = true;
 
     const source = data.isExample ? 'example' : 'routine_plan';
-    const insightCount = data.plan.conflicts.length + data.plan.gaps.length + 1;
+    const insightCount =
+      data.plan.conflicts.length + data.plan.gaps.length + data.plan.unplacedProducts.length + 1;
 
     void recordRoutinePlanAnalytics({
       insightCount,
@@ -198,9 +199,15 @@ export default function PlanScreen() {
     }
   }, [data]);
 
+  const planNote = plan
+    ? plan.unplacedProducts.length > 0
+      ? null
+      : (plan.gaps[0] ?? null)
+    : null;
+
   return (
     <Screen edges={['top', 'bottom']}>
-      <View className="flex-1" style={{ overflow: 'hidden' }}>
+      <View className="flex-1" style={{ minHeight: 0, overflow: 'hidden' }}>
         <ScrollView
           className="flex-1"
           showsVerticalScrollIndicator={false}
@@ -370,7 +377,7 @@ export default function PlanScreen() {
             </View>
 
             {/* Honest gap note. Only when a category is missing */}
-            {plan?.gaps.length ? (
+            {planNote ? (
               <View
                 className={
                   compactPlan
@@ -383,7 +390,7 @@ export default function PlanScreen() {
                   style={{ backgroundColor: colors.muted }}
                 />
                 <Text variant="bodySm" tone="muted" className="flex-1 text-[12.5px]">
-                  {plan.gaps[0]}
+                  {planNote}
                 </Text>
               </View>
             ) : null}

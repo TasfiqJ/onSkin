@@ -31,6 +31,7 @@ export type ClassifiableProduct = {
   id: string;
   name: string;
   tags: FunctionalTag[];
+  category?: string | null;
 };
 
 const NAME_ROLES: { keyword: string; role: SequencingRole }[] = [
@@ -47,22 +48,47 @@ const NAME_ROLES: { keyword: string; role: SequencingRole }[] = [
   { keyword: 'lotion', role: 'moisturiser' },
 ];
 
+const CATEGORY_ROLES: Record<string, SequencingRole | null> = {
+  cleanser: 'cleanser',
+  toner: 'toner',
+  vitamin_c_serum: 'antioxidant',
+  retinoid_serum: 'treatment',
+  serum: 'hydrating_serum',
+  moisturiser_tube: 'moisturiser',
+  moisturiser_jar: 'moisturiser',
+  eye_cream: 'eye',
+  lash_brow: 'eye',
+  mascara: 'eye',
+  spf: 'spf',
+  oil_balm: 'oil',
+  benzoyl_peroxide: 'treatment',
+  other: null,
+};
+
 /** Classify a product to a sequencing role. Active TAGS win over generic name
  *  keywords (a "glycolic toner" is an exfoliant, not a plain toner). */
-export function classifyRole(product: ClassifiableProduct): SequencingRole {
+export function classifyRole(product: ClassifiableProduct): SequencingRole | null {
   const tags = new Set(product.tags);
   if (tags.has('retinoid')) return 'treatment';
   if (tags.has('aha') || tags.has('bha')) return 'exfoliant';
+  if (tags.has('benzoyl_peroxide') || tags.has('hydroquinone')) return 'treatment';
   if (tags.has('vitamin_c')) return 'antioxidant';
   if (tags.has('copper_peptide')) return 'treatment';
   if (tags.has('niacinamide')) return 'hydrating_serum';
+  if (tags.has('humectant')) return 'hydrating_serum';
+  if (tags.has('ceramide') || tags.has('barrier')) return 'moisturiser';
   if (tags.has('sunscreen') || tags.has('physical_spf') || tags.has('chemical_spf')) return 'spf';
+
+  if (product.category) {
+    const categoryRole = CATEGORY_ROLES[product.category];
+    if (categoryRole !== undefined) return categoryRole;
+  }
 
   const name = product.name.toLowerCase();
   for (const { keyword, role } of NAME_ROLES) {
     if (name.includes(keyword)) return role;
   }
-  return 'hydrating_serum'; // safe default
+  return null;
 }
 
 export type SequencedStep = {
@@ -87,6 +113,7 @@ export function phasesFor(role: SequencingRole): RoutinePhase[] {
 export function sequencePhase(products: ClassifiableProduct[], phase: 'am' | 'pm'): SequencedStep[] {
   const eligible = products
     .map((p) => ({ p, role: classifyRole(p) }))
+    .filter((item): item is { p: ClassifiableProduct; role: SequencingRole } => item.role != null)
     .filter(({ role }) => {
       const rule = SEQUENCING_RULES[role];
       const inPhase = phasesFor(role).includes(phase);

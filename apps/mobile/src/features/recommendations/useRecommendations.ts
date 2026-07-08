@@ -33,14 +33,20 @@ export function useRecommendations() {
 
   const result = useMemo<RecResult>(() => {
     if (!shelf.data || !profile.data) return EMPTY;
-    const items: RecShelfItem[] = shelf.data.items.map((i) => ({
-      id: i.id,
-      name: i.name,
-      role: classifyRole(i.engineProduct),
-      tags: i.engineProduct.tags,
-      fragranced: isFragranced(i.product),
-      expiring: i.badge.kind === 'countdown' || i.badge.kind === 'expired',
-    }));
+    const items: RecShelfItem[] = shelf.data.items.flatMap((i) => {
+      const role = classifyRole({ ...i.engineProduct, category: i.category });
+      if (!role) return [];
+      return [
+        {
+          id: i.id,
+          name: i.name,
+          role,
+          tags: i.engineProduct.tags,
+          fragranced: isFragranced(i.product),
+          expiring: i.badge.kind === 'countdown' || i.badge.kind === 'expired',
+        },
+      ];
+    });
     return recommend({
       profile: profile.data,
       shelf: items,

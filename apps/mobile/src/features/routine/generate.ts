@@ -27,6 +27,7 @@ export type GeneratedPlan = {
   pm: PlanStep[];
   cycle: CycleTemplate | null;
   ramp: { productId: string; name: string; state: RampState }[];
+  unplacedProducts: { productId: string; name: string }[];
   gaps: string[];
   conflicts: DetectedConflict[];
 };
@@ -51,6 +52,13 @@ export function generatePlan(
   profile: EngineProfile & { goals: string[] },
   rules: ConflictRule[] = shippableRules(),
 ): GeneratedPlan {
+  const classifiedProducts = products.map((product) => ({
+    product,
+    role: classifyRole(product),
+  }));
+  const unplacedProducts = classifiedProducts
+    .filter(({ role }) => role == null)
+    .map(({ product }) => ({ productId: product.id, name: product.name }));
   const am = sequencePhase(products, 'am');
   const pm = sequencePhase(products, 'pm') as PlanStep[];
 
@@ -79,7 +87,9 @@ export function generatePlan(
     : [];
 
   // Gaps: roles the user doesn't own that would round out the routine.
-  const ownedRoles = new Set(products.map(classifyRole));
+  const ownedRoles = new Set(
+    classifiedProducts.flatMap(({ role }) => (role == null ? [] : [role])),
+  );
   const gaps = (Object.keys(GAP_NOTES) as SequencingRole[])
     .filter((role) => !ownedRoles.has(role))
     .map((role) => GAP_NOTES[role]!);
@@ -93,5 +103,5 @@ export function generatePlan(
   }));
   const conflicts = detectConflicts(engineProducts, profile, rules);
 
-  return { am, pm, cycle, ramp, gaps, conflicts };
+  return { am, pm, cycle, ramp, unplacedProducts, gaps, conflicts };
 }
