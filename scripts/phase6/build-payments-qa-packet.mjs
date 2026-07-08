@@ -2,7 +2,12 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { evidenceFlagEnabled, normalizeNamedSignoff } from '../phase9/lib.mjs';
+import {
+  evidenceFlagEnabled,
+  normalizeNamedSignoff,
+  placeholderEnvValue,
+  productionUrl,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -81,6 +86,90 @@ function hashFile(path) {
   };
 }
 
+function parseEnv(text) {
+  const out = {};
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
+    const [key, ...rest] = trimmed.split('=');
+    out[key] = rest.join('=').trim();
+  }
+  return out;
+}
+
+function envFile(path) {
+  const abs = resolve(root, path);
+  return existsSync(abs) ? parseEnv(readFileSync(abs, 'utf8')) : {};
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
+}
+
+function revenueCatPublicKey(value, prefix) {
+  const trimmed = String(value ?? '').trim();
+  return !placeholderEnvValue(trimmed) && new RegExp(`^${prefix}_[A-Za-z0-9]{8,}$`).test(trimmed);
+}
+
+function finalProductId(value) {
+  const trimmed = String(value ?? '').trim();
+  return (
+    !placeholderEnvValue(trimmed) &&
+    /^[A-Za-z0-9][A-Za-z0-9._-]{2,119}$/.test(trimmed) &&
+    !/(^|[._-])(dev|local|placeholder|example)([._-]|$)/i.test(trimmed)
+  );
+}
+
+const exampleEnv = envFile('.env.example');
+const localEnv = envFile('.env');
+const eas = readJson('apps/mobile/eas.json');
+const productionEasEnv = eas.build?.production?.env ?? {};
+const prodEnv = { ...exampleEnv, ...localEnv, ...productionEasEnv, ...process.env };
+
+const productionConfig = {
+  productionAppEnvironment: productionEasEnv.EXPO_PUBLIC_APP_ENV === 'production',
+  productionHasNoTestStoreKey: !productionEasEnv.EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY,
+  entitlementIdIsPro: prodEnv.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID === 'pro',
+  iosPublicKeyConfigured: revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY, 'appl'),
+  androidPublicKeyConfigured: revenueCatPublicKey(
+    prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY,
+    'goog',
+  ),
+  annualProductIdFinal: finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
+  monthlyProductIdFinal: finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
+  reverseTrialProductIdFinal: finalProductId(
+    prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID,
+  ),
+  webhookSharedAuthConfigured: !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_AUTH),
+  webhookSigningSecretConfigured: !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
+  secretApiKeyConfigured: !placeholderEnvValue(prodEnv.REVENUECAT_SECRET_API_KEY),
+  brandLegalClearanceRecorded: prodEnv.BRAND_LEGAL_CLEARANCE === 'cleared',
+  privacyUrlProduction: productionUrl(prodEnv.EXPO_PUBLIC_PRIVACY_URL),
+  termsUrlProduction: productionUrl(prodEnv.EXPO_PUBLIC_TERMS_URL),
+  supportUrlProduction: productionUrl(prodEnv.EXPO_PUBLIC_SUPPORT_URL),
+};
+
+const productionConfigBlockers = [
+  ['productionAppEnvironment', 'EAS production profile must set EXPO_PUBLIC_APP_ENV=production.'],
+  [
+    'productionHasNoTestStoreKey',
+    'EAS production profile must not include RevenueCat Test Store key.',
+  ],
+  ['entitlementIdIsPro', 'EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID must be `pro`.'],
+  ['iosPublicKeyConfigured', 'Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.'],
+  ['androidPublicKeyConfigured', 'Missing final EXPO_PUBLIC_REVENUECAT_ANDROID_KEY.'],
+  ['annualProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.'],
+  ['monthlyProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.'],
+  ['reverseTrialProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID.'],
+  ['webhookSharedAuthConfigured', 'Missing production REVENUECAT_WEBHOOK_AUTH.'],
+  ['webhookSigningSecretConfigured', 'Missing production REVENUECAT_WEBHOOK_SIGNING_SECRET.'],
+  ['secretApiKeyConfigured', 'Missing production REVENUECAT_SECRET_API_KEY.'],
+  ['brandLegalClearanceRecorded', 'BRAND_LEGAL_CLEARANCE must be cleared for production.'],
+  ['privacyUrlProduction', 'EXPO_PUBLIC_PRIVACY_URL must be a production HTTPS URL.'],
+  ['termsUrlProduction', 'EXPO_PUBLIC_TERMS_URL must be a production HTTPS URL.'],
+  ['supportUrlProduction', 'EXPO_PUBLIC_SUPPORT_URL must be a production HTTPS URL.'],
+];
+
 const evidence = {
   rcOfferingReviewed: evidenceFlagEnabled(process.env.PHASE6_RC_OFFERING_REVIEWED),
   iosSandboxRestorePass: evidenceFlagEnabled(process.env.PHASE6_IOS_SANDBOX_RESTORE_PASS),
@@ -93,6 +182,9 @@ const evidence = {
 const files = requiredFiles.map(hashFile);
 const blockers = [];
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
+for (const [key, message] of productionConfigBlockers) {
+  if (!productionConfig[key]) blockers.push(message);
+}
 if (!evidence.rcOfferingReviewed) blockers.push('Missing PHASE6_RC_OFFERING_REVIEWED=true.');
 if (!evidence.iosSandboxRestorePass) blockers.push('Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.');
 if (!evidence.androidLicenseTestPass)
@@ -104,6 +196,7 @@ if (!evidence.signedOffBy) blockers.push('Missing PHASE6_SIGNED_OFF_BY.');
 const packet = {
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.',
+  productionConfig,
   evidence,
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
   files,
@@ -142,6 +235,24 @@ writeFileSync(
     `- Webhook HMAC test pass: ${evidence.webhookHmacTestPass ? 'yes' : 'BLOCKED'}`,
     `- Finance signoff: ${evidence.financeSignoff ? 'yes' : 'BLOCKED'}`,
     `- Signed off by: ${evidence.signedOffBy || 'BLOCKED'}`,
+    '',
+    '## Production Config',
+    '',
+    `- EAS production app environment: ${productionConfig.productionAppEnvironment ? 'yes' : 'BLOCKED'}`,
+    `- Production excludes RevenueCat Test Store key: ${productionConfig.productionHasNoTestStoreKey ? 'yes' : 'BLOCKED'}`,
+    `- Entitlement ID is pro: ${productionConfig.entitlementIdIsPro ? 'yes' : 'BLOCKED'}`,
+    `- iOS RevenueCat public key configured: ${productionConfig.iosPublicKeyConfigured ? 'yes' : 'BLOCKED'}`,
+    `- Android RevenueCat public key configured: ${productionConfig.androidPublicKeyConfigured ? 'yes' : 'BLOCKED'}`,
+    `- Annual product ID final: ${productionConfig.annualProductIdFinal ? 'yes' : 'BLOCKED'}`,
+    `- Monthly product ID final: ${productionConfig.monthlyProductIdFinal ? 'yes' : 'BLOCKED'}`,
+    `- Reverse-trial product ID final: ${productionConfig.reverseTrialProductIdFinal ? 'yes' : 'BLOCKED'}`,
+    `- Webhook shared auth configured: ${productionConfig.webhookSharedAuthConfigured ? 'yes' : 'BLOCKED'}`,
+    `- Webhook signing secret configured: ${productionConfig.webhookSigningSecretConfigured ? 'yes' : 'BLOCKED'}`,
+    `- RevenueCat secret API key configured: ${productionConfig.secretApiKeyConfigured ? 'yes' : 'BLOCKED'}`,
+    `- Brand legal clearance recorded: ${productionConfig.brandLegalClearanceRecorded ? 'yes' : 'BLOCKED'}`,
+    `- Privacy URL production: ${productionConfig.privacyUrlProduction ? 'yes' : 'BLOCKED'}`,
+    `- Terms URL production: ${productionConfig.termsUrlProduction ? 'yes' : 'BLOCKED'}`,
+    `- Support URL production: ${productionConfig.supportUrlProduction ? 'yes' : 'BLOCKED'}`,
     '',
     '## Scenarios',
     '',

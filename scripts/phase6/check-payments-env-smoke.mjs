@@ -149,15 +149,37 @@ const cases = [
     },
   },
   {
-    name: 'Phase 6 packet writes normalized evidence and signoff',
+    name: 'Phase 6 packet writes normalized evidence, config, and signoff',
     result: runPacket({}),
     expect(result) {
       return (
         result.status === 0 &&
+        result.packet.productionConfig.annualProductIdFinal === true &&
+        result.packet.productionConfig.webhookSigningSecretConfigured === true &&
+        result.packet.productionConfig.privacyUrlProduction === true &&
         result.packet.evidence.rcOfferingReviewed === true &&
         result.packet.evidence.androidLicenseTestPass === true &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
         !result.packet.blockers.some((blocker) => /PHASE6_SIGNED_OFF_BY/.test(blocker))
+      );
+    },
+  },
+  {
+    name: 'Phase 6 packet blocks placeholder production config without leaking secrets',
+    result: runPacket({
+      EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual.dev',
+      REVENUECAT_WEBHOOK_SIGNING_SECRET: '__BLOCKED_PLACEHOLDER__',
+    }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.productionConfig.annualProductIdFinal === false &&
+        result.packet.productionConfig.webhookSigningSecretConfigured === false &&
+        result.packet.blockers.includes(
+          'Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.',
+        ) &&
+        result.packet.blockers.includes('Missing production REVENUECAT_WEBHOOK_SIGNING_SECRET.') &&
+        !JSON.stringify(result.packet).includes('__BLOCKED_PLACEHOLDER__')
       );
     },
   },

@@ -160,6 +160,17 @@ The manifest gate must pass before using local human-E2E evidence in a launch
 readiness packet. If it fails, inspect the named evidence folder instead of
 assuming older screenshots still prove the current route set.
 
+Use the non-mutating check before relying on committed generated evidence:
+
+```bash
+npm run e2e:human:manifest:check
+```
+
+This fails when `docs/e2e/generated/human-e2e-manifest.{json,md}` is stale
+relative to the evidence date, evidence hashes, or committed source/evidence
+changes after the manifest's recorded source Git SHA. The generated manifest
+commit itself is allowed to differ from the recorded SHA.
+
 ## Exploratory Run Report Template
 
 Create a report at `test-results/human-e2e/YYYY-MM-DD/report.md`.

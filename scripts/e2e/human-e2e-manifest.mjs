@@ -8,6 +8,7 @@ const root = process.cwd();
 const args = new Set(process.argv.slice(2));
 const dateArg = process.argv.find((arg) => arg.startsWith('--date='));
 const strict = args.has('--strict');
+const check = args.has('--check');
 
 function abs(path) {
   return resolve(root, path);
@@ -41,6 +42,14 @@ function command(name, commandArgs) {
   } catch {
     return '';
   }
+}
+
+function commandRequired(name, commandArgs) {
+  return execFileSync(name, commandArgs, {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
 }
 
 function latestEvidenceDate() {
@@ -204,8 +213,6 @@ mkdirSync(outDir, { recursive: true });
 const jsonPath = join(outDir, 'human-e2e-manifest.json');
 const mdPath = join(outDir, 'human-e2e-manifest.md');
 
-writeFileSync(jsonPath, `${JSON.stringify(packet, null, 2)}\n`);
-
 const gateRows = gateResults.map((gate) => [
   gate.title,
   gate.status,
@@ -214,38 +221,138 @@ const gateRows = gateResults.map((gate) => [
   rel(abs(gate.folder)),
 ]);
 
-writeFileSync(
-  mdPath,
-  [
-    '# Human E2E Manifest',
-    '',
-    `Generated: ${packet.generatedAt}`,
-    `Git SHA: ${packet.gitSha || 'unknown'}`,
-    `Evidence date: ${packet.evidenceDate}`,
-    `Status: ${packet.status}`,
-    '',
-    'This generated packet is created by `npm run e2e:human:manifest`. It turns',
-    'the committed Expo web-compatible human-simulated E2E evidence into a',
-    'repeatable local gate without adding a Playwright, Detox, Maestro, or Appium',
-    'dependency to the repo.',
-    '',
-    '## Gates',
-    '',
-    markdownTable(['Gate', 'Status', 'Detail', 'Files', 'Folder'], gateRows),
-    '',
-    '## Warnings',
-    '',
-    ...warnings.map((warning) => `- ${warning}`),
-    '',
-    '## Blockers',
-    '',
-    ...(blockers.length > 0 ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
-    '',
-  ].join('\n'),
-);
+const markdown = [
+  '# Human E2E Manifest',
+  '',
+  `Generated: ${packet.generatedAt}`,
+  `Git SHA: ${packet.gitSha || 'unknown'}`,
+  `Evidence date: ${packet.evidenceDate}`,
+  `Status: ${packet.status}`,
+  '',
+  'This generated packet is created by `npm run e2e:human:manifest`. It turns',
+  'the committed Expo web-compatible human-simulated E2E evidence into a',
+  'repeatable local gate without adding a Playwright, Detox, Maestro, or Appium',
+  'dependency to the repo.',
+  '',
+  '## Gates',
+  '',
+  markdownTable(['Gate', 'Status', 'Detail', 'Files', 'Folder'], gateRows),
+  '',
+  '## Warnings',
+  '',
+  ...warnings.map((warning) => `- ${warning}`),
+  '',
+  '## Blockers',
+  '',
+  ...(blockers.length > 0 ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
+  '',
+].join('\n');
 
-console.log(`Wrote ${rel(jsonPath)}`);
-console.log(`Wrote ${rel(mdPath)}`);
+function comparablePacket(value) {
+  if (!value || typeof value !== 'object') return value;
+  const { generatedAt: _generatedAt, gitSha: _gitSha, ...rest } = value;
+  return rest;
+}
+
+function comparableMarkdown(value) {
+  return value
+    .replace(/^Generated: .+$/m, 'Generated: <ignored>')
+    .replace(/^Git SHA: .+$/m, 'Git SHA: <ignored>');
+}
+
+if (check) {
+  if (!existsSync(jsonPath)) {
+    console.error(`FAIL Missing ${rel(jsonPath)}. Run npm run e2e:human:manifest.`);
+    process.exit(1);
+  }
+  if (!existsSync(mdPath)) {
+    console.error(`FAIL Missing ${rel(mdPath)}. Run npm run e2e:human:manifest.`);
+    process.exit(1);
+  }
+
+  let existingPacket;
+  try {
+    existingPacket = JSON.parse(readFileSync(jsonPath, 'utf8'));
+  } catch (error) {
+    console.error(
+      `FAIL Could not parse ${rel(jsonPath)}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    process.exit(1);
+  }
+
+  const expected = JSON.stringify(comparablePacket(packet), null, 2);
+  const actual = JSON.stringify(comparablePacket(existingPacket), null, 2);
+  if (actual !== expected) {
+    console.error(
+      `FAIL ${rel(jsonPath)} is stale or does not match current evidence. Run npm run e2e:human:manifest.`,
+    );
+    process.exit(1);
+  }
+
+  const recordedSha = String(existingPacket.gitSha ?? '').trim();
+  if (!/^[a-f0-9]{40}$/i.test(recordedSha)) {
+    console.error(`FAIL ${rel(jsonPath)} does not record a full source Git SHA.`);
+    process.exit(1);
+  }
+
+  const allowedGeneratedPaths = new Set([rel(jsonPath), rel(mdPath)]);
+  let changedSinceRecorded = [];
+  try {
+    changedSinceRecorded = commandRequired('git', ['diff', '--name-only', `${recordedSha}..HEAD`])
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+  } catch (error) {
+    console.error(
+      `FAIL Could not compare ${recordedSha} to HEAD: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+
+  const disallowedCommittedChanges = changedSinceRecorded.filter(
+    (path) => !allowedGeneratedPaths.has(path.replace(/\\/g, '/')),
+  );
+  if (disallowedCommittedChanges.length > 0) {
+    console.error(
+      `FAIL ${rel(jsonPath)} was generated before later committed source/evidence changes: ${disallowedCommittedChanges.join(', ')}. Run npm run e2e:human:manifest after those changes and commit the generated outputs separately.`,
+    );
+    process.exit(1);
+  }
+
+  const dirtyGeneratedOrTracked = command('git', ['status', '--short', '--untracked-files=no'])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const statusPath = line.slice(3).replace(/\\/g, '/');
+      return !allowedGeneratedPaths.has(statusPath);
+    });
+  if (dirtyGeneratedOrTracked.length > 0) {
+    console.error(
+      `FAIL tracked files outside the generated manifest are dirty: ${dirtyGeneratedOrTracked.join(', ')}.`,
+    );
+    process.exit(1);
+  }
+
+  const expectedMarkdown = comparableMarkdown(markdown);
+  const actualMarkdown = comparableMarkdown(readFileSync(mdPath, 'utf8'));
+  if (actualMarkdown !== expectedMarkdown) {
+    console.error(
+      `FAIL ${rel(mdPath)} is stale or does not match current evidence. Run npm run e2e:human:manifest.`,
+    );
+    process.exit(1);
+  }
+
+  console.log('Human E2E manifest is current.');
+} else {
+  writeFileSync(jsonPath, `${JSON.stringify(packet, null, 2)}\n`);
+  writeFileSync(mdPath, markdown);
+
+  console.log(`Wrote ${rel(jsonPath)}`);
+  console.log(`Wrote ${rel(mdPath)}`);
+}
 
 if (blockers.length > 0) {
   for (const blocker of blockers) console.error(`FAIL ${blocker}`);

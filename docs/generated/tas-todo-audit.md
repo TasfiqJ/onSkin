@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-08T17:21:18.942Z
+Generated: 2026-07-08T17:46:01.842Z
 Status: pass
 Strict mode: yes
 
@@ -15,9 +15,9 @@ canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 213
+- Extracted keys: 214
 - Keys named verbatim in FOR_TAS_TO_DO.md: 24
-- Keys only in generated inventory: 189
+- Keys only in generated inventory: 190
 - Blockers: 0
 - Warnings: 9
 
@@ -32,7 +32,7 @@ canonical machine-readable key list.
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 19   | 15                               |
 | phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 18   | 17                               |
 | phase8  | yes              | phase8:check-growth-store:strict, phase8:qa-packet:strict  | 21   | 21                               |
-| phase9  | yes              | phase9:verify, phase9:release-smoke:strict                 | 54   | 54                               |
+| phase9  | yes              | phase9:verify, phase9:release-smoke:strict                 | 55   | 55                               |
 | phase10 | yes              | phase10:verify, phase10:beta-readiness:strict              | 16   | 16                               |
 | phase11 | yes              | phase11:verify, phase11:launch-readiness:strict            | 16   | 16                               |
 
@@ -252,6 +252,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | PHASE9_OBSERVABILITY_PAYLOAD_PASS                 | no                        |
 | PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED       | no                        |
 | PHASE9_ORDER_REPORT_POLL_PASS                     | no                        |
+| PHASE9_PACKET_OUT_DIR                             | no                        |
 | PHASE9_PLAY_PACKET_PASS                           | no                        |
 | PHASE9_PUBLIC_FORMS_PASS                          | no                        |
 | PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX          | no                        |
@@ -332,6 +333,6 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 - Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 7 core loop launch gates has 17 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 8 growth and store readiness has 21 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
-- Phase 9 release engineering has 54 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
+- Phase 9 release engineering has 55 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 10 closed beta has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 11 public launch has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.

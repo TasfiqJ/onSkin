@@ -1,6 +1,23 @@
 {
-  "generatedAt": "2026-07-08T14:36:39.807Z",
+  "generatedAt": "2026-07-08T17:46:01.779Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
+  "productionConfig": {
+    "productionAppEnvironment": true,
+    "productionHasNoTestStoreKey": true,
+    "entitlementIdIsPro": true,
+    "iosPublicKeyConfigured": false,
+    "androidPublicKeyConfigured": false,
+    "annualProductIdFinal": false,
+    "monthlyProductIdFinal": false,
+    "reverseTrialProductIdFinal": false,
+    "webhookSharedAuthConfigured": false,
+    "webhookSigningSecretConfigured": false,
+    "secretApiKeyConfigured": false,
+    "brandLegalClearanceRecorded": false,
+    "privacyUrlProduction": false,
+    "termsUrlProduction": false,
+    "supportUrlProduction": false
+  },
   "evidence": {
     "rcOfferingReviewed": false,
     "iosSandboxRestorePass": false,
@@ -63,8 +80,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 10935,
-      "sha256": "c8ebb02c4dd1e0031017d04803d50617975b9023f60f4a37b33daf01150f9f19"
+      "bytes": 11407,
+      "sha256": "68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -99,8 +116,8 @@
     {
       "path": "apps/mobile/src/app/paywall/upsell.tsx",
       "exists": true,
-      "bytes": 6967,
-      "sha256": "d32b620921003bf472fb974b0b9ade44f2b2f94a6bcb01037843c4674003abe7"
+      "bytes": 7238,
+      "sha256": "ac7f68cab670ff75a647ee6c8e6499337bd32c60fee189e82a78c63ff7edd859"
     },
     {
       "path": "apps/mobile/src/app/paywall/winback.tsx",
@@ -111,8 +128,8 @@
     {
       "path": "apps/mobile/src/app/settings/subscription.tsx",
       "exists": true,
-      "bytes": 11547,
-      "sha256": "dce1c1aec8395a039f0a4d1d3312c52f4b3a5b2ee54d29ca0d86bc80111e4b09"
+      "bytes": 13478,
+      "sha256": "e842070989fe69249e34e8e1e44f462e94e1adae82af64bc35fa459421ce0089"
     },
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",
@@ -153,8 +170,8 @@
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
       "exists": true,
-      "bytes": 6825,
-      "sha256": "523ae11e2616f8484fef27515a56e3282f6919895c984049a716a9d98f11f632"
+      "bytes": 12605,
+      "sha256": "f6e1aeb7535d99d3bb6da7167a780966ca57fbb49ba3cb2fe0a97d747376eab4"
     },
     {
       "path": "scripts/phase6/check-payments-env.mjs",
@@ -165,8 +182,8 @@
     {
       "path": "scripts/phase6/check-payments-env-smoke.mjs",
       "exists": true,
-      "bytes": 6445,
-      "sha256": "a140d3ee37ff6c2b59d2834a1531cd1771a03f2c04ed0d866775a93f3ab8075d"
+      "bytes": 7493,
+      "sha256": "40919a7139f9d5315f15dec5d62e7e7605eb84ee0c846440a52b8127fc187874"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -183,8 +200,8 @@
     {
       "path": "docs/phase-6/payments-qa-checklist.md",
       "exists": true,
-      "bytes": 2733,
-      "sha256": "664871116854097e887c4e76d40d2872e199fdb0df68f57caf76667f603c1bf6"
+      "bytes": 3469,
+      "sha256": "d335de4c06ae6cc01cbb695a6b32b2d48bd97073f86218d31693ebcd79976337"
     },
     {
       "path": "docs/phase-6/phase-6-exit-review.md",
@@ -194,6 +211,18 @@
     }
   ],
   "blockers": [
+    "Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.",
+    "Missing final EXPO_PUBLIC_REVENUECAT_ANDROID_KEY.",
+    "Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.",
+    "Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.",
+    "Missing final EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID.",
+    "Missing production REVENUECAT_WEBHOOK_AUTH.",
+    "Missing production REVENUECAT_WEBHOOK_SIGNING_SECRET.",
+    "Missing production REVENUECAT_SECRET_API_KEY.",
+    "BRAND_LEGAL_CLEARANCE must be cleared for production.",
+    "EXPO_PUBLIC_PRIVACY_URL must be a production HTTPS URL.",
+    "EXPO_PUBLIC_TERMS_URL must be a production HTTPS URL.",
+    "EXPO_PUBLIC_SUPPORT_URL must be a production HTTPS URL.",
     "Missing PHASE6_RC_OFFERING_REVIEWED=true.",
     "Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.",
     "Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.",

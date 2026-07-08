@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T17:21:18.942Z",
+  "generatedAt": "2026-07-08T17:46:01.842Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,9 +11,9 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 213,
+    "extractedKeyCount": 214,
     "keyMentionCount": 24,
-    "keyNotMentionedCount": 189,
+    "keyNotMentionedCount": 190,
     "blockerCount": 0,
     "warningCount": 9
   },
@@ -21,10 +21,21 @@
     {
       "id": "phase2",
       "title": "Phase 2 environment and RLS",
-      "scriptDirs": ["scripts/phase2"],
-      "packageScriptNeedles": ["phase2:check-env:strict", "phase2:rls-smoke"],
-      "packageScriptsPresent": ["phase2:check-env:strict", "phase2:rls-smoke"],
-      "forTasNeedles": ["phase2:check-env:strict", "phase2:rls-smoke"],
+      "scriptDirs": [
+        "scripts/phase2"
+      ],
+      "packageScriptNeedles": [
+        "phase2:check-env:strict",
+        "phase2:rls-smoke"
+      ],
+      "packageScriptsPresent": [
+        "phase2:check-env:strict",
+        "phase2:rls-smoke"
+      ],
+      "forTasNeedles": [
+        "phase2:check-env:strict",
+        "phase2:rls-smoke"
+      ],
       "forTasCovered": true,
       "keys": [
         "APP_VARIANT",
@@ -142,10 +153,18 @@
     {
       "id": "phase3",
       "title": "Phase 3 legal and reviewer signoff",
-      "scriptDirs": ["scripts/phase3"],
-      "packageScriptNeedles": ["phase3:audit-copy:strict"],
-      "packageScriptsPresent": ["phase3:audit-copy:strict"],
-      "forTasNeedles": ["phase3:audit-copy:strict"],
+      "scriptDirs": [
+        "scripts/phase3"
+      ],
+      "packageScriptNeedles": [
+        "phase3:audit-copy:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase3:audit-copy:strict"
+      ],
+      "forTasNeedles": [
+        "phase3:audit-copy:strict"
+      ],
       "forTasCovered": true,
       "keys": [],
       "keysMentionedInForTas": [],
@@ -154,10 +173,18 @@
     {
       "id": "phase4",
       "title": "Phase 4 catalog source posture",
-      "scriptDirs": ["scripts/phase4"],
-      "packageScriptNeedles": ["phase4:check-source-env:strict"],
-      "packageScriptsPresent": ["phase4:check-source-env:strict"],
-      "forTasNeedles": ["phase4:check-source-env"],
+      "scriptDirs": [
+        "scripts/phase4"
+      ],
+      "packageScriptNeedles": [
+        "phase4:check-source-env:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase4:check-source-env:strict"
+      ],
+      "forTasNeedles": [
+        "phase4:check-source-env"
+      ],
       "forTasCovered": true,
       "keys": [
         "CATALOG_APP_NAME",
@@ -187,10 +214,21 @@
     {
       "id": "phase5",
       "title": "Phase 5 native build and device QA",
-      "scriptDirs": ["scripts/phase5"],
-      "packageScriptNeedles": ["phase5:check-native-config:strict", "phase5:qa-packet:strict"],
-      "packageScriptsPresent": ["phase5:check-native-config:strict", "phase5:qa-packet:strict"],
-      "forTasNeedles": ["phase5:check-native-config:strict", "phase5:qa-packet:strict"],
+      "scriptDirs": [
+        "scripts/phase5"
+      ],
+      "packageScriptNeedles": [
+        "phase5:check-native-config:strict",
+        "phase5:qa-packet:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase5:check-native-config:strict",
+        "phase5:qa-packet:strict"
+      ],
+      "forTasNeedles": [
+        "phase5:check-native-config:strict",
+        "phase5:qa-packet:strict"
+      ],
       "forTasCovered": true,
       "keys": [
         "PHASE5_ANDROID_BUILD_ID",
@@ -201,7 +239,9 @@
         "PHASE5_QA_SIGNOFF",
         "PHASE5_SIGNED_OFF_BY"
       ],
-      "keysMentionedInForTas": ["PHASE5_SIGNED_OFF_BY"],
+      "keysMentionedInForTas": [
+        "PHASE5_SIGNED_OFF_BY"
+      ],
       "keysNotMentionedInForTas": [
         "PHASE5_ANDROID_BUILD_ID",
         "PHASE5_ANDROID_DEVICE",
@@ -214,10 +254,20 @@
     {
       "id": "phase6",
       "title": "Phase 6 payments and RevenueCat",
-      "scriptDirs": ["scripts/phase6"],
-      "packageScriptNeedles": ["phase6:check-payments-env:strict", "phase6:qa-packet:strict"],
-      "packageScriptsPresent": ["phase6:check-payments-env:strict", "phase6:qa-packet:strict"],
-      "forTasNeedles": ["phase6:check-payments-env:strict"],
+      "scriptDirs": [
+        "scripts/phase6"
+      ],
+      "packageScriptNeedles": [
+        "phase6:check-payments-env:strict",
+        "phase6:qa-packet:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase6:check-payments-env:strict",
+        "phase6:qa-packet:strict"
+      ],
+      "forTasNeedles": [
+        "phase6:check-payments-env:strict"
+      ],
       "forTasCovered": true,
       "keys": [
         "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY",
@@ -267,10 +317,21 @@
     {
       "id": "phase7",
       "title": "Phase 7 core loop launch gates",
-      "scriptDirs": ["scripts/phase7"],
-      "packageScriptNeedles": ["phase7:check-core-loop:strict", "phase7:qa-packet:strict"],
-      "packageScriptsPresent": ["phase7:check-core-loop:strict", "phase7:qa-packet:strict"],
-      "forTasNeedles": ["phase7:check-core-loop:strict", "phase7:qa-packet:strict"],
+      "scriptDirs": [
+        "scripts/phase7"
+      ],
+      "packageScriptNeedles": [
+        "phase7:check-core-loop:strict",
+        "phase7:qa-packet:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase7:check-core-loop:strict",
+        "phase7:qa-packet:strict"
+      ],
+      "forTasNeedles": [
+        "phase7:check-core-loop:strict",
+        "phase7:qa-packet:strict"
+      ],
       "forTasCovered": true,
       "keys": [
         "EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED",
@@ -292,7 +353,9 @@
         "PHASE7_SIGNED_OFF_BY",
         "PHASE7_SUPABASE_RLS_PASS"
       ],
-      "keysMentionedInForTas": ["PHASE7_SIGNED_OFF_BY"],
+      "keysMentionedInForTas": [
+        "PHASE7_SIGNED_OFF_BY"
+      ],
       "keysNotMentionedInForTas": [
         "EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED",
         "EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED",
@@ -316,10 +379,21 @@
     {
       "id": "phase8",
       "title": "Phase 8 growth and store readiness",
-      "scriptDirs": ["scripts/phase8"],
-      "packageScriptNeedles": ["phase8:check-growth-store:strict", "phase8:qa-packet:strict"],
-      "packageScriptsPresent": ["phase8:check-growth-store:strict", "phase8:qa-packet:strict"],
-      "forTasNeedles": ["phase8:verify", "Phase 8"],
+      "scriptDirs": [
+        "scripts/phase8"
+      ],
+      "packageScriptNeedles": [
+        "phase8:check-growth-store:strict",
+        "phase8:qa-packet:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase8:check-growth-store:strict",
+        "phase8:qa-packet:strict"
+      ],
+      "forTasNeedles": [
+        "phase8:verify",
+        "Phase 8"
+      ],
       "forTasCovered": true,
       "keys": [
         "ANDROID_CERT_SHA256_FINGERPRINTS",
@@ -372,10 +446,21 @@
     {
       "id": "phase9",
       "title": "Phase 9 release engineering",
-      "scriptDirs": ["scripts/phase9"],
-      "packageScriptNeedles": ["phase9:verify", "phase9:release-smoke:strict"],
-      "packageScriptsPresent": ["phase9:verify", "phase9:release-smoke:strict"],
-      "forTasNeedles": ["phase9:verify", "Phase 9"],
+      "scriptDirs": [
+        "scripts/phase9"
+      ],
+      "packageScriptNeedles": [
+        "phase9:verify",
+        "phase9:release-smoke:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase9:verify",
+        "phase9:release-smoke:strict"
+      ],
+      "forTasNeedles": [
+        "phase9:verify",
+        "Phase 9"
+      ],
       "forTasCovered": true,
       "keys": [
         "PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT",
@@ -411,6 +496,7 @@
         "PHASE9_OBSERVABILITY_PAYLOAD_PASS",
         "PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED",
         "PHASE9_ORDER_REPORT_POLL_PASS",
+        "PHASE9_PACKET_OUT_DIR",
         "PHASE9_PLAY_PACKET_PASS",
         "PHASE9_PUBLIC_FORMS_PASS",
         "PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX",
@@ -468,6 +554,7 @@
         "PHASE9_OBSERVABILITY_PAYLOAD_PASS",
         "PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED",
         "PHASE9_ORDER_REPORT_POLL_PASS",
+        "PHASE9_PACKET_OUT_DIR",
         "PHASE9_PLAY_PACKET_PASS",
         "PHASE9_PUBLIC_FORMS_PASS",
         "PHASE9_PUBLIC_FORMS_RATE_LIMIT_PROBE_MAX",
@@ -494,10 +581,21 @@
     {
       "id": "phase10",
       "title": "Phase 10 closed beta",
-      "scriptDirs": ["scripts/phase10"],
-      "packageScriptNeedles": ["phase10:verify", "phase10:beta-readiness:strict"],
-      "packageScriptsPresent": ["phase10:verify", "phase10:beta-readiness:strict"],
-      "forTasNeedles": ["phase10:verify", "Phase 10"],
+      "scriptDirs": [
+        "scripts/phase10"
+      ],
+      "packageScriptNeedles": [
+        "phase10:verify",
+        "phase10:beta-readiness:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase10:verify",
+        "phase10:beta-readiness:strict"
+      ],
+      "forTasNeedles": [
+        "phase10:verify",
+        "Phase 10"
+      ],
       "forTasCovered": true,
       "keys": [
         "PHASE10_BETA_IDENTITY_PASS",
@@ -540,10 +638,21 @@
     {
       "id": "phase11",
       "title": "Phase 11 public launch",
-      "scriptDirs": ["scripts/phase11"],
-      "packageScriptNeedles": ["phase11:verify", "phase11:launch-readiness:strict"],
-      "packageScriptsPresent": ["phase11:verify", "phase11:launch-readiness:strict"],
-      "forTasNeedles": ["phase11:verify", "Phase 11"],
+      "scriptDirs": [
+        "scripts/phase11"
+      ],
+      "packageScriptNeedles": [
+        "phase11:verify",
+        "phase11:launch-readiness:strict"
+      ],
+      "packageScriptsPresent": [
+        "phase11:verify",
+        "phase11:launch-readiness:strict"
+      ],
+      "forTasNeedles": [
+        "phase11:verify",
+        "Phase 11"
+      ],
       "forTasCovered": true,
       "keys": [
         "PHASE11_ASO_REVIEW_PASS",
@@ -592,7 +701,7 @@
     "Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 7 core loop launch gates has 17 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 8 growth and store readiness has 21 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 9 release engineering has 54 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 9 release engineering has 55 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 10 closed beta has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 11 public launch has 16 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
   ]

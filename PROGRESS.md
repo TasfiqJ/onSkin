@@ -6,6 +6,26 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the Phase 6 payments QA packet so strict payment exit evidence now
+  records production RevenueCat/native billing readiness instead of only
+  external scenario flags. The generated packet writes boolean-only production
+  config status for iOS/Android RevenueCat keys, final annual/monthly/reverse
+  trial product IDs, webhook auth/signing/API secrets, `BRAND_LEGAL_CLEARANCE`,
+  and production policy URLs, without leaking secret values. Updated the Phase
+  6 smoke coverage to prove valid production config passes, placeholder config
+  blocks, and placeholder secrets are not serialized. `npm run phase6:verify`
+  passes with expected missing external production/evidence warnings and the
+  full cached 171-file / 1748-test suite.
+
+- Added a non-mutating `npm run e2e:human:manifest:check` guard so committed
+  human-E2E launch evidence cannot silently claim `pass` against stale evidence.
+  The check compares the generated JSON and Markdown, ignoring only generated
+  metadata, against the current evidence date, gate results, and evidence
+  hashes. It also verifies no committed source/evidence changes exist after the
+  manifest's recorded source Git SHA, except the manifest output files
+  themselves. This avoids the impossible requirement that a committed generated
+  file contain its own final commit hash.
+
 - Added privacy-safe `cycle_night_completed` instrumentation to the local-first
   Today PM check-off path. The event is allowlisted, emitted only when the
   final PM step of an active cycle night completes, and carries only
