@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Modal, Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
@@ -28,18 +28,17 @@ function CategoryPickerSheet({
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const sheetMaxHeight = Math.max(280, viewportHeight - 48);
+  const sheetMaxHeight = Math.max(0, viewportHeight - 52);
   const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
+  if (!visible) return null;
+
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      accessibilityLabel="Choose product category"
-      onRequestClose={onClose}
+    <View
+      className="absolute inset-0 justify-end"
+      style={{ backgroundColor: 'rgba(32,27,21,0.4)', zIndex: 20, elevation: 20 }}
     >
-      <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
+      <View className="flex-1 justify-end">
         <Pressable
           className="flex-1"
           accessibilityLabel="Dismiss category picker"
@@ -54,8 +53,12 @@ function CategoryPickerSheet({
           className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"
           style={
             sheetPaddingBottom === undefined
-              ? { maxHeight: sheetMaxHeight }
-              : { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }
+              ? { height: sheetMaxHeight, maxHeight: sheetMaxHeight }
+              : {
+                  height: sheetMaxHeight,
+                  maxHeight: sheetMaxHeight,
+                  paddingBottom: sheetPaddingBottom,
+                }
           }
         >
           <View
@@ -97,7 +100,7 @@ function CategoryPickerSheet({
           </ScrollView>
         </View>
       </View>
-    </Modal>
+    </View>
   );
 }
 
@@ -200,7 +203,13 @@ export default function ProductsScreen() {
 
   return (
     <Screen>
-      <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
+      <View
+        className="flex-1 overflow-hidden"
+        aria-hidden={categoryPickerOpen || undefined}
+        accessibilityElementsHidden={categoryPickerOpen}
+        importantForAccessibility={categoryPickerOpen ? 'no-hide-descendants' : 'auto'}
+        style={{ minHeight: 0 }}
+      >
         <ScrollView
           ref={scrollRef}
           className="flex-1"
@@ -316,7 +325,12 @@ export default function ProductsScreen() {
           onClose={() => setCategoryPickerOpen(false)}
         />
       ) : null}
-      <View className="bg-paper pb-4 pt-2">
+      <View
+        className="bg-paper pb-4 pt-2"
+        aria-hidden={categoryPickerOpen || undefined}
+        accessibilityElementsHidden={categoryPickerOpen}
+        importantForAccessibility={categoryPickerOpen ? 'no-hide-descendants' : 'auto'}
+      >
         {showCompactCategoryFooter ? (
           <Pressable
             accessibilityRole="button"

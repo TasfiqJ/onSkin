@@ -35,9 +35,8 @@ describe('onboarding route contracts', () => {
 
     expect(goals).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
     expect(quiz).toContain('<View className="flex-1 overflow-hidden">');
-    expect(products).toContain(
-      '<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>',
-    );
+    expect(products).toContain('className="flex-1 overflow-hidden"');
+    expect(products).toContain('style={{ minHeight: 0 }}');
     expect(goals).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
     expect(quiz).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
     expect(products).toMatch(
@@ -81,13 +80,17 @@ describe('onboarding route contracts', () => {
     );
     expect(products).toContain('<CategoryPickerSheet');
     expect(products).toContain('visible={categoryPickerOpen}');
-    expect(products).toContain('animationType="slide"');
+    expect(products).toContain('if (!visible) return null;');
+    expect(products).toContain('className="absolute inset-0 justify-end"');
+    expect(products).toContain(
+      "style={{ backgroundColor: 'rgba(32,27,21,0.4)', zIndex: 20, elevation: 20 }}",
+    );
     expect(products).toContain('accessibilityLabel="Choose product category"');
     expect(products).toContain('accessibilityLabel="Dismiss category picker"');
     expect(products).toContain('useSafeAreaInsets');
     expect(products).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(products).toContain('const insets = useSafeAreaInsets();');
-    expect(products).toContain('const sheetMaxHeight = Math.max(280, viewportHeight - 48);');
+    expect(products).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 52);');
     expect(products).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
     expect(products).toContain('aria-modal');
     expect(products).toContain('role="dialog"');
@@ -96,6 +99,12 @@ describe('onboarding route contracts', () => {
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',
     );
     expect(products).toContain('paddingBottom: sheetPaddingBottom');
+    expect(products).toContain('{ height: sheetMaxHeight, maxHeight: sheetMaxHeight }');
+    expect(products).toContain('aria-hidden={categoryPickerOpen || undefined}');
+    expect(products).toContain('accessibilityElementsHidden={categoryPickerOpen}');
+    expect(products).toContain(
+      "importantForAccessibility={categoryPickerOpen ? 'no-hide-descendants' : 'auto'}",
+    );
     expect(products).toContain('showsVerticalScrollIndicator={false}');
     expect(products).toContain('style={{ flexShrink: 1 }}');
     expect(products).toContain('contentContainerClassName="pb-6"');
@@ -104,6 +113,9 @@ describe('onboarding route contracts', () => {
     expect(products).not.toContain('horizontal');
     expect(products).not.toContain('contentContainerStyle={{ gap: 4, paddingRight: 8 }}');
     expect(products).not.toContain('className="mt-2 flex-row flex-wrap gap-1.5"');
+    expect(products).not.toContain('import { Modal');
+    expect(products).not.toContain('<Modal');
+    expect(products).not.toContain('animationType="slide"');
     expect(products).toContain('<View className="flex-row flex-wrap gap-2">');
     expect(goals).not.toContain('compact={compactPhone}');
     expect(quiz).toContain('compact={compactPhone}');

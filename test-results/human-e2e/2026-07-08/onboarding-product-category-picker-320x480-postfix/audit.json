@@ -1,0 +1,169 @@
+{
+  "url": "http://localhost:8220/onboarding/products",
+  "viewportRequested": {
+    "width": 320,
+    "height": 480
+  },
+  "flow": "goals -> consent -> quiz -> products -> category sheet -> add shelf product",
+  "productName": "Barrier Screen SPF 52",
+  "chooseCategoryBeforeCount": 1,
+  "dialogNamedOpenCount": 1,
+  "selectedCategoryOpenCount": 1,
+  "addedTextCount": 1,
+  "sheetAuditOpen": {
+    "categoryButtonCount": 7,
+    "dialogCount": 1,
+    "dialogs": [
+      {
+        "ariaModal": "true",
+        "bottom": 481,
+        "height": 429,
+        "label": "Choose product category",
+        "left": 0,
+        "right": 320,
+        "top": 52,
+        "width": 320
+      }
+    ],
+    "documentWidth": {
+      "clientWidth": 320,
+      "scrollWidth": 320
+    },
+    "hiddenBackground": [
+      {
+        "bottom": 0,
+        "className": "css-view-g5y9jx r-flex-13awgt0 r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af",
+        "tag": "DIV",
+        "top": 0,
+        "width": 0
+      },
+      {
+        "bottom": 0,
+        "className": "css-view-g5y9jx r-flex-13awgt0 r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af",
+        "tag": "DIV",
+        "top": 0,
+        "width": 0
+      },
+      {
+        "bottom": 0,
+        "className": "css-view-g5y9jx r-flex-13awgt0 r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af",
+        "tag": "DIV",
+        "top": 0,
+        "width": 0
+      },
+      {
+        "bottom": 325,
+        "className": "css-view-g5y9jx flex-1 overflow-hidden",
+        "tag": "DIV",
+        "top": 0,
+        "width": 272
+      },
+      {
+        "bottom": 481,
+        "className": "css-view-g5y9jx bg-paper pb-4 pt-2",
+        "tag": "DIV",
+        "top": 325,
+        "width": 272
+      }
+    ],
+    "hiddenBackgroundCount": 5,
+    "hitTargets": [
+      {
+        "height": 48,
+        "text": "Cleanser",
+        "width": 90
+      },
+      {
+        "height": 48,
+        "text": "Toner",
+        "width": 70
+      },
+      {
+        "height": 48,
+        "text": "Serum",
+        "width": 75
+      },
+      {
+        "height": 48,
+        "text": "Treatment",
+        "width": 98
+      },
+      {
+        "height": 48,
+        "text": "Moisturiser",
+        "width": 105
+      },
+      {
+        "height": 48,
+        "text": "SPF",
+        "width": 58
+      },
+      {
+        "height": 48,
+        "text": "Oil / balm",
+        "width": 96
+      }
+    ],
+    "minHitTargetHeight": 48,
+    "overflowCount": 0,
+    "overflowElements": [],
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  },
+  "sheetAuditAdded": {
+    "addButtons": [],
+    "documentWidth": {
+      "clientWidth": 320,
+      "scrollWidth": 320
+    },
+    "overflowCount": 0,
+    "overflowElements": [],
+    "productText": true,
+    "removeButtons": [
+      {
+        "height": 48,
+        "label": "Remove Barrier Screen SPF 52",
+        "text": "×",
+        "width": 48
+      },
+      {
+        "height": 48,
+        "label": "Remove Barrier Screen SPF",
+        "text": "×",
+        "width": 48
+      },
+      {
+        "height": 48,
+        "label": "Remove Daily Mineral SPF",
+        "text": "×",
+        "width": 48
+      }
+    ],
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  },
+  "logsAfterOnboarding": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T13:19:00.057Z",
+      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

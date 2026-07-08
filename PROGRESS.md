@@ -18,15 +18,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Apple Team ID, Android release certificate fingerprints, and named signoff.
 
 - Finished the onboarding products category-sheet hardening on compact phones.
-  The route-local sheet now reserves a 48 px outside dismiss area, names the
-  sheet body as `Choose product category`, pads the internal chip list, and
-  keeps keyboard taps handled inside the scroll view. Codex in-app browser Expo
-  web at 320 x 480 typed `Retinol serum`, opened the category sheet, verified
-  48 px category chips and zero horizontal overflow, selected `Serum`, confirmed
-  the collapsed field exposes `Category, Serum`, added the product, and ended
-  with zero blocked hit-tests, zero JavaScript dialogs, and zero unexpected
-  current-origin warn/error logs. Evidence:
-  `test-results/human-e2e/2026-07-08/onboarding-product-category-sheet-current/`.
+  The compact picker now uses a route-local overlay instead of nested React
+  Native `Modal` semantics, reserves a 52 px outside dismiss area, exposes one
+  named `Choose product category` dialog, hides background content from the
+  accessibility tree while open, pads the internal chip list, and keeps keyboard
+  taps handled inside the scroll view. Codex in-app browser Expo web at 320 x
+  480 completed goals, consent, and quiz, typed `Barrier Screen SPF 52`, opened the
+  category sheet, verified a single named dialog, 48 px category chips, full
+  320 px sheet width, and zero horizontal overflow, selected `SPF`, confirmed
+  the collapsed field exposes `Category, SPF`, added the product, and verified
+  the 48 x 48 remove control. Evidence:
+  `test-results/human-e2e/2026-07-08/onboarding-product-category-picker-320x480-postfix/`.
 
 - Re-ran `npm run phase7:verify` on current `main` after the latest Today and
   Progress route work. Phase 7 smoke, core-loop code gates, generated QA
