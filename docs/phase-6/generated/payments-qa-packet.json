@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T19:03:35.708Z",
+  "generatedAt": "2026-07-08T19:19:20.369Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "0cbd353d8b228069aaf81919fbcf65be0b9d998e",
-  "gitStatus": "M PROGRESS.md\n M apps/mobile/src/app/(tabs)/_layout.tsx\n M apps/mobile/src/features/navigation/tabBar.test.ts\n M docs/phase-5/device-qa-checklist.md\n M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md\n M docs/phase-5/native-build-runbook.md\n M docs/phase-6/payments-qa-checklist.md\n M docs/phase-6/payments-runbook.md\n M package.json\n M scripts/phase5/build-device-qa-packet.mjs\n M scripts/phase5/check-native-config.mjs\n M scripts/phase5/device-qa-packet-smoke.mjs\n M scripts/phase6/build-payments-qa-packet.mjs\n M scripts/phase6/check-payments-env-smoke.mjs\n M scripts/phase6/check-payments-env.mjs\n?? scripts/e2e/tabbar-geometry.mjs",
+  "gitSha": "adbf74640fece7374590988afbf7211a97422d96",
+  "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,
@@ -232,7 +232,5 @@
     "Missing PHASE6_FINANCE_SIGNOFF=true.",
     "Missing PHASE6_SIGNED_OFF_BY."
   ],
-  "warnings": [
-    "Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence."
-  ]
+  "warnings": []
 }
