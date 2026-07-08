@@ -36,6 +36,12 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('Build a routine from your shelf.');
     expect(source).toContain('label="Add products"');
     expect(source).toContain("router.push('/shelf/manual')");
+    expect(source).toContain("compact ? 'mt-3 rounded-card px-5 py-4' : 'mt-6 rounded-card p-6'");
+    expect(source).toContain("compact ? 'mt-2 font-sans-semibold text-[18px]'");
+    expect(source).toContain('lineHeight: compact ? 22 : 25');
+    expect(source).toContain("className={compact ? 'mt-1.5 text-[13px]' : 'mt-2.5 text-[14px]'}");
+    expect(source).toContain('lineHeight: compact ? 17 : 20');
+    expect(source).toContain("className={compact ? 'mt-3' : 'mt-5'}");
     expect(source).toContain('const hasExamplePlan = planData?.isExample === true;');
     expect(source).toContain('const hasRealRoutine = Boolean(planData && !planData.isExample);');
     expect(source).toContain('const plan = hasRealRoutine ? planData?.plan : undefined;');

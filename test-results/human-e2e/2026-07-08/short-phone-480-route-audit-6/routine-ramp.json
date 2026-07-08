@@ -1,0 +1,22 @@
+{
+  "route": "/routine/ramp",
+  "analysis": {
+    "controlCount": 1,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 592,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/routine/ramp",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< RETINOID · RAMP-UP Low and slow, on your terms. Consistency matters more than frequency. We only ever offer a step-up. Never increase it for you. Nights per week 2 of 3 wk1 wk2 wk3 now next? You're at 2 of 3 nights a week. We will check in as your skin settles, and offer a step-up only when it is comfortable."
+  }
+}

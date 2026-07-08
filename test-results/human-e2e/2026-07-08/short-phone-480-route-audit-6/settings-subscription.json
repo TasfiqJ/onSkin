@@ -1,0 +1,22 @@
+{
+  "route": "/settings/subscription",
+  "analysis": {
+    "controlCount": 5,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/settings/subscription",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Subscription RoutineKind Pro No card Plan Reverse trial Free until July 15, 2026 Keep Pro after your week › Restore purchases › Terms › Privacy › No card is on file. You have Pro until July 15, 2026. Choose a plan only if you want to keep Pro after your week."
+  }
+}

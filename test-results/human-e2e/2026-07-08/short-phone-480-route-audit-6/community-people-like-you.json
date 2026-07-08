@@ -1,0 +1,22 @@
+{
+  "route": "/community/people-like-you",
+  "analysis": {
+    "controlCount": 1,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/community/people-like-you",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes"
+  }
+}

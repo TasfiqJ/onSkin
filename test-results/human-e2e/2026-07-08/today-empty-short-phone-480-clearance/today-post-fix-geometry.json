@@ -1,0 +1,99 @@
+{
+  "addProducts": {
+    "hitSelfOrChild": true,
+    "hitTag": "div",
+    "label": "Add products",
+    "rect": {
+      "bottom": 370,
+      "height": 56,
+      "left": 45,
+      "right": 275,
+      "top": 314,
+      "width": 230
+    },
+    "role": "button"
+  },
+  "clearance": 37,
+  "controls": [
+    {
+      "hitSelfOrChild": true,
+      "hitTag": "div",
+      "label": "You're exploring Pro. Manage your plan",
+      "rect": {
+        "bottom": 74,
+        "height": 74,
+        "left": 24,
+        "right": 296,
+        "top": 0,
+        "width": 272
+      },
+      "role": "button"
+    },
+    "[Circular]",
+    {
+      "hitSelfOrChild": true,
+      "hitTag": "div",
+      "label": "Today tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "left": 9,
+        "right": 85,
+        "top": 407,
+        "width": 76
+      },
+      "role": "tab"
+    },
+    {
+      "hitSelfOrChild": true,
+      "hitTag": "div",
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "left": 85,
+        "right": 160,
+        "top": 407,
+        "width": 76
+      },
+      "role": "tab"
+    },
+    {
+      "hitSelfOrChild": true,
+      "hitTag": "div",
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "left": 160,
+        "right": 236,
+        "top": 407,
+        "width": 76
+      },
+      "role": "tab"
+    },
+    {
+      "hitSelfOrChild": true,
+      "hitTag": "div",
+      "label": "You tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "left": 236,
+        "right": 311,
+        "top": 407,
+        "width": 76
+      },
+      "role": "tab"
+    }
+  ],
+  "scrollHeight": 481,
+  "scrollWidth": 320,
+  "tabBarTop": 407,
+  "url": "http://localhost:8201/today",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+}

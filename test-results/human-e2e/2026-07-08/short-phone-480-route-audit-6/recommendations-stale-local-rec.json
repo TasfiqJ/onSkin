@@ -1,0 +1,22 @@
+{
+  "route": "/recommendations/stale-local-rec",
+  "analysis": {
+    "controlCount": 2,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/recommendations/stale-local-rec",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you"
+  }
+}

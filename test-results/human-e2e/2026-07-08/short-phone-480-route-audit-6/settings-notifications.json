@@ -1,0 +1,22 @@
+{
+  "route": "/settings/notifications",
+  "analysis": {
+    "controlCount": 7,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/settings/notifications",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+  }
+}

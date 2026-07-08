@@ -1,0 +1,22 @@
+{
+  "route": "/shelf/scan",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/shelf/scan",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline"
+  }
+}

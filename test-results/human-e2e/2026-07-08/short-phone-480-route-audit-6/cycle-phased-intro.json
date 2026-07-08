@@ -1,0 +1,22 @@
+{
+  "route": "/cycle/phased-intro",
+  "analysis": {
+    "controlCount": 1,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/cycle/phased-intro",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its own night Then. Your full cycle Both, safely alternated Sounds good Add it now anyway"
+  }
+}

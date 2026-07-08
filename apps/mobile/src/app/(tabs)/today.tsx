@@ -92,7 +92,7 @@ function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
 function EmptyRoutineCard({ compact = false, dark }: { compact?: boolean; dark: boolean }) {
   return (
     <View
-      className={cn(compact ? 'mt-4 rounded-card p-5' : 'mt-6 rounded-card p-6')}
+      className={cn(compact ? 'mt-3 rounded-card px-5 py-4' : 'mt-6 rounded-card p-6')}
       style={{
         backgroundColor: dark ? colors.nightSurface : colors.paperRaised,
         borderWidth: dark ? 0 : 1,
@@ -108,17 +108,17 @@ function EmptyRoutineCard({ compact = false, dark }: { compact?: boolean; dark: 
       </Text>
       <Text
         className={
-          compact ? 'mt-2 font-sans-semibold text-[19px]' : 'mt-3 font-sans-semibold text-[21px]'
+          compact ? 'mt-2 font-sans-semibold text-[18px]' : 'mt-3 font-sans-semibold text-[21px]'
         }
-        style={{ color: dark ? colors.cream : colors.ink, lineHeight: compact ? 23 : 25 }}
+        style={{ color: dark ? colors.cream : colors.ink, lineHeight: compact ? 22 : 25 }}
       >
         Build a routine from your shelf.
       </Text>
       <Text
-        className={compact ? 'mt-2 text-[13px]' : 'mt-2.5 text-[14px]'}
+        className={compact ? 'mt-1.5 text-[13px]' : 'mt-2.5 text-[14px]'}
         style={{
           color: dark ? 'rgba(244,239,231,0.58)' : colors.muted,
-          lineHeight: compact ? 18 : 20,
+          lineHeight: compact ? 17 : 20,
         }}
       >
         Add the products you use and Today will become your AM/PM checklist.
@@ -126,7 +126,7 @@ function EmptyRoutineCard({ compact = false, dark }: { compact?: boolean; dark: 
       <Button
         label="Add products"
         variant={dark ? 'inverse' : 'primary'}
-        className={compact ? 'mt-4' : 'mt-5'}
+        className={compact ? 'mt-3' : 'mt-5'}
         onPress={() => router.push('/shelf/manual')}
       />
     </View>

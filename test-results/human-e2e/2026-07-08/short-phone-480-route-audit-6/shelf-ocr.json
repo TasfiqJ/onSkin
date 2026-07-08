@@ -1,0 +1,22 @@
+{
+  "route": "/shelf/ocr",
+  "analysis": {
+    "controlCount": 2,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/shelf/ocr",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "route": "/commerce/stacks",
+  "analysis": {
+    "controlCount": 1,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/commerce/stacks",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  }
+}

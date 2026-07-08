@@ -1,0 +1,22 @@
+{
+  "route": "/cycle/procedure",
+  "analysis": {
+    "controlCount": 5,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/cycle/procedure",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< ◇ Let's give your skin a few days. After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in. HOW LONG TO REST? 3 days 5 days 7 days WHILE YOU RECOVER ✓ Gentle cleanser ✓ Barrier moisturizer. Ceramides ✓ SPF every morning Start recovery"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "route": "/routine/tolerance",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/routine/tolerance",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save"
+  }
+}

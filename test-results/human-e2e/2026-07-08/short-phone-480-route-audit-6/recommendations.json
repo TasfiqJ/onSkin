@@ -1,0 +1,22 @@
+{
+  "route": "/recommendations",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/recommendations",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every ro"
+  }
+}

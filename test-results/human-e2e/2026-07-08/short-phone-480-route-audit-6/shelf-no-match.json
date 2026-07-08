@@ -1,0 +1,22 @@
+{
+  "route": "/shelf/no-match",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/shelf/no-match",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline"
+  }
+}

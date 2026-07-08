@@ -1,0 +1,22 @@
+{
+  "route": "/cycle/disruption",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/cycle/disruption",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover"
+  }
+}

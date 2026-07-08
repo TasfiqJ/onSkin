@@ -1,0 +1,22 @@
+{
+  "route": "/progress/review",
+  "analysis": {
+    "controlCount": 3,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/progress/review",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress"
+  }
+}

@@ -1,0 +1,576 @@
+[
+  {
+    "route": "/today",
+    "url": "http://localhost:8201/today",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 6,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+  },
+  {
+    "route": "/today?routine=PM",
+    "url": "http://localhost:8201/today?routine=PM",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 6,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 · 8:25 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+  },
+  {
+    "route": "/progress",
+    "url": "http://localhost:8201/progress",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 5,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. Take my first photo Today Progress Shelf You"
+  },
+  {
+    "route": "/progress/capture",
+    "url": "http://localhost:8201/progress/capture",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Take photos. On device only Not now"
+  },
+  {
+    "route": "/progress/review",
+    "url": "http://localhost:8201/progress/review",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 3,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress"
+  },
+  {
+    "route": "/photos/capture",
+    "url": "http://localhost:8201/progress/capture",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Take photos. On device only Not now"
+  },
+  {
+    "route": "/photos/review",
+    "url": "http://localhost:8201/progress/review",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 3,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress"
+  },
+  {
+    "route": "/routine/plan",
+    "url": "http://localhost:8201/routine/plan",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< EXAMPLE ROUTINE Your routine, in order. FIRST INSIGHT Example only Add products to see an insight from your own shelf. MORNING 1 Cream cleanser 2 Vitamin C serum 3 Ceramide moisturizer EVENING SKIN CYCLING Night 1 Glycolic 7% exfoliate Night 2 Retinol 0.3% 2 times/week to start Nights 3-4 Recover moisturiser only A daily SPF would round this out. It’s the highest-impact morning step. Start today"
+  },
+  {
+    "route": "/routine/tolerance",
+    "url": "http://localhost:8201/routine/tolerance",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save"
+  },
+  {
+    "route": "/routine/reorder",
+    "url": "http://localhost:8201/routine/reorder",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 5,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer"
+  },
+  {
+    "route": "/routine/ramp",
+    "url": "http://localhost:8201/routine/ramp",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 592,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< RETINOID · RAMP-UP Low and slow, on your terms. Consistency matters more than frequency. We only ever offer a step-up. Never increase it for you. Nights per week 2 of 3 wk1 wk2 wk3 now next? You're at 2 of 3 nights a week. We will check in as your skin settles, and offer a step-up only when it is comfortable."
+  },
+  {
+    "route": "/routine/adaptation",
+    "url": "http://localhost:8201/routine/adaptation",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "EXAMPLE ROUTINE Here's what changed. This preview shows the explanation style until your shelf has products. + Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence. Active nights stay separated Retinol 0.3% and Glycolic 7% Toner stay scheduled away from recovery nights where needed. Your choices stay in control This is an example preview. Add products to your shelf to see live adaptation notes. Looks good ↺"
+  },
+  {
+    "route": "/cycle/settings",
+    "url": "http://localhost:8201/cycle/settings",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "x Cycle settings VARIANT Gentle more recovery Classic balanced rest Advanced fewer rest Add a retinoid or an exfoliating acid to your shelf and we'll build your cycle here."
+  },
+  {
+    "route": "/cycle/disruption",
+    "url": "http://localhost:8201/cycle/disruption",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover"
+  },
+  {
+    "route": "/cycle/procedure",
+    "url": "http://localhost:8201/cycle/procedure",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 5,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< ◇ Let's give your skin a few days. After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in. HOW LONG TO REST? 3 days 5 days 7 days WHILE YOU RECOVER ✓ Gentle cleanser ✓ Barrier moisturizer. Ceramides ✓ SPF every morning Start recovery"
+  },
+  {
+    "route": "/cycle/phased-intro",
+    "url": "http://localhost:8201/cycle/phased-intro",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its own night Then. Your full cycle Both, safely alternated Sounds good Add it now anyway"
+  },
+  {
+    "route": "/cycle/recovery",
+    "url": "http://localhost:8201/cycle/recovery",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< No recovery in progress. Your cycle is running normally."
+  },
+  {
+    "route": "/cycle/why-tonight",
+    "url": "http://localhost:8201/cycle/why-tonight",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "No cycle is running yet. Add an active to get started. Got it"
+  },
+  {
+    "route": "/recommendations",
+    "url": "http://localhost:8201/recommendations",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every ro"
+  },
+  {
+    "route": "/recommendations/preferences",
+    "url": "http://localhost:8201/recommendations/preferences",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 6,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+  },
+  {
+    "route": "/recommendations/stale-local-rec",
+    "url": "http://localhost:8201/recommendations/stale-local-rec",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you"
+  },
+  {
+    "route": "/community",
+    "url": "http://localhost:8201/community",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils "
+  },
+  {
+    "route": "/community/ask",
+    "url": "http://localhost:8201/community/ask",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes"
+  },
+  {
+    "route": "/community/people-like-you",
+    "url": "http://localhost:8201/community/people-like-you",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes"
+  },
+  {
+    "route": "/community/note/missing-note-e2e",
+    "url": "http://localhost:8201/community/note/missing-note-e2e",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes"
+  },
+  {
+    "route": "/commerce/consent",
+    "url": "http://localhost:8201/commerce/consent",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stacks",
+    "url": "http://localhost:8201/commerce/stacks",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stack/missing-stack-e2e",
+    "url": "http://localhost:8201/commerce/stack/missing-stack-e2e",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/settings/subscription",
+    "url": "http://localhost:8201/settings/subscription",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 5,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Subscription RoutineKind Pro No card Plan Reverse trial Free until July 15, 2026 Keep Pro after your week › Restore purchases › Terms › Privacy › No card is on file. You have Pro until July 15, 2026. Choose a plan only if you want to keep Pro after your week."
+  },
+  {
+    "route": "/settings/notifications",
+    "url": "http://localhost:8201/settings/notifications",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 7,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+  },
+  {
+    "route": "/settings/timing",
+    "url": "http://localhost:8201/settings/timing",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 5,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen"
+  },
+  {
+    "route": "/settings/privacy",
+    "url": "http://localhost:8201/you?section=privacy",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 7,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Exploring Pro > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you t"
+  },
+  {
+    "route": "/trend/optin",
+    "url": "http://localhost:8201/trend/optin",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress"
+  },
+  {
+    "route": "/trend/fairness",
+    "url": "http://localhost:8201/trend/fairness",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress"
+  },
+  {
+    "route": "/ask",
+    "url": "http://localhost:8201/ask",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 5,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · disclosed honestly · your context stays on this device"
+  },
+  {
+    "route": "/ask/consent",
+    "url": "http://localhost:8201/ask/consent",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 1,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship. Back to Ask"
+  },
+  {
+    "route": "/shelf/search",
+    "url": "http://localhost:8201/shelf/search",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand"
+  },
+  {
+    "route": "/shelf/no-match",
+    "url": "http://localhost:8201/shelf/no-match",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline"
+  },
+  {
+    "route": "/shelf/scan",
+    "url": "http://localhost:8201/shelf/scan",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 4,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline"
+  },
+  {
+    "route": "/shelf/ocr",
+    "url": "http://localhost:8201/shelf/ocr",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 2,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text"
+  },
+  {
+    "route": "/shelf/manual",
+    "url": "http://localhost:8201/shelf/manual",
+    "issueCount": 0,
+    "issues": [],
+    "controlCount": 6,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "visibleTextStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue"
+  }
+]

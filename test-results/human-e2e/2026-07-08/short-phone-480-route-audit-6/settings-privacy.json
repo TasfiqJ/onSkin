@@ -1,0 +1,22 @@
+{
+  "route": "/settings/privacy",
+  "analysis": {
+    "controlCount": 7,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/you?section=privacy",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Exploring Pro > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you t"
+  }
+}

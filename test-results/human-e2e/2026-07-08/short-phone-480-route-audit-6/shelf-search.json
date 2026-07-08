@@ -1,0 +1,22 @@
+{
+  "route": "/shelf/search",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/shelf/search",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand"
+  }
+}

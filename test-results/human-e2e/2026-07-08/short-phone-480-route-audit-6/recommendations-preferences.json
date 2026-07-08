@@ -1,0 +1,22 @@
+{
+  "route": "/recommendations/preferences",
+  "analysis": {
+    "controlCount": 6,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/recommendations/preferences",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+  }
+}

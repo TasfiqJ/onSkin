@@ -1,0 +1,22 @@
+{
+  "route": "/cycle/settings",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/cycle/settings",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "x Cycle settings VARIANT Gentle more recovery Classic balanced rest Advanced fewer rest Add a retinoid or an exfoliating acid to your shelf and we'll build your cycle here."
+  }
+}

@@ -59,10 +59,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: content clearance beneath floating tab bar
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open Today at 320 px and 390 px phone viewports with the contextual SPF prompt visible.
-  - Expected result: No visible CTA, prompt control, or inactive locked-paywall compliance control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view.
+  - Action: Open Today at 320 px and 390 px phone viewports with the contextual SPF prompt or empty-routine CTA visible.
+  - Expected result: No visible CTA, prompt control, or inactive locked-paywall compliance control sits partially underneath the floating tab bar; controls either sit fully above the bar or require a deliberate scroll into view, with enough visual separation to keep the floating bar feeling intentional.
   - Evidence: Phone-width screenshots, hit-test snapshot, and control geometry.
   - Current local evidence: 2026-07-07 Chrome CDP Expo web checked `/today`, `/progress`, `/shelf`, and `/you` at 320 x 568 and 390 x 568; the DOM geometry snapshot found no non-tab visible controls intersecting the floating tab-bar zone.
+  - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 first swept 41 routes in `test-results/human-e2e/2026-07-08/short-phone-480-route-audit-6/`, then tightened `/today` empty-routine compact spacing after the `Add products` CTA looked crowded near the floating bar. Post-fix `/today` shows `Add products` at 230 x 56 px, y=314-370, with 37 px clearance above the floating tab bar, correct center hit-test, and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/today-empty-short-phone-480-clearance/`.
 - Branch: PM Today scene background
   - Priority: Important
   - Automate later: Yes
@@ -943,6 +944,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: With commerce consent off, inspect a where-to-buy block and a stack item.
   - Expected result: No paid links or retailer telemetry are exposed; the user sees the consent gate or locked state, and the Allow where-to-buy plus shelf alternative controls meet the 44 pt phone touch target.
   - Evidence: 2026-07-07 Expo web at 320 x 568 verified the recommendation where-to-buy block shows locked copy with no retailer rows, no paid-link disclosure, 48 px `Allow where-to-buy`, 50 px shelf alternative to `/shelf/manual`, and stack item taps open the separate consent sheet instead of retailer links.
+  - Current locking evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with commerce enabled and a final-domain flag reproduced a stack regression where `/commerce/stack/sensitive-skin-starter-set` exposed `Paid link`, `Paid links`, external glyphs, and paid-link accessibility labels before consent. Post-fix, the stack shows `Consent needed` locked rows, no paid-link text, no external glyph, zero horizontal overflow, no sub-44 visible controls, and locked item taps open `/commerce/consent`. The same run adds a cleanser through `/shelf/manual`, opens `/recommendations/gap:mineral_spf`, verifies the locked where-to-buy block has no paid-link text/glyph, 48 px `Allow where-to-buy`, 50 px shelf alternative, the Allow control opens the consent sheet, and the shelf alternative routes to `/shelf/manual`. Evidence and report are in `test-results/human-e2e/2026-07-08/commerce-no-consent-locking/` and `docs/e2e-bug-reports/2026-07-08-commerce-stack-paid-links-before-consent.md`.
 - Branch: retailer link handoff failure
   - Priority: Important
   - Automate later: Yes

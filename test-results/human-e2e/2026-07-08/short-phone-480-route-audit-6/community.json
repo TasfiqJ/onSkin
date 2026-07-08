@@ -1,0 +1,22 @@
+{
+  "route": "/community",
+  "analysis": {
+    "controlCount": 4,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/community",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils "
+  }
+}

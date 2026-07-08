@@ -1,0 +1,22 @@
+{
+  "route": "/cycle/recovery",
+  "analysis": {
+    "controlCount": 1,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/cycle/recovery",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< No recovery in progress. Your cycle is running normally."
+  }
+}

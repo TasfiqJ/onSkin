@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the `/today` empty-routine first viewport on shortest 320 x 480
+  phones. The compact empty-state card now uses tighter spacing while keeping
+  the `Add products` CTA at 56 px tall; post-fix Codex in-app browser evidence
+  shows the CTA hit-tests correctly with 37 px clearance above the floating tab
+  bar and zero horizontal overflow. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/today-empty-short-phone-480-clearance/`,
+  `docs/e2e-bug-reports/2026-07-08-today-empty-state-short-phone-clearance.md`.
+
 - Fixed the `/cycle/disruption` sheet on shortest 320 x 480 phones. The fourth
   choice, `I had a facial or peel`, was clipped to a 42.6 px visible bottom
   sliver while the sheet had no useful page scroll. The route now adds a

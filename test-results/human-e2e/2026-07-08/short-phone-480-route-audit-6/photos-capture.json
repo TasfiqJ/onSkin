@@ -1,0 +1,22 @@
+{
+  "route": "/photos/capture",
+  "analysis": {
+    "controlCount": 2,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/progress/capture",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Take photos. On device only Not now"
+  }
+}

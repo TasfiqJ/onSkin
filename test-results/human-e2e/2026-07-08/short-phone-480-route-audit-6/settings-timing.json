@@ -1,0 +1,22 @@
+{
+  "route": "/settings/timing",
+  "analysis": {
+    "controlCount": 5,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/settings/timing",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen"
+  }
+}

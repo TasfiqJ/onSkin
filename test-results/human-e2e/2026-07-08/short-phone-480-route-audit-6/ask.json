@@ -1,0 +1,22 @@
+{
+  "route": "/ask",
+  "analysis": {
+    "controlCount": 5,
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "title": "",
+    "url": "http://localhost:8201/ask",
+    "viewport": {
+      "height": 481,
+      "innerHeight": 481,
+      "innerWidth": 320,
+      "width": 320
+    },
+    "visibleTextStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · disclosed honestly · your context stays on this device"
+  }
+}
