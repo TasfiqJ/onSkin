@@ -1,0 +1,102 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web in Codex in-app browser",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "url": "http://localhost:8160/settings/privacy",
+  "resolvedRoute": "/you?section=privacy",
+  "environment": {
+    "EXPO_PUBLIC_APP_DISPLAY_NAME": "RoutineKind",
+    "EXPO_PUBLIC_FINAL_BRAND_DOMAIN": "https://routinekind.app",
+    "EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED": "true",
+    "EXPO_PUBLIC_PHASE7_TREND_ENABLED": "true",
+    "EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED": "true",
+    "supabase": "placeholder/unavailable"
+  },
+  "flows": {
+    "export_failure": {
+      "result": "pass",
+      "inlineAlert": "Export failed We could not complete that privacy request. Please try again.",
+      "dialogOpened": false,
+      "rawBackendTextLeaked": false,
+      "horizontalOverflow": 0,
+      "evidence": "02-export-inline-failure.png"
+    },
+    "delete_confirmation_cancel": {
+      "result": "pass",
+      "confirmControl": {
+        "width": 200,
+        "height": 56,
+        "aboveFloatingTabBar": true
+      },
+      "cancelControl": {
+        "width": 200,
+        "height": 56,
+        "aboveFloatingTabBar": true
+      },
+      "dialogOpened": false,
+      "horizontalOverflow": 0,
+      "evidence": [
+        "03-delete-inline-confirmation.png",
+        "04-delete-cancelled.png"
+      ]
+    },
+    "delete_failure": {
+      "result": "pass",
+      "inlineAlert": "Deletion failed We could not complete that privacy request. Please try again.",
+      "dialogOpened": false,
+      "rawBackendTextLeaked": false,
+      "routeStayed": "/you?section=privacy",
+      "horizontalOverflow": 0,
+      "evidence": "05-delete-inline-failure.png"
+    },
+    "withdraw_confirmation_failure": {
+      "result": "pass",
+      "confirmControl": {
+        "width": 200,
+        "height": 56,
+        "aboveFloatingTabBar": true
+      },
+      "cancelControl": {
+        "width": 200,
+        "height": 56,
+        "aboveFloatingTabBar": true
+      },
+      "inlineAlert": "Withdrawal failed We could not complete that privacy request. Please try again.",
+      "dialogOpened": false,
+      "rawBackendTextLeaked": false,
+      "routeStayed": "/you?section=privacy",
+      "horizontalOverflow": 0,
+      "evidence": [
+        "06-withdraw-inline-confirmation.png",
+        "07-withdraw-inline-failure.png"
+      ]
+    },
+    "cloud_backup_fail_closed": {
+      "result": "pass",
+      "switchControl": {
+        "width": 52,
+        "height": 48,
+        "checkedAfterFailure": false
+      },
+      "inlineAlert": "Choice not saved We couldn't save that choice. Please try again.",
+      "dialogOpened": false,
+      "rawBackendTextLeaked": false,
+      "horizontalOverflow": 0,
+      "evidence": "08-cloud-backup-inline-failure.png",
+      "remainingRisk": "Success tradeoff notice still needs live consent-ledger/native evidence because cloud backup intentionally fails closed without ledger persistence."
+    }
+  },
+  "browserLogs": {
+    "currentOriginWarnErrorCount": 0,
+    "evidence": "browser-warn-error-logs.json"
+  },
+  "commands": {
+    "focusedTests": "npm --workspace apps/mobile run test -- src/features/settings/actions.test.ts src/features/settings/applyPrivacyChoice.test.ts src/features/photos/consent.test.ts (passed, 26 tests)",
+    "typecheck": "npm --workspace apps/mobile run typecheck (passed)",
+    "lint": "npm --workspace apps/mobile run lint (passed)",
+    "fullTests": "npm --workspace apps/mobile run test (passed, 169 files, 1718 tests)"
+  }
+}

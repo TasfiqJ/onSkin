@@ -491,6 +491,27 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('className="mt-3 self-start py-1"');
   });
 
+  it('keeps product-detail lifecycle and catalog-report recovery route-owned', () => {
+    const source = readAppRoute('shelf/[id].tsx');
+
+    expect(source).toContain("type ProductDetailSheet = 'manage' | 'report' | null;");
+    expect(source).toContain('function ProductDetailActionSheet');
+    expect(source).toContain('accessibilityLabel={title}');
+    expect(source).toContain('const [activeSheet, setActiveSheet]');
+    expect(source).toContain('const [catalogReportFeedback, setCatalogReportFeedback]');
+    expect(source).toContain('setActiveSheet(\'manage\')');
+    expect(source).toContain('setActiveSheet(\'report\')');
+    expect(source).toContain('Mark discarded');
+    expect(source).toContain('Remove completely');
+    expect(source).toContain('Wrong product match');
+    expect(source).toContain('Ingredient issue');
+    expect(source).toContain('Expiry or PAO issue');
+    expect(source).toContain('CATALOG_REPORT_NOT_SENT');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain("import { Alert");
+  });
+
   it('does not describe unresolved product-detail conflicts as already paired', () => {
     const source = readAppRoute('shelf/[id].tsx');
 

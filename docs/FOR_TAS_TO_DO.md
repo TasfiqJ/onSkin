@@ -67,6 +67,13 @@ Status: launch-blocked
   withdrawal rows; Codex can verify the Trend UI recovery branch locally with
   `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only`, but cannot prove the live
   ledger without Tas-owned Supabase/auth credentials.
+- Supabase consent-ledger and native QA for `photo_cloud_backup`: attach
+  staging/production proof that turning encrypted cloud backup on persists the
+  `photo_cloud_backup` consent row under RLS before the app shows the inline
+  device-loss tradeoff, and that failure leaves the switch off with route-owned
+  recovery. Codex verified the local Expo web fail-closed branch on 2026-07-08,
+  but cannot prove the live ledger or native encrypted-photo backup behavior
+  without Tas-owned Supabase/auth credentials and physical builds.
 - Apple Developer and App Store Connect app under cleared bundle ID.
 - Google Play Console app and OAuth clients under cleared package ID.
 - RevenueCat project, products, offerings, entitlements, and webhook secret.

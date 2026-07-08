@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
@@ -50,11 +50,23 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
 const POLICY_LINK_UNAVAILABLE_MESSAGE =
   'Link unavailable. We could not open this policy link. Please try again.';
 const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';
+const CLOUD_BACKUP_TRADEOFF_TITLE = 'Encrypted cloud backup';
+const EXPORT_UNAVAILABLE_TITLE = 'Export unavailable';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
+const EXPORT_FAILED_TITLE = 'Export failed';
+const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
+const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =
+  'This records your withdrawal and deletes your collected health data. Your account and routine are closed. Apple or Google subscription billing continues until you cancel in the store.';
+const WITHDRAW_HEALTH_DATA_FAILED_TITLE = 'Withdrawal failed';
+const DELETE_ACCOUNT_CONFIRM_TITLE = 'Delete account?';
+const DELETE_ACCOUNT_CONFIRM_MESSAGE =
+  'This permanently deletes your account and data. Apple or Google subscription billing continues until you cancel in the store.';
+const DELETE_ACCOUNT_FAILED_TITLE = 'Deletion failed';
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
 const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;
 const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
+const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
 const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
@@ -63,6 +75,11 @@ const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 type StaticRouteHref = Extract<Href, string>;
 type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';
 type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';
+type InlineNotice = {
+  title: string;
+  message: string;
+};
+type PendingDataRightsAction = 'withdraw_health_data' | 'delete_account';
 
 function Row({
   label,
@@ -154,6 +171,74 @@ function Toggle({
   );
 }
 
+function InlineNoticeCard({
+  notice,
+  className = 'mt-2',
+}: {
+  notice: InlineNotice;
+  className?: string;
+}) {
+  return (
+    <View className={`${className} rounded-[12px] bg-clay-tint px-4 py-3`}>
+      <Text
+        accessibilityRole="alert"
+        variant="bodySm"
+        className="text-center"
+        style={{ color: colors.clayDeep, lineHeight: 20 }}
+      >
+        {notice.title}
+        {'\n'}
+        {notice.message}
+      </Text>
+    </View>
+  );
+}
+
+function InlineConfirmCard({
+  title,
+  message,
+  confirmLabel,
+  disabled,
+  onCancel,
+  onConfirm,
+}: {
+  title: string;
+  message: string;
+  confirmLabel: string;
+  disabled?: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <View className="mt-2 rounded-[12px] bg-clay-tint px-4 py-3">
+      <Text
+        accessibilityRole="alert"
+        variant="bodySm"
+        className="text-center"
+        style={{ color: colors.clayDeep, lineHeight: 20 }}
+      >
+        {title}
+        {'\n'}
+        {message}
+      </Text>
+      <Button
+        className="mt-3"
+        label={confirmLabel}
+        variant="accent"
+        disabled={disabled}
+        onPress={onConfirm}
+      />
+      <Button
+        className="mt-2"
+        label="Cancel"
+        variant="ghost"
+        disabled={disabled}
+        onPress={onCancel}
+      />
+    </View>
+  );
+}
+
 function openPolicyUrl(url: string): Promise<boolean> {
   return openExternalHttpsUrl(url, {
     invalidTitle: 'Link not configured',
@@ -180,13 +265,19 @@ export default function YouScreen() {
     message: string;
   } | null>(null);
   const [savingAppLock, setSavingAppLock] = useState(false);
-  const [exportFeedback, setExportFeedback] = useState<string | null>(null);
+  const [cloudBackupNotice, setCloudBackupNotice] = useState<InlineNotice | null>(null);
+  const [privacyActionFeedback, setPrivacyActionFeedback] = useState<InlineNotice | null>(null);
+  const [exportFeedback, setExportFeedback] = useState<InlineNotice | null>(null);
+  const [dataRightsFeedback, setDataRightsFeedback] = useState<InlineNotice | null>(null);
+  const [confirmingDataRightsAction, setConfirmingDataRightsAction] =
+    useState<PendingDataRightsAction | null>(null);
   const [policyFeedback, setPolicyFeedback] = useState<{
     key: PolicyLinkKey;
     message: string;
   } | null>(null);
   const [privacyCardReady, setPrivacyCardReady] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
+  const scrollY = useRef(0);
   const privacyCardY = useRef(0);
   const savingPrivacyRef = useRef(false);
   const savingAppLockRef = useRef(false);
@@ -308,6 +399,7 @@ export default function YouScreen() {
     savingPrivacyRef.current = true;
     setSavingPrivacy(type);
     setPrivacyFeedback(null);
+    setCloudBackupNotice(null);
     try {
       await applySettingsPrivacyChoice({
         save: async () => {
@@ -358,6 +450,7 @@ export default function YouScreen() {
     savingPrivacyRef.current = true;
     setSavingPrivacy('photo_cloud_backup');
     setPrivacyFeedback(null);
+    setCloudBackupNotice(null);
     try {
       await applySettingsPrivacyChoice({
         save: async () => {
@@ -368,9 +461,10 @@ export default function YouScreen() {
           if (enabled) {
             track('cloud_backup_opted_in');
             // Surface the device-loss tradeoff honestly when turning backup ON (docs/06 §6).
-            Alert.alert('Encrypted cloud backup', PHOTO_COPY.lock.cloudTradeoff, [
-              { text: 'Got it' },
-            ]);
+            setCloudBackupNotice({
+              title: CLOUD_BACKUP_TRADEOFF_TITLE,
+              message: PHOTO_COPY.lock.cloudTradeoff,
+            });
           }
           setPrivacyFeedback(null);
         },
@@ -410,19 +504,26 @@ export default function YouScreen() {
 
   const exportMut = useMutation({
     mutationFn: exportData,
-    onMutate: () => setExportFeedback(null),
+    onMutate: () => {
+      setExportFeedback(null);
+      setDataRightsFeedback(null);
+    },
     onSuccess: (shared) => {
       if (!shared) {
-        setExportFeedback(EXPORT_UNAVAILABLE_MESSAGE);
-        Alert.alert('Export unavailable', EXPORT_UNAVAILABLE_MESSAGE);
+        setExportFeedback({
+          title: EXPORT_UNAVAILABLE_TITLE,
+          message: EXPORT_UNAVAILABLE_MESSAGE,
+        });
         return;
       }
       void requestReviewAfterValue('data_export_success');
     },
     onError: () => {
       const message = dataRightsUserMessage();
-      setExportFeedback(message);
-      Alert.alert('Export failed', message);
+      setExportFeedback({
+        title: EXPORT_FAILED_TITLE,
+        message,
+      });
     },
   });
 
@@ -434,46 +535,74 @@ export default function YouScreen() {
     }
   }
 
-  function confirmWithdrawHealthData() {
-    Alert.alert(
-      'Withdraw health-data consent?',
-      'This records your withdrawal and deletes your collected health data. Your account and routine are closed. Apple or Google subscription billing continues until you cancel in the store.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Withdraw & delete',
-          style: 'destructive',
-          onPress: () => {
-            setBusy(true);
-            withdrawHealthDataConsent()
-              .then(() => router.replace('/'))
-              .catch(() => Alert.alert('Withdrawal failed', dataRightsUserMessage()))
-              .finally(() => setBusy(false));
-          },
-        },
-      ],
-    );
+  function nudgeDataRightsConfirmationIntoView() {
+    const scrollToConfirmation = () => {
+      scrollRef.current?.scrollTo({
+        animated: true,
+        y: Math.max(scrollY.current + DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE, 0),
+      });
+    };
+
+    requestAnimationFrame(scrollToConfirmation);
+    setTimeout(scrollToConfirmation, 80);
   }
 
-  function confirmDelete() {
-    Alert.alert(
-      'Delete account?',
-      'This permanently deletes your account and data. Apple or Google subscription billing continues until you cancel in the store.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            setBusy(true);
-            deleteAccount()
-              .then(() => router.replace('/'))
-              .catch(() => Alert.alert('Deletion failed', dataRightsUserMessage()))
-              .finally(() => setBusy(false));
-          },
-        },
-      ],
-    );
+  function promptWithdrawHealthData() {
+    if (busy) return;
+    setConfirmingDataRightsAction('withdraw_health_data');
+    setPrivacyActionFeedback(null);
+    setDataRightsFeedback(null);
+    setExportFeedback(null);
+    nudgeDataRightsConfirmationIntoView();
+  }
+
+  function promptDeleteAccount() {
+    if (busy) return;
+    setConfirmingDataRightsAction('delete_account');
+    setPrivacyActionFeedback(null);
+    setDataRightsFeedback(null);
+    setExportFeedback(null);
+    nudgeDataRightsConfirmationIntoView();
+  }
+
+  function cancelDataRightsConfirmation() {
+    if (busy) return;
+    setConfirmingDataRightsAction(null);
+  }
+
+  async function runWithdrawHealthData() {
+    setBusy(true);
+    setConfirmingDataRightsAction(null);
+    setPrivacyActionFeedback(null);
+    try {
+      await withdrawHealthDataConsent();
+      router.replace('/');
+    } catch {
+      setPrivacyActionFeedback({
+        title: WITHDRAW_HEALTH_DATA_FAILED_TITLE,
+        message: dataRightsUserMessage(),
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function runDeleteAccount() {
+    setBusy(true);
+    setConfirmingDataRightsAction(null);
+    setDataRightsFeedback(null);
+    setExportFeedback(null);
+    try {
+      await deleteAccount();
+      router.replace('/');
+    } catch {
+      setDataRightsFeedback({
+        title: DELETE_ACCOUNT_FAILED_TITLE,
+        message: dataRightsUserMessage(),
+      });
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -482,6 +611,10 @@ export default function YouScreen() {
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}
+        onScroll={(event) => {
+          scrollY.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
       >
         <Text variant="title" className={compactPhone ? 'mt-1' : 'mt-2'}>
           You
@@ -647,6 +780,7 @@ export default function YouScreen() {
               onChange={(v) => void setCloud(v)}
             />
           </Row>
+          {cloudBackupNotice ? <InlineNoticeCard notice={cloudBackupNotice} /> : null}
           {renderPrivacyFeedback('photo_cloud_backup', 'security')}
         </Card>
 
@@ -717,8 +851,21 @@ export default function YouScreen() {
           <Row
             label="Withdraw health-data consent"
             hint="Records your withdrawal in the consent ledger and deletes your collected health data."
-            onPress={confirmWithdrawHealthData}
+            onPress={promptWithdrawHealthData}
           />
+          {confirmingDataRightsAction === 'withdraw_health_data' ? (
+            <InlineConfirmCard
+              title={WITHDRAW_HEALTH_DATA_CONFIRM_TITLE}
+              message={WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE}
+              confirmLabel={busy ? 'Working...' : 'Withdraw & delete'}
+              disabled={busy}
+              onCancel={cancelDataRightsConfirmation}
+              onConfirm={() => void runWithdrawHealthData()}
+            />
+          ) : null}
+          {privacyActionFeedback ? (
+            <InlineNoticeCard notice={privacyActionFeedback} className="mt-3" />
+          ) : null}
         </Card>
 
         <Card
@@ -770,17 +917,23 @@ export default function YouScreen() {
             label="Delete account"
             variant="ghost"
             disabled={busy}
-            onPress={confirmDelete}
+            onPress={promptDeleteAccount}
           />
+          {confirmingDataRightsAction === 'delete_account' ? (
+            <InlineConfirmCard
+              title={DELETE_ACCOUNT_CONFIRM_TITLE}
+              message={DELETE_ACCOUNT_CONFIRM_MESSAGE}
+              confirmLabel={busy ? 'Working...' : 'Delete'}
+              disabled={busy}
+              onCancel={cancelDataRightsConfirmation}
+              onConfirm={() => void runDeleteAccount()}
+            />
+          ) : null}
+          {dataRightsFeedback ? (
+            <InlineNoticeCard notice={dataRightsFeedback} className="mt-3" />
+          ) : null}
           {exportFeedback ? (
-            <Text
-              accessibilityRole="alert"
-              variant="bodySm"
-              tone="muted"
-              className="mt-3 text-center"
-            >
-              {exportFeedback}
-            </Text>
+            <InlineNoticeCard notice={exportFeedback} className="mt-3" />
           ) : null}
           <Text variant="bodySm" tone="muted" className="mt-3 text-center">
             Photos stay on your device by default. No ads, no data sales.

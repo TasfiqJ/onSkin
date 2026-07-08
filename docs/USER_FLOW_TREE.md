@@ -429,6 +429,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The detail hub explains whether the product is already used in the generated routine or is not placed yet, and the routine action routes to `/routine/plan` without leaving the user at an inventory dead end.
   - Evidence: Product detail screenshot, visible-text snapshot, and routine-plan destination snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 opens `Mineral SPF 50` from Shelf, shows `ROUTINE ROLE` with `Used in your Morning routine`, exposes the `Review routine placement` action, and routes to `/routine/plan` with zero horizontal overflow.
+- Branch: product detail lifecycle and catalog-report recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add or open a real Shelf product, open product detail, tap More options, close the remove/discard sheet, tap Report an issue, and choose a catalog issue while the catalog backend is unavailable.
+  - Expected result: Lifecycle and catalog-report choices stay inside named route-owned sheets, use 48 px+ controls, open no native or JavaScript dialog, keep the product detail at zero horizontal overflow, and render raw-error-free inline report feedback after a failed catalog report.
+  - Evidence: Product-detail screenshots, sheet dialog snapshot, inline alert snapshot, dialog-state check, control-geometry snapshot, and browser logs.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 adds `Route Owned Balm`, opens product detail, verifies `Remove from shelf?` and `Report catalog issue` are named `role="dialog"` sheets with modal semantics and 48 px+ controls, submits `Wrong product match` against the unavailable catalog backend, and sees inline `Report not sent` feedback with no JavaScript/native dialog and zero horizontal overflow. The first pass found unnamed dialog nodes; post-fix evidence is in `test-results/human-e2e/2026-07-08/shelf-detail-you-inline-recovery-current/`.
 - Branch: no search result
   - Priority: Critical
   - Automate later: Yes
@@ -1073,9 +1080,24 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Tap Export my data while the OS share sheet is unavailable, cannot be detected, or rejects after the temporary JSON export is created.
-  - Expected result: The app shows a clear export-unavailable alert, does not treat the export as completed for review prompting, and deletes the temporary plaintext export file.
-  - Evidence: Alert text, mutation state, and cache cleanup assertion.
+  - Expected result: The app shows clear route-owned export-unavailable feedback with `role="alert"`, opens no native or JavaScript dialog, does not treat the export as completed for review prompting, and deletes the temporary plaintext export file.
+  - Evidence: Inline alert text, dialog-state check, mutation state, and cache cleanup assertion.
   - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies `/settings/privacy` resolves to `/you?section=privacy`, `Export my data` is unique, the local backend-unavailable failure renders the visible privacy-request recovery copy, visible data-rights controls are 56 px tall, horizontal overflow is zero, and focused settings action tests cover unavailable share/cache cleanup plus destructive delete/withdraw fallback behavior. Live Supabase and native share-sheet evidence remain external QA.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with placeholder Supabase unavailable verifies `/settings/privacy` resolves to `/you?section=privacy`, tapping `Export my data` renders inline `Export failed` recovery with `role="alert"`, opens no JavaScript/native dialog, leaks no raw backend/provider text, keeps visible controls 56 px tall, and keeps horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`.
+- Branch: destructive data-rights confirmation and failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Tap Withdraw health-data consent and Delete account on a compact phone viewport, cancel the first confirmation, then confirm each action while the data-rights backend is unavailable.
+  - Expected result: Each destructive action requires an inline second confirmation with visible Cancel and destructive confirm controls, opens no native or JavaScript dialog, keeps the route usable after backend failure, renders raw-error-free route-owned recovery near the initiating section, and keeps controls at least 44 px tall with zero horizontal overflow.
+  - Evidence: Confirmation screenshots, post-failure screenshots, dialog-state check, control-geometry snapshot, and browser logs.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies `Delete account` opens an inline confirmation, `Cancel` removes it, confirming with the backend unavailable renders inline `Deletion failed`, `Withdraw health-data consent` opens a section-local inline confirmation, confirming renders inline `Withdrawal failed`, no JavaScript/native dialog opens, raw backend/provider text is hidden, confirmation buttons are 200 x 56 and nudged above the floating tab bar, the route remains `/you?section=privacy`, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`.
+- Branch: cloud-backup tradeoff notice
+  - Priority: Important
+  - Automate later: Yes
+  - Action: In the You tab Security section, turn Encrypted cloud backup on after local persistence succeeds.
+  - Expected result: The device-loss/cloud-backup tradeoff appears inline near the Security switch with `role="alert"`, does not open a native or JavaScript dialog, preserves the saved ON state, and keeps the switch and notice readable on compact phones.
+  - Evidence: Inline notice screenshot, switch state, dialog-state check, control-geometry snapshot, and browser logs.
+  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with placeholder Supabase unavailable verifies the `Encrypted cloud backup` switch is 52 x 48, fails closed with inline `Choice not saved` recovery, opens no JavaScript/native dialog, keeps the switch OFF, leaks no raw storage/backend text, and keeps horizontal overflow at zero. The success tradeoff branch is source-guarded to be inline but still needs live consent-ledger/native evidence because cloud backup intentionally fails closed without ledger persistence. Evidence is in `test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`.
 - Branch: reminder timing and discretion
   - Priority: Important
   - Automate later: Yes

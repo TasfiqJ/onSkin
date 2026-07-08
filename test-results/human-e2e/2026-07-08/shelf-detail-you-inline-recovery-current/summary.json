@@ -1,0 +1,48 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_APP_LOCK_ENABLED=false npm --workspace apps/mobile run web -- --port 8102",
+  "flows": {
+    "shelfProductDetail": {
+      "product": "Route Owned Balm",
+      "manageSheetNamed": true,
+      "reportSheetNamed": true,
+      "reportFeedbackInline": true,
+      "nativeOrJsDialogsOpened": false,
+      "horizontalOverflow": false
+    },
+    "youTab": {
+      "cloudBackupFailureInline": true,
+      "exportFailureInline": true,
+      "withdrawConfirmInlineAndCancelable": true,
+      "deleteConfirmInlineAndCancelable": true,
+      "destructiveConfirmActionsNotPressed": true,
+      "nativeOrJsDialogsOpened": false,
+      "horizontalOverflow": false
+    }
+  },
+  "evidence": [
+    "01-shelf-manual-filled.png",
+    "02-opened-date-default.png",
+    "03-shelf-with-product.png",
+    "04-product-detail-start-final.png",
+    "05-product-manage-sheet.png",
+    "06-product-report-sheet.png",
+    "07-product-report-inline-feedback.png",
+    "08-you-start.png",
+    "09-you-cloud-backup-inline-notice.png",
+    "10-you-export-inline-feedback.png",
+    "11-you-delete-inline-confirm-final.png",
+    "12-you-withdraw-inline-confirm-final.png",
+    "browser-warn-error-logs.json"
+  ],
+  "remainingRisk": [
+    "Physical iOS and Android native screen-reader announcement for inline alerts still needs device QA.",
+    "Successful cloud backup tradeoff notice was not reachable in this no-backend Expo web fixture because the consent save failed inline first.",
+    "Destructive account deletion and withdrawal final actions were intentionally not executed."
+  ]
+}

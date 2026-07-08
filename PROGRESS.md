@@ -4434,6 +4434,56 @@ and `docs/e2e-bug-reports/2026-07-08-shelf-replenish-scarcity-copy.md`. This
 does not replace native iOS/Android bottom-sheet, Dynamic Type, screen-reader,
 safe-area, or restart-persistence QA.
 
+### Settings data-rights inline recovery (2026-07-08)
+
+Replaced the You-tab privacy/data-rights native-alert paths with route-owned
+inline notices and confirmations. Export unavailable/failure, delete
+confirmation/failure, health-data withdrawal confirmation/failure, and
+cloud-backup explanatory/failure copy now stay in the route; destructive
+account actions still require a second explicit press. A compact-phone E2E pass
+found that newly inserted destructive confirmation controls could land under
+the floating tab bar, so the route now tracks ScrollView offset and nudges
+data-rights confirmations into view before the user confirms.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8160 with
+placeholder Supabase unavailable. `/settings/privacy` resolves to
+`/you?section=privacy`; `Export my data` renders inline `Export failed`;
+`Delete account` opens a 200 x 56 inline Delete/Cancel confirmation, Cancel
+removes it, and confirm renders inline `Deletion failed`; `Withdraw
+health-data consent` opens a section-local 200 x 56 `Withdraw & delete`/Cancel
+confirmation above the floating tab bar, and confirm renders inline
+`Withdrawal failed`; cloud backup fails closed inline with the switch still off.
+Across the pass there are no JavaScript/native dialogs, no raw backend/provider
+text leaks, zero horizontal overflow, and no current-origin warn/error logs.
+Evidence and bug reports are in
+`test-results/human-e2e/2026-07-08/settings-data-rights-inline-recovery-current/`,
+`docs/e2e-bug-reports/2026-07-08-settings-data-rights-native-alerts.md`, and
+`docs/e2e-bug-reports/2026-07-08-settings-data-rights-tabbar-overlap.md`.
+`npm --workspace apps/mobile run typecheck`, `npm --workspace apps/mobile run
+lint`, and `npm --workspace apps/mobile run test` pass. Live Supabase
+data-rights/consent-ledger evidence and native iOS/Android share-sheet,
+safe-area, and screen-reader QA remain external launch gates.
+
+### Shelf product-detail route-owned recovery (2026-07-08)
+
+Replaced product-detail lifecycle and catalog-report native alerts with
+route-owned sheets and inline catalog feedback. `More options` now opens a named
+`Remove from shelf?` sheet for discard/delete choices, `Report an issue` opens a
+named `Report catalog issue` sheet, and failed catalog reports stay on the
+product detail with inline `Report not sent` recovery instead of platform chrome.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8102 by
+adding `Route Owned Balm`, opening product detail, exercising both sheets, and
+submitting `Wrong product match` against the unavailable catalog backend. The
+first pass caught unnamed dialog nodes; post-fix both sheets expose named modal
+dialog semantics, 48 px+ controls, no JavaScript/native dialog, and zero
+horizontal overflow. Evidence and report are in
+`test-results/human-e2e/2026-07-08/shelf-detail-you-inline-recovery-current/`
+and
+`docs/e2e-bug-reports/2026-07-08-shelf-product-detail-route-owned-recovery.md`.
+Native iOS/Android screen-reader order, Dynamic Type, and live catalog-report
+success evidence remain device/backend QA follow-up.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

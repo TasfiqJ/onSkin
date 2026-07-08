@@ -1,6 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
@@ -53,6 +55,19 @@ const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
 ];
 
 type RoutineUsage = { phase: string; night?: number };
+type ProductDetailSheet = 'manage' | 'report' | null;
+type CatalogReportFeedback = { title: string; message: string };
+
+const CATALOG_REPORT_SENT: CatalogReportFeedback = {
+  title: 'Report sent',
+  message: 'Thanks. Open catalog issues block product-specific recommendations until reviewed.',
+};
+
+const CATALOG_REPORT_NOT_SENT: CatalogReportFeedback = {
+  title: 'Report not sent',
+  message:
+    'The catalog backend is not configured on this build. You can still keep this product on your shelf.',
+};
 
 function shiftMonthsISO(months: number): string {
   const d = new Date();
@@ -101,14 +116,120 @@ function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
   );
 }
 
+function ProductDetailActionSheet({
+  title,
+  body,
+  viewportHeight,
+  bottomInset,
+  children,
+  onClose,
+}: {
+  title: string;
+  body: string;
+  viewportHeight: number;
+  bottomInset: number;
+  children: ReactNode;
+  onClose: () => void;
+}) {
+  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const sheetPaddingBottom = bottomInset > 0 ? Math.max(32, bottomInset + 18) : 32;
+
+  return (
+    <View
+      className="absolute inset-0 justify-end"
+      style={{ backgroundColor: 'rgba(32,27,21,0.42)', zIndex: 30, elevation: 30 }}
+      accessibilityLabel={title}
+    >
+      <View className="flex-1 justify-end">
+        <Pressable
+          accessibilityLabel={`Dismiss ${title}`}
+          accessibilityRole="button"
+          className="flex-1"
+          onPress={onClose}
+        />
+        <View
+          aria-modal
+          role="dialog"
+          accessibilityLabel={title}
+          accessibilityViewIsModal
+          className="overflow-hidden rounded-t-sheet bg-paper px-6 pt-4"
+          style={{ maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }}
+        >
+          <View
+            className="mx-auto mb-4 h-[5px] w-10 rounded-[3px]"
+            style={{ backgroundColor: 'rgba(32,27,21,0.15)' }}
+          />
+          <View className="mb-3 flex-row items-start justify-between gap-3">
+            <View className="flex-1">
+              <Text variant="titleSm" className="text-[24px] leading-[28px]">
+                {title}
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-1.5">
+                {body}
+              </Text>
+            </View>
+            <Pressable
+              accessibilityLabel="Close product options"
+              accessibilityRole="button"
+              className="min-h-[48px] min-w-[64px] items-center justify-center rounded-pill px-3"
+              onPress={onClose}
+            >
+              <Text variant="bodySm" className="font-sans-semibold" style={{ color: colors.clay }}>
+                Close
+              </Text>
+            </Pressable>
+          </View>
+          <View className="gap-2">{children}</View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function SheetAction({
+  label,
+  description,
+  tone = 'default',
+  onPress,
+}: {
+  label: string;
+  description: string;
+  tone?: 'default' | 'destructive';
+  onPress: () => void;
+}) {
+  const destructive = tone === 'destructive';
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      className="min-h-[58px] rounded-[16px] border border-hairline bg-paper-raised px-4 py-3"
+    >
+      <Text
+        variant="bodySm"
+        className="font-sans-bold"
+        style={{ color: destructive ? colors.clayDeep : colors.ink }}
+      >
+        {label}
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-0.5">
+        {description}
+      </Text>
+    </Pressable>
+  );
+}
+
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const { data } = useShelf();
   const plan = usePlan();
   const m = useShelfMutations();
   const [editOpen, setEditOpen] = useState(false);
   const [bestOpen, setBestOpen] = useState(false);
+  const [activeSheet, setActiveSheet] = useState<ProductDetailSheet>(null);
+  const [catalogReportFeedback, setCatalogReportFeedback] =
+    useState<CatalogReportFeedback | null>(null);
   const compactMissingDetail = height < 640;
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
@@ -196,27 +317,11 @@ export default function ProductDetailScreen() {
   };
 
   const confirmRemove = () => {
-    Alert.alert('Remove from shelf?', `What should we do with ${p.name}?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Mark discarded (keep history)',
-        onPress: async () => {
-          await m.markDiscarded(id);
-          closeToShelf();
-        },
-      },
-      {
-        text: 'Remove completely',
-        style: 'destructive',
-        onPress: async () => {
-          await m.remove(id);
-          closeToShelf();
-        },
-      },
-    ]);
+    setActiveSheet('manage');
   };
 
   const submitCatalogReport = async (correctionType: CatalogCorrectionType) => {
+    setActiveSheet(null);
     const result = await reportCatalogIssue({
       correctionType,
       productId: p.catalogProductId,
@@ -229,21 +334,12 @@ export default function ProductDetailScreen() {
         route: 'shelf_detail',
       },
     });
-    Alert.alert(
-      result.ok ? 'Report sent' : 'Report not sent',
-      result.ok
-        ? 'Thanks. Open catalog issues block product-specific recommendations until reviewed.'
-        : 'The catalog backend is not configured on this build. You can still keep this product on your shelf.',
-    );
+    setCatalogReportFeedback(result.ok ? CATALOG_REPORT_SENT : CATALOG_REPORT_NOT_SENT);
   };
 
   const reportIssue = () => {
-    Alert.alert('Report catalog issue', 'What looks wrong?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Wrong product match', onPress: () => submitCatalogReport('wrong_match') },
-      { text: 'Ingredient issue', onPress: () => submitCatalogReport('ingredient_issue') },
-      { text: 'Expiry or PAO issue', onPress: () => submitCatalogReport('expiry_issue') },
-    ]);
+    setCatalogReportFeedback(null);
+    setActiveSheet('report');
   };
 
   const catalogSourceLabel =
@@ -352,6 +448,21 @@ export default function ProductDetailScreen() {
               Report an issue
             </Text>
           </Pressable>
+          {catalogReportFeedback ? (
+            <View className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3">
+              <Text variant="label" style={{ color: colors.clayDeep }}>
+                {catalogReportFeedback.title}
+              </Text>
+              <Text
+                accessibilityRole="alert"
+                variant="bodySm"
+                className="mt-1"
+                style={{ color: colors.clayDeep, lineHeight: 19 }}
+              >
+                {catalogReportFeedback.message}
+              </Text>
+            </View>
+          ) : null}
         </View>
 
         {/* Freshness block */}
@@ -576,6 +687,60 @@ export default function ProductDetailScreen() {
           </Pressable>
         </View>
       )}
+      {activeSheet === 'manage' ? (
+        <ProductDetailActionSheet
+          title="Remove from shelf?"
+          body={`Choose what should happen to ${p.name}. Discarding keeps your history; removing deletes this local shelf entry.`}
+          viewportHeight={height}
+          bottomInset={insets.bottom}
+          onClose={() => setActiveSheet(null)}
+        >
+          <SheetAction
+            label="Mark discarded"
+            description="Archive it and keep freshness and repurchase history."
+            onPress={async () => {
+              await m.markDiscarded(id);
+              setActiveSheet(null);
+              closeToShelf();
+            }}
+          />
+          <SheetAction
+            label="Remove completely"
+            description="Delete this local shelf entry. This cannot be undone."
+            tone="destructive"
+            onPress={async () => {
+              await m.remove(id);
+              setActiveSheet(null);
+              closeToShelf();
+            }}
+          />
+        </ProductDetailActionSheet>
+      ) : null}
+      {activeSheet === 'report' ? (
+        <ProductDetailActionSheet
+          title="Report catalog issue"
+          body="Choose the closest issue. You can keep using this product while the catalog data is reviewed."
+          viewportHeight={height}
+          bottomInset={insets.bottom}
+          onClose={() => setActiveSheet(null)}
+        >
+          <SheetAction
+            label="Wrong product match"
+            description="The product, brand, or barcode does not match this shelf item."
+            onPress={() => submitCatalogReport('wrong_match')}
+          />
+          <SheetAction
+            label="Ingredient issue"
+            description="The INCI list or active ingredient parsing looks wrong."
+            onPress={() => submitCatalogReport('ingredient_issue')}
+          />
+          <SheetAction
+            label="Expiry or PAO issue"
+            description="The printed date, PAO, or freshness source looks wrong."
+            onPress={() => submitCatalogReport('expiry_issue')}
+          />
+        </ProductDetailActionSheet>
+      ) : null}
     </Screen>
   );
 }

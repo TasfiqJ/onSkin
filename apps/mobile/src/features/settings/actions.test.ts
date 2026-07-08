@@ -171,11 +171,16 @@ describe('settings data export', () => {
     expect(actions).toContain('DATA_EXPORT_BACKEND_UNAVAILABLE');
     expect(source).toContain('onSuccess: (shared)');
     expect(source).toContain('if (!shared)');
-    expect(source).toContain('setExportFeedback(EXPORT_UNAVAILABLE_MESSAGE)');
-    expect(source).toContain('setExportFeedback(message)');
+    expect(source).toContain('title: EXPORT_UNAVAILABLE_TITLE');
+    expect(source).toContain('message: EXPORT_UNAVAILABLE_MESSAGE');
+    expect(source).toContain('title: EXPORT_FAILED_TITLE');
+    expect(source).toContain('message,');
+    expect(source).toContain('function InlineNoticeCard(');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('Export unavailable');
     expect(source).toContain('data_export_success');
+    expect(source).not.toContain("Alert.alert('Export unavailable'");
+    expect(source).not.toContain("Alert.alert('Export failed'");
   });
 });
 
@@ -301,5 +306,37 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.recordConsent).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
     expect(mocks.clearLocalPrivateData).not.toHaveBeenCalled();
+  });
+
+  it('keeps You-tab destructive data-rights actions route-owned and retryable', () => {
+    const source = readSource('app/(tabs)/you.tsx');
+
+    expect(source).toContain(
+      "type PendingDataRightsAction = 'withdraw_health_data' | 'delete_account';",
+    );
+    expect(source).toContain('const [privacyActionFeedback, setPrivacyActionFeedback]');
+    expect(source).toContain('const [dataRightsFeedback, setDataRightsFeedback]');
+    expect(source).toContain('const [confirmingDataRightsAction, setConfirmingDataRightsAction]');
+    expect(source).toContain('function InlineConfirmCard(');
+    expect(source).toContain('const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;');
+    expect(source).toContain('const scrollY = useRef(0);');
+    expect(source).toContain('function nudgeDataRightsConfirmationIntoView()');
+    expect(source).toContain('scrollY.current + DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE');
+    expect(source).toContain('scrollEventThrottle={16}');
+    expect(source).toContain('function promptWithdrawHealthData()');
+    expect(source).toContain('function promptDeleteAccount()');
+    expect(source).toContain('async function runWithdrawHealthData()');
+    expect(source).toContain('async function runDeleteAccount()');
+    expect(source).toContain('WITHDRAW_HEALTH_DATA_CONFIRM_TITLE');
+    expect(source).toContain('WITHDRAW_HEALTH_DATA_FAILED_TITLE');
+    expect(source).toContain('DELETE_ACCOUNT_CONFIRM_TITLE');
+    expect(source).toContain('DELETE_ACCOUNT_FAILED_TITLE');
+    expect(source).toContain('onCancel={cancelDataRightsConfirmation}');
+    expect(source).toContain('onConfirm={() => void runWithdrawHealthData()}');
+    expect(source).toContain('onConfirm={() => void runDeleteAccount()}');
+    expect(source).toContain('setDataRightsFeedback(null);');
+    expect(source).toContain('setPrivacyActionFeedback(null);');
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain("import { Alert");
   });
 });
