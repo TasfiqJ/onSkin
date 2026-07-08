@@ -77,6 +77,12 @@ describe('Ask route launch contracts', () => {
     const home = readAppRoute('ask/index.tsx');
 
     expect(home).toContain('mt-2 min-h-[48px] self-start justify-center py-1');
+    expect(home).toContain("'mt-1 min-h-[48px] self-start justify-center'");
+    expect(home).toContain('function AnswerCard({ answer, compact = false }');
+    expect(home).toContain('function UserBubble({ text, compact = false }');
+    expect(home).toContain("className={shortPhone ? 'pt-1' : 'pt-3'}");
+    expect(home).toContain('<UserBubble key={m.id} text={m.text} compact={shortPhone} />');
+    expect(home).toContain('<AnswerCard key={m.id} answer={m.answer} compact={shortPhone} />');
     expect(home).toContain('className="h-[48px] w-[48px] items-center justify-center');
     expect(home).toContain('minHeight: 48');
     expect(home).toContain('mt-3 min-h-[48px] self-start items-center justify-center');
@@ -97,14 +103,31 @@ describe('Ask route launch contracts', () => {
 
     expect(home).toContain("contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}");
     expect(home).toContain(
+      "const EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight', 'fit'];",
+    );
+    expect(home).toContain(
+      "const SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'];",
+    );
+    expect(home).toContain('const shortPhone = height < 520');
+    expect(home).toContain(
+      'const emptyPromptOrder = shortPhone ? SHORT_PHONE_EMPTY_PROMPT_ORDER : EMPTY_PROMPT_ORDER;',
+    );
+    expect(home).toContain(
       'className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"',
     );
-    expect(home).toContain('className="pt-1"');
+    expect(home).toContain("className={shortPhone ? 'pt-0' : 'pt-1'}");
+    expect(home).toContain('{!shortPhone ? (');
     expect(home).toContain('className="mb-3 flex-row flex-wrap gap-1.5"');
-    expect(home).toContain('className="mb-3 text-[12.5px]"');
-    expect(home).toContain('style={{ lineHeight: 19 }}');
-    expect(home).toContain('className="mb-2 font-mono text-[10px] uppercase"');
-    expect(home).toContain('className="gap-2"');
+    expect(home).toContain(
+      "className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}",
+    );
+    expect(home).toContain('style={{ lineHeight: shortPhone ? 18 : 19 }}');
+    expect(home).toContain("'mb-1.5 font-mono text-[10px] uppercase'");
+    expect(home).toContain("'mb-2 font-mono text-[10px] uppercase'");
+    expect(home).toContain("className={shortPhone ? 'gap-1.5' : 'gap-2'}");
+    expect(home).toContain('{emptyPromptOrder.map((promptKey) => (');
+    expect(home).toContain('label={ASK_COPY.home.prompts[promptKey]}');
+    expect(home).toContain('askSuggested(promptKey)');
     expect(home).not.toContain('py-3.5');
   });
 
@@ -128,10 +151,7 @@ describe('Ask route launch contracts', () => {
       "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
     );
     expect(home).toContain(
-      "pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'), {\n                    scrollToEnd: false,",
-    );
-    expect(home).toContain(
-      "pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'), {\n                    scrollToEnd: false,",
+      "pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {\n                      scrollToEnd: false,",
     );
     expect(home).toContain('{!compactPhone ? (');
   });

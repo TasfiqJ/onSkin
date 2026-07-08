@@ -1180,10 +1180,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Branch: first suggested prompt on a short phone
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/ask` at 320 x 568 with an empty shelf, tap `Is there a conflict on my shelf?`, and inspect the first conversation state without manually scrolling.
-  - Expected result: The user question, deterministic badge, empty-shelf answer, report control, fixed composer, and disclosure footer remain readable; the first user message is not auto-scrolled under the header, and no follow-up prompt peeks partially underneath the fixed composer on compact phones.
+  - Action: Open `/ask` at 320 x 568 and 320 x 480 with an empty shelf, tap `Is there a conflict on my shelf?`, and inspect the first conversation state without manually scrolling.
+  - Expected result: The user question, deterministic badge, empty-shelf answer, report control, fixed composer, and disclosure footer remain readable; the first user message is not auto-scrolled under the header, and no prompt or report control peeks partially underneath the fixed composer on compact or shortest phones.
   - Evidence: Screenshot, scroll-position snapshot, and small-phone control-geometry snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 taps `Is there a conflict on my shelf?`, keeps the user question, deterministic `$0` badge, empty-shelf answer, report control, composer, and disclosure footer readable with zero horizontal overflow and no sub-44 px controls. The same pass typed `Should I use retinol every night?`; before the fix it misrouted to product-fit recommendation copy, and after the fix it escalates safely with no fit-engine, SPF, or vitamin-C recommendation text. Evidence is in `test-results/human-e2e/2026-07-07/ask-first-prompt-compact-current/`, with additional Node REPL Playwright/system Chrome evidence in `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/`.
+  - Current shortest-phone evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced lower empty-state prompt buttons being intercepted by the fixed composer. Post-fix `/ask` hides decorative pills on the shortest phones, shows the top two prompt buttons above the composer, verifies both prompt centers hit their own buttons, taps `Is there a conflict on my shelf?`, and confirms the empty-shelf answer plus report control, input, Send, and disclosure have zero hit-blocked controls, zero sub-44 px controls, zero horizontal overflow, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes
@@ -1197,6 +1198,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Tab through prompt chips, text input, and send controls.
   - Expected result: Interactive controls have usable roles/labels, 44 pt visible touch geometry where applicable, suggested prompts and the disclosure footer do not sit underneath or clip against the fixed composer on short phones, and keyboard focus does not trap the user.
   - Evidence: UI snapshot or accessibility notes.
+  - Current shortest-phone evidence: 2026-07-08 `/ask` at 320 x 480 verifies the visible prompt buttons, report control, input, and Send are 48 px or taller/wider where applicable, their center hit-tests resolve to the intended controls, and the disclosure footer remains visible without intercepting prompts. Evidence is in `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`.
 
 ## Open Questions
 

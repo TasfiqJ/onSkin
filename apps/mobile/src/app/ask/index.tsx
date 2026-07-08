@@ -23,6 +23,11 @@ type Msg =
   | { id: string; role: 'user'; text: string }
   | { id: string; role: 'assistant'; answer: AskAnswer };
 
+type SuggestedPromptKey = 'conflict' | 'tonight' | 'fit';
+
+const EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight', 'fit'];
+const SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'];
+
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
   const bg = tone === 'deterministic' ? colors.sageTint : colors.clayTint;
   const fg = tone === 'deterministic' ? colors.sageDeep : colors.clayDeep;
@@ -75,14 +80,18 @@ function TriadRow({ label, text }: { label: string; text: string }) {
   );
 }
 
-function AnswerCard({ answer }: { answer: AskAnswer }) {
+function AnswerCard({ answer, compact = false }: { answer: AskAnswer; compact?: boolean }) {
   const [reported, setReported] = useState(false);
 
   if (answer.kind === 'escalate') {
     return (
-      <View className="mb-3 max-w-[88%] self-start">
+      <View className={compact ? 'mb-2 max-w-[88%] self-start' : 'mb-3 max-w-[88%] self-start'}>
         <View
-          className="rounded-[18px] rounded-bl-[6px] bg-paper-raised p-4"
+          className={
+            compact
+              ? 'rounded-[18px] rounded-bl-[6px] bg-paper-raised p-3'
+              : 'rounded-[18px] rounded-bl-[6px] bg-paper-raised p-4'
+          }
           style={{ borderWidth: 1, borderColor: 'rgba(165,105,75,0.28)' }}
         >
           {answer.badge ? (
@@ -93,7 +102,11 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
               {answer.badge}
             </Text>
           ) : null}
-          <Text variant="body" className="text-[13.5px]" style={{ lineHeight: 20 }}>
+          <Text
+            variant="body"
+            className={compact ? 'text-[13px]' : 'text-[13.5px]'}
+            style={{ lineHeight: compact ? 19 : 20 }}
+          >
             {answer.claim}
           </Text>
           {answer.cta ? (
@@ -125,7 +138,7 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
   }
 
   return (
-    <View className="mb-3 max-w-[88%] self-start">
+    <View className={compact ? 'mb-2 max-w-[88%] self-start' : 'mb-3 max-w-[88%] self-start'}>
       {answer.badge ? (
         <MonoBadge
           label={answer.badge}
@@ -139,7 +152,11 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
         />
       ) : null}
       <View
-        className="rounded-[18px] rounded-bl-[6px] bg-paper-raised p-4"
+        className={
+          compact
+            ? 'rounded-[18px] rounded-bl-[6px] bg-paper-raised p-3'
+            : 'rounded-[18px] rounded-bl-[6px] bg-paper-raised p-4'
+        }
         style={{ borderWidth: 1, borderColor: colors.hairline }}
       >
         {answer.headline ? (
@@ -147,7 +164,11 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
             {answer.headline}
           </Text>
         ) : null}
-        <Text variant="body" className="text-[13.5px]" style={{ lineHeight: 20 }}>
+        <Text
+          variant="body"
+          className={compact ? 'text-[13px]' : 'text-[13.5px]'}
+          style={{ lineHeight: compact ? 19 : 20 }}
+        >
           {answer.claim}
         </Text>
 
@@ -236,7 +257,11 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
           setReported(true);
           track('ask_reported_problem', { kind: answer.kind });
         }}
-        className="mt-2 min-h-[48px] self-start justify-center py-1"
+        className={
+          compact
+            ? 'mt-1 min-h-[48px] self-start justify-center'
+            : 'mt-2 min-h-[48px] self-start justify-center py-1'
+        }
       >
         <Text className="font-mono text-[9px]" style={{ color: colors.mutedLight }}>
           {reported
@@ -248,13 +273,20 @@ function AnswerCard({ answer }: { answer: AskAnswer }) {
   );
 }
 
-function UserBubble({ text }: { text: string }) {
+function UserBubble({ text, compact = false }: { text: string; compact?: boolean }) {
   return (
     <View
-      className="mb-3.5 max-w-[80%] self-end rounded-[18px] rounded-br-[6px] px-3.5 py-2.5"
+      className={
+        compact
+          ? 'mb-2 max-w-[80%] self-end rounded-[18px] rounded-br-[6px] px-3 py-2'
+          : 'mb-3.5 max-w-[80%] self-end rounded-[18px] rounded-br-[6px] px-3.5 py-2.5'
+      }
       style={{ backgroundColor: colors.ink }}
     >
-      <Text className="text-[13px]" style={{ color: colors.cream, lineHeight: 18 }}>
+      <Text
+        className="text-[13px]"
+        style={{ color: colors.cream, lineHeight: compact ? 17 : 18 }}
+      >
         {text}
       </Text>
     </View>
@@ -334,6 +366,8 @@ export default function AskScreen() {
 
   const empty = messages.length === 0;
   const compactPhone = height < 640;
+  const shortPhone = height < 520;
+  const emptyPromptOrder = shortPhone ? SHORT_PHONE_EMPTY_PROMPT_ORDER : EMPTY_PROMPT_ORDER;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -361,68 +395,64 @@ export default function AskScreen() {
         contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}
       >
         {empty ? (
-          <View className="pt-1">
-            <View className="mb-3 flex-row flex-wrap gap-1.5">
-              {ASK_COPY.home.pills.map((p) => (
-                <View
-                  key={p}
-                  className="rounded-pill px-2.5 py-1"
-                  style={{ backgroundColor: colors.greige }}
-                >
-                  <Text className="font-mono text-[9.5px]" style={{ color: colors.mutedStrong }}>
-                    {p}
-                  </Text>
-                </View>
-              ))}
-            </View>
+          <View className={shortPhone ? 'pt-0' : 'pt-1'}>
+            {!shortPhone ? (
+              <View className="mb-3 flex-row flex-wrap gap-1.5">
+                {ASK_COPY.home.pills.map((p) => (
+                  <View
+                    key={p}
+                    className="rounded-pill px-2.5 py-1"
+                    style={{ backgroundColor: colors.greige }}
+                  >
+                    <Text
+                      className="font-mono text-[9.5px]"
+                      style={{ color: colors.mutedStrong }}
+                    >
+                      {p}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            ) : null}
             <Text
               variant="body"
               tone="muted"
-              className="mb-3 text-[12.5px]"
-              style={{ lineHeight: 19 }}
+              className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}
+              style={{ lineHeight: shortPhone ? 18 : 19 }}
             >
               {ASK_COPY.home.intro}
             </Text>
             <Text
-              className="mb-2 font-mono text-[10px] uppercase"
+              className={
+                shortPhone
+                  ? 'mb-1.5 font-mono text-[10px] uppercase'
+                  : 'mb-2 font-mono text-[10px] uppercase'
+              }
               style={{ color: colors.mutedLight, letterSpacing: 1 }}
             >
               {ASK_COPY.home.groundedEyebrow}
             </Text>
-            <View className="gap-2">
-              <SuggestedPrompt
-                label={ASK_COPY.home.prompts.conflict}
-                onPress={() =>
-                  pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), {
-                    scrollToEnd: false,
-                  })
-                }
-              />
-              <SuggestedPrompt
-                label={ASK_COPY.home.prompts.tonight}
-                onPress={() =>
-                  pushTurn(ASK_COPY.home.prompts.tonight, askSuggested('tonight'), {
-                    scrollToEnd: false,
-                  })
-                }
-              />
-              <SuggestedPrompt
-                label={ASK_COPY.home.prompts.fit}
-                onPress={() =>
-                  pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'), {
-                    scrollToEnd: false,
-                  })
-                }
-              />
+            <View className={shortPhone ? 'gap-1.5' : 'gap-2'}>
+              {emptyPromptOrder.map((promptKey) => (
+                <SuggestedPrompt
+                  key={promptKey}
+                  label={ASK_COPY.home.prompts[promptKey]}
+                  onPress={() =>
+                    pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {
+                      scrollToEnd: false,
+                    })
+                  }
+                />
+              ))}
             </View>
           </View>
         ) : (
-          <View className="pt-3">
+          <View className={shortPhone ? 'pt-1' : 'pt-3'}>
             {messages.map((m) =>
               m.role === 'user' ? (
-                <UserBubble key={m.id} text={m.text} />
+                <UserBubble key={m.id} text={m.text} compact={shortPhone} />
               ) : (
-                <AnswerCard key={m.id} answer={m.answer} />
+                <AnswerCard key={m.id} answer={m.answer} compact={shortPhone} />
               ),
             )}
             {/* Suggested prompts kept as a follow-up affordance after the lead. */}

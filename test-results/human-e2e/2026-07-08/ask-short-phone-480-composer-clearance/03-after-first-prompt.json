@@ -1,0 +1,178 @@
+{
+  "bottomZoneControls": [
+    {
+      "hit": {
+        "owned": true,
+        "tag": "input",
+        "text": "Ask a question about your shelf",
+        "x": 131.2,
+        "y": 385.6
+      },
+      "rect": {
+        "bottom": 409.6,
+        "height": 48,
+        "left": 39,
+        "right": 223.4,
+        "top": 361.6,
+        "width": 184.5
+      },
+      "role": "",
+      "tag": "input",
+      "text": "Ask a question about your shelf"
+    },
+    {
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "↑",
+        "x": 257.4,
+        "y": 385.6
+      },
+      "rect": {
+        "bottom": 409.6,
+        "height": 48,
+        "left": 233.4,
+        "right": 281.4,
+        "top": 361.6,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Send"
+    }
+  ],
+  "composer": {
+    "hit": {
+      "owned": true,
+      "tag": "input",
+      "text": "Ask a question about your shelf",
+      "x": 131.2,
+      "y": 385.6
+    },
+    "rect": {
+      "bottom": 409.6,
+      "height": 48,
+      "left": 39,
+      "right": 223.4,
+      "top": 361.6,
+      "width": 184.5
+    },
+    "role": "",
+    "tag": "input",
+    "text": "Ask a question about your shelf"
+  },
+  "controls": [
+    {
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "<",
+        "x": 48,
+        "y": 28
+      },
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Back"
+    },
+    {
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "Was this helpful? · Report a problem",
+        "x": 143.8,
+        "y": 315.8
+      },
+      "rect": {
+        "bottom": 339.8,
+        "height": 48,
+        "left": 24,
+        "right": 263.7,
+        "top": 291.8,
+        "width": 239.7
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Report a problem with this answer"
+    },
+    {
+      "hit": {
+        "owned": true,
+        "tag": "input",
+        "text": "Ask a question about your shelf",
+        "x": 131.2,
+        "y": 385.6
+      },
+      "rect": {
+        "bottom": 409.6,
+        "height": 48,
+        "left": 39,
+        "right": 223.4,
+        "top": 361.6,
+        "width": 184.5
+      },
+      "role": "",
+      "tag": "input",
+      "text": "Ask a question about your shelf"
+    },
+    {
+      "hit": {
+        "owned": true,
+        "tag": "div",
+        "text": "↑",
+        "x": 257.4,
+        "y": 385.6
+      },
+      "rect": {
+        "bottom": 409.6,
+        "height": 48,
+        "left": 233.4,
+        "right": 281.4,
+        "top": 361.6,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Send"
+    }
+  ],
+  "footerZoneTop": 361.6,
+  "hitBlocked": [],
+  "overflows": [],
+  "promptButtons": [],
+  "sampleText": "< ✦ Ask RoutineKind Is there a conflict on my shelf? ✓ answered by your conflict engine · $0 I do not see products on your shelf yet. Add them and I will check real pairs instead of guessing. Was this helpful? · Report a problem ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "send": {
+    "hit": {
+      "owned": true,
+      "tag": "div",
+      "text": "↑",
+      "x": 257.4,
+      "y": 385.6
+    },
+    "rect": {
+      "bottom": 409.6,
+      "height": 48,
+      "left": 233.4,
+      "right": 281.4,
+      "top": 361.6,
+      "width": 48
+    },
+    "role": "button",
+    "tag": "button",
+    "text": "Send"
+  },
+  "under44": [],
+  "url": "/ask",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "jsDialog": false
+}

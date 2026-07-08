@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed `/ask` on shortest 320 x 480 phones. The empty Ask state now uses a
+  stricter `height < 520` layout: decorative pills are hidden, the top two
+  prompt buttons stay above the fixed composer, and the first-answer user
+  bubble/answer/report stack uses denser spacing only on those shortest phones.
+  Codex in-app browser E2E reproduced the old prompt-composer hit-blocking, then
+  verified the fixed empty state and first-prompt state with zero hit-blocked
+  controls, zero sub-44 px controls, zero horizontal overflow, and only expected
+  local placeholder warnings. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`,
+  `docs/e2e-bug-reports/2026-07-08-ask-short-phone-composer-overlap.md`.
+
 - Made Today check-offs match the append-only routine-completion contract from
   docs/01 and docs/03. Repeated taps on an already-completed row now preserve
   the local completion instead of toggling it off, and completed rows no-op in

@@ -655,6 +655,20 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   additional Node REPL Playwright/system Chrome evidence in
   `test-results/human-e2e/2026-07-07/ask-active-frequency-escalation/`; native
   keyboard/screen-reader QA remains device follow-up.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 480 covers the Ask
+  shortest-phone composer-clearance fix. Pre-fix evidence reproduced lower
+  empty-state prompt buttons being intercepted by the fixed composer. Post-fix,
+  `/ask` hides decorative pills on the shortest phones, shows the top two prompt
+  buttons above the composer, verifies prompt centers hit their own buttons,
+  and after tapping `Is there a conflict on my shelf?` keeps the empty-shelf
+  answer, 48 px report control, 48 px input, Send, and disclosure hit-testable.
+  Horizontal overflow is zero, no visible control is below 44 px, no JavaScript
+  dialog appears, and browser warn/error logs contain only expected local
+  placeholder warnings. Evidence and bug report are in
+  `test-results/human-e2e/2026-07-08/ask-short-phone-480-composer-clearance/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-ask-short-phone-composer-overlap.md`; native
+  keyboard, Dynamic Type, and screen-reader traversal remain device follow-up.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Skin Notes expert
   library happy path: `/community` shows topic groups, evidence labels, and
   explicit library-not-feed copy with zero horizontal overflow; opening the
