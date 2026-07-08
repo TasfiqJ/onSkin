@@ -96,9 +96,11 @@ describe('Shelf route mobile contracts', () => {
       );
     }
 
-    expect(readAppRoute('shelf/no-match.tsx')).toContain(
-      '<Sheet tone="night" fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
-    );
+    const noMatchSource = readAppRoute('shelf/no-match.tsx');
+    expect(noMatchSource).toContain('tone="night"');
+    expect(noMatchSource).toContain('fallbackRoute={APP_SHELF_ROUTE}');
+    expect(noMatchSource).toContain('scroll');
+    expect(noMatchSource).toContain('backdropAccessible={false}');
   });
 
   it('keeps barcode no-match recovery from dead-ending before manual add', () => {
@@ -114,6 +116,18 @@ describe('Shelf route mobile contracts', () => {
     const analytics = readFeatureFile('analytics.ts');
 
     expect(analytics).toContain("'miss_search'");
+  });
+
+  it('keeps barcode no-match recovery visible on the shortest supported phones', () => {
+    const source = readAppRoute('shelf/no-match.tsx');
+
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const shortPhone = height < 520');
+    expect(source).toContain("className={shortPhone ? 'px-6 pb-5 pt-3' : undefined}");
+    expect(source).toContain("<View className={shortPhone ? 'mt-3 gap-1.5' : 'mt-4 gap-2'}>");
+    expect(source).toContain('compact={shortPhone}');
+    expect(source).toContain('min-h-[54px]');
+    expect(source).toContain('!shortPhone ? (');
   });
 
   it('keeps text exits buffered above 44px when a label is clearer than an icon', () => {

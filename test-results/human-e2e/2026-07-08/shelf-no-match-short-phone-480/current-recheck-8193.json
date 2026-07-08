@@ -1,0 +1,215 @@
+{
+  "date": "2026-07-08",
+  "task": "Shelf no-match short-phone current-source recheck",
+  "surface": "Expo web via Codex in-app browser",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8193 --host localhost",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "states": [
+    {
+      "blockedHitTests": [],
+      "bodyTextSample": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+      "clippedControls": [],
+      "controls": [
+        {
+          "center": {
+            "x": 268.4,
+            "y": 94.65
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Close",
+          "rect": {
+            "bottom": 118.64,
+            "height": 48,
+            "width": 48,
+            "x": 244.4,
+            "y": 70.65
+          },
+          "role": "button"
+        },
+        {
+          "center": {
+            "x": 160.19,
+            "y": 313.59
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "SSearch catalogTry name or brand instead",
+          "rect": {
+            "bottom": 340.59,
+            "height": 54,
+            "width": 264.41,
+            "x": 27.99,
+            "y": 286.59
+          },
+          "role": "button"
+        },
+        {
+          "center": {
+            "x": 160.19,
+            "y": 373.59
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "IScan the ingredient listWe'll read the INCI text",
+          "rect": {
+            "bottom": 400.59,
+            "height": 54,
+            "width": 264.41,
+            "x": 27.99,
+            "y": 346.59
+          },
+          "role": "button"
+        },
+        {
+          "center": {
+            "x": 160.19,
+            "y": 433.59
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "+Add it by handAlways works, even offline",
+          "rect": {
+            "bottom": 460.59,
+            "height": 54,
+            "width": 264.41,
+            "x": 27.99,
+            "y": 406.58
+          },
+          "role": "button"
+        }
+      ],
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8193/shelf/no-match",
+      "label": "no-match-current-recheck-8193",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 481,
+        "width": 320
+      }
+    },
+    {
+      "blockedHitTests": [],
+      "bodyTextSample": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+      "clippedControls": [],
+      "controls": [
+        {
+          "center": {
+            "x": 48,
+            "y": 31.99
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Cancel",
+          "rect": {
+            "bottom": 55.99,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 7.99
+          },
+          "role": "button"
+        },
+        {
+          "center": {
+            "x": 160.19,
+            "y": 170.96
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Product name",
+          "rect": {
+            "bottom": 195.96,
+            "height": 50,
+            "width": 272.39,
+            "x": 24,
+            "y": 145.96
+          },
+          "role": "input"
+        },
+        {
+          "center": {
+            "x": 86,
+            "y": 254.96
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Brand",
+          "rect": {
+            "bottom": 279.96,
+            "height": 50,
+            "width": 124,
+            "x": 24,
+            "y": 229.96
+          },
+          "role": "input"
+        },
+        {
+          "center": {
+            "x": 228.19,
+            "y": 254.96
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Category",
+          "rect": {
+            "bottom": 279.96,
+            "height": 50,
+            "width": 136.39,
+            "x": 160,
+            "y": 229.96
+          },
+          "role": "button"
+        },
+        {
+          "center": {
+            "x": 160.19,
+            "y": 378.34
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Ingredients",
+          "rect": {
+            "bottom": 410.73,
+            "height": 64.78,
+            "width": 272.39,
+            "x": 24,
+            "y": 345.95
+          },
+          "role": "textarea"
+        },
+        {
+          "center": {
+            "x": 160.19,
+            "y": 440.59
+          },
+          "clipped": false,
+          "hitSelfOrChild": true,
+          "label": "Continue",
+          "rect": {
+            "bottom": 468.58,
+            "height": 55.99,
+            "width": 272.39,
+            "x": 24,
+            "y": 412.59
+          },
+          "role": "button"
+        }
+      ],
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8193/shelf/manual",
+      "label": "manual-after-current-recheck-8193",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 481,
+        "width": 320
+      }
+    }
+  ],
+  "manualCount": 1,
+  "dialogOpen": null,
+  "verdict": "pass"
+}

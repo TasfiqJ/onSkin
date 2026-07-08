@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added current app-surface evidence for Recommendations direct-entry exits.
+  Codex in-app browser Expo web at 320 x 568 verifies direct
+  `/recommendations` Back recovery to `/you`, direct
+  `/recommendations/preferences` Back recovery to `/recommendations`, and stale
+  `/recommendations/stale-local-rec` `Back to For you` recovery to
+  `/recommendations`. Hub Back/Preferences, preferences chips, route Back, and
+  stale-detail recovery controls all measure 48 px or larger, with zero
+  horizontal overflow, no sub-44 controls, no JavaScript dialog, and only
+  expected local Supabase placeholder / Expo web notification warnings.
+  Evidence:
+  `test-results/human-e2e/2026-07-08/recommendations-direct-entry-exits-current/`.
+
 - Fixed shortest-phone paywall compliance reachability at 320 x 480. Direct
   `/progress/capture` and `/progress/review` now receive the compact
   photo-timeline paywall treatment instead of pushing Terms, Privacy, and
@@ -304,7 +316,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Hardened Progress still-photo capture failure recovery. `/progress/capture`
   now converts `takePictureAsync` rejection into route-owned `Photo wasn't
-  captured` recovery instead of a platform alert, with a foreground retry, a
+captured` recovery instead of a platform alert, with a foreground retry, a
   `Not now` exit, disabled background shutter, and explicit compact heading
   line heights for wrapped recovery copy. In-app browser Expo web E2E at
   320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_FAILURE=once` and
@@ -661,7 +673,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 ## 2026-07-07
 
 - Ran the Phase 9 release-engineering verification suite. `npm run
-  phase9:verify` passes non-strict across release contact smoke, evidence
+phase9:verify` passes non-strict across release contact smoke, evidence
   normalization, release smoke, RLS/policy checks, Edge/public-form/live-harness
   guards, data-rights and consent-withdrawal smoke, privacy-payload audit,
   store-build inspect, dependency inventory/SBOM, QA packet generation, root
@@ -739,7 +751,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   their scroll padding includes safe-area insets. Live Codex in-app browser
   Expo web evidence at 320 x 568 on the current branch verifies the local-only
   consent gate keeps complete privacy copy visible, exposes `Take photos. On
-  device only` as a 52 px control and `Not now` as a 48 px control, has zero
+device only` as a 52 px control and `Not now` as a 48 px control, has zero
   horizontal overflow, and routes `Not now` back to `/progress` with the
   first-photo CTA and tab bar targets still 54 px+. Focused
   `progressRoutes.test.ts` passes. Evidence is in
@@ -748,10 +760,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Verified the realistic shelf-label routine branches in the Codex in-app
   browser at 320 x 568. From `/onboarding/products`, adding `Retinol 0.3%
-  Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` produces a
+Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` produces a
   `BUILT FROM YOUR SHELF` routine plan with SPF in Morning, Glycolic on Night
   1, Retinol on Night 2, and `Timing handled` as the first insight; `Start
-  today` opens the PM Glycolic check-off and completion reaches `1 of 1`.
+today` opens the PM Glycolic check-off and completion reaches `1 of 1`.
   Removing the night actives to leave only `Mineral SPF 50` keeps the plan
   honest with `No night steps yet.` and Today PM shows no stale skin-cycling,
   retinol, glycolic, or recover copy. Focused routine generation, plan,
@@ -775,7 +787,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   context seeded with a retinol/glycolic Shelf conflict. The Shelf banner opened
   the detail through `Review conflict`, the detail showed calm evidence and
   resolution copy, the compact saved-choice footer now reads `saved · we won't
-  ask again`, and tapping `Use together anyway` returned to Shelf with the
+ask again`, and tapping `Use together anyway` returned to Shelf with the
   conflict banner suppressed. The run decrypted the local override envelope and
   confirmed the canonical conflict key persisted. Focused conflict route,
   override, and Shelf tests pass. Evidence is in
@@ -806,7 +818,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Fixed the compact reverse-trial keep-options paywall after 320 x 568 E2E
   reproduced a billing-context ordering issue: tapping `Keep Pro after your
-  week` from `/settings/subscription` showed the fixed CTA before the annual
+week` from `/settings/subscription` showed the fixed CTA before the annual
   price, store-unavailable reason, and compliance row. The active reverse-trial
   keep/options screen now keeps the annual price and preview checkout reason in
   the compact footer above the purchase CTA and restores enough compact scroll
@@ -4684,6 +4696,28 @@ warn/error logs. Evidence is in
 `test-results/human-e2e/2026-07-08/shelf-empty-compact-current/`. Native
 iOS/Android safe-area, Dynamic Type, and screen-reader traversal remain device
 QA follow-up.
+
+### Shelf no-match shortest-phone fallback (2026-07-08)
+
+Found a 320 x 480 Shelf no-match recovery issue in the Codex in-app browser:
+`/shelf/no-match` clipped the final `Add it by hand` fallback so its center was
+outside the viewport while the document had no useful page scroll. Added a
+route-local compact mode below 520 px height that keeps the close action large,
+keeps all three recovery rows visible, reduces each fallback row to a still-safe
+54 px target, and hides only the nonessential footer microcopy.
+
+Post-fix human-simulated E2E at 320 x 481 verifies Search catalog, Scan the
+ingredient list, and Add it by hand are all visible; the manual row has no
+blocked hit-test, clipped-control state, sub-44 px target, horizontal overflow,
+JavaScript dialog, or current-route warning/error logs; and tapping its visible
+center routes to `/shelf/manual`. Evidence and bug report are in
+`test-results/human-e2e/2026-07-08/shelf-no-match-short-phone-480/` and
+`docs/e2e-bug-reports/2026-07-08-shelf-no-match-short-phone-fallback.md`.
+Fresh current-source recheck on localhost:8193 confirms the manual fallback is
+264.41 x 54 px at y=406.58-460.59 in a 320 x 480 viewport, center hit-testing
+succeeds, and the tap-through still lands on `/shelf/manual`.
+Native iOS/Android camera, safe-area, Dynamic Type, and screen-reader traversal
+remain device QA follow-up.
 
 ## Open questions for the founder
 

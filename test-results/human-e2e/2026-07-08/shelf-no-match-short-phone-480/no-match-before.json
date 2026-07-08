@@ -1,0 +1,145 @@
+{
+  "bottomZoneControls": [
+    {
+      "hitBlocked": false,
+      "hitLabel": "Scan the ingredient list",
+      "label": "IScan the ingredient listWe'll read the INCI text",
+      "rect": "[Circular]"
+    },
+    {
+      "hitBlocked": false,
+      "hitLabel": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch",
+      "label": "+Add it by handAlways works, even offline",
+      "rect": "[Circular]"
+    }
+  ],
+  "clippedVisible": [
+    {
+      "centerInsideViewport": false,
+      "label": "+Add it by handAlways works, even offline",
+      "rect": "[Circular]"
+    }
+  ],
+  "controls": [
+    {
+      "center": {
+        "x": 268.4,
+        "y": 76.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Close | x",
+      "rect": {
+        "bottom": 100.6,
+        "height": 48,
+        "left": 244.4,
+        "right": 292.4,
+        "top": 52.6,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 338.5
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Search catalog",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "SSearch catalogTry name or brand instead",
+      "rect": {
+        "bottom": 372.5,
+        "height": 68,
+        "left": 28,
+        "right": 292.4,
+        "top": 304.5,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 414.5
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan the ingredient list",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "IScan the ingredient listWe'll read the INCI text",
+      "rect": {
+        "bottom": 448.5,
+        "height": 68,
+        "left": 28,
+        "right": 292.4,
+        "top": 380.5,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 480
+      },
+      "centerInsideViewport": false,
+      "clippedVisible": true,
+      "hitBlocked": false,
+      "hitLabel": "?xWe don't have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "+Add it by handAlways works, even offline",
+      "rect": {
+        "bottom": 524.5,
+        "height": 68,
+        "left": 28,
+        "right": 292.4,
+        "top": 456.5,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/shelf/no-match",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline manual fallback keeps the shelf working",
+  "jsDialog": null
+}

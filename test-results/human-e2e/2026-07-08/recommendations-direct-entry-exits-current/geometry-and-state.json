@@ -1,0 +1,1022 @@
+{
+  "date": "2026-07-08",
+  "task": "Recommendations direct-entry exits current evidence",
+  "surface": "Expo web via Codex in-app browser",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8192 --host localhost",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "baseUrl": "http://localhost:8192",
+  "dialogOpen": null,
+  "interactions": [
+    {
+      "action": "Open /recommendations directly",
+      "href": "http://localhost:8192/recommendations"
+    },
+    {
+      "action": "Verified unique hub Back and Preferences controls",
+      "backCount": 1,
+      "preferencesCount": 1
+    },
+    {
+      "action": "Tap hub Back",
+      "expected": "/you",
+      "actual": "http://localhost:8192/you"
+    },
+    {
+      "action": "Open /recommendations/preferences directly and verified unique Back",
+      "href": "http://localhost:8192/recommendations/preferences",
+      "backCount": 1
+    },
+    {
+      "action": "Tap preferences Back",
+      "expected": "/recommendations",
+      "actual": "http://localhost:8192/recommendations"
+    },
+    {
+      "action": "Open stale /recommendations/stale-local-rec directly and verified Back + Back to For you",
+      "href": "http://localhost:8192/recommendations/stale-local-rec",
+      "backCount": 1,
+      "backToForYouCount": 1
+    },
+    {
+      "action": "Tap stale Back to For you",
+      "expected": "/recommendations",
+      "actual": "http://localhost:8192/recommendations"
+    }
+  ],
+  "states": [
+    {
+      "bodyTextSample": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+      "controls": [
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Back",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Preferences",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 101.47,
+            "x": 194.92,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+          "rect": {
+            "bottom": 354.82,
+            "height": 170.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 183.95
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+          "rect": {
+            "bottom": 537.7,
+            "height": 170.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 366.82
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A gentle cleanser. Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+          "rect": {
+            "bottom": 813.56,
+            "height": 183.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 629.69
+          },
+          "role": "button"
+        }
+      ],
+      "document": {
+        "clientHeight": 569,
+        "clientWidth": 320,
+        "scrollHeight": 569,
+        "scrollWidth": 320
+      },
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8192/recommendations",
+      "label": "hub-direct-initial",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    {
+      "bodyTextSample": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share.",
+      "controls": [
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Sign out",
+          "rect": {
+            "bottom": 137.97,
+            "height": 48,
+            "width": 90.28,
+            "x": 186.12,
+            "y": 89.97
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Manage subscription. Free plan",
+          "rect": {
+            "bottom": 255.9,
+            "height": 49.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 205.95
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Your plan",
+          "rect": {
+            "bottom": 371.88,
+            "height": 48,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 323.88
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Edit the order",
+          "rect": {
+            "bottom": 419.87,
+            "height": 48,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 371.88
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Retinoid ramp",
+          "rect": {
+            "bottom": 631.84,
+            "height": 48,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 583.84
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Streak & adherence",
+          "rect": {
+            "bottom": 679.84,
+            "height": 48,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 631.84
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Weekly check-in",
+          "rect": {
+            "bottom": 727.84,
+            "height": 48,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 679.84
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Recent changes",
+          "rect": {
+            "bottom": 775.83,
+            "height": 48,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 727.84
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Recommendations",
+          "rect": {
+            "bottom": 1135.79,
+            "height": 59.98,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 1075.8
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Recommendation preferences",
+          "rect": {
+            "bottom": 1199.77,
+            "height": 63.99,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 1135.79
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Skin Notes. Myth vs evidence, reviewed and claim-safe.",
+          "rect": {
+            "bottom": 1281.74,
+            "height": 81.96,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 1199.77
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "App lock",
+          "rect": {
+            "bottom": 1432.68,
+            "height": 48,
+            "width": 51.99,
+            "x": 224.41,
+            "y": 1384.68
+          },
+          "role": "switch"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Encrypted cloud backup",
+          "rect": {
+            "bottom": 1546.63,
+            "height": 48,
+            "width": 51.99,
+            "x": 224.41,
+            "y": 1498.63
+          },
+          "role": "switch"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Reminders & notifications. Tiered, capped, at times you choose. Quiet hours & lock-screen discretion.",
+          "rect": {
+            "bottom": 1787.55,
+            "height": 125.96,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 1661.59
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Marketing emails",
+          "rect": {
+            "bottom": 1928.49,
+            "height": 48,
+            "width": 51.99,
+            "x": 224.41,
+            "y": 1880.49
+          },
+          "role": "switch"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Photos & the no-AI-score promise",
+          "rect": {
+            "bottom": 2009.47,
+            "height": 63.99,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 1945.48
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+          "rect": {
+            "bottom": 2155.42,
+            "height": 145.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2009.47
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Privacy policy. What data we collect, use, and share.",
+          "rect": {
+            "bottom": 2301.34,
+            "height": 69.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2231.39
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Consumer health privacy. Consumer health data notice and rights.",
+          "rect": {
+            "bottom": 2395.28,
+            "height": 93.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2301.33
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Terms. Rules for using RoutineKind and subscription terms.",
+          "rect": {
+            "bottom": 2465.23,
+            "height": 69.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2395.28
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Support. Help with accounts, billing, deletion, or export.",
+          "rect": {
+            "bottom": 2535.18,
+            "height": 69.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2465.23
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Account deletion. How account deletion works before and after deleting in app.",
+          "rect": {
+            "bottom": 2625.12,
+            "height": 89.94,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2535.18
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Data export. How to request and read your export.",
+          "rect": {
+            "bottom": 2695.07,
+            "height": 69.95,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2625.12
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Export my data",
+          "rect": {
+            "bottom": 2835.03,
+            "height": 55.99,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2779.04
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Delete account",
+          "rect": {
+            "bottom": 2899.01,
+            "height": 55.99,
+            "width": 232.4,
+            "x": 43.99,
+            "y": 2843.02
+          },
+          "role": "button"
+        }
+      ],
+      "document": {
+        "clientHeight": 569,
+        "clientWidth": 320,
+        "scrollHeight": 569,
+        "scrollWidth": 320
+      },
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8192/you",
+      "label": "hub-back-after-click",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    {
+      "bodyTextSample": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+      "controls": [
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Back",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Fragrance-free",
+          "rect": {
+            "bottom": 273.94,
+            "height": 48,
+            "width": 140.72,
+            "x": 24,
+            "y": 225.94
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Vegan",
+          "rect": {
+            "bottom": 273.94,
+            "height": 48,
+            "width": 77.72,
+            "x": 172.71,
+            "y": 225.94
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Cruelty-free",
+          "rect": {
+            "bottom": 329.93,
+            "height": 48,
+            "width": 121.68,
+            "x": 24,
+            "y": 281.93
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Non-comedogenic",
+          "rect": {
+            "bottom": 385.92,
+            "height": 48,
+            "width": 163.7,
+            "x": 24,
+            "y": 337.92
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Sustainable",
+          "rect": {
+            "bottom": 441.91,
+            "height": 48,
+            "width": 117.22,
+            "x": 24,
+            "y": 393.92
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Drugstore",
+          "rect": {
+            "bottom": 533.9,
+            "height": 48,
+            "width": 85.47,
+            "x": 24,
+            "y": 485.91
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Mid-range",
+          "rect": {
+            "bottom": 533.9,
+            "height": 48,
+            "width": 85.47,
+            "x": 117.46,
+            "y": 485.91
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Premium",
+          "rect": {
+            "bottom": 533.9,
+            "height": 48,
+            "width": 85.47,
+            "x": 210.92,
+            "y": 485.91
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Gel",
+          "rect": {
+            "bottom": 625.9,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 577.9
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Cream",
+          "rect": {
+            "bottom": 625.9,
+            "height": 48,
+            "width": 65.03,
+            "x": 79.99,
+            "y": 577.9
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Fluid",
+          "rect": {
+            "bottom": 625.9,
+            "height": 48,
+            "width": 54.55,
+            "x": 153.02,
+            "y": 577.9
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Balm",
+          "rect": {
+            "bottom": 625.9,
+            "height": 48,
+            "width": 55.17,
+            "x": 215.56,
+            "y": 577.9
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": "false",
+          "label": "Oil",
+          "rect": {
+            "bottom": 681.89,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 633.89
+          },
+          "role": "button"
+        }
+      ],
+      "document": {
+        "clientHeight": 569,
+        "clientWidth": 320,
+        "scrollHeight": 569,
+        "scrollWidth": 320
+      },
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8192/recommendations/preferences",
+      "label": "preferences-direct-initial",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    {
+      "bodyTextSample": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+      "controls": [
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Back",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Preferences",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 101.47,
+            "x": 194.92,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+          "rect": {
+            "bottom": 354.82,
+            "height": 170.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 183.95
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+          "rect": {
+            "bottom": 537.7,
+            "height": 170.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 366.82
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A gentle cleanser. Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+          "rect": {
+            "bottom": 813.56,
+            "height": 183.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 629.69
+          },
+          "role": "button"
+        }
+      ],
+      "document": {
+        "clientHeight": 569,
+        "clientWidth": 320,
+        "scrollHeight": 569,
+        "scrollWidth": 320
+      },
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8192/recommendations",
+      "label": "preferences-back-after-click",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    {
+      "bodyTextSample": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
+      "controls": [
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Back",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Back to For you",
+          "rect": {
+            "bottom": 382.45,
+            "height": 48,
+            "width": 113.59,
+            "x": 103.4,
+            "y": 334.45
+          },
+          "role": "button"
+        }
+      ],
+      "document": {
+        "clientHeight": 569,
+        "clientWidth": 320,
+        "scrollHeight": 569,
+        "scrollWidth": 320
+      },
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8192/recommendations/stale-local-rec",
+      "label": "stale-detail-direct-initial",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    },
+    {
+      "bodyTextSample": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+      "controls": [
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Back",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 48,
+            "x": 24,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "Preferences",
+          "rect": {
+            "bottom": 51.99,
+            "height": 48,
+            "width": 101.47,
+            "x": 194.92,
+            "y": 3.99
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+          "rect": {
+            "bottom": 354.82,
+            "height": 170.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 183.95
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+          "rect": {
+            "bottom": 537.7,
+            "height": 170.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 366.82
+          },
+          "role": "button"
+        },
+        {
+          "ariaDisabled": null,
+          "ariaSelected": null,
+          "label": "A gentle cleanser. Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+          "rect": {
+            "bottom": 813.56,
+            "height": 183.87,
+            "width": 272.39,
+            "x": 24,
+            "y": 629.69
+          },
+          "role": "button"
+        }
+      ],
+      "document": {
+        "clientHeight": 569,
+        "clientWidth": 320,
+        "scrollHeight": 569,
+        "scrollWidth": 320
+      },
+      "horizontalOverflow": 0,
+      "href": "http://localhost:8192/recommendations",
+      "label": "stale-back-to-for-you-after-click",
+      "sub44Controls": [],
+      "viewport": {
+        "height": 569,
+        "width": 320
+      }
+    }
+  ],
+  "warnErrorLogs": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:43:20.316Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:43:20.316Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:43:20.331Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:44:31.351Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:44:31.352Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:44:31.356Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:44:36.084Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:44:36.085Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:44:36.089Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:44:40.733Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:44:40.735Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:44:40.740Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:45:26.229Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:45:26.229Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:45:26.232Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:45:30.961Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:45:30.962Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:45:30.965Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:45:35.618Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-08T11:45:35.619Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-08T11:45:35.623Z",
+      "url": "http://localhost:8192/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ],
+  "verdict": "pass"
+}

@@ -1,0 +1,130 @@
+{
+  "bottomZoneControls": [
+    "[Circular]",
+    "[Circular]"
+  ],
+  "clippedVisible": [],
+  "controls": [
+    {
+      "center": {
+        "x": 268.4,
+        "y": 128.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 0,
+      "intersectsViewport": true,
+      "label": "Close",
+      "rect": {
+        "bottom": 152.6,
+        "height": 48,
+        "left": 244.4,
+        "right": 292.4,
+        "top": 104.6,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 313.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Try name or brand instead",
+      "hitTag": "div",
+      "inBottom96": false,
+      "index": 1,
+      "intersectsViewport": true,
+      "label": "S Search catalog Try name or brand instead",
+      "rect": {
+        "bottom": 340.6,
+        "height": 54,
+        "left": 28,
+        "right": 292.4,
+        "top": 286.6,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 373.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "We'll read the INCI text",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 2,
+      "intersectsViewport": true,
+      "label": "I Scan the ingredient list We'll read the INCI text",
+      "rect": {
+        "bottom": 400.6,
+        "height": 54,
+        "left": 28,
+        "right": 292.4,
+        "top": 346.6,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    },
+    {
+      "center": {
+        "x": 160.2,
+        "y": 433.6
+      },
+      "centerInsideViewport": true,
+      "clippedVisible": false,
+      "hitBlocked": false,
+      "hitLabel": "Always works, even offline",
+      "hitTag": "div",
+      "inBottom96": true,
+      "index": 3,
+      "intersectsViewport": true,
+      "label": "+ Add it by hand Always works, even offline",
+      "rect": {
+        "bottom": 460.6,
+        "height": 54,
+        "left": 28,
+        "right": 292.4,
+        "top": 406.6,
+        "width": 264.4
+      },
+      "role": "button",
+      "tag": "button",
+      "under44": false
+    }
+  ],
+  "hitBlocked": [],
+  "horizontalOverflow": [],
+  "href": "http://localhost:8185/shelf/no-match",
+  "scroll": {
+    "bodyHeight": 481,
+    "documentHeight": 481,
+    "x": 0,
+    "y": 0
+  },
+  "under44": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+  "jsDialog": null,
+  "currentRouteLogs": []
+}
