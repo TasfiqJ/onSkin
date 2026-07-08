@@ -1,169 +1,176 @@
 {
-  "url": "http://localhost:8220/onboarding/products",
+  "url": "http://localhost:8248/onboarding/products",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8248 --clear",
   "viewportRequested": {
     "width": 320,
     "height": 480
   },
   "flow": "goals -> consent -> quiz -> products -> category sheet -> add shelf product",
-  "productName": "Barrier Screen SPF 52",
+  "productName": "Barrier Screen SPF",
+  "quizSteps": [
+    {
+      "step": 0,
+      "text": "1 / 12 | OIL + MOISTURE | A few hours after cleansing, how does your skin usually feel? | Tight or flaky",
+      "answer": "Tight or flaky"
+    },
+    {
+      "step": 1,
+      "text": "2 / 12 | OIL + MOISTURE | How often does your skin ask for more moisture during the day? | Most days",
+      "answer": "Most days"
+    },
+    {
+      "step": 2,
+      "text": "3 / 12 | SENSITIVITY | When you try a new product, how often does your skin react? | Often stings, burns, or reddens",
+      "answer": "Often stings, burns, or reddens"
+    },
+    {
+      "step": 3,
+      "text": "4 / 12 | SENSITIVITY | How often do you notice redness, flushing, or a hot-feeling face? | Frequently",
+      "answer": "Frequently"
+    },
+    {
+      "step": 4,
+      "text": "5 / 12 | TONE | Do you notice dark spots, uneven tone, or areas that look more pigmented? | Yes, noticeably",
+      "answer": "Yes, noticeably"
+    },
+    {
+      "step": 5,
+      "text": "6 / 12 | TONE | After a breakout or irritation, how long do marks tend to linger? | Weeks or longer",
+      "answer": "Weeks or longer"
+    },
+    {
+      "step": 6,
+      "text": "7 / 12 | FIRMNESS | Which best describes fine lines or firmness right now? | Fine lines or firmness changes are visible",
+      "answer": "Fine lines or firmness changes are visible"
+    },
+    {
+      "step": 7,
+      "text": "8 / 12 | FIRMNESS | Thinking about your usual outdoor time, how much sun exposure has your skin had? | A lot over time",
+      "answer": "A lot over time"
+    },
+    {
+      "step": 8,
+      "text": "9 / 12 | SUN RESPONSE | Without sunscreen, how does your skin usually respond to strong sun? | Always burns",
+      "answer": "Always burns"
+    },
+    {
+      "step": 9,
+      "text": "10 / 12 | SKIN TONE | Choose the skin tone range closest to yours. | Tone 1",
+      "answer": "Tone 1"
+    },
+    {
+      "step": 10,
+      "text": "11 / 12 | SENSITIVITIES | Any known sensitivities or ingredients you try to avoid? Select all that apply. | Fragrance",
+      "answer": "Fragrance"
+    },
+    {
+      "step": 11,
+      "text": "12 / 12 | SAFETY | Are you pregnant, trying to become pregnant, or breastfeeding? | No",
+      "answer": "No"
+    }
+  ],
   "chooseCategoryBeforeCount": 1,
   "dialogNamedOpenCount": 1,
   "selectedCategoryOpenCount": 1,
-  "addedTextCount": 1,
+  "addedTextPresent": true,
   "sheetAuditOpen": {
-    "categoryButtonCount": 7,
     "dialogCount": 1,
     "dialogs": [
       {
         "ariaModal": "true",
-        "bottom": 481,
-        "height": 429,
         "label": "Choose product category",
-        "left": 0,
-        "right": 320,
-        "top": 52,
-        "width": 320
+        "rect": {
+          "bottom": 481,
+          "height": 429,
+          "left": 0,
+          "right": 320,
+          "top": 52,
+          "width": 320,
+          "x": 0,
+          "y": 52
+        }
       }
     ],
-    "documentWidth": {
-      "clientWidth": 320,
-      "scrollWidth": 320
-    },
-    "hiddenBackground": [
-      {
-        "bottom": 0,
-        "className": "css-view-g5y9jx r-flex-13awgt0 r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af",
-        "tag": "DIV",
-        "top": 0,
-        "width": 0
-      },
-      {
-        "bottom": 0,
-        "className": "css-view-g5y9jx r-flex-13awgt0 r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af",
-        "tag": "DIV",
-        "top": 0,
-        "width": 0
-      },
-      {
-        "bottom": 0,
-        "className": "css-view-g5y9jx r-flex-13awgt0 r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af",
-        "tag": "DIV",
-        "top": 0,
-        "width": 0
-      },
-      {
-        "bottom": 325,
-        "className": "css-view-g5y9jx flex-1 overflow-hidden",
-        "tag": "DIV",
-        "top": 0,
-        "width": 272
-      },
-      {
-        "bottom": 481,
-        "className": "css-view-g5y9jx bg-paper pb-4 pt-2",
-        "tag": "DIV",
-        "top": 325,
-        "width": 272
-      }
-    ],
-    "hiddenBackgroundCount": 5,
-    "hitTargets": [
+    "categoryHitTargets": [
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "Cleanser",
         "width": 90
       },
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "Toner",
         "width": 70
       },
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "Serum",
         "width": 75
       },
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "Treatment",
         "width": 98
       },
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "Moisturiser",
         "width": 105
       },
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "SPF",
         "width": 58
       },
       {
         "height": 48,
+        "hitSelfOrChild": true,
         "text": "Oil / balm",
         "width": 96
       }
     ],
-    "minHitTargetHeight": 48,
-    "overflowCount": 0,
+    "minSheetControlHeight": 48,
+    "backgroundAriaHiddenNodeCount": 2,
+    "blockedVisibleControls": [],
+    "horizontalOverflow": 0,
     "overflowElements": [],
-    "viewport": {
-      "height": 481,
-      "width": 320
-    }
-  },
-  "sheetAuditAdded": {
-    "addButtons": [],
     "documentWidth": {
+      "bodyScrollWidth": 320,
       "clientWidth": 320,
       "scrollWidth": 320
-    },
-    "overflowCount": 0,
-    "overflowElements": [],
+    }
+  },
+  "sheetAuditSelected": {
+    "dialogCount": 0,
+    "categoryControlCount": 1,
+    "horizontalOverflow": 0
+  },
+  "sheetAuditAdded": {
+    "dialogCount": 0,
     "productText": true,
     "removeButtons": [
       {
-        "height": 48,
-        "label": "Remove Barrier Screen SPF 52",
-        "text": "×",
-        "width": 48
-      },
-      {
-        "height": 48,
         "label": "Remove Barrier Screen SPF",
-        "text": "×",
-        "width": 48
-      },
-      {
+        "width": 48,
         "height": 48,
-        "label": "Remove Daily Mineral SPF",
-        "text": "×",
-        "width": 48
+        "hitSelfOrChild": true
       }
     ],
-    "viewport": {
-      "height": 481,
-      "width": 320
+    "blockedVisibleControls": [],
+    "horizontalOverflow": 0,
+    "overflowElements": [],
+    "documentWidth": {
+      "bodyScrollWidth": 320,
+      "clientWidth": 320,
+      "scrollWidth": 320
     }
   },
-  "logsAfterOnboarding": [
-    {
-      "level": "warn",
-      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
-      "timestamp": "2026-07-08T13:19:00.057Z",
-      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
-    },
-    {
-      "level": "warn",
-      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
-      "timestamp": "2026-07-08T13:19:00.057Z",
-      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
-    },
-    {
-      "level": "warn",
-      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
-      "timestamp": "2026-07-08T13:19:00.057Z",
-      "url": "http://localhost:8205/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
-    }
-  ]
+  "jsDialog": null,
+  "logsAfterOnboarding": []
 }
