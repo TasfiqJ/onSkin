@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T21:06:52.994Z",
+  "generatedAt": "2026-07-08T22:58:15.857Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "d1528f56d6ce2c55970287dfc100848906d41881",
+  "gitSha": "7820e237dd0a0de96898c12577fb9891b1cc27f3",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -137,8 +137,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 12147,
-      "sha256": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1"
+      "bytes": 12337,
+      "sha256": "bf030e5250bd594e49762bd3e759a7f027631747164234dadf096f5150b61fc7"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -167,8 +167,8 @@
     {
       "path": "apps/mobile/src/app/shelf/scan.tsx",
       "exists": true,
-      "bytes": 21389,
-      "sha256": "b1b1902171787d6103474fc1d0f3d8fb717805ecd48b8f17665799c2a42b8dcf"
+      "bytes": 21856,
+      "sha256": "320f9d05eb3053d7eec09e98de84c1c4694362001b872b78f1e313212beb99b0"
     },
     {
       "path": "apps/mobile/src/app/shelf/ocr.tsx",
@@ -239,8 +239,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 11741,
-      "sha256": "7bc0332cc266cf02137dc1811e44e638b0a8c73cbdc48e30b41f13a6a13dbad8"
+      "bytes": 12197,
+      "sha256": "b7c7ba7e3391e764ac5586f270adc6093910efbf2d977070ba130d562d7c93b7"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -263,20 +263,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 195660,
-      "sha256": "621f8a010f8fab2b8ce90d968776a43b91ac4b50a90e0c17161192e2193e25aa"
+      "bytes": 208941,
+      "sha256": "1a40e3bb65f8417860f617dcde6d3242eb96c54c16beaabc7c8391b0f5989870"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "4e366829d7a339064320522e71d2317222ca53c3a650a2920e5401197b131602"
+      "sha256": "1143a2b4cd0f6f5004c270b8c58e3b0a36d65e354994730b24eb1cdc3507ed78"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "a086173bac459e9d547841030aef9efcbebba95be4a704b56413abcdeb5bb3cd"
+      "sha256": "20720bf0846a929353d5267d943a118d078d407af93e43c8ec17dafaafa7e345"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
