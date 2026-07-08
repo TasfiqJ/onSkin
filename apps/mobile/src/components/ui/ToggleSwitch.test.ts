@@ -8,9 +8,15 @@ describe('ToggleSwitch', () => {
   it('keeps switch controls touchable and semantic on phones', () => {
     const source = readFileSync(`${UI_DIR}/ToggleSwitch.tsx`, 'utf8');
 
+    expect(source).toContain("import { Platform, Pressable");
     expect(source).toContain('accessibilityRole="switch"');
     expect(source).toContain('accessibilityState={{ checked: value, disabled: !!disabled }}');
     expect(source).toContain('aria-checked={value}');
+    expect(source).toContain("Platform.OS === 'web'");
+    expect(source).toContain('onClick: (event: { preventDefault?: () => void; stopPropagation?: () => void })');
+    expect(source).toContain("event.key !== ' ' && event.key !== 'Enter'");
+    expect(source).toContain('tabIndex: disabled ? -1 : 0');
+    expect(source).toContain("onPress={Platform.OS === 'web' ? undefined : activate}");
     expect(source).toContain('width: 52');
     expect(source).toContain('height: 48');
     expect(source).toContain("'h-12 min-h-[44px] w-[52px] items-center justify-center'");

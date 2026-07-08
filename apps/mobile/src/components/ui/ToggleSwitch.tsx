@@ -1,4 +1,4 @@
-import { Pressable, type PressableProps, View, type ViewStyle } from 'react-native';
+import { Platform, Pressable, type PressableProps, View, type ViewStyle } from 'react-native';
 
 import { cn } from '@/lib/cn';
 import { colors } from '@/theme/tokens';
@@ -38,14 +38,40 @@ export function ToggleSwitch({
   style,
   ...rest
 }: ToggleSwitchProps) {
+  const activate = () => {
+    if (!disabled) onChange(!value);
+  };
+  const webActivationProps =
+    Platform.OS === 'web'
+      ? ({
+          onClick: (event: { preventDefault?: () => void; stopPropagation?: () => void }) => {
+            event.preventDefault?.();
+            event.stopPropagation?.();
+            activate();
+          },
+          onKeyDown: (event: {
+            key?: string;
+            preventDefault?: () => void;
+            stopPropagation?: () => void;
+          }) => {
+            if (event.key !== ' ' && event.key !== 'Enter') return;
+            event.preventDefault?.();
+            event.stopPropagation?.();
+            activate();
+          },
+          tabIndex: disabled ? -1 : 0,
+        } as unknown as PressableProps)
+      : ({} as PressableProps);
+
   return (
     <Pressable
+      {...rest}
       accessibilityRole="switch"
       accessibilityState={{ checked: value, disabled: !!disabled }}
       aria-checked={value}
       aria-disabled={disabled ? true : undefined}
       disabled={disabled}
-      onPress={() => onChange(!value)}
+      onPress={Platform.OS === 'web' ? undefined : activate}
       className={cn('h-12 min-h-[44px] w-[52px] items-center justify-center', className)}
       style={(state) => [
         TOUCH_TARGET_STYLE,
@@ -53,7 +79,7 @@ export function ToggleSwitch({
         state.pressed && !disabled ? { opacity: 0.82 } : null,
         typeof style === 'function' ? style(state) : style,
       ]}
-      {...rest}
+      {...webActivationProps}
     >
       <View
         className="h-[24px] w-[42px] justify-center rounded-pill px-0.5"
