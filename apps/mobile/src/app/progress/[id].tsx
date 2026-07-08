@@ -312,6 +312,33 @@ function PhotoDetailScreenContent() {
         ) : null}
       </View>
 
+      {actionFeedback ? (
+        <View
+          accessibilityRole="alert"
+          style={{
+            backgroundColor: '#211C16',
+            borderColor: 'rgba(244,239,231,0.14)',
+            borderRadius: 16,
+            borderWidth: 1,
+            marginBottom: 12,
+            paddingHorizontal: 14,
+            paddingVertical: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: 'rgba(244,239,231,0.84)',
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 13,
+              lineHeight: 18,
+              textAlign: 'center',
+            }}
+          >
+            {actionFeedback}
+          </Text>
+        </View>
+      ) : null}
+
       {/* note */}
       <View
         style={{
@@ -340,33 +367,6 @@ function PhotoDetailScreenContent() {
           }}
         />
       </View>
-
-      {actionFeedback ? (
-        <View
-          accessibilityRole="alert"
-          style={{
-            backgroundColor: '#211C16',
-            borderColor: 'rgba(244,239,231,0.14)',
-            borderRadius: 16,
-            borderWidth: 1,
-            marginTop: 12,
-            paddingHorizontal: 14,
-            paddingVertical: 12,
-          }}
-        >
-          <Text
-            style={{
-              color: 'rgba(244,239,231,0.84)',
-              fontFamily: 'HankenGrotesk_400Regular',
-              fontSize: 13,
-              lineHeight: 18,
-              textAlign: 'center',
-            }}
-          >
-            {actionFeedback}
-          </Text>
-        </View>
-      ) : null}
 
       {!shareConfirmVisible && !deleteConfirmVisible ? (
         <View style={{ flexDirection: 'row', gap: 8, paddingTop: 16 }}>

@@ -180,7 +180,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('onPress={() => void deleteCurrentPhoto()}');
     expect(source).toContain('{!shareConfirmVisible && !deleteConfirmVisible ? (');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('marginTop: 12');
+    expect(source).toContain('marginBottom: 12');
     expect(source).not.toContain('bottom: insets.bottom + 82');
     expect(copy).toContain("deleteTitle: 'Delete this photo?'");
     expect(copy).toContain('deleteBody: "It\'s removed from your phone. This can\'t be undone."');
