@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Re-ran `npm run phase8:verify` on current `main` after the current
+  growth/share-card route work. Phase 8 smoke, growth/store code gates,
+  generated QA packet, root typecheck, root lint, and the full mobile test
+  suite all pass non-strict verification. The generated Phase 8 packet now
+  hashes the current share-card and conflict-share files. Strict Phase 8 remains
+  blocked only on external founder/reviewer evidence: final brand/domain,
+  production marketing/support/store URLs, DNS, Universal Links/App Links,
+  share-card device QA, attribution privacy review, store packets, creator
+  compliance, support response readiness, launch dashboard readiness, dry run,
+  Apple Team ID, Android release certificate fingerprints, and named signoff.
+
 - Finished the onboarding products category-sheet hardening on compact phones.
   The route-local sheet now reserves a 48 px outside dismiss area, names the
   sheet body as `Choose product category`, pads the internal chip list, and

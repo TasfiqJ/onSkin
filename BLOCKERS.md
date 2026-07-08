@@ -88,18 +88,20 @@ Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase7:verify`, `npm run brand:audit:strict`,
-`npm run phase9:verify`, and `npm run phase10-11:verify` pass non-strict code
-gates. The Phase 7 core-loop packet has been refreshed for the current Today
-and Progress route hashes; strict Phase 7 still requires the founder/reviewer
-evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9 privacy payload audit
-now accepts the route-owned progress-photo share confirmation instead of
-requiring a native alert. The mobile suite currently covers 170 test files and
-1743 tests. The 2026-07-08 Expo web shortest-phone rerun at 320 x 480 passed
-49 direct-entry routes with zero failed routes, visible clipped controls,
-sub-44 user-facing controls, blocked hit-tests, horizontal overflow, or
-disallowed browser logs. The Shelf manual category picker also passed fresh
-320 x 480 and 320 x 568 Expo web evidence for its named bottom sheet,
-scrollable lower category options, 52 px rows, `Other` selection,
+`npm run phase8:verify`, `npm run phase9:verify`, and
+`npm run phase10-11:verify` pass non-strict code gates. The Phase 7 core-loop
+packet has been refreshed for the current Today and Progress route hashes; the
+Phase 8 growth/store packet has been refreshed for the current share-card and
+conflict-share route hashes; strict Phase 7 and Phase 8 still require the
+founder/reviewer evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
+privacy payload audit now accepts the route-owned progress-photo share
+confirmation instead of requiring a native alert. The mobile suite currently
+covers 170 test files and 1743 tests. The 2026-07-08 Expo web shortest-phone
+rerun at 320 x 480 passed 49 direct-entry routes with zero failed routes,
+visible clipped controls, sub-44 user-facing controls, blocked hit-tests,
+horizontal overflow, or disallowed browser logs. The Shelf manual category
+picker also passed fresh 320 x 480 and 320 x 568 Expo web evidence for its named
+bottom sheet, scrollable lower category options, 52 px rows, `Other` selection,
 `/shelf/opened` continuation, and zero disallowed browser logs.
 Strict beta/public-launch gates still require the external evidence listed in
 `docs/FOR_TAS_TO_DO.md`. Re-run the relevant checks after any

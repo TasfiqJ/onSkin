@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T08:44:18.891Z",
+  "generatedAt": "2026-07-08T14:17:16.259Z",
   "objective": "Phase 8 growth loop and store readiness",
   "status": "blocked",
   "publicIdentity": {
@@ -64,8 +64,8 @@
     "apps/mobile/src/lib/growth/attribution.ts": "ad7a471633455bcdf45c95f8ce41ef4a7275c108786b06ba5f63d424d272208f",
     "apps/mobile/src/features/growth/shareLinks.ts": "0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d",
     "apps/mobile/src/app/s/[shareId].tsx": "98ca033789f88188c3056bb2a9f5d411bf8de52cf5b44e408c15c311c4c4e54d",
-    "apps/mobile/src/features/growth/shareCard.ts": "11996ad492cfd76a744a3ae45b50ffacae111721119b222b31bcafc1f9d59b3d",
-    "apps/mobile/src/app/share/conflict/[ruleId].tsx": "096fa24edb685bb08d08a4868fedef42a0b3b208e375335d8d96a094717a7cf7",
+    "apps/mobile/src/features/growth/shareCard.ts": "e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436",
+    "apps/mobile/src/app/share/conflict/[ruleId].tsx": "2d3372b7a4d726109665bbe067ac38bf4866f5a4daf3a539c52a322e860dd240",
     "apps/mobile/src/features/review/policy.ts": "cd8ccb30d06e9ef1e44f45693609dfecea5860582695cb18e5f6ac8e1a458d05",
     "apps/mobile/src/features/review/prompt.ts": "e345835e33c6a899d4337bd2ff332d7003224571db610ad3be32adc3613a9a57",
     "apps/mobile/src/lib/legal/storeMetadata.ts": "1708605207ee343e401eb71ed07c38af193232841ac35f1fbf7c0459aa5ffa68",

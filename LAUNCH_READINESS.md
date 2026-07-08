@@ -29,6 +29,13 @@ Fresh verification on 2026-07-08:
   identity/policy URLs, live Supabase/RLS, clinical/reviewer, catalog,
   physical-device, RevenueCat, privacy export/delete, beta dashboard, and named
   signoff evidence.
+- `npm run phase8:verify` passed non-strict growth/store code gates and
+  refreshed `docs/phase-8/generated/growth-store-qa-packet.*` for the current
+  share-card and conflict-share route hashes. Strict Phase 8 remains blocked by
+  missing final identity/domain, marketing/support/store URLs, DNS,
+  Universal/App Links, share-card device QA, attribution privacy, store packet,
+  creator/support/dashboard/dry-run, Apple Team ID, Android release
+  certificate, and named signoff evidence.
 - `npm run brand:audit:strict` passed with 0 public launch-risk and 0
   review-needed hits.
 - `npm run phase9:verify` passed non-strict release-engineering code gates
