@@ -75,6 +75,8 @@ function EveningRow({
   suffix: string;
   accent: boolean;
 }) {
+  const compactNumberLabel = compact && /^\d+$/.test(nightLabel);
+
   return (
     <View
       className={
@@ -82,7 +84,9 @@ function EveningRow({
       }
     >
       <Text
-        className="w-[68px] font-mono text-[11px]"
+        className={
+          compactNumberLabel ? 'w-5 font-mono text-[11px]' : 'w-[68px] font-mono text-[11px]'
+        }
         style={{ color: accent ? colors.clayBright : 'rgba(244,239,231,0.4)' }}
       >
         {nightLabel}
@@ -116,17 +120,23 @@ function FirstInsightCard({
 }) {
   return (
     <View
-      className={compact ? 'mt-3 rounded-[18px] bg-clay-tint px-4 py-3' : 'mt-4 rounded-[18px] bg-clay-tint px-4 py-3.5'}
+      className={
+        compact
+          ? 'mt-2 rounded-2xl bg-clay-tint px-3.5 py-2.5'
+          : 'mt-4 rounded-[18px] bg-clay-tint px-4 py-3.5'
+      }
       style={{ borderWidth: 1, borderColor: 'rgba(172,116,84,0.16)' }}
     >
       <Text
-        className="font-mono text-[11px] uppercase tracking-[1px]"
+        className="font-mono text-[11px] uppercase"
         style={{ color: colors.clayDeep }}
       >
         {copy.eyebrow}
       </Text>
       <Text
-        className={compact ? 'mt-1 font-sans-semibold text-[16px]' : 'mt-1 font-sans-semibold text-[17px]'}
+        className={
+          compact ? 'mt-0.5 font-sans-semibold text-[15px]' : 'mt-1 font-sans-semibold text-[17px]'
+        }
         style={{ color: colors.ink }}
       >
         {copy.title}
@@ -201,15 +211,30 @@ export default function PlanScreen() {
               accessibilityLabel="Back"
               onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
             />
+            {compactPlan ? (
+              <Text
+                numberOfLines={2}
+                className="ml-3 min-w-0 flex-1 font-mono text-[10.5px] uppercase"
+                style={{ color: colors.clayDeep, lineHeight: 13, letterSpacing: 0 }}
+              >
+                {data?.profileLabel ?? 'BUILDING YOUR ROUTINE'}
+              </Text>
+            ) : null}
           </View>
 
-          <View className={compactPlan ? 'pt-1' : 'pt-2'}>
-            <Text variant="label" tone="clay" className="font-mono text-[11.5px] tracking-[1.15px]">
-              {data?.profileLabel ?? 'BUILDING YOUR ROUTINE'}
-            </Text>
+          <View className={compactPlan ? 'pt-0' : 'pt-2'}>
+            {!compactPlan ? (
+              <Text
+                variant="label"
+                tone="clay"
+                className="font-mono text-[11.5px] tracking-[1.15px]"
+              >
+                {data?.profileLabel ?? 'BUILDING YOUR ROUTINE'}
+              </Text>
+            ) : null}
             <Text
               variant="title"
-              className="mt-2"
+              className={compactPlan ? 'mt-1' : 'mt-2'}
               style={{ fontSize: compactPlan ? 30 : 34, lineHeight: compactPlan ? 33 : 37 }}
             >
               Your routine, in order.
@@ -221,7 +246,7 @@ export default function PlanScreen() {
             <View
               className={
                 compactPlan
-                  ? 'mt-3 rounded-[22px] bg-paper-raised'
+                  ? 'mt-2 rounded-[22px] bg-paper-raised'
                   : 'mt-5 rounded-[22px] bg-paper-raised'
               }
               style={{

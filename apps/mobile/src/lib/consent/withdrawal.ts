@@ -1,6 +1,8 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
+import { isSupabaseConfigured } from '@/lib/env';
+
 import { supabase } from '../supabase/client';
 
 export type WithdrawableConsentType =
@@ -16,6 +18,8 @@ export async function withdrawConsent(params: {
   version: string;
   consentText: string;
 }): Promise<void> {
+  if (!isSupabaseConfigured) throw new Error('CONSENT_BACKEND_UNAVAILABLE');
+
   const consentTextHash = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     params.consentText,

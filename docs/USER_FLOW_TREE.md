@@ -243,6 +243,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/routine-plan/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`
+- Current local evidence: `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`
 
 ### Path A: Generated Plan Review
 
@@ -258,18 +259,21 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/routine/plan` with no shelf products or saved profile.
   - Expected result: The plan labels itself as an example and does not claim it was built for the user's real dry/sensitive profile.
   - Evidence: Screenshot and visible-text snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 opens `/routine/plan` with no local shelf/profile, verifies `EXAMPLE ROUTINE` and `Example only`, finds no hardcoded dry/sensitive profile label, and records zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`.
 - Branch: real profile label
   - Priority: Critical
   - Automate later: Yes
   - Action: Open `/routine/plan` with a saved profile whose sensitivity is neutral or resistant.
   - Expected result: The label reflects that profile state rather than hardcoding `dry, sensitive skin`.
   - Evidence: Screenshot and local profile fixture snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 seeds the real local profile store with oily/resistant axes plus a real shelf, opens `/routine/plan`, and verifies `BUILT FOR OILY, RESISTANT SKIN`, `Gel cleanser`, `Mineral SPF 50`, no dry/sensitive copy, a complete compact PM suffix, zero horizontal overflow, and 44 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`.
 - Branch: direct-entry back recovery
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/routine/plan` directly and use the visible Back control.
   - Expected result: The user returns to the You tab instead of staying trapped on the plan route.
   - Evidence: Screenshot sequence and route snapshot.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 opens `/routine/plan` directly from a fresh browser context, taps the visible Back control, lands on `/you`, records zero horizontal overflow, and captures browser logs with no failed placeholder Supabase request after the consent backend guard. Evidence is in `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`.
 - Branch: direct-entry contextual Explore first
   - Priority: Critical
   - Automate later: Yes

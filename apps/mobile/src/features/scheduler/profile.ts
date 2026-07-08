@@ -2,6 +2,10 @@ import type { GoalId } from '@onskin/types';
 import { useQuery } from '@tanstack/react-query';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import {
+  getStoredSkinProfile,
+  type StoredSkinProfile,
+} from '@/features/onboarding/skinProfileStore';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -25,7 +29,21 @@ const NEUTRAL: ProfileBits = {
   goals: [],
 };
 
+function profileBitsFromStoredProfile(profile: StoredSkinProfile): ProfileBits {
+  return {
+    sensitivity: sensitivityFromAxis(profile.result.axisScores.sensitive_resistant),
+    moisture: moistureFromAxis(profile.result.axisScores.oily_dry),
+    pregnancy:
+      profile.result.pregnancyStatus === 'pregnant' ||
+      profile.result.pregnancyStatus === 'breastfeeding',
+    goals: profile.goals,
+  };
+}
+
 export async function readProfileBits(): Promise<ProfileBits> {
+  const local = await getStoredSkinProfile();
+  if (local) return profileBitsFromStoredProfile(local);
+
   if (!isSupabaseConfigured) return NEUTRAL;
 
   try {

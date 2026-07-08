@@ -411,6 +411,19 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`; it
   does not replace native iOS/Android beta-device QA or reviewer signoff for
   cadence/conflict guidance.
+- 2026-07-08: System Chrome Expo web E2E at 320 x 568 with
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` covers the routine-plan empty example
+  label, real local profile label, compact evening row fit, and direct-entry
+  Back recovery. Empty local state shows `EXAMPLE ROUTINE` and `Example only`
+  without dry/sensitive profile copy. A seeded local profile/shelf shows `BUILT
+  FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
+  hardcoded dry/sensitive copy, no truncated compact PM suffix, zero horizontal
+  overflow, and 44 px+ visible controls. Back returns to `/you`. Browser logs
+  contain expected dev/placeholder configuration warnings but no failed
+  placeholder Supabase request after the consent backend guard. Evidence is in
+  `test-results/human-e2e/2026-07-08/routine-plan-profile-label-current/`; it
+  does not replace native iOS/Android beta-device QA or live Supabase profile
+  reconciliation.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the Shelf product-detail
   routine handoff: open `Mineral SPF 50` from Shelf, verify the `ROUTINE ROLE`
   card says it is used in the Morning routine, tap `Review routine placement`,

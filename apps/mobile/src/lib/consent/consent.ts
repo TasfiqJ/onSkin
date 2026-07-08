@@ -1,6 +1,8 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
+import { isSupabaseConfigured } from '@/lib/env';
+
 import { supabase } from '../supabase/client';
 
 // Records an unbundled consent into the immutable ledger (docs/01 §3/§4). Stores
@@ -13,6 +15,8 @@ export async function recordConsent(params: {
   version: string;
   consentText: string;
 }): Promise<void> {
+  if (!isSupabaseConfigured) throw new Error('CONSENT_BACKEND_UNAVAILABLE');
+
   const consentTextHash = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     params.consentText,
@@ -33,6 +37,8 @@ export async function recordConsent(params: {
 
 /** Latest consent state per type for the current user (a revocation is a newer row). */
 export async function getLatestConsents(): Promise<Record<string, boolean>> {
+  if (!isSupabaseConfigured) return {};
+
   const { data, error } = await supabase
     .from('consents')
     .select('consent_type, granted, granted_at')

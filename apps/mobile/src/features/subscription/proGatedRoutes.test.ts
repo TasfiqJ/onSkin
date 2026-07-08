@@ -157,7 +157,10 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('nightLabel="Night 2"');
     expect(plan).toContain('`${retRamp.state.freqPerWeek} times/week to start`');
     expect(plan).toContain('nightLabel="Nights 3-4"');
-    expect(plan).toContain('className="w-[68px] font-mono text-[11px]"');
+    expect(plan).toContain('const compactNumberLabel = compact && /^\\d+$/.test(nightLabel);');
+    expect(plan).toContain(
+      "compactNumberLabel ? 'w-5 font-mono text-[11px]' : 'w-[68px] font-mono text-[11px]'",
+    );
     expect(plan).not.toContain('x/week');
     expect(plan).not.toContain('nightLabel="N1"');
     expect(plan).not.toContain('nightLabel="N2"');

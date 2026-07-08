@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the scheduler profile source so local-first onboarding stays
+  personalized before Supabase is available. The shared `readProfileBits`
+  helper now reads the device-local skin profile first, mapping the quiz axes,
+  pregnancy/breastfeeding state, and goals into routine/cycle/recommendation/Ask
+  profile bits before falling back to neutral defaults. This prevents generated
+  plans, cycle orchestration, recommendations, and Ask grounding from silently
+  using a neutral profile in the local placeholder/offline path. Focused
+  scheduler profile tests cover local-profile mapping and the true empty
+  fallback. System Chrome Expo web E2E at 320 x 568 now covers the routine-plan
+  empty example label, a seeded oily/resistant local profile label, the compact
+  evening row fit, and direct-entry Back recovery. The same slice also guards
+  consent ledger read/write/withdrawal calls when Supabase is unconfigured so
+  placeholder hosts are not queried from local settings surfaces. Tracked report:
+  `docs/e2e-bug-reports/2026-07-08-scheduler-local-profile-fallback.md`.
+
 - Hardened recommendation preference save failure recovery. The preferences
   route now has a clamped
   `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS` fixture so the saving
