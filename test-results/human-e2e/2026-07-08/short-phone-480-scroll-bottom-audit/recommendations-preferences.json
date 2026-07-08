@@ -1,0 +1,69 @@
+{
+  "route": "/recommendations/preferences",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Non-comedogenic",
+        "rect": {
+          "bottom": 386,
+          "height": 48,
+          "left": 24,
+          "right": 188,
+          "top": 338,
+          "width": 164
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 164
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 5,
+        "isTab": false,
+        "label": "Sustainable",
+        "rect": {
+          "bottom": 442,
+          "height": 48,
+          "left": 24,
+          "right": 141,
+          "top": 394,
+          "width": 117
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 117
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/recommendations/preferences",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+  }
+}

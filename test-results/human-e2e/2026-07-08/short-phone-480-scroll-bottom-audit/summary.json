@@ -1,0 +1,2250 @@
+[
+  {
+    "route": "/today",
+    "issueCount": 0,
+    "url": "http://localhost:8202/today",
+    "tabTop": 407,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Add products",
+        "rect": {
+          "bottom": 370,
+          "height": 56,
+          "left": 45,
+          "right": 275,
+          "top": 314,
+          "width": 230
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 230
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+  },
+  {
+    "route": "/today?routine=PM",
+    "issueCount": 0,
+    "url": "http://localhost:8202/today?routine=PM",
+    "tabTop": 407,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Add products",
+        "rect": {
+          "bottom": 361,
+          "height": 56,
+          "left": 44,
+          "right": 276,
+          "top": 305,
+          "width": 232
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 232
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "You’re exploring Pro. 7 days left › WEDNESDAY, JULY 8 · 8:38 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+  },
+  {
+    "route": "/progress",
+    "issueCount": 1,
+    "url": "http://localhost:8202/progress",
+    "tabTop": 407,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Take my first photo",
+        "rect": {
+          "bottom": 405,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 349,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [
+      {
+        "control": "[Circular]",
+        "tabTop": 407,
+        "type": "control-near-tabbar-bottom"
+      }
+    ],
+    "visibleTextStart": "Progress Skin changes slowly. That’s normal. Most actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early. week 1 week 6 week 12 Guided, on your phone, and never scored. Take my first photo Today Progress Shelf You"
+  },
+  {
+    "route": "/progress/capture",
+    "issueCount": 0,
+    "url": "http://localhost:8202/progress/capture",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Not now",
+        "rect": {
+          "bottom": 382,
+          "height": 48,
+          "left": 28,
+          "right": 292,
+          "top": 334,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "Your photos stay on this phone. WHAT Photos you choose to take with guided capture. WHY To build your private progress timeline on this device. NEVER Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice. No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings. Take photos. On device only Not now"
+  },
+  {
+    "route": "/progress/review",
+    "issueCount": 0,
+    "url": "http://localhost:8202/progress/review",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Take photo",
+        "rect": {
+          "bottom": 397,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 341,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Back to Progress",
+        "rect": {
+          "bottom": 465,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 409,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress"
+  },
+  {
+    "route": "/routine/plan",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/plan",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Start today",
+        "rect": {
+          "bottom": 465,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 409,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< EXAMPLE ROUTINE Your routine, in order. FIRST INSIGHT Example only Add products to see an insight from your own shelf. MORNING 1 Cream cleanser 2 Vitamin C serum 3 Ceramide moisturizer EVENING SKIN CYCLING Night 1 Glycolic 7% exfoliate Night 2 Retinol 0.3% 2 times/week to start Nights 3-4 Recover moisturiser only A daily SPF would round this out. It’s the highest-impact morning step. Start today"
+  },
+  {
+    "route": "/routine/ramp",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/ramp",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 592,
+      "scrollWidth": 320,
+      "top": 111
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "< RETINOID · RAMP-UP Low and slow, on your terms. Consistency matters more than frequency. We only ever offer a step-up. Never increase it for you. Nights per week 2 of 3 wk1 wk2 wk3 now next? You're at 2 of 3 nights a week. We will check in as your skin settles, and offer a step-up only when it is comfortable."
+  },
+  {
+    "route": "/routine/tolerance",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/tolerance",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "A bit dry. We'll hold your pace steady",
+        "rect": {
+          "bottom": 401,
+          "height": 72,
+          "left": 28,
+          "right": 292,
+          "top": 329,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 72,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Irritated. We'll add recovery nights & ease off",
+        "rect": {
+          "bottom": 481,
+          "height": 72,
+          "left": 28,
+          "right": 292,
+          "top": 409,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 72,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save"
+  },
+  {
+    "route": "/routine/reorder",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/reorder",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer"
+  },
+  {
+    "route": "/routine/adaptation",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/adaptation",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Looks good",
+        "rect": {
+          "bottom": 473,
+          "height": 56,
+          "left": 24,
+          "right": 232,
+          "top": 417,
+          "width": 208
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 208
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Undo",
+        "rect": {
+          "bottom": 472,
+          "height": 54,
+          "left": 242,
+          "right": 296,
+          "top": 418,
+          "width": 54
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 54
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "EXAMPLE ROUTINE Here's what changed. This preview shows the explanation style until your shelf has products. + Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence. Active nights stay separated Retinol 0.3% and Glycolic 7% Toner stay scheduled away from recovery nights where needed. Your choices stay in control This is an example preview. Add products to your shelf to see live adaptation notes. Looks good ↺"
+  },
+  {
+    "route": "/cycle/settings",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/settings",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "x Cycle settings VARIANT Gentle more recovery Classic balanced rest Advanced fewer rest Add a retinoid or an exfoliating acid to your shelf and we'll build your cycle here."
+  },
+  {
+    "route": "/cycle/disruption",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/disruption",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Travel mode. Trim to essentials while away",
+        "rect": {
+          "bottom": 407,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 351,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "I had a facial or peel. Pause actives, let skin recover",
+        "rect": {
+          "bottom": 469,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 413,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover"
+  },
+  {
+    "route": "/cycle/procedure",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/procedure",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "3days",
+        "rect": {
+          "bottom": 404,
+          "height": 76,
+          "left": 24,
+          "right": 109,
+          "top": 329,
+          "width": 85
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 85
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "5days",
+        "rect": {
+          "bottom": 404,
+          "height": 76,
+          "left": 117,
+          "right": 204,
+          "top": 329,
+          "width": 87
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 87
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "7days",
+        "rect": {
+          "bottom": 404,
+          "height": 76,
+          "left": 212,
+          "right": 296,
+          "top": 329,
+          "width": 85
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 85
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Start recovery",
+        "rect": {
+          "bottom": 465,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 409,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< ◇ Let's give your skin a few days. After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in. HOW LONG TO REST? 3 days 5 days 7 days WHILE YOU RECOVER ✓ Gentle cleanser ✓ Barrier moisturizer. Ceramides ✓ SPF every morning Start recovery"
+  },
+  {
+    "route": "/cycle/phased-intro",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/phased-intro",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Sounds good",
+        "rect": {
+          "bottom": 484,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 429,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 52,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its own night Then. Your full cycle Both, safely alternated Sounds good Add it now anyway"
+  },
+  {
+    "route": "/cycle/recovery",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/recovery",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "< No recovery in progress. Your cycle is running normally."
+  },
+  {
+    "route": "/cycle/why-tonight",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/why-tonight",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Got it",
+        "rect": {
+          "bottom": 441,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 385,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "No cycle is running yet. Add an active to get started. Got it"
+  },
+  {
+    "route": "/recommendations",
+    "issueCount": 0,
+    "url": "http://localhost:8202/recommendations",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+        "rect": {
+          "bottom": 538,
+          "height": 171,
+          "left": 24,
+          "right": 296,
+          "top": 367,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 114,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every ro"
+  },
+  {
+    "route": "/recommendations/preferences",
+    "issueCount": 0,
+    "url": "http://localhost:8202/recommendations/preferences",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Non-comedogenic",
+        "rect": {
+          "bottom": 386,
+          "height": 48,
+          "left": 24,
+          "right": 188,
+          "top": 338,
+          "width": 164
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 164
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 5,
+        "isTab": false,
+        "label": "Sustainable",
+        "rect": {
+          "bottom": 442,
+          "height": 48,
+          "left": 24,
+          "right": 141,
+          "top": 394,
+          "width": 117
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 117
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+  },
+  {
+    "route": "/recommendations/stale-local-rec",
+    "issueCount": 0,
+    "url": "http://localhost:8202/recommendations/stale-local-rec",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you"
+  },
+  {
+    "route": "/community",
+    "issueCount": 0,
+    "url": "http://localhost:8202/community",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Is a 10-step “glass skin” routine better?. Contested.",
+        "rect": {
+          "bottom": 400,
+          "height": 100,
+          "left": 24,
+          "right": 296,
+          "top": 300,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 100,
+        "visibleWidth": 272
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+        "rect": {
+          "bottom": 508,
+          "height": 102,
+          "left": 24,
+          "right": 296,
+          "top": 406,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 75,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils "
+  },
+  {
+    "route": "/community/note/missing-note-e2e",
+    "issueCount": 0,
+    "url": "http://localhost:8202/community/note/missing-note-e2e",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Back to Skin Notes",
+        "rect": {
+          "bottom": 415,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 359,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes"
+  },
+  {
+    "route": "/community/ask",
+    "issueCount": 0,
+    "url": "http://localhost:8202/community/ask",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to Skin Notes",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes"
+  },
+  {
+    "route": "/community/people-like-you",
+    "issueCount": 0,
+    "url": "http://localhost:8202/community/people-like-you",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to Skin Notes",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes"
+  },
+  {
+    "route": "/commerce/consent",
+    "issueCount": 0,
+    "url": "http://localhost:8202/commerce/consent",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to You",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stacks",
+    "issueCount": 0,
+    "url": "http://localhost:8202/commerce/stacks",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to You",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stack/barrier-basics",
+    "issueCount": 0,
+    "url": "http://localhost:8202/commerce/stack/barrier-basics",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to You",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/stack/missing-stack-e2e",
+    "issueCount": 0,
+    "url": "http://localhost:8202/commerce/stack/missing-stack-e2e",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to You",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/commerce/transparency",
+    "issueCount": 0,
+    "url": "http://localhost:8202/commerce/transparency",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to You",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You"
+  },
+  {
+    "route": "/settings/subscription",
+    "issueCount": 0,
+    "url": "http://localhost:8202/settings/subscription",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Terms›",
+        "rect": {
+          "bottom": 390,
+          "height": 53,
+          "left": 38,
+          "right": 282,
+          "top": 337,
+          "width": 244
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 53,
+        "visibleWidth": 244
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Privacy›",
+        "rect": {
+          "bottom": 442,
+          "height": 52,
+          "left": 38,
+          "right": 282,
+          "top": 390,
+          "width": 244
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 52,
+        "visibleWidth": 244
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Subscription RoutineKind Pro No card Plan Reverse trial Free until July 15, 2026 Keep Pro after your week › Restore purchases › Terms › Privacy › No card is on file. You have Pro until July 15, 2026. Choose a plan only if you want to keep Pro after your week."
+  },
+  {
+    "route": "/settings/notifications",
+    "issueCount": 0,
+    "url": "http://localhost:8202/settings/notifications",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 5,
+        "isTab": false,
+        "label": "Streak & adherence",
+        "rect": {
+          "bottom": 383,
+          "height": 48,
+          "left": 230,
+          "right": 282,
+          "top": 335,
+          "width": 52
+        },
+        "role": "switch",
+        "tag": "div",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 52
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 6,
+        "isTab": false,
+        "label": "Replenishment",
+        "rect": {
+          "bottom": 460,
+          "height": 48,
+          "left": 230,
+          "right": 282,
+          "top": 412,
+          "width": 52
+        },
+        "role": "switch",
+        "tag": "div",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 52
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+  },
+  {
+    "route": "/settings/timing",
+    "issueCount": 0,
+    "url": "http://localhost:8202/settings/timing",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Quiet hours start, 10:00 PM",
+        "rect": {
+          "bottom": 361,
+          "height": 48,
+          "left": 38,
+          "right": 120,
+          "top": 313,
+          "width": 82
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 82
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Quiet hours end, 7:00 AM",
+        "rect": {
+          "bottom": 361,
+          "height": 48,
+          "left": 154,
+          "right": 229,
+          "top": 313,
+          "width": 75
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 75
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen"
+  },
+  {
+    "route": "/settings/privacy",
+    "issueCount": 0,
+    "url": "http://localhost:8202/you?section=privacy",
+    "tabTop": 407,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Exploring Pro > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you t"
+  },
+  {
+    "route": "/trend/optin",
+    "issueCount": 0,
+    "url": "http://localhost:8202/trend/optin",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to Progress",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress"
+  },
+  {
+    "route": "/trend/fairness",
+    "issueCount": 0,
+    "url": "http://localhost:8202/trend/fairness",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to Progress",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress"
+  },
+  {
+    "route": "/ask",
+    "issueCount": 0,
+    "url": "http://localhost:8202/ask",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Ask a question about your shelf",
+        "rect": {
+          "bottom": 410,
+          "height": 48,
+          "left": 39,
+          "right": 223,
+          "top": 362,
+          "width": 184
+        },
+        "role": "input",
+        "tag": "input",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 184
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Send",
+        "rect": {
+          "bottom": 410,
+          "height": 48,
+          "left": 233,
+          "right": 281,
+          "top": 362,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 48
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › ↑ AI advisor · disclosed honestly · your context stays on this device"
+  },
+  {
+    "route": "/ask/consent",
+    "issueCount": 0,
+    "url": "http://localhost:8202/ask/consent",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to Ask",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship. Back to Ask"
+  },
+  {
+    "route": "/shelf",
+    "issueCount": 2,
+    "url": "http://localhost:8202/shelf",
+    "tabTop": 407,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Scan a barcode",
+        "rect": {
+          "bottom": 396,
+          "height": 56,
+          "left": 32,
+          "right": 288,
+          "top": 340,
+          "width": 256
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 256
+      },
+      {
+        "blockedBy": "div.css-view-g5y9jx.r-cursor-1loqt21.r-touchAction-1otgn73",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": true,
+        "index": 1,
+        "isTab": false,
+        "label": "Add by hand",
+        "rect": {
+          "bottom": 458,
+          "height": 50,
+          "left": 32,
+          "right": 288,
+          "top": 408,
+          "width": 256
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 50,
+        "visibleWidth": 256
+      }
+    ],
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "hit-blocked"
+      },
+      {
+        "control": "[Circular]",
+        "tabTop": 407,
+        "type": "control-near-tabbar-bottom"
+      }
+    ],
+    "visibleTextStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You"
+  },
+  {
+    "route": "/shelf/search",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/search",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Add by hand",
+        "rect": {
+          "bottom": 449,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 393,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand"
+  },
+  {
+    "route": "/shelf/no-match",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/no-match",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "IScan the ingredient listWe'll read the INCI text",
+        "rect": {
+          "bottom": 401,
+          "height": 54,
+          "left": 28,
+          "right": 292,
+          "top": 347,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "+Add it by handAlways works, even offline",
+        "rect": {
+          "bottom": 461,
+          "height": 54,
+          "left": 28,
+          "right": 292,
+          "top": 407,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline"
+  },
+  {
+    "route": "/shelf/scan",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/scan",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "SSearch catalogUse reviewed matches",
+        "rect": {
+          "bottom": 371,
+          "height": 76,
+          "left": 20,
+          "right": 300,
+          "top": 295,
+          "width": 280
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 280
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "+Add it by handAlways works offline",
+        "rect": {
+          "bottom": 457,
+          "height": 76,
+          "left": 20,
+          "right": 300,
+          "top": 381,
+          "width": 280
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 280
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline"
+  },
+  {
+    "route": "/shelf/ocr",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/ocr",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Continue with manual text",
+        "rect": {
+          "bottom": 474,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 418,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text"
+  },
+  {
+    "route": "/shelf/manual",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/manual",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Ingredients",
+        "rect": {
+          "bottom": 411,
+          "height": 65,
+          "left": 24,
+          "right": 296,
+          "top": 346,
+          "width": 272
+        },
+        "role": "textarea",
+        "tag": "textarea",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 65,
+        "visibleWidth": 272
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 5,
+        "isTab": false,
+        "label": "Continue",
+        "rect": {
+          "bottom": 469,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 413,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue"
+  },
+  {
+    "route": "/shelf/archive",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/archive",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here."
+  },
+  {
+    "route": "/shelf/opened",
+    "issueCount": 0,
+    "url": "http://localhost:8202/shelf/opened",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Add product by hand",
+        "rect": {
+          "bottom": 441,
+          "height": 48,
+          "left": 28,
+          "right": 292,
+          "top": 393,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand"
+  },
+  {
+    "route": "/paywall/upsell?feature=full_routine",
+    "issueCount": 1,
+    "url": "http://localhost:8202/paywall/upsell?feature=full_routine",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Start free trial",
+        "rect": {
+          "bottom": 396,
+          "height": 54,
+          "left": 28,
+          "right": 292,
+          "top": 342,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Terms",
+        "rect": {
+          "bottom": 444,
+          "height": 48,
+          "left": 62,
+          "right": 110,
+          "top": 396,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 48
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Privacy",
+        "rect": {
+          "bottom": 444,
+          "height": 48,
+          "left": 135,
+          "right": 183,
+          "top": 396,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 48
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Restore",
+        "rect": {
+          "bottom": 444,
+          "height": 48,
+          "left": 209,
+          "right": 258,
+          "top": 396,
+          "width": 49
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 49
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": true,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Maybe later",
+        "rect": {
+          "bottom": 492,
+          "height": 48,
+          "left": 28,
+          "right": 292,
+          "top": 444,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 37,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-control"
+      }
+    ],
+    "visibleTextStart": "Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later"
+  },
+  {
+    "route": "/paywall/success",
+    "issueCount": 0,
+    "url": "http://localhost:8202/paywall/success",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "See tonight’s routine",
+        "rect": {
+          "bottom": 465,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 409,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 15 renews $49.99/yr See tonight’s routine"
+  },
+  {
+    "route": "/routine/streak",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/streak",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "< STREAK & ADHERENCE Showing up beats being perfect. Your nights, no pressure. This week 0 of 7 nights M T W T F S S July less more"
+  },
+  {
+    "route": "/routine/widgets",
+    "issueCount": 0,
+    "url": "http://localhost:8202/routine/widgets",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Back to Today",
+        "rect": {
+          "bottom": 445,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 389,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "visibleTextStart": "BETA Widgets are not in this beta Today check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA. The beta should prove the core habit loop before adding OS-level surfaces. Back to Today"
+  },
+  {
+    "route": "/cycle/week",
+    "issueCount": 0,
+    "url": "http://localhost:8202/cycle/week",
+    "tabTop": null,
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "bottomControls": [],
+    "issues": [],
+    "visibleTextStart": "< Settings YOUR CYCLE · SIMPLE DAILY This week, by night. EVERY AM moisturizer → SPF stable No actives to cycle yet. Your routine is a simple daily morning and evening. Add a retinoid or an exfoliating acid and we'll build your cycle."
+  }
+]

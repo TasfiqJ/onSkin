@@ -1,0 +1,46 @@
+{
+  "route": "/cycle/phased-intro",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Sounds good",
+        "rect": {
+          "bottom": 484,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 429,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 52,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/cycle/phased-intro",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "ONE AT A TIME Let's not start everything at once. You added new active. We'll bring it in next week, once your routine settles. So if anything reacts, you'll know what caused it. ✓ This week. Your current actives Settling in Next week. Add new active On its own night Then. Your full cycle Both, safely alternated Sounds good Add it now anyway"
+  }
+}

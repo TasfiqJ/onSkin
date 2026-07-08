@@ -1,0 +1,104 @@
+[
+  {
+    "ariaHidden": "true",
+    "ariaLabel": null,
+    "className": "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 flex-1",
+    "html": "<div aria-hidden=\"true\" tabindex=\"-1\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 flex-1\"></div>",
+    "rect": {
+      "bottom": 36.69599533081055,
+      "height": 36.69599533081055,
+      "top": 0,
+      "width": 320.38836669921875
+    },
+    "role": null,
+    "styleAttr": null,
+    "tabIndex": "-1",
+    "tag": "DIV",
+    "text": ""
+  },
+  {
+    "ariaHidden": null,
+    "ariaLabel": null,
+    "className": "css-view-g5y9jx r-pointerEvents-12vffkv mt-1.5 h-[52px] items-center justify-center rounded-pill",
+    "html": "<button aria-disabled=\"true\" disabled=\"\" role=\"button\" tabindex=\"-1\" class=\"css-view-g5y9jx r-pointerEvents-12vffkv mt-1.5 h-[52px] items-center justify-center rounded-pill\" type=\"button\" style=\"background-color: rgb(163, 154, 139);\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink font-sans-semibold\" style=\"color: rgb(250, 247, 242); font-size: 17px;\">Start free trial</div></button>",
+    "rect": {
+      "bottom": 364.5934600830078,
+      "height": 51.98725891113281,
+      "top": 312.606201171875,
+      "width": 264.4114074707031
+    },
+    "role": "button",
+    "styleAttr": "background-color: rgb(163, 154, 139);",
+    "tabIndex": "-1",
+    "tag": "BUTTON",
+    "text": "Start free trial"
+  },
+  {
+    "ariaHidden": null,
+    "ariaLabel": null,
+    "className": "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] min-w-[48px] items-center justify-center px-1",
+    "html": "<button role=\"button\" tabindex=\"0\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] min-w-[48px] items-center justify-center px-1\" type=\"button\" style=\"min-height: 48px; min-width: 48px;\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink font-sans-semibold\" style=\"font-size: 12px; color: rgb(138, 128, 113);\">Terms</div></button>",
+    "rect": {
+      "bottom": 412.59104919433594,
+      "height": 47.99757385253906,
+      "top": 364.5934753417969,
+      "width": 47.99757385253906
+    },
+    "role": "button",
+    "styleAttr": "min-height: 48px; min-width: 48px;",
+    "tabIndex": "0",
+    "tag": "BUTTON",
+    "text": "Terms"
+  },
+  {
+    "ariaHidden": null,
+    "ariaLabel": null,
+    "className": "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] min-w-[48px] items-center justify-center px-1",
+    "html": "<button role=\"button\" tabindex=\"0\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] min-w-[48px] items-center justify-center px-1\" type=\"button\" style=\"min-height: 48px; min-width: 48px;\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink font-sans-semibold\" style=\"font-size: 12px; color: rgb(138, 128, 113);\">Privacy</div></button>",
+    "rect": {
+      "bottom": 412.59104919433594,
+      "height": 47.99757385253906,
+      "top": 364.5934753417969,
+      "width": 48.01274490356445
+    },
+    "role": "button",
+    "styleAttr": "min-height: 48px; min-width: 48px;",
+    "tabIndex": "0",
+    "tag": "BUTTON",
+    "text": "Privacy"
+  },
+  {
+    "ariaHidden": null,
+    "ariaLabel": null,
+    "className": "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] min-w-[48px] items-center justify-center px-1",
+    "html": "<button role=\"button\" tabindex=\"0\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 min-h-[48px] min-w-[48px] items-center justify-center px-1\" type=\"button\" style=\"min-height: 48px; min-width: 48px;\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-ink font-sans-semibold\" style=\"font-size: 12px; color: rgb(138, 128, 113);\">Restore</div></button>",
+    "rect": {
+      "bottom": 412.59104919433594,
+      "height": 47.99757385253906,
+      "top": 364.5934753417969,
+      "width": 49.45388412475586
+    },
+    "role": "button",
+    "styleAttr": "min-height: 48px; min-width: 48px;",
+    "tabIndex": "0",
+    "tag": "BUTTON",
+    "text": "Restore"
+  },
+  {
+    "ariaHidden": null,
+    "ariaLabel": null,
+    "className": "css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 h-[48px] items-center justify-center",
+    "html": "<button role=\"button\" tabindex=\"0\" class=\"css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 h-[48px] items-center justify-center\" type=\"button\"><div dir=\"auto\" class=\"css-text-146c3p1 font-sans text-base leading-6 text-muted font-sans-semibold\">Maybe later</div></button>",
+    "rect": {
+      "bottom": 460.58860778808594,
+      "height": 47.99757385253906,
+      "top": 412.5910339355469,
+      "width": 264.4114074707031
+    },
+    "role": "button",
+    "styleAttr": null,
+    "tabIndex": "0",
+    "tag": "BUTTON",
+    "text": "Maybe later"
+  }
+]

@@ -63,13 +63,66 @@ describe('the health-leak detector catches a leaked attribute', () => {
   });
 });
 
-describe('the persisted click payload never carries a health-adjacent KEY', () => {
+describe('the persisted click payload never carries surprise commerce data', () => {
   it('accepts the content-free click payload (token / type / source / consent)', () => {
-    const payload: ClickPayload = { clickToken: 'opaque', productType: 'mineral_spf', source: 'none', consented: true };
+    const payload: ClickPayload = { clickToken: 'opaque_123', productType: 'mineral_spf', source: 'none', consented: true };
+    expect(isHealthSafePayload(payload as unknown as Record<string, unknown>)).toBe(true);
+  });
+  it('accepts a null product type for rail-level click attribution', () => {
+    const payload: ClickPayload = { clickToken: 'opaque_123', productType: null, source: 'direct', consented: true };
     expect(isHealthSafePayload(payload as unknown as Record<string, unknown>)).toBe(true);
   });
   it('rejects any payload that smuggles a health-adjacent key', () => {
-    expect(isHealthSafePayload({ clickToken: 'x', concern: 'acne' })).toBe(false);
-    expect(isHealthSafePayload({ clickToken: 'x', skin_profile: 'DSPT' })).toBe(false);
+    expect(isHealthSafePayload({ clickToken: 'x', productType: null, source: 'none', consented: true, concern: 'acne' })).toBe(
+      false,
+    );
+    expect(
+      isHealthSafePayload({ clickToken: 'x', productType: null, source: 'none', consented: true, skin_profile: 'DSPT' }),
+    ).toBe(false);
+  });
+  it('rejects extra partner identifiers even when the key is not health-adjacent', () => {
+    expect(
+      isHealthSafePayload({
+        clickToken: 'opaque',
+        productType: 'mineral_spf',
+        source: 'none',
+        consented: true,
+        partnerUserId: 'abc123',
+      }),
+    ).toBe(false);
+  });
+  it('rejects raw URLs, emails, bad source buckets, and malformed product types', () => {
+    expect(
+      isHealthSafePayload({
+        clickToken: 'https://retailer.example/ref',
+        productType: 'mineral_spf',
+        source: 'none',
+        consented: true,
+      }),
+    ).toBe(false);
+    expect(
+      isHealthSafePayload({
+        clickToken: 'opaque',
+        productType: 'Mineral SPF',
+        source: 'none',
+        consented: true,
+      }),
+    ).toBe(false);
+    expect(
+      isHealthSafePayload({
+        clickToken: 'opaque',
+        productType: 'mineral_spf',
+        source: 'unknown_partner',
+        consented: true,
+      }),
+    ).toBe(false);
+    expect(
+      isHealthSafePayload({
+        clickToken: 'opaque',
+        productType: 'mineral_spf',
+        source: 'none',
+        consented: 'true',
+      }),
+    ).toBe(false);
   });
 });

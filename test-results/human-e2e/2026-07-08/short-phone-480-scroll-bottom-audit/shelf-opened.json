@@ -1,0 +1,46 @@
+{
+  "route": "/shelf/opened",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Add product by hand",
+        "rect": {
+          "bottom": 441,
+          "height": 48,
+          "left": 28,
+          "right": 292,
+          "top": 393,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/shelf/opened",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand"
+  }
+}

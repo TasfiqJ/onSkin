@@ -1,0 +1,124 @@
+{
+  "blockedControls": [],
+  "bodyText": "Reminders, streaks & home-screen widgets. Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later",
+  "controls": [
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "",
+      "rect": {
+        "bottom": 36.69599533081055,
+        "height": 36.69599533081055,
+        "top": 0,
+        "width": 320.38836669921875,
+        "x": 0,
+        "y": 0
+      },
+      "role": "div",
+      "text": ""
+    },
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Start free trial",
+      "rect": {
+        "bottom": 364.5934600830078,
+        "height": 51.98725891113281,
+        "top": 312.606201171875,
+        "width": 264.4114074707031,
+        "x": 27.98847198486328,
+        "y": 312.606201171875
+      },
+      "role": "button",
+      "text": "Start free trial"
+    },
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Terms",
+      "rect": {
+        "bottom": 412.59104919433594,
+        "height": 47.99757385253906,
+        "top": 364.5934753417969,
+        "width": 47.99757385253906,
+        "x": 62.105587005615234,
+        "y": 364.5934753417969
+      },
+      "role": "button",
+      "text": "Terms"
+    },
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Privacy",
+      "rect": {
+        "bottom": 412.59104919433594,
+        "height": 47.99757385253906,
+        "top": 364.5934753417969,
+        "width": 48.01274490356445,
+        "x": 135.4520721435547,
+        "y": 364.5934753417969
+      },
+      "role": "button",
+      "text": "Privacy"
+    },
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Restore",
+      "rect": {
+        "bottom": 412.59104919433594,
+        "height": 47.99757385253906,
+        "top": 364.5934753417969,
+        "width": 49.45388412475586,
+        "x": 208.813720703125,
+        "y": 364.5934753417969
+      },
+      "role": "button",
+      "text": "Restore"
+    },
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Maybe later",
+      "rect": {
+        "bottom": 460.58860778808594,
+        "height": 47.99757385253906,
+        "top": 412.5910339355469,
+        "width": 264.4114074707031,
+        "x": 27.98847198486328,
+        "y": 412.5910339355469
+      },
+      "role": "button",
+      "text": "Maybe later"
+    }
+  ],
+  "hasExpected": {
+    "maybeLater": true,
+    "previewStore": true,
+    "privacy": true,
+    "remindersCopy": true,
+    "restore": true,
+    "routineKindPro": true,
+    "startTrial": true,
+    "terms": true
+  },
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "horizontalOverflow": 0,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "scrollX": 0,
+    "scrollY": 0
+  },
+  "sub44Controls": [
+    "[Circular]"
+  ],
+  "url": "http://localhost:8202/paywall/upsell?feature=reminders_widgets",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleDialogs": 1
+}

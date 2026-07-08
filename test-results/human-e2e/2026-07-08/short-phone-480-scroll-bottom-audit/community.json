@@ -1,0 +1,69 @@
+{
+  "route": "/community",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Is a 10-step “glass skin” routine better?. Contested.",
+        "rect": {
+          "bottom": 400,
+          "height": 100,
+          "left": 24,
+          "right": 296,
+          "top": 300,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 100,
+        "visibleWidth": 272
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+        "rect": {
+          "bottom": 508,
+          "height": 102,
+          "left": 24,
+          "right": 296,
+          "top": 406,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 75,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/community",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils "
+  }
+}

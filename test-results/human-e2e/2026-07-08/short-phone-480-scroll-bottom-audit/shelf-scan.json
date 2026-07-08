@@ -1,0 +1,69 @@
+{
+  "route": "/shelf/scan",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "SSearch catalogUse reviewed matches",
+        "rect": {
+          "bottom": 371,
+          "height": 76,
+          "left": 20,
+          "right": 300,
+          "top": 295,
+          "width": 280
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 280
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "+Add it by handAlways works offline",
+        "rect": {
+          "bottom": 457,
+          "height": 76,
+          "left": 20,
+          "right": 300,
+          "top": 381,
+          "width": 280
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 280
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/shelf/scan",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "route": "/settings/notifications",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 5,
+        "isTab": false,
+        "label": "Streak & adherence",
+        "rect": {
+          "bottom": 383,
+          "height": 48,
+          "left": 230,
+          "right": 282,
+          "top": 335,
+          "width": 52
+        },
+        "role": "switch",
+        "tag": "div",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 52
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 6,
+        "isTab": false,
+        "label": "Replenishment",
+        "rect": {
+          "bottom": 460,
+          "height": 48,
+          "left": 230,
+          "right": 282,
+          "top": 412,
+          "width": 52
+        },
+        "role": "switch",
+        "tag": "div",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 52
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/settings/notifications",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+  }
+}

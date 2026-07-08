@@ -1,0 +1,120 @@
+{
+  "blockedControls": [],
+  "bodyText": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Progress Shelf You",
+  "controls": [
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Scan a barcode",
+      "rect": {
+        "bottom": 312.9247627258301,
+        "height": 55.99211502075195,
+        "top": 256.9326477050781,
+        "width": 256.4017028808594,
+        "x": 31.99332618713379,
+        "y": 256.9326477050781
+      },
+      "role": "button",
+      "text": "Scan a barcode"
+    },
+    {
+      "aria": null,
+      "centerHitSelf": true,
+      "hitText": "Add by hand",
+      "rect": {
+        "bottom": 368.91688537597656,
+        "height": 47.99757385253906,
+        "top": 320.9193115234375,
+        "width": 256.4017028808594,
+        "x": 31.99332618713379,
+        "y": 320.9193115234375
+      },
+      "role": "button",
+      "text": "Add by hand"
+    },
+    {
+      "aria": "Today tab",
+      "centerHitSelf": true,
+      "hitText": "Today",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "top": 406.6141052246094,
+        "width": 75.60679626464844,
+        "x": 8.965413093566895,
+        "y": 406.6141052246094
+      },
+      "role": "tab",
+      "text": "Today"
+    },
+    {
+      "aria": "Progress tab",
+      "centerHitSelf": true,
+      "hitText": "Progress",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "top": 406.6141052246094,
+        "width": 75.6219711303711,
+        "x": 84.57221221923828,
+        "y": 406.6141052246094
+      },
+      "role": "tab",
+      "text": "Progress"
+    },
+    {
+      "aria": "Shelf tab",
+      "centerHitSelf": true,
+      "hitText": "Shelf",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "top": 406.6141052246094,
+        "width": 75.60679626464844,
+        "x": 160.19418334960938,
+        "y": 406.6141052246094
+      },
+      "role": "tab",
+      "text": "Shelf"
+    },
+    {
+      "aria": "You tab",
+      "centerHitSelf": true,
+      "hitText": "You",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "top": 406.6141052246094,
+        "width": 75.6219711303711,
+        "x": 235.8009796142578,
+        "y": 406.6141052246094
+      },
+      "role": "tab",
+      "text": "You"
+    }
+  ],
+  "hasExpected": {
+    "emptyLabel": true,
+    "headline": true,
+    "manual": true,
+    "scan": true,
+    "shelfTitle": true,
+    "tabbar": true
+  },
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "horizontalOverflow": 0,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "scrollX": 0,
+    "scrollY": 0
+  },
+  "sub44Controls": [],
+  "url": "http://localhost:8202/shelf",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleDialogs": 0
+}

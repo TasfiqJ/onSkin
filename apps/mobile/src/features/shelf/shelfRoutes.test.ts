@@ -171,21 +171,31 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
     expect(source).toContain('const compactShelf = height < 640');
+    expect(source).toContain('const shortShelf = height < 520');
     expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
-    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
+    expect(source).toContain(
+      '<EmptyShelf archiveCount={archiveCount} compact={compactShelf} shortPhone={shortShelf} />',
+    );
+    expect(source).toContain('const compactNoArchiveShort = compact && !hasArchive && shortPhone;');
+    expect(source).toContain("? 'items-center px-2 pb-28 pt-2'");
     expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
-    expect(source).toContain("`${compactWithArchive ? 'mb-4' : 'mb-7'} flex-row items-end gap-2.5`");
+    expect(source).toContain("compactNoArchiveShort ? 'mb-3'");
+    expect(source).toContain('width={compactNoArchiveShort ? 38 : 46}');
+    expect(source).toContain('height={compactNoArchiveShort ? 56 : 68}');
     expect(source).toContain('Let&apos;s build your cabinet.');
+    expect(source).toContain("? 'max-w-[280px] text-center text-[25px] leading-[29px]'");
     expect(source).toContain(
       'Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and',
     );
-    expect(source).toContain("`${compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'} w-full max-w-[300px]`");
+    expect(source).toContain("? 'mt-1.5 max-w-[270px] text-center text-[14px] leading-[19px]'");
+    expect(source).toContain("compactNoArchiveShort ? 'mt-4 gap-2'");
     expect(source).toContain('trackProductAddStarted(\'empty_scan\');');
     expect(source).toContain("router.push('/shelf/scan');");
     expect(source).toContain('className="h-14 items-center justify-center rounded-pill bg-ink"');
     expect(source).toContain('trackProductAddStarted(\'empty_manual\');');
     expect(source).toContain("router.push('/shelf/manual');");
-    expect(source).toContain('className="h-[50px] items-center justify-center"');
+    expect(source).toContain("? 'h-[48px] items-center justify-center'");
+    expect(source).toContain(": 'h-[50px] items-center justify-center'");
     expect(source).toContain('!isEmpty && !showLoading && !compactShelf');
     expect(source).not.toContain('!isEmpty && !showLoading ? (');
   });
@@ -266,17 +276,22 @@ describe('Shelf route mobile contracts', () => {
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
-    expect(source).toContain(
-      'function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: boolean })',
-    );
-    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
+    expect(source).toContain('function EmptyShelf({');
+    expect(source).toContain('archiveCount: number;');
+    expect(source).toContain('compact: boolean;');
+    expect(source).toContain('shortPhone: boolean;');
+    expect(source).toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} shortPhone={shortShelf} />');
     expect(source).toContain('const hasArchive = archiveCount > 0;');
     expect(source).toContain('const compactWithArchive = compact && hasArchive;');
+    expect(source).toContain('const compactNoArchiveShort = compact && !hasArchive && shortPhone;');
     expect(source).toContain("? 'items-center px-2 pb-28 pt-2'");
+    expect(source).toContain(': compactNoArchiveShort');
     expect(source).toContain(": 'items-center px-2 pb-24 pt-7'");
     expect(source).toContain(": 'flex-1 items-center justify-center px-2 pb-16'");
-    expect(source).toContain("`${compactWithArchive ? 'mb-4' : 'mb-7'} flex-row items-end gap-2.5`");
-    expect(source).toContain("`${compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'} w-full max-w-[300px]`");
+    expect(source).toContain("compactNoArchiveShort ? 'mb-3' : compactWithArchive ? 'mb-4' : 'mb-7'");
+    expect(source).toContain("compactNoArchiveShort ? 'mt-4 gap-2' : compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'");
+    expect(source).toContain('width={compactNoArchiveShort ? 38 : 46}');
+    expect(source).toContain('height={compactNoArchiveShort ? 56 : 68}');
     expect(source).toContain('{hasArchive ? (');
     expect(source).toContain('accessibilityLabel={`View archive, ${archiveCount} archived ${');
     expect(source).toContain("archiveCount === 1 ? 'product' : 'products'");
@@ -286,6 +301,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('function EmptyShelf()');
     expect(source).not.toContain('<EmptyShelf />');
     expect(source).not.toContain('<EmptyShelf archiveCount={archiveCount} />');
+    expect(source).not.toContain('<EmptyShelf archiveCount={archiveCount} compact={compactShelf} />');
     expect(source).not.toContain('className="mt-6 items-center py-2"');
   });
 

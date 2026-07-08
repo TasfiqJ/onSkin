@@ -30,6 +30,7 @@ export default function UpsellSheet() {
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
   const compactPaywall = height < 640;
+  const shortPaywall = height < 520;
   const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
@@ -58,36 +59,48 @@ export default function UpsellSheet() {
     <Sheet
       scroll
       backdropAccessible={false}
-      className={compactPaywall ? 'px-7 pb-8 pt-4' : undefined}
+      className={
+        shortPaywall ? 'px-7 pb-5 pt-3' : compactPaywall ? 'px-7 pb-8 pt-4' : undefined
+      }
       onClose={() => dismissPaywall(router)}
     >
-      <View
-        className={
-          compactPaywall
-            ? 'mb-2 h-[48px] w-[48px] items-center justify-center rounded-[14px]'
-            : 'mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]'
-        }
-        style={{ backgroundColor: colors.clayTint }}
-      >
-        <View className="h-4 w-4 rounded-[5px]" style={{ backgroundColor: colors.clay }} />
-      </View>
+      {shortPaywall ? null : (
+        <View
+          className={
+            compactPaywall
+              ? 'mb-2 h-[48px] w-[48px] items-center justify-center rounded-[14px]'
+              : 'mb-4 h-[52px] w-[52px] items-center justify-center rounded-[14px]'
+          }
+          style={{ backgroundColor: colors.clayTint }}
+        >
+          <View className="h-4 w-4 rounded-[5px]" style={{ backgroundColor: colors.clay }} />
+        </View>
+      )}
       <Text
         variant="title"
-        style={{ fontSize: longCompactTitle ? 24 : 30, lineHeight: longCompactTitle ? 27 : 34 }}
+        style={{
+          fontSize: shortPaywall ? 27 : longCompactTitle ? 24 : 30,
+          lineHeight: shortPaywall ? 30 : longCompactTitle ? 27 : 34,
+        }}
       >
         {copy.title}
       </Text>
       <Text
         variant="body"
         tone="muted"
-        className={compactPaywall ? 'mt-2' : 'mt-3'}
-        style={{ lineHeight: compactPaywall ? 20 : 24 }}
+        className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
+        style={{
+          fontSize: shortPaywall ? 14 : undefined,
+          lineHeight: shortPaywall ? 18 : compactPaywall ? 20 : 24,
+        }}
       >
         {copy.body}
       </Text>
       <View
         className={
-          compactPaywall
+          shortPaywall
+            ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'
+            : compactPaywall
             ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised p-3'
             : 'mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
         }
@@ -99,7 +112,10 @@ export default function UpsellSheet() {
           </Text>
           <Text
             variant="title"
-            style={{ fontSize: compactPaywall ? 24 : 26, lineHeight: compactPaywall ? 28 : 30 }}
+            style={{
+              fontSize: shortPaywall ? 22 : compactPaywall ? 24 : 26,
+              lineHeight: shortPaywall ? 25 : compactPaywall ? 28 : 30,
+            }}
           >
             {annualDisplay.priceLabel}
             {annualDisplay.periodLabel ? (
@@ -124,8 +140,17 @@ export default function UpsellSheet() {
         <Text
           variant="bodySm"
           tone="muted"
-          className={compactPaywall ? 'mt-1.5 px-3 text-center' : 'mt-2 px-3 text-center'}
-          style={{ fontSize: 12, lineHeight: compactPaywall ? 16 : 17 }}
+          className={
+            shortPaywall
+              ? 'mt-1 px-3 text-center'
+              : compactPaywall
+                ? 'mt-1.5 px-3 text-center'
+                : 'mt-2 px-3 text-center'
+          }
+          style={{
+            fontSize: shortPaywall ? 11.5 : 12,
+            lineHeight: shortPaywall ? 15 : compactPaywall ? 16 : 17,
+          }}
         >
           {offering.data.reason}
         </Text>
@@ -135,7 +160,9 @@ export default function UpsellSheet() {
         disabled={!canPurchase || startTrial.isPending}
         onPress={onStartTrial}
         className={
-          compactPaywall
+          shortPaywall
+            ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'
+            : compactPaywall
             ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
             : 'mt-4 h-[54px] items-center justify-center rounded-pill'
         }

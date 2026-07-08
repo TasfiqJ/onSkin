@@ -1,0 +1,69 @@
+{
+  "route": "/shelf/manual",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Ingredients",
+        "rect": {
+          "bottom": 411,
+          "height": 65,
+          "left": 24,
+          "right": 296,
+          "top": 346,
+          "width": 272
+        },
+        "role": "textarea",
+        "tag": "textarea",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 65,
+        "visibleWidth": 272
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 5,
+        "isTab": false,
+        "label": "Continue",
+        "rect": {
+          "bottom": 469,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 413,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/shelf/manual",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue"
+  }
+}

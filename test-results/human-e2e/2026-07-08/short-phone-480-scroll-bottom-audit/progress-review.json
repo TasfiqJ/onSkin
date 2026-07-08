@@ -1,0 +1,69 @@
+{
+  "route": "/progress/review",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Take photo",
+        "rect": {
+          "bottom": 397,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 341,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Back to Progress",
+        "rect": {
+          "bottom": 465,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 409,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/progress/review",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "x Photo not captured No photo to review yet. Take a new progress photo to open review. Nothing was saved. Take photo Back to Progress"
+  }
+}

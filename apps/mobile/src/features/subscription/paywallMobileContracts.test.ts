@@ -95,13 +95,26 @@ describe('paywall mobile contracts', () => {
     expect(sheet).toContain('backdropAccessible?: boolean');
     expect(upsell).toContain('useWindowDimensions');
     expect(upsell).toContain('const compactPaywall = height < 640;');
+    expect(upsell).toContain('const shortPaywall = height < 520;');
     expect(upsell).toContain(
       "const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';",
     );
-    expect(upsell).toContain('className={compactPaywall ? \'px-7 pb-8 pt-4\' : undefined}');
-    expect(upsell).toContain("fontSize: longCompactTitle ? 24 : 30");
+    expect(upsell).toContain(
+      "shortPaywall ? 'px-7 pb-5 pt-3' : compactPaywall ? 'px-7 pb-8 pt-4' : undefined",
+    );
+    expect(upsell).toContain('{shortPaywall ? null : (');
+    expect(upsell).toContain('fontSize: shortPaywall ? 27 : longCompactTitle ? 24 : 30');
+    expect(upsell).toContain("className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}");
+    expect(upsell).toContain('fontSize: shortPaywall ? 14 : undefined');
+    expect(upsell).toContain(
+      "shortPaywall\n            ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'",
+    );
+    expect(upsell).toContain('fontSize: shortPaywall ? 22 : compactPaywall ? 24 : 26');
     expect(upsell).toContain(
       "compactPaywall\n            ? 'mt-2 h-[54px] items-center justify-center rounded-pill'",
+    );
+    expect(upsell).toContain(
+      "shortPaywall\n            ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'",
     );
     expect(upsell).toContain('backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');

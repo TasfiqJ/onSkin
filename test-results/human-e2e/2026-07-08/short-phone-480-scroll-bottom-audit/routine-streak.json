@@ -1,0 +1,22 @@
+{
+  "route": "/routine/streak",
+  "analysis": {
+    "bottomControls": [],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/routine/streak",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "< STREAK & ADHERENCE Showing up beats being perfect. Your nights, no pressure. This week 0 of 7 nights M T W T F S S July less more"
+  }
+}

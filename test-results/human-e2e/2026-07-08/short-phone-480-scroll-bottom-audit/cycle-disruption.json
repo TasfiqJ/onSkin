@@ -1,0 +1,69 @@
+{
+  "route": "/cycle/disruption",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Travel mode. Trim to essentials while away",
+        "rect": {
+          "bottom": 407,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 351,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "I had a facial or peel. Pause actives, let skin recover",
+        "rect": {
+          "bottom": 469,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 413,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/cycle/disruption",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "Life happens. Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off. ‖ Skip tonight Just this once. The cycle continues ◴ Pause my routine Vacation, illness, a break → Travel mode Trim to essentials while away ◇ I had a facial or peel Pause actives, let skin recover"
+  }
+}

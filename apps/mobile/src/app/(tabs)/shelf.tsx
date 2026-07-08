@@ -131,9 +131,18 @@ function ProductCard({ item }: { item: ShelfItem }) {
   );
 }
 
-function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: boolean }) {
+function EmptyShelf({
+  archiveCount,
+  compact,
+  shortPhone,
+}: {
+  archiveCount: number;
+  compact: boolean;
+  shortPhone: boolean;
+}) {
   const hasArchive = archiveCount > 0;
   const compactWithArchive = compact && hasArchive;
+  const compactNoArchiveShort = compact && !hasArchive && shortPhone;
 
   return (
     <View
@@ -141,27 +150,67 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
         compact
           ? compactWithArchive
             ? 'items-center px-2 pb-28 pt-2'
+            : compactNoArchiveShort
+              ? 'items-center px-2 pb-28 pt-2'
             : 'items-center px-2 pb-24 pt-7'
           : 'flex-1 items-center justify-center px-2 pb-16'
       }
     >
-      <View className={`${compactWithArchive ? 'mb-4' : 'mb-7'} flex-row items-end gap-2.5`}>
+      <View
+        className={`${
+          compactNoArchiveShort ? 'mb-3' : compactWithArchive ? 'mb-4' : 'mb-7'
+        } flex-row items-end gap-2.5`}
+      >
         <View className="-rotate-6">
-          <StripedThumb light width={46} height={60} radius={10} />
+          <StripedThumb
+            light
+            width={compactNoArchiveShort ? 38 : 46}
+            height={compactNoArchiveShort ? 50 : 60}
+            radius={10}
+          />
         </View>
-        <StripedThumb light width={46} height={68} radius={10} />
+        <StripedThumb
+          light
+          width={compactNoArchiveShort ? 38 : 46}
+          height={compactNoArchiveShort ? 56 : 68}
+          radius={10}
+        />
         <View className="rotate-6">
-          <StripedThumb light width={46} height={60} radius={10} />
+          <StripedThumb
+            light
+            width={compactNoArchiveShort ? 38 : 46}
+            height={compactNoArchiveShort ? 50 : 60}
+            radius={10}
+          />
         </View>
       </View>
-      <Text variant="title" className="max-w-[280px] text-center text-[28px] leading-[32px]">
+      <Text
+        variant="title"
+        className={
+          compactNoArchiveShort
+            ? 'max-w-[280px] text-center text-[25px] leading-[29px]'
+            : 'max-w-[280px] text-center text-[28px] leading-[32px]'
+        }
+      >
         Let&apos;s build your cabinet.
       </Text>
-      <Text variant="body" tone="muted" className="mt-2.5 max-w-[280px] text-center">
+      <Text
+        variant="body"
+        tone="muted"
+        className={
+          compactNoArchiveShort
+            ? 'mt-1.5 max-w-[270px] text-center text-[14px] leading-[19px]'
+            : 'mt-2.5 max-w-[280px] text-center'
+        }
+      >
         Add what you already use. Scan a barcode, or add it by hand. We&apos;ll handle freshness and
         clashes.
       </Text>
-      <View className={`${compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'} w-full max-w-[300px]`}>
+      <View
+        className={`${
+          compactNoArchiveShort ? 'mt-4 gap-2' : compactWithArchive ? 'mt-5 gap-2' : 'mt-8 gap-3'
+        } w-full max-w-[300px]`}
+      >
         <Pressable
           accessibilityRole="button"
           onPress={() => {
@@ -180,7 +229,11 @@ function EmptyShelf({ archiveCount, compact }: { archiveCount: number; compact: 
             trackProductAddStarted('empty_manual');
             router.push('/shelf/manual');
           }}
-          className="h-[50px] items-center justify-center"
+          className={
+            compactNoArchiveShort
+              ? 'h-[48px] items-center justify-center'
+              : 'h-[50px] items-center justify-center'
+          }
         >
           <Text className="font-sans-semibold text-[15px]" tone="muted">
             Add by hand
@@ -289,6 +342,7 @@ export default function ShelfScreen() {
   const [filter, setFilter] = useState<Filter>('all');
   const { height } = useWindowDimensions();
   const compactShelf = height < 640;
+  const shortShelf = height < 520;
 
   const items = data?.items ?? [];
   const archiveCount = data?.archive.length ?? 0;
@@ -315,7 +369,7 @@ export default function ShelfScreen() {
               empty for now
             </Text>
           </View>
-          <EmptyShelf archiveCount={archiveCount} compact={compactShelf} />
+          <EmptyShelf archiveCount={archiveCount} compact={compactShelf} shortPhone={shortShelf} />
         </>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">

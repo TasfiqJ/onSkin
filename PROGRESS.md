@@ -6,6 +6,39 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed shortest-phone bottom-action clearance for the empty Shelf and
+  contextual full-routine paywall. A 320 x 480 route sweep found `/shelf`
+  hiding `Add by hand` under the floating tab bar and
+  `/paywall/upsell?feature=full_routine` clipping `Maybe later` below the
+  viewport. The Shelf no-archive empty state now uses a sub-520 px density and
+  the contextual paywall trims its short-phone sheet rhythm while preserving
+  44 px+ controls. Post-fix Codex in-app browser evidence shows both Shelf
+  actions hit-test correctly, `Add by hand` opens `/shelf/manual`, `Maybe later`
+  is fully visible, and tapping it dismisses to `/today`. Evidence and bug
+  report:
+  `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`,
+  `docs/e2e-bug-reports/2026-07-08-shelf-paywall-short-phone-bottom-actions.md`.
+
+- Hardened commerce click attribution at the app boundary. The mirrored
+  click payload guard now requires the exact docs/10 shape
+  (`clickToken`, `productType`, `source`, `consented`), rejects surprise
+  partner identifiers, rejects raw URLs/emails/free-text values, and only
+  accepts known affiliate source buckets while preserving the opaque-token
+  outbound handoff. Added negative contract coverage for extra identifiers,
+  malformed product types, unsafe tokens, bad source buckets, and non-boolean
+  consent. This is a non-UI privacy/trust boundary change, so no human E2E was
+  required. Also verified the current shortest-phone Shelf empty-state and
+  contextual upsell polish at 320 x 480: Shelf keeps both empty-state actions
+  visible and routes them to `/shelf/manual` and `/shelf/scan`; the reminders
+  upsell keeps preview-store copy, Terms, Privacy, Restore, and `Maybe later`
+  visible with 48 px+ user-facing controls and recovers to `/today`. Evidence:
+  `test-results/human-e2e/2026-07-08/shelf-paywall-short-phone-clearance/`,
+  `test-results/human-e2e/2026-07-08/commerce-attribution-and-short-phone-ui/`,
+  and
+  `docs/e2e-bug-reports/2026-07-08-shelf-paywall-short-phone-bottom-actions.md`.
+  Refreshed the stale Shelf route contracts so the archived-products and
+  short-phone empty-state assertions cover the current `shortPhone` path.
+
 - Fixed commerce stack paid-link exposure before the separate where-to-buy
   consent. The stack detail route now renders locked `Consent needed` rows,
   locked accessibility labels, no external glyphs, and non-paid disclosure copy

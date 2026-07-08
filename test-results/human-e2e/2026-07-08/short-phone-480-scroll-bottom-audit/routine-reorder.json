@@ -1,0 +1,22 @@
+{
+  "route": "/routine/reorder",
+  "analysis": {
+    "bottomControls": [],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/routine/reorder",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "Done Example morning Save This example shows how ordering guidance works. Add products to your shelf for your routine. Cream cleanser Vitamin C serum Ceramide moisturizer"
+  }
+}

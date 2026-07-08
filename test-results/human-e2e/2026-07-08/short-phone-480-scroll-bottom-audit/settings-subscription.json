@@ -1,0 +1,69 @@
+{
+  "route": "/settings/subscription",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Terms›",
+        "rect": {
+          "bottom": 390,
+          "height": 53,
+          "left": 38,
+          "right": 282,
+          "top": 337,
+          "width": 244
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 53,
+        "visibleWidth": 244
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Privacy›",
+        "rect": {
+          "bottom": 442,
+          "height": 52,
+          "left": 38,
+          "right": 282,
+          "top": 390,
+          "width": 244
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 52,
+        "visibleWidth": 244
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/settings/subscription",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "< Subscription RoutineKind Pro No card Plan Reverse trial Free until July 15, 2026 Keep Pro after your week › Restore purchases › Terms › Privacy › No card is on file. You have Pro until July 15, 2026. Choose a plan only if you want to keep Pro after your week."
+  }
+}

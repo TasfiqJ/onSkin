@@ -1,0 +1,69 @@
+{
+  "route": "/routine/adaptation",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Looks good",
+        "rect": {
+          "bottom": 473,
+          "height": 56,
+          "left": 24,
+          "right": 232,
+          "top": 417,
+          "width": 208
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 208
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Undo",
+        "rect": {
+          "bottom": 472,
+          "height": 54,
+          "left": 242,
+          "right": 296,
+          "top": 418,
+          "width": 54
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 54
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/routine/adaptation",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "EXAMPLE ROUTINE Here's what changed. This preview shows the explanation style until your shelf has products. + Example order refreshed Cream cleanser, Vitamin C serum, and Ceramide moisturizer stay in a calm morning sequence. Active nights stay separated Retinol 0.3% and Glycolic 7% Toner stay scheduled away from recovery nights where needed. Your choices stay in control This is an example preview. Add products to your shelf to see live adaptation notes. Looks good ↺"
+  }
+}

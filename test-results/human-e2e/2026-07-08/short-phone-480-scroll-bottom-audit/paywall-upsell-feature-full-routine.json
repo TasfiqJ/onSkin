@@ -1,0 +1,143 @@
+{
+  "route": "/paywall/upsell?feature=full_routine",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 0,
+        "isTab": false,
+        "label": "Start free trial",
+        "rect": {
+          "bottom": 396,
+          "height": 54,
+          "left": 28,
+          "right": 292,
+          "top": 342,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Terms",
+        "rect": {
+          "bottom": 444,
+          "height": 48,
+          "left": 62,
+          "right": 110,
+          "top": 396,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 48
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "Privacy",
+        "rect": {
+          "bottom": 444,
+          "height": 48,
+          "left": 135,
+          "right": 183,
+          "top": 396,
+          "width": 48
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 48
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Restore",
+        "rect": {
+          "bottom": 444,
+          "height": 48,
+          "left": 209,
+          "right": 258,
+          "top": 396,
+          "width": 49
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 48,
+        "visibleWidth": 49
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": true,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Maybe later",
+        "rect": {
+          "bottom": 492,
+          "height": 48,
+          "left": 28,
+          "right": 292,
+          "top": 444,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 37,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [
+      {
+        "control": "[Circular]",
+        "type": "clipped-control"
+      }
+    ],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/paywall/upsell?feature=full_routine",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later"
+  }
+}

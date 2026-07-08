@@ -1,0 +1,69 @@
+{
+  "route": "/shelf/no-match",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "IScan the ingredient listWe'll read the INCI text",
+        "rect": {
+          "bottom": 401,
+          "height": 54,
+          "left": 28,
+          "right": 292,
+          "top": 347,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "+Add it by handAlways works, even offline",
+        "rect": {
+          "bottom": 461,
+          "height": 54,
+          "left": 28,
+          "right": 292,
+          "top": 407,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 54,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/shelf/no-match",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "? x We don't have this one yet. That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline"
+  }
+}

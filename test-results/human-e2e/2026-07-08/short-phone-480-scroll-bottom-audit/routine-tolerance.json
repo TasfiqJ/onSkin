@@ -1,0 +1,69 @@
+{
+  "route": "/routine/tolerance",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "A bit dry. We'll hold your pace steady",
+        "rect": {
+          "bottom": 401,
+          "height": 72,
+          "left": 28,
+          "right": 292,
+          "top": 329,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 72,
+        "visibleWidth": 264
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "Irritated. We'll add recovery nights & ease off",
+        "rect": {
+          "bottom": 481,
+          "height": 72,
+          "left": 28,
+          "right": 292,
+          "top": 409,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 72,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/routine/tolerance",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "Skip ONE QUICK CHECK-IN How did your skin feel this week? It only tunes your pace. Nothing here is a diagnosis. Optional, always. Comfortable We may offer a small step-up A bit dry We'll hold your pace steady Irritated We'll add recovery nights & ease off Save"
+  }
+}

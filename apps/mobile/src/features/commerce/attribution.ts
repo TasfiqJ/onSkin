@@ -55,8 +55,8 @@ export function urlLeaksHealthData(
 
 /** Guard for the click-event payload that gets persisted/mirrored: it may carry only
  *  the opaque token, the product TYPE, the source, and the consent flag. Never any
- *  health-adjacent key (docs/10 §9. The table has no health column; this is the
- *  belt-and-suspenders at the app boundary). */
+ *  extra identifier, raw URL, free text, or health-adjacent key (docs/10 §9. The
+ *  table has no health column; this is the belt-and-suspenders at the app boundary). */
 export type ClickPayload = {
   clickToken: string;
   productType: string | null;
@@ -64,6 +64,38 @@ export type ClickPayload = {
   consented: boolean;
 };
 
+const CLICK_PAYLOAD_KEYS = ['clickToken', 'consented', 'productType', 'source'] as const;
+const CLICK_PAYLOAD_KEY_SET = new Set<string>(CLICK_PAYLOAD_KEYS);
+const SAFE_OPAQUE_TOKEN = /^[A-Za-z0-9_-]{1,128}$/;
+const SAFE_PRODUCT_TYPE = /^[a-z0-9_:-]{1,80}$/;
+const AFFILIATE_SOURCE_VALUES = new Set(['shopmy', 'skimlinks', 'direct', 'none']);
+
+function isCleanCommerceValue(value: string): boolean {
+  return !value.includes('@') && !/https?:\/\//i.test(value) && !/file:\/\/|content:\/\//i.test(value);
+}
+
 export function isHealthSafePayload(payload: Record<string, unknown>): boolean {
-  return Object.keys(payload).every((key) => !urlLeaksHealthData(key));
+  const keys = Object.keys(payload);
+  if (keys.length !== CLICK_PAYLOAD_KEYS.length) return false;
+  if (!keys.every((key) => CLICK_PAYLOAD_KEY_SET.has(key) && !urlLeaksHealthData(key))) return false;
+
+  const clickToken = payload.clickToken;
+  if (typeof clickToken !== 'string' || !SAFE_OPAQUE_TOKEN.test(clickToken) || !isCleanCommerceValue(clickToken)) {
+    return false;
+  }
+
+  const productType = payload.productType;
+  if (
+    productType !== null &&
+    (typeof productType !== 'string' || !SAFE_PRODUCT_TYPE.test(productType) || !isCleanCommerceValue(productType))
+  ) {
+    return false;
+  }
+
+  const source = payload.source;
+  if (typeof source !== 'string' || !AFFILIATE_SOURCE_VALUES.has(source) || !isCleanCommerceValue(source)) {
+    return false;
+  }
+
+  return typeof payload.consented === 'boolean';
 }

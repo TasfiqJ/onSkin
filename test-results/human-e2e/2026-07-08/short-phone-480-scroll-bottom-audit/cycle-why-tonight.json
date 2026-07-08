@@ -1,0 +1,46 @@
+{
+  "route": "/cycle/why-tonight",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "Got it",
+        "rect": {
+          "bottom": 441,
+          "height": 56,
+          "left": 28,
+          "right": 292,
+          "top": 385,
+          "width": 264
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 264
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/cycle/why-tonight",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "No cycle is running yet. Add an active to get started. Got it"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "manualUrl": "http://localhost:8202/shelf/manual",
+  "manualText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "scanUrl": "http://localhost:8202/shelf/scan",
+  "scanText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+  "jsDialog": false
+}

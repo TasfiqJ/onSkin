@@ -1,0 +1,115 @@
+{
+  "route": "/cycle/procedure",
+  "analysis": {
+    "bottomControls": [
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 1,
+        "isTab": false,
+        "label": "3days",
+        "rect": {
+          "bottom": 404,
+          "height": 76,
+          "left": 24,
+          "right": 109,
+          "top": 329,
+          "width": 85
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 85
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 2,
+        "isTab": false,
+        "label": "5days",
+        "rect": {
+          "bottom": 404,
+          "height": 76,
+          "left": 117,
+          "right": 204,
+          "top": 329,
+          "width": 87
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 87
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 3,
+        "isTab": false,
+        "label": "7days",
+        "rect": {
+          "bottom": 404,
+          "height": 76,
+          "left": 212,
+          "right": 296,
+          "top": 329,
+          "width": 85
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 76,
+        "visibleWidth": 85
+      },
+      {
+        "blockedBy": "",
+        "centerInViewport": true,
+        "clipped": false,
+        "hitBlocked": false,
+        "index": 4,
+        "isTab": false,
+        "label": "Start recovery",
+        "rect": {
+          "bottom": 465,
+          "height": 56,
+          "left": 24,
+          "right": 296,
+          "top": 409,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "button",
+        "testId": "",
+        "tinyTarget": false,
+        "visibleHeight": 56,
+        "visibleWidth": 272
+      }
+    ],
+    "issues": [],
+    "scroll": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320,
+      "top": 0
+    },
+    "tabTop": null,
+    "title": "",
+    "url": "http://localhost:8202/cycle/procedure",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleTextStart": "< ◇ Let's give your skin a few days. After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in. HOW LONG TO REST? 3 days 5 days 7 days WHILE YOU RECOVER ✓ Gentle cleanser ✓ Barrier moisturizer. Ceramides ✓ SPF every morning Start recovery"
+  }
+}
