@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-08T23:07:40.793Z
+Generated: 2026-07-08T23:30:00.991Z
 Status: blocked
-Git SHA: 10d8c92429aba6dcc813060d4703feaecdc3c604
+Git SHA: ded9333461764c37f14ab91a4a0d69bd08829ae1
 Git status: clean
 
 ## Public Identity
@@ -107,9 +107,9 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29`
 - `docs/E2E_TESTING_CHECKLIST.md`: `ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812`
-- `docs/USER_FLOW_TREE.md`: `f64c03ae139147f573d5f1d4468ce42a20313e1871c9215b99da1bf16a6087c2`
-- `docs/e2e/generated/human-e2e-manifest.json`: `daab88091711d9d714397b719da6567cce09736704f1e1c1798a4cdac129c96d`
-- `docs/e2e/generated/human-e2e-manifest.md`: `ec25381c74e44eb12b79cd25805bcea9137fe55bc2e86e219572fbb08d0a9bfe`
+- `docs/USER_FLOW_TREE.md`: `3cb2a003e1dec3217449acbe43d7b89bfcf57280afcd0b3fd8eac6f2b3796452`
+- `docs/e2e/generated/human-e2e-manifest.json`: `4b33d2f7d68a1bbf529e1d423861bf7c2b1752451e34ef35bddb30509d0e451b`
+- `docs/e2e/generated/human-e2e-manifest.md`: `1463a8d157f21e07c28c1d5dec1419f1e06932d8a7e4c28269d8a80cacba548a`
 - `docs/phase-5/generated/device-qa-packet.json`: `cea1ac24b8f681eba4d87b8911c1669370a8bb899f8951538074ed680b3d7d8a`
 - `docs/phase-5/generated/device-qa-packet.md`: `ff97126f6aeb2bd37a10da31d9fc01aac4785347b9783152ef8bc6cc09f8ab56`
 - `docs/phase-6/generated/payments-qa-packet.json`: `1aab8042d8c372893f4356f96b60d666049289e9ce09df7f0fd0cb272ad36b32`
