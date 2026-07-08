@@ -6,6 +6,26 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 7 core-loop QA packet provenance. The generated packet now
+  hashes the human-simulated E2E rules/checklist, user-flow tree, generated
+  human-E2E manifest, Phase 5 native-device QA packet, and Phase 6 payments QA
+  packet alongside Phase 7 launch helpers, checker/smoke scripts, shared
+  evidence helper, and Phase 7 docs. The Phase 7 checker enforces those
+  upstream evidence inputs, and smoke coverage proves they appear before
+  core-loop signoff can be trusted.
+
+- Tightened split-short Progress, paywall, Shelf, and subscription-settings
+  text-pressure layouts. The locked `/progress` photo-timeline paywall now
+  switches to a 320 x 390 header-only treatment that hides lower-priority body
+  copy, keeps Terms, Privacy, Restore, Maybe later, store-unavailable copy, and
+  Start free trial complete, and verifies all paywall targets at 48 px or larger
+  with zero horizontal overflow. Direct upsell uses the same compact icon
+  dismiss pattern, free subscription settings drop secondary body copy below
+  410 px, and scan fallback rows hide subtitles only on sub-460 px fallback
+  screens while preserving full accessibility labels. Focused
+  paywall/settings/shelf contracts pass, and evidence is in
+  `test-results/human-e2e/2026-07-08/progress-progate-split-short-390-current/`.
+
 - Fixed the 320 x 430 / 130% text-pressure ProGate header failure. Shared
   contextual ProGate paywalls now stack compact compliance above `Maybe later`
   on ultra-short phones and hide the monthly-equivalent label below 460 px, so

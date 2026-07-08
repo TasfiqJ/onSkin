@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 
-import { Sheet, Text } from '@/components/ui';
+import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { UPSELL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
@@ -75,15 +75,12 @@ export default function UpsellSheet() {
         splitShortPaywall ? (
           <View className="mb-0 flex-row items-center justify-between">
             <ComplianceRow density="compactHeader" />
-            <Pressable
-              accessibilityRole="button"
+            <RouteIconButton
+              accessibilityLabel="Maybe later"
+              glyph="x"
+              tone="muted"
               onPress={() => dismissPaywall(router)}
-              className="h-[48px] justify-center pl-2"
-            >
-              <Text className="font-sans-semibold" tone="muted" variant="body">
-                Maybe later
-              </Text>
-            </Pressable>
+            />
           </View>
         ) : (
           <Pressable
@@ -137,8 +134,8 @@ export default function UpsellSheet() {
           shortPaywall
             ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised p-2.5'
             : compactPaywall
-            ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised p-3'
-            : 'mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
+              ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised p-3'
+              : 'mt-5 flex-row items-center justify-between rounded-card bg-paper-raised p-4'
         }
         style={{ borderWidth: 1, borderColor: colors.hairline }}
       >
@@ -199,8 +196,8 @@ export default function UpsellSheet() {
           shortPaywall
             ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'
             : compactPaywall
-            ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
-            : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+              ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
+              : 'mt-4 h-[54px] items-center justify-center rounded-pill'
         }
         style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
       >

@@ -283,20 +283,22 @@ export default function SubscriptionScreen() {
                 splitShortSubscription
                   ? 'mb-2 rounded-card bg-paper-raised p-3'
                   : ultraShortSubscription
-                  ? 'mb-3 rounded-card bg-paper-raised p-4'
-                  : 'mb-4 rounded-card bg-paper-raised p-5'
+                    ? 'mb-3 rounded-card bg-paper-raised p-4'
+                    : 'mb-4 rounded-card bg-paper-raised p-5'
               }
               style={{ borderWidth: 1, borderColor: colors.hairline }}
             >
               <Text variant="titleSm">{PAYWALL_COPY.manage.freeTitle}</Text>
-              <Text
-                variant="bodySm"
-                tone="muted"
-                className={splitShortSubscription ? 'mt-1' : ultraShortSubscription ? 'mt-1.5' : 'mt-2'}
-                style={{ lineHeight: splitShortSubscription ? 18 : ultraShortSubscription ? 19 : 21 }}
-              >
-                {PAYWALL_COPY.manage.freeBody}
-              </Text>
+              {splitShortSubscription ? null : (
+                <Text
+                  variant="bodySm"
+                  tone="muted"
+                  className={ultraShortSubscription ? 'mt-1.5' : 'mt-2'}
+                  style={{ lineHeight: ultraShortSubscription ? 19 : 21 }}
+                >
+                  {PAYWALL_COPY.manage.freeBody}
+                </Text>
+              )}
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/paywall/upsell?feature=full_routine')}
@@ -304,8 +306,8 @@ export default function SubscriptionScreen() {
                   splitShortSubscription
                     ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
                     : ultraShortSubscription
-                    ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
-                    : 'mt-4 h-[50px] items-center justify-center rounded-pill'
+                      ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
+                      : 'mt-4 h-[50px] items-center justify-center rounded-pill'
                 }
                 style={{ backgroundColor: colors.clay }}
               >

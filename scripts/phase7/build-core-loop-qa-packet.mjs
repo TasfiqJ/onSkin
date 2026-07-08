@@ -27,7 +27,17 @@ const requiredFiles = [
   'scripts/phase7/build-core-loop-qa-packet.mjs',
   'scripts/phase7/check-core-loop.mjs',
   'scripts/phase7/check-core-loop-smoke.mjs',
+  'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
+  'docs/HUMAN_SIMULATED_E2E_TESTING.md',
+  'docs/E2E_TESTING_CHECKLIST.md',
+  'docs/USER_FLOW_TREE.md',
+  'docs/e2e/generated/human-e2e-manifest.json',
+  'docs/e2e/generated/human-e2e-manifest.md',
+  'docs/phase-5/generated/device-qa-packet.json',
+  'docs/phase-5/generated/device-qa-packet.md',
+  'docs/phase-6/generated/payments-qa-packet.json',
+  'docs/phase-6/generated/payments-qa-packet.md',
   'docs/phase-7/surface-inventory.md',
   'docs/phase-7/launch-claim-matrix.md',
   'docs/phase-7/beta-evidence-dashboard.md',
@@ -51,7 +61,8 @@ const scenarios = [
   },
   {
     surface: 'Reviewed guidance',
-    scenario: 'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden',
+    scenario:
+      'reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden',
     evidenceKey: 'reviewedGuidanceQaPass',
     envKey: 'PHASE7_REVIEWED_GUIDANCE_QA_PASS',
   },
@@ -82,7 +93,8 @@ const scenarios = [
   },
   {
     surface: 'Payments',
-    scenario: 'RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified',
+    scenario:
+      'RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified',
     evidenceKey: 'paymentsLifecycleQaPass',
     envKey: 'PHASE7_PAYMENTS_LIFECYCLE_QA_PASS',
   },
@@ -100,13 +112,15 @@ const scenarios = [
   },
   {
     surface: 'Deferred surfaces',
-    scenario: 'commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled',
+    scenario:
+      'commerce/community posting/trend/cloud Ask/widgets/share hidden unless gates enabled',
     evidenceKey: 'deferredSurfacesQaPass',
     envKey: 'PHASE7_DEFERRED_SURFACES_QA_PASS',
   },
   {
     surface: 'Analytics',
-    scenario: 'activation, retention, payment, privacy, support, and deferred-surface events visible',
+    scenario:
+      'activation, retention, payment, privacy, support, and deferred-surface events visible',
     evidenceKey: 'analyticsQaPass',
     envKey: 'PHASE7_ANALYTICS_QA_PASS',
   },

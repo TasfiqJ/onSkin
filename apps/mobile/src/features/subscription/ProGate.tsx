@@ -2,7 +2,7 @@ import { router, useIsFocused, usePathname } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
-import { Screen, Text } from '@/components/ui';
+import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 import type { GatedFeature } from '@onskin/types';
@@ -38,6 +38,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       : offering.data?.reason;
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
+  const splitShortProgressTabPaywall =
+    height < 410 && feature === 'photo_timeline' && pathname === '/progress';
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
   const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
@@ -120,26 +122,37 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       <View
         className={
           headerCompliancePaywall
-            ? ultraShortPaywall
-              ? 'min-h-[96px] items-stretch pt-0'
-              : 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
+            ? splitShortProgressTabPaywall
+              ? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-0'
+              : ultraShortPaywall
+                ? 'min-h-[96px] items-stretch pt-0'
+                : 'min-h-[48px] flex-row items-start justify-between gap-2 pt-1'
             : 'flex-row justify-end pt-1'
         }
       >
         {headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => dismissPaywall(router, paywallDismissFallback)}
-          className={
-            headerCompliancePaywall && ultraShortPaywall
-              ? 'h-[48px] self-end justify-center px-2'
-              : 'h-[48px] justify-center px-2'
-          }
-        >
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            Maybe later
-          </Text>
-        </Pressable>
+        {splitShortProgressTabPaywall ? (
+          <RouteIconButton
+            accessibilityLabel="Maybe later"
+            glyph="x"
+            tone="muted"
+            onPress={() => dismissPaywall(router, paywallDismissFallback)}
+          />
+        ) : (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => dismissPaywall(router, paywallDismissFallback)}
+            className={
+              headerCompliancePaywall && ultraShortPaywall
+                ? 'h-[48px] self-end justify-center px-2'
+                : 'h-[48px] justify-center px-2'
+            }
+          >
+            <Text variant="body" tone="muted" className="font-sans-medium">
+              Maybe later
+            </Text>
+          </Pressable>
+        )}
       </View>
       <ScrollView
         className="flex-1"
@@ -181,19 +194,27 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         >
           {copy.title}
         </Text>
-        <Text
-          variant="body"
-          tone="muted"
-          className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
-          numberOfLines={ultraShortPaywall ? 2 : undefined}
-          ellipsizeMode="tail"
-          style={{
-            fontSize: ultraShortPaywall ? 13 : shortPaywall ? 14 : compactPaywall ? 15 : undefined,
-            lineHeight: ultraShortPaywall ? 17 : shortPaywall ? 18 : compactPaywall ? 21 : 24,
-          }}
-        >
-          {copy.body}
-        </Text>
+        {splitShortProgressTabPaywall ? null : (
+          <Text
+            variant="body"
+            tone="muted"
+            className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}
+            numberOfLines={ultraShortPaywall ? 2 : undefined}
+            ellipsizeMode="tail"
+            style={{
+              fontSize: ultraShortPaywall
+                ? 13
+                : shortPaywall
+                  ? 14
+                  : compactPaywall
+                    ? 15
+                    : undefined,
+              lineHeight: ultraShortPaywall ? 17 : shortPaywall ? 18 : compactPaywall ? 21 : 24,
+            }}
+          >
+            {copy.body}
+          </Text>
+        )}
         <View
           className={
             ultraShortPaywall

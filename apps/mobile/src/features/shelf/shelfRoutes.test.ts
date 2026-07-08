@@ -70,6 +70,20 @@ describe('Shelf route mobile contracts', () => {
     }
   });
 
+  it('keeps scan fallback rows complete on split-short text-pressure phones', () => {
+    const source = readAppRoute('shelf/scan.tsx');
+
+    expect(source).toContain('const splitShortScanSurface = height < 460;');
+    expect(source).toContain('hideSubtitle={splitShortScanSurface}');
+    expect(source).toContain('hideSubtitle?: boolean;');
+    expect(source).toContain('accessibilityLabel={`${title}. ${subtitle}`}');
+    expect(source).toContain(
+      "compact\n          ? 'min-h-[48px] flex-row items-center gap-2.5 rounded-[15px] px-2.5 py-1.5'",
+    );
+    expect(source).toContain('{hideSubtitle ? null : (');
+    expect(source).not.toContain("? 'flex-row items-center gap-3 rounded-[16px] px-3 py-2.5'");
+  });
+
   it('keeps add and replenishment sheets scrollable on short phones', () => {
     for (const route of ['shelf/no-match.tsx', 'shelf/opened.tsx', 'shelf/replenish.tsx']) {
       const source = readAppRoute(route);
@@ -343,13 +357,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const compactScanSurface = height < 640');
     expect(source).toContain('const splitShortScanSurface = height < 460;');
     expect(source).toContain('const showScanPreview = !splitShortScanSurface || canShowCamera;');
-    expect(source).toContain(
-      'style={splitShortScanSurface ? { minHeight: 68 } : undefined}',
-    );
+    expect(source).toContain('style={splitShortScanSurface ? { minHeight: 68 } : undefined}');
     expect(source).toContain('{showScanPreview ? (');
-    expect(source).toContain(
-      "'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'",
-    );
+    expect(source).toContain("'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'");
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
     expect(source).toContain('{canShowCamera ? (');
     expect(source).toContain("'absolute left-8 right-8 top-[34px] h-8 rounded-[12px]'");
@@ -362,10 +372,13 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
     expect(source).toContain('compact={splitShortScanSurface}');
+    expect(source).toContain('hideSubtitle={splitShortScanSurface}');
     expect(source).toContain('compact?: boolean;');
+    expect(source).toContain('hideSubtitle?: boolean;');
     expect(source).toContain(
-      "? 'flex-row items-center gap-3 rounded-[16px] px-3 py-2.5'",
+      "? 'min-h-[48px] flex-row items-center gap-2.5 rounded-[15px] px-2.5 py-1.5'",
     );
+    expect(source).toContain('{hideSubtitle ? null : (');
     expect(source).toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source).toContain('EXPO_PUBLIC_E2E_SHELF_CAMERA_PERMISSION');
     expect(source).toContain("devShelfCameraPermissionMode(): 'denied_no_retry' | null");

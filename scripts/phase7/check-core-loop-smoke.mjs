@@ -207,9 +207,35 @@ const cases = [
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
         /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
         typeof result.packet.gitStatus === 'string' &&
-        result.packet.files.some((file) => file.path === 'scripts/phase7/build-core-loop-qa-packet.mjs') &&
+        result.packet.files.some(
+          (file) => file.path === 'scripts/phase7/build-core-loop-qa-packet.mjs',
+        ) &&
         result.packet.files.some((file) => file.path === 'scripts/phase7/check-core-loop.mjs') &&
-        result.packet.files.some((file) => file.path === 'scripts/phase7/check-core-loop-smoke.mjs') &&
+        result.packet.files.some(
+          (file) => file.path === 'scripts/phase7/check-core-loop-smoke.mjs',
+        ) &&
+        result.packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
+        result.packet.files.some((file) => file.path === 'docs/HUMAN_SIMULATED_E2E_TESTING.md') &&
+        result.packet.files.some((file) => file.path === 'docs/E2E_TESTING_CHECKLIST.md') &&
+        result.packet.files.some((file) => file.path === 'docs/USER_FLOW_TREE.md') &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/e2e/generated/human-e2e-manifest.json',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/e2e/generated/human-e2e-manifest.md',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/phase-5/generated/device-qa-packet.json',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/phase-5/generated/device-qa-packet.md',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/phase-6/generated/payments-qa-packet.json',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'docs/phase-6/generated/payments-qa-packet.md',
+        ) &&
         result.packet.scenarios.every((scenario) => scenario.evidencePass === true) &&
         !result.packet.blockers.some((blocker) => /PHASE7_SIGNED_OFF_BY/.test(blocker))
       );
@@ -256,8 +282,7 @@ const cases = [
         result.packet.evidence.todayCheckoffQaPass === false &&
         result.packet.scenarios.some(
           (scenario) =>
-            scenario.envKey === 'PHASE7_TODAY_CHECKOFF_QA_PASS' &&
-            scenario.evidencePass === false,
+            scenario.envKey === 'PHASE7_TODAY_CHECKOFF_QA_PASS' && scenario.evidencePass === false,
         ) &&
         result.packet.blockers.includes('Missing todayCheckoffQaPass evidence.')
       );

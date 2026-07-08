@@ -109,18 +109,16 @@ require(has(
   /productionSurfaceReady/,
 ), 'phase7.ts must fail closed for production deferred surfaces.');
 const qaPacketBuilder = read('scripts/phase7/build-core-loop-qa-packet.mjs');
-require(
-  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
-    /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
-    /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
-    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
-  'Phase 7 core-loop QA packet must ignore only its own generated outputs when recording Git status.',
-);
-require(
-  /Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
-    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
-  'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.',
-);
+require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+  /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
+  /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
+  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 core-loop QA packet must ignore only its own generated outputs when recording Git status.');
+require(/Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+  /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
+    qaPacketBuilder,
+  ), 'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
   'apps/mobile/src/lib/launch/phase7.ts',
@@ -128,14 +126,22 @@ for (const file of [
   'scripts/phase7/build-core-loop-qa-packet.mjs',
   'scripts/phase7/check-core-loop.mjs',
   'scripts/phase7/check-core-loop-smoke.mjs',
+  'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
+  'docs/HUMAN_SIMULATED_E2E_TESTING.md',
+  'docs/E2E_TESTING_CHECKLIST.md',
+  'docs/USER_FLOW_TREE.md',
+  'docs/e2e/generated/human-e2e-manifest.json',
+  'docs/e2e/generated/human-e2e-manifest.md',
+  'docs/phase-5/generated/device-qa-packet.json',
+  'docs/phase-5/generated/device-qa-packet.md',
+  'docs/phase-6/generated/payments-qa-packet.json',
+  'docs/phase-6/generated/payments-qa-packet.md',
   'docs/phase-7/core-loop-qa-checklist.md',
   'docs/phase-7/phase-7-exit-review.md',
 ]) {
-  require(
-    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
-    `Phase 7 core-loop QA packet must hash ${file}.`,
-  );
+  require(qaPacketBuilder.includes(`'${file}'`) ||
+    qaPacketBuilder.includes(`"${file}"`), `Phase 7 core-loop QA packet must hash ${file}.`);
 }
 require(has(
   'apps/mobile/src/lib/launch/phase7.test.ts',

@@ -15,6 +15,10 @@
 - Generated QA packets hash the Phase 7 verifier scripts and shared
   evidence-normalization helper, so packet evidence is tied to the local gates
   that decided its status.
+- Generated QA packets also hash the human-simulated E2E rules/tree/manifest,
+  the generated Phase 5 native-device packet, and the generated Phase 6
+  payments packet, so Phase 7 core-loop signoff cannot drift from the local UI,
+  native-device, or payments evidence packets it depends on.
 - Strict QA packets now require granular scenario evidence for onboarding,
   shelf intake, reviewed guidance, routine builder, Today check-off, photos,
   reminders, payments, privacy controls, share cards, deferred surfaces, and

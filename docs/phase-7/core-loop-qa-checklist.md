@@ -89,8 +89,10 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   whether they were produced from a clean or dirty Git worktree. Treat a packet
   with `Git status: DIRTY` as investigation evidence only, not final core-loop
   signoff. The packet must hash the launch helpers, checker, smoke coverage,
-  Phase 9 shared evidence helpers, and the Phase 7 checklist/exit-review docs
-  so reviewers can tie the packet to the exact local gates that produced it.
+  human-simulated E2E rules/tree/manifest, Phase 5 native-device packet, Phase
+  6 payments packet, Phase 9 shared evidence helpers, and the Phase 7
+  checklist/exit-review docs so reviewers can tie the packet to the exact local
+  gates and upstream evidence packets that produced it.
 
 - 2026-07-06: Vitest covers `shippableRules()` production withholding/reviewed
   pass-through and `generatePlan()` default production behavior for an unreviewed
@@ -179,7 +181,7 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   show `RoutineKind`, all six captured states including free `/routine/widgets`
   before and after `Explore first. 7 days of Pro` show no visible `OnSkin`, the
   no-card Pro week reaches the widgets deferred surface (`Widgets are not in
-  this beta` / `Back to Today`), visible controls are 48 px+, horizontal
+this beta` / `Back to Today`), visible controls are 48 px+, horizontal
   overflow is zero, and current-origin browser warn/error logs are empty.
   Evidence is in
   `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; this does not
@@ -247,7 +249,7 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   `EXPO_PUBLIC_E2E_PHOTO_CONSENT_FAILURE=once` and
   `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`. The forced failed save keeps the
   camera and permission path closed, renders route-owned `Photo choice not
-  saved` feedback with `role="alert"`, opens no JavaScript dialog, keeps the
+saved` feedback with `role="alert"`, opens no JavaScript dialog, keeps the
   retry CTA at 52 px and `Not now` at 48 px inside the viewport, shows no raw
   fixture error, has zero horizontal overflow, and retry reaches the normal web
   camera-permission gate. The same slice removed the leftover native
@@ -319,7 +321,7 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   opens the conflict detail through `Review conflict`, the detail shows calm
   evidence/severity/resolution copy without claiming the products are already
   cycle-placed, the compact saved-choice footer reads `saved · we won't ask
-  again`, and tapping `Use together anyway` returns to Shelf with the conflict
+again`, and tapping `Use together anyway` returns to Shelf with the conflict
   banner suppressed. The run decrypted local override storage and confirmed the
   canonical conflict key persisted. Evidence is in
   `test-results/human-e2e/2026-07-07/conflict-detail-choice-current/`; it does
@@ -382,7 +384,7 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   entitlement branch for contextual routine paywalls. With
   `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store`, direct `/routine/plan` shows the
   paid recovery framing (`Restore Pro for`, `Renew Pro`), hides `Explore first.
-  7 days of Pro` and `Start free trial`, exposes no routine-plan content, keeps
+7 days of Pro` and `Start free trial`, exposes no routine-plan content, keeps
   Renew/Terms/Privacy/Restore/Maybe later controls 48 px+ tall, and has zero
   horizontal overflow. Evidence is in
   `test-results/human-e2e/2026-07-08/lapsed-entitlement-contextual-paywall/`.
@@ -482,8 +484,8 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - 2026-07-08: System Chrome Expo web E2E at 320 x 568 covers Today empty-routine
   recovery and compact PM cycle-strip readability. Empty local state now shows
   `No routine yet`, `Build a routine from your shelf.`, and a 56 px `Add
-  products` action without showing the example `Cream cleanser` or `Morning
-  routine` check-off rows; tapping the action routes to `/shelf/manual`. A
+products` action without showing the example `Cream cleanser` or `Morning
+routine` check-off rows; tapping the action routes to `/shelf/manual`. A
   seeded six-night PM cycle shows split two-line Exfoliate/Retinoid/Recover
   labels with full accessibility labels, zero horizontal overflow, and no
   visible sub-44 px controls. Evidence is in
@@ -565,7 +567,7 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - 2026-07-07: In-app browser E2E at 320 x 568 covers the direct routine-plan
   no-card path: direct-open `/routine/plan`, verify the contextual paywall
   controls are at least 48 px with zero horizontal overflow, tap `Explore first.
-  7 days of Pro`, verify a `BUILT FROM YOUR SHELF` plan and a visible 56 px
+7 days of Pro`, verify a `BUILT FROM YOUR SHELF` plan and a visible 56 px
   `Start today` CTA, then tap it and confirm `/today` opens. Evidence is in
   `test-results/human-e2e/2026-07-07/routine-plan-current-compact-check/`; it
   does not replace real iOS/Android beta-device QA.
@@ -587,7 +589,7 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   label, real local profile label, compact evening row fit, and direct-entry
   Back recovery. Empty local state shows `EXAMPLE ROUTINE` and `Example only`
   without dry/sensitive profile copy. A seeded local profile/shelf shows `BUILT
-  FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
+FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   hardcoded dry/sensitive copy, no truncated compact PM suffix, zero horizontal
   overflow, and 44 px+ visible controls. Back returns to `/you`. Browser logs
   contain expected dev/placeholder configuration warnings but no failed

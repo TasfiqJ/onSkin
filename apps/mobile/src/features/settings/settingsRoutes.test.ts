@@ -308,11 +308,17 @@ describe('Settings route contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const ultraShortSubscription = height < 460;');
+    expect(source).toContain('const splitShortSubscription = height < 410;');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-3.5');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
     expect(source).toContain('compact={ultraShortSubscription}');
     expect(source).toContain(
       "contentContainerClassName={ultraShortSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}",
+    );
+    expect(source).toContain('{splitShortSubscription ? null : (');
+    expect(source).toContain("className={ultraShortSubscription ? 'mt-1.5' : 'mt-2'}");
+    expect(source).not.toContain(
+      "className={splitShortSubscription ? 'mt-1' : ultraShortSubscription ? 'mt-1.5' : 'mt-2'}",
     );
     expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
     expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');

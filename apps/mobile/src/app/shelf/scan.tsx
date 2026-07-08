@@ -112,7 +112,9 @@ export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const { reset } = useIntake();
   const [torch, setTorch] = useState(false);
-  const [state, setState] = useState<ScanState>(() => devShelfScanFixtureState() ?? { kind: 'idle' });
+  const [state, setState] = useState<ScanState>(
+    () => devShelfScanFixtureState() ?? { kind: 'idle' },
+  );
   const [cameraReady, setCameraReady] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const lastScan = useRef<DuplicateBarcodeGate | null>(null);
@@ -215,10 +217,7 @@ export default function ScanScreen() {
           });
           return;
         }
-        if (
-          response.result === 'no_match' ||
-          response.result === 'too_short'
-        ) {
+        if (response.result === 'no_match' || response.result === 'too_short') {
           setState({ kind: 'no_match', barcode: normalized.lookupValue });
           return;
         }
@@ -264,10 +263,7 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
-      <View
-        className="flex-1 px-6"
-        style={splitShortScanSurface ? { minHeight: 68 } : undefined}
-      >
+      <View className="flex-1 px-6" style={splitShortScanSurface ? { minHeight: 68 } : undefined}>
         <View
           className="mt-2 flex-row items-center justify-between"
           style={{ position: 'relative', zIndex: 20 }}
@@ -336,7 +332,9 @@ export default function ScanScreen() {
                     <Pressable
                       accessibilityRole="button"
                       onPress={
-                        canAskCameraPermission ? requestCamera : () => void openShelfCameraSettings()
+                        canAskCameraPermission
+                          ? requestCamera
+                          : () => void openShelfCameraSettings()
                       }
                       className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                     >
@@ -377,9 +375,7 @@ export default function ScanScreen() {
                   style={{
                     pointerEvents: 'none',
                     borderWidth: 2,
-                    borderColor: cameraReady
-                      ? 'rgba(157,177,138,0.9)'
-                      : 'rgba(244,239,231,0.45)',
+                    borderColor: cameraReady ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.45)',
                   }}
                 />
               ) : null}
@@ -406,8 +402,8 @@ export default function ScanScreen() {
           splitShortScanSurface
             ? 'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'
             : compactScanSurface
-            ? 'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'
-            : 'rounded-t-sheet bg-night-surface px-7 pb-10 pt-6'
+              ? 'rounded-t-sheet bg-night-surface px-5 pb-6 pt-5'
+              : 'rounded-t-sheet bg-night-surface px-7 pb-10 pt-6'
         }
       >
         {state.kind === 'looking_up' ? (
@@ -473,6 +469,7 @@ export default function ScanScreen() {
             title="Scan ingredient label"
             subtitle="Review editable OCR"
             compact={splitShortScanSurface}
+            hideSubtitle={splitShortScanSurface}
             onPress={goOcr}
           />
           <FallbackRow
@@ -480,6 +477,7 @@ export default function ScanScreen() {
             title="Search catalog"
             subtitle="Use reviewed matches"
             compact={splitShortScanSurface}
+            hideSubtitle={splitShortScanSurface}
             onPress={goSearch}
           />
           <FallbackRow
@@ -487,6 +485,7 @@ export default function ScanScreen() {
             title="Add it by hand"
             subtitle="Always works offline"
             compact={splitShortScanSurface}
+            hideSubtitle={splitShortScanSurface}
             onPress={goManual}
           />
         </View>
@@ -514,21 +513,24 @@ function FallbackRow({
   title,
   subtitle,
   compact,
+  hideSubtitle,
   onPress,
 }: {
   icon: string;
   title: string;
   subtitle: string;
   compact?: boolean;
+  hideSubtitle?: boolean;
   onPress: () => void;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={`${title}. ${subtitle}`}
       onPress={onPress}
       className={
         compact
-          ? 'flex-row items-center gap-3 rounded-[16px] px-3 py-2.5'
+          ? 'min-h-[48px] flex-row items-center gap-2.5 rounded-[15px] px-2.5 py-1.5'
           : 'flex-row items-center gap-3.5 rounded-[18px] p-4'
       }
       style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
@@ -551,9 +553,11 @@ function FallbackRow({
         >
           {title}
         </Text>
-        <Text variant="bodySm" tone="inverseMuted" numberOfLines={compact ? 1 : undefined}>
-          {subtitle}
-        </Text>
+        {hideSubtitle ? null : (
+          <Text variant="bodySm" tone="inverseMuted" numberOfLines={compact ? 1 : undefined}>
+            {subtitle}
+          </Text>
+        )}
       </View>
     </Pressable>
   );
