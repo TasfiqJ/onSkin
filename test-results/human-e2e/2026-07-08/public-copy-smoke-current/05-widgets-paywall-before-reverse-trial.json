@@ -1,0 +1,84 @@
+{
+  "checks": {
+    "hasDeferredWidgetCopy": false,
+    "hasLegacyOnSkinExact": false,
+    "hasOnSkin": false,
+    "hasRoutineKind": true
+  },
+  "minVisibleControlHeight": 48,
+  "overflowRight": [],
+  "text": "Maybe later\nReminders, streaks & home-screen widgets.\nGentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro.\nStart 14 days free, then\n$49.99/year\n$4.16/mo\nStore checkout is unavailable in this preview. You can keep exploring.\nStart free trial\nExplore first. 7 days of Pro\nNo credit card. See your routine work, then decide.\n›\nTerms\n·\nPrivacy\n·\nRestore",
+  "url": "http://localhost:8150/routine/widgets?e2e=public-copy-smoke",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Maybe later",
+      "visible": true,
+      "width": 102,
+      "x": 194,
+      "y": 4
+    },
+    {
+      "ariaLabel": null,
+      "height": 50,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Start free trial",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 367
+    },
+    {
+      "ariaLabel": null,
+      "height": 60,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 425
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Terms",
+      "visible": true,
+      "width": 48,
+      "x": 62,
+      "y": 485
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Privacy",
+      "visible": true,
+      "width": 48,
+      "x": 135,
+      "y": 485
+    },
+    {
+      "ariaLabel": null,
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Restore",
+      "visible": true,
+      "width": 49,
+      "x": 209,
+      "y": 485
+    }
+  ]
+}

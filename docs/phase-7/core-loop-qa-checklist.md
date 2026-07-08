@@ -146,6 +146,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/runtime-brand-identity/`; it does not
   replace final brand/legal clearance, native identifier QA, store listing QA, or
   final-domain/share-card QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the
+  public-copy smoke with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind`.
+  `/onboarding/age`, `/s/sharecard01`, `/shelf/search`, and `/settings/timing`
+  show `RoutineKind`, all six captured states including free `/routine/widgets`
+  before and after `Explore first. 7 days of Pro` show no visible `OnSkin`, the
+  no-card Pro week reaches the widgets deferred surface (`Widgets are not in
+  this beta` / `Back to Today`), visible controls are 48 px+, horizontal
+  overflow is zero, and current-origin browser warn/error logs are empty.
+  Evidence is in
+  `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; this does not
+  replace final trademark clearance, store listings, native identifiers, final
+  domain, Universal Links/App Links, or device QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers local Trend route recovery in
   both launch-gated and enabled modes. Default `/trend/optin` and
   `/trend/fairness` show the deferred Trend surface with `Back to Progress` and

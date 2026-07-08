@@ -108,6 +108,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   cycle promises stay hidden. Evidence is in
   `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`.
 
+- Verified the critical public-copy smoke under the working `RoutineKind`
+  display name. Expo web at 320 x 568 covers age gate, public share landing,
+  catalog search, timing lock-screen preview, and free `/routine/widgets`
+  before/after the no-card Pro week. The required public surfaces show
+  `RoutineKind`, all captured states show no visible `OnSkin`, widgets still
+  defer behind native-device QA, and current-origin browser warn/error logs are
+  empty. Evidence is in
+  `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`.
+
 - Hardened the Today empty-routine and compact PM cycle-strip states. Today no
   longer treats the routine-plan example preview as real check-off data: when
   the local shelf has no real routine, it shows `No routine yet` with a direct
@@ -4071,6 +4080,22 @@ public-launch-risk and zero review-needed references. Evidence is in
 the local runtime-copy smoke for the working identity; final brand/legal
 clearance, native identifiers, store listings, final domain, and share-card
 device QA remain founder/vendor/legal launch blockers.
+
+### Public-copy smoke evidence (2026-07-08)
+
+Verified the working `RoutineKind` public-copy smoke without changing app code.
+Codex in-app browser Expo web at 320 x 568 opened `/onboarding/age`,
+`/s/sharecard01`, `/shelf/search`, `/settings/timing`, and free
+`/routine/widgets` before and after tapping `Explore first. 7 days of Pro`.
+Age gate, public share landing, catalog search, timing lock-screen preview, and
+the widgets paywall show `RoutineKind`; all six captured states show no visible
+`OnSkin`. The no-card Pro week reaches the widgets deferred surface
+(`Widgets are not in this beta` / `Back to Today`), visible controls are
+48 px+, horizontal overflow is zero, and current-origin browser warn/error logs
+are empty. Evidence and report are in
+`test-results/human-e2e/2026-07-08/public-copy-smoke-current/`. This does not
+replace final trademark clearance, store listings, native identifiers, final
+domain, Universal Links/App Links, or device QA.
 
 ### Trend route recovery evidence (2026-07-07)
 

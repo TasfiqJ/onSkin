@@ -1,0 +1,73 @@
+{
+  "checks": {
+    "hasDeferredWidgetCopy": false,
+    "hasLegacyOnSkinExact": false,
+    "hasOnSkin": false,
+    "hasRoutineKind": true
+  },
+  "minVisibleControlHeight": 48,
+  "overflowRight": [],
+  "text": "<\nTiming\nMorning\n7:30 AM\nEvening\n9:30 PM\nQUIET HOURS\nNothing fires\n10:00 PM\n→\n7:00 AM\nNothing fires inside this window. Even your routine reminders wait until morning.\nLOCK SCREEN\nLock screen privacy\nAlways generic; product, photo, and condition details stay inside the app\nOn\nRoutineKind\nYour evening routine’s ready.\nAlways generic on the lock screen",
+  "url": "http://localhost:8150/settings/timing?e2e=public-copy-smoke",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": "Back",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "<",
+      "visible": true,
+      "width": 48,
+      "x": 20,
+      "y": 4
+    },
+    {
+      "ariaLabel": "Morning reminder time, 7:30 AM",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "7:30 AM",
+      "visible": true,
+      "width": 75,
+      "x": 207,
+      "y": 78
+    },
+    {
+      "ariaLabel": "Evening reminder time, 9:30 PM",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "9:30 PM",
+      "visible": true,
+      "width": 74,
+      "x": 208,
+      "y": 155
+    },
+    {
+      "ariaLabel": "Quiet hours start, 10:00 PM",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "10:00 PM",
+      "visible": true,
+      "width": 82,
+      "x": 38,
+      "y": 313
+    },
+    {
+      "ariaLabel": "Quiet hours end, 7:00 AM",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "7:00 AM",
+      "visible": true,
+      "width": 75,
+      "x": 154,
+      "y": 313
+    }
+  ]
+}

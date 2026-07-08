@@ -1,0 +1,115 @@
+{
+  "aggregate": {
+    "allNoVisibleOnSkin": true,
+    "routineKindRoutes": [
+      "http://localhost:8150/onboarding/age?e2e=public-copy-smoke",
+      "http://localhost:8150/s/sharecard01?source=publiccopy&e2e=public-copy-smoke",
+      "http://localhost:8150/shelf/search?e2e=public-copy-smoke",
+      "http://localhost:8150/settings/timing?e2e=public-copy-smoke",
+      "http://localhost:8150/routine/widgets?e2e=public-copy-smoke"
+    ],
+    "deferredWidgetRouteOk": true,
+    "minVisibleControlHeight": 48,
+    "totalOverflowRightCount": 0,
+    "currentOriginWarnErrorCount": 0,
+    "activeDialogType": null
+  },
+  "states": [
+    {
+      "file": "01-onboarding-age.json",
+      "url": "http://localhost:8150/onboarding/age?e2e=public-copy-smoke",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "checks": {
+        "hasDeferredWidgetCopy": false,
+        "hasLegacyOnSkinExact": false,
+        "hasOnSkin": false,
+        "hasRoutineKind": true
+      },
+      "minVisibleControlHeight": 56,
+      "overflowRightCount": 0
+    },
+    {
+      "file": "02-public-share-landing.json",
+      "url": "http://localhost:8150/s/sharecard01?source=publiccopy&e2e=public-copy-smoke",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "checks": {
+        "hasDeferredWidgetCopy": false,
+        "hasLegacyOnSkinExact": false,
+        "hasOnSkin": false,
+        "hasRoutineKind": true
+      },
+      "minVisibleControlHeight": 56,
+      "overflowRightCount": 0
+    },
+    {
+      "file": "03-shelf-search.json",
+      "url": "http://localhost:8150/shelf/search?e2e=public-copy-smoke",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "checks": {
+        "hasDeferredWidgetCopy": false,
+        "hasLegacyOnSkinExact": false,
+        "hasOnSkin": false,
+        "hasRoutineKind": true
+      },
+      "minVisibleControlHeight": 48,
+      "overflowRightCount": 0
+    },
+    {
+      "file": "04-settings-timing.json",
+      "url": "http://localhost:8150/settings/timing?e2e=public-copy-smoke",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "checks": {
+        "hasDeferredWidgetCopy": false,
+        "hasLegacyOnSkinExact": false,
+        "hasOnSkin": false,
+        "hasRoutineKind": true
+      },
+      "minVisibleControlHeight": 48,
+      "overflowRightCount": 0
+    },
+    {
+      "file": "05-widgets-paywall-before-reverse-trial.json",
+      "url": "http://localhost:8150/routine/widgets?e2e=public-copy-smoke",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "checks": {
+        "hasDeferredWidgetCopy": false,
+        "hasLegacyOnSkinExact": false,
+        "hasOnSkin": false,
+        "hasRoutineKind": true
+      },
+      "minVisibleControlHeight": 48,
+      "overflowRightCount": 0
+    },
+    {
+      "file": "06-widgets-deferred-after-reverse-trial.json",
+      "url": "http://localhost:8150/routine/widgets?e2e=public-copy-smoke",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "checks": {
+        "hasDeferredWidgetCopy": true,
+        "hasLegacyOnSkinExact": false,
+        "hasOnSkin": false,
+        "hasRoutineKind": false
+      },
+      "minVisibleControlHeight": 56,
+      "overflowRightCount": 0
+    }
+  ]
+}

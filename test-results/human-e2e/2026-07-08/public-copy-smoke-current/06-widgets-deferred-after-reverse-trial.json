@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "hasDeferredWidgetCopy": true,
+    "hasLegacyOnSkinExact": false,
+    "hasOnSkin": false,
+    "hasRoutineKind": false
+  },
+  "minVisibleControlHeight": 56,
+  "overflowRight": [],
+  "text": "BETA\nWidgets are not in this beta\nToday check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA.\nThe beta should prove the core habit loop before adding OS-level surfaces.\nBack to Today",
+  "url": "http://localhost:8150/routine/widgets?e2e=public-copy-smoke",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Back to Today",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 477
+    }
+  ]
+}

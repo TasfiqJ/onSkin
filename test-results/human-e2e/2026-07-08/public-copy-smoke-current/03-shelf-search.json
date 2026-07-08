@@ -1,0 +1,62 @@
+{
+  "checks": {
+    "hasDeferredWidgetCopy": false,
+    "hasLegacyOnSkinExact": false,
+    "hasOnSkin": false,
+    "hasRoutineKind": true
+  },
+  "minVisibleControlHeight": 48,
+  "overflowRight": [],
+  "text": "<\nSearch catalog\nSearch\nSearch uses the RoutineKind catalog only. Public API search is not used for live typing.\nAdd by hand",
+  "url": "http://localhost:8150/shelf/search?e2e=public-copy-smoke",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": "Back",
+      "height": 48,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "<",
+      "visible": true,
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "ariaLabel": "Catalog search query",
+      "height": 50,
+      "role": null,
+      "tag": "INPUT",
+      "text": "",
+      "visible": true,
+      "width": 190,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "ariaLabel": null,
+      "height": 50,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Search",
+      "visible": true,
+      "width": 74,
+      "x": 222,
+      "y": 72
+    },
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Add by hand",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 481
+    }
+  ]
+}

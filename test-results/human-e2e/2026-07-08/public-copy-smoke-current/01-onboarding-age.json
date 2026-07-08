@@ -1,0 +1,62 @@
+{
+  "checks": {
+    "hasDeferredWidgetCopy": false,
+    "hasLegacyOnSkinExact": false,
+    "hasOnSkin": false,
+    "hasRoutineKind": true
+  },
+  "minVisibleControlHeight": 56,
+  "overflowRight": [],
+  "text": "First, your date of birth.\nRoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date.\nDAY\nMONTH\nYEAR\nContinue",
+  "url": "http://localhost:8150/onboarding/age?e2e=public-copy-smoke",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": "Day of birth",
+      "height": 66,
+      "role": null,
+      "tag": "INPUT",
+      "text": "",
+      "visible": true,
+      "width": 73,
+      "x": 24,
+      "y": 315
+    },
+    {
+      "ariaLabel": "Month of birth",
+      "height": 66,
+      "role": null,
+      "tag": "INPUT",
+      "text": "",
+      "visible": true,
+      "width": 73,
+      "x": 109,
+      "y": 315
+    },
+    {
+      "ariaLabel": "Year of birth",
+      "height": 66,
+      "role": null,
+      "tag": "INPUT",
+      "text": "",
+      "visible": true,
+      "width": 102,
+      "x": 194,
+      "y": 315
+    },
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 497
+    }
+  ]
+}

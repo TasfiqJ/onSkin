@@ -1,0 +1,40 @@
+{
+  "checks": {
+    "hasDeferredWidgetCopy": false,
+    "hasLegacyOnSkinExact": false,
+    "hasOnSkin": false,
+    "hasRoutineKind": true
+  },
+  "minVisibleControlHeight": 56,
+  "overflowRight": [],
+  "text": "SHELF CHECK\nCheck your own shelf.\nShared cards open to a fresh shelf check. RoutineKind never puts product names, profile details, photos, or health context in public links.\nScan a product\nAdd manually",
+  "url": "http://localhost:8150/s/sharecard01?source=publiccopy&e2e=public-copy-smoke",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Scan a product",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 331
+    },
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Add manually",
+      "visible": true,
+      "width": 272,
+      "x": 24,
+      "y": 399
+    }
+  ]
+}
