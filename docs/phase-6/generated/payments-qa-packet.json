@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T23:43:57.168Z",
+  "generatedAt": "2026-07-08T23:45:09.572Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "c09930e1078fbed77acc6357164249daddae54f8",
+  "gitSha": "93a961fbbbd6e3c90755090caf22b556e414c853",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,

@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-08T23:44:08.718Z
-Git SHA: 57e4fa534856163b372093e45fbcf05a415ecc58
+Generated at: 2026-07-08T23:45:09.443Z
+Git SHA: 93a961fbbbd6e3c90755090caf22b556e414c853
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
