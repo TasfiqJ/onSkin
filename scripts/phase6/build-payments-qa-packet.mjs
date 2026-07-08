@@ -9,6 +9,7 @@ const root = process.cwd();
 const outDir = resolve(root, process.env.PHASE6_PACKET_OUT_DIR ?? 'docs/phase-6/generated');
 
 const requiredFiles = [
+  'package.json',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/features/subscription/store.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
@@ -23,6 +24,10 @@ const requiredFiles = [
   'supabase/migrations/20260615000027_phase6_payments.sql',
   'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',
   'apps/mobile/src/features/subscription/serverContracts.test.ts',
+  'scripts/phase6/build-payments-qa-packet.mjs',
+  'scripts/phase6/check-payments-env.mjs',
+  'scripts/phase6/check-payments-env-smoke.mjs',
+  'scripts/phase9/lib.mjs',
   'docs/phase-6/payments-runbook.md',
   'docs/phase-6/payments-qa-checklist.md',
   'docs/phase-6/phase-6-exit-review.md',

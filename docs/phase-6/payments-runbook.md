@@ -29,6 +29,11 @@ Production environment:
 - `REVENUECAT_SECRET_API_KEY`
 - `EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY` blank
 
+Strict QA packets hash the payment runtime files, Supabase payment functions and
+migrations, Phase 6 verifier scripts, and shared evidence-normalization helper.
+Regenerate `docs/phase-6/generated/payments-qa-packet.md` after changing any of
+those inputs.
+
 ## Entitlement Truth
 
 RevenueCat is the source of truth for store purchases. Supabase mirrors RevenueCat events into `public.entitlements` for fast reads. The mobile AsyncStorage entitlement is a cache only.

@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened Phase 6 payments QA packet traceability. Generated payments packets
+  now hash the Phase 6 verifier scripts, root script manifest, and shared
+  evidence-normalization helper alongside the RevenueCat runtime, Supabase
+  functions, migrations, and payment docs. The cross-phase normalization smoke
+  now covers Phase 6 packet evidence flags, so payment evidence cannot regress
+  to raw string checks without failing locally. The refreshed packet remains
+  blocked on real RevenueCat offering review, iOS sandbox restore, Android
+  license-test restore, webhook HMAC replay evidence, finance signoff, and
+  named owner signoff.
+
 - Hardened Phase 5 device-QA packet evidence normalization. The Phase 5 packet
   builder now uses the shared normalized evidence/signoff helpers, the
   cross-phase evidence-normalization smoke covers `PHASE5_QA_SIGNOFF`, and the

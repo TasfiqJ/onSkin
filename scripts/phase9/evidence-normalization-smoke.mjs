@@ -10,6 +10,16 @@ const evidenceGates = [
     keys: ['PHASE5_QA_SIGNOFF'],
   },
   {
+    file: 'scripts/phase6/build-payments-qa-packet.mjs',
+    keys: [
+      'PHASE6_RC_OFFERING_REVIEWED',
+      'PHASE6_IOS_SANDBOX_RESTORE_PASS',
+      'PHASE6_ANDROID_LICENSE_TEST_PASS',
+      'PHASE6_WEBHOOK_HMAC_TEST_PASS',
+      'PHASE6_FINANCE_SIGNOFF',
+    ],
+  },
+  {
     file: 'scripts/phase9/rls-adversarial.mjs',
     keys: ['PHASE9_RLS_STAGING_PASS', 'PHASE9_RLS_PRODUCTION_PASS'],
   },
@@ -189,4 +199,4 @@ for (const [value, expected] of [
   );
 }
 
-printResult('Phase 5/9/10/11 evidence normalization smoke', errors, warnings);
+printResult('Phase 5/6/9/10/11 evidence normalization smoke', errors, warnings);
