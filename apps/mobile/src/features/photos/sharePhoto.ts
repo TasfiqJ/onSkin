@@ -1,17 +1,11 @@
 import * as Sharing from 'expo-sharing';
-import { Alert } from 'react-native';
 
-import { PHOTO_COPY } from './copy';
 import { createPhotoShareFile, deletePhotoShareFile } from './encryptedStorage';
 
 type ShareablePhoto = {
   id: string;
   localUri?: string | null;
 };
-
-function alertShareUnavailable(): void {
-  Alert.alert(PHOTO_COPY.detail.shareTitle, PHOTO_COPY.detail.shareUnavailable);
-}
 
 function shouldForcePhotoShareFailure(): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
@@ -20,12 +14,10 @@ function shouldForcePhotoShareFailure(): boolean {
 
 export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promise<boolean> {
   if (!photo?.localUri) {
-    alertShareUnavailable();
     return false;
   }
 
   if (shouldForcePhotoShareFailure()) {
-    alertShareUnavailable();
     return false;
   }
 
@@ -33,12 +25,10 @@ export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promis
   try {
     sharingAvailable = await Sharing.isAvailableAsync();
   } catch {
-    alertShareUnavailable();
     return false;
   }
 
   if (!sharingAvailable) {
-    alertShareUnavailable();
     return false;
   }
 
@@ -48,7 +38,6 @@ export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promis
     await Sharing.shareAsync(shareUri);
     return true;
   } catch {
-    alertShareUnavailable();
     return false;
   } finally {
     await deletePhotoShareFile(shareUri, photo.localUri);

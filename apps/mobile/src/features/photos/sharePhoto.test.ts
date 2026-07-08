@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PHOTO_COPY } from './copy';
 import { sharePhotoImageOnly } from './sharePhoto';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
@@ -12,7 +11,6 @@ function readSource(path: string): string {
 }
 
 const mocks = vi.hoisted(() => ({
-  alerts: [] as unknown[][],
   createPhotoShareFile: vi.fn(),
   deletePhotoShareFile: vi.fn(),
   isAvailableAsync: vi.fn(),
@@ -24,14 +22,6 @@ vi.mock('expo-sharing', () => ({
   shareAsync: mocks.shareAsync,
 }));
 
-vi.mock('react-native', () => ({
-  Alert: {
-    alert: (...args: unknown[]) => {
-      mocks.alerts.push(args);
-    },
-  },
-}));
-
 vi.mock('./encryptedStorage', () => ({
   createPhotoShareFile: mocks.createPhotoShareFile,
   deletePhotoShareFile: mocks.deletePhotoShareFile,
@@ -39,7 +29,6 @@ vi.mock('./encryptedStorage', () => ({
 
 describe('progress photo sharing', () => {
   beforeEach(() => {
-    mocks.alerts = [];
     mocks.createPhotoShareFile.mockReset();
     mocks.deletePhotoShareFile.mockReset();
     mocks.isAvailableAsync.mockReset();
@@ -66,22 +55,17 @@ describe('progress photo sharing', () => {
       'file://cache/onskin-share-photo-1.jpg',
       'file://photos/photo-1.onskinphoto',
     );
-    expect(mocks.alerts).toEqual([]);
   });
 
-  it('alerts without creating an export when no shareable photo URI exists', async () => {
+  it('returns false without creating an export when no shareable photo URI exists', async () => {
     await expect(sharePhotoImageOnly({ id: 'photo-1', localUri: null })).resolves.toBe(false);
 
     expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
     expect(mocks.createPhotoShareFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      PHOTO_COPY.detail.shareTitle,
-      PHOTO_COPY.detail.shareUnavailable,
-    ]);
   });
 
-  it('alerts when native sharing is unavailable', async () => {
+  it('returns false when native sharing is unavailable', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(false);
 
     await expect(
@@ -90,10 +74,6 @@ describe('progress photo sharing', () => {
 
     expect(mocks.createPhotoShareFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      PHOTO_COPY.detail.shareTitle,
-      PHOTO_COPY.detail.shareUnavailable,
-    ]);
   });
 
   it('supports a dev-only E2E fixture for failed photo sharing', async () => {
@@ -118,13 +98,9 @@ describe('progress photo sharing', () => {
     expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
     expect(mocks.createPhotoShareFile).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.alerts[0]).toEqual([
-      PHOTO_COPY.detail.shareTitle,
-      PHOTO_COPY.detail.shareUnavailable,
-    ]);
   });
 
-  it('alerts and deletes the temporary export when the share sheet rejects', async () => {
+  it('returns false and deletes the temporary export when the share sheet rejects', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(true);
     mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/onskin-share-photo-1.jpg');
     mocks.shareAsync.mockRejectedValueOnce(new Error('share unavailable'));
@@ -137,13 +113,9 @@ describe('progress photo sharing', () => {
       'file://cache/onskin-share-photo-1.jpg',
       'file://photos/photo-1.onskinphoto',
     );
-    expect(mocks.alerts[0]).toEqual([
-      PHOTO_COPY.detail.shareTitle,
-      PHOTO_COPY.detail.shareUnavailable,
-    ]);
   });
 
-  it('alerts when temporary export creation fails', async () => {
+  it('returns false when temporary export creation fails', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(true);
     mocks.createPhotoShareFile.mockRejectedValueOnce(new Error('cache unavailable'));
 
@@ -156,10 +128,6 @@ describe('progress photo sharing', () => {
       null,
       'file://photos/photo-1.onskinphoto',
     );
-    expect(mocks.alerts[0]).toEqual([
-      PHOTO_COPY.detail.shareTitle,
-      PHOTO_COPY.detail.shareUnavailable,
-    ]);
   });
 
   it('keeps the photo detail route on the shared failure-handled share helper', () => {
@@ -170,12 +138,22 @@ describe('progress photo sharing', () => {
     expect(source).toContain('setShareConfirmVisible(true);');
     expect(source).toContain('setShareConfirmVisible(false);');
     expect(source).toContain('const shared = await sharePhotoImageOnly(photo);');
-    expect(source).toContain('if (!shared) setShareFeedback(PHOTO_COPY.detail.shareUnavailable);');
+    expect(source).toContain('if (!shared) {');
+    expect(source).toContain('setShareFeedback(PHOTO_COPY.detail.shareUnavailable);');
+    expect(source).toContain('nudgeActionFeedbackIntoView();');
     expect(source).toContain('onPress={() => void shareCurrentPhoto()}');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Alert.alert(PHOTO_COPY.detail.shareTitle');
     expect(source).not.toContain("import * as Sharing from 'expo-sharing'");
     expect(source).not.toContain('createPhotoShareFile');
     expect(source).not.toContain('deletePhotoShareFile');
+  });
+
+  it('keeps the share helper UI-free so routes own recovery feedback', () => {
+    const source = readSource('features/photos/sharePhoto.ts');
+
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('PHOTO_COPY.detail.shareUnavailable');
   });
 });

@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { Alert, Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
@@ -20,6 +20,11 @@ import { haptics } from '@/theme/haptics';
 const BG = '#16130F';
 const SAGE = '#9DB18A';
 
+function e2ePhotoDeleteFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  return process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE === '1';
+}
+
 function PhotoDetailScreenContent() {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -31,6 +36,9 @@ function PhotoDetailScreenContent() {
   const [draft, setDraft] = useState(photo?.notes ?? '');
   const [shareConfirmVisible, setShareConfirmVisible] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+  const [deleteFeedback, setDeleteFeedback] = useState<string | null>(null);
+  const scrollRef = useRef<ScrollView>(null);
   const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
   if (!photo) {
@@ -147,27 +155,51 @@ function PhotoDetailScreenContent() {
   });
   const aligned = (photo.alignmentScore ?? 0) >= 0.85 && (photo.lightingScore ?? 0) >= 0.7;
   const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;
+  const actionFeedback = deleteFeedback ?? shareFeedback;
+
+  function nudgeActionFeedbackIntoView() {
+    const scrollToEnd = () => scrollRef.current?.scrollToEnd({ animated: true });
+    requestAnimationFrame(scrollToEnd);
+    setTimeout(scrollToEnd, 120);
+    setTimeout(scrollToEnd, 280);
+  }
 
   function confirmDelete() {
-    Alert.alert('Delete this photo?', 'It’s removed from your phone. This can’t be undone.', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => remove.mutate(id, { onSettled: closeToProgress }),
-      },
-    ]);
+    setShareConfirmVisible(false);
+    setShareFeedback(null);
+    setDeleteFeedback(null);
+    setDeleteConfirmVisible(true);
+  }
+
+  async function deleteCurrentPhoto() {
+    if (!photo) return;
+    setDeleteFeedback(null);
+    setDeleteConfirmVisible(false);
+    try {
+      if (e2ePhotoDeleteFailure()) throw new Error('E2E_PHOTO_DELETE_FAILURE');
+      await remove.mutateAsync(id);
+      closeToProgress();
+    } catch {
+      setDeleteFeedback(PHOTO_COPY.detail.deleteUnavailable);
+      nudgeActionFeedbackIntoView();
+    }
   }
 
   async function shareCurrentPhoto() {
     if (!photo) return;
+    setDeleteFeedback(null);
     setShareFeedback(null);
     setShareConfirmVisible(false);
     const shared = await sharePhotoImageOnly(photo);
-    if (!shared) setShareFeedback(PHOTO_COPY.detail.shareUnavailable);
+    if (!shared) {
+      setShareFeedback(PHOTO_COPY.detail.shareUnavailable);
+      nudgeActionFeedbackIntoView();
+    }
   }
 
   function confirmShare() {
+    setDeleteConfirmVisible(false);
+    setDeleteFeedback(null);
     setShareFeedback(null);
     setShareConfirmVisible(true);
   }
@@ -193,6 +225,7 @@ function PhotoDetailScreenContent() {
       </View>
 
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}
       >
@@ -308,7 +341,34 @@ function PhotoDetailScreenContent() {
         />
       </View>
 
-      {!shareConfirmVisible ? (
+      {actionFeedback ? (
+        <View
+          accessibilityRole="alert"
+          style={{
+            backgroundColor: '#211C16',
+            borderColor: 'rgba(244,239,231,0.14)',
+            borderRadius: 16,
+            borderWidth: 1,
+            marginTop: 12,
+            paddingHorizontal: 14,
+            paddingVertical: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: 'rgba(244,239,231,0.84)',
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 13,
+              lineHeight: 18,
+              textAlign: 'center',
+            }}
+          >
+            {actionFeedback}
+          </Text>
+        </View>
+      ) : null}
+
+      {!shareConfirmVisible && !deleteConfirmVisible ? (
         <View style={{ flexDirection: 'row', gap: 8, paddingTop: 16 }}>
         <Pressable
           accessibilityRole="button"
@@ -363,35 +423,6 @@ function PhotoDetailScreenContent() {
         </View>
       ) : null}
       </ScrollView>
-      {shareFeedback ? (
-        <View
-          accessibilityRole="alert"
-          style={{
-            position: 'absolute',
-            left: 24,
-            right: 24,
-            bottom: insets.bottom + 82,
-            backgroundColor: '#211C16',
-            borderColor: 'rgba(244,239,231,0.14)',
-            borderRadius: 16,
-            borderWidth: 1,
-            paddingHorizontal: 14,
-            paddingVertical: 12,
-          }}
-        >
-          <Text
-            style={{
-              color: 'rgba(244,239,231,0.84)',
-              fontFamily: 'HankenGrotesk_400Regular',
-              fontSize: 13,
-              lineHeight: 18,
-              textAlign: 'center',
-            }}
-          >
-            {shareFeedback}
-          </Text>
-        </View>
-      ) : null}
       {shareConfirmVisible ? (
         <View
           style={{
@@ -470,6 +501,93 @@ function PhotoDetailScreenContent() {
                 }}
               >
                 {PHOTO_COPY.detail.shareConfirm}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
+      {deleteConfirmVisible ? (
+        <View
+          style={{
+            position: 'absolute',
+            left: 24,
+            right: 24,
+            bottom: insets.bottom + 20,
+            backgroundColor: '#211C16',
+            borderColor: 'rgba(244,239,231,0.16)',
+            borderRadius: 18,
+            borderWidth: 1,
+            padding: 14,
+          }}
+        >
+          <Text
+            style={{
+              color: '#F4EFE7',
+              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontSize: 14,
+              lineHeight: 19,
+            }}
+          >
+            {PHOTO_COPY.detail.deleteTitle}
+          </Text>
+          <Text
+            style={{
+              color: 'rgba(244,239,231,0.76)',
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 13,
+              lineHeight: 18,
+              marginTop: 4,
+            }}
+          >
+            {PHOTO_COPY.detail.deleteBody}
+          </Text>
+          <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ disabled: remove.isPending }}
+              disabled={remove.isPending}
+              onPress={() => setDeleteConfirmVisible(false)}
+              style={{
+                flex: 1,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: 'rgba(244,239,231,0.08)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  color: 'rgba(244,239,231,0.82)',
+                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontSize: 13,
+                }}
+              >
+                Cancel
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ disabled: remove.isPending }}
+              disabled={remove.isPending}
+              onPress={() => void deleteCurrentPhoto()}
+              style={{
+                flex: 1,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: '#D9A183',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  color: BG,
+                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontSize: 13,
+                }}
+              >
+                {remove.isPending ? 'Deleting...' : PHOTO_COPY.detail.deleteConfirm}
               </Text>
             </Pressable>
           </View>

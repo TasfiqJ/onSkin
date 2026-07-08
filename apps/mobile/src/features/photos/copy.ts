@@ -73,6 +73,11 @@ export const PHOTO_COPY = {
     shareConfirm: 'Share photo',
     shareUnavailable:
       "Sharing isn't available on this device. Your photo stays on your phone unless you choose another way to export it.",
+    deleteTitle: 'Delete this photo?',
+    deleteBody: "It's removed from your phone. This can't be undone.",
+    deleteConfirm: 'Delete photo',
+    deleteUnavailable:
+      "We couldn't delete this photo right now. It stays on this phone unless you try again.",
     notePlaceholder: 'Add a note. “started retinol”, “travel breakout”',
   },
   // Privacy / app-lock (design screen 08, docs/06 §7).

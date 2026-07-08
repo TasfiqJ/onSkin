@@ -140,22 +140,55 @@ describe('Progress route mobile contracts', () => {
 
   it('keeps single-photo detail actions and share failures stable on compact phones', () => {
     const source = readAppRoute('progress/[id].tsx');
+    const copy = readSource('features/photos/copy.ts');
 
     expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
     expect(source).toContain('const [shareConfirmVisible, setShareConfirmVisible] = useState(false);');
+    expect(source).toContain('const [deleteFeedback, setDeleteFeedback] = useState<string | null>(null);');
+    expect(source).toContain('const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);');
+    expect(source).toContain('const scrollRef = useRef<ScrollView>(null);');
     expect(source).toContain('const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;');
+    expect(source).toContain('const actionFeedback = deleteFeedback ?? shareFeedback;');
+    expect(source).toContain('function nudgeActionFeedbackIntoView()');
+    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
+    expect(source).toContain('requestAnimationFrame(scrollToEnd);');
+    expect(source).toContain('setTimeout(scrollToEnd, 280);');
     expect(source).toContain('<ScrollView');
+    expect(source).toContain('ref={scrollRef}');
     expect(source).toContain('contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}');
     expect(source).toContain("height: photoHeight");
     expect(source).toContain("marginBottom: compact ? 10 : 14");
     expect(source).toContain("flexWrap: 'wrap'");
     expect(source).toContain('const shared = await sharePhotoImageOnly(photo);');
-    expect(source).toContain('if (!shared) setShareFeedback(PHOTO_COPY.detail.shareUnavailable);');
+    expect(source).toContain('if (!shared) {');
+    expect(source).toContain('setShareFeedback(PHOTO_COPY.detail.shareUnavailable);');
     expect(source).toContain('setShareConfirmVisible(true);');
+    expect(source).toContain('function e2ePhotoDeleteFailure(): boolean');
+    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE === '1'");
+    expect(source).toContain('setDeleteConfirmVisible(true);');
+    expect(source).toContain('async function deleteCurrentPhoto()');
+    expect(source).toContain('await remove.mutateAsync(id);');
+    expect(source).toContain('setDeleteFeedback(PHOTO_COPY.detail.deleteUnavailable);');
+    expect(source).toContain('nudgeActionFeedbackIntoView();');
     expect(source).toContain('{PHOTO_COPY.detail.shareTitle}');
     expect(source).toContain('{PHOTO_COPY.detail.shareBody}');
+    expect(source).toContain('{PHOTO_COPY.detail.deleteTitle}');
+    expect(source).toContain('{PHOTO_COPY.detail.deleteBody}');
+    expect(source).toContain("remove.isPending ? 'Deleting...' : PHOTO_COPY.detail.deleteConfirm");
+    expect(source).toContain('accessibilityState={{ disabled: remove.isPending }}');
     expect(source).toContain('onPress={() => void shareCurrentPhoto()}');
+    expect(source).toContain('onPress={() => void deleteCurrentPhoto()}');
+    expect(source).toContain('{!shareConfirmVisible && !deleteConfirmVisible ? (');
     expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('marginTop: 12');
+    expect(source).not.toContain('bottom: insets.bottom + 82');
+    expect(copy).toContain("deleteTitle: 'Delete this photo?'");
+    expect(copy).toContain('deleteBody: "It\'s removed from your phone. This can\'t be undone."');
+    expect(copy).toContain("deleteConfirm: 'Delete photo'");
+    expect(copy).toContain(
+      'deleteUnavailable:\n      "We couldn\'t delete this photo right now. It stays on this phone unless you try again.",',
+    );
+    expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('Alert.alert(PHOTO_COPY.detail.shareTitle');
     expect(source).not.toContain('height: 330,\n          borderRadius: 20');
     expect(source).not.toContain(

@@ -1,0 +1,41 @@
+{
+  "jsDialog": null,
+  "buttons": [
+    {
+      "label": "Back",
+      "rect": {
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 12
+      },
+      "text": "<"
+    },
+    {
+      "label": "",
+      "rect": {
+        "height": 48,
+        "width": 117,
+        "x": 39,
+        "y": 486
+      },
+      "text": "Cancel"
+    },
+    {
+      "label": "",
+      "rect": {
+        "height": 48,
+        "width": 117,
+        "x": 164,
+        "y": 486
+      },
+      "text": "Delete photo"
+    }
+  ],
+  "hasBody": true,
+  "hasCancel": true,
+  "hasDeletePhoto": true,
+  "hasTitle": true,
+  "horizontalOverflow": 0,
+  "url": "http://localhost:8161/progress/e2e-front-2026-04-01"
+}

@@ -1,0 +1,62 @@
+{
+  "jsDialog": null,
+  "alerts": [
+    {
+      "rect": {
+        "height": 62,
+        "width": 272,
+        "x": 24,
+        "y": 425
+      },
+      "text": "We couldn't delete this photo right now. It stays on this phone unless you try again."
+    }
+  ],
+  "buttons": [
+    {
+      "label": "Back",
+      "rect": {
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 12
+      },
+      "text": "<"
+    },
+    {
+      "label": "",
+      "rect": {
+        "height": 48,
+        "width": 160,
+        "x": 24,
+        "y": 510
+      },
+      "text": "Set as reference"
+    },
+    {
+      "label": "Share photo",
+      "rect": {
+        "height": 48,
+        "width": 48,
+        "x": 192,
+        "y": 510
+      },
+      "text": "↗"
+    },
+    {
+      "label": "Delete photo",
+      "rect": {
+        "height": 48,
+        "width": 48,
+        "x": 248,
+        "y": 510
+      },
+      "text": "🗑"
+    }
+  ],
+  "confirmGone": true,
+  "hasFailureCopy": true,
+  "hidesRawFixture": true,
+  "horizontalOverflow": 0,
+  "stayedOnDetail": true,
+  "url": "http://localhost:8161/progress/e2e-front-2026-04-01"
+}

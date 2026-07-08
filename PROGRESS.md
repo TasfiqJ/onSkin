@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Replaced Progress single-photo delete confirmation with route-owned inline UI.
+  The detail route now owns delete confirmation and local-delete failure feedback,
+  closes back to Progress only after successful removal, and uses a dev-only
+  `EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE` fixture for deterministic recovery
+  testing. Added central claim-safe delete copy, source contracts that prevent
+  `Alert.alert` from returning to the route, an E2E bug report, and Codex
+  in-app browser evidence at 320 x 568 showing cancel recovery, forced delete
+  failure, no JavaScript dialog, 48 px controls, zero horizontal overflow, and
+  hidden raw fixture text. Native iOS/Android deletion with real encrypted image
+  bytes remains device QA follow-up.
+
 - Replaced the reviewed conflict share-card export failure `Alert.alert` paths
   with route-owned inline feedback. Added dev-only E2E fixtures for reviewed
   conflict sharing and native share unavailability, kept production review gates
@@ -4483,6 +4494,30 @@ and
 `docs/e2e-bug-reports/2026-07-08-shelf-product-detail-route-owned-recovery.md`.
 Native iOS/Android screen-reader order, Dynamic Type, and live catalog-report
 success evidence remain device/backend QA follow-up.
+
+### Progress photo-detail route-owned delete/share recovery (2026-07-08)
+
+Replaced the remaining single-photo detail native-alert recovery paths with
+route-owned UI. Photo deletion now uses the dark Progress confirmation panel,
+failed deletes render inline local-photo recovery, and the photo share helper is
+UI-free so the route owns all unavailable-share feedback instead of stacking
+platform alerts over the sensitive photo surface. Added a dev-only
+`EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE=1` fixture for safe destructive-path E2E.
+
+Verified in the Codex in-app browser at 320 x 568 on Expo web port 8168 with
+populated local photos, store Pro entitlement, forced share failure, and forced
+delete failure. `/progress/e2e-front-2026-04-01` keeps 48 px Back, Set as
+reference, Share photo, and Delete photo controls visible with zero horizontal
+overflow; Share photo can be cancelled, then forced failure stays on the same
+route with inline feedback and no JavaScript/native dialog; Delete photo can be
+cancelled, then forced failure stays on the same route with inline recovery and
+no dialog. Browser warn/error logs contain only expected placeholder Supabase
+and Expo notifications web-support warnings. Evidence and bug report are in
+`test-results/human-e2e/2026-07-08/progress-photo-detail-delete-recovery-current/`
+and
+`docs/e2e-bug-reports/2026-07-08-progress-photo-detail-native-alerts.md`.
+Native iOS/Android share-sheet rejection chrome, screen-reader order, Dynamic
+Type, and real encrypted-file deletion failure remain device QA follow-up.
 
 ## Open questions for the founder
 

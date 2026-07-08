@@ -1,0 +1,169 @@
+{
+  "date": "2026-07-08",
+  "surface": "Expo web in Codex in-app browser",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "url": "http://localhost:8168/progress/e2e-front-2026-04-01",
+  "resolvedRoute": "/progress/e2e-front-2026-04-01",
+  "environment": {
+    "EXPO_PUBLIC_E2E_APP_LOCK_ENABLED": "false",
+    "EXPO_PUBLIC_E2E_ENTITLEMENT": "store_pro",
+    "EXPO_PUBLIC_E2E_PROGRESS_PHOTOS": "populated",
+    "EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE": "1",
+    "EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE": "1"
+  },
+  "flows": {
+    "start": {
+      "result": "pass",
+      "route": "/progress/e2e-front-2026-04-01",
+      "width": 320,
+      "horizontalOverflow": 0,
+      "visibleActions": [
+        {
+          "aria": null,
+          "bottom": 558,
+          "height": 48,
+          "index": 2,
+          "role": "button",
+          "text": "Set as reference",
+          "visible": true,
+          "width": 160,
+          "x": 24,
+          "y": 510
+        },
+        {
+          "aria": "Share photo",
+          "bottom": 558,
+          "height": 48,
+          "index": 3,
+          "role": "button",
+          "text": "↗",
+          "visible": true,
+          "width": 48,
+          "x": 192,
+          "y": 510
+        },
+        {
+          "aria": "Delete photo",
+          "bottom": 558,
+          "height": 48,
+          "index": 4,
+          "role": "button",
+          "text": "🗑",
+          "visible": true,
+          "width": 48,
+          "x": 248,
+          "y": 510
+        }
+      ],
+      "evidence": "01-photo-detail-start.png"
+    },
+    "share_failure": {
+      "result": "pass",
+      "confirmControls": [
+        {
+          "aria": null,
+          "bottom": 534,
+          "height": 48,
+          "index": 2,
+          "role": "button",
+          "text": "Cancel",
+          "visible": true,
+          "width": 117,
+          "x": 39,
+          "y": 486
+        },
+        {
+          "aria": null,
+          "bottom": 534,
+          "height": 48,
+          "index": 3,
+          "role": "button",
+          "text": "Share photo",
+          "visible": true,
+          "width": 117,
+          "x": 164,
+          "y": 486
+        }
+      ],
+      "inlineAlert": "Sharing isn't available on this device. Your photo stays on your phone unless you choose another way to export it.",
+      "alertRect": {
+        "bottom": 586,
+        "height": 80,
+        "text": "Sharing isn't available on this device. Your photo stays on your phone unless you choose another way to export it.",
+        "width": 272,
+        "x": 24,
+        "y": 506
+      },
+      "dialogOpened": false,
+      "routeStayed": "/progress/e2e-front-2026-04-01",
+      "horizontalOverflow": 0,
+      "evidence": [
+        "02-share-confirm.png",
+        "03-share-inline-failure.png"
+      ]
+    },
+    "delete_cancel_failure": {
+      "result": "pass",
+      "confirmControls": [
+        {
+          "aria": null,
+          "bottom": 534,
+          "height": 48,
+          "index": 2,
+          "role": "button",
+          "text": "Cancel",
+          "visible": true,
+          "width": 117,
+          "x": 39,
+          "y": 486
+        },
+        {
+          "aria": null,
+          "bottom": 534,
+          "height": 48,
+          "index": 3,
+          "role": "button",
+          "text": "Delete photo",
+          "visible": true,
+          "width": 117,
+          "x": 164,
+          "y": 486
+        }
+      ],
+      "dialogOpenedOnOpen": false,
+      "inlineAlert": "We couldn't delete this photo right now. It stays on this phone unless you try again.",
+      "alertRect": {
+        "bottom": 568,
+        "height": 62,
+        "text": "We couldn't delete this photo right now. It stays on this phone unless you try again.",
+        "width": 272,
+        "x": 24,
+        "y": 506
+      },
+      "dialogOpenedAfterFailure": false,
+      "routeStayed": "/progress/e2e-front-2026-04-01",
+      "horizontalOverflow": 0,
+      "evidence": [
+        "04-delete-confirm.png",
+        "05-delete-cancelled.png",
+        "06-delete-inline-failure.png"
+      ]
+    }
+  },
+  "browserLogs": {
+    "currentOriginWarnErrorCount": 3,
+    "expectedWarnings": [
+      "Placeholder Supabase URL/key warnings",
+      "Expo notifications web-support warning"
+    ],
+    "evidence": "browser-warn-error-logs.json"
+  },
+  "remainingRisk": [
+    "Native iOS/Android share-sheet rejection chrome still needs device QA.",
+    "Native screen-reader announcement order and Dynamic Type still need device QA.",
+    "Real encrypted-file deletion failure remains difficult to force outside the dev fixture."
+  ]
+}

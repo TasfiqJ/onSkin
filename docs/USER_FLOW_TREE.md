@@ -601,6 +601,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app shows stable share-unavailable copy, leaves the user on the photo detail, deletes any temporary decrypted export, and does not include notes or promise redaction.
   - Evidence: Alert text, route state, share helper cleanup assertion, and native share-sheet log when available.
   - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and `EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1` opens `/progress/e2e-front-2026-04-01`, verifies the photo detail actions are fully visible 48 px controls, taps the share icon, shows a route-owned confirmation panel with fully visible Cancel and Share photo controls, confirms share failure, stays on the same photo route, and renders the share-unavailable copy as an accessible alert with zero horizontal overflow and no browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`.
+- Branch: single-photo delete confirmation failure
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Open a single-photo detail, tap Delete photo, cancel once, then tap Delete photo again and simulate local photo deletion failing.
+  - Expected result: The app shows a route-owned confirmation panel, never opens a native or JavaScript dialog, keeps the user on the same photo detail after failure, renders stable local-delete recovery copy, hides raw fixture errors, keeps the photo private on-device, and keeps visible controls at least 44 pt.
+  - Evidence: Screenshot sequence, route state, dialog check, browser logs, and 320 px geometry snapshot.
+  - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and `EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE=1` opens `/progress/e2e-front-2026-04-01`, verifies the detail actions are visible 48 px controls, taps Delete photo, shows a route-owned confirmation panel with 48 px Cancel and Delete photo controls, cancels back to the action row, repeats delete, forces local deletion failure, stays on the same detail route, renders stable inline recovery copy with `role="alert"`, hides the raw fixture error, keeps horizontal overflow at zero, and opens no JavaScript dialog. Current-run warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-detail-delete-inline-recovery-current/`.
 - Branch: biometric app-lock prompt unavailable or rejected
   - Priority: Critical
   - Automate later: Yes
