@@ -1,0 +1,29 @@
+{
+  "cardName": "Is “natural” always gentler for sensitive skin?. Contested.",
+  "target": {
+    "center": {
+      "x": 160,
+      "y": 387
+    },
+    "hitTag": "div",
+    "hitText": "Is “natural” always gentler for sensitive skin?",
+    "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+    "rect": {
+      "bottom": 432.72149658203125,
+      "height": 90.92840576171875,
+      "left": 23.99878692626953,
+      "right": 296.38956451416016,
+      "top": 341.7930908203125,
+      "width": 272.3907775878906
+    }
+  },
+  "afterTap": {
+    "horizontalOverflow": 0,
+    "textIncludes": {
+      "claim": true,
+      "natural": false,
+      "reviewer": true
+    },
+    "url": "http://localhost:8206/community/note/note-natural-gentler"
+  }
+}

@@ -1,60 +1,43 @@
-# Human-Simulated E2E Run Report
+# Community Short-Phone Card Fit
 
-## Summary
+Date: 2026-07-08
+Surface: Expo web
+Viewport: 320 x 480 requested, browser reported 320 x 481 at devicePixelRatio 1.03
+Route: `/community`
 
-- Date: 2026-07-08
-- Codex task: Verify `/community` shortest-phone Skin Notes card fit after the 320 x 480 clipping fix.
-- App surface: Expo web
-- Build/start command: `npm --workspace apps/mobile run web -- --port 8210 --host localhost`
-- Browser/device/simulator/OS: Headless Chrome through Playwright, 320 x 480 viewport, Windows host
-- Feature or PR tested: Skin Notes Community Trust Layer
-- Overall verdict: Pass
+## Purpose
 
-## Tool Inventory
+Verify the shortest-phone fix for the Skin Notes hub after the current-main sweep found the third visible Skin Note card clipped below the viewport.
 
-- Expo CLI: Used through `npm --workspace apps/mobile run web`
-- iOS Simulator: Not used
-- Android emulator: Not used
-- Expo web: Used
-- Playwright: Used from bundled Codex runtime with local Chrome
-- Playwright MCP: Not used
-- Codex Computer Use: Not used
-- Other: Focused Vitest route-contract test
+## Steps
 
-## Flows Executed
+1. Started Expo web on `http://localhost:8206`.
+2. Set the in-app browser viewport to 320 x 480.
+3. Opened `/community`.
+4. Captured visible control geometry, viewport/document dimensions, dialog state, and a screenshot.
+5. Tapped the visible `Is "natural" always gentler for sensitive skin?` Skin Note card at its audited center.
+6. Verified navigation to the note detail route.
 
-| Flow | Branch | Result | Evidence | Notes |
-| ---- | ------ | ------ | -------- | ----- |
-| Skin Notes Community Trust Layer | Expert Skin Notes at 320 x 480 | Pass | `community.png`, `community.json`, `summary.json`, `browser-logs.json` | Back remains visible, three note cards are fully visible, zero clipped visible controls, zero sub-44 controls, zero blocked hit-tests, and zero horizontal overflow. |
+## Result
 
-## Bugs Found
+Pass.
 
-| ID | Severity | Reproduction | Expected | Actual | Evidence |
-| --- | --- | --- | --- | --- | --- |
-| `2026-07-08-community-short-phone-card-clipping` | Medium | Open `/community` at 320 x 480 before the fix | Visible Skin Note cards are complete | Third visible note card clipped below viewport | `../current-main-short-phone-480-sweep/community.png`, `../current-main-short-phone-480-sweep/community.json` |
+- Horizontal overflow: 0 px.
+- Dialogs: none.
+- Visible user-facing controls below 44 px: none.
+- Visible clipped controls: none.
+- Back: 48 x 48 px.
+- `Can you use niacinamide with vitamin C?` card: fully visible at y=134-223.
+- `Is a 10-step "glass skin" routine better?` card: fully visible at y=249-338.
+- `Is "natural" always gentler for sensitive skin?` card: fully visible at y=342-433.
+- Tapping `Is "natural" always gentler for sensitive skin?` opened `/community/note/note-natural-gentler`.
 
-## Tests Added or Updated
+## Evidence
 
-- Test file: `apps/mobile/src/features/community/communityRoutes.test.ts`
-- What it covers: The Skin Notes hub now has a `height < 520` branch, passes `shortCommunity` into `NoteCard`, and keeps heading/card metadata compact enough for the shortest-phone first viewport.
-- Why this should be automated: The bug is a route-density regression that can reappear when copy, evidence labels, or spacing change.
-
-## Commands Run
-
-```bash
-npx prettier --write apps/mobile/src/app/recommendations/index.tsx apps/mobile/src/features/recommendations/recommendationRoutes.test.ts PROGRESS.md docs/USER_FLOW_TREE.md docs/e2e-bug-reports/2026-07-08-recommendations-short-phone-card-clipping.md
-npm --workspace apps/mobile run test -- src/features/recommendations/recommendationRoutes.test.ts
-npm --workspace apps/mobile run web -- --port 8210 --host localhost
-node test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/audit.cjs
-npm run typecheck
-npm run lint
-npm test
-git diff --check
-```
+- Screenshot: `community.png`
+- Geometry snapshot: `community.json`
+- Tap/navigation snapshot: `community-note-tap.json`
 
 ## Remaining Risk
 
-- Untested flows: Native iOS/Android safe-area, Dynamic Type, and screen-reader traversal.
-- Missing fixtures: Durable native compact-phone visual regression for the Skin Notes hub.
-- Flaky areas: Expo web dev-server startup can vary by local port availability.
-- Manual follow-up needed: Promote this route into the eventual native compact-phone E2E suite.
+- Native iOS/Android safe-area and Dynamic Type still need device-level regression coverage.
