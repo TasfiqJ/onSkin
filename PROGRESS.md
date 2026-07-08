@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Added a durable local human-E2E evidence manifest gate without adding new
+  E2E dependencies. `npm run e2e:human:manifest` now reads the committed
+  2026-07-08 Expo web evidence for the 320 x 480 route rerun, 320 x 430 final
+  route clearance, 320 x 390 split-short stress sweep, and 320 x 430
+  first-session activation. It passed with all four gates green and wrote
+  `docs/e2e/generated/human-e2e-manifest.{json,md}`. This resolves the local
+  Expo web evidence ambiguity while keeping native simulator/device automation
+  and physical-device QA as explicit open release gates.
+
 - Refreshed the current launch-gate evidence on `main`. `brand:audit:strict`
   still reports 0 public launch-risk and 0 review-needed hits. Non-strict
   `phase3:verify`, `phase4:verify`, `phase5:verify`, `phase6:verify`,
@@ -66,7 +75,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Codex in-app browser Expo web verifies `/community` at 320 x 430 with zero
   clipped controls, zero sub-44 controls, and zero blocked center hit-tests;
   tapping the previously clipped `Is "natural" always gentler for sensitive
-  skin?` card opens the note detail cleanly. The follow-up 49-route sweep no
+skin?` card opens the note detail cleanly. The follow-up 49-route sweep no
   longer reports Community. Evidence:
   `test-results/human-e2e/2026-07-08/community-short-phone-430-card-fit/`,
   `test-results/human-e2e/2026-07-08/current-main-short-phone-430-postcommunity-sweep/`.

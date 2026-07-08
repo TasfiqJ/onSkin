@@ -33,6 +33,13 @@ Fresh verification on 2026-07-08:
   `npm run phase2:rls-smoke` still fail without Tas-owned final environment
   values and live Supabase credentials, which is expected until production
   account setup is complete.
+- `npm run e2e:human:manifest` passed and wrote
+  `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
+  committed local Expo web evidence for the 320 x 480 current-main route rerun,
+  320 x 430 final route clearance, 320 x 390 split-short stress sweep, and
+  320 x 430 first-session activation. It does not replace physical iOS/Android
+  device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
+  StoreKit/Play Billing, or live Supabase release gates.
 - `npm run phase7:verify` passed non-strict core-loop code gates and refreshed
   `docs/phase-7/generated/core-loop-qa-packet.*` for the current Today and
   Progress route hashes. Strict Phase 7 remains blocked by missing final

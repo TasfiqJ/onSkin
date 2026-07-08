@@ -24,7 +24,15 @@ Do not mark UI-facing work as complete until Codex has:
 - Primary target surfaces: iOS Simulator/device and Android emulator/device.
 - Secondary target surface: Expo web for flows that render correctly through `npm --workspace apps/mobile run web`.
 - Current unit/integration test runner: Vitest in `apps/mobile`.
-- Current durable E2E harness: Open Question. No Playwright, Detox, Maestro, Appium, or native UI test config was found during this setup pass.
+- Current durable local evidence gate: `npm run e2e:human:manifest`.
+  This no-new-dependency Node verifier reads committed
+  `test-results/human-e2e/YYYY-MM-DD/` Expo web-compatible evidence folders,
+  checks the current compact route sweeps and first-session activation summary,
+  and writes `docs/e2e/generated/human-e2e-manifest.{json,md}`. It is not a UI
+  runner and does not replace the human-simulated browser/simulator/device pass;
+  it prevents known-good local evidence from becoming ambiguous or hidden.
+- Native durable harness decision: Open Question. No Detox, Maestro, Appium,
+  XCTest/XCUIAutomation, or Android UI Automator config is committed yet.
 - Package manager: npm workspaces.
 
 ## Existing Commands
@@ -141,6 +149,17 @@ test-results/human-e2e/YYYY-MM-DD/
 
 If another project-specific evidence folder is more appropriate for a release phase, use it and report the path.
 
+After a local Expo web-compatible evidence pass has been captured and committed,
+run:
+
+```bash
+npm run e2e:human:manifest
+```
+
+The manifest gate must pass before using local human-E2E evidence in a launch
+readiness packet. If it fails, inspect the named evidence folder instead of
+assuming older screenshots still prove the current route set.
+
 ## Exploratory Run Report Template
 
 Create a report at `test-results/human-e2e/YYYY-MM-DD/report.md`.
@@ -227,7 +246,7 @@ A UI-facing task is done only when:
 
 ## Open Questions
 
-- Which mobile E2E harness should OnSkin standardize on: Detox, Maestro, native XCTest/XCUIAutomation, or another tool?
+- Which native E2E harness should OnSkin standardize on: Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another tool?
 - Which flows are safe to test against local fixtures without live Supabase, RevenueCat, Sentry, PostHog, Apple, or Google services?
 - What test accounts, seed data, and local reset scripts should be used for onboarding, subscription, photo, recommendation, and account-deletion flows?
-- Which Expo web routes are considered faithful enough to support Playwright coverage?
+- Which Expo web routes should graduate from human-simulated evidence plus `e2e:human:manifest` into a committed Playwright suite after dependency approval?

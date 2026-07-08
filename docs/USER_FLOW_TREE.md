@@ -11,7 +11,10 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - `npm --workspace apps/mobile run start`
 - Secondary web command: `npm --workspace apps/mobile run web`
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/`
-- Durable E2E harness: Open Question.
+- Durable local evidence gate: `npm run e2e:human:manifest` verifies committed
+  Expo web-compatible compact-route and first-session evidence packets and
+  writes `docs/e2e/generated/human-e2e-manifest.{json,md}`. Native
+  simulator/device automation remains an Open Question.
 
 ## Known App Areas From Route Inspection
 
@@ -1250,6 +1253,6 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 - What exact fixtures reset the app into a fresh onboarding, returning routine, empty shelf, populated shelf, empty progress, and populated progress state?
 - Which flows are safe to run without live Supabase, RevenueCat, Apple, Google, Sentry, or PostHog credentials?
-- Should the first durable mobile E2E suite use Detox, Maestro, native XCTest/XCUIAutomation, or another harness?
-- Which Expo web routes are faithful enough for Playwright coverage?
+- Should the first durable native mobile E2E suite use Detox, Maestro, native XCTest/XCUIAutomation, Android UI Automator, or another harness?
+- Which Expo web routes should graduate from human-simulated evidence plus `e2e:human:manifest` into a committed Playwright suite after dependency approval?
 - Where should long-lived release evidence live: `test-results/human-e2e/`, phase-specific docs folders, or both?
