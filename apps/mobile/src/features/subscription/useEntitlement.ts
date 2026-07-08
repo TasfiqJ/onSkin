@@ -20,6 +20,7 @@ import {
 } from './store';
 
 const KEY = ['entitlement'] as const;
+const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;
 
 export type EntitlementActionResult = {
   active: boolean;
@@ -34,6 +35,19 @@ function activeResult(
 ): EntitlementActionResult {
   const active = entitlement ? deriveState(entitlement, new Date().toISOString()).isPro : false;
   return { active, entitlement, ...extras };
+}
+
+function e2eEntitlementDelayMs(): number {
+  const raw = process.env.EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS;
+  if (!raw) return 0;
+
+  const value = Number(raw);
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  return Math.min(Math.round(value), MAX_E2E_ENTITLEMENT_DELAY_MS);
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function e2eEntitlementState(): SubscriptionState | null {
@@ -177,6 +191,9 @@ export function useEntitlement() {
     queryKey: KEY,
     retry: 0,
     queryFn: async () => {
+      const e2eDelay = e2eEntitlementDelayMs();
+      if (e2eDelay > 0) await wait(e2eDelay);
+
       const e2e = e2eEntitlementState();
       if (e2e) return e2e;
 

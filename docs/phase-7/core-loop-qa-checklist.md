@@ -264,6 +264,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-08/lapsed-entitlement-contextual-paywall/`.
   This does not replace native RevenueCat expiry, refund, restore, or store
   purchase QA.
+- 2026-07-08: System Chrome Expo web E2E at 320 x 568 covers the slow
+  entitlement-resolution branch for contextual Pro gates. With
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store` and
+  `EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS=2200`, direct `/routine/plan` shows the
+  neutral `Checking your access` holding state while entitlement resolves,
+  samples no premium routine-plan text during the delay, then resolves to the
+  lapsed paid renewal paywall. The final paywall has zero horizontal overflow
+  and Renew/Terms/Privacy/Restore/Maybe later controls are 48 px+ tall.
+  Evidence is in
+  `test-results/human-e2e/2026-07-08/slow-entitlement-no-flash/`. This does
+  not replace native offline/cache, live RevenueCat slow-network, or device
+  lifecycle QA.
 - 2026-07-07: Fresh Chrome E2E at 320 x 568 covers representative Pro route
   locking and local reverse-trial unlocking. In fresh free state, direct
   `/routine/widgets`, `/cycle/settings`, and `/routine/plan` render the correct

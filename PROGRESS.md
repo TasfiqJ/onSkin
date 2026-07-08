@@ -6,6 +6,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened the contextual Pro gate while entitlement is resolving. The gate no
+  longer leaves slow entitlement checks as an empty screen; it shows a neutral
+  `Checking your access` holding state and keeps Pro-only route children hidden
+  until the entitlement query returns. Added a clamped
+  `EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS` fixture so this branch is repeatable.
+  System Chrome Expo web at 320 x 568 with
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store` and a 2.2s entitlement delay
+  verifies direct `/routine/plan` shows only the neutral holding state during
+  the delay, samples no routine-plan premium text during resolution, then
+  resolves to the lapsed paid renewal paywall with zero horizontal overflow and
+  48 px+ controls. Evidence is in
+  `test-results/human-e2e/2026-07-08/slow-entitlement-no-flash/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-08-slow-entitlement-no-flash.md`.
+
 - Corrected lapsed paid entitlement contextual paywall framing. Contextual Pro
   gates now distinguish first-time free users from users with a prior expired
   entitlement: first-time users still get the no-card `Explore first` path, while

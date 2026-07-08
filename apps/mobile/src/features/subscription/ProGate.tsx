@@ -44,7 +44,28 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   if (isLoading || !data) {
     return (
       <Screen edges={['top', 'bottom']}>
-        <View />
+        <View className="flex-1 justify-center">
+          <View
+            className="rounded-card bg-paper-raised p-5"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <View
+              className="mb-4 h-10 w-10 items-center justify-center rounded-[12px]"
+              style={{ backgroundColor: colors.clayTint }}
+            >
+              <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+            </View>
+            <Text variant="label" tone="muted">
+              PRO ACCESS
+            </Text>
+            <Text variant="title" className="mt-2" style={{ fontSize: 28, lineHeight: 32 }}>
+              Checking your access
+            </Text>
+            <Text variant="body" tone="muted" className="mt-2">
+              We will keep Pro-only screens hidden until your subscription status is confirmed.
+            </Text>
+          </View>
+        </View>
       </Screen>
     );
   }

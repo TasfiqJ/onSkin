@@ -668,6 +668,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Load a gated route while entitlement is still resolving.
   - Expected result: No premium content flashes before the entitlement decision.
   - Evidence: Screenshot or trace.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=expired_store` and `EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS=2200` opens direct `/routine/plan`, verifies the neutral `Checking your access` state is visible during entitlement resolution, samples no premium routine-plan text through the delay, then resolves to the lapsed paid renewal paywall. The final paywall has zero horizontal overflow, Renew/Terms/Privacy/Restore/Maybe later controls are 48 px+ tall, and evidence is in `test-results/human-e2e/2026-07-08/slow-entitlement-no-flash/`. Native offline/cache and live RevenueCat slow-network states remain Phase 6 QA.
 - Branch: store pricing loading or unavailable
   - Priority: Important
   - Automate later: Yes

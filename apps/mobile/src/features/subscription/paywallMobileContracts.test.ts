@@ -217,6 +217,23 @@ describe('paywall mobile contracts', () => {
     expect(useEntitlement).toContain("const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();");
   });
 
+  it('keeps gated content hidden while entitlement is still resolving', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const useEntitlement = readSource('features/subscription/useEntitlement.ts');
+
+    expect(proGate.indexOf('if (isLoading || !data)')).toBeLessThan(
+      proGate.indexOf('if (!locked) return <>{children}</>;'),
+    );
+    expect(proGate).toContain('Checking your access');
+    expect(proGate).toContain(
+      'We will keep Pro-only screens hidden until your subscription status is confirmed.',
+    );
+    expect(proGate).toContain('if (!locked) return <>{children}</>;');
+    expect(useEntitlement).toContain('EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS');
+    expect(useEntitlement).toContain('const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;');
+    expect(useEntitlement).toContain('if (e2eDelay > 0) await wait(e2eDelay);');
+  });
+
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {
     const source = readSource('features/subscription/ComplianceRow.tsx');
 
