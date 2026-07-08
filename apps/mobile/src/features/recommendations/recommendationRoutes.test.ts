@@ -146,7 +146,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const compactPreferences = height < 640');
     expect(source).toContain('const shortPreferences = height < 600;');
     expect(source).toContain('const ultraShortPreferences = height < 460;');
-    expect(source).toContain('const splitShortPreferences = height < 460;');
+    expect(source).toContain('const splitShortPreferences = height < 600;');
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");

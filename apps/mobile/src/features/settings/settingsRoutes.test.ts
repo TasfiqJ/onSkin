@@ -37,6 +37,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 84;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
@@ -44,10 +45,14 @@ describe('Settings route contracts', () => {
     expect(you).toContain("const privacyDirectEntry = params.section === 'privacy';");
     expect(you).toContain('const narrowPhone = compactPhone && width < 360;');
     expect(you).toContain(
+      'const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;',
+    );
+    expect(you).toContain(
       'const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;',
     );
     expect(you).toContain('const privacyDirectEntryScrollNudge = ultraShortPrivacyEntry');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE');
     expect(you).toContain(
@@ -149,7 +154,7 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('useWindowDimensions');
     expect(notifications).toContain('const compactNotifications = height < 600;');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
-    expect(notifications).toContain('const splitShortNotifications = height < 460;');
+    expect(notifications).toContain('const splitShortNotifications = height < 600;');
     expect(notifications).toContain('const microShortNotifications = height < 380;');
     expect(notifications).toContain(
       "className={micro ? 'mb-0.5 ml-2 mt-1' : compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}",

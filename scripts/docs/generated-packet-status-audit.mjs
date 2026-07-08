@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, relative, resolve } from 'node:path';
 
@@ -57,6 +58,12 @@ function read(path) {
 
 function readJson(path) {
   return JSON.parse(read(path));
+}
+
+function hashFile(path) {
+  return createHash('sha256')
+    .update(readFileSync(abs(path)))
+    .digest('hex');
 }
 
 function walkFiles(path) {
@@ -128,6 +135,29 @@ function collectGitStatuses(value, path = []) {
   });
 }
 
+function collectHashRefs(value, path = []) {
+  if (!value || typeof value !== 'object') return [];
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => collectHashRefs(item, [...path, String(index)]));
+  }
+
+  const self =
+    typeof value.path === 'string' && typeof value.sha256 === 'string'
+      ? [
+          {
+            jsonPath: path.length > 0 ? path.join('.') : '<root>',
+            path: normalizeRepoPath(value.path),
+            expectedExists: value.exists,
+            expectedSha256: value.sha256,
+          },
+        ]
+      : [];
+  const children = Object.entries(value).flatMap(([key, item]) =>
+    collectHashRefs(item, [...path, key]),
+  );
+  return [...self, ...children];
+}
+
 const blockers = [];
 const warnings = [];
 
@@ -156,10 +186,14 @@ const fileResults = generatedFiles.map((path) => {
     .filter((pattern) => pattern.test(text))
     .map((pattern) => String(pattern));
   let gitStatusMatches = [];
+  let hashRefs = [];
+  let staleHashRefs = [];
 
   if (extname(path) === '.json') {
     try {
-      gitStatusMatches = collectGitStatuses(JSON.parse(text));
+      const parsed = JSON.parse(text);
+      gitStatusMatches = collectGitStatuses(parsed);
+      hashRefs = collectHashRefs(parsed);
     } catch (error) {
       blockers.push(
         `${path} could not be parsed as JSON: ${error instanceof Error ? error.message : String(error)}`,
@@ -173,12 +207,38 @@ const fileResults = generatedFiles.map((path) => {
   for (const match of gitStatusMatches) {
     blockers.push(`${path} records non-empty ${match.path}: ${match.value}`);
   }
+  for (const ref of hashRefs) {
+    const currentExists = exists(ref.path);
+    if (ref.expectedExists === true && !currentExists) {
+      staleHashRefs.push({ ...ref, reason: 'recorded present but file is missing' });
+      continue;
+    }
+    if (ref.expectedExists === false && currentExists) {
+      staleHashRefs.push({ ...ref, reason: 'recorded missing but file exists' });
+      continue;
+    }
+    if (currentExists) {
+      const actualSha256 = hashFile(ref.path);
+      if (actualSha256 !== ref.expectedSha256) {
+        staleHashRefs.push({
+          ...ref,
+          actualSha256,
+          reason: 'sha256 does not match current file',
+        });
+      }
+    }
+  }
+  for (const ref of staleHashRefs) {
+    blockers.push(`${path} has stale hash reference ${ref.jsonPath} -> ${ref.path}: ${ref.reason}.`);
+  }
 
   return {
     path,
     kind: extname(path).slice(1),
     dirtyTextMatchCount: dirtyTextMatches.length,
     nonEmptyGitStatusCount: gitStatusMatches.length,
+    hashReferenceCount: hashRefs.length,
+    staleHashReferenceCount: staleHashRefs.length,
   };
 });
 
@@ -196,6 +256,11 @@ const audit = {
     dirtyTextFileCount: fileResults.filter((file) => file.dirtyTextMatchCount > 0).length,
     nonEmptyGitStatusFileCount: fileResults.filter((file) => file.nonEmptyGitStatusCount > 0)
       .length,
+    hashReferenceCount: fileResults.reduce((total, file) => total + file.hashReferenceCount, 0),
+    staleHashReferenceCount: fileResults.reduce(
+      (total, file) => total + file.staleHashReferenceCount,
+      0,
+    ),
     blockerCount: blockers.length,
     warningCount: warnings.length,
   },
@@ -221,18 +286,29 @@ const mdContent = [
   `- Generated files scanned: ${audit.summary.generatedFileCount}`,
   `- Files with dirty text: ${audit.summary.dirtyTextFileCount}`,
   `- Files with non-empty gitStatus: ${audit.summary.nonEmptyGitStatusFileCount}`,
+  `- Hash references checked: ${audit.summary.hashReferenceCount}`,
+  `- Stale hash references: ${audit.summary.staleHashReferenceCount}`,
   `- Blockers: ${audit.summary.blockerCount}`,
   `- Warnings: ${audit.summary.warningCount}`,
   '',
   '## Files',
   '',
   markdownTable(
-    ['File', 'Kind', 'Dirty text matches', 'Non-empty gitStatus fields'],
+    [
+      'File',
+      'Kind',
+      'Dirty text matches',
+      'Non-empty gitStatus fields',
+      'Hash refs',
+      'Stale hash refs',
+    ],
     fileResults.map((file) => [
       file.path,
       file.kind,
       file.dirtyTextMatchCount,
       file.nonEmptyGitStatusCount,
+      file.hashReferenceCount,
+      file.staleHashReferenceCount,
     ]),
   ),
   '',

@@ -131,7 +131,7 @@ export default function NotificationSettingsScreen() {
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
-  const splitShortNotifications = height < 460;
+  const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
   if (!p) return null;
 

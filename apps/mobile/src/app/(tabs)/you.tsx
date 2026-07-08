@@ -70,6 +70,7 @@ const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
 const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
+const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 84;
 const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 
@@ -319,9 +320,12 @@ export default function YouScreen() {
   const compactPhone = height < 640 || width < 430;
   const privacyDirectEntry = params.section === 'privacy';
   const narrowPhone = compactPhone && width < 360;
+  const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;
   const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;
   const privacyDirectEntryScrollNudge = ultraShortPrivacyEntry
     ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
+    : shortPrivacyEntry
+      ? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE
     : narrowPhone
       ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
       : compactPhone
