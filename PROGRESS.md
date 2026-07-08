@@ -6,6 +6,29 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Refreshed the current launch-gate evidence on `main`. `brand:audit:strict`
+  still reports 0 public launch-risk and 0 review-needed hits. Non-strict
+  `phase3:verify`, `phase4:verify`, `phase5:verify`, `phase6:verify`,
+  `phase7:verify`, `phase8:verify`, `phase9:verify`, and
+  `phase10-11:verify` pass against the current 170-file / 1744-test baseline
+  and regenerate their phase packets. `phase2:check-env-smoke` passes, while
+  `phase2:check-env` and `phase2:rls-smoke` remain correctly blocked by missing
+  final env values and live Supabase credentials.
+
+- Cleared the 320 x 390 split-short phone stress sweep. The remaining compact
+  routes now keep lower-priority controls deliberately below the first viewport
+  instead of half-clipped at the bottom edge: Ask shows one first prompt,
+  Shelf empty/no-match/scan/OCR fallbacks use split-short density, contextual
+  upsell hides nonessential body copy below 410 px, recommendations and Skin
+  Notes defer second/lower cards below the fold, and notification promotional
+  controls no longer peek into the first viewport. Codex in-app browser Expo
+  web evidence verifies 11 focused routes at 320 x 390 with zero clipped or
+  blocked controls, 10 representative user-like taps, and a fresh 49-route
+  320 x 390 sweep with zero failed routes. Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/split-short-phone-390-clearance/`,
+  `test-results/human-e2e/2026-07-08/current-main-split-short-phone-390-sweep-postfix/`,
+  `docs/e2e-bug-reports/2026-07-08-split-short-phone-390-clearance.md`.
+
 - Added a dev-only, env-gated clean first-session reset fixture to the welcome
   route for repeatable onboarding E2E: `EXPO_PUBLIC_E2E_LOCAL_RESET=1` plus
   `/?e2eReset=local` clears local private state and query cache, then returns
@@ -136,7 +159,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   and keeps native alerts out of the sensitive photo-share path. Re-ran
   `npm run phase9:privacy-payload-audit` and full `npm run phase9:verify`;
   both pass non-strict code gates, including root typecheck, root lint, and
-  170 mobile test files / 1743 tests. Strict Phase 9 remains blocked on
+  170 mobile test files / 1744 tests. Strict Phase 9 remains blocked on
   Tas-owned live Supabase, RevenueCat, store/build, observability, dependency,
   beta, and named-signoff evidence.
 

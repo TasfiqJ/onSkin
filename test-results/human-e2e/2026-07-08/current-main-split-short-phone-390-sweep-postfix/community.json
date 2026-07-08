@@ -1,0 +1,85 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 174.4538917541504
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.",
+      "label": "Can you use niacinamide with vitamin C?. Refuted. Can you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredient research. Safe to ",
+      "partialClip": false,
+      "rect": {
+        "bottom": 218.91687774658203,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 129.99090576171875,
+        "visibleHeight": 88.92597198486328,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 289.3507423400879
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+      "label": "Is a 10-step “glass skin” routine better?. Contested. Is a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats more. Layering raises ir",
+      "partialClip": false,
+      "rect": {
+        "bottom": 333.81372833251953,
+        "height": 88.92597198486328,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 244.88775634765625,
+        "visibleHeight": 88.92597198486328,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community",
+  "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils ",
+  "url": "http://localhost:8223/community",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

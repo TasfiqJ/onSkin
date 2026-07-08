@@ -19,10 +19,20 @@ Fresh verification on 2026-07-08:
 
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 170 mobile test files, 1743 tests.
+- `npm test` passed: 170 mobile test files, 1744 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 170 test files, 1743 tests.
+- `npm --workspace apps/mobile run test` passed: 170 test files, 1744 tests.
+- `npm run phase3:verify`, `npm run phase4:verify`,
+  `npm run phase5:verify`, `npm run phase6:verify`,
+  `npm run phase7:verify`, `npm run phase8:verify`,
+  `npm run phase9:verify`, and `npm run phase10-11:verify` passed
+  non-strict local code gates. Strict readiness remains blocked by the external
+  evidence called out below.
+- `npm run phase2:check-env-smoke` passed. `npm run phase2:check-env` and
+  `npm run phase2:rls-smoke` still fail without Tas-owned final environment
+  values and live Supabase credentials, which is expected until production
+  account setup is complete.
 - `npm run phase7:verify` passed non-strict core-loop code gates and refreshed
   `docs/phase-7/generated/core-loop-qa-packet.*` for the current Today and
   Progress route hashes. Strict Phase 7 remains blocked by missing final
@@ -80,6 +90,14 @@ Fresh verification on 2026-07-08:
   sweep now reports zero failed routes. Evidence:
   `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/`,
   `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
+- Expo web 320 x 390 split-short stress clearance passed the current 49-route
+  direct-entry sweep with zero failed routes, zero clipped controls, and zero
+  blocked hit-tests after tightening Ask, Shelf, contextual paywall,
+  Recommendations, Skin Notes, and notification layouts below 410 px. The
+  focused pass also verifies 10 user-like taps across the affected controls.
+  Evidence:
+  `test-results/human-e2e/2026-07-08/split-short-phone-390-clearance/`,
+  `test-results/human-e2e/2026-07-08/current-main-split-short-phone-390-sweep-postfix/`.
 - Expo web Shelf manual category picker evidence at 320 x 480 and 320 x 568
   passed the named bottom-sheet, lower-option scroll, 52 px category row,
   `Other` selection, `/shelf/opened` continuation, horizontal-overflow, and

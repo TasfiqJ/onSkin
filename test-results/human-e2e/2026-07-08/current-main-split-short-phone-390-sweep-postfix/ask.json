@@ -1,0 +1,109 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 213.98665618896484
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is there a conflict on my shelf?",
+      "label": "Is there a conflict on my shelf?›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 237.98544311523438,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 189.9878692626953,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 131.19691467285156,
+        "y": 295.32767486572266
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "Ask a question about your shelf",
+      "label": "Ask a question about your shelf Ask about your shelf…",
+      "partialClip": false,
+      "rect": {
+        "bottom": 319.3264617919922,
+        "height": 47.99757385253906,
+        "left": 38.95631408691406,
+        "right": 223.43751525878906,
+        "top": 271.3288879394531,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 184.481201171875,
+        "width": 184.481201171875
+      },
+      "role": null,
+      "tag": "INPUT"
+    },
+    {
+      "center": {
+        "x": 257.43326568603516,
+        "y": 295.32767486572266
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "↑",
+      "label": "Send ↑",
+      "partialClip": false,
+      "rect": {
+        "bottom": 319.3264617919922,
+        "height": 47.99757385253906,
+        "left": 233.43447875976562,
+        "right": 281.4320526123047,
+        "top": 271.3288879394531,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/ask",
+  "textStart": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "url": "http://localhost:8223/ask",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 256.30310821533203
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 282.29673767089844,
+        "height": 51.98725891113281,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 230.30947875976562,
+        "visibleHeight": 51.98725891113281,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 86.10437393188477,
+        "y": 306.2955093383789
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 330.29429626464844,
+        "height": 47.99757385253906,
+        "left": 62.105587005615234,
+        "right": 110.1031608581543,
+        "top": 282.2967224121094,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 159.4584445953369,
+        "y": 306.2955093383789
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 330.29429626464844,
+        "height": 47.99757385253906,
+        "left": 135.4520721435547,
+        "right": 183.46481704711914,
+        "top": 282.2967224121094,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 48.01274490356445,
+        "width": 48.01274490356445
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 233.54066276550293,
+        "y": 306.2955093383789
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 330.29429626464844,
+        "height": 47.99757385253906,
+        "left": 208.813720703125,
+        "right": 258.26760482788086,
+        "top": 282.2967224121094,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 49.45388412475586,
+        "width": 49.45388412475586
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 354.29309844970703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Maybe later",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 378.29188537597656,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 330.2943115234375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/paywall/upsell?feature=full_routine",
+  "textStart": "Unlock your full routine. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later",
+  "url": "http://localhost:8223/paywall/upsell?feature=full_routine",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 43.992719650268555,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 134.2005500793457,
+        "y": 103.97451782226562
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Morning routine",
+      "label": "Morning routine7:30 AM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 127.97330474853516,
+        "height": 47.99757385253906,
+        "left": 37.98543930053711,
+        "right": 230.4156608581543,
+        "top": 79.9757308959961,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 192.4302215576172,
+        "width": 192.4302215576172
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 103.97451782226562
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Morning routine",
+      "label": "Morning routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 127.97330474853516,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 79.9757308959961,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 134.2005500793457,
+        "y": 152.9429702758789
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Evening · tonight’s step",
+      "label": "Evening · tonight’s step9:30 PM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 176.94175720214844,
+        "height": 47.99757385253906,
+        "left": 37.98543930053711,
+        "right": 230.4156608581543,
+        "top": 128.94418334960938,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 192.4302215576172,
+        "width": 192.4302215576172
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 152.9429702758789
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Evening · tonight’s step",
+      "label": "Evening · tonight’s step",
+      "partialClip": false,
+      "rect": {
+        "bottom": 176.94175720214844,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 128.94418334960938,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 228.92900848388672
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Streak & adherence",
+      "label": "Streak & adherence",
+      "partialClip": false,
+      "rect": {
+        "bottom": 252.92779541015625,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 204.9302215576172,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 277.89746856689453
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Replenishment",
+      "label": "Replenishment",
+      "partialClip": false,
+      "rect": {
+        "bottom": 301.89625549316406,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 253.898681640625,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 256.40929412841797,
+        "y": 326.8659133911133
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Progress-photo nudge",
+      "label": "Progress-photo nudge",
+      "partialClip": false,
+      "rect": {
+        "bottom": 350.8647003173828,
+        "height": 47.99757385253906,
+        "left": 230.41566467285156,
+        "right": 282.4029235839844,
+        "top": 302.86712646484375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 51.98725891113281,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tag": "DIV"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/notifications",
+  "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+  "url": "http://localhost:8223/settings/notifications",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

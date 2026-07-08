@@ -1,0 +1,61 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 345.94207191467285
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Skin Notes",
+      "label": "Back to Skin Notes",
+      "partialClip": false,
+      "rect": {
+        "bottom": 373.9381294250488,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 317.9460144042969,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/community/note/missing-note-e2e",
+  "textStart": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes",
+  "url": "http://localhost:8223/community/note/missing-note-e2e",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

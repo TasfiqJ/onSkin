@@ -1,0 +1,109 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 268.4011001586914,
+        "y": 122.34527587890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close x",
+      "partialClip": false,
+      "rect": {
+        "bottom": 146.34406280517578,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 98.34648895263672,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 250.3185806274414
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Try name or brand instead SSearch catalogTry name or brand instead",
+      "partialClip": false,
+      "rect": {
+        "bottom": 274.31736755371094,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 226.31979370117188,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 302.30582427978516
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan the ingredient list",
+      "label": "Scan the ingredient list. We'll read the INCI text IScan the ingredient listWe'll read the INCI text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 326.3046112060547,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 278.3070373535156,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 354.29309844970703
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works, even offline +Add it by handAlways works, even offline",
+      "partialClip": false,
+      "rect": {
+        "bottom": 378.29188537597656,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 330.2943115234375,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/no-match",
+  "textStart": "? x We don't have this one yet. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+  "url": "http://localhost:8223/shelf/no-match",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

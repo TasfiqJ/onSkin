@@ -1,0 +1,157 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Cancel x",
+      "partialClip": false,
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 101.98725891113281
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "Product name",
+      "label": "Product name e.g. Gentle Retinol Night Serum",
+      "partialClip": false,
+      "rect": {
+        "bottom": 125.98604583740234,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 77.98847198486328,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "INPUT"
+    },
+    {
+      "center": {
+        "x": 86.95388793945312,
+        "y": 179.9757308959961
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "Brand",
+      "label": "Brand Brand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 203.97451782226562,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 149.90898895263672,
+        "top": 155.97694396972656,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 125.91020202636719,
+        "width": 125.91020202636719
+      },
+      "role": null,
+      "tag": "INPUT"
+    },
+    {
+      "center": {
+        "x": 227.1465606689453,
+        "y": 179.9757308959961
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Choose",
+      "label": "Category Choose▾",
+      "partialClip": false,
+      "rect": {
+        "bottom": 203.97451782226562,
+        "height": 47.99757385253906,
+        "left": 157.90353393554688,
+        "right": 296.38958740234375,
+        "top": 155.97694396972656,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 138.48605346679688,
+        "width": 138.48605346679688
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 296.3440570831299
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "TEXTAREA",
+      "hitText": "Ingredients",
+      "label": "Ingredients Paste or type the INCI list…",
+      "partialClip": false,
+      "rect": {
+        "bottom": 326.72937393188477,
+        "height": 60.770633697509766,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 265.958740234375,
+        "visibleHeight": 60.770633697509766,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": null,
+      "tag": "TEXTAREA"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 354.3006839752197
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue",
+      "label": "Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 382.2967414855957,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 326.30462646484375,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 272.3907775878906,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/manual",
+  "textStart": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+  "url": "http://localhost:8223/shelf/manual",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

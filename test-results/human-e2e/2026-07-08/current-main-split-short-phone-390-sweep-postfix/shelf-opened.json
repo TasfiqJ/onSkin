@@ -1,0 +1,61 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 268.4011001586914,
+        "y": 104.3386001586914
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close x",
+      "partialClip": false,
+      "rect": {
+        "bottom": 128.33738708496094,
+        "height": 47.99757385253906,
+        "left": 244.40231323242188,
+        "right": 292.39988708496094,
+        "top": 80.33981323242188,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 326.3046340942383
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add by hand",
+      "label": "Add product by hand Add by hand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 350.3034210205078,
+        "height": 47.99757385253906,
+        "left": 27.98847198486328,
+        "right": 292.3998794555664,
+        "top": 302.30584716796875,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 264.4114074707031,
+        "width": 264.4114074707031
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/opened",
+  "textStart": "+ x Add product details first. Freshness starts after we know which product you're adding. Start with the product name, then we'll ask when you opened it. Add by hand",
+  "url": "http://localhost:8223/shelf/opened",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

@@ -1,0 +1,776 @@
+{
+  "viewport": {
+    "width": 320,
+    "height": 390
+  },
+  "baseUrl": "http://localhost:8223",
+  "generatedAt": "2026-07-08T16:11:59.423Z",
+  "failureCount": 0,
+  "failures": [],
+  "results": [
+    {
+      "bodyPreview": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+      "checks": [
+        {
+          "afterScroll": {
+            "center": {
+              "x": 67.39229583740234,
+              "y": 225.00760173797607
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Drugstore",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 233.0097255706787,
+              "height": 16.004247665405273,
+              "intersectsViewport": true,
+              "left": 40.594661712646484,
+              "right": 94.1899299621582,
+              "top": 217.00547790527344,
+              "visibleHeight": 16.004247665405273,
+              "visibleWidth": 53.59526824951172,
+              "width": 53.59526824951172,
+              "x": 40.594661712646484,
+              "y": 217.00547790527344
+            },
+            "visible": true
+          },
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 67.39229583740234,
+              "y": 389
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitText": "",
+            "offscreen": true,
+            "partialClip": false,
+            "rect": {
+              "bottom": 435.9223384857178,
+              "height": 16.004247665405273,
+              "intersectsViewport": false,
+              "left": 40.594661712646484,
+              "right": 94.1899299621582,
+              "top": 419.9180908203125,
+              "visibleHeight": 0,
+              "visibleWidth": 53.59526824951172,
+              "width": 53.59526824951172,
+              "x": 40.594661712646484,
+              "y": 419.9180908203125
+            },
+            "visible": false
+          },
+          "label": "Drugstore",
+          "target": "Drugstore"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 160.19418716430664,
+              "y": 225.00760173797607
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Mid-range",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 233.0097255706787,
+              "height": 16.004247665405273,
+              "intersectsViewport": true,
+              "left": 133.0097198486328,
+              "right": 187.37865447998047,
+              "top": 217.00547790527344,
+              "visibleHeight": 16.004247665405273,
+              "visibleWidth": 54.368934631347656,
+              "width": 54.368934631347656,
+              "x": 133.0097198486328,
+              "y": 217.00547790527344
+            },
+            "visible": true
+          },
+          "label": "Mid-range",
+          "target": "Mid-range"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 252.9884796142578,
+              "y": 225.00760173797607
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Premium",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 233.0097255706787,
+              "height": 16.004247665405273,
+              "intersectsViewport": true,
+              "left": 229.3841094970703,
+              "right": 276.5928497314453,
+              "top": 217.00547790527344,
+              "visibleHeight": 16.004247665405273,
+              "visibleWidth": 47.208740234375,
+              "width": 47.208740234375,
+              "x": 229.3841094970703,
+              "y": 217.00547790527344
+            },
+            "visible": true
+          },
+          "label": "Premium",
+          "target": "Premium"
+        }
+      ],
+      "issues": [],
+      "path": "/recommendations/preferences",
+      "url": "http://localhost:8223/recommendations/preferences",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "< Subscription You’re on the free plan The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime. See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 64.6693000793457,
+              "y": 351.9114112854004
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Privacy",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 363.91080474853516,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 37.98543930053711,
+              "right": 91.3531608581543,
+              "top": 339.9120178222656,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 53.36772155761719,
+              "width": 53.36772155761719,
+              "x": 37.98543930053711,
+              "y": 339.9120178222656
+            },
+            "visible": true
+          },
+          "label": "Privacy",
+          "target": "Privacy"
+        }
+      ],
+      "issues": [],
+      "path": "/settings/subscription",
+      "url": "http://localhost:8223/settings/subscription",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 256.40929412841797,
+              "y": 326.8659133911133
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Progress-photo nudge",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 350.8647003173828,
+              "height": 47.99757385253906,
+              "intersectsViewport": true,
+              "left": 230.41566467285156,
+              "right": 282.4029235839844,
+              "top": 302.86712646484375,
+              "visibleHeight": 47.99757385253906,
+              "visibleWidth": 51.98725891113281,
+              "width": 51.98725891113281,
+              "x": 230.41566467285156,
+              "y": 302.86712646484375
+            },
+            "visible": true
+          },
+          "label": "Progress-photo nudge",
+          "target": "Progress-photo nudge"
+        }
+      ],
+      "issues": [],
+      "path": "/settings/notifications",
+      "url": "http://localhost:8223/settings/notifications",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "< ✦ Ask RoutineKind Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 158.34345245361328,
+              "y": 213.98666763305664
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Is there a conflict on my shelf?",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 225.9860610961914,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 40.958740234375,
+              "right": 275.72816467285156,
+              "top": 201.98727416992188,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 234.76942443847656,
+              "width": 234.76942443847656,
+              "x": 40.958740234375,
+              "y": 201.98727416992188
+            },
+            "visible": true
+          },
+          "label": "Is there a conflict on my shelf?",
+          "target": "Is there a conflict on my shelf?"
+        }
+      ],
+      "issues": [],
+      "path": "/ask",
+      "url": "http://localhost:8223/ask",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "Shelf empty for now Let's build your cabinet. Scan a barcode, or add it by hand. Scan a barcode Add by hand Today Progress Shelf You",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 160.18659591674805,
+              "y": 230.94661331176758
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add by hand",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 242.94600677490234,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 114.82099914550781,
+              "right": 205.55219268798828,
+              "top": 218.9472198486328,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 90.73119354248047,
+              "width": 90.73119354248047,
+              "x": 114.82099914550781,
+              "y": 218.9472198486328
+            },
+            "visible": true
+          },
+          "label": "Add by hand",
+          "target": "Add by hand"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 160.19418334960938,
+              "y": 170.94964981079102
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Scan a barcode",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 182.94904327392578,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 104.26274871826172,
+              "right": 216.12561798095703,
+              "top": 158.95025634765625,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 111.86286926269531,
+              "width": 111.86286926269531,
+              "x": 104.26274871826172,
+              "y": 158.95025634765625
+            },
+            "visible": true
+          },
+          "label": "Scan a barcode",
+          "target": "Scan a barcode"
+        }
+      ],
+      "issues": [],
+      "path": "/shelf",
+      "url": "http://localhost:8223/shelf",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "? x We don't have this one yet. S Search catalog Try name or brand instead I Scan the ingredient list We'll read the INCI text + Add it by hand Always works, even offline",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 180.18811798095703,
+              "y": 347.2921905517578
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add it by hand",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 355.794921875,
+              "height": 17.005462646484375,
+              "intersectsViewport": true,
+              "left": 77.97330474853516,
+              "right": 282.4029312133789,
+              "top": 338.7894592285156,
+              "visibleHeight": 17.005462646484375,
+              "visibleWidth": 204.42962646484375,
+              "width": 204.42962646484375,
+              "x": 77.97330474853516,
+              "y": 338.7894592285156
+            },
+            "visible": true
+          },
+          "label": "Add it by hand",
+          "target": "Add it by hand"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 180.18811798095703,
+              "y": 243.3176727294922
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Search catalog",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 251.82040405273438,
+              "height": 17.005462646484375,
+              "intersectsViewport": true,
+              "left": 77.97330474853516,
+              "right": 282.4029312133789,
+              "top": 234.81494140625,
+              "visibleHeight": 17.005462646484375,
+              "visibleWidth": 204.42962646484375,
+              "width": 204.42962646484375,
+              "x": 77.97330474853516,
+              "y": 234.81494140625
+            },
+            "visible": true
+          },
+          "label": "Search catalog",
+          "target": "Search catalog"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 180.18811798095703,
+              "y": 295.30491638183594
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Scan the ingredient list",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 303.8076477050781,
+              "height": 17.005462646484375,
+              "intersectsViewport": true,
+              "left": 77.97330474853516,
+              "right": 282.4029312133789,
+              "top": 286.80218505859375,
+              "visibleHeight": 17.005462646484375,
+              "visibleWidth": 204.42962646484375,
+              "width": 204.42962646484375,
+              "x": 77.97330474853516,
+              "y": 286.80218505859375
+            },
+            "visible": true
+          },
+          "label": "Scan the ingredient list",
+          "target": "Scan the ingredient list"
+        }
+      ],
+      "issues": [],
+      "path": "/shelf/no-match",
+      "url": "http://localhost:8223/shelf/no-match",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 47.99757385253906,
+              "y": 31.99332618713379
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "x",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 55.99211311340332,
+              "height": 47.99757385253906,
+              "intersectsViewport": true,
+              "left": 23.99878692626953,
+              "right": 71.9963607788086,
+              "top": 7.994539260864258,
+              "visibleHeight": 47.99757385253906,
+              "visibleWidth": 47.99757385253906,
+              "width": 47.99757385253906,
+              "x": 23.99878692626953,
+              "y": 7.994539260864258
+            },
+            "visible": true
+          },
+          "label": "Close x",
+          "target": "Close"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 185.1865997314453,
+              "y": 162.39381790161133
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Scan ingredient label",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 174.3932113647461,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 85.96784210205078,
+              "right": 284.40535736083984,
+              "top": 150.39442443847656,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 198.43751525878906,
+              "width": 198.43751525878906,
+              "x": 85.96784210205078,
+              "y": 150.39442443847656
+            },
+            "visible": true
+          },
+          "label": "Scan ingredient label",
+          "target": "Scan ingredient label"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 185.1865997314453,
+              "y": 326.31979751586914
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add it by hand",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 338.3191909790039,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 85.96784210205078,
+              "right": 284.40535736083984,
+              "top": 314.3204040527344,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 198.43751525878906,
+              "width": 198.43751525878906,
+              "x": 85.96784210205078,
+              "y": 314.3204040527344
+            },
+            "visible": true
+          },
+          "label": "Add it by hand",
+          "target": "Add it by hand"
+        }
+      ],
+      "issues": [],
+      "path": "/shelf/scan",
+      "url": "http://localhost:8223/shelf/scan",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. Continue with manual text",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 160.1865997314453,
+              "y": 231.9629898071289
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Continue with manual text",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 242.15716552734375,
+              "height": 20.388351440429688,
+              "intersectsViewport": true,
+              "left": 65.16990661621094,
+              "right": 255.2032928466797,
+              "top": 221.76881408691406,
+              "visibleHeight": 20.388351440429688,
+              "visibleWidth": 190.03338623046875,
+              "width": 190.03338623046875,
+              "x": 65.16990661621094,
+              "y": 221.76881408691406
+            },
+            "visible": true
+          },
+          "label": "Continue with manual text",
+          "target": "Continue with manual text"
+        }
+      ],
+      "issues": [],
+      "path": "/shelf/ocr",
+      "url": "http://localhost:8223/shelf/ocr",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "Unlock your full routine. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Terms · Privacy · Restore Maybe later",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 160.19418334960938,
+              "y": 354.29309463500977
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Maybe later",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 366.29248809814453,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 116.8386001586914,
+              "right": 203.54976654052734,
+              "top": 342.293701171875,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 86.71116638183594,
+              "width": 86.71116638183594,
+              "x": 116.8386001586914,
+              "y": 342.293701171875
+            },
+            "visible": true
+          },
+          "label": "Maybe later",
+          "target": "Maybe later"
+        },
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 160.18659591674805,
+              "y": 256.2955207824707
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Start free trial",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 268.29491424560547,
+              "height": 23.99878692626953,
+              "intersectsViewport": true,
+              "left": 105.74939727783203,
+              "right": 214.62379455566406,
+              "top": 244.29612731933594,
+              "visibleHeight": 23.99878692626953,
+              "visibleWidth": 108.87439727783203,
+              "width": 108.87439727783203,
+              "x": 105.74939727783203,
+              "y": 244.29612731933594
+            },
+            "visible": true
+          },
+          "label": "Start free trial",
+          "target": "Start free trial"
+        }
+      ],
+      "issues": [],
+      "path": "/paywall/upsell?feature=full_routine",
+      "url": "http://localhost:8223/paywall/upsell?feature=full_routine",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils ",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 123.0961799621582,
+              "y": 153.95934867858887
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Can you use niacinamide with vitamin C?",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 168.96238327026367,
+              "height": 30.00606918334961,
+              "intersectsViewport": true,
+              "left": 32.96419906616211,
+              "right": 213.2281608581543,
+              "top": 138.95631408691406,
+              "visibleHeight": 30.00606918334961,
+              "visibleWidth": 180.2639617919922,
+              "width": 180.2639617919922,
+              "x": 32.96419906616211,
+              "y": 138.95631408691406
+            },
+            "visible": true
+          },
+          "label": "Can you use niacinamide with vitamin C?",
+          "target": "Can you use niacinamide with vitamin C?"
+        }
+      ],
+      "issues": [],
+      "path": "/community",
+      "url": "http://localhost:8223/community",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    },
+    {
+      "bodyPreview": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every ro",
+      "checks": [
+        {
+          "afterScroll": null,
+          "effective": "[Circular]",
+          "initial": {
+            "center": {
+              "x": 134.10953521728516,
+              "y": 169.89534282684326
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "A mineral SPF 30+",
+            "offscreen": false,
+            "partialClip": false,
+            "rect": {
+              "bottom": 177.8974666595459,
+              "height": 16.004247665405273,
+              "intersectsViewport": true,
+              "left": 64.95752716064453,
+              "right": 203.26154327392578,
+              "top": 161.89321899414062,
+              "visibleHeight": 16.004247665405273,
+              "visibleWidth": 138.30401611328125,
+              "width": 138.30401611328125,
+              "x": 64.95752716064453,
+              "y": 161.89321899414062
+            },
+            "visible": true
+          },
+          "label": "A mineral SPF 30+",
+          "target": "A mineral SPF 30+"
+        }
+      ],
+      "issues": [],
+      "path": "/recommendations",
+      "url": "http://localhost:8223/recommendations",
+      "viewport": {
+        "height": 390,
+        "width": 320
+      }
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 170.9572238922119
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan a barcode",
+      "label": "Scan a barcode",
+      "partialClip": false,
+      "rect": {
+        "bottom": 198.9532814025879,
+        "height": 55.99211502075195,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 142.96116638183594,
+        "visibleHeight": 55.99211502075195,
+        "visibleWidth": 256.4017028808594,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19417762756348,
+        "y": 230.94661712646484
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add by hand",
+      "label": "Add by hand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 254.94540405273438,
+        "height": 47.99757385253906,
+        "left": 31.99332618713379,
+        "right": 288.39502906799316,
+        "top": 206.9478302001953,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 256.4017028808594,
+        "width": 256.4017028808594
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 46.76881122589111,
+        "y": 343.3176898956299
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today tab Today",
+      "label": "Today tab Today",
+      "partialClip": false,
+      "rect": {
+        "bottom": 370.3125343322754,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 316.3228454589844,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.60679626464844,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 122.38319778442383,
+        "y": 343.3176898956299
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Progress tab Progress",
+      "label": "Progress tab Progress",
+      "partialClip": false,
+      "rect": {
+        "bottom": 370.3125343322754,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 316.3228454589844,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.6219711303711,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 197.9975814819336,
+        "y": 343.3176898956299
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf tab Shelf",
+      "label": "Shelf tab Shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 370.3125343322754,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 316.3228454589844,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.60679626464844,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "tag": "DIV"
+    },
+    {
+      "center": {
+        "x": 273.61196517944336,
+        "y": 343.3176898956299
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You tab You",
+      "label": "You tab You",
+      "partialClip": false,
+      "rect": {
+        "bottom": 370.3125343322754,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 316.3228454589844,
+        "visibleHeight": 53.989688873291016,
+        "visibleWidth": 75.6219711303711,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "tag": "DIV"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf",
+  "textStart": "Shelf empty for now Let's build your cabinet. Scan a barcode, or add it by hand. Scan a barcode Add by hand Today Progress Shelf You",
+  "url": "http://localhost:8223/shelf",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

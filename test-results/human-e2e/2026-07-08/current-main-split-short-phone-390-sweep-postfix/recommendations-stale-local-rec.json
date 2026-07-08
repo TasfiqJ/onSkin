@@ -1,0 +1,61 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back <",
+      "partialClip": false,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 47.99757385253906,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 269.12926483154297
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to For you",
+      "label": "Back to For you",
+      "partialClip": false,
+      "rect": {
+        "bottom": 293.1280517578125,
+        "height": 47.99757385253906,
+        "left": 103.39806365966797,
+        "right": 216.99030303955078,
+        "top": 245.13047790527344,
+        "visibleHeight": 47.99757385253906,
+        "visibleWidth": 113.59223937988281,
+        "width": 113.59223937988281
+      },
+      "role": "button",
+      "tag": "BUTTON"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/recommendations/stale-local-rec",
+  "textStart": "< Recommendation This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
+  "url": "http://localhost:8223/recommendations/stale-local-rec",
+  "viewport": {
+    "height": 390,
+    "width": 320
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "viewport": {
+    "width": 320,
+    "height": 390
+  },
+  "generatedAt": "2026-07-08T16:13:40.242Z",
+  "interactions": [
+    {
+      "route": "/settings/notifications",
+      "action": "toggle Progress-photo nudge twice",
+      "before": {
+        "hitInside": true,
+        "label": "Progress-photo nudge",
+        "ok": true,
+        "rect": {
+          "bottom": 218.8258514404297,
+          "height": 47.99757385253906,
+          "left": 230.41566467285156,
+          "right": 282.4029235839844,
+          "top": 170.82827758789062,
+          "width": 51.98725891113281
+        },
+        "role": "switch",
+        "tag": "DIV",
+        "text": "Progress-photo nudge",
+        "x": 256.40929412841797,
+        "y": 194.82706451416016
+      },
+      "first": true,
+      "second": true,
+      "finalUrl": "http://localhost:8223/settings/notifications"
+    },
+    {
+      "route": "/shelf/scan",
+      "action": "tap Close icon",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Close",
+          "ok": true,
+          "rect": {
+            "bottom": 55.99211311340332,
+            "height": 47.99757385253906,
+            "left": 23.99878692626953,
+            "right": 71.9963607788086,
+            "top": 7.994539260864258,
+            "width": 47.99757385253906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Close x",
+          "x": 47.99757385253906,
+          "y": 31.99332618713379
+        },
+        "url": "http://localhost:8223/shelf",
+        "body": "Shelf empty for now Let's build your cabinet. Scan a barcode, or add it by hand. Scan a barcode Add by hand Today Progress Shelf You"
+      }
+    },
+    {
+      "route": "/shelf",
+      "action": "tap Add by hand",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Add by hand",
+          "ok": true,
+          "rect": {
+            "bottom": 254.94540405273438,
+            "height": 47.99757385253906,
+            "left": 31.99332618713379,
+            "right": 288.39502906799316,
+            "top": 206.9478302001953,
+            "width": 256.4017028808594
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Add by hand",
+          "x": 160.19417762756348,
+          "y": 230.94661712646484
+        },
+        "url": "http://localhost:8223/shelf/manual",
+        "body": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue"
+      }
+    },
+    {
+      "route": "/paywall/upsell?feature=full_routine",
+      "action": "tap Maybe later",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Maybe later",
+          "ok": true,
+          "rect": {
+            "bottom": 378.29188537597656,
+            "height": 47.99757385253906,
+            "left": 27.98847198486328,
+            "right": 292.3998794555664,
+            "top": 330.2943115234375,
+            "width": 264.4114074707031
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Maybe later",
+          "x": 160.19417572021484,
+          "y": 354.29309844970703
+        },
+        "url": "http://localhost:8223/today",
+        "body": "WEDNESDAY, JULY 8 Good morning. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You"
+      }
+    },
+    {
+      "route": "/ask",
+      "action": "tap conflict prompt",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Is there a conflict on my shelf?",
+          "ok": true,
+          "rect": {
+            "bottom": 237.0145721435547,
+            "height": 47.99757385253906,
+            "left": 23.99878692626953,
+            "right": 296.38956451416016,
+            "top": 189.01699829101562,
+            "width": 272.3907775878906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Is there a conflict on my shelf?›",
+          "x": 160.19417572021484,
+          "y": 213.01578521728516
+        },
+        "url": "http://localhost:8223/ask",
+        "body": "< ✦ Ask RoutineKind Is there a conflict on my shelf? ✓ answered by your conflict engine · $0 I do not see products on your shelf yet. Add them and I will check real pairs instead of guessing. Was this helpful? · Report a problem ↑ AI advisor · disclosed honestly · your context stays on this device"
+      }
+    },
+    {
+      "route": "/community",
+      "action": "open first Skin Note",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Can you use niacinamide with vitamin C?",
+          "ok": true,
+          "rect": {
+            "bottom": 218.91687774658203,
+            "height": 88.92597198486328,
+            "left": 23.99878692626953,
+            "right": 296.38956451416016,
+            "top": 129.99090576171875,
+            "width": 272.3907775878906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Can you use niacinamide with vitamin C?. Refuted. Can you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredien",
+          "x": 160.19417572021484,
+          "y": 174.4538917541504
+        },
+        "url": "http://localhost:8223/community/note/note-niacinamide-vitc",
+        "body": "< Skin Note THE CLAIM “Niacinamide and vitamin C cancel each other out.” Refuted myth Safe to combine WHY The myth traces to decades-old studies on raw, unformulated ingredients at high heat. In modern formulas the two are widely used together and can support a brighter-looking, more even complexion. Evidence grade Refuted · broad consensus Reviewed by a board-certified dermatologist. Source: Peer-reviewed formulation literature. ✦ General cosmetic information. For the appearance of skin, not medical advice. ♥ This helped Share note"
+      }
+    },
+    {
+      "route": "/recommendations",
+      "action": "open first recommendation",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "A mineral SPF 30+",
+          "ok": true,
+          "rect": {
+            "bottom": 270.7979507446289,
+            "height": 124.84830474853516,
+            "left": 23.99878692626953,
+            "right": 296.38956451416016,
+            "top": 145.94964599609375,
+            "width": 272.3907775878906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step. ✦A mineral SPF 30+Strong fitYour morning routine has no SPF",
+          "x": 160.19417572021484,
+          "y": 208.37379837036133
+        },
+        "url": "http://localhost:8223/recommendations/routine_completion:mineral_spf",
+        "body": "< Recommendation WHAT A mineral SPF 30+ e.g. a zinc-based daily SPF 30 specific products, ranked by fit WHY Your morning routine has no SPF, and daily SPF is the single highest-impact step. HOW WE DECIDED profile Your skin the gap No SPF in your routine evidence Daily SPF. Broad consensus fit Matched to your profile caveat Mineral SPF can leave a slight white cast Add to shelf Not for me A suggestion, not a must, and we won’t keep asking."
+      }
+    },
+    {
+      "route": "/recommendations/preferences",
+      "action": "tap Drugstore budget chip after scroll",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Drugstore",
+          "ok": true,
+          "rect": {
+            "bottom": 249.0139617919922,
+            "height": 47.99757385253906,
+            "left": 23.99878692626953,
+            "right": 110.80097198486328,
+            "top": 201.01638793945312,
+            "width": 86.80218505859375
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Drugstore",
+          "x": 67.3998794555664,
+          "y": 225.01517486572266
+        },
+        "url": "http://localhost:8223/recommendations/preferences",
+        "body": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+      }
+    },
+    {
+      "route": "/shelf/ocr",
+      "action": "tap Continue with manual text",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Continue with manual text",
+          "ok": true,
+          "rect": {
+            "bottom": 259.9666328430176,
+            "height": 55.99211502075195,
+            "left": 23.99878692626953,
+            "right": 296.38956451416016,
+            "top": 203.97451782226562,
+            "width": 272.3907775878906
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Continue with manual text",
+          "x": 160.19417572021484,
+          "y": 231.9705753326416
+        },
+        "url": "http://localhost:8223/shelf/ocr",
+        "body": "< Read the label Capture the ingredient panel Use the editable text below to keep adding this product. EDITABLE LABEL TEXT Looks right. Continue"
+      }
+    },
+    {
+      "route": "/shelf/no-match",
+      "action": "tap Add it by hand",
+      "result": {
+        "clicked": true,
+        "point": {
+          "hitInside": true,
+          "label": "Add it by hand",
+          "ok": true,
+          "rect": {
+            "bottom": 378.29188537597656,
+            "height": 47.99757385253906,
+            "left": 27.98847198486328,
+            "right": 292.3998794555664,
+            "top": 330.2943115234375,
+            "width": 264.4114074707031
+          },
+          "role": "button",
+          "tag": "BUTTON",
+          "text": "Add it by hand. Always works, even offline +Add it by handAlways works, even offline",
+          "x": 160.19417572021484,
+          "y": 354.29309844970703
+        },
+        "url": "http://localhost:8223/shelf/manual",
+        "body": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue"
+      }
+    }
+  ],
+  "failureCount": 0
+}

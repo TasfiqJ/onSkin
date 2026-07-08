@@ -1,0 +1,12 @@
+{
+  "viewport": {
+    "width": 320,
+    "height": 390
+  },
+  "baseUrl": "http://localhost:8223",
+  "generatedAt": "2026-07-08T16:10:44.814Z",
+  "routeCount": 49,
+  "failureCount": 0,
+  "issueCount": 0,
+  "failures": []
+}
