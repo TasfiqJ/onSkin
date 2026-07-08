@@ -1,0 +1,78 @@
+{
+  "summary": {
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8199/recommendations/gap:mineral_spf",
+    "sub44Controls": [],
+    "textIncludes": {
+      "allow": true,
+      "externalGlyph": false,
+      "lockedBody": true,
+      "paidLink": false,
+      "paidLinks": false,
+      "shelfAlternative": true,
+      "whereToBuy": true
+    },
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "ariaLabel": "Back",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "<",
+        "visible": true,
+        "width": 48,
+        "x": 24,
+        "y": 4
+      },
+      {
+        "ariaLabel": "Allow where-to-buy",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Allow where-to-buy →",
+        "visible": true,
+        "width": 195,
+        "x": 45,
+        "y": 290
+      },
+      {
+        "ariaLabel": "Add this product to your shelf instead",
+        "height": 50,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Already own one? Add it to your shelf instead",
+        "visible": true,
+        "width": 230,
+        "x": 45,
+        "y": 352
+      },
+      {
+        "ariaLabel": null,
+        "height": 50,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Add to shelf",
+        "visible": true,
+        "width": 133,
+        "x": 24,
+        "y": 439
+      },
+      {
+        "ariaLabel": null,
+        "height": 50,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Not for me",
+        "visible": true,
+        "width": 127,
+        "x": 169,
+        "y": 439
+      }
+    ]
+  },
+  "visibleDom": "<button node_id=1 aria-label=\"Back\" role=\"button\" type=\"button\">&lt;</button>\n<button node_id=2 aria-label=\"Allow where-to-buy\" role=\"button\" type=\"button\">Allow where-to-buy →</button>\n<button node_id=3 aria-label=\"Add this product to your shelf instead\" role=\"button\" type=\"button\">Already own one? Add it to your shelf instead</button>\n<button node_id=4 role=\"button\" type=\"button\">Add to shelf</button>\n<button node_id=5 role=\"button\" type=\"button\">Not for me</button>"
+}

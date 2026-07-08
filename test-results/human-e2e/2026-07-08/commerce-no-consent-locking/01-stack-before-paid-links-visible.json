@@ -1,0 +1,95 @@
+{
+  "summary": {
+    "allVisibleButtons": [
+      {
+        "ariaLabel": "Back",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "<",
+        "visible": true,
+        "width": 48,
+        "x": 24,
+        "y": 4
+      },
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8198/commerce/stack/sensitive-skin-starter-set",
+    "stackButtons": [
+      {
+        "ariaLabel": "Gentle gel cleanser, Cleanse · fragrance-free, paid link",
+        "height": 138,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "1Gentle gel cleanserCleanse · fragrance-freePaid link↗",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 246
+      },
+      {
+        "ariaLabel": "Niacinamide 5%, Treat · barrier-friendly, paid link",
+        "height": 114,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "2Niacinamide 5%Treat · barrier-friendlyPaid link↗",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 394
+      },
+      {
+        "ariaLabel": "Ceramide moisturiser, Moisturise · seals it in, paid link",
+        "height": 114,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "3Ceramide moisturiserMoisturise · seals it inPaid link↗",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 518
+      },
+      {
+        "ariaLabel": "Mineral SPF 30, Protect · the AM finish, paid link",
+        "height": 114,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "4Mineral SPF 30Protect · the AM finishPaid link↗",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 642
+      },
+      {
+        "ariaLabel": "How stack paid links work",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "How this works →",
+        "visible": true,
+        "width": 157,
+        "x": 24,
+        "y": 845
+      }
+    ],
+    "textIncludes": {
+      "consentGate": false,
+      "externalGlyph": true,
+      "locked": false,
+      "paidLink": true,
+      "paidLinks": true,
+      "stackTitle": true
+    },
+    "title": "",
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "visibleDom": "<button node_id=1 aria-label=\"Back\" role=\"button\" type=\"button\">&lt;</button>\n<button node_id=2 aria-label=\"Gentle gel cleanser, Cleanse · fragrance-free, paid link\" role=\"button\" type=\"button\">1 Gentle gel cleanser Cleanse · fragrance-free Paid link ↗</button>\n<button node_id=3 aria-label=\"Niacinamide 5%, Treat · barrier-friendly, paid link\" role=\"button\" type=\"button\">2 Niacinamide 5% Treat · barrier-friendly Paid link ↗</button>\n<button node_id=4 aria-label=\"Ceramide moisturiser, Moisturise · seals it in, paid link\" role=\"button\" type=\"button\">3 Ceramide moisturiser Moisturise · seals it in Paid link ↗</button>"
+}

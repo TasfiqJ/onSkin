@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8199/shelf/manual",
+    "sub44Controls": [],
+    "textIncludes": {
+      "addByHand": true,
+      "genericCategory": true,
+      "paidLink": false,
+      "productName": true
+    },
+    "viewport": {
+      "height": 569,
+      "width": 320
+    },
+    "visibleControls": [
+      {
+        "ariaLabel": "Cancel",
+        "height": 48,
+        "placeholder": null,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "x",
+        "visible": true,
+        "width": 48,
+        "x": 24,
+        "y": 8
+      },
+      {
+        "ariaLabel": "Product name",
+        "height": 50,
+        "placeholder": "e.g. Gentle Retinol Night Serum",
+        "role": null,
+        "tag": "INPUT",
+        "text": "",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 146
+      },
+      {
+        "ariaLabel": "Brand",
+        "height": 50,
+        "placeholder": "Brand",
+        "role": null,
+        "tag": "INPUT",
+        "text": "",
+        "visible": true,
+        "width": 124,
+        "x": 24,
+        "y": 230
+      },
+      {
+        "ariaLabel": "Category",
+        "height": 50,
+        "placeholder": null,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Choose▾",
+        "visible": true,
+        "width": 136,
+        "x": 160,
+        "y": 230
+      },
+      {
+        "ariaLabel": "Ingredients",
+        "height": 65,
+        "placeholder": "Paste or type the INCI list…",
+        "role": null,
+        "tag": "TEXTAREA",
+        "text": "",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 346
+      },
+      {
+        "ariaLabel": null,
+        "height": 56,
+        "placeholder": null,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Continue",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 501
+      }
+    ]
+  },
+  "visibleDom": "<button node_id=1 aria-label=\"Cancel\" role=\"button\" type=\"button\">x</button>\n<input node_id=2 aria-label=\"Product name\" placeholder=\"e.g. Gentle Retinol Night Serum\" />\n<input node_id=3 aria-label=\"Brand\" placeholder=\"Brand\" />\n<button node_id=4 aria-label=\"Category\" role=\"button\" type=\"button\">Choose ▾</button>\n<textarea node_id=5 aria-label=\"Ingredients\" placeholder=\"Paste or type the INCI list…\" />"
+}

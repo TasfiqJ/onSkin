@@ -145,11 +145,24 @@ describe('Commerce route contracts', () => {
     expect(source).toContain(
       'style={{ minHeight: 96, borderWidth: 1, borderColor: colors.hairline }}',
     );
-    expect(source).toContain('accessibilityLabel="How stack paid links work"');
+    expect(source).toContain("'How stack paid links work'");
+    expect(source).toContain("'How stack link consent works'");
     expect(source).toContain(
       'className="mt-3 min-h-[48px] self-start justify-center rounded-pill px-3"',
     );
     expect(source).toContain('style={{ minHeight: 48, backgroundColor: colors.clayTint }}');
+  });
+
+  it('keeps stack paid links visually locked until commerce consent', () => {
+    const source = readAppRoute('commerce/stack/[slug].tsx');
+
+    expect(source).toContain('const itemAccessibilityLabel = consented');
+    expect(source).toContain('where-to-buy locked until consent');
+    expect(source).toContain('COMMERCE_COPY.stack.lockedChip');
+    expect(source).toContain('COMMERCE_COPY.stack.lockedDisclosure');
+    expect(source).toContain('LockGlyph size={12}');
+    expect(source).toContain('consented ? COMMERCE_COPY.stack.disclosure');
+    expect(source).toContain("consented ? 'How stack paid links work'");
   });
 
   it('keeps paid-link recovery inline instead of native blocking alerts', () => {

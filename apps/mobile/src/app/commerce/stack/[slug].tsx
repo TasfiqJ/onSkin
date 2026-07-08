@@ -5,6 +5,7 @@ import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { CommerceLinkNotice, type CommerceLinkFeedback } from '@/features/commerce/CommerceLinkNotice';
+import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
@@ -15,10 +16,9 @@ import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Surface 02 (docs/10 §4). A shoppable Stack. An expert/derm-reviewed routine, IN
-// ORDER (the routine sequence, never the payout). Each item carries the FTC "Paid
-// link" wording; tapping is consent-gated and routes through the same opaque-token
-// attribution as the where-to-buy affordance. Curated on merit; commission never
-// changed the list.
+// ORDER (the routine sequence, never the payout). Items stay visually locked until
+// commerce consent, then carry the FTC "Paid link" wording with the unavoidable
+// disclosure. Curated on merit; commission never changed the list.
 export default function StackDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const { height } = useWindowDimensions();
@@ -140,63 +140,92 @@ export default function StackDetailScreen() {
 
           {linkFeedback ? <CommerceLinkNotice feedback={linkFeedback} /> : null}
           <View className="mt-4 gap-2.5">
-            {stack.items.map((item) => (
-              <Pressable
-                key={item.position}
-                accessibilityRole="button"
-                accessibilityLabel={`${item.label}, ${item.roleLabel}, paid link`}
-                onPress={() => void tapItem(item)}
-                className="rounded-2xl bg-paper-raised p-3.5"
-                style={{ minHeight: 96, borderWidth: 1, borderColor: colors.hairline }}
-              >
-                <View className="flex-row items-center gap-3">
-                  <Text className="font-mono text-[11px]" tone="muted" style={{ width: 14 }}>
-                    {item.position}
-                  </Text>
-                  <View
-                    className="h-[38px] w-8 rounded"
-                    style={{
-                      backgroundColor: colors.greige,
-                      borderWidth: 1,
-                      borderColor: colors.hairline,
-                    }}
-                  />
-                  <View className="flex-1" style={{ minWidth: 0 }}>
-                    <Text variant="bodySm" className="font-sans-bold text-[13.5px]">
-                      {item.label}
+            {stack.items.map((item) => {
+              const itemAccessibilityLabel = consented
+                ? `${item.label}, ${item.roleLabel}, paid link`
+                : `${item.label}, ${item.roleLabel}, where-to-buy locked until consent`;
+
+              return (
+                <Pressable
+                  key={item.position}
+                  accessibilityRole="button"
+                  accessibilityLabel={itemAccessibilityLabel}
+                  onPress={() => void tapItem(item)}
+                  className="rounded-2xl bg-paper-raised p-3.5"
+                  style={{ minHeight: 96, borderWidth: 1, borderColor: colors.hairline }}
+                >
+                  <View className="flex-row items-center gap-3">
+                    <Text className="font-mono text-[11px]" tone="muted" style={{ width: 14 }}>
+                      {item.position}
                     </Text>
-                    <Text className="text-[11px]" tone="muted">
-                      {item.roleLabel}
-                    </Text>
+                    <View
+                      className="h-[38px] w-8 rounded"
+                      style={{
+                        backgroundColor: colors.greige,
+                        borderWidth: 1,
+                        borderColor: colors.hairline,
+                      }}
+                    />
+                    <View className="flex-1" style={{ minWidth: 0 }}>
+                      <Text variant="bodySm" className="font-sans-bold text-[13.5px]">
+                        {item.label}
+                      </Text>
+                      <Text className="text-[11px]" tone="muted">
+                        {item.roleLabel}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-                <View className="mt-3 flex-row items-center self-end gap-1.5">
-                  <Text
-                    className="font-mono text-[9px]"
-                    style={{
-                      color: colors.muted,
-                      backgroundColor: '#F0EBE2',
-                      paddingHorizontal: 6,
-                      paddingVertical: 2,
-                      borderRadius: 5,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {COMMERCE_COPY.stack.paidChip}
-                  </Text>
-                  <Text style={{ color: colors.clay, fontSize: 12 }}>↗</Text>
-                </View>
-              </Pressable>
-            ))}
+                  <View className="mt-3 flex-row items-center self-end gap-1.5">
+                    {consented ? (
+                      <>
+                        <Text
+                          className="font-mono text-[9px]"
+                          style={{
+                            color: colors.muted,
+                            backgroundColor: '#F0EBE2',
+                            paddingHorizontal: 6,
+                            paddingVertical: 2,
+                            borderRadius: 5,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {COMMERCE_COPY.stack.paidChip}
+                        </Text>
+                        <Text style={{ color: colors.clay, fontSize: 12 }}>↗</Text>
+                      </>
+                    ) : (
+                      <>
+                        <LockGlyph size={12} color={colors.muted} />
+                        <Text
+                          className="font-mono text-[9px]"
+                          style={{
+                            color: colors.muted,
+                            backgroundColor: '#F0EBE2',
+                            paddingHorizontal: 6,
+                            paddingVertical: 2,
+                            borderRadius: 5,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {COMMERCE_COPY.stack.lockedChip}
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                </Pressable>
+              );
+            })}
           </View>
 
-          {/* FTC disclosure. Order set on merit, commission never changed the list */}
+          {/* FTC disclosure appears only with visible paid links; locked state keeps consent separate. */}
           <Text className="mt-3.5 text-[11px]" tone="muted" style={{ lineHeight: 16 }}>
-            {COMMERCE_COPY.stack.disclosure}
+            {consented ? COMMERCE_COPY.stack.disclosure : COMMERCE_COPY.stack.lockedDisclosure}
           </Text>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="How stack paid links work"
+            accessibilityLabel={
+              consented ? 'How stack paid links work' : 'How stack link consent works'
+            }
             onPress={() => router.push('/commerce/transparency')}
             className="mt-3 min-h-[48px] self-start justify-center rounded-pill px-3"
             style={{ minHeight: 48, backgroundColor: colors.clayTint }}

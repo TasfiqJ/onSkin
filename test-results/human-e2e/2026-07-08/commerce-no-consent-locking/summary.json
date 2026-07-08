@@ -1,0 +1,46 @@
+{
+  "date": "2026-07-08",
+  "surface": "Codex in-app browser, Expo web",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "startCommand": "CI=1 EXPO_NO_TELEMETRY=1 EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED=true EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app npm --workspace apps/mobile run web -- --port 8199 --host localhost",
+  "evidence": [
+    "01-stack-before-paid-links-visible.png/json",
+    "02-stack-no-consent-locked.png/json",
+    "03-stack-item-opens-consent.png/json",
+    "04-recommendation-where-to-buy-locked.png/json",
+    "05-recommendation-allow-opens-consent.png/json",
+    "06-recommendation-shelf-alternative.png/json"
+  ],
+  "results": {
+    "beforeFix": "Stack rows exposed Paid link text, Paid links footer, external glyph, and paid-link accessibility labels before consent.",
+    "afterFixStack": "Stack rows show Consent needed and where-to-buy locked accessibility labels before consent; no Paid link/Paid links/external glyph; row controls 114px+ except Back/How 48px; zero horizontal overflow.",
+    "afterFixRecommendation": "SPF recommendation where-to-buy block shows locked copy, no retailer rows, no Paid link/Paid links/external glyph, Allow where-to-buy 48px, shelf alternative 50px, zero horizontal overflow.",
+    "consent": "Locked stack item and recommendation Allow open the separate consent sheet with 48px+ visible controls and no JavaScript dialog.",
+    "shelfAlternative": "Already-own fallback routes to /shelf/manual with 48px+ visible controls and no paid-link text."
+  },
+  "dialogs": [
+    {
+      "tabIndex": 0,
+      "hasDialog": false,
+      "type": null
+    },
+    {
+      "tabIndex": 1,
+      "hasDialog": false,
+      "type": null
+    },
+    {
+      "tabIndex": 2,
+      "hasDialog": false,
+      "type": null
+    },
+    {
+      "tabIndex": 3,
+      "hasDialog": false,
+      "type": null
+    }
+  ]
+}

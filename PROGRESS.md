@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed commerce stack paid-link exposure before the separate where-to-buy
+  consent. The stack detail route now renders locked `Consent needed` rows,
+  locked accessibility labels, no external glyphs, and non-paid disclosure copy
+  while commerce consent is off; the FTC `Paid link` chip/disclosure remains
+  unchanged after consent. Codex in-app browser Expo web verifies the no-consent
+  stack and recommendation branches at 320 x 568 with zero horizontal overflow,
+  no sub-44 visible controls, locked stack item and recommendation Allow handoff
+  to `/commerce/consent`, and the shelf alternative route to `/shelf/manual`.
+  Evidence and bug report:
+  `test-results/human-e2e/2026-07-08/commerce-no-consent-locking/`,
+  `docs/e2e-bug-reports/2026-07-08-commerce-stack-paid-links-before-consent.md`.
+
 - Fixed the `/today` empty-routine first viewport on shortest 320 x 480
   phones. The compact empty-state card now uses tighter spacing while keeping
   the `Add products` CTA at 56 px tall; post-fix Codex in-app browser evidence

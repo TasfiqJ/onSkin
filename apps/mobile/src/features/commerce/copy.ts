@@ -51,8 +51,11 @@ export const COMMERCE_COPY = {
           : 'EDITOR’S ROUTINE',
     subtitle: 'Curated on merit and evidence, not by who pays.',
     paidChip: 'Paid link',
+    lockedChip: 'Consent needed',
     // Footer disclosure on a stack. States the order was set on merit, not commission.
     disclosure: `Paid links. ${BRAND.appName} may earn a commission. We picked these on merit; the commission never changed the list.`,
+    lockedDisclosure:
+      'Where-to-buy links stay locked until you make the separate data-sharing choice. The routine order stays based on merit.',
     orderedNote: 'In order. The routine sequence, not the payout.',
   },
   // Surface 03. The transparency page (the highest-leverage trust artifact).

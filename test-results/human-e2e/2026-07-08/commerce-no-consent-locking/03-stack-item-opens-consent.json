@@ -1,0 +1,125 @@
+{
+  "summary": {
+    "controls": [
+      {
+        "ariaLabel": "Back",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "<",
+        "visible": true,
+        "width": 48,
+        "x": 24,
+        "y": 4
+      },
+      {
+        "ariaLabel": "Gentle gel cleanser, Cleanse · fragrance-free, where-to-buy locked until consent",
+        "height": 138,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "1Gentle gel cleanserCleanse · fragrance-freeConsent needed",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 246
+      },
+      {
+        "ariaLabel": "Niacinamide 5%, Treat · barrier-friendly, where-to-buy locked until consent",
+        "height": 114,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "2Niacinamide 5%Treat · barrier-friendlyConsent needed",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 394
+      },
+      {
+        "ariaLabel": "Ceramide moisturiser, Moisturise · seals it in, where-to-buy locked until consent",
+        "height": 114,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "3Ceramide moisturiserMoisturise · seals it inConsent needed",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 518
+      },
+      {
+        "ariaLabel": "Mineral SPF 30, Protect · the AM finish, where-to-buy locked until consent",
+        "height": 114,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "4Mineral SPF 30Protect · the AM finishConsent needed",
+        "visible": true,
+        "width": 272,
+        "x": 24,
+        "y": 642
+      },
+      {
+        "ariaLabel": "How stack link consent works",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "How this works →",
+        "visible": true,
+        "width": 157,
+        "x": 24,
+        "y": 845
+      },
+      {
+        "ariaLabel": "Dismiss",
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "x",
+        "visible": true,
+        "width": 48,
+        "x": 252,
+        "y": 60
+      },
+      {
+        "ariaLabel": null,
+        "height": 54,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Allow where-to-buy links",
+        "visible": true,
+        "width": 264,
+        "x": 28,
+        "y": 435
+      },
+      {
+        "ariaLabel": null,
+        "height": 48,
+        "role": "button",
+        "tag": "BUTTON",
+        "text": "Not now",
+        "visible": true,
+        "width": 264,
+        "x": 28,
+        "y": 489
+      }
+    ],
+    "dialog": {
+      "ariaModal": "true",
+      "label": "Before we show where to buy"
+    },
+    "horizontalOverflow": 0,
+    "href": "http://localhost:8199/commerce/consent",
+    "minVisibleControlHeight": 48,
+    "sub44Controls": [],
+    "textIncludes": {
+      "allow": true,
+      "decline": true,
+      "paidLink": false,
+      "title": true,
+      "token": true
+    },
+    "viewport": {
+      "height": 569,
+      "width": 320
+    }
+  },
+  "visibleDom": "<button node_id=1 aria-label=\"Back\" role=\"button\" type=\"button\">&lt;</button>\n<button node_id=2 aria-label=\"Gentle gel cleanser, Cleanse · fragrance-free, where-to-buy locked until consent\" role=\"button\" type=\"button\">1 Gentle gel cleanser Cleanse · fragrance-free Consent needed</button>\n<button node_id=3 aria-label=\"Niacinamide 5%, Treat · barrier-friendly, where-to-buy locked until consent\" role=\"button\" type=\"button\">2 Niacinamide 5% Treat · barrier-friendly Consent needed</button>\n<button node_id=4 aria-label=\"Ceramide moisturiser, Moisturise · seals it in, where-to-buy locked until consent\" role=\"button\" type=\"button\">3 Ceramide moisturiser Moisturise · seals it in Consent needed</button>\n<button node_id=5 aria-label=\"Dismiss\" role=\"button\" type=\"button\">x</button>\n<button node_id=6 role=\"button\" type=\"button\">Allow where-to-buy links</button>\n<button node_id=7 role=\"button\" type=\"button\">Not now</button>"
+}
