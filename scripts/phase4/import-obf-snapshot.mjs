@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
 const root = process.cwd();
@@ -47,6 +47,7 @@ function isBeautyCandidate(tags) {
 }
 
 const raw = readFileSync(inputPath, 'utf8');
+const inputSha256 = createHash('sha256').update(raw).digest('hex');
 const records = raw
   .split(/\r?\n/)
   .map((line) => line.trim())
@@ -97,10 +98,31 @@ for (const record of records) {
   });
 }
 
-const manifest = {
-  generatedAt: new Date().toISOString(),
+function stripGeneratedAt(value) {
+  const copy = { ...value };
+  delete copy.generatedAt;
+  return copy;
+}
+
+function stableGeneratedAt(output, nextManifest) {
+  if (!existsSync(output)) return new Date().toISOString();
+  try {
+    const existing = JSON.parse(readFileSync(output, 'utf8'));
+    if (
+      typeof existing.generatedAt === 'string' &&
+      JSON.stringify(stripGeneratedAt(existing)) === JSON.stringify(stripGeneratedAt(nextManifest))
+    ) {
+      return existing.generatedAt;
+    }
+  } catch {
+    // Fall through to a fresh timestamp when the previous artifact is unreadable.
+  }
+  return new Date().toISOString();
+}
+
+const manifestBody = {
   inputPath,
-  inputSha256: createHash('sha256').update(raw).digest('hex'),
+  inputSha256,
   source: 'open_beauty_facts',
   importMode: 'export_or_fixture',
   warning: 'Fixture import only. Production bulk import must use approved export artifacts and legal/source review.',
@@ -113,10 +135,13 @@ const manifest = {
   products,
   rejected,
 };
+const manifest = {
+  generatedAt: stableGeneratedAt(outputPath, manifestBody),
+  ...manifestBody,
+};
 
 mkdirSync(dirname(outputPath), { recursive: true });
 writeFileSync(outputPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
 console.log(`Wrote ${outputPath}`);
 console.log(`Accepted ${products.length}/${records.length}; rejected ${rejected.length}.`);
-

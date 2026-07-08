@@ -1,30 +1,50 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
 const root = process.cwd();
 const fixtureMode = process.argv.includes('--fixture');
 const approved = process.env.COSING_IMPORT_APPROVED === 'true';
 const inputArg = process.argv.find((arg) => !arg.startsWith('--') && arg.endsWith('.csv'));
+const outputArg = process.argv.find((arg) => !arg.startsWith('--') && arg.endsWith('.json'));
 const inputPath = resolve(root, inputArg ?? 'scripts/phase4/fixtures/cosing-sample.csv');
-const outputPath = resolve(root, 'docs/phase-4/generated/cosing-fixture-import.json');
+const outputPath = resolve(root, outputArg ?? 'docs/phase-4/generated/cosing-fixture-import.json');
+
+function stripGeneratedAt(value) {
+  const copy = { ...value };
+  delete copy.generatedAt;
+  return copy;
+}
+
+function stableGeneratedAt(output, nextManifest) {
+  if (!existsSync(output)) return new Date().toISOString();
+  try {
+    const existing = JSON.parse(readFileSync(output, 'utf8'));
+    if (
+      typeof existing.generatedAt === 'string' &&
+      JSON.stringify(stripGeneratedAt(existing)) === JSON.stringify(stripGeneratedAt(nextManifest))
+    ) {
+      return existing.generatedAt;
+    }
+  } catch {
+    // Fall through to a fresh timestamp when the previous artifact is unreadable.
+  }
+  return new Date().toISOString();
+}
 
 if (!fixtureMode && !approved) {
+  const blockedManifestBody = {
+    status: 'blocked',
+    reason: 'COSING_IMPORT_APPROVED is not true. Production CosIng import requires source/legal review.',
+    inputPath,
+  };
+  const blockedManifest = {
+    generatedAt: stableGeneratedAt(outputPath, blockedManifestBody),
+    ...blockedManifestBody,
+  };
   mkdirSync(dirname(outputPath), { recursive: true });
-  writeFileSync(
-    outputPath,
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        status: 'blocked',
-        reason: 'COSING_IMPORT_APPROVED is not true. Production CosIng import requires source/legal review.',
-        inputPath,
-      },
-      null,
-      2,
-    )}\n`,
-  );
+  writeFileSync(outputPath, `${JSON.stringify(blockedManifest, null, 2)}\n`);
   console.error('CosIng import blocked. Re-run with --fixture for local fixtures or COSING_IMPORT_APPROVED=true after review.');
   process.exit(0);
 }
@@ -57,6 +77,7 @@ function parseCsvLine(line) {
 }
 
 const raw = readFileSync(inputPath, 'utf8');
+const inputSha256 = createHash('sha256').update(raw).digest('hex');
 const lines = raw.split(/\r?\n/).filter(Boolean);
 const headers = parseCsvLine(lines.shift() ?? '');
 const rows = lines.map((line) => {
@@ -77,12 +98,11 @@ const ingredients = rows
     synonyms: row.synonyms ? row.synonyms.split('|').map((value) => value.trim()).filter(Boolean) : [],
   }));
 
-const manifest = {
-  generatedAt: new Date().toISOString(),
+const manifestBody = {
   status: fixtureMode ? 'fixture' : 'approved_transform',
   warning: 'CosIng is informative only. Do not treat ingredient presence as approval or safety.',
   inputPath,
-  inputSha256: createHash('sha256').update(raw).digest('hex'),
+  inputSha256,
   totals: {
     inputRows: rows.length,
     ingredients: ingredients.length,
@@ -90,8 +110,11 @@ const manifest = {
   },
   ingredients,
 };
+const manifest = {
+  generatedAt: stableGeneratedAt(outputPath, manifestBody),
+  ...manifestBody,
+};
 
 mkdirSync(dirname(outputPath), { recursive: true });
 writeFileSync(outputPath, `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Wrote ${outputPath}`);
-

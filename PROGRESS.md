@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Made Phase 4 fixture imports stable across no-op reruns. The Open Beauty
+  Facts and CosIng fixture importers now preserve `generatedAt` when the
+  generated manifest content is unchanged, preventing timestamp-only churn from
+  making the catalog QA report mark its inputs dirty. Added
+  `npm run phase4:import-fixture-smoke`, wired it into `phase4:verify`, and
+  included the new import smoke in the catalog QA report source-hash contract.
+
 - Hardened Phase 4 catalog QA report provenance. The generated catalog report
   now records the source Git SHA, ignores only its own generated report outputs
   when checking worktree cleanliness, warns when generated from a dirty tree,

@@ -81,6 +81,7 @@ const requiredSourceHashes = [
   'scripts/phase4/catalog-qa-report.mjs',
   'scripts/phase4/import-obf-snapshot.mjs',
   'scripts/phase4/import-cosing-dictionary.mjs',
+  'scripts/phase4/import-fixture-smoke.mjs',
   'scripts/phase4/check-source-env.mjs',
   'scripts/phase4/check-source-env-smoke.mjs',
   'scripts/phase4/catalog-qa-report-smoke.mjs',
