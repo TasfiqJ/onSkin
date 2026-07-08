@@ -19,6 +19,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `test-results/human-e2e/2026-07-08/text-scale-120-compact-audit/`,
   `test-results/human-e2e/2026-07-08/progress-progate-text-pressure-postfix/`,
   `docs/e2e-bug-reports/2026-07-08-progress-progate-text-pressure-tabbar-overlap.md`.
+  A 320 x 480 clean free-user follow-up also verifies `/progress/capture`,
+  `/progress/review`, tabbed `/progress`, and a real `Maybe later` dismissal
+  with Terms, Privacy, Restore, Maybe later, Start free trial, and Explore
+  first present, 48 px or larger, unclipped, center-hit-testable, at zero
+  horizontal overflow, and no current-run warn/error browser logs. Evidence:
+  `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 
 - Added a strict `04_repo_docs` source-packet audit for the original strategy
   packet. `npm run docs:source-packet-audit:strict` now verifies all 10

@@ -1,0 +1,17 @@
+{
+  "evidenceDir": "C:/Users/jasim/Desktop/onSkin/test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current",
+  "files": [
+    "00-local-reset-320x480.png",
+    "01-progress-capture-paywall-320x480-controls.json",
+    "01-progress-capture-paywall-320x480.png",
+    "02-progress-review-paywall-320x480-controls.json",
+    "02-progress-review-paywall-320x480.png",
+    "03-review-maybe-later-dismiss-320x480.png",
+    "03-review-maybe-later-dismiss.json",
+    "04-progress-paywall-tabbar-320x480-controls.json",
+    "04-progress-paywall-tabbar-320x480.png",
+    "browser-logs-8154.json",
+    "summary.json"
+  ],
+  "current8154Logs": []
+}

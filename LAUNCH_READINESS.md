@@ -17,6 +17,13 @@ clearance and not a real launch catalog.
 
 Fresh verification on 2026-07-08:
 
+- Codex in-app browser Expo web at 320 x 480 rechecked the compact
+  photo-progress contextual paywall after a dev-only local reset. `/progress`,
+  `/progress/capture`, and `/progress/review` keep Terms, Privacy, Restore,
+  Maybe later, Start free trial, and Explore first present, 48 px or larger,
+  unclipped, center-hit-testable, and at zero horizontal overflow; tapping
+  `/progress/review` `Maybe later` dismisses to `/progress`. Evidence is in
+  `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
 - `npm test` passed: 170 mobile test files, 1744 tests.

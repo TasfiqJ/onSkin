@@ -1,0 +1,156 @@
+{
+  "blockedControls": [],
+  "bodyText": "Terms · Privacy · Restore Maybe later Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+  "clippedControls": [],
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "containsHit": true,
+      "hitText": "Terms",
+      "matchedTargets": [
+        "Terms"
+      ],
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Terms"
+    },
+    {
+      "center": {
+        "x": 109,
+        "y": 28
+      },
+      "containsHit": true,
+      "hitText": "Privacy",
+      "matchedTargets": [
+        "Privacy"
+      ],
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "width": 48,
+        "x": 85,
+        "y": 4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Privacy"
+    },
+    {
+      "center": {
+        "x": 171,
+        "y": 28
+      },
+      "containsHit": true,
+      "hitText": "Restore",
+      "matchedTargets": [
+        "Restore"
+      ],
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "width": 48,
+        "x": 147,
+        "y": 4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Restore"
+    },
+    {
+      "center": {
+        "x": 245,
+        "y": 28
+      },
+      "containsHit": true,
+      "hitText": "Maybe later",
+      "matchedTargets": [
+        "Maybe later"
+      ],
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "width": 102,
+        "x": 194,
+        "y": 4
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Maybe later"
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 303
+      },
+      "containsHit": true,
+      "hitText": "Start free trial",
+      "matchedTargets": [
+        "Start free trial"
+      ],
+      "rect": {
+        "bottom": 327,
+        "height": 48,
+        "width": 272,
+        "x": 24,
+        "y": 279
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Start free trial"
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 361
+      },
+      "containsHit": true,
+      "hitText": "No credit card. See your routine work, then decide.",
+      "matchedTargets": [
+        "Explore first"
+      ],
+      "rect": {
+        "bottom": 389,
+        "height": 56,
+        "width": 272,
+        "x": 24,
+        "y": 333
+      },
+      "role": "button",
+      "tag": "button",
+      "text": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›"
+    }
+  ],
+  "expectedPresent": {
+    "Explore first": true,
+    "Maybe later": true,
+    "Privacy": true,
+    "Restore": true,
+    "Start free trial": true,
+    "Terms": true
+  },
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8154/progress/capture",
+  "scroll": {
+    "height": 481,
+    "width": 320,
+    "x": 0,
+    "y": 0
+  },
+  "sub44Controls": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "hasDialog": false,
+  "logs": []
+}
