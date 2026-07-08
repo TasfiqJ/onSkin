@@ -896,6 +896,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Evidence/footer labels wrap within the card, the `See how` action remains visible and tappable, and compact phones do not cut a visible recommendation card before its evidence/CTA row.
   - Evidence: Phone-width screenshot and visible-text snapshot.
   - Current local evidence: 2026-07-07 Expo web at 320 x 568 and 390 x 568 verifies the For You hub has zero horizontal overflow, no sub-44 px controls, and no partial small visible controls. At both tested widths, the first two recommendation cards are fully visible in the initial viewport and the third card stays below the fold instead of peeking in as a clipped tappable sliver.
+  - Current shortest-phone evidence: 2026-07-08 Expo web at 320 x 480 reproduced the second recommendation card clipping below the viewport on `/recommendations`. Post-fix, the same route uses the sub-520 px hub/card density so the visible recommendation controls are fully readable, 48 px+ Back/Preferences remain visible, horizontal overflow is zero, and the second card no longer clips before its evidence/CTA row. Evidence and bug report are in `test-results/human-e2e/2026-07-08/recommendations-short-phone-480-card-fit/` and `docs/e2e-bug-reports/2026-07-08-recommendations-short-phone-card-clipping.md`.
 - Branch: compact recommendation budget and texture preferences
   - Priority: Important
   - Automate later: Yes
@@ -988,6 +989,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
    Evidence: Screenshot sequence and visible route snapshot.
    Current local evidence: 2026-07-07 Expo web 320 x 568 shows topic groups and evidence labels, includes `a library, not a feed. No likes, no authors to follow, no ranking by popularity`, opens the niacinamide/vitamin C note with claim/evidence/reviewer context, and Back returns to `/community` with zero horizontal overflow.
    Current local evidence: 2026-07-07 in-app browser verifies compact `/community` at 320 x 568 and 390 x 568 with zero horizontal overflow and no sub-44 px controls. The 320 x 568 viewport renders the first three Skin Notes fully, while the 390 x 568 viewport renders the first four note cards fully.
+   Current shortest-phone evidence: 2026-07-08 Expo web at 320 x 480 reproduced the third Skin Note clipping below the viewport on `/community`. Post-fix, the same route uses the sub-520 px Skin Notes hub/card density so the visible note cards are fully readable, 48 px+ Back/Ask controls remain visible, horizontal overflow is zero, and the third visible card no longer clips below the viewport. Evidence and bug report are in `test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/` and `docs/e2e-bug-reports/2026-07-08-community-short-phone-card-clipping.md`.
 
 ### Path B: Posting Gate
 

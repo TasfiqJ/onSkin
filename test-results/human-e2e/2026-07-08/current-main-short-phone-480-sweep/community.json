@@ -1,0 +1,141 @@
+{
+  "controls": [
+    {
+      "ariaLabel": "Back",
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "<",
+      "href": "",
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "ariaLabel": "Can you use niacinamide with vitamin C?. Refuted.",
+      "center": {
+        "x": 160.19417572021484,
+        "y": 209.94387817382812
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Can you use niacinamide with vitamin C?",
+      "href": "",
+      "index": 1,
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "rect": {
+        "bottom": 267.91566467285156,
+        "height": 115.94357299804688,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 151.9720916748047,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 115.94357299804688,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "ariaLabel": "Is a 10-step “glass skin” routine better?. Contested.",
+      "center": {
+        "x": 160.19417572021484,
+        "y": 349.8634910583496
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
+      "href": "",
+      "index": 2,
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "rect": {
+        "bottom": 399.8331527709961,
+        "height": 99.93932342529297,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 299.8938293457031,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 99.93932342529297,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "ariaLabel": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "center": {
+        "x": 160.19417572021484,
+        "y": 456.7961311340332
+      },
+      "centerInViewport": true,
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "Is “natural” always gentler for sensitive skin?",
+      "href": "",
+      "index": 3,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "rect": {
+        "bottom": 507.76700592041016,
+        "height": 101.9417495727539,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 405.82525634765625,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 75.17474365234375,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": "[Circular]",
+      "type": "clipped-visible-control"
+    }
+  ],
+  "route": "/community",
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U",
+  "url": "http://localhost:8204/community",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

@@ -39,29 +39,27 @@ describe('Community route contracts', () => {
     );
   });
 
-  it('keeps the Skin Notes hub cards compact on short phones', () => {
+  it('keeps the Skin Notes hub cards compact on shortest phone web', () => {
     const source = readAppRoute('community/index.tsx');
 
+    expect(source).toContain('const shortCommunity = height < 520;');
     expect(source).toContain(
-      "contentContainerClassName={compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'}",
+      "shortCommunity ? 'pb-20 pt-1' : compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'",
     );
     expect(source).toContain(
-      "className={compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'}",
+      "shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'",
     );
     expect(source).toContain(
-      "className={compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'}",
+      "shortCommunity ? 'mt-0 text-[12.5px]' : compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'",
     );
-    expect(source).toContain(
-      "<NoteCard key={note.id} note={note} compact={compactCommunity} />",
-    );
+    expect(source).toContain('short={shortCommunity}');
     expect(source).toContain('const keepNextSectionBelowFold =');
     expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
-    expect(source).toContain(
-      'style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}',
-    );
-    expect(source).toContain("'mb-1.5 rounded-[16px] bg-paper-raised p-2.5'");
-    expect(source).toContain("style={{ lineHeight: compact ? 16 : 19 }}");
-    expect(source).toContain("style={{ lineHeight: compact ? 14 : 18 }}");
+    expect(source).toContain('style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}');
+    expect(source).toContain("short\n          ? 'mb-1 rounded-[14px] bg-paper-raised p-2'");
+    expect(source).toContain("shortCommunity\n                      ? 'mb-1 pl-0.5 text-[10px]'");
+    expect(source).toContain('style={{ lineHeight: short ? 15 : compact ? 16 : 19 }}');
+    expect(source).toContain('style={{ lineHeight: short ? 13 : compact ? 14 : 18 }}');
   });
 
   it('keeps nested community routes safe for direct entry', () => {
@@ -115,7 +113,9 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       "import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';",
     );
-    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain(
+      'const [shareFeedback, setShareFeedback] = useState<string | null>(null);',
+    );
     expect(source).toContain('const scrollRef = useRef<ScrollView>(null);');
     expect(source).toContain('const shared = await shareSkinNote(note);');
     expect(source).toContain('if (!shared) {');

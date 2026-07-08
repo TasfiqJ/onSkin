@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Fixed the `/recommendations` For You hub and `/community` Skin Notes hub on
+  shortest 320 x 480 phones. The previous compact layouts still clipped visible
+  cards: the second recommendation card before its evidence and `See how` row,
+  and the third Skin Note before the bottom of the note card. Both hubs now have
+  sub-520 px densities for heading, card spacing, card copy, and metadata rows
+  while keeping Back, Preferences, and Ask controls at 48 px. Post-fix Expo web
+  evidence verifies no clipped visible cards, no sub-44 controls, zero
+  horizontal overflow, and no dialogs. Evidence and bug reports:
+  `test-results/human-e2e/2026-07-08/recommendations-short-phone-480-card-fit/`,
+  `test-results/human-e2e/2026-07-08/community-short-phone-480-card-fit/`,
+  `docs/e2e-bug-reports/2026-07-08-recommendations-short-phone-card-clipping.md`,
+  `docs/e2e-bug-reports/2026-07-08-community-short-phone-card-clipping.md`.
+
 - Fixed shared contextual ProGate compliance on shortest 320 x 480 phones.
   The shared paywall body could push Terms, Privacy, and Restore below direct
   routine/cycle/streak/widget routes, while the tabbed Progress paywall could
@@ -34,7 +47,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   bar to cover the lower CTA label, leaving only about 2 px of clearance. The
   Progress empty state now trims only its compact spacing and keeps the CTA a
   52 px pill. Post-fix Codex in-app browser evidence shows `Take my first
-  photo` at y=315-367 with 33.6 px clearance above the floating tab bar, correct
+photo` at y=315-367 with 33.6 px clearance above the floating tab bar, correct
   center hit-test, zero horizontal overflow, and a successful tap into the
   `/progress/capture` local-only consent gate. Evidence and bug report:
   `test-results/human-e2e/2026-07-08/progress-empty-short-phone-clearance/`,

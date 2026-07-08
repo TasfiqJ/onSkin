@@ -16,7 +16,15 @@ import { colors } from '@/theme/tokens';
 // Deliberately a reference library: no likes, no authors to follow, no ranking by
 // popularity. Phase 1, live (expert-seeded, read-mostly).
 
-function NoteCard({ note, compact = false }: { note: SkinNote; compact?: boolean }) {
+function NoteCard({
+  note,
+  compact = false,
+  short = false,
+}: {
+  note: SkinNote;
+  compact?: boolean;
+  short?: boolean;
+}) {
   const pill = evidencePill(note.evidenceLabel);
   return (
     <Pressable
@@ -28,37 +36,49 @@ function NoteCard({ note, compact = false }: { note: SkinNote; compact?: boolean
         router.push({ pathname: '/community/note/[id]', params: { id: note.id } });
       }}
       className={
-        compact
-          ? 'mb-1.5 rounded-[16px] bg-paper-raised p-2.5'
-          : 'mb-3 rounded-[18px] bg-paper-raised p-4'
+        short
+          ? 'mb-1 rounded-[14px] bg-paper-raised p-2'
+          : compact
+            ? 'mb-1.5 rounded-[16px] bg-paper-raised p-2.5'
+            : 'mb-3 rounded-[18px] bg-paper-raised p-4'
       }
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
       <View
         className={
-          compact
-            ? 'mb-1 flex-row items-start justify-between gap-2'
-            : 'mb-2 flex-row items-start justify-between gap-2.5'
+          short
+            ? 'mb-0.5 flex-row items-start justify-between gap-1.5'
+            : compact
+              ? 'mb-1 flex-row items-start justify-between gap-2'
+              : 'mb-2 flex-row items-start justify-between gap-2.5'
         }
       >
         <Text
           variant="body"
           className={
-            compact
-              ? 'flex-1 font-sans-bold text-[13.5px]'
-              : 'flex-1 font-sans-bold text-[14.5px]'
+            short
+              ? 'flex-1 font-sans-bold text-[12.8px]'
+              : compact
+                ? 'flex-1 font-sans-bold text-[13.5px]'
+                : 'flex-1 font-sans-bold text-[14.5px]'
           }
-          style={{ lineHeight: compact ? 16 : 19 }}
+          style={{ lineHeight: short ? 15 : compact ? 16 : 19 }}
         >
           {note.title}
         </Text>
         <Text
-          className={compact ? 'font-sans-bold text-[9.5px]' : 'font-sans-bold text-[10px]'}
+          className={
+            short
+              ? 'font-sans-bold text-[9px]'
+              : compact
+                ? 'font-sans-bold text-[9.5px]'
+                : 'font-sans-bold text-[10px]'
+          }
           style={{
             color: pill.fg,
             backgroundColor: pill.bg,
-            paddingHorizontal: compact ? 7 : 9,
-            paddingVertical: compact ? 3 : 4,
+            paddingHorizontal: short ? 6 : compact ? 7 : 9,
+            paddingVertical: short ? 2.5 : compact ? 3 : 4,
             borderRadius: 999,
             overflow: 'hidden',
           }}
@@ -69,8 +89,8 @@ function NoteCard({ note, compact = false }: { note: SkinNote; compact?: boolean
       <Text
         variant="bodySm"
         tone="muted"
-        className={compact ? 'text-[11.5px]' : 'text-[12px]'}
-        style={{ lineHeight: compact ? 14 : 18 }}
+        className={short ? 'text-[11px]' : compact ? 'text-[11.5px]' : 'text-[12px]'}
+        style={{ lineHeight: short ? 13 : compact ? 14 : 18 }}
       >
         {note.summary}
       </Text>
@@ -82,6 +102,7 @@ export default function SkinNotesHub() {
   const { height, width } = useWindowDimensions();
   const groups = notesByTopic();
   const compactCommunity = height < 640;
+  const shortCommunity = height < 520;
   const narrowCompactCommunity = compactCommunity && width < 360;
 
   useEffect(() => {
@@ -112,16 +133,24 @@ export default function SkinNotesHub() {
 
       <Text
         variant="title"
-        className={compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'}
-        style={compactCommunity ? { lineHeight: 30 } : undefined}
+        className={
+          shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'
+        }
+        style={
+          shortCommunity ? { lineHeight: 28 } : compactCommunity ? { lineHeight: 30 } : undefined
+        }
       >
         {COMMUNITY_COPY.hub.title}
       </Text>
       <Text
         variant="bodySm"
         tone="muted"
-        className={compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'}
-        style={compactCommunity ? { lineHeight: 17 } : undefined}
+        className={
+          shortCommunity ? 'mt-0 text-[12.5px]' : compactCommunity ? 'mt-0.5 text-[13px]' : 'mt-1'
+        }
+        style={
+          shortCommunity ? { lineHeight: 15 } : compactCommunity ? { lineHeight: 17 } : undefined
+        }
       >
         {COMMUNITY_COPY.hub.subtitle}
       </Text>
@@ -135,7 +164,9 @@ export default function SkinNotesHub() {
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerClassName={compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'}
+          contentContainerClassName={
+            shortCommunity ? 'pb-20 pt-1' : compactCommunity ? 'pb-12 pt-2' : 'pb-10 pt-5'
+          }
         >
           {groups.map((g) => {
             const keepNextSectionBelowFold =
@@ -143,18 +174,29 @@ export default function SkinNotesHub() {
             return (
               <View
                 key={g.topic.slug}
-                className={compactCommunity ? 'mb-1' : 'mb-3'}
+                className={shortCommunity ? 'mb-0.5' : compactCommunity ? 'mb-1' : 'mb-3'}
                 style={keepNextSectionBelowFold ? { marginBottom: 64 } : undefined}
               >
                 <Text
                   variant="label"
                   tone="muted"
-                  className={compactCommunity ? 'mb-1.5 pl-0.5' : 'mb-2.5 pl-0.5'}
+                  className={
+                    shortCommunity
+                      ? 'mb-1 pl-0.5 text-[10px]'
+                      : compactCommunity
+                        ? 'mb-1.5 pl-0.5'
+                        : 'mb-2.5 pl-0.5'
+                  }
                 >
                   {g.topic.title.toUpperCase()}
                 </Text>
                 {g.notes.map((note) => (
-                  <NoteCard key={note.id} note={note} compact={compactCommunity} />
+                  <NoteCard
+                    key={note.id}
+                    note={note}
+                    compact={compactCommunity}
+                    short={shortCommunity}
+                  />
                 ))}
               </View>
             );

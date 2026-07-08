@@ -1,0 +1,113 @@
+{
+  "controls": [
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "href": "",
+      "index": 0,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 102.22998046875
+    },
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 160.19417572021484,
+        "y": 391.85379219055176
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Start free trial",
+      "href": "",
+      "index": 1,
+      "label": "Start free trial",
+      "rect": {
+        "bottom": 416.8537940979004,
+        "height": 50.000003814697266,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 366.8537902832031,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 50.000003814697266,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 160.19417572021484,
+        "y": 454.81647300720215
+      },
+      "centerInViewport": true,
+      "clipped": true,
+      "hitBlocked": false,
+      "hitLabel": "No credit card. See your routine work, then decide.",
+      "href": "",
+      "index": 2,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "rect": {
+        "bottom": 484.78461837768555,
+        "height": 59.9362907409668,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 424.84832763671875,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 56.15167236328125,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": "[Circular]",
+      "type": "clipped-visible-control"
+    }
+  ],
+  "route": "/cycle/phased-intro",
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+  "url": "http://localhost:8204/cycle/phased-intro",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

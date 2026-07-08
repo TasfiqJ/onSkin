@@ -42,34 +42,32 @@ describe('Recommendation route contracts', () => {
     const source = readAppRoute('recommendations/index.tsx');
 
     expect(source).toContain('min-w-0 flex-1 flex-row items-start');
-    expect(source).toContain("compact ? 'flex-1 font-mono text-[10px]'");
+    expect(source).toContain("short\n                ? 'flex-1 font-mono text-[9.5px]'");
+    expect(source).toContain("compact\n                  ? 'flex-1 font-mono text-[10px]'");
     expect(source).toContain("'flex-1 font-mono text-[10.5px]'");
     expect(source).toContain('flexShrink: 1');
     expect(source).toContain("flexShrink: 0, textAlign: 'right'");
   });
 
-  it('keeps the For You hub heading readable on phone-width web', () => {
+  it('keeps the For You hub heading and cards readable on shortest phone web', () => {
     const source = readAppRoute('recommendations/index.tsx');
 
-    expect(source).toContain('function HubIntro()');
+    expect(source).toContain('function HubIntro({ short = false }: { short?: boolean })');
     expect(source).toContain('accessibilityRole="header"');
     expect(source).toContain("style={{ alignSelf: 'flex-start' }}");
     expect(source).toContain("REC_COPY.hub.subtitle.split(', ')");
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactHub = height < 640;');
+    expect(source).toContain('const shortHub = height < 520;');
     expect(source).toContain('const narrowCompactHub = compactHub && width <= 430;');
-    expect(source).toContain("contentContainerClassName={compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'}");
-    expect(source).toContain('<HubIntro />');
+    expect(source).toContain("shortHub ? 'pb-20 pt-2' : compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'");
+    expect(source).toContain('<HubIntro short={shortHub} />');
     expect(source).toContain('const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;');
-    expect(source).toContain(
-      'style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}',
-    );
-    expect(source).toContain('<RecCard rec={rec} compact={compactHub} />');
-    expect(source).toContain(
-      "compact\n          ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'",
-    );
-    expect(source).toContain('style={{ lineHeight: compact ? 16 : 18 }}');
-    expect(source).toContain('lineHeight: compact ? 13 : 15');
+    expect(source).toContain('style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}');
+    expect(source).toContain('<RecCard rec={rec} compact={compactHub} short={shortHub} />');
+    expect(source).toContain("short\n          ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'");
+    expect(source).toContain('style={{ lineHeight: short ? 14 : compact ? 16 : 18 }}');
+    expect(source).toContain('lineHeight: short ? 12 : compact ? 13 : 15');
   });
 
   it("keeps the you're-set state scrollable on compact phones", () => {

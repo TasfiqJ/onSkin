@@ -55,7 +55,15 @@ function openRec(rec: Recommendation) {
   router.push({ pathname: '/recommendations/[id]', params: { id: rec.id } });
 }
 
-function RecCard({ rec, compact = false }: { rec: Recommendation; compact?: boolean }) {
+function RecCard({
+  rec,
+  compact = false,
+  short = false,
+}: {
+  rec: Recommendation;
+  compact?: boolean;
+  short?: boolean;
+}) {
   const evidenceGood = rec.evidenceLabel === 'established' || rec.evidenceLabel === 'plausible';
   return (
     <Pressable
@@ -63,43 +71,57 @@ function RecCard({ rec, compact = false }: { rec: Recommendation; compact?: bool
       accessibilityLabel={`${rec.what}. ${rec.why}`}
       onPress={() => openRec(rec)}
       className={
-        compact
-          ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'
-          : 'mb-4 rounded-[18px] bg-paper-raised p-4'
+        short
+          ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'
+          : compact
+            ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'
+            : 'mb-4 rounded-[18px] bg-paper-raised p-4'
       }
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
-      <View className={compact ? 'flex-row items-start gap-2.5' : 'flex-row items-start gap-3'}>
+      <View
+        className={
+          short
+            ? 'flex-row items-start gap-2'
+            : compact
+              ? 'flex-row items-start gap-2.5'
+              : 'flex-row items-start gap-3'
+        }
+      >
         <View
           className={
-            compact
-              ? 'h-8 w-8 items-center justify-center rounded-[9px]'
-              : 'h-9 w-9 items-center justify-center rounded-[10px]'
+            short
+              ? 'h-7 w-7 items-center justify-center rounded-[8px]'
+              : compact
+                ? 'h-8 w-8 items-center justify-center rounded-[9px]'
+                : 'h-9 w-9 items-center justify-center rounded-[10px]'
           }
           style={{ backgroundColor: colors.clayTint }}
         >
-          <Text
-            className={compact ? 'text-[14px]' : 'text-[16px]'}
-            style={{ color: colors.clay }}
-          >
+          <Text className={compact ? 'text-[14px]' : 'text-[16px]'} style={{ color: colors.clay }}>
             {TRIGGER_GLYPH[rec.trigger]}
           </Text>
         </View>
         <View className="flex-1">
           <View
             className={
-              compact
-                ? 'mb-0.5 flex-row items-center justify-between gap-2'
-                : 'mb-1 flex-row items-center justify-between gap-2'
+              short
+                ? 'mb-0.5 flex-row items-center justify-between gap-1.5'
+                : compact
+                  ? 'mb-0.5 flex-row items-center justify-between gap-2'
+                  : 'mb-1 flex-row items-center justify-between gap-2'
             }
           >
             <Text
               variant="body"
               className={
-                compact
-                  ? 'flex-1 font-sans-bold text-[14.5px]'
-                  : 'flex-1 font-sans-bold text-[15px]'
+                short
+                  ? 'flex-1 font-sans-bold text-[13.5px]'
+                  : compact
+                    ? 'flex-1 font-sans-bold text-[14.5px]'
+                    : 'flex-1 font-sans-bold text-[15px]'
               }
+              style={short ? { lineHeight: 16 } : undefined}
             >
               {rec.what}
             </Text>
@@ -122,8 +144,8 @@ function RecCard({ rec, compact = false }: { rec: Recommendation; compact?: bool
           <Text
             variant="bodySm"
             tone="muted"
-            className="text-[12.5px]"
-            style={{ lineHeight: compact ? 16 : 18 }}
+            className={short ? 'text-[12px]' : 'text-[12.5px]'}
+            style={{ lineHeight: short ? 14 : compact ? 16 : 18 }}
           >
             {rec.why}
           </Text>
@@ -131,9 +153,11 @@ function RecCard({ rec, compact = false }: { rec: Recommendation; compact?: bool
       </View>
       <View
         className={
-          compact
-            ? 'mt-2 flex-row items-start justify-between gap-2.5 pt-2'
-            : 'mt-3 flex-row items-start justify-between gap-3 pt-3'
+          short
+            ? 'mt-1.5 flex-row items-start justify-between gap-2 pt-1.5'
+            : compact
+              ? 'mt-2 flex-row items-start justify-between gap-2.5 pt-2'
+              : 'mt-3 flex-row items-start justify-between gap-3 pt-3'
         }
         style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}
       >
@@ -146,12 +170,16 @@ function RecCard({ rec, compact = false }: { rec: Recommendation; compact?: bool
           ) : null}
           <Text
             className={
-              compact ? 'flex-1 font-mono text-[10px]' : 'flex-1 font-mono text-[10.5px]'
+              short
+                ? 'flex-1 font-mono text-[9.5px]'
+                : compact
+                  ? 'flex-1 font-mono text-[10px]'
+                  : 'flex-1 font-mono text-[10.5px]'
             }
             style={{
               color: rec.footIsEvidence && evidenceGood ? colors.sage : colors.muted,
               flexShrink: 1,
-              lineHeight: compact ? 13 : 15,
+              lineHeight: short ? 12 : compact ? 13 : 15,
             }}
           >
             {rec.footLabel}
@@ -192,9 +220,7 @@ function YoureSet({ compact = false }: { compact?: boolean }) {
           borderColor: 'rgba(165,105,75,0.3)',
         }}
       >
-        <Text style={{ color: colors.clay, fontSize: compact ? 23 : 30 }}>
-          ✓
-        </Text>
+        <Text style={{ color: colors.clay, fontSize: compact ? 23 : 30 }}>✓</Text>
       </View>
       <Text
         variant="title"
@@ -257,21 +283,36 @@ function YoureSet({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function HubIntro() {
+function HubIntro({ short = false }: { short?: boolean }) {
   const [subtitleLead, ...subtitleRest] = REC_COPY.hub.subtitle.split(', ');
   const subtitleTail = subtitleRest.join(', ');
 
   return (
-    <View className="mt-3">
-      <Text variant="title" accessibilityRole="header" style={{ alignSelf: 'flex-start' }}>
+    <View className={short ? 'mt-1.5' : 'mt-3'}>
+      <Text
+        variant="title"
+        accessibilityRole="header"
+        className={short ? 'text-[28px] leading-[30px]' : undefined}
+        style={{ alignSelf: 'flex-start' }}
+      >
         {REC_COPY.hub.title}
       </Text>
-      <View className="mt-1">
-        <Text variant="bodySm" tone="muted" style={{ alignSelf: 'flex-start' }}>
+      <View className={short ? 'mt-0.5' : 'mt-1'}>
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className={short ? 'text-[12px] leading-[15px]' : undefined}
+          style={{ alignSelf: 'flex-start' }}
+        >
           {subtitleTail ? `${subtitleLead},` : REC_COPY.hub.subtitle}
         </Text>
         {subtitleTail ? (
-          <Text variant="bodySm" tone="muted" style={{ alignSelf: 'flex-start' }}>
+          <Text
+            variant="bodySm"
+            tone="muted"
+            className={short ? 'text-[12px] leading-[15px]' : undefined}
+            style={{ alignSelf: 'flex-start' }}
+          >
             {subtitleTail}
           </Text>
         ) : null}
@@ -285,6 +326,7 @@ export default function ForYouScreen() {
   const { result, isLoading } = useRecommendations();
   const groups = grouped(result.recommendations);
   const compactHub = height < 640;
+  const shortHub = height < 520;
   const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
@@ -311,7 +353,7 @@ export default function ForYouScreen() {
         </Pressable>
       </View>
 
-      <HubIntro />
+      <HubIntro short={shortHub} />
 
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
@@ -324,21 +366,24 @@ export default function ForYouScreen() {
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerClassName={compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'}
+          contentContainerClassName={
+            shortHub ? 'pb-20 pt-2' : compactHub ? 'pb-12 pt-4' : 'pb-10 pt-5'
+          }
         >
           {groups.map((g) => (
-            <View key={g.trigger} className={compactHub ? 'mb-1.5' : 'mb-2'}>
-              <Text variant="label" tone="muted" className="mb-2.5 pl-0.5">
+            <View key={g.trigger} className={shortHub ? 'mb-1' : compactHub ? 'mb-1.5' : 'mb-2'}>
+              <Text
+                variant="label"
+                tone="muted"
+                className={shortHub ? 'mb-1.5 pl-0.5' : 'mb-2.5 pl-0.5'}
+              >
                 {g.group.toUpperCase()}
               </Text>
               {g.items.map((rec, recIndex) => {
                 const keepNextCardBelowFold = narrowCompactHub && recIndex > 1;
                 return (
-                  <View
-                    key={rec.id}
-                    style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}
-                  >
-                    <RecCard rec={rec} compact={compactHub} />
+                  <View key={rec.id} style={keepNextCardBelowFold ? { marginTop: 80 } : undefined}>
+                    <RecCard rec={rec} compact={compactHub} short={shortHub} />
                   </View>
                 );
               })}

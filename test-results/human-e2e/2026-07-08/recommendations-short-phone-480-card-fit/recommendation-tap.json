@@ -1,0 +1,28 @@
+{
+  "cardName": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+  "target": {
+    "center": {
+      "x": 160,
+      "y": 364
+    },
+    "hitTag": "div",
+    "hitText": "Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+    "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+    "rect": {
+      "bottom": 431.7354431152344,
+      "height": 134.89077758789062,
+      "left": 23.99878692626953,
+      "right": 296.38956451416016,
+      "top": 296.84466552734375,
+      "width": 272.3907775878906
+    }
+  },
+  "afterTap": {
+    "horizontalOverflow": 0,
+    "textIncludes": {
+      "ceramide": true,
+      "how": false
+    },
+    "url": "http://localhost:8206/recommendations/routine_completion:ceramide_moisturiser"
+  }
+}

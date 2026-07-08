@@ -1,0 +1,164 @@
+{
+  "controls": [
+    {
+      "ariaLabel": "Close",
+      "center": {
+        "x": 47.99757385253906,
+        "y": 31.99332618713379
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "x",
+      "href": "",
+      "index": 0,
+      "label": "Close",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 7.994539260864258,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 267.8929195404053,
+        "y": 31.99332618713379
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "torch",
+      "href": "",
+      "index": 1,
+      "label": "torch",
+      "rect": {
+        "bottom": 55.99211311340332,
+        "height": 47.99757385253906,
+        "left": 239.39625549316406,
+        "right": 296.3895835876465,
+        "top": 7.994539260864258,
+        "width": 56.99332809448242
+      },
+      "role": "switch",
+      "selected": "",
+      "tag": "div",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 56.99332809448242
+    },
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 160.19418907165527,
+        "y": 246.66263961791992
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Scan ingredient label",
+      "href": "",
+      "index": 2,
+      "label": "=Scan ingredient labelReview editable OCR",
+      "rect": {
+        "bottom": 284.64807891845703,
+        "height": 75.97087860107422,
+        "left": 19.993932723999023,
+        "right": 300.3944454193115,
+        "top": 208.6772003173828,
+        "width": 280.4005126953125
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 75.97087860107422,
+      "visibleWidth": 280.4005126953125
+    },
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 160.19418907165527,
+        "y": 332.63048934936523
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Search catalog",
+      "href": "",
+      "index": 3,
+      "label": "SSearch catalogUse reviewed matches",
+      "rect": {
+        "bottom": 370.61592864990234,
+        "height": 75.97087860107422,
+        "left": 19.993932723999023,
+        "right": 300.3944454193115,
+        "top": 294.6450500488281,
+        "width": 280.4005126953125
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 75.97087860107422,
+      "visibleWidth": 280.4005126953125
+    },
+    {
+      "ariaLabel": "",
+      "center": {
+        "x": 160.19418907165527,
+        "y": 418.5983238220215
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add it by hand",
+      "href": "",
+      "index": 4,
+      "label": "+Add it by handAlways works offline",
+      "rect": {
+        "bottom": 456.5837631225586,
+        "height": 75.97087860107422,
+        "left": 19.993932723999023,
+        "right": 300.3944454193115,
+        "top": 380.6128845214844,
+        "width": 280.4005126953125
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 75.97087860107422,
+      "visibleWidth": 280.4005126953125
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/shelf/scan",
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [],
+  "tabTop": null,
+  "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Review editable OCR S Search catalog Use reviewed matches + Add it by hand Always works offline",
+  "url": "http://localhost:8204/shelf/scan",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

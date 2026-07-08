@@ -1,0 +1,129 @@
+{
+  "bodyTextIncludes": {
+    "ceramide": true,
+    "dailySpf": false,
+    "seeHow": true,
+    "subtitle": true,
+    "title": false
+  },
+  "controls": [
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      }
+    },
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "Preferences",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.9180908203125,
+        "right": 296.3895797729492,
+        "top": 3.989684581756592,
+        "width": 101.47148895263672
+      },
+      "role": "button",
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.9180908203125,
+        "right": 296.3895797729492,
+        "top": 3.989684581756592,
+        "width": 101.47148895263672
+      }
+    },
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "rect": {
+        "bottom": 288.8501281738281,
+        "height": 134.89077758789062,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 153.9593505859375,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 288.8501281738281,
+        "height": 134.89077758789062,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 153.9593505859375,
+        "width": 272.3907775878906
+      }
+    },
+    {
+      "below44": false,
+      "clippedByViewport": false,
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "rect": {
+        "bottom": 431.7354431152344,
+        "height": 134.89077758789062,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 296.84466552734375,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tag": "button",
+      "visible": true,
+      "visibleRect": {
+        "bottom": 431.7354431152344,
+        "height": 134.89077758789062,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 296.84466552734375,
+        "width": 272.3907775878906
+      }
+    }
+  ],
+  "critical": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "document": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320
+  },
+  "horizontalOverflow": 0,
+  "issues": [],
+  "title": "",
+  "url": "http://localhost:8206/recommendations",
+  "viewport": {
+    "devicePixelRatio": 1.0299999713897705,
+    "height": 481,
+    "width": 320
+  },
+  "dialog": null
+}

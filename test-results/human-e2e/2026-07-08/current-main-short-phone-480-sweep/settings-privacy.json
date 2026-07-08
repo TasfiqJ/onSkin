@@ -1,0 +1,225 @@
+{
+  "controls": [
+    {
+      "ariaLabel": "Marketing emails",
+      "center": {
+        "x": 250.40201568603516,
+        "y": 66.62621688842773
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Marketing emails",
+      "href": "",
+      "index": 0,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 90.62500381469727,
+        "height": 47.99757385253906,
+        "left": 224.40838623046875,
+        "right": 276.39564514160156,
+        "top": 42.6274299621582,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "selected": "",
+      "tag": "div",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 51.98725891113281
+    },
+    {
+      "ariaLabel": "Photos & the no-AI-score promise",
+      "center": {
+        "x": 160.19418334960938,
+        "y": 139.60862159729004
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Photos & the no-AI-score promise",
+      "href": "",
+      "index": 1,
+      "label": "Photos & the no-AI-score promise",
+      "rect": {
+        "bottom": 171.60194778442383,
+        "height": 63.98665237426758,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 107.61529541015625,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 63.98665237426758,
+      "visibleWidth": 232.40292358398438
+    },
+    {
+      "ariaLabel": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "center": {
+        "x": 160.19418334960938,
+        "y": 244.57676696777344
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "href": "",
+      "index": 2,
+      "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "rect": {
+        "bottom": 317.5515899658203,
+        "height": 145.94964599609375,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 171.60194396972656,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "selected": "",
+      "tag": "button",
+      "tinyTarget": false,
+      "visibleHeight": 145.94964599609375,
+      "visibleWidth": 232.40292358398438
+    },
+    {
+      "ariaLabel": "Today tab",
+      "center": {
+        "x": 46.76881122589111,
+        "y": 433.6089496612549
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Today tab",
+      "href": "",
+      "index": 3,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "left": 8.965413093566895,
+        "right": 84.57220935821533,
+        "top": 406.6141052246094,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "selected": "false",
+      "tag": "div",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "center": {
+        "x": 122.38319778442383,
+        "y": 433.6089496612549
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Progress tab",
+      "href": "",
+      "index": 4,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "left": 84.57221221923828,
+        "right": 160.19418334960938,
+        "top": 406.6141052246094,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "selected": "false",
+      "tag": "div",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "center": {
+        "x": 197.9975814819336,
+        "y": 433.6089496612549
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Shelf tab",
+      "href": "",
+      "index": 5,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "left": 160.19418334960938,
+        "right": 235.8009796142578,
+        "top": 406.6141052246094,
+        "width": 75.60679626464844
+      },
+      "role": "tab",
+      "selected": "false",
+      "tag": "div",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.60679626464844
+    },
+    {
+      "ariaLabel": "You tab",
+      "center": {
+        "x": 273.61196517944336,
+        "y": 433.6089496612549
+      },
+      "centerInViewport": true,
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "You tab",
+      "href": "",
+      "index": 6,
+      "label": "You tab",
+      "rect": {
+        "bottom": 460.6037940979004,
+        "height": 53.989688873291016,
+        "left": 235.8009796142578,
+        "right": 311.4229507446289,
+        "top": 406.6141052246094,
+        "width": 75.6219711303711
+      },
+      "role": "tab",
+      "selected": "true",
+      "tag": "div",
+      "tinyTarget": false,
+      "visibleHeight": 53.989688873291016,
+      "visibleWidth": 75.6219711303711
+    }
+  ],
+  "currentDialog": null,
+  "issueCount": 0,
+  "issues": [],
+  "route": "/you?section=privacy",
+  "scroll": {
+    "clientHeight": 481,
+    "clientWidth": 320,
+    "scrollHeight": 481,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "tabControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "tabTop": 406.6141052246094,
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share.",
+  "url": "http://localhost:8204/you?section=privacy",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}
