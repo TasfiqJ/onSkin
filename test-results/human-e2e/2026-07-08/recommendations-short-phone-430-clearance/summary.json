@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-07-08T15:13:21.985Z",
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "failedRouteCount": 0,
+  "results": [
+    {
+      "route": "/recommendations",
+      "name": "recommendations-final",
+      "issueCount": 0,
+      "issues": [],
+      "pngPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\recommendations-final.png",
+      "jsonPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\recommendations-final.json",
+      "controls": 4,
+      "scroll": {
+        "clientHeight": 430,
+        "clientWidth": 320,
+        "scrollHeight": 430,
+        "scrollWidth": 320,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "route": "/recommendations/preferences",
+      "name": "recommendations-preferences-final",
+      "issueCount": 0,
+      "issues": [],
+      "pngPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\recommendations-preferences-final.png",
+      "jsonPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\recommendations-preferences-final.json",
+      "controls": 9,
+      "scroll": {
+        "clientHeight": 430,
+        "clientWidth": 320,
+        "scrollHeight": 430,
+        "scrollWidth": 320,
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "bottomScroll": {
+    "name": "recommendations-preferences-bottom",
+    "issueCount": 0,
+    "issues": [],
+    "pngPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\recommendations-preferences-bottom.png",
+    "jsonPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\recommendations-preferences-bottom.json",
+    "controls": 9,
+    "scrollables": [
+      {
+        "clientHeight": 370,
+        "i": 49,
+        "scrollHeight": 684,
+        "scrollTop": 313.5922546386719
+      }
+    ]
+  },
+  "interaction": {
+    "preferencesAfterHubClick": {
+      "name": "preferences-after-hub-click",
+      "issueCount": 0,
+      "issues": [],
+      "pngPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\preferences-after-hub-click.png",
+      "jsonPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\preferences-after-hub-click.json",
+      "controls": 9,
+      "scrollables": [
+        {
+          "clientHeight": 370,
+          "i": 113,
+          "scrollHeight": 684,
+          "scrollTop": 0
+        }
+      ]
+    },
+    "preferencesAfterSustainableTap": {
+      "name": "preferences-after-sustainable-tap",
+      "issueCount": 0,
+      "issues": [],
+      "pngPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\preferences-after-sustainable-tap.png",
+      "jsonPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-08\\recommendations-short-phone-430-clearance\\preferences-after-sustainable-tap.json",
+      "controls": 9,
+      "scrollables": [
+        {
+          "clientHeight": 370,
+          "i": 113,
+          "scrollHeight": 684,
+          "scrollTop": 33.009708404541016
+        }
+      ]
+    }
+  }
+}

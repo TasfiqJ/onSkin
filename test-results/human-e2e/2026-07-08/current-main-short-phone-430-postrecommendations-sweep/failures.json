@@ -1,0 +1,76 @@
+{
+  "generatedAt": "2026-07-08T15:17:05.957Z",
+  "failedRouteCount": 4,
+  "failedRoutes": [
+    {
+      "route": "/community",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 88.2069091796875,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/settings/subscription",
+      "issueCount": 2,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Privacy ›",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        },
+        {
+          "label": "Privacy ›",
+          "rect": "[Circular]",
+          "type": "tiny-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        }
+      ]
+    },
+    {
+      "route": "/settings/notifications",
+      "issueCount": 2,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Replenishment",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 18.2281494140625,
+          "visibleWidth": 51.98725891113281
+        },
+        {
+          "label": "Replenishment",
+          "rect": "[Circular]",
+          "type": "tiny-visible-control",
+          "visibleHeight": 18.2281494140625,
+          "visibleWidth": 51.98725891113281
+        }
+      ]
+    },
+    {
+      "route": "/shelf/opened",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Dismiss",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 79.1717300415039,
+          "visibleWidth": 320
+        }
+      ]
+    }
+  ]
+}

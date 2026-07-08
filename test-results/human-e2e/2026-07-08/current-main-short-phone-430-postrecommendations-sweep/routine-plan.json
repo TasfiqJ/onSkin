@@ -1,0 +1,162 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Terms",
+      "index": 0,
+      "label": "Terms",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 109.32949829101562,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Privacy",
+      "index": 1,
+      "label": "Privacy",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 85.3307113647461,
+        "right": 133.32828521728516,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 170.66141510009766,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Restore",
+      "index": 2,
+      "label": "Restore",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 146.66262817382812,
+        "right": 194.6602020263672,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 245.2745819091797,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Maybe later",
+      "index": 3,
+      "label": "Maybe later",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 194.1595916748047,
+        "right": 296.3895721435547,
+        "top": 3.989684581756592,
+        "width": 102.22998046875
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 102.22998046875
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 225.8798599243164
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Start free trial",
+      "index": 4,
+      "label": "Start free trial",
+      "rect": {
+        "bottom": 249.87864685058594,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 201.88107299804688,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    },
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 277.8671188354492
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "index": 5,
+      "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "rect": {
+        "bottom": 301.86590576171875,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 253.8683319091797,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "disallowedLogCount": 0,
+  "disallowedLogs": [],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/routine/plan",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [],
+  "textStart": "Terms · Privacy · Restore Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+  "url": "http://localhost:8223/routine/plan?postrec430=1783523744060",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

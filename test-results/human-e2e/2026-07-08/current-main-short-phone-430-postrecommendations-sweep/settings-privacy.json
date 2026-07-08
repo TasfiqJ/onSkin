@@ -1,0 +1,100 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 250.40201568603516,
+        "y": 66.62621688842773
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Marketing emails",
+      "index": 0,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 90.62500381469727,
+        "height": 47.99757385253906,
+        "left": 224.40838623046875,
+        "right": 276.39564514160156,
+        "top": 42.6274299621582,
+        "width": 51.98725891113281
+      },
+      "role": "switch",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 51.98725891113281
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 139.60862159729004
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Photos & the no-AI-score promise",
+      "index": 1,
+      "label": "Photos & the no-AI-score promise",
+      "rect": {
+        "bottom": 171.60194778442383,
+        "height": 63.98665237426758,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 107.61529541015625,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 63.98665237426758,
+      "visibleWidth": 232.40292358398438
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 244.57676696777344
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "index": 2,
+      "label": "Withdraw health-data consent. Records your withdrawal in the consent ledger and deletes your collected health data.",
+      "rect": {
+        "bottom": 317.5515899658203,
+        "height": 145.94964599609375,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 171.60194396972656,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 145.94964599609375,
+      "visibleWidth": 232.40292358398438
+    }
+  ],
+  "disallowedLogCount": 0,
+  "disallowedLogs": [],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/settings/privacy",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 326,
+      "i": 46,
+      "scrollHeight": 3503,
+      "scrollTop": 1837.8641357421875
+    }
+  ],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records your withdrawal in the consent ledger and deletes your collected health data. > POLICIES Privacy policy What data we collect, use, and share.",
+  "url": "http://localhost:8223/you?section=privacy",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

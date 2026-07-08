@@ -1,0 +1,54 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 246.97361183166504
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Add products",
+      "index": 0,
+      "label": "Add products",
+      "rect": {
+        "bottom": 274.969669342041,
+        "height": 55.99211502075195,
+        "left": 43.99272155761719,
+        "right": 276.39564514160156,
+        "top": 218.97755432128906,
+        "width": 232.40292358398438
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 232.40292358398438
+    }
+  ],
+  "disallowedLogCount": 0,
+  "disallowedLogs": [],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/today?routine=PM",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 326,
+      "i": 46,
+      "scrollHeight": 403,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "WEDNESDAY, JULY 8 · 11:15 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Progress Shelf You",
+  "url": "http://localhost:8223/today?routine=PM&postrec430=1783523735899",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

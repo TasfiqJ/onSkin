@@ -1,0 +1,54 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160.19417572021484,
+        "y": 366.1028690338135
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back to You",
+      "index": 0,
+      "label": "Back to You",
+      "rect": {
+        "bottom": 394.09892654418945,
+        "height": 55.99211502075195,
+        "left": 23.99878692626953,
+        "right": 296.38956451416016,
+        "top": 338.1068115234375,
+        "width": 272.3907775878906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 55.99211502075195,
+      "visibleWidth": 272.3907775878906
+    }
+  ],
+  "disallowedLogCount": 0,
+  "disallowedLogs": [],
+  "issueCount": 0,
+  "issues": [],
+  "route": "/commerce/consent",
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "scrollables": [
+    {
+      "clientHeight": 330,
+      "i": 40,
+      "scrollHeight": 412,
+      "scrollTop": 0
+    }
+  ],
+  "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+  "url": "http://localhost:8223/commerce/consent?postrec430=1783523780707",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 47.99757385253906,
+        "y": 27.988471508026123
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Back",
+      "index": 0,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 71.9963607788086,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 47.99757385253906
+    },
+    {
+      "center": {
+        "x": 76.66869354248047,
+        "y": 223.95328521728516
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Fragrance-free",
+      "index": 1,
+      "label": "Fragrance-free",
+      "rect": {
+        "bottom": 247.9520721435547,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 129.3386001586914,
+        "top": 199.95449829101562,
+        "width": 105.33981323242188
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 105.33981323242188
+    },
+    {
+      "center": {
+        "x": 163.4026107788086,
+        "y": 223.95328521728516
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Vegan",
+      "index": 2,
+      "label": "Vegan",
+      "rect": {
+        "bottom": 247.9520721435547,
+        "height": 47.99757385253906,
+        "left": 135.33070373535156,
+        "right": 191.47451782226562,
+        "top": 199.95449829101562,
+        "width": 56.14381408691406
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 56.14381408691406
+    },
+    {
+      "center": {
+        "x": 242.7032814025879,
+        "y": 223.95328521728516
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Cruelty-free",
+      "index": 3,
+      "label": "Cruelty-free",
+      "rect": {
+        "bottom": 247.9520721435547,
+        "height": 47.99757385253906,
+        "left": 197.4666290283203,
+        "right": 287.93993377685547,
+        "top": 199.95449829101562,
+        "width": 90.47330474853516
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 90.47330474853516
+    },
+    {
+      "center": {
+        "x": 85.64168930053711,
+        "y": 277.9429702758789
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Non-comedogenic",
+      "index": 4,
+      "label": "Non-comedogenic",
+      "rect": {
+        "bottom": 301.94175720214844,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 147.2845916748047,
+        "top": 253.94418334960938,
+        "width": 123.28580474853516
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 123.28580474853516
+    },
+    {
+      "center": {
+        "x": 196.7764015197754,
+        "y": 277.9429702758789
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Sustainable",
+      "index": 5,
+      "label": "Sustainable",
+      "rect": {
+        "bottom": 301.94175720214844,
+        "height": 47.99757385253906,
+        "left": 153.27670288085938,
+        "right": 240.2761001586914,
+        "top": 253.94418334960938,
+        "width": 86.99939727783203
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 86.99939727783203
+    },
+    {
+      "center": {
+        "x": 67.3998794555664,
+        "y": 395.93448638916016
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Drugstore",
+      "index": 6,
+      "label": "Drugstore",
+      "rect": {
+        "bottom": 419.9332733154297,
+        "height": 47.99757385253906,
+        "left": 23.99878692626953,
+        "right": 110.80097198486328,
+        "top": 371.9356994628906,
+        "width": 86.80218505859375
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 86.80218505859375
+    },
+    {
+      "center": {
+        "x": 160.19418334960938,
+        "y": 395.93448638916016
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Mid-range",
+      "index": 7,
+      "label": "Mid-range",
+      "rect": {
+        "bottom": 419.9332733154297,
+        "height": 47.99757385253906,
+        "left": 116.7930908203125,
+        "right": 203.59527587890625,
+        "top": 371.9356994628906,
+        "width": 86.80218505859375
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 86.80218505859375
+    },
+    {
+      "center": {
+        "x": 252.9884796142578,
+        "y": 395.93448638916016
+      },
+      "clipped": false,
+      "hitBlocked": false,
+      "hitLabel": "Premium",
+      "index": 8,
+      "label": "Premium",
+      "rect": {
+        "bottom": 419.9332733154297,
+        "height": 47.99757385253906,
+        "left": 209.58738708496094,
+        "right": 296.3895721435547,
+        "top": 371.9356994628906,
+        "width": 86.80218505859375
+      },
+      "role": "button",
+      "tinyTarget": false,
+      "visibleHeight": 47.99757385253906,
+      "visibleWidth": 86.80218505859375
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "scroll": {
+    "clientHeight": 430,
+    "clientWidth": 320,
+    "scrollHeight": 430,
+    "scrollWidth": 320,
+    "x": 0,
+    "y": 0
+  },
+  "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "url": "http://localhost:8223/recommendations/preferences?rec430=1783523599846",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

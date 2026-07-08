@@ -13,9 +13,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   for deliberate scroll access. Codex in-app browser Expo web verifies
   `/recommendations` and `/recommendations/preferences` at 320 x 430 with zero
   clipped controls, zero sub-44 controls, zero blocked center hit-tests, zero
-  unexpected warn/error logs, and a successful `Sustainable` chip tap. Evidence
-  and bug report:
-  `test-results/human-e2e/2026-07-08/recommendations-ultrashort-430-current/`,
+  horizontal overflow, and a successful `Sustainable` chip tap. Evidence and
+  bug report:
+  `test-results/human-e2e/2026-07-08/recommendations-short-phone-430-clearance/`,
   `docs/e2e-bug-reports/2026-07-08-recommendations-ultrashort-hub-preferences-clipping.md`.
 
 - Fixed the ultra-short 320 x 430 Progress contextual ProGate clearance. The

@@ -1,0 +1,351 @@
+{
+  "generatedAt": "2026-07-08T15:17:05.957Z",
+  "routeCount": 49,
+  "viewport": {
+    "width": 320,
+    "height": 430
+  },
+  "results": [
+    {
+      "route": "/today",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/today?routine=PM",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/progress",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/progress/capture",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/progress/review",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/plan",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/ramp",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/tolerance",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/reorder",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/adaptation",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/settings",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/disruption",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/procedure",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/phased-intro",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/recovery",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/why-tonight",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/recommendations",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/recommendations/preferences",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/recommendations/stale-local-rec",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/community",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 88.2069091796875,
+          "visibleWidth": 272.3907775878906
+        }
+      ]
+    },
+    {
+      "route": "/community/note/missing-note-e2e",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/community/ask",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/community/people-like-you",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/commerce/consent",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/commerce/stacks",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/commerce/stack/barrier-basics",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/commerce/stack/missing-stack-e2e",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/commerce/transparency",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/settings/subscription",
+      "issueCount": 2,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Privacy ›",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        },
+        {
+          "label": "Privacy ›",
+          "rect": "[Circular]",
+          "type": "tiny-visible-control",
+          "visibleHeight": 39.23846435546875,
+          "visibleWidth": 244.41748046875
+        }
+      ]
+    },
+    {
+      "route": "/settings/notifications",
+      "issueCount": 2,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Replenishment",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 18.2281494140625,
+          "visibleWidth": 51.98725891113281
+        },
+        {
+          "label": "Replenishment",
+          "rect": "[Circular]",
+          "type": "tiny-visible-control",
+          "visibleHeight": 18.2281494140625,
+          "visibleWidth": 51.98725891113281
+        }
+      ]
+    },
+    {
+      "route": "/settings/timing",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/settings/privacy",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/trend/optin",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/trend/fairness",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/ask",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/ask/consent",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/search",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/no-match",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/scan",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/ocr",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/manual",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/archive",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/shelf/opened",
+      "issueCount": 1,
+      "disallowedLogCount": 0,
+      "issues": [
+        {
+          "label": "Dismiss",
+          "rect": "[Circular]",
+          "type": "clipped-visible-control",
+          "visibleHeight": 79.1717300415039,
+          "visibleWidth": 320
+        }
+      ]
+    },
+    {
+      "route": "/paywall/upsell?feature=full_routine",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/paywall/success",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/streak",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/routine/widgets",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    },
+    {
+      "route": "/cycle/week",
+      "issueCount": 0,
+      "disallowedLogCount": 0,
+      "issues": []
+    }
+  ],
+  "failedRouteCount": 4
+}
