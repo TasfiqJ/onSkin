@@ -214,6 +214,17 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain("don't run out");
   });
 
+  it('keeps replenishment similar-options recovery inline after commerce consent', () => {
+    const source = readAppRoute('shelf/replenish.tsx');
+
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain("import { Alert");
+    expect(source).toContain('CommerceLinkNotice');
+    expect(source).toContain('useState<CommerceLinkFeedback | null>');
+    expect(source).toContain('setSimilarFeedback({');
+    expect(source).toContain('COMMERCE_COPY.whereToBuy.emptyState');
+  });
+
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 

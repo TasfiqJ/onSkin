@@ -1,9 +1,13 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 import { Button, ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
+import {
+  CommerceLinkNotice,
+  type CommerceLinkFeedback,
+} from '@/features/commerce/CommerceLinkNotice';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
@@ -20,12 +24,17 @@ export default function ReplenishScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data } = useShelf();
   const m = useShelfMutations();
+  const [similarFeedback, setSimilarFeedback] = useState<CommerceLinkFeedback | null>(null);
 
   const item = data?.items.find((i) => i.id === id);
 
   // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
   useEffect(() => {
     if (item?.id) track('replenishment_nudge_shown', { source: 'shelf' });
+  }, [item?.id]);
+
+  useEffect(() => {
+    setSimilarFeedback(null);
   }, [item?.id]);
 
   if (!item) {
@@ -96,10 +105,14 @@ export default function ReplenishScreen() {
     // Consented => the honest empty state until the catalog lands (B-CATALOG-SEED).
     const consented = await isCommerceConsented();
     if (!consented) {
+      setSimilarFeedback(null);
       router.push('/commerce/consent');
       return;
     }
-    Alert.alert('Similar options', COMMERCE_COPY.whereToBuy.emptyState, [{ text: 'OK' }]);
+    setSimilarFeedback({
+      title: 'Similar options',
+      body: COMMERCE_COPY.whereToBuy.emptyState,
+    });
   };
 
   return (
@@ -158,6 +171,7 @@ export default function ReplenishScreen() {
             </Text>
           </View>
         </Pressable>
+        {similarFeedback ? <CommerceLinkNotice feedback={similarFeedback} /> : null}
       </View>
 
       <View className="mt-4 flex-row items-center justify-center gap-2">
