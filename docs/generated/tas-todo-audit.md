@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-08T17:46:01.842Z
+Generated: 2026-07-08T17:56:24.237Z
 Status: pass
 Strict mode: yes
 
@@ -15,9 +15,9 @@ canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 214
-- Keys named verbatim in FOR_TAS_TO_DO.md: 24
-- Keys only in generated inventory: 190
+- Extracted keys: 228
+- Keys named verbatim in FOR_TAS_TO_DO.md: 43
+- Keys only in generated inventory: 185
 - Blockers: 0
 - Warnings: 9
 
@@ -28,7 +28,7 @@ canonical machine-readable key list.
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 40                               |
 | phase3  | yes              | phase3:audit-copy:strict                                   | 0    | 0                                |
 | phase4  | yes              | phase4:check-source-env:strict                             | 9    | 4                                |
-| phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 7    | 6                                |
+| phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 21   | 1                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 19   | 15                               |
 | phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 18   | 17                               |
 | phase8  | yes              | phase8:check-growth-store:strict, phase8:qa-packet:strict  | 21   | 21                               |
@@ -124,15 +124,29 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
 Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
-| Extracted key            | Named in FOR_TAS_TO_DO.md |
-| ------------------------ | ------------------------- |
-| PHASE5_ANDROID_BUILD_ID  | no                        |
-| PHASE5_ANDROID_DEVICE    | no                        |
-| PHASE5_IOS_BUILD_ID      | no                        |
-| PHASE5_IOS_DEVICE        | no                        |
-| PHASE5_QA_PACKET_OUT_DIR | no                        |
-| PHASE5_QA_SIGNOFF        | no                        |
-| PHASE5_SIGNED_OFF_BY     | yes                       |
+| Extracted key                          | Named in FOR_TAS_TO_DO.md |
+| -------------------------------------- | ------------------------- |
+| PHASE5_ACCESSIBILITY_QA_PASS           | yes                       |
+| PHASE5_ANDROID_BUILD_ID                | yes                       |
+| PHASE5_ANDROID_DEVICE                  | yes                       |
+| PHASE5_BARCODE_QA_PASS                 | yes                       |
+| PHASE5_CAMERA_PERMISSION_QA_PASS       | yes                       |
+| PHASE5_DEVICE_QA_PASS                  | yes                       |
+| PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS | yes                       |
+| PHASE5_INSTALL_QA_PASS                 | yes                       |
+| PHASE5_IOS_BUILD_ID                    | yes                       |
+| PHASE5_IOS_DEVICE                      | yes                       |
+| PHASE5_LABEL_CAPTURE_QA_PASS           | yes                       |
+| PHASE5_NATIVE_OCR_QA_PASS              | yes                       |
+| PHASE5_NOTIFICATION_QA_PASS            | yes                       |
+| PHASE5_PROGRESS_PHOTO_QA_PASS          | yes                       |
+| PHASE5_QA_PACKET_OUT_DIR               | no                        |
+| PHASE5_QA_SIGNOFF                      | yes                       |
+| PHASE5_REVENUECAT_NATIVE_QA_PASS       | yes                       |
+| PHASE5_SENTRY_NATIVE_QA_PASS           | yes                       |
+| PHASE5_SHARE_SHEET_QA_PASS             | yes                       |
+| PHASE5_SIGNED_OFF_BY                   | yes                       |
+| PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS | yes                       |
 
 ### Phase 6 payments and RevenueCat
 
@@ -329,7 +343,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
 - Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
-- Phase 5 native build and device QA has 6 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
+- Phase 5 native build and device QA has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 7 core loop launch gates has 17 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
 - Phase 8 growth and store readiness has 21 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.

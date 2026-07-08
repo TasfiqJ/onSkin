@@ -49,6 +49,38 @@ const scenarios = [
   ['Observability', 'native crash captured, no sensitive event payloads'],
 ];
 
+const requiredQaEvidenceFlags = [
+  ['PHASE5_DEVICE_QA_PASS', 'overall native-device QA matrix'],
+  ['PHASE5_INSTALL_QA_PASS', 'fresh install, update, reinstall, and dev/staging variants'],
+  [
+    'PHASE5_CAMERA_PERMISSION_QA_PASS',
+    'native camera permission denial, retry, and settings recovery',
+  ],
+  ['PHASE5_BARCODE_QA_PASS', 'physical-device barcode scan and checksum matrix'],
+  ['PHASE5_LABEL_CAPTURE_QA_PASS', 'real label capture, editable text, and manual fallback'],
+  ['PHASE5_PROGRESS_PHOTO_QA_PASS', 'progress still capture, retake, review, and recovery'],
+  [
+    'PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS',
+    'encrypted photo save, restart, key-missing recovery, and delete',
+  ],
+  ['PHASE5_NOTIFICATION_QA_PASS', 'iOS/Android reminder delivery and permission behavior'],
+  ['PHASE5_SHARE_SHEET_QA_PASS', 'native share sheet success, cancel, and unavailable states'],
+  [
+    'PHASE5_REVENUECAT_NATIVE_QA_PASS',
+    'RevenueCat native configure, offering, purchase, and restore smoke',
+  ],
+  ['PHASE5_SENTRY_NATIVE_QA_PASS', 'Sentry native crash/source-map smoke'],
+  [
+    'PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS',
+    'native Supabase catalog lookup and no-match/error fallback',
+  ],
+  ['PHASE5_ACCESSIBILITY_QA_PASS', 'VoiceOver/TalkBack labels, traversal, and 44 pt controls'],
+];
+
+const optionalQaEvidenceFlags = [
+  ['PHASE5_NATIVE_OCR_QA_PASS', 'native OCR real-label text recognition'],
+];
+
 function hashFile(path) {
   const abs = resolve(root, path);
   if (!existsSync(abs)) return { path, exists: false };
@@ -74,6 +106,10 @@ function markdownTable(headers, tableRows) {
 
 function envValue(name) {
   return String(process.env[name] ?? '').trim();
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 }
 
 function looksLikeEasBuildEvidence(value) {
@@ -117,6 +153,12 @@ function looksLikePhysicalAndroidDevice(value) {
 
 const rawSignedOffBy = envValue('PHASE5_SIGNED_OFF_BY');
 const normalizedSignedOffBy = normalizeNamedSignoff(rawSignedOffBy) ?? '';
+const eas = readJson('apps/mobile/eas.json');
+const nativeOcrEnabled =
+  evidenceFlagEnabled(process.env.EXPO_PUBLIC_NATIVE_OCR_ENABLED) ||
+  Object.values(eas.build ?? {}).some((profile) =>
+    evidenceFlagEnabled(profile?.env?.EXPO_PUBLIC_NATIVE_OCR_ENABLED),
+  );
 
 const buildEvidence = {
   iosBuildId: envValue('PHASE5_IOS_BUILD_ID'),
@@ -126,6 +168,20 @@ const buildEvidence = {
   qaSignedOff: evidenceFlagEnabled(process.env.PHASE5_QA_SIGNOFF),
   signedOffBy: normalizedSignedOffBy,
 };
+
+const qaEvidence = Object.fromEntries(
+  requiredQaEvidenceFlags.map(([key, label]) => [
+    key,
+    { label, required: true, passed: evidenceFlagEnabled(process.env[key]) },
+  ]),
+);
+for (const [key, label] of optionalQaEvidenceFlags) {
+  qaEvidence[key] = {
+    label,
+    required: key === 'PHASE5_NATIVE_OCR_QA_PASS' ? nativeOcrEnabled : false,
+    passed: evidenceFlagEnabled(process.env[key]),
+  };
+}
 
 const files = requiredFiles.map(hashFile);
 const blockers = [];
@@ -150,12 +206,22 @@ if (!rawSignedOffBy) blockers.push('Missing PHASE5_SIGNED_OFF_BY.');
 else if (!buildEvidence.signedOffBy) {
   blockers.push('PHASE5_SIGNED_OFF_BY must name a real tester/reviewer, not a placeholder.');
 }
+for (const [key, evidence] of Object.entries(qaEvidence)) {
+  if (evidence.required && !evidence.passed) {
+    blockers.push(`Missing ${key}=true (${evidence.label}).`);
+  }
+}
 for (const file of files) if (!file.exists) blockers.push(`Missing ${file.path}.`);
 
 const packet = {
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 5 native device QA packet for installable iOS/Android builds.',
   buildEvidence,
+  qaEvidence,
+  nativeOcr: {
+    enabledInAnyBuild: nativeOcrEnabled,
+    qaRequired: nativeOcrEnabled,
+  },
   scenarios: scenarios.map(([surface, scenario]) => ({ surface, scenario })),
   files,
   blockers,
@@ -171,6 +237,12 @@ const fileRows = files.map((file) =>
     : [file.path, 'missing', '', ''],
 );
 const scenarioRows = scenarios.map(([surface, scenario]) => [surface, scenario]);
+const evidenceRows = Object.entries(qaEvidence).map(([key, evidence]) => [
+  key,
+  evidence.required ? 'required' : 'not required',
+  evidence.passed ? 'PASS' : 'BLOCKED',
+  evidence.label,
+]);
 const mdPath = join(outDir, 'device-qa-packet.md');
 writeFileSync(
   mdPath,
@@ -190,6 +262,11 @@ writeFileSync(
     `- Android device: ${buildEvidence.androidDevice || 'BLOCKED'}`,
     `- QA signoff: ${buildEvidence.qaSignedOff ? 'yes' : 'BLOCKED'}`,
     `- Signed off by: ${buildEvidence.signedOffBy || 'BLOCKED'}`,
+    `- Native OCR QA required: ${packet.nativeOcr.qaRequired ? 'yes' : 'no'}`,
+    '',
+    '## QA Evidence',
+    '',
+    markdownTable(['Key', 'Requirement', 'Status', 'Evidence scope'], evidenceRows),
     '',
     '## Scenarios',
     '',

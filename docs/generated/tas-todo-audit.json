@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T17:46:01.842Z",
+  "generatedAt": "2026-07-08T17:56:24.237Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,9 +11,9 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 214,
-    "keyMentionCount": 24,
-    "keyNotMentionedCount": 190,
+    "extractedKeyCount": 228,
+    "keyMentionCount": 43,
+    "keyNotMentionedCount": 185,
     "blockerCount": 0,
     "warningCount": 9
   },
@@ -231,24 +231,52 @@
       ],
       "forTasCovered": true,
       "keys": [
+        "PHASE5_ACCESSIBILITY_QA_PASS",
         "PHASE5_ANDROID_BUILD_ID",
         "PHASE5_ANDROID_DEVICE",
+        "PHASE5_BARCODE_QA_PASS",
+        "PHASE5_CAMERA_PERMISSION_QA_PASS",
+        "PHASE5_DEVICE_QA_PASS",
+        "PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS",
+        "PHASE5_INSTALL_QA_PASS",
         "PHASE5_IOS_BUILD_ID",
         "PHASE5_IOS_DEVICE",
+        "PHASE5_LABEL_CAPTURE_QA_PASS",
+        "PHASE5_NATIVE_OCR_QA_PASS",
+        "PHASE5_NOTIFICATION_QA_PASS",
+        "PHASE5_PROGRESS_PHOTO_QA_PASS",
         "PHASE5_QA_PACKET_OUT_DIR",
         "PHASE5_QA_SIGNOFF",
-        "PHASE5_SIGNED_OFF_BY"
+        "PHASE5_REVENUECAT_NATIVE_QA_PASS",
+        "PHASE5_SENTRY_NATIVE_QA_PASS",
+        "PHASE5_SHARE_SHEET_QA_PASS",
+        "PHASE5_SIGNED_OFF_BY",
+        "PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS"
       ],
       "keysMentionedInForTas": [
-        "PHASE5_SIGNED_OFF_BY"
-      ],
-      "keysNotMentionedInForTas": [
+        "PHASE5_ACCESSIBILITY_QA_PASS",
         "PHASE5_ANDROID_BUILD_ID",
         "PHASE5_ANDROID_DEVICE",
+        "PHASE5_BARCODE_QA_PASS",
+        "PHASE5_CAMERA_PERMISSION_QA_PASS",
+        "PHASE5_DEVICE_QA_PASS",
+        "PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS",
+        "PHASE5_INSTALL_QA_PASS",
         "PHASE5_IOS_BUILD_ID",
         "PHASE5_IOS_DEVICE",
-        "PHASE5_QA_PACKET_OUT_DIR",
-        "PHASE5_QA_SIGNOFF"
+        "PHASE5_LABEL_CAPTURE_QA_PASS",
+        "PHASE5_NATIVE_OCR_QA_PASS",
+        "PHASE5_NOTIFICATION_QA_PASS",
+        "PHASE5_PROGRESS_PHOTO_QA_PASS",
+        "PHASE5_QA_SIGNOFF",
+        "PHASE5_REVENUECAT_NATIVE_QA_PASS",
+        "PHASE5_SENTRY_NATIVE_QA_PASS",
+        "PHASE5_SHARE_SHEET_QA_PASS",
+        "PHASE5_SIGNED_OFF_BY",
+        "PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS"
+      ],
+      "keysNotMentionedInForTas": [
+        "PHASE5_QA_PACKET_OUT_DIR"
       ]
     },
     {
@@ -697,7 +725,7 @@
   "warnings": [
     "Phase 2 environment and RLS has 40 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 4 catalog source posture has 4 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 5 native build and device QA has 6 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 5 native build and device QA has 1 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 6 payments and RevenueCat has 15 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 7 core loop launch gates has 17 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
     "Phase 8 growth and store readiness has 21 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",

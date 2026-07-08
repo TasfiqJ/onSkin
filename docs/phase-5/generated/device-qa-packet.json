@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T14:39:30.183Z",
+  "generatedAt": "2026-07-08T17:56:24.287Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
   "buildEvidence": {
     "iosBuildId": "",
@@ -8,6 +8,82 @@
     "androidDevice": "",
     "qaSignedOff": false,
     "signedOffBy": ""
+  },
+  "qaEvidence": {
+    "PHASE5_DEVICE_QA_PASS": {
+      "label": "overall native-device QA matrix",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_INSTALL_QA_PASS": {
+      "label": "fresh install, update, reinstall, and dev/staging variants",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_CAMERA_PERMISSION_QA_PASS": {
+      "label": "native camera permission denial, retry, and settings recovery",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_BARCODE_QA_PASS": {
+      "label": "physical-device barcode scan and checksum matrix",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_LABEL_CAPTURE_QA_PASS": {
+      "label": "real label capture, editable text, and manual fallback",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_PROGRESS_PHOTO_QA_PASS": {
+      "label": "progress still capture, retake, review, and recovery",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS": {
+      "label": "encrypted photo save, restart, key-missing recovery, and delete",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_NOTIFICATION_QA_PASS": {
+      "label": "iOS/Android reminder delivery and permission behavior",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_SHARE_SHEET_QA_PASS": {
+      "label": "native share sheet success, cancel, and unavailable states",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_REVENUECAT_NATIVE_QA_PASS": {
+      "label": "RevenueCat native configure, offering, purchase, and restore smoke",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_SENTRY_NATIVE_QA_PASS": {
+      "label": "Sentry native crash/source-map smoke",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS": {
+      "label": "native Supabase catalog lookup and no-match/error fallback",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_ACCESSIBILITY_QA_PASS": {
+      "label": "VoiceOver/TalkBack labels, traversal, and 44 pt controls",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_NATIVE_OCR_QA_PASS": {
+      "label": "native OCR real-label text recognition",
+      "required": false,
+      "passed": false
+    }
+  },
+  "nativeOcr": {
+    "enabledInAnyBuild": false,
+    "qaRequired": false
   },
   "scenarios": [
     {
@@ -59,8 +135,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 10935,
-      "sha256": "c8ebb02c4dd1e0031017d04803d50617975b9023f60f4a37b33daf01150f9f19"
+      "bytes": 11407,
+      "sha256": "68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -89,14 +165,14 @@
     {
       "path": "apps/mobile/src/app/shelf/scan.tsx",
       "exists": true,
-      "bytes": 19905,
-      "sha256": "b246300927d07d277484c46d9c4b894227ce77845564b067af32ae955c4e1e70"
+      "bytes": 20140,
+      "sha256": "14b203f12374f3b7a1bf843daa2425dd5b440c5685c9e9fb42078358ff2c8f61"
     },
     {
       "path": "apps/mobile/src/app/shelf/ocr.tsx",
       "exists": true,
-      "bytes": 15445,
-      "sha256": "debb884cc5966075c06076047bacfa3be0e7272a3dfafb5e8d5d13e9b9c52625"
+      "bytes": 16292,
+      "sha256": "abc6c69e639a5e4f74a0c8237751854531fce2d703efb32e58bb2da0c36008c8"
     },
     {
       "path": "apps/mobile/src/app/progress/capture.tsx",
@@ -143,8 +219,8 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 8683,
-      "sha256": "21cba663b888b6c636ed629450715c3fb7d244ab8a71f0fcb5ccf15d5ee7e168"
+      "bytes": 11558,
+      "sha256": "14fca81e3908174c8902c34d0b60ec709f62023ebc47ae8441dcba2bdca00b53"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
@@ -155,8 +231,8 @@
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 5459,
-      "sha256": "8caa0da744574b3276d2e792063e47aa41aed5944d4698b77bf968f0cecfec54"
+      "bytes": 7075,
+      "sha256": "0b62398e435f9957950b6b4c0b750a847c2cb9e91852c0b35b88ed7f5067686d"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -167,20 +243,20 @@
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 2157,
-      "sha256": "615f54416119b8797c4d0744c8aa8b79d8da6f16a05a126f3473f1869a202011"
+      "bytes": 2868,
+      "sha256": "88b0e9d853262f06a8065dd7d51747760dce86a9b60401edcfd4d45114e899c0"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 2153,
-      "sha256": "58f4cc2f446960e1ccdb4b3de920032d99bcc70f28415caed9c7c2c13dc28ab3"
+      "bytes": 4141,
+      "sha256": "63924b4b607c3d0ddc5c55f52b3d9ea1f142b69b3bf4afa5f7b3b0e53cd4e996"
     },
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 1815,
-      "sha256": "427e72f7fa0e2e6edd5ea48db89e0b49de97d5b9ff1738ee825f0e395fcf0a84"
+      "bytes": 2202,
+      "sha256": "96c08ee081bd9f2f4eb87f80cbe51c3e0e1905c8acc84a4a699c2f8b75828f80"
     }
   ],
   "blockers": [
@@ -189,6 +265,19 @@
     "Missing PHASE5_IOS_DEVICE.",
     "Missing PHASE5_ANDROID_DEVICE.",
     "Missing PHASE5_QA_SIGNOFF=true.",
-    "Missing PHASE5_SIGNED_OFF_BY."
+    "Missing PHASE5_SIGNED_OFF_BY.",
+    "Missing PHASE5_DEVICE_QA_PASS=true (overall native-device QA matrix).",
+    "Missing PHASE5_INSTALL_QA_PASS=true (fresh install, update, reinstall, and dev/staging variants).",
+    "Missing PHASE5_CAMERA_PERMISSION_QA_PASS=true (native camera permission denial, retry, and settings recovery).",
+    "Missing PHASE5_BARCODE_QA_PASS=true (physical-device barcode scan and checksum matrix).",
+    "Missing PHASE5_LABEL_CAPTURE_QA_PASS=true (real label capture, editable text, and manual fallback).",
+    "Missing PHASE5_PROGRESS_PHOTO_QA_PASS=true (progress still capture, retake, review, and recovery).",
+    "Missing PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS=true (encrypted photo save, restart, key-missing recovery, and delete).",
+    "Missing PHASE5_NOTIFICATION_QA_PASS=true (iOS/Android reminder delivery and permission behavior).",
+    "Missing PHASE5_SHARE_SHEET_QA_PASS=true (native share sheet success, cancel, and unavailable states).",
+    "Missing PHASE5_REVENUECAT_NATIVE_QA_PASS=true (RevenueCat native configure, offering, purchase, and restore smoke).",
+    "Missing PHASE5_SENTRY_NATIVE_QA_PASS=true (Sentry native crash/source-map smoke).",
+    "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
+    "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver/TalkBack labels, traversal, and 44 pt controls)."
   ]
 }

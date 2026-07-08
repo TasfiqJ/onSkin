@@ -34,6 +34,19 @@ PHASE5_ANDROID_BUILD_ID=... \
 PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 18.5" \
 PHASE5_ANDROID_DEVICE="Pixel 8 / Android 15" \
 PHASE5_QA_SIGNOFF=true \
+PHASE5_DEVICE_QA_PASS=true \
+PHASE5_INSTALL_QA_PASS=true \
+PHASE5_CAMERA_PERMISSION_QA_PASS=true \
+PHASE5_BARCODE_QA_PASS=true \
+PHASE5_LABEL_CAPTURE_QA_PASS=true \
+PHASE5_PROGRESS_PHOTO_QA_PASS=true \
+PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS=true \
+PHASE5_NOTIFICATION_QA_PASS=true \
+PHASE5_SHARE_SHEET_QA_PASS=true \
+PHASE5_REVENUECAT_NATIVE_QA_PASS=true \
+PHASE5_SENTRY_NATIVE_QA_PASS=true \
+PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true \
+PHASE5_ACCESSIBILITY_QA_PASS=true \
 PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
@@ -41,6 +54,9 @@ npm run phase5:qa-packet:strict
 `PHASE5_QA_SIGNOFF` is trimmed and case-normalized, but only `true` passes.
 `PHASE5_SIGNED_OFF_BY` must be a real tester/reviewer name; placeholders and
 generic tester labels are rejected.
+Each granular `PHASE5_*_PASS` flag is also trimmed and case-normalized, but only
+`true` passes. `PHASE5_NATIVE_OCR_QA_PASS=true` is required only when native OCR
+is enabled in the build; otherwise OCR remains hidden from launch claims.
 
 ## Native Runtime Policy
 

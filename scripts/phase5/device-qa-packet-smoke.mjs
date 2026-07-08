@@ -36,6 +36,20 @@ const validEvidence = {
   PHASE5_ANDROID_DEVICE: 'Pixel 8 / Android 15',
   PHASE5_QA_SIGNOFF: 'true',
   PHASE5_SIGNED_OFF_BY: 'Tas Mohammed',
+  PHASE5_DEVICE_QA_PASS: 'true',
+  PHASE5_INSTALL_QA_PASS: 'true',
+  PHASE5_CAMERA_PERMISSION_QA_PASS: 'true',
+  PHASE5_BARCODE_QA_PASS: 'true',
+  PHASE5_LABEL_CAPTURE_QA_PASS: 'true',
+  PHASE5_PROGRESS_PHOTO_QA_PASS: 'true',
+  PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS: 'true',
+  PHASE5_NOTIFICATION_QA_PASS: 'true',
+  PHASE5_SHARE_SHEET_QA_PASS: 'true',
+  PHASE5_REVENUECAT_NATIVE_QA_PASS: 'true',
+  PHASE5_SENTRY_NATIVE_QA_PASS: 'true',
+  PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS: 'true',
+  PHASE5_ACCESSIBILITY_QA_PASS: 'true',
+  PHASE5_NATIVE_OCR_QA_PASS: 'false',
 };
 
 function run(extraEnv) {
@@ -65,6 +79,37 @@ const cases = [
     expect(result) {
       const text = output(result);
       return result.status === 0 && /device-qa-packet\.json/.test(text) && !/^FAIL /m.test(text);
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects missing granular evidence flags',
+    result: run({ PHASE5_BARCODE_QA_PASS: 'yes' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_BARCODE_QA_PASS=true \(physical-device barcode scan and checksum matrix\)/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet requires native OCR evidence only when OCR is enabled',
+    result: run({ EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true', PHASE5_NATIVE_OCR_QA_PASS: 'false' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_NATIVE_OCR_QA_PASS=true \(native OCR real-label text recognition\)/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet accepts native OCR evidence when OCR is enabled',
+    result: run({ EXPO_PUBLIC_NATIVE_OCR_ENABLED: 'true', PHASE5_NATIVE_OCR_QA_PASS: ' TRUE ' }),
+    expect(result) {
+      return result.status === 0 && !/^FAIL /m.test(output(result));
     },
   },
   {
@@ -164,9 +209,7 @@ const cases = [
     result: run({ PHASE5_SIGNED_OFF_BY: ' Tas Mohammed ' }),
     expect(result) {
       if (result.status !== 0) return false;
-      const packet = JSON.parse(
-        readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'),
-      );
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return packet.buildEvidence.signedOffBy === 'Tas Mohammed';
     },
   },

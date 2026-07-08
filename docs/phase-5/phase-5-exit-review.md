@@ -16,6 +16,10 @@ Completed in repo:
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.
+- The generated QA packet now requires granular physical-device evidence flags
+  for install, camera permission recovery, barcode, label capture, progress
+  photos, encrypted photo storage, notifications, share sheet, RevenueCat,
+  Sentry, Supabase catalog calls, accessibility, and conditional native OCR.
 
 Still blocked before beta:
 
@@ -32,4 +36,6 @@ Still blocked before beta:
 
 Phase 5 supports the paid app thesis only if it makes the core loop trustworthy on real phones: scan/search product, add shelf item, capture progress, receive reminders, and share safely. The highest-risk revenue blockers are not visual polish; they are barcode match reliability, photo privacy proof, reminder reliability, and purchase SDK readiness.
 
-Do not advance launch copy from "beta/internal" to customer-facing claims until the generated QA packet has no blockers.
+Do not advance launch copy from "beta/internal" to customer-facing claims until
+the generated QA packet has no blockers and every required granular evidence
+flag is backed by physical-device evidence.

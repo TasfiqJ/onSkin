@@ -182,9 +182,21 @@ Status: needs-device-verification
 
 Evidence needed:
 
-- Build IDs.
-- Device names and OS versions.
-- Named tester signoff.
+- Build IDs via `PHASE5_IOS_BUILD_ID` and `PHASE5_ANDROID_BUILD_ID`.
+- Device names and OS versions via `PHASE5_IOS_DEVICE` and
+  `PHASE5_ANDROID_DEVICE`.
+- Named tester signoff via `PHASE5_QA_SIGNOFF=true` and
+  `PHASE5_SIGNED_OFF_BY=<real tester/reviewer name>`.
+- Strict Phase 5 evidence flags:
+  `PHASE5_DEVICE_QA_PASS`, `PHASE5_INSTALL_QA_PASS`,
+  `PHASE5_CAMERA_PERMISSION_QA_PASS`, `PHASE5_BARCODE_QA_PASS`,
+  `PHASE5_LABEL_CAPTURE_QA_PASS`, `PHASE5_PROGRESS_PHOTO_QA_PASS`,
+  `PHASE5_ENCRYPTED_PHOTO_STORAGE_QA_PASS`, `PHASE5_NOTIFICATION_QA_PASS`,
+  `PHASE5_SHARE_SHEET_QA_PASS`, `PHASE5_REVENUECAT_NATIVE_QA_PASS`,
+  `PHASE5_SENTRY_NATIVE_QA_PASS`, `PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS`,
+  and `PHASE5_ACCESSIBILITY_QA_PASS`. Set `PHASE5_NATIVE_OCR_QA_PASS=true`
+  only if native OCR is enabled and real-label QA passes on physical iOS and
+  Android.
 - Updated `docs/phase-5/generated/device-qa-packet.md`.
 
 ## P1 - Catalog And Source Quality
