@@ -29,6 +29,8 @@ function PhotoDetailScreenContent() {
   const { reference, remove, note } = usePhotoActions();
   const photo = data?.all.find((p) => p.id === id);
   const [draft, setDraft] = useState(photo?.notes ?? '');
+  const [shareConfirmVisible, setShareConfirmVisible] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
   if (!photo) {
@@ -144,6 +146,7 @@ function PhotoDetailScreenContent() {
     day: 'numeric',
   });
   const aligned = (photo.alignmentScore ?? 0) >= 0.85 && (photo.lightingScore ?? 0) >= 0.7;
+  const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;
 
   function confirmDelete() {
     Alert.alert('Delete this photo?', 'It’s removed from your phone. This can’t be undone.', [
@@ -156,11 +159,17 @@ function PhotoDetailScreenContent() {
     ]);
   }
 
+  async function shareCurrentPhoto() {
+    if (!photo) return;
+    setShareFeedback(null);
+    setShareConfirmVisible(false);
+    const shared = await sharePhotoImageOnly(photo);
+    if (!shared) setShareFeedback(PHOTO_COPY.detail.shareUnavailable);
+  }
+
   function confirmShare() {
-    Alert.alert(PHOTO_COPY.detail.shareTitle, PHOTO_COPY.detail.shareBody, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: PHOTO_COPY.detail.shareConfirm, onPress: () => void sharePhotoImageOnly(photo) },
-    ]);
+    setShareFeedback(null);
+    setShareConfirmVisible(true);
   }
 
   return (
@@ -183,14 +192,18 @@ function PhotoDetailScreenContent() {
         <View style={{ width: 44 }} />
       </View>
 
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}
+      >
       {/* photo */}
       <View
         style={{
-          height: 330,
+          height: photoHeight,
           borderRadius: 20,
           overflow: 'hidden',
           backgroundColor: '#2A251E',
-          marginBottom: 14,
+          marginBottom: compact ? 10 : 14,
         }}
       >
         {photo.localUri ? (
@@ -205,7 +218,7 @@ function PhotoDetailScreenContent() {
       </View>
 
       {/* quality + time chips */}
-      <View style={{ flexDirection: 'row', gap: 8, marginBottom: 14 }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
         <View
           style={{
             flexDirection: 'row',
@@ -295,10 +308,8 @@ function PhotoDetailScreenContent() {
         />
       </View>
 
-      {/* actions */}
-      <View
-        style={{ flexDirection: 'row', gap: 8, paddingTop: 16, paddingBottom: insets.bottom + 20 }}
-      >
+      {!shareConfirmVisible ? (
+        <View style={{ flexDirection: 'row', gap: 8, paddingTop: 16 }}>
         <Pressable
           accessibilityRole="button"
           onPress={() => {
@@ -349,7 +360,121 @@ function PhotoDetailScreenContent() {
         >
           <Text style={{ color: '#D9A183', fontSize: 16 }}>🗑</Text>
         </Pressable>
-      </View>
+        </View>
+      ) : null}
+      </ScrollView>
+      {shareFeedback ? (
+        <View
+          accessibilityRole="alert"
+          style={{
+            position: 'absolute',
+            left: 24,
+            right: 24,
+            bottom: insets.bottom + 82,
+            backgroundColor: '#211C16',
+            borderColor: 'rgba(244,239,231,0.14)',
+            borderRadius: 16,
+            borderWidth: 1,
+            paddingHorizontal: 14,
+            paddingVertical: 12,
+          }}
+        >
+          <Text
+            style={{
+              color: 'rgba(244,239,231,0.84)',
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 13,
+              lineHeight: 18,
+              textAlign: 'center',
+            }}
+          >
+            {shareFeedback}
+          </Text>
+        </View>
+      ) : null}
+      {shareConfirmVisible ? (
+        <View
+          style={{
+            position: 'absolute',
+            left: 24,
+            right: 24,
+            bottom: insets.bottom + 20,
+            backgroundColor: '#211C16',
+            borderColor: 'rgba(244,239,231,0.16)',
+            borderRadius: 18,
+            borderWidth: 1,
+            padding: 14,
+          }}
+        >
+          <Text
+            style={{
+              color: '#F4EFE7',
+              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontSize: 14,
+              lineHeight: 19,
+            }}
+          >
+            {PHOTO_COPY.detail.shareTitle}
+          </Text>
+          <Text
+            style={{
+              color: 'rgba(244,239,231,0.76)',
+              fontFamily: 'HankenGrotesk_400Regular',
+              fontSize: 13,
+              lineHeight: 18,
+              marginTop: 4,
+            }}
+          >
+            {PHOTO_COPY.detail.shareBody}
+          </Text>
+          <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setShareConfirmVisible(false)}
+              style={{
+                flex: 1,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: 'rgba(244,239,231,0.08)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  color: 'rgba(244,239,231,0.82)',
+                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontSize: 13,
+                }}
+              >
+                Cancel
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => void shareCurrentPhoto()}
+              style={{
+                flex: 1,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: '#F4EFE7',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  color: BG,
+                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontSize: 13,
+                }}
+              >
+                {PHOTO_COPY.detail.shareConfirm}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }

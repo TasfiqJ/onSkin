@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened single-photo Progress detail sharing on compact phones. The detail
+  route no longer relies on a platform `Alert.alert` confirmation that can be
+  invisible/inert on Expo web; it uses a route-owned confirmation panel and
+  leaves stable `accessibilityRole="alert"` share-unavailable feedback when the
+  photo cannot be shared. The compact layout now reduces the photo height, wraps
+  quality chips, keeps the dark detail content scrollable, and keeps the 48 px
+  action row fully visible at 320 x 568. Focused photo route/share tests pass.
+  In-app browser Expo web E2E with populated progress photos, store-backed Pro,
+  and `EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1` verifies direct
+  `/progress/e2e-front-2026-04-01` shows fully visible share confirmation
+  controls, stays on the same route after failed sharing, renders accessible
+  recovery copy, has zero horizontal overflow, and logs no browser warnings or
+  errors. Evidence is in
+  `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`,
+  with the tracked report in
+  `docs/e2e-bug-reports/2026-07-08-progress-photo-share-failure.md`.
+
 - Hardened the contextual Pro gate while entitlement is resolving. The gate no
   longer leaves slow entitlement checks as an empty screen; it shows a neutral
   `Checking your access` holding state and keeps Pro-only route children hidden

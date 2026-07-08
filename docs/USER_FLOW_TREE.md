@@ -562,6 +562,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open a single-photo detail, tap Share photo, confirm, and simulate native sharing being unavailable, the temporary export failing, or the share sheet rejecting.
   - Expected result: The app shows stable share-unavailable copy, leaves the user on the photo detail, deletes any temporary decrypted export, and does not include notes or promise redaction.
   - Evidence: Alert text, route state, share helper cleanup assertion, and native share-sheet log when available.
+  - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and `EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1` opens `/progress/e2e-front-2026-04-01`, verifies the photo detail actions are fully visible 48 px controls, taps the share icon, shows a route-owned confirmation panel with fully visible Cancel and Share photo controls, confirms share failure, stays on the same photo route, and renders the share-unavailable copy as an accessible alert with zero horizontal overflow and no browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`.
 - Branch: biometric app-lock prompt unavailable or rejected
   - Priority: Critical
   - Automate later: Yes

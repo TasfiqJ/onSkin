@@ -433,6 +433,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   Evidence is in
   `test-results/human-e2e/2026-07-07/progress-current-compact-check/`; it does
   not replace native camera/capture QA.
+- 2026-07-08: In-app browser Expo web E2E at 320 x 568 covers single-photo
+  detail share failure recovery. With `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`,
+  `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and
+  `EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1`, direct
+  `/progress/e2e-front-2026-04-01` renders fully visible 48 px Back, Set as
+  reference, Share, and Delete controls; tapping Share opens a route-owned
+  confirmation panel with fully visible Cancel and Share photo controls; failed
+  sharing closes the panel, keeps the photo route, and renders the
+  share-unavailable copy as an accessible alert above the 48 px action row.
+  Horizontal overflow is zero and browser warn/error logs are empty. Evidence is
+  in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`;
+  it does not replace native iOS/Android share-sheet and encrypted export QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 covers Ask route parity: `/ask`
   renders the free deterministic `Ask RoutineKind` advisor, a 48 px composer
   and Send control, and the disclosure footer with zero horizontal overflow;

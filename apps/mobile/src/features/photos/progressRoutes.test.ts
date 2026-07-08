@@ -126,6 +126,32 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('height: 380, borderRadius: 24');
   });
 
+  it('keeps single-photo detail actions and share failures stable on compact phones', () => {
+    const source = readAppRoute('progress/[id].tsx');
+
+    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain('const [shareConfirmVisible, setShareConfirmVisible] = useState(false);');
+    expect(source).toContain('const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}');
+    expect(source).toContain("height: photoHeight");
+    expect(source).toContain("marginBottom: compact ? 10 : 14");
+    expect(source).toContain("flexWrap: 'wrap'");
+    expect(source).toContain('const shared = await sharePhotoImageOnly(photo);');
+    expect(source).toContain('if (!shared) setShareFeedback(PHOTO_COPY.detail.shareUnavailable);');
+    expect(source).toContain('setShareConfirmVisible(true);');
+    expect(source).toContain('{PHOTO_COPY.detail.shareTitle}');
+    expect(source).toContain('{PHOTO_COPY.detail.shareBody}');
+    expect(source).toContain('onPress={() => void shareCurrentPhoto()}');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).not.toContain('Alert.alert(PHOTO_COPY.detail.shareTitle');
+    expect(source).not.toContain('height: 330,\n          borderRadius: 20');
+    expect(source).not.toContain(
+      "style={{ flexDirection: 'row', gap: 8, paddingTop: 16, paddingBottom: insets.bottom + 20 }}",
+    );
+    expect(source).not.toContain('onPress: () => void sharePhotoImageOnly(photo)');
+  });
+
   it('recovers direct review entries without a captured photo', () => {
     const source = readAppRoute('progress/review.tsx');
     const copy = readSource('features/photos/copy.ts');

@@ -45,6 +45,7 @@ describe('progress photo sharing', () => {
     mocks.isAvailableAsync.mockReset();
     mocks.shareAsync.mockReset();
     mocks.deletePhotoShareFile.mockResolvedValue(undefined);
+    delete process.env.EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE;
   });
 
   it('opens the native share sheet with a temporary export and deletes it afterwards', async () => {
@@ -95,6 +96,34 @@ describe('progress photo sharing', () => {
     ]);
   });
 
+  it('supports a dev-only E2E fixture for failed photo sharing', async () => {
+    const globalWithDev = globalThis as typeof globalThis & { __DEV__?: boolean };
+    const previousDev = globalWithDev.__DEV__;
+    globalWithDev.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE = '1';
+
+    try {
+      await expect(
+        sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
+      ).resolves.toBe(false);
+    } finally {
+      if (previousDev === undefined) {
+        delete globalWithDev.__DEV__;
+      } else {
+        globalWithDev.__DEV__ = previousDev;
+      }
+      delete process.env.EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE;
+    }
+
+    expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
+    expect(mocks.createPhotoShareFile).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+    expect(mocks.alerts[0]).toEqual([
+      PHOTO_COPY.detail.shareTitle,
+      PHOTO_COPY.detail.shareUnavailable,
+    ]);
+  });
+
   it('alerts and deletes the temporary export when the share sheet rejects', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(true);
     mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/onskin-share-photo-1.jpg');
@@ -136,7 +165,15 @@ describe('progress photo sharing', () => {
   it('keeps the photo detail route on the shared failure-handled share helper', () => {
     const source = readSource('app/progress/[id].tsx');
 
-    expect(source).toContain('sharePhotoImageOnly(photo)');
+    expect(source).toContain('const [shareConfirmVisible, setShareConfirmVisible] = useState(false);');
+    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain('setShareConfirmVisible(true);');
+    expect(source).toContain('setShareConfirmVisible(false);');
+    expect(source).toContain('const shared = await sharePhotoImageOnly(photo);');
+    expect(source).toContain('if (!shared) setShareFeedback(PHOTO_COPY.detail.shareUnavailable);');
+    expect(source).toContain('onPress={() => void shareCurrentPhoto()}');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).not.toContain('Alert.alert(PHOTO_COPY.detail.shareTitle');
     expect(source).not.toContain("import * as Sharing from 'expo-sharing'");
     expect(source).not.toContain('createPhotoShareFile');
     expect(source).not.toContain('deletePhotoShareFile');

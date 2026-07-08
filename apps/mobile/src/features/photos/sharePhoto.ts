@@ -13,8 +13,18 @@ function alertShareUnavailable(): void {
   Alert.alert(PHOTO_COPY.detail.shareTitle, PHOTO_COPY.detail.shareUnavailable);
 }
 
+function shouldForcePhotoShareFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  return process.env.EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE === '1';
+}
+
 export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promise<boolean> {
   if (!photo?.localUri) {
+    alertShareUnavailable();
+    return false;
+  }
+
+  if (shouldForcePhotoShareFailure()) {
     alertShareUnavailable();
     return false;
   }
