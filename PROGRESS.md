@@ -15,16 +15,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   core-loop signoff can be trusted.
 
 - Tightened split-short Progress, paywall, Shelf, and subscription-settings
-  text-pressure layouts. The locked `/progress` photo-timeline paywall now
-  switches to a 320 x 390 header-only treatment that hides lower-priority body
-  copy, keeps Terms, Privacy, Restore, Maybe later, store-unavailable copy, and
-  Start free trial complete, and verifies all paywall targets at 48 px or larger
-  with zero horizontal overflow. Direct upsell uses the same compact icon
-  dismiss pattern, free subscription settings drop secondary body copy below
-  410 px, and scan fallback rows hide subtitles only on sub-460 px fallback
-  screens while preserving full accessibility labels. Focused
-  paywall/settings/shelf contracts pass, and evidence is in
-  `test-results/human-e2e/2026-07-08/progress-progate-split-short-390-current/`.
+  text-pressure layouts under 320 x 390 / 130% pressure. The locked `/progress`
+  photo-timeline paywall now uses a compact icon dismiss and hides
+  lower-priority body copy, direct upsell uses the same compact icon dismiss,
+  free subscription settings drop secondary body copy below 410 px, and scan
+  fallback rows hide subtitles only on sub-460 px fallback screens while
+  preserving full accessibility labels. Focused paywall/settings/shelf
+  contracts pass, and the final 49-route sweep is clean with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-130-split-short-390-postfix-4/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-130-split-short-390-route-clearance.md`.
 
 - Fixed the 320 x 430 / 130% text-pressure ProGate header failure. Shared
   contextual ProGate paywalls now stack compact compliance above `Maybe later`

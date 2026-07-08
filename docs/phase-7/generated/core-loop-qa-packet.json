@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T18:53:00.898Z",
+  "generatedAt": "2026-07-08T21:40:52.431Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "48afa938fa9b40cee2b50e2189daa7bf3e2d7910",
-  "gitStatus": "",
+  "gitSha": "bc6ed3b2b56572a5f81b4e5d20c9caf5b478cc59",
+  "gitStatus": "M docs/e2e/generated/human-e2e-manifest.json\n M docs/e2e/generated/human-e2e-manifest.md",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -116,8 +116,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 11407,
-      "sha256": "68de59211e7bd4051bbba65042722123f6f8e20e1f27f4eb40bc9d363a0ad2cd"
+      "bytes": 12147,
+      "sha256": "bcb595f695619b5c4e2104e8eb31389089cdca30d6da8d439e75141d1f98a0a1"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -152,8 +152,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 32161,
-      "sha256": "a006ea9b8260d2d578bf02b73f14a5c63d238ea930c322e81e4256a63b4d355e"
+      "bytes": 32979,
+      "sha256": "34f8507abf0482b84b8b08e46f36975d66acc6ff1a541cbb4db45efd4b6c9030"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
@@ -176,26 +176,86 @@
     {
       "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
       "exists": true,
-      "bytes": 9809,
-      "sha256": "e1ea6e596d962c67af726fb6a8cac773c3499d54bb0a95f7a0f9682acf459b31"
+      "bytes": 10271,
+      "sha256": "51d7ab3a8ab4f8f7af0405684562774cc2020461c73c507cd5b6516ccd49c206"
     },
     {
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
-      "bytes": 14089,
-      "sha256": "d55d32b8762d00ab70c09a695e3eb8476e50ab15bda4f50a17f69ff747ce9133"
+      "bytes": 14514,
+      "sha256": "2ab330cd53a968052cd3ec1e558c4563a9119c8ea2f5cd1f551e14047fbddd83"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",
       "exists": true,
-      "bytes": 9106,
-      "sha256": "757a489d6ad9b572859c244da99c1bc6261537842a410e13abad7bbd60bcf4b2"
+      "bytes": 10280,
+      "sha256": "da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb"
+    },
+    {
+      "path": "scripts/e2e/human-e2e-manifest.mjs",
+      "exists": true,
+      "bytes": 12197,
+      "sha256": "b7c7ba7e3391e764ac5586f270adc6093910efbf2d977070ba130d562d7c93b7"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
       "bytes": 9767,
       "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
+    },
+    {
+      "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+      "exists": true,
+      "bytes": 9642,
+      "sha256": "e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29"
+    },
+    {
+      "path": "docs/E2E_TESTING_CHECKLIST.md",
+      "exists": true,
+      "bytes": 3387,
+      "sha256": "ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "exists": true,
+      "bytes": 199227,
+      "sha256": "d2a47edfcec1130458755a885ddab610099483b022812e27625d13f2031a1aa0"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.json",
+      "exists": true,
+      "bytes": 3293,
+      "sha256": "e09006b366859bf664faefda9200d0c7cb0704fd2045c2167804926bc9562a3d"
+    },
+    {
+      "path": "docs/e2e/generated/human-e2e-manifest.md",
+      "exists": true,
+      "bytes": 1774,
+      "sha256": "dca25510772a73d00dd418b7ca4fde23405c842496ef4ab31e50ae03a6038d9f"
+    },
+    {
+      "path": "docs/phase-5/generated/device-qa-packet.json",
+      "exists": true,
+      "bytes": 11077,
+      "sha256": "e7b2975a30a9c048f8b042eee0e4abecac95dcc525786a900aab4a044046b81a"
+    },
+    {
+      "path": "docs/phase-5/generated/device-qa-packet.md",
+      "exists": true,
+      "bytes": 9770,
+      "sha256": "e5cafe2c7e1d1d13fdb783bd0abf6340b4e208fb06db835a6b5b25fb46bcc28a"
+    },
+    {
+      "path": "docs/phase-6/generated/payments-qa-packet.json",
+      "exists": true,
+      "bytes": 10518,
+      "sha256": "d31dd8aa571362206842f77071666a88a1c9b83249ee9cfd36a7bf8884e89fd4"
+    },
+    {
+      "path": "docs/phase-6/generated/payments-qa-packet.md",
+      "exists": true,
+      "bytes": 7857,
+      "sha256": "8c7ea2614393d42e881884f3e0405b68f0fb57b4991a5729ee90303484c2b2da"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -218,14 +278,14 @@
     {
       "path": "docs/phase-7/core-loop-qa-checklist.md",
       "exists": true,
-      "bytes": 60173,
-      "sha256": "e9febe41e458fc2b3ef02093d3a7e27dd221d788892d75c09e4cdb04f16de344"
+      "bytes": 60287,
+      "sha256": "43800c02917db3a42017375c4ec026a868fee17f988478c3f2e5f2da25d14dca"
     },
     {
       "path": "docs/phase-7/phase-7-exit-review.md",
       "exists": true,
-      "bytes": 3218,
-      "sha256": "2b4f7601bd8165061ac3e8cb2e4c05726a865218dd1dd50867458dbdddfbed82"
+      "bytes": 3509,
+      "sha256": "033edec9712f3e4bb2529ca8f6b27b91953503664d326774113fdec9ec7748d4"
     }
   ],
   "blockers": [
@@ -251,5 +311,7 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
+  ]
 }
