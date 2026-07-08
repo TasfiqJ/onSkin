@@ -158,6 +158,17 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; this does not
   replace final trademark clearance, store listings, native identifiers, final
   domain, Universal Links/App Links, or device QA.
+- 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers direct-entry
+  reminders/streak/widgets Pro gating. Fresh free `/routine/streak`,
+  `/routine/welcome-back`, and `/routine/widgets` all show the
+  reminders/widgets contextual paywall with no premium surface content, 48 px+
+  visible controls, zero horizontal overflow, no JavaScript dialog, and no
+  current-origin warn/error logs. Starting the no-card Pro week unlocks
+  `/routine/streak`, `/routine/welcome-back`, and the widget deferred surface;
+  `Tonight's step` and `Back to Today` both return to `/today`. Evidence is in
+  `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`; this
+  does not replace native iOS/Android rendering, screen-reader, safe-area,
+  RevenueCat, or WidgetKit/Glance/ActivityKit QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers local Trend route recovery in
   both launch-gated and enabled modes. Default `/trend/optin` and
   `/trend/fairness` show the deferred Trend surface with `Back to Progress` and

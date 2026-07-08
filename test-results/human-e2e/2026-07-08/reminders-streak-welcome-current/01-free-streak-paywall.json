@@ -1,0 +1,92 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": null,
+      "h": 48,
+      "role": "button",
+      "text": "Maybe later",
+      "w": 102,
+      "x": 194,
+      "y": 4
+    },
+    {
+      "aria": null,
+      "h": 50,
+      "role": "button",
+      "text": "Start free trial",
+      "w": 272,
+      "x": 24,
+      "y": 367
+    },
+    {
+      "aria": null,
+      "h": 60,
+      "role": "button",
+      "text": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "w": 272,
+      "x": 24,
+      "y": 425
+    },
+    {
+      "aria": null,
+      "h": 48,
+      "role": "button",
+      "text": "Terms",
+      "w": 48,
+      "x": 62,
+      "y": 485
+    },
+    {
+      "aria": null,
+      "h": 48,
+      "role": "button",
+      "text": "Privacy",
+      "w": 48,
+      "x": 135,
+      "y": 485
+    },
+    {
+      "aria": null,
+      "h": 48,
+      "role": "button",
+      "text": "Restore",
+      "w": 49,
+      "x": 209,
+      "y": 485
+    }
+  ],
+  "overflowX": 0,
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "Maybe later",
+    "Reminders, streaks & home-screen widgets.",
+    "Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro.",
+    "Start 14 days free, then $49.99/year $4.16/mo",
+    "Start 14 days free, then $49.99/year",
+    "Start 14 days free, then",
+    "$49.99/year",
+    "/year",
+    "$4.16/mo",
+    "Store checkout is unavailable in this preview. You can keep exploring.",
+    "Start free trial",
+    "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+    "Explore first. 7 days of Pro No credit card. See your routine work, then decide.",
+    "Explore first. 7 days of Pro",
+    "No credit card. See your routine work, then decide.",
+    "›",
+    "Terms · Privacy · Restore",
+    "Terms",
+    "·",
+    "Privacy",
+    "Restore"
+  ],
+  "title": "",
+  "url": "http://localhost:8153/routine/streak",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": null,
+      "h": 56,
+      "role": "button",
+      "text": "Back to Today",
+      "w": 272,
+      "x": 24,
+      "y": 477
+    }
+  ],
+  "overflowX": 0,
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "BETA Widgets are not in this beta Today check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA. The beta should prove the core habit loop before adding OS-level surfaces.",
+    "BETA",
+    "Widgets are not in this beta",
+    "Today check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA.",
+    "The beta should prove the core habit loop before adding OS-level surfaces.",
+    "Back to Today"
+  ],
+  "title": "",
+  "url": "http://localhost:8153/routine/widgets",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

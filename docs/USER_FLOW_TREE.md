@@ -675,7 +675,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets` directly.
   - Expected result: Free users see the reminders/widgets contextual paywall, not the streak or widget surface.
-  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified free `/routine/widgets` shows `Reminders, streaks & home-screen widgets.` contextual paywall; after local reverse trial, `/routine/widgets` reaches the widget deferred surface with `Back to Today` instead of the paywall. Streak/welcome-back remain covered by route contracts, not fresh UI screenshots.
+  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verified fresh free direct `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets` all render the `Reminders, streaks & home-screen widgets.` contextual paywall, expose no streak, welcome-back, or widget surface content before entitlement, keep visible controls 48 px+, keep horizontal overflow at zero, and open no JavaScript dialog. From the same paywall, `Explore first. 7 days of Pro` starts the local no-card reverse trial; direct `/routine/widgets` reaches the deferred widget surface with `Back to Today`, `/routine/streak` renders `Showing up beats being perfect.`, and `/routine/welcome-back` renders `Welcome back.` with the `Tonight's step` CTA. Evidence is in `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`.
 - Branch: conflict check quota and direct routes
   - Priority: Critical
   - Automate later: Yes
@@ -714,7 +714,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open the same routes with an active Pro or reverse-trial entitlement.
   - Expected result: The intended Pro surface renders and remains usable.
-  - Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified local reverse-trial entitlement unlocks `/routine/plan`, unlocks `/cycle/settings`, and routes `/routine/widgets` to the widget deferred surface rather than the reminders/widgets paywall.
+  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies local reverse-trial entitlement unlocks `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets`: streak shows the calm adherence surface, welcome-back shows the earn-back surface with `Tonight's step`, and widgets show the deferred native-widget surface with `Back to Today` instead of the reminders/widgets paywall. Earlier 2026-07-07 evidence also verifies local reverse-trial entitlement unlocks `/routine/plan` and `/cycle/settings`.
 - Branch: unreviewed cycle-cadence production gate
   - Priority: Critical
   - Automate later: Yes
@@ -730,6 +730,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot sequence, visible route snapshot, cycle-night spacing snapshot, and small-phone button-geometry snapshot.
   - Current cycle-label evidence (2026-07-07): In-app browser E2E at 320 x 568 with local reverse trial and two shelf actives reproduced terse `/cycle/week` and `/cycle/settings` labels (`N1`, `N2`, etc.), then verified the fix. Post-fix `/cycle/week` and `/cycle/settings` render `Night 1`, `Night 2`, etc., contain no `N#` visible labels, keep zero horizontal overflow, and expose no clipped or sub-44 px visible controls. Evidence is in `test-results/human-e2e/2026-07-07/cycle-night-labels-current/`.
   - Current shared-sheet evidence (2026-07-07): Codex in-app browser Expo web at 320 x 568 verifies direct `/cycle/disruption` renders one compact modal dialog with all four disruption choices, zero horizontal overflow, no sub-44 exposed controls, a non-focusable hidden backdrop, and the intended compact 24 px web bottom padding after the shared `Sheet` safe-area hardening.
+  - Current reminders/widgets exit evidence (2026-07-08): Codex in-app browser Expo web at 320 x 568 verifies `/routine/welcome-back` keeps a fully visible `Tonight's step` action and returns direct entries to `/today`; deferred `/routine/widgets` uses `Back to Today` and returns to `/today`; both routes keep visible controls 48 px+ with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`.
 - Branch: back, refresh, relaunch, or navigation
   - Priority: Important
   - Automate later: Yes

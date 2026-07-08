@@ -1,0 +1,47 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": "Back",
+      "h": 48,
+      "role": "button",
+      "text": "<",
+      "w": 48,
+      "x": 24,
+      "y": 4
+    }
+  ],
+  "overflowX": 0,
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "< STREAK & ADHERENCE Showing up beats being perfect. Your nights, no pressure. This week 0 of 7 nights M T W T F S S July less more",
+    "< STREAK & ADHERENCE",
+    "<",
+    "STREAK & ADHERENCE",
+    "Showing up beats being perfect.",
+    "Your nights, no pressure.",
+    "This week 0 of 7 nights M T W T F S S",
+    "This week 0 of 7 nights",
+    "This week",
+    "0 of 7 nights",
+    "M T W T F S S",
+    "M",
+    "T",
+    "W",
+    "F",
+    "S",
+    "July less more",
+    "July",
+    "less more",
+    "less",
+    "more"
+  ],
+  "title": "",
+  "url": "http://localhost:8153/routine/streak",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

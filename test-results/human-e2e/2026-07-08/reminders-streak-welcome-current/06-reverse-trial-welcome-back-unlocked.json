@@ -1,0 +1,32 @@
+{
+  "bodyScrollWidth": 320,
+  "clientWidth": 320,
+  "controls": [
+    {
+      "aria": null,
+      "h": 56,
+      "role": "button",
+      "text": "Tonight’s step",
+      "w": 272,
+      "x": 24,
+      "y": 497
+    }
+  ],
+  "overflowX": 0,
+  "scrollHeight": 569,
+  "shortControls": [],
+  "text": [
+    "✓ Welcome back. It’s been a few days. That’s okay. Start again tonight; consistency over time is what counts, not a perfect chain. Tonight’s step",
+    "✓ Welcome back. It’s been a few days. That’s okay. Start again tonight; consistency over time is what counts, not a perfect chain.",
+    "✓",
+    "Welcome back.",
+    "It’s been a few days. That’s okay. Start again tonight; consistency over time is what counts, not a perfect chain.",
+    "Tonight’s step"
+  ],
+  "title": "",
+  "url": "http://localhost:8153/routine/welcome-back",
+  "viewport": {
+    "height": 569,
+    "width": 320
+  }
+}

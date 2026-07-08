@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Verified the reminders/streak/widgets direct-entry Pro gate and local
+  reverse-trial access on `main`. Codex in-app browser Expo web at 320 x 568
+  confirms fresh free direct `/routine/streak`, `/routine/welcome-back`, and
+  `/routine/widgets` all show the `Reminders, streaks & home-screen widgets.`
+  contextual paywall with no premium content, 48 px+ visible controls, no
+  horizontal overflow, and no browser dialogs or current-origin warn/error logs.
+  From the same paywall, `Explore first. 7 days of Pro` unlocks the calm streak,
+  welcome-back, and widget-deferred surfaces; `Tonight's step` and
+  `Back to Today` return direct entries to `/today`. Evidence and report are in
+  `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`.
+
 - Hardened and verified the installed-base Trend reconsent gate. When Supabase
   is configured and the consent ledger returns old `photo_capture` consent but
   no `photo_trend_insights` row, Trend now fails closed instead of falling back
