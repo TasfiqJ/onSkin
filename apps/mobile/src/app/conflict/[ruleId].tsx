@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
@@ -259,18 +260,30 @@ function ConflictFrame({
   conflict: DetectedConflict | undefined;
   onDismiss: () => void;
 }) {
-  const { height } = useWindowDimensions();
-  const sheetMaxHeight = Math.max(320, height - 24);
+  const { height: viewportHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
+  const dialogLabel = conflict ? familyTitle(conflict) : 'Timing note unavailable';
+  const contentPaddingBottom =
+    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: backdrop }}>
       <Pressable
+        aria-hidden
         className="absolute inset-0"
-        accessibilityRole="button"
-        accessibilityLabel="Dismiss"
+        accessible={false}
+        accessibilityElementsHidden
+        focusable={false}
+        importantForAccessibility="no"
+        tabIndex={-1}
         onPress={onDismiss}
       />
       <View
+        aria-modal
+        role="dialog"
+        accessibilityLabel={dialogLabel}
+        accessibilityViewIsModal
         className="rounded-t-sheet px-7 pt-4"
         style={{ backgroundColor: sheetBg, maxHeight: sheetMaxHeight }}
       >
@@ -282,6 +295,11 @@ function ConflictFrame({
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerClassName="pb-10"
+          contentContainerStyle={
+            contentPaddingBottom === undefined
+              ? undefined
+              : { paddingBottom: contentPaddingBottom }
+          }
           keyboardShouldPersistTaps="handled"
         >
           {!conflict ? (

@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Hardened `/conflict/[ruleId]` stale conflict and detail sheets for compact
+  phone viewports, native bottom safe areas, and web modal semantics. E2E first
+  caught the route-local sheet still collapsing when Expo web reported a
+  transient 44 px window height: the dialog had `maxHeight: 0px` and pushed
+  `Back to Shelf` / `Add a product` below the viewport. The fallback now only
+  trusts viewport heights greater than the 44 px dismiss reserve, otherwise it
+  uses the compact sheet fallback. The same fallback guard was applied to
+  `/commerce/consent` because it shares the route-local bottom-sheet pattern.
+  Post-fix in-app browser evidence at 320 x 568 confirms the missing conflict
+  sheet has a 524 px dialog, `aria-modal`, the `Timing note unavailable` label,
+  zero horizontal overflow, no mojibake, a 56 px `Back to Shelf` action, and a
+  48 px `Add a product` action. Evidence is in
+  `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`, with the
+  tracked report in
+  `docs/e2e-bug-reports/2026-07-08-conflict-detail-safe-area.md`.
+
 - Hardened the `/commerce/consent` MHMDA where-to-buy consent gate for native
   bottom safe areas and modal semantics. The route-local sheet now uses
   `useWindowDimensions()` plus `useSafeAreaInsets()`, caps itself at viewport

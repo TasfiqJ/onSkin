@@ -21,7 +21,7 @@ export default function CommerceConsentSheet() {
   const qc = useQueryClient();
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const sheetMaxHeight = Math.max(0, viewportHeight - 44);
+  const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
   const footerPaddingBottom =
     insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined;
 

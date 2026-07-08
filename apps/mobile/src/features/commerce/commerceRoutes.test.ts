@@ -98,7 +98,9 @@ describe('Commerce route contracts', () => {
     expect(source).toContain('sheetMaxHeight');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const insets = useSafeAreaInsets();');
-    expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
+    expect(source).toContain(
+      'const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;',
+    );
     expect(source).toContain(
       'insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined',
     );
@@ -114,6 +116,7 @@ describe('Commerce route contracts', () => {
     expect(source).toContain('<ScrollView');
     expect(source).toContain('style={{ flexShrink: 1 }}');
     expect(source).toContain('className="h-[48px] items-center justify-center"');
+    expect(source).not.toContain('viewportHeight > 0 ? Math.max(0, viewportHeight - 44) : 524');
     expect(source).not.toContain('height - 48');
     expect(source).not.toContain('className="h-[44px] items-center justify-center"');
     expect(source).not.toContain('h-[42px]');

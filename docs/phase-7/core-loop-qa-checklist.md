@@ -191,6 +191,18 @@ Run this checklist on real iOS and Android beta builds before enabling public pr
   `test-results/human-e2e/2026-07-07/conflict-detail-choice-current/`; it does
   not replace dermatologist/cosmetic-chemist approval of the starter conflict
   matrix or native-device QA.
+- 2026-07-08: In-app browser E2E at 320 x 568 covers the stale conflict-detail
+  compact-sheet fallback after the first safe-area patch exposed a zero-height
+  regression. Pre-fix `/conflict/missing-rule-e2e` rendered `maxHeight: 0px`
+  and pushed `Back to Shelf` / `Add a product` below the viewport. Post-fix,
+  the route uses the compact fallback unless the reported viewport is taller
+  than the 44 px dismiss reserve; the same guard now protects `/commerce/consent`.
+  The rerun shows a 524 px dialog, `aria-modal`, `Timing note unavailable`
+  label, zero horizontal overflow, no mojibake, and visible 56 px / 48 px
+  actions. Evidence is in
+  `test-results/human-e2e/2026-07-08/conflict-detail-safe-area/`; it does not
+  replace native iOS/Android home-indicator, Dynamic Type, VoiceOver, or
+  TalkBack QA.
 - 2026-07-07: Expo web E2E at 320 x 568 covers commerce trust route recovery in
   default deferred and enabled local modes. Default `/commerce/stacks`,
   `/commerce/transparency`, `/commerce/consent`, and
