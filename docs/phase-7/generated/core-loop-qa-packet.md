@@ -1,6 +1,6 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-08T11:33:06.367Z
+Generated at: 2026-07-08T14:09:05.167Z
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -41,8 +41,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/lib/launch/phase7.ts | present | 5290 | 4369c73351a58fd6cad9c5d94917185fadb7e67bf219aa9f85814dea5055e663 |
 | apps/mobile/src/lib/launch/phase7.test.ts | present | 7951 | d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815 |
 | apps/mobile/src/components/launch/DeferredSurface.tsx | present | 2028 | 235a3fcdab2164c06c8677417a2ab5756779e0a53d1dd8b0d7485e6eba619f87 |
-| apps/mobile/src/app/(tabs)/today.tsx | present | 26446 | b9a4d05ad214907c5c0fa1df0fa33bf890184ca3ff2dd1c06b3ab7a7c4b5a830 |
-| apps/mobile/src/app/(tabs)/progress.tsx | present | 23137 | 3254ae337a7879c291cc3fe718a5a9786e3d4c514633de7eca3a3a45b3a9dcf2 |
+| apps/mobile/src/app/(tabs)/today.tsx | present | 26454 | 81a70bfe5b746bbdbd288e61a2c88d70493dae60473ad8575d2cf975902c15a4 |
+| apps/mobile/src/app/(tabs)/progress.tsx | present | 25194 | db75034f851c2238d6d8de011bc42a938bea2d0eb11d57d9b4449e64bbd2a652 |
 | apps/mobile/src/app/(tabs)/you.tsx | present | 32161 | a006ea9b8260d2d578bf02b73f14a5c63d238ea930c322e81e4256a63b4d355e |
 | apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 5773 | 2d3372b7a4d726109665bbe067ac38bf4866f5a4daf3a539c52a322e860dd240 |
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 24700 | 61d0ca03d82d58b972df8bb0f6dd4a5a480f7db6eef75be8f45bbf9abc53038a |

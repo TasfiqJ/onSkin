@@ -1,0 +1,100 @@
+{
+  "feature": "Onboarding product category sheet current compact pass",
+  "surface": "Codex in-app browser Expo web",
+  "url": "http://localhost:8232/onboarding/products",
+  "viewport": "320x480 override (reported 320x481)",
+  "command": "npm --workspace apps/mobile run web -- --port 8232 --clear",
+  "screenshots": [
+    "01-initial-320x480.png",
+    "02-product-typed-320x480.png",
+    "03-category-sheet-open-320x480.png",
+    "04-serum-selected-320x480.png",
+    "05-product-added-320x480.png"
+  ],
+  "checks": {
+    "typedProductName": true,
+    "categoryButtonVisibleAfterTyping": true,
+    "namedCategoryDialogObserved": true,
+    "serumChipSelected": true,
+    "collapsedCategoryLabel": "Category, Serum",
+    "productAdded": true,
+    "overflowX": 0,
+    "minVisibleControlHeight": 48,
+    "blockedControlCount": 0,
+    "jsDialogOpen": false,
+    "currentOriginWarnErrorCount": 0
+  },
+  "expectedLocalWarnings": [],
+  "finalMetrics": {
+    "blockedControls": [],
+    "controls": [
+      {
+        "aria": "Product name",
+        "hitSelfOrChild": true,
+        "hitTag": "INPUT",
+        "hitText": "",
+        "rect": {
+          "h": 53.9,
+          "w": 232.4,
+          "x": 44,
+          "y": 118.7
+        },
+        "role": null,
+        "text": "Product name",
+        "visible": true
+      },
+      {
+        "aria": "Remove Retinol serum",
+        "hitSelfOrChild": true,
+        "hitTag": "DIV",
+        "hitText": "×",
+        "rect": {
+          "h": 48,
+          "w": 48,
+          "x": 231.4,
+          "y": 249.5
+        },
+        "role": "button",
+        "text": "×",
+        "visible": true
+      },
+      {
+        "aria": null,
+        "hitSelfOrChild": true,
+        "hitTag": "DIV",
+        "hitText": "Add 2 more",
+        "rect": {
+          "h": 56,
+          "w": 272.4,
+          "x": 24,
+          "y": 348.6
+        },
+        "role": "button",
+        "text": "Add 2 more",
+        "visible": true
+      },
+      {
+        "aria": null,
+        "hitSelfOrChild": true,
+        "hitTag": "DIV",
+        "hitText": "Continue with 1 product",
+        "rect": {
+          "h": 56,
+          "w": 272.4,
+          "x": 24,
+          "y": 408.6
+        },
+        "role": "button",
+        "text": "Continue with 1 product",
+        "visible": true
+      }
+    ],
+    "href": "http://localhost:8232/onboarding/products",
+    "minVisibleControlHeight": 48,
+    "overflowX": 0,
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  }
+}

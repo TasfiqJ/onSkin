@@ -28,7 +28,7 @@ function CategoryPickerSheet({
 }) {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const sheetMaxHeight = Math.max(280, viewportHeight - 44);
+  const sheetMaxHeight = Math.max(280, viewportHeight - 48);
   const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
   return (
@@ -49,6 +49,7 @@ function CategoryPickerSheet({
         <View
           aria-modal
           role="dialog"
+          accessibilityLabel="Choose product category"
           accessibilityViewIsModal
           className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"
           style={
@@ -79,7 +80,8 @@ function CategoryPickerSheet({
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={{ flexShrink: 1 }}
-            contentContainerClassName="pb-1"
+            contentContainerClassName="pb-6"
+            keyboardShouldPersistTaps="handled"
           >
             <View className="flex-row flex-wrap gap-2">
               {ONBOARDING_PRODUCT_CATEGORIES.map((c) => (

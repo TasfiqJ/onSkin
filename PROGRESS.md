@@ -6,6 +6,27 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Finished the onboarding products category-sheet hardening on compact phones.
+  The route-local sheet now reserves a 48 px outside dismiss area, names the
+  sheet body as `Choose product category`, pads the internal chip list, and
+  keeps keyboard taps handled inside the scroll view. Codex in-app browser Expo
+  web at 320 x 480 typed `Retinol serum`, opened the category sheet, verified
+  48 px category chips and zero horizontal overflow, selected `Serum`, confirmed
+  the collapsed field exposes `Category, Serum`, added the product, and ended
+  with zero blocked hit-tests, zero JavaScript dialogs, and zero unexpected
+  current-origin warn/error logs. Evidence:
+  `test-results/human-e2e/2026-07-08/onboarding-product-category-sheet-current/`.
+
+- Re-ran `npm run phase7:verify` on current `main` after the latest Today and
+  Progress route work. Phase 7 smoke, core-loop code gates, generated QA
+  packet, root typecheck, root lint, and the full mobile test suite all pass
+  non-strict verification. The generated Phase 7 packet now hashes the current
+  Today and Progress route files. Strict Phase 7 remains blocked only on
+  external founder/reviewer evidence: final brand/domain and policy URLs, live
+  Supabase/RLS, reviewed conflict/routine/recommendation content, source-cleared
+  catalog import, physical-device QA, RevenueCat QA, privacy export/delete QA,
+  beta dashboard readiness, and named signoff.
+
 - Repaired the Phase 9 privacy payload audit so it enforces the current
   route-owned progress-photo share confirmation instead of requiring a native
   `Alert.alert`. The audit now proves the photo detail route opens explicit
