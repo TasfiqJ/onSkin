@@ -34,12 +34,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   groups peeking as partial controls. Direct upsell and ProGate now use a
   320 px narrow-short density tier with icon dismiss, hidden nonessential body
   copy, hidden monthly-equivalent labels, and tighter one-line price/CTA blocks;
-  Recommendation Preferences now uses an inert split-short spacer so visible
-  chips remain 48 px and lower chip groups stay fully below the first viewport.
+  Recommendation Preferences now uses split-short deferred value groups so
+  visible chips remain 48 px and lower chip groups stay fully below the first
+  viewport.
   Focused subscription/recommendation route contracts pass, and the final
   49-route sweeps report zero failed routes with evidence in
   `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`,
-  `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-5/`
+  `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-7/`
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-140-compact-568-clearance.md`.
 
@@ -56,9 +57,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Ingredients textarea under the sticky Continue footer. The fix adds sub-380
   px density for timing settings, Skin Notes, contextual ProGate paywalls, the
   direct upsell sheet, and shelf no-match recovery; extends split-short
-  notification/manual-add spacing below 410 px; adds an inert Recommendation
-  Preferences spacer; moves lower-priority controls fully below the first
-  viewport; and reserves extra manual-add spacing above the fixed footer.
+  notification/manual-add spacing below 410 px; splits Recommendation
+  Preferences value chips into first-viewport and below-fold groups; moves
+  lower-priority controls fully below the first viewport; and reserves extra
+  manual-add spacing above the fixed footer.
   Focused community/paywall/recommendation/settings/shelf route contracts pass,
   and the final 49-route sweeps report zero failed routes with evidence in
   `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`,
@@ -66,7 +68,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`,
   `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`,
-  `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/`,
+  `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`,
   and
   `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`.
 

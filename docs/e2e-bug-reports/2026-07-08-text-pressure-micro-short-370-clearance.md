@@ -33,7 +33,7 @@ The harder 320 x 360 / 130% follow-up also exposed first-viewport partial target
 - Final passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`
 - Harder final passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`
 - Latest direct-upsell passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`
-- Latest split-short passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/`
+- Latest split-short passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`
 - Terminal transcript: `npm run e2e:text-pressure`
 
 ## Frequency
@@ -79,8 +79,8 @@ The previous split-short spacing was tuned down to 320 x 390. At 320 x 370 with 
 - Direct-upsell UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/report.md`
 - Recommendation Preferences screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`
 - Recommendation Preferences UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/report.md`
-- Latest split-short screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/`
-- Latest split-short UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-9/report.md`
+- Latest split-short screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`
+- Latest split-short UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/report.md`
 
 The final audits passed 49 / 49 routes with zero clipped visible controls, zero sub-44 px visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs.
 

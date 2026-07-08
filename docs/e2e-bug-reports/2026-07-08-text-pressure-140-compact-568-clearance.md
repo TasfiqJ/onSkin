@@ -59,8 +59,8 @@ Add a narrow-short density tier for 320 px short paywalls: use an icon dismiss, 
 
 - Screenshot/UI snapshots: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/`
 - Report: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-3/report.md`
-- Latest screenshot/UI snapshots: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-5/`
-- Latest report: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-5/report.md`
+- Latest screenshot/UI snapshots: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-7/`
+- Latest report: `test-results/human-e2e/2026-07-08/text-pressure-140-compact-568-postfix-7/report.md`
 - Terminal transcript: `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts src/features/recommendations/recommendationRoutes.test.ts`
 
 ## Remaining Risk
