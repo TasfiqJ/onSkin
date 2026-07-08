@@ -17,7 +17,7 @@ Tester: Codex human-simulated E2E
 
 ## Expected Result
 
-The chip stays unselected and disabled while each save is pending, failure leaves stable recovery copy, retry applies the selected state only after persistence succeeds, and reload preserves the saved state.
+The chip stays unselected and disabled while each save is pending, failure leaves stable route-owned recovery copy without a blocking native dialog, retry applies the selected state only after persistence succeeds, and reload preserves the saved state.
 
 ## Actual Result
 
@@ -37,7 +37,7 @@ React Native `accessibilityState={{ selected: active }}` was not emitted as `ari
 
 ## Fix
 
-Added explicit `aria-selected={active}` to the recommendation preference chip while keeping the existing React Native `accessibilityState`. Added a clamped delayed-save E2E fixture so the disabled saving state is observable and contract-tested.
+Added explicit `aria-selected={active}` to the recommendation preference chip while keeping the existing React Native `accessibilityState`. Added a clamped delayed-save E2E fixture so the disabled saving state is observable and contract-tested. Removed the legacy `Alert.alert` call so the failure path relies on the persistent route-owned alert region instead of showing duplicate native feedback.
 
 ## Verification
 
@@ -48,7 +48,7 @@ Added explicit `aria-selected={active}` to the recommendation preference chip wh
 Post-fix E2E verified:
 
 - `Vegan` remains `aria-selected=false` and disabled while the forced failed save is pending.
-- The route shows stable `Preference not saved` copy after rejection.
+- The route shows stable `Preference not saved` copy after rejection and opens no JS/system dialog.
 - Retry disables the chip again before persistence succeeds.
 - `Vegan` becomes `aria-selected=true` only after the successful save.
 - Reload preserves `aria-selected=true`.

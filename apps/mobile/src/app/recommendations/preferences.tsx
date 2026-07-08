@@ -2,7 +2,7 @@ import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@onskin/type
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { applyRecommendationPreferences } from '@/features/recommendations/applyPreferences';
@@ -143,7 +143,6 @@ export default function PreferencesScreen() {
         },
         onFailure: () => {
           setSaveFailed(true);
-          Alert.alert(REC_COPY.preferences.saveFailedTitle, REC_COPY.preferences.saveFailedBody);
         },
       });
     } finally {

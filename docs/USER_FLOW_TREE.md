@@ -812,9 +812,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: Open `/recommendations/preferences`, tap a value, budget, or texture chip while forcing local private preference persistence to reject.
-  - Expected result: Chips are disabled while saving, the new state is applied only after persistence succeeds, failures show stable copy, and the For You hub does not recompute from an unsaved preference.
-  - Evidence: Alert text, disabled chip state, and local preference state.
-  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE=once` and `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS=1200` verifies `Vegan` stays `aria-selected=false` and disabled while the failed save is pending, shows stable `Preference not saved` copy after rejection, disables again during retry, becomes `aria-selected=true` only after the successful save, persists after reload, keeps zero horizontal overflow, and keeps visible controls 48 px tall. Evidence is in `test-results/human-e2e/2026-07-08/recommendation-preference-save-failure-current/`.
+  - Expected result: Chips are disabled while saving, the new state is applied only after persistence succeeds, failures show stable route-owned copy without a blocking native dialog, and the For You hub does not recompute from an unsaved preference.
+  - Evidence: Alert-region text, absence of a JS/system dialog, disabled chip state, and local preference state.
+  - Current local evidence: 2026-07-08 System Chrome Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE=once` and `EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS=1200` verifies `Vegan` stays `aria-selected=false` and disabled while the failed save is pending, shows stable `Preference not saved` copy after rejection with no JS/system dialog, disables again during retry, becomes `aria-selected=true` only after the successful save, persists after reload, keeps zero horizontal overflow, and keeps visible controls 48 px tall. Evidence is in `test-results/human-e2e/2026-07-08/recommendation-preference-save-failure-current/`.
 
 ## Flow: Commerce Trust And Shoppable Routines
 

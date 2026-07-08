@@ -100,7 +100,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const [saveFailed, setSaveFailed] = useState(false);');
     expect(source).toContain('setSaveFailed(false);');
     expect(source).toContain('setSaveFailed(true);');
-    expect(source).toContain('Alert.alert(REC_COPY.preferences.saveFailedTitle');
+    expect(source).not.toContain('Alert.alert');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('aria-selected={active}');
     expect(source).toContain('EXPO_PUBLIC_E2E_RECOMMENDATION_PREFERENCES_FAILURE');
