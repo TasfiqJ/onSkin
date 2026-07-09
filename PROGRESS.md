@@ -23,6 +23,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `test-results/human-e2e/2026-07-09/settings-privacy-terms-support-floor-current/`
   and
   `test-results/human-e2e/2026-07-09/progate-tall-phone-header-current/`.
+  Follow-up 49-route 170% text-pressure sweeps pass at 320 x 480, 390 x 844,
+  and 430 x 932 after the Terms-row spacer, compact Explore-first copy, and
+  tall-phone compact compliance header fixes. Evidence is in
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-4/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6/`,
+  and
+  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3/`.
 
 - Cleared the supported-phone 170% text-pressure follow-up across compact,
   support-floor, and modern phone viewports. The current-source sweeps first
