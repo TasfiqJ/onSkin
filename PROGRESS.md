@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a supported iPhone-class 375 x 812 / 200% text-pressure route audit.
+  The first 49-route sweep exposed a partial `Oil` texture chip in
+  `/recommendations/preferences` and a partial `Progress-photo nudge` switch in
+  `/settings/notifications`. Recommendation Preferences now moves the
+  lower-priority texture group below the first 375-class text-pressure viewport,
+  and Notification Settings reuses the deferred capture-nudge card so visible
+  reminder controls stay complete. Focused route contracts pass, the focused
+  two-route E2E pass is clean, and the final 49-route Expo web sweep reports
+  zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-iphone-375-clearance.md`.
+
 - Cleared a supported Android-class 360 x 780 / 200% text-pressure route
   audit. The first sweep exposed reverse-trial ProGate copy overflow in
   `/routine/reorder` and a partially visible Recommendation Preferences texture

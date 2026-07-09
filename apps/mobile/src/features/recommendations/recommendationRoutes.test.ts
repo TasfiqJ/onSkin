@@ -199,7 +199,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('? { marginTop: 112 }');
     expect(source).toContain('const modernTextPressureTextureGroupStyle =');
     expect(source).toContain('androidMidTextPressurePreferences');
-    expect(source).toContain('? { marginTop: 96 }');
+    expect(source).toContain('? { marginTop: 184 }');
     expect(source).toContain('? { marginTop: 56 }');
     expect(source).toContain('? { marginTop: 64 }');
     expect(source).toContain('const renderValueToggle = (v: ValuesFilter) => (');

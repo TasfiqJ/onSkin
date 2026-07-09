@@ -70,14 +70,14 @@ function gateEvidencePath(gate) {
   return `${gate.folder}/${gate.evidence}`;
 }
 
-function textPressureSupportFloorGate(date) {
+function textPressureSupportFloorGate(date, scale, suffix, titleScale = `${scale}%`) {
   return {
-    id: 'support-floor-480-170-text-pressure',
-    title: '320 x 480 supported-floor 170% text-pressure route sweep',
+    id: `support-floor-480-${scale}-text-pressure`,
+    title: `320 x 480 supported-floor ${titleScale} text-pressure route sweep`,
     kind: 'summary-status',
     required: true,
     supportClass: 'launch-blocking',
-    folder: `test-results/human-e2e/${date}/text-pressure-170-support-floor-480-postfix-4`,
+    folder: `test-results/human-e2e/${date}/text-pressure-${scale}-support-floor-480-${suffix}`,
     evidence: 'summary.json',
     expected:
       '49 Expo web direct-entry routes have zero support-floor text-pressure geometry/log failures.',
@@ -98,7 +98,12 @@ function legacySupportFloorGate(date) {
 }
 
 function supportFloorGateForDate(date) {
-  const candidates = [textPressureSupportFloorGate(date), legacySupportFloorGate(date)];
+  const candidates = [
+    textPressureSupportFloorGate(date, 200, 'postfix-12'),
+    textPressureSupportFloorGate(date, 170, 'postfix-16'),
+    textPressureSupportFloorGate(date, 170, 'postfix-4'),
+    legacySupportFloorGate(date),
+  ];
   return candidates.find((gate) => exists(gateEvidencePath(gate))) ?? candidates[0];
 }
 
@@ -177,6 +182,26 @@ if (!evidenceDate) {
 
 const gates = [
   supportFloorGateForDate(evidenceDate),
+  {
+    id: 'modern-390-200-text-pressure',
+    title: '390 x 844 supported-phone 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-modern-390-postfix-7`,
+    evidence: 'summary.json',
+    expected: '49 Expo web direct-entry routes have zero modern-phone 200% text-pressure failures.',
+  },
+  {
+    id: 'modern-430-200-text-pressure',
+    title: '430 x 932 supported-phone 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-modern-430-postfix-5`,
+    evidence: 'summary.json',
+    expected: '49 Expo web direct-entry routes have zero tall-phone 200% text-pressure failures.',
+  },
   {
     id: 'modern-390-170-text-pressure',
     title: '390 x 844 supported-phone 170% text-pressure route sweep',

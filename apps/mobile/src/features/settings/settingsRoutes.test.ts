@@ -199,11 +199,19 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain(
       'const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;',
     );
-    expect(notifications).toContain('const splitShortNudgeRowStyle = {');
     expect(notifications).toContain(
-      'marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,',
+      'const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;',
     );
-    expect(notifications).toContain('style={splitShortNudgeRowStyle}');
+    expect(notifications).toContain(
+      'const deferCaptureNudge = splitShortNotifications || iphoneTextPressureNotifications;',
+    );
+    expect(notifications).toContain('const deferredNudgeRowStyle = {');
+    expect(notifications).toContain('marginTop: iphoneTextPressureNotifications');
+    expect(notifications).toContain('? 96');
+    expect(notifications).toContain(
+      ': microShortNotifications\n        ? 72\n        : height < 520\n          ? 184\n          : 88,',
+    );
+    expect(notifications).toContain('style={deferredNudgeRowStyle}');
     expect(notifications).toContain('const nudgesSectionStyle = supportTextPressureNotifications');
     expect(notifications).toContain('? { marginTop: 152 }');
     expect(notifications).toContain(': microShortNotifications\n      ? { marginTop: 136 }');
@@ -237,9 +245,9 @@ describe('Settings route contracts', () => {
       'const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;',
     );
     expect(notifications).toContain('style={promotionalSectionStyle}');
-    expect(notifications).toContain('last={splitShortNotifications}');
-    expect(notifications).toContain('{splitShortNotifications ? null : (');
-    expect(notifications).toContain('{splitShortNotifications ? (');
+    expect(notifications).toContain('last={deferCaptureNudge}');
+    expect(notifications).toContain('{deferCaptureNudge ? null : (');
+    expect(notifications).toContain('{deferCaptureNudge ? (');
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
   });

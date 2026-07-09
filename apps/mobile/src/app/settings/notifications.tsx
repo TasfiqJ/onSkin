@@ -134,8 +134,16 @@ export default function NotificationSettingsScreen() {
   const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
   const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;
-  const splitShortNudgeRowStyle = {
-    marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,
+  const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;
+  const deferCaptureNudge = splitShortNotifications || iphoneTextPressureNotifications;
+  const deferredNudgeRowStyle = {
+    marginTop: iphoneTextPressureNotifications
+      ? 96
+      : microShortNotifications
+        ? 72
+        : height < 520
+          ? 184
+          : 88,
   };
   const nudgesSectionStyle = supportTextPressureNotifications
     ? { marginTop: 152 }
@@ -214,10 +222,10 @@ export default function NotificationSettingsScreen() {
               title="Replenishment"
               value={p.replenishmentAlerts}
               onChange={(v) => set({ replenishmentAlerts: v })}
-              last={splitShortNotifications}
+              last={deferCaptureNudge}
               compact={compactNotifications}
             />
-            {splitShortNotifications ? null : (
+            {deferCaptureNudge ? null : (
               <Row
                 title="Progress-photo nudge"
                 value={p.captureReminders}
@@ -229,8 +237,8 @@ export default function NotificationSettingsScreen() {
           </View>
         </View>
 
-        {splitShortNotifications ? (
-          <View style={splitShortNudgeRowStyle}>
+        {deferCaptureNudge ? (
+          <View style={deferredNudgeRowStyle}>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
               <Row
                 title="Progress-photo nudge"

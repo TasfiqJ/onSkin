@@ -176,7 +176,7 @@ export default function PreferencesScreen() {
       ? { marginTop: 112 }
       : undefined;
   const modernTextPressureTextureGroupStyle = androidMidTextPressurePreferences
-    ? { marginTop: 96 }
+    ? { marginTop: 184 }
     : modernTextPressurePreferences && !compactPreferences
       ? { marginTop: 56 }
       : tallTextPressurePreferences
