@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T01:20:35.994Z",
+  "generatedAt": "2026-07-09T02:01:25.265Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "d6e501e06c409b70332ba26f7c1a5c6050639952",
-  "gitStatus": "",
+  "gitSha": "a021433649b8e0d14082696894778c66d1b36c95",
+  "gitStatus": "M PROGRESS.md\n M docs/USER_FLOW_TREE.md\n M docs/e2e-bug-reports/2026-07-09-text-pressure-200-modern-390-clearance.md",
   "files": [
     {
       "packet": "packetContract",
@@ -134,15 +134,15 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 27291,
-      "sha256": "8375ea13ec0fecb64622e7370be774448137fcf0d7d68d4ad3443630fb1c944c"
+      "bytes": 27513,
+      "sha256": "f3c0d6ebfd38b65e51c7181bbccdc7ada22b7d763305e31cae48389b2e19ac51"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 2662,
-      "sha256": "8a757982365741b321910da58573221c76b3198b9aea27ee1c93fa1166a77b5b"
+      "bytes": 2767,
+      "sha256": "9bcd5a5c433ae09b3076ddd526f12360b1fd018e85307a751d23e9ee53cea95e"
     },
     {
       "packet": "clinical",
@@ -197,15 +197,15 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 27291,
-      "sha256": "8375ea13ec0fecb64622e7370be774448137fcf0d7d68d4ad3443630fb1c944c"
+      "bytes": 27513,
+      "sha256": "f3c0d6ebfd38b65e51c7181bbccdc7ada22b7d763305e31cae48389b2e19ac51"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 2662,
-      "sha256": "8a757982365741b321910da58573221c76b3198b9aea27ee1c93fa1166a77b5b"
+      "bytes": 2767,
+      "sha256": "9bcd5a5c433ae09b3076ddd526f12360b1fd018e85307a751d23e9ee53cea95e"
     },
     {
       "packet": "cosmeticChemistry",
@@ -320,5 +320,7 @@
       "sha256": "fd545c0b8e0f7fd526d21a1eeb216c9670a77fcd96d81abe595d7d0285130bbd"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
+  ]
 }
