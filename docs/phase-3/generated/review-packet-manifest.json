@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T00:27:07.030Z",
+  "generatedAt": "2026-07-09T00:29:27.893Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "1342597545ca188eea46f86e7eb08a6573b7347a",
+  "gitSha": "e1e8a3b689e8871672b8f7e4cb5a1ed74f6db465",
   "gitStatus": "",
   "files": [
     {
@@ -22,8 +22,8 @@
       "packet": "packetContract",
       "path": "scripts/phase3/build-review-worklist.mjs",
       "exists": true,
-      "bytes": 11481,
-      "sha256": "e0a01b72ba21b14ca357025a635c595e396f297df6b05d7bee2b95d1c3f8b2c0"
+      "bytes": 11582,
+      "sha256": "21d34bfff4e2d06d55c3cc8e63ba13496f344851ae0ecbb4fe8f01aa78946463"
     },
     {
       "packet": "packetContract",
