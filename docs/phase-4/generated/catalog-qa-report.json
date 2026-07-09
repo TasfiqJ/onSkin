@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T18:42:36.197Z",
+  "generatedAt": "2026-07-09T18:50:08.357Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "fb5a18a69d0fc45ee5056ca93f421a99c7488f3b",
+  "gitSha": "94d9ddc2958d7fc04ac1d476a0b5fb0c319aa7f4",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -136,13 +136,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 35121,
-      "sha256": "ee57e68c2956d42915d59ecc28c9e2e458441a1ba4fa7dab5a842cea3fc4a623"
+      "sha256": "d052efcd1a12b384e7e663a39e376901bb5d23d42897c7ad4057a68ad985e59e"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 22472,
-      "sha256": "61b997dfdc743b4bfeb2aaf8c46ad9ee50cf4799038e08a2d28c82251352de2a"
+      "sha256": "9d86b427bf04cc6d5552dd86be666b80ec0c817653bcc5aa95865fa72b62e81c"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",

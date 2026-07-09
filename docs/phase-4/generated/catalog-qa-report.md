@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-09T18:42:36.197Z
+Generated: 2026-07-09T18:50:08.357Z
 
-Git SHA: fb5a18a69d0fc45ee5056ca93f421a99c7488f3b
+Git SHA: 94d9ddc2958d7fc04ac1d476a0b5fb0c319aa7f4
 
 Git status: clean
 
@@ -50,7 +50,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2022 | 313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2335 | a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8 |
-| docs/phase-4/generated/source-worklist.json | present | 35121 | ee57e68c2956d42915d59ecc28c9e2e458441a1ba4fa7dab5a842cea3fc4a623 |
-| docs/phase-4/generated/source-worklist.md | present | 22472 | 61b997dfdc743b4bfeb2aaf8c46ad9ee50cf4799038e08a2d28c82251352de2a |
+| docs/phase-4/generated/source-worklist.json | present | 35121 | d052efcd1a12b384e7e663a39e376901bb5d23d42897c7ad4057a68ad985e59e |
+| docs/phase-4/generated/source-worklist.md | present | 22472 | 9d86b427bf04cc6d5552dd86be666b80ec0c817653bcc5aa95865fa72b62e81c |
 | docs/phase-4/odbl-compliance-memo.md | present | 2020 | 6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

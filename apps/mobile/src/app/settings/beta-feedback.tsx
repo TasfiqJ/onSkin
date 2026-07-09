@@ -234,7 +234,7 @@ export default function BetaFeedbackScreen() {
 
   function categoryFirstViewportBreakMargin(index: number): number | undefined {
     if (!highTextPressure) return undefined;
-    if (height < 700 && index === 2) return 96;
+    if (height < 700 && index === 2) return 128;
     if (height >= 800 && height < 900 && index === 4) return 56;
     if (height >= 900 && height < 980 && index === 4) return 128;
     return undefined;
