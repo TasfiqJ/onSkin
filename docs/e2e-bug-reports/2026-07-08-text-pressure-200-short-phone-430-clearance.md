@@ -21,11 +21,15 @@ All 49 route entries keep visible controls complete, 44 px or larger, center-hit
 
 The first audit failed `/progress`, `/recommendations/preferences`, and `/settings/notifications`. The locked Progress paywall rendered `Start free trial` as a visible but disabled primary CTA when store pricing was unavailable in the preview, so the button center hit the parent container instead of the button. Recommendation Preferences let the `Fragrance-free` value chip peek into the viewport as a 14 px visible target, and Settings Notifications let the `Streak & adherence` switch peek into the viewport as a 3 px visible target.
 
+A follow-up sweep after those fixes failed `/shelf/search`. The Shelf catalog `Add by hand` recovery button peeked into the first viewport with only 40 px visible, which made the visible target too small and partially clipped.
+
 ## Evidence
 
-- Screenshot packet: `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-audit-current/`
-- UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-audit-current/failures.json`
-- Terminal transcript: `npm run e2e:text-pressure` failed with `3 text-pressure route(s) failed.`
+- Initial screenshot packet: `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-audit-current/`
+- Initial UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-audit-current/failures.json`
+- Follow-up screenshot packet: `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-current/`
+- Follow-up UI snapshot: `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-current/failures.json`
+- Terminal transcripts: `npm run e2e:text-pressure` first failed with `3 text-pressure route(s) failed`, then failed with `1 text-pressure route(s) failed` before the Shelf search layout fix.
 
 ## Frequency
 
@@ -33,22 +37,22 @@ The first audit failed `/progress`, `/recommendations/preferences`, and `/settin
 
 ## Scope
 
-- Affected route/screen: `/progress`, `/recommendations/preferences`, and `/settings/notifications`.
+- Affected route/screen: `/progress`, `/recommendations/preferences`, `/settings/notifications`, and `/shelf/search`.
 - Affected account or fixture: local Expo web route fixtures used by `scripts/e2e/text-pressure-route-audit.mjs`.
 - External service involved: none.
 - Destructive action involved: none.
 
 ## Suspected Cause
 
-The 200 percent short-phone sweep combined the compact 568 px text-pressure problems with the tighter 430 px first viewport. Recommendation Preferences and Settings Notifications needed additional ultra-short spacing so the first lower-priority group did not partially appear at the bottom edge. ProGate already had a store-unavailable feedback path, but disabling the CTA before that handler ran created a visible dead button under preview store conditions.
+The 200 percent short-phone sweep combined the compact 568 px text-pressure problems with the tighter 430 px first viewport. Recommendation Preferences and Settings Notifications needed additional ultra-short spacing so the first lower-priority group did not partially appear at the bottom edge. ProGate already had a store-unavailable feedback path, but disabling the CTA before that handler ran created a visible dead button under preview store conditions. Shelf catalog search also left the result scroll area unconstrained, so the fixed manual-add footer could start inside the viewport and continue below it.
 
 ## Minimal Fix Recommendation
 
-Keep the contextual paywall primary CTA enabled unless a purchase mutation is pending, so preview store-unavailable taps surface the existing feedback. Add ultra-short first-group spacing to Recommendation Preferences and move the Gentle Nudges block below the first viewport on ultra-short notification settings.
+Keep the contextual paywall primary CTA enabled unless a purchase mutation is pending, so preview store-unavailable taps surface the existing feedback. Add ultra-short first-group spacing to Recommendation Preferences, move the Gentle Nudges block below the first viewport on ultra-short notification settings, and reserve a flexed results slot on Shelf catalog search so the fixed manual-add recovery remains fully visible.
 
 ## Verification Flow After Fix
 
-1. Run focused route contract tests for Settings, Recommendations, and paywall mobile contracts.
+1. Run focused route contract tests for Shelf, Settings, Recommendations, and paywall mobile contracts.
 2. Re-run the same 320 x 430 / 200 percent route sweep.
 3. Confirm 49 routes pass with zero failed routes, zero disallowed logs, and zero visible control issues.
 
