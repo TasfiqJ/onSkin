@@ -35,6 +35,7 @@ const dirtyTextPatterns = [
   /dirty Git worktree/i,
   /Git status:\s*DIRTY/i,
 ];
+const sha256Pattern = /^[a-f0-9]{64}$/i;
 
 function abs(path) {
   return resolve(root, path);
@@ -46,6 +47,21 @@ function rel(path) {
 
 function normalizeRepoPath(path) {
   return String(path).replaceAll('\\', '/').replace(/^\.\//, '');
+}
+
+function formatJsonPath(path) {
+  return path.length > 0 ? path.join('.') : '<root>';
+}
+
+function looksLikeRepoPath(path) {
+  const normalized = normalizeRepoPath(path);
+  return (
+    normalized === 'package.json' ||
+    normalized === '.env.example' ||
+    /^[A-Za-z]:\//.test(normalized) ||
+    normalized.includes('/') ||
+    /\.(?:cjs|css|html|json|js|jsx|md|mjs|sql|ts|tsx)$/.test(normalized)
+  );
 }
 
 function exists(path) {
@@ -145,17 +161,28 @@ function collectHashRefs(value, path = []) {
     typeof value.path === 'string' && typeof value.sha256 === 'string'
       ? [
           {
-            jsonPath: path.length > 0 ? path.join('.') : '<root>',
+            jsonPath: formatJsonPath(path),
             path: normalizeRepoPath(value.path),
             expectedExists: value.exists,
             expectedSha256: value.sha256,
           },
         ]
       : [];
+  const hashMapRefs = Object.entries(value)
+    .filter(
+      ([key, item]) =>
+        typeof item === 'string' && sha256Pattern.test(item) && looksLikeRepoPath(key),
+    )
+    .map(([key, item]) => ({
+      jsonPath: formatJsonPath([...path, key]),
+      path: normalizeRepoPath(key),
+      expectedExists: true,
+      expectedSha256: item,
+    }));
   const children = Object.entries(value).flatMap(([key, item]) =>
     collectHashRefs(item, [...path, key]),
   );
-  return [...self, ...children];
+  return [...self, ...hashMapRefs, ...children];
 }
 
 const blockers = [];
@@ -247,7 +274,7 @@ const audit = {
   status: blockers.length === 0 ? 'pass' : 'blocked',
   strict,
   purpose:
-    'Audit committed generated phase packets so dirty-worktree packet output cannot be mistaken for final evidence.',
+    'Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.',
   generatedRoots,
   generatedFiles: fileResults,
   requiredPackageScripts,
@@ -278,8 +305,9 @@ const mdContent = [
   `Strict mode: ${strict ? 'yes' : 'no'}`,
   '',
   'This generated audit scans committed phase packet outputs for dirty-worktree',
-  'status. It does not prove external launch evidence; it only prevents a local',
-  'dirty generated packet from being treated as trustworthy launch evidence.',
+  'status and stale recorded file hashes. It does not prove external launch',
+  'evidence; it only prevents a local dirty or stale generated packet from',
+  'being treated as trustworthy launch evidence.',
   '',
   '## Summary',
   '',
