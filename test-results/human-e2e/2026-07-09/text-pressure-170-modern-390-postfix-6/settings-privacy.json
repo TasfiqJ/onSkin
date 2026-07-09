@@ -1,0 +1,195 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 320,
+        "y": 130.296875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Marketing emails",
+      "partialClip": false,
+      "rect": {
+        "bottom": 154.296875,
+        "height": 48,
+        "left": 294,
+        "right": 346,
+        "top": 106.296875,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 224.609375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Photos & the no-AI-score promise",
+      "label": "Photos & the no-AI-score promise",
+      "partialClip": false,
+      "rect": {
+        "bottom": 255.515625,
+        "height": 61.8125,
+        "left": 44,
+        "right": 346,
+        "top": 193.703125,
+        "visibleHeight": 61.8125,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 328.2265625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Records withdrawal and deletes collected health data.",
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 400.9375,
+        "height": 145.421875,
+        "left": 44,
+        "right": 346,
+        "top": 255.515625,
+        "visibleHeight": 145.421875,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 55.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 9,
+        "right": 102,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 148.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Prog.",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 102,
+        "right": 195,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 241.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 195,
+        "right": 288,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 334.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 288,
+        "right": 381,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/you?section=privacy",
+  "textOverflows": [],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help wit",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/settings/privacy",
+  "scaledCount": 71,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/settings/privacy",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

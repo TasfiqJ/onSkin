@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/recommendations/stale-local-rec",
+  "textOverflows": [],
+  "textStart": "< Recommendation Looking at your routine…",
+  "viewport": {
+    "width": 430,
+    "height": 932
+  },
+  "route": "/recommendations/stale-local-rec",
+  "scaledCount": 3,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/recommendations/stale-local-rec",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

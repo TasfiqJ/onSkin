@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 255
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue with manual text",
+      "label": "Continue with manual text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 306,
+        "height": 102,
+        "left": 24,
+        "right": 366,
+        "top": 204,
+        "visibleHeight": 102,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/shelf/ocr",
+  "textOverflows": [],
+  "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. Continue with manual text",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/shelf/ocr",
+  "scaledCount": 5,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/shelf/ocr",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

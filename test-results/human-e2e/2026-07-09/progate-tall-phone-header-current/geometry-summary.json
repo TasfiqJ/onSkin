@@ -1,6 +1,7 @@
 {
   "progressPaywall": {
     "dialog": false,
+    "hasBodyCopy": false,
     "hasCompactExploreCopy": true,
     "hasFullExploreA11y": true,
     "horizontalOverflow": 0,
@@ -11,6 +12,7 @@
         "centerHit": true,
         "completeInViewport": true,
         "hitText": "Terms",
+        "name": "Terms",
         "rect": {
           "bottom": 51.987258434295654,
           "height": 47.99757385253906,
@@ -29,6 +31,7 @@
         "centerHit": true,
         "completeInViewport": true,
         "hitText": "Privacy",
+        "name": "Privacy",
         "rect": {
           "bottom": 51.987258434295654,
           "height": 47.99757385253906,
@@ -47,6 +50,7 @@
         "centerHit": true,
         "completeInViewport": true,
         "hitText": "Restore",
+        "name": "Restore",
         "rect": {
           "bottom": 51.987258434295654,
           "height": 47.99757385253906,
@@ -61,20 +65,21 @@
       },
       {
         "aboveTabbar": true,
-        "aria": "",
+        "aria": "Maybe later",
         "centerHit": true,
         "completeInViewport": true,
-        "hitText": "Maybe later",
+        "hitText": "x",
+        "name": "Maybe later",
         "rect": {
           "bottom": 51.987258434295654,
           "height": 47.99757385253906,
-          "left": 303.86834716796875,
-          "right": 406.09832763671875,
+          "left": 358.1007385253906,
+          "right": 406.0983123779297,
           "top": 3.989684581756592,
-          "width": 102.22998046875
+          "width": 47.99757385253906
         },
         "role": "button",
-        "text": "Maybe later",
+        "text": "x",
         "visible": true
       },
       {
@@ -83,12 +88,13 @@
         "centerHit": true,
         "completeInViewport": true,
         "hitText": "Start free trial",
+        "name": "Start free trial",
         "rect": {
-          "bottom": 608.4799842834473,
-          "height": 53.989688873291016,
+          "bottom": 338.8653106689453,
+          "height": 47.99757385253906,
           "left": 23.99878692626953,
           "right": 406.09830474853516,
-          "top": 554.4902954101562,
+          "top": 290.86773681640625,
           "width": 382.0995178222656
         },
         "role": "button",
@@ -100,112 +106,40 @@
         "aria": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
         "centerHit": true,
         "completeInViewport": true,
-        "hitText": "Explore first",
+        "hitText": "Explore first No card needed. ›",
+        "name": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
         "rect": {
-          "bottom": 682.4180870056152,
+          "bottom": 412.8034324645996,
           "height": 61.938716888427734,
           "left": 23.99878692626953,
           "right": 406.09830474853516,
-          "top": 620.4793701171875,
+          "top": 350.8647155761719,
           "width": 382.0995178222656
         },
         "role": "button",
-        "text": "Explore firstNo card needed.›",
-        "visible": true
-      },
-      {
-        "aboveTabbar": false,
-        "aria": "Today tab",
-        "centerHit": true,
-        "completeInViewport": true,
-        "hitText": "",
-        "rect": {
-          "bottom": 912.0601234436035,
-          "height": 53.989688873291016,
-          "left": 8.965413093566895,
-          "right": 111.99940204620361,
-          "top": 858.0704345703125,
-          "width": 103.03398895263672
-        },
-        "role": "tab",
-        "text": "Today",
-        "visible": true
-      },
-      {
-        "aboveTabbar": false,
-        "aria": "Progress tab",
-        "centerHit": true,
-        "completeInViewport": true,
-        "hitText": "",
-        "rect": {
-          "bottom": 912.0601234436035,
-          "height": 53.989688873291016,
-          "left": 111.99939727783203,
-          "right": 215.04855346679688,
-          "top": 858.0704345703125,
-          "width": 103.04915618896484
-        },
-        "role": "tab",
-        "text": "Progress",
-        "visible": true
-      },
-      {
-        "aboveTabbar": false,
-        "aria": "Shelf tab",
-        "centerHit": true,
-        "completeInViewport": true,
-        "hitText": "",
-        "rect": {
-          "bottom": 912.0601234436035,
-          "height": 53.989688873291016,
-          "left": 215.04855346679688,
-          "right": 318.0825424194336,
-          "top": 858.0704345703125,
-          "width": 103.03398895263672
-        },
-        "role": "tab",
-        "text": "Shelf",
-        "visible": true
-      },
-      {
-        "aboveTabbar": false,
-        "aria": "You tab",
-        "centerHit": true,
-        "completeInViewport": true,
-        "hitText": "",
-        "rect": {
-          "bottom": 912.0601234436035,
-          "height": 53.989688873291016,
-          "left": 318.0825500488281,
-          "right": 421.13170623779297,
-          "top": 858.0704345703125,
-          "width": 103.04915618896484
-        },
-        "role": "tab",
-        "text": "You",
+        "text": "Explore first No card needed. ›",
         "visible": true
       }
     ],
     "tabbarTop": 852.0631713867188,
-    "textSample": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore firstNo card needed.›TodayProgressShelfYou",
-    "url": "http://localhost:8264/progress",
-    "viewport": {
-      "height": 932,
-      "width": 430
-    }
-  },
-  "afterMaybe": {
-    "dialog": false,
-    "hasPaywall": false,
-    "horizontalOverflow": 0,
-    "tabbarTop": 852.0631713867188,
-    "textSample": "THURSDAY, JULY 9Good morning.No routine yetBuild a routine from your shelf.Add the products you use and Today will become your AM/PM checklist.Add productsTodayProgressShelfYou",
-    "url": "http://localhost:8264/today",
+    "textSample": "Terms·Privacy·RestorexUnlockyourprivatephototimeline.Start14daysfree,then$49.99/yearStorecheckoutisunavailableinthispreview.Youcankeepexploring.StartfreetrialExplorefirstNocardneeded.›TodayProgressShelfYou",
+    "url": "http://localhost:8266/progress",
     "viewport": {
       "height": 932,
       "width": 430
     }
   },
   "currentPaywallLogs": [],
-  "disallowedPaywallLogs": []
+  "disallowedPaywallLogs": [],
+  "afterDismiss": {
+    "dialog": false,
+    "hasPaywall": false,
+    "horizontalOverflow": 0,
+    "textSample": "THURSDAY,JULY9Goodmorning.NOROUTINEYETBuildaroutinefromyourshelf.AddtheproductsyouuseandTodaywillbecomeyourAM/PMchecklist.AddproductsTodayProgressShelfYou",
+    "url": "http://localhost:8266/today",
+    "viewport": {
+      "height": 932,
+      "width": 430
+    }
+  }
 }

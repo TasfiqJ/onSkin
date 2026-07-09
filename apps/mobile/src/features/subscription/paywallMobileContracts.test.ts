@@ -174,6 +174,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
+    expect(proGate).toContain(
+      'const denseTallTextPressurePaywall = tallPhoneTextPressurePaywall && width <= 430;',
+    );
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
@@ -188,11 +191,15 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('const storeUnavailableReason =');
     expect(proGate).toContain("? 'Store unavailable in this preview.'");
-    expect(proGate).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
+    expect(proGate).toContain(
+      "justifyContent: compactPaywall || denseTallTextPressurePaywall ? 'flex-start' : 'center'",
+    );
     expect(proGate).toContain("? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-0'");
     expect(proGate).toContain("? 'min-h-[96px] items-stretch pt-0'");
     expect(proGate).toContain("? 'h-[48px] self-end justify-center px-2'");
-    expect(proGate).toContain('{splitShortProgressTabPaywall || narrowShortPaywall ? (');
+    expect(proGate).toContain(
+      '{splitShortProgressTabPaywall || narrowShortPaywall || tallPhoneTextPressurePaywall ? (',
+    );
     expect(proGate).toContain('accessibilityLabel="Maybe later"');
     expect(proGate).toContain('glyph="x"');
     expect(proGate).toContain('tone="muted"');
@@ -210,7 +217,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toMatch(/fontSize:\s*microShortPaywall\s*\?\s*18/);
     expect(proGate).toMatch(/lineHeight:\s*microShortPaywall\s*\?\s*21/);
     expect(proGate).toContain(
-      '{splitShortProgressTabPaywall || microShortPaywall || narrowShortPaywall ? null : (',
+      '{splitShortProgressTabPaywall ||\n        microShortPaywall ||\n        narrowShortPaywall ||\n        denseTallTextPressurePaywall ? null : (',
     );
     expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 2 : undefined}');
     expect(proGate).toMatch(
@@ -226,6 +233,7 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('fontSize: microShortPaywall');
     expect(proGate).toContain('lineHeight: microShortPaywall');
+    expect(proGate).toContain('shortPaywall || denseTallTextPressurePaywall');
     expect(proGate).toMatch(
       /microShortPaywall\s*\?\s*'mt-0 h-\[48px\] items-center justify-center rounded-pill'/,
     );
@@ -236,11 +244,16 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('accessibilityLabel={primaryCtaLabel}');
     expect(proGate).toContain('numberOfLines={1}');
-    expect(proGate).toContain('fontSize: microShortPaywall ? 15.5 : 17');
-    expect(proGate).toContain('lineHeight: microShortPaywall ? 18 : undefined');
+    expect(proGate).toContain(
+      'fontSize: microShortPaywall ? 15.5 : denseTallTextPressurePaywall ? 16 : 17',
+    );
+    expect(proGate).toContain(
+      'lineHeight: microShortPaywall ? 18 : denseTallTextPressurePaywall ? 19 : undefined',
+    );
     expect(proGate).toContain('disabled={startTrial.isPending}');
     expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(proGate).toContain('!supportedTextPressurePaywall');
+    expect(proGate).toContain('!tallPhoneTextPressurePaywall');
     expect(proGate).toContain('style={{ flexShrink: 1, minWidth: 0 }}');
     expect(proGate).toContain(
       "style={{ flexShrink: 0, letterSpacing: 0, minWidth: 92, textAlign: 'right' }}",

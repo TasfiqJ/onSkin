@@ -1,6 +1,6 @@
 # Blockers - Founder Do-Not-Guess List
 
-Date: 2026-07-08
+Date: 2026-07-09
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -91,7 +91,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
+Fresh verification through 2026-07-09: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -111,13 +111,23 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 171 mobile test files / 1750 tests. The 2026-07-08 Expo web shortest-phone
-rerun at 320 x 480 passed 49 direct-entry routes with zero failed routes,
-visible clipped controls, sub-44 user-facing controls, blocked hit-tests,
-horizontal overflow, or disallowed browser logs. The Shelf manual category
-picker also passed fresh 320 x 480 and 320 x 568 Expo web evidence for its named
-bottom sheet, scrollable lower category options, 52 px rows, `Other` selection,
-`/shelf/opened` continuation, and zero disallowed browser logs. Additional
+covers 171 mobile test files / 1750 tests. The 2026-07-09 human-simulated E2E
+manifest now anchors to the 320 x 480 support-floor 170% text-pressure sweep,
+which passed 49 direct-entry routes with zero failed routes; the 390 x 844 and
+430 x 932 supported-phone 170% sweeps also passed 49 / 49 routes with zero
+failures. The Settings Privacy Terms-row spacer and contextual Progress
+tall-phone compact compliance header have fresh route evidence, including
+compact visible Explore-first copy with the full reverse-trial copy retained in
+the accessibility label. Phase 9 dependency/SBOM evidence now records 1073
+packages and zero npm vulnerabilities; strict release completion still needs
+release-owner dependency signoff. The earlier 2026-07-08 Expo web
+shortest-phone rerun at 320 x 480 passed 49 direct-entry routes with zero
+failed routes, visible clipped controls, sub-44 user-facing controls, blocked
+hit-tests, horizontal overflow, or disallowed browser logs. The Shelf manual
+category picker also passed 320 x 480 and 320 x 568 Expo web evidence for its
+named bottom sheet, scrollable lower category options, 52 px rows, `Other`
+selection, `/shelf/opened` continuation, and zero disallowed browser logs.
+Additional
 320 x 440 / 320 x 430 Shelf intake evidence verifies the ultra-short manual
 add, OCR capture-failure/manual-text continuation, and labeled no-match fallback
 paths without horizontal overflow, blocked user-facing controls, or

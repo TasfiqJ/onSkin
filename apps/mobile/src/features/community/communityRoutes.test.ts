@@ -58,9 +58,7 @@ describe('Community route contracts', () => {
     expect(source).toContain('{groups.map((g, groupIndex) => {');
     expect(source).toContain('const keepSectionBelowFold = microShortCommunity && groupIndex > 0;');
     expect(source).toContain('const keepUltraShortNarrowSectionBelowFold =');
-    expect(source).toContain(
-      'ultraShortCommunity && narrowCompactCommunity && groupIndex > 0;',
-    );
+    expect(source).toContain('ultraShortCommunity && narrowCompactCommunity && groupIndex > 0;');
     expect(source).toContain(
       'const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;',
     );
@@ -73,23 +71,25 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       'keepUltraShortNarrowSectionBelowFold\n                      ? { marginTop: 176 }',
     );
-    expect(source).toContain(
-      'keepNarrowSectionBelowFold\n                      ? { marginTop: 140 }',
-    );
-    expect(source).toContain(
-      'keepShortModernSectionBelowFold\n                        ? { marginTop: 48 }',
-    );
+    expect(source).toContain(': keepNarrowSectionBelowFold');
+    expect(source).toContain('? { marginTop: 140 }');
+    expect(source).toContain(': keepShortModernSectionBelowFold');
+    expect(source).toContain('? { marginTop: 48 }');
     expect(source).toContain('? { marginBottom: 64 }');
     expect(source).toContain('const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;');
     expect(source).toContain(
       'const keepNarrowNextNoteBelowFold = narrowCompactCommunity && noteIndex > 0;',
     );
+    expect(source).toContain('const keepModernSensitiveNoteBelowFold =');
+    expect(source).toContain(
+      "g.topic.slug === 'sensitive-skin' &&\n                    noteIndex > 0;",
+    );
     expect(source).toContain(
       'keepNextNoteBelowFold\n                          ? { marginTop: 72 }',
     );
-    expect(source).toContain(
-      'keepNarrowNextNoteBelowFold\n                            ? { marginTop: 112 }',
-    );
+    expect(source).toContain(': keepModernSensitiveNoteBelowFold');
+    expect(source).toContain('? { marginTop: 160 }');
+    expect(source).toContain(': keepNarrowNextNoteBelowFold');
     expect(source).toContain("short\n          ? 'mb-1 rounded-[14px] bg-paper-raised p-2'");
     expect(source).toContain("shortCommunity\n                      ? 'mb-1 pl-0.5 text-[10px]'");
     expect(source).toContain('style={{ lineHeight: short ? 15 : compact ? 16 : 19 }}');

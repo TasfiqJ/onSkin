@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 338,
+        "y": 629
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 653,
+        "height": 48,
+        "left": 314,
+        "right": 362,
+        "top": 605,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 690.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Try name or brand instead",
+      "partialClip": false,
+      "rect": {
+        "bottom": 714.796875,
+        "height": 48,
+        "left": 28,
+        "right": 362,
+        "top": 666.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 740.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan ingredients",
+      "label": "Scan the ingredient list. We'll read the INCI text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 764.796875,
+        "height": 48,
+        "left": 28,
+        "right": 362,
+        "top": 716.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 822.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works, even offline",
+      "partialClip": true,
+      "rect": {
+        "bottom": 846.796875,
+        "height": 48,
+        "left": 28,
+        "right": 362,
+        "top": 798.796875,
+        "visibleHeight": 45.203125,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/shelf/no-match",
+  "textOverflows": [],
+  "textStart": "x Not found yet. S Search catalog I Scan ingredients + Add it by hand",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/shelf/no-match",
+  "scaledCount": 8,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/shelf/no-match",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/routine/widgets",
+  "textOverflows": [],
+  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "viewport": {
+    "width": 430,
+    "height": 932
+  },
+  "route": "/routine/widgets",
+  "scaledCount": 3,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/routine/widgets",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

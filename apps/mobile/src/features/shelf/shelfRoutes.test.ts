@@ -138,10 +138,14 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/no-match.tsx');
 
     expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const shortPhone = height < 600');
     expect(source).toContain('const ultraShortPhone = height < 460;');
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain('const microShortPhone = height < 380;');
+    expect(source).toContain('const tallTextPressurePhone =');
+    expect(source).toContain('(width <= 430 && height >= 900 && height < 980) ||');
+    expect(source).toContain('(height <= 430 && width >= 900 && width < 980);');
     expect(source).toContain('const compactPressurePhone = shortPhone;');
     expect(source).toContain("? 'px-6 pb-2 pt-2'");
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
@@ -168,6 +172,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const compactManualRecoveryStyle = microShortPhone');
     expect(source).toContain('<View style={compactSecondaryRecoveryStyle}>');
     expect(source).toContain('? { marginTop: 40, transform: [{ translateY: -32 }] }');
+    expect(source).toContain('tallTextPressurePhone');
+    expect(source).toContain('? { marginTop: 96, transform: [{ translateY: -32 }] }');
     expect(source).toContain('compactPressurePhone');
     expect(source).toContain('? { marginTop: 32, transform: [{ translateY: -32 }] }');
     expect(source).toContain('<View style={compactManualRecoveryStyle}>');

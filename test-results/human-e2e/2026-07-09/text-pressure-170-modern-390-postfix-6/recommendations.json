@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 285.34375,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Preferences",
+      "label": "Preferences",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 204.6875,
+        "right": 366,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 161.3125,
+        "width": 161.3125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/recommendations",
+  "textOverflows": [],
+  "textStart": "< Preferences For you Ranked by fit and evidence, never by commission. Looking at your routine…",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/recommendations",
+  "scaledCount": 6,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/recommendations",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

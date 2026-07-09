@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 275
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add products",
+      "label": "Add products",
+      "partialClip": false,
+      "rect": {
+        "bottom": 303,
+        "height": 56,
+        "left": 48,
+        "right": 342,
+        "top": 247,
+        "visibleHeight": 56,
+        "visibleWidth": 294,
+        "width": 294
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 55.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 9,
+        "right": 102,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 148.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 102,
+        "right": 195,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 241.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 195,
+        "right": 288,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 334.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 288,
+        "right": 381,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/today?routine=PM",
+  "textOverflows": [],
+  "textStart": "THURSDAY, JULY 9 · 6:03 AM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Prog. Shelf You",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/today?routine=PM",
+  "scaledCount": 8,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/today?routine=PM",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

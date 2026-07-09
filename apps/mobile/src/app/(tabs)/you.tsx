@@ -77,6 +77,8 @@ const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;
 const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
+const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;
+const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;
 const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;
 const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;
 const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
@@ -328,7 +330,9 @@ export default function YouScreen() {
   const privacyDirectEntry = params.section === 'privacy';
   const narrowPhone = compactPhone && width < 360;
   const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;
-  const supportFloorPrivacyEntry = privacyDirectEntry && narrowPhone && height >= 460 && height < 520;
+  const supportFloorPrivacyEntry =
+    privacyDirectEntry && narrowPhone && height >= 460 && height < 520;
+  const tallPhonePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 900 && height < 980;
   const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;
   const microShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 380;
   const privacyDirectEntryScrollNudge = microShortPrivacyEntry
@@ -943,13 +947,19 @@ export default function YouScreen() {
             <View
               key={row.key}
               style={
-                privacyDirectEntry && row.key === 'terms'
-                  ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN }
-                  : privacyDirectEntry && row.key === 'dataExport'
-                  ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }
-                  : privacyDirectEntry && row.key === 'support'
-                    ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN }
-                  : undefined
+                privacyDirectEntry && row.key === 'consumerHealthPrivacy'
+                  ? {
+                      marginTop: tallPhonePrivacyEntry
+                        ? PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN
+                        : PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN,
+                    }
+                  : privacyDirectEntry && row.key === 'terms'
+                    ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN }
+                    : privacyDirectEntry && row.key === 'dataExport'
+                      ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }
+                      : privacyDirectEntry && row.key === 'support'
+                        ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN }
+                        : undefined
               }
             >
               <Row

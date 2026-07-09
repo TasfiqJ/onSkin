@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 49.8671875,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 24,
+        "right": 75.734375,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 51.734375,
+        "width": 51.734375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 124.015625,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 92.828125,
+        "right": 155.203125,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 62.375,
+        "width": 62.375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 204.6015625,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 172.296875,
+        "right": 236.90625,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 64.609375,
+        "width": 64.609375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 272,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 248,
+        "right": 296,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 304.3125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 328.3125,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 280.3125,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/cycle/disruption",
+  "textOverflows": [],
+  "textStart": "Terms · Privacy · Restore x Unlock your full skin-cycling scheduler. $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/cycle/disruption",
+  "scaledCount": 12,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/cycle/disruption",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

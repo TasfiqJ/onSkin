@@ -37,6 +37,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const supportedTextPressurePaywall = width <= 430 && height < 900;
   const tallPhoneTextPressurePaywall =
     width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const denseTallTextPressurePaywall = tallPhoneTextPressurePaywall && width <= 430;
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -158,7 +159,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         }
       >
         {headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}
-        {splitShortProgressTabPaywall || narrowShortPaywall ? (
+        {splitShortProgressTabPaywall || narrowShortPaywall || tallPhoneTextPressurePaywall ? (
           <RouteIconButton
             accessibilityLabel="Maybe later"
             glyph="x"
@@ -186,7 +187,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: compactPaywall ? 'flex-start' : 'center',
+          justifyContent: compactPaywall || denseTallTextPressurePaywall ? 'flex-start' : 'center',
           paddingTop: shortPaywall ? 0 : compactPaywall ? 4 : 0,
           paddingBottom: compactProgressPhotoPaywall
             ? 96
@@ -221,31 +222,34 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             fontSize: microShortPaywall
               ? 18
               : narrowShortPaywall
-              ? 22
-              : ultraShortPaywall
-                ? 24
-                : shortPaywall
-                  ? 26
-                  : compactPaywall
-                    ? 28
-                    : 32,
+                ? 22
+                : ultraShortPaywall
+                  ? 24
+                  : shortPaywall
+                    ? 26
+                    : compactPaywall
+                      ? 28
+                      : 32,
             lineHeight: microShortPaywall
               ? 21
               : narrowShortPaywall
-              ? 25
-              : ultraShortPaywall
-                ? 27
-                : shortPaywall
-                  ? 29
-                  : compactPaywall
-                    ? 32
-                    : 36,
+                ? 25
+                : ultraShortPaywall
+                  ? 27
+                  : shortPaywall
+                    ? 29
+                    : compactPaywall
+                      ? 32
+                      : 36,
           }}
           accessibilityLabel={copy.title}
         >
           {paywallTitle}
         </Text>
-        {splitShortProgressTabPaywall || microShortPaywall || narrowShortPaywall ? null : (
+        {splitShortProgressTabPaywall ||
+        microShortPaywall ||
+        narrowShortPaywall ||
+        denseTallTextPressurePaywall ? null : (
           <Text
             variant="body"
             tone="muted"
@@ -274,7 +278,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 ? microShortPaywall
                   ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1'
                   : 'mt-1.5 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'
-                : shortPaywall
+                : shortPaywall || denseTallTextPressurePaywall
                   ? 'mt-2 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-2'
                   : compactPaywall
                     ? 'mt-3 flex-row items-center justify-between rounded-card bg-paper-raised px-3.5 py-3'
@@ -298,7 +302,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                   ? 18
                   : narrowShortPaywall
                     ? 20
-                    : shortPaywall
+                    : shortPaywall || denseTallTextPressurePaywall
                       ? 22
                       : compactPaywall
                         ? 24
@@ -307,7 +311,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                   ? 21
                   : narrowShortPaywall
                     ? 23
-                    : shortPaywall
+                    : shortPaywall || denseTallTextPressurePaywall
                       ? 25
                       : compactPaywall
                         ? 28
@@ -324,6 +328,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           </View>
           {annualDisplay.pricePerMonthLabel &&
           !supportedTextPressurePaywall &&
+          !tallPhoneTextPressurePaywall &&
           !ultraShortPaywall &&
           !narrowShortPaywall ? (
             <Text
@@ -345,7 +350,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 ? 'mt-0.5 text-center'
                 : ultraShortPaywall
                   ? 'mt-0.5 text-center'
-                  : shortPaywall
+                  : shortPaywall || denseTallTextPressurePaywall
                     ? 'mt-1 text-center'
                     : compactPaywall
                       ? 'mt-1 text-center'
@@ -356,7 +361,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 ? 10
                 : ultraShortPaywall
                   ? 10
-                  : shortPaywall
+                  : shortPaywall || denseTallTextPressurePaywall
                     ? 10.5
                     : compactPaywall
                       ? 11
@@ -365,7 +370,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 ? 12
                 : ultraShortPaywall
                   ? 12
-                  : shortPaywall
+                  : shortPaywall || denseTallTextPressurePaywall
                     ? 14
                     : compactPaywall
                       ? 15
@@ -387,7 +392,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 ? microShortPaywall
                   ? 'mt-0 h-[48px] items-center justify-center rounded-pill'
                   : 'mt-1 h-[48px] items-center justify-center rounded-pill'
-                : shortPaywall
+                : shortPaywall || denseTallTextPressurePaywall
                   ? 'mt-1.5 h-[48px] items-center justify-center rounded-pill'
                   : compactPaywall
                     ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
@@ -405,8 +410,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             numberOfLines={1}
             style={{
               color: colors.paper,
-              fontSize: microShortPaywall ? 15.5 : 17,
-              lineHeight: microShortPaywall ? 18 : undefined,
+              fontSize: microShortPaywall ? 15.5 : denseTallTextPressurePaywall ? 16 : 17,
+              lineHeight: microShortPaywall ? 18 : denseTallTextPressurePaywall ? 19 : undefined,
             }}
           >
             {primaryCtaLabel}

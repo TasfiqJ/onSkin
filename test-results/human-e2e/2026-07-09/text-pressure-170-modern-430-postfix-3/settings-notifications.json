@@ -1,0 +1,245 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 32.890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56.890625,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 8.890625,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 189,
+        "y": 185.3984375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "7:30 AM",
+      "label": "Morning routine 7:30 AM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 239.796875,
+        "height": 108.796875,
+        "left": 38,
+        "right": 340,
+        "top": 131,
+        "visibleHeight": 108.796875,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 366,
+        "y": 185.390625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Morning routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 209.390625,
+        "height": 48,
+        "left": 340,
+        "right": 392,
+        "top": 161.390625,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 189,
+        "y": 323.1953125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "9:30 PM",
+      "label": "Evening · tonight’s step 9:30 PM",
+      "partialClip": false,
+      "rect": {
+        "bottom": 377.59375,
+        "height": 108.796875,
+        "left": 38,
+        "right": 340,
+        "top": 268.796875,
+        "visibleHeight": 108.796875,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 366,
+        "y": 323.1875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Evening · tonight’s step",
+      "partialClip": false,
+      "rect": {
+        "bottom": 347.1875,
+        "height": 48,
+        "left": 340,
+        "right": 392,
+        "top": 299.1875,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 366,
+        "y": 480.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Streak & adherence",
+      "partialClip": false,
+      "rect": {
+        "bottom": 504.796875,
+        "height": 48,
+        "left": 340,
+        "right": 392,
+        "top": 456.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 366,
+        "y": 557.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Replenishment",
+      "partialClip": false,
+      "rect": {
+        "bottom": 581.796875,
+        "height": 48,
+        "left": 340,
+        "right": 392,
+        "top": 533.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 366,
+        "y": 634.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress-photo nudge",
+      "partialClip": false,
+      "rect": {
+        "bottom": 658.796875,
+        "height": 48,
+        "left": 340,
+        "right": 392,
+        "top": 610.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 366,
+        "y": 792.390625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Tips & announcements",
+      "partialClip": false,
+      "rect": {
+        "bottom": 816.390625,
+        "height": 48,
+        "left": 340,
+        "right": 392,
+        "top": 768.390625,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8266/settings/notifications",
+  "textOverflows": [],
+  "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+  "viewport": {
+    "width": 430,
+    "height": 932
+  },
+  "route": "/settings/notifications",
+  "scaledCount": 15,
+  "textScale": 1.7,
+  "url": "http://localhost:8266/settings/notifications",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

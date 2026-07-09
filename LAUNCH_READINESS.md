@@ -1,6 +1,6 @@
 # Launch Readiness
 
-Date: 2026-07-08
+Date: 2026-07-09
 
 This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.
@@ -15,7 +15,29 @@ quality logic, OBF fixture import/QA tooling, catalog lookup/search/report Edge
 Functions, and mobile source/quality disclosure. This is not source/legal
 clearance and not a real launch catalog.
 
-Fresh verification on 2026-07-08:
+Fresh verification through 2026-07-09:
+
+- The human-simulated E2E manifest now anchors to the 2026-07-09 Expo web
+  support-floor evidence. The 320 x 480 launch-blocking 170% text-pressure
+  sweep passed 49 / 49 routes with zero failed routes, and the 390 x 844 plus
+  430 x 932 supported-phone sweeps also passed 49 / 49 routes with zero failed
+  routes. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-4/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6/`,
+  and
+  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3/`.
+- Settings Privacy direct entries and contextual Progress paywalls have fresh
+  2026-07-09 browser evidence for the Terms-row support-floor spacer, compact
+  tall-phone paywall compliance header, and compact visible Explore-first copy
+  with the full reverse-trial copy retained in the accessibility label.
+  Evidence:
+  `test-results/human-e2e/2026-07-09/settings-privacy-terms-support-floor-current/`
+  and
+  `test-results/human-e2e/2026-07-09/progate-tall-phone-header-current/`.
+- Phase 9 dependency/SBOM evidence was refreshed with `npm audit` metadata:
+  the generated inventory records 1073 packages and zero npm vulnerabilities.
+  Strict release completion still needs the release-owner
+  `PHASE9_DEPENDENCY_AUDIT_PASS=true` signoff.
 
 - Codex in-app browser Expo web at 320 x 568 verified the new
   `cycle_night_completed` Today PM instrumentation path through the real UI:
@@ -87,13 +109,12 @@ Fresh verification on 2026-07-08:
   hash.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
-  committed local Expo web evidence for the 320 x 480 support-floor route
-  rerun, and records 320 x 430 / 390 stress evidence when present without
-  making those sub-floor browser heights the customer support floor. It does
-  not replace physical iOS/Android device QA, native keyboard/text-scale/
-  accessibility checks, RevenueCat, StoreKit/Play Billing, or live Supabase
-  release gates. The support contract is defined in
-  `docs/DEVICE_SUPPORT_POLICY.md`.
+  committed local Expo web evidence for the 2026-07-09 320 x 480
+  support-floor 170% text-pressure sweep and records 390 x 844 / 430 x 932
+  supported-phone sweep evidence. It does not replace physical iOS/Android
+  device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
+  StoreKit/Play Billing, or live Supabase release gates. The support contract
+  is defined in `docs/DEVICE_SUPPORT_POLICY.md`.
 - `npm run e2e:human:manifest:check` passed as the non-mutating local human-E2E
   evidence freshness gate.
 - `npm run phase7:verify` passed non-strict core-loop code gates and refreshed

@@ -66,8 +66,44 @@ function commandRequired(name, commandArgs) {
   }).trim();
 }
 
+function gateEvidencePath(gate) {
+  return `${gate.folder}/${gate.evidence}`;
+}
+
+function textPressureSupportFloorGate(date) {
+  return {
+    id: 'support-floor-480-170-text-pressure',
+    title: '320 x 480 supported-floor 170% text-pressure route sweep',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'launch-blocking',
+    folder: `test-results/human-e2e/${date}/text-pressure-170-support-floor-480-postfix-4`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero support-floor text-pressure geometry/log failures.',
+  };
+}
+
+function legacySupportFloorGate(date) {
+  return {
+    id: 'short-phone-480-route-rerun',
+    title: '320 x 480 supported-floor route rerun',
+    kind: 'failures',
+    required: true,
+    supportClass: 'launch-blocking',
+    folder: `test-results/human-e2e/${date}/current-main-short-phone-480-rerun`,
+    evidence: 'failures.json',
+    expected: '49 Expo web direct-entry routes have zero support-floor geometry/log failures.',
+  };
+}
+
+function supportFloorGateForDate(date) {
+  const candidates = [textPressureSupportFloorGate(date), legacySupportFloorGate(date)];
+  return candidates.find((gate) => exists(gateEvidencePath(gate))) ?? candidates[0];
+}
+
 function requiredGateEvidenceFiles(date) {
-  return [`test-results/human-e2e/${date}/current-main-short-phone-480-rerun/failures.json`];
+  return [gateEvidencePath(supportFloorGateForDate(date))];
 }
 
 function latestEvidenceDate() {
@@ -99,6 +135,8 @@ function walkEvidence(path) {
       const next = join(current, entry.name);
       if (entry.isDirectory()) {
         stack.push(next);
+      } else if (entry.name === 'expo-web.log') {
+        continue;
       } else {
         result.files += 1;
         result.bytes += statSync(next).size;
@@ -138,15 +176,26 @@ if (!evidenceDate) {
 }
 
 const gates = [
+  supportFloorGateForDate(evidenceDate),
   {
-    id: 'short-phone-480-route-rerun',
-    title: '320 x 480 supported-floor route rerun',
-    kind: 'failures',
-    required: true,
-    supportClass: 'launch-blocking',
-    folder: `test-results/human-e2e/${evidenceDate}/current-main-short-phone-480-rerun`,
-    evidence: 'failures.json',
-    expected: '49 Expo web direct-entry routes have zero support-floor geometry/log failures.',
+    id: 'modern-390-170-text-pressure',
+    title: '390 x 844 supported-phone 170% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-170-modern-390-postfix-6`,
+    evidence: 'summary.json',
+    expected: '49 Expo web direct-entry routes have zero modern-phone text-pressure failures.',
+  },
+  {
+    id: 'modern-430-170-text-pressure',
+    title: '430 x 932 supported-phone 170% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-170-modern-430-postfix-3`,
+    evidence: 'summary.json',
+    expected: '49 Expo web direct-entry routes have zero tall-phone text-pressure failures.',
   },
   {
     id: 'short-phone-430-final-clearance',
@@ -212,6 +261,24 @@ const gateResults = gates.map((gate) => {
           .toLowerCase();
         status = verdict === 'pass' ? 'pass' : 'fail';
         detail = `summary verdict: ${verdict || 'missing'}.`;
+      } else if (gate.kind === 'summary-status') {
+        const summary = readJson(evidencePath);
+        verdict = String(summary.status ?? summary.verdict ?? '')
+          .trim()
+          .toLowerCase();
+        if (typeof summary?.failedRouteCount === 'number') {
+          failureCount = summary.failedRouteCount;
+        } else if (Array.isArray(summary?.failedRoutes)) {
+          failureCount = summary.failedRoutes.length;
+        }
+        status =
+          verdict === 'pass' && (failureCount == null || failureCount === 0) ? 'pass' : 'fail';
+        detail =
+          failureCount == null
+            ? `summary status: ${verdict || 'missing'}.`
+            : `summary status: ${verdict || 'missing'}; ${failureCount} failed route${
+                failureCount === 1 ? '' : 's'
+              }.`;
       }
     } catch (error) {
       status = 'fail';

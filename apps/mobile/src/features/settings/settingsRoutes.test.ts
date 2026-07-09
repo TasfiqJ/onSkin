@@ -43,6 +43,8 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;');
@@ -53,8 +55,10 @@ describe('Settings route contracts', () => {
     expect(you).toContain(
       'const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;',
     );
+    expect(you).toContain('const supportFloorPrivacyEntry =');
+    expect(you).toContain('privacyDirectEntry && narrowPhone && height >= 460 && height < 520;');
     expect(you).toContain(
-      'const supportFloorPrivacyEntry = privacyDirectEntry && narrowPhone && height >= 460 && height < 520;',
+      'const tallPhonePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 900 && height < 980;',
     );
     expect(you).toContain(
       'const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;',
@@ -86,6 +90,9 @@ describe('Settings route contracts', () => {
     expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
     expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
+    expect(you).toContain("privacyDirectEntry && row.key === 'consumerHealthPrivacy'");
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN');
+    expect(you).toContain(': PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN');
     expect(you).toContain("privacyDirectEntry && row.key === 'dataExport'");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }');
     expect(you).toContain("privacyDirectEntry && row.key === 'terms'");
@@ -185,7 +192,9 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('const splitShortNotifications = height < 600;');
     expect(notifications).toContain('const microShortNotifications = height < 380;');
     expect(notifications).toContain('const splitShortNudgeRowStyle = {');
-    expect(notifications).toContain('marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,');
+    expect(notifications).toContain(
+      'marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,',
+    );
     expect(notifications).toContain('style={splitShortNudgeRowStyle}');
     expect(notifications).toContain('const ultraShortNudgesStyle = microShortNotifications');
     expect(notifications).toContain(
@@ -286,7 +295,9 @@ describe('Settings route contracts', () => {
     expect(source).toContain('setPolicyFeedback(null);');
     expect(source).toContain('const opened = await openPolicyUrl(row.url);');
     expect(source).toContain("if (row.key === 'support')");
-    expect(source).toContain("track('support_contact_opened', { source: 'settings', result: 'opened' });");
+    expect(source).toContain(
+      "track('support_contact_opened', { source: 'settings', result: 'opened' });",
+    );
     expect(source).toContain(
       "track('support_contact_failed', { source: 'settings', result: 'unavailable' });",
     );

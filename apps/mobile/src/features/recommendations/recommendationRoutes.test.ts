@@ -148,6 +148,9 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const ultraShortPreferences = height < 460;');
     expect(source).toContain('const microShortPreferences = height < 380;');
     expect(source).toContain('const splitShortPreferences = height < 600;');
+    expect(source).toContain(
+      'const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;',
+    );
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");
@@ -172,12 +175,17 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');
+    expect(source).toContain('const modernTextPressureBudgetGroupStyle =');
+    expect(source).toContain('modernTextPressurePreferences || tallTextPressurePreferences');
+    expect(source).toContain('? { marginTop: 112 }');
     expect(source).toContain('const modernTextPressureTextureGroupStyle =');
     expect(source).toContain('? { marginTop: 56 }');
+    expect(source).toContain('? { marginTop: 64 }');
     expect(source).toContain('const renderValueToggle = (v: ValuesFilter) => (');
     expect(source).toContain('VALUES_FILTERS.slice(0, 3).map(renderValueToggle)');
     expect(source).toContain('VALUES_FILTERS.slice(3).map(renderValueToggle)');
     expect(source).toContain('style={splitShortPreferenceDeferredGroupStyle}');
+    expect(source).toContain('style={modernTextPressureBudgetGroupStyle}');
     expect(source).toContain('style={modernTextPressureTextureGroupStyle}');
     expect(source).toContain(
       'paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined',

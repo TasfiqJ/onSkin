@@ -108,7 +108,7 @@ function Toggle({
 }
 
 export default function PreferencesScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -127,6 +127,7 @@ export default function PreferencesScreen() {
   const microShortPreferences = height < 380;
   const splitShortPreferences = height < 600;
   const modernTextPressurePreferences = height < 900;
+  const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
     : shortPreferences
@@ -160,8 +161,16 @@ export default function PreferencesScreen() {
       ? { marginTop: 48 }
       : undefined;
   const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };
+  const modernTextPressureBudgetGroupStyle =
+    (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
+      ? { marginTop: 112 }
+      : undefined;
   const modernTextPressureTextureGroupStyle =
-    modernTextPressurePreferences && !compactPreferences ? { marginTop: 56 } : undefined;
+    modernTextPressurePreferences && !compactPreferences
+      ? { marginTop: 56 }
+      : tallTextPressurePreferences
+        ? { marginTop: 64 }
+        : undefined;
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
     if (preferenceDelayMs > 0) await wait(preferenceDelayMs);
@@ -287,7 +296,7 @@ export default function PreferencesScreen() {
         <Text variant="label" tone="muted" className={sectionLabelClassName}>
           {REC_COPY.preferences.budgetLabel.toUpperCase()}
         </Text>
-        <View className={chipGroupClassName}>
+        <View className={chipGroupClassName} style={modernTextPressureBudgetGroupStyle}>
           {BUDGETS.map((b) => (
             <Toggle
               key={b}

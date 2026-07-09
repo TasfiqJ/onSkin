@@ -13,11 +13,14 @@ import { colors } from '@/theme/tokens';
 // the source workflow is approved.
 export default function NoMatchScreen() {
   const { reset } = useIntake();
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const shortPhone = height < 600;
   const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
   const microShortPhone = height < 380;
+  const tallTextPressurePhone =
+    (width <= 430 && height >= 900 && height < 980) ||
+    (height <= 430 && width >= 900 && width < 980);
   const compactPressurePhone = shortPhone;
   const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;
   const compactScanRecoveryStyle = compactPressurePhone
@@ -25,9 +28,11 @@ export default function NoMatchScreen() {
     : undefined;
   const compactManualRecoveryStyle = microShortPhone
     ? { marginTop: 40, transform: [{ translateY: -32 }] }
-    : compactPressurePhone
-      ? { marginTop: 32, transform: [{ translateY: -32 }] }
-      : undefined;
+    : tallTextPressurePhone
+      ? { marginTop: 96, transform: [{ translateY: -32 }] }
+      : compactPressurePhone
+        ? { marginTop: 32, transform: [{ translateY: -32 }] }
+        : undefined;
 
   const goOcr = () => {
     haptics.select();

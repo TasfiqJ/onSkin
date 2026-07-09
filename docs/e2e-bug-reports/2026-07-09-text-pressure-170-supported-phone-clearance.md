@@ -3,7 +3,7 @@
 Severity: High
 Surface: Expo web
 Environment: Headless Chrome, Expo web, 320 x 568, 320 x 480, 390 x 844, and 430 x 932 viewports, 170% text pressure
-Feature: Supported-phone text-pressure layout across Settings Privacy, Today empty routine, and contextual Pro paywalls
+Feature: Supported-phone text-pressure layout across Settings Privacy, Today empty routine, Recommendation Preferences, Shelf recovery, and contextual Pro paywalls
 Date: 2026-07-09
 Tester: Codex
 
@@ -22,7 +22,8 @@ Visible controls remain complete, readable, 44 px or taller where applicable, an
 - `/settings/privacy` at 320 x 568 exposed the unrelated `Reminders & notifications` row as a bottom-edge sliver.
 - `/settings/privacy` at 320 x 480 exposed `Withdraw health-data consent` with its center blocked by the floating tab bar.
 - `/today?routine=PM` at 320 x 568 placed the empty-routine `Add products` CTA under the floating tab bar.
-- `/settings/privacy` at 430 x 932 exposed the `Terms` policy row as a partial bottom-edge target.
+- `/settings/privacy` at 430 x 932 exposed policy rows, including `Terms` and then `Consumer health privacy`, as partial bottom-edge targets.
+- `/recommendations/preferences` at 430 x 932 exposed the Texture chips as barely visible bottom-edge targets.
 - `/cycle/phased-intro` at 430 x 932 placed footer Terms, Privacy, and Restore controls at the viewport bottom.
 - `/routine/plan`, `/routine/reorder`, and `/routine/streak` at 390 x 844 exposed compact Explore-first copy as either one-line overflow or a partial bottom-edge button.
 - `/shelf/no-match` emitted a transient Expo web reconnect warning in one run and cleared on the next full rerun.
@@ -40,7 +41,9 @@ Visible controls remain complete, readable, 44 px or taller where applicable, an
 
 - Settings Privacy direct entries omit the unrelated Reminders card so direct privacy recovery starts on the privacy surface only.
 - Settings Privacy adds a support-floor-only withdraw margin so destructive health-data consent actions stay fully below the first 320 x 480 viewport until the user scrolls.
-- Settings Privacy gives the Terms policy row its own direct-entry spacer so policy controls do not peek into the 430 x 932 first viewport.
+- Settings Privacy gives lower policy rows tall-phone direct-entry spacers so policy controls do not peek into the 430 x 932 first viewport.
+- Recommendation Preferences gives the tall 430 px text-pressure texture group its own below-fold spacer while keeping visible value and budget chips complete.
+- Shelf no-match gives tall 430 px text-pressure recovery actions enough top spacing so lower-priority manual recovery does not peek at the viewport edge.
 - Today empty-routine cards add a short-phone density tier that keeps the title and `Add products` CTA, drops only the secondary helper sentence, and trims CTA spacing while preserving a 52 px minimum button height.
 - ProGate promotes tall 430 px text-pressure phones into the compact header compliance treatment, preserving Terms, Privacy, Restore, and Maybe later as complete header controls.
 - ProGate shortens visible Explore-first copy in text-pressure tiers while retaining the full reverse-trial copy in the button accessibility label, and moves optional Explore-first rows fully below the first 390 x 844 viewport when needed.
@@ -55,6 +58,8 @@ Visible controls remain complete, readable, 44 px or taller where applicable, an
 
 - `npm --workspace apps/mobile run test -- src/features/today/todayRoute.test.ts`
 - `npm --workspace apps/mobile run test -- src/features/settings/settingsRoutes.test.ts`
+- `npm --workspace apps/mobile run test -- src/features/recommendations/recommendationRoutes.test.ts`
+- `npm --workspace apps/mobile run test -- src/features/shelf/shelfRoutes.test.ts`
 - `npm --workspace apps/mobile run test -- src/features/subscription/paywallMobileContracts.test.ts src/features/subscription/proGatedRoutes.test.ts`
 - `test-results/human-e2e/2026-07-09/text-pressure-170-compact-568-postfix-3/report.md`
 - `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-3/report.md`
