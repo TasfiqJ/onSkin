@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the Phase 6 entitlement E2E fixture path so
+  `EXPO_PUBLIC_E2E_ENTITLEMENT` and `EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS` are
+  ignored outside development builds. The mobile source contract and
+  `phase6:check-payments-env` now enforce the guard, preserving RevenueCat or
+  Supabase app-granted entitlements as the only production Pro sources.
+
 - Extended the Shelf scan text-pressure support-band guard through 430 x 640.
   The scan route now treats 391-430 px wide, 640-699 px tall layouts as compact
   scan surfaces so the unavailable-camera fallback keeps the primary recovery

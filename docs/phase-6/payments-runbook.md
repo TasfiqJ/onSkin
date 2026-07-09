@@ -51,6 +51,8 @@ Forbidden production behavior:
 
 - Local trial grants
 - Local paid grants
+- Client E2E entitlement fixtures or artificial entitlement delays outside
+  development builds
 - Win-back grants without a native eligible offer
 - Test Store key in production
 - Purchase CTA enabled when the current offering is missing

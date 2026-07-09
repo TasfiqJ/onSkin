@@ -12,6 +12,8 @@
 - RevenueCat webhook verifies HMAC over the raw request body, dedupes events, resolves aliases, and mirrors cancellation versus expiration correctly.
 - Account deletion calls RevenueCat customer deletion with a secret server key.
 - Mobile deletion copy no longer implies account deletion cancels Apple or Google billing.
+- Client E2E entitlement fixtures and artificial entitlement delays are ignored
+  outside development builds, and the Phase 6 verifier enforces that guard.
 - Phase 6 scripts generate a QA packet and block strict exit on missing external evidence.
 - The generated QA packet hashes payment lifecycle routes, subscription
   contract tests, human-simulated E2E rules, user-flow tree, manifest

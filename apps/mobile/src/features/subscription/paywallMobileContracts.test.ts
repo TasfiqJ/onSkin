@@ -448,6 +448,7 @@ describe('paywall mobile contracts', () => {
     expect(useEntitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(useEntitlement).toContain("if (fixture === 'expired_store')");
     expect(useEntitlement).toContain("if (fixture === 'expired_reverse_trial')");
+    expect(useEntitlement).toContain("if (env.appEnvironment !== 'development') return null;");
     expect(useEntitlement).toContain(
       'const expiredAt = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();',
     );
@@ -467,6 +468,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('if (!locked) return <>{children}</>;');
     expect(useEntitlement).toContain('EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS');
     expect(useEntitlement).toContain('const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;');
+    expect(useEntitlement).toContain("if (env.appEnvironment !== 'development') return 0;");
     expect(useEntitlement).toContain('if (e2eDelay > 0) await wait(e2eDelay);');
   });
 

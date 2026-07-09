@@ -160,6 +160,14 @@ require(has(
   'supabase/functions/account-deletion/index.ts',
   /api\.revenuecat\.com\/v1\/subscribers/,
 ), 'Account deletion is missing RevenueCat subscriber deletion endpoint.');
+require(has(
+  'apps/mobile/src/features/subscription/useEntitlement.ts',
+  /if \(env\.appEnvironment !== 'development'\) return null;/,
+), 'Entitlement E2E fixture grants must be ignored outside development builds.');
+require(has(
+  'apps/mobile/src/features/subscription/useEntitlement.ts',
+  /if \(env\.appEnvironment !== 'development'\) return 0;/,
+), 'Entitlement E2E delay fixture must be ignored outside development builds.');
 
 const forbiddenLocalGrants = [
   [

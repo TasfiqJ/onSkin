@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { cancelTrialReminder, scheduleTrialReminder } from '@/features/notifications/deliver';
 import { track } from '@/lib/analytics/track';
+import { env } from '@/lib/env';
 import {
   customerInfoToStoredEntitlement,
   purchasePackage,
@@ -38,6 +39,8 @@ function activeResult(
 }
 
 function e2eEntitlementDelayMs(): number {
+  if (env.appEnvironment !== 'development') return 0;
+
   const raw = process.env.EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS;
   if (!raw) return 0;
 
@@ -51,6 +54,8 @@ function wait(ms: number): Promise<void> {
 }
 
 function e2eEntitlementState(): SubscriptionState | null {
+  if (env.appEnvironment !== 'development') return null;
+
   const fixture = process.env.EXPO_PUBLIC_E2E_ENTITLEMENT;
   if (
     fixture !== 'pro' &&
