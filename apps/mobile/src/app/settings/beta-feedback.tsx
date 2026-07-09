@@ -133,14 +133,12 @@ function supportFeedbackUrl(
 function OptionRow({
   label,
   detail,
-  extraTopMargin,
   selected,
   density,
   onPress,
 }: {
   label: string;
   detail: string;
-  extraTopMargin?: number;
   selected: boolean;
   density: OptionRowDensity;
   onPress: () => void;
@@ -168,7 +166,6 @@ function OptionRow({
         backgroundColor: selected ? colors.clayTint : colors.paperRaised,
         borderWidth: 1,
         borderColor: selected ? colors.clay : colors.hairline,
-        marginTop: extraTopMargin,
       }}
     >
       <Text
@@ -210,6 +207,8 @@ export default function BetaFeedbackScreen() {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [opening, setOpening] = useState(false);
   const canOpenSupport = !!category && !!severity && !opening;
+  const feedbackMessage =
+    feedback && highTextPressure ? 'Support is not configured in this build.' : feedback;
 
   async function openSupport() {
     if (!category || !severity || opening) return;
@@ -230,14 +229,6 @@ export default function BetaFeedbackScreen() {
     });
     if (!opened) setFeedback(SUPPORT_FEEDBACK_UNAVAILABLE);
     setOpening(false);
-  }
-
-  function categoryFirstViewportBreakMargin(index: number): number | undefined {
-    if (!highTextPressure) return undefined;
-    if (height < 700 && index === 2) return 128;
-    if (height >= 800 && height < 900 && index === 4) return 56;
-    if (height >= 900 && height < 980 && index === 4) return 128;
-    return undefined;
   }
 
   return (
@@ -286,12 +277,11 @@ export default function BetaFeedbackScreen() {
         <Text variant="label" tone="muted" className="mb-2 ml-2">
           ISSUE TYPE
         </Text>
-        {SUPPORT_FEEDBACK_CATEGORIES.map((item, index) => (
+        {SUPPORT_FEEDBACK_CATEGORIES.map((item) => (
           <OptionRow
             key={item.key}
             label={item.label}
             detail={item.detail}
-            extraTopMargin={categoryFirstViewportBreakMargin(index)}
             selected={category === item.key}
             density={optionRowDensity}
             onPress={() => {
@@ -309,7 +299,6 @@ export default function BetaFeedbackScreen() {
             key={item.key}
             label={item.label}
             detail={item.detail}
-            extraTopMargin={undefined}
             selected={severity === item.key}
             density={optionRowDensity}
             onPress={() => {
@@ -319,19 +308,20 @@ export default function BetaFeedbackScreen() {
           />
         ))}
 
-        {feedback ? (
+        {feedbackMessage ? (
           <Text
             accessibilityRole="alert"
             variant="bodySm"
             tone="muted"
-            className="mt-2 text-center"
+            className={highTextPressure ? 'mt-1 text-center' : 'mt-2 text-center'}
+            style={highTextPressure ? { fontSize: 12, lineHeight: 15 } : undefined}
           >
-            {feedback}
+            {feedbackMessage}
           </Text>
         ) : null}
 
         <Button
-          className="mt-4"
+          className={feedback && highTextPressure ? 'mt-2' : 'mt-4'}
           label={opening ? 'Opening...' : 'Open support'}
           disabled={!canOpenSupport}
           onPress={() => void openSupport()}

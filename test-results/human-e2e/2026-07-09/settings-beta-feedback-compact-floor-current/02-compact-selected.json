@@ -286,7 +286,12 @@
       "text": "Open support"
     }
   ],
+  "hasCompactHeading": true,
+  "hasLongRouteCopy": false,
+  "hasLongSupportUnavailableCopy": false,
+  "hasSupportUnavailableCopy": false,
   "horizontalOverflow": 0,
+  "label": "compact selected",
   "scroll": {
     "clientHeight": 641,
     "scrollHeight": 641,
@@ -294,7 +299,7 @@
     "y": 0
   },
   "textInputCount": 0,
-  "url": "http://localhost:8193/settings/beta-feedback",
+  "url": "http://localhost:8194/settings/beta-feedback",
   "viewport": {
     "height": 641,
     "width": 390

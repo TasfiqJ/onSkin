@@ -200,11 +200,12 @@ describe('Settings route contracts', () => {
     expect(route).toContain("density === 'tallTextPressure'");
     expect(route).toContain("? 'mb-16 min-h-[56px]");
     expect(route).toContain('density={optionRowDensity}');
-    expect(route).toContain('function categoryFirstViewportBreakMargin(index: number): number | undefined');
-    expect(route).toContain('if (height < 700 && index === 2) return 96;');
-    expect(route).toContain('if (height >= 800 && height < 900 && index === 4) return 56;');
-    expect(route).toContain('if (height >= 900 && height < 980 && index === 4) return 128;');
-    expect(route).toContain('extraTopMargin={categoryFirstViewportBreakMargin(index)}');
+    expect(route).not.toContain('extraTopMargin');
+    expect(route).not.toContain('categoryFirstViewportBreakMargin');
+    expect(route).toContain(
+      "feedback && highTextPressure ? 'Support is not configured in this build.' : feedback",
+    );
+    expect(route).toContain("className={feedback && highTextPressure ? 'mt-2' : 'mt-4'}");
     expect(route).toContain('SUPPORT_FEEDBACK_UNAVAILABLE');
     expect(route).not.toContain('TextInput');
     expect(route).not.toContain('freeText');

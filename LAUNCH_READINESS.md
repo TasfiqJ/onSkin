@@ -218,7 +218,8 @@ Fresh verification through 2026-07-09:
   only`, hides the longer explanatory paragraph, keeps fixed category/severity
   rows at support-floor spacing, category + priority selection still enables
   `Open support`, the unavailable support handoff recovers inline without a
-  JavaScript dialog, there are no free-text inputs, horizontal overflow is
+  JavaScript dialog, the compact recovery copy does not push the support CTA
+  below the viewport, there are no free-text inputs, horizontal overflow is
   zero, and current-origin warn/error logs are clean. Evidence:
   `test-results/human-e2e/2026-07-09/settings-beta-feedback-compact-floor-current/`.
 - Expo web 320 x 480 current-main route rerun passed 49 direct-entry routes

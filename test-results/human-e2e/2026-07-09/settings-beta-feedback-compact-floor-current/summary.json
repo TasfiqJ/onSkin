@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T18:46:58.586Z",
+  "generatedAt": "2026-07-09T19:03:06.243Z",
   "status": "pass",
   "appSurface": "Expo web in-app browser",
-  "baseUrl": "http://localhost:8193",
+  "baseUrl": "http://localhost:8194",
   "supportClass": "launch support floor compact height",
   "viewport": {
     "width": 390,
@@ -15,7 +15,7 @@
     "Select Catalog match issue",
     "Select Core flow blocked",
     "Open support handoff",
-    "Verify inline recovery when support URL is unavailable in this build"
+    "Verify compact inline unavailable-support recovery"
   ],
   "checks": {
     "topHorizontalOverflow": 0,
@@ -25,7 +25,19 @@
     "compactHeading": true,
     "longRouteCopyHidden": true,
     "supportUnavailableCopy": true,
+    "longSupportUnavailableCopyHidden": true,
+    "openSupportButtonFullyVisible": true,
     "jsDialog": null,
     "currentOriginWarnErrorLogCount": 0
-  }
+  },
+  "artifacts": [
+    "01-compact-top.png",
+    "01-compact-top.json",
+    "02-compact-selected.png",
+    "02-compact-selected.json",
+    "03-compact-after-support.png",
+    "03-compact-after-support.json",
+    "browser-logs.json",
+    "report.md"
+  ]
 }
