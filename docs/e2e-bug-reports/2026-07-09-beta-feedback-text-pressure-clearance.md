@@ -46,22 +46,22 @@ The normal explanatory intro card and dense category list consumed too much firs
 
 ## Minimal Fix Recommendation
 
-Collapse the beta-feedback intro copy under high text pressure, use compact row density without arbitrary blank-gap offsets, and keep visible controls at least 44 px tall and center-hit-testable on supported compact phone viewports.
+Collapse the beta-feedback intro copy under high text pressure, keep compact row density, and add targeted first-viewport category breaks only for compact-phone widths where the next row would otherwise appear as a clipped/tiny target.
 
 ## Verification Flow After Fix
 
 1. Re-run `/settings/beta-feedback` at 360 x 640 / 200%.
 2. Re-run compact and supported-phone spot checks at 360 x 740, 375 x 667, 390 x 844, 412 x 915, and 430 x 932.
-3. Confirm zero failed routes, no sub-44 visible controls, no blocked center hit-tests, no horizontal overflow, and no oversized blank layout gaps in the final screenshots.
+3. Confirm zero failed routes, no sub-44 visible controls, no blocked center hit-tests, no horizontal overflow, and no bottom-edge clipped first-viewport controls in the final support-floor screenshots.
 
 ## Post-Fix Evidence
 
-- 360 x 640: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-640-postfix8/`
-- 360 x 740: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-740-postfix5/`
-- 375 x 667: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-375-667-postfix8/`
-- 390 x 844: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-390-844-postfix7/`
-- 412 x 915: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-412-915-postfix5/`
-- 430 x 932: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-430-932-postfix5/`
+- 360 x 640: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-640-postfix12/`
+- 360 x 740: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-740-postfix8/`
+- 375 x 667: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-375-667-postfix11/`
+- 390 x 844: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-390-844-postfix13/`
+- 412 x 915: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-412-915-postfix8/`
+- 430 x 932: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-430-932-postfix8/`
 
 ## Remaining Risk
 
