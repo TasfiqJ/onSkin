@@ -123,6 +123,8 @@ function isLocalOnlyGeneratedKey(key) {
     /_OUT_DIR$/.test(key) ||
     key === 'PHASE3_REVIEW_WORKLIST_JSON' ||
     key === 'PHASE3_REVIEW_WORKLIST_MD' ||
+    key === 'PHASE4_SOURCE_WORKLIST_JSON' ||
+    key === 'PHASE4_SOURCE_WORKLIST_MD' ||
     key === 'PHASE8_STORE_METADATA_PACKET' ||
     key === 'PHASE9_RELEASE_CANDIDATE_DIR'
   );
