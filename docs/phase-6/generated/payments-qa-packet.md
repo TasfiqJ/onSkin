@@ -1,8 +1,8 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-09T11:44:42.252Z
-Git SHA: aa22e29e9c6e21cbe20c3d71b774f40400b84549
-Git status: clean
+Generated at: 2026-07-09T11:45:47.653Z
+Git SHA: 0a1ee3dc4dd857ad13a17e051efeabafadcc2b72
+Git status: DIRTY
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
 
@@ -82,8 +82,8 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9912 | 30ba52fe498f13d31108da44fcaf8f68cd6159369877f0c470c1e54772848a44 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
 | docs/USER_FLOW_TREE.md | present | 245419 | 2457086fdd6ea007a7871ee4a398a2c851166cf5195def1e7673695dd12802ee |
-| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | f7a4546dec16b5dd5f6080354bc8b59cef74bc037676e06732231a4ae0b60e65 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | 020d28b7e607a7257e6152c44b7d92ff1469a40b923309c5182a0ae86f23f927 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | a115e002bbd55d758a2be4035d6a2bdae30dc1547077c7867a4fb2d40119331b |
+| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | 298e2aa9754d504a70f8c61ec20674a304beca24485020f0ff5ff032979df1b3 |
 | docs/phase-6/payments-runbook.md | present | 3957 | 8a0c61a484cd2e8fd689c93f96efb2b13ab34eb8ca285ffb80aac8c6b7072fa1 |
 | docs/phase-6/payments-qa-checklist.md | present | 3683 | 5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291 |
 | docs/phase-6/phase-6-exit-review.md | present | 2599 | 4f096a6c3c698ce428400e9eb88518f353358197e55846ba815a4448b9fa1ea8 |
@@ -111,4 +111,4 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 ## Warnings
 
-- none
+- Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence.
