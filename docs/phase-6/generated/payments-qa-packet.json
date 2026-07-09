@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T09:41:40.000Z",
+  "generatedAt": "2026-07-09T09:47:30.127Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "43d25c1cd35ad7824295d714df66a29470cd69db",
+  "gitSha": "4f5fe9979b77004cc637086d548f3342b5b49d0d",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -244,20 +244,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 240098,
-      "sha256": "0ec63318c55a044ca4ee7c9f0c50012643a21f0019575cdb7b54383b81ce6775"
+      "bytes": 240509,
+      "sha256": "8335bde85e8bdfb315489a6a2bcae91d8457b8b7c0f92fc91b3d1387f6634c4f"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3780,
-      "sha256": "75165a0ddb049a098f9c5101d3ee65712b08e5ad54b9a8850fdea486755266a9"
+      "sha256": "2ae4664415bf4066d4046a05b7e0f756590c5e4c0a60416057a8162e7a347c63"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 2124,
-      "sha256": "a44ec51f45fc8bc41c673527d839d91d88db7b49154ffd7596c7eae84db49e1c"
+      "sha256": "d5984ba10304460e3f372a08b6742ccada33e97e483fbf38b973f03792959ee6"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
