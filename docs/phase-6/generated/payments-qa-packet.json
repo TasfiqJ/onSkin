@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T10:21:26.715Z",
+  "generatedAt": "2026-07-09T10:22:46.720Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "34d42e05b31efb6fc78499bc64ea0aa5a9752a23",
-  "gitStatus": "M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md",
+  "gitSha": "f81b9affa8e20ea86118d0be42baf3659be66ef0",
+  "gitStatus": "M docs/phase-7/generated/core-loop-qa-packet.json\n M docs/phase-7/generated/core-loop-qa-packet.md",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,

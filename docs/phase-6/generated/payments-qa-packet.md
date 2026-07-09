@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-09T10:21:26.715Z
-Git SHA: 34d42e05b31efb6fc78499bc64ea0aa5a9752a23
+Generated at: 2026-07-09T10:22:46.720Z
+Git SHA: f81b9affa8e20ea86118d0be42baf3659be66ef0
 Git status: DIRTY
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
