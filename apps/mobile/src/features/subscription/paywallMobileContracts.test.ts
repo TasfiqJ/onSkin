@@ -152,6 +152,16 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
     expect(proGate).toContain('const microShortPaywall = height < 380;');
     expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
+    expect(proGate).toContain(
+      'const microShortDeferredCtaStyle = microShortPaywall',
+    );
+    expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
+    expect(proGate).toContain("position: 'relative' as const,");
+    expect(proGate).toContain('zIndex: 2,');
+    expect(proGate).toContain('const paywallTitle = microShortPaywall');
+    expect(proGate).toContain("? 'Unlock photos.'");
+    expect(proGate).toContain(": 'Unlock Pro.'");
+    expect(proGate).toContain(': copy.title;');
     expect(proGate).toContain('const splitShortProgressTabPaywall =');
     expect(proGate).toContain(
       "height < 410 && feature === 'photo_timeline' && pathname === '/progress'",
@@ -173,8 +183,12 @@ describe('paywall mobile contracts', () => {
       '{headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}',
     );
     expect(proGate).toContain('{headerCompliancePaywall ? null : <ComplianceRow />}');
-    expect(proGate).toMatch(/fontSize:\s*narrowShortPaywall\s*\?\s*22/);
-    expect(proGate).toMatch(/lineHeight:\s*narrowShortPaywall\s*\?\s*25/);
+    expect(proGate).toContain('accessibilityLabel={copy.title}');
+    expect(proGate).toContain('{paywallTitle}');
+    expect(proGate).toContain('adjustsFontSizeToFit={microShortPaywall}');
+    expect(proGate).toContain('numberOfLines={microShortPaywall ? 1 : undefined}');
+    expect(proGate).toMatch(/fontSize:\s*microShortPaywall\s*\?\s*18/);
+    expect(proGate).toMatch(/lineHeight:\s*microShortPaywall\s*\?\s*21/);
     expect(proGate).toContain(
       '{splitShortProgressTabPaywall || microShortPaywall || narrowShortPaywall ? null : (',
     );
@@ -186,11 +200,24 @@ describe('paywall mobile contracts', () => {
       "narrowShortPaywall\n              ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'",
     );
     expect(proGate).toContain('{narrowShortPaywall ? null : (');
-    expect(proGate).toContain('adjustsFontSizeToFit={narrowShortPaywall}');
-    expect(proGate).toContain('numberOfLines={narrowShortPaywall ? 1 : undefined}');
+    expect(proGate).toContain('adjustsFontSizeToFit={microShortPaywall || narrowShortPaywall}');
+    expect(proGate).toContain(
+      'numberOfLines={microShortPaywall || narrowShortPaywall ? 1 : undefined}',
+    );
+    expect(proGate).toContain('fontSize: microShortPaywall');
+    expect(proGate).toContain('lineHeight: microShortPaywall');
     expect(proGate).toMatch(
       /microShortPaywall\s*\?\s*'mt-0 h-\[48px\] items-center justify-center rounded-pill'/,
     );
+    expect(proGate).toContain('style={[');
+    expect(proGate).toContain('microShortDeferredCtaStyle,');
+    expect(proGate).toContain(
+      '{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight },',
+    );
+    expect(proGate).toContain('accessibilityLabel={primaryCtaLabel}');
+    expect(proGate).toContain('numberOfLines={1}');
+    expect(proGate).toContain('fontSize: microShortPaywall ? 15.5 : 17');
+    expect(proGate).toContain('lineHeight: microShortPaywall ? 18 : undefined');
     expect(proGate).toContain('disabled={startTrial.isPending}');
     expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(proGate).toContain(

@@ -227,10 +227,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const compactFilterLabels = compactShelf;');
     expect(source).toContain('function SkeletonShelf({ compactFilterLabels }');
     expect(source).toContain('<SkeletonShelf compactFilterLabels={compactFilterLabels} />');
-    expect(source).toContain("label={compactFilterLabels && l === 'Expiring' ? 'Exp.' : l}");
-    expect(source).toContain("? 'Exp.'");
+    expect(source).toContain("label={compactFilterLabels && l === 'Expiring' ? '7d' : l}");
+    expect(source).toContain("? '7d'");
     expect(source).toContain('accessibilityLabel={f ===');
-    expect(source).toContain("className={compactFilterLabels ? 'px-3' : undefined}");
+    expect(source).toContain("className={compactFilterLabels ? 'px-2.5' : undefined}");
     expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
     expect(source).toContain('splitShort: boolean;');
     expect(source).toContain('splitShort={splitShortShelf}');

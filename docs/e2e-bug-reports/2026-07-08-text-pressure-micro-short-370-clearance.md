@@ -27,6 +27,20 @@ The first 320 x 370 / 130% sweep found two failures:
 
 The harder 320 x 360 / 130% follow-up also exposed first-viewport partial targets in `/settings/timing`, `/shelf/no-match`, contextual ProGate routes, `/paywall/upsell`, `/recommendations/preferences`, and `/community`.
 
+The 2026-07-09 current-source rerun exposed a smaller follow-up set before the
+same gate passed again:
+
+- `/recommendations/preferences`: the first visible value chip group still
+  produced a partial target at 320 x 360 after text scaling.
+- `/settings/notifications`: the nudge group spacing could push `Streak &
+adherence` into a tiny partial target, or make `Replenishment` peek depending
+  on the spacer.
+- `/settings/privacy`: the direct-entry privacy scroll could show the
+  health-data withdrawal row while its hit center resolved to the underlying
+  You tab content.
+- `/progress`: the micro-short contextual paywall CTA needed explicit one-line
+  hit-target treatment while the entitlement state was loaded.
+
 ## Evidence
 
 - Initial failing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-current/`
@@ -34,6 +48,9 @@ The harder 320 x 360 / 130% follow-up also exposed first-viewport partial target
 - Harder final passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-4/`
 - Latest direct-upsell passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`
 - Latest split-short passing sweep: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`
+- 2026-07-09 failing follow-up sweep: `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-current/`
+- 2026-07-09 final 320 x 360 passing sweep: `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-postfix-3/`
+- 2026-07-09 final 320 x 370 passing sweep: `test-results/human-e2e/2026-07-09/text-pressure-130-micro-short-370-postfix-2/`
 - Terminal transcript: `npm run e2e:text-pressure`
 
 ## Frequency
@@ -61,6 +78,12 @@ The previous split-short spacing was tuned down to 320 x 390. At 320 x 370 with 
 - Tightened the direct contextual upsell sheet below 360 px width by dropping nonessential body copy/monthly-equivalent price, scaling the annual price, and preserving the compact compliance/header controls plus 48 px CTA.
 - Split Recommendation Preferences value chips into first-viewport and below-fold groups so visible value chips stay complete at 48 px and lower-priority chips do not peek as partial targets.
 - Pushed later Skin Notes topic sections below the first viewport on micro-short screens.
+- Follow-up on 2026-07-09: tuned the sub-380 px preference first-group buffer,
+  removed the counterproductive micro-short notification nudge spacer, kept the
+  privacy withdrawal row in the active privacy card instead of a lowered
+  spacer, gave the contextual ProGate CTA an explicit raised one-line style, and
+  shortened the compact Shelf `Expiring` visible label to `7d` while preserving
+  its accessibility label.
 
 ## Verification Flow After Fix
 
@@ -81,6 +104,10 @@ The previous split-short spacing was tuned down to 320 x 390. At 320 x 370 with 
 - Recommendation Preferences UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/report.md`
 - Latest split-short screenshot/report set: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`
 - Latest split-short UI report: `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/report.md`
+- 2026-07-09 320 x 360 screenshot/report set: `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-postfix-3/`
+- 2026-07-09 320 x 360 UI report: `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-postfix-3/report.md`
+- 2026-07-09 320 x 370 screenshot/report set: `test-results/human-e2e/2026-07-09/text-pressure-130-micro-short-370-postfix-2/`
+- 2026-07-09 320 x 370 UI report: `test-results/human-e2e/2026-07-09/text-pressure-130-micro-short-370-postfix-2/report.md`
 
 The final audits passed 49 / 49 routes with zero clipped visible controls, zero sub-44 px visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs.
 

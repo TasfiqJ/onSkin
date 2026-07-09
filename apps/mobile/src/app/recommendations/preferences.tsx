@@ -122,6 +122,7 @@ export default function PreferencesScreen() {
   const compactPreferences = height < 640;
   const shortPreferences = height < 600;
   const ultraShortPreferences = height < 460;
+  const microShortPreferences = height < 380;
   const splitShortPreferences = height < 600;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
@@ -150,7 +151,11 @@ export default function PreferencesScreen() {
   const textureSectionLabelStyle = ultraShortPreferences
     ? { marginBottom: 6, marginTop: 44 }
     : undefined;
-  const ultraShortPreferenceFirstGroupStyle = ultraShortPreferences ? { marginTop: 48 } : undefined;
+  const ultraShortPreferenceFirstGroupStyle = microShortPreferences
+    ? { marginTop: 88 }
+    : ultraShortPreferences
+      ? { marginTop: 48 }
+      : undefined;
   const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {

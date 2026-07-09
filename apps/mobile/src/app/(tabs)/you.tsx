@@ -72,6 +72,8 @@ const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
 const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 84;
 const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
+const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
+const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 144;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
 
 type StaticRouteHref = Extract<Href, string>;
@@ -322,15 +324,21 @@ export default function YouScreen() {
   const narrowPhone = compactPhone && width < 360;
   const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;
   const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;
-  const privacyDirectEntryScrollNudge = ultraShortPrivacyEntry
-    ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
-    : shortPrivacyEntry
-      ? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE
-    : narrowPhone
-      ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
-      : compactPhone
-        ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
-        : 0;
+  const microShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 380;
+  const privacyDirectEntryScrollNudge = microShortPrivacyEntry
+    ? PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE
+    : ultraShortPrivacyEntry
+      ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
+      : shortPrivacyEntry
+        ? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE
+        : narrowPhone
+          ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
+          : compactPhone
+            ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
+            : 0;
+  const narrowPrivacyWithdrawStyle = privacyDirectEntry && narrowPhone
+    ? { marginTop: PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN }
+    : undefined;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
@@ -368,10 +376,12 @@ export default function YouScreen() {
     };
     const frame = requestAnimationFrame(scrollToPrivacyCard);
     const retry = setTimeout(scrollToPrivacyCard, 180);
+    const lateRetry = setTimeout(scrollToPrivacyCard, 360);
 
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(retry);
+      clearTimeout(lateRetry);
     };
   }, [privacyDirectEntry, privacyCardReady, privacyDirectEntryScrollNudge]);
 
@@ -869,31 +879,33 @@ export default function YouScreen() {
               onPress={() => router.push('/ask/consent')}
             />
           ) : null}
-          <Row
-            label="Withdraw health-data consent"
-            hint={
-              ultraShortPrivacyEntry
-                ? undefined
-                : compactPhone
-                  ? 'Records withdrawal and deletes collected health data.'
-                  : 'Records your withdrawal in the consent ledger and deletes your collected health data.'
-            }
-            compact={compactPhone}
-            onPress={promptWithdrawHealthData}
-          />
-          {confirmingDataRightsAction === 'withdraw_health_data' ? (
-            <InlineConfirmCard
-              title={WITHDRAW_HEALTH_DATA_CONFIRM_TITLE}
-              message={WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE}
-              confirmLabel={busy ? 'Working...' : 'Withdraw & delete'}
-              disabled={busy}
-              onCancel={cancelDataRightsConfirmation}
-              onConfirm={() => void runWithdrawHealthData()}
+          <View style={narrowPrivacyWithdrawStyle}>
+            <Row
+              label="Withdraw health-data consent"
+              hint={
+                ultraShortPrivacyEntry
+                  ? undefined
+                  : compactPhone
+                    ? 'Records withdrawal and deletes collected health data.'
+                    : 'Records your withdrawal in the consent ledger and deletes your collected health data.'
+              }
+              compact={compactPhone}
+              onPress={promptWithdrawHealthData}
             />
-          ) : null}
-          {privacyActionFeedback ? (
-            <InlineNoticeCard notice={privacyActionFeedback} className="mt-3" />
-          ) : null}
+            {confirmingDataRightsAction === 'withdraw_health_data' ? (
+              <InlineConfirmCard
+                title={WITHDRAW_HEALTH_DATA_CONFIRM_TITLE}
+                message={WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE}
+                confirmLabel={busy ? 'Working...' : 'Withdraw & delete'}
+                disabled={busy}
+                onCancel={cancelDataRightsConfirmation}
+                onConfirm={() => void runWithdrawHealthData()}
+              />
+            ) : null}
+            {privacyActionFeedback ? (
+              <InlineNoticeCard notice={privacyActionFeedback} className="mt-3" />
+            ) : null}
+          </View>
         </Card>
 
         <Card

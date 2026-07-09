@@ -4,6 +4,25 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-09
+
+- Re-cleared the 320 x 370 and 320 x 360 / 130% micro-short text-pressure
+  route audits after the current source exposed fresh first-viewport issues in
+  Recommendation Preferences, Settings Notifications, Settings Privacy, and the
+  Progress contextual paywall. Recommendation Preferences now gives the first
+  value-chip group a sub-380 px buffer, Notification Settings keeps the first
+  two nudge switches complete instead of peeking, Settings Privacy keeps the
+  health-data withdrawal row in the visible privacy card hit layer, ProGate gives
+  the micro-short CTA a raised one-line hit target, and compact Shelf filters
+  use a shorter visible `7d` label while retaining the full Expiring
+  accessibility label. Focused Settings/Recommendations/Shelf/paywall route
+  contracts pass, and the final 49-route sweeps report zero failed routes with
+  evidence in
+  `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-postfix-3/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-130-micro-short-370-postfix-2/`,
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-micro-short-370-clearance.md`.
+
 ## 2026-07-08
 
 - Cleared the 320 x 430 / 200% short-phone text-pressure route audit. The

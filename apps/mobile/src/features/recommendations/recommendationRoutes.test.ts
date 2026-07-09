@@ -146,6 +146,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const compactPreferences = height < 640');
     expect(source).toContain('const shortPreferences = height < 600;');
     expect(source).toContain('const ultraShortPreferences = height < 460;');
+    expect(source).toContain('const microShortPreferences = height < 380;');
     expect(source).toContain('const splitShortPreferences = height < 600;');
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1.5 mt-3'");
@@ -158,10 +159,9 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3 py-2'");
     expect(source).toContain('minHeight: ultraDense ? 48 : undefined');
     expect(source).toContain('const textureSectionLabelStyle = ultraShortPreferences');
-    expect(source).toContain('const ultraShortPreferenceFirstGroupStyle = ultraShortPreferences');
-    expect(source).toContain(
-      'const ultraShortPreferenceFirstGroupStyle = ultraShortPreferences ? { marginTop: 48 } : undefined;',
-    );
+    expect(source).toContain('const ultraShortPreferenceFirstGroupStyle = microShortPreferences');
+    expect(source).toContain('? { marginTop: 88 }');
+    expect(source).toContain('? { marginTop: 48 }');
     expect(source).toContain('className={textureSectionLabelClassName}');
     expect(source).toContain('style={textureSectionLabelStyle}');
     expect(source).toContain('style={ultraShortPreferenceFirstGroupStyle}');

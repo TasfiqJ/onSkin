@@ -340,9 +340,9 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
           <SegmentChip
             key={l}
             accessibilityLabel={l}
-            label={compactFilterLabels && l === 'Expiring' ? 'Exp.' : l}
+            label={compactFilterLabels && l === 'Expiring' ? '7d' : l}
             selected={i === 0}
-            className={compactFilterLabels ? 'px-3' : undefined}
+            className={compactFilterLabels ? 'px-2.5' : undefined}
           />
         ))}
       </View>
@@ -420,11 +420,11 @@ export default function ShelfScreen() {
                     : f === 'actives'
                       ? 'Actives'
                       : compactFilterLabels
-                        ? 'Exp.'
+                        ? '7d'
                         : 'Expiring'
                 }
                 selected={filter === f}
-                className={compactFilterLabels ? 'px-3' : undefined}
+                className={compactFilterLabels ? 'px-2.5' : undefined}
                 onPress={() => setFilter(f)}
               />
             ))}

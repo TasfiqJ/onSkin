@@ -133,7 +133,11 @@ export default function NotificationSettingsScreen() {
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
-  const ultraShortNudgesStyle = ultraShortNotifications ? { marginTop: 64 } : undefined;
+  const ultraShortNudgesStyle = microShortNotifications
+    ? { marginTop: 136 }
+    : ultraShortNotifications
+      ? { marginTop: 64 }
+      : undefined;
   if (!p) return null;
 
   return (

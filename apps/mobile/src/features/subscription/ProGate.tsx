@@ -44,6 +44,13 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     height < 410 && feature === 'photo_timeline' && pathname === '/progress';
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
   const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;
+  const microShortDeferredCtaStyle = microShortPaywall
+    ? {
+        marginTop: splitShortProgressTabPaywall ? 0 : 88,
+        position: 'relative' as const,
+        zIndex: 2,
+      }
+    : undefined;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
   const lapsedEntitlement = data?.expired === true;
   const lapsedReverseTrial = lapsedEntitlement && data?.priorPeriodType === 'reverse_trial';
@@ -87,6 +94,11 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   if (!locked) return <>{children}</>;
 
   const copy = UPSELL_COPY[feature];
+  const paywallTitle = microShortPaywall
+    ? feature === 'photo_timeline'
+      ? 'Unlock photos.'
+      : 'Unlock Pro.'
+    : copy.title;
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
@@ -191,8 +203,13 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         )}
         <Text
           variant="title"
+          adjustsFontSizeToFit={microShortPaywall}
+          minimumFontScale={0.86}
+          numberOfLines={microShortPaywall ? 1 : undefined}
           style={{
-            fontSize: narrowShortPaywall
+            fontSize: microShortPaywall
+              ? 18
+              : narrowShortPaywall
               ? 22
               : ultraShortPaywall
                 ? 24
@@ -201,7 +218,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                   : compactPaywall
                     ? 28
                     : 32,
-            lineHeight: narrowShortPaywall
+            lineHeight: microShortPaywall
+              ? 21
+              : narrowShortPaywall
               ? 25
               : ultraShortPaywall
                 ? 27
@@ -211,8 +230,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                     ? 32
                     : 36,
           }}
+          accessibilityLabel={copy.title}
         >
-          {copy.title}
+          {paywallTitle}
         </Text>
         {splitShortProgressTabPaywall || microShortPaywall || narrowShortPaywall ? null : (
           <Text
@@ -259,12 +279,28 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
             )}
             <Text
               variant="title"
-              adjustsFontSizeToFit={narrowShortPaywall}
+              adjustsFontSizeToFit={microShortPaywall || narrowShortPaywall}
               minimumFontScale={0.82}
-              numberOfLines={narrowShortPaywall ? 1 : undefined}
+              numberOfLines={microShortPaywall || narrowShortPaywall ? 1 : undefined}
               style={{
-                fontSize: narrowShortPaywall ? 20 : shortPaywall ? 22 : compactPaywall ? 24 : 26,
-                lineHeight: narrowShortPaywall ? 23 : shortPaywall ? 25 : compactPaywall ? 28 : 30,
+                fontSize: microShortPaywall
+                  ? 18
+                  : narrowShortPaywall
+                    ? 20
+                    : shortPaywall
+                      ? 22
+                      : compactPaywall
+                        ? 24
+                        : 26,
+                lineHeight: microShortPaywall
+                  ? 21
+                  : narrowShortPaywall
+                    ? 23
+                    : shortPaywall
+                      ? 25
+                      : compactPaywall
+                        ? 28
+                        : 30,
               }}
             >
               {annualDisplay.priceLabel}
@@ -326,6 +362,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           </Text>
         ) : null}
         <Pressable
+          accessibilityLabel={primaryCtaLabel}
           accessibilityRole="button"
           disabled={startTrial.isPending}
           onPress={onStartTrial}
@@ -342,9 +379,22 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                     ? 'mt-2 h-[50px] items-center justify-center rounded-pill'
                     : 'mt-4 h-[54px] items-center justify-center rounded-pill'
           }
-          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
+          style={[
+            microShortDeferredCtaStyle,
+            { backgroundColor: canPurchase ? colors.clay : colors.mutedLight },
+          ]}
         >
-          <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
+          <Text
+            adjustsFontSizeToFit
+            className="font-sans-semibold"
+            minimumFontScale={0.86}
+            numberOfLines={1}
+            style={{
+              color: colors.paper,
+              fontSize: microShortPaywall ? 15.5 : 17,
+              lineHeight: microShortPaywall ? 18 : undefined,
+            }}
+          >
             {primaryCtaLabel}
           </Text>
         </Pressable>

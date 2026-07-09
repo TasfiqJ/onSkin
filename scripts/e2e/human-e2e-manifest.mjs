@@ -66,6 +66,15 @@ function commandRequired(name, commandArgs) {
   }).trim();
 }
 
+function durableGateEvidenceFiles(date) {
+  return [
+    `test-results/human-e2e/${date}/current-main-short-phone-480-rerun/failures.json`,
+    `test-results/human-e2e/${date}/current-main-short-phone-430-final-clearance-sweep/failures.json`,
+    `test-results/human-e2e/${date}/current-main-split-short-phone-390-sweep-postfix/failures.json`,
+    `test-results/human-e2e/${date}/onboarding-first-session-430-current/summary.json`,
+  ];
+}
+
 function latestEvidenceDate() {
   const base = abs('test-results/human-e2e');
   if (!existsSync(base)) return null;
@@ -73,7 +82,13 @@ function latestEvidenceDate() {
     .filter((entry) => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
     .map((entry) => entry.name)
     .sort();
-  return dates.at(-1) ?? null;
+  return (
+    [...dates]
+      .reverse()
+      .find((date) => durableGateEvidenceFiles(date).every((evidencePath) => exists(evidencePath))) ??
+    dates.at(-1) ??
+    null
+  );
 }
 
 function walkEvidence(path) {
