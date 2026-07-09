@@ -1,0 +1,233 @@
+{
+  "controls": [
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Begin"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "I already have an account"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Clear skinBreakouts & congestion"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Even toneDark spots & texture"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "HydrationTightness & dullness"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Fine linesFirmness & elasticity"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "SensitivityStinging & flushing"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Barrier repairRedness & reactivity"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Continue"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "I agree. Continue"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "I don't agree"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Read the health data policy"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "No"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Pregnant or trying"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Breastfeeding"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Prefer not to say"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "See my profile"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "×"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "×"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "×"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0
+      },
+      "text": "Continue"
+    },
+    {
+      "disabled": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "text": "Continue"
+    }
+  ],
+  "hasContinue": true,
+  "hasDerivedInsightBody": true,
+  "hasFirstInsightLabel": true,
+  "hasRoutinePreviewFallback": false,
+  "hasSeeMyRoutine": false,
+  "hasTimingHandled": true,
+  "href": "http://localhost:8284/onboarding/reveal",
+  "overflowX": 0,
+  "text": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. Continue"
+}

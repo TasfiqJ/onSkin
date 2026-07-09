@@ -1,0 +1,63 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 1 OF 3 PRODUCTS 2 more products gives your first insight more to work with. PRODUCT NAME 1 ON YOUR SHELF Retinol 0.3% serum × Add 2 more Continue with 1 product",
+  "controls": [
+    {
+      "aria": "Product name",
+      "disabled": null,
+      "placeholder": "e.g. Retinol serum",
+      "rect": {
+        "h": 54,
+        "w": 302,
+        "x": 44,
+        "y": 298
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "e.g. Retinol serum"
+    },
+    {
+      "aria": "Remove Retinol 0.3% serum",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 48,
+        "x": 301,
+        "y": 429
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "×"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 509
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Add 2 more"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue with 1 product"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/products",
+  "overflowX": 0
+}

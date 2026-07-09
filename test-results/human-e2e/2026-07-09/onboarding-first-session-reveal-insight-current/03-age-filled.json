@@ -1,0 +1,63 @@
+{
+  "bodyText": "First, your date of birth. RoutineKind confirms your age before skin-health data. We don't store your birth date. DAY MONTH YEAR Continue",
+  "controls": [
+    {
+      "aria": "Day of birth",
+      "disabled": null,
+      "placeholder": "DD",
+      "rect": {
+        "h": 66,
+        "w": 96,
+        "x": 24,
+        "y": 150
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "DD"
+    },
+    {
+      "aria": "Month of birth",
+      "disabled": null,
+      "placeholder": "MM",
+      "rect": {
+        "h": 66,
+        "w": 96,
+        "x": 128,
+        "y": 150
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "MM"
+    },
+    {
+      "aria": "Year of birth",
+      "disabled": null,
+      "placeholder": "YYYY",
+      "rect": {
+        "h": 66,
+        "w": 134,
+        "x": 232,
+        "y": 150
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "YYYY"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/age",
+  "overflowX": 0
+}

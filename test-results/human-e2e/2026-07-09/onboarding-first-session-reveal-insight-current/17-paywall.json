@@ -1,0 +1,77 @@
+{
+  "bodyText": "Your plan for oily, sensitive skin is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "controls": [
+    {
+      "aria": null,
+      "disabled": "true",
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 342,
+        "x": 24,
+        "y": 338
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Start free trial"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 60,
+        "w": 342,
+        "x": 24,
+        "y": 410
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 48,
+        "x": 97,
+        "y": 470
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Terms"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 48,
+        "x": 170,
+        "y": 470
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Privacy"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 49,
+        "x": 244,
+        "y": 470
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Restore"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/paywall",
+  "overflowX": 0
+}

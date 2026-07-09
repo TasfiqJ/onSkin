@@ -1,0 +1,35 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME Skip for now",
+  "controls": [
+    {
+      "aria": "Product name",
+      "disabled": null,
+      "placeholder": "e.g. Retinol serum",
+      "rect": {
+        "h": 54,
+        "w": 302,
+        "x": 44,
+        "y": 312
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "e.g. Retinol serum"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Skip for now"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/products",
+  "overflowX": 0
+}

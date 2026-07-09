@@ -1,0 +1,52 @@
+{
+  "baseUrl": "http://localhost:8276",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-170-support-band-onboarding-paywall-detail-current",
+  "generatedAt": "2026-07-09T13:11:52.898Z",
+  "routeCount": 6,
+  "scale": 1.7,
+  "status": "pass",
+  "viewport": {
+    "height": 640,
+    "width": 390
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/age",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/goals",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/products",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/paywall",
+      "scaledCount": 23
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/downgrade",
+      "scaledCount": 17
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/missing-detail-e2e",
+      "scaledCount": 6
+    }
+  ]
+}

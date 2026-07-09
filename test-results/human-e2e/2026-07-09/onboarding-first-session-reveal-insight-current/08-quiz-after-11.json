@@ -1,0 +1,77 @@
+{
+  "bodyText": "12 / 12 SAFETY Are you pregnant, trying to become pregnant, or breastfeeding? No Pregnant or trying Breastfeeding Prefer not to say See my profile",
+  "controls": [
+    {
+      "aria": "No",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 213
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "No"
+    },
+    {
+      "aria": "Pregnant or trying",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 289
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Pregnant or trying"
+    },
+    {
+      "aria": "Breastfeeding",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Breastfeeding"
+    },
+    {
+      "aria": "Prefer not to say",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 440
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Prefer not to say"
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "See my profile"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/quiz",
+  "overflowX": 0
+}

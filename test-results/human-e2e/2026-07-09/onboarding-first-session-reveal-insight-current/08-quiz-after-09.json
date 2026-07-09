@@ -1,0 +1,161 @@
+{
+  "bodyText": "10 / 12 SKIN TONE Choose the skin tone range closest to yours. Tone 1 Tone 2 Tone 3 Tone 4 Tone 5 Tone 6 Tone 7 Tone 8 Tone 9 Tone 10 Next",
+  "controls": [
+    {
+      "aria": "Tone 1",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 80
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 1"
+    },
+    {
+      "aria": "Tone 2",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 156
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 2"
+    },
+    {
+      "aria": "Tone 3",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 232
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 3"
+    },
+    {
+      "aria": "Tone 4",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 308
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 4"
+    },
+    {
+      "aria": "Tone 5",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 384
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 5"
+    },
+    {
+      "aria": "Tone 6",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 460
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 6"
+    },
+    {
+      "aria": "Tone 7",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 536
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 7"
+    },
+    {
+      "aria": "Tone 8",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 612
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 8"
+    },
+    {
+      "aria": "Tone 9",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 688
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 9"
+    },
+    {
+      "aria": "Tone 10",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 764
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tone 10"
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Next"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/quiz",
+  "overflowX": 0
+}

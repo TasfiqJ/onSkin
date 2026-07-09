@@ -1,0 +1,105 @@
+{
+  "bodyText": "What brings you here? Choose up to two. This shapes your plan. Clear skin Breakouts & congestion Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity Continue",
+  "controls": [
+    {
+      "aria": "Clear skin. Breakouts & congestion",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 74,
+        "w": 164,
+        "x": 24,
+        "y": 114
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Clear skin Breakouts & congestion"
+    },
+    {
+      "aria": "Even tone. Dark spots & texture",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 74,
+        "w": 164,
+        "x": 196,
+        "y": 114
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Even tone Dark spots & texture"
+    },
+    {
+      "aria": "Hydration. Tightness & dullness",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 74,
+        "w": 164,
+        "x": 24,
+        "y": 196
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Hydration Tightness & dullness"
+    },
+    {
+      "aria": "Fine lines. Firmness & elasticity",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 74,
+        "w": 164,
+        "x": 196,
+        "y": 196
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Fine lines Firmness & elasticity"
+    },
+    {
+      "aria": "Sensitivity. Stinging & flushing",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 74,
+        "w": 164,
+        "x": 24,
+        "y": 278
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Sensitivity Stinging & flushing"
+    },
+    {
+      "aria": "Barrier repair. Redness & reactivity",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 74,
+        "w": 164,
+        "x": 196,
+        "y": 278
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Barrier repair Redness & reactivity"
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/goals",
+  "overflowX": 0
+}

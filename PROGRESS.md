@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Moved the first-session value moment earlier by showing the shelf-derived
+  routine insight on the reveal screen before reminder setup. Reveal now uses
+  the same `routineFirstInsightCopy` signal as the routine plan, records
+  `first_useful_insight` with source `reveal` only for real non-example shelf
+  plans, and routes forward with a neutral `Continue` CTA instead of promising
+  an immediate routine screen. The same slice extends 390 x 640 support-band
+  compact guards across onboarding, paywall downgrade, and missing Shelf detail
+  surfaces. Focused routine/onboarding/paywall/shelf tests and mobile
+  typecheck pass. Human-E2E evidence covers the full first-session reveal path
+  at 390 x 640 in
+  `test-results/human-e2e/2026-07-09/onboarding-first-session-reveal-insight-current/`
+  and the focused 390 x 640 / 170% support-band route audit in
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-onboarding-paywall-detail-current/`.
+
 - Hardened three compact supported-floor text-pressure routes from the 320 x
   480 / 170% audit. The onboarding age gate now scrolls above its fixed footer
   and uses shorter compact copy; the missing conflict sheet prioritizes recovery

@@ -1,0 +1,21 @@
+{
+  "bodyText": "Save your plan, keep it private. Create an account so your routine and progress are yours on any device. Your photos still stay on this phone. Account sign-in is not available right now. You can continue without an account. Not now",
+  "controls": [
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 342,
+        "x": 24,
+        "y": 577
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Not now"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/account",
+  "overflowX": 0
+}

@@ -1,0 +1,77 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 3 OF 3 PRODUCTS Good. That is enough for a stronger first routine, and you can still add more later. PRODUCT NAME 3 ON YOUR SHELF Ceramide moisturizer × Glycolic 7% toner × Retinol 0.3% serum × Continue",
+  "controls": [
+    {
+      "aria": "Product name",
+      "disabled": null,
+      "placeholder": "e.g. Retinol serum",
+      "rect": {
+        "h": 54,
+        "w": 302,
+        "x": 44,
+        "y": 98
+      },
+      "role": null,
+      "tag": "INPUT",
+      "text": "e.g. Retinol serum"
+    },
+    {
+      "aria": "Remove Ceramide moisturizer",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 48,
+        "x": 301,
+        "y": 229
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "×"
+    },
+    {
+      "aria": "Remove Glycolic 7% toner",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 48,
+        "x": 301,
+        "y": 311
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "×"
+    },
+    {
+      "aria": "Remove Retinol 0.3% serum",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 48,
+        "w": 48,
+        "x": 301,
+        "y": 393
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "×"
+    },
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/products",
+  "overflowX": 0
+}

@@ -1,0 +1,21 @@
+{
+  "bodyText": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. Continue",
+  "controls": [
+    {
+      "aria": null,
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Continue"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/reveal",
+  "overflowX": 0
+}

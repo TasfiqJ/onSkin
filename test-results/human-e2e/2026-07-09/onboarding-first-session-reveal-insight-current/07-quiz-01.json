@@ -1,0 +1,77 @@
+{
+  "bodyText": "1 / 12 OIL + MOISTURE A few hours after cleansing, how does your skin usually feel? Tight or flaky Comfortable Shiny in places Oily all over Next",
+  "controls": [
+    {
+      "aria": "Tight or flaky",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 179
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Tight or flaky"
+    },
+    {
+      "aria": "Comfortable",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 255
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Comfortable"
+    },
+    {
+      "aria": "Shiny in places",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 330
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Shiny in places"
+    },
+    {
+      "aria": "Oily all over",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 406
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Oily all over"
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Next"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/quiz",
+  "overflowX": 0
+}

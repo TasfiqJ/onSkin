@@ -1,0 +1,63 @@
+{
+  "bodyText": "5 / 12 TONE Do you notice dark spots, uneven tone, or areas that look more pigmented? Yes, noticeably A little Not really Next",
+  "controls": [
+    {
+      "aria": "Yes, noticeably",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 213
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Yes, noticeably"
+    },
+    {
+      "aria": "A little",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 289
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "A little"
+    },
+    {
+      "aria": "Not really",
+      "disabled": null,
+      "placeholder": null,
+      "rect": {
+        "h": 64,
+        "w": 342,
+        "x": 24,
+        "y": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Not really"
+    },
+    {
+      "aria": null,
+      "disabled": "true",
+      "placeholder": null,
+      "rect": {
+        "h": 56,
+        "w": 342,
+        "x": 24,
+        "y": 569
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "text": "Next"
+    }
+  ],
+  "href": "http://localhost:8284/onboarding/quiz",
+  "overflowX": 0
+}
