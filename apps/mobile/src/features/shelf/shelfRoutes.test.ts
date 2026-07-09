@@ -165,11 +165,12 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('const compactScanRecoveryStyle = compactPressurePhone');
     expect(source).toContain('? { transform: [{ translateY: -26 }] }');
+    expect(source).toContain('const compactManualRecoveryStyle = microShortPhone');
     expect(source).toContain('<View style={compactSecondaryRecoveryStyle}>');
-    expect(source).toContain('style={');
-    expect(source).toContain('? { marginTop: 40 }');
+    expect(source).toContain('? { marginTop: 40, transform: [{ translateY: -32 }] }');
     expect(source).toContain('compactPressurePhone');
-    expect(source).toContain('? { marginTop: 32 }');
+    expect(source).toContain('? { marginTop: 32, transform: [{ translateY: -32 }] }');
+    expect(source).toContain('<View style={compactManualRecoveryStyle}>');
     expect(source).toContain('style={compactScanRecoveryStyle}');
     expect(source).toContain("style={[{ backgroundColor: 'rgba(244,239,231,0.08)' }, style]}");
     expect(source).toContain('compact={shortPhone}');

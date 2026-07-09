@@ -23,6 +23,11 @@ export default function NoMatchScreen() {
   const compactScanRecoveryStyle = compactPressurePhone
     ? { transform: [{ translateY: -26 }] }
     : undefined;
+  const compactManualRecoveryStyle = microShortPhone
+    ? { marginTop: 40, transform: [{ translateY: -32 }] }
+    : compactPressurePhone
+      ? { marginTop: 32, transform: [{ translateY: -32 }] }
+      : undefined;
 
   const goOcr = () => {
     haptics.select();
@@ -150,15 +155,7 @@ export default function NoMatchScreen() {
             style={compactScanRecoveryStyle}
             onPress={goOcr}
           />
-          <View
-            style={
-              microShortPhone
-                ? { marginTop: 40 }
-                : compactPressurePhone
-                  ? { marginTop: 32 }
-                  : undefined
-            }
-          >
+          <View style={compactManualRecoveryStyle}>
             <NoMatchAction
               icon="+"
               title="Add it by hand"

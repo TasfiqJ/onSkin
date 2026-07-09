@@ -1,0 +1,80 @@
+{
+  "actionMetrics": [
+    {
+      "ariaLabel": "Search catalog. Try name or brand instead",
+      "center": {
+        "x": 195.15,
+        "y": 590.7
+      },
+      "centerHitPass": true,
+      "found": true,
+      "hitText": "SSearch catalogTry name or brand instead",
+      "id": "search",
+      "label": "Search catalog",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 624.7,
+        "height": 67.99,
+        "width": 334.31,
+        "x": 27.99,
+        "y": 556.71
+      },
+      "role": "button",
+      "text": "SSearch catalogTry name or brand instead",
+      "visibleInViewport": true
+    },
+    {
+      "ariaLabel": "Scan the ingredient list. We'll read the INCI text",
+      "center": {
+        "x": 195.15,
+        "y": 666.69
+      },
+      "centerHitPass": true,
+      "found": true,
+      "hitText": "IScan the ingredient listWe'll read the INCI text",
+      "id": "scan",
+      "label": "Scan ingredient fallback",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 700.68,
+        "height": 67.99,
+        "width": 334.31,
+        "x": 27.99,
+        "y": 632.69
+      },
+      "role": "button",
+      "text": "IScan the ingredient listWe'll read the INCI text",
+      "visibleInViewport": true
+    },
+    {
+      "ariaLabel": "Add it by hand. Always works, even offline",
+      "center": {
+        "x": 195.15,
+        "y": 734.68
+      },
+      "centerHitPass": true,
+      "found": true,
+      "hitText": "+Add it by handAlways works, even offline",
+      "id": "manual",
+      "label": "Add it by hand",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 768.67,
+        "height": 67.99,
+        "width": 334.31,
+        "x": 27.99,
+        "y": 700.68
+      },
+      "role": "button",
+      "text": "+Add it by handAlways works, even offline",
+      "visibleInViewport": true
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/shelf/no-match",
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleText": "?xWe don&apos;t have this one yet.That barcode isn't in our database yet. No problem. Add it another way, then report any wrong details from the product page.SSearch catalogTry name or brand insteadIScan the ingredient listWe'll read the INCI text+Add it by handAlways works, even offlinemanual fallback keeps the shelf working"
+}

@@ -1,0 +1,80 @@
+{
+  "actionMetrics": [
+    {
+      "ariaLabel": "Search catalog. Try name or brand instead",
+      "center": {
+        "x": 160.19,
+        "y": 308.62
+      },
+      "centerHitPass": true,
+      "found": true,
+      "hitText": "SSearch catalogTry name or brand instead",
+      "id": "search",
+      "label": "Search catalog",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 332.62,
+        "height": 48,
+        "width": 264.41,
+        "x": 27.99,
+        "y": 284.62
+      },
+      "role": "button",
+      "text": "SSearch catalogTry name or brand instead",
+      "visibleInViewport": true
+    },
+    {
+      "ariaLabel": "Scan the ingredient list. We'll read the INCI text",
+      "center": {
+        "x": 160.19,
+        "y": 334.6
+      },
+      "centerHitPass": true,
+      "found": true,
+      "hitText": "IScan ingredients",
+      "id": "scan",
+      "label": "Scan ingredient fallback",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 358.6,
+        "height": 48,
+        "width": 264.41,
+        "x": 27.99,
+        "y": 310.6
+      },
+      "role": "button",
+      "text": "IScan ingredients",
+      "visibleInViewport": true
+    },
+    {
+      "ariaLabel": "Add it by hand. Always works, even offline",
+      "center": {
+        "x": 160.19,
+        "y": 408.59
+      },
+      "centerHitPass": true,
+      "found": true,
+      "hitText": "+Add it by handAlways works, even offline",
+      "id": "manual",
+      "label": "Add it by hand",
+      "minTargetPass": true,
+      "rect": {
+        "bottom": 432.59,
+        "height": 48,
+        "width": 264.41,
+        "x": 27.99,
+        "y": 384.6
+      },
+      "role": "button",
+      "text": "+Add it by handAlways works, even offline",
+      "visibleInViewport": true
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/shelf/no-match",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleText": "?xNot found yet.SSearch catalogTry name or brand insteadIScan ingredients+Add it by handAlways works, even offline"
+}

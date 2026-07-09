@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Search catalog. Try name or brand instead",
+    "count": 1,
+    "clicked": true,
+    "afterUrl": "http://localhost:8255/shelf/search",
+    "expectedPath": "/shelf/search",
+    "pass": true
+  },
+  {
+    "label": "Scan the ingredient list. We'll read the INCI text",
+    "count": 1,
+    "clicked": true,
+    "afterUrl": "http://localhost:8255/shelf/ocr",
+    "expectedPath": "/shelf/ocr",
+    "pass": true
+  },
+  {
+    "label": "Add it by hand. Always works, even offline",
+    "count": 1,
+    "clicked": true,
+    "afterUrl": "http://localhost:8255/shelf/manual",
+    "expectedPath": "/shelf/manual",
+    "pass": true
+  }
+]
