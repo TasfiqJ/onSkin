@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T19:06:10.157Z",
+  "generatedAt": "2026-07-09T19:24:56.060Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -58,7 +58,7 @@
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
       "bytes": 4833,
-      "sha256": "01be02ee0c4e233f09cf0a026d94d75a6f51c3c6127f475b63d016f9960245c6"
+      "sha256": "e52cc343626e2896ce07bde2a61652503dfde2b2dfaad2f7244fa3ade2b67ba1"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
@@ -146,8 +146,8 @@
       "activePath": "docs/FEATURE_INDEX.md",
       "sourceBytes": 4833,
       "activeBytes": 4833,
-      "sourceSha256": "01be02ee0c4e233f09cf0a026d94d75a6f51c3c6127f475b63d016f9960245c6",
-      "activeSha256": "01be02ee0c4e233f09cf0a026d94d75a6f51c3c6127f475b63d016f9960245c6",
+      "sourceSha256": "e52cc343626e2896ce07bde2a61652503dfde2b2dfaad2f7244fa3ade2b67ba1",
+      "activeSha256": "e52cc343626e2896ce07bde2a61652503dfde2b2dfaad2f7244fa3ade2b67ba1",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
