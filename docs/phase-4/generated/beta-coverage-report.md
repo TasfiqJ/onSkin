@@ -1,22 +1,10 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-09T21:34:51.583Z
+Generated: 2026-07-09T21:37:20.109Z
 Status: blocked
-Git SHA: 9636f618054c09fb1f3536ea007b5e526dee87d6
-Git status: DIRTY
+Git SHA: 40b29cf43cb49e2309d819c028f66e271c9524e4
+Git status: clean
 
-Dirty paths:
-
-```
-M apps/mobile/src/app/onboarding/analyzing.tsx
- M apps/mobile/src/app/onboarding/products.tsx
- M apps/mobile/src/app/onboarding/quiz.tsx
- M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts
- M docs/USER_FLOW_TREE.md
- M package.json
-?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md
-?? scripts/e2e/onboarding-first-session.mjs
-```
 
 ## Verdict
 
@@ -57,7 +45,7 @@ Phase 4 coverage thresholds below are satisfied.
 
 ## Warnings
 
-- Beta coverage report generated with a dirty Git worktree; do not use it as final beta evidence.
+- None.
 
 ## Input Artifact
 

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T21:35:00.989Z",
+  "generatedAt": "2026-07-09T21:37:20.102Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
-  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+  "gitSha": "40b29cf43cb49e2309d819c028f66e271c9524e4",
+  "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,
@@ -298,7 +298,5 @@
     "Missing PHASE6_FINANCE_SIGNOFF=true.",
     "Missing PHASE6_SIGNED_OFF_BY."
   ],
-  "warnings": [
-    "Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence."
-  ]
+  "warnings": []
 }

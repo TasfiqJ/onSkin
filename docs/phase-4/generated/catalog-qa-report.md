@@ -1,23 +1,10 @@
 # Catalog QA Report
 
-Generated: 2026-07-09T21:34:46.023Z
+Generated: 2026-07-09T21:37:20.101Z
 
-Git SHA: 9636f618054c09fb1f3536ea007b5e526dee87d6
+Git SHA: 40b29cf43cb49e2309d819c028f66e271c9524e4
 
-Git status: DIRTY
-
-Dirty paths:
-
-```
-M apps/mobile/src/app/onboarding/analyzing.tsx
- M apps/mobile/src/app/onboarding/products.tsx
- M apps/mobile/src/app/onboarding/quiz.tsx
- M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts
- M docs/USER_FLOW_TREE.md
- M package.json
-?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md
-?? scripts/e2e/onboarding-first-session.mjs
-```
+Git status: clean
 
 Accepted products: 2
 
@@ -25,9 +12,9 @@ Rejected records: 1
 
 Blockers: none
 
-Warnings: Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence.
+Warnings: none
 
-Local fixture QA clear: no
+Local fixture QA clear: yes
 
 Launch clear: no
 
