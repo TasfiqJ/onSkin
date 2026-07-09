@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T17:08:02.220Z",
+  "generatedAt": "2026-07-09T17:18:17.945Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -36,8 +36,10 @@
     "npm test",
     "npm run docs:source-packet-audit:check",
     "npm run docs:tas-todo-audit:check",
+    "npm run docs:device-support-policy-audit:check",
     "npm run e2e:human:manifest:check",
     "npm run docs:generated-packet-status-audit:check",
+    "npm run phase5:check-native-config",
     "npm run phase9:verify",
     "npm run phase10-11:verify"
   ],
@@ -45,14 +47,19 @@
     "launch:verify",
     "docs:readiness-status-audit",
     "docs:readiness-status-audit:strict",
-    "docs:readiness-status-audit:check"
+    "docs:readiness-status-audit:check",
+    "docs:device-support-policy-audit",
+    "docs:device-support-policy-audit:strict",
+    "docs:device-support-policy-audit:check"
   ],
   "requiredLaunchVerifyScriptParts": [
     "docs:source-packet-audit:check",
     "docs:tas-todo-audit:check",
     "docs:readiness-status-audit:check",
+    "docs:device-support-policy-audit:check",
     "docs:generated-packet-status-audit:check",
     "e2e:human:manifest:check",
+    "phase5:check-native-config",
     "phase9:release-smoke",
     "phase10:beta-readiness",
     "phase11:launch-readiness",

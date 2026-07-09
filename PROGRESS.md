@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added a dedicated device support policy audit and wired it into
+  `launch:verify`. The new non-mutating guard verifies `app.base.json` still
+  pins iOS 17.0+, Android min SDK API 29, and Android compile/target API 36;
+  confirms the human-E2E manifest keeps 360 x 640 as the required
+  launch-blocking viewport gate; and confirms 320-wide browser evidence remains
+  stress/resilience unless real device, app-review, accessibility, or
+  beta/support evidence elevates it.
+
 - Extended direct-entry onboarding and downgrade paywall compact support-band
   guards through 430 x 640 at 200% text pressure. Focused mobile route
   contracts pass, and the five-route Expo web audit for `/onboarding/age`,

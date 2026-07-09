@@ -1,0 +1,128 @@
+{
+  "generatedAt": "2026-07-09T17:18:17.724Z",
+  "status": "pass",
+  "strict": true,
+  "purpose": "Audit the accepted device support policy so install floors, viewport launch gates, and 320-wide stress-only evidence cannot drift silently.",
+  "files": {
+    "appBase": "apps/mobile/app.base.json",
+    "blockers": "BLOCKERS.md",
+    "decisions": "docs/DECISIONS.md",
+    "devicePolicy": "docs/DEVICE_SUPPORT_POLICY.md",
+    "e2eGuide": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+    "forTas": "docs/FOR_TAS_TO_DO.md",
+    "humanManifest": "docs/e2e/generated/human-e2e-manifest.json",
+    "launchReadiness": "LAUNCH_READINESS.md",
+    "manifestScript": "scripts/e2e/human-e2e-manifest.mjs",
+    "packageJson": "package.json",
+    "testingStrategy": "docs/TESTING_STRATEGY.md",
+    "userFlowTree": "docs/USER_FLOW_TREE.md"
+  },
+  "configContracts": [
+    {
+      "actual": "17.0",
+      "expected": "17.0",
+      "label": "iOS deployment target",
+      "pass": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "label": "iOS tablet launch scope",
+      "pass": true
+    },
+    {
+      "actual": 29,
+      "expected": 29,
+      "label": "Android min SDK install floor",
+      "pass": true
+    },
+    {
+      "actual": 36,
+      "expected": 36,
+      "label": "Android compile SDK",
+      "pass": true
+    },
+    {
+      "actual": 36,
+      "expected": 36,
+      "label": "Android target SDK",
+      "pass": true
+    }
+  ],
+  "docResults": [
+    {
+      "path": "docs/DEVICE_SUPPORT_POLICY.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 9
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 4
+    },
+    {
+      "path": "docs/FOR_TAS_TO_DO.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 5
+    },
+    {
+      "path": "LAUNCH_READINESS.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 4
+    },
+    {
+      "path": "BLOCKERS.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 3
+    },
+    {
+      "path": "docs/TESTING_STRATEGY.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 3
+    },
+    {
+      "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 3
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "missingNeedles": [],
+      "requiredNeedleCount": 4
+    }
+  ],
+  "manifestScript": {
+    "path": "scripts/e2e/human-e2e-manifest.mjs",
+    "missingNeedles": []
+  },
+  "humanManifest": {
+    "path": "docs/e2e/generated/human-e2e-manifest.json",
+    "launchGate": {
+      "id": "support-floor-360-640-200-text-pressure",
+      "required": true,
+      "status": "pass",
+      "supportClass": "launch-blocking",
+      "title": "360 x 640 launch-floor 200% text-pressure route sweep"
+    },
+    "legacyGateProblems": [],
+    "gateCount": 14
+  },
+  "requiredPackageScripts": [
+    "docs:device-support-policy-audit",
+    "docs:device-support-policy-audit:strict",
+    "docs:device-support-policy-audit:check"
+  ],
+  "requiredLaunchVerifyParts": [
+    "docs:device-support-policy-audit:check",
+    "phase5:check-native-config",
+    "e2e:human:manifest:check"
+  ],
+  "summary": {
+    "blockerCount": 0,
+    "warningCount": 0,
+    "docCount": 8,
+    "configContractCount": 5
+  },
+  "blockers": [],
+  "warnings": []
+}

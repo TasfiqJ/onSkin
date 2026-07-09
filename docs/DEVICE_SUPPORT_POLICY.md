@@ -24,6 +24,16 @@ or later. Google Play target-API policy is separate from `minSdkVersion`; this
 app pins compile/target SDK to API 36 while keeping the install floor at Android
 10 / API 29. Do not lower target/compile SDKs to widen support.
 
+Repo guard:
+
+```bash
+npm run docs:device-support-policy-audit:check
+```
+
+`npm run launch:verify` also runs this guard and `phase5:check-native-config`
+so OS support, build-target posture, and viewport gate classification are
+checked together.
+
 References:
 
 - https://docs.expo.dev/versions/latest/

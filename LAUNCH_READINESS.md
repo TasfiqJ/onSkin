@@ -103,9 +103,16 @@ Fresh verification through 2026-07-09:
 - `npm test` passed: 171 mobile test files / 1760 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
-  Tas-owned blocker, readiness-status, generated-packet, and human-E2E manifest
-  checks; Phase 9 release smoke, Phase 10 beta readiness, Phase 11 launch
+  Tas-owned blocker, readiness-status, device-support-policy,
+  generated-packet, and human-E2E manifest checks; the Phase 5 native config
+  guard; Phase 9 release smoke, Phase 10 beta readiness, Phase 11 launch
   readiness, and launch ring gates; then typecheck, lint, and tests.
+- `npm run docs:device-support-policy-audit:check` passed as the
+  non-mutating guard that keeps the V1 cutoff explicit: iOS 17.0+, Android 10 /
+  API 29+, Android compile/target API 36, 360 x 640 as the launch-blocking Expo
+  web layout floor, and 320-wide browser evidence as stress/resilience only.
+- `npm run phase5:check-native-config` passed as the non-mutating native config
+  guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
 - `npm --workspace apps/mobile run test` passed: 171 test files / 1760 tests.

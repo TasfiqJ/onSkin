@@ -51,8 +51,10 @@ const requiredLaunchCommands = [
   'npm test',
   'npm run docs:source-packet-audit:check',
   'npm run docs:tas-todo-audit:check',
+  'npm run docs:device-support-policy-audit:check',
   'npm run e2e:human:manifest:check',
   'npm run docs:generated-packet-status-audit:check',
+  'npm run phase5:check-native-config',
   'npm run phase9:verify',
   'npm run phase10-11:verify',
 ];
@@ -62,14 +64,19 @@ const requiredPackageScripts = [
   'docs:readiness-status-audit',
   'docs:readiness-status-audit:strict',
   'docs:readiness-status-audit:check',
+  'docs:device-support-policy-audit',
+  'docs:device-support-policy-audit:strict',
+  'docs:device-support-policy-audit:check',
 ];
 
 const requiredLaunchVerifyScriptParts = [
   'docs:source-packet-audit:check',
   'docs:tas-todo-audit:check',
   'docs:readiness-status-audit:check',
+  'docs:device-support-policy-audit:check',
   'docs:generated-packet-status-audit:check',
   'e2e:human:manifest:check',
+  'phase5:check-native-config',
   'phase9:release-smoke',
   'phase10:beta-readiness',
   'phase11:launch-readiness',
