@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T11:42:12.822Z",
+  "generatedAt": "2026-07-09T11:44:07.030Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "d2e29a69f0729cd6437ff3437da90d9635a446af",
-  "gitStatus": "M docs/generated/generated-packet-status-audit.json\n M docs/generated/generated-packet-status-audit.md",
+  "gitSha": "7c24ff23d81e5d3f534c29a152ebbd9829516a66",
+  "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
@@ -135,14 +135,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 27291,
-      "sha256": "ca5587118e0fabe6fdd8df1c1b69f678268515726eb1eef0598f4226e293cb9b"
+      "sha256": "475388798f92dba59cc1521fc8baf397c47fb32d02a3da693aa1711bb36ddfe2"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 2662,
-      "sha256": "f78c580d48a93424474eb5976322bfb5ba2389341fe5f6a7f8db5193b1c26bfa"
+      "sha256": "86f6823c4a8e8712cc002cf6e2f385ae7dc194e653015dbd1ea4c9eb319f1f8f"
     },
     {
       "packet": "clinical",
@@ -198,14 +198,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 27291,
-      "sha256": "ca5587118e0fabe6fdd8df1c1b69f678268515726eb1eef0598f4226e293cb9b"
+      "sha256": "475388798f92dba59cc1521fc8baf397c47fb32d02a3da693aa1711bb36ddfe2"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 2662,
-      "sha256": "f78c580d48a93424474eb5976322bfb5ba2389341fe5f6a7f8db5193b1c26bfa"
+      "sha256": "86f6823c4a8e8712cc002cf6e2f385ae7dc194e653015dbd1ea4c9eb319f1f8f"
     },
     {
       "packet": "cosmeticChemistry",
@@ -320,7 +320,5 @@
       "sha256": "fd545c0b8e0f7fd526d21a1eeb216c9670a77fcd96d81abe595d7d0285130bbd"
     }
   ],
-  "warnings": [
-    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
-  ]
+  "warnings": []
 }
