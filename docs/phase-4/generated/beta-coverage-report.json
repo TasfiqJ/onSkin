@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T23:50:49.997Z",
+  "generatedAt": "2026-07-09T00:25:41.426Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "5bbfcf26d04a22edf6844d94e86229bb603c6560",
+  "gitSha": "b62661f34209a61e68be870b45496e032f5c9915",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -11,8 +11,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 12955,
-      "sha256": "4107d6b3929824056bfe0ad7dbe69cb7908b974794003936e013dd4ba5f31475"
+      "bytes": 13265,
+      "sha256": "ec9126b6605a01f80aa1c12a6d20ab37146aabdb024bf2661682c1ecf9a9c335"
     },
     {
       "path": ".env.example",
@@ -78,13 +78,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 4303,
-      "sha256": "8226b24af4b316753edc46a449f544c0f7c7b4f81debb95723822a84c64a7e86"
+      "sha256": "a54e0618f12229e64141388a217c59b2794b2217ea78d1c29c7c96a9c12f6327"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 2902,
-      "sha256": "cb8e9a03a6a4be48ba035305e12b733140e5b3bff571943ba74e714c1ce918dd"
+      "sha256": "1b485d5a55663482efee646775f2ad8ed3a162a741ccbadb56fa93a232114653"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
