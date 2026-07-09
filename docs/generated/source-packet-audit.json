@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:43:29.007Z",
+  "generatedAt": "2026-07-09T20:44:23.084Z",
   "status": "pass",
-  "strict": false,
+  "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
   "sourceRoot": "04_repo_docs",
   "activeDocsDir": "docs",
