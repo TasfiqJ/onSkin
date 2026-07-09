@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T20:36:24.442Z
+Generated: 2026-07-09T21:43:44.878Z
 Status: pass
-Git SHA: 82c3eb2993e494dcab39adbdd5e97015f8dcad22
+Git SHA: b4f90cb8df8c90d287fb07611a6bcdd91840808e
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -211,12 +211,12 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 429 bytes - sha256 `004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4472 bytes - sha256 `8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1867 bytes - sha256 `0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 43244 bytes - sha256 `f81ecc07b084d6bec8391a6c4c6ec691f545dd2504bd976a9992e288c0ad4c49`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 43738 bytes - sha256 `ddc6e0786fbada0c6481ee91144f1883810a33ae7420e5c20ba73c33d322dc98`
 - `apps/mobile/src/features/shelf/store.test.ts` - 4504 bytes - sha256 `6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda`
 - `apps/mobile/src/features/shelf/store.ts` - 12890 bytes - sha256 `416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 3709 bytes - sha256 `4c0e9666689722778f642729ab0e12091ffa92e1e5184cff8a908a745182da37`
 - `apps/mobile/src/features/shelf/useShelf.ts` - 8783 bytes - sha256 `0fb8fe03586758ea85aabc8d825cd42d4aeb007c5eb62b45a6d9ee2eb6980261`
-- `apps/mobile/src/app/shelf/[id].tsx` - 29138 bytes - sha256 `87a142d80265ae92979d7828752b7746228b18a6c2ec45707484cc074a7d3b5a`
+- `apps/mobile/src/app/shelf/[id].tsx` - 29622 bytes - sha256 `82744f147ed61319c56ac341e7cba734023b5b8800c4f9a90d66ad0c60dc8bc7`
 - `apps/mobile/src/app/shelf/search.tsx` - 10156 bytes - sha256 `7420f9782f5637247c95ca17d6a4a3b4d56b7da67e888473742c247f5cd1539a`
 - `apps/mobile/src/app/shelf/manual.tsx` - 13837 bytes - sha256 `52ca7524948f5ad3a7485ce7be8be97d14d25ae55119f010ff1513baef291227`
 - `apps/mobile/src/features/recommendations/applyPreferences.test.ts` - 1319 bytes - sha256 `751559e6d23b979ffe0cd2924d42f30eb41b591f6427bf13d27c175cffdb75a3`

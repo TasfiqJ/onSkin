@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T21:38:29.217Z",
+  "generatedAt": "2026-07-09T21:43:55.325Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "c836a27982e498113f81da42c0080388a704a4e8",
+  "gitSha": "b4f90cb8df8c90d287fb07611a6bcdd91840808e",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1245,8 +1245,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 43244,
-          "sha256": "f81ecc07b084d6bec8391a6c4c6ec691f545dd2504bd976a9992e288c0ad4c49"
+          "bytes": 43738,
+          "sha256": "ddc6e0786fbada0c6481ee91144f1883810a33ae7420e5c20ba73c33d322dc98"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
