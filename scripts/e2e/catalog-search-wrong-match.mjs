@@ -764,7 +764,7 @@ async function run() {
   let server = null;
   let browser = null;
   let client = null;
-  const userDataDir = mkdtempSync(path.join(tmpdir(), 'onskin-catalog-wrong-match-'));
+  const userDataDir = mkdtempSync(path.join(tmpdir(), 'routinekind-catalog-wrong-match-'));
   const summary = {
     date: today,
     endUrl: null,
