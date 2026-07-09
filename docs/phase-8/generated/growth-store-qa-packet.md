@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-09T20:14:43.811Z
+Generated: 2026-07-09T20:21:37.262Z
 Status: blocked
-Git SHA: ab99492410151883833111460c807594ede34cdd
+Git SHA: 47d0cc1f30a20cc349512e89c70475f5f4c4c9fc
 Git status: clean
 
 ## Public Identity
@@ -77,7 +77,7 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `package.json`: `48908797640f6aeaeb9941f8e552cc0978bd7bb6bc366be3c98a4ce98b63b289`
+- `package.json`: `de04387db608f85e2f38b10bdcd4161b350366cbcb67a2336e9cfadfe85c5b8f`
 - `apps/mobile/app.config.js`: `5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c`
 - `apps/mobile/src/lib/env.ts`: `2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321`
 - `apps/mobile/src/lib/launch/phase8.ts`: `94ac42c54e192d2f3c641de05609846ff3de9892646d5cc6ad41a098acbdac70`
@@ -105,17 +105,17 @@ Git status: clean
 - `docs/phase-8/public-site/support.html`: `00e3ac9648d19b3c1beb147623bedeba84effe74e4889a57d401872d934e2bd6`
 - `docs/phase-8/public-site/.well-known/apple-app-site-association.template.json`: `074f2a17a36b3659e6682ae1e8386c6c668c4362f90e88ed09cd98c0b5ab0813`
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
-- `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `a041a70316072871e6401e2ee2b0c837ca54ef9f0fed65330abe26cfacf1dd15`
+- `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149`
 - `docs/E2E_TESTING_CHECKLIST.md`: `014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e`
-- `docs/USER_FLOW_TREE.md`: `4f2bc4472c7b4ac0073938f2bd2d6ac784cc9abd09aa3be50c12a5df1e7bfe86`
-- `docs/e2e/generated/human-e2e-manifest.json`: `90f0d4f153e566c2973001a9d0538556e2ebd3efa7d3bf4006530c6cc03dd9b6`
-- `docs/e2e/generated/human-e2e-manifest.md`: `b57acd9cd2d1340f3b0180f089b1ed9d29a371c9631c636205fee773e7e3684c`
-- `docs/phase-5/generated/device-qa-packet.json`: `0d49b6433fa5f888f71658f4115d849bf28494c135a2b9ce3efb9733e68cae7a`
-- `docs/phase-5/generated/device-qa-packet.md`: `e841b30a108307a518472a9fc05ad3fad5cb0d7cec15d21ca66d55834da6b8cb`
-- `docs/phase-6/generated/payments-qa-packet.json`: `1a3b4a304fd9ae8923b9b227244d32d59e80a18976ee9e46d4768e2f5c526f93`
-- `docs/phase-6/generated/payments-qa-packet.md`: `62169c9d0f4b0c1e830e29ae11cfaf5da1f5a28fa07d1b0b38df33e3f67b304b`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `cce467c59b5460f9b3512b673469b3d494ab4e4f84f79c8fc8ceb0178aebe249`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `0c877bb523df4e53acc2c60843da43a1b0b57e559ed4600beedf62d260dde076`
+- `docs/USER_FLOW_TREE.md`: `9adf79e3fef30f9b1df57a216503d487f8a567513668c035afea340d2af33df6`
+- `docs/e2e/generated/human-e2e-manifest.json`: `7ca2a82d6cc9ad6c55ef8742f9dbdfbb17fef0b6a5a7681d67a5419c0995a6f5`
+- `docs/e2e/generated/human-e2e-manifest.md`: `18bd472312d351eaf3f715ff242da644dfa037f193686d5ed50f0c2df6a8c457`
+- `docs/phase-5/generated/device-qa-packet.json`: `1c9ad82fd8d628c497dd994579905dbf9e37aadddf5b3e07e92650b86f53f4d6`
+- `docs/phase-5/generated/device-qa-packet.md`: `09abd538d0e3d15634ebd1ffa79b4d7b5425ce7592bb392abb94c3c6464c2af8`
+- `docs/phase-6/generated/payments-qa-packet.json`: `accfe9db5bbb2a8f0460f2c91d33390b4c832a5dbc0ce26945b7d1944007b4f5`
+- `docs/phase-6/generated/payments-qa-packet.md`: `6855d9ef500957e7914942e4e59ef3f8fa0bc382363d38c8e31c2688ae1fa94d`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `c1d656de7af11a8cd0a8b1eca0b8b8102d1490c3d16cd3a8d3663914f8482e51`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `efe5cd5bc28429e6d0792bbda942648beed237c1163773503a5f12b44cfc5371`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `6070ec2ffd588b13555481ab5173e7d7783958977662807199e3dc16bd5c1122`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `e6602b38bf458f5759f9fc82f9e9defb38611c1252fdb308bc61f81555d2fac6`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
