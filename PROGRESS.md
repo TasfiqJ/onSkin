@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Expanded the Phase 3 reviewer worklist from a count-only Markdown handoff
+  into a per-item operator packet. `npm run phase3:review-worklist` now lists
+  each legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review
+  item with the required reviewer type, required evidence, current reviewer/date,
+  review-log notes, and exact source-file SHA-256 hashes. The dependent Phase 3
+  review packet and generated-packet status audit were refreshed from clean
+  source state. This improves reviewer handoff quality but does not mark any
+  review gate approved; named reviewer/counsel evidence remains in
+  `docs/FOR_TAS_TO_DO.md`.
+
 - Cleared a short Android-class 360 x 600 / 200% text-pressure route audit.
   The first 49-route Expo web sweep exposed `/recommendations/preferences` with
   `Sustainable` visible as a 24 px bottom-edge partial target. After lower
