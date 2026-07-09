@@ -19,11 +19,11 @@ export type ReviewPromptDecision =
         | 'cooldown';
     };
 
+// Privacy controls and payment completion are tracked as moments, but they are
+// not satisfaction moments. Native review prompts stay tied to product value.
 const VALUE_MOMENTS = new Set<ReviewValueMoment>([
   'seven_checkoff_days',
-  'data_export_success',
   'first_reviewed_conflict',
-  'paid_conversion_success',
 ]);
 
 export const REVIEW_PROMPT_POLICY = {

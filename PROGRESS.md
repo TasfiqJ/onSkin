@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the Phase 8 review prompt policy so native StoreReview prompts stay
+  tied to product-value moments only. `seven_checkoff_days` and
+  `first_reviewed_conflict` remain reviewable; privacy export success and paid
+  conversion completion now skip with `not_value_moment` telemetry instead of
+  touching the native prompt API. Focused review/settings tests pass, and the
+  Phase 8 growth/store checker now pins the exclusion so privacy/payment
+  moments cannot silently become rating prompts.
+
+- Added a focused text-pressure route override to the human-E2E audit runner.
+  `TEXT_PRESSURE_ROUTES` can now run one or more comma/newline-separated direct
+  routes while preserving the default 49-route sweep when unset, and invalid
+  entries fail fast unless they start with `/`. This keeps follow-up UI fixes
+  cheaper without weakening the full manifest gates. A one-route `/today`
+  verification passed at 390 x 640 / 170% with evidence in
+  `test-results/human-e2e/2026-07-09/text-pressure-route-override-today-current/`.
+
 - Cleared a supported Android-class 360 x 640 / 200% text-pressure regression
   in Settings Notifications. The fresh route audit found the lower-priority
   `Streak & adherence` switch peeking into the first viewport by 5 px, which

@@ -1,0 +1,22 @@
+{
+  "baseUrl": "http://localhost:8274",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-route-override-today-current",
+  "generatedAt": "2026-07-09T12:50:43.954Z",
+  "routeCount": 1,
+  "scale": 1.7,
+  "status": "pass",
+  "viewport": {
+    "height": 640,
+    "width": 390
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today",
+      "scaledCount": 8
+    }
+  ]
+}

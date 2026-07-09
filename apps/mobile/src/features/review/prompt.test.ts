@@ -51,7 +51,7 @@ describe('review prompt local history', () => {
   it('recovers from unreadable local history before recording a fresh attempt', async () => {
     mocks.storage.set(KEY, '{not-json');
 
-    await requestReviewAfterValue('data_export_success', NOW);
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
 
     expect(mocks.requestReview).toHaveBeenCalledTimes(1);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
@@ -63,23 +63,40 @@ describe('review prompt local history', () => {
     mocks.hasAction.mockResolvedValue(false);
     mocks.storage.set(KEY, JSON.stringify(['2026-06-01T12:00:00.000Z']));
 
-    await requestReviewAfterValue('data_export_success', NOW);
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
 
     expect(mocks.requestReview).not.toHaveBeenCalled();
     expect(mocks.storage.has(KEY)).toBe(false);
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
+      moment: 'seven_checkoff_days',
+    });
+  });
+
+  it('skips privacy and payment moments without touching the native prompt API', async () => {
+    for (const moment of ['data_export_success', 'paid_conversion_success'] as const) {
+      await requestReviewAfterValue(moment, NOW);
+    }
+
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_skipped', {
       moment: 'data_export_success',
+      reason: 'not_value_moment',
+    });
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_skipped', {
+      moment: 'paid_conversion_success',
+      reason: 'not_value_moment',
     });
   });
 
   it('treats platform availability errors as unavailable instead of throwing', async () => {
     mocks.hasAction.mockRejectedValueOnce(new Error('native module failed'));
 
-    await expect(requestReviewAfterValue('paid_conversion_success', NOW)).resolves.toBeUndefined();
+    await expect(requestReviewAfterValue('first_reviewed_conflict', NOW)).resolves.toBeUndefined();
 
     expect(mocks.requestReview).not.toHaveBeenCalled();
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
-      moment: 'paid_conversion_success',
+      moment: 'first_reviewed_conflict',
     });
     expect(mocks.storage.has(KEY)).toBe(false);
   });
@@ -87,13 +104,13 @@ describe('review prompt local history', () => {
   it('records a local attempt even when the native review request rejects', async () => {
     mocks.requestReview.mockRejectedValueOnce(new Error('prompt failed'));
 
-    await expect(requestReviewAfterValue('paid_conversion_success', NOW)).resolves.toBeUndefined();
+    await expect(requestReviewAfterValue('first_reviewed_conflict', NOW)).resolves.toBeUndefined();
 
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_attempted', {
-      moment: 'paid_conversion_success',
+      moment: 'first_reviewed_conflict',
     });
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
-      moment: 'paid_conversion_success',
+      moment: 'first_reviewed_conflict',
     });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
       attemptedAt: [NOW.toISOString()],
@@ -103,11 +120,11 @@ describe('review prompt local history', () => {
   it('does not throw if local attempt history cannot be saved after a prompt attempt', async () => {
     mocks.setShouldReject = true;
 
-    await expect(requestReviewAfterValue('paid_conversion_success', NOW)).resolves.toBeUndefined();
+    await expect(requestReviewAfterValue('seven_checkoff_days', NOW)).resolves.toBeUndefined();
 
     expect(mocks.requestReview).toHaveBeenCalledTimes(1);
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_attempted', {
-      moment: 'paid_conversion_success',
+      moment: 'seven_checkoff_days',
     });
     expect(mocks.storage.has(KEY)).toBe(false);
   });
@@ -125,7 +142,7 @@ describe('review prompt local history', () => {
       }),
     );
 
-    await requestReviewAfterValue('data_export_success', NOW);
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
 
     expect(mocks.requestReview).toHaveBeenCalledTimes(1);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({

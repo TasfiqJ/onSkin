@@ -24,11 +24,24 @@ describe('Phase 8 review prompt policy', () => {
     expect(
       canRequestReviewPrompt({
         enabled: true,
-        moment: 'data_export_success',
+        moment: 'first_reviewed_conflict',
         state: { attemptedAt: [] },
         now,
       }),
     ).toEqual({ ok: true });
+  });
+
+  it('does not prompt after privacy or payment moments', () => {
+    for (const moment of ['data_export_success', 'paid_conversion_success'] as const) {
+      expect(
+        canRequestReviewPrompt({
+          enabled: true,
+          moment,
+          state: { attemptedAt: [] },
+          now,
+        }),
+      ).toEqual({ ok: false, reason: 'not_value_moment' });
+    }
   });
 
   it('enforces a 30-day cooldown', () => {
@@ -58,7 +71,7 @@ describe('Phase 8 review prompt policy', () => {
     expect(
       canRequestReviewPrompt({
         enabled: true,
-        moment: 'data_export_success',
+        moment: 'first_reviewed_conflict',
         state,
         now,
       }),

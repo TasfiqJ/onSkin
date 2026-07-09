@@ -232,6 +232,7 @@ fail(
   'Share card export must be fixed at 1080x1920.',
 );
 const shareRoute = read('apps/mobile/src/app/share/conflict/[ruleId].tsx');
+const reviewPolicy = read('apps/mobile/src/features/review/policy.ts');
 for (const event of [
   'share_card_export_started',
   'share_link_created',
@@ -259,6 +260,12 @@ fail(
 fail(
   has('apps/mobile/src/features/review/policy.ts', /maxAttemptsPer365Days:\s*3/),
   'Review prompt policy must cap annual attempts.',
+);
+fail(
+  /const VALUE_MOMENTS = new Set<ReviewValueMoment>\(\[\s*'seven_checkoff_days',\s*'first_reviewed_conflict',\s*\]\)/m.test(
+    reviewPolicy,
+  ),
+  'Review prompt policy must allow only product-value moments, not privacy or payment completion.',
 );
 fail(
   !has('apps/mobile/src/features/review/prompt.ts', /5\s*star|five\s*star|positive\s*review/i),

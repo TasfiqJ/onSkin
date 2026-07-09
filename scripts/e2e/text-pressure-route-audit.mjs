@@ -27,7 +27,7 @@ const viewport = {
   width: Number(process.env.TEXT_PRESSURE_VIEWPORT_WIDTH ?? 320),
 };
 
-const routes = [
+const defaultRoutes = [
   '/today',
   '/today?routine=PM',
   '/progress',
@@ -78,6 +78,25 @@ const routes = [
   '/routine/widgets',
   '/cycle/week',
 ];
+
+function parseRouteOverride(value) {
+  if (!value?.trim()) return null;
+
+  const routes = value
+    .split(/[\n,]+/)
+    .map((route) => route.trim())
+    .filter(Boolean);
+
+  for (const route of routes) {
+    if (!route.startsWith('/')) {
+      throw new Error(`TEXT_PRESSURE_ROUTES entries must start with "/": ${route}`);
+    }
+  }
+
+  return routes;
+}
+
+const routes = parseRouteOverride(process.env.TEXT_PRESSURE_ROUTES) ?? defaultRoutes;
 
 mkdirSync(evidenceDir, { recursive: true });
 
@@ -356,7 +375,9 @@ class CdpClient {
 
 async function connectToPage() {
   const targets = await readJson(`http://127.0.0.1:${debugPort}/json`);
-  const pageTarget = targets.find((target) => target.type === 'page' && target.webSocketDebuggerUrl);
+  const pageTarget = targets.find(
+    (target) => target.type === 'page' && target.webSocketDebuggerUrl,
+  );
   if (!pageTarget) throw new Error('Chrome DevTools did not expose a page target.');
 
   const client = new CdpClient(pageTarget.webSocketDebuggerUrl);
@@ -404,7 +425,11 @@ async function waitForExpression(client, expression, timeoutMs = 30_000) {
 }
 
 async function waitForLoad(client) {
-  await waitForExpression(client, `document.body && document.body.innerText.trim().length > 0`, 60_000);
+  await waitForExpression(
+    client,
+    `document.body && document.body.innerText.trim().length > 0`,
+    60_000,
+  );
   await evaluate(
     client,
     `document.fonts && document.fonts.ready ? document.fonts.ready.then(() => true) : true`,
@@ -627,7 +652,10 @@ async function auditRoute(client, route) {
   result.url = url;
 
   if (result.horizontalOverflow > 1) {
-    result.issues.push({ horizontalOverflow: result.horizontalOverflow, type: 'horizontalOverflow' });
+    result.issues.push({
+      horizontalOverflow: result.horizontalOverflow,
+      type: 'horizontalOverflow',
+    });
     result.issueCount = result.issues.length;
   }
   if (result.textOverflows.length > 0) {
@@ -746,7 +774,9 @@ async function run() {
 
     summary.failedRouteCount = failedRoutes.length;
     summary.failedRoutes = failedRoutes;
-    summary.results = results.map(({ issues: _issues, textStart: _textStart, ...result }) => result);
+    summary.results = results.map(
+      ({ issues: _issues, textStart: _textStart, ...result }) => result,
+    );
     if (failedRoutes.length > 0) summary.status = 'fail';
 
     writeJson('summary.json', summary);
