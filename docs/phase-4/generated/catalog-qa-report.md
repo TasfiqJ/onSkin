@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-09T15:57:39.725Z
+Generated: 2026-07-09T15:58:31.626Z
 
-Git SHA: 3f5dc2c9348603219758e9b2c8d7df4d720f7064
+Git SHA: db2eb2ea0c35f4dbbb66af8d91be2aedee060c42
 
 Git status: clean
 
@@ -32,7 +32,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | --- | --- | ---: | --- |
 | package.json | present | 13575 | 48f9e3f326ee484e9d96f7054d30cd27028780bae7d58e006254b1ab0ed64832 |
 | scripts/phase4/catalog-qa-report.mjs | present | 6493 | 96796c537dc0ee1150fa84e5eff78b39ea6064c575c92f68ba83e5d9f2ce440f |
-| scripts/phase4/build-source-worklist.mjs | present | 16899 | 05cbdb376656dd5631262fe765c739de079011ea9fd69bd0296469dd9a1dd11f |
+| scripts/phase4/build-source-worklist.mjs | present | 16791 | bf3a1c89be6eaaa0f8985bacd0e137d58509bba26dc1381f4f30d6cb6dc62f21 |
 | scripts/phase4/beta-coverage-report.mjs | present | 21220 | 245f5542ae9b109bcc8e9b6e0b9fa6c3bb49ac44dabd0dd76b1046d8316619c6 |
 | scripts/phase4/beta-coverage-report-smoke.mjs | present | 7116 | a7f0280c06c6247c5cbccf806403f7960636cc85fdb5f9223d03ad517f8ca558 |
 | scripts/phase4/import-obf-snapshot.mjs | present | 4814 | 437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af |
@@ -46,7 +46,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | docs/phase-4/beta-coverage-report.md | present | 1854 | 5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6 |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2022 | 313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2335 | a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8 |
-| docs/phase-4/generated/source-worklist.json | present | 33689 | ac736067f48d9ebeb5065f0d38c492d87de6c6449301c0f0b38e830c56b05c1e |
-| docs/phase-4/generated/source-worklist.md | present | 21768 | 40c785186416e779775803737eaa37c290b35f0bd6cfb86ec4a6b3bfac53d874 |
+| docs/phase-4/generated/source-worklist.json | present | 33127 | b38a98e69beda5c700be1a0497afeb789d9ab1c749348cca0f47259dbbeddf5c |
+| docs/phase-4/generated/source-worklist.md | present | 21492 | 1318d6661f2c603479a0610744cc46480c7c4b36048f2d8134d5be3804483cbc |
 | docs/phase-4/odbl-compliance-memo.md | present | 2020 | 6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

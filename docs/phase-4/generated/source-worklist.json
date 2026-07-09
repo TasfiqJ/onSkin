@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T15:57:00.769Z",
+  "generatedAt": "2026-07-09T16:03:17.506Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "4390657947b22e9720953c3f3e9921f08392800c",
+  "gitSha": "45494b60e90e965e36dc139bdd9fd3bd568c52a1",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -17,7 +17,7 @@
       "blocked": 7,
       "local-scaffold": 2
     },
-    "sourcePathCount": 106,
+    "sourcePathCount": 104,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -304,9 +304,7 @@
         "scripts/phase4/catalog-qa-report-smoke.mjs",
         "scripts/phase4/import-obf-snapshot.mjs",
         "scripts/phase4/import-cosing-dictionary.mjs",
-        "scripts/docs/generated-packet-status-audit.mjs",
-        "docs/phase-4/generated/catalog-qa-report.json",
-        "docs/phase-4/generated/catalog-qa-report.md"
+        "scripts/docs/generated-packet-status-audit.mjs"
       ],
       "sourcePaths": [
         {
@@ -338,18 +336,6 @@
           "exists": true,
           "bytes": 11748,
           "sha256": "ddafd263ac29b217a1a86af04d74df0b21cd298af09cb669a91c5c3ec672f332"
-        },
-        {
-          "path": "docs/phase-4/generated/catalog-qa-report.json",
-          "exists": true,
-          "bytes": 4902,
-          "sha256": "4a9a39d0c99a1d70cdc40550db8cfbd84de36df7598f89fe1c45956bc800eb7e"
-        },
-        {
-          "path": "docs/phase-4/generated/catalog-qa-report.md",
-          "exists": true,
-          "bytes": 3297,
-          "sha256": "1a6c9821eeedf84ec0a4c885032e98e89afb8f2e6c62530805095692107a1f8a"
         }
       ]
     },

@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-09T15:31:11.811Z
+Generated: 2026-07-09T16:02:14.599Z
 Status: pass
 Strict mode: yes
 
@@ -19,7 +19,7 @@ inventory itself is the canonical machine-readable key list.
 - Gate groups: 10
 - Covered gate groups: 10
 - Extracted keys: 233
-- Local generated-only keys excluded: 12
+- Local generated-only keys excluded: 14
 - Keys named verbatim in FOR_TAS_TO_DO.md: 233
 - Keys only in generated inventory: 0
 - Blockers: 0
@@ -138,7 +138,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | PHASE4_BETA_COVERAGE_INPUT        | yes                       |
 | PHASE4_BETA_COVERAGE_REPORT       | yes                       |
 
-Local generated-only keys excluded from evidence warnings: none.
+Local generated-only keys excluded from evidence warnings: PHASE4_SOURCE_WORKLIST_JSON, PHASE4_SOURCE_WORKLIST_MD
 
 ### Phase 5 native build and device QA
 

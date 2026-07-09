@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T15:31:11.811Z",
+  "generatedAt": "2026-07-09T16:02:14.599Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
@@ -32,7 +32,7 @@
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
     "extractedKeyCount": 233,
-    "localOnlyKeyCount": 12,
+    "localOnlyKeyCount": 14,
     "keyMentionCount": 233,
     "keyNotMentionedCount": 0,
     "blockerCount": 0,
@@ -212,7 +212,10 @@
         "phase4:check-source-env"
       ],
       "forTasCovered": true,
-      "localOnlyKeys": [],
+      "localOnlyKeys": [
+        "PHASE4_SOURCE_WORKLIST_JSON",
+        "PHASE4_SOURCE_WORKLIST_MD"
+      ],
       "keys": [
         "CATALOG_APP_NAME",
         "CATALOG_APP_VERSION",

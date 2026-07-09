@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T15:57:00.769Z
+Generated: 2026-07-09T16:03:17.506Z
 Status: pass
-Git SHA: 4390657947b22e9720953c3f3e9921f08392800c
+Git SHA: 45494b60e90e965e36dc139bdd9fd3bd568c52a1
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -13,7 +13,7 @@ must attach before Phase 4 can stop blocking launch.
 ## Summary
 
 - Work items: 9
-- Source files hashed: 106
+- Source files hashed: 104
 - Missing source files: 0
 - Blockers: 0
 - Warnings: 0
@@ -26,7 +26,7 @@ must attach before Phase 4 can stop blocking launch.
 | obf-odbl-posture          | sourceReview   | Open Beauty Facts and ODbL launch posture                   | blocked        | B-ODBL-REVIEW           | 8       | 0               |
 | cosing-reuse-taxonomy     | sourceReview   | CosIng reuse and ingredient-tag taxonomy                    | blocked        | B-CATALOG-SOURCE-REVIEW | 7       | 0               |
 | curated-first-batch       | curation       | First curated launch product batch                          | blocked        | B-CURATED-CATALOG       | 7       | 0               |
-| import-qa                 | curation       | Import QA and generated catalog evidence                    | local-scaffold | B-CATALOG-SEED          | 7       | 0               |
+| import-qa                 | curation       | Import QA and generated catalog evidence                    | local-scaffold | B-CATALOG-SEED          | 5       | 0               |
 | beta-coverage             | betaEvidence   | Closed-beta catalog coverage and correction loop            | blocked        | B-CATALOG-COVERAGE      | 7       | 0               |
 | mobile-catalog-disclosure | productSurface | Mobile catalog source, quality, and report-issue disclosure | local-scaffold | B-CATALOG-SEED          | 51      | 0               |
 | obf-contribution-back     | operations     | Unmatched-product contribution-back operation               | blocked        | B-SHELF-CONTRIB         | 7       | 0               |
@@ -146,8 +146,6 @@ Sources:
 - `scripts/phase4/import-obf-snapshot.mjs` - 4814 bytes - sha256 `437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af`
 - `scripts/phase4/import-cosing-dictionary.mjs` - 4025 bytes - sha256 `07918f71f397b59c5889995c479d6d1757f216edcaec0b8ac19fa64a9dc5e4b0`
 - `scripts/docs/generated-packet-status-audit.mjs` - 11748 bytes - sha256 `ddafd263ac29b217a1a86af04d74df0b21cd298af09cb669a91c5c3ec672f332`
-- `docs/phase-4/generated/catalog-qa-report.json` - 4902 bytes - sha256 `4a9a39d0c99a1d70cdc40550db8cfbd84de36df7598f89fe1c45956bc800eb7e`
-- `docs/phase-4/generated/catalog-qa-report.md` - 3297 bytes - sha256 `1a6c9821eeedf84ec0a4c885032e98e89afb8f2e6c62530805095692107a1f8a`
 
 ### beta-coverage - Closed-beta catalog coverage and correction loop
 
