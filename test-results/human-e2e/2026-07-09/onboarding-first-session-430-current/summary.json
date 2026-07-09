@@ -1,0 +1,58 @@
+{
+  "browserProblemLogCount": 3,
+  "date": "2026-07-09",
+  "endUrl": "http://localhost:8285/onboarding/paywall",
+  "evidenceFiles": [
+    "01-welcome.png",
+    "03-age-filled.png",
+    "05-goals-selected.png",
+    "09-products-empty.png",
+    "12-products-after-3.png",
+    "14-reveal-insight.png",
+    "15-notifications.png",
+    "16-account.png",
+    "17-paywall-current.png"
+  ],
+  "overflowXByStep": {
+    "welcome": 0,
+    "reveal": 0,
+    "paywall": 0
+  },
+  "productNames": [
+    "Retinol 0.3% serum",
+    "Glycolic 7% toner",
+    "Ceramide moisturizer"
+  ],
+  "reveal": {
+    "hasContinue": true,
+    "hasDerivedInsightBody": true,
+    "hasFirstInsightLabel": true,
+    "hasRoutinePreviewFallback": false,
+    "hasSeeMyRoutine": false,
+    "hasTimingHandled": true,
+    "text": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. Continue"
+  },
+  "routeCheck": {
+    "accountSkipLedToPaywall": true,
+    "notificationSkipLedToAccount": true,
+    "revealContinueLedToNotifications": true,
+    "revealRoute": "http://localhost:8285/onboarding/reveal"
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port 8285 --host localhost",
+  "startUrl": "http://localhost:8285/?e2eReset=local",
+  "steps": [
+    "Reset local private state with dev-only fixture.",
+    "Began onboarding, entered valid adult DOB, selected Clear skin and Barrier repair.",
+    "Granted explicit health-data collection consent.",
+    "Answered 12-question quiz with visible option buttons.",
+    "Added Retinol 0.3% serum, Glycolic 7% toner, and Ceramide moisturizer from product intake.",
+    "Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall."
+  ],
+  "surface": "Headless Chrome Expo web",
+  "verdict": "pass",
+  "viewport": {
+    "height": 430,
+    "width": 320,
+    "supportClass": "resilience stress viewport below launch web support floor"
+  }
+}

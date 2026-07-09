@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T21:19:48.014Z",
-  "status": "pass",
+  "generatedAt": "2026-07-09T21:35:39.886Z",
+  "status": "blocked",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
@@ -18,15 +18,15 @@
     {
       "path": "docs/phase-10/generated/closed-beta-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 34,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-10/generated/closed-beta-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -34,15 +34,15 @@
     {
       "path": "docs/phase-10/generated/support-handoff-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 5,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-10/generated/support-handoff-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -50,15 +50,15 @@
     {
       "path": "docs/phase-11/generated/public-launch-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 40,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-11/generated/public-launch-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -66,15 +66,15 @@
     {
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 234,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -82,15 +82,15 @@
     {
       "path": "docs/phase-3/generated/review-packet-manifest.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 53,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-3/generated/review-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -98,15 +98,15 @@
     {
       "path": "docs/phase-3/generated/review-worklist.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 238,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-3/generated/review-worklist.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -114,15 +114,15 @@
     {
       "path": "docs/phase-4/generated/beta-coverage-report.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 25,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/beta-coverage-report.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -130,15 +130,15 @@
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 25,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -178,15 +178,15 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 28,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -194,15 +194,15 @@
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 33,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -210,15 +210,15 @@
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 29,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -226,15 +226,15 @@
     {
       "path": "docs/phase-8/generated/growth-store-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 47,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-8/generated/growth-store-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -386,15 +386,15 @@
     {
       "path": "docs/phase-9/generated/release-engineering-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0,
+      "dirtyTextMatchCount": 1,
+      "nonEmptyGitStatusCount": 1,
       "hashReferenceCount": 77,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/release-engineering-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 0,
+      "dirtyTextMatchCount": 2,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -415,13 +415,53 @@
   ],
   "summary": {
     "generatedFileCount": 49,
-    "dirtyTextFileCount": 0,
-    "nonEmptyGitStatusFileCount": 0,
+    "dirtyTextFileCount": 26,
+    "nonEmptyGitStatusFileCount": 13,
     "hashReferenceCount": 979,
     "staleHashReferenceCount": 0,
-    "blockerCount": 0,
+    "blockerCount": 39,
     "warningCount": 0
   },
-  "blockers": [],
+  "blockers": [
+    "docs/phase-10/generated/closed-beta-packet.json contains dirty generated-packet text.",
+    "docs/phase-10/generated/closed-beta-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-10/generated/closed-beta-packet.md contains dirty generated-packet text.",
+    "docs/phase-10/generated/support-handoff-packet.json contains dirty generated-packet text.",
+    "docs/phase-10/generated/support-handoff-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-10/generated/support-handoff-packet.md contains dirty generated-packet text.",
+    "docs/phase-11/generated/public-launch-packet.json contains dirty generated-packet text.",
+    "docs/phase-11/generated/public-launch-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-11/generated/public-launch-packet.md contains dirty generated-packet text.",
+    "docs/phase-3/generated/review-operator-queue.json contains dirty generated-packet text.",
+    "docs/phase-3/generated/review-operator-queue.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-3/generated/review-operator-queue.md contains dirty generated-packet text.",
+    "docs/phase-3/generated/review-packet-manifest.json contains dirty generated-packet text.",
+    "docs/phase-3/generated/review-packet-manifest.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-3/generated/review-packet.md contains dirty generated-packet text.",
+    "docs/phase-3/generated/review-worklist.json contains dirty generated-packet text.",
+    "docs/phase-3/generated/review-worklist.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-3/generated/review-worklist.md contains dirty generated-packet text.",
+    "docs/phase-4/generated/beta-coverage-report.json contains dirty generated-packet text.",
+    "docs/phase-4/generated/beta-coverage-report.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-4/generated/beta-coverage-report.md contains dirty generated-packet text.",
+    "docs/phase-4/generated/catalog-qa-report.json contains dirty generated-packet text.",
+    "docs/phase-4/generated/catalog-qa-report.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-4/generated/catalog-qa-report.md contains dirty generated-packet text.",
+    "docs/phase-5/generated/device-qa-packet.json contains dirty generated-packet text.",
+    "docs/phase-5/generated/device-qa-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-5/generated/device-qa-packet.md contains dirty generated-packet text.",
+    "docs/phase-6/generated/payments-qa-packet.json contains dirty generated-packet text.",
+    "docs/phase-6/generated/payments-qa-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-6/generated/payments-qa-packet.md contains dirty generated-packet text.",
+    "docs/phase-7/generated/core-loop-qa-packet.json contains dirty generated-packet text.",
+    "docs/phase-7/generated/core-loop-qa-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-7/generated/core-loop-qa-packet.md contains dirty generated-packet text.",
+    "docs/phase-8/generated/growth-store-qa-packet.json contains dirty generated-packet text.",
+    "docs/phase-8/generated/growth-store-qa-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-8/generated/growth-store-qa-packet.md contains dirty generated-packet text.",
+    "docs/phase-9/generated/release-engineering-qa-packet.json contains dirty generated-packet text.",
+    "docs/phase-9/generated/release-engineering-qa-packet.json records non-empty gitStatus: M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+    "docs/phase-9/generated/release-engineering-qa-packet.md contains dirty generated-packet text."
+  ],
   "warnings": []
 }

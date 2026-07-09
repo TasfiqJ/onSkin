@@ -1,0 +1,34 @@
+{
+  "bodyText": "Healthier skin in eight weeks, built around your skin. A routine that fits what's already on your shelf. And photos that never leave your phone. Begin I already have an account No ads · no data sales · photos stay on device",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Begin",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 258
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "I already have an account",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 326
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

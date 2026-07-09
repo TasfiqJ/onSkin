@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-09T20:50:59.791Z",
+  "generatedAt": "2026-07-09T21:34:31.830Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8",
-  "gitStatus": "",
+  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
+  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
   "reviewLogs": [
     {
       "domain": "legalRegulatory",
@@ -62,7 +62,7 @@
     "sourcePathCount": 233,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -1807,8 +1807,8 @@
         {
           "path": "apps/mobile/src/app/onboarding/quiz.tsx",
           "exists": true,
-          "bytes": 4824,
-          "sha256": "15898b1d26651092c07c079b9902142cacc93e45b4718a4bb074c06a8f20d6bd"
+          "bytes": 6960,
+          "sha256": "941bc4c27bbf1fc4f504f65e02c8bee761632536c0116097016a046af5834c87"
         },
         {
           "path": "apps/mobile/src/app/onboarding/reveal.tsx",
@@ -2025,5 +2025,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence."
+  ]
 }

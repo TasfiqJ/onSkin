@@ -1,0 +1,64 @@
+{
+  "bodyText": "1 / 12 OIL + MOISTURE A few hours after cleansing, how does your skin usually feel? Tight or flaky Comfortable Shiny in places Oily all over Next",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Tight or flaky",
+      "role": "button",
+      "width": 130.55,
+      "x": 24,
+      "y": 132
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Comfortable",
+      "role": "button",
+      "width": 130.55,
+      "x": 162.55,
+      "y": 132
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Shiny in places",
+      "role": "button",
+      "width": 130.55,
+      "x": 24,
+      "y": 192
+    },
+    {
+      "disabled": false,
+      "height": 52,
+      "hitOk": true,
+      "label": "Oily all over",
+      "role": "button",
+      "width": 130.55,
+      "x": 162.55,
+      "y": 192
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Next",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 358
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/quiz",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

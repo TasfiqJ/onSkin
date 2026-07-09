@@ -1,0 +1,44 @@
+{
+  "bodyText": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "I agree. Continue",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 246
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "I don't agree",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 314
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Read the health data policy",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 366
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/consent",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

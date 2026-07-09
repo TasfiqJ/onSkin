@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T20:51:07.035Z",
+  "generatedAt": "2026-07-09T21:34:41.904Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8",
-  "gitStatus": "",
+  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
+  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 15727,
-      "sha256": "387960dacb05532538212d2c6ad3aa590887d2f9d9dcad8afe586b5c50351cfa"
+      "bytes": 15812,
+      "sha256": "2cd969f5304354242b6341aeb16db281d12c941eed9e40bc18e4d955a7c579c3"
     },
     {
       "packet": "packetContract",
@@ -148,29 +148,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 81829,
-      "sha256": "de0f3c55c6a9de7bb5794e9a79af12d83b6f5a0983a47dcc7ce303adbc4b97e5"
+      "bytes": 82326,
+      "sha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 53360,
-      "sha256": "865cc0456041f31ee59b8e490405bcf09298a515eae3eabb2761ad64c89ee34c"
+      "bytes": 53465,
+      "sha256": "880dad41311bcfbdd22bc5bfb2a28004598fb020c81db6372c4c6da2630ea896"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 86552,
-      "sha256": "4cbbb97f857ac23ed41ed5c5b77730832c1231a2c33a6ef7efb8878127bdd4df"
+      "bytes": 87183,
+      "sha256": "892888f4c2f45f1d4be81c24a8647d604181104fa56d93dc891a8b773442f786"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 66036,
-      "sha256": "84be8df75ab94d5ca3551cfc63a3d5c25b0200f81fe1b9ed8bf96585525c7753"
+      "bytes": 66270,
+      "sha256": "dd7a2cc7637e834128615a08c907edd3a768dac528fc86b749f975a572dd8375"
     },
     {
       "packet": "clinical",
@@ -225,29 +225,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 81829,
-      "sha256": "de0f3c55c6a9de7bb5794e9a79af12d83b6f5a0983a47dcc7ce303adbc4b97e5"
+      "bytes": 82326,
+      "sha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 53360,
-      "sha256": "865cc0456041f31ee59b8e490405bcf09298a515eae3eabb2761ad64c89ee34c"
+      "bytes": 53465,
+      "sha256": "880dad41311bcfbdd22bc5bfb2a28004598fb020c81db6372c4c6da2630ea896"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 86552,
-      "sha256": "4cbbb97f857ac23ed41ed5c5b77730832c1231a2c33a6ef7efb8878127bdd4df"
+      "bytes": 87183,
+      "sha256": "892888f4c2f45f1d4be81c24a8647d604181104fa56d93dc891a8b773442f786"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 66036,
-      "sha256": "84be8df75ab94d5ca3551cfc63a3d5c25b0200f81fe1b9ed8bf96585525c7753"
+      "bytes": 66270,
+      "sha256": "dd7a2cc7637e834128615a08c907edd3a768dac528fc86b749f975a572dd8375"
     },
     {
       "packet": "cosmeticChemistry",
@@ -309,8 +309,8 @@
       "packet": "ipFto",
       "path": "apps/mobile/src/app/onboarding/quiz.tsx",
       "exists": true,
-      "bytes": 4824,
-      "sha256": "15898b1d26651092c07c079b9902142cacc93e45b4718a4bb074c06a8f20d6bd"
+      "bytes": 6960,
+      "sha256": "941bc4c27bbf1fc4f504f65e02c8bee761632536c0116097016a046af5834c87"
     },
     {
       "packet": "ipFto",
@@ -376,5 +376,7 @@
       "sha256": "41d9599afa86794bd2444debf1e98463e794b5536d5c3c3b02b5ef15459c240c"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
+  ]
 }

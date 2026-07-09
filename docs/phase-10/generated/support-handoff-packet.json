@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-09T21:08:26.224Z",
+  "generatedAt": "2026-07-09T21:35:23.646Z",
   "status": "pass",
   "strict": false,
-  "gitSha": "a67f17198a8dd5c42d369f4de2af0fe2b56b1170",
-  "gitStatus": "",
+  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
+  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
   "purpose": "Support-desk setup packet for in-app beta feedback query parameters, category routing, severity SLA, and escalation owners.",
   "handoffContract": {
     "supportUrlEnv": "EXPO_PUBLIC_SUPPORT_URL",
@@ -178,8 +178,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 15727,
-      "sha256": "387960dacb05532538212d2c6ad3aa590887d2f9d9dcad8afe586b5c50351cfa"
+      "bytes": 15812,
+      "sha256": "2cd969f5304354242b6341aeb16db281d12c941eed9e40bc18e4d955a7c579c3"
     },
     {
       "path": "scripts/phase10/build-support-handoff-packet.mjs",
@@ -207,5 +207,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 10 support handoff packet generated with a dirty Git worktree; do not use it as final support-desk evidence."
+  ]
 }

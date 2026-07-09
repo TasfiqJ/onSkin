@@ -1,0 +1,54 @@
+{
+  "bodyText": "What's on your shelf? 3 OF 3 PRODUCTS PRODUCT NAME 3 ON YOUR SHELF Ceramide moisturizer × Glycolic 7% toner × Retinol 0.3% serum × Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Ceramide moisturizer",
+      "role": "button",
+      "width": 48,
+      "x": 231,
+      "y": 13
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Glycolic 7% toner",
+      "role": "button",
+      "width": 48,
+      "x": 231,
+      "y": 95
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "width": 48,
+      "x": 231,
+      "y": 177
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 358
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/products",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

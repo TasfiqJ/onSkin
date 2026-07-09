@@ -1,9 +1,9 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T20:50:59.791Z
+Generated: 2026-07-09T21:34:31.830Z
 Status: pass
-Git SHA: f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8
-Git status: clean
+Git SHA: 9636f618054c09fb1f3536ea007b5e526dee87d6
+Git status: DIRTY
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
 privacy/security, and IP/FTO review logs into an operator handoff. It does
@@ -16,7 +16,7 @@ reviewers must inspect before launch gates can close.
 - Source files hashed: 233
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 0
+- Warnings: 1
 
 ## Items
 
@@ -648,7 +648,7 @@ Sources:
 
 - `docs/phase-3/quiz-fto-summary.md` - 2050 bytes - sha256 `ac8ad15f610d262d05c9196ad952a276e3b1f2cfafcdf4e7d4c09fda635e1ba6`
 - `apps/mobile/src/features/onboarding/quiz.ts` - 11021 bytes - sha256 `e467bfb1e6605e41cb2e62e764ff33cefbed98a936c94150de1a704654d23527`
-- `apps/mobile/src/app/onboarding/quiz.tsx` - 4824 bytes - sha256 `15898b1d26651092c07c079b9902142cacc93e45b4718a4bb074c06a8f20d6bd`
+- `apps/mobile/src/app/onboarding/quiz.tsx` - 6960 bytes - sha256 `941bc4c27bbf1fc4f504f65e02c8bee761632536c0116097016a046af5834c87`
 - `apps/mobile/src/app/onboarding/reveal.tsx` - 5488 bytes - sha256 `f38ab745a996a1cdc4aef4fabb6d8119fe51c3e59dcff47d177e40fc41cda31d`
 
 ### ipFto - Public positioning differentiation
@@ -719,4 +719,4 @@ Sources:
 
 ## Warnings
 
-- None.
+- Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.

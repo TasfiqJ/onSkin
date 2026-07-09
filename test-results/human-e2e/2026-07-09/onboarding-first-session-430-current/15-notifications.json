@@ -1,0 +1,34 @@
+{
+  "bodyText": "A gentle nudge at your routine times? You pick the moments. Morning and evening, and we’ll quietly remind you. No noise, no pressure, and you can change it anytime. ✓ Only at times you choose ✓ Discreet on your lock screen ✓ Off in one tap, whenever Yes, remind me Not now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Yes, remind me",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 298
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 366
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/notifications",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

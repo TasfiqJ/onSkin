@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T20:51:03.353Z",
+  "generatedAt": "2026-07-09T21:34:36.164Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8",
-  "gitStatus": "",
+  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
+  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 81829,
-    "sha256": "de0f3c55c6a9de7bb5794e9a79af12d83b6f5a0983a47dcc7ce303adbc4b97e5",
-    "currentSha256": "de0f3c55c6a9de7bb5794e9a79af12d83b6f5a0983a47dcc7ce303adbc4b97e5"
+    "bytes": 82326,
+    "sha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40",
+    "currentSha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -31,7 +31,7 @@
       "notCleared": 20
     },
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 2
   },
   "items": [
     {
@@ -305,8 +305,8 @@
         {
           "path": "apps/mobile/src/app/onboarding/quiz.tsx",
           "exists": true,
-          "bytes": 4824,
-          "sha256": "15898b1d26651092c07c079b9902142cacc93e45b4718a4bb074c06a8f20d6bd"
+          "bytes": 6960,
+          "sha256": "941bc4c27bbf1fc4f504f65e02c8bee761632536c0116097016a046af5834c87"
         },
         {
           "path": "apps/mobile/src/app/onboarding/reveal.tsx",
@@ -2134,5 +2134,8 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review operator queue generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.",
+    "Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff."
+  ]
 }

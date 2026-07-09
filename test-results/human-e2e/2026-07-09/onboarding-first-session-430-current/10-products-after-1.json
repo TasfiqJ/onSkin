@@ -1,0 +1,44 @@
+{
+  "bodyText": "What's on your shelf? 1 OF 3 PRODUCTS PRODUCT NAME 1 ON YOUR SHELF Retinol 0.3% serum × Add 2 more Continue with 1 product",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "width": 48,
+      "x": 231,
+      "y": 53
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add 2 more",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 298
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue with 1 product",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 358
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/products",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "bodyText": "What's on your shelf? 2 OF 3 PRODUCTS PRODUCT NAME 2 ON YOUR SHELF Glycolic 7% toner × Retinol 0.3% serum × Add 1 more Continue with 2 products",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Glycolic 7% toner",
+      "role": "button",
+      "width": 48,
+      "x": 231,
+      "y": 3
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "width": 48,
+      "x": 231,
+      "y": 85
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add 1 more",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 298
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue with 2 products",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 358
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/products",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

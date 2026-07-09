@@ -1,12 +1,61 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
 import { ONBOARDING_QUIZ, toggleExclusiveNoneSelection } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
+import { cn } from '@/lib/cn';
+import { haptics } from '@/theme/haptics';
+
+function CompactQuizOptionCard({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={label}
+      aria-pressed={selected}
+      onPress={() => {
+        haptics.select();
+        onPress();
+      }}
+      className={cn(
+        'min-h-[52px] rounded-card border px-3 py-2',
+        selected ? 'border-clay bg-clay/5' : 'border-hairline bg-paper-raised',
+      )}
+      style={{ width: '48%' }}
+    >
+      <View className="flex-row items-center justify-between gap-2">
+        <Text
+          className="flex-1 font-sans-medium text-[13.5px] leading-[16px] text-ink"
+          numberOfLines={3}
+          adjustsFontSizeToFit
+          minimumFontScale={0.86}
+        >
+          {label}
+        </Text>
+        <View
+          className={cn(
+            'h-4 w-4 items-center justify-center rounded-full border',
+            selected ? 'border-clay bg-clay' : 'border-greige-deep bg-transparent',
+          )}
+        >
+          {selected ? <View className="h-1.5 w-1.5 rounded-full bg-paper" /> : null}
+        </View>
+      </View>
+    </Pressable>
+  );
+}
 
 // 04 · Quiz. Original 4-axis questions, data-driven from the engine. The content
 // is still pending final B-QUIZ-COPY/legal review. The pregnancy/sensitivities
@@ -17,6 +66,7 @@ export default function QuizScreen() {
   const [index, setIndex] = useState(0);
   const [consentChecked, setConsentChecked] = useState(false);
   const compactPhone = height < 640;
+  const splitShortPhone = height < 460;
 
   useEffect(() => {
     let active = true;
@@ -89,22 +139,34 @@ export default function QuizScreen() {
           {index + 1} / {total}
         </Text>
       </View>
-      <View className="flex-1 overflow-hidden">
+      <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
         <ScrollView
           className="flex-1"
           showsVerticalScrollIndicator={false}
           contentContainerClassName="pb-28"
         >
-          <Text variant="eyebrow" tone="clay" className={compactPhone ? 'mt-5' : 'mt-7'}>
+          <Text
+            variant="eyebrow"
+            tone="clay"
+            className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-7'}
+          >
             {question.eyebrow}
           </Text>
-          <Text variant="title" className="mt-2">
+          <Text
+            variant="title"
+            className={splitShortPhone ? 'mt-1' : 'mt-2'}
+            style={splitShortPhone ? { fontSize: 24, lineHeight: 27 } : undefined}
+          >
             {question.prompt}
           </Text>
           {isMulti ? (
             <View
               className={
-                compactPhone ? 'mt-4 flex-row flex-wrap gap-2' : 'mt-6 flex-row flex-wrap gap-2'
+                splitShortPhone
+                  ? 'mt-3 flex-row flex-wrap gap-1.5'
+                  : compactPhone
+                    ? 'mt-4 flex-row flex-wrap gap-2'
+                    : 'mt-6 flex-row flex-wrap gap-2'
               }
             >
               {question.options.map((o) => (
@@ -113,6 +175,17 @@ export default function QuizScreen() {
                   label={o.label}
                   selected={Array.isArray(current) && current.includes(o.id)}
                   onPress={() => toggleMulti(o.id)}
+                />
+              ))}
+            </View>
+          ) : splitShortPhone ? (
+            <View className="mt-3 flex-row flex-wrap gap-2">
+              {question.options.map((o) => (
+                <CompactQuizOptionCard
+                  key={o.id}
+                  label={o.label}
+                  selected={current === o.id}
+                  onPress={() => selectSingle(o.id)}
                 />
               ))}
             </View>

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Animated, Easing, Platform, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -24,6 +24,7 @@ export default function AnalyzingScreen() {
   const [retryKey, setRetryKey] = useState(0);
   const simulatedProfileSaveFailureUsed = useRef(false);
   const profileSaveFailureMode = devProfileSaveFailureMode();
+  const useNativeAnimationDriver = Platform.OS !== 'web';
 
   useEffect(() => {
     if (!quizCompletion.complete) {
@@ -38,8 +39,18 @@ export default function AnalyzingScreen() {
     track('personalization_shown');
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulse, { toValue: 1, duration: 900, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 0, duration: 900, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(pulse, {
+          toValue: 1,
+          duration: 900,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: useNativeAnimationDriver,
+        }),
+        Animated.timing(pulse, {
+          toValue: 0,
+          duration: 900,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: useNativeAnimationDriver,
+        }),
       ]),
     );
     loop.start();
@@ -74,7 +85,15 @@ export default function AnalyzingScreen() {
       loop.stop();
       if (revealTimer) clearTimeout(revealTimer);
     };
-  }, [goals.length, persistSkinProfile, profileSaveFailureMode, pulse, quizCompletion.complete, retryKey]);
+  }, [
+    goals.length,
+    persistSkinProfile,
+    profileSaveFailureMode,
+    pulse,
+    quizCompletion.complete,
+    retryKey,
+    useNativeAnimationDriver,
+  ]);
 
   const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
   const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });

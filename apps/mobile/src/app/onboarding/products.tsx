@@ -131,14 +131,22 @@ export default function ProductsScreen() {
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const modernTextPressurePhone =
     width <= 390 && height >= 800 && height < 900 && (fontScale >= 1.3 || Platform.OS === 'web');
-  const compactPhone = height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone;
-  const showIntroCopy = !modernTextPressurePhone;
-  const showProgressBody = !modernTextPressurePhone;
+  const splitShortPhone = height < 460;
+  const compactPhone =
+    height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone || splitShortPhone;
+  const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;
+  const showProgressBody = !modernTextPressurePhone && !splitShortPhone;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
   const showCompactCategoryFooter = compactFooterAdds;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
   const hasTargetProducts = remainingToTarget === 0;
   const showContinueAnyway = added.length > 0 && !hasTargetProducts && !compactFooterAdds;
+  const productsBottomPaddingClass =
+    splitShortPhone && showContinueAnyway && added.length === 1
+      ? 'pb-44'
+      : showContinueAnyway
+        ? 'pb-36'
+        : 'pb-28';
   const remainingProductNoun = remainingToTarget === 1 ? 'product' : 'products';
   const continueAnywayLabel = `Continue with ${added.length} ${
     added.length === 1 ? 'product' : 'products'
@@ -163,7 +171,11 @@ export default function ProductsScreen() {
   }, []);
 
   function scrollToShelfList() {
-    requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
+    const scroll = () => scrollRef.current?.scrollToEnd({ animated: true });
+    requestAnimationFrame(() => {
+      scroll();
+      setTimeout(scroll, 120);
+    });
   }
 
   function focusNextProduct() {
@@ -227,9 +239,13 @@ export default function ProductsScreen() {
           ref={scrollRef}
           className="flex-1"
           showsVerticalScrollIndicator={false}
-          contentContainerClassName={showContinueAnyway ? 'pb-36' : 'pb-28'}
+          contentContainerClassName={productsBottomPaddingClass}
         >
-          <Text variant="title" className={compactPhone ? 'mt-4' : 'mt-6'}>
+          <Text
+            variant="title"
+            className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-4' : 'mt-6'}
+            style={splitShortPhone ? { fontSize: 27, lineHeight: 30 } : undefined}
+          >
             What&apos;s on your shelf?
           </Text>
           {showIntroCopy ? (
@@ -240,9 +256,11 @@ export default function ProductsScreen() {
           ) : null}
           <View
             className={
-              compactPhone
-                ? 'mt-3 rounded-2xl bg-greige-chip px-4 py-3'
-                : 'mt-4 rounded-2xl bg-greige-chip px-4 py-3'
+              splitShortPhone
+                ? 'mt-3 rounded-2xl bg-greige-chip px-4 py-2.5'
+                : compactPhone
+                  ? 'mt-3 rounded-2xl bg-greige-chip px-4 py-3'
+                  : 'mt-4 rounded-2xl bg-greige-chip px-4 py-3'
             }
             style={{ borderWidth: 1, borderColor: colors.hairline }}
           >
@@ -257,7 +275,17 @@ export default function ProductsScreen() {
             ) : null}
           </View>
 
-          <Card className={modernTextPressurePhone ? 'mt-3 p-4' : compactPhone ? 'mt-4 p-4' : 'mt-6'}>
+          <Card
+            className={
+              splitShortPhone
+                ? 'mt-3 p-4'
+                : modernTextPressurePhone
+                  ? 'mt-3 p-4'
+                  : compactPhone
+                    ? 'mt-4 p-4'
+                    : 'mt-6'
+            }
+          >
             <Text variant="label" tone="muted" className="mb-2">
               PRODUCT NAME
             </Text>

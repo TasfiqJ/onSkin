@@ -1,0 +1,84 @@
+{
+  "bodyText": "What brings you here? Choose up to two. This shapes your plan. Clear skin Breakouts & congestion Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": true,
+      "label": "Clear skin. Breakouts & congestion",
+      "role": "button",
+      "width": 130.55,
+      "x": 24,
+      "y": 138
+    },
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": true,
+      "label": "Even tone. Dark spots & texture",
+      "role": "button",
+      "width": 130.55,
+      "x": 162.55,
+      "y": 138
+    },
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": true,
+      "label": "Hydration. Tightness & dullness",
+      "role": "button",
+      "width": 130.55,
+      "x": 24,
+      "y": 220
+    },
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": true,
+      "label": "Fine lines. Firmness & elasticity",
+      "role": "button",
+      "width": 130.55,
+      "x": 162.55,
+      "y": 220
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "Sensitivity. Stinging & flushing",
+      "role": "button",
+      "width": 130.55,
+      "x": 24,
+      "y": 302
+    },
+    {
+      "disabled": false,
+      "height": 88,
+      "hitOk": true,
+      "label": "Barrier repair. Redness & reactivity",
+      "role": "button",
+      "width": 130.55,
+      "x": 162.55,
+      "y": 302
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 358
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/goals",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

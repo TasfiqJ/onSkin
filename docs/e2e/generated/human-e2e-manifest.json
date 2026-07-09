@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T21:18:43.846Z",
-  "gitSha": "595c814d4909aa399d3db249d95862a87864f834",
+  "generatedAt": "2026-07-09T21:34:05.277Z",
+  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
   "evidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -451,15 +451,15 @@
       "folder": "test-results/human-e2e/2026-07-09/onboarding-first-session-430-current",
       "evidence": "summary.json",
       "expected": "Fresh onboarding to shelf intake, routine plan, and Today check-off passes.",
-      "status": "skipped",
-      "detail": "Optional resilience evidence not present for this date.",
+      "status": "pass",
+      "detail": "summary verdict: pass.",
       "failureCount": null,
-      "verdict": null,
-      "folderExists": false,
-      "evidenceExists": false,
-      "fileCount": 0,
-      "bytes": 0,
-      "evidenceSha256": null
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 44,
+      "bytes": 1269646,
+      "evidenceSha256": "d67e75717998f48475b93e87bdd60c00f38188b7328cf6cb9d3054e6eca72fae"
     }
   ],
   "warnings": [
