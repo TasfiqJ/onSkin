@@ -1,0 +1,142 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-skipped-routes-430-640-current",
+  "generatedAt": "2026-07-09T17:12:37.218Z",
+  "routeCount": 21,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 640,
+    "width": 430
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/age",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/account",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/consent",
+      "scaledCount": 14
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/goals",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/notifications",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/products",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/quiz",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/analyzing",
+      "scaledCount": 2
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/reveal",
+      "scaledCount": 4
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/paywall",
+      "scaledCount": 23
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/downgrade",
+      "scaledCount": 17
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/reoffer",
+      "scaledCount": 17
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/winback",
+      "scaledCount": 13
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/about",
+      "scaledCount": 11
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/welcome-back",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/conflict/00000000-0000-4000-8000-000000000001",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/share/conflict/00000000-0000-4000-8000-000000000001",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/s/e2e-missing-share",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/replenish",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/missing-shelf-e2e",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/e2e-missing-photo",
+      "scaledCount": 16
+    }
+  ]
+}

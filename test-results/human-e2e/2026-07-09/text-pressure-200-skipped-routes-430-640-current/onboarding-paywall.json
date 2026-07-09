@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 215,
+        "y": 332
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 356,
+        "height": 48,
+        "left": 24,
+        "right": 406,
+        "top": 308,
+        "visibleHeight": 48,
+        "visibleWidth": 382,
+        "width": 382
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 215,
+        "y": 410
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No credit card. See your routine work, then decide.",
+      "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 440,
+        "height": 60,
+        "left": 24,
+        "right": 406,
+        "top": 380,
+        "visibleHeight": 60,
+        "visibleWidth": 382,
+        "width": 382
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 140.890625,
+        "y": 464
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 488,
+        "height": 48,
+        "left": 116.890625,
+        "right": 164.890625,
+        "top": 440,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 214.265625,
+        "y": 464
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 488,
+        "height": 48,
+        "left": 190.25,
+        "right": 238.28125,
+        "top": 440,
+        "visibleHeight": 48,
+        "visibleWidth": 48.03125,
+        "width": 48.03125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 288.375,
+        "y": 464
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 488,
+        "height": 48,
+        "left": 263.640625,
+        "right": 313.109375,
+        "top": 440,
+        "visibleHeight": 48,
+        "visibleWidth": 49.46875,
+        "width": 49.46875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/onboarding/paywall",
+  "textOverflows": [],
+  "textStart": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Store pricing Checking price Monthly Checking price Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "viewport": {
+    "width": 430,
+    "height": 640
+  },
+  "route": "/onboarding/paywall",
+  "scaledCount": 23,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/paywall",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
