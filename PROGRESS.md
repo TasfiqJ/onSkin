@@ -16,6 +16,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `phase7:verify` passed typecheck, lint, and 171 mobile test files / 1752
   tests.
 
+- Pinned the existing B-DERM-REVIEW production guidance gates in the Phase 7
+  launch checker. `phase7:check-core-loop` now verifies the routine generator
+  still uses `shippableRules()` and `canUseRoutineCadence()`, and that the
+  production-mode tests still prove unreviewed conflict guidance, cycle cadence,
+  and E2E cadence fixtures stay closed until clinical/cosmetic review opens the
+  gate.
+
 - Cleared the 390 x 640 support-band 170% text-pressure follow-up. ProGate,
   Recommendation Preferences, Shelf scan/manual, and Skin Notes now share density
   guards that move lower-priority body copy, secondary chips, scan fallback

@@ -229,6 +229,10 @@ const shelfTab = read('apps/mobile/src/app/(tabs)/shelf.tsx');
 const onboardingProducts = read('apps/mobile/src/app/onboarding/products.tsx');
 const routinePlan = read('apps/mobile/src/app/routine/plan.tsx');
 const routineActivationAnalytics = read('apps/mobile/src/features/routine/activationAnalytics.ts');
+const routineGenerate = read('apps/mobile/src/features/routine/generate.ts');
+const routineGenerateTest = read('apps/mobile/src/features/routine/generate.test.ts');
+const routineReviewGateTest = read('apps/mobile/src/features/routine/reviewGate.test.ts');
+const schedulerOrchestrateTest = read('apps/mobile/src/features/scheduler/orchestrate.test.ts');
 const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
 const progressReview = read('apps/mobile/src/app/progress/review.tsx');
 const shelfMutations = read('apps/mobile/src/features/shelf/mutations.ts');
@@ -283,6 +287,27 @@ require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
   /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
     todayTab,
   ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
+require(
+  /shippableRules\(\)/.test(routineGenerate) &&
+    /canUseRoutineCadence\(\)/.test(routineGenerate) &&
+    /does not surface unreviewed conflict guidance through the default production generator/.test(
+      routineGenerateTest,
+    ) &&
+    /surfaces reviewed conflict guidance when production rules are reviewed/.test(
+      routineGenerateTest,
+    ) &&
+    /withDevFlag\(false/.test(routineGenerateTest) &&
+    /withholds cadence outside dev until clinical review flips the gate/.test(
+      routineReviewGateTest,
+    ) &&
+    /does not let the E2E fixture open unreviewed cadence outside dev/.test(
+      routineReviewGateTest,
+    ) &&
+    /withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes/.test(
+      schedulerOrchestrateTest,
+    ),
+  'Phase 7 must pin production-mode tests that withhold unreviewed conflict and routine-cadence guidance until B-DERM-REVIEW closes.',
+);
 require(/shouldTrackCycleNightCompleted/.test(todayTab) &&
   /track\('cycle_night_completed', \{ moment: 'pm', source: 'today' \}/.test(
     todayTab,
