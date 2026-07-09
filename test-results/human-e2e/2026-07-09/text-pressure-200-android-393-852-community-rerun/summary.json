@@ -1,0 +1,22 @@
+{
+  "baseUrl": "http://localhost:8334",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-community-rerun",
+  "generatedAt": "2026-07-09T22:34:38.209Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 852,
+    "width": 393
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community",
+      "scaledCount": 26
+    }
+  ]
+}

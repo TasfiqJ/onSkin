@@ -54,10 +54,12 @@ Add a supported modern text-pressure guard for 391-414 px wide, 840-899 px tall 
 
 ## Post-Fix Evidence
 
-- Screenshot: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-postfix/community.png`
-- UI snapshot: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-postfix/community.json`
-- Failure report: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-postfix/failures.json`
-- Summary: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-postfix/summary.json`
+- Focused Community rerun: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-community-rerun/`
+- Final 49-route rerun: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-full-rerun/`
+- Community screenshot: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-full-rerun/community.png`
+- UI snapshot: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-full-rerun/community.json`
+- Failure report: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-full-rerun/failures.json`
+- Summary: `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-full-rerun/summary.json`
 
 ## Remaining Risk
 

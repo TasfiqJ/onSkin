@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared the 393 x 852 / 200% text-pressure Skin Notes boundary failure on
+  the supported modern Android midpoint. `/community` now defers the Retinoids
+  section for the 391-414 px / 840-899 px band so `Does retinol thin your
+  skin?` no longer peeks into the bottom edge as a 26 px partial target. The
+  focused Community route contract passes, the focused `/community` rerun and
+  fresh 49-route sweep both pass at 393 x 852 / 200%, and the readiness
+  baseline now records 172 mobile test files / 1765 tests. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-current/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-community-rerun/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-393-852-full-rerun/`,
+  and `docs/e2e-bug-reports/2026-07-09-community-393-text-pressure-retinoids-partial.md`.
+
 - Added privacy-safe missing-product reporting from Shelf catalog search
   no-match and barcode no-match recovery. Search no-match now exposes
   `Report missing product`, preserves the missing query through manual add, and
