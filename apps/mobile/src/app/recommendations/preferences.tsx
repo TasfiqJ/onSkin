@@ -2,7 +2,7 @@ import { VALUES_FILTERS, type BudgetBand, type ValuesFilter } from '@onskin/type
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { applyRecommendationPreferences } from '@/features/recommendations/applyPreferences';
@@ -108,7 +108,7 @@ function Toggle({
 }
 
 export default function PreferencesScreen() {
-  const { height, width } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -129,6 +129,8 @@ export default function PreferencesScreen() {
   const microShortPreferences = height < 380;
   const splitShortPreferences = height < 600 || supportFloorTextPressurePreferences;
   const modernTextPressurePreferences = height < 900;
+  const boundaryTextPressurePreferences =
+    height >= 700 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
   const androidMidTextPressurePreferences = width <= 390 && height >= 700 && height < 840;
   const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;
   const showPreferencesSubtitle = !compactPreferences;
@@ -172,7 +174,9 @@ export default function PreferencesScreen() {
       ? { marginTop: 224 }
       : { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =
-    (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
+    supportFloorPreferences || boundaryTextPressurePreferences
+      ? { marginTop: 320 }
+      : (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
       ? { marginTop: 112 }
       : undefined;
   const modernTextPressureTextureGroupStyle = androidMidTextPressurePreferences

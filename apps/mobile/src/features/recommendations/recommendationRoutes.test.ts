@@ -142,7 +142,11 @@ describe('Recommendation route contracts', () => {
   it('keeps recommendation budget preferences fully visible on compact phones', () => {
     const source = readAppRoute('recommendations/preferences.tsx');
 
+    expect(source).toContain(
+      "import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';",
+    );
     expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const { fontScale = 1, height, width } = useWindowDimensions();');
     expect(source).toContain('const compactPreferences = height < 640');
     expect(source).toContain('const shortPreferences = height < 600;');
     expect(source).toContain('const supportFloorPreferences = width <= 320 && height < 520;');
@@ -191,10 +195,17 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('? { marginTop: 224 }');
     expect(source).toContain(': { marginTop: 192 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');
+    expect(source).toContain('const boundaryTextPressurePreferences =');
+    expect(source).toContain(
+      "height >= 700 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
     expect(source).toContain(
       'const androidMidTextPressurePreferences = width <= 390 && height >= 700 && height < 840;',
     );
     expect(source).toContain('const modernTextPressureBudgetGroupStyle =');
+    expect(source).toContain('supportFloorPreferences || boundaryTextPressurePreferences');
+    expect(source).toContain('boundaryTextPressurePreferences');
+    expect(source).toContain('? { marginTop: 320 }');
     expect(source).toContain('modernTextPressurePreferences || tallTextPressurePreferences');
     expect(source).toContain('? { marginTop: 112 }');
     expect(source).toContain('const modernTextPressureTextureGroupStyle =');

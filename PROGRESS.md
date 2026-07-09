@@ -17,6 +17,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   evidence focused on the real locked/unlocked UI instead of transient
   `Checking your access` placeholders.
 
+- Cleared a focused 412 x 844 / 200% text-pressure failure in Recommendation
+  Preferences. The first boundary audit reproduced `Drugstore` and `Mid-range`
+  budget chips peeking into the bottom edge as 26 px partial targets; the route
+  now applies the stronger modern/tall text-pressure spacer so lower-priority
+  budget chips start below the first viewport. Focused route contracts and the
+  final route audit pass in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-412-844-preferences-postfix3/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-412-boundary-text-pressure.md`.
+
 - Added a focused 412 x 844 / 200% text-pressure boundary guard for contextual
   ProGate paywalls. The paywall now treats the 391-430 px wide, 840-899 px tall
   band as dense under text pressure, moving compliance into the header, using
