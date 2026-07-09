@@ -9,10 +9,16 @@ Git worktree status for auditability. Final reviewer signoff evidence must use
 a generated packet that shows `Git status: clean`; treat `Git status: DIRTY` as
 investigation evidence only.
 
+`npm run phase3:review-worklist` generates a machine-readable reviewer worklist
+from the clinical and cosmetic chemistry logs. It is an operator handoff only:
+it keeps launch gates blocked until named reviewers sign off against the exact
+source hashes.
+
 ## Packet Contract
 
 - `package.json`
 - `scripts/phase3/build-review-packet.mjs`
+- `scripts/phase3/build-review-worklist.mjs`
 - `scripts/phase3/audit-copy.mjs`
 - `scripts/phase9/lib.mjs`
 - `docs/phase-3/review-packet-index.md`
@@ -34,6 +40,8 @@ investigation evidence only.
 ## Clinical Packet
 
 - `docs/phase-3/clinical-review-log.md`
+- `docs/phase-3/generated/review-worklist.json`
+- `docs/phase-3/generated/review-worklist.md`
 - `apps/mobile/src/features/intelligence/rules.ts`
 - `apps/mobile/src/features/intelligence/pao.ts`
 - `apps/mobile/src/features/recommendations/catalog.ts`
@@ -44,6 +52,8 @@ investigation evidence only.
 ## Cosmetic Chemistry Packet
 
 - `docs/phase-3/cosmetic-chemistry-review-log.md`
+- `docs/phase-3/generated/review-worklist.json`
+- `docs/phase-3/generated/review-worklist.md`
 - `apps/mobile/src/features/intelligence/tags.ts`
 - `apps/mobile/src/features/intelligence/pao.ts`
 - `apps/mobile/src/features/recommendations/catalog.ts`

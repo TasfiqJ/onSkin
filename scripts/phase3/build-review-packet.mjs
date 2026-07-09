@@ -16,6 +16,7 @@ const packets = {
   packetContract: [
     'package.json',
     'scripts/phase3/build-review-packet.mjs',
+    'scripts/phase3/build-review-worklist.mjs',
     'scripts/phase3/audit-copy.mjs',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
@@ -35,6 +36,8 @@ const packets = {
   ],
   clinical: [
     'docs/phase-3/clinical-review-log.md',
+    'docs/phase-3/generated/review-worklist.json',
+    'docs/phase-3/generated/review-worklist.md',
     'apps/mobile/src/features/intelligence/rules.ts',
     'apps/mobile/src/features/intelligence/pao.ts',
     'apps/mobile/src/features/recommendations/catalog.ts',
@@ -44,6 +47,8 @@ const packets = {
   ],
   cosmeticChemistry: [
     'docs/phase-3/cosmetic-chemistry-review-log.md',
+    'docs/phase-3/generated/review-worklist.json',
+    'docs/phase-3/generated/review-worklist.md',
     'apps/mobile/src/features/intelligence/tags.ts',
     'apps/mobile/src/features/intelligence/pao.ts',
     'apps/mobile/src/features/recommendations/catalog.ts',

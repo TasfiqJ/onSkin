@@ -149,6 +149,7 @@ function checkReviewPacketContract() {
     !/function gitStatusExcludingGeneratedPacket\(\)/.test(source) ||
     !/review-packet-manifest\.json/.test(source) ||
     !/review-packet\.md/.test(source) ||
+    !/build-review-worklist\.mjs/.test(source) ||
     !/gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(source)
   ) {
     addContractFinding(
@@ -167,6 +168,7 @@ function checkReviewPacketContract() {
   for (const file of [
     'package.json',
     'scripts/phase3/build-review-packet.mjs',
+    'scripts/phase3/build-review-worklist.mjs',
     'scripts/phase3/audit-copy.mjs',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
