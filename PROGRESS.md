@@ -9,14 +9,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Cleared a supported Android-class 360 x 640 / 200% text-pressure regression
   in Settings Notifications. The fresh route audit found the lower-priority
   `Streak & adherence` switch peeking into the first viewport by 5 px, which
-  made it a partial sub-44 visible target. `/settings/notifications` now pushes
-  the Gentle Nudges card below the first viewport for 360/390-class supported
-  text-pressure layouts while keeping the utility reminder rows complete. The
-  focused settings route contract and mobile typecheck pass, and the post-fix
-  49-route Expo web sweep reports zero failed routes, zero clipped controls,
-  zero sub-44 visible controls, zero blocked hit centers, zero horizontal
-  overflow, and zero disallowed browser logs. Evidence and bug report are in
+  made it a partial sub-44 visible target. A follow-up 390 x 640 / 170%
+  support-band sweep found the same switch visible by only 30 px. The route now
+  pushes the Gentle Nudges card below the first viewport for 360/390-class
+  supported text-pressure layouts while keeping the utility reminder rows
+  complete. The focused settings route contract and mobile typecheck pass, and
+  the post-fix 49-route Expo web sweeps at 360 x 640 / 200% and 390 x 640 /
+  170% both report zero failed routes, zero clipped controls, zero sub-44
+  visible controls, zero blocked hit centers, zero horizontal overflow, and zero
+  disallowed browser logs. Evidence and bug reports are in
   `test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix/`
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-390-640-notifications-postfix/`,
+  `docs/e2e-bug-reports/2026-07-09-settings-notifications-support-band-text-pressure.md`,
   and
   `docs/e2e-bug-reports/2026-07-09-settings-notifications-360-640-text-pressure.md`.
 

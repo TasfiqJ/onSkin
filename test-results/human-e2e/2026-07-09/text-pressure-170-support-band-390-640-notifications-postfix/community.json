@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 274.234375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.",
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 366.671875,
+        "height": 184.875,
+        "left": 24,
+        "right": 366,
+        "top": 181.796875,
+        "visibleHeight": 184.875,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 610.015625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is a 10-step “glass skin” routine better?",
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "partialClip": true,
+      "rect": {
+        "bottom": 704.15625,
+        "height": 188.28125,
+        "left": 24,
+        "right": 366,
+        "top": 515.875,
+        "visibleHeight": 124.125,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8314/community",
+  "textOverflows": [],
+  "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/community",
+  "scaledCount": 26,
+  "textScale": 1.7,
+  "url": "http://localhost:8314/community",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,70 @@
+{
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 326,
+              "y": 633.59375
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "",
+            "label": "Streak & adherence",
+            "partialClip": true,
+            "rect": {
+              "bottom": 657.59375,
+              "height": 48,
+              "left": 300,
+              "right": 352,
+              "top": 609.59375,
+              "visibleHeight": 30.40625,
+              "visibleWidth": 52,
+              "width": 52
+            },
+            "role": "switch",
+            "tag": "DIV",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 326,
+              "y": 633.59375
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "",
+            "label": "Streak & adherence",
+            "partialClip": true,
+            "rect": {
+              "bottom": 657.59375,
+              "height": 48,
+              "left": 300,
+              "right": 352,
+              "top": 609.59375,
+              "visibleHeight": 30.40625,
+              "visibleWidth": 52,
+              "width": 52
+            },
+            "role": "switch",
+            "tag": "DIV",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/settings/notifications",
+      "scaledCount": 15,
+      "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+    }
+  ]
+}

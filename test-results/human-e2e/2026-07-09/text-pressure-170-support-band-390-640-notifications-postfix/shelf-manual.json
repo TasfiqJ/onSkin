@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Cancel",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 113.203125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 137.203125,
+        "height": 48,
+        "left": 24,
+        "right": 366,
+        "top": 89.203125,
+        "visibleHeight": 48,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 89.2109375,
+        "y": 202.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Brand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 226.40625,
+        "height": 48,
+        "left": 24,
+        "right": 154.421875,
+        "top": 178.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 130.421875,
+        "width": 130.421875
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 264.2109375,
+        "y": 202.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Choose",
+      "label": "Category",
+      "partialClip": false,
+      "rect": {
+        "bottom": 226.40625,
+        "height": 48,
+        "left": 162.421875,
+        "right": 366,
+        "top": 178.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 203.578125,
+        "width": 203.578125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 598.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue",
+      "label": "Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 632,
+        "height": 67,
+        "left": 24,
+        "right": 366,
+        "top": 565,
+        "visibleHeight": 67,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8314/shelf/manual",
+  "textOverflows": [],
+  "textStart": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/shelf/manual",
+  "scaledCount": 11,
+  "textScale": 1.7,
+  "url": "http://localhost:8314/shelf/manual",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

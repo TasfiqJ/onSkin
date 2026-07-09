@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 361
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan a barcode",
+      "label": "Scan a barcode",
+      "partialClip": false,
+      "rect": {
+        "bottom": 389,
+        "height": 56,
+        "left": 45,
+        "right": 345,
+        "top": 333,
+        "visibleHeight": 56,
+        "visibleWidth": 300,
+        "width": 300
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 426
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add by hand",
+      "label": "Add by hand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 451,
+        "height": 50,
+        "left": 45,
+        "right": 345,
+        "top": 401,
+        "visibleHeight": 50,
+        "visibleWidth": 300,
+        "width": 300
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 55.5,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 9,
+        "right": 102,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 148.5,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 102,
+        "right": 195,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 241.5,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 195,
+        "right": 288,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 334.5,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 288,
+        "right": 381,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8314/shelf",
+  "textOverflows": [],
+  "textStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Prog. Shelf You",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/shelf",
+  "scaledCount": 8,
+  "textScale": 1.7,
+  "url": "http://localhost:8314/shelf",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

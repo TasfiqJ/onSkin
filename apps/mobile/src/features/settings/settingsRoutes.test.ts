@@ -205,7 +205,7 @@ describe('Settings route contracts', () => {
     );
     expect(notifications).toContain('style={splitShortNudgeRowStyle}');
     expect(notifications).toContain('const nudgesSectionStyle = supportTextPressureNotifications');
-    expect(notifications).toContain('? { marginTop: 112 }');
+    expect(notifications).toContain('? { marginTop: 152 }');
     expect(notifications).toContain(': microShortNotifications\n      ? { marginTop: 136 }');
     expect(notifications).toContain('? { marginTop: 64 }');
     expect(notifications).toContain('<View style={nudgesSectionStyle}>');

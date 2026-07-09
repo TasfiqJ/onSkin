@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 143
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "See RoutineKind Pro",
+      "label": "See RoutineKind Pro",
+      "partialClip": false,
+      "rect": {
+        "bottom": 167,
+        "height": 48,
+        "left": 37,
+        "right": 353,
+        "top": 119,
+        "visibleHeight": 48,
+        "visibleWidth": 316,
+        "width": 316
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 220
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Restore purchases ›",
+      "label": "Restore purchases",
+      "partialClip": false,
+      "rect": {
+        "bottom": 244,
+        "height": 48,
+        "left": 38,
+        "right": 352,
+        "top": 196,
+        "visibleHeight": 48,
+        "visibleWidth": 314,
+        "width": 314
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 268
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Terms ›",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 292,
+        "height": 48,
+        "left": 38,
+        "right": 352,
+        "top": 244,
+        "visibleHeight": 48,
+        "visibleWidth": 314,
+        "width": 314
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 316
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Privacy ›",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 340,
+        "height": 48,
+        "left": 38,
+        "right": 352,
+        "top": 292,
+        "visibleHeight": 48,
+        "visibleWidth": 314,
+        "width": 314
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8314/settings/subscription",
+  "textOverflows": [],
+  "textStart": "< Subscription You’re on the free plan See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/settings/subscription",
+  "scaledCount": 10,
+  "textScale": 1.7,
+  "url": "http://localhost:8314/settings/subscription",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
