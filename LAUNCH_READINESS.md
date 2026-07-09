@@ -87,11 +87,13 @@ Fresh verification on 2026-07-08:
   hash.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
-  committed local Expo web evidence for the 320 x 480 current-main route rerun,
-  320 x 430 final route clearance, 320 x 390 split-short stress sweep, and
-  320 x 430 first-session activation. It does not replace physical iOS/Android
-  device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
-  StoreKit/Play Billing, or live Supabase release gates.
+  committed local Expo web evidence for the 320 x 480 support-floor route
+  rerun, and records 320 x 430 / 390 stress evidence when present without
+  making those sub-floor browser heights the customer support floor. It does
+  not replace physical iOS/Android device QA, native keyboard/text-scale/
+  accessibility checks, RevenueCat, StoreKit/Play Billing, or live Supabase
+  release gates. The support contract is defined in
+  `docs/DEVICE_SUPPORT_POLICY.md`.
 - `npm run e2e:human:manifest:check` passed as the non-mutating local human-E2E
   evidence freshness gate.
 - `npm run phase7:verify` passed non-strict core-loop code gates and refreshed
@@ -160,6 +162,9 @@ Fresh verification on 2026-07-08:
   sweep now reports zero failed routes. Evidence:
   `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/`,
   `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
+- The 320 x 430 evidence above is retained as resilience/stress proof. The
+  launch-blocking web viewport floor remains 320 x 480 unless a supported
+  native device or app-review requirement reproduces the smaller-height issue.
 - Expo web 320 x 390 split-short stress clearance passed the current 49-route
   direct-entry sweep with zero failed routes, zero clipped controls, and zero
   blocked hit-tests after tightening Ask, Shelf, contextual paywall,

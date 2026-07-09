@@ -584,8 +584,10 @@ Scheduling code exists, but physical-device behavior is not verified.
 
 Exit criteria:
 
-- iOS latest and older supported version pass;
-- Android latest and Android 14+ alarm behavior pass;
+- iOS latest and an oldest-supported iOS 17-class device pass per
+  `docs/DEVICE_SUPPORT_POLICY.md`;
+- Android latest, Android 10 / API 29+ floor, and Android 14+ alarm behavior
+  pass per `docs/DEVICE_SUPPORT_POLICY.md`;
 - timezone changes, quiet hours, reinstall, and lock-screen privacy pass;
 - notification config plugin assets are included in native build.
 

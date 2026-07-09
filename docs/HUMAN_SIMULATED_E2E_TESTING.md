@@ -23,14 +23,16 @@ Do not mark UI-facing work as complete until Codex has:
 - Primary app: Expo React Native mobile app in `apps/mobile`.
 - Primary target surfaces: iOS Simulator/device and Android emulator/device.
 - Secondary target surface: Expo web for flows that render correctly through `npm --workspace apps/mobile run web`.
+- Device and layout support policy: `docs/DEVICE_SUPPORT_POLICY.md`.
 - Current unit/integration test runner: Vitest in `apps/mobile`.
 - Current durable local evidence gate: `npm run e2e:human:manifest`.
   This no-new-dependency Node verifier reads committed
   `test-results/human-e2e/YYYY-MM-DD/` Expo web-compatible evidence folders,
-  checks the current compact route sweeps and first-session activation summary,
-  and writes `docs/e2e/generated/human-e2e-manifest.{json,md}`. It is not a UI
-  runner and does not replace the human-simulated browser/simulator/device pass;
-  it prevents known-good local evidence from becoming ambiguous or hidden.
+  checks the launch-blocking 320 x 480 support-floor route sweep, records
+  smaller 320 x 430 / 390 / 370 / 360 stress evidence when present, and writes
+  `docs/e2e/generated/human-e2e-manifest.{json,md}`. It is not a UI runner and
+  does not replace the human-simulated browser/simulator/device pass; it
+  prevents known-good local evidence from becoming ambiguous or hidden.
 - Native durable harness decision: Open Question. No Detox, Maestro, Appium,
   XCTest/XCUIAutomation, or Android UI Automator config is committed yet.
 - Package manager: npm workspaces.
@@ -102,6 +104,8 @@ Before each human-simulated E2E pass, record:
 
 - Feature or bug under test.
 - App surface: iOS, Android, Expo web, CLI/script, or mixed.
+- Whether the viewport/device is inside the launch support floor or is a
+  stress-only audit according to `docs/DEVICE_SUPPORT_POLICY.md`.
 - Start/build command.
 - Test account, fixture, seed data, or local state used.
 - Required environment variables.

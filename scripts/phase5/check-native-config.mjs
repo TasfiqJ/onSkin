@@ -13,11 +13,21 @@ function pluginNames(plugins) {
   return new Set((plugins ?? []).map((plugin) => (Array.isArray(plugin) ? plugin[0] : plugin)));
 }
 
+function pluginOptions(plugins, name) {
+  const plugin = (plugins ?? []).find((candidate) =>
+    Array.isArray(candidate) ? candidate[0] === name : candidate === name,
+  );
+  return Array.isArray(plugin) && typeof plugin[1] === 'object' && plugin[1] !== null
+    ? plugin[1]
+    : {};
+}
+
 const app = readJson('apps/mobile/app.base.json').expo;
 const eas = readJson('apps/mobile/eas.json');
 const pkg = readJson('apps/mobile/package.json');
 const rootPkg = readJson('package.json');
 const plugins = pluginNames(app.plugins);
+const buildProperties = pluginOptions(app.plugins, 'expo-build-properties');
 const androidPermissions = new Set(app.android?.permissions ?? []);
 const errors = [];
 const warnings = [];
@@ -31,7 +41,13 @@ function warn(condition, message) {
 }
 
 require(Boolean(pkg.dependencies?.['expo-camera']), 'expo-camera dependency is missing.');
+require(Boolean(
+  pkg.dependencies?.['expo-build-properties'],
+), 'expo-build-properties dependency is missing; Android minSdk support floor is not enforceable.');
 require(plugins.has('expo-camera'), 'expo-camera config plugin is missing.');
+require(plugins.has(
+  'expo-build-properties',
+), 'expo-build-properties config plugin is missing; Android minSdk support floor is not enforceable.');
 require(plugins.has('expo-notifications'), 'expo-notifications config plugin is missing.');
 require(Boolean(
   app.runtimeVersion,
@@ -50,6 +66,10 @@ require(!androidPermissions.has(
 require(!androidPermissions.has(
   'android.permission.SCHEDULE_EXACT_ALARM',
 ), 'SCHEDULE_EXACT_ALARM must not be requested for V1 skincare reminders.');
+require(app.ios?.deploymentTarget ===
+  '17.0', 'iOS deployment target must stay at 17.0+ for the launch support floor.');
+require(buildProperties.android?.minSdkVersion ===
+  29, 'Android minSdkVersion must stay at API 29 / Android 10+ for the launch support floor.');
 require(Boolean(
   app.ios?.infoPlist?.NSCameraUsageDescription,
 ), 'iOS NSCameraUsageDescription is missing.');
@@ -101,18 +121,16 @@ const qaPacketBuilder = readFileSync(
   resolve(root, 'scripts/phase5/build-device-qa-packet.mjs'),
   'utf8',
 );
-require(
-  /function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
-    /device-qa-packet\.json/.test(qaPacketBuilder) &&
-    /device-qa-packet\.md/.test(qaPacketBuilder) &&
-    /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder),
-  'Phase 5 device QA packet must ignore only its own generated outputs when recording Git status.',
-);
-require(
-  /Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
-    /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(qaPacketBuilder),
-  'Phase 5 device QA packet must warn on dirty worktrees and expose Git status in Markdown.',
-);
+require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+  /device-qa-packet\.json/.test(qaPacketBuilder) &&
+  /device-qa-packet\.md/.test(qaPacketBuilder) &&
+  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+    qaPacketBuilder,
+  ), 'Phase 5 device QA packet must ignore only its own generated outputs when recording Git status.');
+require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+  /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
+    qaPacketBuilder,
+  ), 'Phase 5 device QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
   'apps/mobile/app.base.json',
@@ -124,6 +142,7 @@ for (const file of [
   'scripts/phase5/device-qa-packet-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
+  'docs/DEVICE_SUPPORT_POLICY.md',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',
   'docs/USER_FLOW_TREE.md',
@@ -133,10 +152,8 @@ for (const file of [
   'docs/phase-5/device-qa-checklist.md',
   'docs/phase-5/phase-5-exit-review.md',
 ]) {
-  require(
-    qaPacketBuilder.includes(`'${file}'`) || qaPacketBuilder.includes(`"${file}"`),
-    `Phase 5 device QA packet must hash ${file}.`,
-  );
+  require(qaPacketBuilder.includes(`'${file}'`) ||
+    qaPacketBuilder.includes(`"${file}"`), `Phase 5 device QA packet must hash ${file}.`);
 }
 
 console.log('Phase 5 native config check');

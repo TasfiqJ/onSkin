@@ -124,6 +124,16 @@ Evidence needed:
 
 Status: needs-device-verification
 
+- Use `docs/DEVICE_SUPPORT_POLICY.md` as the V1 support floor: iOS 17.0+,
+  Android 10 / API 29+, iPhone width 375 pt or wider, Android smallest width
+  320 dp or wider, and at least 480 dp usable portrait height. Do not spend
+  launch-blocking QA time on iOS 16, Android 9-or-older, sub-320 dp width, or
+  320 x 430 / 390 / 370 / 360 browser-only stress heights unless a supported
+  physical device, app-review requirement, or real beta/support evidence
+  reproduces the same issue.
+- After the Play Console app exists, export Reach and devices data for Android
+  version, screen metrics, RAM, and issue-rate peerset. Revisit the Android 10 /
+  API 29 floor only if paid-user reach or issue-risk evidence justifies it.
 - Create EAS development or staging builds for iOS and Android.
 - Test on at least one physical iPhone and one physical Android device.
 - Provide real EAS build UUIDs or `expo.dev` build URLs, physical device model

@@ -2,6 +2,11 @@
 
 Phase 5 moves OnSkin from Expo preview behavior to installable native builds. The product is not beta-ready until the generated device QA packet has real iOS and Android build IDs, physical-device names, and named signoff.
 
+The native support floor is defined in `docs/DEVICE_SUPPORT_POLICY.md`: iOS
+17.0+ and Android 10 / API 29+. Builds may target newer SDKs as required by
+Apple, Google, and Expo, but the minimum install floor must not be lowered
+without updating the policy, config guard, and QA matrix together.
+
 ## Build Profiles
 
 - `development`: internal dev client, `APP_VARIANT=development`, native camera enabled, native OCR disabled.
@@ -31,7 +36,7 @@ Generate the evidence packet after installing on devices:
 ```bash
 PHASE5_IOS_BUILD_ID=... \
 PHASE5_ANDROID_BUILD_ID=... \
-PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 18.5" \
+PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 26" \
 PHASE5_ANDROID_DEVICE="Pixel 8 / Android 15" \
 PHASE5_QA_SIGNOFF=true \
 PHASE5_DEVICE_QA_PASS=true \

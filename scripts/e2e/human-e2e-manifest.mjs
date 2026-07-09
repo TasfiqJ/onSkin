@@ -66,13 +66,8 @@ function commandRequired(name, commandArgs) {
   }).trim();
 }
 
-function durableGateEvidenceFiles(date) {
-  return [
-    `test-results/human-e2e/${date}/current-main-short-phone-480-rerun/failures.json`,
-    `test-results/human-e2e/${date}/current-main-short-phone-430-final-clearance-sweep/failures.json`,
-    `test-results/human-e2e/${date}/current-main-split-short-phone-390-sweep-postfix/failures.json`,
-    `test-results/human-e2e/${date}/onboarding-first-session-430-current/summary.json`,
-  ];
+function requiredGateEvidenceFiles(date) {
+  return [`test-results/human-e2e/${date}/current-main-short-phone-480-rerun/failures.json`];
 }
 
 function latestEvidenceDate() {
@@ -85,7 +80,9 @@ function latestEvidenceDate() {
   return (
     [...dates]
       .reverse()
-      .find((date) => durableGateEvidenceFiles(date).every((evidencePath) => exists(evidencePath))) ??
+      .find((date) =>
+        requiredGateEvidenceFiles(date).every((evidencePath) => exists(evidencePath)),
+      ) ??
     dates.at(-1) ??
     null
   );
@@ -143,16 +140,20 @@ if (!evidenceDate) {
 const gates = [
   {
     id: 'short-phone-480-route-rerun',
-    title: '320 x 480 direct-route rerun',
+    title: '320 x 480 supported-floor route rerun',
     kind: 'failures',
+    required: true,
+    supportClass: 'launch-blocking',
     folder: `test-results/human-e2e/${evidenceDate}/current-main-short-phone-480-rerun`,
     evidence: 'failures.json',
-    expected: '49 Expo web direct-entry routes have zero geometry/log failures.',
+    expected: '49 Expo web direct-entry routes have zero support-floor geometry/log failures.',
   },
   {
     id: 'short-phone-430-final-clearance',
-    title: '320 x 430 final route clearance',
+    title: '320 x 430 resilience route clearance',
     kind: 'failures',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/current-main-short-phone-430-final-clearance-sweep`,
     evidence: 'failures.json',
     expected: '49 Expo web direct-entry routes have zero ultra-short geometry failures.',
@@ -161,14 +162,18 @@ const gates = [
     id: 'split-short-390-clearance',
     title: '320 x 390 split-short stress clearance',
     kind: 'failures',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/current-main-split-short-phone-390-sweep-postfix`,
     evidence: 'failures.json',
     expected: '49 Expo web direct-entry routes have zero split-short failures.',
   },
   {
     id: 'first-session-430-activation',
-    title: '320 x 430 first-session activation',
+    title: '320 x 430 first-session activation stress pass',
     kind: 'summary-verdict',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/onboarding-first-session-430-current`,
     evidence: 'summary.json',
     expected: 'Fresh onboarding to shelf intake, routine plan, and Today check-off passes.',
@@ -177,6 +182,7 @@ const gates = [
 
 const warnings = [
   'This manifest verifies committed local Expo web evidence only; it does not replace physical iOS/Android device QA.',
+  'Only launch-blocking gates are required by the device support policy; 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.',
   'Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.',
 ];
 const blockers = [];
@@ -190,7 +196,10 @@ const gateResults = gates.map((gate) => {
   let failureCount = null;
   let verdict = null;
 
-  if (folderExists && evidenceExists) {
+  if (!gate.required && (!folderExists || !evidenceExists)) {
+    status = 'skipped';
+    detail = 'Optional resilience evidence not present for this date.';
+  } else if (folderExists && evidenceExists) {
     try {
       if (gate.kind === 'failures') {
         failureCount = parseFailureCount(evidencePath);
@@ -210,7 +219,7 @@ const gateResults = gates.map((gate) => {
     }
   }
 
-  if (status !== 'pass') blockers.push(`${gate.title}: ${detail}`);
+  if (gate.required && status !== 'pass') blockers.push(`${gate.title}: ${detail}`);
 
   return {
     ...gate,
@@ -244,6 +253,7 @@ const mdPath = join(outDir, 'human-e2e-manifest.md');
 
 const gateRows = gateResults.map((gate) => [
   gate.title,
+  gate.supportClass,
   gate.status,
   gate.detail,
   gate.fileCount,
@@ -265,7 +275,7 @@ const markdown = [
   '',
   '## Gates',
   '',
-  markdownTable(['Gate', 'Status', 'Detail', 'Files', 'Folder'], gateRows),
+  markdownTable(['Gate', 'Class', 'Status', 'Detail', 'Files', 'Folder'], gateRows),
   '',
   '## Warnings',
   '',

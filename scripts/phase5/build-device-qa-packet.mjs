@@ -38,6 +38,7 @@ const requiredFiles = [
   'scripts/phase5/device-qa-packet-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
+  'docs/DEVICE_SUPPORT_POLICY.md',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',
   'docs/USER_FLOW_TREE.md',

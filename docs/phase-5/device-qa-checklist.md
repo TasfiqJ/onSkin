@@ -2,6 +2,11 @@
 
 Record device model, OS version, build profile, build ID, tester, date, pass/fail, and notes for every row.
 
+Use `docs/DEVICE_SUPPORT_POLICY.md` as the support floor. V1 native QA starts
+at iOS 17.0+ and Android 10 / API 29+; sub-floor browser stress viewports are
+not launch blockers unless reproduced on a supported physical device or required
+by app review/accessibility.
+
 | Surface           | Required Checks                                                                                         | Status                                   |
 | ----------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | Install           | Fresh install, update, reinstall, dev/staging side by side                                              | Blocked until EAS builds                 |
@@ -24,16 +29,16 @@ Record device model, OS version, build profile, build ID, tester, date, pass/fai
 Minimum before beta:
 
 - Current iPhone on current public iOS.
-- Older supported iPhone or small-screen iPhone.
-- Current Pixel or equivalent Android.
-- Current or midrange Samsung Android.
+- Oldest-supported iOS 17-class iPhone available to the team.
+- Current Pixel or equivalent Android on current public Android.
+- Current or midrange Samsung Android on Android 10 / API 29 or newer.
 - Android 13+ notification permission behavior.
 - Android 14+ exact-alarm/background behavior.
 
 ## Evidence Required For Strict Exit
 
 - Generated `docs/phase-5/generated/device-qa-packet.md` with `Git status:
-  clean`, current source hashes, real EAS build evidence, physical-device
+clean`, current source hashes, real EAS build evidence, physical-device
   labels, current human-E2E manifest hashes, and named signoff.
 - `PHASE5_IOS_BUILD_ID=<real EAS UUID or expo.dev build URL>`
 - `PHASE5_ANDROID_BUILD_ID=<real EAS UUID or expo.dev build URL>`

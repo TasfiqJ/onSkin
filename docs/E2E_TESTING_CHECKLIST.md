@@ -6,9 +6,11 @@ Use this checklist before marking UI-facing work done.
 
 - [ ] Read `AGENTS.md`.
 - [ ] Read `docs/HUMAN_SIMULATED_E2E_TESTING.md`.
+- [ ] Read `docs/DEVICE_SUPPORT_POLICY.md` for device and viewport support floors.
 - [ ] Read or update the relevant branch in `docs/USER_FLOW_TREE.md`.
 - [ ] Read the feature's source-of-truth product docs from `CLAUDE.md`.
 - [ ] Identify the target surface: iOS, Android, Expo web, CLI/script, or mixed.
+- [ ] Identify whether the target viewport/device is launch-supported or stress-only.
 - [ ] Identify the exact start/build command.
 - [ ] Identify account state, local fixture, seed data, and required environment variables.
 - [ ] Identify external services involved.

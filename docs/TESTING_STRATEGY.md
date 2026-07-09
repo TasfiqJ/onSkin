@@ -6,6 +6,8 @@
 - Test launch gates so unreviewed features cannot leak into production.
 - UI-facing work requires human-simulated E2E evidence.
 - Device-dependent features require physical iOS/Android QA before public claims.
+- Device and viewport support floors are defined in
+  `docs/DEVICE_SUPPORT_POLICY.md`.
 
 ## Unit Tests
 
@@ -64,7 +66,7 @@ Reference:
 
 Manual QA must cover:
 
-- small phone layout
+- supported small phone layout from `docs/DEVICE_SUPPORT_POLICY.md`
 - large text / Dynamic Type
 - dark/light mode
 - network offline
@@ -73,6 +75,8 @@ Manual QA must cover:
 - direct-entry route back/close behavior
 - relaunch persistence
 - accessibility labels and touch targets
+- stress-only 320 x 430 / 390 / 370 / 360 browser viewports when they protect
+  critical flows, without treating those sub-floor sizes as launch blockers
 
 ## Security Checks
 

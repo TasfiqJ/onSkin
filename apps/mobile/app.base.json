@@ -13,6 +13,7 @@
     "ios": {
       "bundleIdentifier": "com.routinekind.app",
       "supportsTablet": false,
+      "deploymentTarget": "17.0",
       "icon": "./assets/expo.icon",
       "infoPlist": {
         "NSCameraUsageDescription": "RoutineKind uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
@@ -37,6 +38,14 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 29
+          }
+        }
+      ],
       [
         "expo-splash-screen",
         {
