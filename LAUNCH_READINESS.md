@@ -103,7 +103,7 @@ Fresh verification through 2026-07-09:
 - `npm test` passed: 171 mobile test files / 1760 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
-  Tas-owned blocker, readiness-status, device-support-policy,
+  Tas-owned blocker, readiness-status, strict brand, device-support-policy,
   generated-packet, and human-E2E manifest checks; the Phase 5 native config
   guard; Phase 9 release smoke, Phase 10 beta readiness, Phase 11 launch
   readiness, and launch ring gates; then typecheck, lint, and tests.
@@ -142,6 +142,9 @@ Fresh verification through 2026-07-09:
   from phase scripts and `.env.example`.
 - `npm run docs:tas-todo-audit:check` passed as the non-mutating freshness gate
   for the committed Tas-owned evidence inventory.
+- `npm run brand:audit:strict` is now part of `npm run launch:verify`, so the
+  root readiness sweep fails if public launch-risk or review-needed legacy brand
+  references return.
 - `npm run docs:generated-packet-status-audit:check` passed as the
   non-mutating guard that committed generated phase packets do not record a
   dirty Git worktree, dirty-packet warning text, or stale recorded source/file

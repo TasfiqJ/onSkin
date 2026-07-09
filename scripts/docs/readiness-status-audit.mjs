@@ -51,6 +51,7 @@ const requiredLaunchCommands = [
   'npm test',
   'npm run docs:source-packet-audit:check',
   'npm run docs:tas-todo-audit:check',
+  'npm run brand:audit:strict',
   'npm run docs:device-support-policy-audit:check',
   'npm run e2e:human:manifest:check',
   'npm run docs:generated-packet-status-audit:check',
@@ -61,6 +62,8 @@ const requiredLaunchCommands = [
 
 const requiredPackageScripts = [
   'launch:verify',
+  'brand:audit',
+  'brand:audit:strict',
   'docs:readiness-status-audit',
   'docs:readiness-status-audit:strict',
   'docs:readiness-status-audit:check',
@@ -73,6 +76,7 @@ const requiredLaunchVerifyScriptParts = [
   'docs:source-packet-audit:check',
   'docs:tas-todo-audit:check',
   'docs:readiness-status-audit:check',
+  'brand:audit:strict',
   'docs:device-support-policy-audit:check',
   'docs:generated-packet-status-audit:check',
   'e2e:human:manifest:check',

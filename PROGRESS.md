@@ -6,6 +6,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added `brand:audit:strict` to the root `launch:verify` sweep and hardened
+  the readiness-status audit so the root launch gate now fails if public
+  launch-risk or review-needed legacy brand references return.
+
 - Refreshed the RoutineKind brand evidence packet with 2026-07-09 Apple public
   app search, Google Play exact-search, web-indexed store search, and DNS spot
   checks. The current screening still finds no exact public `RoutineKind` app
