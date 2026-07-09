@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Promoted the supported iPhone-class 375 x 812 / 200% text-pressure sweep into
+  the durable human-E2E manifest. The generated manifest now records that
+  evidence as a supported-phone gate alongside the 320 x 480 launch support
+  floor and the 390 x 844 / 430 x 932 supported-phone sweeps, so the 375-class
+  clearance cannot drift into an untracked screenshot-only artifact.
+
 - Cleared a supported iPhone-class 375 x 812 / 200% text-pressure route audit.
   The first 49-route sweep exposed a partial `Oil` texture chip in
   `/recommendations/preferences` and a partial `Progress-photo nudge` switch in

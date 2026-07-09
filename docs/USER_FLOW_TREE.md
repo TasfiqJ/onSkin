@@ -18,8 +18,8 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   the same issue.
 - Durable local evidence gate: `npm run e2e:human:manifest` verifies committed
   Expo web-compatible support-floor evidence, prefers the 320 x 480 / 200%
-  text-pressure pass when present, records supported-phone and smaller stress
-  evidence when available, and writes
+  text-pressure pass when present, records supported-phone 375 / 390 / 430 px
+  evidence and smaller stress evidence when available, and writes
   `docs/e2e/generated/human-e2e-manifest.{json,md}`.
   Native simulator/device automation remains an Open Question.
 

@@ -30,8 +30,8 @@ Do not mark UI-facing work as complete until Codex has:
   `test-results/human-e2e/YYYY-MM-DD/` Expo web-compatible evidence folders,
   checks the launch-blocking 320 x 480 support-floor route sweep, preferring
   the current 200% text-pressure pass when present, records supported-phone
-  390 x 844 / 430 x 932 evidence and smaller 320 x 430 / 390 / 370 / 360
-  stress evidence when present, and writes
+  375 x 812 / 390 x 844 / 430 x 932 evidence and smaller 320 x 430 / 390 /
+  370 / 360 stress evidence when present, and writes
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. It is not a UI runner and
   does not replace the human-simulated browser/simulator/device pass; it
   prevents known-good local evidence from becoming ambiguous or hidden.

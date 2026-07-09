@@ -183,6 +183,16 @@ if (!evidenceDate) {
 const gates = [
   supportFloorGateForDate(evidenceDate),
   {
+    id: 'iphone-375-200-text-pressure',
+    title: '375 x 812 supported iPhone-class 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-iphone-375-812-postfix`,
+    evidence: 'summary.json',
+    expected: '49 Expo web direct-entry routes have zero iPhone-class 200% text-pressure failures.',
+  },
+  {
     id: 'modern-390-200-text-pressure',
     title: '390 x 844 supported-phone 200% text-pressure route sweep',
     kind: 'summary-status',
