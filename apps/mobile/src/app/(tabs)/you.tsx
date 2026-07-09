@@ -78,7 +78,6 @@ const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;
 const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
-const PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN = 180;
 
 type StaticRouteHref = Extract<Href, string>;
 type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';
@@ -561,6 +560,13 @@ export default function YouScreen() {
   async function openPolicyRow(row: (typeof POLICY_ROWS)[number]) {
     setPolicyFeedback(null);
     const opened = await openPolicyUrl(row.url);
+    if (row.key === 'support') {
+      if (opened) {
+        track('support_contact_opened', { source: 'settings', result: 'opened' });
+      } else {
+        track('support_contact_failed', { source: 'settings', result: 'unavailable' });
+      }
+    }
     if (!opened) {
       setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });
     }
@@ -818,19 +824,18 @@ export default function YouScreen() {
           {renderPrivacyFeedback('photo_cloud_backup', 'security')}
         </Card>
 
-        <Card
-          className={privacyDirectEntry ? undefined : 'mt-4'}
-          style={privacyDirectEntry ? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN } : undefined}
-        >
-          <Text variant="label" tone="muted" className="mb-1">
-            REMINDERS
-          </Text>
-          <Row
-            label="Reminders & notifications"
-            hint="Tiered, capped, at times you choose. Quiet hours & lock-screen discretion."
-            onPress={() => router.push('/settings/notifications')}
-          />
-        </Card>
+        {privacyDirectEntry ? null : (
+          <Card className="mt-4">
+            <Text variant="label" tone="muted" className="mb-1">
+              REMINDERS
+            </Text>
+            <Row
+              label="Reminders & notifications"
+              hint="Tiered, capped, at times you choose. Quiet hours & lock-screen discretion."
+              onPress={() => router.push('/settings/notifications')}
+            />
+          </Card>
+        )}
 
         <Card
           className="mt-4"

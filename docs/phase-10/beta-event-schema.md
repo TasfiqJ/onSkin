@@ -27,7 +27,7 @@ documented or allowlisted.
 | Routine loop               | routine_plan_viewed, routine_created, first_useful_insight, first_checkoff_completed, routine_checkoff_completed, cycle_night_completed, streak milestone |
 | Photo and reminder         | permission prompt, capture, trend/progress usage, reminder opt-in/denial                                                                        |
 | Paywall and entitlement    | paywall_shown, contextual_paywall_shown, trial_started, purchase_completed, restore_tapped, manage_subscription_opened                          |
-| Privacy and support        | deletion/export requests, consent withdrawal, support categories, privacy escalations                                                           |
+| Privacy and support        | deletion/export requests, consent withdrawal, support contact opened/failed, support categories, privacy escalations                            |
 | Release health             | crashes, ANRs, app-start, affected users, build adoption                                                                                        |
 | Retention cohorts          | D1, D7, D14, D30 by activated/not activated, platform, wave, first-value path                                                                   |
 
@@ -76,6 +76,8 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `purchase_completed`
 - `restore_tapped`
 - `manage_subscription_opened`
+- `support_contact_opened`
+- `support_contact_failed`
 - `share_card_exported`
 - `share_link_opened`
 - `ask_opened`

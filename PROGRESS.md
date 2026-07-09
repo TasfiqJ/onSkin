@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added beta-safe support-contact analytics to the Settings privacy Support
+  policy row. The row now emits literal `support_contact_opened` or
+  `support_contact_failed` events with only `source=settings` and
+  `result=opened|unavailable`, and tests/audits guard the event registry,
+  sanitizer, runtime literal calls, and Phase 10 schema. A Codex in-app browser
+  Expo web pass at 390 x 844 tapped Support from `/you?section=privacy` and
+  verified the local unavailable URL shows route-owned `Link unavailable`
+  recovery with zero clipped controls, zero sub-44 visible controls, zero
+  blocked hit-tests, zero horizontal overflow, and zero unexpected current-run
+  browser logs. Evidence is in
+  `test-results/human-e2e/2026-07-09/settings-support-contact-analytics-current/`.
+  Live support URL, support desk categories/SLA, and native iOS/Android
+  external-link handoff remain Phase 10 external QA.
+
 - Tightened the Settings Notifications support-floor nudge spacing after a
   focused Codex in-app browser pass found `Progress-photo nudge` still peeking
   by roughly 5 px at the 320 x 480 launch support floor. The lower nudge group

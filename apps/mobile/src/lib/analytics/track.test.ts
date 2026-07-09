@@ -149,6 +149,8 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('subscription_cancel_intent')).toBe(
       'subscription_cancel_intent',
     );
+    expect(sanitizeAnalyticsEventName('support_contact_opened')).toBe('support_contact_opened');
+    expect(sanitizeAnalyticsEventName('support_contact_failed')).toBe('support_contact_failed');
 
     expect(
       sanitizeAnalyticsProps({
@@ -161,6 +163,15 @@ describe('analytics sanitizer', () => {
         goal: 'barrier_repair',
       }),
     ).toEqual({ source: 'routine_plan', action: 'reordered', count: 3, moment: 'pm' });
+
+    expect(
+      sanitizeAnalyticsProps({
+        source: 'settings',
+        result: 'unavailable',
+        email: 'support@example.com',
+        message: 'my routine is broken',
+      }),
+    ).toEqual({ source: 'settings', result: 'unavailable' });
   });
 
   it('drops unapproved or user-derived event names', () => {

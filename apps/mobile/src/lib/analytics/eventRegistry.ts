@@ -86,6 +86,8 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'scan_matched',
   'scan_no_match',
   'subscription_cancel_intent',
+  'support_contact_failed',
+  'support_contact_opened',
   'share_card_export_failed',
   'share_card_export_started',
   'share_card_export_succeeded',

@@ -1,0 +1,21 @@
+{
+  "date": "2026-07-09",
+  "task": "Settings support contact analytics and inline recovery",
+  "appSurface": "Expo web in Codex in-app browser",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8255",
+  "route": "/you?section=privacy",
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "supportRowCount": 1,
+  "inlineAlertCount": 1,
+  "alertVisible": true,
+  "clippedCount": 0,
+  "sub44Count": 0,
+  "blockedCount": 0,
+  "horizontalOverflow": 0,
+  "unexpectedLogCount": 0,
+  "unexpectedLogs": [],
+  "verdict": "pass"
+}
