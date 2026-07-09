@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 48.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 72.796875,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 24.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 101.4296875,
+        "y": 130.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Catalog search query",
+      "partialClip": false,
+      "rect": {
+        "bottom": 155.59375,
+        "height": 50,
+        "left": 24,
+        "right": 178.859375,
+        "top": 105.59375,
+        "visibleHeight": 50,
+        "visibleWidth": 154.859375,
+        "width": 154.859375
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 241.4296875,
+        "y": 130.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search",
+      "label": "Search",
+      "partialClip": false,
+      "rect": {
+        "bottom": 155.59375,
+        "height": 50,
+        "left": 186.859375,
+        "right": 296,
+        "top": 105.59375,
+        "visibleHeight": 50,
+        "visibleWidth": 109.140625,
+        "width": 109.140625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 414.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add by hand",
+      "label": "Add by hand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 448,
+        "height": 67,
+        "left": 24,
+        "right": 296,
+        "top": 381,
+        "visibleHeight": 67,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8301/shelf/search",
+  "textOverflows": [],
+  "textStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/shelf/search",
+  "scaledCount": 5,
+  "textScale": 1.7,
+  "url": "http://localhost:8301/shelf/search",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

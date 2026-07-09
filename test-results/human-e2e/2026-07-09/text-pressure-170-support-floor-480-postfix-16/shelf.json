@@ -1,0 +1,195 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 58.3125,
+        "y": 121.3984375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "All",
+      "label": "All",
+      "partialClip": false,
+      "rect": {
+        "bottom": 152.796875,
+        "height": 62.796875,
+        "left": 24,
+        "right": 92.625,
+        "top": 90,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 68.625,
+        "width": 68.625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 164.5625,
+        "y": 121.3984375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Actives",
+      "label": "Actives",
+      "partialClip": false,
+      "rect": {
+        "bottom": 152.796875,
+        "height": 62.796875,
+        "left": 100.625,
+        "right": 228.5,
+        "top": 90,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 127.875,
+        "width": 127.875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 270.9921875,
+        "y": 121.3984375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "7d",
+      "label": "Expiring",
+      "partialClip": false,
+      "rect": {
+        "bottom": 152.796875,
+        "height": 62.796875,
+        "left": 236.5,
+        "right": 305.484375,
+        "top": 90,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 68.984375,
+        "width": 68.984375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 46.75,
+        "y": 433
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 460,
+        "height": 54,
+        "left": 9,
+        "right": 84.5,
+        "top": 406,
+        "visibleHeight": 54,
+        "visibleWidth": 75.5,
+        "width": 75.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 122.25,
+        "y": 433
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Prog.",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 460,
+        "height": 54,
+        "left": 84.5,
+        "right": 160,
+        "top": 406,
+        "visibleHeight": 54,
+        "visibleWidth": 75.5,
+        "width": 75.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 197.75,
+        "y": 433
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 460,
+        "height": 54,
+        "left": 160,
+        "right": 235.5,
+        "top": 406,
+        "visibleHeight": 54,
+        "visibleWidth": 75.5,
+        "width": 75.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 273.25,
+        "y": 433
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 460,
+        "height": 54,
+        "left": 235.5,
+        "right": 311,
+        "top": 406,
+        "visibleHeight": 54,
+        "visibleWidth": 75.5,
+        "width": 75.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8301/shelf",
+  "textOverflows": [],
+  "textStart": "Shelf All Actives 7d Today Prog. Shelf You",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/shelf",
+  "scaledCount": 8,
+  "textScale": 1.7,
+  "url": "http://localhost:8301/shelf",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

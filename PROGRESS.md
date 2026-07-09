@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared the 320 x 480 launch-floor text-pressure follow-up at both 200% and
+  170%. The current-source sweeps reproduced bottom-edge or blocked controls
+  in Settings Privacy direct entry, Settings Subscription, Recommendation
+  Preferences, Ask, Shelf no-match, Community missing-note recovery, and stale
+  Recommendation detail. Post-fix, support-floor surfaces use shorter visible
+  labels with full accessibility labels retained, suppress nonessential hints
+  and subtitles, compact subscription policy rows, keep privacy withdraw
+  actions complete, show the two essential Shelf no-match recovery actions, and
+  shorten Recommendation Preferences headings at the exact floor. Focused
+  Ask/Settings/Shelf/Recommendation/Community route contracts pass. Final
+  49-route Expo web text-pressure sweeps at 320 x 480 report zero failed routes
+  with evidence in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-16/`,
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-support-floor-480-clearance.md`.
+
 - Added a source-level native support-floor contract for the accepted launch
   cutoff. `apps/mobile/src/lib/appConfig.test.ts` now verifies the resolved
   Expo config keeps iOS at 17.0+, Android at API 29+, and tablets out of V1

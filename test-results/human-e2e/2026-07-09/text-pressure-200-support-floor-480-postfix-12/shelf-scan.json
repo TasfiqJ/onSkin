@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 249.5,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "torch",
+      "label": "torch",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 203,
+        "right": 296,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 302
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan label",
+      "label": "Scan ingredient label. Review editable OCR",
+      "partialClip": false,
+      "rect": {
+        "bottom": 332,
+        "height": 60,
+        "left": 20,
+        "right": 300,
+        "top": 272,
+        "visibleHeight": 60,
+        "visibleWidth": 280,
+        "width": 280
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 368
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Use reviewed matches",
+      "partialClip": false,
+      "rect": {
+        "bottom": 398,
+        "height": 60,
+        "left": 20,
+        "right": 300,
+        "top": 338,
+        "visibleHeight": 60,
+        "visibleWidth": 280,
+        "width": 280
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 434
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works offline",
+      "partialClip": false,
+      "rect": {
+        "bottom": 464,
+        "height": 60,
+        "left": 20,
+        "right": 300,
+        "top": 404,
+        "visibleHeight": 60,
+        "visibleWidth": 280,
+        "width": 280
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8300/shelf/scan",
+  "textOverflows": [],
+  "textStart": "x torch = Scan label S Search catalog + Add it by hand",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/shelf/scan",
+  "scaledCount": 8,
+  "textScale": 2,
+  "url": "http://localhost:8300/shelf/scan",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

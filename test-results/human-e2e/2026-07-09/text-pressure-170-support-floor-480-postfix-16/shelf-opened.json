@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 268,
+        "y": 265
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 289,
+        "height": 48,
+        "left": 244,
+        "right": 292,
+        "top": 241,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8301/shelf/opened",
+  "textOverflows": [],
+  "textStart": "+ x Add product details first. Freshness starts after we know the product. Start with the name, then we'll ask when you opened it. Add by hand",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/shelf/opened",
+  "scaledCount": 5,
+  "textScale": 1.7,
+  "url": "http://localhost:8301/shelf/opened",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8301/shelf/archive",
+  "textOverflows": [],
+  "textStart": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here.",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/shelf/archive",
+  "scaledCount": 9,
+  "textScale": 1.7,
+  "url": "http://localhost:8301/shelf/archive",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

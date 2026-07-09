@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 76.71875,
+        "y": 148
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fragrance-free",
+      "label": "Fragrance-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 172,
+        "height": 48,
+        "left": 24,
+        "right": 129.4375,
+        "top": 124,
+        "visibleHeight": 48,
+        "visibleWidth": 105.4375,
+        "width": 105.4375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 161.546875,
+        "y": 148
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Vegan",
+      "label": "Vegan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 172,
+        "height": 48,
+        "left": 133.4375,
+        "right": 189.65625,
+        "top": 124,
+        "visibleHeight": 48,
+        "visibleWidth": 56.21875,
+        "width": 56.21875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 238.9375,
+        "y": 148
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cruelty-free",
+      "label": "Cruelty-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 172,
+        "height": 48,
+        "left": 193.65625,
+        "right": 284.21875,
+        "top": 124,
+        "visibleHeight": 48,
+        "visibleWidth": 90.5625,
+        "width": 90.5625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 85.6953125,
+        "y": 388
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Non-comedogenic",
+      "label": "Non-comedogenic",
+      "partialClip": false,
+      "rect": {
+        "bottom": 412,
+        "height": 48,
+        "left": 24,
+        "right": 147.390625,
+        "top": 364,
+        "visibleHeight": 48,
+        "visibleWidth": 123.390625,
+        "width": 123.390625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 194.9296875,
+        "y": 388
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sustainable",
+      "label": "Sustainable",
+      "partialClip": false,
+      "rect": {
+        "bottom": 412,
+        "height": 48,
+        "left": 151.390625,
+        "right": 238.46875,
+        "top": 364,
+        "visibleHeight": 48,
+        "visibleWidth": 87.078125,
+        "width": 87.078125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8301/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< Preferences Preferences VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 21,
+  "textScale": 1.7,
+  "url": "http://localhost:8301/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
