@@ -540,7 +540,7 @@ describe('Shelf route mobile contracts', () => {
       "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
     );
     expect(source).toContain('compactManualPhone');
-    expect(source).toContain('? { marginTop: 220 }');
+    expect(source).toContain('? { marginTop: 300 }');
     expect(source).toContain('? { marginTop: 408 }');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(

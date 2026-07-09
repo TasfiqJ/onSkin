@@ -1,0 +1,346 @@
+{
+  "name": "notifications-modern-390x844",
+  "route": "/settings/notifications",
+  "expectedHref": "http://localhost:8255/settings/notifications",
+  "width": 390,
+  "height": 844,
+  "nonBlockingStress": false,
+  "sourceUrl": "http://localhost:8255/settings/notifications",
+  "href": "http://localhost:8255/settings/notifications",
+  "title": "localhost:8255/settings/notifications",
+  "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\support-floor-layout-constant-followup-current\\notifications-modern-390x844.png",
+  "passed": true,
+  "checks": {
+    "hrefOk": true,
+    "requiredPresent": true,
+    "offscreenOk": true,
+    "horizontalOverflowOk": true,
+    "noClippedControls": true,
+    "noSub44Controls": true,
+    "noBlockedControls": true,
+    "noUnexpectedLogs": true,
+    "noDialog": true
+  },
+  "metrics": {
+    "blockedControls": [],
+    "clippedControls": [],
+    "documentHeight": 845,
+    "horizontalOverflow": 0,
+    "offscreenVisible": [],
+    "pageTextSample": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+    "requiredTextPresent": [
+      {
+        "present": true,
+        "text": "Notifications"
+      },
+      {
+        "present": true,
+        "text": "Morning routine"
+      },
+      {
+        "present": true,
+        "text": "Evening"
+      },
+      {
+        "present": true,
+        "text": "Streak"
+      },
+      {
+        "present": true,
+        "text": "Replenishment"
+      }
+    ],
+    "scrollY": 0,
+    "sub44Controls": [],
+    "textRects": [
+      {
+        "actualText": "Notifications",
+        "area": 4082.8944418233586,
+        "rect": {
+          "bottom": 44.97876453399658,
+          "height": 33.99575424194336,
+          "left": 79.99089813232422,
+          "right": 200.09102630615234,
+          "top": 10.983010292053223,
+          "width": 120.10012817382812,
+          "x": 79.99089813232422,
+          "y": 10.983010292053223
+        },
+        "text": "Notifications",
+        "visible": true
+      },
+      {
+        "actualText": "Morning routine",
+        "area": 2495.2622989781667,
+        "rect": {
+          "bottom": 165.94357299804688,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 117.94599914550781,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 117.94599914550781
+        },
+        "text": "Morning routine",
+        "visible": true
+      },
+      {
+        "actualText": "Evening · tonight’s step",
+        "area": 2495.2622989781667,
+        "rect": {
+          "bottom": 258.87440490722656,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 210.8768310546875,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 210.8768310546875
+        },
+        "text": "Evening",
+        "visible": true
+      },
+      {
+        "actualText": "Streak & adherence",
+        "area": 2495.2622989781667,
+        "rect": {
+          "bottom": 382.8276824951172,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 334.8301086425781,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 334.8301086425781
+        },
+        "text": "Streak",
+        "visible": true
+      },
+      {
+        "actualText": "Replenishment",
+        "area": 2495.2622989781667,
+        "rect": {
+          "bottom": 459.76942443847656,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 411.7718505859375,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 411.7718505859375
+        },
+        "text": "Replenishment",
+        "visible": true
+      }
+    ],
+    "viewport": {
+      "height": 845,
+      "width": 390
+    },
+    "visibleControlCount": 9,
+    "visibleControls": [
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "<",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "<",
+        "partial": false,
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 19.993932723999023,
+          "right": 67.99150657653809,
+          "top": 3.989684581756592,
+          "width": 47.99757385253906,
+          "x": 19.993932723999023,
+          "y": 3.989684581756592
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "7:30 AM",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Morning routine 7:30 AM",
+        "partial": false,
+        "rect": {
+          "bottom": 173.93811416625977,
+          "height": 63.98665237426758,
+          "left": 37.98543930053711,
+          "right": 300.3185691833496,
+          "top": 109.95146179199219,
+          "width": 262.3331298828125,
+          "x": 37.98543930053711,
+          "y": 109.95146179199219
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Morning routine",
+        "partial": false,
+        "rect": {
+          "bottom": 165.94357299804688,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 117.94599914550781,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 117.94599914550781
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "9:30 PM",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Evening · tonight’s step 9:30 PM",
+        "partial": false,
+        "rect": {
+          "bottom": 266.86894607543945,
+          "height": 63.98665237426758,
+          "left": 37.98543930053711,
+          "right": 300.3185691833496,
+          "top": 202.88229370117188,
+          "width": 262.3331298828125,
+          "x": 37.98543930053711,
+          "y": 202.88229370117188
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Evening · tonight’s step",
+        "partial": false,
+        "rect": {
+          "bottom": 258.87440490722656,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 210.8768310546875,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 210.8768310546875
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Streak & adherence",
+        "partial": false,
+        "rect": {
+          "bottom": 382.8276824951172,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 334.8301086425781,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 334.8301086425781
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Replenishment",
+        "partial": false,
+        "rect": {
+          "bottom": 459.76942443847656,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 411.7718505859375,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 411.7718505859375
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Progress-photo nudge",
+        "partial": false,
+        "rect": {
+          "bottom": 536.7111968994141,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 488.713623046875,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 488.713623046875
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Tips & announcements",
+        "partial": false,
+        "rect": {
+          "bottom": 660.6644439697266,
+          "height": 47.99757385253906,
+          "left": 300.3185729980469,
+          "right": 352.3058319091797,
+          "top": 612.6668701171875,
+          "width": 51.98725891113281,
+          "x": 300.3185729980469,
+          "y": 612.6668701171875
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      }
+    ]
+  },
+  "newLogs": [],
+  "unexpectedLogs": [],
+  "dialog": null
+}

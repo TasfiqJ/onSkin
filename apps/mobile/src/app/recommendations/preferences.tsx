@@ -160,6 +160,8 @@ export default function PreferencesScreen() {
       ? { marginTop: 48 }
       : undefined;
   const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };
+  const modernTextPressureTextureGroupStyle =
+    modernTextPressurePreferences && !compactPreferences ? { marginTop: 56 } : undefined;
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
     if (preferenceDelayMs > 0) await wait(preferenceDelayMs);
@@ -308,7 +310,7 @@ export default function PreferencesScreen() {
         >
           {REC_COPY.preferences.formatLabel.toUpperCase()}
         </Text>
-        <View className={chipGroupClassName}>
+        <View className={chipGroupClassName} style={modernTextPressureTextureGroupStyle}>
           {FORMATS.map((f) => (
             <Toggle
               key={f}

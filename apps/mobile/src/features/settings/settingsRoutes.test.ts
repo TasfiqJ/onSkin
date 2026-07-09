@@ -40,7 +40,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 48;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;');
@@ -207,7 +207,7 @@ describe('Settings route contracts', () => {
     );
     expect(notifications).toContain('compact={compactNotifications}');
     expect(notifications).toContain(
-      'const promotionalSectionStyle = splitShortNotifications ? { marginTop: 56 } : undefined;',
+      'const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;',
     );
     expect(notifications).toContain('style={promotionalSectionStyle}');
     expect(notifications).toContain('last={splitShortNotifications}');

@@ -1,0 +1,326 @@
+{
+  "name": "privacy-floor-320x480",
+  "route": "/settings/privacy",
+  "expectedHref": "http://localhost:8255/you?section=privacy",
+  "width": 320,
+  "height": 480,
+  "nonBlockingStress": false,
+  "sourceUrl": "http://localhost:8255/settings/privacy",
+  "href": "http://localhost:8255/you?section=privacy",
+  "title": "localhost:8255/settings/privacy",
+  "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\support-floor-layout-constant-followup-current\\privacy-floor-320x480.png",
+  "passed": true,
+  "checks": {
+    "hrefOk": true,
+    "requiredPresent": true,
+    "offscreenOk": true,
+    "horizontalOverflowOk": true,
+    "noClippedControls": true,
+    "noSub44Controls": true,
+    "noBlockedControls": true,
+    "noUnexpectedLogs": true,
+    "noDialog": true
+  },
+  "metrics": {
+    "blockedControls": [],
+    "clippedControls": [],
+    "documentHeight": 481,
+    "horizontalOverflow": 0,
+    "offscreenVisible": [],
+    "pageTextSample": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-s",
+    "requiredTextPresent": [
+      {
+        "present": true,
+        "text": "PRIVACY & CONSENT"
+      },
+      {
+        "present": true,
+        "text": "Marketing emails"
+      },
+      {
+        "present": true,
+        "text": "Withdraw health-data consent"
+      }
+    ],
+    "scrollY": 0,
+    "sub44Controls": [],
+    "textRects": [
+      {
+        "actualText": "PRIVACY & CONSENT",
+        "area": 3719.433947202342,
+        "rect": {
+          "bottom": 43.59830284118652,
+          "height": 16.004247665405273,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 27.59405517578125,
+          "width": 232.40292358398438,
+          "x": 43.99272155761719,
+          "y": 27.59405517578125
+        },
+        "text": "PRIVACY & CONSENT",
+        "visible": true
+      },
+      {
+        "actualText": "Marketing emails",
+        "area": 2495.2622989781667,
+        "rect": {
+          "bottom": 112.56068420410156,
+          "height": 47.99757385253906,
+          "left": 224.40838623046875,
+          "right": 276.39564514160156,
+          "top": 64.5631103515625,
+          "width": 51.98725891113281,
+          "x": 224.40838623046875,
+          "y": 64.5631103515625
+        },
+        "text": "Marketing emails",
+        "visible": true
+      },
+      {
+        "actualText": "Withdraw health-data consent",
+        "area": 5999.894960657693,
+        "rect": {
+          "bottom": 213.54673767089844,
+          "height": 34.01092529296875,
+          "left": 43.99272155761719,
+          "right": 220.40353393554688,
+          "top": 179.5358123779297,
+          "width": 176.4108123779297,
+          "x": 43.99272155761719,
+          "y": 179.5358123779297
+        },
+        "text": "Withdraw health-data consent",
+        "visible": true
+      },
+      {
+        "actualText": "POLICIES",
+        "area": 3719.433947202342,
+        "rect": {
+          "bottom": 945.5097408294678,
+          "height": 16.004247665405273,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 929.5054931640625,
+          "width": 232.40292358398438,
+          "x": 43.99272155761719,
+          "y": 929.5054931640625
+        },
+        "text": "POLICIES",
+        "visible": false
+      },
+      {
+        "actualText": "Privacy policy",
+        "area": 2999.9474803288467,
+        "rect": {
+          "bottom": 968.4921569824219,
+          "height": 17.005462646484375,
+          "left": 43.99272155761719,
+          "right": 220.40353393554688,
+          "top": 951.4866943359375,
+          "width": 176.4108123779297,
+          "x": 43.99272155761719,
+          "y": 951.4866943359375
+        },
+        "text": "Privacy policy",
+        "visible": false
+      },
+      {
+        "actualText": "Export my data",
+        "area": 2266.781430341536,
+        "rect": {
+          "bottom": 1845.4946746826172,
+          "height": 20.388351440429688,
+          "left": 104.59648895263672,
+          "right": 215.7767105102539,
+          "top": 1825.1063232421875,
+          "width": 111.18022155761719,
+          "x": 104.59648895263672,
+          "y": 1825.1063232421875
+        },
+        "text": "Export my data",
+        "visible": false
+      },
+      {
+        "actualText": "Delete account",
+        "area": 2224.0995415442158,
+        "rect": {
+          "bottom": 1909.4812469482422,
+          "height": 20.388351440429688,
+          "left": 105.6432113647461,
+          "right": 214.72998809814453,
+          "top": 1889.0928955078125,
+          "width": 109.08677673339844,
+          "x": 105.6432113647461,
+          "y": 1889.0928955078125
+        },
+        "text": "Delete account",
+        "visible": false
+      }
+    ],
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "visibleControlCount": 7,
+    "visibleControls": [
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Marketing emails",
+        "partial": false,
+        "rect": {
+          "bottom": 112.56068420410156,
+          "height": 47.99757385253906,
+          "left": 224.40838623046875,
+          "right": 276.39564514160156,
+          "top": 64.5631103515625,
+          "width": 51.98725891113281,
+          "x": 224.40838623046875,
+          "y": 64.5631103515625
+        },
+        "role": "switch",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "Photos & the no-AI-score promise",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Photos & the no-AI-score promise >",
+        "partial": false,
+        "rect": {
+          "bottom": 177.54855346679688,
+          "height": 47.99757385253906,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 129.5509796142578,
+          "width": 232.40292358398438,
+          "x": 43.99272155761719,
+          "y": 129.5509796142578
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "Withdraw health-data consent",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Withdraw health-data consent Records withdrawal and deletes collected health data. >",
+        "partial": false,
+        "rect": {
+          "bottom": 249.52974700927734,
+          "height": 71.98119354248047,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 177.54855346679688,
+          "width": 232.40292358398438,
+          "x": 43.99272155761719,
+          "y": 177.54855346679688
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Today",
+        "partial": false,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 8.965413093566895,
+          "right": 84.57220935821533,
+          "top": 406.6141052246094,
+          "width": 75.60679626464844,
+          "x": 8.965413093566895,
+          "y": 406.6141052246094
+        },
+        "role": "tab",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Prog.",
+        "partial": false,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 84.57221221923828,
+          "right": 160.19418334960938,
+          "top": 406.6141052246094,
+          "width": 75.6219711303711,
+          "x": 84.57221221923828,
+          "y": 406.6141052246094
+        },
+        "role": "tab",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Shelf",
+        "partial": false,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 160.19418334960938,
+          "right": 235.8009796142578,
+          "top": 406.6141052246094,
+          "width": 75.60679626464844,
+          "x": 160.19418334960938,
+          "y": 406.6141052246094
+        },
+        "role": "tab",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "You",
+        "partial": false,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 235.8009796142578,
+          "right": 311.4229507446289,
+          "top": 406.6141052246094,
+          "width": 75.6219711303711,
+          "x": 235.8009796142578,
+          "y": 406.6141052246094
+        },
+        "role": "tab",
+        "sub44": false,
+        "tag": "div",
+        "visible": true
+      }
+    ]
+  },
+  "newLogs": [],
+  "unexpectedLogs": [],
+  "dialog": null
+}

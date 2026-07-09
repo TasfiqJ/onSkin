@@ -1,0 +1,274 @@
+{
+  "name": "manual-split-stress-320x400",
+  "route": "/shelf/manual",
+  "expectedHref": "http://localhost:8255/shelf/manual",
+  "width": 320,
+  "height": 400,
+  "nonBlockingStress": true,
+  "sourceUrl": "http://localhost:8255/shelf/manual",
+  "href": "http://localhost:8255/shelf/manual",
+  "title": "localhost:8255/shelf/manual",
+  "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\support-floor-layout-constant-followup-current\\manual-split-stress-320x400.png",
+  "passed": true,
+  "checks": {
+    "hrefOk": true,
+    "requiredPresent": true,
+    "offscreenOk": true,
+    "horizontalOverflowOk": true,
+    "noClippedControls": true,
+    "noSub44Controls": true,
+    "noBlockedControls": true,
+    "noUnexpectedLogs": true,
+    "noDialog": true
+  },
+  "metrics": {
+    "blockedControls": [],
+    "clippedControls": [],
+    "documentHeight": 400,
+    "horizontalOverflow": 0,
+    "offscreenVisible": [],
+    "pageTextSample": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+    "requiredTextPresent": [
+      {
+        "present": true,
+        "text": "Add by hand"
+      },
+      {
+        "present": true,
+        "text": "PRODUCT NAME"
+      },
+      {
+        "present": true,
+        "text": "BRAND"
+      },
+      {
+        "present": true,
+        "text": "CATEGORY"
+      },
+      {
+        "present": true,
+        "text": "Continue"
+      }
+    ],
+    "scrollY": 0,
+    "sub44Controls": [],
+    "textRects": [
+      {
+        "actualText": "Add by hand",
+        "area": 2177.438581392111,
+        "rect": {
+          "bottom": 43.992719650268555,
+          "height": 23.99878692626953,
+          "left": 116.8386001586914,
+          "right": 207.56979370117188,
+          "top": 19.993932723999023,
+          "width": 90.73119354248047,
+          "x": 116.8386001586914,
+          "y": 19.993932723999023
+        },
+        "text": "Add by hand",
+        "visible": true
+      },
+      {
+        "actualText": "PRODUCT NAME",
+        "area": 4359.409466288926,
+        "rect": {
+          "bottom": 71.99636268615723,
+          "height": 16.004247665405273,
+          "left": 23.99878692626953,
+          "right": 296.38956451416016,
+          "top": 55.99211502075195,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 55.99211502075195
+        },
+        "text": "PRODUCT NAME",
+        "visible": true
+      },
+      {
+        "actualText": "BRAND",
+        "area": 1652.380328455838,
+        "rect": {
+          "bottom": 149.98483848571777,
+          "height": 16.004247665405273,
+          "left": 23.99878692626953,
+          "right": 127.24514770507812,
+          "top": 133.9805908203125,
+          "width": 103.2463607788086,
+          "x": 23.99878692626953,
+          "y": 133.9805908203125
+        },
+        "text": "BRAND",
+        "visible": true
+      },
+      {
+        "actualText": "CATEGORY",
+        "area": 2579.0827041598095,
+        "rect": {
+          "bottom": 149.98483848571777,
+          "height": 16.004247665405273,
+          "left": 135.23968505859375,
+          "right": 296.3895721435547,
+          "top": 133.9805908203125,
+          "width": 161.14988708496094,
+          "x": 135.23968505859375,
+          "y": 133.9805908203125
+        },
+        "text": "CATEGORY",
+        "visible": true
+      },
+      {
+        "actualText": "Continue",
+        "area": 1337.3670933889225,
+        "rect": {
+          "bottom": 374.1959991455078,
+          "height": 20.388351440429688,
+          "left": 127.3968505859375,
+          "right": 192.99151611328125,
+          "top": 353.8076477050781,
+          "width": 65.59466552734375,
+          "x": 127.3968505859375,
+          "y": 353.8076477050781
+        },
+        "text": "Continue",
+        "visible": true
+      },
+      {
+        "actualText": "INGREDIENTS · optional, we’ll find the actives",
+        "area": 13074.096464025322,
+        "rect": {
+          "bottom": 559.9666595458984,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 296.38956451416016,
+          "top": 511.9690856933594,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 511.9690856933594
+        },
+        "text": "INGREDIENTS",
+        "visible": false
+      }
+    ],
+    "viewport": {
+      "height": 400,
+      "width": 320
+    },
+    "visibleControlCount": 5,
+    "visibleControls": [
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "x",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "x",
+        "partial": false,
+        "rect": {
+          "bottom": 55.99211311340332,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 71.9963607788086,
+          "top": 7.994539260864258,
+          "width": 47.99757385253906,
+          "x": 23.99878692626953,
+          "y": 7.994539260864258
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "Product name",
+        "centerTopTag": "input",
+        "href": null,
+        "label": "Product name",
+        "partial": false,
+        "rect": {
+          "bottom": 125.98604583740234,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 296.38956451416016,
+          "top": 77.98847198486328,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 77.98847198486328
+        },
+        "role": null,
+        "sub44": false,
+        "tag": "input",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "Brand",
+        "centerTopTag": "input",
+        "href": null,
+        "label": "Brand",
+        "partial": false,
+        "rect": {
+          "bottom": 203.97451782226562,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 127.24514770507812,
+          "top": 155.97694396972656,
+          "width": 103.2463607788086,
+          "x": 23.99878692626953,
+          "y": 155.97694396972656
+        },
+        "role": null,
+        "sub44": false,
+        "tag": "input",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "Choose",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Choose ▾",
+        "partial": false,
+        "rect": {
+          "bottom": 203.97451782226562,
+          "height": 47.99757385253906,
+          "left": 135.23968505859375,
+          "right": 296.3895721435547,
+          "top": 155.97694396972656,
+          "width": 161.14988708496094,
+          "x": 135.23968505859375,
+          "y": 155.97694396972656
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      },
+      {
+        "centerBlocked": false,
+        "centerTopLabel": "Continue",
+        "centerTopTag": "div",
+        "href": null,
+        "label": "Continue",
+        "partial": false,
+        "rect": {
+          "bottom": 392.0054817199707,
+          "height": 55.99211502075195,
+          "left": 23.99878692626953,
+          "right": 296.38956451416016,
+          "top": 336.01336669921875,
+          "width": 272.3907775878906,
+          "x": 23.99878692626953,
+          "y": 336.01336669921875
+        },
+        "role": "button",
+        "sub44": false,
+        "tag": "button",
+        "visible": true
+      }
+    ]
+  },
+  "newLogs": [],
+  "unexpectedLogs": [],
+  "dialog": null
+}

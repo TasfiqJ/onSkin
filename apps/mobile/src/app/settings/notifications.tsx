@@ -138,7 +138,7 @@ export default function NotificationSettingsScreen() {
     : ultraShortNotifications
       ? { marginTop: 64 }
       : undefined;
-  const promotionalSectionStyle = splitShortNotifications ? { marginTop: 56 } : undefined;
+  const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
   if (!p) return null;
 
   return (
