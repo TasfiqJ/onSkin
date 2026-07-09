@@ -199,6 +199,10 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;',
     );
+    expect(proGate).toContain('const supportFloorProgressExploreFirstDeferred =');
+    expect(proGate).toContain(
+      'supportFloorTextPressurePaywall && insideProgressPhotoPaywall;',
+    );
     expect(proGate).toContain('compactProgressPhotoPaywall ||\n    progressTextPressurePaywall ||');
     expect(proGate).toContain('progressTextPressurePaywall ||\n    boundaryTextPressurePaywall ||');
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
@@ -296,7 +300,8 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       'accessibilityLabel={`${PAYWALL_COPY.offer.exploreTitle}. ${PAYWALL_COPY.offer.exploreBody}`}',
     );
-    expect(proGate).toContain('marginTop: supportFloorTextPressurePaywall');
+    expect(proGate).toContain('marginTop: supportFloorProgressExploreFirstDeferred');
+    expect(proGate).toContain('? 176');
     expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 1 : undefined}');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');

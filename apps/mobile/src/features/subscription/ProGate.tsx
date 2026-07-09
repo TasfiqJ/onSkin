@@ -55,6 +55,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
   const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;
+  const supportFloorProgressExploreFirstDeferred =
+    supportFloorTextPressurePaywall && insideProgressPhotoPaywall;
   const splitShortProgressTabPaywall =
     height < 410 && feature === 'photo_timeline' && pathname === '/progress';
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
@@ -457,8 +459,10 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               backgroundColor: colors.clayTint,
               borderWidth: 1,
               borderColor: 'rgba(165,105,75,0.22)',
-              marginTop: supportFloorTextPressurePaywall
-                ? 10
+              marginTop: supportFloorProgressExploreFirstDeferred
+                ? 176
+                : supportFloorTextPressurePaywall
+                  ? 10
                 : supportedTextPressurePaywall
                   ? 88
                   : undefined,
