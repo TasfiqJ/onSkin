@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T23:50:49.530Z",
+  "generatedAt": "2026-07-09T00:24:15.017Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "5bbfcf26d04a22edf6844d94e86229bb603c6560",
+  "gitSha": "304472d2e34f4f49dbccd07c01c766e648021828",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -15,8 +15,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 12955,
-      "sha256": "4107d6b3929824056bfe0ad7dbe69cb7908b974794003936e013dd4ba5f31475"
+      "bytes": 13265,
+      "sha256": "ec9126b6605a01f80aa1c12a6d20ab37146aabdb024bf2661682c1ecf9a9c335"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
