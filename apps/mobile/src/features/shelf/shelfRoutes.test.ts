@@ -435,7 +435,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("{ position: 'relative', zIndex: 2 }");
     expect(source).toContain('{showScanPreview ? (');
     expect(source).toContain("title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}");
-    expect(source).toContain('accessibilityLabel="Scan ingredient label. Review editable OCR"');
+    expect(source).toContain(
+      'accessibilityLabel="Scan ingredient label. Capture label, then type from it"',
+    );
     expect(source).toContain("'h-[96px] w-full overflow-hidden rounded-[18px] bg-night-elevated'");
     expect(source).toContain("'h-[152px] w-full overflow-hidden rounded-[20px] bg-night-elevated'");
     expect(source).toContain('{canShowCamera ? (');
@@ -446,7 +448,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("style={{ position: 'relative', zIndex: 1 }}");
     expect(source).toContain("state.kind === 'idle' && compactScanSurface ? null");
     expect(source).toContain("className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}");
-    expect(source).toContain('subtitle="Review editable OCR"');
+    expect(source).toContain('subtitle="Capture label, then type from it"');
+    expect(source).not.toContain('Review editable OCR');
     expect(source).toContain('title="Search catalog"');
     expect(source).toContain('subtitle="Use reviewed matches"');
     expect(source).toContain('compact={compactScanSurface}');

@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 436
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "See tonight’s routine",
+      "label": "See tonight’s routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 464,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 408,
+        "visibleHeight": 56,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8312/paywall/success",
+  "textOverflows": [],
+  "textStart": "✓ You’re all set. Your 14 days of Pro start now. We’ll remind you 2 days before it converts to the store price/year. Cancel anytime. trial ends July 23 renews the store price/yr See tonight’s routine",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/paywall/success",
+  "scaledCount": 6,
+  "textScale": 1,
+  "url": "http://localhost:8312/paywall/success",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

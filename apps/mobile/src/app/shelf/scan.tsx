@@ -479,8 +479,8 @@ export default function ScanScreen() {
           <FallbackRow
             icon="="
             title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}
-            subtitle="Review editable OCR"
-            accessibilityLabel="Scan ingredient label. Review editable OCR"
+            subtitle="Capture label, then type from it"
+            accessibilityLabel="Scan ingredient label. Capture label, then type from it"
             compact={compactScanSurface}
             hideSubtitle={compactScanSurface}
             onPress={goOcr}
