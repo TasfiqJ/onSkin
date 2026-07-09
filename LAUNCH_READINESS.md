@@ -110,7 +110,7 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 171 mobile test files / 1760 tests.
+- `npm test` passed: 171 mobile test files / 1762 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -125,7 +125,7 @@ Fresh verification through 2026-07-09:
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 171 test files / 1760 tests.
+- `npm --workspace apps/mobile run test` passed: 171 test files / 1762 tests.
 - `npm run phase3:verify`, `npm run phase4:verify`,
   `npm run phase5:verify`, `npm run phase6:verify`,
   `npm run phase7:verify`, `npm run phase8:verify`,
