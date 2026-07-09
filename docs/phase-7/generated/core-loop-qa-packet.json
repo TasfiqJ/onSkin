@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T10:23:19.458Z",
+  "generatedAt": "2026-07-09T10:24:19.459Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "862eef0c6fb05698369d71467ea010f1a9dd7e4f",
+  "gitSha": "dc5fb48a6194fcbdce428718c119be8af4959243",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -248,14 +248,14 @@
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 10733,
-      "sha256": "54e58df5fd341835023a7d37af8601df8302622da859ae5a5e8181a31e353959"
+      "bytes": 10519,
+      "sha256": "8cb7ec59e3adbfce48db94a5aefbd040ef9d0692f03b556afd34e0913a2f42f7"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7959,
-      "sha256": "825a72e21a406f48a274e6b1f2ade2165714a3dc05a7c4d2ed6b37e47431b7e3"
+      "bytes": 7858,
+      "sha256": "63e110cf295f7cd1c547e18ee3daf46239fc9feb5709c45108a7e94adb5ef009"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
