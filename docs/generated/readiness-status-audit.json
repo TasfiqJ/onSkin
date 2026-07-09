@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T17:22:09.880Z",
+  "generatedAt": "2026-07-09T17:29:05.161Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",

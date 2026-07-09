@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T17:22:53.857Z
-Git SHA: d475478da15c8405c952a91b4781e888b73db6e1
+Generated at: 2026-07-09T17:29:51.666Z
+Git SHA: 9df9f4d0531ce7a9fe49f6a5d16df0bfe3baf7b8
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -71,13 +71,13 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase9/lib.mjs | present | 13541 | 54b07f029b0b690a4ad8f4c05e524201a52a952c44e62ba9582d270764a141d7 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9982 | 2828721ebc99a2de1e4ba722516bfacd4ed8c2537603c8756cc383c49d5889a5 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 284285 | 326b62769e9a080155077b9c6dbcbc9b44dfca9113dd0764f0aa911661a42f8d |
-| docs/e2e/generated/human-e2e-manifest.json | present | 11616 | b4d1df655ea6473b2775f1c4a9fb066dc798dda79dc6ca1a8791300cc01e5a5b |
-| docs/e2e/generated/human-e2e-manifest.md | present | 4958 | d87a3eec6853cc6a53fb4ca1b5a888eaca1ee46807a3d4df1ec4f43c7748f027 |
-| docs/phase-5/generated/device-qa-packet.json | present | 11265 | 7ab6e8973d7540e29ea2ae5320498b4782e98168fb1198822f6a9b5fcca284f5 |
-| docs/phase-5/generated/device-qa-packet.md | present | 9912 | 59f66b6504f5f1903d0141867c7a5254344d74149adc006f519354b14017c4d1 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10521 | e010aca3f3ec67e4d8dfaa9d9abfad414511ef898cbe55598cc0af24c29d52b0 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7860 | bf9906e8851649d8a74d921ef3583603af747c55e2558009896d36a0eeaa120e |
+| docs/USER_FLOW_TREE.md | present | 285002 | bf2b598b9d85b153dcb090871e2c1bba4fcc2173add004da603dcad9c632e172 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 11616 | cc7e23cde40e1a408c2bf35ddaec6c8d0ee045f5be2b2d0161d8213f09b0269a |
+| docs/e2e/generated/human-e2e-manifest.md | present | 4958 | fc0294b32269ba24c9c1e37e4dde21d88223debdd0576c4adf670de63b7b6e0e |
+| docs/phase-5/generated/device-qa-packet.json | present | 11265 | d2f8b238f33bed78b980893b20d27a4cd153fbaea8c016efafd52ee3953f09e0 |
+| docs/phase-5/generated/device-qa-packet.md | present | 9912 | be12746957a3402b02bbed9f92cf5d8ce82c14aa6528d269cf157aecc5ccab36 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10521 | e6ebae21196a70c87c63b9793e9f84f54af9f540e60eefa7075d4bb7ef4a6fa7 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7860 | 8298016978ebdeb9a2ef8f0ffcf0bb2e25df5c01cc1d36eb8b4b425e1ce2e8cd |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4705 | 5388ca6479bdd3bf247c172b724e14b53be9bc1e0bb590f91ee546f150d2fe50 |

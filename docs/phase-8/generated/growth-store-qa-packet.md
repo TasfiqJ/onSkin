@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-09T17:22:58.028Z
+Generated: 2026-07-09T17:29:54.976Z
 Status: blocked
-Git SHA: d475478da15c8405c952a91b4781e888b73db6e1
+Git SHA: 9df9f4d0531ce7a9fe49f6a5d16df0bfe3baf7b8
 Git status: clean
 
 ## Public Identity
@@ -107,15 +107,15 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `2828721ebc99a2de1e4ba722516bfacd4ed8c2537603c8756cc383c49d5889a5`
 - `docs/E2E_TESTING_CHECKLIST.md`: `014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e`
-- `docs/USER_FLOW_TREE.md`: `326b62769e9a080155077b9c6dbcbc9b44dfca9113dd0764f0aa911661a42f8d`
-- `docs/e2e/generated/human-e2e-manifest.json`: `b4d1df655ea6473b2775f1c4a9fb066dc798dda79dc6ca1a8791300cc01e5a5b`
-- `docs/e2e/generated/human-e2e-manifest.md`: `d87a3eec6853cc6a53fb4ca1b5a888eaca1ee46807a3d4df1ec4f43c7748f027`
-- `docs/phase-5/generated/device-qa-packet.json`: `7ab6e8973d7540e29ea2ae5320498b4782e98168fb1198822f6a9b5fcca284f5`
-- `docs/phase-5/generated/device-qa-packet.md`: `59f66b6504f5f1903d0141867c7a5254344d74149adc006f519354b14017c4d1`
-- `docs/phase-6/generated/payments-qa-packet.json`: `e010aca3f3ec67e4d8dfaa9d9abfad414511ef898cbe55598cc0af24c29d52b0`
-- `docs/phase-6/generated/payments-qa-packet.md`: `bf9906e8851649d8a74d921ef3583603af747c55e2558009896d36a0eeaa120e`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `20b0ebbb2b2e5cfe60b85829e5d911af695d62ae6a704d614741b43015ce5731`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `dda6b7ed5190d0ba616b3aef976b3c7659929724fcfc793823cc81b564f95a2a`
+- `docs/USER_FLOW_TREE.md`: `bf2b598b9d85b153dcb090871e2c1bba4fcc2173add004da603dcad9c632e172`
+- `docs/e2e/generated/human-e2e-manifest.json`: `cc7e23cde40e1a408c2bf35ddaec6c8d0ee045f5be2b2d0161d8213f09b0269a`
+- `docs/e2e/generated/human-e2e-manifest.md`: `fc0294b32269ba24c9c1e37e4dde21d88223debdd0576c4adf670de63b7b6e0e`
+- `docs/phase-5/generated/device-qa-packet.json`: `d2f8b238f33bed78b980893b20d27a4cd153fbaea8c016efafd52ee3953f09e0`
+- `docs/phase-5/generated/device-qa-packet.md`: `be12746957a3402b02bbed9f92cf5d8ce82c14aa6528d269cf157aecc5ccab36`
+- `docs/phase-6/generated/payments-qa-packet.json`: `e6ebae21196a70c87c63b9793e9f84f54af9f540e60eefa7075d4bb7ef4a6fa7`
+- `docs/phase-6/generated/payments-qa-packet.md`: `8298016978ebdeb9a2ef8f0ffcf0bb2e25df5c01cc1d36eb8b4b425e1ce2e8cd`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `d700c7bec11c936a6a9996a18d3aaf51993aea320b82719a7bc7ed89e0831f74`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `48470f077bbc45b0445bb8772780c293347bab886a818fcb324a3434ed9e3a22`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `6070ec2ffd588b13555481ab5173e7d7783958977662807199e3dc16bd5c1122`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `e6602b38bf458f5759f9fc82f9e9defb38611c1252fdb308bc61f81555d2fac6`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
