@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-09T20:36:13.136Z
+Generated: 2026-07-09T20:51:03.353Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 82c3eb2993e494dcab39adbdd5e97015f8dcad22
+Git SHA: f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -296,7 +296,7 @@ Sources:
 - `apps/mobile/src/features/settings/actions.ts` - 3754 bytes - sha256 `28c211982c43826005b3de809a6d7a1a1b6e572fec33b9948bf1a1d56943882c`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 15795 bytes - sha256 `d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73`
-- `supabase/functions/data-export/index.ts` - 12223 bytes - sha256 `613170a95c01697505bdf17a4b83dbdafd6e6823f041161059bd1d79dc107e93`
+- `supabase/functions/data-export/index.ts` - 12737 bytes - sha256 `3f9affb6a477912b68af3def6eb4562cba8bbd970437a73bbfd545a3c076b0b6`
 
 ### P0 - Privacy/security - Ask, commerce, and community consent
 

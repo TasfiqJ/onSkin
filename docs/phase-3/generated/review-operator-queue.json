@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T20:36:13.136Z",
+  "generatedAt": "2026-07-09T20:51:03.353Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "82c3eb2993e494dcab39adbdd5e97015f8dcad22",
+  "gitSha": "f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 81829,
-    "sha256": "9bf8aafbc08d20233cfc449ea92b0e0ccba9ed6ad9bc03b24cc8950295672827",
-    "currentSha256": "9bf8aafbc08d20233cfc449ea92b0e0ccba9ed6ad9bc03b24cc8950295672827"
+    "sha256": "de0f3c55c6a9de7bb5794e9a79af12d83b6f5a0983a47dcc7ce303adbc4b97e5",
+    "currentSha256": "de0f3c55c6a9de7bb5794e9a79af12d83b6f5a0983a47dcc7ce303adbc4b97e5"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -741,8 +741,8 @@
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 12223,
-          "sha256": "613170a95c01697505bdf17a4b83dbdafd6e6823f041161059bd1d79dc107e93"
+          "bytes": 12737,
+          "sha256": "3f9affb6a477912b68af3def6eb4562cba8bbd970437a73bbfd545a3c076b0b6"
         }
       ]
     },

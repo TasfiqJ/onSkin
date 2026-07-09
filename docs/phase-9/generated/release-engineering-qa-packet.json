@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:44:16.716Z",
+  "generatedAt": "2026-07-09T20:51:13.263Z",
   "status": "blocked",
-  "gitSha": "c49ca06dd62a52815c630382bb29a56b31dec4fb",
+  "gitSha": "f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -66,7 +66,7 @@
     "supabase/functions/account-deletion/index.ts": "d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73",
     "supabase/functions/_shared/body.ts": "03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a",
     "supabase/functions/_shared/fetch.ts": "d8ff37a96a965d3826d3d7df14a69eb00f35dddbc119d3a2f4cc92d778226a25",
-    "supabase/functions/data-export/index.ts": "613170a95c01697505bdf17a4b83dbdafd6e6823f041161059bd1d79dc107e93",
+    "supabase/functions/data-export/index.ts": "3f9affb6a477912b68af3def6eb4562cba8bbd970437a73bbfd545a3c076b0b6",
     "supabase/functions/consent-withdrawal/index.ts": "fa5f9949677e076c648ce90da97c631b67e53ea72ad94e0daa27199d68f14521",
     "supabase/functions/subscription-grants/index.ts": "2922047f3ca942aa406785a00ee8175ac3f1899f6b97502f49393a6b204baa02",
     "supabase/functions/catalog-search/index.ts": "6469ad3fb88b6eba7e09bdc00a211618a2b25d36123ec6775bdb120c05c5c44d",
@@ -92,7 +92,7 @@
     "scripts/phase9/live-revenuecat-webhook.mjs": "98f2d8496eb4f5c19706c3ce7d17d82c84223ba776bae6084e9706ebf3e6e718",
     "scripts/phase9/edge-auth-smoke.mjs": "92968a8bbbc5375a8ed3b52d087ae3c3b9b0f2435d5ddbcfcc2f0a6ed004284e",
     "scripts/phase9/edge-functions-check.mjs": "81b6c6d8413d27166379c589f00434daf631feab4a406fd6e17b2cfbe6430f4b",
-    "scripts/phase9/data-rights-smoke.mjs": "ad243460c1784e19ff611398e3d22fc62f177823be2dcdd7dba7fed8aeea3e7f",
+    "scripts/phase9/data-rights-smoke.mjs": "6392dc7f45296234f0eaff86a75bad3142185e69933627fda93ff0954084fe19",
     "scripts/phase9/consent-withdrawal-smoke.mjs": "03071784d71b93271ff929cfc6528da76fc0bf547ed80af7c666074474ac801e",
     "scripts/phase9/supabase-policy-lint.mjs": "153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183",
     "scripts/phase9/security-ci-smoke.mjs": "f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9",
