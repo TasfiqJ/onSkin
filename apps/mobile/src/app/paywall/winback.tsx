@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
@@ -24,7 +24,7 @@ const BG = '#1B1813';
 
 export default function WinbackScreen() {
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const { winback } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
@@ -33,7 +33,9 @@ export default function WinbackScreen() {
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const unavailableOfferCopy =
     'A native welcome-back offer is not available on this account. You can still choose the current Pro plan.';
-  const compactPaywall = height < 640;
+  const tallTextPressurePaywall =
+    width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPaywall = height < 640 || tallTextPressurePaywall;
 
   function onComeBack() {
     setActionFeedback(null);

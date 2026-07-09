@@ -18,6 +18,16 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-09:
 
+- Shelf catalog no-match recovery now has fresh Codex in-app browser Expo web
+  evidence for privacy-safe missing-product reporting. At 390 x 844, catalog
+  search no-match exposes a 48 px `Report missing product` action, renders
+  inline `Report not sent` feedback with no JavaScript dialog or current-route
+  warn/error logs, and preserves the missing query through manual add. Direct
+  `/shelf/no-match?barcode=012345678905` exposes distinct Search, Scan, Add by
+  hand, and Report controls with no overlap, then routes to manual add. 360 x
+  640 support-floor spot checks keep visible controls 48 px+, fully visible,
+  center-hit-testable, and at zero horizontal overflow. Evidence:
+  `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`.
 - The human-simulated E2E manifest now anchors to the 2026-07-09 Expo web
   support-floor evidence. The 360 x 640 launch-floor 200% text-pressure sweep
   passed 49 / 49 routes with zero failed routes, and the supported-phone

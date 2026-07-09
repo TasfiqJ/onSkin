@@ -126,12 +126,22 @@ describe('Shelf route mobile contracts', () => {
   it('keeps barcode no-match recovery from dead-ending before manual add', () => {
     const source = readAppRoute('shelf/no-match.tsx');
 
+    expect(source).toContain('useLocalSearchParams');
+    expect(source).toContain('reportCatalogIssue');
+    expect(source).toContain('const barcode =');
     expect(source).toContain("trackProductAddStarted('miss_search')");
     expect(source).toContain("reset({ addedVia: 'search' })");
     expect(source).toContain("router.replace('/shelf/search')");
+    expect(source).toContain("reset({ addedVia: 'manual', barcode })");
     expect(source).toContain('Search catalog');
     expect(source).toContain('Scan the ingredient list');
     expect(source).toContain('Add it by hand');
+    expect(source).toContain('Report missing product');
+    expect(source).toContain("correctionType: 'missing_product'");
+    expect(source).toContain('missing_product reported from barcode no-match');
+    expect(source).toContain("route: 'shelf_no_match'");
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).not.toContain('Alert.alert');
 
     const analytics = readFeatureFile('analytics.ts');
 
@@ -174,18 +184,15 @@ describe('Shelf route mobile contracts', () => {
       'const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;',
     );
     expect(source).toContain('? { marginTop: 24 }');
-    expect(source).toContain('const compactScanRecoveryStyle = compactPressurePhone');
-    expect(source).toContain('compactPressurePhone && !supportFloorPhone');
-    expect(source).toContain('? { transform: [{ translateY: -26 }] }');
+    expect(source).toContain('const compactScanRecoveryStyle = undefined;');
     expect(source).toContain('const compactManualRecoveryStyle = supportFloorPhone');
     expect(source).toContain('? undefined');
     expect(source).toContain('{showScanRecovery ? (');
     expect(source).toContain('<View style={compactSecondaryRecoveryStyle}>');
-    expect(source).toContain('? { marginTop: 40, transform: [{ translateY: -32 }] }');
+    expect(source).toContain('? { marginTop: 40 }');
     expect(source).toContain('tallTextPressurePhone');
-    expect(source).toContain('? { marginTop: 96, transform: [{ translateY: -32 }] }');
-    expect(source).toContain('compactPressurePhone');
-    expect(source).toContain('? { marginTop: 32, transform: [{ translateY: -32 }] }');
+    expect(source).toContain('? { marginTop: 64 }');
+    expect(source).not.toContain('translateY');
     expect(source).toContain('<View style={compactManualRecoveryStyle}>');
     expect(source).toContain('style={compactScanRecoveryStyle}');
     expect(source).toContain("style={[{ backgroundColor: 'rgba(244,239,231,0.08)' }, style]}");
@@ -479,6 +486,10 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("return { kind: 'offline', barcode };");
     expect(source).toContain("if (response.result === 'offline')");
     expect(source).toContain("setState({ kind: 'offline', barcode: normalized.lookupValue });");
+    expect(source).toContain('function noMatchRoute(barcode: string)');
+    expect(source).toContain("pathname: '/shelf/no-match' as const");
+    expect(source).toContain('params: { barcode }');
+    expect(source).toContain('router.push(noMatchRoute(state.barcode))');
     expect(source).toContain('Barcode {state.barcode} is not in the catalog yet.');
     expect(source).toContain(
       'Couldn&apos;t reach the product catalog for barcode {state.barcode}.',
@@ -509,6 +520,12 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('className="flex-1"');
     expect(source).toContain('<View className="pb-8 pt-2">');
     expect(source).toContain('<Button label="Add by hand" variant="ghost" onPress={goManual} />');
+    expect(source).toContain('reportCatalogIssue');
+    expect(source).toContain('lastNoMatchQuery');
+    expect(source).toContain('Report missing product');
+    expect(source).toContain('missing_product reported from catalog search');
+    expect(source).toContain("route: 'shelf_search'");
+    expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain(
       "Couldn't reach the product catalog. Add this product by hand for now.",
     );
@@ -750,6 +767,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('Mark discarded');
     expect(source).toContain('Remove completely');
     expect(source).toContain('Wrong product match');
+    expect(source).toContain('Missing catalog product');
+    expect(source).toContain("submitCatalogReport('missing_product')");
     expect(source).toContain('Ingredient issue');
     expect(source).toContain('Expiry or PAO issue');
     expect(source).toContain('CATALOG_REPORT_NOT_SENT');

@@ -747,6 +747,11 @@ export default function ProductDetailScreen() {
           onClose={() => setActiveSheet(null)}
         >
           <SheetAction
+            label="Missing catalog product"
+            description="This local shelf item should be added to the reviewed catalog."
+            onPress={() => submitCatalogReport('missing_product')}
+          />
+          <SheetAction
             label="Wrong product match"
             description="The product, brand, or barcode does not match this shelf item."
             onPress={() => submitCatalogReport('wrong_match')}

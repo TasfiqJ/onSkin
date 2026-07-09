@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added privacy-safe missing-product reporting from Shelf catalog search
+  no-match and barcode no-match recovery. Search no-match now exposes
+  `Report missing product`, preserves the missing query through manual add, and
+  renders configured/offline report feedback inline. Barcode no-match now
+  carries the scanned barcode into recovery, exposes the same missing-product
+  report path, and avoids transform-based compact row overlap. Focused catalog
+  and Shelf route contracts pass, and Codex in-app browser evidence covers
+  390 x 844 plus 360 x 640 support-floor checks in
+  `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`.
+
 - Extended `/onboarding/products` compact footer/category behavior to 390-wide,
   tall supported-phone 200% text-pressure layouts. The onboarding route
   contract passes, and focused Expo web evidence for `/onboarding/products` at

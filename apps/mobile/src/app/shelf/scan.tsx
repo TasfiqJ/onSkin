@@ -106,6 +106,10 @@ function activeIngredients(product: CatalogProductSummary): {
   };
 }
 
+function noMatchRoute(barcode: string) {
+  return { pathname: '/shelf/no-match' as const, params: { barcode } };
+}
+
 export default function ScanScreen() {
   const isFocused = useIsFocused();
   const { height, width } = useWindowDimensions();
@@ -440,7 +444,7 @@ export default function ScanScreen() {
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                onPress={() => router.push('/shelf/no-match')}
+                onPress={() => router.push(noMatchRoute(state.barcode))}
                 className="items-center rounded-pill px-4 py-3"
                 style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}
               >
@@ -504,7 +508,7 @@ export default function ScanScreen() {
             className="mt-5 items-center py-1"
             onPress={() => {
               haptics.select();
-              router.push('/shelf/no-match');
+              router.push(noMatchRoute(state.barcode));
             }}
           >
             <Text variant="label" tone="inverseMuted">

@@ -1,7 +1,9 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, type StyleProp, View, type ViewStyle, useWindowDimensions } from 'react-native';
 
-import { RouteIconButton, Sheet, Text } from '@/components/ui';
+import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
+import { reportCatalogIssue } from '@/features/catalog/client';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { cn } from '@/lib/cn';
@@ -13,7 +15,17 @@ import { colors } from '@/theme/tokens';
 // the source workflow is approved.
 export default function NoMatchScreen() {
   const { reset } = useIntake();
+  const params = useLocalSearchParams<{ barcode?: string }>();
   const { height, width } = useWindowDimensions();
+  const [reportingMissingProduct, setReportingMissingProduct] = useState(false);
+  const [missingProductFeedback, setMissingProductFeedback] = useState<{
+    title: string;
+    message: string;
+  } | null>(null);
+  const barcode =
+    typeof params.barcode === 'string' && params.barcode.trim().length > 0
+      ? params.barcode.trim()
+      : null;
   const shortPhone = height < 700 || width <= 430;
   const ultraShortPhone = height < 560 || width <= 320;
   const supportFloorPhone = width <= 320 && height < 520;
@@ -25,17 +37,13 @@ export default function NoMatchScreen() {
   const compactPressurePhone = shortPhone;
   const showScanRecovery = !supportFloorPhone;
   const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;
-  const compactScanRecoveryStyle = compactPressurePhone && !supportFloorPhone
-    ? { transform: [{ translateY: -26 }] }
-    : undefined;
+  const compactScanRecoveryStyle = undefined;
   const compactManualRecoveryStyle = supportFloorPhone
     ? undefined
     : microShortPhone
-      ? { marginTop: 40, transform: [{ translateY: -32 }] }
+      ? { marginTop: 40 }
       : tallTextPressurePhone
-        ? { marginTop: 96, transform: [{ translateY: -32 }] }
-      : compactPressurePhone
-        ? { marginTop: 32, transform: [{ translateY: -32 }] }
+        ? { marginTop: 64 }
         : undefined;
 
   const goOcr = () => {
@@ -53,8 +61,35 @@ export default function NoMatchScreen() {
   const goManual = () => {
     haptics.select();
     trackProductAddStarted('miss_manual');
-    reset({ addedVia: 'manual' });
+    reset({ addedVia: 'manual', barcode });
     router.replace('/shelf/manual');
+  };
+  const reportMissingProduct = async () => {
+    if (reportingMissingProduct) return;
+    setReportingMissingProduct(true);
+    setMissingProductFeedback(null);
+    const result = await reportCatalogIssue({
+      correctionType: 'missing_product',
+      barcode,
+      description: 'missing_product reported from barcode no-match',
+      proposedPayload: barcode ? { barcode } : undefined,
+      clientContext: {
+        addedVia: 'barcode',
+        route: 'shelf_no_match',
+      },
+    });
+    setMissingProductFeedback(
+      result.ok
+        ? {
+            title: 'Report sent',
+            message: 'Thanks. Missing-product reports help prioritize catalog review.',
+          }
+        : {
+            title: 'Report not sent',
+            message: 'Catalog reporting is not configured on this build. Add it another way.',
+          },
+    );
+    setReportingMissingProduct(false);
   };
 
   return (
@@ -178,6 +213,34 @@ export default function NoMatchScreen() {
             onPress={goManual}
           />
         </View>
+      </View>
+
+      <View className={shortPhone ? 'mt-3' : 'mt-4'}>
+        <Button
+          label={reportingMissingProduct ? 'Sending report...' : 'Report missing product'}
+          variant="inverse"
+          disabled={reportingMissingProduct}
+          className={shortPhone ? 'min-h-[48px] py-3' : undefined}
+          onPress={reportMissingProduct}
+        />
+        {missingProductFeedback ? (
+          <View
+            accessibilityRole="alert"
+            className="mt-2.5 rounded-[14px] px-4 py-3"
+            style={{
+              borderWidth: 1,
+              borderColor: 'rgba(217,161,131,0.42)',
+              backgroundColor: 'rgba(217,161,131,0.12)',
+            }}
+          >
+            <Text variant="label" tone="inverse">
+              {missingProductFeedback.title}
+            </Text>
+            <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+              {missingProductFeedback.message}
+            </Text>
+          </View>
+        ) : null}
       </View>
 
       {!shortPhone ? (

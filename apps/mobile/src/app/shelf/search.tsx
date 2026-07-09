@@ -1,10 +1,14 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, TextInput, View } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
-import { searchCatalog, type CatalogProductSummary } from '@/features/catalog/client';
+import {
+  reportCatalogIssue,
+  searchCatalog,
+  type CatalogProductSummary,
+} from '@/features/catalog/client';
 import { catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
@@ -19,6 +23,14 @@ import { colors } from '@/theme/tokens';
 
 const categoryIds = new Set(PRODUCT_CATEGORIES.map((category) => category.id));
 const qualityGrades = new Set(['verified', 'usable', 'limited', 'unverified', 'blocked']);
+const CATALOG_MISSING_SENT = {
+  title: 'Report sent',
+  message: 'Thanks. Missing-product reports help prioritize catalog review before launch.',
+};
+const CATALOG_MISSING_NOT_SENT = {
+  title: 'Report not sent',
+  message: 'Catalog reporting is not configured on this build. Add it by hand for now.',
+};
 
 function normalizeCategory(value: string | null | undefined): ProductCategory | null {
   return value && categoryIds.has(value as ProductCategory) ? (value as ProductCategory) : null;
@@ -33,6 +45,12 @@ export default function CatalogSearchScreen() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<CatalogProductSummary[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const [lastNoMatchQuery, setLastNoMatchQuery] = useState<string | null>(null);
+  const [reportingMissingProduct, setReportingMissingProduct] = useState(false);
+  const [missingProductFeedback, setMissingProductFeedback] = useState<{
+    title: string;
+    message: string;
+  } | null>(null);
   const [searching, setSearching] = useState(false);
   const canSearch = query.trim().length >= 2 && !searching;
 
@@ -40,17 +58,39 @@ export default function CatalogSearchScreen() {
     const cleaned = query.trim();
     if (!canSearch) return;
     setSearching(true);
+    setLastNoMatchQuery(null);
+    setMissingProductFeedback(null);
     const response = await searchCatalog(cleaned);
     setResults(response.products ?? []);
+    const noProducts = !response.products?.length;
     setMessage(
       response.result === 'offline' || response.result === 'error'
         ? "Couldn't reach the product catalog. Add this product by hand for now."
-        : response.products?.length
+        : !noProducts
           ? null
           : 'No catalog match yet. Add it by hand for now.',
     );
-    if (!response.products?.length) track('catalog_lookup_no_match', { lookup_type: 'search' });
+    if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
+    if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
     setSearching(false);
+  };
+
+  const reportMissingProduct = async () => {
+    if (!lastNoMatchQuery || reportingMissingProduct) return;
+    setReportingMissingProduct(true);
+    setMissingProductFeedback(null);
+    const result = await reportCatalogIssue({
+      correctionType: 'missing_product',
+      description: 'missing_product reported from catalog search',
+      proposedPayload: { productName: lastNoMatchQuery },
+      clientContext: {
+        addedVia: 'search',
+        platform: Platform.OS,
+        route: 'shelf_search',
+      },
+    });
+    setMissingProductFeedback(result.ok ? CATALOG_MISSING_SENT : CATALOG_MISSING_NOT_SENT);
+    setReportingMissingProduct(false);
   };
 
   const goManual = () => {
@@ -144,6 +184,36 @@ export default function CatalogSearchScreen() {
             <Text variant="bodySm" tone="muted">
               {message}
             </Text>
+            {lastNoMatchQuery ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ busy: reportingMissingProduct }}
+                disabled={reportingMissingProduct}
+                onPress={reportMissingProduct}
+                className="mt-3 min-h-[48px] self-start items-center justify-center rounded-pill px-1"
+              >
+                <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+                  {reportingMissingProduct ? 'Sending report...' : 'Report missing product'}
+                </Text>
+              </Pressable>
+            ) : null}
+            {missingProductFeedback ? (
+              <View
+                accessibilityRole="alert"
+                className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3"
+              >
+                <Text variant="label" style={{ color: colors.clayDeep }}>
+                  {missingProductFeedback.title}
+                </Text>
+                <Text
+                  variant="bodySm"
+                  className="mt-1"
+                  style={{ color: colors.clayDeep, lineHeight: 19 }}
+                >
+                  {missingProductFeedback.message}
+                </Text>
+              </View>
+            ) : null}
           </View>
         ) : null}
 

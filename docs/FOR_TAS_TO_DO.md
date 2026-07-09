@@ -68,6 +68,13 @@ Status: launch-blocked
   no-match, and offline/queued outcomes under RLS. The 2026-07-08 Codex pass can
   prove the local Expo web fallback UI, but it cannot prove live Supabase writes
   without Tas-owned Supabase/auth credentials.
+- Supabase live catalog-report evidence: attach staging/production proof that
+  `catalog-report` accepts privacy-safe `missing_product` reports from search
+  no-match and barcode no-match recovery, rejects unsafe payloads, stores only
+  allowlisted product/report fields under the intended auth/RLS model, and
+  returns a clean client response. The 2026-07-09 Codex pass proves local
+  offline UI feedback and client payload contracts, but it cannot prove live
+  Edge Function insertion without Tas-owned Supabase/auth credentials.
 - Supabase anonymous auth and consent-ledger QA for the local-first
   `photo_capture` path: attach evidence that first-use photo capture can save
   a local proof offline/pre-account and that staging/production sessions insert

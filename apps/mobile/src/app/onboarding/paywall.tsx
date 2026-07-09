@@ -66,7 +66,10 @@ export default function PaywallScreen() {
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const supportFloorTextPressurePaywall =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
-  const compactPaywall = height < 640 || supportFloorTextPressurePaywall;
+  const tallTextPressurePaywall =
+    width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPaywall = height < 640 || supportFloorTextPressurePaywall || tallTextPressurePaywall;
+  const headerCompliancePaywall = compactPaywall;
 
   function onStartTrial() {
     setActionFeedback(null);
@@ -127,6 +130,7 @@ export default function PaywallScreen() {
         >
           {PAYWALL_COPY.offer.subhead}
         </Text>
+        {headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}
 
         {/* four value props */}
         <View className={compactPaywall ? 'mt-2.5 gap-1' : 'mt-5 gap-2.5'}>
@@ -301,7 +305,7 @@ export default function PaywallScreen() {
         <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
 
         {/* compliance (Apple 3.1.2) */}
-        <ComplianceRow />
+        {headerCompliancePaywall ? null : <ComplianceRow />}
 
         {/* auto-renew disclosure (plain, honest) */}
         <Text

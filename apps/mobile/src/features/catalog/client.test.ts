@@ -136,4 +136,45 @@ describe('catalog issue reporting', () => {
       },
     });
   });
+
+  it('submits missing-product reports with product-only context when configured', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({ error: null });
+
+    await expect(
+      reportCatalogIssue({
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+        description: 'missing_product reported from barcode no-match',
+        proposedPayload: {
+          barcode: '012345678905',
+          productName: 'Unknown sunscreen',
+        },
+        clientContext: {
+          addedVia: 'barcode',
+          route: 'shelf_no_match',
+        },
+      }),
+    ).resolves.toEqual({ ok: true });
+
+    expect(mocks.track).toHaveBeenCalledWith('catalog_correction_reported', {
+      correction_type: 'missing_product',
+    });
+    expect(mocks.track).toHaveBeenCalledTimes(1);
+    expect(mocks.invoke).toHaveBeenCalledWith('catalog-report', {
+      body: {
+        correctionType: 'missing_product',
+        barcode: '012345678905',
+        description: 'missing_product reported from barcode no-match',
+        proposedPayload: {
+          barcode: '012345678905',
+          productName: 'Unknown sunscreen',
+        },
+        clientContext: {
+          addedVia: 'barcode',
+          route: 'shelf_no_match',
+        },
+      },
+    });
+  });
 });

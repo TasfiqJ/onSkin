@@ -648,7 +648,15 @@ describe('paywall mobile contracts', () => {
     const winback = readAppRoute('paywall/winback.tsx');
 
     expect(winback).toContain('useWindowDimensions');
-    expect(winback).toContain('const compactPaywall = height < 640');
+    expect(winback).toContain(
+      "import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';",
+    );
+    expect(winback).toContain('const { fontScale = 1, height, width } = useWindowDimensions();');
+    expect(winback).toContain('const tallTextPressurePaywall =');
+    expect(winback).toContain(
+      "width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
+    expect(winback).toContain('const compactPaywall = height < 640 || tallTextPressurePaywall;');
     expect(winback).toContain("style={{ overflow: 'hidden' }}");
     expect(winback).toContain("justifyContent: compactPaywall ? 'flex-start' : 'center'");
     expect(winback).toContain('const unavailableOfferCopy =');
@@ -685,9 +693,18 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain(
       "width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
+    expect(source).toContain('const tallTextPressurePaywall =');
     expect(source).toContain(
-      'const compactPaywall = height < 640 || supportFloorTextPressurePaywall;',
+      "width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
+    expect(source).toContain(
+      'const compactPaywall = height < 640 || supportFloorTextPressurePaywall || tallTextPressurePaywall;',
+    );
+    expect(source).toContain('const headerCompliancePaywall = compactPaywall;');
+    expect(source).toContain(
+      '{headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}',
+    );
+    expect(source).toContain('{headerCompliancePaywall ? null : <ComplianceRow />}');
     expect(source).toContain("contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-8'}");
     expect(source).toContain("className={compactPaywall ? 'mt-2.5 gap-1' : 'mt-5 gap-2.5'}");
     expect(source).toContain("'mt-2 h-[48px] items-center justify-center rounded-pill'");
