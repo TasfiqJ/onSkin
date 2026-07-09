@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 94.3984375,
+        "y": 208
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fragrance-free",
+      "label": "Fragrance-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 232,
+        "height": 48,
+        "left": 24,
+        "right": 164.796875,
+        "top": 184,
+        "visibleHeight": 48,
+        "visibleWidth": 140.796875,
+        "width": 140.796875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 211.6953125,
+        "y": 208
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Vegan",
+      "label": "Vegan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 232,
+        "height": 48,
+        "left": 172.796875,
+        "right": 250.59375,
+        "top": 184,
+        "visibleHeight": 48,
+        "visibleWidth": 77.796875,
+        "width": 77.796875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 319.46875,
+        "y": 208
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cruelty-free",
+      "label": "Cruelty-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 232,
+        "height": 48,
+        "left": 258.59375,
+        "right": 380.34375,
+        "top": 184,
+        "visibleHeight": 48,
+        "visibleWidth": 121.75,
+        "width": 121.75
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 21,
+  "textScale": 2,
+  "url": "http://localhost:8232/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

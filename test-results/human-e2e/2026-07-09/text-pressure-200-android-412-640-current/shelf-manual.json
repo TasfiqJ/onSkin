@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Cancel",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 267
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 292,
+        "height": 50,
+        "left": 24,
+        "right": 388,
+        "top": 242,
+        "visibleHeight": 50,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 107.8125,
+        "y": 367
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Brand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 392,
+        "height": 50,
+        "left": 24,
+        "right": 191.625,
+        "top": 342,
+        "visibleHeight": 50,
+        "visibleWidth": 167.625,
+        "width": 167.625
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 295.8125,
+        "y": 367
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Choose",
+      "label": "Category",
+      "partialClip": false,
+      "rect": {
+        "bottom": 392,
+        "height": 50,
+        "left": 203.625,
+        "right": 388,
+        "top": 342,
+        "visibleHeight": 50,
+        "visibleWidth": 184.375,
+        "width": 184.375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 539
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "TEXTAREA",
+      "hitText": "",
+      "label": "Ingredients",
+      "partialClip": false,
+      "rect": {
+        "bottom": 572,
+        "height": 66,
+        "left": 24,
+        "right": 388,
+        "top": 506,
+        "visibleHeight": 66,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "textarea",
+      "tag": "TEXTAREA",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 591
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue",
+      "label": "Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 628,
+        "height": 74,
+        "left": 24,
+        "right": 388,
+        "top": 554,
+        "visibleHeight": 74,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/shelf/manual",
+  "textOverflows": [],
+  "textStart": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/shelf/manual",
+  "scaledCount": 12,
+  "textScale": 2,
+  "url": "http://localhost:8232/shelf/manual",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

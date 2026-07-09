@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 427
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue with manual text",
+      "label": "Continue with manual text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 455,
+        "height": 56,
+        "left": 24,
+        "right": 388,
+        "top": 399,
+        "visibleHeight": 56,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/shelf/ocr",
+  "textOverflows": [],
+  "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/shelf/ocr",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8232/shelf/ocr",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 342,
+        "y": 145
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Marketing emails",
+      "partialClip": false,
+      "rect": {
+        "bottom": 169,
+        "height": 48,
+        "left": 316,
+        "right": 368,
+        "top": 121,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 303
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Records withdrawal and deletes collected health data.",
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 388,
+        "height": 170,
+        "left": 44,
+        "right": 368,
+        "top": 218,
+        "visibleHeight": 170,
+        "visibleWidth": 324,
+        "width": 324
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 58.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 9,
+        "right": 107.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 98.5,
+        "width": 98.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 156.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Prog.",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 107.5,
+        "right": 206,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 98.5,
+        "width": 98.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 255.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 206,
+        "right": 304.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 98.5,
+        "width": 98.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 353.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 304.5,
+        "right": 403,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 98.5,
+        "width": 98.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/you?section=privacy",
+  "textOverflows": [],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to req",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/settings/privacy",
+  "scaledCount": 61,
+  "textScale": 2,
+  "url": "http://localhost:8232/settings/privacy",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

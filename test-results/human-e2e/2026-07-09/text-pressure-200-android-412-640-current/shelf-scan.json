@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 359.5,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "torch",
+      "label": "torch",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 331,
+        "right": 388,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 57,
+        "width": 57
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 492
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan label",
+      "label": "Scan ingredient label. Review editable OCR",
+      "partialClip": false,
+      "rect": {
+        "bottom": 516,
+        "height": 48,
+        "left": 20,
+        "right": 392,
+        "top": 468,
+        "visibleHeight": 48,
+        "visibleWidth": 372,
+        "width": 372
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 546
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Use reviewed matches",
+      "partialClip": false,
+      "rect": {
+        "bottom": 570,
+        "height": 48,
+        "left": 20,
+        "right": 392,
+        "top": 522,
+        "visibleHeight": 48,
+        "visibleWidth": 372,
+        "width": 372
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 600
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works offline",
+      "partialClip": false,
+      "rect": {
+        "bottom": 624,
+        "height": 48,
+        "left": 20,
+        "right": 392,
+        "top": 576,
+        "visibleHeight": 48,
+        "visibleWidth": 372,
+        "width": 372
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/shelf/scan",
+  "textOverflows": [],
+  "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. = Scan label S Search catalog + Add it by hand",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/shelf/scan",
+  "scaledCount": 8,
+  "textScale": 2,
+  "url": "http://localhost:8232/shelf/scan",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

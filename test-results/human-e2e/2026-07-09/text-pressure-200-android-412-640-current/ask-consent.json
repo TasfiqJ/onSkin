@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 206,
+        "y": 567
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Ask",
+      "label": "Back to Ask",
+      "partialClip": false,
+      "rect": {
+        "bottom": 604,
+        "height": 74,
+        "left": 24,
+        "right": 388,
+        "top": 530,
+        "visibleHeight": 74,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/ask/consent",
+  "textOverflows": [],
+  "textStart": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship. Back to Ask",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/ask/consent",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8232/ask/consent",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
