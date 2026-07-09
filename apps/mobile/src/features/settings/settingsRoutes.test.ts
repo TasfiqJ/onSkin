@@ -42,7 +42,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 232;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 80;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;');
@@ -392,11 +392,11 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source).toContain('style={compact ? { fontSize: 12, lineHeight: 16 } : undefined}');
     expect(source).toContain(
-      "hint={ultraShortPrivacyEntry ? undefined : 'Off by default. Opt in anytime.'}",
+      "supportFloorPrivacyEntry || ultraShortPrivacyEntry\n                ? undefined\n                : 'Off by default. Opt in anytime.'",
     );
     expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
     expect(source).toMatch(
-      /hint=\{\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Records withdrawal and deletes collected health data\.'/,
+      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Records withdrawal and deletes collected health data\.'/,
     );
   });
 

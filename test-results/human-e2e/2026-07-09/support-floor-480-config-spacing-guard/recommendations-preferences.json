@@ -154,7 +154,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/recommendations/preferences",
+  "location": "http://localhost:8291/recommendations/preferences",
   "textOverflows": [],
   "textStart": "< Preferences Recommendation preferences VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
   "viewport": {
@@ -164,7 +164,7 @@
   "route": "/recommendations/preferences",
   "scaledCount": 21,
   "textScale": 1,
-  "url": "http://localhost:8289/recommendations/preferences",
+  "url": "http://localhost:8291/recommendations/preferences",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

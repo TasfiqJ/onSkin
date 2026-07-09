@@ -29,7 +29,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/community/people-like-you",
+  "location": "http://localhost:8291/community/people-like-you",
   "textOverflows": [],
   "textStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes",
   "viewport": {
@@ -39,7 +39,7 @@
   "route": "/community/people-like-you",
   "scaledCount": 5,
   "textScale": 1,
-  "url": "http://localhost:8289/community/people-like-you",
+  "url": "http://localhost:8291/community/people-like-you",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

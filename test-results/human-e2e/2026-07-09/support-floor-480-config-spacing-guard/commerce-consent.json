@@ -29,7 +29,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/commerce/consent",
+  "location": "http://localhost:8291/commerce/consent",
   "textOverflows": [],
   "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
   "viewport": {
@@ -39,7 +39,7 @@
   "route": "/commerce/consent",
   "scaledCount": 5,
   "textScale": 1,
-  "url": "http://localhost:8289/commerce/consent",
+  "url": "http://localhost:8291/commerce/consent",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

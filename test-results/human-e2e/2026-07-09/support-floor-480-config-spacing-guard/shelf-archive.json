@@ -29,7 +29,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/shelf/archive",
+  "location": "http://localhost:8291/shelf/archive",
   "textOverflows": [],
   "textStart": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here.",
   "viewport": {
@@ -39,7 +39,7 @@
   "route": "/shelf/archive",
   "scaledCount": 9,
   "textScale": 1,
-  "url": "http://localhost:8289/shelf/archive",
+  "url": "http://localhost:8291/shelf/archive",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

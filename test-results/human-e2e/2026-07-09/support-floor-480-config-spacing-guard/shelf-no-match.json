@@ -3,7 +3,7 @@
     {
       "center": {
         "x": 268,
-        "y": 205
+        "y": 225
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,11 +12,11 @@
       "label": "Close",
       "partialClip": false,
       "rect": {
-        "bottom": 229,
+        "bottom": 249,
         "height": 48,
         "left": 244,
         "right": 292,
-        "top": 181,
+        "top": 201,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -28,7 +28,7 @@
     {
       "center": {
         "x": 160,
-        "y": 295
+        "y": 263
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,11 +37,11 @@
       "label": "Search catalog. Try name or brand instead",
       "partialClip": false,
       "rect": {
-        "bottom": 319,
+        "bottom": 287,
         "height": 48,
         "left": 28,
         "right": 292,
-        "top": 271,
+        "top": 239,
         "visibleHeight": 48,
         "visibleWidth": 264,
         "width": 264
@@ -53,32 +53,7 @@
     {
       "center": {
         "x": 160,
-        "y": 347
-      },
-      "centerBlocked": false,
-      "hitInside": true,
-      "hitTag": "DIV",
-      "hitText": "Scan ingredients",
-      "label": "Scan the ingredient list. We'll read the INCI text",
-      "partialClip": false,
-      "rect": {
-        "bottom": 371,
-        "height": 48,
-        "left": 28,
-        "right": 292,
-        "top": 323,
-        "visibleHeight": 48,
-        "visibleWidth": 264,
-        "width": 264
-      },
-      "role": "button",
-      "tag": "BUTTON",
-      "tinyTarget": false
-    },
-    {
-      "center": {
-        "x": 160,
-        "y": 395
+        "y": 315
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,11 +62,11 @@
       "label": "Add it by hand. Always works, even offline",
       "partialClip": false,
       "rect": {
-        "bottom": 419,
+        "bottom": 339,
         "height": 48,
         "left": 28,
         "right": 292,
-        "top": 371,
+        "top": 291,
         "visibleHeight": 48,
         "visibleWidth": 264,
         "width": 264
@@ -104,17 +79,17 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/shelf/no-match",
+  "location": "http://localhost:8291/shelf/no-match",
   "textOverflows": [],
-  "textStart": "? x Not found yet. S Search catalog I Scan ingredients + Add it by hand",
+  "textStart": "x Not found yet. S Search catalog + Add it by hand",
   "viewport": {
     "width": 320,
     "height": 480
   },
   "route": "/shelf/no-match",
-  "scaledCount": 8,
+  "scaledCount": 6,
   "textScale": 1,
-  "url": "http://localhost:8289/shelf/no-match",
+  "url": "http://localhost:8291/shelf/no-match",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

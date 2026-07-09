@@ -3,7 +3,7 @@
     {
       "center": {
         "x": 250,
-        "y": 49
+        "y": 40
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,11 +12,11 @@
       "label": "Marketing emails",
       "partialClip": false,
       "rect": {
-        "bottom": 73,
+        "bottom": 64,
         "height": 48,
         "left": 224,
         "right": 276,
-        "top": 25,
+        "top": 16,
         "visibleHeight": 48,
         "visibleWidth": 52,
         "width": 52
@@ -28,21 +28,21 @@
     {
       "center": {
         "x": 160,
-        "y": 358
+        "y": 176
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "Withdraw health-data consent Records withdrawal and deletes collected health data.",
-      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "hitText": "Withdraw health-data consent",
+      "label": "Withdraw health-data consent",
       "partialClip": false,
       "rect": {
-        "bottom": 394,
-        "height": 72,
+        "bottom": 200,
+        "height": 48,
         "left": 44,
         "right": 276,
-        "top": 322,
-        "visibleHeight": 72,
+        "top": 152,
+        "visibleHeight": 48,
         "visibleWidth": 232,
         "width": 232
       },
@@ -154,17 +154,17 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/you?section=privacy",
+  "location": "http://localhost:8291/you?section=privacy",
   "textOverflows": [],
-  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to req",
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > MORE ROUTINE Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Withdraw health-data consent > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to request and read your export. > YOUR DATA Export my data Delete account Photos stay on yo",
   "viewport": {
     "width": 320,
     "height": 480
   },
   "route": "/settings/privacy",
-  "scaledCount": 61,
+  "scaledCount": 59,
   "textScale": 1,
-  "url": "http://localhost:8289/settings/privacy",
+  "url": "http://localhost:8291/settings/privacy",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

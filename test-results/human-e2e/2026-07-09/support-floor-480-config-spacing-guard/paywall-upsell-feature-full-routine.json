@@ -2,33 +2,8 @@
   "controls": [
     {
       "center": {
-        "x": 240.640625,
-        "y": 266
-      },
-      "centerBlocked": false,
-      "hitInside": true,
-      "hitTag": "DIV",
-      "hitText": "Maybe later",
-      "label": "Maybe later",
-      "partialClip": false,
-      "rect": {
-        "bottom": 290,
-        "height": 48,
-        "left": 189.28125,
-        "right": 292,
-        "top": 242,
-        "visibleHeight": 48,
-        "visibleWidth": 102.71875,
-        "width": 102.71875
-      },
-      "role": "button",
-      "tag": "BUTTON",
-      "tinyTarget": false
-    },
-    {
-      "center": {
         "x": 52,
-        "y": 318
+        "y": 336
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,11 +12,11 @@
       "label": "Terms",
       "partialClip": false,
       "rect": {
-        "bottom": 342,
+        "bottom": 360,
         "height": 48,
         "left": 28,
         "right": 76,
-        "top": 294,
+        "top": 312,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -53,7 +28,7 @@
     {
       "center": {
         "x": 113.359375,
-        "y": 318
+        "y": 336
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,11 +37,11 @@
       "label": "Privacy",
       "partialClip": false,
       "rect": {
-        "bottom": 342,
+        "bottom": 360,
         "height": 48,
         "left": 89.359375,
         "right": 137.359375,
-        "top": 294,
+        "top": 312,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -78,7 +53,7 @@
     {
       "center": {
         "x": 174.71875,
-        "y": 318
+        "y": 336
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,11 +62,36 @@
       "label": "Restore",
       "partialClip": false,
       "rect": {
-        "bottom": 342,
+        "bottom": 360,
         "height": 48,
         "left": 150.71875,
         "right": 198.71875,
-        "top": 294,
+        "top": 312,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 268,
+        "y": 336
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 360,
+        "height": 48,
+        "left": 244,
+        "right": 292,
+        "top": 312,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -103,7 +103,7 @@
     {
       "center": {
         "x": 160,
-        "y": 436
+        "y": 444
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -112,11 +112,11 @@
       "label": "Start free trial",
       "partialClip": false,
       "rect": {
-        "bottom": 460,
+        "bottom": 468,
         "height": 48,
         "left": 28,
         "right": 292,
-        "top": 412,
+        "top": 420,
         "visibleHeight": 48,
         "visibleWidth": 264,
         "width": 264
@@ -129,9 +129,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8289/paywall/upsell?feature=full_routine",
+  "location": "http://localhost:8291/paywall/upsell?feature=full_routine",
   "textOverflows": [],
-  "textStart": "Maybe later Terms · Privacy · Restore Unlock your full routine. Checking price Start free trial",
+  "textStart": "Terms · Privacy · Restore x Unlock Pro. Checking price Start free trial",
   "viewport": {
     "width": 320,
     "height": 480
@@ -139,7 +139,7 @@
   "route": "/paywall/upsell?feature=full_routine",
   "scaledCount": 9,
   "textScale": 1,
-  "url": "http://localhost:8289/paywall/upsell?feature=full_routine",
+  "url": "http://localhost:8291/paywall/upsell?feature=full_routine",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }
