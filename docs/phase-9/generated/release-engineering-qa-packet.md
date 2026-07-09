@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-09T01:21:43.640Z
+Generated: 2026-07-09T02:03:44.273Z
 Status: blocked
-Git SHA: f0ecbf538a5630301f6bca7383e63dc33dff8102
+Git SHA: 9b5474e3c30d295c89e229c695a24cea2e055e65
 Git status: clean
 
 ## Release Identity
@@ -90,7 +90,7 @@ Git status: clean
 - `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
 - `apps/mobile/src/lib/launch/phase7.ts`: `4369c73351a58fd6cad9c5d94917185fadb7e67bf219aa9f85814dea5055e663`
 - `apps/mobile/src/lib/launch/phase7.test.ts`: `d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `ef50b0582128c6e1401214e36ca542aaef9678466019745c9b8dbc99d70ce98f`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
