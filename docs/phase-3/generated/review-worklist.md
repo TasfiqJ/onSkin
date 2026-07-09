@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T17:41:44.135Z
+Generated: 2026-07-09T18:05:16.016Z
 Status: pass
-Git SHA: 36027fefffc4e8a9a456f418e748957615b2bd21
+Git SHA: daf7a8ff43fa6eae16ce8d3b38e3664284854cc0
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -131,7 +131,7 @@ Sources:
 - `apps/mobile/src/features/subscription/gatedRoutes.ts` - 458 bytes - sha256 `8bd7312f2bad9c07e2157f5147dfbc9a7a69ce164bc9100e0852e498b4961f70`
 - `apps/mobile/src/features/subscription/lifecycle.ts` - 1473 bytes - sha256 `e0a96935fa1a1fa8c8a7ccfd9c8d906d769f3125c5ff45e836479fcc1e3bb130`
 - `apps/mobile/src/features/subscription/PaywallFeedback.tsx` - 2216 bytes - sha256 `d1bb35111052d1540ccd3d24d30fb36005e5c00dc35c4ecc50b888ce120f1201`
-- `apps/mobile/src/features/subscription/paywallMobileContracts.test.ts` - 37253 bytes - sha256 `72677610a85d8c4ebb207c5e2f256c938c136236c6081db9c6e1a51680fce0b2`
+- `apps/mobile/src/features/subscription/paywallMobileContracts.test.ts` - 38244 bytes - sha256 `030326dbb2af9331513d6d5f9ad446ac61a26c04ecec559abe7cbecb31ffb669`
 - `apps/mobile/src/features/subscription/plans.test.ts` - 1722 bytes - sha256 `23c775e3e8097b29f727b29157a62659e0a61ae726f7db1b019bd55c41749882`
 - `apps/mobile/src/features/subscription/plans.ts` - 2677 bytes - sha256 `3e6f35b07b59b875d9ee7b337f341f227dd6f42f5178b501c4fdda2242225e22`
 - `apps/mobile/src/features/subscription/priceDisplay.test.ts` - 3483 bytes - sha256 `420ec71fc37fed57e2ecc31fc5ccd19098289051b29bb18e9b79f13c2b7c180f`
@@ -461,7 +461,7 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 429 bytes - sha256 `004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4472 bytes - sha256 `8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1867 bytes - sha256 `0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 42220 bytes - sha256 `a4d62e8fbc498aa8f3da61715e236b55c409e1a76c463404410c7243f097ba20`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 43244 bytes - sha256 `f81ecc07b084d6bec8391a6c4c6ec691f545dd2504bd976a9992e288c0ad4c49`
 - `apps/mobile/src/features/shelf/store.test.ts` - 4504 bytes - sha256 `6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda`
 - `apps/mobile/src/features/shelf/store.ts` - 12890 bytes - sha256 `416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 3709 bytes - sha256 `4c0e9666689722778f642729ab0e12091ffa92e1e5184cff8a908a745182da37`
@@ -680,7 +680,7 @@ Sources:
 - `docs/phase-4/catalog-source-memo-cosing.md` - 2022 bytes - sha256 `313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78`
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 2335 bytes - sha256 `a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8`
 - `docs/phase-4/odbl-compliance-memo.md` - 2020 bytes - sha256 `6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79`
-- `apps/mobile/src/features/catalog/client.test.ts` - 4115 bytes - sha256 `39405ec911d268db14b802ebb80156f0e0cc28e7061e5caee66dab7116cf28e7`
+- `apps/mobile/src/features/catalog/client.test.ts` - 5416 bytes - sha256 `5ffaaf74c97a8bcbc9ba307b80744738dea3833811d39ba0f5c22b06f76dc605`
 - `apps/mobile/src/features/catalog/client.ts` - 4003 bytes - sha256 `968d5b6a45cc265d41ce3b626cdc29fc35ba279cb86fc7fc9f46c600e07f6bba`
 - `apps/mobile/src/features/catalog/copy.ts` - 1913 bytes - sha256 `b182cec74cb72f850e83dcca14a5548c6277d73a9eaac229f6062e665090f958`
 - `apps/mobile/src/features/catalog/ingredientParser.test.ts` - 1498 bytes - sha256 `3d4cbbfb6a0137835695c8b17c701729192cc2040dcd9d5b2e4a2c60eec34814`
