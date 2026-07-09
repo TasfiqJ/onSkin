@@ -1,0 +1,27 @@
+
+> @onskin/mobile@0.1.0 web
+> expo start --web --port 8260 --host localhost
+
+Starting project at C:\Users\jasim\Desktop\onSkin\apps\mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+Waiting on http://localhost:8260
+An update for expo is available: 56.0.14 → ~56.0.15
+3 other packages may need updating. Run npx expo install --check for details.
+Logs for your project will appear below.
+λ Bundled 3391ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (2581 modules)
+Web Bundled 4397ms node_modules\expo-router\entry.js (2337 modules)
+λ Bundled 110ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 709ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 1561ms node_modules\expo-router\entry.js (2360 modules)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  LOG  Running application "main" with appParams:
+ {"hydrate": undefined, "rootTag": "#root"} 
+Development-level warnings: ON.
+Performance optimizations: OFF.
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
+Web  WARN  [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.

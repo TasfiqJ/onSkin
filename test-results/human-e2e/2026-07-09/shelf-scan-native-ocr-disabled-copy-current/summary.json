@@ -1,0 +1,36 @@
+{
+  "date": "2026-07-09",
+  "feature": "shelf scan native OCR disabled copy",
+  "surface": "Expo web",
+  "viewport": {
+    "width": 360,
+    "height": 640,
+    "supportClass": "launch-floor"
+  },
+  "routes": [
+    "http://localhost:8260/shelf/scan",
+    "http://localhost:8260/shelf/ocr"
+  ],
+  "status": "pass",
+  "verdict": "pass",
+  "assertions": {
+    "scanFallbackHonestAccessibleCopyPresent": true,
+    "oldEditableOcrCopyVisible": false,
+    "ocrDisabledCopyVisible": true,
+    "horizontalOverflowPx": 0,
+    "scanFallbackHeightPx": 48,
+    "currentRouteWarnErrorCount": 0
+  },
+  "evidence": [
+    "scan-native-ocr-disabled-copy.png",
+    "scan-native-ocr-disabled-copy.json",
+    "ocr-native-ocr-disabled-copy.png",
+    "ocr-native-ocr-disabled-copy.json",
+    "browser-warn-error-logs.json",
+    "report.md"
+  ],
+  "remainingRisk": [
+    "Native iOS and Android camera QA remains separate.",
+    "Real OCR implementation and capture quality remain blocked until native OCR is selected and reviewed."
+  ]
+}

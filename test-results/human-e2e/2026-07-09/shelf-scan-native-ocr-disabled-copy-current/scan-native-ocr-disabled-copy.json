@@ -1,0 +1,51 @@
+{
+  "bodyText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. = Scan label S Search catalog + Add it by hand",
+  "compactScanLabelVisible": true,
+  "controls": [
+    {
+      "ariaLabel": "Close",
+      "height": 48,
+      "left": 24,
+      "role": "button",
+      "text": "x",
+      "top": 8,
+      "width": 48
+    },
+    {
+      "ariaLabel": "Scan ingredient label. Capture label, then type from it",
+      "height": 48,
+      "left": 20,
+      "role": "button",
+      "text": "=Scan label",
+      "top": 469,
+      "width": 320
+    },
+    {
+      "ariaLabel": "Search catalog. Use reviewed matches",
+      "height": 48,
+      "left": 20,
+      "role": "button",
+      "text": "SSearch catalog",
+      "top": 523,
+      "width": 320
+    },
+    {
+      "ariaLabel": "Add it by hand. Always works offline",
+      "height": 48,
+      "left": 20,
+      "role": "button",
+      "text": "+Add it by hand",
+      "top": 577,
+      "width": 320
+    }
+  ],
+  "honestAccessibleCopyPresent": true,
+  "horizontalOverflowPx": 0,
+  "oldEditableOcrCopyVisible": false,
+  "url": "http://localhost:8260/shelf/scan",
+  "viewport": {
+    "devicePixelRatio": 1.0000000199067927,
+    "height": 641,
+    "width": 360
+  }
+}

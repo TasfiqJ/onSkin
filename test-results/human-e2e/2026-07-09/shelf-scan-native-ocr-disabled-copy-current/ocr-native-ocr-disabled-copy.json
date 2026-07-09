@@ -1,0 +1,68 @@
+{
+  "bodyText": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
+  "controls": [
+    {
+      "ariaLabel": "Close",
+      "height": 0,
+      "left": 0,
+      "role": "button",
+      "text": "x",
+      "top": 0,
+      "width": 0
+    },
+    {
+      "ariaLabel": "Scan ingredient label. Capture label, then type from it",
+      "height": 0,
+      "left": 0,
+      "role": "button",
+      "text": "=Scan label",
+      "top": 0,
+      "width": 0
+    },
+    {
+      "ariaLabel": "Search catalog. Use reviewed matches",
+      "height": 0,
+      "left": 0,
+      "role": "button",
+      "text": "SSearch catalog",
+      "top": 0,
+      "width": 0
+    },
+    {
+      "ariaLabel": "Add it by hand. Always works offline",
+      "height": 0,
+      "left": 0,
+      "role": "button",
+      "text": "+Add it by hand",
+      "top": 0,
+      "width": 0
+    },
+    {
+      "ariaLabel": "Back",
+      "height": 48,
+      "left": 24,
+      "role": "button",
+      "text": "<",
+      "top": 8,
+      "width": 48
+    },
+    {
+      "ariaLabel": null,
+      "height": 56,
+      "left": 24,
+      "role": "button",
+      "text": "Continue with manual text",
+      "top": 399,
+      "width": 312
+    }
+  ],
+  "horizontalOverflowPx": 0,
+  "ocrDisabledCopyVisible": true,
+  "oldEditableOcrCopyVisible": false,
+  "url": "http://localhost:8260/shelf/ocr",
+  "viewport": {
+    "devicePixelRatio": 1.0000000199067927,
+    "height": 641,
+    "width": 360
+  }
+}
