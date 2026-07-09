@@ -37,10 +37,17 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const supportFloorTextPressurePaywall =
     width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const supportedTextPressurePaywall = width <= 430 && height < 900;
+  const boundaryTextPressurePaywall =
+    width > 390 &&
+    width <= 430 &&
+    height >= 840 &&
+    height < 900 &&
+    (fontScale >= 1.3 || Platform.OS === 'web');
   const tallPhoneTextPressurePaywall =
     width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web');
   const denseTallTextPressurePaywall = tallPhoneTextPressurePaywall && width <= 430;
-  const denseTextPressurePaywall = denseTallTextPressurePaywall || supportFloorTextPressurePaywall;
+  const denseTextPressurePaywall =
+    denseTallTextPressurePaywall || boundaryTextPressurePaywall || supportFloorTextPressurePaywall;
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -55,6 +62,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     shortPaywall ||
     compactProgressPhotoPaywall ||
     progressTextPressurePaywall ||
+    boundaryTextPressurePaywall ||
     tallPhoneTextPressurePaywall ||
     supportFloorTextPressurePaywall;
   const microShortDeferredCtaStyle = microShortPaywall
@@ -170,6 +178,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         {splitShortProgressTabPaywall ||
         narrowShortPaywall ||
         progressTextPressurePaywall ||
+        boundaryTextPressurePaywall ||
         tallPhoneTextPressurePaywall ||
         supportFloorTextPressurePaywall ? (
           <RouteIconButton
@@ -210,7 +219,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 : 24,
         }}
       >
-        {shortPaywall || supportFloorTextPressurePaywall ? null : (
+        {shortPaywall || boundaryTextPressurePaywall || supportFloorTextPressurePaywall ? null : (
           <View
             className={
               compactPaywall

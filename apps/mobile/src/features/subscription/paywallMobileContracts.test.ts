@@ -179,6 +179,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const microShortPaywall = height < 380;');
     expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
     expect(proGate).toContain('const supportedTextPressurePaywall = width <= 430 && height < 900;');
+    expect(proGate).toContain('const boundaryTextPressurePaywall =');
+    expect(proGate).toContain('width > 390 &&');
+    expect(proGate).toContain('height >= 840 &&');
     expect(proGate).toContain('const tallPhoneTextPressurePaywall =');
     expect(proGate).toContain(
       "width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web')",
@@ -190,11 +193,14 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
-    expect(proGate).toContain('denseTallTextPressurePaywall || supportFloorTextPressurePaywall;');
+    expect(proGate).toContain(
+      'denseTallTextPressurePaywall || boundaryTextPressurePaywall || supportFloorTextPressurePaywall;',
+    );
     expect(proGate).toContain(
       'const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;',
     );
     expect(proGate).toContain('compactProgressPhotoPaywall ||\n    progressTextPressurePaywall ||');
+    expect(proGate).toContain('progressTextPressurePaywall ||\n    boundaryTextPressurePaywall ||');
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
@@ -219,7 +225,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('accessibilityLabel="Maybe later"');
     expect(proGate).toContain('glyph="x"');
     expect(proGate).toContain('tone="muted"');
-    expect(proGate).toContain('narrowShortPaywall ||\n        progressTextPressurePaywall ||');
+    expect(proGate).toContain(
+      'narrowShortPaywall ||\n        progressTextPressurePaywall ||\n        boundaryTextPressurePaywall ||',
+    );
     expect(proGate).toMatch(
       /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
@@ -325,8 +333,9 @@ describe('paywall mobile contracts', () => {
       'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
     );
     expect(proGate).toContain('compactProgressPhotoPaywall ||\n    progressTextPressurePaywall ||');
+    expect(proGate).toContain('progressTextPressurePaywall ||\n    boundaryTextPressurePaywall ||');
     expect(proGate).toContain(
-      'progressTextPressurePaywall ||\n    tallPhoneTextPressurePaywall ||',
+      'boundaryTextPressurePaywall ||\n    tallPhoneTextPressurePaywall ||',
     );
     expect(proGate).toContain('const shortPaywall = height < 600;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');
@@ -334,7 +343,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "height < 410 && feature === 'photo_timeline' && pathname === '/progress'",
     );
-    expect(proGate).toContain('narrowShortPaywall ||\n        progressTextPressurePaywall ||');
+    expect(proGate).toContain(
+      'narrowShortPaywall ||\n        progressTextPressurePaywall ||\n        boundaryTextPressurePaywall ||',
+    );
     expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (');
     expect(proGate).toContain('{storeUnavailableReason}');
     expect(proGate).not.toContain('compactComplianceSpacer');
@@ -349,7 +360,9 @@ describe('paywall mobile contracts', () => {
     expect(feedback).toBeGreaterThan(-1);
     expect(headerCompliance).toBeLessThan(scrollBody);
     expect(bottomCompliance).toBeGreaterThan(feedback);
-    expect(proGate).toContain('{shortPaywall || supportFloorTextPressurePaywall ? null : (');
+    expect(proGate).toContain(
+      '{shortPaywall || boundaryTextPressurePaywall || supportFloorTextPressurePaywall ? null : (',
+    );
     expect(proGate).toContain(
       "'mt-1.5 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );

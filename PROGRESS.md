@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added a focused 412 x 844 / 200% text-pressure boundary guard for contextual
+  ProGate paywalls. The paywall now treats the 391-430 px wide, 840-899 px tall
+  band as dense under text pressure, moving compliance into the header, using
+  the compact dismiss control, and suppressing nonessential paywall body/icon
+  pressure. The focused Progress/paywall route audit passed zero failed routes
+  in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-412-844-progate-current/`.
+
 - Hardened the readiness-status audit so launch-readiness docs must mention
   the supported Android-class 412 x 915 / 200% text-pressure evidence now
   tracked by the human-E2E manifest. `LAUNCH_READINESS.md` and `BLOCKERS.md`
