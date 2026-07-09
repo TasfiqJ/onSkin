@@ -1,0 +1,44 @@
+{
+  "date": "2026-07-09",
+  "task": "Settings privacy support-floor withdraw spacing",
+  "appSurface": "Expo web in Codex in-app browser",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8255",
+  "route": "/settings/privacy -> /you?section=privacy",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "firstViewport": {
+    "withdrawVisible": false,
+    "clippedCount": 0,
+    "sub44Count": 0,
+    "blockedCount": 0,
+    "horizontalOverflow": 0,
+    "tabBarTop": 407
+  },
+  "scrolled": {
+    "withdrawVisible": true,
+    "withdraw": {
+      "blocked": false,
+      "clipped": false,
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "rect": {
+        "bottom": 201,
+        "height": 72,
+        "width": 232,
+        "x": 44,
+        "y": 129
+      },
+      "role": "button",
+      "sub44": false,
+      "visible": true
+    },
+    "clippedCount": 0,
+    "sub44Count": 0,
+    "blockedCount": 0,
+    "horizontalOverflow": 0
+  },
+  "unexpectedLogCount": 0,
+  "unexpectedLogs": [],
+  "verdict": "pass"
+}

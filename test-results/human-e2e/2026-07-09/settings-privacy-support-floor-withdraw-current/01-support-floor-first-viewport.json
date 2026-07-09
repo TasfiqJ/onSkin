@@ -1,0 +1,107 @@
+{
+  "blockedCount": 0,
+  "clippedCount": 0,
+  "containsPrivacy": true,
+  "containsWithdraw": true,
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/you?section=privacy",
+  "sub44Count": 0,
+  "tabBarTop": 407,
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleControls": [
+    {
+      "blocked": false,
+      "clipped": false,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 113,
+        "height": 48,
+        "width": 52,
+        "x": 224,
+        "y": 65
+      },
+      "role": "switch",
+      "sub44": false,
+      "visible": true
+    },
+    {
+      "blocked": false,
+      "clipped": false,
+      "label": "Photos & the no-AI-score promise",
+      "rect": {
+        "bottom": 178,
+        "height": 48,
+        "width": 232,
+        "x": 44,
+        "y": 130
+      },
+      "role": "button",
+      "sub44": false,
+      "visible": true
+    },
+    {
+      "blocked": false,
+      "clipped": false,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "width": 76,
+        "x": 9,
+        "y": 407
+      },
+      "role": "tab",
+      "sub44": false,
+      "visible": true
+    },
+    {
+      "blocked": false,
+      "clipped": false,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "width": 76,
+        "x": 85,
+        "y": 407
+      },
+      "role": "tab",
+      "sub44": false,
+      "visible": true
+    },
+    {
+      "blocked": false,
+      "clipped": false,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "width": 76,
+        "x": 160,
+        "y": 407
+      },
+      "role": "tab",
+      "sub44": false,
+      "visible": true
+    },
+    {
+      "blocked": false,
+      "clipped": false,
+      "label": "You tab",
+      "rect": {
+        "bottom": 461,
+        "height": 54,
+        "width": 76,
+        "x": 236,
+        "y": 407
+      },
+      "role": "tab",
+      "sub44": false,
+      "visible": true
+    }
+  ],
+  "withdrawVisible": false
+}

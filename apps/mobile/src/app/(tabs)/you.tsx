@@ -74,6 +74,7 @@ const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;
 const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
 const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;
+const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;
@@ -326,6 +327,7 @@ export default function YouScreen() {
   const privacyDirectEntry = params.section === 'privacy';
   const narrowPhone = compactPhone && width < 360;
   const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;
+  const supportFloorPrivacyEntry = privacyDirectEntry && narrowPhone && height >= 460 && height < 520;
   const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;
   const microShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 380;
   const privacyDirectEntryScrollNudge = microShortPrivacyEntry
@@ -339,9 +341,11 @@ export default function YouScreen() {
           : compactPhone
             ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
             : 0;
-  const narrowPrivacyWithdrawStyle = privacyDirectEntry && narrowPhone
-    ? { marginTop: PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN }
-    : undefined;
+  const narrowPrivacyWithdrawStyle = supportFloorPrivacyEntry
+    ? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN }
+    : privacyDirectEntry && narrowPhone
+      ? { marginTop: PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN }
+      : undefined;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },

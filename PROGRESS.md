@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Tightened the Settings Privacy support-floor withdraw spacer after a 320 x
+  480 Codex in-app browser check found the initial support-floor margin still
+  left `Withdraw health-data consent` partly under the floating tab bar. The
+  direct `/settings/privacy` entry now resolves to `/you?section=privacy`, keeps
+  Marketing emails and Photos/no-AI controls complete in the first viewport,
+  moves the destructive withdraw row fully below the first viewport, and a
+  user-like scroll reaches a complete 232 x 72 px withdraw button. Evidence
+  reports zero clipped controls, zero sub-44 controls, zero blocked hit-tests,
+  zero horizontal overflow, and zero unexpected current-run browser logs in
+  `test-results/human-e2e/2026-07-09/settings-privacy-support-floor-withdraw-current/`
+  plus
+  `docs/e2e-bug-reports/2026-07-09-settings-privacy-support-floor-withdraw-peek.md`.
+
 - Added beta-safe support-contact analytics to the Settings privacy Support
   policy row. The row now emits literal `support_contact_opened` or
   `support_contact_failed` events with only `source=settings` and
