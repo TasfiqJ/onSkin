@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Raised the launch-blocking layout support floor from 320-wide browser states
+  to the practical 360 x 640 compact-phone floor while keeping iOS 17.0+,
+  Android 10 / API 29+, and Android API 36 compile/target posture intact.
+  `docs/DEVICE_SUPPORT_POLICY.md`, `docs/FOR_TAS_TO_DO.md`, `docs/DECISIONS.md`,
+  `docs/HUMAN_SIMULATED_E2E_TESTING.md`, `docs/USER_FLOW_TREE.md`, and the
+  Tas/readiness/human-E2E generators now treat 320-wide viewports as
+  stress/resilience evidence unless supported physical-device, app-review,
+  accessibility, or beta/support evidence elevates them. Existing passing
+  evidence at 360 x 640, 360 x 740, 375 x 812, 390 x 844, 412 x 915, and
+  430 x 932 remains inside the launch-supported evidence set.
+
 - Cleared a supported Android-class 360 x 740 / 200% text-pressure route
   audit. The fresh 49-route sweep exposed `/settings/notifications` with only
   4 px of the lower-priority `Replenishment` switch visible at the viewport
@@ -42,7 +53,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `docs:tas-todo-audit:strict` now fails if `docs/FOR_TAS_TO_DO.md` drifts
   behind the current human-E2E evidence date or stops naming
   `docs/DEVICE_SUPPORT_POLICY.md`, iOS 17.0+, Android 10 / API 29+, the
-  320 x 480 shortest-phone web floor, and Android API 36 compile/target
+  360 x 640 shortest-phone web floor, and Android API 36 compile/target
   posture. `AGENTS.md` and `CLAUDE.md` now list the device support policy in
   the readiness source-of-truth docs.
 
@@ -94,7 +105,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   tracked by the human-E2E manifest. `LAUNCH_READINESS.md` and `BLOCKERS.md`
   now name the 412 x 915 pass and its
   `text-pressure-200-android-412-915-postfix2` evidence folder alongside the
-  320 x 480 launch floor and 375 / 390 / 430 supported-phone gates.
+  then-current 320 x 480 launch floor and 375 / 390 / 430 supported-phone gates.
 
 - Cleared a supported Android-class 412 x 915 / 200% text-pressure route
   audit. The first sweep exposed a 3 px `Progress` tab-label overflow in
@@ -111,8 +122,8 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `docs/e2e-bug-reports/2026-07-09-text-pressure-200-android-412-clearance.md`.
 
 - Promoted the supported iPhone-class 375 x 812 / 200% text-pressure sweep into
-  the durable human-E2E manifest. The generated manifest now records that
-  evidence as a supported-phone gate alongside the 320 x 480 launch support
+  the durable human-E2E manifest. The generated manifest records that evidence
+  as a supported-phone gate alongside the then-current 320 x 480 launch support
   floor and the 390 x 844 / 430 x 932 supported-phone sweeps, so the 375-class
   clearance cannot drift into an untracked screenshot-only artifact.
 
@@ -277,14 +288,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   and
   `docs/e2e-bug-reports/2026-07-09-text-pressure-200-support-floor-480-clearance.md`.
 
-- Added a source-level native support-floor contract for the accepted launch
+- Added a source-level native support-floor contract for the then-accepted launch
   cutoff. `apps/mobile/src/lib/appConfig.test.ts` now verifies the resolved
   Expo config keeps iOS at 17.0+, Android at API 29+, and tablets out of V1
   scope, matching `docs/DEVICE_SUPPORT_POLICY.md` and Phase 5 native-config
   checks. The same slice tightened 320 x 480 direct-entry density for Ask,
   Community missing-note recovery, Recommendation detail headers, Settings
   Privacy, Settings Subscription, and Shelf no-match/opened-date recovery. A
-  fresh 49-route Expo web audit at the accepted 320 x 480 floor passed with
+  fresh 49-route Expo web audit at the then-accepted 320 x 480 floor passed with
   zero failed routes in
   `test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard/`.
   The readiness test baseline is now 171 mobile test files / 1751 tests.
@@ -415,10 +426,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   and
   `docs/e2e-bug-reports/2026-07-09-text-pressure-120-supported-phone-clearance.md`.
 
-- Accepted and enforced the V1 device support floor so release QA is no longer
+- Accepted and enforced the then-current V1 device support floor so release QA is no longer
   open-ended across browser-only micro-short heights. `docs/DEVICE_SUPPORT_POLICY.md`
   now sets iOS 17.0+ and Android 10 / API 29+ as the launch install floor,
-  keeps 320 x 480 as the launch-blocking Expo web small-phone viewport, and
+  kept 320 x 480 as the launch-blocking Expo web small-phone viewport at the
+  time, and
   reclassifies 320 x 430 / 390 / 370 / 360 browser viewports as resilience
   stress audits unless they reproduce on a supported physical device or app
   review/accessibility requirement. `app.base.json` now enforces the iOS

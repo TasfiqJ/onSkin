@@ -17,13 +17,13 @@ const requiredForTasDeviceSupportNeedles = [
   'docs/DEVICE_SUPPORT_POLICY.md',
   'iOS 17.0+',
   'Android 10 / API 29+',
-  '320 x 480',
+  '360 x 640',
   'API 36',
 ];
 const requiredDeviceSupportPolicyNeedles = [
   'iOS 17.0+',
   'Android 10 / API 29+',
-  '320 x 480',
+  '360 x 640',
   'API 36',
 ];
 

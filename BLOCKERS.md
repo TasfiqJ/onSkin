@@ -115,11 +115,12 @@ founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
 covers 171 mobile test files / 1760 tests. The 2026-07-09 human-simulated E2E
-manifest now anchors to the 320 x 480 support-floor 200% text-pressure sweep,
+manifest now anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
-375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also passed 49 / 49
-routes with zero failures. Evidence includes
-`test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`,
+360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
+passed 49 / 49 routes with zero failures. Evidence includes
+`test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix/`,
+`test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix/`,
 `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
 and
 `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`.
@@ -129,7 +130,10 @@ fixes, with evidence in
 `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3/`.
 The native support-floor guard now keeps iOS deployment at 17.0+, Android min
 SDK at API 29, and Android compile/target SDK at API 36, so the install floor
-and current store target posture cannot drift silently.
+and current store target posture cannot drift silently. `docs/DEVICE_SUPPORT_POLICY.md`
+now treats 360 x 640 as the launch-blocking web-compatible layout floor and
+keeps 320-wide browser evidence as stress/resilience coverage unless real
+device, beta, accessibility, or store-review evidence elevates it.
 The Settings Privacy Terms-row spacer and contextual Progress
 tall-phone compact compliance header have fresh route evidence, including
 compact visible Explore-first copy with the full reverse-trial copy retained in

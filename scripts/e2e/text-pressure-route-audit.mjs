@@ -23,8 +23,8 @@ const debugPort = Number(process.env.TEXT_PRESSURE_DEBUG_PORT ?? 9332);
 const baseUrl = process.env.TEXT_PRESSURE_BASE_URL ?? `http://localhost:${appPort}`;
 const shouldStartServer = !process.env.TEXT_PRESSURE_BASE_URL;
 const viewport = {
-  height: Number(process.env.TEXT_PRESSURE_VIEWPORT_HEIGHT ?? 568),
-  width: Number(process.env.TEXT_PRESSURE_VIEWPORT_WIDTH ?? 320),
+  height: Number(process.env.TEXT_PRESSURE_VIEWPORT_HEIGHT ?? 640),
+  width: Number(process.env.TEXT_PRESSURE_VIEWPORT_WIDTH ?? 360),
 };
 const entitlementLoadingText = 'Checking your access';
 const entitlementWaitMs = positiveNumber(process.env.TEXT_PRESSURE_ENTITLEMENT_WAIT_MS, 35_000);

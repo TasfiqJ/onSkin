@@ -75,8 +75,9 @@ Manual QA must cover:
 - direct-entry route back/close behavior
 - relaunch persistence
 - accessibility labels and touch targets
-- stress-only 320 x 430 / 390 / 370 / 360 browser viewports when they protect
-  critical flows, without treating those sub-floor sizes as launch blockers
+- stress-only 320 x 568 / 480 / 430 / 390 / 370 / 360 browser viewports when
+  they protect critical flows, without treating those sub-floor sizes as launch
+  blockers
 
 ## Security Checks
 

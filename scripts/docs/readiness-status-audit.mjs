@@ -24,18 +24,21 @@ const staleTestPatterns = [
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
   /\b1751\s+tests?\b/i,
+  /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
 
 const requiredManifestNeedles = [
-  '320 x 480 support-floor 200% text-pressure',
+  '360 x 640 launch-floor 200% text-pressure',
+  '360 x 740',
   '375 x 812',
   '390 x 844',
   '412 x 915',
   '414 x 896',
   '430 x 932',
   'API 36',
-  'text-pressure-200-support-floor-480-postfix-12',
+  'text-pressure-200-supported-360-640-postfix',
+  'text-pressure-200-android-360-740-postfix',
   'text-pressure-200-iphone-375-812-postfix',
   'text-pressure-200-android-412-915-postfix2',
   'text-pressure-200-boundary-414-896-postfix3',

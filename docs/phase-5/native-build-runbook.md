@@ -3,11 +3,12 @@
 Phase 5 moves OnSkin from Expo preview behavior to installable native builds. The product is not beta-ready until the generated device QA packet has real iOS and Android build IDs, physical-device names, and named signoff.
 
 The native support floor is defined in `docs/DEVICE_SUPPORT_POLICY.md`: iOS
-17.0+ and Android 10 / API 29+. Builds may target newer SDKs as required by
-Apple, Google, and Expo, but the minimum install floor must not be lowered
-without updating the policy, config guard, and QA matrix together. Current
-Android native builds intentionally pin compile/target SDK to API 36 while
-keeping min SDK at API 29, so store submission posture can advance without
+17.0+ and Android 10 / API 29+, with 360 x 640 as the launch-blocking
+Expo web-compatible compact-phone layout floor. Builds may target newer SDKs as
+required by Apple, Google, and Expo, but the minimum install floor must not be
+lowered without updating the policy, config guard, and QA matrix together.
+Current Android native builds intentionally pin compile/target SDK to API 36
+while keeping min SDK at API 29, so store submission posture can advance without
 re-expanding the supported customer device matrix.
 
 ## Build Profiles

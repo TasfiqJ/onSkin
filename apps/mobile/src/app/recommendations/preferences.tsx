@@ -124,10 +124,12 @@ export default function PreferencesScreen() {
   const compactPreferences = height < 640;
   const shortPreferences = height < 600;
   const supportFloorPreferences = width <= 320 && height < 520;
+  const shortTextPressurePreferences = width <= 414 && height >= 600 && height < 640;
   const supportFloorTextPressurePreferences = width <= 390 && height >= 640 && height < 700;
   const ultraShortPreferences = height < 460;
   const microShortPreferences = height < 380;
-  const splitShortPreferences = height < 600 || supportFloorTextPressurePreferences;
+  const splitShortPreferences =
+    height < 600 || shortTextPressurePreferences || supportFloorTextPressurePreferences;
   const modernTextPressurePreferences = height < 900;
   const boundaryTextPressurePreferences =
     height >= 700 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
@@ -174,7 +176,7 @@ export default function PreferencesScreen() {
       ? { marginTop: 400 }
       : { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =
-    supportFloorPreferences || boundaryTextPressurePreferences
+    supportFloorPreferences || shortTextPressurePreferences || boundaryTextPressurePreferences
       ? { marginTop: 320 }
       : (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
         ? { marginTop: 112 }

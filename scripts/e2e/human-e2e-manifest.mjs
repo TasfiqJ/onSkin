@@ -70,41 +70,49 @@ function gateEvidencePath(gate) {
   return `${gate.folder}/${gate.evidence}`;
 }
 
-function textPressureSupportFloorGate(date, scale, suffix, titleScale = `${scale}%`) {
+function textPressureLaunchFloorGate(date) {
   return {
-    id: `support-floor-480-${scale}-text-pressure`,
-    title: `320 x 480 supported-floor ${titleScale} text-pressure route sweep`,
+    id: 'support-floor-360-640-200-text-pressure',
+    title: '360 x 640 launch-floor 200% text-pressure route sweep',
     kind: 'summary-status',
     required: true,
     supportClass: 'launch-blocking',
+    folder: `test-results/human-e2e/${date}/text-pressure-200-supported-360-640-postfix`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero launch-floor text-pressure geometry/log failures.',
+  };
+}
+
+function textPressureLegacyFloorGate(date, scale, suffix, titleScale = `${scale}%`) {
+  return {
+    id: `legacy-320-480-${scale}-text-pressure`,
+    title: `320 x 480 stress ${titleScale} text-pressure route sweep`,
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${date}/text-pressure-${scale}-support-floor-480-${suffix}`,
     evidence: 'summary.json',
     expected:
-      '49 Expo web direct-entry routes have zero support-floor text-pressure geometry/log failures.',
+      '49 Expo web direct-entry routes have zero legacy 320-wide stress geometry/log failures.',
   };
 }
 
 function legacySupportFloorGate(date) {
   return {
     id: 'short-phone-480-route-rerun',
-    title: '320 x 480 supported-floor route rerun',
+    title: '320 x 480 stress route rerun',
     kind: 'failures',
-    required: true,
-    supportClass: 'launch-blocking',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${date}/current-main-short-phone-480-rerun`,
     evidence: 'failures.json',
-    expected: '49 Expo web direct-entry routes have zero support-floor geometry/log failures.',
+    expected: '49 Expo web direct-entry routes have zero legacy 320-wide geometry/log failures.',
   };
 }
 
 function supportFloorGateForDate(date) {
-  const candidates = [
-    textPressureSupportFloorGate(date, 200, 'postfix-12'),
-    textPressureSupportFloorGate(date, 170, 'postfix-16'),
-    textPressureSupportFloorGate(date, 170, 'postfix-4'),
-    legacySupportFloorGate(date),
-  ];
-  return candidates.find((gate) => exists(gateEvidencePath(gate))) ?? candidates[0];
+  return textPressureLaunchFloorGate(date);
 }
 
 function requiredGateEvidenceFiles(date) {
@@ -183,6 +191,16 @@ if (!evidenceDate) {
 const gates = [
   supportFloorGateForDate(evidenceDate),
   {
+    id: 'android-360-740-200-text-pressure',
+    title: '360 x 740 supported Android-class 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-360-740-postfix`,
+    evidence: 'summary.json',
+    expected: '49 Expo web direct-entry routes have zero Android 360-class failures.',
+  },
+  {
     id: 'iphone-375-200-text-pressure',
     title: '375 x 812 supported iPhone-class 200% text-pressure route sweep',
     kind: 'summary-status',
@@ -244,6 +262,15 @@ const gates = [
     expected: '49 Expo web direct-entry routes have zero tall-phone text-pressure failures.',
   },
   {
+    ...textPressureLegacyFloorGate(evidenceDate, 200, 'postfix-12'),
+  },
+  {
+    ...textPressureLegacyFloorGate(evidenceDate, 170, 'postfix-16'),
+  },
+  {
+    ...legacySupportFloorGate(evidenceDate),
+  },
+  {
     id: 'short-phone-430-final-clearance',
     title: '320 x 430 resilience route clearance',
     kind: 'failures',
@@ -277,7 +304,7 @@ const gates = [
 
 const warnings = [
   'This manifest verifies committed local Expo web evidence only; it does not replace physical iOS/Android device QA.',
-  'Only launch-blocking gates are required by the device support policy; 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.',
+  'Only launch-blocking gates are required by the device support policy; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.',
   'Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.',
 ];
 const blockers = [];

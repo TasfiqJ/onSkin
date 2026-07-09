@@ -3,9 +3,10 @@
 Record device model, OS version, build profile, build ID, tester, date, pass/fail, and notes for every row.
 
 Use `docs/DEVICE_SUPPORT_POLICY.md` as the support floor. V1 native QA starts
-at iOS 17.0+ and Android 10 / API 29+; sub-floor browser stress viewports are
-not launch blockers unless reproduced on a supported physical device or required
-by app review/accessibility.
+at iOS 17.0+ and Android 10 / API 29+ with 360 x 640 as the launch-blocking
+Expo web-compatible layout floor; 320-wide browser stress viewports are not
+launch blockers unless reproduced on a supported physical device or required by
+app review/accessibility.
 
 | Surface           | Required Checks                                                                                         | Status                                   |
 | ----------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
@@ -32,6 +33,8 @@ Minimum before beta:
 - Oldest-supported iOS 17-class iPhone available to the team.
 - Current Pixel or equivalent Android on current public Android.
 - Current or midrange Samsung Android on Android 10 / API 29 or newer.
+- 360 dp / compact Android-class physical phone if available, or Play Console
+  Reach evidence proving that no meaningful target devices sit at that floor.
 - Android 13+ notification permission behavior.
 - Android 14+ exact-alarm/background behavior.
 

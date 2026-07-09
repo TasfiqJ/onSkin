@@ -49,11 +49,11 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ### 2026-07-09 - Launch Device Support Floor
 
-- Decision: Launch support floor is iOS 17.0+ and Android 10 / API 29+; launch-blocking layout QA starts at 320 x 480 for Expo web-compatible Android-small-phone coverage, while 320 x 430 / 390 / 370 / 360 browser viewports remain stress-only unless reproduced on a supported native device or required by app review/accessibility.
-- Alternatives: support Expo's lower Android 7+ default, require Android 12+, keep every micro-short browser viewport as launch-blocking, or drop small Android phones entirely.
+- Decision: Launch support floor is iOS 17.0+ and Android 10 / API 29+; launch-blocking layout QA starts at 360 x 640 for Expo web-compatible compact-phone coverage, while 320-wide browser viewports and sub-640 browser-only heights remain stress-only unless reproduced on a supported native device or required by app review/accessibility.
+- Alternatives: support Expo's lower Android 7+ default, require Android 12+, keep the earlier 320 x 480 browser floor as launch-blocking, or drop compact Android phones entirely.
 - Criteria: paid consumer market reach, QA burden, current Expo SDK support, App Store/Play submission requirements, camera/photo reliability, accessibility, and launch speed.
-- Evidence: Expo SDK 56 supports iOS 16.4+ and Android compile/target SDK 36; Apple and Google current submission rules require modern build SDK/target API; Android 320 dp remains the smallest realistic supported phone width; the repo has passing 320 x 480 evidence and extensive sub-floor stress evidence.
-- Risk: Android 9-or-older and iOS 16 users cannot install; sub-floor browser/split-screen layouts may still expose polish bugs that are recorded but not launch-blocking.
+- Evidence: Expo SDK 56 supports iOS 16.4+ and Android compile/target SDK 36; Apple and Google current submission rules require modern build SDK/target API; the repo has passing 360 x 640, 360 x 740, 375 x 667/812, 390 x 844, 412 x 915, and 430 x 932 evidence plus extensive 320-wide stress evidence.
+- Risk: Android 9-or-older and iOS 16 users cannot install; users on sub-360 width or sub-640 height browser/device states may still hit polish bugs that are recorded but not launch-blocking unless real device/app-review evidence elevates them.
 - Status: Accepted.
 
 ## Architecture Decisions

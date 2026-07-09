@@ -11,6 +11,8 @@ Completed in repo:
   29+ via `docs/DEVICE_SUPPORT_POLICY.md`, `app.base.json`, and
   `phase5:check-native-config`; Android compile/target SDK are explicitly
   pinned to API 36 so Play target posture is separate from the install floor.
+  The launch-blocking web-compatible layout floor is now 360 x 640; 320-wide
+  browser evidence is retained as stress/resilience coverage.
 - Runtime version policy added.
 - Android camera and notification permissions declared.
 - Exact-alarm permissions intentionally absent.

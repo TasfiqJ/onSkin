@@ -19,11 +19,13 @@ clearance and not a real launch catalog.
 Fresh verification through 2026-07-09:
 
 - The human-simulated E2E manifest now anchors to the 2026-07-09 Expo web
-  support-floor evidence. The 320 x 480 support-floor 200% text-pressure
-  sweep passed 49 / 49 routes with zero failed routes, and the supported-phone
-  375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% text-pressure sweeps
-  also passed 49 / 49 routes with zero failed routes. Evidence:
-  `test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`,
+  support-floor evidence. The 360 x 640 launch-floor 200% text-pressure sweep
+  passed 49 / 49 routes with zero failed routes, and the supported-phone
+  360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200%
+  text-pressure sweeps also passed 49 / 49 routes with zero failed routes.
+  Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix/`,
   `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
   `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7/`,
   `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`,
@@ -37,7 +39,7 @@ Fresh verification through 2026-07-09:
   iOS deployment stays at 17.0+, Android min SDK stays at API 29, and Android
   compile/target SDK are pinned to API 36 by `app.base.json`,
   `appConfig.test.ts`, and `phase5:check-native-config`.
-- A fresh accepted-floor Expo web route audit after the native support-floor
+- A retained 320-wide stress Expo web route audit after the native support-floor
   config contract plus direct-entry density guards for Ask, Community,
   Recommendation detail, Settings, and Shelf recovery passed 49 / 49 routes at
   320 x 480 with zero failed routes, zero clipped visible controls, zero blocked
@@ -126,9 +128,10 @@ Fresh verification through 2026-07-09:
   hash.
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
-  committed local Expo web evidence for the 2026-07-09 320 x 480
-  support-floor 200% text-pressure sweep and records 375 x 812, 390 x 844,
-  412 x 915, and 430 x 932 supported-phone 200% text-pressure sweep evidence.
+  committed local Expo web evidence for the 2026-07-09 360 x 640
+  launch-floor 200% text-pressure sweep and records 360 x 740, 375 x 812,
+  390 x 844, 412 x 915, and 430 x 932 supported-phone 200% text-pressure sweep
+  evidence.
   It does not replace physical iOS/Android
   device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
   StoreKit/Play Billing, or live Supabase release gates. The support contract
@@ -204,8 +207,9 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-08/remaining-short-phone-430-clearance/`,
   `test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep/`.
 - The 320 x 430 evidence above is retained as resilience/stress proof. The
-  launch-blocking web viewport floor remains 320 x 480 unless a supported
-  native device or app-review requirement reproduces the smaller-height issue.
+  launch-blocking web viewport floor is now 360 x 640; 320-wide evidence remains
+  stress proof unless a supported native device or app-review requirement
+  reproduces the smaller-width or smaller-height issue.
 - Expo web 320 x 390 split-short stress clearance passed the current 49-route
   direct-entry sweep with zero failed routes, zero clipped controls, and zero
   blocked hit-tests after tightening Ask, Shelf, contextual paywall,

@@ -151,12 +151,15 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const shortPreferences = height < 600;');
     expect(source).toContain('const supportFloorPreferences = width <= 320 && height < 520;');
     expect(source).toContain(
+      'const shortTextPressurePreferences = width <= 414 && height >= 600 && height < 640;',
+    );
+    expect(source).toContain(
       'const supportFloorTextPressurePreferences = width <= 390 && height >= 640 && height < 700;',
     );
     expect(source).toContain('const ultraShortPreferences = height < 460;');
     expect(source).toContain('const microShortPreferences = height < 380;');
     expect(source).toContain(
-      'const splitShortPreferences = height < 600 || supportFloorTextPressurePreferences;',
+      'height < 600 || shortTextPressurePreferences || supportFloorTextPressurePreferences',
     );
     expect(source).toContain(
       'const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;',
@@ -203,7 +206,9 @@ describe('Recommendation route contracts', () => {
       'const androidMidTextPressurePreferences = width <= 390 && height >= 700 && height < 840;',
     );
     expect(source).toContain('const modernTextPressureBudgetGroupStyle =');
-    expect(source).toContain('supportFloorPreferences || boundaryTextPressurePreferences');
+    expect(source).toContain(
+      'supportFloorPreferences || shortTextPressurePreferences || boundaryTextPressurePreferences',
+    );
     expect(source).toContain('boundaryTextPressurePreferences');
     expect(source).toContain('? { marginTop: 320 }');
     expect(source).toContain('modernTextPressurePreferences || tallTextPressurePreferences');
