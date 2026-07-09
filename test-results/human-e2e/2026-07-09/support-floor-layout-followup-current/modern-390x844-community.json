@@ -1,0 +1,93 @@
+{
+  "controls": [
+    {
+      "centerInViewport": true,
+      "hitLabel": "Back",
+      "hitPass": true,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.99,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 3.99
+      },
+      "role": "button",
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Can you use niacinamide with vitamin C?. Refuted.",
+      "hitPass": true,
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "rect": {
+        "bottom": 321.88,
+        "height": 133.92,
+        "width": 342.29,
+        "x": 24,
+        "y": 187.96
+      },
+      "role": "button",
+      "visibleHeight": 133.92,
+      "visibleWidth": 342.29
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Is a 10-step “glass skin” routine better?. Contested.",
+      "hitPass": true,
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "rect": {
+        "bottom": 487.79,
+        "height": 115.91,
+        "width": 342.29,
+        "x": 24,
+        "y": 371.88
+      },
+      "role": "button",
+      "visibleHeight": 115.91,
+      "visibleWidth": 342.29
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "hitPass": true,
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "rect": {
+        "bottom": 615.7,
+        "height": 115.91,
+        "width": 342.29,
+        "x": 24,
+        "y": 499.79
+      },
+      "role": "button",
+      "visibleHeight": 115.91,
+      "visibleWidth": 342.29
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Does retinol thin your skin?. Refuted.",
+      "hitPass": true,
+      "label": "Does retinol thin your skin?. Refuted.",
+      "rect": {
+        "bottom": 775.61,
+        "height": 109.91,
+        "width": 342.29,
+        "x": 24,
+        "y": 665.7
+      },
+      "role": "button",
+      "visibleHeight": 109.91,
+      "visibleWidth": 342.29
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/community",
+  "issues": [],
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleControlCount": 5,
+  "visibleText": "<Skin NotesMyth vs evidence. Expert-written, evidence-graded, calm.INGREDIENT MYTHSCan you use niacinamide with vitamin C?RefutedThe “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.SENSITIVE SKINIs a 10-step “glass skin” routine better?ContestedFor sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.Is “natural” always gentler for sensitive skin?ContestedNot necessarily. Some plant extracts and essential oils are common irritants.RETINOIDSDoes retinol thin your skin?RefutedIt thickens the deeper dermis over time; surface flaking early on is not thinning.SUNSCREENDo you have to wait between skincare steps?RefutedMostly no. Layering onto slightly damp skin is fine for most routines.Is homemade sunscreen as protective as store-bought?RefutedNo. Homemade mixes can’t be measured for protection. Use a tested SPF.a library, not a feed. No likes, no authors to follow, no ranking by popularity"
+}

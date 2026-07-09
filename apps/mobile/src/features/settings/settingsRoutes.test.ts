@@ -40,8 +40,9 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 144;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN = 180;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
     expect(you).toContain("const privacyDirectEntry = params.section === 'privacy';");
@@ -79,6 +80,8 @@ describe('Settings route contracts', () => {
     expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
     expect(you).toContain('<View style={narrowPrivacyWithdrawStyle}>');
+    expect(you).toContain("className={privacyDirectEntry ? undefined : 'mt-4'}");
+    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN }');
 
     const privacyAnchorIndex = you.indexOf('privacyCardY.current = event.nativeEvent.layout.y;');
     expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('SECURITY'));
@@ -198,8 +201,9 @@ describe('Settings route contracts', () => {
     );
     expect(notifications).toContain('compact={compactNotifications}');
     expect(notifications).toContain(
-      'style={ultraShortNotifications ? { marginTop: 56 } : undefined}',
+      'const promotionalSectionStyle = splitShortNotifications ? { marginTop: 56 } : undefined;',
     );
+    expect(notifications).toContain('style={promotionalSectionStyle}');
     expect(notifications).toContain('last={splitShortNotifications}');
     expect(notifications).toContain('{splitShortNotifications ? null : (');
     expect(notifications).toContain('{splitShortNotifications ? (');

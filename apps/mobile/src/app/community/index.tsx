@@ -107,7 +107,7 @@ export default function SkinNotesHub() {
   const splitShortCommunity = height < 410;
   const microShortCommunity = height < 380;
   const narrowCompactCommunity = compactCommunity && width < 360;
-  const modernPhoneCommunity = height < 900;
+  const modernPhoneCommunity = height < 980;
 
   useEffect(() => {
     track('skin_note_viewed', { surface: 'hub' });

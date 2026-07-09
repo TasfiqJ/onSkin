@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-07-09T08:07:12.792Z",
+  "baseUrl": "http://localhost:8255",
+  "verdict": "pass",
+  "routes": [
+    "/community",
+    "/settings/privacy",
+    "/settings/notifications",
+    "/shelf/manual"
+  ],
+  "viewports": [
+    {
+      "name": "floor-320x480",
+      "width": 320,
+      "height": 480
+    },
+    {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "results": [
+    {
+      "viewport": "floor-320x480",
+      "route": "/community",
+      "href": "http://localhost:8255/community",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "floor-320x480",
+      "route": "/settings/privacy",
+      "href": "http://localhost:8255/you?section=privacy",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "floor-320x480",
+      "route": "/settings/notifications",
+      "href": "http://localhost:8255/settings/notifications",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "floor-320x480",
+      "route": "/shelf/manual",
+      "href": "http://localhost:8255/shelf/manual",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "modern-390x844",
+      "route": "/community",
+      "href": "http://localhost:8255/community",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "modern-390x844",
+      "route": "/settings/privacy",
+      "href": "http://localhost:8255/you?section=privacy",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "modern-390x844",
+      "route": "/settings/notifications",
+      "href": "http://localhost:8255/settings/notifications",
+      "issueCount": 0,
+      "issues": []
+    },
+    {
+      "viewport": "modern-390x844",
+      "route": "/shelf/manual",
+      "href": "http://localhost:8255/shelf/manual",
+      "issueCount": 0,
+      "issues": []
+    }
+  ],
+  "currentOriginLogs": [],
+  "dialogType": null
+}

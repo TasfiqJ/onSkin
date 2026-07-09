@@ -1,0 +1,157 @@
+{
+  "controls": [
+    {
+      "centerInViewport": true,
+      "hitLabel": "Back",
+      "hitPass": true,
+      "label": "Back",
+      "rect": {
+        "bottom": 51.99,
+        "height": 48,
+        "width": 48,
+        "x": 19.99,
+        "y": 3.99
+      },
+      "role": "button",
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Morning routine 7:30 AM",
+      "hitPass": true,
+      "label": "Morning routine 7:30 AM",
+      "rect": {
+        "bottom": 173.94,
+        "height": 63.99,
+        "width": 262.33,
+        "x": 37.99,
+        "y": 109.95
+      },
+      "role": "button",
+      "visibleHeight": 63.99,
+      "visibleWidth": 262.33
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Morning routine",
+      "hitPass": true,
+      "label": "Morning routine",
+      "rect": {
+        "bottom": 165.94,
+        "height": 48,
+        "width": 51.99,
+        "x": 300.32,
+        "y": 117.95
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Evening · tonight’s step 9:30 PM",
+      "hitPass": true,
+      "label": "Evening · tonight’s step 9:30 PM",
+      "rect": {
+        "bottom": 266.87,
+        "height": 63.99,
+        "width": 262.33,
+        "x": 37.99,
+        "y": 202.88
+      },
+      "role": "button",
+      "visibleHeight": 63.99,
+      "visibleWidth": 262.33
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Evening · tonight’s step",
+      "hitPass": true,
+      "label": "Evening · tonight’s step",
+      "rect": {
+        "bottom": 258.87,
+        "height": 48,
+        "width": 51.99,
+        "x": 300.32,
+        "y": 210.88
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Streak & adherence",
+      "hitPass": true,
+      "label": "Streak & adherence",
+      "rect": {
+        "bottom": 382.83,
+        "height": 48,
+        "width": 51.99,
+        "x": 300.32,
+        "y": 334.83
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Replenishment",
+      "hitPass": true,
+      "label": "Replenishment",
+      "rect": {
+        "bottom": 459.77,
+        "height": 48,
+        "width": 51.99,
+        "x": 300.32,
+        "y": 411.77
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Progress-photo nudge",
+      "hitPass": true,
+      "label": "Progress-photo nudge",
+      "rect": {
+        "bottom": 536.71,
+        "height": 48,
+        "width": 51.99,
+        "x": 300.32,
+        "y": 488.71
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Tips & announcements",
+      "hitPass": true,
+      "label": "Tips & announcements",
+      "rect": {
+        "bottom": 660.66,
+        "height": 48,
+        "width": 51.99,
+        "x": 300.32,
+        "y": 612.67
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/settings/notifications",
+  "issues": [],
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleControlCount": 9,
+  "visibleText": "<NotificationsUTILITY · YOUR ROUTINEMorning routine 7:30 AMEvening · tonight’s step 9:30 PMGENTLE NUDGES · CAPPEDStreak & adherenceReplenishmentProgress-photo nudgePROMOTIONALTips & announcements off by defaultwe cap gentle nudges so they never stack up"
+}

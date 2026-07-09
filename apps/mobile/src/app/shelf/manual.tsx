@@ -280,9 +280,9 @@ export default function ManualAddScreen() {
           <View
             style={
               splitShortPhone
-                ? { marginTop: 152 }
+                ? { marginTop: 220 }
                 : compactManualPhone
-                  ? { marginTop: 344 }
+                  ? { marginTop: 408 }
                   : undefined
             }
           >

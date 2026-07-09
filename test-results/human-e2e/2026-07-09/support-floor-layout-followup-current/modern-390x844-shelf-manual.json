@@ -1,0 +1,109 @@
+{
+  "controls": [
+    {
+      "centerInViewport": true,
+      "hitLabel": "Cancel",
+      "hitPass": true,
+      "label": "Cancel",
+      "rect": {
+        "bottom": 55.99,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      "role": "button",
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Product name",
+      "hitPass": true,
+      "label": "Product name",
+      "rect": {
+        "bottom": 195.96,
+        "height": 50,
+        "width": 342.29,
+        "x": 24,
+        "y": 145.96
+      },
+      "role": "input",
+      "visibleHeight": 50,
+      "visibleWidth": 342.29
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Brand",
+      "hitPass": true,
+      "label": "Brand",
+      "rect": {
+        "bottom": 279.96,
+        "height": 50,
+        "width": 157.28,
+        "x": 24,
+        "y": 229.96
+      },
+      "role": "input",
+      "visibleHeight": 50,
+      "visibleWidth": 157.28
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Category",
+      "hitPass": true,
+      "label": "Category",
+      "rect": {
+        "bottom": 279.96,
+        "height": 50,
+        "width": 173.01,
+        "x": 193.28,
+        "y": 229.96
+      },
+      "role": "button",
+      "visibleHeight": 50,
+      "visibleWidth": 173.01
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Ingredients",
+      "hitPass": true,
+      "label": "Ingredients",
+      "rect": {
+        "bottom": 386.73,
+        "height": 64.78,
+        "width": 342.29,
+        "x": 24,
+        "y": 321.95
+      },
+      "role": "textarea",
+      "visibleHeight": 64.78,
+      "visibleWidth": 342.29
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Continue",
+      "hitPass": true,
+      "label": "Continue",
+      "rect": {
+        "bottom": 832.66,
+        "height": 55.99,
+        "width": 342.29,
+        "x": 24,
+        "y": 776.67
+      },
+      "role": "button",
+      "visibleHeight": 55.99,
+      "visibleWidth": 342.29
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/shelf/manual",
+  "issues": [],
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleControlCount": 6,
+  "visibleText": "xAdd by handThe floor under every other path. This always works, even fully offline.Product nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesPick a category and we'll estimate the PAO. You can change it next.Continue"
+}

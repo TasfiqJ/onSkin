@@ -138,6 +138,7 @@ export default function NotificationSettingsScreen() {
     : ultraShortNotifications
       ? { marginTop: 64 }
       : undefined;
+  const promotionalSectionStyle = splitShortNotifications ? { marginTop: 56 } : undefined;
   if (!p) return null;
 
   return (
@@ -236,7 +237,7 @@ export default function NotificationSettingsScreen() {
           </View>
         ) : null}
 
-        <View style={ultraShortNotifications ? { marginTop: 56 } : undefined}>
+        <View style={promotionalSectionStyle}>
           <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
             PROMOTIONAL
           </SectionLabel>

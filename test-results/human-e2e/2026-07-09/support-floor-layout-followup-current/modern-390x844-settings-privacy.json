@@ -1,0 +1,125 @@
+{
+  "controls": [
+    {
+      "centerInViewport": true,
+      "hitLabel": "Marketing emails",
+      "hitPass": true,
+      "label": "Marketing emails",
+      "rect": {
+        "bottom": 111.91,
+        "height": 48,
+        "width": 51.99,
+        "x": 294.31,
+        "y": 63.91
+      },
+      "role": "switch",
+      "visibleHeight": 48,
+      "visibleWidth": 51.99
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Photos & the no-AI-score promise",
+      "hitPass": true,
+      "label": "Photos & the no-AI-score promise",
+      "rect": {
+        "bottom": 167.9,
+        "height": 48,
+        "width": 302.31,
+        "x": 43.99,
+        "y": 119.9
+      },
+      "role": "button",
+      "visibleHeight": 48,
+      "visibleWidth": 302.31
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "hitPass": true,
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "rect": {
+        "bottom": 222.88,
+        "height": 54.98,
+        "width": 302.31,
+        "x": 43.99,
+        "y": 167.9
+      },
+      "role": "button",
+      "visibleHeight": 54.98,
+      "visibleWidth": 302.31
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Today tab",
+      "hitPass": true,
+      "label": "Today tab",
+      "rect": {
+        "bottom": 824.68,
+        "height": 53.99,
+        "width": 93.08,
+        "x": 8.97,
+        "y": 770.69
+      },
+      "role": "tab",
+      "visibleHeight": 53.99,
+      "visibleWidth": 93.08
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Progress tab",
+      "hitPass": true,
+      "label": "Progress tab",
+      "rect": {
+        "bottom": 824.68,
+        "height": 53.99,
+        "width": 93.1,
+        "x": 102.05,
+        "y": 770.69
+      },
+      "role": "tab",
+      "visibleHeight": 53.99,
+      "visibleWidth": 93.1
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Shelf tab",
+      "hitPass": true,
+      "label": "Shelf tab",
+      "rect": {
+        "bottom": 824.68,
+        "height": 53.99,
+        "width": 93.08,
+        "x": 195.15,
+        "y": 770.69
+      },
+      "role": "tab",
+      "visibleHeight": 53.99,
+      "visibleWidth": 93.08
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "You tab",
+      "hitPass": true,
+      "label": "You tab",
+      "rect": {
+        "bottom": 824.68,
+        "height": 53.99,
+        "width": 93.1,
+        "x": 288.23,
+        "y": 770.69
+      },
+      "role": "tab",
+      "visibleHeight": 53.99,
+      "visibleWidth": 93.1
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/you?section=privacy",
+  "issues": [],
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleControlCount": 7,
+  "visibleText": "YouACCOUNTSigned inSign outSUBSCRIPTIONManage subscriptionFree plan>YOUR ROUTINEYour plan>Edit the order>Retinoid ramp>MORE ROUTINEStreak & adherence>Weekly check-in>Recent changes>FOR YOURecommendations>Recommendation preferences>Skin NotesMyth vs evidence, reviewed and claim-safe.>SECURITYApp lockRequire your phone's unlock to open the app and your photo timeline.Encrypted cloud backupOff by default. A separate choice. Photos stay on this phone until you turn it on.REMINDERSReminders & notificationsTiered, capped, at times you choose. Quiet hours & lock-screen discretion.>PRIVACY & CONSENTMarketing emailsOff by default. Opt in anytime.Photos & the no-AI-score promise>Withdraw health-data consentRecords withdrawal and deletes collected health data.>POLICIESPrivacy policyWhat data we collect, use, and share.>Consumer health privacyConsumer health data notice and rights.>TermsRules for using RoutineKind and subscription terms.>SupportHelp with accounts, billing, deletion, or export.>Account deletionHow account deletion works before and after deleting in app.>Data exportHow to request and read your export.>YOUR DATAExport my dataDelete accountPhotos stay on your device by default. No ads, no data sales.RoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist.TodayProg.ShelfYou"
+}

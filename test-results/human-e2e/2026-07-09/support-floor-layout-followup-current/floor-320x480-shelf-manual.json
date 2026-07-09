@@ -1,0 +1,93 @@
+{
+  "controls": [
+    {
+      "centerInViewport": true,
+      "hitLabel": "Cancel",
+      "hitPass": true,
+      "label": "Cancel",
+      "rect": {
+        "bottom": 55.99,
+        "height": 48,
+        "width": 48,
+        "x": 24,
+        "y": 7.99
+      },
+      "role": "button",
+      "visibleHeight": 48,
+      "visibleWidth": 48
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Product name",
+      "hitPass": true,
+      "label": "Product name",
+      "rect": {
+        "bottom": 125.99,
+        "height": 48,
+        "width": 272.39,
+        "x": 24,
+        "y": 77.99
+      },
+      "role": "input",
+      "visibleHeight": 48,
+      "visibleWidth": 272.39
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Brand",
+      "hitPass": true,
+      "label": "Brand",
+      "rect": {
+        "bottom": 203.97,
+        "height": 48,
+        "width": 103.25,
+        "x": 24,
+        "y": 155.98
+      },
+      "role": "input",
+      "visibleHeight": 48,
+      "visibleWidth": 103.25
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Category",
+      "hitPass": true,
+      "label": "Category",
+      "rect": {
+        "bottom": 203.97,
+        "height": 48,
+        "width": 161.15,
+        "x": 135.24,
+        "y": 155.98
+      },
+      "role": "button",
+      "visibleHeight": 48,
+      "visibleWidth": 161.15
+    },
+    {
+      "centerInViewport": true,
+      "hitLabel": "Continue",
+      "hitPass": true,
+      "label": "Continue",
+      "rect": {
+        "bottom": 472.59,
+        "height": 55.99,
+        "width": 272.39,
+        "x": 24,
+        "y": 416.6
+      },
+      "role": "button",
+      "visibleHeight": 55.99,
+      "visibleWidth": 272.39
+    }
+  ],
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/shelf/manual",
+  "issues": [],
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "visibleControlCount": 5,
+  "visibleText": "xAdd by handProduct nameBrandCategoryChoose▾Ingredients · optional, we’ll find the activesPick a category and we'll estimate the PAO. You can change it next.Continue"
+}

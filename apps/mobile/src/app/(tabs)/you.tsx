@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
@@ -73,9 +73,11 @@ const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
 const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;
 const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
-const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 144;
+const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 48;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
+const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
+const PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN = 180;
 
 type StaticRouteHref = Extract<Href, string>;
 type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';
@@ -815,7 +817,10 @@ export default function YouScreen() {
           {renderPrivacyFeedback('photo_cloud_backup', 'security')}
         </Card>
 
-        <Card className="mt-4">
+        <Card
+          className={privacyDirectEntry ? undefined : 'mt-4'}
+          style={privacyDirectEntry ? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN } : undefined}
+        >
           <Text variant="label" tone="muted" className="mb-1">
             REMINDERS
           </Text>
@@ -924,7 +929,14 @@ export default function YouScreen() {
             POLICIES
           </Text>
           {POLICY_ROWS.map((row) => (
-            <Fragment key={row.key}>
+            <View
+              key={row.key}
+              style={
+                privacyDirectEntry && compactPhone && row.key === 'dataExport'
+                  ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }
+                  : undefined
+              }
+            >
               <Row
                 label={row.label}
                 hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}
@@ -941,7 +953,7 @@ export default function YouScreen() {
                   {policyFeedback.message}
                 </Text>
               ) : null}
-            </Fragment>
+            </View>
           ))}
         </Card>
 
