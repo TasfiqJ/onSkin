@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T23:49:51.902Z",
+  "generatedAt": "2026-07-09T00:00:58.631Z",
   "status": "pass",
   "strict": true,
-  "purpose": "Audit committed generated phase packets so dirty-worktree packet output cannot be mistaken for final evidence.",
+  "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
     "docs/phase-3/generated",
     "docs/phase-4/generated",
@@ -19,247 +19,329 @@
       "path": "docs/phase-10/generated/closed-beta-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 31,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-10/generated/closed-beta-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-11/generated/public-launch-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 35,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-11/generated/public-launch-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-3/generated/review-packet-manifest.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 40,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-3/generated/review-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/beta-coverage-report.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 17,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/beta-coverage-report.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 18,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/cosing-fixture-import.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/obf-fixture-import.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 27,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 33,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 29,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-8/generated/growth-store-qa-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 47,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-8/generated/growth-store-qa-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/dependency-inventory.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/dependency-inventory.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-catalog-rate-limit.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-catalog-rate-limit.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-consent-withdrawal.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-consent-withdrawal.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-data-rights.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-data-rights.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-edge-auth.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-edge-auth.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-order-report-poll.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-order-report-poll.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-public-forms.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-public-forms.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-revenuecat-webhook.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-revenuecat-webhook.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-supabase-adversarial.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/live-supabase-adversarial.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/release-engineering-qa-packet.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 75,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/release-engineering-qa-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-9/generated/store-build-inspection.json",
       "kind": "json",
       "dirtyTextMatchCount": 0,
-      "nonEmptyGitStatusCount": 0
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
     }
   ],
   "requiredPackageScripts": [
@@ -271,6 +353,8 @@
     "generatedFileCount": 41,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
+    "hashReferenceCount": 352,
+    "staleHashReferenceCount": 0,
     "blockerCount": 0,
     "warningCount": 0
   },
