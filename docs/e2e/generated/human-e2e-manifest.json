@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T23:02:08.135Z",
-  "gitSha": "51d5f91130d93d0b8446ad59781b75e0a0049763",
+  "generatedAt": "2026-07-09T23:48:06.418Z",
+  "gitSha": "4b60279da47aff12514a790a43af434b82b0c10b",
   "evidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
