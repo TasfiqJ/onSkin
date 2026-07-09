@@ -77,6 +77,7 @@ const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
 const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;
 const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 80;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
+const PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN = 180;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;
 const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;
@@ -334,6 +335,7 @@ export default function YouScreen() {
   const supportFloorPrivacyEntry =
     privacyDirectEntry && narrowPhone && height >= 460 && height < 520;
   const tallPhonePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 900 && height < 980;
+  const shortWidePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 700 && height < 780;
   const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;
   const microShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 380;
   const privacyDirectEntryScrollNudge = microShortPrivacyEntry
@@ -354,6 +356,12 @@ export default function YouScreen() {
     : privacyDirectEntry && narrowPhone
       ? { marginTop: PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN }
       : undefined;
+  const privacyPolicyCardMarginTop =
+    compactPhone && privacyDirectEntry
+      ? PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN
+      : shortWidePrivacyEntry
+        ? PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN
+        : undefined;
   const routineRows: { label: string; href: StaticRouteHref }[] = [
     { label: 'Your plan', href: '/routine/plan' },
     { label: 'Edit the order', href: '/routine/reorder' },
@@ -960,11 +968,11 @@ export default function YouScreen() {
         </Card>
 
         <Card
-          className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}
+          className={privacyPolicyCardMarginTop === undefined ? 'mt-4' : undefined}
           style={
-            compactPhone && privacyDirectEntry
-              ? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }
-              : undefined
+            privacyPolicyCardMarginTop === undefined
+              ? undefined
+              : { marginTop: privacyPolicyCardMarginTop }
           }
         >
           <Text variant="label" tone="muted" className="mb-1">

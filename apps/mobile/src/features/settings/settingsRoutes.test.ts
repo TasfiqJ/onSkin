@@ -44,6 +44,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 80;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN = 180;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;');
@@ -60,6 +61,9 @@ describe('Settings route contracts', () => {
     expect(you).toContain('privacyDirectEntry && narrowPhone && height >= 460 && height < 520;');
     expect(you).toContain(
       'const tallPhonePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 900 && height < 980;',
+    );
+    expect(you).toContain(
+      'const shortWidePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 700 && height < 780;',
     );
     expect(you).toContain(
       'const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;',
@@ -100,8 +104,13 @@ describe('Settings route contracts', () => {
     );
     expect(you).toContain('requestAnimationFrame(scrollToCurrentPrivacyCard);');
     expect(you).toContain('setTimeout(scrollToCurrentPrivacyCard, 80);');
-    expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
-    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
+    expect(you).toContain('const privacyPolicyCardMarginTop =');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_SHORT_WIDE_POLICY_MARGIN');
+    expect(you).toContain(
+      "className={privacyPolicyCardMarginTop === undefined ? 'mt-4' : undefined}",
+    );
+    expect(you).toContain(': { marginTop: privacyPolicyCardMarginTop }');
     expect(you).toContain("privacyDirectEntry && row.key === 'consumerHealthPrivacy'");
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN');
     expect(you).toContain(': PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN');
