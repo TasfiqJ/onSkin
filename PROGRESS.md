@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added a source-level native support-floor contract for the accepted launch
+  cutoff. `apps/mobile/src/lib/appConfig.test.ts` now verifies the resolved
+  Expo config keeps iOS at 17.0+, Android at API 29+, and tablets out of V1
+  scope, matching `docs/DEVICE_SUPPORT_POLICY.md` and Phase 5 native-config
+  checks. The same slice tightened 320 x 480 direct-entry density for Ask,
+  Community missing-note recovery, Recommendation detail headers, Settings
+  Privacy, Settings Subscription, and Shelf no-match/opened-date recovery. A
+  fresh 49-route Expo web audit at the accepted 320 x 480 floor passed with
+  zero failed routes in
+  `test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard/`.
+  The readiness test baseline is now 171 mobile test files / 1751 tests.
+
 - Cleared the supported modern-phone 430 x 932 / 200% text-pressure
   follow-up and re-regressed 390 x 844. The current-source sweep first
   reproduced contextual ProGate compliance/action clipping, then lower-priority
@@ -276,7 +288,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `BLOCKERS.md` match the latest committed human-E2E evidence date, name the
   non-mutating docs/E2E freshness checks, and do not retain stale mobile test
   baselines. The launch docs now reflect the current 171 mobile test files /
-  1750 tests verification baseline.
+  1751 tests verification baseline.
 
 - Cleared the harsher 320 x 568 / 170% compact text-pressure route audit.
   The first sweep found floating-tab `Progress` label overflow, Shelf filter

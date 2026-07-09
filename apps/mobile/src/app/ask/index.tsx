@@ -28,6 +28,11 @@ type SuggestedPromptKey = 'conflict' | 'tonight' | 'fit';
 const EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight', 'fit'];
 const SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'];
 const SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict'];
+const SUPPORT_FLOOR_PROMPT_LABELS: Record<SuggestedPromptKey, string> = {
+  conflict: 'Check shelf conflicts',
+  tonight: 'Plan tonight',
+  fit: 'Check product fit',
+};
 
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
   const bg = tone === 'deterministic' ? colors.sageTint : colors.clayTint;
@@ -291,7 +296,15 @@ function UserBubble({ text, compact = false }: { text: string; compact?: boolean
   );
 }
 
-function SuggestedPrompt({ label, onPress }: { label: string; onPress: () => void }) {
+function SuggestedPrompt({
+  label,
+  onPress,
+  supportFloor = false,
+}: {
+  label: string;
+  onPress: () => void;
+  supportFloor?: boolean;
+}) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -299,10 +312,18 @@ function SuggestedPrompt({ label, onPress }: { label: string; onPress: () => voi
         haptics.select();
         onPress();
       }}
-      className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"
+      className={
+        supportFloor
+          ? 'h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2'
+          : 'min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5'
+      }
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
-      <Text className="flex-1 text-[13.5px]" style={{ color: colors.ink }}>
+      <Text
+        numberOfLines={supportFloor ? 1 : undefined}
+        className="flex-1 text-[13.5px]"
+        style={{ color: colors.ink }}
+      >
         {label}
       </Text>
       <Text style={{ color: colors.clay, fontSize: 15 }}>›</Text>
@@ -311,7 +332,7 @@ function SuggestedPrompt({ label, onPress }: { label: string; onPress: () => voi
 }
 
 export default function AskScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const { ask, askSuggested, isLoading, hasShelf } = useAsk();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
@@ -367,6 +388,7 @@ export default function AskScreen() {
   const shortPhone = height < 520;
   const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
+  const supportFloorPhone = width <= 320 && height < 520;
   const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;
   const emptyPromptOrder =
     ultraShortPhone || splitShortPhone
@@ -374,6 +396,7 @@ export default function AskScreen() {
       : shortPhone
         ? SHORT_PHONE_EMPTY_PROMPT_ORDER
         : EMPTY_PROMPT_ORDER;
+  const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -423,7 +446,7 @@ export default function AskScreen() {
                 ))}
               </View>
             ) : null}
-            {ultraShortPhone ? null : (
+            {ultraShortPhone || supportFloorPhone ? null : (
               <Text
                 variant="body"
                 tone="muted"
@@ -449,7 +472,8 @@ export default function AskScreen() {
               {emptyPromptOrder.map((promptKey) => (
                 <SuggestedPrompt
                   key={promptKey}
-                  label={ASK_COPY.home.prompts[promptKey]}
+                  label={promptLabels[promptKey]}
+                  supportFloor={supportFloorPhone}
                   onPress={() =>
                     pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {
                       scrollToEnd: false,
@@ -486,7 +510,7 @@ export default function AskScreen() {
       </ScrollView>
 
       {/* Input bar */}
-      <View className={compactPhone ? 'pb-6' : 'pb-5'}>
+      <View className={supportFloorPhone ? 'pb-2' : compactPhone ? 'pb-6' : 'pb-5'}>
         <View
           className="flex-row items-center gap-2.5 rounded-[16px] bg-paper-raised px-3.5 py-2.5"
           style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}

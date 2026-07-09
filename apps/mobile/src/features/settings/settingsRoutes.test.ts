@@ -42,6 +42,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN = 192;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;');
@@ -75,6 +76,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const narrowPrivacyWithdrawStyle = supportFloorPrivacyEntry');
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN }');
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN }');
+    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN }');
     expect(you).toContain(
       'privacyCardY.current - PRIVACY_DIRECT_ENTRY_TOP_OFFSET + privacyDirectEntryScrollNudge',
     );
@@ -400,18 +402,25 @@ describe('Settings route contracts', () => {
     const source = readAppRoute('settings/subscription.tsx');
 
     expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const ultraShortSubscription = height < 460;');
     expect(source).toContain('const splitShortSubscription = height < 410;');
+    expect(source).toContain('const supportFloorSubscription = width <= 430 || height < 640;');
+    expect(source).toContain('const compactSubscription = true;');
+    expect(source).toContain('const hideFreeSubscriptionBody = true;');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-3.5');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
-    expect(source).toContain('compact={ultraShortSubscription}');
+    expect(source).toContain('compact={compactSubscription}');
     expect(source).toContain(
-      "contentContainerClassName={ultraShortSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}",
+      "contentContainerClassName={compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}",
     );
-    expect(source).toContain('{splitShortSubscription ? null : (');
-    expect(source).toContain("className={ultraShortSubscription ? 'mt-1.5' : 'mt-2'}");
+    expect(source).toContain('{hideFreeSubscriptionBody ? null : (');
+    expect(source).toContain("className={compactSubscription ? 'mt-1.5' : 'mt-2'}");
     expect(source).not.toContain(
       "className={splitShortSubscription ? 'mt-1' : ultraShortSubscription ? 'mt-1.5' : 'mt-2'}",
+    );
+    expect(source).not.toContain(
+      'style={supportFloorSubscription ? { marginTop: 96 } : undefined}',
     );
     expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');
     expect(source).not.toContain('mt-4 min-h-[44px] items-center justify-center py-2');
@@ -438,7 +447,8 @@ describe('Settings route contracts', () => {
     expect(source).toContain('label={PAYWALL_COPY.manage.restoreRow}');
     expect(source).toContain('label="Terms"');
     expect(source).toContain('label="Privacy"');
-    expect(source).toContain('compact={ultraShortSubscription}');
+    expect(source).toContain('compact={compactSubscription}');
+    expect(source).toContain('{hideFreeSubscriptionBody ? null : (');
     expect(source).not.toContain(
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',
     );
@@ -477,7 +487,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('const manageAction = isAppGrantedAccess');
     expect(source).toContain('const supportNote = isReverseTrialAccess');
     expect(source).toContain(
-      '<Row label={manageLabel} onPress={manageAction} compact={ultraShortSubscription} />',
+      '<Row label={manageLabel} onPress={manageAction} compact={compactSubscription} />',
     );
     expect(source).not.toContain('<Row label={manageLabel} onPress={openStore} />');
   });

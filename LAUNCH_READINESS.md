@@ -26,6 +26,12 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6/`,
   and
   `test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3/`.
+- A fresh accepted-floor Expo web route audit after the native support-floor
+  config contract plus direct-entry density guards for Ask, Community,
+  Recommendation detail, Settings, and Shelf recovery passed 49 / 49 routes at
+  320 x 480 with zero failed routes, zero clipped visible controls, zero blocked
+  center hit-tests, and zero unexpected browser logs. Evidence:
+  `test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard/`.
 - Settings Privacy direct entries and contextual Progress paywalls have fresh
   2026-07-09 browser evidence for the Terms-row support-floor spacer, compact
   tall-phone paywall compliance header, and compact visible Explore-first copy
@@ -73,10 +79,10 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 171 mobile test files / 1750 tests.
+- `npm test` passed: 171 mobile test files / 1751 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 171 test files / 1750 tests.
+- `npm --workspace apps/mobile run test` passed: 171 test files / 1751 tests.
 - `npm run phase3:verify`, `npm run phase4:verify`,
   `npm run phase5:verify`, `npm run phase6:verify`,
   `npm run phase7:verify`, `npm run phase8:verify`,

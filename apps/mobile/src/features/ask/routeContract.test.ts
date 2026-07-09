@@ -111,9 +111,15 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain(
       "const SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict'];",
     );
+    expect(home).toContain('const SUPPORT_FLOOR_PROMPT_LABELS: Record<SuggestedPromptKey, string> = {');
+    expect(home).toContain("conflict: 'Check shelf conflicts'");
+    expect(home).toContain("tonight: 'Plan tonight'");
+    expect(home).toContain("fit: 'Check product fit'");
+    expect(home).toContain('const { height, width } = useWindowDimensions();');
     expect(home).toContain('const shortPhone = height < 520');
     expect(home).toContain('const ultraShortPhone = height < 460;');
     expect(home).toContain('const splitShortPhone = height < 410;');
+    expect(home).toContain('const supportFloorPhone = width <= 320 && height < 520;');
     expect(home).toContain("const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;");
     expect(home).toContain('accessibilityLabel={ASK_COPY.home.title}');
     expect(home).toContain('{visibleTitle}');
@@ -122,11 +128,15 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain('? SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain(
-      'className="min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5"',
+      "? 'h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2'",
     );
+    expect(home).toContain(
+      ": 'min-h-[48px] flex-row items-center justify-between rounded-[15px] bg-paper-raised px-4 py-2.5'",
+    );
+    expect(home).toContain('numberOfLines={supportFloor ? 1 : undefined}');
     expect(home).toContain("className={shortPhone ? 'pt-0' : 'pt-1'}");
     expect(home).toContain('{!shortPhone ? (');
-    expect(home).toContain('{ultraShortPhone ? null : (');
+    expect(home).toContain('{ultraShortPhone || supportFloorPhone ? null : (');
     expect(home).toContain('className="mb-3 flex-row flex-wrap gap-1.5"');
     expect(home).toContain("className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}");
     expect(home).toContain('style={{ lineHeight: shortPhone ? 18 : 19 }}');
@@ -135,7 +145,11 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain("'mb-2 font-mono text-[10px] uppercase'");
     expect(home).toContain("className={shortPhone ? 'gap-1.5' : 'gap-2'}");
     expect(home).toContain('{emptyPromptOrder.map((promptKey) => (');
-    expect(home).toContain('label={ASK_COPY.home.prompts[promptKey]}');
+    expect(home).toContain(
+      'const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;',
+    );
+    expect(home).toContain('label={promptLabels[promptKey]}');
+    expect(home).toContain('supportFloor={supportFloorPhone}');
     expect(home).toContain('askSuggested(promptKey)');
     expect(home).not.toContain('py-3.5');
   });
@@ -143,7 +157,7 @@ describe('Ask route launch contracts', () => {
   it('keeps the Ask disclosure footer legible above compact-phone bottom edges', () => {
     const home = readAppRoute('ask/index.tsx');
 
-    expect(home).toContain("className={compactPhone ? 'pb-6' : 'pb-5'}");
+    expect(home).toContain("className={supportFloorPhone ? 'pb-2' : compactPhone ? 'pb-6' : 'pb-5'}");
     expect(home).toContain('className="mt-2 text-center font-mono"');
     expect(home).toContain('style={{ color: colors.muted, fontSize: 10, lineHeight: 14 }}');
     expect(home).toContain('{ASK_COPY.home.disclosureFooter}');

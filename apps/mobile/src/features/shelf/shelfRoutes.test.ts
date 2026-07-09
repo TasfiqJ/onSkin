@@ -139,17 +139,17 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const { height, width } = useWindowDimensions();');
-    expect(source).toContain('const shortPhone = height < 600');
-    expect(source).toContain('const ultraShortPhone = height < 460;');
+    expect(source).toContain('const shortPhone = height < 700 || width <= 430;');
+    expect(source).toContain('const ultraShortPhone = height < 560 || width <= 320;');
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain('const microShortPhone = height < 380;');
     expect(source).toContain('const tallTextPressurePhone =');
     expect(source).toContain('(width <= 430 && height >= 900 && height < 980) ||');
     expect(source).toContain('(height <= 430 && width >= 900 && width < 980);');
     expect(source).toContain('const compactPressurePhone = shortPhone;');
-    expect(source).toContain("? 'px-6 pb-2 pt-2'");
-    expect(source).toContain("? 'px-6 pb-3 pt-2'");
-    expect(source).toMatch(/:\s*shortPhone\s*\?\s*'px-6 pb-4 pt-2'/);
+    expect(source).toContain("? 'min-h-[320px] px-6 pb-2 pt-2'");
+    expect(source).toContain("? 'min-h-[320px] px-6 pb-3 pt-2'");
+    expect(source).toMatch(/:\s*shortPhone\s*\?\s*'min-h-\[340px\] px-6 pb-4 pt-2'/);
     expect(source).toContain("? 'absolute right-0 top-0 z-10'");
     expect(source).toContain(
       "microShortPhone ? undefined : 'flex-row items-start justify-between'",
@@ -167,6 +167,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain(
       'const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;',
     );
+    expect(source).toContain('? { marginTop: 24 }');
+    expect(source).not.toContain('const supportFloorPhone =');
     expect(source).toContain('const compactScanRecoveryStyle = compactPressurePhone');
     expect(source).toContain('? { transform: [{ translateY: -26 }] }');
     expect(source).toContain('const compactManualRecoveryStyle = microShortPhone');
@@ -635,6 +637,7 @@ describe('Shelf route mobile contracts', () => {
   it('keeps opened-date and PAO chips buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('shelf/opened.tsx');
 
+    expect(source).toContain("import { Pressable, View } from 'react-native';");
     expect(source).toContain('const hasProductDraft =');
     expect(source).toContain('if (!hasProductDraft)');
     expect(source).toContain('accessibilityLabel="Add product by hand"');
@@ -645,6 +648,13 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('<Sheet fallbackRoute={APP_SHELF_ROUTE} backdropAccessible={false}>');
     expect(source).toContain(
       '<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
+    );
+    expect(source).toContain('className="mb-3 flex-row items-start justify-between"');
+    expect(source).toContain('className="text-[28px] leading-[31px]"');
+    expect(source).toContain('variant="bodySm" tone="muted" className="mt-1.5 text-[13px] leading-[18px]"');
+    expect(source).toContain('className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"');
+    expect(source).toContain(
+      'Freshness starts after we know the product. Start with the name, then we&apos;ll ask when',
     );
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2'");
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-4 py-2'");

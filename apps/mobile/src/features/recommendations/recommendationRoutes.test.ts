@@ -205,10 +205,15 @@ describe('Recommendation route contracts', () => {
 
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('h-7 w-7');
+    expect(source).toContain("import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';");
+    expect(source).toContain('const { width } = useWindowDimensions();');
+    expect(source).toContain('const compactHeader = width <= 360;');
     expect(source).toContain('adjustsFontSizeToFit');
+    expect(source).toContain('accessibilityLabel="Recommendation"');
     expect(source).toContain('className="flex-1 font-sans-semibold"');
     expect(source).toContain('minimumFontScale={0.82}');
     expect(source).toContain('numberOfLines={1}');
+    expect(source).toContain("{compactHeader ? 'Suggestion' : 'Recommendation'}");
     expect(source).toContain('style={{ minWidth: 0 }}');
     expect(source).toContain('style={{ width: 72, flexShrink: 0 }}');
     expect(source).toContain('mt-4 min-h-[48px] items-center justify-center py-2');

@@ -14,8 +14,8 @@ import { colors } from '@/theme/tokens';
 export default function NoMatchScreen() {
   const { reset } = useIntake();
   const { height, width } = useWindowDimensions();
-  const shortPhone = height < 600;
-  const ultraShortPhone = height < 460;
+  const shortPhone = height < 700 || width <= 430;
+  const ultraShortPhone = height < 560 || width <= 320;
   const splitShortPhone = height < 410;
   const microShortPhone = height < 380;
   const tallTextPressurePhone =
@@ -61,11 +61,11 @@ export default function NoMatchScreen() {
       backdropAccessible={false}
       className={
         microShortPhone
-          ? 'px-6 pb-2 pt-2'
+          ? 'min-h-[320px] px-6 pb-2 pt-2'
           : splitShortPhone
-            ? 'px-6 pb-3 pt-2'
+            ? 'min-h-[320px] px-6 pb-3 pt-2'
             : shortPhone
-              ? 'px-6 pb-4 pt-2'
+              ? 'min-h-[340px] px-6 pb-4 pt-2'
               : undefined
       }
     >

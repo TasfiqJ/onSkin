@@ -146,7 +146,7 @@ export default function OpenedDateScreen() {
   if (!hasProductDraft) {
     return (
       <Sheet fallbackRoute={APP_SHELF_ROUTE} backdropAccessible={false}>
-        <View className="mb-4 flex-row items-start justify-between">
+        <View className="mb-3 flex-row items-start justify-between">
           <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
             <Text className="text-[18px] text-clay">+</Text>
           </View>
@@ -156,17 +156,21 @@ export default function OpenedDateScreen() {
             onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
           />
         </View>
-        <Text variant="title" className="text-[30px] leading-[33px]" accessibilityRole="header">
+        <Text
+          variant="title"
+          className="text-[28px] leading-[31px]"
+          accessibilityRole="header"
+        >
           Add product details first.
         </Text>
-        <Text variant="body" tone="muted" className="mt-2">
-          Freshness starts after we know which product you&apos;re adding. Start with the product
-          name, then we&apos;ll ask when you opened it.
+        <Text variant="bodySm" tone="muted" className="mt-1.5 text-[13px] leading-[18px]">
+          Freshness starts after we know the product. Start with the name, then we&apos;ll ask when
+          you opened it.
         </Text>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Add product by hand"
-          className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"
+          className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"
           onPress={() => {
             haptics.select();
             trackProductAddStarted('opened_recovery');

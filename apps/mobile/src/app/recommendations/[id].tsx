@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import type { SequencingRole } from '@onskin/types';
 
@@ -186,8 +186,10 @@ function Body({ rec }: { rec: Recommendation }) {
 
 export default function RecommendationDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { width } = useWindowDimensions();
   const { result, isLoading } = useRecommendations();
   const rec = result.recommendations.find((r) => r.id === id);
+  const compactHeader = width <= 360;
 
   return (
     <Screen edges={['top']}>
@@ -199,13 +201,14 @@ export default function RecommendationDetail() {
         <Text
           variant="body"
           adjustsFontSizeToFit
+          accessibilityLabel="Recommendation"
           className="flex-1 font-sans-semibold"
           minimumFontScale={0.82}
           numberOfLines={1}
           tone="muted"
           style={{ minWidth: 0 }}
         >
-          Recommendation
+          {compactHeader ? 'Suggestion' : 'Recommendation'}
         </Text>
       </View>
 

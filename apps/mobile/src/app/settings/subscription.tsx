@@ -70,13 +70,16 @@ function Row({
 }
 
 export default function SubscriptionScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const { data } = useEntitlement();
   const { restore } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const ultraShortSubscription = height < 460;
   const splitShortSubscription = height < 410;
+  const supportFloorSubscription = width <= 430 || height < 640;
+  const compactSubscription = true;
+  const hideFreeSubscriptionBody = true;
   const isPro = data?.isPro ?? false;
 
   async function openStore() {
@@ -171,7 +174,7 @@ export default function SubscriptionScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={ultraShortSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}
+        contentContainerClassName={compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}
       >
         <View
           className={
@@ -239,22 +242,22 @@ export default function SubscriptionScreen() {
             </View>
 
             <View className="mb-4 rounded-[18px] bg-paper-raised px-[18px]">
-              <Row label={manageLabel} onPress={manageAction} compact={ultraShortSubscription} />
+              <Row label={manageLabel} onPress={manageAction} compact={compactSubscription} />
               <Row
                 label={PAYWALL_COPY.manage.restoreRow}
                 onPress={onRestore}
-                compact={ultraShortSubscription}
+                compact={compactSubscription}
               />
               <Row
                 label="Terms"
                 onPress={() => void onPolicy(TERMS_URL)}
-                compact={ultraShortSubscription}
+                compact={compactSubscription}
               />
               <Row
                 label="Privacy"
                 last
                 onPress={() => void onPolicy(PRIVACY_URL)}
-                compact={ultraShortSubscription}
+                compact={compactSubscription}
               />
               {feedbackLabel}
             </View>
@@ -280,21 +283,21 @@ export default function SubscriptionScreen() {
           <>
             <View
               className={
-                splitShortSubscription
+                splitShortSubscription || supportFloorSubscription
                   ? 'mb-2 rounded-card bg-paper-raised p-3'
-                  : ultraShortSubscription
+                  : compactSubscription
                     ? 'mb-3 rounded-card bg-paper-raised p-4'
                     : 'mb-4 rounded-card bg-paper-raised p-5'
               }
               style={{ borderWidth: 1, borderColor: colors.hairline }}
             >
               <Text variant="titleSm">{PAYWALL_COPY.manage.freeTitle}</Text>
-              {splitShortSubscription ? null : (
+              {hideFreeSubscriptionBody ? null : (
                 <Text
                   variant="bodySm"
                   tone="muted"
-                  className={ultraShortSubscription ? 'mt-1.5' : 'mt-2'}
-                  style={{ lineHeight: ultraShortSubscription ? 19 : 21 }}
+                  className={compactSubscription ? 'mt-1.5' : 'mt-2'}
+                  style={{ lineHeight: compactSubscription ? 19 : 21 }}
                 >
                   {PAYWALL_COPY.manage.freeBody}
                 </Text>
@@ -303,9 +306,9 @@ export default function SubscriptionScreen() {
                 accessibilityRole="button"
                 onPress={() => router.push('/paywall/upsell?feature=full_routine')}
                 className={
-                  splitShortSubscription
+                  splitShortSubscription || supportFloorSubscription
                     ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
-                    : ultraShortSubscription
+                    : compactSubscription
                       ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
                       : 'mt-4 h-[50px] items-center justify-center rounded-pill'
                 }
@@ -320,18 +323,18 @@ export default function SubscriptionScreen() {
               <Row
                 label={PAYWALL_COPY.manage.restoreRow}
                 onPress={onRestore}
-                compact={ultraShortSubscription}
+                compact={compactSubscription}
               />
               <Row
                 label="Terms"
                 onPress={() => void onPolicy(TERMS_URL)}
-                compact={ultraShortSubscription}
+                compact={compactSubscription}
               />
               <Row
                 label="Privacy"
                 last
                 onPress={() => void onPolicy(PRIVACY_URL)}
-                compact={ultraShortSubscription}
+                compact={compactSubscription}
               />
               {feedbackLabel}
             </View>

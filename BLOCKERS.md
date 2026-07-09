@@ -111,7 +111,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 171 mobile test files / 1750 tests. The 2026-07-09 human-simulated E2E
+covers 171 mobile test files / 1751 tests. The 2026-07-09 human-simulated E2E
 manifest now anchors to the 320 x 480 support-floor 170% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the 390 x 844 and
 430 x 932 supported-phone 170% sweeps also passed 49 / 49 routes with zero

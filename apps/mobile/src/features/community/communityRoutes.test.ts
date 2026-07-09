@@ -170,35 +170,33 @@ describe('Community route contracts', () => {
     const source = readAppRoute('community/note/[id].tsx');
 
     expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const compactMissingNote = height < 640');
+    expect(source).toContain('const compactMissingNote = height < 640 || width <= 430;');
     expect(source).toContain('const splitShortMissingNote = height < 410;');
     expect(source).toContain('const narrowCompactMissingNote = compactMissingNote && width < 360;');
-    expect(source).toContain('<ScrollView');
     expect(source).toContain(
-      "splitShortMissingNote || narrowCompactMissingNote ? 'flex-start' : 'center'",
+      'const supportFloorMissingNote = splitShortMissingNote || narrowCompactMissingNote;',
     );
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain("justifyContent: supportFloorMissingNote ? 'flex-start' : 'center'");
     expect(source).toContain(
       'paddingBottom: splitShortMissingNote ? 12 : compactMissingNote ? 16 : 38',
     );
     expect(source).toContain(
       'paddingTop: splitShortMissingNote ? 2 : narrowCompactMissingNote ? 0 : 0',
     );
-    expect(source).toContain('{splitShortMissingNote || narrowCompactMissingNote ? null : (');
+    expect(source).toContain('{supportFloorMissingNote ? null : (');
     expect(source).toContain('Note unavailable');
     expect(source).toContain('This Skin Note is not available right now.');
-    expect(source).toContain(
-      "{narrowCompactMissingNote\n                ? 'This note is unavailable.'",
-    );
+    expect(source).toContain("{narrowCompactMissingNote\n                ? 'Note unavailable.'");
     expect(source).toContain('It may have been updated or removed during expert review.');
     expect(source).toContain('Current Skin Notes are still');
     expect(source).toContain(
-      "splitShortMissingNote || narrowCompactMissingNote\n                ? 'It may have been updated or removed during expert review. Current Skin Notes are still in the library.'",
+      "supportFloorMissingNote\n                ? 'Updated or removed during review. Current notes are in the library.'",
     );
-    expect(source).toContain("splitShortMissingNote || narrowCompactMissingNote ? 'mt-3' : 'mt-6'");
-    expect(source).toContain(
-      "splitShortMissingNote || narrowCompactMissingNote ? 'min-h-[48px] py-3'",
-    );
-    expect(source).toContain('label="Back to Skin Notes"');
+    expect(source).toContain("className={supportFloorMissingNote ? 'mt-2' : 'mt-6'}");
+    expect(source).toContain("label={supportFloorMissingNote ? 'Back' : 'Back to Skin Notes'}");
+    expect(source).toContain("className={supportFloorMissingNote ? 'min-h-[48px] py-2' : undefined}");
+    expect(source).toContain('accessibilityLabel="Back to Skin Notes"');
     expect(source).toContain('router.replace(APP_COMMUNITY_ROUTE)');
     expect(source).not.toContain('This note isn’t available right now.');
     expect(source).not.toContain('<View className="flex-1 items-center justify-center px-6">');

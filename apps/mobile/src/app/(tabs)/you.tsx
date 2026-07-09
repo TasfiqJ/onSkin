@@ -75,6 +75,7 @@ const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
 const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;
 const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;
+const PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN = 192;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;
@@ -884,11 +885,19 @@ export default function YouScreen() {
               {renderPrivacyFeedback('data_sharing', 'privacy')}
             </>
           ) : null}
-          <Row
-            label="Photos & the no-AI-score promise"
-            compact={compactPhone}
-            onPress={() => router.push('/progress/about')}
-          />
+          <View
+            style={
+              supportFloorPrivacyEntry
+                ? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN }
+                : undefined
+            }
+          >
+            <Row
+              label="Photos & the no-AI-score promise"
+              compact={compactPhone}
+              onPress={() => router.push('/progress/about')}
+            />
+          </View>
           {phase7Flags.trend ? (
             <Row
               label="Changes in your own photos"

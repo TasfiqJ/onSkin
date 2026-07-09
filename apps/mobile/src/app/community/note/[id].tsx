@@ -24,9 +24,10 @@ export default function NoteDetail() {
   const note = id ? noteById(id) : undefined;
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
-  const compactMissingNote = height < 640;
+  const compactMissingNote = height < 640 || width <= 430;
   const splitShortMissingNote = height < 410;
   const narrowCompactMissingNote = compactMissingNote && width < 360;
+  const supportFloorMissingNote = splitShortMissingNote || narrowCompactMissingNote;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
     queryKey: ['noteHelped', id],
@@ -78,21 +79,20 @@ export default function NoteDetail() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent:
-              splitShortMissingNote || narrowCompactMissingNote ? 'flex-start' : 'center',
+            justifyContent: supportFloorMissingNote ? 'flex-start' : 'center',
             paddingBottom: splitShortMissingNote ? 12 : compactMissingNote ? 16 : 38,
             paddingTop: splitShortMissingNote ? 2 : narrowCompactMissingNote ? 0 : 0,
           }}
         >
           <View className="items-center px-2">
-            {splitShortMissingNote || narrowCompactMissingNote ? null : (
+            {supportFloorMissingNote ? null : (
               <StripedThumb size={compactMissingNote ? 66 : 74} radius={20} faded />
             )}
             <Text
               variant="label"
               tone="clay"
               className={
-                splitShortMissingNote || narrowCompactMissingNote
+                supportFloorMissingNote
                   ? 'mt-1 font-mono uppercase'
                   : 'mt-5 font-mono uppercase'
               }
@@ -102,8 +102,8 @@ export default function NoteDetail() {
             <Text
               variant="titleSm"
               className={
-                splitShortMissingNote || narrowCompactMissingNote
-                  ? 'mt-1 text-center'
+                supportFloorMissingNote
+                  ? 'mt-0.5 text-center'
                   : 'mt-2 text-center'
               }
               style={{
@@ -125,32 +125,29 @@ export default function NoteDetail() {
               accessibilityRole="header"
             >
               {narrowCompactMissingNote
-                ? 'This note is unavailable.'
+                ? 'Note unavailable.'
                 : 'This Skin Note is not available right now.'}
             </Text>
             <Text
               variant="bodySm"
               tone="muted"
               className={
-                splitShortMissingNote || narrowCompactMissingNote
-                  ? 'mt-1 max-w-[278px] text-center text-[12px]'
+                supportFloorMissingNote
+                  ? 'mt-1 max-w-[258px] text-center text-[12px]'
                   : 'mt-2 max-w-[284px] text-center'
               }
-              style={
-                splitShortMissingNote || narrowCompactMissingNote ? { lineHeight: 17 } : undefined
-              }
+              style={supportFloorMissingNote ? { lineHeight: 17 } : undefined}
             >
-              {splitShortMissingNote || narrowCompactMissingNote
-                ? 'It may have been updated or removed during expert review. Current Skin Notes are still in the library.'
+              {supportFloorMissingNote
+                ? 'Updated or removed during review. Current notes are in the library.'
                 : 'It may have been updated or removed during expert review. Current Skin Notes are still available in the library.'}
             </Text>
           </View>
-          <View className={splitShortMissingNote || narrowCompactMissingNote ? 'mt-3' : 'mt-6'}>
+          <View className={supportFloorMissingNote ? 'mt-2' : 'mt-6'}>
             <Button
-              label="Back to Skin Notes"
-              className={
-                splitShortMissingNote || narrowCompactMissingNote ? 'min-h-[48px] py-3' : undefined
-              }
+              accessibilityLabel="Back to Skin Notes"
+              label={supportFloorMissingNote ? 'Back' : 'Back to Skin Notes'}
+              className={supportFloorMissingNote ? 'min-h-[48px] py-2' : undefined}
               onPress={() => router.replace(APP_COMMUNITY_ROUTE)}
             />
           </View>

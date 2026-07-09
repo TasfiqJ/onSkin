@@ -52,6 +52,15 @@ function intentFilterText(expo: ReturnType<typeof buildExpoConfig>): string {
   return JSON.stringify(expo.android?.intentFilters ?? []);
 }
 
+function pluginOptions(expo: ReturnType<typeof buildExpoConfig>, name: string): Record<string, unknown> {
+  const plugin = (expo.plugins ?? []).find((candidate: unknown) =>
+    Array.isArray(candidate) ? candidate[0] === name : candidate === name,
+  );
+  return Array.isArray(plugin) && typeof plugin[1] === 'object' && plugin[1] !== null
+    ? (plugin[1] as Record<string, unknown>)
+    : {};
+}
+
 describe('Expo app identity config', () => {
   it('defaults unset local config reads to the development install identity', () => {
     const expo = buildExpoConfig({});
@@ -63,6 +72,17 @@ describe('Expo app identity config', () => {
     expect(expo.android.package).toBe('com.routinekind.app.development');
     expect(expo.extra.appVariant).toBe('development');
     expect(expo.extra.appEnvironment).toBe('development');
+  });
+
+  it('keeps the accepted launch support floor enforced in native config', () => {
+    const expo = buildExpoConfig({});
+    const buildProperties = pluginOptions(expo, 'expo-build-properties') as {
+      android?: { minSdkVersion?: number };
+    };
+
+    expect(expo.ios.supportsTablet).toBe(false);
+    expect(expo.ios.deploymentTarget).toBe('17.0');
+    expect(buildProperties.android?.minSdkVersion).toBe(29);
   });
 
   it('uses production identity only when the production variant is explicit', () => {
