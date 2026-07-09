@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T10:24:19.459Z",
+  "generatedAt": "2026-07-09T11:30:24.292Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "dc5fb48a6194fcbdce428718c119be8af4959243",
+  "gitSha": "422c31a75431e8551a55566b625766b75040d866",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -152,8 +152,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 35901,
-      "sha256": "b8a6fd3aabba51fc49e53bca1b42e4ab4adafe28dcb47ca46e4bfda191fc68fd"
+      "bytes": 36176,
+      "sha256": "a99ccd81fb2d69910a9de8fdd5ffe2b9a8309beb7e29997104cc8e7ecbba6b15"
     },
     {
       "path": "apps/mobile/src/app/share/conflict/[ruleId].tsx",
@@ -218,32 +218,32 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 243185,
-      "sha256": "f0bed33692f8b31c47c2c5ba54502a4cb61ca29f6ff5f7847c0b41d10e41f20b"
+      "bytes": 244157,
+      "sha256": "9e5a9d6028182eb2eefc0508a2c21c2b2db2f05f3f800ab996c9eb216636ffc8"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 5342,
-      "sha256": "c9663a20527f218192cc41b6764d46d65ba5ad24d5d2e4504a28110d4a249d88"
+      "sha256": "f8c27d25ecc87636bc3100cc0e224b772aa2badf94e05d229204cc91d3ed58db"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 2872,
-      "sha256": "fdf7da53a578ddb918eae514545e9fced3e0aacf405a8cfa828b3904f573d4d4"
+      "sha256": "65b93ab45f064cfda39faf79505b49fd0715ed46a998f930388ae0c4dead9290"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 11263,
-      "sha256": "56054e5f5bc6488e2008aac877a63adad6f87e071f401768206173f35ac557bb"
+      "sha256": "12007242e5366fad604c4b8717158e80a236f961c3f6e81c267340912b318cfa"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 9912,
-      "sha256": "c630a0235205ab829c963cf14fe9938ebb1df4aeae8f87ddc7e89c7091f43a07"
+      "sha256": "dd5c84b5cd9c7c5ffff61e0130179ea94cc47a34e36b0fe06b28df1956774c56"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
