@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-09T21:37:20.109Z
+Generated: 2026-07-09T21:38:01.198Z
 Status: blocked
-Git SHA: 40b29cf43cb49e2309d819c028f66e271c9524e4
+Git SHA: 6af88ecee6447c545da2261d6198c180859cd6bf
 Git status: clean
 
 
@@ -76,8 +76,8 @@ Phase 4 coverage thresholds below are satisfied.
 | docs/phase-4/generated/source-worklist.md | present | 22472 | c52886b98da8eedda8091e3d3c1c5155bd72eb780061e4baa395087dbc0f668d |
 | docs/phase-4/observability-dashboard.md | present | 1804 | a42191be85ab1d75e0c7d9cce2934b0e52369852da35bdd6edf2c153fc6f09af |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 6183 | fce987df7379c2c0ce68412ccb59587966d7f41ede09acf0c511805fe13637d9 |
-| docs/phase-4/generated/catalog-qa-report.md | present | 4307 | 03820065287b62ddfee48f9027081faf3bea25de3a2f21769e5c24d67e90c127 |
+| docs/phase-4/generated/catalog-qa-report.json | present | 5693 | c9f9608066944a6a3b1b227e508aaf46b744359d2b5421e3f3724b93368e7d80 |
+| docs/phase-4/generated/catalog-qa-report.md | present | 3816 | 2117f7bba3474040cf2d03cef011bb6c9c05d6e242190b0acab488b61c1cc3b0 |
 | docs/phase-10/beta-event-schema.md | present | 6425 | e875b98e6130e65989eb5adad3d57b6ab438747a809cccb49d1ce15e1c6ee383 |
 | docs/phase-10/catalog-beta-report.md | present | 1291 | 2924dac7cc798a904716b0fbc7de6760046485e85db62e3357c901519081bd3c |
 | docs/phase-10/support-beta-report.md | present | 1486 | 68bcd8e27b511229e2c1e9d5bb84ba97eac658b66f5bf04b8eb550c8838c9af3 |
