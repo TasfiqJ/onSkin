@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T23:03:31.421Z",
+  "generatedAt": "2026-07-09T23:50:19.067Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "8b517225ba1b42bf980f831251d46113144b2179",
+  "gitSha": "d9ae09c5aa82932c5f6106079591e5bbd8ed9ba8",
   "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 16028,
-      "sha256": "b7094b76778694d62a9ffd3f5f59b60b44553dcc1bf8b0de410b70debd471944"
+      "bytes": 16117,
+      "sha256": "bb14b0e53b7e6f8dd754c32790aa9d2646cf7b9d86b7feb8a21d93857ff9d3df"
     },
     {
       "packet": "packetContract",
@@ -149,28 +149,28 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 82915,
-      "sha256": "6baddd2261b62a819a629b3a6915eac4b518af9f80be4d778922c6a7c81fc18d"
+      "sha256": "ea4efe25eb911639baa73c26f88df3049ff3cd218be37f7b9a25510698ed91a3"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 53908,
-      "sha256": "5ecdb32926ece84af69608576123c1eee21af8684a52310c35763b2dd6e7b124"
+      "sha256": "45df78bb23fb870a41970371ba29b616268b0d915f3316e6dcc4b5a124541273"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
       "bytes": 87448,
-      "sha256": "0dbf932052928b426ff42d67eda6b04aa564ca8d51f9b7b027cf8d653982ebd5"
+      "sha256": "e3c1fa778e9554a337b9cf77cd6bc18701bbd5cdee9e63d4b1fb4c10d7732420"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
       "bytes": 66584,
-      "sha256": "d05bbaa2328ac9e60dd74dff4e72f2aed5a9691a462615cab583124101e40a16"
+      "sha256": "b3e031d0c1e2289de26ea4ca9841e5edde61f5c6b6dde1c06a41f0f7fbc2ca17"
     },
     {
       "packet": "clinical",
@@ -226,28 +226,28 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 82915,
-      "sha256": "6baddd2261b62a819a629b3a6915eac4b518af9f80be4d778922c6a7c81fc18d"
+      "sha256": "ea4efe25eb911639baa73c26f88df3049ff3cd218be37f7b9a25510698ed91a3"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 53908,
-      "sha256": "5ecdb32926ece84af69608576123c1eee21af8684a52310c35763b2dd6e7b124"
+      "sha256": "45df78bb23fb870a41970371ba29b616268b0d915f3316e6dcc4b5a124541273"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
       "bytes": 87448,
-      "sha256": "0dbf932052928b426ff42d67eda6b04aa564ca8d51f9b7b027cf8d653982ebd5"
+      "sha256": "e3c1fa778e9554a337b9cf77cd6bc18701bbd5cdee9e63d4b1fb4c10d7732420"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
       "bytes": 66584,
-      "sha256": "d05bbaa2328ac9e60dd74dff4e72f2aed5a9691a462615cab583124101e40a16"
+      "sha256": "b3e031d0c1e2289de26ea4ca9841e5edde61f5c6b6dde1c06a41f0f7fbc2ca17"
     },
     {
       "packet": "cosmeticChemistry",

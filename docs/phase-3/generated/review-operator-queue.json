@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T23:03:30.911Z",
+  "generatedAt": "2026-07-09T23:50:14.014Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "8b517225ba1b42bf980f831251d46113144b2179",
+  "gitSha": "d9ae09c5aa82932c5f6106079591e5bbd8ed9ba8",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 82915,
-    "sha256": "6baddd2261b62a819a629b3a6915eac4b518af9f80be4d778922c6a7c81fc18d",
-    "currentSha256": "6baddd2261b62a819a629b3a6915eac4b518af9f80be4d778922c6a7c81fc18d"
+    "sha256": "ea4efe25eb911639baa73c26f88df3049ff3cd218be37f7b9a25510698ed91a3",
+    "currentSha256": "ea4efe25eb911639baa73c26f88df3049ff3cd218be37f7b9a25510698ed91a3"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -169,14 +169,14 @@
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 5416,
-          "sha256": "5ffaaf74c97a8bcbc9ba307b80744738dea3833811d39ba0f5c22b06f76dc605"
+          "bytes": 6158,
+          "sha256": "dd3d1319105637aa8cc5d73f619adcb6b0cba643ede4c72d581bda08ac4200df"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 4003,
-          "sha256": "968d5b6a45cc265d41ce3b626cdc29fc35ba279cb86fc7fc9f46c600e07f6bba"
+          "bytes": 4815,
+          "sha256": "e7921c914cec2b477e352592e8ba10cabe781b5ac58ba05b8fedabb22ae66e22"
         },
         {
           "path": "apps/mobile/src/features/catalog/copy.ts",
@@ -1701,8 +1701,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 43836,
-          "sha256": "edffd702bcd9a75756f9ab983abc7dc71f3d15d868fa2ddfe4b598ea5aaa317c"
+          "bytes": 45384,
+          "sha256": "84b6f763cdf84a3e7fd10fe5a12aa7c2461b3e96b131be28f6d8c47131d78289"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",

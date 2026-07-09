@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T23:03:33.168Z",
+  "generatedAt": "2026-07-09T23:50:39.305Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "8b517225ba1b42bf980f831251d46113144b2179",
+  "gitSha": "d9ae09c5aa82932c5f6106079591e5bbd8ed9ba8",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -11,8 +11,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 16028,
-      "sha256": "b7094b76778694d62a9ffd3f5f59b60b44553dcc1bf8b0de410b70debd471944"
+      "bytes": 16117,
+      "sha256": "bb14b0e53b7e6f8dd754c32790aa9d2646cf7b9d86b7feb8a21d93857ff9d3df"
     },
     {
       "path": ".env.example",
@@ -102,13 +102,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 35121,
-      "sha256": "856325d1947639eaec15dabe9a76ddbef44f2975ae73b7771c450d510d3a526c"
+      "sha256": "f6479be42bcf12dccda9448776d3c39db4a05476bcc7e847676c3986466c7664"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 22472,
-      "sha256": "a5bbfee33f61b55fe6625842fff84ae9a0e598bae13d5dacda55f1f6b0b7335d"
+      "sha256": "45eb2e4d4effe82a518979d09cd2b84126899d31004eadcb0d9afe99344cf182"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -126,13 +126,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 5693,
-      "sha256": "1c125827c2c7185c0f37101d3c9c16e08050db281c766e0dbbb483ed82357b04"
+      "sha256": "9b2f46d96d257e531f18e48352e9c82a4590297c276c0e0d5326af59ef19e8ec"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 3816,
-      "sha256": "b6ff32b77b27e569ab28b9cd17ab30c6533bdbe4e859edcb1cd1c9ca6700e740"
+      "sha256": "1ef590937145b15a52715b6642f5373af2020edf46a0234d00aad09afe26fa2c"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
