@@ -12,11 +12,7 @@ export type ReviewPromptDecision =
   | { ok: true }
   | {
       ok: false;
-      reason:
-        | 'disabled'
-        | 'not_value_moment'
-        | 'annual_cap'
-        | 'cooldown';
+      reason: 'disabled' | 'not_value_moment' | 'annual_cap' | 'cooldown';
     };
 
 // Privacy controls and payment completion are tracked as moments, but they are

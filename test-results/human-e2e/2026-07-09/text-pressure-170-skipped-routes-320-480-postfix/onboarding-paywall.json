@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8322/onboarding/paywall",
+  "textOverflows": [],
+  "textStart": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Store pricing Checking price Monthly Checking price Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/onboarding/paywall",
+  "scaledCount": 23,
+  "textScale": 1.7,
+  "url": "http://localhost:8322/onboarding/paywall",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

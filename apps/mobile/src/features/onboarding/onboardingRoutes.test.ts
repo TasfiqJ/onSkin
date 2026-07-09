@@ -44,10 +44,22 @@ describe('onboarding route contracts', () => {
   });
 
   it('keeps onboarding fixed-footer screens scrollable above phone actions', () => {
+    const age = readAppRoute('onboarding/age.tsx');
     const goals = readAppRoute('onboarding/goals.tsx');
     const quiz = readAppRoute('onboarding/quiz.tsx');
     const products = readAppRoute('onboarding/products.tsx');
 
+    expect(age).toContain('useWindowDimensions');
+    expect(age).toContain('const compactPhone = height < 640');
+    expect(age).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
+    expect(age).toMatch(/<ScrollView\s+className="flex-1"\s+showsVerticalScrollIndicator/);
+    expect(age).toContain("contentContainerClassName={compactPhone ? 'pb-28 pt-6' : 'pb-8 pt-10'}");
+    expect(age).toContain(
+      "className={compactPhone ? 'mt-5 flex-row gap-2' : 'mt-8 flex-row gap-3'}",
+    );
+    expect(age).toContain('className="bg-paper pb-4 pt-2"');
+    expect(age).toContain('confirms your age before skin-health data');
+    expect(age).not.toContain('<View className="flex-1 justify-center">');
     expect(goals).toContain('<View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>');
     expect(quiz).toContain('<View className="flex-1 overflow-hidden">');
     expect(products).toContain('className="flex-1 overflow-hidden"');

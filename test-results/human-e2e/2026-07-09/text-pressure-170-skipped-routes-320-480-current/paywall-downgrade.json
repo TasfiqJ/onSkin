@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 85.890625,
+        "y": 258
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 282,
+        "height": 48,
+        "left": 61.890625,
+        "right": 109.890625,
+        "top": 234,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 159.265625,
+        "y": 258
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 282,
+        "height": 48,
+        "left": 135.25,
+        "right": 183.28125,
+        "top": 234,
+        "visibleHeight": 48,
+        "visibleWidth": 48.03125,
+        "width": 48.03125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 233.375,
+        "y": 258
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 282,
+        "height": 48,
+        "left": 208.640625,
+        "right": 258.109375,
+        "top": 234,
+        "visibleHeight": 48,
+        "visibleWidth": 49.46875,
+        "width": 49.46875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 363
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Renew Pro",
+      "label": "Renew Pro",
+      "partialClip": false,
+      "rect": {
+        "bottom": 390,
+        "height": 54,
+        "left": 24,
+        "right": 296,
+        "top": 336,
+        "visibleHeight": 54,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 424
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Keep using free",
+      "label": "Keep using free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 448,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 400,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8321/paywall/downgrade",
+  "textOverflows": [],
+  "textStart": "Pro ended · you’re on the free plan Everything you made is still here. Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up. ✓ Your routine & cycle. Kept ✓ Your photos. On your phone ✓ Your shelf & streak. Kept On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do. Terms · Privacy · Restore Store checkout is unavailable in this preview. You can keep exploring. Renew Pro Keep using free",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/paywall/downgrade",
+  "scaledCount": 17,
+  "textScale": 1.7,
+  "url": "http://localhost:8321/paywall/downgrade",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

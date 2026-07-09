@@ -101,34 +101,49 @@ export default function ReofferScreen() {
       >
         <Text
           variant="bodySm"
+          numberOfLines={compact ? 2 : undefined}
           style={{
             color: colors.clayDeep,
             fontSize: compact ? 12.5 : undefined,
             lineHeight: compact ? 17 : undefined,
+            flexShrink: 1,
+            minWidth: 0,
           }}
         >
           {annualDisplay.introLabel}
         </Text>
-        <Text
-          adjustsFontSizeToFit
-          minimumFontScale={0.86}
-          numberOfLines={1}
-          variant="title"
+        <View
           style={{
-            color: colors.clayDeep,
-            fontSize: compact ? 22 : 24,
-            letterSpacing: 0,
-            maxWidth: compact ? 124 : undefined,
-            textAlign: 'right',
+            alignItems: 'flex-end',
+            flexShrink: 0,
+            maxWidth: compact ? 136 : undefined,
+            minWidth: compact ? 116 : undefined,
           }}
         >
-          {annualDisplay.priceLabel}
+          <Text
+            adjustsFontSizeToFit
+            minimumFontScale={0.78}
+            numberOfLines={1}
+            variant="title"
+            style={{
+              color: colors.clayDeep,
+              fontSize: compact ? 20 : 24,
+              letterSpacing: 0,
+              textAlign: 'right',
+            }}
+          >
+            {annualDisplay.priceLabel}
+          </Text>
           {annualDisplay.periodLabel ? (
-            <Text variant="bodySm" style={{ color: colors.clayDeep }}>
+            <Text
+              numberOfLines={1}
+              variant="bodySm"
+              style={{ color: colors.clayDeep, fontSize: compact ? 11.5 : undefined }}
+            >
               /{annualDisplay.periodLabel}
             </Text>
           ) : null}
-        </Text>
+        </View>
       </View>
     );
   }

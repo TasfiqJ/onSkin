@@ -1,0 +1,172 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 53.640625,
+        "y": 302
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 326,
+        "height": 48,
+        "left": 21.421875,
+        "right": 85.859375,
+        "top": 278,
+        "visibleHeight": 48,
+        "visibleWidth": 64.4375,
+        "width": 64.4375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 152.9765625,
+        "y": 302
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 326,
+        "height": 48,
+        "left": 114.953125,
+        "right": 191,
+        "top": 278,
+        "visibleHeight": 48,
+        "visibleWidth": 76.046875,
+        "width": 76.046875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 259.3359375,
+        "y": 302
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 326,
+        "height": 48,
+        "left": 220.09375,
+        "right": 298.578125,
+        "top": 278,
+        "visibleHeight": 48,
+        "visibleWidth": 78.484375,
+        "width": 78.484375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 363
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Keep my full routine",
+      "label": "Keep my full routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 390,
+        "height": 54,
+        "left": 24,
+        "right": 296,
+        "top": 336,
+        "visibleHeight": 54,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 424
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue on free",
+      "label": "Continue on free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 448,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 400,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 1,
+  "issues": [
+    {
+      "textOverflows": [
+        {
+          "clientWidth": 92,
+          "overflow": 47,
+          "rect": {
+            "height": 57.796875,
+            "width": 92.390625
+          },
+          "text": "$49.99/year",
+          "whiteSpace": "nowrap"
+        }
+      ],
+      "type": "textOverflow"
+    }
+  ],
+  "location": "http://localhost:8321/paywall/reoffer",
+  "textOverflows": [
+    {
+      "clientWidth": 92,
+      "overflow": 47,
+      "rect": {
+        "height": 57.796875,
+        "width": 92.390625
+      },
+      "text": "$49.99/year",
+      "whiteSpace": "nowrap"
+    }
+  ],
+  "textStart": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Terms · Privacy · Restore Keep my full routine Continue on free",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/paywall/reoffer",
+  "scaledCount": 17,
+  "textScale": 1.7,
+  "url": "http://localhost:8321/paywall/reoffer",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

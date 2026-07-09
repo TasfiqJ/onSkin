@@ -1,0 +1,187 @@
+{
+  "failedRouteCount": 3,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 3,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 60.46875,
+              "y": 438.6875
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Day of birth",
+            "partialClip": false,
+            "rect": {
+              "bottom": 471.6875,
+              "height": 66,
+              "left": 24,
+              "right": 96.9375,
+              "top": 405.6875,
+              "visibleHeight": 66,
+              "visibleWidth": 72.9375,
+              "width": 72.9375
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 145.40625,
+              "y": 438.6875
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Month of birth",
+            "partialClip": false,
+            "rect": {
+              "bottom": 471.6875,
+              "height": 66,
+              "left": 108.9375,
+              "right": 181.875,
+              "top": 405.6875,
+              "visibleHeight": 66,
+              "visibleWidth": 72.9375,
+              "width": 72.9375
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 244.9375,
+              "y": 438.6875
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Year of birth",
+            "partialClip": false,
+            "rect": {
+              "bottom": 471.6875,
+              "height": 66,
+              "left": 193.875,
+              "right": 296,
+              "top": 405.6875,
+              "visibleHeight": 66,
+              "visibleWidth": 102.125,
+              "width": 102.125
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        }
+      ],
+      "route": "/onboarding/age",
+      "scaledCount": 7,
+      "textStart": "First, your date of birth. RoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date. DAY MONTH YEAR Continue"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "issues": [
+        {
+          "textOverflows": [
+            {
+              "clientWidth": 92,
+              "overflow": 47,
+              "rect": {
+                "height": 57.796875,
+                "width": 92.390625
+              },
+              "text": "$49.99/year",
+              "whiteSpace": "nowrap"
+            }
+          ],
+          "type": "textOverflow"
+        }
+      ],
+      "route": "/paywall/reoffer",
+      "scaledCount": 17,
+      "textStart": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Terms · Privacy · Restore Keep my full routine Continue on free"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 160,
+              "y": 473
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Back to Shelf",
+            "label": "Back to Shelf",
+            "partialClip": true,
+            "rect": {
+              "bottom": 501,
+              "height": 56,
+              "left": 28,
+              "right": 292,
+              "top": 445,
+              "visibleHeight": 35,
+              "visibleWidth": 264,
+              "width": 264
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 160,
+              "y": 473
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Back to Shelf",
+            "label": "Back to Shelf",
+            "partialClip": true,
+            "rect": {
+              "bottom": 501,
+              "height": 56,
+              "left": 28,
+              "right": 292,
+              "top": 445,
+              "visibleHeight": 35,
+              "visibleWidth": 264,
+              "width": 264
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/conflict/00000000-0000-4000-8000-000000000001",
+      "scaledCount": 6,
+      "textStart": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice. Back to Shelf Add a product"
+    }
+  ]
+}

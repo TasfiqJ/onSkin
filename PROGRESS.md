@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened three compact supported-floor text-pressure routes from the 320 x
+  480 / 170% audit. The onboarding age gate now scrolls above its fixed footer
+  and uses shorter compact copy; the missing conflict sheet prioritizes recovery
+  actions before the advisory card on very short heights; and the reverse-trial
+  reoffer price summary now clamps/scales the price block. Focused contract
+  tests pass. A 21-route skipped-route human-E2E sweep now passes at 320 x 480 /
+  170% in
+  `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
+
 - Hardened the Phase 8 review prompt policy so native StoreReview prompts stay
   tied to product-value moments only. `seven_checkoff_days` and
   `first_reviewed_conflict` remain reviewable; privacy export success and paid
@@ -21,6 +32,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   cheaper without weakening the full manifest gates. A one-route `/today`
   verification passed at 390 x 640 / 170% with evidence in
   `test-results/human-e2e/2026-07-09/text-pressure-route-override-today-current/`.
+
+- Cleared the first skipped-route 320 x 480 / 170% text-pressure sweep. The new
+  override audit found `/onboarding/age` inputs hidden under the fixed Continue
+  footer, `/paywall/reoffer` overflowing the compact annual price text, and the
+  stale `/conflict/[ruleId]` recovery sheet clipping `Back to Shelf`.
+  Post-fix, the age gate uses the same scroll-above-footer compact structure as
+  the later onboarding screens, the reoffer billing block separates fitted price
+  and period text, and missing conflict recovery prioritizes the primary exit
+  before the explanatory card on short sheets. Focused route-contract tests pass,
+  and the 21-route skipped-route audit now reports zero failed routes. Evidence
+  and report are in
+  `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`,
+  and
+  `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
 
 - Cleared a supported Android-class 360 x 640 / 200% text-pressure regression
   in Settings Notifications. The fresh route audit found the lower-priority

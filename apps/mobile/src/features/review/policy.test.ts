@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  canRequestReviewPrompt,
-  recordReviewAttempt,
-  type ReviewPromptState,
-} from './policy';
+import { canRequestReviewPrompt, recordReviewAttempt, type ReviewPromptState } from './policy';
 
 const now = new Date('2026-07-04T12:00:00.000Z');
 

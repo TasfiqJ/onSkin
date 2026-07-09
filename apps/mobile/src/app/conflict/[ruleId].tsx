@@ -264,8 +264,44 @@ function ConflictFrame({
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
   const dialogLabel = conflict ? familyTitle(conflict) : 'Timing note unavailable';
-  const contentPaddingBottom =
-    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+  const compactMissingConflict = !conflict && viewportHeight < 520;
+  const contentPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+  const missingConflictAdvice = compactMissingConflict
+    ? 'Old links never reuse stale routine advice.'
+    : 'We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice.';
+  const missingConflictActions = (
+    <View className="mt-1 gap-2">
+      <Button label="Back to Shelf" onPress={() => router.replace(APP_SHELF_ROUTE)} />
+      <Pressable
+        accessibilityRole="button"
+        className="min-h-[48px] items-center justify-center py-2"
+        onPress={() => router.replace('/shelf/manual')}
+      >
+        <Text variant="body" tone="muted" className="font-sans-semibold">
+          Add a product
+        </Text>
+      </Pressable>
+    </View>
+  );
+  const missingConflictAdviceCard = (
+    <View
+      className="rounded-[16px]"
+      style={{
+        backgroundColor: colors.greigeChip,
+        paddingHorizontal: compactMissingConflict ? 14 : 18,
+        paddingVertical: compactMissingConflict ? 10 : 12,
+      }}
+    >
+      <Text
+        className={
+          compactMissingConflict ? 'text-[12px] leading-[17px]' : 'text-[12.5px] leading-[18px]'
+        }
+        style={{ color: colors.mutedStrong }}
+      >
+        {missingConflictAdvice}
+      </Text>
+    </View>
+  );
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: backdrop }}>
@@ -296,9 +332,7 @@ function ConflictFrame({
           showsVerticalScrollIndicator={false}
           contentContainerClassName="pb-10"
           contentContainerStyle={
-            contentPaddingBottom === undefined
-              ? undefined
-              : { paddingBottom: contentPaddingBottom }
+            contentPaddingBottom === undefined ? undefined : { paddingBottom: contentPaddingBottom }
           }
           keyboardShouldPersistTaps="handled"
         >
@@ -324,35 +358,8 @@ function ConflictFrame({
                 </Text>
               </View>
 
-              <View
-                className="rounded-[16px]"
-                style={{
-                  backgroundColor: colors.greigeChip,
-                  paddingHorizontal: 18,
-                  paddingVertical: 12,
-                }}
-              >
-                <Text
-                  className="text-[12.5px] leading-[18px]"
-                  style={{ color: colors.mutedStrong }}
-                >
-                  We only show conflict guidance for products currently on your shelf, so old links
-                  never reuse stale routine advice.
-                </Text>
-              </View>
-
-              <View className="mt-1 gap-2">
-                <Button label="Back to Shelf" onPress={() => router.replace(APP_SHELF_ROUTE)} />
-                <Pressable
-                  accessibilityRole="button"
-                  className="min-h-[48px] items-center justify-center py-2"
-                  onPress={() => router.replace('/shelf/manual')}
-                >
-                  <Text variant="body" tone="muted" className="font-sans-semibold">
-                    Add a product
-                  </Text>
-                </Pressable>
-              </View>
+              {compactMissingConflict ? missingConflictActions : missingConflictAdviceCard}
+              {compactMissingConflict ? missingConflictAdviceCard : missingConflictActions}
             </View>
           ) : (
             <ConflictBody conflict={conflict} onDismiss={onDismiss} />

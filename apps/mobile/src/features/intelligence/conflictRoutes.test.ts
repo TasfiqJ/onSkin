@@ -102,9 +102,16 @@ describe('Conflict route contracts', () => {
     expect(source).toContain(
       "const dialogLabel = conflict ? familyTitle(conflict) : 'Timing note unavailable';",
     );
+    expect(source).toContain('const compactMissingConflict = !conflict && viewportHeight < 520;');
+    expect(source).toContain('const missingConflictActions = (');
+    expect(source).toContain('const missingConflictAdviceCard = (');
     expect(source).toContain(
-      'insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined',
+      '{compactMissingConflict ? missingConflictActions : missingConflictAdviceCard}',
     );
+    expect(source).toContain(
+      '{compactMissingConflict ? missingConflictAdviceCard : missingConflictActions}',
+    );
+    expect(source).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined');
     expect(source).toContain('aria-modal');
     expect(source).toContain('role="dialog"');
     expect(source).toContain('accessibilityLabel={dialogLabel}');

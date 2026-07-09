@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import {
@@ -54,11 +54,13 @@ function DobField({
 }
 
 export default function AgeGateScreen() {
+  const { height } = useWindowDimensions();
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [blocked, setBlocked] = useState(false);
   const [checked, setChecked] = useState(false);
+  const compactPhone = height < 640;
 
   // Skip if a prior session already passed the gate (don't re-ask on re-entry).
   useEffect(() => {
@@ -101,54 +103,72 @@ export default function AgeGateScreen() {
 
   return (
     <Screen>
-      <View className="flex-1 justify-center">
-        <Text variant="title">
-          First, your{' '}
-          <Text variant="title" italic tone="clay">
-            date of birth.
+      <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName={compactPhone ? 'pb-28 pt-6' : 'pb-8 pt-10'}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text variant="title" style={compactPhone ? { fontSize: 26, lineHeight: 30 } : undefined}>
+            First, your{' '}
+            <Text
+              variant="title"
+              italic
+              tone="clay"
+              style={compactPhone ? { fontSize: 26, lineHeight: 30 } : undefined}
+            >
+              date of birth.
+            </Text>
           </Text>
-        </Text>
-        <Text variant="body" tone="muted" className="mt-3">
-          {BRAND.appName} handles skin-health information, so we confirm your age before we begin.{' '}
-          {"We don't store your birth date."}
-        </Text>
-
-        <View className="mt-8 flex-row gap-3">
-          <DobField
-            label="DAY"
-            accessibilityLabel="Day of birth"
-            value={day}
-            onChange={edit(setDay)}
-            max={2}
-            placeholder="DD"
-          />
-          <DobField
-            label="MONTH"
-            accessibilityLabel="Month of birth"
-            value={month}
-            onChange={edit(setMonth)}
-            max={2}
-            placeholder="MM"
-          />
-          <DobField
-            label="YEAR"
-            accessibilityLabel="Year of birth"
-            value={year}
-            onChange={edit(setYear)}
-            max={4}
-            placeholder="YYYY"
-            grow={1.4}
-          />
-        </View>
-
-        {validationError || blocked ? (
-          <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
-            {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
+          <Text
+            variant="body"
+            tone="muted"
+            className="mt-3"
+            style={compactPhone ? { fontSize: 14, lineHeight: 20 } : undefined}
+          >
+            {compactPhone
+              ? `${BRAND.appName} confirms your age before skin-health data. We don't store your birth date.`
+              : `${BRAND.appName} handles skin-health information, so we confirm your age before we begin. We don't store your birth date.`}
           </Text>
-        ) : null}
+
+          <View className={compactPhone ? 'mt-5 flex-row gap-2' : 'mt-8 flex-row gap-3'}>
+            <DobField
+              label="DAY"
+              accessibilityLabel="Day of birth"
+              value={day}
+              onChange={edit(setDay)}
+              max={2}
+              placeholder="DD"
+            />
+            <DobField
+              label="MONTH"
+              accessibilityLabel="Month of birth"
+              value={month}
+              onChange={edit(setMonth)}
+              max={2}
+              placeholder="MM"
+            />
+            <DobField
+              label="YEAR"
+              accessibilityLabel="Year of birth"
+              value={year}
+              onChange={edit(setYear)}
+              max={4}
+              placeholder="YYYY"
+              grow={1.4}
+            />
+          </View>
+
+          {validationError || blocked ? (
+            <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
+              {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
+            </Text>
+          ) : null}
+        </ScrollView>
       </View>
 
-      <View className="pb-4">
+      <View className="bg-paper pb-4 pt-2">
         <Button label="Continue" disabled={!valid} onPress={() => void submit()} />
       </View>
     </Screen>

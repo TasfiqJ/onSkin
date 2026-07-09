@@ -181,9 +181,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
-    expect(proGate).toContain(
-      'denseTallTextPressurePaywall || supportFloorTextPressurePaywall;',
-    );
+    expect(proGate).toContain('denseTallTextPressurePaywall || supportFloorTextPressurePaywall;');
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
@@ -204,9 +202,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain("? 'min-h-[48px] flex-row items-start justify-between gap-2 pt-0'");
     expect(proGate).toContain("? 'min-h-[96px] items-stretch pt-0'");
     expect(proGate).toContain("? 'h-[48px] self-end justify-center px-2'");
-    expect(proGate).toContain(
-      'supportFloorTextPressurePaywall ? (',
-    );
+    expect(proGate).toContain('supportFloorTextPressurePaywall ? (');
     expect(proGate).toContain('accessibilityLabel="Maybe later"');
     expect(proGate).toContain('glyph="x"');
     expect(proGate).toContain('tone="muted"');
@@ -592,6 +588,10 @@ describe('paywall mobile contracts', () => {
     expect(reoffer).toContain("contentContainerClassName={compactPaywall ? 'pb-56' : 'pb-4'}");
     expect(reoffer).toContain('adjustsFontSizeToFit');
     expect(reoffer).toContain('numberOfLines={1}');
+    expect(reoffer).toContain('numberOfLines={compact ? 2 : undefined}');
+    expect(reoffer).toContain('minimumFontScale={0.78}');
+    expect(reoffer).toContain('fontSize: compact ? 20 : 24');
+    expect(reoffer).toContain('fontSize: compact ? 11.5 : undefined');
     expect(compactPrice).toBeGreaterThan(-1);
     expect(compactReason).toBeGreaterThan(-1);
     expect(purchaseCta).toBeGreaterThan(-1);

@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 160,
+        "y": 260.109375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "I agree. Continue",
+      "label": "I agree. Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 293.609375,
+        "height": 67,
+        "left": 24,
+        "right": 296,
+        "top": 226.609375,
+        "visibleHeight": 67,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 334.0078125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "I don't agree",
+      "label": "I don't agree",
+      "partialClip": false,
+      "rect": {
+        "bottom": 362.40625,
+        "height": 56.796875,
+        "left": 24,
+        "right": 296,
+        "top": 305.609375,
+        "visibleHeight": 56.796875,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 415.203125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Read the health data policy",
+      "label": "Read the health data policy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 464,
+        "height": 97.59375,
+        "left": 24,
+        "right": 296,
+        "top": 366.40625,
+        "visibleHeight": 97.59375,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8322/onboarding/consent",
+  "textOverflows": [],
+  "textStart": "Before the quiz, your privacy. Your answers describe your skin's health, so we ask plainly. This consent covers collection only. We'll ask separately before anything is ever shared. WHAT Your quiz answers, skin goals, sensitivities, and products you add. WHY To build your routine, check product conflicts, and adjust timing around your shelf. NEVER Sold, shared for ads, or used to train AI. You can withdraw this consent in Settings. Account deletion removes collected health data. General cosmetic information, not medical advice. I agree. Continue I don't agree Read the health data policy",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/onboarding/quiz",
+  "scaledCount": 15,
+  "textScale": 1.7,
+  "url": "http://localhost:8322/onboarding/quiz",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
