@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T09:49:22.298Z",
+  "generatedAt": "2026-07-09T09:50:20.537Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "b89581c7cb63f7a2d0e43a239498698e3dd9cbd9",
-  "gitStatus": "M docs/phase-6/generated/payments-qa-packet.json\n M docs/phase-6/generated/payments-qa-packet.md",
+  "gitSha": "581e9e2b89d2f95b8cc96e67f2d8b3538eb3cd5c",
+  "gitStatus": "",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -311,7 +311,5 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": [
-    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
-  ]
+  "warnings": []
 }
