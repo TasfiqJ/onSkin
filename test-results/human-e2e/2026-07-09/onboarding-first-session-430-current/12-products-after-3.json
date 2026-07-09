@@ -1,11 +1,11 @@
 {
-  "bodyText": "What's on your shelf? 3 OF 3 PRODUCTS PRODUCT NAME 3 ON YOUR SHELF Ceramide moisturizer × Glycolic 7% toner × Retinol 0.3% serum × Continue",
+  "bodyText": "What's on your shelf? 3 OF 3 PRODUCTS PRODUCT NAME 3 ON YOUR SHELF Mineral SPF 50 × Glycolic 7% toner × Retinol 0.3% serum × Continue",
   "controls": [
     {
       "disabled": false,
       "height": 48,
       "hitOk": true,
-      "label": "Remove Ceramide moisturizer",
+      "label": "Remove Mineral SPF 50",
       "role": "button",
       "width": 48,
       "x": 231,

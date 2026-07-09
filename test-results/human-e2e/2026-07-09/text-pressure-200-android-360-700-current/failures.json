@@ -1,0 +1,135 @@
+{
+  "failedRouteCount": 2,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Is “natural” always gentler for sensitive skin?",
+            "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 813,
+              "height": 135,
+              "left": 24,
+              "right": 336,
+              "top": 678,
+              "visibleHeight": 22,
+              "visibleWidth": 312,
+              "width": 312
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Is “natural” always gentler for sensitive skin?",
+            "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 813,
+              "height": 135,
+              "left": 24,
+              "right": 336,
+              "top": 678,
+              "visibleHeight": 22,
+              "visibleWidth": 312,
+              "width": 312
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/community",
+      "scaledCount": 26,
+      "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add it by hand",
+            "label": "Add it by hand. Always works offline",
+            "partialClip": true,
+            "rect": {
+              "bottom": 836,
+              "height": 160,
+              "left": 28,
+              "right": 332,
+              "top": 676,
+              "visibleHeight": 24,
+              "visibleWidth": 304,
+              "width": 304
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add it by hand",
+            "label": "Add it by hand. Always works offline",
+            "partialClip": true,
+            "rect": {
+              "bottom": 836,
+              "height": 160,
+              "left": 28,
+              "right": 332,
+              "top": 676,
+              "visibleHeight": 24,
+              "visibleWidth": 304,
+              "width": 304
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/shelf/scan",
+      "scaledCount": 17,
+      "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Line up the barcode Decoding happens on your device Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Capture label, then type from it S Search catalog Use reviewed matches + Add it by hand Always works offline"
+    }
+  ]
+}

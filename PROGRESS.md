@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Promoted the maintained first-session onboarding E2E harness from a
+  paywall-stop proof to a full activation-loop proof. `npm run
+  e2e:onboarding-first-session` now uses the dev-only local reset, adds
+  `Retinol 0.3% serum`, `Glycolic 7% toner`, and `Mineral SPF 50`, verifies
+  the shelf-derived `FIRST INSIGHT` / `Timing handled` reveal, scrolls to and
+  taps the no-card `Explore first` paywall path, opens `/routine/plan`, taps
+  `Start today`, and completes forced AM SPF plus PM glycolic check-offs to
+  `1 of 1`. The harness now treats accessible checkbox rows as tappable
+  controls, records the offscreen paywall Explore state, and keeps 320 x 430 as
+  stress evidence below the launch web floor. Today also suppresses the
+  lower-priority recommendation teaser below 500 px height so the AM check-off
+  card stays clear of the floating tab bar. Evidence:
+  `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current/`
+  and
+  `docs/e2e-bug-reports/2026-07-09-today-short-stress-recommendation-clearance.md`.
+
 - Cleared the 393 x 852 / 200% text-pressure Skin Notes boundary failure on
   the supported modern Android midpoint. `/community` now defers the Retinoids
   section for the 391-414 px / 840-899 px band so `Does retinol thin your

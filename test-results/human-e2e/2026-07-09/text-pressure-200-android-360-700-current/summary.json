@@ -1,0 +1,442 @@
+{
+  "baseUrl": "http://localhost:8365",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-200-android-360-700-current",
+  "generatedAt": "2026-07-09T22:47:46.272Z",
+  "routeCount": 49,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 700,
+    "width": 360
+  },
+  "failedRouteCount": 2,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Is “natural” always gentler for sensitive skin?",
+            "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 813,
+              "height": 135,
+              "left": 24,
+              "right": 336,
+              "top": 678,
+              "visibleHeight": 22,
+              "visibleWidth": 312,
+              "width": 312
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Is “natural” always gentler for sensitive skin?",
+            "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 813,
+              "height": 135,
+              "left": 24,
+              "right": 336,
+              "top": 678,
+              "visibleHeight": 22,
+              "visibleWidth": 312,
+              "width": 312
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/community",
+      "scaledCount": 26,
+      "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add it by hand",
+            "label": "Add it by hand. Always works offline",
+            "partialClip": true,
+            "rect": {
+              "bottom": 836,
+              "height": 160,
+              "left": 28,
+              "right": 332,
+              "top": 676,
+              "visibleHeight": 24,
+              "visibleWidth": 304,
+              "width": 304
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 699
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Add it by hand",
+            "label": "Add it by hand. Always works offline",
+            "partialClip": true,
+            "rect": {
+              "bottom": 836,
+              "height": 160,
+              "left": 28,
+              "right": 332,
+              "top": 676,
+              "visibleHeight": 24,
+              "visibleWidth": 304,
+              "width": 304
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/shelf/scan",
+      "scaledCount": 17,
+      "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Line up the barcode Decoding happens on your device Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Capture label, then type from it S Search catalog Use reviewed matches + Add it by hand Always works offline"
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today?routine=PM",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress",
+      "scaledCount": 20
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/capture",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/review",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/plan",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/ramp",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/tolerance",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/reorder",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/adaptation",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/settings",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/disruption",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/procedure",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/phased-intro",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/recovery",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/why-tonight",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/preferences",
+      "scaledCount": 22
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/stale-local-rec",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "route": "/community",
+      "scaledCount": 26
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/note/missing-note-e2e",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/ask",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/people-like-you",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/consent",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stacks",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/barrier-basics",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/missing-stack-e2e",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/transparency",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/subscription",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/notifications",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/timing",
+      "scaledCount": 19
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 61
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/optin",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/fairness",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask/consent",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/search",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/no-match",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "route": "/shelf/scan",
+      "scaledCount": 17
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/ocr",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/manual",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/archive",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/opened",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/upsell?feature=full_routine",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/success",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/streak",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/widgets",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/week",
+      "scaledCount": 16
+    }
+  ],
+  "error": "2 text-pressure route(s) failed."
+}

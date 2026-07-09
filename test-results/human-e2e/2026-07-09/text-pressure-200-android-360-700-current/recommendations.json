@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 285.2578125,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Preferences",
+      "label": "Preferences",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 234.515625,
+        "right": 336,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 101.484375,
+        "width": 101.484375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 276.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 365,
+        "height": 177,
+        "left": 24,
+        "right": 336,
+        "top": 188,
+        "visibleHeight": 177,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 478.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 576,
+        "height": 195,
+        "left": 24,
+        "right": 336,
+        "top": 381,
+        "visibleHeight": 195,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 680.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+      "label": "A gentle cleanser. Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+      "partialClip": true,
+      "rect": {
+        "bottom": 769,
+        "height": 177,
+        "left": 24,
+        "right": 336,
+        "top": 592,
+        "visibleHeight": 108,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8365/recommendations",
+  "textOverflows": [],
+  "textStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
+  "viewport": {
+    "width": 360,
+    "height": 700
+  },
+  "route": "/recommendations",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8365/recommendations",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

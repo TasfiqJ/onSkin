@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 280.640625,
+        "y": 365
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Maybe later",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 389,
+        "height": 48,
+        "left": 229.28125,
+        "right": 332,
+        "top": 341,
+        "visibleHeight": 48,
+        "visibleWidth": 102.71875,
+        "width": 102.71875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 52,
+        "y": 417
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 441,
+        "height": 48,
+        "left": 28,
+        "right": 76,
+        "top": 393,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 113.359375,
+        "y": 417
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 441,
+        "height": 48,
+        "left": 89.359375,
+        "right": 137.359375,
+        "top": 393,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 174.71875,
+        "y": 417
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 441,
+        "height": 48,
+        "left": 150.71875,
+        "right": 198.71875,
+        "top": 393,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 654
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 52,
+        "left": 28,
+        "right": 332,
+        "top": 628,
+        "visibleHeight": 52,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8366/paywall/upsell?feature=full_routine",
+  "textOverflows": [],
+  "textStart": "Maybe later Terms · Privacy · Restore Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year $4.16/mo Store checkout is unavailable in this preview. You can keep exploring. Start free trial",
+  "viewport": {
+    "width": 360,
+    "height": 700
+  },
+  "route": "/paywall/upsell?feature=full_routine",
+  "scaledCount": 9,
+  "textScale": 2,
+  "url": "http://localhost:8366/paywall/upsell?feature=full_routine",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

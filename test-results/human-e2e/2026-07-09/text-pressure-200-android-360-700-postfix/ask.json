@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 310
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is there a conflict on my shelf?",
+      "label": "Is there a conflict on my shelf? ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 334,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 286,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 366
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "What should I do tonight?",
+      "label": "What should I do tonight? ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 390,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 342,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 422
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is this product a fit for me?",
+      "label": "Is this product a fit for me? ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 446,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 398,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 151,
+        "y": 623
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Ask a question about your shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 647,
+        "height": 48,
+        "left": 39,
+        "right": 263,
+        "top": 599,
+        "visibleHeight": 48,
+        "visibleWidth": 224,
+        "width": 224
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 297,
+        "y": 623
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "↑",
+      "label": "Send",
+      "partialClip": false,
+      "rect": {
+        "bottom": 647,
+        "height": 48,
+        "left": 273,
+        "right": 321,
+        "top": 599,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8366/ask",
+  "textOverflows": [],
+  "textStart": "< ✦ Ask RoutineKind knows your shelf evidence-grounded private Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › Is this product a fit for me? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "viewport": {
+    "width": 360,
+    "height": 700
+  },
+  "route": "/ask",
+  "scaledCount": 8,
+  "textScale": 2,
+  "url": "http://localhost:8366/ask",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,48 @@
+{
+  "bodyText": "You’re exploring Pro. 7 days left › THURSDAY, JULY 9 · 6:59 PM Good evening. SKIN CYCLING · NIGHT 1 OF 6 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Evening routine 0 of 1 Glycolic 7% toner Thin layer tonight. NEXT Today Prog. Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 139,
+      "hitOk": true,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": -69
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Glycolic 7% toner",
+      "role": "checkbox",
+      "width": 232,
+      "x": 44,
+      "y": 138
+    }
+  ],
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": {
+        "disabled": false,
+        "height": 139,
+        "hitOk": true,
+        "label": "See your cycle week ahead",
+        "role": "button",
+        "width": 272,
+        "x": 24,
+        "y": -69
+      },
+      "type": "clippedVisibleControl"
+    }
+  ],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/today?routine=PM",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

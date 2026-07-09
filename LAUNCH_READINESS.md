@@ -284,11 +284,15 @@ Fresh verification through 2026-07-09:
   `/shelf/manual` recovery with zero current-origin warn/error logs. Evidence:
   `test-results/human-e2e/2026-07-08/shelf-manual-category-sheet-current/`,
   `test-results/human-e2e/2026-07-08/shelf-ultrashort-manual-ocr-current/`.
-- Expo web clean first-session activation evidence at 320 x 430 passed using
-  the new dev-only local reset fixture. The run covers onboarding, three-product
-  shelf intake, no-card paywall exploration, generated routine plan, Today AM
-  checkoff, and Today PM Night 1 checkoff. Evidence:
-  `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`.
+- Expo web clean first-session activation evidence has a current maintained
+  2026-07-09 pass at 320 x 430 stress size using the dev-only local reset
+  fixture. The run covers onboarding, three-product shelf intake with retinol,
+  glycolic, and SPF, the shelf-derived first insight, no-card paywall
+  exploration, generated routine plan, `Start today`, Today AM SPF checkoff,
+  and Today PM Night 1 glycolic checkoff. This remains below the launch web
+  support floor, but it proves the first-session value loop through a real app
+  surface. Evidence:
+  `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current/`.
 
 Re-run the relevant checks after any production-readiness change.
 

@@ -133,7 +133,7 @@ export default function ScanScreen() {
   const canShowPermissionRecovery =
     !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
   const canShowCamera = cameraEnabled && permissionGranted;
-  const supportFloorTextPressureScan = width <= 430 && height >= 640 && height < 700;
+  const supportFloorTextPressureScan = width <= 430 && height >= 640 && height <= 700;
   const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
   const showScanPreview = !splitShortScanSurface || canShowCamera;

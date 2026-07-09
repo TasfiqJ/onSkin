@@ -1,0 +1,202 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 289.5,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "torch",
+      "label": "torch",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 243,
+        "right": 336,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 368
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan ingredient label",
+      "label": "Scan ingredient label. Capture label, then type from it",
+      "partialClip": false,
+      "rect": {
+        "bottom": 496,
+        "height": 256,
+        "left": 28,
+        "right": 332,
+        "top": 240,
+        "visibleHeight": 256,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 586
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Use reviewed matches",
+      "label": "Search catalog. Use reviewed matches",
+      "partialClip": false,
+      "rect": {
+        "bottom": 666,
+        "height": 160,
+        "left": 28,
+        "right": 332,
+        "top": 506,
+        "visibleHeight": 160,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 699
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works offline",
+      "partialClip": true,
+      "rect": {
+        "bottom": 836,
+        "height": 160,
+        "left": 28,
+        "right": 332,
+        "top": 676,
+        "visibleHeight": 24,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": true
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 2,
+  "issues": [
+    {
+      "control": {
+        "center": {
+          "x": 180,
+          "y": 699
+        },
+        "centerBlocked": false,
+        "hitInside": true,
+        "hitTag": "DIV",
+        "hitText": "Add it by hand",
+        "label": "Add it by hand. Always works offline",
+        "partialClip": true,
+        "rect": {
+          "bottom": 836,
+          "height": 160,
+          "left": 28,
+          "right": 332,
+          "top": 676,
+          "visibleHeight": 24,
+          "visibleWidth": 304,
+          "width": 304
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "tinyTarget"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 180,
+          "y": 699
+        },
+        "centerBlocked": false,
+        "hitInside": true,
+        "hitTag": "DIV",
+        "hitText": "Add it by hand",
+        "label": "Add it by hand. Always works offline",
+        "partialClip": true,
+        "rect": {
+          "bottom": 836,
+          "height": 160,
+          "left": 28,
+          "right": 332,
+          "top": 676,
+          "visibleHeight": 24,
+          "visibleWidth": 304,
+          "width": 304
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "partialClip"
+    }
+  ],
+  "location": "http://localhost:8365/shelf/scan",
+  "textOverflows": [],
+  "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. Line up the barcode Decoding happens on your device Scan a UPC or EAN barcode, or use a fallback. No third-party product lookup is called from the app. = Scan ingredient label Capture label, then type from it S Search catalog Use reviewed matches + Add it by hand Always works offline",
+  "viewport": {
+    "width": 360,
+    "height": 700
+  },
+  "route": "/shelf/scan",
+  "scaledCount": 17,
+  "textScale": 2,
+  "url": "http://localhost:8365/shelf/scan",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

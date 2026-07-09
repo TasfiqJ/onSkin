@@ -32,6 +32,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('const compactPhone = height < 700');
     expect(source).toContain('const compactRecommendationPrompt = height < 860');
     expect(source).toContain('const shortEmptyRoutine = compactPhone && height < 600;');
+    expect(source).toContain('const showRecommendations = hasRealRoutine && height >= 500;');
     expect(source).toContain('function EmptyRoutineCard');
     expect(source).toContain('short = false');
     expect(source).toContain('const tight = compact && short;');
@@ -88,7 +89,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain(
       '<RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />',
     );
-    expect(source).toContain('{hasRealRoutine ? (');
+    expect(source).toContain('{showRecommendations ? (');
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
     expect(source).toContain('{hasRealRoutine && !compactPhone && cycle ? (');

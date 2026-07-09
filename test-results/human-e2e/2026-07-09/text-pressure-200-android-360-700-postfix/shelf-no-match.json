@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 308,
+        "y": 394
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 418,
+        "height": 48,
+        "left": 284,
+        "right": 332,
+        "top": 370,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 488
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Try name or brand instead",
+      "partialClip": false,
+      "rect": {
+        "bottom": 512,
+        "height": 48,
+        "left": 28,
+        "right": 332,
+        "top": 464,
+        "visibleHeight": 48,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 540
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan ingredients",
+      "label": "Scan the ingredient list. We'll read the INCI text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 564,
+        "height": 48,
+        "left": 28,
+        "right": 332,
+        "top": 516,
+        "visibleHeight": 48,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 592
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works, even offline",
+      "partialClip": false,
+      "rect": {
+        "bottom": 616,
+        "height": 48,
+        "left": 28,
+        "right": 332,
+        "top": 568,
+        "visibleHeight": 48,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 656
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Report missing product",
+      "label": "Report missing product",
+      "partialClip": false,
+      "rect": {
+        "bottom": 684,
+        "height": 56,
+        "left": 28,
+        "right": 332,
+        "top": 628,
+        "visibleHeight": 56,
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8366/shelf/no-match",
+  "textOverflows": [],
+  "textStart": "? x Not found yet. S Search catalog Try name or brand instead I Scan ingredients + Add it by hand Always works, even offline Report missing product",
+  "viewport": {
+    "width": 360,
+    "height": 700
+  },
+  "route": "/shelf/no-match",
+  "scaledCount": 7,
+  "textScale": 2,
+  "url": "http://localhost:8366/shelf/no-match",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

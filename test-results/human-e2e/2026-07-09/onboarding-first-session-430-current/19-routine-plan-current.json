@@ -1,0 +1,34 @@
+{
+  "bodyText": "< BUILT FOR OILY, SENSITIVE SKIN Your routine, in order. FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. MORNING 1 Mineral SPF 50 EVENING SKIN CYCLING Night 1 Glycolic 7% exfoliate Night 2 Retinol 0.3% serum 2 times/week to start Nights 3-4 Recover keep it simple A gentle cleanser would give your routine a clean base. Start today",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "width": 48,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Start today",
+      "role": "button",
+      "width": 272,
+      "x": 24,
+      "y": 358
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/routine/plan",
+  "viewport": {
+    "height": 430,
+    "width": 320
+  }
+}

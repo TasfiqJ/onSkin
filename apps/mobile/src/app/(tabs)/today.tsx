@@ -360,6 +360,7 @@ export default function TodayScreen() {
   const compactCycleStrip = compactPhone || width < 360;
   const compactRecommendationPrompt = height < 860;
   const shortEmptyRoutine = compactPhone && height < 600;
+  const showRecommendations = hasRealRoutine && height >= 500;
 
   // ---- AM ----
   if (!dark) {
@@ -442,7 +443,7 @@ export default function TodayScreen() {
           )}
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
-          {hasRealRoutine ? (
+          {showRecommendations ? (
             <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
           ) : null}
 

@@ -14,7 +14,7 @@
 
 | Flow | Branch | Result | Evidence | Notes |
 | ---- | ------ | ------ | -------- | ----- |
-| First-run onboarding | Happy path / stress viewport | pass | `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current` | Reached http://localhost:8285/onboarding/paywall |
+| First-run onboarding | Happy path / stress viewport | pass | `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current` | Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off. |
 
 ## Bugs Found
 

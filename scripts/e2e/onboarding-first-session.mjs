@@ -336,7 +336,7 @@ function rectByTextExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],a,label'));
     const matches = [];
     for (const node of nodes) {
       if (!visible(node)) continue;
@@ -394,6 +394,58 @@ async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } =
   return rect;
 }
 
+function scrollTextIntoViewExpression(label, exact) {
+  return `(() => {
+    const label = ${JSON.stringify(label)};
+    const exact = ${JSON.stringify(exact)};
+    const normalize = (value) => String(value ?? '').replace(/\\s+/g, ' ').trim();
+    const visible = (node) => {
+      if (!(node instanceof Element)) return false;
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
+    };
+    const textMatches = (text) => exact ? text === label : text.includes(label);
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],a,label'));
+    const target = nodes.find((node) => {
+      if (!visible(node)) return false;
+      const values = [
+        node.getAttribute('aria-label'),
+        node.getAttribute('accessibilitylabel'),
+        node.textContent,
+        node.getAttribute('title'),
+      ].map(normalize).filter(Boolean);
+      return values.some(textMatches);
+    });
+    if (!target) return null;
+    target.scrollIntoView({ block: 'center', inline: 'nearest' });
+    const rect = target.getBoundingClientRect();
+    return {
+      height: rect.height,
+      label: normalize(target.getAttribute('aria-label') || target.textContent),
+      text: normalize(target.textContent),
+      width: rect.width,
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    };
+  })()`;
+}
+
+async function scrollTextIntoView(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+  const startedAt = Date.now();
+  let rect = null;
+
+  while (Date.now() - startedAt < timeoutMs) {
+    rect = await evaluate(client, scrollTextIntoViewExpression(label, exact));
+    if (rect) break;
+    await delay(250);
+  }
+
+  assert(rect, `Could not find text to scroll into view: ${label}`);
+  await delay(350);
+  return rect;
+}
+
 function fillExpression(label, value) {
   return `(() => {
     const label = ${JSON.stringify(label)};
@@ -442,7 +494,7 @@ function auditExpression() {
       const style = getComputedStyle(node);
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],a,input,textarea,select'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],a,input,textarea,select'));
     const controls = [];
     const issues = [];
 
@@ -523,6 +575,14 @@ async function captureStep(client, name, { assertClean = true } = {}) {
     assert(snapshot.issueCount === 0, `${name} has ${snapshot.issueCount} visible control issue(s).`);
   }
   return snapshot;
+}
+
+function assertInteractiveControl(snapshot, label) {
+  const control = snapshot.controls.find((item) => item.label.includes(label));
+  assert(control, `${snapshot.url} did not expose an interactive control labeled ${label}.`);
+  assert(control.hitOk, `${label} center is not hittable at ${snapshot.url}.`);
+  assert(control.width >= 44, `${label} control is too narrow: ${control.width}px.`);
+  assert(control.height >= 44, `${label} control is too short: ${control.height}px.`);
 }
 
 function collectProblemLogs(events) {
@@ -613,7 +673,7 @@ function writeReport(summary) {
     '',
     '| Flow | Branch | Result | Evidence | Notes |',
     '| ---- | ------ | ------ | -------- | ----- |',
-    `| First-run onboarding | Happy path / stress viewport | ${summary.verdict} | \`${path.relative(repoRoot, evidenceDir).replace(/\\/g, '/')}\` | Reached ${summary.endUrl} |`,
+    `| First-run onboarding | Happy path / stress viewport | ${summary.verdict} | \`${path.relative(repoRoot, evidenceDir).replace(/\\/g, '/')}\` | ${summary.flowResult ?? `Reached ${summary.endUrl}`} |`,
     '',
     '## Bugs Found',
     '',
@@ -695,7 +755,7 @@ async function run() {
     const productNames = [
       { category: 'Treatment', name: 'Retinol 0.3% serum' },
       { category: 'Toner', name: 'Glycolic 7% toner' },
-      { category: 'Moisturiser', name: 'Ceramide moisturizer' },
+      { category: 'SPF', name: 'Mineral SPF 50' },
     ];
     await addProduct(client, productNames[0], '10-products-after-1');
     await addProduct(client, productNames[1], '11-products-after-2');
@@ -728,9 +788,62 @@ async function run() {
 
     await waitForPath(client, '/onboarding/paywall');
     await waitForText(client, 'Start free trial');
+    await waitForText(client, 'Explore first', 30_000);
     const paywall = await captureStep(client, '17-paywall-current');
     await screenshot(client, '17-paywall');
     writeJson('17-paywall.json', paywall);
+    assert(paywall.bodyText.includes('Explore first'), 'Paywall did not expose Explore first.');
+
+    await scrollTextIntoView(client, 'Explore first', { exact: false });
+    const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
+    await clickByText(client, 'Explore first', { exact: false });
+    await waitForPath(client, '/routine/plan', 30_000);
+    await waitForText(client, 'Your routine, in order.', 30_000);
+    await waitForText(client, 'Start today', 30_000);
+    const routinePlan = await captureStep(client, '19-routine-plan-current');
+    assert(routinePlan.bodyText.includes('FIRST INSIGHT'), 'Routine plan did not show FIRST INSIGHT.');
+    assert(routinePlan.bodyText.includes('Timing handled'), 'Routine plan did not show Timing handled.');
+    assert(routinePlan.bodyText.includes('Mineral SPF 50'), 'Routine plan did not show the SPF morning step.');
+    assert(routinePlan.bodyText.includes('Glycolic 7%'), 'Routine plan did not show the glycolic night step.');
+    assert(routinePlan.bodyText.includes('Retinol 0.3%'), 'Routine plan did not show the retinol night step.');
+
+    await clickByText(client, 'Start today');
+    await waitForPath(client, '/today', 30_000);
+    const todayAfterStart = await captureStep(client, '20-today-after-start-current', {
+      assertClean: false,
+    });
+
+    await client.send('Page.navigate', { url: `${baseUrl}/today?routine=AM` });
+    await waitForPath(client, '/today', 30_000);
+    await waitForText(client, 'Morning routine', 30_000);
+    await waitForText(client, 'Mineral SPF 50', 30_000);
+    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
+    const todayAmBefore = await captureStep(client, '21-today-am-before-checkoff');
+    assertInteractiveControl(todayAmBefore, 'Mineral SPF 50');
+    assert(todayAmBefore.bodyText.includes('0 of 1'), 'AM routine did not start at 0 of 1.');
+    await clickByText(client, 'Mineral SPF 50', { exact: false });
+    await waitForText(client, '1 of 1', 30_000);
+    const todayAmAfter = await captureStep(client, '22-today-am-after-checkoff');
+    assertInteractiveControl(todayAmAfter, 'Mineral SPF 50');
+    assert(todayAmAfter.bodyText.includes('1 of 1'), 'AM check-off did not reach 1 of 1.');
+
+    await client.send('Page.navigate', { url: `${baseUrl}/today?routine=PM` });
+    await waitForPath(client, '/today', 30_000);
+    await waitForText(client, 'Evening routine', 30_000);
+    await waitForText(client, 'Glycolic 7%', 30_000);
+    await scrollTextIntoView(client, 'Glycolic 7%', { exact: false });
+    const todayPmBefore = await captureStep(client, '23-today-pm-before-checkoff', {
+      assertClean: false,
+    });
+    assertInteractiveControl(todayPmBefore, 'Glycolic 7%');
+    assert(todayPmBefore.bodyText.includes('0 of 1'), 'PM routine did not start at 0 of 1.');
+    await clickByText(client, 'Glycolic 7%', { exact: false });
+    await waitForText(client, '1 of 1', 30_000);
+    const todayPmAfter = await captureStep(client, '24-today-pm-after-checkoff', {
+      assertClean: false,
+    });
+    assertInteractiveControl(todayPmAfter, 'Glycolic 7%');
+    assert(todayPmAfter.bodyText.includes('1 of 1'), 'PM check-off did not reach 1 of 1.');
 
     const problemLogs = collectProblemLogs(client.events);
     const disallowedLogs = problemLogs.filter(disallowedLog);
@@ -742,6 +855,13 @@ async function run() {
       welcome,
       reveal,
       paywall,
+      paywallExplore,
+      routinePlan,
+      todayAfterStart,
+      todayAmBefore,
+      todayAmAfter,
+      todayPmBefore,
+      todayPmAfter,
     })) {
       overflowXByStep[key] = snapshot.overflowX;
     }
@@ -749,7 +869,7 @@ async function run() {
     const summary = {
       browserProblemLogCount: problemLogs.length,
       date: today,
-      endUrl: paywall.url,
+      endUrl: todayPmAfter.url,
       evidenceFiles: [
         '01-welcome.png',
         '03-age-filled.png',
@@ -760,7 +880,16 @@ async function run() {
         '15-notifications.png',
         '16-account.png',
         '17-paywall-current.png',
+        '18-paywall-explore-visible.png',
+        '19-routine-plan-current.png',
+        '20-today-after-start-current.png',
+        '21-today-am-before-checkoff.png',
+        '22-today-am-after-checkoff.png',
+        '23-today-pm-before-checkoff.png',
+        '24-today-pm-after-checkoff.png',
       ],
+      flowResult:
+        'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -774,11 +903,24 @@ async function run() {
         hasTimingHandled: reveal.bodyText.includes('Timing handled'),
         text: reveal.bodyText,
       },
+      routinePlan: {
+        hasFirstInsight: routinePlan.bodyText.includes('FIRST INSIGHT'),
+        hasGlycolicNight: routinePlan.bodyText.includes('Glycolic 7%'),
+        hasRetinolNight: routinePlan.bodyText.includes('Retinol 0.3%'),
+        hasSpfMorning: routinePlan.bodyText.includes('Mineral SPF 50'),
+        hasStartToday: routinePlan.bodyText.includes('Start today'),
+        text: routinePlan.bodyText,
+        url: routinePlan.url,
+      },
       routeCheck: {
         accountSkipLedToPaywall: paywall.url.includes('/onboarding/paywall'),
+        amCheckoffReachedComplete: todayAmAfter.bodyText.includes('1 of 1'),
+        exploreFirstLedToRoutinePlan: routinePlan.url.includes('/routine/plan'),
         notificationSkipLedToAccount: true,
+        pmCheckoffReachedComplete: todayPmAfter.bodyText.includes('1 of 1'),
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
+        startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
         ? `EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
@@ -789,10 +931,30 @@ async function run() {
         'Began onboarding, entered valid adult DOB, selected Clear skin and Barrier repair.',
         'Granted explicit health-data collection consent.',
         'Answered 12-question quiz with visible option buttons.',
-        'Added Retinol 0.3% serum, Glycolic 7% toner, and Ceramide moisturizer from product intake.',
+        'Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.',
         'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
+        'Used Explore first to unlock the routine plan without card entry.',
+        'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
+        'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
       ],
       surface: 'Headless Chrome Expo web',
+      today: {
+        am: {
+          afterText: todayAmAfter.bodyText,
+          beforeText: todayAmBefore.bodyText,
+          completed: todayAmAfter.bodyText.includes('1 of 1'),
+          product: 'Mineral SPF 50',
+          url: todayAmAfter.url,
+        },
+        afterStartUrl: todayAfterStart.url,
+        pm: {
+          afterText: todayPmAfter.bodyText,
+          beforeText: todayPmBefore.bodyText,
+          completed: todayPmAfter.bodyText.includes('1 of 1'),
+          product: 'Glycolic 7% toner',
+          url: todayPmAfter.url,
+        },
+      },
       verdict: 'pass',
       viewport: {
         ...viewport,

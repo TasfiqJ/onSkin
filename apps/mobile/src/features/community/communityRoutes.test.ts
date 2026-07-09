@@ -47,7 +47,7 @@ describe('Community route contracts', () => {
     expect(source).toContain('const splitShortCommunity = height < 410;');
     expect(source).toContain('const microShortCommunity = height < 380;');
     expect(source).toContain(
-      'const supportFloorTextPressureCommunity = width <= 430 && height < 700;',
+      'const supportFloorTextPressureCommunity = width <= 430 && height <= 700;',
     );
     expect(source).toContain('const modernPhoneCommunity = height < 980;');
     expect(source).toContain('const boundaryModernTextPressureCommunity =');
