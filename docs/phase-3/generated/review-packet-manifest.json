@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T15:16:04.928Z",
+  "generatedAt": "2026-07-09T15:41:46.625Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "16162b4c9e7c80f82fe5a93bb7d2e5a29511fc14",
+  "gitSha": "b2a64b77b03094f29c51e90ee4964af0a5e72dc0",
   "gitStatus": "",
   "files": [
     {
@@ -22,8 +22,8 @@
       "packet": "packetContract",
       "path": "scripts/phase3/build-review-worklist.mjs",
       "exists": true,
-      "bytes": 12084,
-      "sha256": "e8f9ab1aa40448d09b10460618766ce747f1a8e1784b223f422876b02c746106"
+      "bytes": 13197,
+      "sha256": "cc8353e1cb4f851685522087e6d5b3d21dcce3fb8c09f8a2520c876feac8fd3a"
     },
     {
       "packet": "packetContract",
@@ -142,14 +142,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 81591,
-      "sha256": "ae77d8463dcb7743c6b9a7e2abd0d1ac8338e270422c819cd314bbc81d04a476"
+      "sha256": "f2d925599c52d64bac82741a2e68659be77d5858c681cfefb1f6c00668f44aa0"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 5068,
-      "sha256": "ccf74c00cf0655a06096a976300dece0f4adeba0752032e62be6eb04319f95cd"
+      "bytes": 53209,
+      "sha256": "3820747d77a985807c6356e59ca4757a5de0df8f483ab827998a038f94908d8b"
     },
     {
       "packet": "clinical",
@@ -205,14 +205,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 81591,
-      "sha256": "ae77d8463dcb7743c6b9a7e2abd0d1ac8338e270422c819cd314bbc81d04a476"
+      "sha256": "f2d925599c52d64bac82741a2e68659be77d5858c681cfefb1f6c00668f44aa0"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 5068,
-      "sha256": "ccf74c00cf0655a06096a976300dece0f4adeba0752032e62be6eb04319f95cd"
+      "bytes": 53209,
+      "sha256": "3820747d77a985807c6356e59ca4757a5de0df8f483ab827998a038f94908d8b"
     },
     {
       "packet": "cosmeticChemistry",
