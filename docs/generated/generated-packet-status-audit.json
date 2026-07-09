@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T11:47:20.765Z",
-  "status": "blocked",
+  "generatedAt": "2026-07-09T11:49:01.481Z",
+  "status": "pass",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
@@ -130,15 +130,15 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 1,
-      "nonEmptyGitStatusCount": 1,
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 28,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 2,
+      "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -367,17 +367,13 @@
   ],
   "summary": {
     "generatedFileCount": 43,
-    "dirtyTextFileCount": 2,
-    "nonEmptyGitStatusFileCount": 1,
+    "dirtyTextFileCount": 0,
+    "nonEmptyGitStatusFileCount": 0,
     "hashReferenceCount": 427,
     "staleHashReferenceCount": 0,
-    "blockerCount": 3,
+    "blockerCount": 0,
     "warningCount": 0
   },
-  "blockers": [
-    "docs/phase-5/generated/device-qa-packet.json contains dirty generated-packet text.",
-    "docs/phase-5/generated/device-qa-packet.json records non-empty gitStatus: M docs/generated/generated-packet-status-audit.json\n M docs/generated/generated-packet-status-audit.md",
-    "docs/phase-5/generated/device-qa-packet.md contains dirty generated-packet text."
-  ],
+  "blockers": [],
   "warnings": []
 }
