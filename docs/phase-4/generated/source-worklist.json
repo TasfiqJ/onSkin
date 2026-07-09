@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T21:43:44.878Z",
+  "generatedAt": "2026-07-09T22:20:19.348Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "b4f90cb8df8c90d287fb07611a6bcdd91840808e",
+  "gitSha": "8441a74684cf0909a5ee58b252202582ec29893c",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -583,8 +583,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 43738,
-          "sha256": "ddc6e0786fbada0c6481ee91144f1883810a33ae7420e5c20ba73c33d322dc98"
+          "bytes": 43834,
+          "sha256": "0a949a5f81d02caeb474678c65a1f20b868e67bae3ca6b7f32feaf045abce751"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
