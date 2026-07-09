@@ -57,6 +57,8 @@ const sourceFiles = [
   'supabase/functions/account-deletion/index.ts',
   'supabase/functions/_shared/body.ts',
   'supabase/functions/_shared/fetch.ts',
+  'supabase/functions/_shared/storagePath.ts',
+  'supabase/functions/_shared/storagePath.test.ts',
   'supabase/functions/data-export/index.ts',
   'supabase/functions/consent-withdrawal/index.ts',
   'supabase/functions/subscription-grants/index.ts',

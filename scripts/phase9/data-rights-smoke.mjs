@@ -11,6 +11,8 @@ const localPrivateDataKeysSource = read('apps/mobile/src/features/settings/local
 const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-data-rights.mjs');
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
+const storagePathHelper = read('supabase/functions/_shared/storagePath.ts');
+const storagePathHelperTest = read('supabase/functions/_shared/storagePath.test.ts');
 const deletionHandlerSource = deletionSource.slice(deletionSource.indexOf('Deno.serve'));
 const exportHandlerSource = exportSource.slice(exportSource.indexOf('Deno.serve'));
 
@@ -77,6 +79,20 @@ block(
     exportSource.indexOf('photoPathBelongsToUser(userId, photo.storage_path as string)') <
       exportSource.indexOf('.createSignedUrl(photo.storage_path as string'),
   'data-export must verify photo storage_path ownership before creating signed URLs.',
+);
+block(
+  errors,
+  /SAFE_STORAGE_PATH_SEGMENT/.test(storagePathHelper) &&
+    /segment !== '\.'/.test(storagePathHelper) &&
+    /segment !== '\.\.'/.test(storagePathHelper),
+  'Shared photo storage path helper must reject unsafe object path segments.',
+);
+block(
+  errors,
+  /photo storage path contract rejects cross-user or malformed paths/.test(storagePathHelperTest) &&
+    /%2e%2e/.test(storagePathHelperTest) &&
+    /token=secret/.test(storagePathHelperTest),
+  'Shared photo storage path helper test must cover traversal and signed-token path probes.',
 );
 for (const pattern of [
   /DATA_EXPORT_RATE_LIMIT_MAX/,

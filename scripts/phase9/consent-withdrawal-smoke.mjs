@@ -14,6 +14,8 @@ const ask = read('apps/mobile/src/features/ask/consent.ts');
 const photoConsent = read('apps/mobile/src/features/photos/consent.ts');
 const withdrawalClient = read('apps/mobile/src/lib/consent/withdrawal.ts');
 const edgeFunction = read('supabase/functions/consent-withdrawal/index.ts');
+const storagePathHelper = read('supabase/functions/_shared/storagePath.ts');
+const storagePathHelperTest = read('supabase/functions/_shared/storagePath.test.ts');
 const liveHarness = read('scripts/phase9/live-consent-withdrawal.mjs');
 const migrations = read('supabase/migrations/20260613000023_community.sql') + read('supabase/migrations/20260614000025_ask_onskin.sql');
 const phase9ConsentMigration = read('supabase/migrations/20260705000032_phase9_consent_withdrawal.sql');
@@ -57,6 +59,20 @@ block(
 block(errors, /allowedBodyKeys/.test(edgeFunction) && /INVALID_BODY/.test(edgeFunction), 'consent-withdrawal must reject unknown or invalid body fields.');
 block(errors, /granted:\s*false/.test(edgeFunction) && /revoked_at/.test(edgeFunction), 'consent-withdrawal must append a false consent ledger row.');
 block(errors, /withdrawPhotoCloudBackup/.test(edgeFunction) && /photoPathBelongsToUser/.test(edgeFunction) && /storage\.from\('photos'\)\.remove/.test(edgeFunction), 'Photo cloud withdrawal must remove only caller-owned storage paths.');
+block(
+  errors,
+  /SAFE_STORAGE_PATH_SEGMENT/.test(storagePathHelper) &&
+    /segment !== '\.'/.test(storagePathHelper) &&
+    /segment !== '\.\.'/.test(storagePathHelper),
+  'Shared photo storage path helper must reject unsafe object path segments.',
+);
+block(
+  errors,
+  /photo storage path contract rejects cross-user or malformed paths/.test(storagePathHelperTest) &&
+    /%2e%2e/.test(storagePathHelperTest) &&
+    /token=secret/.test(storagePathHelperTest),
+  'Shared photo storage path helper test must cover traversal and signed-token path probes.',
+);
 block(errors, /local_only:\s*true/.test(edgeFunction) && /storage_path:\s*null/.test(edgeFunction), 'Photo cloud withdrawal must relocalize photo metadata.');
 block(errors, /withdrawAskOnSkin/.test(edgeFunction) && /ask_safety_audit/.test(edgeFunction), 'Ask withdrawal must delete server-side safety audit content.');
 block(errors, /withdrawTrendInsights/.test(edgeFunction) && /photo_trend/.test(edgeFunction), 'Trend withdrawal must delete server-side trend rows.');

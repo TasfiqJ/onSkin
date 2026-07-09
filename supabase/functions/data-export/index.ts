@@ -4,6 +4,7 @@
 // Deploy with JWT verification enabled: `supabase functions deploy data-export`
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
+import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey =
@@ -109,11 +110,6 @@ function exportFileName(): string {
 function applyFilter(query: any, filter: TableFilter, userId: string) {
   if (!filter) return query;
   return query.eq(filter.column, filter.value === 'USER_ID' ? userId : filter.value);
-}
-
-function photoPathBelongsToUser(userId: string, storagePath: string): boolean {
-  const [prefix, fileName, ...rest] = storagePath.split('/');
-  return prefix === userId && Boolean(fileName) && rest.every((part) => part.length > 0);
 }
 
 async function selectRows(

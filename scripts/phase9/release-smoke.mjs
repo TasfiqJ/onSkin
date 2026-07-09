@@ -88,6 +88,8 @@ const requiredFiles = [
   'docs/phase-9/release-candidates/_template/incident-plan.md',
   'docs/phase-9/release-candidates/_template/signoff.md',
   'supabase/functions/account-deletion/index.ts',
+  'supabase/functions/_shared/storagePath.ts',
+  'supabase/functions/_shared/storagePath.test.ts',
   'supabase/functions/data-export/index.ts',
   'supabase/functions/consent-withdrawal/index.ts',
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',

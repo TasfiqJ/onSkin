@@ -7,6 +7,7 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
+import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -69,11 +70,6 @@ function validateBody(value: unknown): WithdrawalBody | null {
     version,
     consentTextHash: consentTextHash.toLowerCase(),
   };
-}
-
-function photoPathBelongsToUser(userId: string, storagePath: string): boolean {
-  const [prefix, fileName, ...rest] = storagePath.split('/');
-  return prefix === userId && Boolean(fileName) && rest.every((part) => part.length > 0);
 }
 
 function rowCount(data: unknown): number {
