@@ -1,9 +1,9 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T17:08:52.451Z
+Generated: 2026-07-09T17:21:10.604Z
 Status: pass
-Git SHA: ded5dc2b12ffb5a13fa625ee9e5c7115da71e598
-Git status: clean
+Git SHA: 5e08a00fdcb06bb4c01c53a9eac6b7fce23b32f7
+Git status: DIRTY
 
 This generated worklist is an operator handoff for the catalog/source launch
 gate. It does not approve any catalog source, product batch, beta metric, or
@@ -16,7 +16,7 @@ must attach before Phase 4 can stop blocking launch.
 - Source files hashed: 111
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 0
+- Warnings: 1
 
 ## Items
 
@@ -296,4 +296,4 @@ Sources:
 
 ## Warnings
 
-- None.
+- Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence.

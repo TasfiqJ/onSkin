@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T17:08:23.213Z",
+  "generatedAt": "2026-07-09T17:21:43.593Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "ded5dc2b12ffb5a13fa625ee9e5c7115da71e598",
+  "gitSha": "9caf5d3d6f3ebe85ccdeec51c81f262bb524b8b4",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -137,8 +137,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 14371,
-      "sha256": "ca12598b07000b0f80c9647c8985b004bc7713125dd3f07007a4438c30940871"
+      "bytes": 14777,
+      "sha256": "9fb695b18f509d863abbfac854d2047a49cc9d357c3f327ae90cfb0c1127c975"
     },
     {
       "path": "apps/mobile/app.base.json",
@@ -245,14 +245,14 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 13437,
-      "sha256": "2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78"
+      "bytes": 13541,
+      "sha256": "54b07f029b0b690a4ad8f4c05e524201a52a952c44e62ba9582d270764a141d7"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
       "exists": true,
-      "bytes": 4511,
-      "sha256": "0de20a94146e3b3a97625f2defd05472902a33d2e6be46d22f77ecc5913636a3"
+      "bytes": 4755,
+      "sha256": "a8306909eecfe5e0db5d6c39a8b9b5e9692449f030681548404349e402524747"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -269,20 +269,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 283568,
-      "sha256": "25d49bae202c7281274f66e907a15f4792ddbe2cb7dc86df76d75576399f89ff"
+      "bytes": 284285,
+      "sha256": "326b62769e9a080155077b9c6dbcbc9b44dfca9113dd0764f0aa911661a42f8d"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 11616,
-      "sha256": "64bfeb3ef735f31ac0a11c88e2baa339c7594b69128e1421986a9554b5ba18ee"
+      "sha256": "0abbc9e9c962aa5bd31db43b1922d8cc901ed60f7c9aab8b82e8ea9dda1a95e5"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 4958,
-      "sha256": "f37ecd5e2f351304313de98696a2a9f6bd5673f1f7638e97a599457e24a97836"
+      "sha256": "8b837d243ef9dea7e67c5167700e16f34709ebfa8d5504a549d5082217c0635b"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",

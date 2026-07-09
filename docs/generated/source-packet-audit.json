@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T17:08:02.133Z",
+  "generatedAt": "2026-07-09T17:22:02.845Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -82,8 +82,8 @@
     },
     {
       "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
-      "bytes": 4307,
-      "sha256": "e35bdda8a3fc27109ef3a1a7667f01f2611cc33bced13a9a57ba9847d0d9fd95"
+      "bytes": 4363,
+      "sha256": "0518f37ae6d2ceecf854375f4c0031012492aea19296209a52a933040d9b0e2e"
     }
   ],
   "docs": [
@@ -209,10 +209,10 @@
       "title": "Testing Strategy",
       "sourcePath": "04_repo_docs/docs/TESTING_STRATEGY.md",
       "activePath": "docs/TESTING_STRATEGY.md",
-      "sourceBytes": 4307,
-      "activeBytes": 4307,
-      "sourceSha256": "e35bdda8a3fc27109ef3a1a7667f01f2611cc33bced13a9a57ba9847d0d9fd95",
-      "activeSha256": "e35bdda8a3fc27109ef3a1a7667f01f2611cc33bced13a9a57ba9847d0d9fd95",
+      "sourceBytes": 4363,
+      "activeBytes": 4363,
+      "sourceSha256": "0518f37ae6d2ceecf854375f4c0031012492aea19296209a52a933040d9b0e2e",
+      "activeSha256": "0518f37ae6d2ceecf854375f4c0031012492aea19296209a52a933040d9b0e2e",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

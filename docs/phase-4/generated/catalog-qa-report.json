@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T17:08:56.914Z",
+  "generatedAt": "2026-07-09T17:21:28.591Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "ded5dc2b12ffb5a13fa625ee9e5c7115da71e598",
-  "gitStatus": "",
+  "gitSha": "5e08a00fdcb06bb4c01c53a9eac6b7fce23b32f7",
+  "gitStatus": "M  scripts/phase9/lib.mjs",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
   "inputArtifact": {
@@ -15,8 +15,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 14371,
-      "sha256": "ca12598b07000b0f80c9647c8985b004bc7713125dd3f07007a4438c30940871"
+      "bytes": 14777,
+      "sha256": "9fb695b18f509d863abbfac854d2047a49cc9d357c3f327ae90cfb0c1127c975"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
@@ -105,8 +105,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 13437,
-      "sha256": "2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78"
+      "bytes": 13541,
+      "sha256": "54b07f029b0b690a4ad8f4c05e524201a52a952c44e62ba9582d270764a141d7"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -135,14 +135,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 35120,
-      "sha256": "2e5d62a51c0f66f767187667bf76280758b8bf5f1877fa0d566bf59238a7fee0"
+      "bytes": 35263,
+      "sha256": "6acc1d496e486fc04f1914a11aafa39198790f6d906fb01b2791ab80c391ad86"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 22471,
-      "sha256": "1aceb30be45d7c0a33fb4647e06598d259be8444649da2257135008641261d96"
+      "bytes": 22574,
+      "sha256": "527d10dc540ab04e52652d50d99aaaa0456330a5fb1aa0c41fb42f476c5c42fd"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
@@ -166,8 +166,10 @@
     "missingIngredients": 0
   },
   "blockers": [],
-  "warnings": [],
-  "localQaClear": true,
+  "warnings": [
+    "Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence."
+  ],
+  "localQaClear": false,
   "launchClear": false,
   "launchClearReason": "No. This report only validates the local fixture/export output; launch clearance still requires final source identity, ODbL/CosIng legal review, curated batch QA, beta coverage, and reviewer signoff."
 }
