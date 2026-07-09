@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T19:30:55.812Z",
+  "generatedAt": "2026-07-09T19:58:22.436Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "f1b8d37f7504ae0fd8d6591a8958b84f0b0e1280",
+  "gitSha": "503689ecc6f7968deecb946500ab802d3d9eeadb",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -82,8 +82,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 15159,
-      "sha256": "5bbd4fddd686a8b94d67aba34d779e385da1575931284c6a908452fde6d473a8"
+      "bytes": 15497,
+      "sha256": "9cc48a02054d19f2ad076e1e9dd0a8253b7b2fa93cc14420f666951ba0255a2b"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -226,8 +226,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 13649,
-      "sha256": "998500929ddfe87ddc5a456c0b2f7eb589231372e58cbc5109004002416a5a08"
+      "bytes": 13761,
+      "sha256": "544dbaaaba3f7eafcc2527d7700933f31e672a68f160fcb7222caa1389557ff1"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -244,20 +244,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 294976,
-      "sha256": "1fe732653fea3fc6fb0c0ba27cc365cfa8d5521cd5d8134105b18bb8dface5da"
+      "bytes": 295100,
+      "sha256": "41ca4a8bd54945c516f0fc4a3af7347820b256ad77ac56e4afdf1bbe138bd4dc"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 11616,
-      "sha256": "b69dced633e8c99a758c1a911072834edfac9d2cde9a4b6570855185193bbd46"
+      "sha256": "affbd81810c2eaf18220d88286b5f7fb0ace2c7268b836020abd0ccb564149af"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 4958,
-      "sha256": "20ddc8848b73f836ce97f9c672c38f27ef93c29648cdd4cfecb51fa7ee7e17c7"
+      "sha256": "02d2e47829451677fa8d68e8d45bf18f3453c3c3ef433435c9e10d25c84bb93c"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",

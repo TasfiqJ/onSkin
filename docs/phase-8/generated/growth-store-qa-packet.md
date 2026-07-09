@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-09T19:30:56.823Z
+Generated: 2026-07-09T19:58:23.702Z
 Status: blocked
-Git SHA: f1b8d37f7504ae0fd8d6591a8958b84f0b0e1280
+Git SHA: 503689ecc6f7968deecb946500ab802d3d9eeadb
 Git status: clean
 
 ## Public Identity
@@ -77,7 +77,7 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `package.json`: `5bbd4fddd686a8b94d67aba34d779e385da1575931284c6a908452fde6d473a8`
+- `package.json`: `9cc48a02054d19f2ad076e1e9dd0a8253b7b2fa93cc14420f666951ba0255a2b`
 - `apps/mobile/app.config.js`: `5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c`
 - `apps/mobile/src/lib/env.ts`: `2f07a9ac7fa9a07c287c36614cd77aa2c4d06fbcf9fd9037733413f6528b8321`
 - `apps/mobile/src/lib/launch/phase8.ts`: `94ac42c54e192d2f3c641de05609846ff3de9892646d5cc6ad41a098acbdac70`
@@ -107,19 +107,19 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `2828721ebc99a2de1e4ba722516bfacd4ed8c2537603c8756cc383c49d5889a5`
 - `docs/E2E_TESTING_CHECKLIST.md`: `014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e`
-- `docs/USER_FLOW_TREE.md`: `1fe732653fea3fc6fb0c0ba27cc365cfa8d5521cd5d8134105b18bb8dface5da`
-- `docs/e2e/generated/human-e2e-manifest.json`: `b69dced633e8c99a758c1a911072834edfac9d2cde9a4b6570855185193bbd46`
-- `docs/e2e/generated/human-e2e-manifest.md`: `20ddc8848b73f836ce97f9c672c38f27ef93c29648cdd4cfecb51fa7ee7e17c7`
-- `docs/phase-5/generated/device-qa-packet.json`: `d86b58bdd78fa34dba03b138d37780f6988dada073e1d6f9abfa8b36bf586db4`
-- `docs/phase-5/generated/device-qa-packet.md`: `42cf5482421f4d69d6b9b1228ca7b75f9be2249f0c4102c49ebd4108f3ca3b21`
-- `docs/phase-6/generated/payments-qa-packet.json`: `19334e8686c1b00feff295b718edc3159a23cbc8fec332da5d1e7b4303a14c6b`
-- `docs/phase-6/generated/payments-qa-packet.md`: `e9951c6a44d62dc1fcab75c6201aef93e1049600fa233900de23d8f5aca38dff`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `04fbfd0d50bff732d89d1e7d3a37507a50da1da81875c56609c5a4dc5138fa46`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `ca81389d0be1060d435aa5ea8b0e8ca1f3d66fd134ae63f23727932343691b77`
+- `docs/USER_FLOW_TREE.md`: `41ca4a8bd54945c516f0fc4a3af7347820b256ad77ac56e4afdf1bbe138bd4dc`
+- `docs/e2e/generated/human-e2e-manifest.json`: `affbd81810c2eaf18220d88286b5f7fb0ace2c7268b836020abd0ccb564149af`
+- `docs/e2e/generated/human-e2e-manifest.md`: `02d2e47829451677fa8d68e8d45bf18f3453c3c3ef433435c9e10d25c84bb93c`
+- `docs/phase-5/generated/device-qa-packet.json`: `c496af655ef0f0b8f6d15d364974b620a0d03ab10981aae503a00acbc121f13a`
+- `docs/phase-5/generated/device-qa-packet.md`: `337d5899c08a645eac9642c56cbb5caea587bfcaa7645d16fd19eced4d7f1500`
+- `docs/phase-6/generated/payments-qa-packet.json`: `12f1e6072faa8f0b5e78ffa9df937c9fd7f1a5fdd371d7294eed489392d74a4b`
+- `docs/phase-6/generated/payments-qa-packet.md`: `62e0eccdcbbd33ca6b82288614e9fb2097a10dc96b0797bede49bafbf5f8603b`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `bcab62296c674f935ff5212f83cdbacea8ba81263de132b325814cad15b5b47a`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `08ea7b50086cf01396404d19fc3d0ae8772f9d54e53fd8097f6adb35c814b66b`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `6070ec2ffd588b13555481ab5173e7d7783958977662807199e3dc16bd5c1122`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `e6602b38bf458f5759f9fc82f9e9defb38611c1252fdb308bc61f81555d2fac6`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
-- `scripts/phase9/lib.mjs`: `998500929ddfe87ddc5a456c0b2f7eb589231372e58cbc5109004002416a5a08`
+- `scripts/phase9/lib.mjs`: `544dbaaaba3f7eafcc2527d7700933f31e672a68f160fcb7222caa1389557ff1`
 - `supabase/migrations/20260616000028_phase8_growth.sql`: `629bcda19f7f227679b8202a6d0234392dba62d4cf602023d0c2b976c576f14e`
 - `supabase/functions/growth-event/index.ts`: `a7945cfe8706fffeec0bb733aac5a9a19a47545c2dfa021c9807db907b6261ae`
 - `supabase/functions/waitlist/index.ts`: `828be1876b1aa1de84e33267a912b957a05a018b42d9207ade2be7d34157d256`

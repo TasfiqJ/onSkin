@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T19:21:00.184Z
+Generated: 2026-07-09T19:57:33.711Z
 Status: pass
-Git SHA: 013bf27778a1e5d3881570d81691f4ae2cb9b407
+Git SHA: 503689ecc6f7968deecb946500ab802d3d9eeadb
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -283,7 +283,7 @@ Sources:
 
 - `docs/phase-4/observability-dashboard.md` - 1804 bytes - sha256 `a42191be85ab1d75e0c7d9cce2934b0e52369852da35bdd6edf2c153fc6f09af`
 - `docs/phase-4/beta-coverage-report.md` - 2125 bytes - sha256 `d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d`
-- `docs/phase-10/support-operations.md` - 2697 bytes - sha256 `2dedf1baab29c8e3bd0e1dcc9c248ffc1ade2e9d7cdbf05d217094208a87245d`
+- `docs/phase-10/support-operations.md` - 3784 bytes - sha256 `66af3dc3110f55906996505088ac853d3af730f3700966b2199b01fef2c8cb9f`
 - `docs/phase-10/support-beta-report.md` - 1486 bytes - sha256 `68bcd8e27b511229e2c1e9d5bb84ba97eac658b66f5bf04b8eb550c8838c9af3`
 - `scripts/phase4/beta-coverage-report.mjs` - 21522 bytes - sha256 `ed306d7329101f4369f5e7d971a8361f75e15eb3397288de990999e6c19aac69`
 - `supabase/functions/catalog-report/privacy.ts` - 3497 bytes - sha256 `d0d39665dc489392ff8d29c524d46ee182695772cf0fc7293c1c9d93c53e2c8e`

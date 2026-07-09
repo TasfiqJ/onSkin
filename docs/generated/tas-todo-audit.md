@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-09T19:31:45.586Z
+Generated: 2026-07-09T19:57:44.403Z
 Status: pass
 Strict mode: yes
 
@@ -18,12 +18,12 @@ inventory itself is the canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 235
+- Extracted keys: 237
 - Local generated-only keys excluded: 14
 - Keys named verbatim in FOR_TAS_TO_DO.md: 233
-- Keys only in generated inventory: 2
+- Keys only in generated inventory: 4
 - Blockers: 0
-- Warnings: 1
+- Warnings: 2
 
 ## Handoff Freshness
 
@@ -45,7 +45,7 @@ inventory itself is the canonical machine-readable key list.
 | phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 29   | 0                                |
 | phase8  | yes              | phase8:check-growth-store:strict, phase8:qa-packet:strict  | 19   | 0                                |
 | phase9  | yes              | phase9:verify, phase9:release-smoke:strict                 | 53   | 0                                |
-| phase10 | yes              | phase10:verify, phase10:beta-readiness:strict              | 15   | 0                                |
+| phase10 | yes              | phase10:verify, phase10:beta-readiness:strict              | 17   | 2                                |
 | phase11 | yes              | phase11:verify, phase11:launch-readiness:strict            | 15   | 0                                |
 
 ## Extracted Evidence Keys
@@ -347,6 +347,8 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | PHASE10_RETENTION_REPORT_PASS             | yes                       |
 | PHASE10_SIGNED_OFF_BY                     | yes                       |
 | PHASE10_SUPPORT_DESK_PASS                 | yes                       |
+| PHASE10_SUPPORT_HANDOFF_JSON              | no                        |
+| PHASE10_SUPPORT_HANDOFF_MD                | no                        |
 | PHASE10_TESTFLIGHT_READY                  | yes                       |
 
 Local generated-only keys excluded from evidence warnings: PHASE10_PACKET_OUT_DIR
@@ -382,3 +384,4 @@ Local generated-only keys excluded from evidence warnings: PHASE11_PACKET_OUT_DI
 ## Warnings
 
 - Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
+- Phase 10 closed beta has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.

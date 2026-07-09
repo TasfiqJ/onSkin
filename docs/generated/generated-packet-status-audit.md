@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-09T19:31:46.953Z
+Generated: 2026-07-09T19:58:24.400Z
 Status: pass
 Strict mode: yes
 
@@ -11,10 +11,10 @@ being treated as trustworthy launch evidence.
 
 ## Summary
 
-- Generated files scanned: 47
+- Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 964
+- Hash references checked: 972
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -23,8 +23,10 @@ being treated as trustworthy launch evidence.
 
 | File                                                      | Kind | Dirty text matches | Non-empty gitStatus fields | Hash refs | Stale hash refs |
 | --------------------------------------------------------- | ---- | ------------------ | -------------------------- | --------- | --------------- |
-| docs/phase-10/generated/closed-beta-packet.json           | json | 0                  | 0                          | 31        | 0               |
+| docs/phase-10/generated/closed-beta-packet.json           | json | 0                  | 0                          | 34        | 0               |
 | docs/phase-10/generated/closed-beta-packet.md             | md   | 0                  | 0                          | 0         | 0               |
+| docs/phase-10/generated/support-handoff-packet.json       | json | 0                  | 0                          | 5         | 0               |
+| docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 35        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 233       | 0               |

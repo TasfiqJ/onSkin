@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T19:21:00.184Z",
+  "generatedAt": "2026-07-09T19:57:33.711Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "013bf27778a1e5d3881570d81691f4ae2cb9b407",
+  "gitSha": "503689ecc6f7968deecb946500ab802d3d9eeadb",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -874,8 +874,8 @@
         {
           "path": "docs/phase-10/support-operations.md",
           "exists": true,
-          "bytes": 2697,
-          "sha256": "2dedf1baab29c8e3bd0e1dcc9c248ffc1ade2e9d7cdbf05d217094208a87245d"
+          "bytes": 3784,
+          "sha256": "66af3dc3110f55906996505088ac853d3af730f3700966b2199b01fef2c8cb9f"
         },
         {
           "path": "docs/phase-10/support-beta-report.md",

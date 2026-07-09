@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T19:31:45.586Z",
+  "generatedAt": "2026-07-09T19:57:44.403Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
@@ -31,12 +31,12 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 235,
+    "extractedKeyCount": 237,
     "localOnlyKeyCount": 14,
     "keyMentionCount": 233,
-    "keyNotMentionedCount": 2,
+    "keyNotMentionedCount": 4,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 2
   },
   "groups": [
     {
@@ -706,6 +706,8 @@
         "PHASE10_RETENTION_REPORT_PASS",
         "PHASE10_SIGNED_OFF_BY",
         "PHASE10_SUPPORT_DESK_PASS",
+        "PHASE10_SUPPORT_HANDOFF_JSON",
+        "PHASE10_SUPPORT_HANDOFF_MD",
         "PHASE10_TESTFLIGHT_READY"
       ],
       "keysMentionedInForTas": [
@@ -725,7 +727,10 @@
         "PHASE10_SUPPORT_DESK_PASS",
         "PHASE10_TESTFLIGHT_READY"
       ],
-      "keysNotMentionedInForTas": []
+      "keysNotMentionedInForTas": [
+        "PHASE10_SUPPORT_HANDOFF_JSON",
+        "PHASE10_SUPPORT_HANDOFF_MD"
+      ]
     },
     {
       "id": "phase11",
@@ -788,6 +793,7 @@
   ],
   "blockers": [],
   "warnings": [
-    "Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
+    "Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
+    "Phase 10 closed beta has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
   ]
 }

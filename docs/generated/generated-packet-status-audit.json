@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T19:31:46.953Z",
+  "generatedAt": "2026-07-09T19:58:24.400Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
@@ -20,11 +20,27 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 31,
+      "hashReferenceCount": 34,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-10/generated/closed-beta-packet.md",
+      "kind": "md",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-10/generated/support-handoff-packet.json",
+      "kind": "json",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 5,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-10/generated/support-handoff-packet.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
@@ -398,10 +414,10 @@
     "docs:generated-packet-status-audit:check"
   ],
   "summary": {
-    "generatedFileCount": 47,
+    "generatedFileCount": 49,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
-    "hashReferenceCount": 964,
+    "hashReferenceCount": 972,
     "staleHashReferenceCount": 0,
     "blockerCount": 0,
     "warningCount": 0
