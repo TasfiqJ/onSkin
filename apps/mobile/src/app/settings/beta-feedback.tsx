@@ -133,14 +133,12 @@ function supportFeedbackUrl(
 function OptionRow({
   label,
   detail,
-  extraTopMargin,
   selected,
   density,
   onPress,
 }: {
   label: string;
   detail: string;
-  extraTopMargin?: number;
   selected: boolean;
   density: OptionRowDensity;
   onPress: () => void;
@@ -158,36 +156,34 @@ function OptionRow({
             : 'mb-2 min-h-[64px] rounded-[14px] px-4 py-3';
 
   return (
-    <View style={extraTopMargin ? { marginTop: extraTopMargin } : undefined}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ selected }}
-        accessibilityLabel={`${label}. ${detail}`}
-        onPress={onPress}
-        className={className}
-        style={{
-          backgroundColor: selected ? colors.clayTint : colors.paperRaised,
-          borderWidth: 1,
-          borderColor: selected ? colors.clay : colors.hairline,
-        }}
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={`${label}. ${detail}`}
+      onPress={onPress}
+      className={className}
+      style={{
+        backgroundColor: selected ? colors.clayTint : colors.paperRaised,
+        borderWidth: 1,
+        borderColor: selected ? colors.clay : colors.hairline,
+      }}
+    >
+      <Text
+        variant="body"
+        className="font-sans-semibold"
+        style={compactTreatment ? { fontSize: 14, lineHeight: 17 } : undefined}
       >
-        <Text
-          variant="body"
-          className="font-sans-semibold"
-          style={compactTreatment ? { fontSize: 14, lineHeight: 17 } : undefined}
-        >
-          {label}
-        </Text>
-        <Text
-          variant="bodySm"
-          tone="muted"
-          className="mt-1"
-          style={compactTreatment ? { fontSize: 12, lineHeight: 15 } : { lineHeight: 18 }}
-        >
-          {detail}
-        </Text>
-      </Pressable>
-    </View>
+        {label}
+      </Text>
+      <Text
+        variant="bodySm"
+        tone="muted"
+        className="mt-1"
+        style={compactTreatment ? { fontSize: 12, lineHeight: 15 } : { lineHeight: 18 }}
+      >
+        {detail}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -240,13 +236,6 @@ export default function BetaFeedbackScreen() {
     setOpening(false);
   }
 
-  function categoryFirstViewportBreakMargin(index: number): number | undefined {
-    if (!highTextPressure) return undefined;
-    if (width <= 430 && height < 700 && index === 2) return 192;
-    if (width <= 430 && height >= 700 && height < 900 && index === 4) return 64;
-    return undefined;
-  }
-
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView
@@ -293,12 +282,11 @@ export default function BetaFeedbackScreen() {
         <Text variant="label" tone="muted" className="mb-2 ml-2">
           ISSUE TYPE
         </Text>
-        {SUPPORT_FEEDBACK_CATEGORIES.map((item, index) => (
+        {SUPPORT_FEEDBACK_CATEGORIES.map((item) => (
           <OptionRow
             key={item.key}
             label={item.label}
             detail={item.detail}
-            extraTopMargin={categoryFirstViewportBreakMargin(index)}
             selected={category === item.key}
             density={optionRowDensity}
             onPress={() => {
@@ -316,7 +304,6 @@ export default function BetaFeedbackScreen() {
             key={item.key}
             label={item.label}
             detail={item.detail}
-            extraTopMargin={undefined}
             selected={severity === item.key}
             density={optionRowDensity}
             onPress={() => {
