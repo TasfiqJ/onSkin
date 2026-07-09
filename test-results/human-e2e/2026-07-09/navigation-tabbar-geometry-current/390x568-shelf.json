@@ -57,6 +57,7 @@
         "x": 9,
         "y": 494
       },
+      "route": "today",
       "selected": false,
       "text": "Today"
     },
@@ -96,6 +97,7 @@
         "x": 102,
         "y": 494
       },
+      "route": "progress",
       "selected": false,
       "text": "Prog."
     },
@@ -135,6 +137,7 @@
         "x": 195,
         "y": 494
       },
+      "route": "shelf",
       "selected": true,
       "text": "Shelf"
     },
@@ -174,6 +177,7 @@
         "x": 288,
         "y": 494
       },
+      "route": "you",
       "selected": false,
       "text": "You"
     }

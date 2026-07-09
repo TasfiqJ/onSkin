@@ -245,12 +245,15 @@ Status: launch-blocked
   `PHASE4_BETA_COVERAGE_INPUT` or `docs/phase-4/beta-coverage-input.json` so
   `npm run phase4:beta-coverage-report:strict` can generate a clean
   `docs/phase-4/generated/beta-coverage-report.{json,md}`. The export must
-  include 50-100 real target users, users with 3+ products, barcode/search/OCR
-  and manual-fallback counts, category coverage, top no-matches, wrong-match
+  follow `docs/phase-4/beta-coverage-input.template.json` and include 50-100
+  real target users, users with 3+ products, barcode/search/OCR and
+  manual-fallback counts, category coverage, top no-matches, wrong-match
   reports, parser unknown-token rate and top tokens, recommendation eligibility
   proof, support ticket counts, real catalog/analytics/support dashboard URLs,
   a non-placeholder source export hash, `evidence.realBetaData=true`, and a
-  named beta coverage signoff. Codex will not fake this input.
+  named beta coverage signoff. The template is intentionally blocked evidence
+  until every placeholder is replaced with real beta data. Codex will not fake
+  this input.
 - Keep product images disabled unless image rights are cleared.
 
 Evidence needed:

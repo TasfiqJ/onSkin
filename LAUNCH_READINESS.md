@@ -213,6 +213,13 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-09/settings-beta-feedback-current/`. Live
   support desk category/SLA routing and native iOS/Android external handoff
   remain Phase 10 blockers.
+- Expo web `/settings/beta-feedback` compact-height evidence at 390 x 640
+  confirms the fixed category/severity rows keep support-floor spacing,
+  category + priority selection still enables `Open support`, the unavailable
+  support handoff recovers inline without a JavaScript dialog, there are no
+  free-text inputs, horizontal overflow is zero, and current-origin
+  warn/error logs are clean. Evidence:
+  `test-results/human-e2e/2026-07-09/settings-beta-feedback-compact-floor-current/`.
 - Expo web 320 x 480 current-main route rerun passed 49 direct-entry routes
   with zero failed routes, zero visible clipped controls, zero sub-44
   user-facing controls, zero blocked hit-tests, zero horizontal overflow, and

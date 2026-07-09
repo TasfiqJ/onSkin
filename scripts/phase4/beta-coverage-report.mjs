@@ -44,6 +44,7 @@ const sourceHashPaths = [
   'supabase/functions/deno.lock',
   'scripts/phase9/lib.mjs',
   'docs/FOR_TAS_TO_DO.md',
+  'docs/phase-4/beta-coverage-input.template.json',
   'docs/phase-4/beta-coverage-report.md',
   'docs/phase-4/generated/source-worklist.json',
   'docs/phase-4/generated/source-worklist.md',
@@ -153,7 +154,7 @@ if (existsSync(inputPath)) {
 
 if (!existsSync(inputPath)) {
   evidenceBlockers.push(
-    'Missing beta coverage input artifact. Set PHASE4_BETA_COVERAGE_INPUT or create docs/phase-4/beta-coverage-input.json from real beta exports.',
+    'Missing beta coverage input artifact. Set PHASE4_BETA_COVERAGE_INPUT or copy docs/phase-4/beta-coverage-input.template.json to docs/phase-4/beta-coverage-input.json and replace it with real beta exports.',
   );
 } else if (parseError) {
   evidenceBlockers.push(`Beta coverage input is not valid JSON: ${parseError}.`);

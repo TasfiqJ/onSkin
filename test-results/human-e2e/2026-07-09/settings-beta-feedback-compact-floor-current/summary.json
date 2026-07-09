@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-07-09T18:40:12.866Z",
+  "status": "pass",
+  "appSurface": "Expo web in-app browser",
+  "baseUrl": "http://localhost:8192",
+  "supportClass": "launch support floor compact height",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/settings/beta-feedback",
+  "flow": [
+    "Open beta feedback route directly at compact support-floor viewport",
+    "Select Catalog match issue",
+    "Select Core flow blocked",
+    "Open support handoff",
+    "Verify inline recovery when support URL is unavailable in this build"
+  ],
+  "checks": {
+    "topHorizontalOverflow": 0,
+    "selectedHorizontalOverflow": 0,
+    "finalHorizontalOverflow": 0,
+    "textInputCount": 0,
+    "supportUnavailableCopy": true,
+    "jsDialog": null,
+    "currentOriginWarnErrorLogCount": 0
+  }
+}

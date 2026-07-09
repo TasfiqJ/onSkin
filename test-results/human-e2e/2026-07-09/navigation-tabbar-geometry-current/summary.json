@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:8184",
   "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\navigation-tabbar-geometry-current",
-  "generatedAt": "2026-07-09T12:20:31.011Z",
+  "generatedAt": "2026-07-09T18:34:48.675Z",
   "status": "pass",
   "viewports": [
     {
@@ -1001,6 +1001,505 @@
         }
       ],
       "width": 390
+    },
+    {
+      "height": 915,
+      "name": "412x915",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 8,
+            "right": 404,
+            "top": 835,
+            "width": 396,
+            "x": 8,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 11,
+                "right": 105.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 11,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 9,
+                "right": 107.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 9,
+                "y": 841
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": "Prog.",
+              "label": "Progress",
+              "labelText": "Prog.",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 109.5,
+                "right": 204,
+                "top": 873,
+                "width": 94.5,
+                "x": 109.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 107.5,
+                "right": 206,
+                "top": 841,
+                "width": 98.5,
+                "x": 107.5,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 208,
+                "right": 302.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 208,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 304.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 306.5,
+                "right": 401,
+                "top": 873,
+                "width": 94.5,
+                "x": 306.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 304.5,
+                "right": 403,
+                "top": 841,
+                "width": 98.5,
+                "x": 304.5,
+                "y": 841
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 8,
+            "right": 404,
+            "top": 835,
+            "width": 396,
+            "x": 8,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 11,
+                "right": 105.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 11,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 9,
+                "right": 107.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 9,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": "Prog.",
+              "label": "Progress",
+              "labelText": "Prog.",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 109.5,
+                "right": 204,
+                "top": 873,
+                "width": 94.5,
+                "x": 109.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 107.5,
+                "right": 206,
+                "top": 841,
+                "width": 98.5,
+                "x": 107.5,
+                "y": 841
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 208,
+                "right": 302.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 208,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 304.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 306.5,
+                "right": 401,
+                "top": 873,
+                "width": 94.5,
+                "x": 306.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 304.5,
+                "right": 403,
+                "top": 841,
+                "width": 98.5,
+                "x": 304.5,
+                "y": 841
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 8,
+            "right": 404,
+            "top": 835,
+            "width": 396,
+            "x": 8,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 11,
+                "right": 105.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 11,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 9,
+                "right": 107.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 9,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": "Prog.",
+              "label": "Progress",
+              "labelText": "Prog.",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 109.5,
+                "right": 204,
+                "top": 873,
+                "width": 94.5,
+                "x": 109.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 107.5,
+                "right": 206,
+                "top": 841,
+                "width": 98.5,
+                "x": 107.5,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 208,
+                "right": 302.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 208,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 304.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 306.5,
+                "right": 401,
+                "top": 873,
+                "width": 94.5,
+                "x": 306.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 304.5,
+                "right": 403,
+                "top": 841,
+                "width": 98.5,
+                "x": 304.5,
+                "y": 841
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 8,
+            "right": 404,
+            "top": 835,
+            "width": 396,
+            "x": 8,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 11,
+                "right": 105.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 11,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 9,
+                "right": 107.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 9,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": "Prog.",
+              "label": "Progress",
+              "labelText": "Prog.",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 109.5,
+                "right": 204,
+                "top": 873,
+                "width": 94.5,
+                "x": 109.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 107.5,
+                "right": 206,
+                "top": 841,
+                "width": 98.5,
+                "x": 107.5,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 208,
+                "right": 302.5,
+                "top": 873,
+                "width": 94.5,
+                "x": 208,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 304.5,
+                "top": 841,
+                "width": 98.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "compactLabel": null,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 892,
+                "height": 19,
+                "left": 306.5,
+                "right": 401,
+                "top": 873,
+                "width": 94.5,
+                "x": 306.5,
+                "y": 873
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 304.5,
+                "right": 403,
+                "top": 841,
+                "width": 98.5,
+                "x": 304.5,
+                "y": 841
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 412
     }
   ],
   "problemLogCount": 0

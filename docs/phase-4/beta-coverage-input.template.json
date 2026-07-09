@@ -1,0 +1,78 @@
+{
+  "_templatePurpose": "Copy to docs/phase-4/beta-coverage-input.json only after replacing every placeholder with real closed-beta export data. This template is intentionally blocked evidence.",
+  "cohort": {
+    "invitedUsers": 0,
+    "realTargetUsers": 0,
+    "completedUsers": 0
+  },
+  "productAddCompletion": {
+    "usersAddedThreePlusProducts": 0,
+    "productsAdded": 0
+  },
+  "catalog": {
+    "productsAdded": 0,
+    "barcodeLookups": {
+      "total": 0,
+      "matched": 0
+    },
+    "searches": {
+      "total": 0,
+      "matched": 0
+    },
+    "ocr": {
+      "attempts": 0,
+      "parsed": 0
+    },
+    "manualFallback": {
+      "started": 0,
+      "saved": 0
+    },
+    "wrongMatchReports": {
+      "total": 0,
+      "open": 0,
+      "triaged": 0,
+      "matchedScans": 0
+    },
+    "parser": {
+      "unknownTokenRate": 0,
+      "topUnknownTokens": []
+    },
+    "recommendationEligibility": {
+      "lowerThanUsableUsedInRecommendations": 0
+    },
+    "categoryCoverage": [
+      {
+        "category": "replace-with-real-category",
+        "added": 0,
+        "matched": 0
+      }
+    ],
+    "topNoMatches": [
+      {
+        "label": "replace-with-real-no-match-label",
+        "count": 0
+      }
+    ],
+    "topWrongMatches": [],
+    "expectedRecommendationProducts": [
+      {
+        "label": "replace-with-real-expected-recommendation-product",
+        "count": 0
+      }
+    ]
+  },
+  "support": {
+    "totalTickets": 0,
+    "catalogTickets": 0,
+    "trustAccuracySourceConfusionTickets": 0,
+    "openP0P1Tickets": 0
+  },
+  "evidence": {
+    "realBetaData": false,
+    "dashboardUrl": "https://replace-with-production-catalog-dashboard.example.com",
+    "analyticsDashboardUrl": "https://replace-with-production-analytics-dashboard.example.com",
+    "supportDashboardUrl": "https://replace-with-production-support-dashboard.example.com",
+    "sourceExportHash": "replace-with-real-export-sha256",
+    "signedOffBy": "TBD"
+  }
+}

@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const reportPath = resolve(scriptDir, 'beta-coverage-report.mjs');
+const templatePath = resolve(root, 'docs/phase-4/beta-coverage-input.template.json');
+const templateInput = JSON.parse(readFileSync(templatePath, 'utf8'));
 
 const passthroughKeys = [
   'ComSpec',
@@ -102,6 +104,7 @@ const validInput = {
 };
 
 const requiredSourceHashes = [
+  'docs/phase-4/beta-coverage-input.template.json',
   'supabase/functions/catalog-report/index.ts',
   'supabase/functions/catalog-report/privacy.ts',
   'supabase/functions/catalog-report/privacy.test.ts',
@@ -166,6 +169,21 @@ const cases = [
         result.packet.evidenceBlockers.some((item) =>
           item.includes('Missing beta coverage input artifact'),
         )
+      );
+    },
+  },
+  {
+    name: 'beta coverage template documents the export shape without passing evidence gates',
+    result: runReport({ input: templateInput }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.status === 'blocked' &&
+        result.packet.evidence.realBetaData === false &&
+        result.packet.evidenceBlockers.includes(
+          'Evidence must explicitly set evidence.realBetaData=true for real beta exports.',
+        ) &&
+        result.packet.evidenceBlockers.includes('Missing real named beta coverage signoff.')
       );
     },
   },

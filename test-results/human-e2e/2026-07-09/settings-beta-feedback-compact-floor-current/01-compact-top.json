@@ -1,0 +1,304 @@
+{
+  "buttons": [
+    {
+      "ariaLabel": "Back",
+      "disabled": null,
+      "rect": {
+        "bottom": 51.987258434295654,
+        "height": 47.99757385253906,
+        "left": 19.993932723999023,
+        "right": 67.99150657653809,
+        "top": 3.989684581756592,
+        "width": 47.99757385253906,
+        "x": 19.993932723999023,
+        "y": 3.989684581756592
+      },
+      "text": "<"
+    },
+    {
+      "ariaLabel": "Onboarding confusion. Age, consent, quiz, account, or first-run setup.",
+      "disabled": null,
+      "rect": {
+        "bottom": 261.87804412841797,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 203.94418334960938,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 203.94418334960938
+      },
+      "text": "Onboarding confusionAge, consent, quiz, account, or first-run setup."
+    },
+    {
+      "ariaLabel": "Catalog match issue. No match, wrong match, barcode, or manual add.",
+      "disabled": null,
+      "rect": {
+        "bottom": 351.8052291870117,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 293.8713684082031,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 293.8713684082031
+      },
+      "text": "Catalog match issueNo match, wrong match, barcode, or manual add."
+    },
+    {
+      "ariaLabel": "Guidance trust concern. Advice felt unclear, unsafe, or not grounded enough.",
+      "disabled": null,
+      "rect": {
+        "bottom": 441.73241424560547,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 383.7985534667969,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 383.7985534667969
+      },
+      "text": "Guidance trust concernAdvice felt unclear, unsafe, or not grounded enough."
+    },
+    {
+      "ariaLabel": "Routine or check-off. Scheduling, timing, step order, or completion issue.",
+      "disabled": null,
+      "rect": {
+        "bottom": 531.6595993041992,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 473.7257385253906,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 473.7257385253906
+      },
+      "text": "Routine or check-offScheduling, timing, step order, or completion issue."
+    },
+    {
+      "ariaLabel": "Progress photos. Capture, timeline, comparison, or permission issue.",
+      "disabled": null,
+      "rect": {
+        "bottom": 621.5868148803711,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 563.6529541015625,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 563.6529541015625
+      },
+      "text": "Progress photosCapture, timeline, comparison, or permission issue."
+    },
+    {
+      "ariaLabel": "Reminders. Notification timing, quiet hours, or delivery issue.",
+      "disabled": null,
+      "rect": {
+        "bottom": 711.5139999389648,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 653.5801391601562,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 653.5801391601562
+      },
+      "text": "RemindersNotification timing, quiet hours, or delivery issue."
+    },
+    {
+      "ariaLabel": "Paywall comprehension. Pricing, trial, restore, or subscription wording.",
+      "disabled": null,
+      "rect": {
+        "bottom": 801.4411849975586,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 743.50732421875,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 743.50732421875
+      },
+      "text": "Paywall comprehensionPricing, trial, restore, or subscription wording."
+    },
+    {
+      "ariaLabel": "Privacy or data rights. Deletion, export, consent, or privacy policy issue.",
+      "disabled": null,
+      "rect": {
+        "bottom": 891.3683700561523,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 833.4345092773438,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 833.4345092773438
+      },
+      "text": "Privacy or data rightsDeletion, export, consent, or privacy policy issue."
+    },
+    {
+      "ariaLabel": "Crash or performance. Freeze, blank screen, slow load, or app crash.",
+      "disabled": null,
+      "rect": {
+        "bottom": 981.2955551147461,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 923.3616943359375,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 923.3616943359375
+      },
+      "text": "Crash or performanceFreeze, blank screen, slow load, or app crash."
+    },
+    {
+      "ariaLabel": "Account or sign-in. Email, guest mode, auth, or saved-account issue.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1071.2227401733398,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1013.2888793945312,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1013.2888793945312
+      },
+      "text": "Account or sign-inEmail, guest mode, auth, or saved-account issue."
+    },
+    {
+      "ariaLabel": "Install or app review. Store, TestFlight, install, or update issue.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1161.1499252319336,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1103.216064453125,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1103.216064453125
+      },
+      "text": "Install or app reviewStore, TestFlight, install, or update issue."
+    },
+    {
+      "ariaLabel": "Advice boundary concern. Content felt too clinical or beyond product guidance.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1251.0771713256836,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1193.143310546875,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1193.143310546875
+      },
+      "text": "Advice boundary concernContent felt too clinical or beyond product guidance."
+    },
+    {
+      "ariaLabel": "Other. Something important not covered above.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1341.004295349121,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1283.0704345703125,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1283.0704345703125
+      },
+      "text": "OtherSomething important not covered above."
+    },
+    {
+      "ariaLabel": "Cannot use the app. Crash, data-loss risk, or hard blocker.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1470.919334411621,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1412.9854736328125,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1412.9854736328125
+      },
+      "text": "Cannot use the appCrash, data-loss risk, or hard blocker."
+    },
+    {
+      "ariaLabel": "Core flow blocked. A key journey cannot be completed.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1560.846580505371,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1502.9127197265625,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1502.9127197265625
+      },
+      "text": "Core flow blockedA key journey cannot be completed."
+    },
+    {
+      "ariaLabel": "Can continue. Wrong or confusing, but there is a workaround.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1650.7737045288086,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1592.83984375,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1592.83984375
+      },
+      "text": "Can continueWrong or confusing, but there is a workaround."
+    },
+    {
+      "ariaLabel": "Suggestion. Polish, wording, or nice-to-have improvement.",
+      "disabled": null,
+      "rect": {
+        "bottom": 1740.7009506225586,
+        "height": 57.933860778808594,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1682.76708984375,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1682.76708984375
+      },
+      "text": "SuggestionPolish, wording, or nice-to-have improvement."
+    },
+    {
+      "ariaLabel": null,
+      "disabled": "true",
+      "rect": {
+        "bottom": 1844.675464630127,
+        "height": 55.99211502075195,
+        "left": 19.993932723999023,
+        "right": 370.2973384857178,
+        "top": 1788.683349609375,
+        "width": 350.30340576171875,
+        "x": 19.993932723999023,
+        "y": 1788.683349609375
+      },
+      "text": "Open support"
+    }
+  ],
+  "horizontalOverflow": 0,
+  "scroll": {
+    "bodyHeight": 640.7767333984375,
+    "clientHeight": 641,
+    "scrollHeight": 641,
+    "x": 0,
+    "y": 0
+  },
+  "textInputCount": 0,
+  "title": "",
+  "url": "http://localhost:8192/settings/beta-feedback",
+  "viewport": {
+    "height": 641,
+    "width": 390
+  }
+}

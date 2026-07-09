@@ -12,6 +12,11 @@ when `PHASE4_BETA_COVERAGE_INPUT` is set, or from
 blocked packet when the input is missing. Strict mode must fail until real beta
 evidence, dashboard links, and a named signoff are attached.
 
+Use `docs/phase-4/beta-coverage-input.template.json` as the field map for the
+real export. The template is intentionally non-launchable: `realBetaData` is
+false, dashboard URLs are placeholders, and counts are zero until Tas replaces
+them with real closed-beta metrics.
+
 ## Required Beta Inputs
 
 - 50-100 user closed beta cohort.

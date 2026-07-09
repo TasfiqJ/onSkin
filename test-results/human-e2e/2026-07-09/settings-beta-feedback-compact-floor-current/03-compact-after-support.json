@@ -1,0 +1,18 @@
+{
+  "bodyExcerpt": "<Beta feedbackRoute the issue fastWe send only the selected issue type and priority with your support handoff.ISSUE TYPEOnboarding confusionAge, consent, quiz, account, or first-run setup.Catalog match issueNo match, wrong match, barcode, or manual add.Guidance trust concernAdvice felt unclear, unsafe, or not grounded enough.Routine or check-offScheduling, timing, step order, or completion issue.Progress photosCapture, timeline, comparison, or permission issue.RemindersNotification timing, quiet hours, or delivery issue.Paywall comprehensionPricing, trial, restore, or subscription wording.Privacy or data rightsDeletion, export, consent, or privacy policy issue.Crash or performanceFreeze, blank screen, slow load, or app crash.Account or sign-inEmail, guest mode, auth, or saved-account issue.Install or app reviewStore, TestFlight, install, or update issue.Advice boundary concernContent felt too clinical or beyond product guidance.OtherSomething important not covered above.PRIORITYCannot ",
+  "hasUnavailableCopy": true,
+  "horizontalOverflow": 0,
+  "scroll": {
+    "clientHeight": 641,
+    "scrollHeight": 641,
+    "x": 0,
+    "y": 0
+  },
+  "textInputCount": 0,
+  "url": "http://localhost:8192/settings/beta-feedback",
+  "viewport": {
+    "height": 641,
+    "width": 390
+  },
+  "dialogType": null
+}

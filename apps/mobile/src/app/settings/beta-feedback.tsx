@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Text } from '@/components/ui';
@@ -107,6 +107,12 @@ const SUPPORT_FEEDBACK_SEVERITIES = [
 
 type SupportFeedbackCategory = (typeof SUPPORT_FEEDBACK_CATEGORIES)[number]['key'];
 type SupportFeedbackSeverity = (typeof SUPPORT_FEEDBACK_SEVERITIES)[number]['key'];
+type OptionRowDensity =
+  | 'compact'
+  | 'modernTextPressure'
+  | 'regular'
+  | 'supportTextPressure'
+  | 'tallTextPressure';
 
 function supportFeedbackUrl(
   category: SupportFeedbackCategory,
@@ -128,26 +134,34 @@ function OptionRow({
   label,
   detail,
   selected,
-  compact,
+  density,
   onPress,
 }: {
   label: string;
   detail: string;
   selected: boolean;
-  compact: boolean;
+  density: OptionRowDensity;
   onPress: () => void;
 }) {
+  const compactTreatment = density !== 'regular';
+  const className =
+    density === 'supportTextPressure'
+      ? 'mb-8 min-h-[56px] rounded-[14px] px-3 py-2.5'
+      : density === 'modernTextPressure'
+        ? 'mb-6 min-h-[56px] rounded-[14px] px-3 py-2.5'
+        : density === 'tallTextPressure'
+          ? 'mb-16 min-h-[56px] rounded-[14px] px-3 py-2.5'
+          : density === 'compact'
+            ? 'mb-2 min-h-[56px] rounded-[14px] px-3 py-2.5'
+            : 'mb-2 min-h-[64px] rounded-[14px] px-4 py-3';
+
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
       accessibilityLabel={`${label}. ${detail}`}
       onPress={onPress}
-      className={
-        compact
-          ? 'mb-2 min-h-[56px] rounded-[14px] px-3 py-2.5'
-          : 'mb-2 min-h-[64px] rounded-[14px] px-4 py-3'
-      }
+      className={className}
       style={{
         backgroundColor: selected ? colors.clayTint : colors.paperRaised,
         borderWidth: 1,
@@ -157,7 +171,7 @@ function OptionRow({
       <Text
         variant="body"
         className="font-sans-semibold"
-        style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}
+        style={compactTreatment ? { fontSize: 14, lineHeight: 17 } : undefined}
       >
         {label}
       </Text>
@@ -165,7 +179,7 @@ function OptionRow({
         variant="bodySm"
         tone="muted"
         className="mt-1"
-        style={compact ? { fontSize: 12, lineHeight: 15 } : { lineHeight: 18 }}
+        style={compactTreatment ? { fontSize: 12, lineHeight: 15 } : { lineHeight: 18 }}
       >
         {detail}
       </Text>
@@ -174,8 +188,19 @@ function OptionRow({
 }
 
 export default function BetaFeedbackScreen() {
-  const { height, width } = useWindowDimensions();
+  const { fontScale, height, width } = useWindowDimensions();
   const compact = height < 700 || width < 390;
+  const highTextPressure = fontScale >= 1.3 || Platform.OS === 'web';
+  const optionRowDensity: OptionRowDensity =
+    highTextPressure && width <= 390 && height < 700
+      ? 'supportTextPressure'
+      : highTextPressure && width <= 430 && height >= 900 && height < 980
+        ? 'tallTextPressure'
+        : highTextPressure && width <= 430 && height >= 700 && height < 900
+          ? 'modernTextPressure'
+          : compact
+            ? 'compact'
+            : 'regular';
   const [category, setCategory] = useState<SupportFeedbackCategory | null>(null);
   const [severity, setSeverity] = useState<SupportFeedbackSeverity | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -249,7 +274,7 @@ export default function BetaFeedbackScreen() {
             label={item.label}
             detail={item.detail}
             selected={category === item.key}
-            compact={compact}
+            density={optionRowDensity}
             onPress={() => {
               setFeedback(null);
               setCategory(item.key);
@@ -266,7 +291,7 @@ export default function BetaFeedbackScreen() {
             label={item.label}
             detail={item.detail}
             selected={severity === item.key}
-            compact={compact}
+            density={optionRowDensity}
             onPress={() => {
               setFeedback(null);
               setSeverity(item.key);
