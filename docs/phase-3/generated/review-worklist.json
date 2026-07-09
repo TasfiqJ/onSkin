@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T12:24:31.177Z",
+  "generatedAt": "2026-07-09T13:19:37.197Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.",
   "strict": false,
-  "gitSha": "134e4bec6e12aff9fca4ba95f4f758b0b411dba0",
+  "gitSha": "7601e1223c36a9374c4c04e4e44e1ec683cd6c3e",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -440,14 +440,14 @@
         {
           "path": "apps/mobile/src/features/routine/activationAnalytics.test.ts",
           "exists": true,
-          "bytes": 3348,
-          "sha256": "ba6a54bcc20d7ee4d09f3f461fd5a494587621afeb07a02a245383e6436bed13"
+          "bytes": 4353,
+          "sha256": "50b51417012a07838ecd625f32b1b90a836684edb1c869c20b4fcc7bd2e0ed38"
         },
         {
           "path": "apps/mobile/src/features/routine/activationAnalytics.ts",
           "exists": true,
-          "bytes": 2358,
-          "sha256": "ccb1ec02a385882785d29ee261dfee9a9fe0387cfefd20fb248fe8cc4edf2e3e"
+          "bytes": 2886,
+          "sha256": "7d020210d9c10b56dc99fcd518fa169fd6e71f3ab3d5342dd1d22944651dd488"
         },
         {
           "path": "apps/mobile/src/features/routine/cycleAnchor.test.ts",
@@ -464,14 +464,14 @@
         {
           "path": "apps/mobile/src/features/routine/firstInsight.test.ts",
           "exists": true,
-          "bytes": 4001,
-          "sha256": "e36ce35a59c0b24598717f8ba6d5d4bb734f7827681e652a9b5113fc06475782"
+          "bytes": 4435,
+          "sha256": "cb297fe597aa582716fb7569637aaf2a0d6a2e2c201dbb3465d5d9d14221fc09"
         },
         {
           "path": "apps/mobile/src/features/routine/firstInsight.ts",
           "exists": true,
-          "bytes": 2250,
-          "sha256": "4857abb080221198e1ed2e8fe42e1070af1151ef68fb12d8d5dc9a105ab77271"
+          "bytes": 2410,
+          "sha256": "b6cf43fc7b4aba8e3d9ed12c7ab7bbdeaddc76594c2301f500d5cc60f30cae9b"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.test.ts",
@@ -666,8 +666,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 41612,
-          "sha256": "c483e18f46a7caebd96e1ae6209c81e2320afbb8c00c329fc4f3a3f3a3ac9953"
+          "bytes": 41893,
+          "sha256": "fd05a91a7e6fddd0b3d281f7fd0d5196e009cddde4de0b4fdeed9412c72cc077"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",

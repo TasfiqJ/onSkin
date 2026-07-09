@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T12:24:40.069Z",
+  "generatedAt": "2026-07-09T13:19:43.084Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "134e4bec6e12aff9fca4ba95f4f758b0b411dba0",
+  "gitSha": "7601e1223c36a9374c4c04e4e44e1ec683cd6c3e",
   "gitStatus": "",
   "files": [
     {
@@ -135,14 +135,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 27291,
-      "sha256": "ee1e9a68015eb8c11a6cc8651a97e796347a726321955b58df3aef051c5c5e35"
+      "sha256": "3c8c3f35f7d2c0eb8f35f1dc7bf1fd45983a10d1410f691ae584621f6d74f027"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 2662,
-      "sha256": "fe8ff77dd832cca50173fe59f1f0ef960f9f49238d2c6588ecdcd3333349c2b0"
+      "sha256": "bafdc617f71858f6a3f2bcd33de4f4f8bf3607d7bdbd5d21fb5ecbf5c8a95893"
     },
     {
       "packet": "clinical",
@@ -198,14 +198,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 27291,
-      "sha256": "ee1e9a68015eb8c11a6cc8651a97e796347a726321955b58df3aef051c5c5e35"
+      "sha256": "3c8c3f35f7d2c0eb8f35f1dc7bf1fd45983a10d1410f691ae584621f6d74f027"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 2662,
-      "sha256": "fe8ff77dd832cca50173fe59f1f0ef960f9f49238d2c6588ecdcd3333349c2b0"
+      "sha256": "bafdc617f71858f6a3f2bcd33de4f4f8bf3607d7bdbd5d21fb5ecbf5c8a95893"
     },
     {
       "packet": "cosmeticChemistry",
@@ -267,8 +267,8 @@
       "packet": "ipFto",
       "path": "apps/mobile/src/app/onboarding/reveal.tsx",
       "exists": true,
-      "bytes": 4224,
-      "sha256": "c74b512da152d8e94c1561d38878c177c0cb2d444967aab3fd102c626fe4cc9d"
+      "bytes": 5488,
+      "sha256": "f38ab745a996a1cdc4aef4fabb6d8119fe51c3e59dcff47d177e40fc41cda31d"
     },
     {
       "packet": "privacyPlatform",
