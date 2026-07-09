@@ -17,6 +17,15 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('â€™');
   });
 
+  it('keeps account creation copy honest about local-first routine state', () => {
+    const source = readAppRoute('onboarding/account.tsx');
+
+    expect(source).toContain('Routine checks stay');
+    expect(source).toContain('local-first on this device');
+    expect(source).toContain('photos still stay on this device');
+    expect(source).not.toContain('routine and progress are yours on any device');
+  });
+
   it('keeps the first-session E2E local reset dev-only and env-gated', () => {
     const source = readAppRoute('index.tsx');
 

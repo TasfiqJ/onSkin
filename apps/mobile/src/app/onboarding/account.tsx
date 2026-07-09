@@ -81,14 +81,14 @@ export default function AccountScreen() {
           }}
         >
           <Text variant="title">
-            Save your plan,{' '}
+            Protect your plan,{' '}
             <Text variant="title" italic tone="clay">
               keep it private.
             </Text>
           </Text>
           <Text variant="body" tone="muted" className="mt-3">
-            Create an account so your routine and progress are yours on any device. Your photos
-            still stay on this phone.
+            Create an account for sign-in, subscription, and privacy controls. Routine checks stay
+            local-first on this device for this beta, and photos still stay on this device.
           </Text>
           {!isSupabaseConfigured ? (
             <Text variant="bodySm" tone="clay" className="mt-4">
