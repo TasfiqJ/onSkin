@@ -1,0 +1,182 @@
+{
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 6,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 66.03125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Drugstore",
+            "label": "Drugstore",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 24,
+              "right": 108.0625,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.0625,
+              "width": 84.0625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 66.03125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Drugstore",
+            "label": "Drugstore",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 24,
+              "right": 108.0625,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.0625,
+              "width": 84.0625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 158.5078125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Mid-range",
+            "label": "Mid-range",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 116.0625,
+              "right": 200.953125,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.890625,
+              "width": 84.890625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 158.5078125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Mid-range",
+            "label": "Mid-range",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 116.0625,
+              "right": 200.953125,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.890625,
+              "width": 84.890625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 247.53125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Premium",
+            "label": "Premium",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 208.953125,
+              "right": 286.109375,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 77.15625,
+              "width": 77.15625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 247.53125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Premium",
+            "label": "Premium",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 208.953125,
+              "right": 286.109375,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 77.15625,
+              "width": 77.15625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/recommendations/preferences",
+      "scaledCount": 21,
+      "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+    }
+  ]
+}

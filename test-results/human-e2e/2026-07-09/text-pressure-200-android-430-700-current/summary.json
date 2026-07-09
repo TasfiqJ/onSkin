@@ -1,0 +1,489 @@
+{
+  "baseUrl": "http://localhost:8368",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-200-android-430-700-current",
+  "generatedAt": "2026-07-09T23:07:15.190Z",
+  "routeCount": 49,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 700,
+    "width": 430
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 6,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 66.03125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Drugstore",
+            "label": "Drugstore",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 24,
+              "right": 108.0625,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.0625,
+              "width": 84.0625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 66.03125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Drugstore",
+            "label": "Drugstore",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 24,
+              "right": 108.0625,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.0625,
+              "width": 84.0625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 158.5078125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Mid-range",
+            "label": "Mid-range",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 116.0625,
+              "right": 200.953125,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.890625,
+              "width": 84.890625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 158.5078125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Mid-range",
+            "label": "Mid-range",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 116.0625,
+              "right": 200.953125,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 84.890625,
+              "width": 84.890625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 247.53125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Premium",
+            "label": "Premium",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 208.953125,
+              "right": 286.109375,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 77.15625,
+              "width": 77.15625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 247.53125,
+              "y": 688
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Premium",
+            "label": "Premium",
+            "partialClip": true,
+            "rect": {
+              "bottom": 712,
+              "height": 48,
+              "left": 208.953125,
+              "right": 286.109375,
+              "top": 664,
+              "visibleHeight": 36,
+              "visibleWidth": 77.15625,
+              "width": 77.15625
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/recommendations/preferences",
+      "scaledCount": 21,
+      "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these."
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today?routine=PM",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress",
+      "scaledCount": 20
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/capture",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/review",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/plan",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/ramp",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/tolerance",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/reorder",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/adaptation",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/settings",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/disruption",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/procedure",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/phased-intro",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/recovery",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/why-tonight",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 6,
+      "route": "/recommendations/preferences",
+      "scaledCount": 21
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/stale-local-rec",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community",
+      "scaledCount": 26
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/note/missing-note-e2e",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/ask",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/people-like-you",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/consent",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stacks",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/barrier-basics",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/missing-stack-e2e",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/transparency",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/subscription",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/notifications",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/timing",
+      "scaledCount": 19
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 60
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/optin",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/fairness",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask/consent",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/search",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/no-match",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/scan",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/ocr",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/manual",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/archive",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/opened",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/upsell?feature=full_routine",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/success",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/streak",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/widgets",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/week",
+      "scaledCount": 16
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}

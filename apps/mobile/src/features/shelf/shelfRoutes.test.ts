@@ -148,6 +148,33 @@ describe('Shelf route mobile contracts', () => {
     expect(analytics).toContain("'miss_search'");
   });
 
+  it('keeps catalog search wrong-match reporting obvious before add', () => {
+    const source = readAppRoute('shelf/search.tsx');
+
+    expect(source).toContain('reportCatalogIssue');
+    expect(source).toContain('const reportWrongMatch = async (product: CatalogProductSummary)');
+    expect(source).toContain('useLocalSearchParams');
+    expect(source).toContain("typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web'");
+    expect(source).toContain('initialSearchQuery.slice(0, 120)');
+    expect(source).toContain('const autoSearchStarted = useRef(false);');
+    expect(source).toContain('void runSearch(initialSearchQuery);');
+    expect(source).toContain("correctionType: 'wrong_match'");
+    expect(source).toContain('wrong_match reported from catalog search result');
+    expect(source).toContain('productId: product.id');
+    expect(source).toContain('barcode: product.barcode');
+    expect(source).toContain('sourceName');
+    expect(source).toContain('sourceUrl: product.source_url ?? null');
+    expect(source).toContain("route: 'shelf_search'");
+    expect(source).toContain('CATALOG_WRONG_MATCH_NOT_SENT');
+    expect(source).toContain('Use this match');
+    expect(source).toContain('Not this product');
+    expect(source).toContain('min-h-[48px] flex-1 basis-[148px]');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain("reset({ addedVia: 'manual', name: query.trim() })");
+    expect(source).not.toContain('Alert.alert');
+    expect(source).not.toContain('import { Alert');
+  });
+
   it('keeps barcode no-match recovery visible on the shortest supported phones', () => {
     const source = readAppRoute('shelf/no-match.tsx');
 

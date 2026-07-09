@@ -148,6 +148,7 @@
     "docs:generated-packet-status-audit:check": "node scripts/docs/generated-packet-status-audit.mjs --strict --check",
     "e2e:tabbar-geometry": "node scripts/e2e/tabbar-geometry.mjs",
     "e2e:onboarding-first-session": "node scripts/e2e/onboarding-first-session.mjs",
+    "e2e:catalog-search-wrong-match": "node scripts/e2e/catalog-search-wrong-match.mjs",
     "e2e:text-pressure": "node scripts/e2e/text-pressure-route-audit.mjs",
     "e2e:human:manifest": "node scripts/e2e/human-e2e-manifest.mjs",
     "e2e:human:manifest:check": "node scripts/e2e/human-e2e-manifest.mjs --check",

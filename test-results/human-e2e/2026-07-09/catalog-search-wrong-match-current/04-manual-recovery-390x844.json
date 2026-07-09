@@ -1,0 +1,96 @@
+{
+  "alertText": "",
+  "bodyText": "x Add by hand The floor under every other path. This always works, even fully offline. PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Cancel",
+      "role": "button",
+      "text": "x",
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "text": "ceramide cleanser",
+      "width": 342,
+      "x": 24,
+      "y": 146
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Brand",
+      "role": "input",
+      "text": "",
+      "width": 157.14,
+      "x": 24,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Category",
+      "role": "button",
+      "text": "Choose▾",
+      "width": 172.86,
+      "x": 193.14,
+      "y": 230
+    },
+    {
+      "disabled": false,
+      "height": 66,
+      "hitOk": true,
+      "label": "Ingredients",
+      "role": "textarea",
+      "text": "",
+      "width": 342,
+      "x": 24,
+      "y": 322
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue",
+      "role": "button",
+      "text": "Continue",
+      "width": 342,
+      "x": 24,
+      "y": 776
+    }
+  ],
+  "dialogText": "",
+  "inputs": [
+    {
+      "label": "Product name",
+      "value": "ceramide cleanser"
+    },
+    {
+      "label": "Brand",
+      "value": ""
+    },
+    {
+      "label": "Ingredients",
+      "value": ""
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8426/shelf/manual",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  }
+}

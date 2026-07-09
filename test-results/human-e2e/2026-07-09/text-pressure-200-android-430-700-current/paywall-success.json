@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 215,
+        "y": 664
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "See tonight’s routine",
+      "label": "See tonight’s routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 692,
+        "height": 56,
+        "left": 24,
+        "right": 406,
+        "top": 636,
+        "visibleHeight": 56,
+        "visibleWidth": 382,
+        "width": 382
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8368/paywall/success",
+  "textOverflows": [],
+  "textStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 9 renews $49.99/yr See tonight’s routine",
+  "viewport": {
+    "width": 430,
+    "height": 700
+  },
+  "route": "/paywall/success",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8368/paywall/success",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

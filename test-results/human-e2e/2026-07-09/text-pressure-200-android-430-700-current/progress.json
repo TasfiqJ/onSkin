@@ -1,0 +1,220 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 54.4296875,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 84.859375,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 60.859375,
+        "width": 60.859375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 140.25,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 103.5625,
+        "right": 176.9375,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 73.375,
+        "width": 73.375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 233.6484375,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 195.640625,
+        "right": 271.65625,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 76.015625,
+        "width": 76.015625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 382,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 358,
+        "right": 406,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 60.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 9,
+        "right": 112,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 163.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Progress",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 112,
+        "right": 215,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 266.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 215,
+        "right": 318,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 369.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 318,
+        "right": 421,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8368/progress",
+  "textOverflows": [],
+  "textStart": "Terms · Privacy · Restore x Unlock your private photo timeline. Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. › Today Progress Shelf You",
+  "viewport": {
+    "width": 430,
+    "height": 700
+  },
+  "route": "/progress",
+  "scaledCount": 20,
+  "textScale": 2,
+  "url": "http://localhost:8368/progress",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

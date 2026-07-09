@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 311.7578125,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Maybe later",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 217.515625,
+        "right": 406,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 188.484375,
+        "width": 188.484375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8370/cycle/week",
+  "textOverflows": [],
+  "textStart": "Maybe later Unlock your full skin-cycling scheduler. Tonight’s active, recovery nights, the next acid night. Orchestrated for your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. › Terms · Privacy · Restore",
+  "viewport": {
+    "width": 430,
+    "height": 700
+  },
+  "route": "/cycle/week",
+  "scaledCount": 16,
+  "textScale": 2,
+  "url": "http://localhost:8370/cycle/week",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

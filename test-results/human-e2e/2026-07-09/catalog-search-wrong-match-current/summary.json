@@ -1,0 +1,6 @@
+{
+  "date": "2026-07-09",
+  "endUrl": "http://localhost:8426/shelf/search?e2eReset=local&e2eQuery=ceramide+cleanser",
+  "startCommand": "EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match npm --workspace apps/mobile run web -- --port 8426 --host localhost",
+  "verdict": "pass"
+}

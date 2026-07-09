@@ -57,6 +57,30 @@ describe('catalog client E2E fixtures', () => {
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
+  it('supports a dev-only catalog search wrong-match fixture', async () => {
+    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'wrong_match';
+
+    await expect(searchCatalog('ceramide cleanser')).resolves.toMatchObject({
+      result: 'matched',
+      product: {
+        id: 'e2e-wrong-match-product',
+        name: 'Wrong Catalog Serum',
+        source: 'open_beauty_facts',
+      },
+      products: [
+        {
+          id: 'e2e-wrong-match-product',
+          barcode: '012345678905',
+          name: 'Wrong Catalog Serum',
+          quality_grade: 'limited',
+        },
+      ],
+    });
+
+    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
   it('ignores catalog search fixtures outside development runtime', async () => {
     runtime.__DEV__ = false;
     process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'no_match';

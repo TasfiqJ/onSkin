@@ -154,7 +154,7 @@ describe('Recommendation route contracts', () => {
       'const shortTextPressurePreferences = width <= 414 && height >= 600 && height < 640;',
     );
     expect(source).toContain(
-      'const supportFloorTextPressurePreferences = width <= 430 && height >= 640 && height < 700;',
+      'const supportFloorTextPressurePreferences = width <= 430 && height >= 640 && height <= 700;',
     );
     expect(source).toContain('const wideSupportFloorTextPressurePreferences =');
     expect(source).toContain('width > 390 && supportFloorTextPressurePreferences;');

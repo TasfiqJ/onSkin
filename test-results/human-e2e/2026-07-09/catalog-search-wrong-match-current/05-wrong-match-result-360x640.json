@@ -1,0 +1,88 @@
+{
+  "alertText": "",
+  "bodyText": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Wrong Catalog Serum Mismatch Lab / Open Beauty Facts / Limited barcode 012345678905 Use this match Not this product Add by hand",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Back",
+      "role": "button",
+      "text": "<",
+      "width": 48,
+      "x": 24,
+      "y": 8
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Catalog search query",
+      "role": "input",
+      "text": "ceramide cleanser",
+      "width": 229.91,
+      "x": 24,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "height": 50,
+      "hitOk": true,
+      "label": "Search",
+      "role": "button",
+      "text": "Search",
+      "width": 74.09,
+      "x": 261.91,
+      "y": 72
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Use Wrong Catalog Serum match",
+      "role": "button",
+      "text": "Use this match",
+      "width": 278,
+      "x": 41,
+      "y": 283
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not this product",
+      "role": "button",
+      "text": "Not this product",
+      "width": 278,
+      "x": 41,
+      "y": 339
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add by hand",
+      "role": "button",
+      "text": "Add by hand",
+      "width": 312,
+      "x": 24,
+      "y": 552
+    }
+  ],
+  "dialogText": "",
+  "inputs": [
+    {
+      "label": "Catalog search query",
+      "value": "ceramide cleanser"
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8426/shelf/search?e2eReset=local&e2eQuery=ceramide+cleanser",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

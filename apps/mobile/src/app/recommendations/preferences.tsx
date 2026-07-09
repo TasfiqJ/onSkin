@@ -125,7 +125,7 @@ export default function PreferencesScreen() {
   const shortPreferences = height < 600;
   const supportFloorPreferences = width <= 320 && height < 520;
   const shortTextPressurePreferences = width <= 414 && height >= 600 && height < 640;
-  const supportFloorTextPressurePreferences = width <= 430 && height >= 640 && height < 700;
+  const supportFloorTextPressurePreferences = width <= 430 && height >= 640 && height <= 700;
   const wideSupportFloorTextPressurePreferences =
     width > 390 && supportFloorTextPressurePreferences;
   const ultraShortPreferences = height < 460;

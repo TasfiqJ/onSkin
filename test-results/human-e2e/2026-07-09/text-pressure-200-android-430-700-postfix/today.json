@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 60.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 9,
+        "right": 112,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 163.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Prog.",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 112,
+        "right": 215,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 266.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 215,
+        "right": 318,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 369.5,
+        "y": 653
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 680,
+        "height": 54,
+        "left": 318,
+        "right": 421,
+        "top": 626,
+        "visibleHeight": 54,
+        "visibleWidth": 103,
+        "width": 103
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8370/today",
+  "textOverflows": [],
+  "textStart": "THURSDAY, JULY 9 · 7:43 PM Good evening. Evening routine No evening steps yet. Add a cleanser, moisturiser, or night product to build this out. Today Prog. Shelf You",
+  "viewport": {
+    "width": 430,
+    "height": 700
+  },
+  "route": "/today",
+  "scaledCount": 9,
+  "textScale": 2,
+  "url": "http://localhost:8370/today",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
