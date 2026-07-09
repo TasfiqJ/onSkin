@@ -28,9 +28,9 @@ Do not mark UI-facing work as complete until Codex has:
 - Current durable local evidence gate: `npm run e2e:human:manifest`.
   This no-new-dependency Node verifier reads committed
   `test-results/human-e2e/YYYY-MM-DD/` Expo web-compatible evidence folders,
-  checks the launch-blocking 360 x 640 support-floor route sweep, records
+  checks the launch-blocking 360 x 640 support-floor route sweep, requires
   supported-phone 360 x 740 / 375 x 667 / 375 x 812 / 390 x 844 / 412 x 640 /
-  412 x 915 / 414 x 896 / 430 x 640 / 430 x 932 evidence, records
+  412 x 915 / 414 x 896 / 430 x 640 / 430 x 932 evidence, requires
   skipped/direct-entry onboarding, paywall, recovery, conflict, share, shelf,
   and progress route sweeps when present, records smaller 320-wide stress
   evidence when present, and writes

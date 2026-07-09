@@ -124,10 +124,33 @@ const manifestScriptNeedles = [
   'required: true',
   "supportClass: 'launch-blocking'",
   'text-pressure-200-supported-360-640-postfix',
+  'android-360-740-200-text-pressure',
+  'iphone-375-667-200-text-pressure',
+  'modern-390-200-text-pressure',
+  'modern-430-200-text-pressure',
+  'skipped-routes-360-640-200-text-pressure',
   'function textPressureLegacyFloorGate',
   'required: false',
   "supportClass: 'resilience'",
-  'Only launch-blocking gates are required by the device support policy',
+  'Supported-phone 200% text-pressure gates listed in this manifest are launch-required',
+];
+
+const requiredSupportedPhoneGateIds = [
+  'android-360-740-200-text-pressure',
+  'iphone-375-667-200-text-pressure',
+  'iphone-375-200-text-pressure',
+  'modern-390-200-text-pressure',
+  'android-412-640-200-text-pressure',
+  'android-412-200-text-pressure',
+  'boundary-414-896-200-text-pressure',
+  'android-430-640-200-text-pressure',
+  'modern-430-200-text-pressure',
+  'skipped-routes-360-640-200-text-pressure',
+  'skipped-routes-375-667-200-text-pressure',
+  'skipped-routes-390-844-200-text-pressure',
+  'skipped-routes-412-640-200-text-pressure',
+  'skipped-routes-430-640-200-text-pressure',
+  'skipped-routes-430-932-200-text-pressure',
 ];
 
 function abs(path) {
@@ -302,6 +325,19 @@ if (!launchGate) {
   if (launchGate.status !== 'pass') blockers.push('360 x 640 launch-floor gate must pass.');
 }
 
+for (const gateId of requiredSupportedPhoneGateIds) {
+  const gate = gateResults.find((candidate) => candidate.id === gateId);
+  if (!gate) {
+    blockers.push(`${files.humanManifest} is missing supported-phone gate ${gateId}.`);
+    continue;
+  }
+  if (!gate.required) blockers.push(`${gateId} must be required supported-phone evidence.`);
+  if (gate.supportClass !== 'supported-phone') {
+    blockers.push(`${gateId} must be classified as supported-phone evidence.`);
+  }
+  if (gate.status !== 'pass') blockers.push(`${gateId} must pass.`);
+}
+
 const legacyGateProblems = gateResults
   .filter((gate) => /\b320 x 480\b/.test(String(gate.title ?? '')))
   .filter((gate) => gate.required || gate.supportClass !== 'resilience');
@@ -341,6 +377,7 @@ const audit = {
   humanManifest: {
     path: files.humanManifest,
     launchGate,
+    requiredSupportedPhoneGateIds,
     legacyGateProblems,
     gateCount: gateResults.length,
   },

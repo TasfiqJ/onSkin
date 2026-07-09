@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T20:12:51.731Z",
+  "generatedAt": "2026-07-09T20:19:22.138Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the accepted device support policy so install floors, viewport launch gates, and 320-wide stress-only evidence cannot drift silently.",
@@ -104,6 +104,23 @@
       "supportClass": "launch-blocking",
       "title": "360 x 640 launch-floor 200% text-pressure route sweep"
     },
+    "requiredSupportedPhoneGateIds": [
+      "android-360-740-200-text-pressure",
+      "iphone-375-667-200-text-pressure",
+      "iphone-375-200-text-pressure",
+      "modern-390-200-text-pressure",
+      "android-412-640-200-text-pressure",
+      "android-412-200-text-pressure",
+      "boundary-414-896-200-text-pressure",
+      "android-430-640-200-text-pressure",
+      "modern-430-200-text-pressure",
+      "skipped-routes-360-640-200-text-pressure",
+      "skipped-routes-375-667-200-text-pressure",
+      "skipped-routes-390-844-200-text-pressure",
+      "skipped-routes-412-640-200-text-pressure",
+      "skipped-routes-430-640-200-text-pressure",
+      "skipped-routes-430-932-200-text-pressure"
+    ],
     "legacyGateProblems": [],
     "gateCount": 24
   },

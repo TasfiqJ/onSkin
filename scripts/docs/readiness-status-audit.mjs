@@ -57,6 +57,7 @@ const requiredLaunchCommands = [
   'npm run e2e:human:manifest:check',
   'npm run docs:generated-packet-status-audit:check',
   'npm run phase5:check-native-config',
+  'npm run phase10:beta-analytics-audit',
   'npm run phase9:verify',
   'npm run phase10-11:verify',
 ];
@@ -84,6 +85,7 @@ const requiredLaunchVerifyScriptParts = [
   'phase5:check-native-config',
   'phase9:release-smoke',
   'phase10:beta-readiness',
+  'phase10:beta-analytics-audit',
   'phase11:launch-readiness',
   'phase11:ring-gates',
   'typecheck',

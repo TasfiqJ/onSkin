@@ -116,7 +116,24 @@ function supportFloorGateForDate(date) {
 }
 
 function requiredGateEvidenceFiles(date) {
-  return [gateEvidencePath(supportFloorGateForDate(date))];
+  return [
+    gateEvidencePath(supportFloorGateForDate(date)),
+    `test-results/human-e2e/${date}/text-pressure-200-android-360-740-postfix/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-iphone-375-667-full-postfix3-clear/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-iphone-375-812-postfix/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-modern-390-postfix-7/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-android-412-640-current/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-android-412-915-postfix2/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-boundary-414-896-postfix3/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-android-430-640-postfix3/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-modern-430-postfix-5/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-360-640-current/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-375-667-postfix3/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-390-844-postfix/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-412-640-postfix/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-430-640-current/summary.json`,
+    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-430-932-postfix/summary.json`,
+  ];
 }
 
 function latestEvidenceDate() {
@@ -194,7 +211,7 @@ const gates = [
     id: 'android-360-740-200-text-pressure',
     title: '360 x 740 supported Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-360-740-postfix`,
     evidence: 'summary.json',
@@ -204,7 +221,7 @@ const gates = [
     id: 'iphone-375-667-200-text-pressure',
     title: '375 x 667 compact iPhone-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-iphone-375-667-full-postfix3-clear`,
     evidence: 'summary.json',
@@ -215,7 +232,7 @@ const gates = [
     id: 'iphone-375-200-text-pressure',
     title: '375 x 812 supported iPhone-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-iphone-375-812-postfix`,
     evidence: 'summary.json',
@@ -225,7 +242,7 @@ const gates = [
     id: 'modern-390-200-text-pressure',
     title: '390 x 844 supported-phone 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-modern-390-postfix-7`,
     evidence: 'summary.json',
@@ -235,7 +252,7 @@ const gates = [
     id: 'android-412-640-200-text-pressure',
     title: '412 x 640 supported Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-412-640-current`,
     evidence: 'summary.json',
@@ -246,7 +263,7 @@ const gates = [
     id: 'android-412-200-text-pressure',
     title: '412 x 915 supported Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-412-915-postfix2`,
     evidence: 'summary.json',
@@ -257,7 +274,7 @@ const gates = [
     id: 'boundary-414-896-200-text-pressure',
     title: '414 x 896 boundary-phone 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-boundary-414-896-postfix3`,
     evidence: 'summary.json',
@@ -268,7 +285,7 @@ const gates = [
     id: 'android-430-640-200-text-pressure',
     title: '430 x 640 supported Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-430-640-postfix3`,
     evidence: 'summary.json',
@@ -279,7 +296,7 @@ const gates = [
     id: 'modern-430-200-text-pressure',
     title: '430 x 932 supported-phone 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-modern-430-postfix-5`,
     evidence: 'summary.json',
@@ -289,7 +306,7 @@ const gates = [
     id: 'skipped-routes-360-640-200-text-pressure',
     title: '360 x 640 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-360-640-current`,
     evidence: 'summary.json',
@@ -300,7 +317,7 @@ const gates = [
     id: 'skipped-routes-375-667-200-text-pressure',
     title: '375 x 667 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-375-667-postfix3`,
     evidence: 'summary.json',
@@ -311,7 +328,7 @@ const gates = [
     id: 'skipped-routes-390-844-200-text-pressure',
     title: '390 x 844 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-390-844-postfix`,
     evidence: 'summary.json',
@@ -322,7 +339,7 @@ const gates = [
     id: 'skipped-routes-412-640-200-text-pressure',
     title: '412 x 640 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-412-640-postfix`,
     evidence: 'summary.json',
@@ -333,7 +350,7 @@ const gates = [
     id: 'skipped-routes-430-640-200-text-pressure',
     title: '430 x 640 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-430-640-current`,
     evidence: 'summary.json',
@@ -344,7 +361,7 @@ const gates = [
     id: 'skipped-routes-430-932-200-text-pressure',
     title: '430 x 932 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: false,
+    required: true,
     supportClass: 'supported-phone',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-430-932-postfix`,
     evidence: 'summary.json',
@@ -414,7 +431,7 @@ const gates = [
 
 const warnings = [
   'This manifest verifies committed local Expo web evidence only; it does not replace physical iOS/Android device QA.',
-  'Only launch-blocking gates are required by the device support policy; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.',
+  'Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 remain resilience stress evidence unless tied to a supported physical device.',
   'Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.',
 ];
 const blockers = [];
@@ -430,7 +447,7 @@ const gateResults = gates.map((gate) => {
 
   if (!gate.required && (!folderExists || !evidenceExists)) {
     status = 'skipped';
-    detail = 'Optional resilience evidence not present for this date.';
+    detail = `Optional ${gate.supportClass} evidence not present for this date.`;
   } else if (folderExists && evidenceExists) {
     try {
       if (gate.kind === 'failures') {
