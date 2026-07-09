@@ -1,0 +1,702 @@
+{
+  "generatedAt": "2026-07-09T00:26:51.754Z",
+  "purpose": "Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.",
+  "strict": false,
+  "gitSha": "373089d4b429637d331ca6b70728ef8edf0e8076",
+  "gitStatus": "",
+  "reviewLogs": [
+    {
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "path": "docs/phase-3/clinical-review-log.md",
+      "exists": true,
+      "bytes": 4704,
+      "sha256": "ed2942bdd382da460648a0c50bced443b991e6ce286340fc42ea155c2f945f18"
+    },
+    {
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "path": "docs/phase-3/cosmetic-chemistry-review-log.md",
+      "exists": true,
+      "bytes": 2995,
+      "sha256": "6704e036e1805b154a1ec71092a6096acbb457ab9f25136f62f22c280315c3a5"
+    }
+  ],
+  "summary": {
+    "itemCount": 16,
+    "domainCounts": {
+      "clinical": 10,
+      "cosmeticChemistry": 6
+    },
+    "statusCounts": {
+      "notCleared": 14,
+      "blocked": 2
+    },
+    "sourcePathCount": 67,
+    "missingSourcePathCount": 0,
+    "blockerCount": 0,
+    "warningCount": 0
+  },
+  "items": [
+    {
+      "id": "clinical:ingredient-interaction-rules",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Ingredient interaction rules",
+      "sourceText": "`apps/mobile/src/features/intelligence/rules.ts`",
+      "currentBehavior": "Hidden unless reviewed",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "All launch rules currently have `reviewedBy: null`.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/intelligence/rules.ts",
+          "exists": true,
+          "bytes": 9929,
+          "sha256": "ce013235898077a3b477280c99f81431c801bac8544ed34c5c90a9410c23eeea"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:pao-defaults",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "PAO defaults",
+      "sourceText": "`apps/mobile/src/features/intelligence/pao.ts`",
+      "currentBehavior": "Hidden in production",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Keep conservative until chemist/derm signoff.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/intelligence/pao.ts",
+          "exists": true,
+          "bytes": 6949,
+          "sha256": "62112d95a6c1b26531cbf06a8bf46a0eef9f9cddb635c5c9ec502a1e6b47e8a5"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:recommendation-types",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Recommendation types",
+      "sourceText": "`apps/mobile/src/features/recommendations/catalog.ts`",
+      "currentBehavior": "Medical-adjacent types hidden unless reviewed",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Structural routine types may remain; medical-adjacent needs signoff.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/recommendations/catalog.ts",
+          "exists": true,
+          "bytes": 9381,
+          "sha256": "e5d35422d6e33398d362b5c2e4483da8808bf2654d83d470013f537aa09e59c4"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:shoppable-stacks",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Shoppable stacks",
+      "sourceText": "`apps/mobile/src/features/commerce/stacks.ts`",
+      "currentBehavior": "Hidden unless reviewed",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Paid link disclosure does not replace clinical review.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/commerce/stacks.ts",
+          "exists": true,
+          "bytes": 3159,
+          "sha256": "eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:community-notes",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Community notes",
+      "sourceText": "`apps/mobile/src/features/community/notes.ts`",
+      "currentBehavior": "Hidden unless reviewed",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Peer/community posting remains deferred.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/community/notes.ts",
+          "exists": true,
+          "bytes": 9168,
+          "sha256": "e312393884b343b49308ecc37d95fceb9a35266160bd94489b51ffa0172a75db"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:ask-onskin-deterministic-answers",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Ask OnSkin deterministic answers",
+      "sourceText": "`apps/mobile/src/features/ask/answer.ts` and `apps/mobile/src/features/ask/copy.ts`",
+      "currentBehavior": "Template-bounded, refusal/escalation",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Deterministic answers are still regulated user-facing copy.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/ask/answer.ts",
+          "exists": true,
+          "bytes": 11097,
+          "sha256": "24a03ef3f5123881be026ee11c28ec64b7d4d7a37f02a0c91f6b9fd538843839"
+        },
+        {
+          "path": "apps/mobile/src/features/ask/copy.ts",
+          "exists": true,
+          "bytes": 8488,
+          "sha256": "06cc6c48b71dcad944ea8e218810466aec3764e06df78c8552edf3bc998a034b"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:trend-analysis",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Trend analysis",
+      "sourceText": "`apps/mobile/src/features/trend/*`",
+      "currentBehavior": "Opt-in and local-only copy exists",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Requires fairness and legal review before public V1.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/trend/applyConsentChoice.test.ts",
+          "exists": true,
+          "bytes": 2646,
+          "sha256": "86e179a895d4f1c9d78b468c4d0450e7caf4679818549e5b849812a9187fcdd7"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/applyConsentChoice.ts",
+          "exists": true,
+          "bytes": 506,
+          "sha256": "8322b4a9b03c8edc25f6e07761ea4a923159edc90cf8002712aca36a815758a9"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/claimsafety.test.ts",
+          "exists": true,
+          "bytes": 5791,
+          "sha256": "c3c24bb9d6cea7388ffe2c1e3acb53c2ecc103a4d619b2e96b43c3e504a69d96"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/consent.test.ts",
+          "exists": true,
+          "bytes": 5437,
+          "sha256": "8bf2da0499d74c4d4be27a3a7755a561c805293d0d89a17f14d368e28d256b89"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/consent.ts",
+          "exists": true,
+          "bytes": 2280,
+          "sha256": "61bfca2aaa7f10951b7d316280fe370cf25a5704f4da5c0011652ff9102f5bbd"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/copy.ts",
+          "exists": true,
+          "bytes": 5364,
+          "sha256": "d1c326bea20ee3ad38845f04369bb94cc49a3df133a3cdd4a928f2cb3fa1fb5d"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/store.test.ts",
+          "exists": true,
+          "bytes": 2156,
+          "sha256": "79edcc071ded5b761c3a38199ecb3d3c13f488100ff97c0f8ba964f5146189ff"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/store.ts",
+          "exists": true,
+          "bytes": 1446,
+          "sha256": "ccf25c4dc64b977468c6018aee896f736bf64db535f7443e5e2593b807b45989"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/trend.test.ts",
+          "exists": true,
+          "bytes": 3141,
+          "sha256": "2e3f28c77f85a04818be73f4b3f296b4d1132b398affaab0d80b42db2d5f8a94"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/trend.ts",
+          "exists": true,
+          "bytes": 3594,
+          "sha256": "aab647a597772d0e9c9647d1495b283112e6f0fcbbf239ded35239e384e56c27"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/TrendInsight.tsx",
+          "exists": true,
+          "bytes": 2259,
+          "sha256": "3f04bde01d2948d3c89c663540e09fed350d45209038649a6f536c4d2f38ba16"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/trendRoutes.test.ts",
+          "exists": true,
+          "bytes": 4740,
+          "sha256": "3dd3e51a5e7413c598e14d0d6bb82a4240f1700aae3ceee07963d114f53db3cc"
+        },
+        {
+          "path": "apps/mobile/src/features/trend/useTrend.ts",
+          "exists": true,
+          "bytes": 2997,
+          "sha256": "5cd3ed398b775be6faf1937803628b974988b9819bb80e1bf09c507befa886ea"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:photo-progress-copy",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Photo progress copy",
+      "sourceText": "`apps/mobile/src/features/photos/copy.ts`",
+      "currentBehavior": "No-score local progress",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Lower risk but privacy-sensitive.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/photos/copy.ts",
+          "exists": true,
+          "bytes": 7237,
+          "sha256": "893461e3aac30d7d671141a69adf9c3ed2ed458e7a2b2fb621cbd730546aae57"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:onboarding-quiz",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Onboarding quiz",
+      "sourceText": "`apps/mobile/src/features/onboarding/quiz.ts`",
+      "currentBehavior": "Placeholder",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Blocked",
+      "statusBucket": "blocked",
+      "notes": "Needs IP/legal plus clinical review.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/onboarding/quiz.ts",
+          "exists": true,
+          "bytes": 11021,
+          "sha256": "e467bfb1e6605e41cb2e62e764ff33cefbed98a936c94150de1a704654d23527"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "clinical:consent-copy",
+      "domain": "clinical",
+      "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
+      "area": "Consent copy",
+      "sourceText": "`apps/mobile/src/features/onboarding/consentCopy.ts`",
+      "currentBehavior": "Placeholder",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Blocked",
+      "statusBucket": "blocked",
+      "notes": "Legal-owned copy.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
+          "exists": true,
+          "bytes": 4250,
+          "sha256": "9c35f1c098072115108f2b599d6bc32ee3e3b85f2a270d9ea0d1347c413f1f62"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "cosmeticChemistry:functional-tags",
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "area": "Functional tags",
+      "sourceText": "`packages/types/src/index.ts` and intelligence modules",
+      "currentBehavior": "Used by shelf/routine logic",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Verify naming and category boundaries.",
+      "sourcePaths": [
+        {
+          "path": "packages/types/src/index.ts",
+          "exists": true,
+          "bytes": 19164,
+          "sha256": "2c767bf50e1551affbbd5e71fd0d3243b4f691b222ced986b21e1afbfc3c1b5a"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "cosmeticChemistry:pao-defaults",
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "area": "PAO defaults",
+      "sourceText": "`apps/mobile/src/features/intelligence/pao.ts`",
+      "currentBehavior": "Hidden in production",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Review by category and preservative risk assumptions.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/intelligence/pao.ts",
+          "exists": true,
+          "bytes": 6949,
+          "sha256": "62112d95a6c1b26531cbf06a8bf46a0eef9f9cddb635c5c9ec502a1e6b47e8a5"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "cosmeticChemistry:recommendation-catalog",
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "area": "Recommendation catalog",
+      "sourceText": "`apps/mobile/src/features/recommendations/catalog.ts`",
+      "currentBehavior": "Medical-adjacent hidden unless reviewed",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Confirm evidence notes and caveats.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/recommendations/catalog.ts",
+          "exists": true,
+          "bytes": 9381,
+          "sha256": "e5d35422d6e33398d362b5c2e4483da8808bf2654d83d470013f537aa09e59c4"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "cosmeticChemistry:shoppable-stack-item-labels",
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "area": "Shoppable stack item labels",
+      "sourceText": "`apps/mobile/src/features/commerce/stacks.ts`",
+      "currentBehavior": "Hidden unless reviewed",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Product examples illustrative only.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/commerce/stacks.ts",
+          "exists": true,
+          "bytes": 3159,
+          "sha256": "eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "cosmeticChemistry:routine-sequencing",
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "area": "Routine sequencing",
+      "sourceText": "`apps/mobile/src/features/routine/*`",
+      "currentBehavior": "Core routine behavior",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Confirm order labels and conflicts.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/routine/activationAnalytics.test.ts",
+          "exists": true,
+          "bytes": 2485,
+          "sha256": "2b45613860035dcea25834f1ab153f82d94ba8b873cd8e6f58e91d3f5079b799"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/activationAnalytics.ts",
+          "exists": true,
+          "bytes": 2167,
+          "sha256": "5f3fd771422126dc233160e7abfbc028bd54070d49cafe4add707109a2047eaa"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/cycleAnchor.test.ts",
+          "exists": true,
+          "bytes": 1643,
+          "sha256": "6805908ad6fe8d24af819a133461bb3d619b74055ba6922f9f2d46852e3e6231"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/cycleAnchor.ts",
+          "exists": true,
+          "bytes": 1840,
+          "sha256": "7897000957b694cda01edf5d6e72bd7eece3e41db1246ef3ebcfb2105e0a8bf4"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/firstInsight.test.ts",
+          "exists": true,
+          "bytes": 4001,
+          "sha256": "e36ce35a59c0b24598717f8ba6d5d4bb734f7827681e652a9b5113fc06475782"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/firstInsight.ts",
+          "exists": true,
+          "bytes": 2250,
+          "sha256": "4857abb080221198e1ed2e8fe42e1070af1151ef68fb12d8d5dc9a105ab77271"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/generate.test.ts",
+          "exists": true,
+          "bytes": 10088,
+          "sha256": "e47767f84648366e8646b4a382cafd97aaad87c91ca53695ac93bb9f27c06963"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/generate.ts",
+          "exists": true,
+          "bytes": 4235,
+          "sha256": "4561ba92352b4a5c5e211a98c0a7ac9edad597367efef7732fb21054425d04bf"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/progressSanitizers.test.ts",
+          "exists": true,
+          "bytes": 1120,
+          "sha256": "bac657c445e5ac8a357299c341a20f45d24e53a21da1061b6eba021d61bfcf31"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/progressSanitizers.ts",
+          "exists": true,
+          "bytes": 851,
+          "sha256": "0e7a86551b7fdbc02f1c65f96794f916863f57bdeb36743c9d5d1eb78d8fe406"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/ramp.ts",
+          "exists": true,
+          "bytes": 2597,
+          "sha256": "fe93b0f7e6726d3c006c9e6f7a5a53d37da8de52cf5bb4b46177186538806e51"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/rampStore.test.ts",
+          "exists": true,
+          "bytes": 2433,
+          "sha256": "aac54bd9c387c5b87b7e907ed70a7128a5f193bb4e03e9d5a091c6d177b46f00"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/rampStore.ts",
+          "exists": true,
+          "bytes": 5626,
+          "sha256": "793cc86e0c047b467f7e8599dd31808d78d000b2bb48d3c6ddb1101c89e1dfed"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/reviewGate.test.ts",
+          "exists": true,
+          "bytes": 1458,
+          "sha256": "9134ef0d3dee8aab7efab7e1de07bd1e041a82d42f57ff7b72435abac3fe589b"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/reviewGate.ts",
+          "exists": true,
+          "bytes": 586,
+          "sha256": "ab56e4d57c55e76af25ce35fe9a9d00d9b653f810cfab50b0caf126e1ec42acd"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/sequencing.ts",
+          "exists": true,
+          "bytes": 5855,
+          "sha256": "45e761fec1095e10921312f5e24d97c25df7fb33fc3738fa149690c228553662"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/usePlan.test.ts",
+          "exists": true,
+          "bytes": 1158,
+          "sha256": "7ae09b126b6bf84d97ae605861bfbeb9678e426859c0fca37ff9b5d2a7875d48"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/usePlan.ts",
+          "exists": true,
+          "bytes": 2987,
+          "sha256": "9b35741ce608db59ee43846faf99efc1d2f547baf5e97cff799990d5ab836fbe"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/useProgress.test.ts",
+          "exists": true,
+          "bytes": 993,
+          "sha256": "fa66fb1d9a3b4e9d29e8edd7354c11e99098adeb594f381f58d4f30317d2a308"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/useProgress.ts",
+          "exists": true,
+          "bytes": 5619,
+          "sha256": "62d8984b7a33cd9df65323dfbf9ee2d58c2cc1e1dfb374c72e119f535bfd765c"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/useRamp.ts",
+          "exists": true,
+          "bytes": 2300,
+          "sha256": "9b3d32161925cbdcf88c563474fcd4404e9835a9467e2c917cf016360ed8a849"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    },
+    {
+      "id": "cosmeticChemistry:smart-shelf-labels",
+      "domain": "cosmeticChemistry",
+      "requiredReviewer": "qualified cosmetic chemist/formulator",
+      "area": "Smart shelf labels",
+      "sourceText": "`apps/mobile/src/features/shelf/*`",
+      "currentBehavior": "User-facing taxonomy",
+      "reviewer": "TBD",
+      "date": "TBD",
+      "status": "Not cleared",
+      "statusBucket": "notCleared",
+      "notes": "Confirm terms are cosmetic, not medical.",
+      "sourcePaths": [
+        {
+          "path": "apps/mobile/src/features/shelf/analytics.test.ts",
+          "exists": true,
+          "bytes": 543,
+          "sha256": "fce0e7cd2128b9c01644369a7dde86d178f44aaa80b0c7f9a58079ab08d4cc17"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/analytics.ts",
+          "exists": true,
+          "bytes": 599,
+          "sha256": "1e514f5fc1a96111a8b792dc8841ad41a11130dd6de7031eb08a353f85ef1050"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/categories.test.ts",
+          "exists": true,
+          "bytes": 2124,
+          "sha256": "4aae0710713ddf321c7cb078b8434b4c77931270f68591802be2d2366cbdf4a9"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/categories.ts",
+          "exists": true,
+          "bytes": 2696,
+          "sha256": "aebb87c48e67cf211f4f878d47ff22eca0705133940b9202addda56cbde035c6"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/expiry.ts",
+          "exists": true,
+          "bytes": 993,
+          "sha256": "a9442bc51ab8761763f774e4e48c04e5d0bad11640486e2a983e61876b05a0d5"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/IntakeContext.tsx",
+          "exists": true,
+          "bytes": 2833,
+          "sha256": "afc1156ac26b2a759511c95e8acc7f84ab8b6487d46f72c359c3dc4fee6c3252"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/labels.ts",
+          "exists": true,
+          "bytes": 612,
+          "sha256": "1a5fbe77abdf30f9b8286625effa24e240444bcbf3be8f5a8663693a17a855eb"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/metadata.ts",
+          "exists": true,
+          "bytes": 1372,
+          "sha256": "87178aae2ac9df43a91f5815a54d3f91c71a3da5c7e1777a545122d23a1628be"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/mutations.ts",
+          "exists": true,
+          "bytes": 3567,
+          "sha256": "2f297f5dc58b6820309f207d07d6bf8ab403cfa30e5f62b6611e44564546806c"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
+          "exists": true,
+          "bytes": 771,
+          "sha256": "7b87abe51db6e2af8a5b213b52b1a32f4a1af87bfaf372db323d5cfc7dce3678"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/paoProvenance.test.ts",
+          "exists": true,
+          "bytes": 909,
+          "sha256": "e9b4d0c1dd6c19d3a833a18c6b2c2aecb79c1872d6bfff9d71585cb0b06d4855"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/paoProvenance.ts",
+          "exists": true,
+          "bytes": 429,
+          "sha256": "004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/scanLog.test.ts",
+          "exists": true,
+          "bytes": 4472,
+          "sha256": "8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/scanLog.ts",
+          "exists": true,
+          "bytes": 1867,
+          "sha256": "0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
+          "exists": true,
+          "bytes": 38260,
+          "sha256": "0a02be84c3cb24eed0f7bc22b21751cde2716a88f1351d2179082d3e0dc4e578"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/store.test.ts",
+          "exists": true,
+          "bytes": 4504,
+          "sha256": "6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/store.ts",
+          "exists": true,
+          "bytes": 12890,
+          "sha256": "416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
+          "exists": true,
+          "bytes": 3709,
+          "sha256": "4c0e9666689722778f642729ab0e12091ffa92e1e5184cff8a908a745182da37"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/useShelf.ts",
+          "exists": true,
+          "bytes": 8783,
+          "sha256": "0fb8fe03586758ea85aabc8d825cd42d4aeb007c5eb62b45a6d9ee2eb6980261"
+        }
+      ],
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+    }
+  ],
+  "blockers": [],
+  "warnings": []
+}
