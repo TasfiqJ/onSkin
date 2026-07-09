@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-09T00:04:44.817Z
+Generated: 2026-07-09T00:31:17.768Z
 Status: pass
 Strict mode: yes
 
@@ -11,10 +11,10 @@ being treated as trustworthy launch evidence.
 
 ## Summary
 
-- Generated files scanned: 41
+- Generated files scanned: 43
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 352
+- Hash references checked: 426
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -27,8 +27,10 @@ being treated as trustworthy launch evidence.
 | docs/phase-10/generated/closed-beta-packet.md             | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 35        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 40        | 0               |
+| docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 45        | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
+| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 69        | 0               |
+| docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 17        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 18        | 0               |
