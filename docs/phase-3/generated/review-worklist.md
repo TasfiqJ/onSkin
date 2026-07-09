@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T16:52:34.103Z
+Generated: 2026-07-09T17:07:53.881Z
 Status: pass
-Git SHA: bf6db6c135cb86a827c1bed72b39a856a0b65c70
+Git SHA: ded5dc2b12ffb5a13fa625ee9e5c7115da71e598
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -131,7 +131,7 @@ Sources:
 - `apps/mobile/src/features/subscription/gatedRoutes.ts` - 458 bytes - sha256 `8bd7312f2bad9c07e2157f5147dfbc9a7a69ce164bc9100e0852e498b4961f70`
 - `apps/mobile/src/features/subscription/lifecycle.ts` - 1473 bytes - sha256 `e0a96935fa1a1fa8c8a7ccfd9c8d906d769f3125c5ff45e836479fcc1e3bb130`
 - `apps/mobile/src/features/subscription/PaywallFeedback.tsx` - 2216 bytes - sha256 `d1bb35111052d1540ccd3d24d30fb36005e5c00dc35c4ecc50b888ce120f1201`
-- `apps/mobile/src/features/subscription/paywallMobileContracts.test.ts` - 37083 bytes - sha256 `e2f354ea9b1f2320f764e7ffc5fa561266e1f043b03b11a54ba441a10227f49d`
+- `apps/mobile/src/features/subscription/paywallMobileContracts.test.ts` - 37253 bytes - sha256 `72677610a85d8c4ebb207c5e2f256c938c136236c6081db9c6e1a51680fce0b2`
 - `apps/mobile/src/features/subscription/plans.test.ts` - 1722 bytes - sha256 `23c775e3e8097b29f727b29157a62659e0a61ae726f7db1b019bd55c41749882`
 - `apps/mobile/src/features/subscription/plans.ts` - 2677 bytes - sha256 `3e6f35b07b59b875d9ee7b337f341f227dd6f42f5178b501c4fdda2242225e22`
 - `apps/mobile/src/features/subscription/priceDisplay.test.ts` - 3483 bytes - sha256 `420ec71fc37fed57e2ecc31fc5ccd19098289051b29bb18e9b79f13c2b7c180f`

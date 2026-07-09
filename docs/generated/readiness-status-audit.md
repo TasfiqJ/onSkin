@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-09T16:13:37.471Z
+Generated: 2026-07-09T17:08:02.220Z
 Status: pass
 Strict mode: yes
 
@@ -27,6 +27,7 @@ store, legal, clinical, beta, or launch signoff evidence.
 
 ## Required Launch Commands
 
+- `npm run launch:verify`
 - `npm run typecheck`
 - `npm run lint`
 - `npm test`

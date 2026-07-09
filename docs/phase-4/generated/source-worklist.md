@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T16:52:34.078Z
+Generated: 2026-07-09T17:08:52.451Z
 Status: pass
-Git SHA: bf6db6c135cb86a827c1bed72b39a856a0b65c70
+Git SHA: ded5dc2b12ffb5a13fa625ee9e5c7115da71e598
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch

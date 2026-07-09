@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T16:13:37.471Z",
+  "generatedAt": "2026-07-09T17:08:02.220Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -30,6 +30,7 @@
     }
   ],
   "requiredLaunchCommands": [
+    "npm run launch:verify",
     "npm run typecheck",
     "npm run lint",
     "npm test",
@@ -41,9 +42,24 @@
     "npm run phase10-11:verify"
   ],
   "requiredPackageScripts": [
+    "launch:verify",
     "docs:readiness-status-audit",
     "docs:readiness-status-audit:strict",
     "docs:readiness-status-audit:check"
+  ],
+  "requiredLaunchVerifyScriptParts": [
+    "docs:source-packet-audit:check",
+    "docs:tas-todo-audit:check",
+    "docs:readiness-status-audit:check",
+    "docs:generated-packet-status-audit:check",
+    "e2e:human:manifest:check",
+    "phase9:release-smoke",
+    "phase10:beta-readiness",
+    "phase11:launch-readiness",
+    "phase11:ring-gates",
+    "typecheck",
+    "lint",
+    "test"
   ],
   "summary": {
     "blockerCount": 0,

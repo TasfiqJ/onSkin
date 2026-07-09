@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T16:52:49.735Z",
+  "generatedAt": "2026-07-09T17:08:34.511Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "bf6db6c135cb86a827c1bed72b39a856a0b65c70",
+  "gitSha": "ded5dc2b12ffb5a13fa625ee9e5c7115da71e598",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -116,8 +116,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 13957,
-      "sha256": "a1d6b0ce3f1d623d56b2529291edeab9f914320fad726342a10ffb1d392e9183"
+      "bytes": 14371,
+      "sha256": "ca12598b07000b0f80c9647c8985b004bc7713125dd3f07007a4438c30940871"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -218,44 +218,44 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 281679,
-      "sha256": "d0a4a3be27d9f5e37d9521ae8ab71ded1acabcb186ad6eb23f0335dcbe73a973"
+      "bytes": 283568,
+      "sha256": "25d49bae202c7281274f66e907a15f4792ddbe2cb7dc86df76d75576399f89ff"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 11616,
-      "sha256": "d8bfe4e52603441683b1fa85e811e2af0ae445843aa4ee4d99fe5cee69f6ba9e"
+      "sha256": "64bfeb3ef735f31ac0a11c88e2baa339c7594b69128e1421986a9554b5ba18ee"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 4958,
-      "sha256": "821f7bce093cb79ff3c4fbbd6f6b2c0eb0b43e3016790d4cdb7ce4d1aceff2ff"
+      "sha256": "f37ecd5e2f351304313de98696a2a9f6bd5673f1f7638e97a599457e24a97836"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 11265,
-      "sha256": "f3c8557a89306c304a4950f80d4650d671c4262b25e02781ac096aeb9ec882a6"
+      "sha256": "1df5e408b0b1d1e396cb045290a8cc4185df7ebcdf0f92f4685f9e8ef3bb9e49"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 9912,
-      "sha256": "12429c3b524b7b8570425bce382bc78693f23a879e3a55835f2323fa155265ec"
+      "sha256": "5bdd782b05c51b9ad741c82a2f5ef9d54ab0a812d8b4f0499d88fde6d77f2df1"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 10521,
-      "sha256": "651ca5be2d6aa3404109f504d0377114f496145f504fe9fadfa5f450e216e225"
+      "sha256": "695c45a62310094690da3331b7e7ef0cf959ef112f5ba8a5831770ad995d1e02"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 7860,
-      "sha256": "a140713f92836c3948457bd02e25d1ede681a4b1163624de27802b9351c65189"
+      "sha256": "380cab81622c8f8adcc1d4fc699cbd65f3d707b09670f25be251ef5f3f1ef48d"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

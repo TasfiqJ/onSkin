@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T16:52:40.141Z",
+  "generatedAt": "2026-07-09T17:07:58.213Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "bf6db6c135cb86a827c1bed72b39a856a0b65c70",
+  "gitSha": "ded5dc2b12ffb5a13fa625ee9e5c7115da71e598",
   "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 13957,
-      "sha256": "a1d6b0ce3f1d623d56b2529291edeab9f914320fad726342a10ffb1d392e9183"
+      "bytes": 14371,
+      "sha256": "ca12598b07000b0f80c9647c8985b004bc7713125dd3f07007a4438c30940871"
     },
     {
       "packet": "packetContract",
@@ -142,14 +142,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 81591,
-      "sha256": "3c07913f508d75483213f0374e8288c11d7215482c84cdbc0b8f1296e5dde392"
+      "sha256": "456dbc9ce0cd2099fb44b1718d216f09a7d051c386e595aee1029ac30effbad0"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 53209,
-      "sha256": "451716aee317c762c33d04ee69dda7fc526bc1c1ef80555047d27d38ef77a89b"
+      "sha256": "a7e95fc0fba72bd1bdadc33c51c42f2bb658978d2102267d6366ed7573f93bec"
     },
     {
       "packet": "clinical",
@@ -205,14 +205,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 81591,
-      "sha256": "3c07913f508d75483213f0374e8288c11d7215482c84cdbc0b8f1296e5dde392"
+      "sha256": "456dbc9ce0cd2099fb44b1718d216f09a7d051c386e595aee1029ac30effbad0"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 53209,
-      "sha256": "451716aee317c762c33d04ee69dda7fc526bc1c1ef80555047d27d38ef77a89b"
+      "sha256": "a7e95fc0fba72bd1bdadc33c51c42f2bb658978d2102267d6366ed7573f93bec"
     },
     {
       "packet": "cosmeticChemistry",
