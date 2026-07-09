@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T21:44:22.318Z
-Git SHA: c4f35f7e9a566fdc925bdba8207cc621577f0003
+Generated: 2026-07-09T21:48:35.474Z
+Git SHA: 8378fd25982bf54469ab0c8d5e7056b01b80b2e9
 Evidence date: 2026-07-09
 Status: pass
 
@@ -35,7 +35,7 @@ dependency to the repo.
 | 320 x 480 stress 200% text-pressure route sweep                  | resilience      | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12       |
 | 320 x 480 stress 170% text-pressure route sweep                  | resilience      | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-16       |
 | 320 x 480 stress route rerun                                     | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun                   |
-| 320 x 430 resilience route clearance                             | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep   |
+| 320 x 430 resilience route clearance                             | resilience      | pass    | 0 failures recorded.                                    | 101   | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep   |
 | 320 x 390 split-short stress clearance                           | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
 | 320 x 430 first-session activation stress pass                   | resilience      | pass    | summary verdict: pass.                                  | 44    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
 
