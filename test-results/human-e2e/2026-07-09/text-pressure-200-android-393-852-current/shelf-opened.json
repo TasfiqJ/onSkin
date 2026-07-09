@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 341,
+        "y": 636
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 660,
+        "height": 48,
+        "left": 317,
+        "right": 365,
+        "top": 612,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 788
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add by hand",
+      "label": "Add product by hand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812,
+        "height": 48,
+        "left": 28,
+        "right": 365,
+        "top": 764,
+        "visibleHeight": 48,
+        "visibleWidth": 337,
+        "width": 337
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8313/shelf/opened",
+  "textOverflows": [],
+  "textStart": "+ x Add product details first. Freshness starts after we know the product. Start with the name, then we'll ask when you opened it. Add by hand",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "route": "/shelf/opened",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8313/shelf/opened",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 196.5,
+        "y": 788
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to You",
+      "label": "Back to You",
+      "partialClip": false,
+      "rect": {
+        "bottom": 816,
+        "height": 56,
+        "left": 24,
+        "right": 369,
+        "top": 760,
+        "visibleHeight": 56,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8313/commerce/stack/barrier-basics",
+  "textOverflows": [],
+  "textStart": "BETA Where-to-buy is not in this beta Recommendations stay type-first until the catalog, paid-link rail, legal disclosure, and brand gates are cleared. This keeps money out of the decision engine while the core routine loop is being validated. Back to You",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "route": "/commerce/stack/barrier-basics",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8313/commerce/stack/barrier-basics",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

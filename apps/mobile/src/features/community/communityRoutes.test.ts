@@ -50,6 +50,10 @@ describe('Community route contracts', () => {
       'const supportFloorTextPressureCommunity = width <= 430 && height < 700;',
     );
     expect(source).toContain('const modernPhoneCommunity = height < 980;');
+    expect(source).toContain('const boundaryModernTextPressureCommunity =');
+    expect(source).toContain(
+      'width > 390 && width <= 414 && height >= 840 && height < 900;',
+    );
     expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
     expect(source).toContain(
       "shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'",
@@ -70,6 +74,10 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       "modernPhoneCommunity && !narrowCompactCommunity && g.topic.slug === 'sunscreen';",
     );
+    expect(source).toContain('const keepBoundaryModernRetinoidsBelowFold =');
+    expect(source).toContain(
+      "boundaryModernTextPressureCommunity && g.topic.slug === 'retinoids';",
+    );
     expect(source).toContain('const keepNextSectionBelowFold =');
     expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
     expect(source).toContain('keepSectionBelowFold\n                    ? { marginTop: 112 }');
@@ -82,6 +90,8 @@ describe('Community route contracts', () => {
     expect(source).toContain('? { marginTop: 140 }');
     expect(source).toContain(': keepShortModernSectionBelowFold');
     expect(source).toContain('? { marginTop: 48 }');
+    expect(source).toContain(': keepBoundaryModernRetinoidsBelowFold');
+    expect(source).toContain('? { marginTop: 72 }');
     expect(source).toContain('? { marginBottom: 64 }');
     expect(source).toContain('const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;');
     expect(source).toContain(

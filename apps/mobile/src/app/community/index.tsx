@@ -109,6 +109,8 @@ export default function SkinNotesHub() {
   const narrowCompactCommunity = compactCommunity && width < 360;
   const supportFloorTextPressureCommunity = width <= 430 && height < 700;
   const modernPhoneCommunity = height < 980;
+  const boundaryModernTextPressureCommunity =
+    width > 390 && width <= 414 && height >= 840 && height < 900;
 
   useEffect(() => {
     track('skin_note_viewed', { surface: 'hub' });
@@ -188,6 +190,8 @@ export default function SkinNotesHub() {
               supportFloorTextPressureCommunity && groupIndex > 0;
             const keepShortModernSectionBelowFold =
               modernPhoneCommunity && !narrowCompactCommunity && g.topic.slug === 'sunscreen';
+            const keepBoundaryModernRetinoidsBelowFold =
+              boundaryModernTextPressureCommunity && g.topic.slug === 'retinoids';
             const keepNextSectionBelowFold =
               narrowCompactCommunity && g.topic.slug === 'sensitive-skin';
             return (
@@ -205,9 +209,11 @@ export default function SkinNotesHub() {
                           ? { marginTop: 140 }
                           : keepShortModernSectionBelowFold
                             ? { marginTop: 48 }
-                            : keepNextSectionBelowFold
-                              ? { marginBottom: 64 }
-                              : undefined
+                            : keepBoundaryModernRetinoidsBelowFold
+                              ? { marginTop: 72 }
+                              : keepNextSectionBelowFold
+                                ? { marginBottom: 64 }
+                                : undefined
                 }
               >
                 <Text

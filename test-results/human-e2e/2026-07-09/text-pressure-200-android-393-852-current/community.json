@@ -1,0 +1,202 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 255
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.",
+      "label": "Can you use niacinamide with vitamin C?. Refuted.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 322,
+        "height": 134,
+        "left": 24,
+        "right": 369,
+        "top": 188,
+        "visibleHeight": 134,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 430
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation ris",
+      "label": "Is a 10-step “glass skin” routine better?. Contested.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 488,
+        "height": 116,
+        "left": 24,
+        "right": 369,
+        "top": 372,
+        "visibleHeight": 116,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 718
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants.",
+      "label": "Is “natural” always gentler for sensitive skin?. Contested.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 776,
+        "height": 116,
+        "left": 24,
+        "right": 369,
+        "top": 660,
+        "visibleHeight": 116,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 851
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Does retinol thin your skin?",
+      "label": "Does retinol thin your skin?. Refuted.",
+      "partialClip": true,
+      "rect": {
+        "bottom": 936,
+        "height": 110,
+        "left": 24,
+        "right": 369,
+        "top": 826,
+        "visibleHeight": 26,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": true
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 2,
+  "issues": [
+    {
+      "control": {
+        "center": {
+          "x": 196.5,
+          "y": 851
+        },
+        "centerBlocked": false,
+        "hitInside": true,
+        "hitTag": "DIV",
+        "hitText": "Does retinol thin your skin?",
+        "label": "Does retinol thin your skin?. Refuted.",
+        "partialClip": true,
+        "rect": {
+          "bottom": 936,
+          "height": 110,
+          "left": 24,
+          "right": 369,
+          "top": 826,
+          "visibleHeight": 26,
+          "visibleWidth": 345,
+          "width": 345
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "tinyTarget"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 196.5,
+          "y": 851
+        },
+        "centerBlocked": false,
+        "hitInside": true,
+        "hitTag": "DIV",
+        "hitText": "Does retinol thin your skin?",
+        "label": "Does retinol thin your skin?. Refuted.",
+        "partialClip": true,
+        "rect": {
+          "bottom": 936,
+          "height": 110,
+          "left": 24,
+          "right": 369,
+          "top": 826,
+          "visibleHeight": 26,
+          "visibleWidth": 345,
+          "width": 345
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "partialClip"
+    }
+  ],
+  "location": "http://localhost:8313/community",
+  "textOverflows": [],
+  "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "route": "/community",
+  "scaledCount": 26,
+  "textScale": 2,
+  "url": "http://localhost:8313/community",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

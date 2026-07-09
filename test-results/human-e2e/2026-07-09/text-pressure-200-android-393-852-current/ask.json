@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 38
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 62,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 14,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 200
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Conflicts",
+      "label": "Conflicts ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 224,
+        "height": 48,
+        "left": 24,
+        "right": 369,
+        "top": 176,
+        "visibleHeight": 48,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 167.5,
+        "y": 745
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Ask a question about your shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 769,
+        "height": 48,
+        "left": 39,
+        "right": 296,
+        "top": 721,
+        "visibleHeight": 48,
+        "visibleWidth": 257,
+        "width": 257
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 330,
+        "y": 745
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "↑",
+      "label": "Send",
+      "partialClip": false,
+      "rect": {
+        "bottom": 769,
+        "height": 48,
+        "left": 306,
+        "right": 354,
+        "top": 721,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8313/ask",
+  "textOverflows": [],
+  "textStart": "< ✦ Ask GROUNDED IN YOUR SHELF RIGHT NOW Conflicts › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "route": "/ask",
+  "scaledCount": 8,
+  "textScale": 2,
+  "url": "http://localhost:8313/ask",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

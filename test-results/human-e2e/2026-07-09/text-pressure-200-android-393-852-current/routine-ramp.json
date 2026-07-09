@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 54.4296875,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 84.859375,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 60.859375,
+        "width": 60.859375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 140.25,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 103.5625,
+        "right": 176.9375,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 73.375,
+        "width": 73.375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 233.6484375,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 195.640625,
+        "right": 271.65625,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 76.015625,
+        "width": 76.015625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 345,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 321,
+        "right": 369,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 402
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 426,
+        "height": 48,
+        "left": 24,
+        "right": 369,
+        "top": 378,
+        "visibleHeight": 48,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 196.5,
+        "y": 563
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Explore first",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 612,
+        "height": 98,
+        "left": 24,
+        "right": 369,
+        "top": 514,
+        "visibleHeight": 98,
+        "visibleWidth": 345,
+        "width": 345
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8313/routine/ramp",
+  "textOverflows": [],
+  "textStart": "Terms · Privacy · Restore x Unlock your full routine. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. ›",
+  "viewport": {
+    "width": 393,
+    "height": 852
+  },
+  "route": "/routine/ramp",
+  "scaledCount": 15,
+  "textScale": 2,
+  "url": "http://localhost:8313/routine/ramp",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
