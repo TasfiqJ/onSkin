@@ -191,6 +191,10 @@ describe('paywall mobile contracts', () => {
       "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
     expect(proGate).toContain('denseTallTextPressurePaywall || supportFloorTextPressurePaywall;');
+    expect(proGate).toContain(
+      'const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;',
+    );
+    expect(proGate).toContain('compactProgressPhotoPaywall ||\n    progressTextPressurePaywall ||');
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
@@ -215,6 +219,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('accessibilityLabel="Maybe later"');
     expect(proGate).toContain('glyph="x"');
     expect(proGate).toContain('tone="muted"');
+    expect(proGate).toContain('narrowShortPaywall ||\n        progressTextPressurePaywall ||');
     expect(proGate).toMatch(
       /paddingBottom:\s*compactProgressPhotoPaywall\s*\?\s*96\s*:\s*shortPaywall\s*\?\s*16\s*:\s*compactPaywall\s*\?\s*112\s*:\s*24/,
     );
@@ -314,10 +319,14 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const insideProgressPhotoPaywall =');
     expect(proGate).toContain("feature === 'photo_timeline' && pathname.startsWith('/progress');");
     expect(proGate).toContain(
-      'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
+      'const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;',
     );
     expect(proGate).toContain(
-      'tallPhoneTextPressurePaywall ||\n    supportFloorTextPressurePaywall;',
+      'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
+    );
+    expect(proGate).toContain('compactProgressPhotoPaywall ||\n    progressTextPressurePaywall ||');
+    expect(proGate).toContain(
+      'progressTextPressurePaywall ||\n    tallPhoneTextPressurePaywall ||',
     );
     expect(proGate).toContain('const shortPaywall = height < 600;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');
@@ -325,6 +334,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain(
       "height < 410 && feature === 'photo_timeline' && pathname === '/progress'",
     );
+    expect(proGate).toContain('narrowShortPaywall ||\n        progressTextPressurePaywall ||');
     expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (');
     expect(proGate).toContain('{storeUnavailableReason}');
     expect(proGate).not.toContain('compactComplianceSpacer');

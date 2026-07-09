@@ -47,12 +47,14 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       : offering.data?.reason;
   const insideProgressPhotoPaywall =
     feature === 'photo_timeline' && pathname.startsWith('/progress');
+  const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;
   const splitShortProgressTabPaywall =
     height < 410 && feature === 'photo_timeline' && pathname === '/progress';
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
   const headerCompliancePaywall =
     shortPaywall ||
     compactProgressPhotoPaywall ||
+    progressTextPressurePaywall ||
     tallPhoneTextPressurePaywall ||
     supportFloorTextPressurePaywall;
   const microShortDeferredCtaStyle = microShortPaywall
@@ -167,6 +169,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         {headerCompliancePaywall ? <ComplianceRow density="compactHeader" /> : null}
         {splitShortProgressTabPaywall ||
         narrowShortPaywall ||
+        progressTextPressurePaywall ||
         tallPhoneTextPressurePaywall ||
         supportFloorTextPressurePaywall ? (
           <RouteIconButton
