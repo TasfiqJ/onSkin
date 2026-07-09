@@ -42,6 +42,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN = 180;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
@@ -79,6 +80,8 @@ describe('Settings route contracts', () => {
     expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
     expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
+    expect(you).toContain("privacyDirectEntry && compactPhone && row.key === 'dataExport'");
+    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }');
     expect(you).toContain('<View style={narrowPrivacyWithdrawStyle}>');
     expect(you).toContain("className={privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN }');
@@ -261,7 +264,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
     expect(source).toContain('accessibilityLabel={hint ? `${label}. ${hint}` : label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
-    expect(source).toContain("import { Fragment, useEffect, useRef, useState } from 'react';");
+    expect(source).toContain("import { useEffect, useRef, useState } from 'react';");
     expect(source).toContain('const [policyFeedback, setPolicyFeedback] = useState<{');
     expect(source).toContain('key: PolicyLinkKey;');
     expect(source).toContain('message: string;');
@@ -274,7 +277,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       'setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });',
     );
-    expect(source).toContain('<Fragment key={row.key}>');
+    expect(source).toContain('<View\n              key={row.key}');
     expect(source).toContain(
       'compact={compactPhone}\n                onPress={() => void openPolicyRow(row)}',
     );
