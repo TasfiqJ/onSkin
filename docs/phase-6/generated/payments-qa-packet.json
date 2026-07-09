@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T00:02:50.231Z",
+  "generatedAt": "2026-07-09T00:03:55.014Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "e05e837ecb25dcc07115b7dd6c845793891cda3c",
-  "gitStatus": "M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md\n M docs/generated/generated-packet-status-audit.json\n M docs/generated/generated-packet-status-audit.md",
+  "gitSha": "e4ae38d77df75f033636867d04cb516f2363d510",
+  "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,
@@ -298,7 +298,5 @@
     "Missing PHASE6_FINANCE_SIGNOFF=true.",
     "Missing PHASE6_SIGNED_OFF_BY."
   ],
-  "warnings": [
-    "Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence."
-  ]
+  "warnings": []
 }
