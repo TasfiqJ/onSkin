@@ -33,8 +33,8 @@
   "textOverflows": [],
   "textStart": "< Archive Finished and discarded products live here. We keep the history so repurchases and replenishment just work. Unopened › Active › Finished Nothing archived yet. When you finish or discard a product, it'll move here.",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/shelf/archive",
   "scaledCount": 9,

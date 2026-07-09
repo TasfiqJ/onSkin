@@ -6,27 +6,27 @@ Phase 10 is not a feature phase. It is the evidence phase that decides whether p
 
 ## Current Decision
 
-| Area | Required evidence | Current status |
-| --- | --- | --- |
-| Phase 9 candidate | Phase 9 release QA packet with named signoff | BLOCKED: external evidence required |
-| Beta identity | Final brand, bundle IDs, domains, policy URLs, support email | BLOCKED: final live values required |
-| iOS beta | TestFlight internal group, external group, beta review status, build number | BLOCKED: App Store Connect evidence required |
-| Android beta | Play internal test, closed test, license testers, pre-launch report | BLOCKED: Play Console evidence required |
-| Google production eligibility | Account type known; if new personal account, 12 opted-in testers for 14 continuous days | BLOCKED: account-specific proof required |
-| Beta support | Inbox, categories, SLA, escalation owners, deletion/export escalation | BLOCKED: live desk evidence required |
-| Analytics | Frozen schema, dashboard links, privacy-payload audit, cohort filters | BLOCKED: dashboard evidence required |
-| Payments | RevenueCat/test-store/native QA, TestFlight sandbox notes, Android license tester results | BLOCKED: payment evidence required |
-| Catalog | Match/miss/wrong-match report from real tester products | BLOCKED: beta data required |
-| Retention | D1/D7/D14/D30 activated cohorts and churn reasons | BLOCKED: beta data required |
-| Public launch decision | Go, limited launch, hold, or no-go memo with owners | BLOCKED: Phase 10 exit evidence required |
+| Area                          | Required evidence                                                                         | Current status                                                                                                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Phase 9 candidate             | Phase 9 release QA packet with named signoff                                              | BLOCKED: external evidence required                                                                                                                                                        |
+| Beta identity                 | Final brand, bundle IDs, domains, policy URLs, support email                              | BLOCKED: final live values required                                                                                                                                                        |
+| iOS beta                      | TestFlight internal group, external group, beta review status, build number               | BLOCKED: App Store Connect evidence required                                                                                                                                               |
+| Android beta                  | Play internal test, closed test, license testers, pre-launch report                       | BLOCKED: Play Console evidence required                                                                                                                                                    |
+| Google production eligibility | Account type known; if new personal account, 12 opted-in testers for 14 continuous days   | BLOCKED: account-specific proof required                                                                                                                                                   |
+| Beta support                  | Inbox, categories, SLA, escalation owners, deletion/export escalation                     | BLOCKED: live desk evidence required; the app now has a categorized beta-feedback handoff that sends only `source=beta_feedback`, `category`, and `severity` to the configured support URL |
+| Analytics                     | Frozen schema, dashboard links, privacy-payload audit, cohort filters                     | BLOCKED: dashboard evidence required                                                                                                                                                       |
+| Payments                      | RevenueCat/test-store/native QA, TestFlight sandbox notes, Android license tester results | BLOCKED: payment evidence required                                                                                                                                                         |
+| Catalog                       | Match/miss/wrong-match report from real tester products                                   | BLOCKED: beta data required                                                                                                                                                                |
+| Retention                     | D1/D7/D14/D30 activated cohorts and churn reasons                                         | BLOCKED: beta data required                                                                                                                                                                |
+| Public launch decision        | Go, limited launch, hold, or no-go memo with owners                                       | BLOCKED: Phase 10 exit evidence required                                                                                                                                                   |
 
 ## Beta Waves
 
-| Wave | Target users | Purpose | Entry gate | Exit gate |
-| --- | ---: | --- | --- | --- |
-| Wave 0 internal | 5-10 | Release rehearsal, support dry run, deletion/export/payment smoke | Phase 9 candidate passes non-strict code gates | No P0/P1 build, privacy, support, or payment issue remains |
-| Wave 1 friendly | 15-25 | First real-user comprehension, catalog friction, trust and support themes | Wave 0 exit and reviewed tester brief | Top blockers fixed or explicitly accepted |
-| Wave 2 target | 50-100 total real target users | Activation, retention, catalog usefulness, willingness-to-pay signal | Dashboards and support categories live | Public-launch memo can be written from evidence |
+| Wave            |                   Target users | Purpose                                                                   | Entry gate                                     | Exit gate                                                  |
+| --------------- | -----------------------------: | ------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
+| Wave 0 internal |                           5-10 | Release rehearsal, support dry run, deletion/export/payment smoke         | Phase 9 candidate passes non-strict code gates | No P0/P1 build, privacy, support, or payment issue remains |
+| Wave 1 friendly |                          15-25 | First real-user comprehension, catalog friction, trust and support themes | Wave 0 exit and reviewed tester brief          | Top blockers fixed or explicitly accepted                  |
+| Wave 2 target   | 50-100 total real target users | Activation, retention, catalog usefulness, willingness-to-pay signal      | Dashboards and support categories live         | Public-launch memo can be written from evidence            |
 
 Do not count employees, contractors, duplicate devices, or passive installs as target-user completion. A completed beta user must install the final beta build, complete onboarding, add real shelf context, see a first-value moment, attempt at least one routine or progress action, and have the option to provide feedback through the approved channel.
 
@@ -48,23 +48,23 @@ Proceed to Phase 11 only if the beta shows a credible path toward retained paid 
 
 ## Required Tickets And Artifacts
 
-| Ticket | Artifact |
-| --- | --- |
-| P10-001 | `docs/phase-10/beta-source-of-truth.md` |
-| P10-002 | `docs/phase-10/tester-recruitment-sheet.md` |
-| P10-003 | `docs/phase-10/tester-brief.md` |
-| P10-004 | `docs/phase-10/testflight-packet.md` |
+| Ticket  | Artifact                                        |
+| ------- | ----------------------------------------------- |
+| P10-001 | `docs/phase-10/beta-source-of-truth.md`         |
+| P10-002 | `docs/phase-10/tester-recruitment-sheet.md`     |
+| P10-003 | `docs/phase-10/tester-brief.md`                 |
+| P10-004 | `docs/phase-10/testflight-packet.md`            |
 | P10-005 | `docs/phase-10/google-closed-testing-packet.md` |
-| P10-006 | `docs/phase-10/beta-event-schema.md` |
-| P10-007 | `docs/phase-10/support-operations.md` |
-| P10-008 | `docs/phase-10/surveys.md` |
-| P10-009 | `docs/phase-10/surveys.md` |
-| P10-010 | `docs/phase-10/interview-script.md` |
-| P10-011 | `docs/phase-10/catalog-beta-report.md` |
-| P10-012 | `docs/phase-10/payment-beta-report.md` |
-| P10-013 | `docs/phase-10/support-beta-report.md` |
-| P10-014 | `docs/phase-10/retention-activation-report.md` |
-| P10-015 | `docs/phase-10/public-launch-decision-memo.md` |
+| P10-006 | `docs/phase-10/beta-event-schema.md`            |
+| P10-007 | `docs/phase-10/support-operations.md`           |
+| P10-008 | `docs/phase-10/surveys.md`                      |
+| P10-009 | `docs/phase-10/surveys.md`                      |
+| P10-010 | `docs/phase-10/interview-script.md`             |
+| P10-011 | `docs/phase-10/catalog-beta-report.md`          |
+| P10-012 | `docs/phase-10/payment-beta-report.md`          |
+| P10-013 | `docs/phase-10/support-beta-report.md`          |
+| P10-014 | `docs/phase-10/retention-activation-report.md`  |
+| P10-015 | `docs/phase-10/public-launch-decision-memo.md`  |
 
 ## Hard No-Go Rules
 

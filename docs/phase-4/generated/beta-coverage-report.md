@@ -1,10 +1,122 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-09T18:05:31.022Z
+Generated: 2026-07-09T18:27:52.390Z
 Status: blocked
-Git SHA: daf7a8ff43fa6eae16ce8d3b38e3664284854cc0
-Git status: clean
+Git SHA: 03fb31af74c81f76fab88391b2d8c7b8a040f68e
+Git status: DIRTY
 
+Dirty paths:
+
+```
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/expo-web.log
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/failures.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/report.md
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/settings-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/settings-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/summary.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-accountdeletion.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-accountdeletion.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-commerce.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-commerce.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-security.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-security.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-support.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you-section-support.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-current/you.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/expo-web.log
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/failures.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/report.md
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/settings-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/settings-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/summary.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-accountdeletion.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-accountdeletion.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-commerce.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-commerce.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-security.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-security.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-support.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you-section-support.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-360-640-postfix4/you.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/expo-web.log
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/failures.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/report.md
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/settings-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/settings-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/summary.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-accountdeletion.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-accountdeletion.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-commerce.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-commerce.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-security.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-security.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-support.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you-section-support.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-375-667-postfix2/you.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/expo-web.log
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/failures.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/report.md
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/settings-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/settings-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/summary.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-accountdeletion.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-accountdeletion.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-commerce.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-commerce.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-security.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-security.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-support.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you-section-support.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-390-844-postfix2/you.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/expo-web.log
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/failures.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/report.md
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/settings-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/settings-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/summary.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-accountdeletion.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-accountdeletion.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-commerce.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-commerce.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-security.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-security.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-support.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you-section-support.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix/you.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/expo-web.log
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/failures.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/report.md
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/settings-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/settings-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/summary.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-accountdeletion.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-accountdeletion.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-commerce.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-commerce.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-privacy.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-privacy.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-security.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-security.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-support.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you-section-support.png
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you.json
+A  test-results/human-e2e/2026-07-09/text-pressure-200-you-sections-430-932-postfix4/you.png
+```
 
 ## Verdict
 
@@ -45,7 +157,7 @@ Phase 4 coverage thresholds below are satisfied.
 
 ## Warnings
 
-- None.
+- Beta coverage report generated with a dirty Git worktree; do not use it as final beta evidence.
 
 ## Input Artifact
 
@@ -69,14 +181,14 @@ Phase 4 coverage thresholds below are satisfied.
 | supabase/functions/catalog-report/privacy.test.ts | present | 3819 | 1a6014b406eba2e771901906309e78162321af3352af63d33d20fd017df70c76 |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
 | scripts/phase9/lib.mjs | present | 13541 | 54b07f029b0b690a4ad8f4c05e524201a52a952c44e62ba9582d270764a141d7 |
-| docs/FOR_TAS_TO_DO.md | present | 37531 | a5a461309ae97f8c47b4a3ef1ebf1228dc059e93e32246a10ad9d83c9156bddc |
+| docs/FOR_TAS_TO_DO.md | present | 37879 | 24f2810d8674c0e287cd0c8911e4206534e04932d69d9c0677ae100208b53aa7 |
 | docs/phase-4/beta-coverage-report.md | present | 1854 | 5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6 |
-| docs/phase-4/generated/source-worklist.json | present | 35121 | 2b18925db5992d774e88d9e73b905cb19169a4ad7b0bf8f6aab6445f59156b7e |
-| docs/phase-4/generated/source-worklist.md | present | 22472 | 830e93264ccc4fba9fa185220cb5b2351c91cb774529dbfa8a9bd9cc057566e7 |
+| docs/phase-4/generated/source-worklist.json | present | 46739 | 7e99f8b7e55f8aaccabfe6d95f56dc9f3ce1d321f3920e4aa38e551630e9605e |
+| docs/phase-4/generated/source-worklist.md | present | 22575 | 0e80af783aa58588146db5712dde061bb0ca7ded0368c412524690996e9e729d |
 | docs/phase-4/observability-dashboard.md | present | 1804 | a42191be85ab1d75e0c7d9cce2934b0e52369852da35bdd6edf2c153fc6f09af |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 5693 | 1caee24fb0e8c2cc97e1427d01d528fcea67ea527726d407db38db29169536c6 |
-| docs/phase-4/generated/catalog-qa-report.md | present | 3816 | a96ba180ec8381b8916a8e6637c3d593a07fbfc5b40628581e2fb93f7fcf7466 |
+| docs/phase-4/generated/catalog-qa-report.json | present | 17306 | a35ccb1c06594dc86205a84a5b91b7bf42538b9c28132dbbde120f3205bbbe80 |
+| docs/phase-4/generated/catalog-qa-report.md | present | 15330 | 58238293bbb1adbcd783fec14672db80922ccf1499c1c9dca112012e7dcb453e |
 | docs/phase-10/beta-event-schema.md | present | 6406 | 02f56526909efc482c51307dc3fc8410de6b7c99b17699545f4db6208c4ca1d7 |
 | docs/phase-10/catalog-beta-report.md | present | 1291 | 2924dac7cc798a904716b0fbc7de6760046485e85db62e3357c901519081bd3c |
 | docs/phase-10/support-beta-report.md | present | 1486 | 68bcd8e27b511229e2c1e9d5bb84ba97eac658b66f5bf04b8eb550c8838c9af3 |

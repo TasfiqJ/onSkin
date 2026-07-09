@@ -2,8 +2,8 @@
   "controls": [
     {
       "center": {
-        "x": 268,
-        "y": 353
+        "x": 308,
+        "y": 334
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,11 +12,11 @@
       "label": "Close",
       "partialClip": false,
       "rect": {
-        "bottom": 377,
+        "bottom": 358,
         "height": 48,
-        "left": 244,
-        "right": 292,
-        "top": 329,
+        "left": 284,
+        "right": 332,
+        "top": 310,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -27,8 +27,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 397.796875
+        "x": 180,
+        "y": 428
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,14 +37,14 @@
       "label": "Search catalog. Try name or brand instead",
       "partialClip": false,
       "rect": {
-        "bottom": 421.796875,
+        "bottom": 452,
         "height": 48,
         "left": 28,
-        "right": 292,
-        "top": 373.796875,
+        "right": 332,
+        "top": 404,
         "visibleHeight": 48,
-        "visibleWidth": 264,
-        "width": 264
+        "visibleWidth": 304,
+        "width": 304
       },
       "role": "button",
       "tag": "BUTTON",
@@ -52,8 +52,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 447.796875
+        "x": 180,
+        "y": 480
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,14 +62,14 @@
       "label": "Scan the ingredient list. We'll read the INCI text",
       "partialClip": false,
       "rect": {
-        "bottom": 471.796875,
+        "bottom": 504,
         "height": 48,
         "left": 28,
-        "right": 292,
-        "top": 423.796875,
+        "right": 332,
+        "top": 456,
         "visibleHeight": 48,
-        "visibleWidth": 264,
-        "width": 264
+        "visibleWidth": 304,
+        "width": 304
       },
       "role": "button",
       "tag": "BUTTON",
@@ -77,8 +77,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 529.796875
+        "x": 180,
+        "y": 532
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,14 +87,39 @@
       "label": "Add it by hand. Always works, even offline",
       "partialClip": false,
       "rect": {
-        "bottom": 553.796875,
+        "bottom": 556,
         "height": 48,
         "left": 28,
-        "right": 292,
-        "top": 505.796875,
+        "right": 332,
+        "top": 508,
         "visibleHeight": 48,
-        "visibleWidth": 264,
-        "width": 264
+        "visibleWidth": 304,
+        "width": 304
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 596
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Report missing product",
+      "label": "Report missing product",
+      "partialClip": false,
+      "rect": {
+        "bottom": 624,
+        "height": 56,
+        "left": 28,
+        "right": 332,
+        "top": 568,
+        "visibleHeight": 56,
+        "visibleWidth": 304,
+        "width": 304
       },
       "role": "button",
       "tag": "BUTTON",
@@ -106,13 +131,13 @@
   "issues": [],
   "location": "http://localhost:8232/shelf/no-match",
   "textOverflows": [],
-  "textStart": "x Not found yet. S Search catalog I Scan ingredients + Add it by hand",
+  "textStart": "? x Not found yet. S Search catalog Try name or brand instead I Scan ingredients + Add it by hand Always works, even offline Report missing product",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/shelf/no-match",
-  "scaledCount": 8,
+  "scaledCount": 7,
   "textScale": 1.2,
   "url": "http://localhost:8232/shelf/no-match",
   "disallowedLogCount": 0,

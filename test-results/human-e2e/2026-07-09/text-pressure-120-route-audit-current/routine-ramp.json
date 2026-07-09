@@ -1,17 +1,168 @@
 {
-  "controls": [],
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 110.421875,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 86.421875,
+        "right": 134.421875,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 172.84375,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 148.84375,
+        "right": 196.84375,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 312,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 288,
+        "right": 336,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 282
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 306,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 258,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 340.3984375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No card needed.",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 364.796875,
+        "height": 48.796875,
+        "left": 24,
+        "right": 336,
+        "top": 316,
+        "visibleHeight": 48.796875,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
   "location": "http://localhost:8232/routine/ramp",
   "textOverflows": [],
-  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "textStart": "Terms · Privacy · Restore x Unlock your full routine. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. ›",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/routine/ramp",
-  "scaledCount": 3,
+  "scaledCount": 15,
   "textScale": 1.2,
   "url": "http://localhost:8232/routine/ramp",
   "disallowedLogCount": 0,

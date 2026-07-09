@@ -27,24 +27,24 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 157.390625
+        "x": 180,
+        "y": 141.59375
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "Is there a conflict on my shelf?",
-      "label": "Is there a conflict on my shelf? ›",
+      "hitText": "Conflicts",
+      "label": "Conflicts ›",
       "partialClip": false,
       "rect": {
-        "bottom": 197.1875,
-        "height": 79.59375,
+        "bottom": 165.59375,
+        "height": 48,
         "left": 24,
-        "right": 296,
+        "right": 336,
         "top": 117.59375,
-        "visibleHeight": 79.59375,
-        "visibleWidth": 272,
-        "width": 272
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -52,8 +52,8 @@
     },
     {
       "center": {
-        "x": 131,
-        "y": 467.40625
+        "x": 151,
+        "y": 555.40625
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,14 +62,14 @@
       "label": "Ask a question about your shelf",
       "partialClip": false,
       "rect": {
-        "bottom": 491.40625,
+        "bottom": 579.40625,
         "height": 48,
         "left": 39,
-        "right": 223,
-        "top": 443.40625,
+        "right": 263,
+        "top": 531.40625,
         "visibleHeight": 48,
-        "visibleWidth": 184,
-        "width": 184
+        "visibleWidth": 224,
+        "width": 224
       },
       "role": "input",
       "tag": "INPUT",
@@ -77,8 +77,8 @@
     },
     {
       "center": {
-        "x": 257,
-        "y": 467.40625
+        "x": 297,
+        "y": 555.40625
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,11 +87,11 @@
       "label": "Send",
       "partialClip": false,
       "rect": {
-        "bottom": 491.40625,
+        "bottom": 579.40625,
         "height": 48,
-        "left": 233,
-        "right": 281,
-        "top": 443.40625,
+        "left": 273,
+        "right": 321,
+        "top": 531.40625,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -106,10 +106,10 @@
   "issues": [],
   "location": "http://localhost:8232/ask",
   "textOverflows": [],
-  "textStart": "< ✦ Ask GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "textStart": "< ✦ Ask GROUNDED IN YOUR SHELF RIGHT NOW Conflicts › ↑ AI advisor · disclosed honestly · your context stays on this device",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/ask",
   "scaledCount": 8,

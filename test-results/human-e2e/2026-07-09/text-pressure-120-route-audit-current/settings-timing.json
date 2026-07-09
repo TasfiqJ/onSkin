@@ -27,7 +27,7 @@
     },
     {
       "center": {
-        "x": 239.3046875,
+        "x": 279.3046875,
         "y": 102
       },
       "centerBlocked": false,
@@ -39,8 +39,8 @@
       "rect": {
         "bottom": 126,
         "height": 48,
-        "left": 196.609375,
-        "right": 282,
+        "left": 236.609375,
+        "right": 322,
         "top": 78,
         "visibleHeight": 48,
         "visibleWidth": 85.390625,
@@ -52,7 +52,7 @@
     },
     {
       "center": {
-        "x": 240,
+        "x": 280,
         "y": 179
       },
       "centerBlocked": false,
@@ -64,8 +64,8 @@
       "rect": {
         "bottom": 203,
         "height": 48,
-        "left": 198,
-        "right": 282,
+        "left": 238,
+        "right": 322,
         "top": 155,
         "visibleHeight": 48,
         "visibleWidth": 84,
@@ -133,8 +133,8 @@
   "textOverflows": [],
   "textStart": "< Timing Morning 7:30 AM Evening 9:30 PM QUIET HOURS Nothing fires 10:00 PM → 7:00 AM Nothing fires inside this window. Even your routine reminders wait until morning. LOCK SCREEN Lock screen privacy Always generic; product, photo, and condition details stay inside the app On RoutineKind Your evening routine’s ready. Always generic on the lock screen",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/settings/timing",
   "scaledCount": 19,

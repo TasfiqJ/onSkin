@@ -1,0 +1,786 @@
+{
+  "baseUrl": "http://localhost:8247",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-you-sections-430-932-postfix",
+  "generatedAt": "2026-07-09T18:18:17.059Z",
+  "routeCount": 7,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  },
+  "failedRouteCount": 6,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 872
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Today Prog. Shelf You",
+            "label": "Edit the order",
+            "partialClip": false,
+            "rect": {
+              "bottom": 896,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 848,
+              "visibleHeight": 48,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/you",
+      "scaledCount": 79,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What d"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 872
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Today Prog. Shelf You",
+            "label": "Edit the order",
+            "partialClip": false,
+            "rect": {
+              "bottom": 896,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 848,
+              "visibleHeight": 48,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/you?section=privacy",
+      "scaledCount": 53,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Withdraw health-data consent > POLICIES Privacy policy > Consumer health privacy > Terms > Support > Account deletion > Data export > YOUR DATA Export my data Delete account Photos stay on your device by default. No ads, no data sales. RoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Today Prog. Shelf You"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 872
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Today Prog. Shelf You",
+            "label": "Edit the order",
+            "partialClip": false,
+            "rect": {
+              "bottom": 896,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 848,
+              "visibleHeight": 48,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/you?section=security",
+      "scaledCount": 79,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What d"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 872
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Today Prog. Shelf You",
+            "label": "Edit the order",
+            "partialClip": false,
+            "rect": {
+              "bottom": 896,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 848,
+              "visibleHeight": 48,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/you?section=commerce",
+      "scaledCount": 79,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What d"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 872
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Today Prog. Shelf You",
+            "label": "Edit the order",
+            "partialClip": false,
+            "rect": {
+              "bottom": 896,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 848,
+              "visibleHeight": 48,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/you?section=support",
+      "scaledCount": 79,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What d"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 872
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Today Prog. Shelf You",
+            "label": "Edit the order",
+            "partialClip": false,
+            "rect": {
+              "bottom": 896,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 848,
+              "visibleHeight": 48,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 215,
+              "y": 920
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ",
+            "label": "Retinoid ramp",
+            "partialClip": true,
+            "rect": {
+              "bottom": 944,
+              "height": 48,
+              "left": 44,
+              "right": 386,
+              "top": 896,
+              "visibleHeight": 36,
+              "visibleWidth": 342,
+              "width": 342
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/you?section=accountDeletion",
+      "scaledCount": 79,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What d"
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "route": "/you",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "route": "/you?section=privacy",
+      "scaledCount": 53
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "route": "/you?section=security",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "route": "/you?section=commerce",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "route": "/you?section=support",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 4,
+      "route": "/you?section=accountDeletion",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 60
+    }
+  ],
+  "error": "6 text-pressure route(s) failed."
+}

@@ -27,8 +27,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 244.125
+        "x": 180,
+        "y": 471
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,14 +37,14 @@
       "label": "Back to Skin Notes",
       "partialClip": false,
       "rect": {
-        "bottom": 272.625,
-        "height": 57,
+        "bottom": 499,
+        "height": 56,
         "left": 24,
-        "right": 296,
-        "top": 215.625,
-        "visibleHeight": 57,
-        "visibleWidth": 272,
-        "width": 272
+        "right": 336,
+        "top": 443,
+        "visibleHeight": 56,
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -56,10 +56,10 @@
   "issues": [],
   "location": "http://localhost:8232/community/note/missing-note-e2e",
   "textOverflows": [],
-  "textStart": "< Skin Note NOTE UNAVAILABLE This note is unavailable. It may have been updated or removed during expert review. Current Skin Notes are still in the library. Back to Skin Notes",
+  "textStart": "< Skin Note NOTE UNAVAILABLE This Skin Note is not available right now. It may have been updated or removed during expert review. Current Skin Notes are still available in the library. Back to Skin Notes",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/community/note/missing-note-e2e",
   "scaledCount": 6,

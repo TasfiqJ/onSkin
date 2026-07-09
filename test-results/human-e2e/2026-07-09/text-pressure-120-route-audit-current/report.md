@@ -1,7 +1,7 @@
 # Text-Pressure Route Audit
 
-Generated: 2026-07-09T08:23:36.980Z
-Viewport: 320 x 568
+Generated: 2026-07-09T18:20:17.873Z
+Viewport: 360 x 640
 Text pressure scale: 1.2
 Status: pass
 Failed routes: 0 / 49

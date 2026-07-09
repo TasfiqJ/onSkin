@@ -27,8 +27,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 245
+        "x": 180,
+        "y": 232.5
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,14 +37,14 @@
       "label": "Continue with manual text",
       "partialClip": false,
       "rect": {
-        "bottom": 286,
-        "height": 82,
+        "bottom": 261,
+        "height": 57,
         "left": 24,
-        "right": 296,
+        "right": 336,
         "top": 204,
-        "visibleHeight": 82,
-        "visibleWidth": 272,
-        "width": 272
+        "visibleHeight": 57,
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -58,8 +58,8 @@
   "textOverflows": [],
   "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. Continue with manual text",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/shelf/ocr",
   "scaledCount": 5,

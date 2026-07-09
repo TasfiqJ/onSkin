@@ -1,0 +1,21 @@
+{
+  "surface": "Expo web in-app browser",
+  "startCommand": "EXPO_PUBLIC_SUPPORT_URL=https://support.example.com/beta EXPO_PUBLIC_E2E_EXTERNAL_OPEN_FAILURE=browser npm --workspace apps/mobile run web -- --port 8161 --clear",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "youInitialUrl": "http://localhost:8161/you",
+  "betaRouteUrl": "http://localhost:8161/settings/beta-feedback",
+  "selectedRouteUrl": "http://localhost:8161/settings/beta-feedback",
+  "unavailableRouteUrl": "http://localhost:8161/settings/beta-feedback",
+  "backRouteUrl": "http://localhost:8161/you",
+  "textInputCount": 0,
+  "horizontalOverflowMax": 0,
+  "openSupportEnabledAfterSelections": true,
+  "visibleUnavailableFeedback": true,
+  "jsDialogPresent": false,
+  "expectedWarnOrErrorLogs": 3,
+  "currentOriginWarnErrorLogCount": 0,
+  "unexpectedCurrentOriginWarnOrErrorLogs": []
+}

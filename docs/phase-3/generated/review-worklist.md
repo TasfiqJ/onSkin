@@ -1,9 +1,9 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T18:05:16.016Z
+Generated: 2026-07-09T18:27:36.123Z
 Status: pass
-Git SHA: daf7a8ff43fa6eae16ce8d3b38e3664284854cc0
-Git status: clean
+Git SHA: 03fb31af74c81f76fab88391b2d8c7b8a040f68e
+Git status: DIRTY
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
 privacy/security, and IP/FTO review logs into an operator handoff. It does
@@ -16,7 +16,7 @@ reviewers must inspect before launch gates can close.
 - Source files hashed: 232
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 0
+- Warnings: 1
 
 ## Items
 
@@ -573,8 +573,8 @@ Sources:
 
 Sources:
 
-- `apps/mobile/src/lib/analytics/eventRegistry.ts` - 4021 bytes - sha256 `33df93ea6c9116b50df449c0d1fa67adb82d83742f47c3f5b5ee57fe63a0792b`
-- `apps/mobile/src/lib/analytics/track.test.ts` - 7548 bytes - sha256 `03830caac2a5704e572e3e2d9ec18f32e552eeecb775079d4a0cbd34878cfad0`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts` - 4049 bytes - sha256 `809423a02b83f645e44f78086d12e89a7ffd3eb4c59d0441777ce414710e0e88`
+- `apps/mobile/src/lib/analytics/track.test.ts` - 7891 bytes - sha256 `24f77b3fbd53af4dc7f20e529d3997b0d55f32303993ed7d2ee0df3d7b173c13`
 - `apps/mobile/src/lib/analytics/track.ts` - 5955 bytes - sha256 `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/safeLog.test.ts` - 1536 bytes - sha256 `2c01477feb279bbdc2e6906fda4b989186b64fe92dc6f98e2dbb4b81d9ba607f`
 - `apps/mobile/src/lib/observability/safeLog.ts` - 674 bytes - sha256 `9be726f4471c30b6a6dec06c5f9075ec5e184182a12ae6dfdfa9cf275e4a0954`
@@ -718,4 +718,4 @@ Sources:
 
 ## Warnings
 
-- None.
+- Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.

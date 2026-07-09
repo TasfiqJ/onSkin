@@ -27,7 +27,7 @@
     },
     {
       "center": {
-        "x": 113.9453125,
+        "x": 138.953125,
         "y": 97
       },
       "centerBlocked": false,
@@ -40,11 +40,11 @@
         "bottom": 122,
         "height": 50,
         "left": 24,
-        "right": 203.890625,
+        "right": 253.90625,
         "top": 72,
         "visibleHeight": 50,
-        "visibleWidth": 179.890625,
-        "width": 179.890625
+        "visibleWidth": 229.90625,
+        "width": 229.90625
       },
       "role": "input",
       "tag": "INPUT",
@@ -52,7 +52,7 @@
     },
     {
       "center": {
-        "x": 253.9453125,
+        "x": 298.953125,
         "y": 97
       },
       "centerBlocked": false,
@@ -64,12 +64,12 @@
       "rect": {
         "bottom": 122,
         "height": 50,
-        "left": 211.890625,
-        "right": 296,
+        "left": 261.90625,
+        "right": 336,
         "top": 72,
         "visibleHeight": 50,
-        "visibleWidth": 84.109375,
-        "width": 84.109375
+        "visibleWidth": 74.09375,
+        "width": 74.09375
       },
       "role": "button",
       "tag": "BUTTON",
@@ -77,8 +77,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 507.5
+        "x": 180,
+        "y": 580
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,14 +87,14 @@
       "label": "Add by hand",
       "partialClip": false,
       "rect": {
-        "bottom": 536,
-        "height": 57,
+        "bottom": 608,
+        "height": 56,
         "left": 24,
-        "right": 296,
-        "top": 479,
-        "visibleHeight": 57,
-        "visibleWidth": 272,
-        "width": 272
+        "right": 336,
+        "top": 552,
+        "visibleHeight": 56,
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -108,8 +108,8 @@
   "textOverflows": [],
   "textStart": "< Search catalog Search Search uses the RoutineKind catalog only. Public API search is not used for live typing. Add by hand",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/shelf/search",
   "scaledCount": 5,

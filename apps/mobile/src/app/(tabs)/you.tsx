@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Href, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
@@ -65,6 +65,8 @@ const DELETE_ACCOUNT_CONFIRM_MESSAGE =
 const DELETE_ACCOUNT_FAILED_TITLE = 'Deletion failed';
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
 const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;
+const SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN = 640;
+const TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN = 640;
 const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
 const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
@@ -272,7 +274,7 @@ function openPolicyUrl(url: string): Promise<boolean> {
 }
 
 export default function YouScreen() {
-  const { height, width } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const params = useLocalSearchParams<{ section?: string }>();
   const { user, isAnonymous, signOut } = useAuth();
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
@@ -329,6 +331,11 @@ export default function YouScreen() {
         ? `${BRAND.proName} · active`
         : 'Free plan';
   const compactPhone = height < 640 || width < 430;
+  const supportFloorTextPressureYou =
+    width <= 390 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const tallTextPressureYou =
+    width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const highTextPressureYou = supportFloorTextPressureYou || tallTextPressureYou;
   const privacyDirectEntry = params.section === 'privacy';
   const narrowPhone = compactPhone && width < 360;
   const shortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 600;
@@ -374,16 +381,27 @@ export default function YouScreen() {
     routineRows.push({ label: 'Widgets & Live Activity', href: '/routine/widgets' });
   }
   const shortPhone = compactPhone && height < 600;
-  const primaryRoutineRows = shortPhone
+  const primaryRoutineRows = highTextPressureYou
+    ? routineRows.slice(0, 1)
+    : shortPhone
     ? routineRows.slice(0, 2)
     : compactPhone
       ? routineRows.slice(0, 3)
       : routineRows;
-  const secondaryRoutineRows = shortPhone
+  const secondaryRoutineRows = highTextPressureYou
+    ? routineRows.slice(1)
+    : shortPhone
     ? routineRows.slice(2)
     : compactPhone
       ? routineRows.slice(3)
       : [];
+  const secondaryRoutineTopMargin = tallTextPressureYou
+    ? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN
+    : supportFloorTextPressureYou
+      ? SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN
+      : shortPhone
+        ? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN
+        : COMPACT_SECONDARY_ROUTINE_TOP_MARGIN;
 
   useEffect(() => {
     if (!privacyDirectEntry || !privacyCardReady) return;
@@ -754,9 +772,7 @@ export default function YouScreen() {
           <Card
             className="p-3"
             style={{
-              marginTop: shortPhone
-                ? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN
-                : COMPACT_SECONDARY_ROUTINE_TOP_MARGIN,
+              marginTop: secondaryRoutineTopMargin,
             }}
           >
             <Text variant="label" tone="muted" className="mb-1">
@@ -855,6 +871,20 @@ export default function YouScreen() {
               label="Reminders & notifications"
               hint="Tiered, capped, at times you choose. Quiet hours & lock-screen discretion."
               onPress={() => router.push('/settings/notifications')}
+            />
+          </Card>
+        )}
+
+        {privacyDirectEntry ? null : (
+          <Card className="mt-4">
+            <Text variant="label" tone="muted" className="mb-1">
+              HELP
+            </Text>
+            <Row
+              label="Beta feedback"
+              hint="Send a categorized issue through support."
+              compact={compactPhone}
+              onPress={() => router.push('/settings/beta-feedback')}
             />
           </Card>
         )}

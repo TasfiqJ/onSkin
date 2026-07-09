@@ -1,0 +1,58 @@
+{
+  "baseUrl": "http://localhost:8252",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-you-sections-375-667-postfix2",
+  "generatedAt": "2026-07-09T18:23:04.994Z",
+  "routeCount": 7,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/you",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/you?section=privacy",
+      "scaledCount": 53
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/you?section=security",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/you?section=commerce",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/you?section=support",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/you?section=accountDeletion",
+      "scaledCount": 79
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 61
+    }
+  ]
+}

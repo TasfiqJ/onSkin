@@ -2,24 +2,24 @@
   "controls": [
     {
       "center": {
-        "x": 53.515625,
-        "y": 95.3984375
+        "x": 180,
+        "y": 361
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "All",
-      "label": "All",
+      "hitText": "Scan a barcode",
+      "label": "Scan a barcode",
       "partialClip": false,
       "rect": {
-        "bottom": 120.796875,
-        "height": 50.796875,
-        "left": 24,
-        "right": 83.03125,
-        "top": 70,
-        "visibleHeight": 50.796875,
-        "visibleWidth": 59.03125,
-        "width": 59.03125
+        "bottom": 389,
+        "height": 56,
+        "left": 32,
+        "right": 328,
+        "top": 333,
+        "visibleHeight": 56,
+        "visibleWidth": 296,
+        "width": 296
       },
       "role": "button",
       "tag": "BUTTON",
@@ -27,24 +27,24 @@
     },
     {
       "center": {
-        "x": 141.75,
-        "y": 95.3984375
+        "x": 180,
+        "y": 426
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "Actives",
-      "label": "Actives",
+      "hitText": "Add by hand",
+      "label": "Add by hand",
       "partialClip": false,
       "rect": {
-        "bottom": 120.796875,
-        "height": 50.796875,
-        "left": 91.03125,
-        "right": 192.46875,
-        "top": 70,
-        "visibleHeight": 50.796875,
-        "visibleWidth": 101.4375,
-        "width": 101.4375
+        "bottom": 451,
+        "height": 50,
+        "left": 32,
+        "right": 328,
+        "top": 401,
+        "visibleHeight": 50,
+        "visibleWidth": 296,
+        "width": 296
       },
       "role": "button",
       "tag": "BUTTON",
@@ -52,33 +52,8 @@
     },
     {
       "center": {
-        "x": 230.40625,
-        "y": 95.3984375
-      },
-      "centerBlocked": false,
-      "hitInside": true,
-      "hitTag": "DIV",
-      "hitText": "7d",
-      "label": "Expiring",
-      "partialClip": false,
-      "rect": {
-        "bottom": 120.796875,
-        "height": 50.796875,
-        "left": 200.46875,
-        "right": 260.34375,
-        "top": 70,
-        "visibleHeight": 50.796875,
-        "visibleWidth": 59.875,
-        "width": 59.875
-      },
-      "role": "button",
-      "tag": "BUTTON",
-      "tinyTarget": false
-    },
-    {
-      "center": {
-        "x": 46.75,
-        "y": 521
+        "x": 51.75,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,14 +62,14 @@
       "label": "Today tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
         "left": 9,
-        "right": 84.5,
-        "top": 494,
+        "right": 94.5,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -102,8 +77,8 @@
     },
     {
       "center": {
-        "x": 122.25,
-        "y": 521
+        "x": 137.25,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -112,14 +87,14 @@
       "label": "Progress tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 84.5,
-        "right": 160,
-        "top": 494,
+        "left": 94.5,
+        "right": 180,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -127,8 +102,8 @@
     },
     {
       "center": {
-        "x": 197.75,
-        "y": 521
+        "x": 222.75,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -137,14 +112,14 @@
       "label": "Shelf tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 160,
-        "right": 235.5,
-        "top": 494,
+        "left": 180,
+        "right": 265.5,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -152,8 +127,8 @@
     },
     {
       "center": {
-        "x": 273.25,
-        "y": 521
+        "x": 308.25,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -162,14 +137,14 @@
       "label": "You tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 235.5,
-        "right": 311,
-        "top": 494,
+        "left": 265.5,
+        "right": 351,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -181,10 +156,10 @@
   "issues": [],
   "location": "http://localhost:8232/shelf",
   "textOverflows": [],
-  "textStart": "Shelf All Actives 7d Today Prog. Shelf You",
+  "textStart": "Shelf empty for now Let's build your cabinet. Add what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes. Scan a barcode Add by hand Today Prog. Shelf You",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/shelf",
   "scaledCount": 8,

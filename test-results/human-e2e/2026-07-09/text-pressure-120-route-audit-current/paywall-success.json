@@ -2,8 +2,8 @@
   "controls": [
     {
       "center": {
-        "x": 160,
-        "y": 523.5
+        "x": 180,
+        "y": 604
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,14 +12,14 @@
       "label": "See tonight’s routine",
       "partialClip": false,
       "rect": {
-        "bottom": 552,
-        "height": 57,
+        "bottom": 632,
+        "height": 56,
         "left": 24,
-        "right": 296,
-        "top": 495,
-        "visibleHeight": 57,
-        "visibleWidth": 272,
-        "width": 272
+        "right": 336,
+        "top": 576,
+        "visibleHeight": 56,
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -31,10 +31,10 @@
   "issues": [],
   "location": "http://localhost:8232/paywall/success",
   "textOverflows": [],
-  "textStart": "✓ You’re all set. Your 14 days of Pro start now. We’ll remind you 2 days before it converts to the store price/year. Cancel anytime. trial ends July 23 renews the store price/yr See tonight’s routine",
+  "textStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 9 renews $49.99/yr See tonight’s routine",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/paywall/success",
   "scaledCount": 6,

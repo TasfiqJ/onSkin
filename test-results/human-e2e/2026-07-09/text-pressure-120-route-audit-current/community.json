@@ -27,8 +27,8 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 212.984375
+        "x": 180,
+        "y": 255
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,39 +37,14 @@
       "label": "Can you use niacinamide with vitamin C?. Refuted.",
       "partialClip": false,
       "rect": {
-        "bottom": 281.171875,
-        "height": 136.375,
+        "bottom": 322,
+        "height": 134,
         "left": 24,
-        "right": 296,
-        "top": 144.796875,
-        "visibleHeight": 136.375,
-        "visibleWidth": 272,
-        "width": 272
-      },
-      "role": "button",
-      "tag": "BUTTON",
-      "tinyTarget": false
-    },
-    {
-      "center": {
-        "x": 160,
-        "y": 482.765625
-      },
-      "centerBlocked": false,
-      "hitInside": true,
-      "hitTag": "DIV",
-      "hitText": "For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.",
-      "label": "Is a 10-step “glass skin” routine better?. Contested.",
-      "partialClip": false,
-      "rect": {
-        "bottom": 543.15625,
-        "height": 120.78125,
-        "left": 24,
-        "right": 296,
-        "top": 422.375,
-        "visibleHeight": 120.78125,
-        "visibleWidth": 272,
-        "width": 272
+        "right": 336,
+        "top": 188,
+        "visibleHeight": 134,
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -83,8 +58,8 @@
   "textOverflows": [],
   "textStart": "< Skin Notes Myth vs evidence. Expert-written, evidence-graded, calm. INGREDIENT MYTHS Can you use niacinamide with vitamin C? Refuted The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine. SENSITIVE SKIN Is a 10-step “glass skin” routine better? Contested For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk. Is “natural” always gentler for sensitive skin? Contested Not necessarily. Some plant extracts and essential oils are common irritants. RETINOIDS Does retinol thin your skin? Refuted It thickens the deeper dermis over time; surface flaking early on is not thinning. SUNSCREEN Do you have to wait between skincare steps? Refuted Mostly no. Layering onto slightly damp skin is fine for most routines. Is homemade sunscreen as protective as store-bought? Refuted No. Homemade mixes can’t be measured for protection. U",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/community",
   "scaledCount": 26,

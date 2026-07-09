@@ -1,9 +1,9 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-09T17:41:49.477Z
+Generated: 2026-07-09T18:28:15.390Z
 Status: blocked
-Git SHA: 36027fefffc4e8a9a456f418e748957615b2bd21
-Git status: clean
+Git SHA: 03fb31af74c81f76fab88391b2d8c7b8a040f68e
+Git status: DIRTY
 
 ## Release Identity
 
@@ -22,6 +22,7 @@ Git status: clean
 
 ## Warnings
 
+- Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.
 - External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.
 - External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.
 - External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.
@@ -90,7 +91,7 @@ Git status: clean
 - `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
 - `apps/mobile/src/lib/launch/phase7.ts`: `4369c73351a58fd6cad9c5d94917185fadb7e67bf219aa9f85814dea5055e663`
 - `apps/mobile/src/lib/launch/phase7.test.ts`: `d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `33df93ea6c9116b50df449c0d1fa67adb82d83742f47c3f5b5ee57fe63a0792b`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `809423a02b83f645e44f78086d12e89a7ffd3eb4c59d0441777ce414710e0e88`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`

@@ -1,13 +1,13 @@
 {
   "baseUrl": "http://localhost:8232",
   "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-120-route-audit-current",
-  "generatedAt": "2026-07-09T08:23:36.980Z",
+  "generatedAt": "2026-07-09T18:20:17.873Z",
   "routeCount": 49,
   "scale": 1.2,
   "status": "pass",
   "viewport": {
-    "height": 568,
-    "width": 320
+    "height": 640,
+    "width": 360
   },
   "failedRouteCount": 0,
   "failedRoutes": [],
@@ -28,85 +28,85 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/progress",
-      "scaledCount": 7
+      "scaledCount": 19
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/progress/capture",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/progress/review",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/plan",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/ramp",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/tolerance",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/reorder",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/adaptation",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/settings",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/disruption",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/procedure",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/phased-intro",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/recovery",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/why-tonight",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
@@ -118,7 +118,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/recommendations/preferences",
-      "scaledCount": 22
+      "scaledCount": 21
     },
     {
       "disallowedLogCount": 0,
@@ -202,7 +202,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/settings/privacy",
-      "scaledCount": 75
+      "scaledCount": 61
     },
     {
       "disallowedLogCount": 0,
@@ -244,7 +244,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/shelf/no-match",
-      "scaledCount": 8
+      "scaledCount": 7
     },
     {
       "disallowedLogCount": 0,
@@ -262,7 +262,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/shelf/manual",
-      "scaledCount": 10
+      "scaledCount": 8
     },
     {
       "disallowedLogCount": 0,
@@ -292,19 +292,19 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/streak",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/routine/widgets",
-      "scaledCount": 3
+      "scaledCount": 15
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/cycle/week",
-      "scaledCount": 3
+      "scaledCount": 15
     }
   ]
 }

@@ -27,8 +27,8 @@
     },
     {
       "center": {
-        "x": 85.0625,
-        "y": 335.203125
+        "x": 94.3984375,
+        "y": 228
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,14 +37,14 @@
       "label": "Fragrance-free",
       "partialClip": false,
       "rect": {
-        "bottom": 359.203125,
+        "bottom": 252,
         "height": 48,
         "left": 24,
-        "right": 146.125,
-        "top": 311.203125,
+        "right": 164.796875,
+        "top": 204,
         "visibleHeight": 48,
-        "visibleWidth": 122.125,
-        "width": 122.125
+        "visibleWidth": 140.796875,
+        "width": 140.796875
       },
       "role": "button",
       "tag": "BUTTON",
@@ -52,8 +52,8 @@
     },
     {
       "center": {
-        "x": 181.65625,
-        "y": 335.203125
+        "x": 211.6953125,
+        "y": 228
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,14 +62,14 @@
       "label": "Vegan",
       "partialClip": false,
       "rect": {
-        "bottom": 359.203125,
+        "bottom": 252,
         "height": 48,
-        "left": 150.125,
-        "right": 213.1875,
-        "top": 311.203125,
+        "left": 172.796875,
+        "right": 250.59375,
+        "top": 204,
         "visibleHeight": 48,
-        "visibleWidth": 63.0625,
-        "width": 63.0625
+        "visibleWidth": 77.796875,
+        "width": 77.796875
       },
       "role": "button",
       "tag": "BUTTON",
@@ -77,8 +77,8 @@
     },
     {
       "center": {
-        "x": 76.1328125,
-        "y": 387.203125
+        "x": 84.875,
+        "y": 284
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,14 +87,14 @@
       "label": "Cruelty-free",
       "partialClip": false,
       "rect": {
-        "bottom": 411.203125,
+        "bottom": 308,
         "height": 48,
         "left": 24,
-        "right": 128.265625,
-        "top": 363.203125,
+        "right": 145.75,
+        "top": 260,
         "visibleHeight": 48,
-        "visibleWidth": 104.265625,
-        "width": 104.265625
+        "visibleWidth": 121.75,
+        "width": 121.75
       },
       "role": "button",
       "tag": "BUTTON",
@@ -108,11 +108,11 @@
   "textOverflows": [],
   "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/recommendations/preferences",
-  "scaledCount": 22,
+  "scaledCount": 21,
   "textScale": 1.2,
   "url": "http://localhost:8232/recommendations/preferences",
   "disallowedLogCount": 0,

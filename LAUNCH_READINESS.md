@@ -203,6 +203,16 @@ Fresh verification through 2026-07-09:
   and public-launch readiness remain blocked by missing final identity URLs,
   TestFlight/Play evidence, RevenueCat production evidence, monitoring/support
   proof, beta/launch reports, and named signoffs.
+- Expo web `/settings/beta-feedback` evidence at 390 x 844 covers the local
+  beta feedback handoff: the You tab row opens the route, fixed category and
+  P0-P3 priority selections enable `Open support`, forced external-open failure
+  renders inline support-unavailable recovery with no JavaScript dialog, there
+  are no free-text inputs, horizontal overflow is zero, visible controls are
+  48 px+, current-origin browser warn/error logs are clean, and Back returns to
+  `/you`. Evidence:
+  `test-results/human-e2e/2026-07-09/settings-beta-feedback-current/`. Live
+  support desk category/SLA routing and native iOS/Android external handoff
+  remain Phase 10 blockers.
 - Expo web 320 x 480 current-main route rerun passed 49 direct-entry routes
   with zero failed routes, zero visible clipped controls, zero sub-44
   user-facing controls, zero blocked hit-tests, zero horizontal overflow, and

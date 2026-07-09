@@ -1,0 +1,408 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 270.8515625,
+        "y": 114
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sign out",
+      "label": "Sign out",
+      "partialClip": false,
+      "rect": {
+        "bottom": 138,
+        "height": 48,
+        "left": 225.703125,
+        "right": 316,
+        "top": 90,
+        "visibleHeight": 48,
+        "visibleWidth": 90.296875,
+        "width": 90.296875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 230
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Manage subscription Free plan",
+      "label": "Manage subscription. Free plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 254,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 206,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 346
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your plan",
+      "label": "Your plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 370,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 322,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 394
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Edit the order",
+      "label": "Edit the order",
+      "partialClip": false,
+      "rect": {
+        "bottom": 418,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 370,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 442
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Retinoid ramp",
+      "label": "Retinoid ramp",
+      "partialClip": false,
+      "rect": {
+        "bottom": 466,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 418,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 598
+      },
+      "centerBlocked": true,
+      "hitInside": false,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Streak & adherence",
+      "partialClip": false,
+      "rect": {
+        "bottom": 622,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 574,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 639
+      },
+      "centerBlocked": true,
+      "hitInside": false,
+      "hitTag": "DIV",
+      "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE R",
+      "label": "Weekly check-in",
+      "partialClip": true,
+      "rect": {
+        "bottom": 670,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 622,
+        "visibleHeight": 18,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": true
+    },
+    {
+      "center": {
+        "x": 51.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 9,
+        "right": 94.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 137.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 94.5,
+        "right": 180,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 222.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 180,
+        "right": 265.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 308.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 265.5,
+        "right": 351,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 4,
+  "issues": [
+    {
+      "control": {
+        "center": {
+          "x": 180,
+          "y": 598
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "Shelf",
+        "label": "Streak & adherence",
+        "partialClip": false,
+        "rect": {
+          "bottom": 622,
+          "height": 48,
+          "left": 44,
+          "right": 316,
+          "top": 574,
+          "visibleHeight": 48,
+          "visibleWidth": 272,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": false
+      },
+      "type": "centerBlocked"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 180,
+          "y": 639
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE R",
+        "label": "Weekly check-in",
+        "partialClip": true,
+        "rect": {
+          "bottom": 670,
+          "height": 48,
+          "left": 44,
+          "right": 316,
+          "top": 622,
+          "visibleHeight": 18,
+          "visibleWidth": 272,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "tinyTarget"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 180,
+          "y": 639
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE R",
+        "label": "Weekly check-in",
+        "partialClip": true,
+        "rect": {
+          "bottom": 670,
+          "height": 48,
+          "left": 44,
+          "right": 316,
+          "top": 622,
+          "visibleHeight": 18,
+          "visibleWidth": 272,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "centerBlocked"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 180,
+          "y": 639
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE R",
+        "label": "Weekly check-in",
+        "partialClip": true,
+        "rect": {
+          "bottom": 670,
+          "height": 48,
+          "left": 44,
+          "right": 316,
+          "top": 622,
+          "visibleHeight": 18,
+          "visibleWidth": 272,
+          "width": 272
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "partialClip"
+    }
+  ],
+  "location": "http://localhost:8241/you?section=accountDeletion",
+  "textOverflows": [],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consu",
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "route": "/you?section=accountDeletion",
+  "scaledCount": 75,
+  "textScale": 2,
+  "url": "http://localhost:8241/you?section=accountDeletion",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

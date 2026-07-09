@@ -2,8 +2,8 @@
   "controls": [
     {
       "center": {
-        "x": 160,
-        "y": 503.5
+        "x": 180,
+        "y": 575.5
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,14 +12,14 @@
       "label": "Back to Progress",
       "partialClip": false,
       "rect": {
-        "bottom": 532,
+        "bottom": 604,
         "height": 57,
         "left": 24,
-        "right": 296,
-        "top": 475,
+        "right": 336,
+        "top": 547,
         "visibleHeight": 57,
-        "visibleWidth": 272,
-        "width": 272
+        "visibleWidth": 312,
+        "width": 312
       },
       "role": "button",
       "tag": "BUTTON",
@@ -33,8 +33,8 @@
   "textOverflows": [],
   "textStart": "BETA Photo trend insights are not in this beta The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy. Progress photos remain useful without estimated scores or change claims. Back to Progress",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/trend/fairness",
   "scaledCount": 5,

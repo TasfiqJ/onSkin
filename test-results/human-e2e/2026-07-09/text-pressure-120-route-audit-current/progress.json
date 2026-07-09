@@ -2,8 +2,158 @@
   "controls": [
     {
       "center": {
-        "x": 46.75,
-        "y": 521
+        "x": 48,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 110.421875,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 86.421875,
+        "right": 134.421875,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 172.84375,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 148.84375,
+        "right": 196.84375,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 312,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 288,
+        "right": 336,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 282
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 306,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 258,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 506.3984375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No card needed.",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 530.796875,
+        "height": 48.796875,
+        "left": 24,
+        "right": 336,
+        "top": 482,
+        "visibleHeight": 48.796875,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 51.75,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,14 +162,14 @@
       "label": "Today tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
         "left": 9,
-        "right": 84.5,
-        "top": 494,
+        "right": 94.5,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -27,8 +177,8 @@
     },
     {
       "center": {
-        "x": 122.25,
-        "y": 521
+        "x": 137.25,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,14 +187,14 @@
       "label": "Progress tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 84.5,
-        "right": 160,
-        "top": 494,
+        "left": 94.5,
+        "right": 180,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -52,8 +202,8 @@
     },
     {
       "center": {
-        "x": 197.75,
-        "y": 521
+        "x": 222.75,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,14 +212,14 @@
       "label": "Shelf tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 160,
-        "right": 235.5,
-        "top": 494,
+        "left": 180,
+        "right": 265.5,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -77,8 +227,8 @@
     },
     {
       "center": {
-        "x": 273.25,
-        "y": 521
+        "x": 308.25,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,14 +237,14 @@
       "label": "You tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 235.5,
-        "right": 311,
-        "top": 494,
+        "left": 265.5,
+        "right": 351,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -106,13 +256,13 @@
   "issues": [],
   "location": "http://localhost:8232/progress",
   "textOverflows": [],
-  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed. Today Prog. Shelf You",
+  "textStart": "Terms · Privacy · Restore x Unlock your private photo timeline. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. › Today Prog. Shelf You",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/progress",
-  "scaledCount": 7,
+  "scaledCount": 19,
   "textScale": 1.2,
   "url": "http://localhost:8232/progress",
   "disallowedLogCount": 0,

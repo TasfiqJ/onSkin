@@ -1,0 +1,195 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 241.7109375,
+        "y": 188
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sign out",
+      "label": "Sign out",
+      "partialClip": false,
+      "rect": {
+        "bottom": 220,
+        "height": 64,
+        "left": 167.421875,
+        "right": 316,
+        "top": 156,
+        "visibleHeight": 64,
+        "visibleWidth": 148.578125,
+        "width": 148.578125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 373
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Manage subscription",
+      "label": "Manage subscription. Free plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 426,
+        "height": 106,
+        "left": 44,
+        "right": 316,
+        "top": 320,
+        "visibleHeight": 106,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 534
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your plan",
+      "label": "Your plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 558,
+        "height": 48,
+        "left": 44,
+        "right": 316,
+        "top": 510,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 51.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 9,
+        "right": 94.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 137.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Prog.",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 94.5,
+        "right": 180,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 222.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 180,
+        "right": 265.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 308.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 265.5,
+        "right": 351,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8250/you?section=privacy",
+  "textOverflows": [],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Withdraw health-data consent > POLICIES Privacy policy > Consumer health privacy > Terms > Support > Account deletion > Data export > YOUR DATA Export my data Delete account Photos stay on your device by default. No ads, no data sales. RoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Today Prog. Shelf You",
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "route": "/you?section=privacy",
+  "scaledCount": 53,
+  "textScale": 2,
+  "url": "http://localhost:8250/you?section=privacy",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

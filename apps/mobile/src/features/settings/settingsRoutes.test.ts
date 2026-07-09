@@ -136,6 +136,7 @@ describe('Settings route contracts', () => {
       'settings/subscription.tsx',
       'settings/notifications.tsx',
       'settings/timing.tsx',
+      'settings/beta-feedback.tsx',
     ]) {
       const source = readAppRoute(route);
 
@@ -156,9 +157,37 @@ describe('Settings route contracts', () => {
       'settings/subscription.tsx',
       'settings/notifications.tsx',
       'settings/timing.tsx',
+      'settings/beta-feedback.tsx',
     ]) {
       expectTouchableRouteIcon(route);
     }
+  });
+
+  it('keeps beta feedback routed through categorized support handoff', () => {
+    const you = readAppRoute('(tabs)/you.tsx');
+    const route = readAppRoute('settings/beta-feedback.tsx');
+
+    expect(you).toContain('label="Beta feedback"');
+    expect(you).toContain('hint="Send a categorized issue through support."');
+    expect(you).toContain("onPress={() => router.push('/settings/beta-feedback')}");
+    expect(route).toContain('const SUPPORT_FEEDBACK_CATEGORIES = [');
+    expect(route).toContain("key: 'catalog_match'");
+    expect(route).toContain("key: 'routine_checkoff'");
+    expect(route).toContain("key: 'advice_boundary'");
+    expect(route).toContain('const SUPPORT_FEEDBACK_SEVERITIES = [');
+    expect(route).toContain("key: 'p0'");
+    expect(route).toContain("key: 'p3'");
+    expect(route).toContain("['source', 'beta_feedback']");
+    expect(route).toContain("['category', category]");
+    expect(route).toContain("['severity', severity]");
+    expect(route).toContain("track(opened ? 'support_contact_opened' : 'support_contact_failed'");
+    expect(route).toContain("source: 'beta_feedback'");
+    expect(route).toContain('category,');
+    expect(route).toContain('severity,');
+    expect(route).toContain('SUPPORT_FEEDBACK_UNAVAILABLE');
+    expect(route).not.toContain('TextInput');
+    expect(route).not.toContain('freeText');
+    expect(route).not.toContain('supportEmail');
   });
 
   it('keeps reminder timing controls comfortably above 44px on phones', () => {
@@ -376,9 +405,19 @@ describe('Settings route contracts', () => {
   it('keeps You tab first-viewport rows clear of the floating tab bar on short phones', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
+    expect(source).toContain('Platform');
     expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const { height, width } = useWindowDimensions();');
+    expect(source).toContain('const { fontScale = 1, height, width } = useWindowDimensions();');
     expect(source).toContain('const compactPhone = height < 640 || width < 430');
+    expect(source).toContain('const supportFloorTextPressureYou =');
+    expect(source).toContain(
+      "width <= 390 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');",
+    );
+    expect(source).toContain('const tallTextPressureYou =');
+    expect(source).toContain(
+      "width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');",
+    );
+    expect(source).toContain('const highTextPressureYou = supportFloorTextPressureYou || tallTextPressureYou;');
     expect(source).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;');
     expect(source).toContain('const shortPhone = compactPhone && height < 600;');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}");
@@ -394,18 +433,25 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       'className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"',
     );
-    expect(source).toContain('const primaryRoutineRows = shortPhone');
+    expect(source).toContain('const primaryRoutineRows = highTextPressureYou');
+    expect(source).toContain('? routineRows.slice(0, 1)');
     expect(source).toContain('? routineRows.slice(0, 2)');
     expect(source).toContain('? routineRows.slice(0, 3)');
-    expect(source).toContain('const secondaryRoutineRows = shortPhone');
+    expect(source).toContain('const secondaryRoutineRows = highTextPressureYou');
+    expect(source).toContain('? routineRows.slice(1)');
     expect(source).toContain('? routineRows.slice(2)');
     expect(source).toContain('? routineRows.slice(3)');
+    expect(source).toContain('const secondaryRoutineTopMargin = tallTextPressureYou');
+    expect(source).toContain('const SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN = 640;');
+    expect(source).toContain('const TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN = 640;');
     expect(source).toContain('{primaryRoutineRows.map(({ label, href }) => (');
     expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
     expect(source).toContain('const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;');
     expect(source).toContain('const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;');
     expect(source).toContain('<Card\n            className="p-3"');
-    expect(source).toContain('marginTop: shortPhone');
+    expect(source).toContain('marginTop: secondaryRoutineTopMargin');
+    expect(source).toContain('? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN');
+    expect(source).toContain('? SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN');
     expect(source).toContain('? SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN');
     expect(source).toContain(': COMPACT_SECONDARY_ROUTINE_TOP_MARGIN');
     expect(source).toContain('MORE ROUTINE');

@@ -2,8 +2,8 @@
   "controls": [
     {
       "center": {
-        "x": 46.75,
-        "y": 521
+        "x": 51.75,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,14 +12,14 @@
       "label": "Today tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
         "left": 9,
-        "right": 84.5,
-        "top": 494,
+        "right": 94.5,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -27,8 +27,8 @@
     },
     {
       "center": {
-        "x": 122.25,
-        "y": 521
+        "x": 137.25,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,14 +37,14 @@
       "label": "Progress tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 84.5,
-        "right": 160,
-        "top": 494,
+        "left": 94.5,
+        "right": 180,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -52,8 +52,8 @@
     },
     {
       "center": {
-        "x": 197.75,
-        "y": 521
+        "x": 222.75,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,14 +62,14 @@
       "label": "Shelf tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 160,
-        "right": 235.5,
-        "top": 494,
+        "left": 180,
+        "right": 265.5,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -77,8 +77,8 @@
     },
     {
       "center": {
-        "x": 273.25,
-        "y": 521
+        "x": 308.25,
+        "y": 593
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,14 +87,14 @@
       "label": "You tab",
       "partialClip": false,
       "rect": {
-        "bottom": 548,
+        "bottom": 620,
         "height": 54,
-        "left": 235.5,
-        "right": 311,
-        "top": 494,
+        "left": 265.5,
+        "right": 351,
+        "top": 566,
         "visibleHeight": 54,
-        "visibleWidth": 75.5,
-        "width": 75.5
+        "visibleWidth": 85.5,
+        "width": 85.5
       },
       "role": "tab",
       "tag": "DIV",
@@ -108,8 +108,8 @@
   "textOverflows": [],
   "textStart": "THURSDAY, JULY 9 Good morning. Morning routine 0 of 0 Today Prog. Shelf You",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/today?routine=PM",
   "scaledCount": 8,

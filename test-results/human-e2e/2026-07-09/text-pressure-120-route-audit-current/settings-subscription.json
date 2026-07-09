@@ -3,7 +3,7 @@
     {
       "center": {
         "x": 44,
-        "y": 28
+        "y": 24
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,11 +12,11 @@
       "label": "Back",
       "partialClip": false,
       "rect": {
-        "bottom": 52,
+        "bottom": 48,
         "height": 48,
         "left": 20,
         "right": 68,
-        "top": 4,
+        "top": 0,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -27,24 +27,24 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 134.203125
+        "x": 180,
+        "y": 115.40625
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "See RoutineKind Pro",
+      "hitText": "See Pro",
       "label": "See RoutineKind Pro",
       "partialClip": false,
       "rect": {
-        "bottom": 158.203125,
-        "height": 48,
-        "left": 33,
-        "right": 287,
-        "top": 110.203125,
-        "visibleHeight": 48,
-        "visibleWidth": 254,
-        "width": 254
+        "bottom": 137.40625,
+        "height": 44,
+        "left": 29,
+        "right": 331,
+        "top": 93.40625,
+        "visibleHeight": 44,
+        "visibleWidth": 302,
+        "width": 302
       },
       "role": "button",
       "tag": "BUTTON",
@@ -52,24 +52,24 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 204.1015625
+        "x": 180,
+        "y": 172.40625
       },
       "centerBlocked": false,
       "hitInside": true,
-      "hitTag": "DIV",
-      "hitText": "Restore purchases",
-      "label": "Restore purchases ›",
+      "hitTag": "BUTTON",
+      "hitText": "Restore ›",
+      "label": "Restore purchases",
       "partialClip": false,
       "rect": {
-        "bottom": 229,
-        "height": 49.796875,
-        "left": 38,
-        "right": 282,
-        "top": 179.203125,
-        "visibleHeight": 49.796875,
-        "visibleWidth": 244,
-        "width": 244
+        "bottom": 194.40625,
+        "height": 44,
+        "left": 32,
+        "right": 328,
+        "top": 150.40625,
+        "visibleHeight": 44,
+        "visibleWidth": 296,
+        "width": 296
       },
       "role": "button",
       "tag": "BUTTON",
@@ -77,24 +77,24 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 253.8984375
+        "x": 180,
+        "y": 216.40625
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "BUTTON",
       "hitText": "Terms ›",
-      "label": "Terms ›",
+      "label": "Terms",
       "partialClip": false,
       "rect": {
-        "bottom": 278.796875,
-        "height": 49.796875,
-        "left": 38,
-        "right": 282,
-        "top": 229,
-        "visibleHeight": 49.796875,
-        "visibleWidth": 244,
-        "width": 244
+        "bottom": 238.40625,
+        "height": 44,
+        "left": 32,
+        "right": 328,
+        "top": 194.40625,
+        "visibleHeight": 44,
+        "visibleWidth": 296,
+        "width": 296
       },
       "role": "button",
       "tag": "BUTTON",
@@ -102,24 +102,24 @@
     },
     {
       "center": {
-        "x": 160,
-        "y": 303.1953125
+        "x": 180,
+        "y": 260.40625
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "BUTTON",
       "hitText": "Privacy ›",
-      "label": "Privacy ›",
+      "label": "Privacy",
       "partialClip": false,
       "rect": {
-        "bottom": 327.59375,
-        "height": 48.796875,
-        "left": 38,
-        "right": 282,
-        "top": 278.796875,
-        "visibleHeight": 48.796875,
-        "visibleWidth": 244,
-        "width": 244
+        "bottom": 282.40625,
+        "height": 44,
+        "left": 32,
+        "right": 328,
+        "top": 238.40625,
+        "visibleHeight": 44,
+        "visibleWidth": 296,
+        "width": 296
       },
       "role": "button",
       "tag": "BUTTON",
@@ -131,10 +131,10 @@
   "issues": [],
   "location": "http://localhost:8232/settings/subscription",
   "textOverflows": [],
-  "textStart": "< Subscription You’re on the free plan See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+  "textStart": "< Subscription Free plan See Pro Restore › Terms › Privacy ›",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/settings/subscription",
   "scaledCount": 10,

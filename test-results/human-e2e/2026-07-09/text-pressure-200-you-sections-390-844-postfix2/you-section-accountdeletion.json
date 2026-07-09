@@ -1,0 +1,195 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 271.7109375,
+        "y": 172
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sign out",
+      "label": "Sign out",
+      "partialClip": false,
+      "rect": {
+        "bottom": 204,
+        "height": 64,
+        "left": 197.421875,
+        "right": 346,
+        "top": 140,
+        "visibleHeight": 64,
+        "visibleWidth": 148.578125,
+        "width": 148.578125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 341
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Manage subscription",
+      "label": "Manage subscription. Free plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 394,
+        "height": 106,
+        "left": 44,
+        "right": 346,
+        "top": 288,
+        "visibleHeight": 106,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 502
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your plan",
+      "label": "Your plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 526,
+        "height": 48,
+        "left": 44,
+        "right": 346,
+        "top": 478,
+        "visibleHeight": 48,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 55.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Today",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 9,
+        "right": 102,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 148.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Prog.",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 102,
+        "right": 195,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 241.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Shelf",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 195,
+        "right": 288,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 334.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "You",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 288,
+        "right": 381,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8253/you?section=accountDeletion",
+  "textOverflows": [],
+  "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > HELP Beta feedback Send a categorized issue through support. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What d",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/you?section=accountDeletion",
+  "scaledCount": 79,
+  "textScale": 2,
+  "url": "http://localhost:8253/you?section=accountDeletion",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -172,6 +172,21 @@ describe('analytics sanitizer', () => {
         message: 'my routine is broken',
       }),
     ).toEqual({ source: 'settings', result: 'unavailable' });
+
+    expect(
+      sanitizeAnalyticsProps({
+        source: 'beta_feedback',
+        result: 'opened',
+        category: 'catalog_match',
+        severity: 'p1',
+        free_text: 'my exact issue',
+      }),
+    ).toEqual({
+      source: 'beta_feedback',
+      result: 'opened',
+      category: 'catalog_match',
+      severity: 'p1',
+    });
   });
 
   it('drops unapproved or user-derived event names', () => {

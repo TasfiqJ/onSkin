@@ -24,6 +24,31 @@
       "role": "button",
       "tag": "BUTTON",
       "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 394
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to For you",
+      "label": "Back to For you",
+      "partialClip": false,
+      "rect": {
+        "bottom": 418,
+        "height": 48,
+        "left": 123.203125,
+        "right": 236.796875,
+        "top": 370,
+        "visibleHeight": 48,
+        "visibleWidth": 113.59375,
+        "width": 113.59375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
     }
   ],
   "horizontalOverflow": 0,
@@ -31,10 +56,10 @@
   "issues": [],
   "location": "http://localhost:8232/recommendations/stale-local-rec",
   "textOverflows": [],
-  "textStart": "< Recommendation Looking at your routine…",
+  "textStart": "< Suggestion This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
   "viewport": {
-    "width": 320,
-    "height": 568
+    "width": 360,
+    "height": 640
   },
   "route": "/recommendations/stale-local-rec",
   "scaledCount": 3,
