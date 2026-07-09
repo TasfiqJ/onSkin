@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-09T20:51:13.263Z
+Generated: 2026-07-09T20:52:43.271Z
 Status: blocked
-Git SHA: f0f0d720e3f7a9cfabe75709e60ab6fea26a3bd8
+Git SHA: a8eb50bc8d614683d59db390c0bc6acd469241c7
 Git status: clean
 
 ## Release Identity
@@ -127,7 +127,7 @@ Git status: clean
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `98f2d8496eb4f5c19706c3ce7d17d82c84223ba776bae6084e9706ebf3e6e718`
 - `scripts/phase9/edge-auth-smoke.mjs`: `92968a8bbbc5375a8ed3b52d087ae3c3b9b0f2435d5ddbcfcc2f0a6ed004284e`
 - `scripts/phase9/edge-functions-check.mjs`: `81b6c6d8413d27166379c589f00434daf631feab4a406fd6e17b2cfbe6430f4b`
-- `scripts/phase9/data-rights-smoke.mjs`: `6392dc7f45296234f0eaff86a75bad3142185e69933627fda93ff0954084fe19`
+- `scripts/phase9/data-rights-smoke.mjs`: `2b737e9ca997907e0d2f8f7962f1e0170739790d0e983c8e207498fc7b8e05f5`
 - `scripts/phase9/consent-withdrawal-smoke.mjs`: `03071784d71b93271ff929cfc6528da76fc0bf547ed80af7c666074474ac801e`
 - `scripts/phase9/supabase-policy-lint.mjs`: `153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183`
 - `scripts/phase9/security-ci-smoke.mjs`: `f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9`
