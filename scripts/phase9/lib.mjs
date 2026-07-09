@@ -260,6 +260,8 @@ export const generatedEvidenceOutputPaths = Object.freeze([
   'docs/e2e/generated/human-e2e-manifest.md',
   'docs/generated/generated-packet-status-audit.json',
   'docs/generated/generated-packet-status-audit.md',
+  'docs/generated/device-support-policy-audit.json',
+  'docs/generated/device-support-policy-audit.md',
   'docs/generated/readiness-status-audit.json',
   'docs/generated/readiness-status-audit.md',
   'docs/generated/source-packet-audit.json',
