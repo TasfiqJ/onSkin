@@ -205,6 +205,38 @@ function markdownTable(headers, rows) {
   ].join('\n');
 }
 
+function displayValue(value, fallback = 'TBD') {
+  const normalized = String(value ?? '').trim();
+  return normalized.length > 0 ? normalized : fallback;
+}
+
+function sourceLine(source) {
+  if (!source.exists) return `- \`${source.path}\` - missing`;
+  return `- \`${source.path}\` - ${source.bytes} bytes - sha256 \`${source.sha256}\``;
+}
+
+function itemDetailMarkdown(item) {
+  const sourceLines =
+    item.sourcePaths.length > 0
+      ? item.sourcePaths.map(sourceLine)
+      : ['- No backticked source path was extracted from the review log row.'];
+  return [
+    `### ${item.domain} - ${item.area}`,
+    '',
+    `- Worklist ID: \`${item.id}\``,
+    `- Status: ${displayValue(item.status, 'Unspecified')}`,
+    `- Required reviewer: ${item.requiredReviewer}`,
+    `- Current reviewer/date: ${displayValue(item.reviewer)} / ${displayValue(item.date)}`,
+    `- Required evidence: ${item.requiredEvidence}`,
+    `- Review-log notes: ${displayValue(item.notes, 'None.')}`,
+    '',
+    'Sources:',
+    '',
+    ...sourceLines,
+    '',
+  ].join('\n');
+}
+
 const blockers = [];
 const warnings = [];
 let gitSha = 'unknown';
@@ -334,6 +366,9 @@ const mdContent = [
     ]),
   ),
   '',
+  '## Item Details',
+  '',
+  ...items.map(itemDetailMarkdown),
   '## Blockers',
   '',
   ...(blockers.length > 0 ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
