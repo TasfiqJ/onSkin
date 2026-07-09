@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:36:13.669Z",
+  "generatedAt": "2026-07-09T20:43:36.294Z",
   "status": "pass",
-  "strict": true,
+  "strict": false,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-09",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",

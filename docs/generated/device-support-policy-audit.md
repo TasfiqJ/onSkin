@@ -1,8 +1,8 @@
 # Device Support Policy Audit
 
-Generated: 2026-07-09T20:36:19.598Z
+Generated: 2026-07-09T20:43:36.267Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit keeps the V1 device cutoff explicit: iOS 17.0+,
 Android 10 / API 29+, Android compile/target API 36, 360 x 640 as the

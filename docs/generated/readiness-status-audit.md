@@ -1,8 +1,8 @@
 # Readiness Status Audit
 
-Generated: 2026-07-09T20:36:13.669Z
+Generated: 2026-07-09T20:43:36.294Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit keeps the launch source-of-truth docs aligned with
 the latest committed human-simulated E2E evidence and current verification

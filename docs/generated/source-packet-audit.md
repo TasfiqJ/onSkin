@@ -1,8 +1,8 @@
 # Source Packet Audit
 
-Generated: 2026-07-09T20:31:05.101Z
+Generated: 2026-07-09T20:43:29.007Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit checks the original `04_repo_docs` source packet and
 verifies that its strategy docs are represented in the active `docs/` tree.

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:36:19.598Z",
+  "generatedAt": "2026-07-09T20:43:36.267Z",
   "status": "pass",
-  "strict": true,
+  "strict": false,
   "purpose": "Audit the accepted device support policy so install floors, viewport launch gates, and 320-wide stress-only evidence cannot drift silently.",
   "files": {
     "appBase": "apps/mobile/app.base.json",
