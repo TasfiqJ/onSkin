@@ -104,9 +104,17 @@ describe('paywall mobile contracts', () => {
     expect(sheet).toContain('style: { flexShrink: 1 }');
     expect(sheet).toContain('backdropAccessible?: boolean');
     expect(upsell).toContain("import { RouteIconButton, Sheet, Text } from '@/components/ui';");
+    expect(upsell).toContain(
+      "import { Platform, Pressable, View, useWindowDimensions } from 'react-native';",
+    );
     expect(upsell).toContain('useWindowDimensions');
-    expect(upsell).toContain('const compactPaywall = height < 640;');
-    expect(upsell).toContain('const shortPaywall = height < 600;');
+    expect(upsell).toContain('const { fontScale, height, width } = useWindowDimensions();');
+    expect(upsell).toContain('const midTextPressurePaywall =');
+    expect(upsell).toContain(
+      "width <= 390 && height >= 700 && height < 780 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
+    expect(upsell).toContain('const compactPaywall = height < 640 || midTextPressurePaywall;');
+    expect(upsell).toContain('const shortPaywall = height < 600 || midTextPressurePaywall;');
     expect(upsell).toContain('const splitShortPaywall = height < 410;');
     expect(upsell).toContain('const microShortPaywall = height < 380;');
     expect(upsell).toContain('const narrowShortPaywall = shortPaywall && width < 360;');

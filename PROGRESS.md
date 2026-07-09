@@ -24,6 +24,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   disallowed browser logs. Evidence:
   `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-notifications-margin-recheck/`.
 
+- Rechecked the direct contextual upsell sheet at 360 x 740 / 200% text
+  pressure after treating the 360/390-wide 700-779 px text-pressure band as a
+  compact paywall layout. The focused paywall source contract and one-route
+  human-simulated E2E pass for `/paywall/upsell?feature=full_routine` report
+  zero failed routes, zero visible clipped controls, zero sub-44 visible
+  controls, zero blocked hit centers, zero horizontal overflow, and zero
+  disallowed browser logs. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-upsell-current/`.
+
 - Cleared a short Android-class 360 x 600 / 200% text-pressure route audit.
   The first 49-route Expo web sweep exposed `/recommendations/preferences` with
   `Sustainable` visible as a 24 px bottom-edge partial target. After lower

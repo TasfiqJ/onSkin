@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
@@ -23,14 +23,16 @@ import type { GatedFeature } from '@onskin/types';
 // expired-reverse-trial user taps a Pro action mid-flow.
 export default function UpsellSheet() {
   const { feature } = useLocalSearchParams<{ feature?: string }>();
-  const { height, width } = useWindowDimensions();
+  const { fontScale, height, width } = useWindowDimensions();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const key = (feature as GatedFeature) in UPSELL_COPY ? (feature as GatedFeature) : 'full_routine';
   const copy = UPSELL_COPY[key];
-  const compactPaywall = height < 640;
-  const shortPaywall = height < 600;
+  const midTextPressurePaywall =
+    width <= 390 && height >= 700 && height < 780 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPaywall = height < 640 || midTextPressurePaywall;
+  const shortPaywall = height < 600 || midTextPressurePaywall;
   const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
