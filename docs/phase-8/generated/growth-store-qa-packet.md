@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-09T20:14:13.629Z
+Generated: 2026-07-09T20:14:43.811Z
 Status: blocked
-Git SHA: 933cfc30a4931c0b5128efe86e7105f3530aa348
+Git SHA: ab99492410151883833111460c807594ede34cdd
 Git status: clean
 
 ## Public Identity
@@ -114,8 +114,8 @@ Git status: clean
 - `docs/phase-5/generated/device-qa-packet.md`: `e841b30a108307a518472a9fc05ad3fad5cb0d7cec15d21ca66d55834da6b8cb`
 - `docs/phase-6/generated/payments-qa-packet.json`: `1a3b4a304fd9ae8923b9b227244d32d59e80a18976ee9e46d4768e2f5c526f93`
 - `docs/phase-6/generated/payments-qa-packet.md`: `62169c9d0f4b0c1e830e29ae11cfaf5da1f5a28fa07d1b0b38df33e3f67b304b`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `b8ac1379ef7367530aaa0f7499608599eb86ce5cc975b09d8b2354f8311ef0f3`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `4df41ebbdbef864a5475730935301b1a5fda8770924cf324bc69eb710de31b52`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `cce467c59b5460f9b3512b673469b3d494ab4e4f84f79c8fc8ceb0178aebe249`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `0c877bb523df4e53acc2c60843da43a1b0b57e559ed4600beedf62d260dde076`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `6070ec2ffd588b13555481ab5173e7d7783958977662807199e3dc16bd5c1122`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `e6602b38bf458f5759f9fc82f9e9defb38611c1252fdb308bc61f81555d2fac6`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
