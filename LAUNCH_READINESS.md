@@ -20,11 +20,12 @@ Fresh verification through 2026-07-09:
 - The human-simulated E2E manifest now anchors to the 2026-07-09 Expo web
   support-floor evidence. The 320 x 480 support-floor 200% text-pressure
   sweep passed 49 / 49 routes with zero failed routes, and the supported-phone
-  375 x 812, 390 x 844, and 430 x 932 200% text-pressure sweeps also passed
-  49 / 49 routes with zero failed routes. Evidence:
+  375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% text-pressure sweeps
+  also passed 49 / 49 routes with zero failed routes. Evidence:
   `test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`,
   `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
   `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`,
   and
   `test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5/`.
 - A fresh accepted-floor Expo web route audit after the native support-floor
@@ -118,8 +119,8 @@ Fresh verification through 2026-07-09:
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 2026-07-09 320 x 480
   support-floor 200% text-pressure sweep and records 375 x 812, 390 x 844,
-  and 430 x 932 supported-phone 200% text-pressure sweep evidence. It does not
-  replace physical iOS/Android
+  412 x 915, and 430 x 932 supported-phone 200% text-pressure sweep evidence.
+  It does not replace physical iOS/Android
   device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
   StoreKit/Play Billing, or live Supabase release gates. The support contract
   is defined in `docs/DEVICE_SUPPORT_POLICY.md`.

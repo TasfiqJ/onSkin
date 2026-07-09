@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the readiness-status audit so launch-readiness docs must mention
+  the supported Android-class 412 x 915 / 200% text-pressure evidence now
+  tracked by the human-E2E manifest. `LAUNCH_READINESS.md` and `BLOCKERS.md`
+  now name the 412 x 915 pass and its
+  `text-pressure-200-android-412-915-postfix2` evidence folder alongside the
+  320 x 480 launch floor and 375 / 390 / 430 supported-phone gates.
+
 - Cleared a supported Android-class 412 x 915 / 200% text-pressure route
   audit. The first sweep exposed a 3 px `Progress` tab-label overflow in
   `/settings/privacy`; after the compact visible label fix, the full route

@@ -114,11 +114,12 @@ confirmation instead of requiring a native alert. The mobile suite currently
 covers 171 mobile test files / 1760 tests. The 2026-07-09 human-simulated E2E
 manifest now anchors to the 320 x 480 support-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
-375 x 812, 390 x 844, and 430 x 932 200% sweeps also passed 49 / 49 routes
-with zero failures. Evidence includes
-`test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`
+375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also passed 49 / 49
+routes with zero failures. Evidence includes
+`test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`,
+`test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
 and
-`test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`.
+`test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`.
 The Settings Privacy Terms-row spacer and contextual Progress
 tall-phone compact compliance header have fresh route evidence, including
 compact visible Explore-first copy with the full reverse-trial copy retained in
