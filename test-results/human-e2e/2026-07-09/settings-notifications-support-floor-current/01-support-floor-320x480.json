@@ -1,0 +1,141 @@
+{
+  "blocked": [],
+  "clipped": [],
+  "controls": [
+    {
+      "centerBlocked": false,
+      "checked": null,
+      "clipped": false,
+      "label": "Back",
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "right": 68,
+        "width": 48,
+        "x": 20,
+        "y": 4
+      },
+      "role": "button",
+      "sub44": false,
+      "tag": "button",
+      "text": "<"
+    },
+    {
+      "centerBlocked": false,
+      "checked": null,
+      "clipped": false,
+      "label": null,
+      "rect": {
+        "bottom": 128,
+        "height": 48,
+        "right": 230,
+        "width": 192,
+        "x": 38,
+        "y": 80
+      },
+      "role": "button",
+      "sub44": false,
+      "tag": "button",
+      "text": "Morning routine 7:30 AM"
+    },
+    {
+      "centerBlocked": false,
+      "checked": "true",
+      "clipped": false,
+      "label": "Morning routine",
+      "rect": {
+        "bottom": 128,
+        "height": 48,
+        "right": 282,
+        "width": 52,
+        "x": 230,
+        "y": 80
+      },
+      "role": "switch",
+      "sub44": false,
+      "tag": "div",
+      "text": ""
+    },
+    {
+      "centerBlocked": false,
+      "checked": null,
+      "clipped": false,
+      "label": null,
+      "rect": {
+        "bottom": 177,
+        "height": 48,
+        "right": 230,
+        "width": 192,
+        "x": 38,
+        "y": 129
+      },
+      "role": "button",
+      "sub44": false,
+      "tag": "button",
+      "text": "Evening · tonight’s step 9:30 PM"
+    },
+    {
+      "centerBlocked": false,
+      "checked": "true",
+      "clipped": false,
+      "label": "Evening · tonight’s step",
+      "rect": {
+        "bottom": 177,
+        "height": 48,
+        "right": 282,
+        "width": 52,
+        "x": 230,
+        "y": 129
+      },
+      "role": "switch",
+      "sub44": false,
+      "tag": "div",
+      "text": ""
+    },
+    {
+      "centerBlocked": false,
+      "checked": "true",
+      "clipped": false,
+      "label": "Streak & adherence",
+      "rect": {
+        "bottom": 253,
+        "height": 48,
+        "right": 282,
+        "width": 52,
+        "x": 230,
+        "y": 205
+      },
+      "role": "switch",
+      "sub44": false,
+      "tag": "div",
+      "text": ""
+    },
+    {
+      "centerBlocked": false,
+      "checked": "false",
+      "clipped": false,
+      "label": "Replenishment",
+      "rect": {
+        "bottom": 302,
+        "height": 48,
+        "right": 282,
+        "width": 52,
+        "x": 230,
+        "y": 254
+      },
+      "role": "switch",
+      "sub44": false,
+      "tag": "div",
+      "text": ""
+    }
+  ],
+  "documentHeight": 481,
+  "horizontalOverflow": 0,
+  "sub44": [],
+  "text": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
+  "url": "http://localhost:8255/settings/notifications",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

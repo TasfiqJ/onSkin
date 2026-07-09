@@ -176,6 +176,9 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
     expect(notifications).toContain('const splitShortNotifications = height < 600;');
     expect(notifications).toContain('const microShortNotifications = height < 380;');
+    expect(notifications).toContain('const splitShortNudgeRowStyle = {');
+    expect(notifications).toContain('marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,');
+    expect(notifications).toContain('style={splitShortNudgeRowStyle}');
     expect(notifications).toContain('const ultraShortNudgesStyle = microShortNotifications');
     expect(notifications).toContain(
       'const ultraShortNudgesStyle = microShortNotifications\n    ? { marginTop: 136 }',
@@ -213,9 +216,6 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('last={splitShortNotifications}');
     expect(notifications).toContain('{splitShortNotifications ? null : (');
     expect(notifications).toContain('{splitShortNotifications ? (');
-    expect(notifications).toContain(
-      '<View style={{ marginTop: microShortNotifications ? 72 : 88 }}>',
-    );
     expect(notifications).toContain('ToggleSwitch');
     expect(notifications).toContain('accessibilityLabel={title}');
   });

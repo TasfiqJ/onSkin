@@ -133,6 +133,9 @@ export default function NotificationSettingsScreen() {
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
+  const splitShortNudgeRowStyle = {
+    marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,
+  };
   const ultraShortNudgesStyle = microShortNotifications
     ? { marginTop: 136 }
     : ultraShortNotifications
@@ -224,7 +227,7 @@ export default function NotificationSettingsScreen() {
         </View>
 
         {splitShortNotifications ? (
-          <View style={{ marginTop: microShortNotifications ? 72 : 88 }}>
+          <View style={splitShortNudgeRowStyle}>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
               <Row
                 title="Progress-photo nudge"

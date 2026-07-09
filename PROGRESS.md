@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Tightened the Settings Notifications support-floor nudge spacing after a
+  focused Codex in-app browser pass found `Progress-photo nudge` still peeking
+  by roughly 5 px at the 320 x 480 launch support floor. The lower nudge group
+  now starts fully below the first support-floor viewport while 320 x 568 and
+  390 x 844 remain complete. The route-contract test was updated, the user-like
+  `Replenishment` toggle changes `aria-checked`, and the final evidence reports
+  zero clipped controls, zero sub-44 visible controls, zero blocked hit-tests,
+  zero horizontal overflow, and zero current-run unexpected warn/error logs in
+  `test-results/human-e2e/2026-07-09/settings-notifications-support-floor-current/`
+  plus
+  `docs/e2e-bug-reports/2026-07-09-settings-notifications-support-floor-nudge.md`.
+
 - Cleared a supported-phone 120% text-pressure follow-up across the launch
   support floor and modern phone sizes. The rerun found `/shelf/no-match`
   manual recovery clipping, `/settings/notifications` promotional switch

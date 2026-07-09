@@ -1,0 +1,58 @@
+{
+  "date": "2026-07-09",
+  "task": "Settings Notifications support-floor spacer verification",
+  "appSurface": "Expo web in Codex in-app browser",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8255",
+  "route": "/settings/notifications",
+  "cases": [
+    {
+      "name": "01-support-floor-320x480",
+      "viewport": {
+        "height": 481,
+        "width": 320
+      },
+      "visibleControlCount": 7,
+      "clippedCount": 0,
+      "sub44Count": 0,
+      "blockedCount": 0,
+      "horizontalOverflow": 0,
+      "documentHeight": 481
+    },
+    {
+      "name": "02-compact-320x568",
+      "viewport": {
+        "height": 569,
+        "width": 320
+      },
+      "visibleControlCount": 8,
+      "clippedCount": 0,
+      "sub44Count": 0,
+      "blockedCount": 0,
+      "horizontalOverflow": 0,
+      "documentHeight": 569
+    },
+    {
+      "name": "03-modern-390x844",
+      "viewport": {
+        "height": 845,
+        "width": 390
+      },
+      "visibleControlCount": 9,
+      "clippedCount": 0,
+      "sub44Count": 0,
+      "blockedCount": 0,
+      "horizontalOverflow": 0,
+      "documentHeight": 845
+    }
+  ],
+  "interaction": {
+    "count": 1,
+    "before": "false",
+    "after": "true"
+  },
+  "unexpectedLogCount": 0,
+  "unexpectedLogs": [],
+  "allowedWarnErrorLogCount": 0,
+  "verdict": "pass",
+  "logScope": "Only warn/error entries with no URL or localhost:8255 URL are counted; stale prior-browser-session logs are excluded."
+}
