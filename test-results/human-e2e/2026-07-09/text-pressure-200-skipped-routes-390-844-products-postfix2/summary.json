@@ -1,0 +1,22 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-skipped-routes-390-844-products-postfix2",
+  "generatedAt": "2026-07-09T17:37:59.306Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/products",
+      "scaledCount": 6
+    }
+  ]
+}

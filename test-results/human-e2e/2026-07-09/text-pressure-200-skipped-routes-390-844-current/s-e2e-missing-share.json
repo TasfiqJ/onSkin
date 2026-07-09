@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 655
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan a product",
+      "label": "Scan a product",
+      "partialClip": false,
+      "rect": {
+        "bottom": 692,
+        "height": 74,
+        "left": 24,
+        "right": 366,
+        "top": 618,
+        "visibleHeight": 74,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 741
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add manually",
+      "label": "Add manually",
+      "partialClip": false,
+      "rect": {
+        "bottom": 778,
+        "height": 74,
+        "left": 24,
+        "right": 366,
+        "top": 704,
+        "visibleHeight": 74,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/s/e2e-missing-share",
+  "textOverflows": [],
+  "textStart": "SHELF CHECK Check your own shelf. Shared cards open to a fresh shelf check. RoutineKind never puts product names, profile details, photos, or health context in public links. Scan a product Add manually",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/s/e2e-missing-share",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8232/s/e2e-missing-share",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

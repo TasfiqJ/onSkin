@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/conflict/00000000-0000-4000-8000-000000000001",
+  "textOverflows": [],
+  "textStart": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. Back to Shelf Add a product Old links never reuse stale routine advice.",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/conflict/00000000-0000-4000-8000-000000000001",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8232/conflict/00000000-0000-4000-8000-000000000001",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

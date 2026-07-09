@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 740
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Yes, remind me",
+      "label": "Yes, remind me",
+      "partialClip": false,
+      "rect": {
+        "bottom": 768,
+        "height": 56,
+        "left": 24,
+        "right": 366,
+        "top": 712,
+        "visibleHeight": 56,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 804
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Not now",
+      "label": "Not now",
+      "partialClip": false,
+      "rect": {
+        "bottom": 828,
+        "height": 48,
+        "left": 24,
+        "right": 366,
+        "top": 780,
+        "visibleHeight": 48,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/onboarding/notifications",
+  "textOverflows": [],
+  "textStart": "A gentle nudge at your routine times? You pick the moments. Morning and evening, and we’ll quietly remind you. No noise, no pressure, and you can change it anytime. ✓ Only at times you choose ✓ Discreet on your lock screen ✓ Off in one tap, whenever Yes, remind me Not now",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/onboarding/notifications",
+  "scaledCount": 10,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/notifications",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

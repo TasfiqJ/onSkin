@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 120.890625,
+        "y": 514.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 538.5,
+        "height": 48,
+        "left": 96.890625,
+        "right": 144.890625,
+        "top": 490.5,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 194.265625,
+        "y": 514.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 538.5,
+        "height": 48,
+        "left": 170.25,
+        "right": 218.28125,
+        "top": 490.5,
+        "visibleHeight": 48,
+        "visibleWidth": 48.03125,
+        "width": 48.03125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 268.375,
+        "y": 514.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 538.5,
+        "height": 48,
+        "left": 243.640625,
+        "right": 293.109375,
+        "top": 490.5,
+        "visibleHeight": 48,
+        "visibleWidth": 49.46875,
+        "width": 49.46875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 743
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "See current Pro plan",
+      "label": "See current Pro plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 770,
+        "height": 54,
+        "left": 30,
+        "right": 360,
+        "top": 716,
+        "visibleHeight": 54,
+        "visibleWidth": 330,
+        "width": 330
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 804
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No thanks",
+      "label": "No thanks",
+      "partialClip": false,
+      "rect": {
+        "bottom": 828,
+        "height": 48,
+        "left": 30,
+        "right": 360,
+        "top": 780,
+        "visibleHeight": 48,
+        "visibleWidth": 330,
+        "width": 330
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/paywall/winback",
+  "textOverflows": [],
+  "textStart": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/paywall/winback",
+  "scaledCount": 13,
+  "textScale": 2,
+  "url": "http://localhost:8232/paywall/winback",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

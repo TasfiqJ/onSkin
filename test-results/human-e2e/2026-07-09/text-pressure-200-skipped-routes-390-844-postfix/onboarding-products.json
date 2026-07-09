@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 187
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 214,
+        "height": 54,
+        "left": 44,
+        "right": 346,
+        "top": 160,
+        "visibleHeight": 54,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 800
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Skip for now",
+      "label": "Skip for now",
+      "partialClip": false,
+      "rect": {
+        "bottom": 828,
+        "height": 56,
+        "left": 24,
+        "right": 366,
+        "top": 772,
+        "visibleHeight": 56,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/onboarding/products",
+  "textOverflows": [],
+  "textStart": "What's on your shelf? 0 OF 3 PRODUCTS PRODUCT NAME Skip for now",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/onboarding/products",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/products",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

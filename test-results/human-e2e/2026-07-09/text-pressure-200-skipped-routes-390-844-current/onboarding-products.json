@@ -1,0 +1,155 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 843
+      },
+      "centerBlocked": true,
+      "hitInside": false,
+      "hitTag": "DIV",
+      "hitText": "Skip for now",
+      "label": "Product name",
+      "partialClip": true,
+      "rect": {
+        "bottom": 884,
+        "height": 54,
+        "left": 44,
+        "right": 346,
+        "top": 830,
+        "visibleHeight": 14,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": true
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 791
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Skip for now",
+      "label": "Skip for now",
+      "partialClip": false,
+      "rect": {
+        "bottom": 828,
+        "height": 74,
+        "left": 24,
+        "right": 366,
+        "top": 754,
+        "visibleHeight": 74,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 3,
+  "issues": [
+    {
+      "control": {
+        "center": {
+          "x": 195,
+          "y": 843
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "Skip for now",
+        "label": "Product name",
+        "partialClip": true,
+        "rect": {
+          "bottom": 884,
+          "height": 54,
+          "left": 44,
+          "right": 346,
+          "top": 830,
+          "visibleHeight": 14,
+          "visibleWidth": 302,
+          "width": 302
+        },
+        "role": "input",
+        "tag": "INPUT",
+        "tinyTarget": true
+      },
+      "type": "tinyTarget"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 195,
+          "y": 843
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "Skip for now",
+        "label": "Product name",
+        "partialClip": true,
+        "rect": {
+          "bottom": 884,
+          "height": 54,
+          "left": 44,
+          "right": 346,
+          "top": 830,
+          "visibleHeight": 14,
+          "visibleWidth": 302,
+          "width": 302
+        },
+        "role": "input",
+        "tag": "INPUT",
+        "tinyTarget": true
+      },
+      "type": "centerBlocked"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 195,
+          "y": 843
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "DIV",
+        "hitText": "Skip for now",
+        "label": "Product name",
+        "partialClip": true,
+        "rect": {
+          "bottom": 884,
+          "height": 54,
+          "left": 44,
+          "right": 346,
+          "top": 830,
+          "visibleHeight": 14,
+          "visibleWidth": 302,
+          "width": 302
+        },
+        "role": "input",
+        "tag": "INPUT",
+        "tinyTarget": true
+      },
+      "type": "partialClip"
+    }
+  ],
+  "location": "http://localhost:8232/onboarding/products",
+  "textOverflows": [],
+  "textStart": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm Add to shelf Skip for now",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/onboarding/products",
+  "scaledCount": 16,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/products",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
