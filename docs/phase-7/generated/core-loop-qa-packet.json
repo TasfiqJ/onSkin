@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T11:48:08.924Z",
+  "generatedAt": "2026-07-09T11:48:28.909Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "3e12d1e0db72bcdb38a30239b182493d8f72037a",
+  "gitSha": "c5b01317a3504a24f3e880536816672184dd7c26",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
