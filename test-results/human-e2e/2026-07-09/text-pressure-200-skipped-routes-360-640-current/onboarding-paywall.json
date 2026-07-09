@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 180,
+        "y": 362
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 386,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 338,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 440
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No credit card. See your routine work, then decide.",
+      "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 470,
+        "height": 60,
+        "left": 24,
+        "right": 336,
+        "top": 410,
+        "visibleHeight": 60,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 105.890625,
+        "y": 494
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 518,
+        "height": 48,
+        "left": 81.890625,
+        "right": 129.890625,
+        "top": 470,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 179.265625,
+        "y": 494
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 518,
+        "height": 48,
+        "left": 155.25,
+        "right": 203.28125,
+        "top": 470,
+        "visibleHeight": 48,
+        "visibleWidth": 48.03125,
+        "width": 48.03125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 253.375,
+        "y": 494
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 518,
+        "height": 48,
+        "left": 228.640625,
+        "right": 278.109375,
+        "top": 470,
+        "visibleHeight": 48,
+        "visibleWidth": 49.46875,
+        "width": 49.46875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/onboarding/paywall",
+  "textOverflows": [],
+  "textStart": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "route": "/onboarding/paywall",
+  "scaledCount": 23,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/paywall",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
