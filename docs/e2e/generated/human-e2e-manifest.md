@@ -1,8 +1,8 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T09:48:44.943Z
-Git SHA: 30c7e6cd1e6066bcb35e8071065f3a78eab99aa2
-Evidence date: 2026-07-08
+Generated: 2026-07-09T10:14:27.222Z
+Git SHA: 1abe840109cdd009d0cfe3f8ab20da146d144b6d
+Evidence date: 2026-07-09
 Status: pass
 
 This generated packet is created by `npm run e2e:human:manifest`. It turns
@@ -12,12 +12,14 @@ dependency to the repo.
 
 ## Gates
 
-| Gate                                           | Class           | Status | Detail                 | Files | Folder                                                                               |
-| ---------------------------------------------- | --------------- | ------ | ---------------------- | ----- | ------------------------------------------------------------------------------------ |
-| 320 x 480 supported-floor route rerun          | launch-blocking | pass   | 0 failures recorded.   | 151   | test-results/human-e2e/2026-07-08/current-main-short-phone-480-rerun                 |
-| 320 x 430 resilience route clearance           | resilience      | pass   | 0 failures recorded.   | 101   | test-results/human-e2e/2026-07-08/current-main-short-phone-430-final-clearance-sweep |
-| 320 x 390 split-short stress clearance         | resilience      | pass   | 0 failures recorded.   | 51    | test-results/human-e2e/2026-07-08/current-main-split-short-phone-390-sweep-postfix   |
-| 320 x 430 first-session activation stress pass | resilience      | pass   | summary verdict: pass. | 15    | test-results/human-e2e/2026-07-08/onboarding-first-session-430-current               |
+| Gate                                                     | Class           | Status  | Detail                                                  | Files | Folder                                                                               |
+| -------------------------------------------------------- | --------------- | ------- | ------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
+| 320 x 480 supported-floor 170% text-pressure route sweep | launch-blocking | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-4      |
+| 390 x 844 supported-phone 170% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6             |
+| 430 x 932 supported-phone 170% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3             |
+| 320 x 430 resilience route clearance                     | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep |
+| 320 x 390 split-short stress clearance                   | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix   |
+| 320 x 430 first-session activation stress pass           | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current               |
 
 ## Warnings
 
