@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T08:37:48.592Z",
+  "generatedAt": "2026-07-09T10:15:36.464Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.",
   "strict": false,
-  "gitSha": "a817b68770e59c386ab9f713fdf0affdc579a43c",
+  "gitSha": "92dc2cece38f87573bbf5973518cd1337ef39f6e",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -666,8 +666,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 39223,
-          "sha256": "b2fc20b270be9a31141b4cbcd678bd1ca093ae9815f34b57a8a4fb69e4f4a9dc"
+          "bytes": 39675,
+          "sha256": "8e824af7a70e1244ed5427a99bd90af4ed939f950a8a84f305c0198e43905560"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
