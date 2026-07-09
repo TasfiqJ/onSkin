@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T21:35:05.526Z",
+  "generatedAt": "2026-07-09T21:37:29.252Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
-  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+  "gitSha": "40b29cf43cb49e2309d819c028f66e271c9524e4",
+  "gitStatus": "",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -236,26 +236,26 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 11761,
-      "sha256": "80e8c0838c6fb6fd6f761a33c620a76425f82a722c8a1cf786ccf3c337657d76"
+      "bytes": 11266,
+      "sha256": "ca78837fc2396233147e26b88c6d76cc63664d310d7752a4235b828e9ab5d345"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
-      "bytes": 10016,
-      "sha256": "f87abc7ab680bc3f5ab73152cdaf170f44cc759e7ba41d1428bd419ffef76843"
+      "bytes": 9912,
+      "sha256": "0cc8a288612bb88880838f4da6596fde657b597b43963ceaa07864392dfed7e6"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 11014,
-      "sha256": "af6be77be9bcca5a478e89ebf00dd9b10534eac1aa2a1542b9eb36f56f6560fc"
+      "bytes": 10522,
+      "sha256": "dd9d9cfb95d57b1c836c777f6a8aae12bfa3f43a19a933db00235e05364836d4"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7962,
-      "sha256": "a066917f393d45790c4af353362c95589212fcbffc7bd6a542aa2eb00ee69d56"
+      "bytes": 7861,
+      "sha256": "447729dece6efa071365ab9e8582c1548f70cbd24d0a3d849cc40535ec3fd878"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -311,7 +311,5 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": [
-    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
-  ]
+  "warnings": []
 }

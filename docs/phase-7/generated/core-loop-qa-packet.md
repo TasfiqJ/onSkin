@@ -1,8 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T21:35:05.526Z
-Git SHA: 9636f618054c09fb1f3536ea007b5e526dee87d6
-Git status: DIRTY
+Generated at: 2026-07-09T21:37:29.252Z
+Git SHA: 40b29cf43cb49e2309d819c028f66e271c9524e4
+Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -74,10 +74,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/USER_FLOW_TREE.md | present | 297114 | 224efda71c736d59f83aabd8432cf174cdfd64d148245713d38e17a8f8794647 |
 | docs/e2e/generated/human-e2e-manifest.json | present | 19996 | e6fd3d871a5d80b4c7ad9f51a45731399e9be1f1846de3231795bb298c1babb1 |
 | docs/e2e/generated/human-e2e-manifest.md | present | 7553 | 09c53bb8774f7e58d22f48173a9852843d96044891e9fde141e116fd52ea71f1 |
-| docs/phase-5/generated/device-qa-packet.json | present | 11761 | 80e8c0838c6fb6fd6f761a33c620a76425f82a722c8a1cf786ccf3c337657d76 |
-| docs/phase-5/generated/device-qa-packet.md | present | 10016 | f87abc7ab680bc3f5ab73152cdaf170f44cc759e7ba41d1428bd419ffef76843 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 11014 | af6be77be9bcca5a478e89ebf00dd9b10534eac1aa2a1542b9eb36f56f6560fc |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7962 | a066917f393d45790c4af353362c95589212fcbffc7bd6a542aa2eb00ee69d56 |
+| docs/phase-5/generated/device-qa-packet.json | present | 11266 | ca78837fc2396233147e26b88c6d76cc63664d310d7752a4235b828e9ab5d345 |
+| docs/phase-5/generated/device-qa-packet.md | present | 9912 | 0cc8a288612bb88880838f4da6596fde657b597b43963ceaa07864392dfed7e6 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10522 | dd9d9cfb95d57b1c836c777f6a8aae12bfa3f43a19a933db00235e05364836d4 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7861 | 447729dece6efa071365ab9e8582c1548f70cbd24d0a3d849cc40535ec3fd878 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4705 | 5388ca6479bdd3bf247c172b724e14b53be9bc1e0bb590f91ee546f150d2fe50 |
@@ -110,4 +110,4 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Warnings
 
-- Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.
+- none

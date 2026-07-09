@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T21:34:36.164Z",
+  "generatedAt": "2026-07-09T21:37:28.766Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
-  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+  "gitSha": "40b29cf43cb49e2309d819c028f66e271c9524e4",
+  "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 82326,
-    "sha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40",
-    "currentSha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40"
+    "bytes": 81829,
+    "sha256": "0eb3bef5f387ab7fb7724102a7a858255e5d0e727ccb40a3b682865435f9ca2b",
+    "currentSha256": "0eb3bef5f387ab7fb7724102a7a858255e5d0e727ccb40a3b682865435f9ca2b"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -31,7 +31,7 @@
       "notCleared": 20
     },
     "blockerCount": 0,
-    "warningCount": 2
+    "warningCount": 0
   },
   "items": [
     {
@@ -2134,8 +2134,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 review operator queue generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.",
-    "Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff."
-  ]
+  "warnings": []
 }
