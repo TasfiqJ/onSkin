@@ -107,4 +107,7 @@ Do not use:
 - Unit tests scan app copy modules for high-risk claims.
 - `npm run phase3:audit-copy` scans source/docs for placeholders and risk vocabulary.
 - `npm run phase3:audit-copy:strict` must fail until legal/clinical blockers are cleared and placeholder production copy is replaced.
-- Reviewers must use `clinical-review-log.md`, `cosmetic-chemistry-review-log.md`, and `quiz-fto-summary.md` before any reviewed content is exposed in production.
+- Reviewers must use `legal-regulatory-review-log.md`,
+  `clinical-review-log.md`, `cosmetic-chemistry-review-log.md`,
+  `privacy-security-review-log.md`, and `ip-fto-review-log.md` before any
+  reviewed content is exposed in production.

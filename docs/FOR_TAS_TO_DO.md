@@ -115,7 +115,11 @@ Status: launch-blocked
 
 Evidence needed:
 
-- Signed review logs in `docs/phase-3/`.
+- Signed review rows in `docs/phase-3/legal-regulatory-review-log.md`,
+  `docs/phase-3/clinical-review-log.md`,
+  `docs/phase-3/cosmetic-chemistry-review-log.md`,
+  `docs/phase-3/privacy-security-review-log.md`, and
+  `docs/phase-3/ip-fto-review-log.md`.
 - Strict Phase 3 audit passing or explicitly accepted with recorded exceptions.
 - Generated `docs/phase-3/generated/review-packet.md` with clean Git status,
   current source hashes, and reviewer signoff tied to the exact reviewed build.

@@ -6,9 +6,10 @@ This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.
 
 Phase 3 local governance scaffolding exists: regulatory/data/consent/store
-metadata packets, clinical and chemistry review logs, policy-link wiring, review
-packet generation, and claim/gate tests. This is not legal, clinical, chemistry,
-privacy, or IP clearance.
+metadata packets, structured legal/regulatory, clinical, chemistry,
+privacy/security, and IP/FTO review logs, policy-link wiring, review packet
+generation, and claim/gate tests. This is not legal, clinical, chemistry,
+privacy, security, or IP clearance.
 
 Phase 4 catalog scaffolding exists: catalog schema/RLS, source memos, parser and
 quality logic, OBF fixture import/QA tooling, catalog lookup/search/report Edge

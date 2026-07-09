@@ -25,8 +25,11 @@ Read this with:
 - `docs/store-privacy-inventory.md`
 - `docs/seven-figure-readiness.md`
 - `docs/phase-3/regulatory-positioning-memo.md`
+- `docs/phase-3/legal-regulatory-review-log.md`
 - `docs/phase-3/clinical-review-log.md`
 - `docs/phase-3/cosmetic-chemistry-review-log.md`
+- `docs/phase-3/privacy-security-review-log.md`
+- `docs/phase-3/ip-fto-review-log.md`
 - `docs/phase-3/quiz-fto-summary.md`
 - `docs/phase-3/data-inventory.md`
 - `docs/phase-3/consent-matrix.md`
@@ -153,11 +156,13 @@ handoff source in this workspace is the local `dx*` folders and `.dc.html`
 artifacts.
 
 Phase 3 local governance scaffolding exists, but it is not professional
-clearance. The repo now has Phase 3 review logs, regulatory/data/consent/store
-metadata packets, `scripts/phase3/audit-copy.mjs`,
+clearance. The repo now has structured Phase 3 legal/regulatory, clinical,
+cosmetic chemistry, privacy/security, and IP/FTO review logs,
+regulatory/data/consent/store metadata packets, `scripts/phase3/audit-copy.mjs`,
 `scripts/phase3/build-review-packet.mjs`, a policy-link registry, store metadata
 claim tests, and production gate tests. The strict Phase 3 audit must remain
-blocking until counsel, dermatologist, and cosmetic-chemist signoffs are real.
+blocking until counsel, dermatologist, cosmetic-chemist, privacy/security, and
+IP/FTO signoffs are real.
 
 ## B-BRAND - RoutineKind candidate clearance and launch identity
 

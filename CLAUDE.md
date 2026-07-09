@@ -52,8 +52,11 @@ authoritative for product behavior, schema, privacy posture, and launch scope:
 - `docs/phase-2-status.md`
 - `docs/store-privacy-inventory.md`
 - `docs/phase-3/regulatory-positioning-memo.md`
+- `docs/phase-3/legal-regulatory-review-log.md`
 - `docs/phase-3/clinical-review-log.md`
 - `docs/phase-3/cosmetic-chemistry-review-log.md`
+- `docs/phase-3/privacy-security-review-log.md`
+- `docs/phase-3/ip-fto-review-log.md`
 - `docs/phase-3/quiz-fto-summary.md`
 - `docs/phase-3/data-inventory.md`
 - `docs/phase-3/consent-matrix.md`

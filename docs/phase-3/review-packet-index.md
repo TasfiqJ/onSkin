@@ -10,9 +10,9 @@ a generated packet that shows `Git status: clean`; treat `Git status: DIRTY` as
 investigation evidence only.
 
 `npm run phase3:review-worklist` generates a machine-readable reviewer worklist
-from the clinical and cosmetic chemistry logs. It is an operator handoff only:
-it keeps launch gates blocked until named reviewers sign off against the exact
-source hashes.
+from the legal/regulatory, clinical, cosmetic chemistry, privacy/security, and
+IP/FTO review logs. It is an operator handoff only: it keeps launch gates
+blocked until named reviewers sign off against the exact source hashes.
 
 ## Packet Contract
 
@@ -25,6 +25,7 @@ source hashes.
 
 ## Legal/Regulatory Packet
 
+- `docs/phase-3/legal-regulatory-review-log.md`
 - `docs/phase-3/regulatory-positioning-memo.md`
 - `docs/phase-3/launch-claims-vocabulary.md`
 - `docs/phase-3/data-inventory.md`
@@ -62,6 +63,7 @@ source hashes.
 
 ## IP/FTO Packet
 
+- `docs/phase-3/ip-fto-review-log.md`
 - `docs/phase-3/quiz-fto-summary.md`
 - `apps/mobile/src/features/onboarding/quiz.ts`
 - `apps/mobile/src/app/onboarding/quiz.tsx`
@@ -69,6 +71,7 @@ source hashes.
 
 ## Privacy/Platform Packet
 
+- `docs/phase-3/privacy-security-review-log.md`
 - `docs/store-privacy-inventory.md`
 - `docs/phase-3/data-inventory.md`
 - `docs/phase-3/consent-matrix.md`

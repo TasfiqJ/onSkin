@@ -109,6 +109,13 @@ No one may mark Phase 3 complete until these are attached to the review logs:
 | IP/FTO             | Counsel                                              | Quiz flow, scoring, similarity to SkinSort/competitors, brand/marks     | Not retained / not cleared |
 | Privacy/security   | Counsel plus technical owner                         | Data inventory, processors, deletion/export, breach response            | Not cleared                |
 
+The authoritative review-log files are
+`docs/phase-3/legal-regulatory-review-log.md`,
+`docs/phase-3/clinical-review-log.md`,
+`docs/phase-3/cosmetic-chemistry-review-log.md`,
+`docs/phase-3/privacy-security-review-log.md`, and
+`docs/phase-3/ip-fto-review-log.md`.
+
 ## Seven-Figure Readiness Judgment
 
 Phase 3 is commercially necessary. The app idea can be worth building only if customers believe it is calmer, more private, more useful, and more honest than the noisy skincare internet. That requires conservative claims, real review evidence, and visible privacy controls. Shipping placeholder quiz/legal copy or unreviewed medical-adjacent claims would damage the trust wedge that the business depends on.

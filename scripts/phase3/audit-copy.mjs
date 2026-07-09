@@ -172,9 +172,27 @@ function checkReviewPacketContract() {
     'scripts/phase3/audit-copy.mjs',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
+    'docs/phase-3/legal-regulatory-review-log.md',
+    'docs/phase-3/privacy-security-review-log.md',
+    'docs/phase-3/ip-fto-review-log.md',
   ]) {
     if (!source.includes(`'${file}'`) && !source.includes(`"${file}"`)) {
       addContractFinding(`Phase 3 review packet must hash ${file}.`);
+    }
+  }
+
+  const worklistRel = 'scripts/phase3/build-review-worklist.mjs';
+  const worklistAbs = resolve(root, worklistRel);
+  const worklistSource = existsSync(worklistAbs) ? readFileSync(worklistAbs, 'utf8') : '';
+  for (const file of [
+    'docs/phase-3/legal-regulatory-review-log.md',
+    'docs/phase-3/clinical-review-log.md',
+    'docs/phase-3/cosmetic-chemistry-review-log.md',
+    'docs/phase-3/privacy-security-review-log.md',
+    'docs/phase-3/ip-fto-review-log.md',
+  ]) {
+    if (!worklistSource.includes(`'${file}'`) && !worklistSource.includes(`"${file}"`)) {
+      addContractFinding(`Phase 3 review worklist must parse ${file}.`);
     }
   }
 }

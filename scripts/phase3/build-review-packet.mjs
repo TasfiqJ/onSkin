@@ -22,6 +22,7 @@ const packets = {
     'docs/phase-3/review-packet-index.md',
   ],
   legalRegulatory: [
+    'docs/phase-3/legal-regulatory-review-log.md',
     'docs/phase-3/regulatory-positioning-memo.md',
     'docs/phase-3/launch-claims-vocabulary.md',
     'docs/phase-3/data-inventory.md',
@@ -56,12 +57,14 @@ const packets = {
     'apps/mobile/src/features/shelf/categories.ts',
   ],
   ipFto: [
+    'docs/phase-3/ip-fto-review-log.md',
     'docs/phase-3/quiz-fto-summary.md',
     'apps/mobile/src/features/onboarding/quiz.ts',
     'apps/mobile/src/app/onboarding/quiz.tsx',
     'apps/mobile/src/app/onboarding/reveal.tsx',
   ],
   privacyPlatform: [
+    'docs/phase-3/privacy-security-review-log.md',
     'docs/store-privacy-inventory.md',
     'docs/phase-3/data-inventory.md',
     'docs/phase-3/consent-matrix.md',

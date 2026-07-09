@@ -12,6 +12,13 @@ const outJson =
 const outMd = process.env.PHASE3_REVIEW_WORKLIST_MD ?? 'docs/phase-3/generated/review-worklist.md';
 const reviewLogs = [
   {
+    domain: 'legalRegulatory',
+    path: 'docs/phase-3/legal-regulatory-review-log.md',
+    tableHeading: '## Inventory',
+    requiredReviewer:
+      'qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience',
+  },
+  {
     domain: 'clinical',
     path: 'docs/phase-3/clinical-review-log.md',
     tableHeading: '## Content Inventory',
@@ -22,6 +29,18 @@ const reviewLogs = [
     path: 'docs/phase-3/cosmetic-chemistry-review-log.md',
     tableHeading: '## Inventory',
     requiredReviewer: 'qualified cosmetic chemist/formulator',
+  },
+  {
+    domain: 'privacySecurity',
+    path: 'docs/phase-3/privacy-security-review-log.md',
+    tableHeading: '## Inventory',
+    requiredReviewer: 'privacy counsel plus technical security owner',
+  },
+  {
+    domain: 'ipFto',
+    path: 'docs/phase-3/ip-fto-review-log.md',
+    tableHeading: '## Inventory',
+    requiredReviewer: 'qualified trademark, copyright, and product/FTO counsel',
   },
 ];
 const packetOutputPaths = [outJson, outMd].map((path) => normalizeRepoPath(path));
@@ -255,7 +274,7 @@ const missingSourcePathCount = items.reduce(
 const worklist = {
   generatedAt: new Date().toISOString(),
   purpose:
-    'Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.',
+    'Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.',
   strict,
   gitSha,
   gitStatus,
@@ -287,10 +306,10 @@ const mdContent = [
   `Git SHA: ${worklist.gitSha}`,
   `Git status: ${worklist.gitStatus ? 'DIRTY' : 'clean'}`,
   '',
-  'This generated worklist converts the clinical and cosmetic chemistry review',
-  'logs into an operator handoff. It does not mark anything approved; it records',
-  'the exact source files and hashes reviewers must inspect before launch gates',
-  'can close.',
+  'This generated worklist converts the legal, clinical, cosmetic chemistry,',
+  'privacy/security, and IP/FTO review logs into an operator handoff. It does',
+  'not mark anything approved; it records the exact source files and hashes',
+  'reviewers must inspect before launch gates can close.',
   '',
   '## Summary',
   '',
