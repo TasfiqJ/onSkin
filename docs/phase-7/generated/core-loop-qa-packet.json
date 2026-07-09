@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T00:32:42.333Z",
+  "generatedAt": "2026-07-09T00:38:53.006Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "846ec061d999b25aece8ce490bc0863967c568f9",
+  "gitSha": "ffc1c2dc53aaee71821f0033949f5049b3e37bd1",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -225,37 +225,37 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "943bd6b20f59f7d8b3ead08c593c47f5cc25a6a17901f2a76f081d47e35071e9"
+      "sha256": "fad28ef6cbdc870520be02c17c45f39a00501783e6ba219989b94b33ab3b1453"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "0e4a37d62a078ac42288f8bdf5f2ee46b4de7e3c9a38c3905fbaa5451a7f729a"
+      "sha256": "04d0cb41128ae3defd1973f74b4e09746c1a7e81729e074b34d2d4815e9a0a5e"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 11077,
-      "sha256": "628584588935b41290bcc99017126c07f9a3520e8c39ff7a5c70a2ce0269523d"
+      "sha256": "9f55cee5daf178dfa46ca543188d5cff2e87f85538ace04d355dc3e8cab234a7"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 9770,
-      "sha256": "33a512265af18f8f82531664dfad818fb1b7b006caceef1f876e544acb638d09"
+      "sha256": "9e554a23233da313a82dfd642884eccedb7c82e97e8ec80f0575b6d25734c6ad"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 10518,
-      "sha256": "a634c8396dadeb2a8c29db2fbf505f5ce3232780407fdfce62d3f12efe2df9df"
+      "sha256": "c0cfea02cf790b797ce711e7172433d1e1af87684da1e08b4486b77b84437a23"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 7857,
-      "sha256": "42723389a0cc4a61f5e188907af930d8fb0cbb8b5555a6e42e439b696b3c4ba1"
+      "sha256": "8b4f48283af81612a89cba59390c94a4ace692cac5b8264837895cf08a4b01f9"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
