@@ -42,6 +42,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN = 180;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
@@ -80,8 +81,10 @@ describe('Settings route contracts', () => {
     expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
     expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
-    expect(you).toContain("privacyDirectEntry && compactPhone && row.key === 'dataExport'");
+    expect(you).toContain("privacyDirectEntry && row.key === 'dataExport'");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }');
+    expect(you).toContain("privacyDirectEntry && row.key === 'support'");
+    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN }');
     expect(you).toContain('<View style={narrowPrivacyWithdrawStyle}>');
     expect(you).toContain("className={privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN }');

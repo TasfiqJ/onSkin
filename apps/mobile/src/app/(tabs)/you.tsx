@@ -76,6 +76,7 @@ const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
 const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 48;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
+const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;
 const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
 const PRIVACY_DIRECT_ENTRY_DATA_RIGHTS_MARGIN = 180;
 
@@ -932,8 +933,10 @@ export default function YouScreen() {
             <View
               key={row.key}
               style={
-                privacyDirectEntry && compactPhone && row.key === 'dataExport'
+                privacyDirectEntry && row.key === 'dataExport'
                   ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }
+                  : privacyDirectEntry && row.key === 'support'
+                    ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN }
                   : undefined
               }
             >

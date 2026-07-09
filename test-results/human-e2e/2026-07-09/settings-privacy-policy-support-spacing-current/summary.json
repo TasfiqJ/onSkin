@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-07-09T08:19:49.641Z",
+  "route": "/settings/privacy",
+  "expectedResolvedRoute": "/you?section=privacy",
+  "appUrl": "http://localhost:8255/settings/privacy",
+  "surface": "Codex in-app browser, Expo web localhost:8255",
+  "pass": true,
+  "cases": [
+    {
+      "name": "floor-320x480",
+      "width": 320,
+      "height": 480,
+      "href": "http://localhost:8255/you?section=privacy",
+      "passed": true,
+      "horizontalOverflow": 0,
+      "visibleControlCount": 7,
+      "clippedControls": 0,
+      "sub44Controls": 0,
+      "blockedControls": 0,
+      "visiblePolicyRows": 0,
+      "unexpectedLogs": 0,
+      "dialog": null,
+      "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\settings-privacy-policy-support-spacing-current\\floor-320x480-settings-privacy.png"
+    },
+    {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844,
+      "href": "http://localhost:8255/you?section=privacy",
+      "passed": true,
+      "horizontalOverflow": 0,
+      "visibleControlCount": 7,
+      "clippedControls": 0,
+      "sub44Controls": 0,
+      "blockedControls": 0,
+      "visiblePolicyRows": 0,
+      "unexpectedLogs": 0,
+      "dialog": null,
+      "screenshotPath": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\settings-privacy-policy-support-spacing-current\\modern-390x844-settings-privacy.png"
+    }
+  ]
+}
