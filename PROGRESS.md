@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Extended `/onboarding/products` compact footer/category behavior to 390-wide,
+  tall supported-phone 200% text-pressure layouts. The onboarding route
+  contract passes, and focused Expo web evidence for `/onboarding/products` at
+  390 x 844 / 200% reports zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-products-390-844-current/`.
+
 - Added `brand:audit:strict` to the root `launch:verify` sweep and hardened
   the readiness-status audit so the root launch gate now fails if public
   launch-risk or review-needed legacy brand references return.

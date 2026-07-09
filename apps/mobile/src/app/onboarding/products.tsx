@@ -129,7 +129,11 @@ export default function ProductsScreen() {
   const added = data?.items ?? [];
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
-  const compactPhone = height < 640 || supportFloorTextPressurePhone;
+  const modernTextPressurePhone =
+    width <= 390 && height >= 800 && height < 900 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPhone = height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone;
+  const showIntroCopy = !modernTextPressurePhone;
+  const showProgressBody = !modernTextPressurePhone;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
   const showCompactCategoryFooter = compactFooterAdds;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);
@@ -228,10 +232,12 @@ export default function ProductsScreen() {
           <Text variant="title" className={compactPhone ? 'mt-4' : 'mt-6'}>
             What&apos;s on your shelf?
           </Text>
-          <Text variant="body" tone="muted" className={compactPhone ? 'mt-2' : 'mt-3'}>
-            Add the products you already use so we build around them. Even just the name helps us
-            spot conflicts. You can add more anytime from your Shelf.
-          </Text>
+          {showIntroCopy ? (
+            <Text variant="body" tone="muted" className={compactPhone ? 'mt-2' : 'mt-3'}>
+              Add the products you already use so we build around them. Even just the name helps us
+              spot conflicts. You can add more anytime from your Shelf.
+            </Text>
+          ) : null}
           <View
             className={
               compactPhone
@@ -244,12 +250,14 @@ export default function ProductsScreen() {
               {Math.min(added.length, ONBOARDING_PRODUCT_TARGET)} OF {ONBOARDING_PRODUCT_TARGET}{' '}
               PRODUCTS
             </Text>
-            <Text variant="bodySm" tone="muted" className="mt-1">
-              {progressBody}
-            </Text>
+            {showProgressBody ? (
+              <Text variant="bodySm" tone="muted" className="mt-1">
+                {progressBody}
+              </Text>
+            ) : null}
           </View>
 
-          <Card className={compactPhone ? 'mt-4 p-4' : 'mt-6'}>
+          <Card className={modernTextPressurePhone ? 'mt-3 p-4' : compactPhone ? 'mt-4 p-4' : 'mt-6'}>
             <Text variant="label" tone="muted" className="mb-2">
               PRODUCT NAME
             </Text>

@@ -81,10 +81,21 @@ describe('onboarding route contracts', () => {
       expect(source).toContain(
         "width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
       );
+    }
+    for (const source of [age, goals]) {
       expect(source).toContain(
         'const compactPhone = height < 640 || supportFloorTextPressurePhone;',
       );
     }
+    expect(products).toContain('const modernTextPressurePhone =');
+    expect(products).toContain(
+      "width <= 390 && height >= 800 && height < 900 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
+    expect(products).toContain(
+      'const compactPhone = height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone;',
+    );
+    expect(products).toContain('const showIntroCopy = !modernTextPressurePhone;');
+    expect(products).toContain('const showProgressBody = !modernTextPressurePhone;');
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
     expect(products).toContain('const inputRef = useRef<TextInput>(null)');
     expect(products).toContain('placeholder="e.g. Retinol serum"');
@@ -108,7 +119,9 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain("className={compactPhone ? 'mt-5' : 'mt-7'}");
     expect(quiz).toContain("className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}");
     expect(products).toContain("className={compactPhone ? 'mt-4' : 'mt-6'}");
-    expect(products).toContain("className={compactPhone ? 'mt-4 p-4' : 'mt-6'}");
+    expect(products).toContain(
+      "className={modernTextPressurePhone ? 'mt-3 p-4' : compactPhone ? 'mt-4 p-4' : 'mt-6'}",
+    );
     expect(products).toContain(
       'const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);',
     );
