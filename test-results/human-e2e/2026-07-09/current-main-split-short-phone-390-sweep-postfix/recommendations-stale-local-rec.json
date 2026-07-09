@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 269
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to For you",
+      "label": "Back to For you",
+      "partialClip": false,
+      "rect": {
+        "bottom": 293,
+        "height": 48,
+        "left": 103.203125,
+        "right": 216.796875,
+        "top": 245,
+        "visibleHeight": 48,
+        "visibleWidth": 113.59375,
+        "width": 113.59375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8311/recommendations/stale-local-rec",
+  "textOverflows": [],
+  "textStart": "< Suggestion This suggestion isn’t current anymore. Your routine may have changed. Back to For you",
+  "viewport": {
+    "width": 320,
+    "height": 390
+  },
+  "route": "/recommendations/stale-local-rec",
+  "scaledCount": 3,
+  "textScale": 1,
+  "url": "http://localhost:8311/recommendations/stale-local-rec",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

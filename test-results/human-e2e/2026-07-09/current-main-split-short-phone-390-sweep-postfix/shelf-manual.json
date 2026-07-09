@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Cancel",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 102
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 126,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 78,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 75.5390625,
+        "y": 180
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Brand",
+      "partialClip": false,
+      "rect": {
+        "bottom": 204,
+        "height": 48,
+        "left": 24,
+        "right": 127.078125,
+        "top": 156,
+        "visibleHeight": 48,
+        "visibleWidth": 103.078125,
+        "width": 103.078125
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 215.5390625,
+        "y": 180
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Choose",
+      "label": "Category",
+      "partialClip": false,
+      "rect": {
+        "bottom": 204,
+        "height": 48,
+        "left": 135.078125,
+        "right": 296,
+        "top": 156,
+        "visibleHeight": 48,
+        "visibleWidth": 160.921875,
+        "width": 160.921875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 354
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue",
+      "label": "Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 382,
+        "height": 56,
+        "left": 24,
+        "right": 296,
+        "top": 326,
+        "visibleHeight": 56,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8311/shelf/manual",
+  "textOverflows": [],
+  "textStart": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ Continue",
+  "viewport": {
+    "width": 320,
+    "height": 390
+  },
+  "route": "/shelf/manual",
+  "scaledCount": 8,
+  "textScale": 1,
+  "url": "http://localhost:8311/shelf/manual",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
