@@ -16,13 +16,24 @@ const outJson =
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
 const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 171);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1751);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1760);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
+  /\b1751\s+tests?\b/i,
+  /support-floor\s+170%\s+text-pressure/i,
+];
+
+const requiredManifestNeedles = [
+  '320 x 480 support-floor 200% text-pressure',
+  '375 x 812',
+  '390 x 844',
+  '430 x 932',
+  'text-pressure-200-support-floor-480-postfix-12',
+  'text-pressure-200-iphone-375-812-postfix',
 ];
 
 const requiredLaunchCommands = [
@@ -168,6 +179,9 @@ const docResults = docs.map((doc) => {
   const stalePatterns = matchingStalePatterns(doc.text);
   const hasExpectedTestPhrase =
     doc.text.includes(expectedTestPhrase) || doc.text.includes(expectedWorkspaceTestPhrase);
+  const missingManifestNeedles = requiredManifestNeedles.filter(
+    (needle) => !doc.text.includes(needle),
+  );
   const missingCommands = doc.requireCommands
     ? requiredLaunchCommands.filter((command) => !doc.text.includes(command))
     : [];
@@ -184,12 +198,16 @@ const docResults = docs.map((doc) => {
   for (const command of missingCommands) {
     blockers.push(`${doc.path} does not mention ${command}.`);
   }
+  for (const needle of missingManifestNeedles) {
+    blockers.push(`${doc.path} does not mention current human-E2E manifest evidence: ${needle}.`);
+  }
 
   return {
     path: doc.path,
     date,
     expectedDate: evidenceDate,
     hasExpectedTestPhrase,
+    missingManifestNeedles,
     stalePatterns,
     missingCommands,
   };
@@ -255,12 +273,21 @@ const mdContent = [
   '## Docs',
   '',
   markdownTable(
-    ['Doc', 'Date', 'Expected date', 'Current test phrase', 'Stale patterns', 'Missing commands'],
+    [
+      'Doc',
+      'Date',
+      'Expected date',
+      'Current test phrase',
+      'Manifest evidence',
+      'Stale patterns',
+      'Missing commands',
+    ],
     docResults.map((doc) => [
       doc.path,
       doc.date ?? 'missing',
       doc.expectedDate || 'missing',
       doc.hasExpectedTestPhrase ? 'yes' : 'no',
+      doc.missingManifestNeedles.length === 0 ? 'yes' : 'no',
       doc.stalePatterns.length,
       doc.missingCommands.length,
     ]),

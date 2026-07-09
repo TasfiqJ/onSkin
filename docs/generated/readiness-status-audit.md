@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-09T10:59:03.023Z
+Generated: 2026-07-09T13:54:19.572Z
 Status: pass
 Strict mode: yes
 
@@ -13,17 +13,17 @@ store, legal, clinical, beta, or launch signoff evidence.
 ## Summary
 
 - Evidence date: 2026-07-09
-- Expected mobile test baseline: 171 mobile test files / 1751 tests
+- Expected mobile test baseline: 171 mobile test files / 1760 tests
 - Actual mobile test files found: 171
 - Blockers: 0
 - Warnings: 0
 
 ## Docs
 
-| Doc                 | Date       | Expected date | Current test phrase | Stale patterns | Missing commands |
-| ------------------- | ---------- | ------------- | ------------------- | -------------- | ---------------- |
-| LAUNCH_READINESS.md | 2026-07-09 | 2026-07-09    | yes                 | 0              | 0                |
-| BLOCKERS.md         | 2026-07-09 | 2026-07-09    | yes                 | 0              | 0                |
+| Doc                 | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
+| ------------------- | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
+| LAUNCH_READINESS.md | 2026-07-09 | 2026-07-09    | yes                 | yes               | 0              | 0                |
+| BLOCKERS.md         | 2026-07-09 | 2026-07-09    | yes                 | yes               | 0              | 0                |
 
 ## Required Launch Commands
 

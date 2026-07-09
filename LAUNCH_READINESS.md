@@ -18,14 +18,15 @@ clearance and not a real launch catalog.
 Fresh verification through 2026-07-09:
 
 - The human-simulated E2E manifest now anchors to the 2026-07-09 Expo web
-  support-floor evidence. The 320 x 480 launch-blocking 170% text-pressure
-  sweep passed 49 / 49 routes with zero failed routes, and the 390 x 844 plus
-  430 x 932 supported-phone sweeps also passed 49 / 49 routes with zero failed
-  routes. Evidence:
-  `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-4/`,
-  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6/`,
+  support-floor evidence. The 320 x 480 support-floor 200% text-pressure
+  sweep passed 49 / 49 routes with zero failed routes, and the supported-phone
+  375 x 812, 390 x 844, and 430 x 932 200% text-pressure sweeps also passed
+  49 / 49 routes with zero failed routes. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7/`,
   and
-  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3/`.
+  `test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5/`.
 - A fresh accepted-floor Expo web route audit after the native support-floor
   config contract plus direct-entry density guards for Ask, Community,
   Recommendation detail, Settings, and Shelf recovery passed 49 / 49 routes at
@@ -79,10 +80,10 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 171 mobile test files / 1751 tests.
+- `npm test` passed: 171 mobile test files / 1760 tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 171 test files / 1751 tests.
+- `npm --workspace apps/mobile run test` passed: 171 test files / 1760 tests.
 - `npm run phase3:verify`, `npm run phase4:verify`,
   `npm run phase5:verify`, `npm run phase6:verify`,
   `npm run phase7:verify`, `npm run phase8:verify`,
@@ -116,8 +117,9 @@ Fresh verification through 2026-07-09:
 - `npm run e2e:human:manifest` passed and wrote
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. The manifest verifies the
   committed local Expo web evidence for the 2026-07-09 320 x 480
-  support-floor 170% text-pressure sweep and records 390 x 844 / 430 x 932
-  supported-phone sweep evidence. It does not replace physical iOS/Android
+  support-floor 200% text-pressure sweep and records 375 x 812, 390 x 844,
+  and 430 x 932 supported-phone 200% text-pressure sweep evidence. It does not
+  replace physical iOS/Android
   device QA, native keyboard/text-scale/accessibility checks, RevenueCat,
   StoreKit/Play Billing, or live Supabase release gates. The support contract
   is defined in `docs/DEVICE_SUPPORT_POLICY.md`.
