@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-08T23:51:16.816Z",
+  "generatedAt": "2026-07-09T00:30:42.337Z",
   "status": "blocked",
-  "gitSha": "1360f06a2ebd04eff56202e0ceaa92375ab0ad66",
+  "gitSha": "8711ea759ff4e0e6a79085d4e2df505a24ce3de0",
   "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
@@ -28,7 +28,7 @@
   "publicLaunchDecision": "",
   "signedOffBy": "",
   "sourceHashes": {
-    "package.json": "4107d6b3929824056bfe0ad7dbe69cb7908b974794003936e013dd4ba5f31475",
+    "package.json": "ec9126b6605a01f80aa1c12a6d20ab37146aabdb024bf2661682c1ecf9a9c335",
     "turbo.json": "66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57",
     ".env.example": "09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1",
     "scripts/phase9/lib.mjs": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752",
@@ -43,8 +43,8 @@
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "83bf561cf5c25e6c87fab77d0c95b8f83d7c51edb80304bb3e879f57fff8ce2d",
     "apps/mobile/src/lib/analytics/track.ts": "7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45",
     "apps/mobile/src/lib/observability/scrub.ts": "222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e",
-    "docs/phase-9/generated/release-engineering-qa-packet.json": "d4084aac5703ff61f938be02b5d259fbd93fa3556994ec78fd14f3fad8147e84",
-    "docs/phase-9/generated/release-engineering-qa-packet.md": "cc201ef992c44da8c7975b89cbe43aa323a17a740c3c2a7744cdd39a7c0288b4",
+    "docs/phase-9/generated/release-engineering-qa-packet.json": "559fb53632ac044a099af80ff24ce408ca2d1dcd590a11f98f7499da6d12ee26",
+    "docs/phase-9/generated/release-engineering-qa-packet.md": "07b86de86dec3aa126130546e00d6041640385542ad504b8d7ea0c40a2da6f0a",
     "docs/phase-10/beta-source-of-truth.md": "0cb11a58751407ffdfcc836e2373cb6d39d1faf93874d23a817098dc3b68e530",
     "docs/phase-10/tester-recruitment-sheet.md": "ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc",
     "docs/phase-10/tester-brief.md": "6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16",
