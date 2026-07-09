@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-09T15:31:16.154Z
+Generated: 2026-07-09T15:57:39.725Z
 
-Git SHA: fd8885509dd0f8cdb23a4088a9625ac06dccaa46
+Git SHA: 3f5dc2c9348603219758e9b2c8d7df4d720f7064
 
 Git status: clean
 
@@ -30,9 +30,10 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 13265 | ec9126b6605a01f80aa1c12a6d20ab37146aabdb024bf2661682c1ecf9a9c335 |
-| scripts/phase4/catalog-qa-report.mjs | present | 6351 | 4c920afb0101c845dc3f0f0675cff41f8f3950c6b582756dea0a70f632e9fc6b |
-| scripts/phase4/beta-coverage-report.mjs | present | 21078 | 095ea24b9acb7cb7a25b3e8f2a59ff1929a6c834af87a55e5b182e6c272a266c |
+| package.json | present | 13575 | 48f9e3f326ee484e9d96f7054d30cd27028780bae7d58e006254b1ab0ed64832 |
+| scripts/phase4/catalog-qa-report.mjs | present | 6493 | 96796c537dc0ee1150fa84e5eff78b39ea6064c575c92f68ba83e5d9f2ce440f |
+| scripts/phase4/build-source-worklist.mjs | present | 16899 | 05cbdb376656dd5631262fe765c739de079011ea9fd69bd0296469dd9a1dd11f |
+| scripts/phase4/beta-coverage-report.mjs | present | 21220 | 245f5542ae9b109bcc8e9b6e0b9fa6c3bb49ac44dabd0dd76b1046d8316619c6 |
 | scripts/phase4/beta-coverage-report-smoke.mjs | present | 7116 | a7f0280c06c6247c5cbccf806403f7960636cc85fdb5f9223d03ad517f8ca558 |
 | scripts/phase4/import-obf-snapshot.mjs | present | 4814 | 437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af |
 | scripts/phase4/import-cosing-dictionary.mjs | present | 4025 | 07918f71f397b59c5889995c479d6d1757f216edcaec0b8ac19fa64a9dc5e4b0 |
@@ -40,10 +41,12 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | scripts/phase4/check-source-env.mjs | present | 3454 | 1b459b27d2ffae6220523741099e72fd57911b53e36b4c0beeb93eb2ea0103a4 |
 | scripts/phase4/check-source-env-smoke.mjs | present | 3992 | ae38709e83827c30bfbc2c52b4d4165a0ada5bc1ab36f9cc2a37cdc986f40149 |
 | scripts/phase4/catalog-qa-report-smoke.mjs | present | 5271 | 6cf01a6d0303828a2b5b6aaddcd6cad662c9aeb3098700de431cf12ff182ab35 |
-| scripts/phase9/lib.mjs | present | 13341 | 6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace |
+| scripts/phase9/lib.mjs | present | 13437 | 2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78 |
 | docs/FOR_TAS_TO_DO.md | present | 36418 | 829648ede250e845937be24826b014323d082b446301d77192a9faa1ee733389 |
 | docs/phase-4/beta-coverage-report.md | present | 1854 | 5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6 |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2022 | 313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2335 | a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8 |
+| docs/phase-4/generated/source-worklist.json | present | 33689 | ac736067f48d9ebeb5065f0d38c492d87de6c6449301c0f0b38e830c56b05c1e |
+| docs/phase-4/generated/source-worklist.md | present | 21768 | 40c785186416e779775803737eaa37c290b35f0bd6cfb86ec4a6b3bfac53d874 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2020 | 6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

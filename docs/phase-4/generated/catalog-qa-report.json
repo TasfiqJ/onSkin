@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T15:31:16.154Z",
+  "generatedAt": "2026-07-09T15:57:39.725Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "fd8885509dd0f8cdb23a4088a9625ac06dccaa46",
+  "gitSha": "3f5dc2c9348603219758e9b2c8d7df4d720f7064",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -15,20 +15,26 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 13265,
-      "sha256": "ec9126b6605a01f80aa1c12a6d20ab37146aabdb024bf2661682c1ecf9a9c335"
+      "bytes": 13575,
+      "sha256": "48f9e3f326ee484e9d96f7054d30cd27028780bae7d58e006254b1ab0ed64832"
     },
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 6351,
-      "sha256": "4c920afb0101c845dc3f0f0675cff41f8f3950c6b582756dea0a70f632e9fc6b"
+      "bytes": 6493,
+      "sha256": "96796c537dc0ee1150fa84e5eff78b39ea6064c575c92f68ba83e5d9f2ce440f"
+    },
+    {
+      "path": "scripts/phase4/build-source-worklist.mjs",
+      "exists": true,
+      "bytes": 16899,
+      "sha256": "05cbdb376656dd5631262fe765c739de079011ea9fd69bd0296469dd9a1dd11f"
     },
     {
       "path": "scripts/phase4/beta-coverage-report.mjs",
       "exists": true,
-      "bytes": 21078,
-      "sha256": "095ea24b9acb7cb7a25b3e8f2a59ff1929a6c834af87a55e5b182e6c272a266c"
+      "bytes": 21220,
+      "sha256": "245f5542ae9b109bcc8e9b6e0b9fa6c3bb49ac44dabd0dd76b1046d8316619c6"
     },
     {
       "path": "scripts/phase4/beta-coverage-report-smoke.mjs",
@@ -75,8 +81,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 13341,
-      "sha256": "6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace"
+      "bytes": 13437,
+      "sha256": "2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -101,6 +107,18 @@
       "exists": true,
       "bytes": 2335,
       "sha256": "a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.json",
+      "exists": true,
+      "bytes": 33689,
+      "sha256": "ac736067f48d9ebeb5065f0d38c492d87de6c6449301c0f0b38e830c56b05c1e"
+    },
+    {
+      "path": "docs/phase-4/generated/source-worklist.md",
+      "exists": true,
+      "bytes": 21768,
+      "sha256": "40c785186416e779775803737eaa37c290b35f0bd6cfb86ec4a6b3bfac53d874"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
