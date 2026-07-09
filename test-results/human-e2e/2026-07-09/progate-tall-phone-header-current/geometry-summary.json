@@ -1,7 +1,8 @@
 {
   "progressPaywall": {
     "dialog": false,
-    "hasPaywallCopy": true,
+    "hasCompactExploreCopy": true,
+    "hasFullExploreA11y": true,
     "horizontalOverflow": 0,
     "rows": [
       {
@@ -83,11 +84,11 @@
         "completeInViewport": true,
         "hitText": "Start free trial",
         "rect": {
-          "bottom": 600.4702796936035,
+          "bottom": 608.4799842834473,
           "height": 53.989688873291016,
           "left": 23.99878692626953,
           "right": 406.09830474853516,
-          "top": 546.4805908203125,
+          "top": 554.4902954101562,
           "width": 382.0995178222656
         },
         "role": "button",
@@ -96,20 +97,20 @@
       },
       {
         "aboveTabbar": true,
-        "aria": "",
+        "aria": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
         "centerHit": true,
         "completeInViewport": true,
-        "hitText": "No credit card. See your routine work, then decide.",
+        "hitText": "Explore first",
         "rect": {
-          "bottom": 690.4126281738281,
-          "height": 77.94296264648438,
+          "bottom": 682.4180870056152,
+          "height": 61.938716888427734,
           "left": 23.99878692626953,
           "right": 406.09830474853516,
-          "top": 612.4696655273438,
+          "top": 620.4793701171875,
           "width": 382.0995178222656
         },
         "role": "button",
-        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "text": "Explore firstNo card needed.›",
         "visible": true
       },
       {
@@ -186,7 +187,7 @@
       }
     ],
     "tabbarTop": 852.0631713867188,
-    "textSample": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›TodayProgressShelfYou",
+    "textSample": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore firstNo card needed.›TodayProgressShelfYou",
     "url": "http://localhost:8264/progress",
     "viewport": {
       "height": 932,

@@ -56,6 +56,13 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       }
     : undefined;
   const showExploreFirst = data ? canStartContextualReverseTrial(data) : false;
+  const compactExploreCopyPaywall = supportedTextPressurePaywall || tallPhoneTextPressurePaywall;
+  const exploreFirstTitle = compactExploreCopyPaywall
+    ? 'Explore first'
+    : PAYWALL_COPY.offer.exploreTitle;
+  const exploreFirstBody = compactExploreCopyPaywall
+    ? 'No card needed.'
+    : PAYWALL_COPY.offer.exploreBody;
   const lapsedEntitlement = data?.expired === true;
   const lapsedReverseTrial = lapsedEntitlement && data?.priorPeriodType === 'reverse_trial';
   const paywallDismissFallback = paywallDismissFallbackForFeature(feature);
@@ -407,6 +414,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         </Pressable>
         {showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (
           <Pressable
+            accessibilityLabel={`${PAYWALL_COPY.offer.exploreTitle}. ${PAYWALL_COPY.offer.exploreBody}`}
             accessibilityRole="button"
             disabled={startReverseTrial.isPending}
             onPress={onStartReverseTrial}
@@ -423,7 +431,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               backgroundColor: colors.clayTint,
               borderWidth: 1,
               borderColor: 'rgba(165,105,75,0.22)',
-              marginTop: supportedTextPressurePaywall ? 56 : undefined,
+              marginTop: supportedTextPressurePaywall ? 88 : undefined,
             }}
           >
             <View
@@ -452,13 +460,13 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                   lineHeight: compactPaywall ? 16 : undefined,
                 }}
               >
-                {PAYWALL_COPY.offer.exploreTitle}
+                {exploreFirstTitle}
               </Text>
               <Text
                 variant="label"
                 adjustsFontSizeToFit
                 minimumFontScale={0.82}
-                numberOfLines={ultraShortPaywall || supportedTextPressurePaywall ? 1 : undefined}
+                numberOfLines={ultraShortPaywall || compactExploreCopyPaywall ? 1 : undefined}
                 ellipsizeMode="tail"
                 style={{
                   color: colors.clay,
@@ -466,7 +474,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                   lineHeight: compactPaywall ? 13 : undefined,
                 }}
               >
-                {PAYWALL_COPY.offer.exploreBody}
+                {exploreFirstBody}
               </Text>
             </View>
             <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>

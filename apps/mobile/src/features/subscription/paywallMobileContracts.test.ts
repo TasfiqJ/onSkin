@@ -250,9 +250,17 @@ describe('paywall mobile contracts', () => {
     );
     expect(proGate).toContain('{storeUnavailableReason}');
     expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (');
-    expect(proGate).toContain('marginTop: supportedTextPressurePaywall ? 56 : undefined');
     expect(proGate).toContain(
-      'numberOfLines={ultraShortPaywall || supportedTextPressurePaywall ? 1 : undefined}',
+      'const compactExploreCopyPaywall = supportedTextPressurePaywall || tallPhoneTextPressurePaywall;',
+    );
+    expect(proGate).toContain("compactExploreCopyPaywall\n    ? 'Explore first'");
+    expect(proGate).toContain("compactExploreCopyPaywall\n    ? 'No card needed.'");
+    expect(proGate).toContain(
+      'accessibilityLabel={`${PAYWALL_COPY.offer.exploreTitle}. ${PAYWALL_COPY.offer.exploreBody}`}',
+    );
+    expect(proGate).toContain('marginTop: supportedTextPressurePaywall ? 88 : undefined');
+    expect(proGate).toContain(
+      'numberOfLines={ultraShortPaywall || compactExploreCopyPaywall ? 1 : undefined}',
     );
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');

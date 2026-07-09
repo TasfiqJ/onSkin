@@ -13,7 +13,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   `PHASE9_DEPENDENCY_AUDIT_PASS=true` from the release owner. Settings Privacy
   direct entries now give the Terms policy row its own support-floor spacer, and
   contextual Progress paywalls use the compact compliance header on 430 x 932
-  tall supported phones. Focused Settings and paywall route contracts pass.
+  tall supported phones, including shorter visible Explore-first copy with the
+  full copy retained in the accessibility label. Focused Settings and paywall
+  route contracts pass.
   Human-simulated E2E on Expo web verifies `/settings/privacy` at 320 x 480 and
   390 x 844 plus `/progress` at 430 x 932 with complete 48 px+ controls, zero
   horizontal overflow, no dialogs, and successful user-like Terms/Maybe later
