@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:37:30.887Z",
+  "generatedAt": "2026-07-09T20:38:47.438Z",
   "status": "blocked",
-  "gitSha": "82c3eb2993e494dcab39adbdd5e97015f8dcad22",
+  "gitSha": "000e34de9e4aa3522581c4334b1c480a7ecc2f16",
   "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
@@ -39,8 +39,8 @@
     "scripts/phase10/beta-analytics-audit.mjs": "b53f5f09236eac44112e145c818cd845e8593a48821e80a3ac96697f88a3570e",
     "scripts/phase10/build-support-handoff-packet.mjs": "bdc16041ab8e7bcd1f5f524b4ffcec18c3721df2090fcd287d9717317dcc749d",
     "scripts/phase10/build-beta-packet.mjs": "ddebd3541d92a9f4e53ddbb41b8c1aebefb1ac915d536b60e334fd50f738df61",
-    "docs/phase-10/generated/support-handoff-packet.json": "40abcedf17d8b0897ef3ea752a3c4d25a81c74d838755b046d1d3ec81d15e963",
-    "docs/phase-10/generated/support-handoff-packet.md": "bbd7146c5f47d2b584f4a2ef23e723c9c8a25743e17b7aa89a1641e858af7e5e",
+    "docs/phase-10/generated/support-handoff-packet.json": "5b0376da62fc7ae73423d6f951489ae93695ab68dfb498de9e2bafda6d3735e1",
+    "docs/phase-10/generated/support-handoff-packet.md": "2b06e2f43ef996c35793081e89e02ec58c6154502308c16411d6a51a25c8218a",
     "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",
     "apps/mobile/app.config.js": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c",
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "334b5b3a7a298d4820b4c888016f53a7a0610fd9c158ce6e81ebabfb3fae1ce6",

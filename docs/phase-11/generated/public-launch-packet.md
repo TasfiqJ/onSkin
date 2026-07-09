@@ -1,8 +1,8 @@
 # Phase 11 Public Launch Packet
 
-Generated: 2026-07-09T20:37:38.753Z
+Generated: 2026-07-09T20:38:48.849Z
 Status: blocked
-Git SHA: 82c3eb2993e494dcab39adbdd5e97015f8dcad22
+Git SHA: 000e34de9e4aa3522581c4334b1c480a7ecc2f16
 Git status: clean
 Phase 9 packet status: blocked
 Phase 10 packet status: blocked
@@ -83,10 +83,10 @@ Phase 10 decision: BLOCKED
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
 - `docs/phase-9/generated/release-engineering-qa-packet.json`: `610d1ceaa7e3e1654e55cad77533c36f738fc5e9542c73758b06ed3c5d66cc29`
 - `docs/phase-9/generated/release-engineering-qa-packet.md`: `1ddfb9aa3316a4135d61035c279bcd0e8f65ba36fc086a350df58f9d27f5aeae`
-- `docs/phase-10/generated/support-handoff-packet.json`: `40abcedf17d8b0897ef3ea752a3c4d25a81c74d838755b046d1d3ec81d15e963`
-- `docs/phase-10/generated/support-handoff-packet.md`: `bbd7146c5f47d2b584f4a2ef23e723c9c8a25743e17b7aa89a1641e858af7e5e`
-- `docs/phase-10/generated/closed-beta-packet.json`: `0ab08024c653912b0acea22bfd2ed8efea50587641b6b8bd0a0014a70cfe4dc7`
-- `docs/phase-10/generated/closed-beta-packet.md`: `4c6ac5f694e2f18da0c1d3bd8a431d26ec6f705a4f3091051436d85c2ccce635`
+- `docs/phase-10/generated/support-handoff-packet.json`: `5b0376da62fc7ae73423d6f951489ae93695ab68dfb498de9e2bafda6d3735e1`
+- `docs/phase-10/generated/support-handoff-packet.md`: `2b06e2f43ef996c35793081e89e02ec58c6154502308c16411d6a51a25c8218a`
+- `docs/phase-10/generated/closed-beta-packet.json`: `01e987936eb2f2823fae728bb35912697bba6ccdfefb7c986b627bd8a39ccdba`
+- `docs/phase-10/generated/closed-beta-packet.md`: `2de153681606a0621d8468583083fea413e95d7d271ffea50882b20f99e832cf`
 - `docs/phase-11/launch-command-center.md`: `f89cd30ca5833fcda5ecbbdf8910a102552fc1544254fcc308135c7cf547aa40`
 - `docs/phase-11/phase-10-exit-review.md`: `2ca063c42e33c76f8244d778d8f72d3dff9b96db420f4241d2b7d52b5871fd0e`
 - `docs/phase-11/store-release-plan.md`: `dbd10e7753372f7a1ccc0ec28aed947423dc51c57977d359ca95efe951d4fbc8`
