@@ -201,8 +201,12 @@ describe('Settings route contracts', () => {
     expect(route).toContain("density === 'tallTextPressure'");
     expect(route).toContain("? 'mb-16 min-h-[56px]");
     expect(route).toContain('density={optionRowDensity}');
-    expect(route).not.toContain('extraTopMargin');
-    expect(route).not.toContain('categoryFirstViewportBreakMargin');
+    expect(route).toContain('function categoryFirstViewportBreakMargin(index: number): number | undefined');
+    expect(route).toContain('if (width <= 430 && height < 700 && index === 2) return 192;');
+    expect(route).toContain(
+      'if (width <= 430 && height >= 700 && height < 900 && index === 4) return 64;',
+    );
+    expect(route).toContain('extraTopMargin={categoryFirstViewportBreakMargin(index)}');
     expect(route).toContain(
       "feedback && highTextPressure ? 'Support is not configured in this build.' : feedback",
     );
