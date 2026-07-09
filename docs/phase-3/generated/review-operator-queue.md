@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-09T21:43:55.885Z
+Generated: 2026-07-09T21:54:50.343Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: b4f90cb8df8c90d287fb07611a6bcdd91840808e
+Git SHA: a28de8eb32c4f9dc66b85725757bde856e237173
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -34,10 +34,10 @@ names, credentials, dates, or legal/clinical decisions.
 | 8    | P0       | Legal/regulatory   | Ask and AI disclosures               | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
 | 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure    | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
 | 10   | P0       | Legal/regulatory   | Store metadata and review notes      | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 11   | P0       | Privacy/security   | Account deletion and data export     | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
+| 11   | P0       | Privacy/security   | Account deletion and data export     | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 6       |
 | 12   | P0       | Privacy/security   | Ask, commerce, and community consent | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
 | 13   | P0       | Privacy/security   | Auth and processor posture           | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 8       |
-| 14   | P0       | Privacy/security   | Health-data consent and withdrawal   | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 9       |
+| 14   | P0       | Privacy/security   | Health-data consent and withdrawal   | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 11      |
 | 15   | P0       | Privacy/security   | Trend and cloud-backup consent       | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 14      |
 | 16   | P1       | Clinical           | Ask OnSkin deterministic answers     | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 2       |
 | 17   | P1       | Clinical           | Community notes                      | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
@@ -296,7 +296,9 @@ Sources:
 - `apps/mobile/src/features/settings/actions.ts` - 3754 bytes - sha256 `28c211982c43826005b3de809a6d7a1a1b6e572fec33b9948bf1a1d56943882c`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 15795 bytes - sha256 `d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73`
-- `supabase/functions/data-export/index.ts` - 12737 bytes - sha256 `3f9affb6a477912b68af3def6eb4562cba8bbd970437a73bbfd545a3c076b0b6`
+- `supabase/functions/data-export/index.ts` - 12570 bytes - sha256 `76310cf108a0c3bbb9cd24e76bac0aa5671d0085ea39b00e605e9d8fbc155f96`
+- `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
+- `supabase/functions/_shared/storagePath.test.ts` - 1336 bytes - sha256 `b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2`
 
 ### P0 - Privacy/security - Ask, commerce, and community consent
 
@@ -359,7 +361,9 @@ Sources:
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 1033 bytes - sha256 `7a4b15f07b67f884fce6540ff51309d01feffd7c387e359de7793bbfc903c6c3`
 - `apps/mobile/src/lib/consent/withdrawal.ts` - 961 bytes - sha256 `53073b8e3f422ff127594b6157821180864cfd7261c0e69cfc5df33da14bc316`
 - `apps/mobile/src/features/settings/actions.ts` - 3754 bytes - sha256 `28c211982c43826005b3de809a6d7a1a1b6e572fec33b9948bf1a1d56943882c`
-- `supabase/functions/consent-withdrawal/index.ts` - 9188 bytes - sha256 `fa5f9949677e076c648ce90da97c631b67e53ea72ad94e0daa27199d68f14521`
+- `supabase/functions/consent-withdrawal/index.ts` - 9021 bytes - sha256 `60c95bdc1eb58d117a334b0b786ec6c394e7145f1cdc6680ed86184cd01189e9`
+- `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
+- `supabase/functions/_shared/storagePath.test.ts` - 1336 bytes - sha256 `b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2`
 
 ### P0 - Privacy/security - Trend and cloud-backup consent
 

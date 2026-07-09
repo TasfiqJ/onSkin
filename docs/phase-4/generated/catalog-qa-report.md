@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-09T21:43:45.304Z
+Generated: 2026-07-09T21:55:20.562Z
 
-Git SHA: b4f90cb8df8c90d287fb07611a6bcdd91840808e
+Git SHA: a28de8eb32c4f9dc66b85725757bde856e237173
 
 Git status: clean
 
@@ -30,7 +30,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 15812 | 2cd969f5304354242b6341aeb16db281d12c941eed9e40bc18e4d955a7c579c3 |
+| package.json | present | 16028 | b7094b76778694d62a9ffd3f5f59b60b44553dcc1bf8b0de410b70debd471944 |
 | scripts/phase4/catalog-qa-report.mjs | present | 6680 | 9abfd57fc1937cd3f958955f2a0a747e2b9a420560443b11c658feb9d3b482ee |
 | scripts/phase4/build-source-worklist.mjs | present | 17182 | 1ab08d0a3392148f47e43b141c1a831b420d8110e5a37e780ac41dd685cfd1d6 |
 | scripts/phase4/beta-coverage-report.mjs | present | 21522 | ed306d7329101f4369f5e7d971a8361f75e15eb3397288de990999e6c19aac69 |

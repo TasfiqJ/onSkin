@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-09T21:39:22.761Z
+Generated: 2026-07-09T21:55:00.451Z
 Status: blocked
-Git SHA: 3c2d85bc052eca62d084e88a822af4b34bbdb67d
+Git SHA: a28de8eb32c4f9dc66b85725757bde856e237173
 Git status: clean
 
 ## Release Identity
@@ -80,7 +80,7 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `package.json`: `2cd969f5304354242b6341aeb16db281d12c941eed9e40bc18e4d955a7c579c3`
+- `package.json`: `b7094b76778694d62a9ffd3f5f59b60b44553dcc1bf8b0de410b70debd471944`
 - `package-lock.json`: `f85eb88858555c4ec6827aedf170ce7752f18e0f9c94c9a0e09a2c6a449f0d26`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
@@ -101,8 +101,10 @@ Git status: clean
 - `supabase/functions/account-deletion/index.ts`: `d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
 - `supabase/functions/_shared/fetch.ts`: `d8ff37a96a965d3826d3d7df14a69eb00f35dddbc119d3a2f4cc92d778226a25`
-- `supabase/functions/data-export/index.ts`: `3f9affb6a477912b68af3def6eb4562cba8bbd970437a73bbfd545a3c076b0b6`
-- `supabase/functions/consent-withdrawal/index.ts`: `fa5f9949677e076c648ce90da97c631b67e53ea72ad94e0daa27199d68f14521`
+- `supabase/functions/_shared/storagePath.ts`: `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
+- `supabase/functions/_shared/storagePath.test.ts`: `b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2`
+- `supabase/functions/data-export/index.ts`: `76310cf108a0c3bbb9cd24e76bac0aa5671d0085ea39b00e605e9d8fbc155f96`
+- `supabase/functions/consent-withdrawal/index.ts`: `60c95bdc1eb58d117a334b0b786ec6c394e7145f1cdc6680ed86184cd01189e9`
 - `supabase/functions/subscription-grants/index.ts`: `2922047f3ca942aa406785a00ee8175ac3f1899f6b97502f49393a6b204baa02`
 - `supabase/functions/catalog-search/index.ts`: `6469ad3fb88b6eba7e09bdc00a211618a2b25d36123ec6775bdb120c05c5c44d`
 - `supabase/functions/catalog-lookup/index.ts`: `943138cd87be526acaea5c84acff7250967670bfe964805f315c8eb71a9f474c`
@@ -114,9 +116,9 @@ Git status: clean
 - `scripts/phase9/lib.mjs`: `544dbaaaba3f7eafcc2527d7700933f31e672a68f160fcb7222caa1389557ff1`
 - `scripts/phase9/release-contact-smoke.mjs`: `e4695f91978bbebbe2ed447b543b3d163b6b81c8313c4aecf490a72acf67e58a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
-- `scripts/phase9/release-smoke.mjs`: `a6f7611e967781c7ffdbd0b19c566706c0d5e95024f1d796b2f69f67628bc110`
+- `scripts/phase9/release-smoke.mjs`: `0e57ab70a4ff8f980de2fb37d9942c79ebd80851ad52fe683ed5b2443771d928`
 - `scripts/phase9/rls-adversarial.mjs`: `24ede97ccbd865c99911ebdcb48c389c151b337565bc68e6788456bbb6c366bc`
-- `scripts/phase9/build-release-qa-packet.mjs`: `0db5d9d5de1579c311cac3ed2a15d0458647eed34fbac1c5bd8e0eb9f6d2eebb`
+- `scripts/phase9/build-release-qa-packet.mjs`: `150dfec06d8c6a828241315bcabba03900ad024878057860c49be86fd076d50a`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `98c836d4dd6494c3ac6bf24719e97afd7f7cb4f8d542162deebbe1e15beed7ef`
 - `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
 - `scripts/phase9/live-data-rights.mjs`: `987f92e64ae380e5f9e6e641117ef7a85e89a40749b278ecede19fa2f5417b65`
@@ -127,15 +129,15 @@ Git status: clean
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `98f2d8496eb4f5c19706c3ce7d17d82c84223ba776bae6084e9706ebf3e6e718`
 - `scripts/phase9/edge-auth-smoke.mjs`: `92968a8bbbc5375a8ed3b52d087ae3c3b9b0f2435d5ddbcfcc2f0a6ed004284e`
 - `scripts/phase9/edge-functions-check.mjs`: `81b6c6d8413d27166379c589f00434daf631feab4a406fd6e17b2cfbe6430f4b`
-- `scripts/phase9/data-rights-smoke.mjs`: `2b737e9ca997907e0d2f8f7962f1e0170739790d0e983c8e207498fc7b8e05f5`
-- `scripts/phase9/consent-withdrawal-smoke.mjs`: `03071784d71b93271ff929cfc6528da76fc0bf547ed80af7c666074474ac801e`
+- `scripts/phase9/data-rights-smoke.mjs`: `3a4c649781cd0ca3b1a238afbc1919d1cf5a5c50702b0fd0f089b7855feb4af2`
+- `scripts/phase9/consent-withdrawal-smoke.mjs`: `9204ce366e7f0175afddfdf2080d1abe3b3fc4d38ba75a2d891655a7334c3c9d`
 - `scripts/phase9/supabase-policy-lint.mjs`: `153c5f455a7d99176feff036fa172fb4dfaa6ddbc97e8718c7cfbaf2f9bee183`
 - `scripts/phase9/security-ci-smoke.mjs`: `f477d24f5873e1dfa5b00e95819f1237f9e79861d6c8434d6d07668031e9c1b9`
 - `scripts/phase9/privacy-payload-audit.mjs`: `4e662826a00d001cfcc7b5f87230210132cfb5e1fcc518ba6c5403faeeec1ede`
 - `scripts/phase9/dependency-sbom.mjs`: `bc7aad0525237b1116698211196de85849bb5892266557bdc5da8fe8fa7723db`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `f7cf68cd1ec95fae581bd98623206994b1baa2daec42ba03339d7e41b0ce0abe`
+- `docs/phase-9/data-inventory.md`: `cc2120ad02de7e8bb2d57747a556f113beb011cb46eb05d9147c09c3148eb947`
 - `docs/phase-9/edge-function-auth-matrix.md`: `eabfcd63602581316cf83f0ca42411f88b6206e578d0168bb7cc044a847c8743`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `1390557c60c5637f16ac10b46d2b1b38190ba4d0dddda43bf84a3bbd65c43428`

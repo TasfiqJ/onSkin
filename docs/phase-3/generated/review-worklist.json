@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T21:43:55.325Z",
+  "generatedAt": "2026-07-09T21:54:47.462Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "b4f90cb8df8c90d287fb07611a6bcdd91840808e",
+  "gitSha": "a28de8eb32c4f9dc66b85725757bde856e237173",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -34,8 +34,8 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "path": "docs/phase-3/privacy-security-review-log.md",
       "exists": true,
-      "bytes": 5979,
-      "sha256": "41810d461cb2cdb6eec640bff1133a3a3a02b067ec7aedf47e3e8fefcd3e197d"
+      "bytes": 6169,
+      "sha256": "0a21c5bca27559af25271141ab2a613864e980d8836d1b0c258b665585f2bfd3"
     },
     {
       "domain": "ipFto",
@@ -59,7 +59,7 @@
       "notCleared": 20,
       "blocked": 15
     },
-    "sourcePathCount": 233,
+    "sourcePathCount": 237,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -1280,7 +1280,7 @@
       "domain": "privacySecurity",
       "requiredReviewer": "privacy counsel plus technical security owner",
       "area": "Health-data consent and withdrawal",
-      "sourceText": "`docs/phase-3/consent-matrix.md`, `docs/store-privacy-inventory.md`, `apps/mobile/src/features/onboarding/consentCopy.ts`, `apps/mobile/src/lib/consent/*`, `apps/mobile/src/features/settings/actions.ts`, `supabase/functions/consent-withdrawal/index.ts`",
+      "sourceText": "`docs/phase-3/consent-matrix.md`, `docs/store-privacy-inventory.md`, `apps/mobile/src/features/onboarding/consentCopy.ts`, `apps/mobile/src/lib/consent/*`, `apps/mobile/src/features/settings/actions.ts`, `supabase/functions/consent-withdrawal/index.ts`, `supabase/functions/_shared/storagePath.ts`, `supabase/functions/_shared/storagePath.test.ts`",
       "currentBehavior": "Technical consent/withdrawal scaffolds; final copy blocked",
       "reviewer": "TBD",
       "date": "TBD",
@@ -1339,8 +1339,20 @@
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
           "exists": true,
-          "bytes": 9188,
-          "sha256": "fa5f9949677e076c648ce90da97c631b67e53ea72ad94e0daa27199d68f14521"
+          "bytes": 9021,
+          "sha256": "60c95bdc1eb58d117a334b0b786ec6c394e7145f1cdc6680ed86184cd01189e9"
+        },
+        {
+          "path": "supabase/functions/_shared/storagePath.ts",
+          "exists": true,
+          "bytes": 591,
+          "sha256": "9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594"
+        },
+        {
+          "path": "supabase/functions/_shared/storagePath.test.ts",
+          "exists": true,
+          "bytes": 1336,
+          "sha256": "b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1530,7 +1542,7 @@
       "domain": "privacySecurity",
       "requiredReviewer": "privacy counsel plus technical security owner",
       "area": "Account deletion and data export",
-      "sourceText": "`apps/mobile/src/features/settings/actions.ts`, `apps/mobile/src/lib/legal/policyLinks.ts`, `supabase/functions/account-deletion/index.ts`, `supabase/functions/data-export/index.ts`",
+      "sourceText": "`apps/mobile/src/features/settings/actions.ts`, `apps/mobile/src/lib/legal/policyLinks.ts`, `supabase/functions/account-deletion/index.ts`, `supabase/functions/data-export/index.ts`, `supabase/functions/_shared/storagePath.ts`, `supabase/functions/_shared/storagePath.test.ts`",
       "currentBehavior": "Edge Function scaffolds exist; live backend not verified",
       "reviewer": "TBD",
       "date": "TBD",
@@ -1559,8 +1571,20 @@
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 12737,
-          "sha256": "3f9affb6a477912b68af3def6eb4562cba8bbd970437a73bbfd545a3c076b0b6"
+          "bytes": 12570,
+          "sha256": "76310cf108a0c3bbb9cd24e76bac0aa5671d0085ea39b00e605e9d8fbc155f96"
+        },
+        {
+          "path": "supabase/functions/_shared/storagePath.ts",
+          "exists": true,
+          "bytes": 591,
+          "sha256": "9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594"
+        },
+        {
+          "path": "supabase/functions/_shared/storagePath.test.ts",
+          "exists": true,
+          "bytes": 1336,
+          "sha256": "b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
