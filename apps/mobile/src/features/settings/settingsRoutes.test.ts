@@ -208,6 +208,9 @@ describe('Settings route contracts', () => {
       'const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;',
     );
     expect(notifications).toContain(
+      'const androidMidTextPressureNotifications = width <= 390 && height >= 700 && height < 780;',
+    );
+    expect(notifications).toContain(
       'const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;',
     );
     expect(notifications).toContain(
@@ -222,7 +225,8 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('style={deferredNudgeRowStyle}');
     expect(notifications).toContain('const nudgesSectionStyle = supportTextPressureNotifications');
     expect(notifications).toContain('? { marginTop: 152 }');
-    expect(notifications).toContain(': microShortNotifications\n      ? { marginTop: 136 }');
+    expect(notifications).toContain(': androidMidTextPressureNotifications');
+    expect(notifications).toContain(': microShortNotifications\n        ? { marginTop: 136 }');
     expect(notifications).toContain('? { marginTop: 64 }');
     expect(notifications).toContain('<View style={nudgesSectionStyle}>');
     expect(notifications).toContain(

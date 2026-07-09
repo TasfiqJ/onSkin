@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a supported Android-class 360 x 740 / 200% text-pressure route
+  audit. The fresh 49-route sweep exposed `/settings/notifications` with only
+  4 px of the lower-priority `Replenishment` switch visible at the viewport
+  bottom. Notification Settings now treats the 360/390-wide 700-779 px
+  text-pressure band like other dense supported-phone notification layouts:
+  the primary morning/evening reminder controls remain complete, while Gentle
+  Nudges starts below the first viewport instead of exposing a partial switch.
+  The focused route rerun and the full 49-route Expo web sweep report zero
+  failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-settings-notifications-android-360-740-text-pressure.md`.
+
 - Cleared a shorter supported iPhone-class 375 x 667 / 200% text-pressure route
   audit. The first full sweep exposed `/progress` with the lower-priority
   `Explore first` card visible in the floating tab-bar hit zone, where its

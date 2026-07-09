@@ -134,6 +134,7 @@ export default function NotificationSettingsScreen() {
   const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
   const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;
+  const androidMidTextPressureNotifications = width <= 390 && height >= 700 && height < 780;
   const iphoneTextPressureNotifications = width <= 390 && height >= 780 && height < 840;
   const deferCaptureNudge = splitShortNotifications || iphoneTextPressureNotifications;
   const deferredNudgeRowStyle = {
@@ -147,11 +148,13 @@ export default function NotificationSettingsScreen() {
   };
   const nudgesSectionStyle = supportTextPressureNotifications
     ? { marginTop: 152 }
-    : microShortNotifications
-      ? { marginTop: 136 }
-      : ultraShortNotifications
-        ? { marginTop: 64 }
-        : undefined;
+    : androidMidTextPressureNotifications
+      ? { marginTop: 152 }
+      : microShortNotifications
+        ? { marginTop: 136 }
+        : ultraShortNotifications
+          ? { marginTop: 64 }
+          : undefined;
   const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
   if (!p) return null;
 
