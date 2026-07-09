@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T17:32:35.275Z",
+  "generatedAt": "2026-07-09T17:39:12.248Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -36,6 +36,7 @@
     "npm test",
     "npm run docs:source-packet-audit:check",
     "npm run docs:tas-todo-audit:check",
+    "npm run brand:audit:strict",
     "npm run docs:device-support-policy-audit:check",
     "npm run e2e:human:manifest:check",
     "npm run docs:generated-packet-status-audit:check",
@@ -45,6 +46,8 @@
   ],
   "requiredPackageScripts": [
     "launch:verify",
+    "brand:audit",
+    "brand:audit:strict",
     "docs:readiness-status-audit",
     "docs:readiness-status-audit:strict",
     "docs:readiness-status-audit:check",
@@ -56,6 +59,7 @@
     "docs:source-packet-audit:check",
     "docs:tas-todo-audit:check",
     "docs:readiness-status-audit:check",
+    "brand:audit:strict",
     "docs:device-support-policy-audit:check",
     "docs:generated-packet-status-audit:check",
     "e2e:human:manifest:check",
