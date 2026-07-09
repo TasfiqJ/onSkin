@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T16:04:17.814Z
+Generated: 2026-07-09T16:13:20.631Z
 Status: pass
-Git SHA: 8769bbe6f90be26f1f66487768135b6a4cf5056e
+Git SHA: 2ff887a615c5545a841216a67a604d4f1de3eb1f
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -13,7 +13,7 @@ must attach before Phase 4 can stop blocking launch.
 ## Summary
 
 - Work items: 9
-- Source files hashed: 104
+- Source files hashed: 111
 - Missing source files: 0
 - Blockers: 0
 - Warnings: 0
@@ -28,9 +28,9 @@ must attach before Phase 4 can stop blocking launch.
 | curated-first-batch       | curation       | First curated launch product batch                          | blocked        | B-CURATED-CATALOG       | 7       | 0               |
 | import-qa                 | curation       | Import QA and generated catalog evidence                    | local-scaffold | B-CATALOG-SEED          | 5       | 0               |
 | beta-coverage             | betaEvidence   | Closed-beta catalog coverage and correction loop            | blocked        | B-CATALOG-COVERAGE      | 7       | 0               |
-| mobile-catalog-disclosure | productSurface | Mobile catalog source, quality, and report-issue disclosure | local-scaffold | B-CATALOG-SEED          | 51      | 0               |
-| obf-contribution-back     | operations     | Unmatched-product contribution-back operation               | blocked        | B-SHELF-CONTRIB         | 7       | 0               |
-| observability-support     | operations     | Catalog dashboards, alerts, and support feedback loop       | blocked        | B-CATALOG-COVERAGE      | 6       | 0               |
+| mobile-catalog-disclosure | productSurface | Mobile catalog source, quality, and report-issue disclosure | local-scaffold | B-CATALOG-SEED          | 54      | 0               |
+| obf-contribution-back     | operations     | Unmatched-product contribution-back operation               | blocked        | B-SHELF-CONTRIB         | 9       | 0               |
+| observability-support     | operations     | Catalog dashboards, alerts, and support feedback loop       | blocked        | B-CATALOG-COVERAGE      | 8       | 0               |
 
 ## Item Details
 
@@ -74,11 +74,11 @@ Sources:
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 2335 bytes - sha256 `a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8`
 - `docs/phase-4/odbl-compliance-memo.md` - 2020 bytes - sha256 `6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79`
 - `scripts/phase4/import-obf-snapshot.mjs` - 4814 bytes - sha256 `437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af`
-- `scripts/phase4/catalog-qa-report.mjs` - 6493 bytes - sha256 `96796c537dc0ee1150fa84e5eff78b39ea6064c575c92f68ba83e5d9f2ce440f`
+- `scripts/phase4/catalog-qa-report.mjs` - 6680 bytes - sha256 `9abfd57fc1937cd3f958955f2a0a747e2b9a420560443b11c658feb9d3b482ee`
 - `supabase/migrations/20260614000026_phase4_catalog.sql` - 35102 bytes - sha256 `dc1a7f150bd5b285cf2d05f2583126ebeb97e67b5363666e670518896b93c311`
 - `supabase/functions/catalog-lookup/index.ts` - 8315 bytes - sha256 `943138cd87be526acaea5c84acff7250967670bfe964805f315c8eb71a9f474c`
 - `supabase/functions/catalog-search/index.ts` - 5351 bytes - sha256 `6469ad3fb88b6eba7e09bdc00a211618a2b25d36123ec6775bdb120c05c5c44d`
-- `supabase/functions/catalog-report/index.ts` - 7648 bytes - sha256 `5a063bb6db5e1a5194e17b498b61ed0e9abbaef1d62c7cb80f09be9da429c621`
+- `supabase/functions/catalog-report/index.ts` - 4604 bytes - sha256 `831529e201bf59a61f9eb929cc5939c14797fb9e0eb0b11e1bf817a6008517ec`
 
 ### cosing-reuse-taxonomy - CosIng reuse and ingredient-tag taxonomy
 
@@ -141,8 +141,8 @@ Required evidence:
 
 Sources:
 
-- `scripts/phase4/catalog-qa-report.mjs` - 6493 bytes - sha256 `96796c537dc0ee1150fa84e5eff78b39ea6064c575c92f68ba83e5d9f2ce440f`
-- `scripts/phase4/catalog-qa-report-smoke.mjs` - 5271 bytes - sha256 `6cf01a6d0303828a2b5b6aaddcd6cad662c9aeb3098700de431cf12ff182ab35`
+- `scripts/phase4/catalog-qa-report.mjs` - 6680 bytes - sha256 `9abfd57fc1937cd3f958955f2a0a747e2b9a420560443b11c658feb9d3b482ee`
+- `scripts/phase4/catalog-qa-report-smoke.mjs` - 5504 bytes - sha256 `43e8b217e0a8276e0299f2477ddb3b4ab9536521d745514be2a48e68e7bf97a1`
 - `scripts/phase4/import-obf-snapshot.mjs` - 4814 bytes - sha256 `437b8ce58a661ac43aba2f64016bf5c5bff1dc63910ffeca36fd348047dd88af`
 - `scripts/phase4/import-cosing-dictionary.mjs` - 4025 bytes - sha256 `07918f71f397b59c5889995c479d6d1757f216edcaec0b8ac19fa64a9dc5e4b0`
 - `scripts/docs/generated-packet-status-audit.mjs` - 11748 bytes - sha256 `ddafd263ac29b217a1a86af04d74df0b21cd298af09cb669a91c5c3ec672f332`
@@ -164,8 +164,8 @@ Required evidence:
 Sources:
 
 - `docs/phase-4/beta-coverage-report.md` - 1854 bytes - sha256 `5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6`
-- `scripts/phase4/beta-coverage-report.mjs` - 21220 bytes - sha256 `245f5542ae9b109bcc8e9b6e0b9fa6c3bb49ac44dabd0dd76b1046d8316619c6`
-- `scripts/phase4/beta-coverage-report-smoke.mjs` - 7116 bytes - sha256 `a7f0280c06c6247c5cbccf806403f7960636cc85fdb5f9223d03ad517f8ca558`
+- `scripts/phase4/beta-coverage-report.mjs` - 21407 bytes - sha256 `b9c92a82c29de2bab80ec56fa2bdaf2742e3d0aa202775e4334b3012d14f3da4`
+- `scripts/phase4/beta-coverage-report-smoke.mjs` - 7566 bytes - sha256 `0a145db27b355e3bf1a25a509f583559a8ca2728e73d2c8385b3f6da7a866732`
 - `docs/phase-10/catalog-beta-report.md` - 1291 bytes - sha256 `2924dac7cc798a904716b0fbc7de6760046485e85db62e3357c901519081bd3c`
 - `docs/phase-10/support-beta-report.md` - 1486 bytes - sha256 `68bcd8e27b511229e2c1e9d5bb84ba97eac658b66f5bf04b8eb550c8838c9af3`
 - `docs/phase-10/retention-activation-report.md` - 1685 bytes - sha256 `0e93cb0c1662d2ea3c35282dda19cc1d4188cb8c1c4a9cc52cbe5d996e9002ba`
@@ -237,6 +237,9 @@ Sources:
 - `apps/mobile/src/features/recommendations/store.ts` - 5632 bytes - sha256 `bf8890e423058ebe067aa925d1ec76b5b7cd168560558cd8a49ee8701da5d7ef`
 - `apps/mobile/src/features/recommendations/useRecommendations.test.ts` - 1006 bytes - sha256 `9c1908c337df4cc3abd8a4fb12fcf12bca2d82b985b4043189a4347ab65fe44a`
 - `apps/mobile/src/features/recommendations/useRecommendations.ts` - 2491 bytes - sha256 `f279c9c9ba518afe6392b1717c604ded0786dd18bddd4d69ea3fb912107050a2`
+- `supabase/functions/catalog-report/index.ts` - 4604 bytes - sha256 `831529e201bf59a61f9eb929cc5939c14797fb9e0eb0b11e1bf817a6008517ec`
+- `supabase/functions/catalog-report/privacy.ts` - 3497 bytes - sha256 `d0d39665dc489392ff8d29c524d46ee182695772cf0fc7293c1c9d93c53e2c8e`
+- `supabase/functions/catalog-report/privacy.test.ts` - 3819 bytes - sha256 `1a6014b406eba2e771901906309e78162321af3352af63d33d20fd017df70c76`
 
 ### obf-contribution-back - Unmatched-product contribution-back operation
 
@@ -256,7 +259,9 @@ Sources:
 - `docs/phase-4/odbl-compliance-memo.md` - 2020 bytes - sha256 `6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79`
 - `docs/04-smart-shelf.md` - 54123 bytes - sha256 `7ba337c03c868a9fe53e187b5a5ec1cf2cafdb2782387a1e1839c3837dc6cb15`
 - `supabase/migrations/20260614000026_phase4_catalog.sql` - 35102 bytes - sha256 `dc1a7f150bd5b285cf2d05f2583126ebeb97e67b5363666e670518896b93c311`
-- `supabase/functions/catalog-report/index.ts` - 7648 bytes - sha256 `5a063bb6db5e1a5194e17b498b61ed0e9abbaef1d62c7cb80f09be9da429c621`
+- `supabase/functions/catalog-report/index.ts` - 4604 bytes - sha256 `831529e201bf59a61f9eb929cc5939c14797fb9e0eb0b11e1bf817a6008517ec`
+- `supabase/functions/catalog-report/privacy.ts` - 3497 bytes - sha256 `d0d39665dc489392ff8d29c524d46ee182695772cf0fc7293c1c9d93c53e2c8e`
+- `supabase/functions/catalog-report/privacy.test.ts` - 3819 bytes - sha256 `1a6014b406eba2e771901906309e78162321af3352af63d33d20fd017df70c76`
 - `apps/mobile/src/features/catalog/client.ts` - 4003 bytes - sha256 `968d5b6a45cc265d41ce3b626cdc29fc35ba279cb86fc7fc9f46c600e07f6bba`
 - `apps/mobile/src/features/catalog/client.test.ts` - 4115 bytes - sha256 `39405ec911d268db14b802ebb80156f0e0cc28e7061e5caee66dab7116cf28e7`
 - `docs/FOR_TAS_TO_DO.md` - 36418 bytes - sha256 `829648ede250e845937be24826b014323d082b446301d77192a9faa1ee733389`
@@ -280,7 +285,9 @@ Sources:
 - `docs/phase-4/beta-coverage-report.md` - 1854 bytes - sha256 `5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6`
 - `docs/phase-10/support-operations.md` - 2697 bytes - sha256 `2dedf1baab29c8e3bd0e1dcc9c248ffc1ade2e9d7cdbf05d217094208a87245d`
 - `docs/phase-10/support-beta-report.md` - 1486 bytes - sha256 `68bcd8e27b511229e2c1e9d5bb84ba97eac658b66f5bf04b8eb550c8838c9af3`
-- `scripts/phase4/beta-coverage-report.mjs` - 21220 bytes - sha256 `245f5542ae9b109bcc8e9b6e0b9fa6c3bb49ac44dabd0dd76b1046d8316619c6`
+- `scripts/phase4/beta-coverage-report.mjs` - 21407 bytes - sha256 `b9c92a82c29de2bab80ec56fa2bdaf2742e3d0aa202775e4334b3012d14f3da4`
+- `supabase/functions/catalog-report/privacy.ts` - 3497 bytes - sha256 `d0d39665dc489392ff8d29c524d46ee182695772cf0fc7293c1c9d93c53e2c8e`
+- `supabase/functions/catalog-report/privacy.test.ts` - 3819 bytes - sha256 `1a6014b406eba2e771901906309e78162321af3352af63d33d20fd017df70c76`
 - `docs/FOR_TAS_TO_DO.md` - 36418 bytes - sha256 `829648ede250e845937be24826b014323d082b446301d77192a9faa1ee733389`
 
 ## Blockers

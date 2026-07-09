@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-09T16:04:19.923Z
-Git SHA: 8769bbe6f90be26f1f66487768135b6a4cf5056e
+Generated at: 2026-07-09T16:13:22.930Z
+Git SHA: 2ff887a615c5545a841216a67a604d4f1de3eb1f
 Git status: clean
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 13575 | 48f9e3f326ee484e9d96f7054d30cd27028780bae7d58e006254b1ab0ed64832 |
+| package.json | present | 13798 | dd21079f31bff92d95d1f4b1826c1f81d87a9c4724e319751e0dab148bf0656c |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 18355 | b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75 |
 | apps/mobile/src/features/subscription/store.ts | present | 10936 | 9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991 |
 | apps/mobile/src/features/subscription/useEntitlement.ts | present | 8978 | 8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a |

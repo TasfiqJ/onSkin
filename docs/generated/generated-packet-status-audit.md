@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-09T16:04:40.664Z
+Generated: 2026-07-09T16:13:38.694Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 45
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 708
+- Hash references checked: 725
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -31,13 +31,13 @@ being treated as trustworthy launch evidence.
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 237       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 20        | 0               |
+| docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 24        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 21        | 0               |
+| docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 25        | 0               |
 | docs/phase-4/generated/catalog-qa-report.md               | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/cosing-fixture-import.json         | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 104       | 0               |
+| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 111       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 28        | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
@@ -65,7 +65,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-9/generated/live-revenuecat-webhook.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.json     | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.md       | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 75        | 0               |
+| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 77        | 0               |
 | docs/phase-9/generated/release-engineering-qa-packet.md   | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 0         | 0               |
 

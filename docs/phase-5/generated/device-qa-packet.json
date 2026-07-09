@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T16:04:19.382Z",
+  "generatedAt": "2026-07-09T16:13:22.202Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "8769bbe6f90be26f1f66487768135b6a4cf5056e",
+  "gitSha": "2ff887a615c5545a841216a67a604d4f1de3eb1f",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -137,8 +137,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 13575,
-      "sha256": "48f9e3f326ee484e9d96f7054d30cd27028780bae7d58e006254b1ab0ed64832"
+      "bytes": 13798,
+      "sha256": "dd21079f31bff92d95d1f4b1826c1f81d87a9c4724e319751e0dab148bf0656c"
     },
     {
       "path": "apps/mobile/app.base.json",
