@@ -40,8 +40,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const tallPhoneTextPressurePaywall =
     width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web');
   const denseTallTextPressurePaywall = tallPhoneTextPressurePaywall && width <= 430;
-  const denseTextPressurePaywall =
-    denseTallTextPressurePaywall || supportFloorTextPressurePaywall;
+  const denseTextPressurePaywall = denseTallTextPressurePaywall || supportFloorTextPressurePaywall;
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -466,7 +465,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 style={{ borderColor: colors.clay }}
               />
             </View>
-            <View className="flex-1">
+            <View className="flex-1" style={{ minWidth: 0 }}>
               <Text
                 variant="bodySm"
                 className="font-sans-semibold"
@@ -485,7 +484,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 variant="label"
                 adjustsFontSizeToFit
                 minimumFontScale={0.82}
-                numberOfLines={ultraShortPaywall || compactExploreCopyPaywall ? 1 : undefined}
+                numberOfLines={ultraShortPaywall ? 1 : undefined}
                 ellipsizeMode="tail"
                 style={{
                   color: colors.clay,

@@ -284,9 +284,7 @@ describe('paywall mobile contracts', () => {
       'accessibilityLabel={`${PAYWALL_COPY.offer.exploreTitle}. ${PAYWALL_COPY.offer.exploreBody}`}',
     );
     expect(proGate).toContain('marginTop: supportFloorTextPressurePaywall');
-    expect(proGate).toContain(
-      'numberOfLines={ultraShortPaywall || compactExploreCopyPaywall ? 1 : undefined}',
-    );
+    expect(proGate).toContain('numberOfLines={ultraShortPaywall ? 1 : undefined}');
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });

@@ -129,6 +129,7 @@ export default function PreferencesScreen() {
   const microShortPreferences = height < 380;
   const splitShortPreferences = height < 600 || supportFloorTextPressurePreferences;
   const modernTextPressurePreferences = height < 900;
+  const androidMidTextPressurePreferences = width <= 390 && height >= 700 && height < 840;
   const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;
   const showPreferencesSubtitle = !compactPreferences;
   const preferencesTitle = supportFloorPreferences ? 'Preferences' : REC_COPY.preferences.title;
@@ -137,10 +138,10 @@ export default function PreferencesScreen() {
     : supportFloorPreferences
       ? 'mb-1 mt-1.5'
       : shortPreferences
-      ? 'mb-1.5 mt-3'
-      : compactPreferences
-        ? 'mb-2 mt-5'
-        : 'mb-3 mt-7';
+        ? 'mb-1.5 mt-3'
+        : compactPreferences
+          ? 'mb-2 mt-5'
+          : 'mb-3 mt-7';
   const sectionLabelClassName = splitShortPreferences
     ? 'mb-1.5 mt-20'
     : ultraShortPreferences
@@ -174,8 +175,9 @@ export default function PreferencesScreen() {
     (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
       ? { marginTop: 112 }
       : undefined;
-  const modernTextPressureTextureGroupStyle =
-    modernTextPressurePreferences && !compactPreferences
+  const modernTextPressureTextureGroupStyle = androidMidTextPressurePreferences
+    ? { marginTop: 96 }
+    : modernTextPressurePreferences && !compactPreferences
       ? { marginTop: 56 }
       : tallTextPressurePreferences
         ? { marginTop: 64 }

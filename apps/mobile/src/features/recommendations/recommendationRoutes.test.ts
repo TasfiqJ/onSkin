@@ -191,10 +191,15 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('? { marginTop: 224 }');
     expect(source).toContain(': { marginTop: 192 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');
+    expect(source).toContain(
+      'const androidMidTextPressurePreferences = width <= 390 && height >= 700 && height < 840;',
+    );
     expect(source).toContain('const modernTextPressureBudgetGroupStyle =');
     expect(source).toContain('modernTextPressurePreferences || tallTextPressurePreferences');
     expect(source).toContain('? { marginTop: 112 }');
     expect(source).toContain('const modernTextPressureTextureGroupStyle =');
+    expect(source).toContain('androidMidTextPressurePreferences');
+    expect(source).toContain('? { marginTop: 96 }');
     expect(source).toContain('? { marginTop: 56 }');
     expect(source).toContain('? { marginTop: 64 }');
     expect(source).toContain('const renderValueToggle = (v: ValuesFilter) => (');
@@ -221,7 +226,9 @@ describe('Recommendation route contracts', () => {
 
     expect(source).toContain('RouteIconButton');
     expect(source).not.toContain('h-7 w-7');
-    expect(source).toContain("import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';");
+    expect(source).toContain(
+      "import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';",
+    );
     expect(source).toContain('const { width } = useWindowDimensions();');
     expect(source).toContain('const compactHeader = width <= 360;');
     expect(source).toContain('adjustsFontSizeToFit');
