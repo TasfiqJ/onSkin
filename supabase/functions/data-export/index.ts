@@ -14,6 +14,7 @@ const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE
 const dataExportRateLimitMax = intEnv('DATA_EXPORT_RATE_LIMIT_MAX', 5, 1, 100);
 const dataExportRateLimitWindowSeconds = intEnv('DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS', 3600, 60, 86400);
 const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
+const dataExportFileName = exportFileName();
 let rateLimitHmacKey: CryptoKey | null = null;
 
 type TableFilter = { column: string; value: string } | null;
@@ -86,6 +87,23 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
   const value = Number(Deno.env.get(name));
   if (!Number.isInteger(value) || value < min || value > max) return fallback;
   return value;
+}
+
+function exportFileSlug(): string {
+  const displayName =
+    Deno.env.get('EXPO_PUBLIC_APP_DISPLAY_NAME') ?? Deno.env.get('APP_DISPLAY_NAME') ?? 'RoutineKind';
+  const slug = displayName
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 48);
+  return slug || 'routinekind';
+}
+
+function exportFileName(): string {
+  return `${exportFileSlug()}-export.json`;
 }
 
 function applyFilter(query: any, filter: TableFilter, userId: string) {
@@ -243,7 +261,7 @@ Deno.serve(async (req) => {
     bundle.photo_download_url_omissions = photoUrlOmissions;
 
     return json(bundle, 200, {
-      'Content-Disposition': 'attachment; filename="onskin-export.json"',
+      'Content-Disposition': `attachment; filename="${dataExportFileName}"`,
     });
   } catch (error) {
     console.error('[data-export]', 'DATA_EXPORT_FAILED');

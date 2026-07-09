@@ -107,6 +107,31 @@ block(
   /createSignedUrl\(photo\.storage_path as string,\s*dataExportPhotoUrlTtlSeconds\)/.test(exportSource),
   'data-export must use DATA_EXPORT_PHOTO_URL_TTL_SECONDS for photo signed URLs.',
 );
+block(errors, /function exportFileSlug\(\)/.test(exportSource), 'data-export must derive a sanitized export filename slug.');
+block(errors, /function exportFileName\(\)/.test(exportSource), 'data-export must derive its attachment filename from the sanitized slug.');
+block(
+  errors,
+  /EXPO_PUBLIC_APP_DISPLAY_NAME/.test(exportSource) &&
+    /APP_DISPLAY_NAME/.test(exportSource) &&
+    /RoutineKind/.test(exportSource),
+  'data-export attachment filename must use the runtime display name with a RoutineKind fallback.',
+);
+block(
+  errors,
+  /replace\(\/\[\^a-z0-9\]\+\/g,\s*'-'\)/.test(exportSource) &&
+    /slice\(0,\s*48\)/.test(exportSource),
+  'data-export attachment filename must sanitize and bound the runtime display name.',
+);
+block(
+  errors,
+  /'Content-Disposition': `attachment; filename="\$\{dataExportFileName\}"`/.test(exportSource),
+  'data-export must use the sanitized runtime-brand filename in Content-Disposition.',
+);
+block(
+  errors,
+  !/filename="onskin-export\.json"/.test(exportSource) && !/const dataExportFileName = 'onskin-export\.json'/.test(exportSource),
+  'data-export must not expose the legacy OnSkin export filename in response headers.',
+);
 
 for (const pattern of [
   /revokeAppleTokenIfNeeded/,
