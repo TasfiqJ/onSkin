@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T21:54:50.343Z",
+  "generatedAt": "2026-07-09T22:19:58.768Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "a28de8eb32c4f9dc66b85725757bde856e237173",
+  "gitSha": "989206885540b6b7d358d63eb5f8624bd82f552a",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 82915,
-    "sha256": "1a8f1da66a9aa03780fdcd056eeb1933efd01c3fbae826862b5226077fd74cac",
-    "currentSha256": "1a8f1da66a9aa03780fdcd056eeb1933efd01c3fbae826862b5226077fd74cac"
+    "sha256": "203066f9ad6d5f8e0810343bc945f81856b28711c1d264fa394ff7fc8b427568",
+    "currentSha256": "203066f9ad6d5f8e0810343bc945f81856b28711c1d264fa394ff7fc8b427568"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -1701,8 +1701,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 43738,
-          "sha256": "ddc6e0786fbada0c6481ee91144f1883810a33ae7420e5c20ba73c33d322dc98"
+          "bytes": 43834,
+          "sha256": "0a949a5f81d02caeb474678c65a1f20b868e67bae3ca6b7f32feaf045abce751"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
