@@ -1,0 +1,211 @@
+{
+  "generatedAt": "2026-07-09T19:45:57.955Z",
+  "status": "pass",
+  "strict": false,
+  "gitSha": "5cc508c0c55103683a12349e219f95255983f9f7",
+  "gitStatus": "",
+  "purpose": "Support-desk setup packet for in-app beta feedback query parameters, category routing, severity SLA, and escalation owners.",
+  "handoffContract": {
+    "supportUrlEnv": "EXPO_PUBLIC_SUPPORT_URL",
+    "requiredQueryParams": {
+      "source": "beta_feedback",
+      "category": [
+        "onboarding_confusion",
+        "catalog_match",
+        "guidance_trust",
+        "routine_checkoff",
+        "visual_progress",
+        "notifications",
+        "paywall_comprehension",
+        "privacy_rights",
+        "crash_performance",
+        "account_auth",
+        "app_install",
+        "advice_boundary",
+        "other"
+      ],
+      "severity": [
+        "p0",
+        "p1",
+        "p2",
+        "p3"
+      ]
+    },
+    "freeText": false,
+    "personalData": "No free-text or health/photo detail is sent by this handoff."
+  },
+  "categories": [
+    {
+      "key": "onboarding_confusion",
+      "label": "Onboarding confusion",
+      "detail": "Age, consent, quiz, account, or first-run setup.",
+      "deskQueue": "beta-onboarding",
+      "escalationOwner": "Support ops + onboarding owner",
+      "publicTheme": "activation confusion"
+    },
+    {
+      "key": "catalog_match",
+      "label": "Catalog match issue",
+      "detail": "No match, wrong match, barcode, or manual add.",
+      "deskQueue": "beta-catalog",
+      "escalationOwner": "Catalog owner",
+      "publicTheme": "catalog miss or wrong match"
+    },
+    {
+      "key": "guidance_trust",
+      "label": "Guidance trust concern",
+      "detail": "Advice felt unclear, unsafe, or not grounded enough.",
+      "deskQueue": "beta-guidance-review",
+      "escalationOwner": "Clinical/claims reviewer + engineering",
+      "publicTheme": "guidance trust"
+    },
+    {
+      "key": "routine_checkoff",
+      "label": "Routine or check-off",
+      "detail": "Scheduling, timing, step order, or completion issue.",
+      "deskQueue": "beta-routine",
+      "escalationOwner": "Routine owner",
+      "publicTheme": "routine activation"
+    },
+    {
+      "key": "visual_progress",
+      "label": "Progress photos",
+      "detail": "Capture, timeline, comparison, or permission issue.",
+      "deskQueue": "beta-photos",
+      "escalationOwner": "Photo/privacy owner",
+      "publicTheme": "progress photo friction"
+    },
+    {
+      "key": "notifications",
+      "label": "Reminders",
+      "detail": "Notification timing, quiet hours, or delivery issue.",
+      "deskQueue": "beta-reminders",
+      "escalationOwner": "Notifications owner",
+      "publicTheme": "reminder reliability"
+    },
+    {
+      "key": "paywall_comprehension",
+      "label": "Paywall comprehension",
+      "detail": "Pricing, trial, restore, or subscription wording.",
+      "deskQueue": "beta-payments",
+      "escalationOwner": "Payments + legal owner",
+      "publicTheme": "pricing or trial comprehension"
+    },
+    {
+      "key": "privacy_rights",
+      "label": "Privacy or data rights",
+      "detail": "Deletion, export, consent, or privacy policy issue.",
+      "deskQueue": "beta-privacy",
+      "escalationOwner": "Privacy/legal owner",
+      "publicTheme": "privacy rights"
+    },
+    {
+      "key": "crash_performance",
+      "label": "Crash or performance",
+      "detail": "Freeze, blank screen, slow load, or app crash.",
+      "deskQueue": "beta-release",
+      "escalationOwner": "Release/build owner",
+      "publicTheme": "crash or performance"
+    },
+    {
+      "key": "account_auth",
+      "label": "Account or sign-in",
+      "detail": "Email, guest mode, auth, or saved-account issue.",
+      "deskQueue": "beta-auth",
+      "escalationOwner": "Auth/backend owner",
+      "publicTheme": "account access"
+    },
+    {
+      "key": "app_install",
+      "label": "Install or app review",
+      "detail": "Store, TestFlight, install, or update issue.",
+      "deskQueue": "beta-install",
+      "escalationOwner": "Release/build owner",
+      "publicTheme": "install or update"
+    },
+    {
+      "key": "advice_boundary",
+      "label": "Advice boundary concern",
+      "detail": "Content felt too clinical or beyond product guidance.",
+      "deskQueue": "beta-claims",
+      "escalationOwner": "Clinical/claims reviewer + legal",
+      "publicTheme": "medical-advice boundary"
+    },
+    {
+      "key": "other",
+      "label": "Other",
+      "detail": "Something important not covered above.",
+      "deskQueue": "beta-general",
+      "escalationOwner": "Support ops owner",
+      "publicTheme": "uncategorized feedback"
+    }
+  ],
+  "severities": [
+    {
+      "key": "p0",
+      "label": "Cannot use the app",
+      "detail": "Crash, data-loss risk, or hard blocker.",
+      "responseTarget": "same day",
+      "escalation": "page owner immediately",
+      "definition": "Crash, data-loss risk, unexpected charge, privacy failure, or harmful medical framing."
+    },
+    {
+      "key": "p1",
+      "label": "Core flow blocked",
+      "detail": "A key journey cannot be completed.",
+      "responseTarget": "1 business day",
+      "escalation": "feature owner",
+      "definition": "Core activation, catalog, payment, auth, or routine flow is blocked."
+    },
+    {
+      "key": "p2",
+      "label": "Can continue",
+      "detail": "Wrong or confusing, but there is a workaround.",
+      "responseTarget": "2 business days",
+      "escalation": "weekly beta triage unless repeated",
+      "definition": "Tester can continue, but the issue is wrong, confusing, or unreliable."
+    },
+    {
+      "key": "p3",
+      "label": "Suggestion",
+      "detail": "Polish, wording, or nice-to-have improvement.",
+      "responseTarget": "weekly triage",
+      "escalation": "backlog review",
+      "definition": "Suggestion, polish, wording, or non-launch request."
+    }
+  ],
+  "files": [
+    {
+      "path": "package.json",
+      "exists": true,
+      "bytes": 15497,
+      "sha256": "9cc48a02054d19f2ad076e1e9dd0a8253b7b2fa93cc14420f666951ba0255a2b"
+    },
+    {
+      "path": "scripts/phase10/build-support-handoff-packet.mjs",
+      "exists": true,
+      "bytes": 12540,
+      "sha256": "bdc16041ab8e7bcd1f5f524b4ffcec18c3721df2090fcd287d9717317dcc749d"
+    },
+    {
+      "path": "scripts/phase10/lib.mjs",
+      "exists": true,
+      "bytes": 2708,
+      "sha256": "3d326b6f8589e7157f9def40c2b3cd17c31bda9b4b3746f35f7ffd5f3d4deb0c"
+    },
+    {
+      "path": "apps/mobile/src/app/settings/beta-feedback.tsx",
+      "exists": true,
+      "bytes": 11070,
+      "sha256": "c308e90f8217f36e03a55df0afa490ea2c8030f0fa98923ca28b7cfe72ce0272"
+    },
+    {
+      "path": "docs/phase-10/support-operations.md",
+      "exists": true,
+      "bytes": 3784,
+      "sha256": "66af3dc3110f55906996505088ac853d3af730f3700966b2199b01fef2c8cb9f"
+    }
+  ],
+  "blockers": [],
+  "warnings": []
+}
