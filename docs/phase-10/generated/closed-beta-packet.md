@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-09T16:13:25.072Z
+Generated: 2026-07-09T16:52:58.699Z
 Status: blocked
-Git SHA: 2ff887a615c5545a841216a67a604d4f1de3eb1f
+Git SHA: bf6db6c135cb86a827c1bed72b39a856a0b65c70
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -56,14 +56,14 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `dd21079f31bff92d95d1f4b1826c1f81d87a9c4724e319751e0dab148bf0656c`
+- `package.json`: `a1d6b0ce3f1d623d56b2529291edeab9f914320fad726342a10ffb1d392e9183`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
 - `scripts/phase9/lib.mjs`: `2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase10-11/public-contact-smoke.mjs`: `630ad5c5ff818df209ef7bfa990f2bf64fb22a257ca22acb0fd09fad782801e4`
 - `scripts/phase10/lib.mjs`: `d86f0fd60baac38388f518bfb1ad7024102f80ab31783b4503542b882321bee3`
-- `scripts/phase10/beta-readiness.mjs`: `fa59ce14ede994d0d2954fdf4638e417c7465b1cfad81be620361025a854dfa4`
+- `scripts/phase10/beta-readiness.mjs`: `5b0550a8d1e64e03bf63d8197e468f3ae70dc93bf560daddb1de3eb58ad73248`
 - `scripts/phase10/beta-analytics-audit.mjs`: `b53f5f09236eac44112e145c818cd845e8593a48821e80a3ac96697f88a3570e`
 - `scripts/phase10/build-beta-packet.mjs`: `ddebd3541d92a9f4e53ddbb41b8c1aebefb1ac915d536b60e334fd50f738df61`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
@@ -71,8 +71,8 @@ Phase 9 packet status: blocked
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `33df93ea6c9116b50df449c0d1fa67adb82d83742f47c3f5b5ee57fe63a0792b`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `4496cefb1b4fb94d64df8c389bf145ae32d005322e1714748cb7bbb9887fedd1`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `4b809685249d33f2d462e367ae281ec12a7f7b402009e9801dd52a516d764915`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `06bce06b3608971978baafa6691943fdebdde96807c603c76d5cb9f821f3cd5f`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `9267275f332a3eb9d7a0e4e3e404173041bd5523c94317f4fca90c68ce651002`
 - `docs/phase-10/beta-source-of-truth.md`: `0cb11a58751407ffdfcc836e2373cb6d39d1faf93874d23a817098dc3b68e530`
 - `docs/phase-10/tester-recruitment-sheet.md`: `ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`

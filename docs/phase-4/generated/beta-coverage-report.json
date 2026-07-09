@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T16:40:25.166Z",
+  "generatedAt": "2026-07-09T16:52:45.513Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "c47f0bbaee869e60c373eb8687165a5486e8958e",
+  "gitSha": "bf6db6c135cb86a827c1bed72b39a856a0b65c70",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -11,8 +11,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 13798,
-      "sha256": "dd21079f31bff92d95d1f4b1826c1f81d87a9c4724e319751e0dab148bf0656c"
+      "bytes": 13957,
+      "sha256": "a1d6b0ce3f1d623d56b2529291edeab9f914320fad726342a10ffb1d392e9183"
     },
     {
       "path": ".env.example",
@@ -96,13 +96,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 35120,
-      "sha256": "0e3921258ca69d1aebbb509fd9591d206761a7772ba0adb13a93e1b03912be65"
+      "sha256": "34285bf197462048e73cea95d39822039098260136732b4d41f06b600c5f55d4"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 22471,
-      "sha256": "bf04c9768ffde9a410aa54556c05a2e91fc3d810b0af7ecf2babde7a5001ce1f"
+      "sha256": "e511429cbd4d811f850fc3826d217464a92e7402c07ab715e906036adf44a7a0"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -120,13 +120,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 5693,
-      "sha256": "e95177f5c1596ea6bbb72b469e61bf1af98bf92b9633afbd27f32ef18809a441"
+      "sha256": "9bf733a84e071f3a103d02697319c626843c1437bedb8487558050c9d7dcf872"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 3816,
-      "sha256": "7245152b77feea82023f2cf8c011e2b4b53440437a88c82aa7cbf8860c566c83"
+      "sha256": "eda4d7aa4c85c25e25976d5be4af8cabb7d87173c5945c1fcf1ddd3a76ff1784"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
