@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T09:36:43.247Z",
+  "generatedAt": "2026-07-09T09:41:21.307Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "28fe15986afebf42933d34451c7f27992fcc6b61",
-  "gitStatus": "M apps/mobile/src/features/subscription/ProGate.tsx",
+  "gitSha": "b50a9f61757adcfd8dbe097844d68013bb2abc9a",
+  "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
     "androidBuildId": "",
@@ -269,20 +269,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 239991,
-      "sha256": "8cebe2564e2503256a15e2fa89ff18efa526e729387d34819035a8e00f4e9af3"
+      "bytes": 240098,
+      "sha256": "0ec63318c55a044ca4ee7c9f0c50012643a21f0019575cdb7b54383b81ce6775"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3780,
-      "sha256": "3aed470ab8aaa06170e07dd10669d805bc083cb1ba8c0b6f400630ef5fd96c26"
+      "sha256": "75165a0ddb049a098f9c5101d3ee65712b08e5ad54b9a8850fdea486755266a9"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 2124,
-      "sha256": "f9dfc596498ebc23164dae2f88a2d187edb697e9798fcfc2f6a75196c2c0cd3e"
+      "sha256": "a44ec51f45fc8bc41c673527d839d91d88db7b49154ffd7596c7eae84db49e1c"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
@@ -324,7 +324,5 @@
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
     "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver/TalkBack labels, traversal, and 44 pt controls)."
   ],
-  "warnings": [
-    "Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence."
-  ]
+  "warnings": []
 }
