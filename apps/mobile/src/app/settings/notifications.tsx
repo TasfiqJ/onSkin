@@ -149,7 +149,7 @@ export default function NotificationSettingsScreen() {
   const nudgesSectionStyle = supportTextPressureNotifications
     ? { marginTop: 152 }
     : androidMidTextPressureNotifications
-      ? { marginTop: 152 }
+      ? { marginTop: 184 }
       : microShortNotifications
         ? { marginTop: 136 }
         : ultraShortNotifications

@@ -16,6 +16,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   review gate approved; named reviewer/counsel evidence remains in
   `docs/FOR_TAS_TO_DO.md`.
 
+- Rechecked the supported Android-class `/settings/notifications` 360 x 740 /
+  200% text-pressure branch after increasing the mid-height Gentle Nudges
+  spacer. The focused route contract and one-route human-simulated E2E pass
+  report zero failed routes, zero visible clipped controls, zero sub-44 visible
+  controls, zero blocked hit centers, zero horizontal overflow, and zero
+  disallowed browser logs. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-notifications-margin-recheck/`.
+
 - Cleared a short Android-class 360 x 600 / 200% text-pressure route audit.
   The first 49-route Expo web sweep exposed `/recommendations/preferences` with
   `Sustainable` visible as a 24 px bottom-edge partial target. After lower
