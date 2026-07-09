@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T00:05:37.139Z",
+  "generatedAt": "2026-07-09T00:05:55.547Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "c591df85a030d2ba1c2f79282b48bf31db3869f8",
-  "gitStatus": "M docs/e2e/generated/human-e2e-manifest.json\n M docs/e2e/generated/human-e2e-manifest.md",
+  "gitSha": "7692ca7833cc31f962ebdafb3530d9233cde4162",
+  "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
     "androidBuildId": "",
@@ -318,7 +318,5 @@
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
     "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver/TalkBack labels, traversal, and 44 pt controls)."
   ],
-  "warnings": [
-    "Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence."
-  ]
+  "warnings": []
 }
