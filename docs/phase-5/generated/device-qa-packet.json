@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T08:38:29.300Z",
+  "generatedAt": "2026-07-09T08:38:37.887Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "4e9ee0a15d9d15b52f162bbc5b937faf2f943d9d",
+  "gitSha": "5071373417e13894d11ebdecae85921c021ff8a5",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
