@@ -88,6 +88,20 @@ Run or maintain:
 - dependency inventory/SBOM.
 - account deletion and data export smoke.
 
+## Generated Evidence Checks
+
+Generated launch packets record whether source files were dirty when the packet
+was produced. Packet builders intentionally ignore other generated evidence
+outputs so Phase 3-11 packets can be refreshed together, but they still report
+non-generated source changes as dirty. After any multi-packet refresh, run:
+
+```bash
+npm run docs:generated-packet-status-audit:check
+```
+
+That audit is the gate that proves committed generated packet hashes are current
+and no packet records dirty source evidence.
+
 ## Performance Checks
 
 Monitor:

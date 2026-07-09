@@ -28,7 +28,7 @@
     {
       "center": {
         "x": 195,
-        "y": 255
+        "y": 427
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,12 +37,12 @@
       "label": "Continue with manual text",
       "partialClip": false,
       "rect": {
-        "bottom": 306,
-        "height": 102,
+        "bottom": 455,
+        "height": 56,
         "left": 24,
         "right": 366,
-        "top": 204,
-        "visibleHeight": 102,
+        "top": 399,
+        "visibleHeight": 56,
         "visibleWidth": 342,
         "width": 342
       },
@@ -54,9 +54,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8364/shelf/ocr",
+  "location": "http://localhost:8365/shelf/ocr",
   "textOverflows": [],
-  "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. Continue with manual text",
+  "textStart": "< Read the label Capture the ingredient panel Camera permission lets you keep the label beside the editable text. Manual entry still works. On-device OCR is not enabled in this build yet. Use the captured label as a reference, then type or paste the ingredients below. Continue with manual text",
   "viewport": {
     "width": 390,
     "height": 640
@@ -64,7 +64,7 @@
   "route": "/shelf/ocr",
   "scaledCount": 5,
   "textScale": 1.7,
-  "url": "http://localhost:8364/shelf/ocr",
+  "url": "http://localhost:8365/shelf/ocr",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

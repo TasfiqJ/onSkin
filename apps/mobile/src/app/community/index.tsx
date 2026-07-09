@@ -184,6 +184,8 @@ export default function SkinNotesHub() {
             const keepUltraShortNarrowSectionBelowFold =
               ultraShortCommunity && narrowCompactCommunity && groupIndex > 0;
             const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;
+            const keepSupportFloorSectionBelowFold =
+              supportFloorTextPressureCommunity && groupIndex > 0;
             const keepShortModernSectionBelowFold =
               modernPhoneCommunity && !narrowCompactCommunity && g.topic.slug === 'sunscreen';
             const keepNextSectionBelowFold =
@@ -197,6 +199,8 @@ export default function SkinNotesHub() {
                     ? { marginTop: 112 }
                     : keepUltraShortNarrowSectionBelowFold
                       ? { marginTop: 176 }
+                      : keepSupportFloorSectionBelowFold
+                        ? { marginTop: 96 }
                       : keepNarrowSectionBelowFold
                         ? { marginTop: 140 }
                         : keepShortModernSectionBelowFold

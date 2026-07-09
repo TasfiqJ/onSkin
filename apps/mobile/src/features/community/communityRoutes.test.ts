@@ -65,6 +65,8 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       'const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;',
     );
+    expect(source).toContain('const keepSupportFloorSectionBelowFold =');
+    expect(source).toContain('supportFloorTextPressureCommunity && groupIndex > 0;');
     expect(source).toContain(
       "modernPhoneCommunity && !narrowCompactCommunity && g.topic.slug === 'sunscreen';",
     );
@@ -74,6 +76,8 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       'keepUltraShortNarrowSectionBelowFold\n                      ? { marginTop: 176 }',
     );
+    expect(source).toContain(': keepSupportFloorSectionBelowFold');
+    expect(source).toContain('? { marginTop: 96 }');
     expect(source).toContain(': keepNarrowSectionBelowFold');
     expect(source).toContain('? { marginTop: 140 }');
     expect(source).toContain(': keepShortModernSectionBelowFold');

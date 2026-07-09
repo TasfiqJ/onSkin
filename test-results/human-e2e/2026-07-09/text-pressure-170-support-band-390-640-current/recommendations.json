@@ -27,7 +27,7 @@
     },
     {
       "center": {
-        "x": 285.34375,
+        "x": 315.2578125,
         "y": 28
       },
       "centerBlocked": false,
@@ -39,12 +39,87 @@
       "rect": {
         "bottom": 52,
         "height": 48,
-        "left": 204.6875,
+        "left": 264.515625,
         "right": 366,
         "top": 4,
         "visibleHeight": 48,
-        "visibleWidth": 161.3125,
-        "width": 161.3125
+        "visibleWidth": 101.484375,
+        "width": 101.484375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 273.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "label": "A mineral SPF 30+. Your morning routine has no SPF, and daily SPF is the single highest-impact step.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 359,
+        "height": 171,
+        "left": 24,
+        "right": 366,
+        "top": 188,
+        "visibleHeight": 171,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 463.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "label": "A ceramide moisturiser. Your routine has no moisturiser. It helps seal everything in and support your barrier.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 552,
+        "height": 177,
+        "left": 24,
+        "right": 366,
+        "top": 375,
+        "visibleHeight": 177,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 639
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+      "label": "A gentle cleanser. Your routine has no cleanser. A gentle, clean base is where every routine starts.",
+      "partialClip": true,
+      "rect": {
+        "bottom": 727,
+        "height": 159,
+        "left": 24,
+        "right": 366,
+        "top": 568,
+        "visibleHeight": 72,
+        "visibleWidth": 342,
+        "width": 342
       },
       "role": "button",
       "tag": "BUTTON",
@@ -54,9 +129,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8364/recommendations",
+  "location": "http://localhost:8365/recommendations",
   "textOverflows": [],
-  "textStart": "< Preferences For you Ranked by fit and evidence, never by commission. Looking at your routine…",
+  "textStart": "< Preferences For you Ranked by fit and evidence, never by commission. START SIMPLE ✦ A mineral SPF 30+ Strong fit Your morning routine has no SPF, and daily SPF is the single highest-impact step. Daily SPF. Broad consensus See how → ✦ A ceramide moisturiser Strong fit Your routine has no moisturiser. It helps seal everything in and support your barrier. Barrier support. Well established See how → ✦ A gentle cleanser Strong fit Your routine has no cleanser. A gentle, clean base is where every routine starts. A clean, non-stripping base. Well established See how →",
   "viewport": {
     "width": 390,
     "height": 640
@@ -64,7 +139,7 @@
   "route": "/recommendations",
   "scaledCount": 6,
   "textScale": 1.7,
-  "url": "http://localhost:8364/recommendations",
+  "url": "http://localhost:8365/recommendations",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

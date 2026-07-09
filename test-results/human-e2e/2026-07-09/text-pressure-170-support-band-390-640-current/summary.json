@@ -1,7 +1,7 @@
 {
-  "baseUrl": "http://localhost:8364",
+  "baseUrl": "http://localhost:8365",
   "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-170-support-band-390-640-current",
-  "generatedAt": "2026-07-09T12:03:37.968Z",
+  "generatedAt": "2026-07-09T12:10:55.977Z",
   "routeCount": 49,
   "scale": 1.7,
   "status": "pass",
@@ -130,7 +130,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/community",
-      "scaledCount": 26
+      "scaledCount": 27
     },
     {
       "disallowedLogCount": 0,
@@ -208,7 +208,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/trend/optin",
-      "scaledCount": 5
+      "scaledCount": 6
     },
     {
       "disallowedLogCount": 0,

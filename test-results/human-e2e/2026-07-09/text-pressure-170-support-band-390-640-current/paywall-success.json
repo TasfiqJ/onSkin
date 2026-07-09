@@ -29,9 +29,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8364/paywall/success",
+  "location": "http://localhost:8365/paywall/success",
   "textOverflows": [],
-  "textStart": "✓ You’re all set. Pro is active now. Your plan renews at $49.99/year. Cancel anytime. active until July 9 renews $49.99/yr See tonight’s routine",
+  "textStart": "✓ You’re all set. Your 14 days of Pro start now. We’ll remind you 2 days before it converts to the store price/year. Cancel anytime. trial ends July 23 renews the store price/yr See tonight’s routine",
   "viewport": {
     "width": 390,
     "height": 640
@@ -39,7 +39,7 @@
   "route": "/paywall/success",
   "scaledCount": 6,
   "textScale": 1.7,
-  "url": "http://localhost:8364/paywall/success",
+  "url": "http://localhost:8365/paywall/success",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

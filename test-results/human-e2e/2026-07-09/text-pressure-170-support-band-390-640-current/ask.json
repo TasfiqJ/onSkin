@@ -3,7 +3,7 @@
     {
       "center": {
         "x": 48,
-        "y": 32.890625
+        "y": 28
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,11 +12,11 @@
       "label": "Back",
       "partialClip": false,
       "rect": {
-        "bottom": 56.890625,
+        "bottom": 52,
         "height": 48,
         "left": 24,
         "right": 72,
-        "top": 8.890625,
+        "top": 4,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -28,20 +28,70 @@
     {
       "center": {
         "x": 195,
-        "y": 175.390625
+        "y": 267
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "Conflicts",
-      "label": "Conflicts ›",
+      "hitText": "Is there a conflict on my shelf?",
+      "label": "Is there a conflict on my shelf? ›",
       "partialClip": false,
       "rect": {
-        "bottom": 199.390625,
+        "bottom": 291,
         "height": 48,
         "left": 24,
         "right": 366,
-        "top": 151.390625,
+        "top": 243,
+        "visibleHeight": 48,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 323
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "What should I do tonight?",
+      "label": "What should I do tonight? ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 347,
+        "height": 48,
+        "left": 24,
+        "right": 366,
+        "top": 299,
+        "visibleHeight": 48,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 379
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Is this product a fit for me?",
+      "label": "Is this product a fit for me? ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 403,
+        "height": 48,
+        "left": 24,
+        "right": 366,
+        "top": 355,
         "visibleHeight": 48,
         "visibleWidth": 342,
         "width": 342
@@ -53,7 +103,7 @@
     {
       "center": {
         "x": 166,
-        "y": 541.40625
+        "y": 563
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,11 +112,11 @@
       "label": "Ask a question about your shelf",
       "partialClip": false,
       "rect": {
-        "bottom": 565.40625,
+        "bottom": 587,
         "height": 48,
         "left": 39,
         "right": 293,
-        "top": 517.40625,
+        "top": 539,
         "visibleHeight": 48,
         "visibleWidth": 254,
         "width": 254
@@ -78,7 +128,7 @@
     {
       "center": {
         "x": 327,
-        "y": 541.40625
+        "y": 563
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,11 +137,11 @@
       "label": "Send",
       "partialClip": false,
       "rect": {
-        "bottom": 565.40625,
+        "bottom": 587,
         "height": 48,
         "left": 303,
         "right": 351,
-        "top": 517.40625,
+        "top": 539,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -104,9 +154,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8364/ask",
+  "location": "http://localhost:8365/ask",
   "textOverflows": [],
-  "textStart": "< ✦ Ask GROUNDED IN YOUR SHELF RIGHT NOW Conflicts › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "textStart": "< ✦ Ask RoutineKind knows your shelf evidence-grounded private Ask about your own shelf, routine and conflicts. I answer from RoutineKind's evidence base, and I'll tell you when I don't know. GROUNDED IN YOUR SHELF RIGHT NOW Is there a conflict on my shelf? › What should I do tonight? › Is this product a fit for me? › ↑ AI advisor · disclosed honestly · your context stays on this device",
   "viewport": {
     "width": 390,
     "height": 640
@@ -114,7 +164,7 @@
   "route": "/ask",
   "scaledCount": 8,
   "textScale": 1.7,
-  "url": "http://localhost:8364/ask",
+  "url": "http://localhost:8365/ask",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }
