@@ -1,0 +1,46 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-skipped-routes-430-640-focused-regression",
+  "generatedAt": "2026-07-09T17:03:16.281Z",
+  "routeCount": 5,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 640,
+    "width": 430
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/age",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/goals",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/products",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/paywall",
+      "scaledCount": 23
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/downgrade",
+      "scaledCount": 17
+    }
+  ]
+}

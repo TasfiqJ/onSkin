@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 75.171875,
+        "y": 409
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Day of birth",
+      "partialClip": false,
+      "rect": {
+        "bottom": 442,
+        "height": 66,
+        "left": 24,
+        "right": 126.34375,
+        "top": 376,
+        "visibleHeight": 66,
+        "visibleWidth": 102.34375,
+        "width": 102.34375
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 185.5234375,
+        "y": 409
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Month of birth",
+      "partialClip": false,
+      "rect": {
+        "bottom": 442,
+        "height": 66,
+        "left": 134.34375,
+        "right": 236.703125,
+        "top": 376,
+        "visibleHeight": 66,
+        "visibleWidth": 102.359375,
+        "width": 102.359375
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 316.3515625,
+        "y": 409
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Year of birth",
+      "partialClip": false,
+      "rect": {
+        "bottom": 442,
+        "height": 66,
+        "left": 244.703125,
+        "right": 388,
+        "top": 376,
+        "visibleHeight": 66,
+        "visibleWidth": 143.296875,
+        "width": 143.296875
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 206,
+        "y": 587
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue",
+      "label": "Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 624,
+        "height": 74,
+        "left": 24,
+        "right": 388,
+        "top": 550,
+        "visibleHeight": 74,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/onboarding/age",
+  "textOverflows": [],
+  "textStart": "First, your date of birth. RoutineKind confirms your age before skin-health data. We don't store your birth date. DAY MONTH YEAR Continue",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/onboarding/age",
+  "scaledCount": 7,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/age",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

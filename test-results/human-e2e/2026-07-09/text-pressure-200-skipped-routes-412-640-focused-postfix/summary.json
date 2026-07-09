@@ -1,0 +1,72 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-skipped-routes-412-640-focused-postfix",
+  "generatedAt": "2026-07-09T17:00:35.838Z",
+  "routeCount": 5,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 640,
+    "width": 412
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "issues": [
+        {
+          "textOverflows": [
+            {
+              "clientWidth": 48,
+              "overflow": 72,
+              "rect": {
+                "height": 40,
+                "width": 47.5625
+              },
+              "text": "$4.16/mo",
+              "whiteSpace": "nowrap"
+            }
+          ],
+          "type": "textOverflow"
+        }
+      ],
+      "route": "/onboarding/paywall",
+      "scaledCount": 27,
+      "textStart": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales"
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/age",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/goals",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/products",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "route": "/onboarding/paywall",
+      "scaledCount": 27
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/downgrade",
+      "scaledCount": 17
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}

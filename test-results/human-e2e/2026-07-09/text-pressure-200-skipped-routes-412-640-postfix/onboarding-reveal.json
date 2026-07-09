@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 206,
+        "y": 596
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to quiz",
+      "label": "Back to quiz",
+      "partialClip": false,
+      "rect": {
+        "bottom": 624,
+        "height": 56,
+        "left": 24,
+        "right": 388,
+        "top": 568,
+        "visibleHeight": 56,
+        "visibleWidth": 364,
+        "width": 364
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/onboarding/reveal",
+  "textOverflows": [],
+  "textStart": "PROFILE PAUSED Finish the quiz to see your profile. Your reveal needs the quiz answers first, so the result reflects your skin. Back to quiz",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/onboarding/reveal",
+  "scaledCount": 4,
+  "textScale": 2,
+  "url": "http://localhost:8232/onboarding/reveal",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 293.7578125,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Maybe later",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 199.515625,
+        "right": 388,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 188.484375,
+        "width": 188.484375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/routine/welcome-back",
+  "textOverflows": [],
+  "textStart": "Maybe later Reminders, streaks & home-screen widgets. Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of RoutineKind Pro. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. › Terms · Privacy · Restore",
+  "viewport": {
+    "width": 412,
+    "height": 640
+  },
+  "route": "/routine/welcome-back",
+  "scaledCount": 16,
+  "textScale": 2,
+  "url": "http://localhost:8232/routine/welcome-back",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
