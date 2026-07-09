@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T15:18:06.155Z
-Git SHA: 16162b4c9e7c80f82fe5a93bb7d2e5a29511fc14
+Generated: 2026-07-09T15:31:11.888Z
+Git SHA: fd8885509dd0f8cdb23a4088a9625ac06dccaa46
 Evidence date: 2026-07-09
 Status: pass
 
@@ -14,13 +14,17 @@ dependency to the repo.
 
 | Gate                                                             | Class           | Status  | Detail                                                  | Files | Folder                                                                               |
 | ---------------------------------------------------------------- | --------------- | ------- | ------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
-| 320 x 480 supported-floor 200% text-pressure route sweep         | launch-blocking | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12     |
+| 360 x 640 launch-floor 200% text-pressure route sweep            | launch-blocking | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix        |
+| 360 x 740 supported Android-class 200% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix          |
 | 375 x 812 supported iPhone-class 200% text-pressure route sweep  | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix           |
 | 390 x 844 supported-phone 200% text-pressure route sweep         | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7             |
 | 412 x 915 supported Android-class 200% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2         |
 | 430 x 932 supported-phone 200% text-pressure route sweep         | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5             |
 | 390 x 844 supported-phone 170% text-pressure route sweep         | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6             |
 | 430 x 932 supported-phone 170% text-pressure route sweep         | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3             |
+| 320 x 480 stress 200% text-pressure route sweep                  | resilience      | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12     |
+| 320 x 480 stress 170% text-pressure route sweep                  | resilience      | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-16     |
+| 320 x 480 stress route rerun                                     | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun                 |
 | 320 x 430 resilience route clearance                             | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep |
 | 320 x 390 split-short stress clearance                           | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix   |
 | 320 x 430 first-session activation stress pass                   | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current               |
@@ -28,7 +32,7 @@ dependency to the repo.
 ## Warnings
 
 - This manifest verifies committed local Expo web evidence only; it does not replace physical iOS/Android device QA.
-- Only launch-blocking gates are required by the device support policy; 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.
+- Only launch-blocking gates are required by the device support policy; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.
 - Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.
 
 ## Blockers

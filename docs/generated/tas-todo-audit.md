@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-09T15:16:46.095Z
+Generated: 2026-07-09T15:31:11.811Z
 Status: pass
 Strict mode: yes
 
@@ -30,8 +30,8 @@ inventory itself is the canonical machine-readable key list.
 - FOR_TAS date: 2026-07-09
 - Expected evidence date: 2026-07-09
 - Device support policy: `docs/DEVICE_SUPPORT_POLICY.md`
-- Required FOR_TAS support-floor details: `docs/DEVICE_SUPPORT_POLICY.md`, `iOS 17.0+`, `Android 10 / API 29+`, `320 x 480`, `API 36`
-- Required policy support-floor details: `iOS 17.0+`, `Android 10 / API 29+`, `320 x 480`, `API 36`
+- Required FOR_TAS support-floor details: `docs/DEVICE_SUPPORT_POLICY.md`, `iOS 17.0+`, `Android 10 / API 29+`, `360 x 640`, `API 36`
+- Required policy support-floor details: `iOS 17.0+`, `Android 10 / API 29+`, `360 x 640`, `API 36`
 
 ## Gate Coverage
 

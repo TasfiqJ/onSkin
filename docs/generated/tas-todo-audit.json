@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T15:16:46.095Z",
+  "generatedAt": "2026-07-09T15:31:11.811Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
@@ -18,13 +18,13 @@
       "docs/DEVICE_SUPPORT_POLICY.md",
       "iOS 17.0+",
       "Android 10 / API 29+",
-      "320 x 480",
+      "360 x 640",
       "API 36"
     ],
     "requiredDeviceSupportPolicyNeedles": [
       "iOS 17.0+",
       "Android 10 / API 29+",
-      "320 x 480",
+      "360 x 640",
       "API 36"
     ]
   },
