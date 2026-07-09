@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T13:37:02.874Z
-Git SHA: 3376d86231de96dd2c1287722c7e3bf1620fa0ef
+Generated at: 2026-07-09T13:37:07.183Z
+Git SHA: 0f15e79dfff02abc68e993a3ec94c03f5af977f2
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -76,8 +76,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/e2e/generated/human-e2e-manifest.md | present | 2872 | 91225aa5f186ac1ae8156bb1405a2ffbaef5b84b5ba00c651635fda7cf30c2cb |
 | docs/phase-5/generated/device-qa-packet.json | present | 11264 | db1ebec682e97f22a1cfe524b2acac5fae1cb3def1f21f8a61154802a383a4ca |
 | docs/phase-5/generated/device-qa-packet.md | present | 9912 | 51ec9d7e1a862801741a812e4d43fbfc2f527e1540d7e5f4b74f92ce61b5547f |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10520 | 4ffe3674db103ea384c017edb9ca135e8bddfb3682fec4e2becd4dac26e033e0 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7859 | 974f9d8f60d0a6e8b8921f1f8f8ae73c69d7ffe435966c1c938ffa87367731e2 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10520 | 4e16881d1daec70a563b0c19dd87a7eceea311863779fbe50e8df8b9ce43b372 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7859 | 6fe651b7f6fbeee5529e10e89435f994a053113d96cc2de4edce36b99570fb19 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4705 | 5388ca6479bdd3bf247c172b724e14b53be9bc1e0bb590f91ee546f150d2fe50 |
