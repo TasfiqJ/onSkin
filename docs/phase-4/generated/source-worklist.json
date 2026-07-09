@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-09T17:21:10.604Z",
+  "generatedAt": "2026-07-09T17:22:34.417Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "5e08a00fdcb06bb4c01c53a9eac6b7fce23b32f7",
-  "gitStatus": "M  scripts/phase9/lib.mjs",
+  "gitSha": "ae16d770544fca2672357922bc5f6c0cc98fe9c6",
+  "gitStatus": "",
   "summary": {
     "itemCount": 9,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 111,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -911,7 +911,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ]
+  "warnings": []
 }

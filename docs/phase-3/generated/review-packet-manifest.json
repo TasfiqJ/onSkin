@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T17:21:27.828Z",
+  "generatedAt": "2026-07-09T17:22:27.974Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "5e08a00fdcb06bb4c01c53a9eac6b7fce23b32f7",
-  "gitStatus": "M  scripts/phase9/lib.mjs",
+  "gitSha": "ae16d770544fca2672357922bc5f6c0cc98fe9c6",
+  "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
@@ -141,15 +141,15 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 81736,
-      "sha256": "9c78c0c9922fd62f01e53d8f9271213e1ca4542c429b5b48ec9bbe03b108d668"
+      "bytes": 81591,
+      "sha256": "9cab663b879a217a0930b19ed7ed90d2363f0ce550e0c1374335dd051ad73416"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 53314,
-      "sha256": "f213c214865daf92a8e4931f27509f39c93e038380dfdc17f82055b2c86ce5b7"
+      "bytes": 53209,
+      "sha256": "c0832b42c2d9e4ca45b9c97d70540e0ac6b6ebc90ec3f7e82a9d1a9644ef4b69"
     },
     {
       "packet": "clinical",
@@ -204,15 +204,15 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 81736,
-      "sha256": "9c78c0c9922fd62f01e53d8f9271213e1ca4542c429b5b48ec9bbe03b108d668"
+      "bytes": 81591,
+      "sha256": "9cab663b879a217a0930b19ed7ed90d2363f0ce550e0c1374335dd051ad73416"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 53314,
-      "sha256": "f213c214865daf92a8e4931f27509f39c93e038380dfdc17f82055b2c86ce5b7"
+      "bytes": 53209,
+      "sha256": "c0832b42c2d9e4ca45b9c97d70540e0ac6b6ebc90ec3f7e82a9d1a9644ef4b69"
     },
     {
       "packet": "cosmeticChemistry",
@@ -341,7 +341,5 @@
       "sha256": "197581e4b08210ed0384b0422b19082156aed5c9782317955ea858d4d87c3eaf"
     }
   ],
-  "warnings": [
-    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
-  ]
+  "warnings": []
 }

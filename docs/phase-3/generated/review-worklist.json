@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-09T17:21:10.489Z",
+  "generatedAt": "2026-07-09T17:22:20.031Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "5e08a00fdcb06bb4c01c53a9eac6b7fce23b32f7",
-  "gitStatus": "M  scripts/phase9/lib.mjs",
+  "gitSha": "ae16d770544fca2672357922bc5f6c0cc98fe9c6",
+  "gitStatus": "",
   "reviewLogs": [
     {
       "domain": "legalRegulatory",
@@ -62,7 +62,7 @@
     "sourcePathCount": 232,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -2019,7 +2019,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence."
-  ]
+  "warnings": []
 }
