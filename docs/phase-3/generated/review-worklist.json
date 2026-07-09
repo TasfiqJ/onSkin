@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T17:32:36.142Z",
+  "generatedAt": "2026-07-09T17:41:44.135Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "5dab29148fcdf2fecf3d1a92ecbc2e24baa9af18",
+  "gitSha": "36027fefffc4e8a9a456f418e748957615b2bd21",
   "gitStatus": "",
   "reviewLogs": [
     {
