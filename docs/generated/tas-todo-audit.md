@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-08T22:30:18.031Z
+Generated: 2026-07-09T00:31:49.026Z
 Status: pass
 Strict mode: yes
 
@@ -17,19 +17,19 @@ inventory itself is the canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 233
+- Extracted keys: 235
 - Local generated-only keys excluded: 10
 - Keys named verbatim in FOR_TAS_TO_DO.md: 233
-- Keys only in generated inventory: 0
+- Keys only in generated inventory: 2
 - Blockers: 0
-- Warnings: 0
+- Warnings: 1
 
 ## Gate Coverage
 
 | Gate    | FOR_TAS coverage | Package script evidence                                    | Keys | Keys only in generated inventory |
 | ------- | ---------------- | ---------------------------------------------------------- | ---- | -------------------------------- |
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 0                                |
-| phase3  | yes              | phase3:audit-copy:strict                                   | 0    | 0                                |
+| phase3  | yes              | phase3:audit-copy:strict                                   | 2    | 2                                |
 | phase4  | yes              | phase4:check-source-env:strict                             | 11   | 0                                |
 | phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 20   | 0                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 18   | 0                                |
@@ -107,7 +107,10 @@ Local generated-only keys excluded from evidence warnings: none.
 
 Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
-- No machine-detected external evidence keys in this group.
+| Extracted key               | Named in FOR_TAS_TO_DO.md |
+| --------------------------- | ------------------------- |
+| PHASE3_REVIEW_WORKLIST_JSON | no                        |
+| PHASE3_REVIEW_WORKLIST_MD   | no                        |
 
 Local generated-only keys excluded from evidence warnings: PHASE3_REVIEW_PACKET_OUT_DIR
 
@@ -369,4 +372,4 @@ Local generated-only keys excluded from evidence warnings: PHASE11_PACKET_OUT_DI
 
 ## Warnings
 
-- None.
+- Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.

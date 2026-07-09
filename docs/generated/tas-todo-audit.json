@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T22:30:18.031Z",
+  "generatedAt": "2026-07-09T00:31:49.026Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,12 +11,12 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 233,
+    "extractedKeyCount": 235,
     "localOnlyKeyCount": 10,
     "keyMentionCount": 233,
-    "keyNotMentionedCount": 0,
+    "keyNotMentionedCount": 2,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "groups": [
     {
@@ -166,9 +166,15 @@
         "phase3:audit-copy:strict"
       ],
       "forTasCovered": true,
-      "keys": [],
+      "keys": [
+        "PHASE3_REVIEW_WORKLIST_JSON",
+        "PHASE3_REVIEW_WORKLIST_MD"
+      ],
       "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": []
+      "keysNotMentionedInForTas": [
+        "PHASE3_REVIEW_WORKLIST_JSON",
+        "PHASE3_REVIEW_WORKLIST_MD"
+      ]
     },
     {
       "id": "phase4",
@@ -728,5 +734,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
+  ]
 }
