@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8255/routine/reorder",
+  "textOverflows": [],
+  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/routine/reorder",
+  "scaledCount": 3,
+  "textScale": 2,
+  "url": "http://localhost:8255/routine/reorder",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

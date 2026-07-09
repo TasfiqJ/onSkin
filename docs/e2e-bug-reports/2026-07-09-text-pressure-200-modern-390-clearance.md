@@ -26,6 +26,7 @@ The initial modern-phone 200% sweep failed 16 routes. The failures centered on c
 - Follow-up audit: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-3/`
 - Final passing audit: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-4/`
 - Final UI report: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-4/report.md`
+- Current-source rerun: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-current-rerun/`
 
 ## Minimal Fix
 
@@ -47,8 +48,9 @@ The initial modern-phone 200% sweep failed 16 routes. The failures centered on c
 - Focused contracts: `npm --workspace apps/mobile run test -- settingsRoutes.test.ts shelfRoutes.test.ts paywallMobileContracts.test.ts tabBar.test.ts recommendationRoutes.test.ts communityRoutes.test.ts`
 - Final screenshot/report set: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-4/`
 - Final UI report: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-4/report.md`
+- Current-source rerun report: `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-current-rerun/report.md`
 
-The final audit passed 49 / 49 routes with zero clipped visible controls, zero sub-44 px visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs.
+The final audit and the current-source rerun passed 49 / 49 routes with zero clipped visible controls, zero sub-44 px visible controls, zero blocked center hit-tests, zero horizontal overflow, and zero disallowed browser logs.
 
 ## Remaining Risk
 

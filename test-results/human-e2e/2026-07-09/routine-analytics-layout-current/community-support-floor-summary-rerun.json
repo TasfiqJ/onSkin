@@ -1,0 +1,41 @@
+{
+  "baseUrl": "http://localhost:8255",
+  "capturedAt": "2026-07-09T01:55:21.585Z",
+  "results": [
+    {
+      "name": "final-community-390x844-rerun",
+      "route": "/community",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "href": "http://localhost:8255/community",
+      "horizontalOverflow": false,
+      "clipped": 0,
+      "sub44": 0,
+      "blocked": 0,
+      "warnErrorLogs": 0,
+      "jsDialog": false,
+      "tabs": [],
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\21-final-community-390x844-rerun.jpg"
+    },
+    {
+      "name": "final-community-320x480-floor-rerun",
+      "route": "/community",
+      "viewport": {
+        "width": 320,
+        "height": 480
+      },
+      "href": "http://localhost:8255/community",
+      "horizontalOverflow": false,
+      "clipped": 0,
+      "sub44": 0,
+      "blocked": 0,
+      "warnErrorLogs": 0,
+      "jsDialog": false,
+      "tabs": [],
+      "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\22-final-community-320x480-floor-rerun.jpg"
+    }
+  ],
+  "failed": []
+}

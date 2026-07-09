@@ -1,0 +1,197 @@
+{
+  "blockedCenters": [
+    "[Circular]"
+  ],
+  "clippedControls": [
+    "[Circular]"
+  ],
+  "controls": [
+    {
+      "centerHit": true,
+      "clipped": true,
+      "height": 48,
+      "label": "Marketing emails",
+      "role": "switch",
+      "sub44": false,
+      "testId": "",
+      "width": 51.99,
+      "x": 294.31,
+      "y": -40.87
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 48,
+      "label": "Photos & the no-AI-score promise",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 15.12
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 54.98,
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health da",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 63.12
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 48,
+      "label": "Privacy policy. What data we collect, use, and share.",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 458.07
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 48,
+      "label": "Consumer health privacy. Consumer health data notice and rights.",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 506.07
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 54.98,
+      "label": "Terms. Rules for using RoutineKind and subscription terms.",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 554.07
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 54.98,
+      "label": "Support. Help with accounts, billing, deletion, or export.",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 609.04
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 54.98,
+      "label": "Account deletion. How account deletion works before and after deleting in app.",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 664.02
+    },
+    {
+      "centerHit": false,
+      "clipped": false,
+      "height": 48,
+      "label": "Data export. How to request and read your export.",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 302.31,
+      "x": 43.99,
+      "y": 718.99
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "Today tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-today",
+      "width": 93.08,
+      "x": 8.97,
+      "y": 770.69
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "Progress tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-progress",
+      "width": 93.1,
+      "x": 102.05,
+      "y": 770.69
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "Shelf tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-shelf",
+      "width": 93.08,
+      "x": 195.15,
+      "y": 770.69
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "You tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-you",
+      "width": 93.1,
+      "x": 288.23,
+      "y": 770.69
+    }
+  ],
+  "documentWidth": 390,
+  "horizontalOverflow": false,
+  "jsDialog": false,
+  "maxVisibleRight": 390.29,
+  "sub44Controls": [],
+  "tabControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "url": "http://localhost:8244/you?section=privacy",
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to request and read your export. > YOUR DATA Export my data Delete account Photos stay on your device by default. No ads, no data sales. RoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist. Tod",
+  "warnErrorLogs": [
+    {
+      "level": "error",
+      "message": "Error: Browser Use clipboard bridge is unavailable\n    at installPageClipboardBridge (<anonymous>:3:176)\n    at <anonymous>:4:5\n    at <anonymous>:5:5",
+      "timestamp": "2026-07-08T16:10:03.776Z",
+      "url": "http://localhost:8233/today?routine=PM"
+    },
+    {
+      "level": "warn",
+      "message": "Disconnected from Metro (1006)\nTo reconnect:\n- Ensure that Metro is running and available on the same network\n- Reload this app (will trigger further help if Metro cannot be connected to)",
+      "timestamp": "2026-07-08T16:10:08.618Z",
+      "url": "http://localhost:8233/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

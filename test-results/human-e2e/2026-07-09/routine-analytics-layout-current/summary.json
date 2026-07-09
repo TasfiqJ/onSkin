@@ -1,0 +1,82 @@
+[
+  {
+    "url": "http://localhost:8244/today",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    },
+    "horizontalOverflow": false,
+    "clippedControls": 0,
+    "sub44Controls": 0,
+    "blockedCenters": 0,
+    "jsDialog": false,
+    "warnErrorLogs": 2,
+    "tabLabels": [
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  {
+    "url": "http://localhost:8244/recommendations/preferences",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    },
+    "horizontalOverflow": false,
+    "clippedControls": 0,
+    "sub44Controls": 0,
+    "blockedCenters": 0,
+    "jsDialog": false,
+    "warnErrorLogs": 2,
+    "tabLabels": []
+  },
+  {
+    "url": "http://localhost:8244/you?section=privacy",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    },
+    "horizontalOverflow": false,
+    "clippedControls": 2,
+    "sub44Controls": 0,
+    "blockedCenters": 2,
+    "jsDialog": false,
+    "warnErrorLogs": 2,
+    "tabLabels": [
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  {
+    "url": "http://localhost:8244/shelf/scan",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    },
+    "horizontalOverflow": false,
+    "clippedControls": 0,
+    "sub44Controls": 0,
+    "blockedCenters": 0,
+    "jsDialog": false,
+    "warnErrorLogs": 2,
+    "tabLabels": []
+  },
+  {
+    "url": "http://localhost:8244/routine/plan",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    },
+    "horizontalOverflow": false,
+    "clippedControls": 0,
+    "sub44Controls": 0,
+    "blockedCenters": 0,
+    "jsDialog": false,
+    "warnErrorLogs": 2,
+    "tabLabels": []
+  }
+]

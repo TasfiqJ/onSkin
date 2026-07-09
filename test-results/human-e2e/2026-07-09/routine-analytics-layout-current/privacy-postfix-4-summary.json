@@ -1,0 +1,85 @@
+{
+  "url": "http://localhost:8244/you?section=privacy",
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "horizontalOverflow": false,
+  "clippedControls": 2,
+  "sub44Controls": 0,
+  "blockedCenters": 2,
+  "jsDialog": false,
+  "warnErrorLogs": 2,
+  "controls": [
+    {
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health da",
+      "y": -52.41,
+      "height": 54.98,
+      "clipped": true,
+      "centerHit": true
+    },
+    {
+      "label": "Privacy policy. What data we collect, use, and share.",
+      "y": 602.53,
+      "height": 48,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Consumer health privacy. Consumer health data notice and rights.",
+      "y": 650.53,
+      "height": 48,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Terms. Rules for using RoutineKind and subscription terms.",
+      "y": 698.53,
+      "height": 54.98,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Support. Help with accounts, billing, deletion, or export.",
+      "y": 753.5,
+      "height": 54.98,
+      "clipped": false,
+      "centerHit": false
+    },
+    {
+      "label": "Account deletion. How account deletion works before and after deleting in app.",
+      "y": 808.48,
+      "height": 54.98,
+      "clipped": true,
+      "centerHit": false
+    },
+    {
+      "label": "Today tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Progress tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Shelf tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "You tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    }
+  ]
+}

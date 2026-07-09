@@ -1,0 +1,148 @@
+{
+  "name": "today-390x844",
+  "route": "/today",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "capturedAt": "2026-07-09T01:47:52.617Z",
+  "page": {
+    "blockedCenters": [],
+    "bodyText": "WEDNESDAY, JULY 8 · 9:47 PM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Prog. Shelf You",
+    "clippedControls": [],
+    "controls": [
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Add products",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Add products",
+        "rect": {
+          "bottom": 302.9581489562988,
+          "height": 55.99211502075195,
+          "left": 47.99757385253906,
+          "right": 342.29371643066406,
+          "top": 246.96603393554688,
+          "width": 294.296142578125
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Today tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 8.965413093566895,
+          "right": 102.04794025421143,
+          "top": 770.6917724609375,
+          "width": 93.08252716064453
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-today"
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Progress tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 102.04794311523438,
+          "right": 195.14564514160156,
+          "top": 770.6917724609375,
+          "width": 93.09770202636719
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-progress"
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Shelf tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 195.14564514160156,
+          "right": 288.2281723022461,
+          "top": 770.6917724609375,
+          "width": 93.08252716064453
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-shelf"
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "You tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 288.2281799316406,
+          "right": 381.3258819580078,
+          "top": 770.6917724609375,
+          "width": 93.09770202636719
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-you"
+      }
+    ],
+    "document": {
+      "clientHeight": 845,
+      "clientWidth": 390,
+      "scrollHeight": 845,
+      "scrollWidth": 390
+    },
+    "horizontalOverflow": false,
+    "href": "http://localhost:8255/today",
+    "sub44Controls": [],
+    "tabControls": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "viewport": {
+      "dpr": 1.0000000199067927,
+      "height": 845,
+      "width": 390
+    }
+  },
+  "warnErrorLogs": [],
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\01-today-390x844.jpg"
+}

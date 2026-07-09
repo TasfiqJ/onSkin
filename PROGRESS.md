@@ -48,9 +48,11 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   Shelf scan/no-match keep visible hit targets complete, and Skin Notes moves a
   later Sunscreen section fully below the first short modern-phone viewport.
   Focused Settings/Shelf/paywall/navigation/recommendation/community contracts
-  pass, and the final 49-route sweep reports zero failed routes with evidence
-  in
+  pass, and the final 49-route sweep plus current-source rerun report zero
+  failed routes with evidence in
   `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-4/`
+  plus
+  `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-current-rerun/`
   and
   `docs/e2e-bug-reports/2026-07-09-text-pressure-200-modern-390-clearance.md`.
 

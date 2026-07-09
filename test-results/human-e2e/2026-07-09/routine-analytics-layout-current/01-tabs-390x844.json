@@ -1,0 +1,97 @@
+{
+  "blockedCenters": [],
+  "clippedControls": [],
+  "controls": [
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 55.99,
+      "label": "Add products",
+      "role": "button",
+      "sub44": false,
+      "testId": "",
+      "width": 294.3,
+      "x": 48,
+      "y": 246.97
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "Today tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-today",
+      "width": 93.08,
+      "x": 8.97,
+      "y": 770.69
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "Progress tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-progress",
+      "width": 93.1,
+      "x": 102.05,
+      "y": 770.69
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "Shelf tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-shelf",
+      "width": 93.08,
+      "x": 195.15,
+      "y": 770.69
+    },
+    {
+      "centerHit": true,
+      "clipped": false,
+      "height": 53.99,
+      "label": "You tab",
+      "role": "tab",
+      "sub44": false,
+      "testId": "bottom-tab-you",
+      "width": 93.1,
+      "x": 288.23,
+      "y": 770.69
+    }
+  ],
+  "documentWidth": 390,
+  "horizontalOverflow": false,
+  "jsDialog": false,
+  "maxVisibleRight": 390.29,
+  "sub44Controls": [],
+  "tabControls": [
+    "[Circular]",
+    "[Circular]",
+    "[Circular]",
+    "[Circular]"
+  ],
+  "url": "http://localhost:8244/today",
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "visibleText": "WEDNESDAY, JULY 8 · 9:36 PM Good evening. NO ROUTINE YET Build a routine from your shelf. Add the products you use and Today will become your AM/PM checklist. Add products Today Prog. Shelf You",
+  "warnErrorLogs": [
+    {
+      "level": "error",
+      "message": "Error: Browser Use clipboard bridge is unavailable\n    at installPageClipboardBridge (<anonymous>:3:176)\n    at <anonymous>:4:5\n    at <anonymous>:5:5",
+      "timestamp": "2026-07-08T16:10:03.776Z",
+      "url": "http://localhost:8233/today?routine=PM"
+    },
+    {
+      "level": "warn",
+      "message": "Disconnected from Metro (1006)\nTo reconnect:\n- Ensure that Metro is running and available on the same network\n- Reload this app (will trigger further help if Metro cannot be connected to)",
+      "timestamp": "2026-07-08T16:10:08.618Z",
+      "url": "http://localhost:8233/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

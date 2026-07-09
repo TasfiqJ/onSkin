@@ -1,0 +1,121 @@
+{
+  "name": "final-shelf-no-match-320x480-floor",
+  "route": "/shelf/no-match",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "capturedAt": "2026-07-09T01:50:04.822Z",
+  "page": {
+    "blockedCenters": [],
+    "bodyText": "? x Not found yet. S Search catalog Try name or brand instead I Scan ingredients + Add it by hand Always works, even offline",
+    "clippedControls": [],
+    "controls": [
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "x",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Close",
+        "rect": {
+          "bottom": 202.6395721435547,
+          "height": 47.99757385253906,
+          "left": 244.40231323242188,
+          "right": 292.39988708496094,
+          "top": 154.64199829101562,
+          "width": 47.99757385253906
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Search catalog",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Search catalog. Try name or brand instead",
+        "rect": {
+          "bottom": 296.61712646484375,
+          "height": 47.99757385253906,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 248.6195526123047,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Scan ingredients",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Scan the ingredient list. We'll read the INCI text",
+        "rect": {
+          "bottom": 384.60255432128906,
+          "height": 47.99757385253906,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 336.60498046875,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Add it by hand",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Add it by hand. Always works, even offline",
+        "rect": {
+          "bottom": 464.5934600830078,
+          "height": 47.99757385253906,
+          "left": 27.98847198486328,
+          "right": 292.3998794555664,
+          "top": 416.59588623046875,
+          "width": 264.4114074707031
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      }
+    ],
+    "document": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "horizontalOverflow": false,
+    "href": "http://localhost:8255/shelf/no-match",
+    "sub44Controls": [],
+    "tabControls": [],
+    "viewport": {
+      "dpr": 1.0000000199067927,
+      "height": 481,
+      "width": 320
+    }
+  },
+  "warnErrorLogs": [],
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\17-final-shelf-no-match-320x480-floor.jpg"
+}

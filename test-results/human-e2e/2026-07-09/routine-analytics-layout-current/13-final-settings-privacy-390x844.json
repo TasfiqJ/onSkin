@@ -1,0 +1,192 @@
+{
+  "name": "final-settings-privacy-390x844",
+  "route": "/settings/privacy",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "capturedAt": "2026-07-09T01:49:49.104Z",
+  "page": {
+    "blockedCenters": [],
+    "bodyText": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > Edit the order > Retinoid ramp > MORE ROUTINE Streak & adherence > Weekly check-in > Recent changes > FOR YOU Recommendations > Recommendation preferences > Skin Notes Myth vs evidence, reviewed and claim-safe. > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. REMINDERS Reminders & notifications Tiered, capped, at times you choose. Quiet hours & lock-screen discretion. > PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Photos & the no-AI-score promise > Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Sup",
+    "clippedControls": [],
+    "controls": [
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Marketing emails",
+        "rect": {
+          "bottom": 111.98422622680664,
+          "height": 47.99757385253906,
+          "left": 294.3113098144531,
+          "right": 346.29856872558594,
+          "top": 63.98665237426758,
+          "width": 51.98725891113281
+        },
+        "role": "switch",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Photos & the no-AI-score promise",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Photos & the no-AI-score promise",
+        "rect": {
+          "bottom": 167.9763412475586,
+          "height": 47.99757385253906,
+          "left": 43.99272155761719,
+          "right": 346.29856872558594,
+          "top": 119.97876739501953,
+          "width": 302.30584716796875
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Records withdrawal and deletes collected health data.",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+        "rect": {
+          "bottom": 222.95207977294922,
+          "height": 54.975730895996094,
+          "left": 43.99272155761719,
+          "right": 346.29856872558594,
+          "top": 167.97634887695312,
+          "width": 302.30584716796875
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Today tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 8.965413093566895,
+          "right": 102.04794025421143,
+          "top": 770.6917724609375,
+          "width": 93.08252716064453
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-today"
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Progress tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 102.04794311523438,
+          "right": 195.14564514160156,
+          "top": 770.6917724609375,
+          "width": 93.09770202636719
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-progress"
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Shelf tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 195.14564514160156,
+          "right": 288.2281723022461,
+          "top": 770.6917724609375,
+          "width": 93.08252716064453
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-shelf"
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "You tab",
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 288.2281799316406,
+          "right": 381.3258819580078,
+          "top": 770.6917724609375,
+          "width": 93.09770202636719
+        },
+        "role": "tab",
+        "sub44": false,
+        "testId": "bottom-tab-you"
+      }
+    ],
+    "document": {
+      "clientHeight": 845,
+      "clientWidth": 390,
+      "scrollHeight": 845,
+      "scrollWidth": 390
+    },
+    "horizontalOverflow": false,
+    "href": "http://localhost:8255/you?section=privacy",
+    "sub44Controls": [],
+    "tabControls": [
+      "[Circular]",
+      "[Circular]",
+      "[Circular]",
+      "[Circular]"
+    ],
+    "viewport": {
+      "dpr": 1.0000000199067927,
+      "height": 845,
+      "width": 390
+    }
+  },
+  "warnErrorLogs": [],
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\13-final-settings-privacy-390x844.jpg"
+}

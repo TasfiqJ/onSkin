@@ -1,0 +1,165 @@
+{
+  "name": "combined-final-routine-plan-390x844",
+  "route": "/routine/plan",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "capturedAt": "2026-07-09T01:56:22.157Z",
+  "page": {
+    "blockedCenters": [],
+    "bodyText": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+    "clippedControls": [],
+    "controls": [
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Maybe later",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Maybe later",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 264.0625,
+          "right": 366.29248046875,
+          "top": 3.989684581756592,
+          "width": 102.22998046875
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Start free trial",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Start free trial",
+        "rect": {
+          "bottom": 549.287052154541,
+          "height": 53.989688873291016,
+          "left": 23.99878692626953,
+          "right": 366.29248809814453,
+          "top": 495.29736328125,
+          "width": 342.293701171875
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Explore first. 7 days of Pro",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "rect": {
+          "bottom": 667.2178916931152,
+          "height": 61.938716888427734,
+          "left": 23.99878692626953,
+          "right": 366.29248809814453,
+          "top": 605.2791748046875,
+          "width": 342.293701171875
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Terms",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Terms",
+        "rect": {
+          "bottom": 715.2154693603516,
+          "height": 47.99757385253906,
+          "left": 97.05704498291016,
+          "right": 145.05461883544922,
+          "top": 667.2178955078125,
+          "width": 47.99757385253906
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Privacy",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Privacy",
+        "rect": {
+          "bottom": 715.2154693603516,
+          "height": 47.99757385253906,
+          "left": 170.40353393554688,
+          "right": 218.41627883911133,
+          "top": 667.2178955078125,
+          "width": 48.01274490356445
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Restore",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Restore",
+        "rect": {
+          "bottom": 715.2154693603516,
+          "height": 47.99757385253906,
+          "left": 243.7651824951172,
+          "right": 293.21906661987305,
+          "top": 667.2178955078125,
+          "width": 49.45388412475586
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      }
+    ],
+    "document": {
+      "clientHeight": 845,
+      "clientWidth": 390,
+      "scrollHeight": 845,
+      "scrollWidth": 390
+    },
+    "horizontalOverflow": false,
+    "href": "http://localhost:8255/routine/plan",
+    "sub44Controls": [],
+    "tabControls": [],
+    "viewport": {
+      "dpr": 1.0000000199067927,
+      "height": 845,
+      "width": 390
+    }
+  },
+  "warnErrorLogs": [],
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\30-combined-final-routine-plan-390x844.jpg"
+}

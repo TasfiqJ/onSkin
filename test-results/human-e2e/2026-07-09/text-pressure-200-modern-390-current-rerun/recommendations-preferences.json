@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 118.4296875,
+        "y": 461
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fragrance-free",
+      "label": "Fragrance-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 486,
+        "height": 50,
+        "left": 24,
+        "right": 212.859375,
+        "top": 436,
+        "visibleHeight": 50,
+        "visibleWidth": 188.859375,
+        "width": 188.859375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 262.078125,
+        "y": 461
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Vegan",
+      "label": "Vegan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 486,
+        "height": 50,
+        "left": 216.859375,
+        "right": 307.296875,
+        "top": 436,
+        "visibleHeight": 50,
+        "visibleWidth": 90.4375,
+        "width": 90.4375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 103.5546875,
+        "y": 515
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cruelty-free",
+      "label": "Cruelty-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 540,
+        "height": 50,
+        "left": 24,
+        "right": 183.109375,
+        "top": 490,
+        "visibleHeight": 50,
+        "visibleWidth": 159.109375,
+        "width": 159.109375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 136.390625,
+        "y": 741
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Non-comedogenic",
+      "label": "Non-comedogenic",
+      "partialClip": false,
+      "rect": {
+        "bottom": 766,
+        "height": 50,
+        "left": 24,
+        "right": 248.78125,
+        "top": 716,
+        "visibleHeight": 50,
+        "visibleWidth": 224.78125,
+        "width": 224.78125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 100.078125,
+        "y": 795
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sustainable",
+      "label": "Sustainable",
+      "partialClip": false,
+      "rect": {
+        "bottom": 820,
+        "height": 50,
+        "left": 24,
+        "right": 176.15625,
+        "top": 770,
+        "visibleHeight": 50,
+        "visibleWidth": 152.15625,
+        "width": 152.15625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8255/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 22,
+  "textScale": 2,
+  "url": "http://localhost:8255/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

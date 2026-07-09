@@ -1,0 +1,99 @@
+{
+  "url": "http://localhost:8244/you?section=privacy",
+  "viewport": {
+    "height": 845,
+    "width": 390
+  },
+  "horizontalOverflow": false,
+  "clippedControls": 1,
+  "sub44Controls": 0,
+  "blockedCenters": 1,
+  "jsDialog": false,
+  "warnErrorLogs": 2,
+  "controls": [
+    {
+      "label": "Marketing emails",
+      "y": -40.87,
+      "height": 48,
+      "clipped": true,
+      "centerHit": true
+    },
+    {
+      "label": "Photos & the no-AI-score promise",
+      "y": 15.12,
+      "height": 48,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health da",
+      "y": 63.12,
+      "height": 54.98,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Privacy policy. What data we collect, use, and share.",
+      "y": 458.07,
+      "height": 48,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Consumer health privacy. Consumer health data notice and rights.",
+      "y": 506.07,
+      "height": 48,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Terms. Rules for using RoutineKind and subscription terms.",
+      "y": 554.07,
+      "height": 54.98,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Support. Help with accounts, billing, deletion, or export.",
+      "y": 609.04,
+      "height": 54.98,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Account deletion. How account deletion works before and after deleting in app.",
+      "y": 664.02,
+      "height": 54.98,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Data export. How to request and read your export.",
+      "y": 718.99,
+      "height": 48,
+      "clipped": false,
+      "centerHit": false
+    },
+    {
+      "label": "Today tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Progress tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    },
+    {
+      "label": "Shelf tab",
+      "y": 770.69,
+      "height": 53.99,
+      "clipped": false,
+      "centerHit": true
+    }
+  ]
+}

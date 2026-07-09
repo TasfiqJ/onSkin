@@ -1,0 +1,143 @@
+{
+  "name": "shelf-scan-320x480-floor",
+  "route": "/shelf/scan",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "capturedAt": "2026-07-09T01:48:12.525Z",
+  "page": {
+    "blockedCenters": [],
+    "bodyText": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. = Scan label S Search catalog + Add it by hand",
+    "clippedControls": [],
+    "controls": [
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "x",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Close",
+        "rect": {
+          "bottom": 55.99211311340332,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 71.9963607788086,
+          "top": 7.994539260864258,
+          "width": 47.99757385253906
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "torch",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "torch",
+        "rect": {
+          "bottom": 55.99211311340332,
+          "height": 47.99757385253906,
+          "left": 239.39625549316406,
+          "right": 296.3895835876465,
+          "top": 7.994539260864258,
+          "width": 56.99332809448242
+        },
+        "role": "switch",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Scan label",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Scan ingredient label. Review editable OCR",
+        "rect": {
+          "bottom": 356.6140899658203,
+          "height": 47.99757385253906,
+          "left": 19.993932723999023,
+          "right": 300.3944454193115,
+          "top": 308.61651611328125,
+          "width": 280.4005126953125
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Search catalog",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Search catalog. Use reviewed matches",
+        "rect": {
+          "bottom": 410.60377502441406,
+          "height": 47.99757385253906,
+          "left": 19.993932723999023,
+          "right": 300.3944454193115,
+          "top": 362.606201171875,
+          "width": 280.4005126953125
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      },
+      {
+        "centerBlocked": false,
+        "centerHit": {
+          "label": "Add it by hand",
+          "role": null,
+          "tag": "div",
+          "testId": null
+        },
+        "clipped": false,
+        "label": "Add it by hand. Always works offline",
+        "rect": {
+          "bottom": 464.5934600830078,
+          "height": 47.99757385253906,
+          "left": 19.993932723999023,
+          "right": 300.3944454193115,
+          "top": 416.59588623046875,
+          "width": 280.4005126953125
+        },
+        "role": "button",
+        "sub44": false,
+        "testId": null
+      }
+    ],
+    "document": {
+      "clientHeight": 481,
+      "clientWidth": 320,
+      "scrollHeight": 481,
+      "scrollWidth": 320
+    },
+    "horizontalOverflow": false,
+    "href": "http://localhost:8255/shelf/scan",
+    "sub44Controls": [],
+    "tabControls": [],
+    "viewport": {
+      "dpr": 1.0000000199067927,
+      "height": 481,
+      "width": 320
+    }
+  },
+  "warnErrorLogs": [],
+  "screenshot": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\routine-analytics-layout-current\\06-shelf-scan-320x480-floor.jpg"
+}
