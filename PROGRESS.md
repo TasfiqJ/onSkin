@@ -6,6 +6,15 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Refreshed the RoutineKind brand evidence packet with 2026-07-09 Apple public
+  app search, Google Play exact-search, web-indexed store search, and DNS spot
+  checks. The current screening still finds no exact public `RoutineKind` app
+  title or DNS record for `routinekind.app` / `routinekind.com`, but it now
+  explicitly records adjacent `Routine`, `Routinery`, `MyRoutine`, and
+  `Kind App` name-risk inputs for counsel/founder review. This remains
+  evidence for decision-making, not legal clearance or store/domain
+  reservation.
+
 - Added a dedicated device support policy audit and wired it into
   `launch:verify`. The new non-mutating guard verifies `app.base.json` still
   pins iOS 17.0+, Android min SDK API 29, and Android compile/target API 36;

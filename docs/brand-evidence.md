@@ -1,6 +1,6 @@
 # Brand Evidence Packet
 
-Date: 2026-07-04
+Date: 2026-07-09
 
 Purpose: give the founder and trademark counsel a clean packet for deciding
 whether this product can launch as `OnSkin`. This is evidence, not legal advice.
@@ -44,14 +44,15 @@ real clearance and reservation.
 
 ## DNS Checks
 
-Local DNS checks on 2026-07-04:
+Local DNS checks. Incumbent `OnSkin` rows are from the 2026-07-04 packet;
+`RoutineKind` candidate domains were rerun on 2026-07-09.
 
 | Domain            | DNS result                 | Interpretation                                                                      |
 | ----------------- | -------------------------- | ----------------------------------------------------------------------------------- |
 | `onskin.com`      | Resolves to Cloudflare IPs | Existing public web property is active                                              |
 | `onskin.app`      | DNS NXDOMAIN               | No DNS record found, but this is not proof that the domain is available to register |
-| `routinekind.com` | DNS NXDOMAIN               | Candidate domain target needs registrar check and legal clearance                   |
-| `routinekind.app` | DNS NXDOMAIN               | Candidate app domain target needs registrar check and legal clearance               |
+| `routinekind.com` | DNS NXDOMAIN on 2026-07-09 | Candidate domain target needs registrar checkout and legal clearance                |
+| `routinekind.app` | DNS NXDOMAIN on 2026-07-09 | Candidate app domain target needs registrar checkout and legal clearance            |
 
 DNS NXDOMAIN only means no current DNS record was found. It does not prove domain
 availability, trademark availability, or social handle availability.
@@ -68,6 +69,24 @@ package creation, social-handle checks, or paid-search/common-law review.
 | 2026-07-07 | Google Play public search page             | Exact quoted query responded successfully; page inspection found no exact `>RoutineKind<` rendered-title marker. Google Play search HTML is not a reservation or authoritative availability proof. | [Google Play search](https://play.google.com/store/search?q=%22RoutineKind%22&c=apps&hl=en_US&gl=US)                               |
 | 2026-07-07 | Web-indexed App Store / Google Play search | Search over App Store, Google Play, and broad web results did not surface an exact `RoutineKind` app listing.                                                                                      | Search queries: `site:apps.apple.com RoutineKind app`, `site:play.google.com/store/apps RoutineKind`, `"RoutineKind" skincare app` |
 | 2026-07-07 | DNS                                        | `routinekind.app` and `routinekind.com` returned NXDOMAIN or no DNS answer from local DNS resolution. This is not registrar availability.                                                          | Local `Resolve-DnsName`                                                                                                            |
+| 2026-07-09 | Apple public app search API                | Query for `RoutineKind` returned 18 US software results and zero exact `RoutineKind` `trackName` matches. Top returned names were routine/habit apps, not the exact candidate.                    | [Apple Search API](https://itunes.apple.com/search?term=RoutineKind&entity=software&country=us&limit=20)                           |
+| 2026-07-09 | Google Play public search page             | Exact quoted query responded with HTTP 200; inspection found no exact rendered-title marker `>RoutineKind<`. The string appeared in page metadata/search echoes, not as an exact title marker.     | [Google Play search](https://play.google.com/store/search?q=%22RoutineKind%22&c=apps&hl=en_US&gl=US)                               |
+| 2026-07-09 | Web-indexed App Store / Google Play search | Current public web searches did not surface an exact `RoutineKind` App Store or Google Play app listing. Results did surface adjacent `Routine`, `Routinery`, `MyRoutine`, and `Kind` app names.  | Search queries: `site:apps.apple.com RoutineKind skincare app`, `site:play.google.com/store/apps RoutineKind skincare app`, `"RoutineKind" app` |
+| 2026-07-09 | DNS                                        | `routinekind.app` and `routinekind.com` returned DNS NXDOMAIN from local `Resolve-DnsName`. This is still not registrar availability or legal clearance.                                           | Local `Resolve-DnsName`                                                                                                            |
+
+## Adjacent Name Collision Inputs
+
+These are not exact `RoutineKind` conflicts. They are screening inputs for
+trademark counsel and store-positioning review because the candidate combines
+common `routine` and `kind` terms in mobile-app contexts.
+
+| Adjacent name                  | Surface     | Why it matters                                                                 | Source |
+| ------------------------------ | ----------- | ------------------------------------------------------------------------------ | ------ |
+| `Routine: Calendars & Tasks`   | Apple       | Uses `Routine` as the primary app name for a productivity app.                 | [Apple App Store](https://apps.apple.com/us/app/routine-calendars-tasks/id1548507969) |
+| `Routine`                      | Google Play | Uses `Routine` as the primary app name for a productivity app.                 | [Google Play](https://play.google.com/store/apps/details?id=co.routine.android&hl=en_US&gl=US) |
+| `Routine Planner, Habit Tracker` / `Routinery` | Apple / Google Play | Routine-planning and habit-tracking positioning could create search-result adjacency. | [Apple App Store](https://apps.apple.com/us/app/routine-planner-habit-tracker/id1450486923), [Google Play](https://play.google.com/store/apps/details?id=com.alt.goodmorning&hl=en_US&gl=US) |
+| `MyRoutine`                    | Google Play | Another app using a close routine-based compound.                              | [Google Play](https://play.google.com/store/apps/details?id=com.minding.myroutine&hl=en_US&gl=US) |
+| `Kind App`                     | Apple       | Uses the `Kind` term as an app name; relevant because the candidate ends with `Kind`. | [Apple App Store](https://apps.apple.com/us/app/kind-app/id1443802777) |
 
 ## Similarity Assessment
 

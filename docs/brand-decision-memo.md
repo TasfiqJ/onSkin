@@ -32,6 +32,13 @@ development/staging work can proceed without entrenching the conflicted
 `OnSkin` identity. Production builds still require explicit final identity env
 values plus `BRAND_LEGAL_CLEARANCE=cleared`.
 
+The 2026-07-09 public screening refresh found no exact `RoutineKind` App Store
+or Google Play title in the checked public surfaces and no DNS record for
+`routinekind.app` or `routinekind.com`. It also surfaced adjacent app names
+using `Routine`, `Routinery`, `MyRoutine`, and `Kind App`. Treat that as
+counsel input only; it is not clearance, reservation, or proof that the name is
+safe to launch.
+
 ## Why Keeping OnSkin Is High Risk
 
 - There is already a public skincare scanner at [onskin.com](https://onskin.com/)
