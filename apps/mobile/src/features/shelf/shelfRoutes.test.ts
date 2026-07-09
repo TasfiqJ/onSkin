@@ -75,7 +75,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain(
-      'const supportFloorTextPressureScan = width <= 390 && height >= 640 && height < 700;',
+      'const supportFloorTextPressureScan = width <= 430 && height >= 640 && height < 700;',
     );
     expect(source).toContain('const splitShortScanSurface = height < 460;');
     expect(source).toContain('const compactScanSurface = height < 640');
@@ -419,7 +419,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain(
-      'const supportFloorTextPressureScan = width <= 390 && height >= 640 && height < 700;',
+      'const supportFloorTextPressureScan = width <= 430 && height >= 640 && height < 700;',
     );
     expect(source).toContain('const compactScanSurface = height < 640');
     expect(source).toContain('const splitShortScanSurface = height < 460;');

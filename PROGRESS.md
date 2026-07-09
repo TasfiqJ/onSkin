@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Extended the Shelf scan text-pressure support-band guard through 430 x 640.
+  The scan route now treats 391-430 px wide, 640-699 px tall layouts as compact
+  scan surfaces so the unavailable-camera fallback keeps the primary recovery
+  actions complete under 200% text pressure. Focused Shelf route contracts pass,
+  and the focused `/shelf/scan` audit reports zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-shelf-scan-430-640-current/`.
+
 - Cleared a 430 x 640 / 200% support-band route audit for Settings Privacy,
   Community, and Recommendation Preferences. The first focused sweep found
   `/recommendations/preferences` exposing `Non-comedogenic` and `Sustainable`
