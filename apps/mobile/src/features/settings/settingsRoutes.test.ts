@@ -63,7 +63,7 @@ describe('Settings route contracts', () => {
       'const tallPhonePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 900 && height < 980;',
     );
     expect(you).toContain(
-      'const shortWidePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 700 && height < 780;',
+      'const shortWidePrivacyEntry = privacyDirectEntry && width <= 430 && height >= 640 && height < 780;',
     );
     expect(you).toContain(
       'const ultraShortPrivacyEntry = privacyDirectEntry && narrowPhone && height < 460;',

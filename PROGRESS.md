@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a 430 x 640 / 200% support-band route audit for Settings Privacy,
+  Community, and Recommendation Preferences. The first focused sweep found
+  `/recommendations/preferences` exposing `Non-comedogenic` and `Sustainable`
+  as 8 px partial targets at the viewport bottom. Recommendation Preferences now
+  treats the 391-430 px wide, 640-699 px tall text-pressure band as a wider
+  support-floor case: the first three value chips stay complete while the lower
+  value chips move below the first viewport. Focused route contracts pass, and
+  the post-fix three-route sweep reports zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-support-band-430-640-postfix/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-430-640-text-pressure.md`.
+
 - Expanded the Phase 3 reviewer worklist from a count-only Markdown handoff
   into a per-item operator packet. `npm run phase3:review-worklist` now lists
   each legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review

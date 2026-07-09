@@ -154,8 +154,10 @@ describe('Recommendation route contracts', () => {
       'const shortTextPressurePreferences = width <= 414 && height >= 600 && height < 640;',
     );
     expect(source).toContain(
-      'const supportFloorTextPressurePreferences = width <= 390 && height >= 640 && height < 700;',
+      'const supportFloorTextPressurePreferences = width <= 430 && height >= 640 && height < 700;',
     );
+    expect(source).toContain('const wideSupportFloorTextPressurePreferences =');
+    expect(source).toContain('width > 390 && supportFloorTextPressurePreferences;');
     expect(source).toContain('const ultraShortPreferences = height < 460;');
     expect(source).toContain('const microShortPreferences = height < 380;');
     expect(source).toContain(
@@ -194,6 +196,8 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('const splitShortPreferenceDeferredGroupStyle =');
+    expect(source).toContain('wideSupportFloorTextPressurePreferences');
+    expect(source).toContain('? { marginTop: 560 }');
     expect(source).toContain('supportFloorPreferences || supportFloorTextPressurePreferences');
     expect(source).toContain('? { marginTop: 400 }');
     expect(source).toContain(': { marginTop: 192 };');
