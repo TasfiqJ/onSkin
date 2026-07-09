@@ -47,6 +47,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: feature complexity can dilute focus.
 - Status: Accepted.
 
+### 2026-07-09 - Launch Device Support Floor
+
+- Decision: Launch support floor is iOS 17.0+ and Android 10 / API 29+; launch-blocking layout QA starts at 320 x 480 for Expo web-compatible Android-small-phone coverage, while 320 x 430 / 390 / 370 / 360 browser viewports remain stress-only unless reproduced on a supported native device or required by app review/accessibility.
+- Alternatives: support Expo's lower Android 7+ default, require Android 12+, keep every micro-short browser viewport as launch-blocking, or drop small Android phones entirely.
+- Criteria: paid consumer market reach, QA burden, current Expo SDK support, App Store/Play submission requirements, camera/photo reliability, accessibility, and launch speed.
+- Evidence: Expo SDK 56 supports iOS 16.4+ and Android compile/target SDK 36; Apple and Google current submission rules require modern build SDK/target API; Android 320 dp remains the smallest realistic supported phone width; the repo has passing 320 x 480 evidence and extensive sub-floor stress evidence.
+- Risk: Android 9-or-older and iOS 16 users cannot install; sub-floor browser/split-screen layouts may still expose polish bugs that are recorded but not launch-blocking.
+- Status: Accepted.
+
 ## Architecture Decisions
 
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
