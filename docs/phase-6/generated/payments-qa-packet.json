@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T10:16:22.359Z",
+  "generatedAt": "2026-07-09T10:21:26.715Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "8ad8146659b130dfe2de2d7ae77f62b7dfd2b417",
-  "gitStatus": "",
+  "gitSha": "34d42e05b31efb6fc78499bc64ea0aa5a9752a23",
+  "gitStatus": "M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,
@@ -244,20 +244,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 242156,
-      "sha256": "b79bb1fcc7f72233f8d16493a5f190986ecb1ad099fd2ef5b9226438445003fb"
+      "bytes": 243185,
+      "sha256": "f0bed33692f8b31c47c2c5ba54502a4cb61ca29f6ff5f7847c0b41d10e41f20b"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 5342,
-      "sha256": "6b7d81b03c835156858accb6a713c9829302d555854ee124886150db4c968c04"
+      "sha256": "c9663a20527f218192cc41b6764d46d65ba5ad24d5d2e4504a28110d4a249d88"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 2872,
-      "sha256": "afdd59a490b4df71b20ad3df67d9388b87017465dae6aea9a4999455e7ca3254"
+      "sha256": "fdf7da53a578ddb918eae514545e9fced3e0aacf405a8cfa828b3904f573d4d4"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
@@ -298,5 +298,7 @@
     "Missing PHASE6_FINANCE_SIGNOFF=true.",
     "Missing PHASE6_SIGNED_OFF_BY."
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence."
+  ]
 }

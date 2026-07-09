@@ -1,8 +1,8 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-09T10:16:22.359Z
-Git SHA: 8ad8146659b130dfe2de2d7ae77f62b7dfd2b417
-Git status: clean
+Generated at: 2026-07-09T10:21:26.715Z
+Git SHA: 34d42e05b31efb6fc78499bc64ea0aa5a9752a23
+Git status: DIRTY
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
 
@@ -81,9 +81,9 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9912 | 30ba52fe498f13d31108da44fcaf8f68cd6159369877f0c470c1e54772848a44 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 242156 | b79bb1fcc7f72233f8d16493a5f190986ecb1ad099fd2ef5b9226438445003fb |
-| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | 6b7d81b03c835156858accb6a713c9829302d555854ee124886150db4c968c04 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | afdd59a490b4df71b20ad3df67d9388b87017465dae6aea9a4999455e7ca3254 |
+| docs/USER_FLOW_TREE.md | present | 243185 | f0bed33692f8b31c47c2c5ba54502a4cb61ca29f6ff5f7847c0b41d10e41f20b |
+| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | c9663a20527f218192cc41b6764d46d65ba5ad24d5d2e4504a28110d4a249d88 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | fdf7da53a578ddb918eae514545e9fced3e0aacf405a8cfa828b3904f573d4d4 |
 | docs/phase-6/payments-runbook.md | present | 3957 | 8a0c61a484cd2e8fd689c93f96efb2b13ab34eb8ca285ffb80aac8c6b7072fa1 |
 | docs/phase-6/payments-qa-checklist.md | present | 3683 | 5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291 |
 | docs/phase-6/phase-6-exit-review.md | present | 2599 | 4f096a6c3c698ce428400e9eb88518f353358197e55846ba815a4448b9fa1ea8 |
@@ -111,4 +111,4 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 ## Warnings
 
-- none
+- Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence.
