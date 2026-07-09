@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T16:13:35.747Z
+Generated: 2026-07-09T16:39:49.014Z
 Status: pass
-Git SHA: 2ff887a615c5545a841216a67a604d4f1de3eb1f
+Git SHA: 6ba54a7d3e1faf970855ce57a341c56d82c8e92a
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -131,7 +131,7 @@ Sources:
 - `apps/mobile/src/features/subscription/gatedRoutes.ts` - 458 bytes - sha256 `8bd7312f2bad9c07e2157f5147dfbc9a7a69ce164bc9100e0852e498b4961f70`
 - `apps/mobile/src/features/subscription/lifecycle.ts` - 1473 bytes - sha256 `e0a96935fa1a1fa8c8a7ccfd9c8d906d769f3125c5ff45e836479fcc1e3bb130`
 - `apps/mobile/src/features/subscription/PaywallFeedback.tsx` - 2216 bytes - sha256 `d1bb35111052d1540ccd3d24d30fb36005e5c00dc35c4ecc50b888ce120f1201`
-- `apps/mobile/src/features/subscription/paywallMobileContracts.test.ts` - 36894 bytes - sha256 `5ff0e9205b68441fd70ebe519eabe8b17b707dda96773ec3aac0c7fd230789d0`
+- `apps/mobile/src/features/subscription/paywallMobileContracts.test.ts` - 37083 bytes - sha256 `e2f354ea9b1f2320f764e7ffc5fa561266e1f043b03b11a54ba441a10227f49d`
 - `apps/mobile/src/features/subscription/plans.test.ts` - 1722 bytes - sha256 `23c775e3e8097b29f727b29157a62659e0a61ae726f7db1b019bd55c41749882`
 - `apps/mobile/src/features/subscription/plans.ts` - 2677 bytes - sha256 `3e6f35b07b59b875d9ee7b337f341f227dd6f42f5178b501c4fdda2242225e22`
 - `apps/mobile/src/features/subscription/priceDisplay.test.ts` - 3483 bytes - sha256 `420ec71fc37fed57e2ecc31fc5ccd19098289051b29bb18e9b79f13c2b7c180f`
@@ -142,7 +142,7 @@ Sources:
 - `apps/mobile/src/features/subscription/serverContracts.test.ts` - 3019 bytes - sha256 `d956f0f80adc8c7fa64ab50322b665606449c89f98d2209704c73a674df4cc97`
 - `apps/mobile/src/features/subscription/store.test.ts` - 9423 bytes - sha256 `0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a`
 - `apps/mobile/src/features/subscription/store.ts` - 10936 bytes - sha256 `9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991`
-- `apps/mobile/src/features/subscription/useEntitlement.ts` - 8978 bytes - sha256 `8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a`
+- `apps/mobile/src/features/subscription/useEntitlement.ts` - 9124 bytes - sha256 `9e1c92c8998845c588473acbace1f53a23aed7b6ebae2c75941365830c8a5319`
 - `apps/mobile/src/features/subscription/useSubscriptionOffering.ts` - 579 bytes - sha256 `68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675`
 - `apps/mobile/src/lib/iap/revenuecat.ts` - 18355 bytes - sha256 `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
 
@@ -461,7 +461,7 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 429 bytes - sha256 `004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4472 bytes - sha256 `8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1867 bytes - sha256 `0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 42220 bytes - sha256 `5b2c77e27dad7e48442a170bfedc821ac43892cab9be0b051191c1e87da38f37`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 42220 bytes - sha256 `a4d62e8fbc498aa8f3da61715e236b55c409e1a76c463404410c7243f097ba20`
 - `apps/mobile/src/features/shelf/store.test.ts` - 4504 bytes - sha256 `6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda`
 - `apps/mobile/src/features/shelf/store.ts` - 12890 bytes - sha256 `416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 3709 bytes - sha256 `4c0e9666689722778f642729ab0e12091ffa92e1e5184cff8a908a745182da37`

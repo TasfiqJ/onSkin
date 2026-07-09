@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-09T16:13:20.631Z
+Generated: 2026-07-09T16:39:50.044Z
 Status: pass
-Git SHA: 2ff887a615c5545a841216a67a604d4f1de3eb1f
+Git SHA: 6ba54a7d3e1faf970855ce57a341c56d82c8e92a
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -211,7 +211,7 @@ Sources:
 - `apps/mobile/src/features/shelf/paoProvenance.ts` - 429 bytes - sha256 `004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4472 bytes - sha256 `8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1867 bytes - sha256 `0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 42220 bytes - sha256 `5b2c77e27dad7e48442a170bfedc821ac43892cab9be0b051191c1e87da38f37`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 42220 bytes - sha256 `a4d62e8fbc498aa8f3da61715e236b55c409e1a76c463404410c7243f097ba20`
 - `apps/mobile/src/features/shelf/store.test.ts` - 4504 bytes - sha256 `6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda`
 - `apps/mobile/src/features/shelf/store.ts` - 12890 bytes - sha256 `416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 3709 bytes - sha256 `4c0e9666689722778f642729ab0e12091ffa92e1e5184cff8a908a745182da37`
@@ -230,7 +230,7 @@ Sources:
 - `apps/mobile/src/features/recommendations/fit.ts` - 5650 bytes - sha256 `53030a7d1537eaf7567b861bd72368f829b82d79a4323285d570a6a6da823745`
 - `apps/mobile/src/features/recommendations/loading.ts` - 251 bytes - sha256 `9c611cd49e793cc1161ecd665ee790bb056014b28a8d2f928a20bf59c0d7294d`
 - `apps/mobile/src/features/recommendations/preferences.ts` - 647 bytes - sha256 `055882921e6e68b018b75aa075d93214119fa098add0c3e2665f96dadc77ebbf`
-- `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts` - 14360 bytes - sha256 `0e1990f51ee7b409280eeae54bc099fc26db5fc3c5845c5ab6dc45efe2ca07e5`
+- `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts` - 14653 bytes - sha256 `a0bff4bbcc4dbf7eda7672df73ce449e39b726e4236feaa08308fcc8417b8995`
 - `apps/mobile/src/features/recommendations/RecommendationsTeaser.test.ts` - 3590 bytes - sha256 `6f0d92c8fb2f1165be38c25b7bc2b6aa6ba582bfda66e86b7099e7ed78bb4340`
 - `apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx` - 8154 bytes - sha256 `e7f0a45a96459b892d81a36c3a5f196864b7f9bec210f4be880dee58706e75f0`
 - `apps/mobile/src/features/recommendations/store.test.ts` - 3232 bytes - sha256 `ef032d38c8d630abaee8072724276b590e0223dae3e8995522e8a9771e579a0d`

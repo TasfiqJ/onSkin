@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T16:13:20.631Z",
+  "generatedAt": "2026-07-09T16:39:50.044Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "2ff887a615c5545a841216a67a604d4f1de3eb1f",
+  "gitSha": "6ba54a7d3e1faf970855ce57a341c56d82c8e92a",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -584,7 +584,7 @@
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
           "bytes": 42220,
-          "sha256": "5b2c77e27dad7e48442a170bfedc821ac43892cab9be0b051191c1e87da38f37"
+          "sha256": "a4d62e8fbc498aa8f3da61715e236b55c409e1a76c463404410c7243f097ba20"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -697,8 +697,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/recommendationRoutes.test.ts",
           "exists": true,
-          "bytes": 14360,
-          "sha256": "0e1990f51ee7b409280eeae54bc099fc26db5fc3c5845c5ab6dc45efe2ca07e5"
+          "bytes": 14653,
+          "sha256": "a0bff4bbcc4dbf7eda7672df73ce449e39b726e4236feaa08308fcc8417b8995"
         },
         {
           "path": "apps/mobile/src/features/recommendations/RecommendationsTeaser.test.ts",

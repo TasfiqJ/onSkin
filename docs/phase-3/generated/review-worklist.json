@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T16:13:35.747Z",
+  "generatedAt": "2026-07-09T16:39:49.014Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "2ff887a615c5545a841216a67a604d4f1de3eb1f",
+  "gitSha": "6ba54a7d3e1faf970855ce57a341c56d82c8e92a",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -273,8 +273,8 @@
         {
           "path": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
           "exists": true,
-          "bytes": 36894,
-          "sha256": "5ff0e9205b68441fd70ebe519eabe8b17b707dda96773ec3aac0c7fd230789d0"
+          "bytes": 37083,
+          "sha256": "e2f354ea9b1f2320f764e7ffc5fa561266e1f043b03b11a54ba441a10227f49d"
         },
         {
           "path": "apps/mobile/src/features/subscription/plans.test.ts",
@@ -339,8 +339,8 @@
         {
           "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
           "exists": true,
-          "bytes": 8978,
-          "sha256": "8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a"
+          "bytes": 9124,
+          "sha256": "9e1c92c8998845c588473acbace1f53a23aed7b6ebae2c75941365830c8a5319"
         },
         {
           "path": "apps/mobile/src/features/subscription/useSubscriptionOffering.ts",
@@ -1246,7 +1246,7 @@
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
           "bytes": 42220,
-          "sha256": "5b2c77e27dad7e48442a170bfedc821ac43892cab9be0b051191c1e87da38f37"
+          "sha256": "a4d62e8fbc498aa8f3da61715e236b55c409e1a76c463404410c7243f097ba20"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
