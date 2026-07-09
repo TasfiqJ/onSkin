@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T15:59:56.101Z",
+  "generatedAt": "2026-07-09T16:04:21.913Z",
   "status": "blocked",
-  "gitSha": "e66ad352cbfe1bbdb80ce68744c60ff642018bae",
+  "gitSha": "8769bbe6f90be26f1f66487768135b6a4cf5056e",
   "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
@@ -43,8 +43,8 @@
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "33df93ea6c9116b50df449c0d1fa67adb82d83742f47c3f5b5ee57fe63a0792b",
     "apps/mobile/src/lib/analytics/track.ts": "7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45",
     "apps/mobile/src/lib/observability/scrub.ts": "222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e",
-    "docs/phase-9/generated/release-engineering-qa-packet.json": "ea546d21cefe6acc2cebc201ca45f8d4a6a5f23f94e0040a0eb802f40f558d13",
-    "docs/phase-9/generated/release-engineering-qa-packet.md": "6d7ade185d48a44c737300928c6e9afecb1e051b67b53bf49eb2decd5fb63797",
+    "docs/phase-9/generated/release-engineering-qa-packet.json": "655cc994ede8ab01c026e33674e170fdcae39b909c67fed07602364b9d6844dd",
+    "docs/phase-9/generated/release-engineering-qa-packet.md": "a61a8a544a9986a19402356035b2dd12f1ab5765871c902d9ee6428221d805ac",
     "docs/phase-10/beta-source-of-truth.md": "0cb11a58751407ffdfcc836e2373cb6d39d1faf93874d23a817098dc3b68e530",
     "docs/phase-10/tester-recruitment-sheet.md": "ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc",
     "docs/phase-10/tester-brief.md": "6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16",
