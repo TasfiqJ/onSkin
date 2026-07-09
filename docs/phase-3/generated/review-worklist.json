@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T17:29:22.165Z",
+  "generatedAt": "2026-07-09T17:32:36.142Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "9df9f4d0531ce7a9fe49f6a5d16df0bfe3baf7b8",
+  "gitSha": "5dab29148fcdf2fecf3d1a92ecbc2e24baa9af18",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1721,14 +1721,14 @@
         {
           "path": "docs/brand-decision-memo.md",
           "exists": true,
-          "bytes": 4863,
-          "sha256": "eef048de436eb9c598900c1914f3150677280e6697c1e6c641175b6fd7d5c19b"
+          "bytes": 5262,
+          "sha256": "c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9"
         },
         {
           "path": "docs/brand-evidence.md",
           "exists": true,
-          "bytes": 10089,
-          "sha256": "94a0a5763b29da2172d7b2f28f9159fe5d1ecd8eda5f56d78354076f8c044262"
+          "bytes": 13523,
+          "sha256": "8eaa08a1b3347ccdea168e733a0575edfa73a7d9319c4798c59df95e9effd189"
         },
         {
           "path": "apps/mobile/app.base.json",
@@ -2011,8 +2011,8 @@
         {
           "path": "docs/brand-decision-memo.md",
           "exists": true,
-          "bytes": 4863,
-          "sha256": "eef048de436eb9c598900c1914f3150677280e6697c1e6c641175b6fd7d5c19b"
+          "bytes": 5262,
+          "sha256": "c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."

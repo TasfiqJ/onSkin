@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T17:29:22.165Z
+Generated: 2026-07-09T17:32:36.142Z
 Status: pass
-Git SHA: 9df9f4d0531ce7a9fe49f6a5d16df0bfe3baf7b8
+Git SHA: 5dab29148fcdf2fecf3d1a92ecbc2e24baa9af18
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -615,8 +615,8 @@ Sources:
 
 Sources:
 
-- `docs/brand-decision-memo.md` - 4863 bytes - sha256 `eef048de436eb9c598900c1914f3150677280e6697c1e6c641175b6fd7d5c19b`
-- `docs/brand-evidence.md` - 10089 bytes - sha256 `94a0a5763b29da2172d7b2f28f9159fe5d1ecd8eda5f56d78354076f8c044262`
+- `docs/brand-decision-memo.md` - 5262 bytes - sha256 `c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9`
+- `docs/brand-evidence.md` - 13523 bytes - sha256 `8eaa08a1b3347ccdea168e733a0575edfa73a7d9319c4798c59df95e9effd189`
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
 - `apps/mobile/app.config.js` - 9553 bytes - sha256 `5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c`
 
@@ -710,7 +710,7 @@ Sources:
 - `apps/mobile/src/features/growth/shareCard.ts` - 1967 bytes - sha256 `e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436`
 - `apps/mobile/src/features/growth/shareLinks.ts` - 1224 bytes - sha256 `0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d`
 - `docs/14-growth-to-seven-figures.md` - 57849 bytes - sha256 `045a6a9864ffa4c04df4d64bf5e53f98ca936835ba8d68e372f2cba4bcf416e7`
-- `docs/brand-decision-memo.md` - 4863 bytes - sha256 `eef048de436eb9c598900c1914f3150677280e6697c1e6c641175b6fd7d5c19b`
+- `docs/brand-decision-memo.md` - 5262 bytes - sha256 `c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9`
 
 ## Blockers
 
