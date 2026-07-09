@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
@@ -343,10 +343,25 @@ export default function ProductDetailScreen() {
       productId: p.catalogProductId,
       barcode: p.barcode,
       description: `${correctionType} reported from product detail`,
+      proposedPayload: {
+        productName: p.name,
+        brand: p.brand,
+        barcode: p.barcode,
+        category: p.category,
+        sourceName: catalogSourceLabel,
+        sourceUrl: p.catalogSourceUrl,
+        defaultPaoMonths:
+          p.paoMonths != null &&
+          (p.paoSource === 'catalog' || p.paoSource === 'category_default')
+            ? p.paoMonths
+            : null,
+        qualityIssue: correctionType,
+      },
       clientContext: {
         addedVia: p.addedVia,
         quality: p.catalogMatchQuality,
         source: p.catalogSource,
+        platform: Platform.OS,
         route: 'shelf_detail',
       },
     });

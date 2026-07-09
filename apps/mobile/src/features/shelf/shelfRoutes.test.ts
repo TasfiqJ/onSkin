@@ -771,6 +771,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("submitCatalogReport('missing_product')");
     expect(source).toContain('Ingredient issue');
     expect(source).toContain('Expiry or PAO issue');
+    expect(source).toContain('proposedPayload: {');
+    expect(source).toContain('productName: p.name');
+    expect(source).toContain('brand: p.brand');
+    expect(source).toContain('sourceName: catalogSourceLabel');
+    expect(source).toContain('sourceUrl: p.catalogSourceUrl');
+    expect(source).toContain("p.paoSource === 'catalog' || p.paoSource === 'category_default'");
+    expect(source).toContain('qualityIssue: correctionType');
+    expect(source).toContain('platform: Platform.OS');
     expect(source).toContain('CATALOG_REPORT_NOT_SENT');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Alert.alert');
