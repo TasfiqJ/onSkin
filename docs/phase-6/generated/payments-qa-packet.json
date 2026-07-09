@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T21:07:04.360Z",
+  "generatedAt": "2026-07-09T21:17:35.078Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "5fb899658290b42868494f1bc4c9091b0e7f763f",
+  "gitSha": "fdfe1d85367574e626acdcb34747450fd607fa1a",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -244,8 +244,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 296542,
-      "sha256": "3a237afec734ada468436df15466f7ab3b3dcba5142b8bdd98006048efed911c"
+      "bytes": 296370,
+      "sha256": "1097f11ed0d013b033ecceb1b048ffb6612976c9b11b3c2d9f01575f4941d7cc"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
