@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-09T15:35:33.511Z
-Git SHA: fc83927c9b6ee160f7b4b8f56b7979eb3b8d34c8
+Generated at: 2026-07-09T15:58:05.225Z
+Git SHA: b1dd3a32b7b7ca9304e0d091ae16d94feb00d9ab
 Git status: clean
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -54,13 +54,13 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 13265 | ec9126b6605a01f80aa1c12a6d20ab37146aabdb024bf2661682c1ecf9a9c335 |
+| package.json | present | 13575 | 48f9e3f326ee484e9d96f7054d30cd27028780bae7d58e006254b1ab0ed64832 |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 18355 | b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75 |
 | apps/mobile/src/features/subscription/store.ts | present | 10936 | 9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991 |
 | apps/mobile/src/features/subscription/useEntitlement.ts | present | 8978 | 8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a |
 | apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 579 | 68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675 |
 | apps/mobile/src/app/onboarding/paywall.tsx | present | 12402 | 5b7800c2942ff62d3407c4c7eb23a8d9681b6012717f058121561c3ef09e7b46 |
-| apps/mobile/src/app/paywall/upsell.tsx | present | 10235 | 96cad6370623b0731128dcd1743301033ee17538b3164cd6d515bae60cea03e8 |
+| apps/mobile/src/app/paywall/upsell.tsx | present | 10439 | 3aa577c240eaa5085db61a9bab40ece1138bd640f177ef44a3dac1a3d4d4c9eb |
 | apps/mobile/src/app/paywall/reoffer.tsx | present | 9007 | d641e51cf1e1eea76e05bcd5eeb3ca824832465921ae5122fda824762f63a682 |
 | apps/mobile/src/app/paywall/downgrade.tsx | present | 5506 | 1ba9948580e026aebe08e08c7f23776418ae2de657c31a09e301993e804b76bb |
 | apps/mobile/src/app/paywall/winback.tsx | present | 7394 | 0858e3180d41540efd1ce4f2306ee40c4f313fe52d9e5963c0b3a6b264eef069 |
@@ -70,7 +70,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | supabase/functions/account-deletion/index.ts | present | 15795 | d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73 |
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |
 | supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql | present | 3947 | a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02 |
-| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 36421 | 6c53840ce401ded401acc4a45aae5ee897944a0bf2663897c86281a2ad638362 |
+| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 36894 | 5ff0e9205b68441fd70ebe519eabe8b17b707dda96773ec3aac0c7fd230789d0 |
 | apps/mobile/src/features/subscription/store.test.ts | present | 9423 | 0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a |
 | apps/mobile/src/features/subscription/entitlement.test.ts | present | 3513 | 9eacdfb4685fc9a11faa2b65c2becc33f3b3ea7a5b429357f457fb83c2535ed6 |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 3019 | d956f0f80adc8c7fa64ab50322b665606449c89f98d2209704c73a674df4cc97 |
@@ -78,12 +78,12 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | scripts/phase6/check-payments-env.mjs | present | 10163 | 4413f6bf9f823cdb72d0f62bf9659737ae696f99f263677856e60d7e7e9a9009 |
 | scripts/phase6/check-payments-env-smoke.mjs | present | 10114 | df4ee4543c815fe726c52ef092caac9e2e56638ac7b1c94b38971f43cee7fe7a |
 | scripts/e2e/human-e2e-manifest.mjs | present | 18616 | 6c94b8961cdbd25ddbbd0fa43cb9638c603c31cde22859615716d8a6ec5ee374 |
-| scripts/phase9/lib.mjs | present | 13341 | 6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace |
+| scripts/phase9/lib.mjs | present | 13437 | 2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9982 | 2828721ebc99a2de1e4ba722516bfacd4ed8c2537603c8756cc383c49d5889a5 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 269701 | 3caf8caf7aebe1e4886c611c6a2330aeafe81106fb07668288426508654009b7 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 11616 | d2f23bb44c108a54a0b4eecf7724531630862d737ed9e4416118cef2cb5abdc6 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 4958 | 8067689efb9fe6d8339735d53aefce360936d72d837cc733b7ca877b6314fae3 |
+| docs/USER_FLOW_TREE.md | present | 272951 | 61e263eddb00a8bf9ceb4e8b9228d7cf7c499c33720ad46fab1bdd007c05b9a4 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 11616 | 03ea65903a3f9dcf6dbefb230a36ef332d4e00bc0839e5ca6b6c6bbfb4e7f97b |
+| docs/e2e/generated/human-e2e-manifest.md | present | 4958 | 11b8b817423f591f5adf02680dc7aae058aa871be1e255756a3b49b721d1b694 |
 | docs/phase-6/payments-runbook.md | present | 3957 | 8a0c61a484cd2e8fd689c93f96efb2b13ab34eb8ca285ffb80aac8c6b7072fa1 |
 | docs/phase-6/payments-qa-checklist.md | present | 3683 | 5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291 |
 | docs/phase-6/phase-6-exit-review.md | present | 2599 | 4f096a6c3c698ce428400e9eb88518f353358197e55846ba815a4448b9fa1ea8 |
