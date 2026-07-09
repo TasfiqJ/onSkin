@@ -83,6 +83,16 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `ask_opened`
 - `review_prompt_attempted`
 
+Routine event definitions:
+
+- `routine_plan_viewed`: any routine plan surface view, including examples.
+- `routine_created`: a non-example plan with at least one executable AM or PM
+  step.
+- `first_routine_created`: the first `routine_created` event for the install or
+  account marker.
+- `first_useful_insight`: the first non-example plan insight, including a
+  zero-step recovery insight that explains which product needs more details.
+
 ## Dashboard Acceptance
 
 Each dashboard must have:

@@ -21,7 +21,7 @@ const viewports = [
 ];
 const tabs = [
   { id: 'bottom-tab-today', label: 'Today', route: 'today' },
-  { id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
+  { compactLabel: 'Prog.', id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
   { id: 'bottom-tab-shelf', label: 'Shelf', route: 'shelf' },
   { id: 'bottom-tab-you', label: 'You', route: 'you' },
 ];
@@ -252,7 +252,9 @@ class CdpClient {
 
 async function connectToPage() {
   const targets = await readJson(`http://127.0.0.1:${debugPort}/json`);
-  const pageTarget = targets.find((target) => target.type === 'page' && target.webSocketDebuggerUrl);
+  const pageTarget = targets.find(
+    (target) => target.type === 'page' && target.webSocketDebuggerUrl,
+  );
 
   if (!pageTarget) {
     throw new Error('Chrome DevTools did not expose a page target.');
@@ -348,7 +350,9 @@ const snapshotExpression = `(() => {
   const tabListStyle = tabList ? getComputedStyle(tabList) : null;
   const tabs = tabSpecs.map((tab) => {
     const node = document.querySelector('[data-testid="' + tab.id + '"]');
-    const labelNode = ownTextNode(node, tab.label);
+    const compactTabLabels = window.innerWidth <= 390;
+    const visibleLabel = compactTabLabels && tab.compactLabel ? tab.compactLabel : tab.label;
+    const labelNode = ownTextNode(node, visibleLabel);
     const rect = rectOf(node);
     const labelRect = rectOf(labelNode);
     const labelStyle = labelNode ? getComputedStyle(labelNode) : null;
@@ -361,6 +365,7 @@ const snapshotExpression = `(() => {
       center,
       centerHitContains: Boolean(node && hit && node.contains(hit)),
       centerHitText: hit?.textContent?.replace(/\\s+/g, ' ').trim() ?? null,
+      compactLabel: tab.compactLabel ?? null,
       id: tab.id,
       label: tab.label,
       labelClientWidth: labelNode?.clientWidth ?? null,
@@ -394,23 +399,53 @@ const snapshotExpression = `(() => {
 
 function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
   assert(snapshot.innerWidth > 0, `${viewportName}: missing viewport width`);
-  assert(snapshot.horizontalOverflow <= 1, `${viewportName}: horizontal overflow ${snapshot.horizontalOverflow}`);
+  assert(
+    snapshot.horizontalOverflow <= 1,
+    `${viewportName}: horizontal overflow ${snapshot.horizontalOverflow}`,
+  );
   assert(snapshot.selectedCount === 1, `${viewportName}: expected exactly one selected tab`);
   assert(snapshot.tabList?.role === 'tablist', `${viewportName}: missing tablist role`);
-  assert(snapshot.tabList.rect.width <= snapshot.innerWidth - 14, `${viewportName}: tab bar is not floating`);
+  assert(
+    snapshot.tabList.rect.width <= snapshot.innerWidth - 14,
+    `${viewportName}: tab bar is not floating`,
+  );
   assert(snapshot.tabList.rect.height >= 64, `${viewportName}: tab bar is too short`);
   assert(snapshot.tabList.borderRadius >= 30, `${viewportName}: tab bar is not pill-shaped`);
-  assert(snapshot.tabList.rect.bottom <= snapshot.innerHeight - 10, `${viewportName}: tab bar sits too low`);
+  assert(
+    snapshot.tabList.rect.bottom <= snapshot.innerHeight - 10,
+    `${viewportName}: tab bar sits too low`,
+  );
 
   for (const tab of snapshot.tabs) {
+    const compactTabLabels = snapshot.innerWidth <= 390;
+    const expectedVisibleLabel =
+      compactTabLabels && tab.compactLabel ? tab.compactLabel : tab.label;
     assert(tab.rect, `${viewportName}: missing ${tab.label} tab`);
-    assert(tab.labelText === tab.label, `${viewportName}: ${tab.label} label is not rendered directly`);
-    assert(tab.text?.includes(tab.label), `${viewportName}: ${tab.label} text is missing`);
-    assert(tab.ariaLabel === `${tab.label} tab`, `${viewportName}: ${tab.label} accessibility label is wrong`);
-    assert(tab.rect.width >= 74, `${viewportName}: ${tab.label} tab width ${tab.rect.width} is too narrow`);
-    assert(tab.rect.height >= 52, `${viewportName}: ${tab.label} tab height ${tab.rect.height} is too short`);
+    assert(
+      tab.labelText === expectedVisibleLabel,
+      `${viewportName}: ${tab.label} visible label is not rendered directly`,
+    );
+    assert(
+      tab.text?.includes(expectedVisibleLabel),
+      `${viewportName}: ${tab.label} text is missing`,
+    );
+    assert(
+      tab.ariaLabel === `${tab.label} tab`,
+      `${viewportName}: ${tab.label} accessibility label is wrong`,
+    );
+    assert(
+      tab.rect.width >= 74,
+      `${viewportName}: ${tab.label} tab width ${tab.rect.width} is too narrow`,
+    );
+    assert(
+      tab.rect.height >= 52,
+      `${viewportName}: ${tab.label} tab height ${tab.rect.height} is too short`,
+    );
     assert(tab.labelRect.height >= 15, `${viewportName}: ${tab.label} label line box is clipped`);
-    assert(tab.labelRect.width >= Math.min(tab.label.length * 5.2, 28), `${viewportName}: ${tab.label} label is too narrow`);
+    assert(
+      tab.labelRect.width >= Math.min(expectedVisibleLabel.length * 5.2, 28),
+      `${viewportName}: ${tab.label} label is too narrow`,
+    );
     assert(
       tab.labelRect.left >= tab.rect.left - 1 && tab.labelRect.right <= tab.rect.right + 1,
       `${viewportName}: ${tab.label} label escapes its tab horizontally`,
@@ -425,7 +460,10 @@ function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
         tab.labelScrollWidth <= tab.labelClientWidth + 1,
       `${viewportName}: ${tab.label} label overflows its own frame`,
     );
-    assert(tab.centerHitContains, `${viewportName}: ${tab.label} center hit-test does not land on the tab`);
+    assert(
+      tab.centerHitContains,
+      `${viewportName}: ${tab.label} center hit-test does not land on the tab`,
+    );
     assert(
       tab.selected === (tab.label === expectedSelectedLabel),
       `${viewportName}: ${tab.label} selected state mismatch`,
@@ -518,7 +556,9 @@ async function run() {
           tabListRect: snapshot.tabList.rect,
           tabs: snapshot.tabs.map((item) => ({
             centerHitContains: item.centerHitContains,
+            compactLabel: item.compactLabel ?? null,
             label: item.label,
+            labelText: item.labelText,
             labelRect: item.labelRect,
             rect: item.rect,
             selected: item.selected,
@@ -544,7 +584,10 @@ async function run() {
       );
     });
 
-    assert(unexpectedLogs.length === 0, `Unexpected browser warn/error logs: ${unexpectedLogs.length}`);
+    assert(
+      unexpectedLogs.length === 0,
+      `Unexpected browser warn/error logs: ${unexpectedLogs.length}`,
+    );
     writeJson('summary.json', summary);
 
     console.log(`Tab bar geometry E2E passed. Evidence: ${evidenceDir}`);

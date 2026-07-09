@@ -185,10 +185,12 @@ export default function PlanScreen() {
     trackedPlanView.current = true;
 
     const source = data.isExample ? 'example' : 'routine_plan';
+    const routineStepCount = data.plan.am.length + data.plan.pm.length;
     const insightCount =
       data.plan.conflicts.length + data.plan.gaps.length + data.plan.unplacedProducts.length + 1;
 
     void recordRoutinePlanAnalytics({
+      routineStepCount,
       insightCount,
       isExample: data.isExample,
       source,

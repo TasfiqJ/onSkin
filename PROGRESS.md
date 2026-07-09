@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened first-session activation analytics so beta dashboards do not inflate
+  routine creation. `routine_created` and `first_routine_created` now require a
+  non-example routine plan with at least one placed AM or PM step, while a
+  zero-step recovery plan can still emit `first_useful_insight` when it tells
+  the user which shelf item needs category or ingredient details. The Phase 7
+  core-loop checker, Phase 7 dashboard spec, and Phase 10 beta event schema now
+  encode the same definition. Focused routine analytics tests pass, and
+  `phase7:verify` passed typecheck, lint, and 171 mobile test files / 1752
+  tests.
+
 - Cleared the 390 x 640 support-band 170% text-pressure follow-up. ProGate,
   Recommendation Preferences, Shelf scan/manual, and Skin Notes now share density
   guards that move lower-priority body copy, secondary chips, scan fallback
@@ -5805,6 +5815,29 @@ returns to `/progress`. Evidence and bug report are in
 `docs/e2e-bug-reports/2026-07-08-progress-first-photo-short-phone-tabbar-consent.md`.
 Native iOS/Android camera permission sheets, hardware safe areas, Dynamic Type,
 and screen-reader traversal remain device QA follow-up.
+
+### Tab bar compact-label geometry gate (2026-07-09)
+
+Found a stale durable E2E harness assertion while rechecking the
+Wealthsimple-style floating tab bar: the app correctly rendered the narrow-phone visible
+Progress label as `Prog.` with the full `Progress tab` accessibility label, but
+`npm run e2e:tabbar-geometry` still expected visible `Progress` at 320 x 568.
+
+Updated `scripts/e2e/tabbar-geometry.mjs` so the runner separates stable tab
+identity from viewport-specific visible copy. The gate now accepts the compact
+visible label at 320 px and 390 px while continuing to require the full
+accessibility label and center hit-tests for every tab.
+
+Post-fix headless Chrome Expo web evidence at 320 x 568 and 390 x 568 verifies
+Today, `Prog.`, Shelf, and You render as direct one-line labels; the floating
+bar stays 66 px tall and pill-shaped; tab targets remain 54 px tall; label boxes
+are 19 px; each selected route has exactly one selected tab; all tab centers
+hit-test correctly; horizontal overflow is zero; and browser warn/error logs are
+empty. Evidence and bug report are in
+`test-results/human-e2e/2026-07-09/navigation-tabbar-geometry-current/` and
+`docs/e2e-bug-reports/2026-07-09-tabbar-geometry-compact-label-harness.md`.
+Native iOS/Android Dynamic Type, safe-area, and screen-reader traversal remain
+device QA follow-up.
 
 ## Open questions for the founder
 

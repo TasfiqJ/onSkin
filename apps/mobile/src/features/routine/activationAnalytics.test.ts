@@ -31,11 +31,13 @@ describe('routine activation analytics', () => {
 
   it('records routine plan views every time but first activation events only once', async () => {
     await recordRoutinePlanAnalytics({
+      routineStepCount: 2,
       insightCount: 3,
       isExample: false,
       source: 'routine_plan',
     });
     await recordRoutinePlanAnalytics({
+      routineStepCount: 3,
       insightCount: 4,
       isExample: false,
       source: 'routine_plan',
@@ -57,6 +59,7 @@ describe('routine activation analytics', () => {
 
   it('does not count example plans as first routine creation or first insight', async () => {
     await recordRoutinePlanAnalytics({
+      routineStepCount: 2,
       insightCount: 1,
       isExample: true,
       source: 'example',
@@ -70,6 +73,7 @@ describe('routine activation analytics', () => {
     mocks.storage.set(KEY, JSON.stringify({ firstRoutineCreated: 'yes' }));
 
     await recordRoutinePlanAnalytics({
+      routineStepCount: 1,
       insightCount: 2,
       isExample: false,
       source: 'routine_plan',
@@ -81,5 +85,23 @@ describe('routine activation analytics', () => {
       ['first_routine_created', { source: 'routine_plan' }],
       ['first_useful_insight', { count: 2, source: 'routine_plan' }],
     ]);
+  });
+
+  it('does not count a real plan with no executable steps as routine creation', async () => {
+    await recordRoutinePlanAnalytics({
+      routineStepCount: 0,
+      insightCount: 1,
+      isExample: false,
+      source: 'routine_plan',
+    });
+
+    expect(mocks.track.mock.calls).toEqual([
+      ['routine_plan_viewed', { source: 'routine_plan' }],
+      ['first_useful_insight', { count: 1, source: 'routine_plan' }],
+    ]);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      firstRoutineCreated: false,
+      firstUsefulInsight: true,
+    });
   });
 });

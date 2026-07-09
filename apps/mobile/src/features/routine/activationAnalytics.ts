@@ -47,10 +47,12 @@ async function saveFlags(flags: ActivationFlags): Promise<void> {
 }
 
 export async function recordRoutinePlanAnalytics({
+  routineStepCount,
   insightCount,
   isExample,
   source,
 }: {
+  routineStepCount: number;
   insightCount: number;
   isExample: boolean;
   source: 'example' | 'routine_plan';
@@ -58,12 +60,16 @@ export async function recordRoutinePlanAnalytics({
   track('routine_plan_viewed', { source });
 
   if (isExample) return;
-  track('routine_created', { source });
+
+  const hasRoutineSteps = routineStepCount > 0;
+  if (hasRoutineSteps) {
+    track('routine_created', { source });
+  }
 
   const flags = await loadFlags();
   let changed = false;
 
-  if (!flags.firstRoutineCreated) {
+  if (hasRoutineSteps && !flags.firstRoutineCreated) {
     track('first_routine_created', { source });
     flags.firstRoutineCreated = true;
     changed = true;

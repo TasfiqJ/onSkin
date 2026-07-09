@@ -267,13 +267,18 @@ require(/trackProductAddStarted/.test(shelfTab) &&
     onboardingProducts,
   ), 'Shelf and onboarding entry points must emit product_add_started for product-add drop-off analysis.');
 require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
+  /routineStepCount/.test(routinePlan) &&
   /track\('routine_plan_viewed'/.test(routineActivationAnalytics) &&
   /track\('routine_created'/.test(routineActivationAnalytics) &&
-  /if \(isExample\) return;\s*track\('routine_created'/.test(routineActivationAnalytics) &&
+  /const hasRoutineSteps = routineStepCount > 0;/.test(routineActivationAnalytics) &&
+  /if \(hasRoutineSteps\) \{\s*track\('routine_created'/.test(
+    routineActivationAnalytics,
+  ) &&
+  /if \(hasRoutineSteps && !flags\.firstRoutineCreated\)/.test(routineActivationAnalytics) &&
   /track\('first_useful_insight'/.test(routineActivationAnalytics) &&
   /track\('conflict_detected'/.test(
     routinePlan,
-  ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans, and emit first_useful_insight plus conflict_detected.');
+  ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans with executable steps, and emit first_useful_insight plus conflict_detected.');
 require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
   /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
     todayTab,

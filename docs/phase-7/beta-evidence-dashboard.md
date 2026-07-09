@@ -11,6 +11,11 @@ Purpose: prove whether the V1 loop is valuable enough to keep funding. This is t
 | Routine activation       | `first_checkoff_completed`, `routine_checkoff_completed`, and `cycle_night_completed` | 45% complete at least one check-off within 48 hours     |
 | Photo activation         | `photo_baseline_added`, `first_photo_captured`, and `photo_captured`                  | 25% capture a baseline photo within 7 days              |
 
+`routine_created` and `first_routine_created` are reserved for non-example
+plans with at least one placed AM or PM step. A plan that only tells the user a
+product needs a category or ingredient clue can still count as
+`first_useful_insight`, but it must not inflate routine creation.
+
 ## Retention
 
 | Metric              | Event(s)                                                                 | Target                                 |
