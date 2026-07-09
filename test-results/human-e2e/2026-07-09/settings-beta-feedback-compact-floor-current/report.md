@@ -14,11 +14,14 @@
 | Step | Result | Evidence |
 | --- | --- | --- |
 | Open beta feedback route | Pass | 01-compact-top.png / 01-compact-top.json |
+| Verify compact high-text-pressure chrome | Pass | 01-compact-top.png / 01-compact-top.json |
 | Select category and severity | Pass | 02-compact-selected.png / 02-compact-selected.json |
 | Open support with unavailable support URL | Pass | 03-compact-after-support.png / 03-compact-after-support.json |
 
 ## Checks
 
+- Compact heading shown: yes
+- Long explanatory copy hidden: yes
 - Horizontal overflow: 0
 - Free-text inputs: 0
 - Inline unavailable-support recovery: yes

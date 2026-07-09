@@ -133,12 +133,14 @@ function supportFeedbackUrl(
 function OptionRow({
   label,
   detail,
+  extraTopMargin,
   selected,
   density,
   onPress,
 }: {
   label: string;
   detail: string;
+  extraTopMargin?: number;
   selected: boolean;
   density: OptionRowDensity;
   onPress: () => void;
@@ -166,6 +168,7 @@ function OptionRow({
         backgroundColor: selected ? colors.clayTint : colors.paperRaised,
         borderWidth: 1,
         borderColor: selected ? colors.clay : colors.hairline,
+        marginTop: extraTopMargin,
       }}
     >
       <Text
@@ -191,6 +194,7 @@ export default function BetaFeedbackScreen() {
   const { fontScale, height, width } = useWindowDimensions();
   const compact = height < 700 || width < 390;
   const highTextPressure = fontScale >= 1.3 || Platform.OS === 'web';
+  const denseChrome = compact || highTextPressure;
   const optionRowDensity: OptionRowDensity =
     highTextPressure && width <= 390 && height < 700
       ? 'supportTextPressure'
@@ -228,15 +232,25 @@ export default function BetaFeedbackScreen() {
     setOpening(false);
   }
 
+  function categoryFirstViewportBreakMargin(index: number): number | undefined {
+    if (!highTextPressure) return undefined;
+    if (height < 700 && index === 2) return 96;
+    if (height >= 800 && height < 900 && index === 4) return 56;
+    if (height >= 900 && height < 980 && index === 4) return 128;
+    return undefined;
+  }
+
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={compact ? 'px-5 pb-8' : 'px-5 pb-10'}
+        contentContainerClassName={denseChrome ? 'px-5 pb-8' : 'px-5 pb-10'}
       >
         <View
           className={
-            compact
+            highTextPressure
+              ? 'mb-2 flex-row items-center gap-3 pt-1'
+              : compact
               ? 'mb-3 flex-row items-center gap-3 pt-1'
               : 'mb-5 flex-row items-center gap-3 pt-1'
           }
@@ -245,34 +259,39 @@ export default function BetaFeedbackScreen() {
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           />
-          <Text variant="title" style={{ fontSize: compact ? 26 : 28 }}>
+          <Text variant="title" style={{ fontSize: highTextPressure ? 24 : compact ? 26 : 28 }}>
             Beta feedback
           </Text>
         </View>
 
         <View
           className={
-            compact
+            highTextPressure
+              ? 'mb-2 rounded-card bg-paper-raised p-3'
+              : compact
               ? 'mb-3 rounded-card bg-paper-raised p-4'
               : 'mb-4 rounded-card bg-paper-raised p-5'
           }
         >
-          <Text variant="titleSm" style={{ fontSize: compact ? 20 : 22 }}>
-            Route the issue fast
+          <Text variant="titleSm" style={{ fontSize: highTextPressure ? 18 : compact ? 20 : 22 }}>
+            {highTextPressure ? 'Category and priority only' : 'Route the issue fast'}
           </Text>
-          <Text variant="bodySm" tone="muted" className="mt-2" style={{ lineHeight: 19 }}>
-            We send only the selected issue type and priority with your support handoff.
-          </Text>
+          {highTextPressure ? null : (
+            <Text variant="bodySm" tone="muted" className="mt-2" style={{ lineHeight: 19 }}>
+              We send only the selected issue type and priority with your support handoff.
+            </Text>
+          )}
         </View>
 
         <Text variant="label" tone="muted" className="mb-2 ml-2">
           ISSUE TYPE
         </Text>
-        {SUPPORT_FEEDBACK_CATEGORIES.map((item) => (
+        {SUPPORT_FEEDBACK_CATEGORIES.map((item, index) => (
           <OptionRow
             key={item.key}
             label={item.label}
             detail={item.detail}
+            extraTopMargin={categoryFirstViewportBreakMargin(index)}
             selected={category === item.key}
             density={optionRowDensity}
             onPress={() => {
@@ -290,6 +309,7 @@ export default function BetaFeedbackScreen() {
             key={item.key}
             label={item.label}
             detail={item.detail}
+            extraTopMargin={undefined}
             selected={severity === item.key}
             density={optionRowDensity}
             onPress={() => {

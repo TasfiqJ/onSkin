@@ -187,6 +187,9 @@ describe('Settings route contracts', () => {
     expect(route).toContain("import { Platform, Pressable, ScrollView, View, useWindowDimensions }");
     expect(route).toContain('const { fontScale, height, width } = useWindowDimensions();');
     expect(route).toContain("const highTextPressure = fontScale >= 1.3 || Platform.OS === 'web';");
+    expect(route).toContain('const denseChrome = compact || highTextPressure;');
+    expect(route).toContain("{highTextPressure ? 'Category and priority only' : 'Route the issue fast'}");
+    expect(route).toContain('{highTextPressure ? null : (');
     expect(route).toContain("? 'supportTextPressure'");
     expect(route).toContain("? 'tallTextPressure'");
     expect(route).toContain("? 'modernTextPressure'");
@@ -197,6 +200,11 @@ describe('Settings route contracts', () => {
     expect(route).toContain("density === 'tallTextPressure'");
     expect(route).toContain("? 'mb-16 min-h-[56px]");
     expect(route).toContain('density={optionRowDensity}');
+    expect(route).toContain('function categoryFirstViewportBreakMargin(index: number): number | undefined');
+    expect(route).toContain('if (height < 700 && index === 2) return 96;');
+    expect(route).toContain('if (height >= 800 && height < 900 && index === 4) return 56;');
+    expect(route).toContain('if (height >= 900 && height < 980 && index === 4) return 128;');
+    expect(route).toContain('extraTopMargin={categoryFirstViewportBreakMargin(index)}');
     expect(route).toContain('SUPPORT_FEEDBACK_UNAVAILABLE');
     expect(route).not.toContain('TextInput');
     expect(route).not.toContain('freeText');
