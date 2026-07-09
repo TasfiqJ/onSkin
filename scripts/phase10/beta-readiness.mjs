@@ -71,6 +71,7 @@ for (const script of [
   'phase10:support-handoff',
   'phase10:support-handoff:check',
   'phase10:beta-packet',
+  'phase11:launch-packet',
   'phase10:verify',
   'docs:generated-packet-status-audit:strict',
 ]) {
@@ -78,10 +79,10 @@ for (const script of [
 }
 block(
   errors,
-  /phase10:support-handoff && npm run phase10:beta-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
+  /phase10:support-handoff && npm run phase10:beta-packet && npm run phase11:launch-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
     packageJson.scripts?.['phase10:verify'] ?? '',
   ),
-  'phase10:verify must build the support handoff packet and run the strict generated-packet status audit after building the closed beta packet.',
+  'phase10:verify must build the support handoff, closed beta, and public launch packets before running the strict generated-packet status audit.',
 );
 
 const closedBetaPacketSourceFiles = new Set(phase10SourceFiles());
