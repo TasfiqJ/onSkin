@@ -29,8 +29,11 @@ Do not mark UI-facing work as complete until Codex has:
   This no-new-dependency Node verifier reads committed
   `test-results/human-e2e/YYYY-MM-DD/` Expo web-compatible evidence folders,
   checks the launch-blocking 360 x 640 support-floor route sweep, records
-  supported-phone 360 x 740 / 375 x 812 / 390 x 844 / 412 x 915 / 430 x 932
-  evidence and smaller 320-wide stress evidence when present, and writes
+  supported-phone 360 x 740 / 375 x 667 / 375 x 812 / 390 x 844 / 412 x 640 /
+  412 x 915 / 414 x 896 / 430 x 640 / 430 x 932 evidence, records
+  skipped/direct-entry onboarding, paywall, recovery, conflict, share, shelf,
+  and progress route sweeps when present, records smaller 320-wide stress
+  evidence when present, and writes
   `docs/e2e/generated/human-e2e-manifest.{json,md}`. It is not a UI runner and
   does not replace the human-simulated browser/simulator/device pass; it
   prevents known-good local evidence from becoming ambiguous or hidden.

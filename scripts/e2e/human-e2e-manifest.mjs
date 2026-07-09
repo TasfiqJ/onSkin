@@ -201,6 +201,17 @@ const gates = [
     expected: '49 Expo web direct-entry routes have zero Android 360-class failures.',
   },
   {
+    id: 'iphone-375-667-200-text-pressure',
+    title: '375 x 667 compact iPhone-class 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-iphone-375-667-full-postfix3-clear`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero compact iPhone-class 200% text-pressure failures.',
+  },
+  {
     id: 'iphone-375-200-text-pressure',
     title: '375 x 812 supported iPhone-class 200% text-pressure route sweep',
     kind: 'summary-status',
@@ -221,6 +232,17 @@ const gates = [
     expected: '49 Expo web direct-entry routes have zero modern-phone 200% text-pressure failures.',
   },
   {
+    id: 'android-412-640-200-text-pressure',
+    title: '412 x 640 supported Android-class 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-412-640-current`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero wide support-floor 200% text-pressure failures.',
+  },
+  {
     id: 'android-412-200-text-pressure',
     title: '412 x 915 supported Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
@@ -232,6 +254,28 @@ const gates = [
       '49 Expo web direct-entry routes have zero Android-class 200% text-pressure failures.',
   },
   {
+    id: 'boundary-414-896-200-text-pressure',
+    title: '414 x 896 boundary-phone 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-boundary-414-896-postfix3`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero boundary-phone 200% text-pressure failures.',
+  },
+  {
+    id: 'android-430-640-200-text-pressure',
+    title: '430 x 640 supported Android-class 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-430-640-postfix3`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero wide support-floor 200% text-pressure failures.',
+  },
+  {
     id: 'modern-430-200-text-pressure',
     title: '430 x 932 supported-phone 200% text-pressure route sweep',
     kind: 'summary-status',
@@ -240,6 +284,72 @@ const gates = [
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-modern-430-postfix-5`,
     evidence: 'summary.json',
     expected: '49 Expo web direct-entry routes have zero tall-phone 200% text-pressure failures.',
+  },
+  {
+    id: 'skipped-routes-360-640-200-text-pressure',
+    title: '360 x 640 skipped/direct-entry 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-360-640-current`,
+    evidence: 'summary.json',
+    expected:
+      '21 onboarding, paywall, recovery, conflict, share, shelf, and progress routes have zero launch-floor failures.',
+  },
+  {
+    id: 'skipped-routes-375-667-200-text-pressure',
+    title: '375 x 667 skipped/direct-entry 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-375-667-postfix3`,
+    evidence: 'summary.json',
+    expected:
+      '21 onboarding, paywall, recovery, conflict, share, shelf, and progress routes have zero compact iPhone failures.',
+  },
+  {
+    id: 'skipped-routes-390-844-200-text-pressure',
+    title: '390 x 844 skipped/direct-entry 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-390-844-postfix`,
+    evidence: 'summary.json',
+    expected:
+      '21 onboarding, paywall, recovery, conflict, share, shelf, and progress routes have zero modern-phone failures.',
+  },
+  {
+    id: 'skipped-routes-412-640-200-text-pressure',
+    title: '412 x 640 skipped/direct-entry 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-412-640-postfix`,
+    evidence: 'summary.json',
+    expected:
+      '21 onboarding, paywall, recovery, conflict, share, shelf, and progress routes have zero wide support-floor failures.',
+  },
+  {
+    id: 'skipped-routes-430-640-200-text-pressure',
+    title: '430 x 640 skipped/direct-entry 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-430-640-current`,
+    evidence: 'summary.json',
+    expected:
+      '21 onboarding, paywall, recovery, conflict, share, shelf, and progress routes have zero wide support-floor failures.',
+  },
+  {
+    id: 'skipped-routes-430-932-200-text-pressure',
+    title: '430 x 932 skipped/direct-entry 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-430-932-postfix`,
+    evidence: 'summary.json',
+    expected:
+      '21 onboarding, paywall, recovery, conflict, share, shelf, and progress routes have zero tall-phone failures.',
   },
   {
     id: 'modern-390-170-text-pressure',
