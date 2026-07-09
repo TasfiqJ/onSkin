@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T00:03:00.135Z",
+  "generatedAt": "2026-07-09T00:04:10.441Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "54506c8b1f65173165b3ca7d3b0f5073c8bbad11",
-  "gitStatus": "M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md",
+  "gitSha": "d14c88efac61b807d339819f52fd7031910c6370",
+  "gitStatus": "",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -236,26 +236,26 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 11354,
-      "sha256": "afaf48f1a3ac39425ce619709bef38b5d951d3bf09826cb002b58950fbd21993"
+      "bytes": 11077,
+      "sha256": "327cd000661e26dd6bc9ec0d4fe22937c0f5706b3d6966cb93237d6137d26bf2"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
-      "bytes": 9874,
-      "sha256": "c1b9fed54a8d8c25a4edabda0e7364640ed71986753c11fb30f006d84e9d2d64"
+      "bytes": 9770,
+      "sha256": "cdcf9837ec336f3773a861b449a178e47e021abc34496333d90befec8ab15e01"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 10792,
-      "sha256": "a9afabd8b28aa159b62167ce08669bb0bcb12544997033cfeabc152af46aa19b"
+      "bytes": 10518,
+      "sha256": "8f643ad072ca5bffbbb5ee3a604c49b9a10153460fc1ec1107343fdacfbf284c"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7958,
-      "sha256": "173691da23d175d2f1d6c458068c2829d89dc008001a81b41752264a712e1a44"
+      "bytes": 7857,
+      "sha256": "79c5fbad89e593279a6370039eb4653d292b2a48470e9ee18b2f7e7ca40985af"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -311,7 +311,5 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": [
-    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
-  ]
+  "warnings": []
 }
