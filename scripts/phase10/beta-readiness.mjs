@@ -35,7 +35,10 @@ const closedBetaPacketRequiredSourceFiles = [
   'scripts/phase10/lib.mjs',
   'scripts/phase10/beta-readiness.mjs',
   'scripts/phase10/beta-analytics-audit.mjs',
+  'scripts/phase10/build-support-handoff-packet.mjs',
   'scripts/phase10/build-beta-packet.mjs',
+  'docs/phase-10/generated/support-handoff-packet.json',
+  'docs/phase-10/generated/support-handoff-packet.md',
   'apps/mobile/eas.json',
   'apps/mobile/app.config.js',
   'apps/mobile/src/lib/analytics/eventRegistry.ts',
@@ -65,6 +68,8 @@ const packageJson = JSON.parse(read('package.json'));
 for (const script of [
   'phase10:beta-readiness',
   'phase10:beta-analytics-audit',
+  'phase10:support-handoff',
+  'phase10:support-handoff:check',
   'phase10:beta-packet',
   'phase10:verify',
   'docs:generated-packet-status-audit:strict',
@@ -73,10 +78,10 @@ for (const script of [
 }
 block(
   errors,
-  /phase10:beta-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
+  /phase10:support-handoff && npm run phase10:beta-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
     packageJson.scripts?.['phase10:verify'] ?? '',
   ),
-  'phase10:verify must run the strict generated-packet status audit after building the closed beta packet.',
+  'phase10:verify must build the support handoff packet and run the strict generated-packet status audit after building the closed beta packet.',
 );
 
 const closedBetaPacketSourceFiles = new Set(phase10SourceFiles());
@@ -118,6 +123,13 @@ block(
   betaAnalyticsAudit.includes('REQUIRED_PHASE_H_EVENTS') &&
     betaAnalyticsAudit.includes('Phase H beta event contract'),
   'Phase 10 beta analytics audit must pin the required Phase H event contract.',
+);
+block(
+  errors,
+  has('docs/phase-10/generated/support-handoff-packet.json', /"source": "beta_feedback"/) &&
+    has('docs/phase-10/generated/support-handoff-packet.json', /"catalog_match"/) &&
+    has('docs/phase-10/generated/support-handoff-packet.json', /"p0"/),
+  'Phase 10 generated support handoff packet must include source, category, and severity query values.',
 );
 
 block(

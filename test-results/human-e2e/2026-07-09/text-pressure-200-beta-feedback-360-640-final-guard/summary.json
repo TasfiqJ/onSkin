@@ -1,0 +1,22 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-beta-feedback-360-640-final-guard",
+  "generatedAt": "2026-07-09T19:40:17.647Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/beta-feedback",
+      "scaledCount": 40
+    }
+  ]
+}

@@ -56,12 +56,12 @@ Collapse the beta-feedback intro copy under high text pressure, keep compact row
 
 ## Post-Fix Evidence
 
-- 360 x 640: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-640-postfix8/`
-- 360 x 740: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-740-postfix5/`
-- 375 x 667: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-375-667-postfix8/`
-- 390 x 844: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-390-844-postfix7/`
-- 412 x 915: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-412-915-postfix5/`
-- 430 x 932: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-430-932-postfix5/`
+- 360 x 640: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-640-final-guard/`
+- 360 x 740: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-360-740-final-guard/`
+- 375 x 667: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-375-667-final-guard/`
+- 390 x 844: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-390-844-final-guard/`
+- 412 x 915: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-412-915-final-guard/`
+- 430 x 932: `test-results/human-e2e/2026-07-09/text-pressure-200-beta-feedback-430-932-final-guard/`
 
 ## Remaining Risk
 

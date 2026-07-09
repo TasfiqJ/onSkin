@@ -313,6 +313,8 @@ export const generatedEvidenceOutputPaths = Object.freeze([
   'docs/phase-9/generated/store-build-inspection.json',
   'docs/phase-10/generated/closed-beta-packet.json',
   'docs/phase-10/generated/closed-beta-packet.md',
+  'docs/phase-10/generated/support-handoff-packet.json',
+  'docs/phase-10/generated/support-handoff-packet.md',
   'docs/phase-11/generated/public-launch-packet.json',
   'docs/phase-11/generated/public-launch-packet.md',
 ]);
