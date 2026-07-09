@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-09T01:25:44.073Z
-Git SHA: eaad692eca80318cf1c0432c965fe3c2a04c0b7b
+Generated at: 2026-07-09T02:02:39.356Z
+Git SHA: 3525df78c02026d80af271b54db7260e39db9977
 Git status: clean
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -70,7 +70,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | supabase/functions/account-deletion/index.ts | present | 15795 | d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73 |
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |
 | supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql | present | 3947 | a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02 |
-| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 31940 | 60a1f42b8519676190b4e31eacab2310fb3a3fc08d72baa5ab3bf4efaae5403d |
+| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 32435 | e70ee734c00007d1d81b3a0ce643cc8a9bf81b2b009f09c7ec0c53ea0776808e |
 | apps/mobile/src/features/subscription/store.test.ts | present | 9423 | 0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a |
 | apps/mobile/src/features/subscription/entitlement.test.ts | present | 3513 | 9eacdfb4685fc9a11faa2b65c2becc33f3b3ea7a5b429357f457fb83c2535ed6 |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 3019 | d956f0f80adc8c7fa64ab50322b665606449c89f98d2209704c73a674df4cc97 |
@@ -81,7 +81,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9912 | 30ba52fe498f13d31108da44fcaf8f68cd6159369877f0c470c1e54772848a44 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 219186 | a7b3c0047aea497e860d2657ec3f81989ff54defc0084b609762d26eda32e8b0 |
+| docs/USER_FLOW_TREE.md | present | 224129 | 7a75c41dfb25ce8d90ac30f8595d7a01bfc56a759b917feb34f8b084ae16e8f9 |
 | docs/e2e/generated/human-e2e-manifest.json | present | 3780 | ac2a605542e40f4b7fdaef823dbb980841a716a1348d5090ca1732fc22a4844a |
 | docs/e2e/generated/human-e2e-manifest.md | present | 2124 | 946fd6a3a7aa670f66d9083467e0a39030b785b14665a306ad0dc5222f77e08d |
 | docs/phase-6/payments-runbook.md | present | 3957 | 8a0c61a484cd2e8fd689c93f96efb2b13ab34eb8ca285ffb80aac8c6b7072fa1 |
