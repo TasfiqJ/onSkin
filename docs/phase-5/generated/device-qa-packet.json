@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T15:31:25.500Z",
+  "generatedAt": "2026-07-09T15:35:32.997Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "fd8885509dd0f8cdb23a4088a9625ac06dccaa46",
+  "gitSha": "fc83927c9b6ee160f7b4b8f56b7979eb3b8d34c8",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -269,20 +269,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 267811,
-      "sha256": "1553f147faffb93ed5e61158204ba869c60dd8efc03680b1d5bb5958efb991d8"
+      "bytes": 269701,
+      "sha256": "3caf8caf7aebe1e4886c611c6a2330aeafe81106fb07668288426508654009b7"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 11616,
-      "sha256": "c12be5fe121314711af4d901cd9d54628b27210dde8f0744188b607f9ca26d35"
+      "sha256": "d2f23bb44c108a54a0b4eecf7724531630862d737ed9e4416118cef2cb5abdc6"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 4958,
-      "sha256": "61d763d455d8af287dae3b7fcfd98724f55d050bfac8fc7e2e2da8dcb42b9a46"
+      "sha256": "8067689efb9fe6d8339735d53aefce360936d72d837cc733b7ca877b6314fae3"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
