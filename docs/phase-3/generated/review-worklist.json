@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-09T01:20:25.947Z",
+  "generatedAt": "2026-07-09T02:01:10.376Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.",
   "strict": false,
-  "gitSha": "464e423286540345a6d0d759b85b9f5de315e6da",
-  "gitStatus": "",
+  "gitSha": "d6d1231c06805c00cf1d3101e17da394a25c7f86",
+  "gitStatus": "M docs/USER_FLOW_TREE.md\n M docs/e2e-bug-reports/2026-07-09-text-pressure-200-modern-390-clearance.md",
   "reviewLogs": [
     {
       "domain": "clinical",
@@ -35,7 +35,7 @@
     "sourcePathCount": 67,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -440,14 +440,14 @@
         {
           "path": "apps/mobile/src/features/routine/activationAnalytics.test.ts",
           "exists": true,
-          "bytes": 2485,
-          "sha256": "2b45613860035dcea25834f1ab153f82d94ba8b873cd8e6f58e91d3f5079b799"
+          "bytes": 2666,
+          "sha256": "35a238b8f2c4b154dfc749f734a5551b10a7018e81b346d7feab83c17f4718a8"
         },
         {
           "path": "apps/mobile/src/features/routine/activationAnalytics.ts",
           "exists": true,
-          "bytes": 2167,
-          "sha256": "5f3fd771422126dc233160e7abfbc028bd54070d49cafe4add707109a2047eaa"
+          "bytes": 2211,
+          "sha256": "84331bc62487bad654b5d9e90d977748e8d87f22c2b50d69103cab20e8ab2502"
         },
         {
           "path": "apps/mobile/src/features/routine/cycleAnchor.test.ts",
@@ -666,8 +666,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 38528,
-          "sha256": "23aa89df930eacda7280aaa0178114b8b24855444adddb51d80af731721b9abd"
+          "bytes": 38983,
+          "sha256": "e06e6d3f2e8eea255424bd6159eeddc4fd7c993d6437098ad2e646dff3595127"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -698,5 +698,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence."
+  ]
 }

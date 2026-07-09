@@ -1,9 +1,9 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T01:20:25.947Z
+Generated: 2026-07-09T02:01:10.376Z
 Status: pass
-Git SHA: 464e423286540345a6d0d759b85b9f5de315e6da
-Git status: clean
+Git SHA: d6d1231c06805c00cf1d3101e17da394a25c7f86
+Git status: DIRTY
 
 This generated worklist converts the clinical and cosmetic chemistry review
 logs into an operator handoff. It does not mark anything approved; it records
@@ -16,7 +16,7 @@ can close.
 - Source files hashed: 67
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 0
+- Warnings: 1
 
 ## Items
 
@@ -45,4 +45,4 @@ can close.
 
 ## Warnings
 
-- None.
+- Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.
