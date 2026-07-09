@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T15:41:21.227Z",
+  "generatedAt": "2026-07-09T15:56:28.210Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "76cecb99909b0b499778dd7e812c36e76c832252",
+  "gitSha": "418b7e2eaccd79f9679a735465fc9bc85842790c",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -273,8 +273,8 @@
         {
           "path": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
           "exists": true,
-          "bytes": 36421,
-          "sha256": "6c53840ce401ded401acc4a45aae5ee897944a0bf2663897c86281a2ad638362"
+          "bytes": 36894,
+          "sha256": "5ff0e9205b68441fd70ebe519eabe8b17b707dda96773ec3aac0c7fd230789d0"
         },
         {
           "path": "apps/mobile/src/features/subscription/plans.test.ts",
