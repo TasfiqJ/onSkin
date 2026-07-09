@@ -442,6 +442,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/s/[shareId]` with safe campaign attribution parameters, then open an invalid share id.
   - Expected result: The public landing page renders without exposing private shelf, skin-profile, product, token, signed-url, or JWT values; invalid share IDs recover to the safe missing-share state; analytics attribution remains sanitized by source-contract and payload tests.
   - Evidence: Phone-width screenshots, visible-text snapshot, browser console logs, route URL snapshot, and focused analytics/attribution test output.
+  - Current local evidence: 2026-07-09 Chrome DevTools Protocol Expo web at the 360 x 640 supported phone floor opened `/s/sharecard01` with safe attribution and `/s/not-a-valid-share-id` with sensitive-looking attribution/query values. Both routes rendered the safe public shelf-check landing surface, kept `Scan a product` and `Add manually` as complete 56 px controls, reported zero horizontal overflow, zero route issues, and zero disallowed browser logs, and exposed no private product, shelf, skin-profile, token, signed-url, JWT, photo, or health context in visible text. Evidence is in `test-results/human-e2e/2026-07-09/share-landing-attribution-current/`.
 - Branch: Phase 8 public-site identity smoke
   - Priority: Critical
   - Automate later: Yes
