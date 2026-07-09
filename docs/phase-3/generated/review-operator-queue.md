@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-09T19:20:59.181Z
+Generated: 2026-07-09T20:36:13.136Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 013bf27778a1e5d3881570d81691f4ae2cb9b407
+Git SHA: 82c3eb2993e494dcab39adbdd5e97015f8dcad22
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -30,7 +30,7 @@ names, credentials, dates, or legal/clinical decisions.
 | 4    | P0       | IP/FTO             | Catalog source and image rights      | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 14      |
 | 5    | P0       | IP/FTO             | Native identifiers and callbacks     | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 3       |
 | 6    | P0       | IP/FTO             | Onboarding quiz FTO                  | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 7    | P0       | IP/FTO             | Share-card marks and deep links      | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 8       |
+| 7    | P0       | IP/FTO             | Share-card marks and deep links      | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 9       |
 | 8    | P0       | Legal/regulatory   | Ask and AI disclosures               | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
 | 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure    | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
 | 10   | P0       | Legal/regulatory   | Store metadata and review notes      | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
@@ -191,6 +191,7 @@ Sources:
 - `apps/mobile/src/features/growth/ConflictCard.tsx` - 4425 bytes - sha256 `dc0e46aae4853f7ee10fead5163f9e3e4a0969de43f58ac69977ef7486ff1361`
 - `apps/mobile/src/features/growth/shareCard.test.ts` - 5266 bytes - sha256 `e5e46d4018c95d6b7c14a1239acd51108b830618a0332824737a9bd7b4e0ca82`
 - `apps/mobile/src/features/growth/shareCard.ts` - 1967 bytes - sha256 `e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436`
+- `apps/mobile/src/features/growth/shareLandingRoute.test.ts` - 1535 bytes - sha256 `ce523179c8ed97432d19e6c3bcd3f492e8bd846b5f7b604600199de1d9a270c9`
 - `apps/mobile/src/features/growth/shareLinks.ts` - 1224 bytes - sha256 `0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d`
 - `docs/14-growth-to-seven-figures.md` - 57849 bytes - sha256 `045a6a9864ffa4c04df4d64bf5e53f98ca936835ba8d68e372f2cba4bcf416e7`
 - `docs/brand-decision-memo.md` - 5262 bytes - sha256 `c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9`
@@ -738,16 +739,16 @@ Sources:
 
 Sources:
 
-- `apps/mobile/src/lib/analytics/eventRegistry.ts` - 4049 bytes - sha256 `809423a02b83f645e44f78086d12e89a7ffd3eb4c59d0441777ce414710e0e88`
-- `apps/mobile/src/lib/analytics/track.test.ts` - 7891 bytes - sha256 `24f77b3fbd53af4dc7f20e529d3997b0d55f32303993ed7d2ee0df3d7b173c13`
-- `apps/mobile/src/lib/analytics/track.ts` - 5955 bytes - sha256 `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts` - 4199 bytes - sha256 `334b5b3a7a298d4820b4c888016f53a7a0610fd9c158ce6e81ebabfb3fae1ce6`
+- `apps/mobile/src/lib/analytics/track.test.ts` - 8374 bytes - sha256 `2c3daf2152bacd88b4ea5d38742dbf4d79de7cd1817e06038f0ab05b7c28b7ca`
+- `apps/mobile/src/lib/analytics/track.ts` - 6400 bytes - sha256 `ba85d7ef840dbd322970efdd3f040997b07b881fa461050c1bb50142220051a4`
 - `apps/mobile/src/lib/observability/safeLog.test.ts` - 1536 bytes - sha256 `2c01477feb279bbdc2e6906fda4b989186b64fe92dc6f98e2dbb4b81d9ba607f`
 - `apps/mobile/src/lib/observability/safeLog.ts` - 674 bytes - sha256 `9be726f4471c30b6a6dec06c5f9075ec5e184182a12ae6dfdfa9cf275e4a0954`
 - `apps/mobile/src/lib/observability/scrub.test.ts` - 2866 bytes - sha256 `3cfd91c4cc5b486d40fcb22bd5f67393f162154166162ffa540fe9931e2f1b0e`
 - `apps/mobile/src/lib/observability/scrub.ts` - 3132 bytes - sha256 `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
 - `apps/mobile/src/lib/observability/sentry.test.ts` - 4818 bytes - sha256 `1264166e44a7c63bda48666e181882b6d6548fb0bd1b3cdf4217223a78b5f5f6`
 - `apps/mobile/src/lib/observability/sentry.ts` - 4089 bytes - sha256 `d228827c369b9119584b2b75bab2b067debca9b5bc5510f58c8233da931c3230`
-- `supabase/functions/growth-event/index.ts` - 9643 bytes - sha256 `a7945cfe8706fffeec0bb733aac5a9a19a47545c2dfa021c9807db907b6261ae`
+- `supabase/functions/growth-event/index.ts` - 9671 bytes - sha256 `fbcbc8abdd0165bfa1ac693994bec7f6019e63ce6901a156e744394c9161c8fd`
 
 ### P1 - Privacy/security - Photo privacy and local storage
 

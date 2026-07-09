@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:21:47.410Z",
+  "generatedAt": "2026-07-09T20:37:22.763Z",
   "status": "blocked",
-  "gitSha": "47d0cc1f30a20cc349512e89c70475f5f4c4c9fc",
+  "gitSha": "82c3eb2993e494dcab39adbdd5e97015f8dcad22",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -45,7 +45,7 @@
   "signedOffBy": "",
   "sourceHashes": {
     ".env.example": "09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1",
-    "package.json": "de04387db608f85e2f38b10bdcd4161b350366cbcb67a2336e9cfadfe85c5b8f",
+    "package.json": "387960dacb05532538212d2c6ad3aa590887d2f9d9dcad8afe586b5c50351cfa",
     "package-lock.json": "f85eb88858555c4ec6827aedf170ce7752f18e0f9c94c9a0e09a2c6a449f0d26",
     ".github/workflows/security.yml": "fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d",
     "apps/mobile/app.base.json": "a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5",
@@ -55,8 +55,8 @@
     "apps/mobile/src/lib/env.test.ts": "aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa",
     "apps/mobile/src/lib/launch/phase7.ts": "4369c73351a58fd6cad9c5d94917185fadb7e67bf219aa9f85814dea5055e663",
     "apps/mobile/src/lib/launch/phase7.test.ts": "d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815",
-    "apps/mobile/src/lib/analytics/eventRegistry.ts": "809423a02b83f645e44f78086d12e89a7ffd3eb4c59d0441777ce414710e0e88",
-    "apps/mobile/src/lib/analytics/track.ts": "7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45",
+    "apps/mobile/src/lib/analytics/eventRegistry.ts": "334b5b3a7a298d4820b4c888016f53a7a0610fd9c158ce6e81ebabfb3fae1ce6",
+    "apps/mobile/src/lib/analytics/track.ts": "ba85d7ef840dbd322970efdd3f040997b07b881fa461050c1bb50142220051a4",
     "apps/mobile/src/lib/iap/revenuecat.ts": "b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75",
     "apps/mobile/src/lib/observability/scrub.ts": "222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e",
     "apps/mobile/src/lib/observability/sentry.ts": "d228827c369b9119584b2b75bab2b067debca9b5bc5510f58c8233da931c3230",

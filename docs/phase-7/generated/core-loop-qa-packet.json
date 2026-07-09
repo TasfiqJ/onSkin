@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T20:24:46.052Z",
+  "generatedAt": "2026-07-09T20:37:13.754Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "882fc1305245f16b943ba29a26d93dcd6c160073",
+  "gitSha": "82c3eb2993e494dcab39adbdd5e97015f8dcad22",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -116,8 +116,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 15570,
-      "sha256": "de04387db608f85e2f38b10bdcd4161b350366cbcb67a2336e9cfadfe85c5b8f"
+      "bytes": 15727,
+      "sha256": "387960dacb05532538212d2c6ad3aa590887d2f9d9dcad8afe586b5c50351cfa"
     },
     {
       "path": "apps/mobile/src/lib/launch/phase7.ts",
@@ -237,25 +237,25 @@
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 11266,
-      "sha256": "bfb0ec12199d93d79c045bb7ec12c08090325dfb9a1e317f3f7a72c787d7abf5"
+      "sha256": "030176d2ceae4c057e2ba535cc851e816361b36f607b5eeba0276e14bf1acc78"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 9912,
-      "sha256": "804cd475e24470fe5b7b625cb012b89a1d890317f8845f340d78dec672e2fefe"
+      "sha256": "160da8b23274e39f5cdb2c20c51999083579013cd30e6eac8412785ce3086791"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 10522,
-      "sha256": "46ec4ac9acf8be9b6aa42cafe433af174745af019fa5cfeda623986e4040bbcb"
+      "sha256": "876052e1cafa03b13bb1bac9310fd70baf1e6591c2ed40a72118055333344d9e"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 7861,
-      "sha256": "6250fadb07dc82b048c2a241e87c379f889b91397be71a5dc02fb92c11869039"
+      "sha256": "0d794985f49c99e7f6576660fe7bdb17b06b624aec3396703db6481694600307"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-09T19:20:59.181Z",
+  "generatedAt": "2026-07-09T20:36:13.136Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "013bf27778a1e5d3881570d81691f4ae2cb9b407",
+  "gitSha": "82c3eb2993e494dcab39adbdd5e97015f8dcad22",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 81591,
-    "sha256": "049006a2b1e559d208751d3731d01ca1bf0cc7b5015e88d0e63ba565d7c7f337",
-    "currentSha256": "049006a2b1e559d208751d3731d01ca1bf0cc7b5015e88d0e63ba565d7c7f337"
+    "bytes": 81829,
+    "sha256": "9bf8aafbc08d20233cfc449ea92b0e0ccba9ed6ad9bc03b24cc8950295672827",
+    "currentSha256": "9bf8aafbc08d20233cfc449ea92b0e0ccba9ed6ad9bc03b24cc8950295672827"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -363,6 +363,12 @@
           "exists": true,
           "bytes": 1967,
           "sha256": "e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436"
+        },
+        {
+          "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
+          "exists": true,
+          "bytes": 1535,
+          "sha256": "ce523179c8ed97432d19e6c3bcd3f492e8bd846b5f7b604600199de1d9a270c9"
         },
         {
           "path": "apps/mobile/src/features/growth/shareLinks.ts",
@@ -1985,20 +1991,20 @@
         {
           "path": "apps/mobile/src/lib/analytics/eventRegistry.ts",
           "exists": true,
-          "bytes": 4049,
-          "sha256": "809423a02b83f645e44f78086d12e89a7ffd3eb4c59d0441777ce414710e0e88"
+          "bytes": 4199,
+          "sha256": "334b5b3a7a298d4820b4c888016f53a7a0610fd9c158ce6e81ebabfb3fae1ce6"
         },
         {
           "path": "apps/mobile/src/lib/analytics/track.test.ts",
           "exists": true,
-          "bytes": 7891,
-          "sha256": "24f77b3fbd53af4dc7f20e529d3997b0d55f32303993ed7d2ee0df3d7b173c13"
+          "bytes": 8374,
+          "sha256": "2c3daf2152bacd88b4ea5d38742dbf4d79de7cd1817e06038f0ab05b7c28b7ca"
         },
         {
           "path": "apps/mobile/src/lib/analytics/track.ts",
           "exists": true,
-          "bytes": 5955,
-          "sha256": "7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45"
+          "bytes": 6400,
+          "sha256": "ba85d7ef840dbd322970efdd3f040997b07b881fa461050c1bb50142220051a4"
         },
         {
           "path": "apps/mobile/src/lib/observability/safeLog.test.ts",
@@ -2039,8 +2045,8 @@
         {
           "path": "supabase/functions/growth-event/index.ts",
           "exists": true,
-          "bytes": 9643,
-          "sha256": "a7945cfe8706fffeec0bb733aac5a9a19a47545c2dfa021c9807db907b6261ae"
+          "bytes": 9671,
+          "sha256": "fbcbc8abdd0165bfa1ac693994bec7f6019e63ce6901a156e744394c9161c8fd"
         }
       ]
     },
