@@ -121,8 +121,6 @@ const workItems = [
       'scripts/phase4/import-obf-snapshot.mjs',
       'scripts/phase4/import-cosing-dictionary.mjs',
       'scripts/docs/generated-packet-status-audit.mjs',
-      'docs/phase-4/generated/catalog-qa-report.json',
-      'docs/phase-4/generated/catalog-qa-report.md',
     ],
   },
   {
