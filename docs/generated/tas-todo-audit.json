@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T00:31:49.026Z",
+  "generatedAt": "2026-07-09T00:37:15.574Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
@@ -11,12 +11,12 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 235,
-    "localOnlyKeyCount": 10,
+    "extractedKeyCount": 233,
+    "localOnlyKeyCount": 12,
     "keyMentionCount": 233,
-    "keyNotMentionedCount": 2,
+    "keyNotMentionedCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "groups": [
     {
@@ -38,6 +38,7 @@
         "phase2:rls-smoke"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [],
       "keys": [
         "APP_VARIANT",
         "APPLE_SIWA_CLIENT_ID",
@@ -166,15 +167,14 @@
         "phase3:audit-copy:strict"
       ],
       "forTasCovered": true,
-      "keys": [
+      "localOnlyKeys": [
+        "PHASE3_REVIEW_PACKET_OUT_DIR",
         "PHASE3_REVIEW_WORKLIST_JSON",
         "PHASE3_REVIEW_WORKLIST_MD"
       ],
+      "keys": [],
       "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
-        "PHASE3_REVIEW_WORKLIST_JSON",
-        "PHASE3_REVIEW_WORKLIST_MD"
-      ]
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase4",
@@ -192,6 +192,7 @@
         "phase4:check-source-env"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [],
       "keys": [
         "CATALOG_APP_NAME",
         "CATALOG_APP_VERSION",
@@ -239,6 +240,9 @@
         "phase5:qa-packet:strict"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE5_QA_PACKET_OUT_DIR"
+      ],
       "keys": [
         "PHASE5_ACCESSIBILITY_QA_PASS",
         "PHASE5_ANDROID_BUILD_ID",
@@ -303,6 +307,9 @@
         "phase6:check-payments-env:strict"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE6_PACKET_OUT_DIR"
+      ],
       "keys": [
         "EXPO_PUBLIC_REVENUECAT_ANDROID_KEY",
         "EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID",
@@ -364,6 +371,9 @@
         "phase7:qa-packet:strict"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE7_PACKET_OUT_DIR"
+      ],
       "keys": [
         "EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED",
         "EXPO_PUBLIC_PHASE7_COMMERCE_ENABLED",
@@ -447,6 +457,10 @@
         "Phase 8"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE8_PACKET_OUT_DIR",
+        "PHASE8_STORE_METADATA_PACKET"
+      ],
       "keys": [
         "ANDROID_CERT_SHA256_FINGERPRINTS",
         "APPLE_TEAM_ID",
@@ -510,6 +524,10 @@
         "Phase 9"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE9_PACKET_OUT_DIR",
+        "PHASE9_RELEASE_CANDIDATE_DIR"
+      ],
       "keys": [
         "PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT",
         "PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL",
@@ -641,6 +659,9 @@
         "Phase 10"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE10_PACKET_OUT_DIR"
+      ],
       "keys": [
         "PHASE10_BETA_IDENTITY_PASS",
         "PHASE10_BETA_TERMS_PASS",
@@ -696,6 +717,9 @@
         "Phase 11"
       ],
       "forTasCovered": true,
+      "localOnlyKeys": [
+        "PHASE11_PACKET_OUT_DIR"
+      ],
       "keys": [
         "PHASE11_ASO_REVIEW_PASS",
         "PHASE11_CREATOR_DISCLOSURE_PASS",
@@ -734,7 +758,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
-  ]
+  "warnings": []
 }

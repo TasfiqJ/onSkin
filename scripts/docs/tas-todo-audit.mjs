@@ -105,6 +105,8 @@ function collectKeys(text, patterns) {
 function isLocalOnlyGeneratedKey(key) {
   return (
     /_OUT_DIR$/.test(key) ||
+    key === 'PHASE3_REVIEW_WORKLIST_JSON' ||
+    key === 'PHASE3_REVIEW_WORKLIST_MD' ||
     key === 'PHASE8_STORE_METADATA_PACKET' ||
     key === 'PHASE9_RELEASE_CANDIDATE_DIR'
   );
@@ -324,6 +326,7 @@ const audit = {
       packageScriptsPresent,
       forTasNeedles,
       forTasCovered,
+      localOnlyKeys,
       keys,
       keysMentionedInForTas,
       keysNotMentionedInForTas,
