@@ -1,8 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T10:16:44.744Z
-Git SHA: dc68708f39d4a0568fea8f21a24d87b714b6603c
-Git status: DIRTY
+Generated at: 2026-07-09T10:20:33.582Z
+Git SHA: 6db7b4e4e38c747187679814e2adb1cc68094b63
+Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -71,9 +71,9 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9912 | 30ba52fe498f13d31108da44fcaf8f68cd6159369877f0c470c1e54772848a44 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 243187 | c7048fca74a86c29281d47b1707598843223fd4f799d30de06e5ec983813c1c8 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | 6b7d81b03c835156858accb6a713c9829302d555854ee124886150db4c968c04 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | afdd59a490b4df71b20ad3df67d9388b87017465dae6aea9a4999455e7ca3254 |
+| docs/USER_FLOW_TREE.md | present | 243185 | f0bed33692f8b31c47c2c5ba54502a4cb61ca29f6ff5f7847c0b41d10e41f20b |
+| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | c9663a20527f218192cc41b6764d46d65ba5ad24d5d2e4504a28110d4a249d88 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | fdf7da53a578ddb918eae514545e9fced3e0aacf405a8cfa828b3904f573d4d4 |
 | docs/phase-5/generated/device-qa-packet.json | present | 11263 | 52818eba82fb48c72954cc6e8dc2fa4fb57a388ecf736ba3cfd13cbfdcf03675 |
 | docs/phase-5/generated/device-qa-packet.md | present | 9912 | 50ffa7205d8546ae0b187249f6873124142ee648bd36313990c9f539ca212fbb |
 | docs/phase-6/generated/payments-qa-packet.json | present | 10519 | 99ca8d69e7ddc8a769833650aacfc3694ae7744d96a3b001a7dfc802050edaa5 |
@@ -110,4 +110,4 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Warnings
 
-- Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.
+- none
