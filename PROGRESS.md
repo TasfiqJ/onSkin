@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a supported Android-class 360 x 780 / 200% text-pressure route
+  audit. The first sweep exposed reverse-trial ProGate copy overflow in
+  `/routine/reorder` and a partially visible Recommendation Preferences texture
+  chip; the follow-up exposed `/progress` Terms, Privacy, and Restore buttons
+  whose centers hit the surrounding paywall wrapper near the floating tab bar.
+  ProGate now lets supported-width reverse-trial body copy wrap, promotes
+  supported-width Progress photo paywalls into header compliance with a compact
+  dismiss control, and Recommendation Preferences defers the texture group below
+  the first mid-height viewport. Focused subscription/recommendation contracts
+  pass, and the final 49-route Expo web sweep reports zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-mid-360-780-postfix2/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-android-mid-360-clearance.md`.
+
 - Moved the first-session value moment earlier by showing the shelf-derived
   routine insight on the reveal screen before reminder setup. Reveal now uses
   the same `routineFirstInsightCopy` signal as the routine plan, records
