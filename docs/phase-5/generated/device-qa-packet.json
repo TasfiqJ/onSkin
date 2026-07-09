@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T13:50:55.329Z",
+  "generatedAt": "2026-07-09T14:06:43.288Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "d2275cf199e9a61c059cc86fca7603f2f7662f5b",
+  "gitSha": "77a01fb019d55fc910e40b9b175117acf18216fc",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -239,8 +239,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 17311,
-      "sha256": "6d303fa5dabbbab6fa4f3291bd6a9316f2393544d1805dd75e13550755f51868"
+      "bytes": 17761,
+      "sha256": "63702c806554724939c9c9d51875d771bfd10a4d343e8ed40e7c3e2ef5462678"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -257,8 +257,8 @@
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
       "exists": true,
-      "bytes": 10040,
-      "sha256": "3f5a7bf982563d66eed2398cff5b71efb5a3949866de18c5f16b4081a1cd20ab"
+      "bytes": 10052,
+      "sha256": "bac3f0403cbec1055dc8290a168c521962974b09143e8444c9feca59bc7ee9f6"
     },
     {
       "path": "docs/E2E_TESTING_CHECKLIST.md",
@@ -269,20 +269,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 256881,
-      "sha256": "ca8387c1674d14da2b49059672a9a462f7edfa1a7ae8adb3e6653d15d6ba27e4"
+      "bytes": 259089,
+      "sha256": "d040cf140d7794ad218ba973d3abf50bf12dc45b8f169c53cdaf8ccd16fd4866"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 7720,
-      "sha256": "08811479c0458e25b39b73585c8d6829444f40a82b9af7c4c341d710a5b16b5f"
+      "bytes": 8524,
+      "sha256": "01356837f5d197cec16a4285573762dbd08b28caa34469a3cba1608fc7a3b701"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 3675,
-      "sha256": "9b54cba454d9061c5335a3d2faa5c71e4f44ae32d6ca8ac31a5bd4f8725fe390"
+      "bytes": 3936,
+      "sha256": "bb0625232dc6b45027ca8f64da489f215888b1ca433fd06fc39940dd39cb531d"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",

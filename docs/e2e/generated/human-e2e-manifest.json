@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T13:50:32.912Z",
-  "gitSha": "d2275cf199e9a61c059cc86fca7603f2f7662f5b",
+  "generatedAt": "2026-07-09T14:06:37.165Z",
+  "gitSha": "77a01fb019d55fc910e40b9b175117acf18216fc",
   "evidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -61,6 +61,25 @@
       "fileCount": 101,
       "bytes": 4374011,
       "evidenceSha256": "cca9cbbea7ac6cc753c3b5b5c9af86fd7379723fed745c5bc472b3c73b09345a"
+    },
+    {
+      "id": "android-412-200-text-pressure",
+      "title": "412 x 915 supported Android-class 200% text-pressure route sweep",
+      "kind": "summary-status",
+      "required": false,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2",
+      "evidence": "summary.json",
+      "expected": "49 Expo web direct-entry routes have zero Android-class 200% text-pressure failures.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 101,
+      "bytes": 4002622,
+      "evidenceSha256": "584f506283fd7c3d3a899685cb191ae4274592747cddccb69f883639cf9f3fb3"
     },
     {
       "id": "modern-430-200-text-pressure",
