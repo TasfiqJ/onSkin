@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T20:19:22.138Z",
+  "generatedAt": "2026-07-09T20:24:21.677Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the accepted device support policy so install floors, viewport launch gates, and 320-wide stress-only evidence cannot drift silently.",
