@@ -1,8 +1,8 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-09T20:55:44.973Z
+Generated: 2026-07-09T20:56:17.081Z
 Status: pass
-Strict mode: no
+Strict mode: yes
 
 This generated audit scans committed phase packet outputs for dirty-worktree
 status and stale recorded file hashes. It does not prove external launch
