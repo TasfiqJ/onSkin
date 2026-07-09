@@ -130,7 +130,7 @@ block(
 block(
   errors,
   !/filename="onskin-export\.json"/.test(exportSource) && !/const dataExportFileName = 'onskin-export\.json'/.test(exportSource),
-  'data-export must not expose the legacy OnSkin export filename in response headers.',
+  'data-export must not expose the legacy export filename in response headers.',
 );
 
 for (const pattern of [
