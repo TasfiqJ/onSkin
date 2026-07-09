@@ -27,6 +27,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   with the bug record in
   `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-412-boundary-text-pressure.md`.
 
+- Cleared the broader 414 x 896 / 200% boundary route audit after the same
+  ProGate, text-pressure harness, and Recommendation Preferences fixes. The
+  initial full sweep failed `/progress`, `/cycle/disruption`, and
+  `/cycle/procedure`; the final 49-route sweep passed with zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3/`,
+  with the combined bug record in
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-boundary-414-clearance.md`.
+
 - Added a focused 412 x 844 / 200% text-pressure boundary guard for contextual
   ProGate paywalls. The paywall now treats the 391-430 px wide, 840-899 px tall
   band as dense under text pressure, moving compliance into the header, using
