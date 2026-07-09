@@ -28,6 +28,14 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`,
   and
   `test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5/`.
+- The 414 x 896 / 200% boundary sweep also passed 49 / 49 routes after the
+  contextual ProGate, Recommendation Preferences, and entitlement-loading
+  harness fixes. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3/`.
+- Native config now pins the install floor and build target posture separately:
+  iOS deployment stays at 17.0+, Android min SDK stays at API 29, and Android
+  compile/target SDK are pinned to API 36 by `app.base.json`,
+  `appConfig.test.ts`, and `phase5:check-native-config`.
 - A fresh accepted-floor Expo web route audit after the native support-floor
   config contract plus direct-entry density guards for Ask, Community,
   Recommendation detail, Settings, and Shelf recovery passed 49 / 49 routes at
@@ -141,7 +149,9 @@ Fresh verification through 2026-07-09:
   certificate, and named signoff evidence.
 - `npm run phase5:verify` passed non-strict native-build/device-QA code gates
   and refreshed `docs/phase-5/generated/device-qa-packet.*` for the current
-  progress capture route hash. Strict Phase 5 remains blocked by missing EAS
+  native support-floor and progress capture route hashes. The local native
+  config guard keeps iOS at 17.0+, Android min SDK at API 29, and Android
+  compile/target SDK at API 36. Strict Phase 5 remains blocked by missing EAS
   iOS/Android build IDs, physical-device matrix evidence, native
   camera/photo/notification/share/RevenueCat/Sentry QA, and named tester
   signoff evidence.

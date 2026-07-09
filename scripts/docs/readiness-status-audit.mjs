@@ -32,10 +32,13 @@ const requiredManifestNeedles = [
   '375 x 812',
   '390 x 844',
   '412 x 915',
+  '414 x 896',
   '430 x 932',
+  'API 36',
   'text-pressure-200-support-floor-480-postfix-12',
   'text-pressure-200-iphone-375-812-postfix',
   'text-pressure-200-android-412-915-postfix2',
+  'text-pressure-200-boundary-414-896-postfix3',
 ];
 
 const requiredLaunchCommands = [

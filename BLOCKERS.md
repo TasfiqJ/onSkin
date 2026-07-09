@@ -120,6 +120,13 @@ routes with zero failures. Evidence includes
 `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix/`,
 and
 `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`.
+The 414 x 896 / 200% boundary sweep also passed 49 / 49 routes after the
+contextual ProGate, Recommendation Preferences, and entitlement-loading harness
+fixes, with evidence in
+`test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3/`.
+The native support-floor guard now keeps iOS deployment at 17.0+, Android min
+SDK at API 29, and Android compile/target SDK at API 36, so the install floor
+and current store target posture cannot drift silently.
 The Settings Privacy Terms-row spacer and contextual Progress
 tall-phone compact compliance header have fresh route evidence, including
 compact visible Explore-first copy with the full reverse-trial copy retained in

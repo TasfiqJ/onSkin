@@ -6,6 +6,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the readiness-status audit so source-of-truth launch docs must now
+  mention the 414 x 896 / 200% boundary sweep and Android API 36 compile/target
+  guard alongside the supported-phone manifest evidence. `LAUNCH_READINESS.md`
+  and `BLOCKERS.md` now record the boundary evidence folder and the split
+  install-floor/build-target posture explicitly.
+
 - Tightened the native support-floor guard so Android store target posture is
   explicit instead of implicit. `app.base.json`, the Expo config unit test, and
   `phase5:check-native-config` now pin Android min SDK at API 29 while also
