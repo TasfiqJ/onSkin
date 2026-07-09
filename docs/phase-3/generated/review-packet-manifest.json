@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T21:34:41.904Z",
+  "generatedAt": "2026-07-09T21:37:35.044Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "9636f618054c09fb1f3536ea007b5e526dee87d6",
-  "gitStatus": "M apps/mobile/src/app/onboarding/analyzing.tsx\n M apps/mobile/src/app/onboarding/products.tsx\n M apps/mobile/src/app/onboarding/quiz.tsx\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M docs/USER_FLOW_TREE.md\n M package.json\n?? docs/e2e-bug-reports/2026-07-09-onboarding-first-session-430-stress-clearance.md\n?? scripts/e2e/onboarding-first-session.mjs",
+  "gitSha": "323aadd71c8048cdc0268145cf82389840a98cc6",
+  "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
@@ -148,29 +148,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 82326,
-      "sha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40"
+      "bytes": 81829,
+      "sha256": "0eb3bef5f387ab7fb7724102a7a858255e5d0e727ccb40a3b682865435f9ca2b"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 53465,
-      "sha256": "880dad41311bcfbdd22bc5bfb2a28004598fb020c81db6372c4c6da2630ea896"
+      "bytes": 53360,
+      "sha256": "b8509021e08e4540cbecc6e77a11102d97ffdade403dacab9378e9d8d6000194"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 87183,
-      "sha256": "892888f4c2f45f1d4be81c24a8647d604181104fa56d93dc891a8b773442f786"
+      "bytes": 86552,
+      "sha256": "6fb38e8447ac5b415510f056e2b4111f4f2c83ccc26f634778d539afd28b0e0b"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 66270,
-      "sha256": "dd7a2cc7637e834128615a08c907edd3a768dac528fc86b749f975a572dd8375"
+      "bytes": 66036,
+      "sha256": "45da0eb58236ad0ac021f527c14d42594c031f34b5678fd61d6fa26048796d4b"
     },
     {
       "packet": "clinical",
@@ -225,29 +225,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 82326,
-      "sha256": "b6bdc14e4a26346063cb46c2f62bcdae8448ab251047102e2d0c476c7ec85d40"
+      "bytes": 81829,
+      "sha256": "0eb3bef5f387ab7fb7724102a7a858255e5d0e727ccb40a3b682865435f9ca2b"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 53465,
-      "sha256": "880dad41311bcfbdd22bc5bfb2a28004598fb020c81db6372c4c6da2630ea896"
+      "bytes": 53360,
+      "sha256": "b8509021e08e4540cbecc6e77a11102d97ffdade403dacab9378e9d8d6000194"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 87183,
-      "sha256": "892888f4c2f45f1d4be81c24a8647d604181104fa56d93dc891a8b773442f786"
+      "bytes": 86552,
+      "sha256": "6fb38e8447ac5b415510f056e2b4111f4f2c83ccc26f634778d539afd28b0e0b"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 66270,
-      "sha256": "dd7a2cc7637e834128615a08c907edd3a768dac528fc86b749f975a572dd8375"
+      "bytes": 66036,
+      "sha256": "45da0eb58236ad0ac021f527c14d42594c031f34b5678fd61d6fa26048796d4b"
     },
     {
       "packet": "cosmeticChemistry",
@@ -376,7 +376,5 @@
       "sha256": "41d9599afa86794bd2444debf1e98463e794b5536d5c3c3b02b5ef15459c240c"
     }
   ],
-  "warnings": [
-    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
-  ]
+  "warnings": []
 }
