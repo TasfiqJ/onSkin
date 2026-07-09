@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T20:12:46.800Z
-Git SHA: bb7a0eec6f25db3ebfe015b760711c094cd879fe
+Generated: 2026-07-09T20:20:14.534Z
+Git SHA: c5925118a6adcd751d3eb2b169d6b2c46cc1b554
 Evidence date: 2026-07-09
 Status: pass
 
@@ -42,7 +42,7 @@ dependency to the repo.
 ## Warnings
 
 - This manifest verifies committed local Expo web evidence only; it does not replace physical iOS/Android device QA.
-- Only launch-blocking gates are required by the device support policy; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 are resilience stress evidence unless tied to a supported physical device.
+- Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 remain resilience stress evidence unless tied to a supported physical device.
 - Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.
 
 ## Blockers
