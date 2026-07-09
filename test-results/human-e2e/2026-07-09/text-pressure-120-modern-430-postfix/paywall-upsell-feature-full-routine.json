@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 52,
+        "y": 779.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 803.59375,
+        "height": 48,
+        "left": 28,
+        "right": 76,
+        "top": 755.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 114.421875,
+        "y": 779.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 803.59375,
+        "height": 48,
+        "left": 90.421875,
+        "right": 138.421875,
+        "top": 755.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 176.84375,
+        "y": 779.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 803.59375,
+        "height": 48,
+        "left": 152.84375,
+        "right": 200.84375,
+        "top": 755.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 378,
+        "y": 779.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 803.59375,
+        "height": 48,
+        "left": 354,
+        "right": 402,
+        "top": 755.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 215,
+        "y": 896
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 920,
+        "height": 48,
+        "left": 28,
+        "right": 402,
+        "top": 872,
+        "visibleHeight": 48,
+        "visibleWidth": 374,
+        "width": 374
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8241/paywall/upsell?feature=full_routine",
+  "textOverflows": [],
+  "textStart": "Terms · Privacy · Restore x Unlock Pro. Checking price Start free trial",
+  "viewport": {
+    "width": 430,
+    "height": 932
+  },
+  "route": "/paywall/upsell?feature=full_routine",
+  "scaledCount": 9,
+  "textScale": 1.2,
+  "url": "http://localhost:8241/paywall/upsell?feature=full_routine",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

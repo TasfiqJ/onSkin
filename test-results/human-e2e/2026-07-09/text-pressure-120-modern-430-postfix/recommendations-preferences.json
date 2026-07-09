@@ -1,0 +1,370 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 85.0625,
+        "y": 294.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fragrance-free",
+      "label": "Fragrance-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 318.40625,
+        "height": 48,
+        "left": 24,
+        "right": 146.125,
+        "top": 270.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 122.125,
+        "width": 122.125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 181.65625,
+        "y": 294.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Vegan",
+      "label": "Vegan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 318.40625,
+        "height": 48,
+        "left": 150.125,
+        "right": 213.1875,
+        "top": 270.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 63.0625,
+        "width": 63.0625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 269.3203125,
+        "y": 294.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cruelty-free",
+      "label": "Cruelty-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 318.40625,
+        "height": 48,
+        "left": 217.1875,
+        "right": 321.453125,
+        "top": 270.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 104.265625,
+        "width": 104.265625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 95.8359375,
+        "y": 518.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Non-comedogenic",
+      "label": "Non-comedogenic",
+      "partialClip": false,
+      "rect": {
+        "bottom": 542.40625,
+        "height": 48,
+        "left": 24,
+        "right": 167.671875,
+        "top": 494.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 143.671875,
+        "width": 143.671875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 221.71875,
+        "y": 518.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sustainable",
+      "label": "Sustainable",
+      "partialClip": false,
+      "rect": {
+        "bottom": 542.40625,
+        "height": 48,
+        "left": 171.671875,
+        "right": 271.765625,
+        "top": 494.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 100.09375,
+        "width": 100.09375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 68.5,
+        "y": 671.609375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Drugstore",
+      "label": "Drugstore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 695.609375,
+        "height": 48,
+        "left": 24,
+        "right": 113,
+        "top": 647.609375,
+        "visibleHeight": 48,
+        "visibleWidth": 89,
+        "width": 89
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 161.9765625,
+        "y": 671.609375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Mid-range",
+      "label": "Mid-range",
+      "partialClip": false,
+      "rect": {
+        "bottom": 695.609375,
+        "height": 48,
+        "left": 117,
+        "right": 206.953125,
+        "top": 647.609375,
+        "visibleHeight": 48,
+        "visibleWidth": 89.953125,
+        "width": 89.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 251.4609375,
+        "y": 671.609375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Premium",
+      "label": "Premium",
+      "partialClip": false,
+      "rect": {
+        "bottom": 695.609375,
+        "height": 48,
+        "left": 210.953125,
+        "right": 291.96875,
+        "top": 647.609375,
+        "visibleHeight": 48,
+        "visibleWidth": 81.015625,
+        "width": 81.015625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 48,
+        "y": 788.8125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Gel",
+      "label": "Gel",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812.8125,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 764.8125,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 109.5546875,
+        "y": 788.8125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cream",
+      "label": "Cream",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812.8125,
+        "height": 48,
+        "left": 76,
+        "right": 143.109375,
+        "top": 764.8125,
+        "visibleHeight": 48,
+        "visibleWidth": 67.109375,
+        "width": 67.109375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 174.609375,
+        "y": 788.8125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fluid",
+      "label": "Fluid",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812.8125,
+        "height": 48,
+        "left": 147.109375,
+        "right": 202.109375,
+        "top": 764.8125,
+        "visibleHeight": 48,
+        "visibleWidth": 55,
+        "width": 55
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 233.9765625,
+        "y": 788.8125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Balm",
+      "label": "Balm",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812.8125,
+        "height": 48,
+        "left": 206.109375,
+        "right": 261.84375,
+        "top": 764.8125,
+        "visibleHeight": 48,
+        "visibleWidth": 55.734375,
+        "width": 55.734375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 289.84375,
+        "y": 788.8125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Oil",
+      "label": "Oil",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812.8125,
+        "height": 48,
+        "left": 265.84375,
+        "right": 313.84375,
+        "top": 764.8125,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8241/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "viewport": {
+    "width": 430,
+    "height": 932
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 22,
+  "textScale": 1.2,
+  "url": "http://localhost:8241/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8240/cycle/disruption",
+  "textOverflows": [],
+  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "viewport": {
+    "width": 320,
+    "height": 480
+  },
+  "route": "/cycle/disruption",
+  "scaledCount": 3,
+  "textScale": 1.2,
+  "url": "http://localhost:8240/cycle/disruption",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

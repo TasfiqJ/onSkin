@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 55.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 9,
+        "right": 102,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 148.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 102,
+        "right": 195,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 241.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 195,
+        "right": 288,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 334.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 288,
+        "right": 381,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 93,
+        "width": 93
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8242/today?routine=PM",
+  "textOverflows": [],
+  "textStart": "THURSDAY, JULY 9 Good morning. Morning routine 0 of 0 Today Prog. Shelf You",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/today?routine=PM",
+  "scaledCount": 8,
+  "textScale": 1.2,
+  "url": "http://localhost:8242/today?routine=PM",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

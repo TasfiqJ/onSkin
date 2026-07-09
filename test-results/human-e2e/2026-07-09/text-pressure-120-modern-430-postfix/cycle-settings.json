@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8241/cycle/settings",
+  "textOverflows": [],
+  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "viewport": {
+    "width": 430,
+    "height": 932
+  },
+  "route": "/cycle/settings",
+  "scaledCount": 3,
+  "textScale": 1.2,
+  "url": "http://localhost:8241/cycle/settings",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

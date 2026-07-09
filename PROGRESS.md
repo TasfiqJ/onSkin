@@ -6,6 +6,25 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a supported-phone 120% text-pressure follow-up across the launch
+  support floor and modern phone sizes. The rerun found `/shelf/no-match`
+  manual recovery clipping, `/settings/notifications` promotional switch
+  peeking, `/settings/privacy` direct-entry policy/data rows entering the
+  floating-tab zone, `/shelf/manual` optional Ingredients blocked by the sticky
+  Continue footer, `/community` Sunscreen notes peeking on a modern phone, and
+  `/recommendations/preferences` Texture chips peeking at 390 x 844. Shelf,
+  Settings, Community, and Recommendation Preferences now defer those
+  lower-priority rows below the first viewport or keep them complete and
+  hit-testable. Focused route contracts pass, and the 49-route 120% sweeps at
+  320 x 568, 320 x 480, 390 x 844, and 430 x 932 report zero failed routes with
+  evidence in
+  `test-results/human-e2e/2026-07-09/text-pressure-120-route-audit-current/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-120-support-floor-480-postfix/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-120-modern-390-postfix/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-120-modern-430-postfix/`,
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-120-supported-phone-clearance.md`.
+
 - Accepted and enforced the V1 device support floor so release QA is no longer
   open-ended across browser-only micro-short heights. `docs/DEVICE_SUPPORT_POLICY.md`
   now sets iOS 17.0+ and Android 10 / API 29+ as the launch install floor,
