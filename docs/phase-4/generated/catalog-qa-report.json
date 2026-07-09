@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T01:20:44.873Z",
+  "generatedAt": "2026-07-09T12:12:59.443Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "d3ababd55c6c524a10afa6e2044cf9de0914acea",
+  "gitSha": "9b4aada1b29ab2cd921d150ea85f157eae8c3caa",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -21,14 +21,14 @@
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 6579,
-      "sha256": "cfb7d04ab9b1a0a940c186bd5b6921edca30e8447f5345aab7ccaefb4b8b0202"
+      "bytes": 6351,
+      "sha256": "4c920afb0101c845dc3f0f0675cff41f8f3950c6b582756dea0a70f632e9fc6b"
     },
     {
       "path": "scripts/phase4/beta-coverage-report.mjs",
       "exists": true,
-      "bytes": 21304,
-      "sha256": "17db7bc6e862bc6fb065b5e740b12da8f3634adfaefb80b8c05393e39690a3de"
+      "bytes": 21078,
+      "sha256": "095ea24b9acb7cb7a25b3e8f2a59ff1929a6c834af87a55e5b182e6c272a266c"
     },
     {
       "path": "scripts/phase4/beta-coverage-report-smoke.mjs",
@@ -75,8 +75,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 9767,
-      "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
+      "bytes": 13341,
+      "sha256": "6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",

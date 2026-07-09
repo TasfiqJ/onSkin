@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T11:48:28.909Z",
+  "generatedAt": "2026-07-09T12:13:01.685Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "c5b01317a3504a24f3e880536816672184dd7c26",
+  "gitSha": "9b4aada1b29ab2cd921d150ea85f157eae8c3caa",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -176,8 +176,8 @@
     {
       "path": "scripts/phase7/build-core-loop-qa-packet.mjs",
       "exists": true,
-      "bytes": 10271,
-      "sha256": "51d7ab3a8ab4f8f7af0405684562774cc2020461c73c507cd5b6516ccd49c206"
+      "bytes": 10052,
+      "sha256": "1dae83cb3b21bda64a75e3a90f64b13253072d256b521f885516bbb02b906407"
     },
     {
       "path": "scripts/phase7/check-core-loop.mjs",
@@ -200,8 +200,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 9767,
-      "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
+      "bytes": 13341,
+      "sha256": "6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -218,44 +218,44 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 245419,
-      "sha256": "2457086fdd6ea007a7871ee4a398a2c851166cf5195def1e7673695dd12802ee"
+      "bytes": 246105,
+      "sha256": "aafd07dc60cc121f74806986e5e198d06b4698cca9c78f736331fa6f68c6bcf0"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 5342,
-      "sha256": "a115e002bbd55d758a2be4035d6a2bdae30dc1547077c7867a4fb2d40119331b"
+      "sha256": "f9a6ed9af19f219ecc47c3c3f7620c2ba0beb6726871f27f8ed6a25fd0b20b9b"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 2872,
-      "sha256": "298e2aa9754d504a70f8c61ec20674a304beca24485020f0ff5ff032979df1b3"
+      "sha256": "5b56638c0aca77805b4414117c5acaa7fd7d11471661481685402e56706ac61b"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 11263,
-      "sha256": "e7ed0b0e4a5dcb4db7e3b26c3911d6ada54581c5e0619d4c734793b62b480ef3"
+      "bytes": 11264,
+      "sha256": "37b3e62d53fb138ae17b6784e50e1e28253d8cc03459273aada9ef7b36421e6c"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 9912,
-      "sha256": "aec17dd5c6d85083f9285d479f540bc3b1de73ee11280b554299919331eff12f"
+      "sha256": "48a54fa970d956854d8bfdeb7db456bbaf3c37b958861570d9a0887454987051"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 10519,
-      "sha256": "e50ed7c22bea346346f51175b955b2be92022daef50be65f7c9c4e7748e7d953"
+      "bytes": 10520,
+      "sha256": "477643a7752d0027a63891e93e2107b74b91159f12ae63ee47ff34c4d0dfcc80"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7858,
-      "sha256": "4fc1efd2f125e4d00e9f410da5581840758b63e2f4a4f86af3a9034827a7ccf7"
+      "bytes": 7859,
+      "sha256": "e50a69f34598f38c58b2ebc04ed8ca6fc52222bd087fa9d26494023244f2cd67"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

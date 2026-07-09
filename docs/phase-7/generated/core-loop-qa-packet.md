@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T11:48:28.909Z
-Git SHA: c5b01317a3504a24f3e880536816672184dd7c26
+Generated at: 2026-07-09T12:13:01.685Z
+Git SHA: 9b4aada1b29ab2cd921d150ea85f157eae8c3caa
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -64,20 +64,20 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 5773 | 2d3372b7a4d726109665bbe067ac38bf4866f5a4daf3a539c52a322e860dd240 |
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 24700 | 61d0ca03d82d58b972df8bb0f6dd4a5a480f7db6eef75be8f45bbf9abc53038a |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 8380 | 236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 10271 | 51d7ab3a8ab4f8f7af0405684562774cc2020461c73c507cd5b6516ccd49c206 |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 10052 | 1dae83cb3b21bda64a75e3a90f64b13253072d256b521f885516bbb02b906407 |
 | scripts/phase7/check-core-loop.mjs | present | 14753 | b42d636752f1acc1798126fab683bed1c34767a8501ab4f12995f53c7a7c1447 |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 10280 | da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb |
 | scripts/e2e/human-e2e-manifest.mjs | present | 15805 | 22f7569e85afbcf56ce915d6bee53ebb24ecd6fe53a041da58546760d0a00740 |
-| scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
+| scripts/phase9/lib.mjs | present | 13341 | 6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9912 | 30ba52fe498f13d31108da44fcaf8f68cd6159369877f0c470c1e54772848a44 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 245419 | 2457086fdd6ea007a7871ee4a398a2c851166cf5195def1e7673695dd12802ee |
-| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | a115e002bbd55d758a2be4035d6a2bdae30dc1547077c7867a4fb2d40119331b |
-| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | 298e2aa9754d504a70f8c61ec20674a304beca24485020f0ff5ff032979df1b3 |
-| docs/phase-5/generated/device-qa-packet.json | present | 11263 | e7ed0b0e4a5dcb4db7e3b26c3911d6ada54581c5e0619d4c734793b62b480ef3 |
-| docs/phase-5/generated/device-qa-packet.md | present | 9912 | aec17dd5c6d85083f9285d479f540bc3b1de73ee11280b554299919331eff12f |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10519 | e50ed7c22bea346346f51175b955b2be92022daef50be65f7c9c4e7748e7d953 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7858 | 4fc1efd2f125e4d00e9f410da5581840758b63e2f4a4f86af3a9034827a7ccf7 |
+| docs/USER_FLOW_TREE.md | present | 246105 | aafd07dc60cc121f74806986e5e198d06b4698cca9c78f736331fa6f68c6bcf0 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 5342 | f9a6ed9af19f219ecc47c3c3f7620c2ba0beb6726871f27f8ed6a25fd0b20b9b |
+| docs/e2e/generated/human-e2e-manifest.md | present | 2872 | 5b56638c0aca77805b4414117c5acaa7fd7d11471661481685402e56706ac61b |
+| docs/phase-5/generated/device-qa-packet.json | present | 11264 | 37b3e62d53fb138ae17b6784e50e1e28253d8cc03459273aada9ef7b36421e6c |
+| docs/phase-5/generated/device-qa-packet.md | present | 9912 | 48a54fa970d956854d8bfdeb7db456bbaf3c37b958861570d9a0887454987051 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10520 | 477643a7752d0027a63891e93e2107b74b91159f12ae63ee47ff34c4d0dfcc80 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7859 | e50a69f34598f38c58b2ebc04ed8ca6fc52222bd087fa9d26494023244f2cd67 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4420 | df2afc7386b3536d92f622afc7a9d8ed6ff5ed87165e6c9665fa1165d9313bec |

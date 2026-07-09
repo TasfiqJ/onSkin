@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-09T09:20:33.938Z
+Generated: 2026-07-09T12:13:03.695Z
 Status: blocked
-Git SHA: 75eb67c50ef326654439c63503116e8a418b11da
+Git SHA: 9b4aada1b29ab2cd921d150ea85f157eae8c3caa
 Git status: clean
 
 ## Release Identity
@@ -109,12 +109,12 @@ Git status: clean
 - `supabase/functions/catalog-report/index.ts`: `5a063bb6db5e1a5194e17b498b61ed0e9abbaef1d62c7cb80f09be9da429c621`
 - `supabase/functions/revenuecat-webhook/index.ts`: `210324cc1b57e321885d2fb523cf62a0b2adcfca3cee9fc2df9164ffde9147c4`
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
-- `scripts/phase9/lib.mjs`: `d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752`
+- `scripts/phase9/lib.mjs`: `6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace`
 - `scripts/phase9/release-contact-smoke.mjs`: `e4695f91978bbebbe2ed447b543b3d163b6b81c8313c4aecf490a72acf67e58a`
-- `scripts/phase9/evidence-normalization-smoke.mjs`: `e1b2895dabe89a004bd01844d6c705fbafe303c7ddab9cd28eee5b94a7c71f24`
+- `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase9/release-smoke.mjs`: `cdc2b8459bf9e13d709fce8d68d0c5e898ab2b3819032b4440af981b00828616`
 - `scripts/phase9/rls-adversarial.mjs`: `24ede97ccbd865c99911ebdcb48c389c151b337565bc68e6788456bbb6c366bc`
-- `scripts/phase9/build-release-qa-packet.mjs`: `f834bb8b850e1258a24fe3b03d50d85f631f7e7772f2b0032135134c14ab8f89`
+- `scripts/phase9/build-release-qa-packet.mjs`: `df06c4284a2a199258e94b765de1ade1138eed86e6ee9363dff74b47fd0ff75a`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `98c836d4dd6494c3ac6bf24719e97afd7f7cb4f8d542162deebbe1e15beed7ef`
 - `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
 - `scripts/phase9/live-data-rights.mjs`: `987f92e64ae380e5f9e6e641117ef7a85e89a40749b278ecede19fa2f5417b65`

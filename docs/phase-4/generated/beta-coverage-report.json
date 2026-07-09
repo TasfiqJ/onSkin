@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T09:01:44.467Z",
+  "generatedAt": "2026-07-09T12:12:59.996Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "1c59fa8046e3bfd2489abf23fd732093908ca376",
+  "gitSha": "9b4aada1b29ab2cd921d150ea85f157eae8c3caa",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -23,8 +23,8 @@
     {
       "path": "scripts/phase4/beta-coverage-report.mjs",
       "exists": true,
-      "bytes": 21304,
-      "sha256": "17db7bc6e862bc6fb065b5e740b12da8f3634adfaefb80b8c05393e39690a3de"
+      "bytes": 21078,
+      "sha256": "095ea24b9acb7cb7a25b3e8f2a59ff1929a6c834af87a55e5b182e6c272a266c"
     },
     {
       "path": "scripts/phase4/beta-coverage-report-smoke.mjs",
@@ -35,8 +35,8 @@
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 6579,
-      "sha256": "cfb7d04ab9b1a0a940c186bd5b6921edca30e8447f5345aab7ccaefb4b8b0202"
+      "bytes": 6351,
+      "sha256": "4c920afb0101c845dc3f0f0675cff41f8f3950c6b582756dea0a70f632e9fc6b"
     },
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
@@ -47,8 +47,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 9767,
-      "sha256": "d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752"
+      "bytes": 13341,
+      "sha256": "6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -77,14 +77,14 @@
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
-      "bytes": 4303,
-      "sha256": "27892cfff31434a3860e81c4a101a7c7b64979a6a5f1dbf8804c9672ee3faee5"
+      "bytes": 4304,
+      "sha256": "d745a46d343bc4d3577e134ed017f2356d737b8c716ff86f44dd073e8eeb96a9"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
-      "bytes": 2902,
-      "sha256": "c38cd3f169c7e244063d89c3fda351c09eab3ec7f996abc2f6b4693cab5264c1"
+      "bytes": 2903,
+      "sha256": "353a90c945596290bee65acf8383f4eb168adde6bf1ad895ed205da899c6f311"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

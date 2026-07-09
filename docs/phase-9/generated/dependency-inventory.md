@@ -1,12 +1,12 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-09T09:26:12.168Z
+Generated: 2026-07-09T12:13:02.783Z
 Package count: 1073
 Lockfile version: 3
 
 ## Vulnerabilities
 
-`{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0}`
+- npm audit not run in this invocation.
 
 ## Audit Findings
 
@@ -26,6 +26,7 @@ Lockfile version: 3
 
 ## Warnings
 
+- npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
 - Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.
 
 ## Packages
