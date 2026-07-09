@@ -101,6 +101,13 @@ const validInput = {
   },
 };
 
+const requiredSourceHashes = [
+  'supabase/functions/catalog-report/index.ts',
+  'supabase/functions/catalog-report/privacy.ts',
+  'supabase/functions/catalog-report/privacy.test.ts',
+  'supabase/functions/deno.lock',
+];
+
 function runReport({ input = validInput, strict = false, missingInput = false } = {}) {
   const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase4-beta-coverage-'));
   const inputPath = resolve(outDir, 'beta-coverage-input.json');
@@ -135,12 +142,16 @@ const cases = [
     name: 'beta coverage report accepts real-shaped beta evidence',
     result: runReport(),
     expect(result) {
+      const sourceHashes = Object.fromEntries(
+        result.packet.sourceHashes.map((sourceHash) => [sourceHash.path, sourceHash]),
+      );
       return (
         result.status === 0 &&
         result.packet.evidenceBlockers.length === 0 &&
         result.packet.metrics.completedUsers === 60 &&
         result.packet.metrics.usersAddedThreePlusRate === 1 &&
         result.packet.evidence.signedOffBy === 'Avery Chen' &&
+        requiredSourceHashes.every((path) => sourceHashes[path]?.exists === true) &&
         result.markdown.includes('Completed beta users')
       );
     },

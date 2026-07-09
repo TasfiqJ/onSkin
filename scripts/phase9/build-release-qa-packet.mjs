@@ -63,6 +63,8 @@ const sourceFiles = [
   'supabase/functions/catalog-search/index.ts',
   'supabase/functions/catalog-lookup/index.ts',
   'supabase/functions/catalog-report/index.ts',
+  'supabase/functions/catalog-report/privacy.ts',
+  'supabase/functions/catalog-report/privacy.test.ts',
   'supabase/functions/revenuecat-webhook/index.ts',
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'scripts/phase9/lib.mjs',

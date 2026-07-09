@@ -154,10 +154,11 @@ block(errors, /active_subscription_exists/.test(subscriptionGrants), 'subscripti
 block(errors, /reverse_trial_already_used/.test(subscriptionGrants), 'subscription-grants must return a stable already-used reverse-trial conflict code.');
 
 const catalogReport = read('supabase/functions/catalog-report/index.ts');
+const catalogReportPrivacy = read('supabase/functions/catalog-report/privacy.ts');
 block(errors, /allowedTopLevelKeys/.test(catalogReport), 'catalog-report must reject unknown top-level request fields.');
 block(errors, /allowedPayloadKeys/.test(catalogReport), 'catalog-report must allowlist proposed payload keys.');
 block(errors, /allowedContextKeys/.test(catalogReport), 'catalog-report must allowlist client context keys.');
-block(errors, /sensitiveText/.test(catalogReport), 'catalog-report must filter sensitive support payload text.');
+block(errors, /sensitiveText/.test(catalogReportPrivacy), 'catalog-report must filter sensitive support payload text.');
 block(errors, /unexpected_field/.test(catalogReport), 'catalog-report must return a stable code for unexpected request fields.');
 block(errors, /invalid_proposed_payload/.test(catalogReport), 'catalog-report must reject invalid proposed payload objects.');
 block(errors, /invalid_client_context/.test(catalogReport), 'catalog-report must reject invalid client context objects.');
@@ -165,8 +166,9 @@ block(errors, /proposed_payload:\s*proposedPayload\.value/.test(catalogReport), 
 block(errors, /client_context:\s*clientContext\.value/.test(catalogReport), 'catalog-report must write sanitized client context only.');
 block(errors, !/proposed_payload:\s*body\.proposedPayload/.test(catalogReport), 'catalog-report must not persist raw proposedPayload.');
 block(errors, !/client_context:\s*body\.clientContext/.test(catalogReport), 'catalog-report must not persist raw clientContext.');
-block(errors, /safeUrl/.test(catalogReport), 'catalog-report must normalize URLs and drop query strings before support storage.');
-block(errors, /Number\.isFinite/.test(catalogReport), 'catalog-report must reject non-finite numeric payload values.');
+block(errors, /safeUrl/.test(catalogReportPrivacy), 'catalog-report must normalize URLs and drop query strings before support storage.');
+block(errors, /Number\.isFinite/.test(catalogReportPrivacy), 'catalog-report must reject non-finite numeric payload values.');
+block(errors, Boolean(packageJson.scripts?.['phase4:catalog-report-privacy-smoke']), 'package.json is missing phase4:catalog-report-privacy-smoke.');
 
 const catalogLookup = read('supabase/functions/catalog-lookup/index.ts');
 block(errors, !/req\.method === 'GET'/.test(catalogLookup), 'catalog-lookup must not support GET because lookups write caller telemetry and can call external catalog APIs.');

@@ -79,6 +79,7 @@ function runReport({ manifest = validManifest, dirtyMarker = false } = {}) {
 const requiredSourceHashes = [
   'package.json',
   'scripts/phase4/catalog-qa-report.mjs',
+  'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
   'scripts/phase4/beta-coverage-report-smoke.mjs',
   'scripts/phase4/import-obf-snapshot.mjs',
@@ -87,6 +88,10 @@ const requiredSourceHashes = [
   'scripts/phase4/check-source-env.mjs',
   'scripts/phase4/check-source-env-smoke.mjs',
   'scripts/phase4/catalog-qa-report-smoke.mjs',
+  'supabase/functions/catalog-report/index.ts',
+  'supabase/functions/catalog-report/privacy.ts',
+  'supabase/functions/catalog-report/privacy.test.ts',
+  'supabase/functions/deno.lock',
   'scripts/phase9/lib.mjs',
   'docs/FOR_TAS_TO_DO.md',
   'docs/phase-4/beta-coverage-report.md',
