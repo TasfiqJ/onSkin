@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T13:46:56.613Z
-Git SHA: 71dd13e125cf5832e72f246baaf8f90ad97b447c
+Generated: 2026-07-09T13:50:32.912Z
+Git SHA: d2275cf199e9a61c059cc86fca7603f2f7662f5b
 Evidence date: 2026-07-09
 Status: pass
 
@@ -12,16 +12,17 @@ dependency to the repo.
 
 ## Gates
 
-| Gate                                                     | Class           | Status  | Detail                                                  | Files | Folder                                                                               |
-| -------------------------------------------------------- | --------------- | ------- | ------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
-| 320 x 480 supported-floor 200% text-pressure route sweep | launch-blocking | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12     |
-| 390 x 844 supported-phone 200% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7             |
-| 430 x 932 supported-phone 200% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5             |
-| 390 x 844 supported-phone 170% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6             |
-| 430 x 932 supported-phone 170% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3             |
-| 320 x 430 resilience route clearance                     | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep |
-| 320 x 390 split-short stress clearance                   | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix   |
-| 320 x 430 first-session activation stress pass           | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current               |
+| Gate                                                            | Class           | Status  | Detail                                                  | Files | Folder                                                                               |
+| --------------------------------------------------------------- | --------------- | ------- | ------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
+| 320 x 480 supported-floor 200% text-pressure route sweep        | launch-blocking | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12     |
+| 375 x 812 supported iPhone-class 200% text-pressure route sweep | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix           |
+| 390 x 844 supported-phone 200% text-pressure route sweep        | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7             |
+| 430 x 932 supported-phone 200% text-pressure route sweep        | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5             |
+| 390 x 844 supported-phone 170% text-pressure route sweep        | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6             |
+| 430 x 932 supported-phone 170% text-pressure route sweep        | supported-phone | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3             |
+| 320 x 430 resilience route clearance                            | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep |
+| 320 x 390 split-short stress clearance                          | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix   |
+| 320 x 430 first-session activation stress pass                  | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current               |
 
 ## Warnings
 

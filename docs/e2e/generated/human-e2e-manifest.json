@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T13:46:56.613Z",
-  "gitSha": "71dd13e125cf5832e72f246baaf8f90ad97b447c",
+  "generatedAt": "2026-07-09T13:50:32.912Z",
+  "gitSha": "d2275cf199e9a61c059cc86fca7603f2f7662f5b",
   "evidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -23,6 +23,25 @@
       "fileCount": 101,
       "bytes": 2773449,
       "evidenceSha256": "b85eee08a9931d9af8b11edc1cc116ea8a2d0b2249b4af500c81244e8544ab15"
+    },
+    {
+      "id": "iphone-375-200-text-pressure",
+      "title": "375 x 812 supported iPhone-class 200% text-pressure route sweep",
+      "kind": "summary-status",
+      "required": false,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix",
+      "evidence": "summary.json",
+      "expected": "49 Expo web direct-entry routes have zero iPhone-class 200% text-pressure failures.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 101,
+      "bytes": 4238917,
+      "evidenceSha256": "eed51aeee29d23d41d70c43f2102fdfd86b52b0a19e30e30e2db7e3876ca4241"
     },
     {
       "id": "modern-390-200-text-pressure",
