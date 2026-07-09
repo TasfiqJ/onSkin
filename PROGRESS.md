@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Tightened the Today empty-routine support-floor card so 320 x 480 no longer
+  spends first-viewport height on lower helper copy. The compact card keeps
+  `Build a routine from your shelf.`, renders `Add products` as a complete
+  238 x 56 px button with 196 px clearance above the floating tab bar, and
+  tapping it reaches `/shelf/manual`. The focused Codex in-app browser pass
+  reports zero clipped controls, zero sub-44 visible controls, zero blocked
+  hit-tests, zero horizontal overflow, and zero unexpected current-run browser
+  logs in
+  `test-results/human-e2e/2026-07-09/today-empty-support-floor-current/`.
+
 - Tightened the Settings Privacy support-floor withdraw spacer after a 320 x
   480 Codex in-app browser check found the initial support-floor margin still
   left `Withdraw health-data consent` partly under the floating tab bar. The

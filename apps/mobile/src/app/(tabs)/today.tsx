@@ -90,10 +90,26 @@ function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   return 'Active';
 }
 
-function EmptyRoutineCard({ compact = false, dark }: { compact?: boolean; dark: boolean }) {
+function EmptyRoutineCard({
+  compact = false,
+  dark,
+  short = false,
+}: {
+  compact?: boolean;
+  dark: boolean;
+  short?: boolean;
+}) {
+  const tight = compact && short;
+
   return (
     <View
-      className={cn(compact ? 'mt-3 rounded-card px-5 py-4' : 'mt-6 rounded-card p-6')}
+      className={cn(
+        tight
+          ? 'mt-2 rounded-card px-4 py-3'
+          : compact
+            ? 'mt-3 rounded-card px-5 py-4'
+            : 'mt-6 rounded-card p-6',
+      )}
       style={{
         backgroundColor: dark ? colors.nightSurface : colors.paperRaised,
         borderWidth: dark ? 0 : 1,
@@ -109,25 +125,34 @@ function EmptyRoutineCard({ compact = false, dark }: { compact?: boolean; dark: 
       </Text>
       <Text
         className={
-          compact ? 'mt-2 font-sans-semibold text-[18px]' : 'mt-3 font-sans-semibold text-[21px]'
+          tight
+            ? 'mt-1.5 font-sans-semibold text-[16px]'
+            : compact
+              ? 'mt-2 font-sans-semibold text-[18px]'
+              : 'mt-3 font-sans-semibold text-[21px]'
         }
-        style={{ color: dark ? colors.cream : colors.ink, lineHeight: compact ? 22 : 25 }}
+        style={{
+          color: dark ? colors.cream : colors.ink,
+          lineHeight: tight ? 20 : compact ? 22 : 25,
+        }}
       >
         Build a routine from your shelf.
       </Text>
-      <Text
-        className={compact ? 'mt-1.5 text-[13px]' : 'mt-2.5 text-[14px]'}
-        style={{
-          color: dark ? 'rgba(244,239,231,0.58)' : colors.muted,
-          lineHeight: compact ? 17 : 20,
-        }}
-      >
-        Add the products you use and Today will become your AM/PM checklist.
-      </Text>
+      {tight ? null : (
+        <Text
+          className={compact ? 'mt-1.5 text-[13px]' : 'mt-2.5 text-[14px]'}
+          style={{
+            color: dark ? 'rgba(244,239,231,0.58)' : colors.muted,
+            lineHeight: compact ? 17 : 20,
+          }}
+        >
+          Add the products you use and Today will become your AM/PM checklist.
+        </Text>
+      )}
       <Button
         label="Add products"
         variant={dark ? 'inverse' : 'primary'}
-        className={compact ? 'mt-3' : 'mt-5'}
+        className={tight ? 'mt-2 min-h-[52px] py-3' : compact ? 'mt-3' : 'mt-5'}
         onPress={() => router.push('/shelf/manual')}
       />
     </View>
@@ -334,6 +359,7 @@ export default function TodayScreen() {
   const compactPhone = height < 700;
   const compactCycleStrip = compactPhone || width < 360;
   const compactRecommendationPrompt = height < 860;
+  const shortEmptyRoutine = compactPhone && height < 600;
 
   // ---- AM ----
   if (!dark) {
@@ -372,7 +398,7 @@ export default function TodayScreen() {
           </Text>
 
           {hasExamplePlan ? (
-            <EmptyRoutineCard compact={compactPhone} dark={false} />
+            <EmptyRoutineCard compact={compactPhone} dark={false} short={shortEmptyRoutine} />
           ) : (
             <View
               className={
@@ -632,7 +658,7 @@ export default function TodayScreen() {
 
         {/* Evening routine */}
         {hasExamplePlan ? (
-          <EmptyRoutineCard compact={compactPhone} dark />
+          <EmptyRoutineCard compact={compactPhone} dark short={shortEmptyRoutine} />
         ) : (
           <View className="mt-4 rounded-card p-5" style={{ backgroundColor: colors.nightSurface }}>
             <View className="mb-2 flex-row items-center justify-between">

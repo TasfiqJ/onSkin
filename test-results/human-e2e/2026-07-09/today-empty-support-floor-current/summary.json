@@ -1,0 +1,45 @@
+{
+  "date": "2026-07-09",
+  "task": "Today empty routine support-floor compact layout",
+  "appSurface": "Expo web in Codex in-app browser",
+  "startCommand": "npm --workspace apps/mobile run web -- --port 8255",
+  "route": "/today?routine=AM",
+  "viewport": {
+    "height": 481,
+    "width": 320
+  },
+  "firstViewport": {
+    "containsBuildRoutine": true,
+    "helperCopyHidden": true,
+    "addProductsVisible": true,
+    "addProducts": {
+      "blocked": false,
+      "clipped": false,
+      "label": "Add products",
+      "rect": {
+        "bottom": 211,
+        "height": 56,
+        "width": 238,
+        "x": 41,
+        "y": 155
+      },
+      "role": "button",
+      "sub44": false,
+      "visible": true
+    },
+    "addProductsClearanceFromTabBar": 196,
+    "clippedCount": 0,
+    "sub44Count": 0,
+    "blockedCount": 0,
+    "horizontalOverflow": 0
+  },
+  "interaction": {
+    "addProductsCount": 1,
+    "afterClickHref": "http://localhost:8255/shelf/manual",
+    "manualRouteReached": true,
+    "horizontalOverflow": 0
+  },
+  "unexpectedLogCount": 0,
+  "unexpectedLogs": [],
+  "verdict": "pass"
+}

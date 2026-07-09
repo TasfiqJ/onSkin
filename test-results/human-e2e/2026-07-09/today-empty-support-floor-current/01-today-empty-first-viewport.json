@@ -1,0 +1,31 @@
+{
+  "addProducts": {
+    "blocked": false,
+    "clipped": false,
+    "label": "Add products",
+    "rect": {
+      "bottom": 211,
+      "height": 56,
+      "width": 238,
+      "x": 41,
+      "y": 155
+    },
+    "role": "button",
+    "sub44": false,
+    "visible": true
+  },
+  "addProductsClearanceFromTabBar": 196,
+  "addProductsVisible": true,
+  "blockedCount": 0,
+  "clippedCount": 0,
+  "containsBuildRoutine": true,
+  "containsHelperCopy": false,
+  "horizontalOverflow": 0,
+  "href": "http://localhost:8255/today?routine=AM",
+  "sub44Count": 0,
+  "tabBarTop": 407,
+  "viewport": {
+    "height": 481,
+    "width": 320
+  }
+}

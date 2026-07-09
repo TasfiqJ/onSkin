@@ -31,17 +31,27 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPhone = height < 700');
     expect(source).toContain('const compactRecommendationPrompt = height < 860');
+    expect(source).toContain('const shortEmptyRoutine = compactPhone && height < 600;');
     expect(source).toContain('function EmptyRoutineCard');
+    expect(source).toContain('short = false');
+    expect(source).toContain('const tight = compact && short;');
     expect(source).toContain('No routine yet');
     expect(source).toContain('Build a routine from your shelf.');
     expect(source).toContain('label="Add products"');
     expect(source).toContain("router.push('/shelf/manual')");
-    expect(source).toContain("compact ? 'mt-3 rounded-card px-5 py-4' : 'mt-6 rounded-card p-6'");
-    expect(source).toContain("compact ? 'mt-2 font-sans-semibold text-[18px]'");
-    expect(source).toContain('lineHeight: compact ? 22 : 25');
+    expect(source).toContain("tight\n          ? 'mt-2 rounded-card px-4 py-3'");
+    expect(source).toContain("? 'mt-3 rounded-card px-5 py-4'");
+    expect(source).toContain(": 'mt-6 rounded-card p-6'");
+    expect(source).toContain("tight\n            ? 'mt-1.5 font-sans-semibold text-[16px]'");
+    expect(source).toContain("? 'mt-2 font-sans-semibold text-[18px]'");
+    expect(source).toContain('lineHeight: tight ? 20 : compact ? 22 : 25');
+    expect(source).toContain('{tight ? null : (');
     expect(source).toContain("className={compact ? 'mt-1.5 text-[13px]' : 'mt-2.5 text-[14px]'}");
     expect(source).toContain('lineHeight: compact ? 17 : 20');
-    expect(source).toContain("className={compact ? 'mt-3' : 'mt-5'}");
+    expect(source).toContain(
+      "className={tight ? 'mt-2 min-h-[52px] py-3' : compact ? 'mt-3' : 'mt-5'}",
+    );
+    expect(source.match(/short=\{shortEmptyRoutine\}/g)).toHaveLength(2);
     expect(source).toContain('const hasExamplePlan = planData?.isExample === true;');
     expect(source).toContain('const hasRealRoutine = Boolean(planData && !planData.isExample);');
     expect(source).toContain('const plan = hasRealRoutine ? planData?.plan : undefined;');
