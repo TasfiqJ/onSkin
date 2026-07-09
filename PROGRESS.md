@@ -22,9 +22,10 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Added a generated-packet status audit after smoke runs left Phase 5-8 packet
   outputs stamped with dirty-worktree warnings. The new
   `docs:generated-packet-status-audit:check` gate scans generated Phase 3-11
-  packet/report outputs for non-empty `gitStatus`, `Git status: DIRTY`, and
-  dirty-worktree warning text, so dirty generated evidence cannot be mistaken
-  for final launch proof.
+  packet/report outputs for non-empty `gitStatus`, `Git status: DIRTY`,
+  dirty-worktree warning text, and stale recorded SHA-256 source/file hashes,
+  so dirty or stale generated evidence cannot be mistaken for final launch
+  proof.
 
 - Cleared the harsher 320 x 430 / 170% short-phone text-pressure route audit.
   The sweep reproduced partial first-viewport controls in Skin Notes,

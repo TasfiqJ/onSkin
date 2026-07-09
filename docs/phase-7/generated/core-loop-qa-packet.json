@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T23:59:35.680Z",
+  "generatedAt": "2026-07-09T00:03:00.135Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "8aa2e4356c202649f978acd826c06156f29d7706",
-  "gitStatus": "",
+  "gitSha": "54506c8b1f65173165b3ca7d3b0f5073c8bbad11",
+  "gitStatus": "M BLOCKERS.md\n M LAUNCH_READINESS.md\n M PROGRESS.md",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -194,8 +194,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 12197,
-      "sha256": "b7c7ba7e3391e764ac5586f270adc6093910efbf2d977070ba130d562d7c93b7"
+      "bytes": 12250,
+      "sha256": "5e1e790ab41492349ae604582d6bcfe93b1c31190bb2df6065908cab59184b7b"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -225,37 +225,37 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "6ed8a58163e940987a9d99ff3e8cb5b81a397439c4698d95ec58e0f48679cf5e"
+      "sha256": "619223fe5cfece6e1fc7d9ca59f27f46e01cedd0c23afb06cfb97e513380d495"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "dded0eacafb1bb7924e07b950c8b2ed8073ed0a686c581ad2e2b835b276e87b8"
+      "sha256": "9df317fbf00f856a71bfeb630ba2ae474458ed9a7fe565f242db9c32cd53ef6e"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 11077,
-      "sha256": "62067d918fac966b74c4627f7459b646bce01ac98e30b415fe21366f1f89ddc5"
+      "bytes": 11354,
+      "sha256": "afaf48f1a3ac39425ce619709bef38b5d951d3bf09826cb002b58950fbd21993"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
-      "bytes": 9770,
-      "sha256": "1b90b3354117602d6891e0e5c6b7fb0e1c395994398345f408422f31d67c60a0"
+      "bytes": 9874,
+      "sha256": "c1b9fed54a8d8c25a4edabda0e7364640ed71986753c11fb30f006d84e9d2d64"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 10518,
-      "sha256": "f17375f24b98b1a6f2c4db0c97ad66d0d6f306676eadd0f2480d14088ba9813b"
+      "bytes": 10792,
+      "sha256": "a9afabd8b28aa159b62167ce08669bb0bcb12544997033cfeabc152af46aa19b"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7857,
-      "sha256": "74a87106b6dcb6aa63f5555191c0c06c6523539122a6b429b4fd3daaffcc2887"
+      "bytes": 7958,
+      "sha256": "173691da23d175d2f1d6c458068c2829d89dc008001a81b41752264a712e1a44"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -311,5 +311,7 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
+  ]
 }

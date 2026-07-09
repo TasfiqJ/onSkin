@@ -101,8 +101,10 @@ Fresh verification on 2026-07-08: `npm run typecheck`, `npm run lint`,
 `npm run docs:readiness-status-audit:check`,
 `npm run docs:generated-packet-status-audit:check`, and
 `npm run e2e:human:manifest:check` pass non-strict code and documentation
-freshness gates. The Phase 7 core-loop packet has been refreshed for the
-current Today and Progress route hashes; the Phase 8 growth/store packet has
+freshness gates. The generated-packet status audit now rejects dirty packet
+outputs and stale recorded source/file hashes. The Phase 7 core-loop packet has
+been refreshed for the current Today and Progress route hashes; the Phase 8
+growth/store packet has
 been refreshed for the current share-card and conflict-share route hashes; the
 Phase 5 native-device packet has been refreshed for the current progress
 capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the

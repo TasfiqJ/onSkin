@@ -1,8 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-08T23:59:35.680Z
-Git SHA: 8aa2e4356c202649f978acd826c06156f29d7706
-Git status: clean
+Generated at: 2026-07-09T00:03:00.135Z
+Git SHA: 54506c8b1f65173165b3ca7d3b0f5073c8bbad11
+Git status: DIRTY
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -67,17 +67,17 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase7/build-core-loop-qa-packet.mjs | present | 10271 | 51d7ab3a8ab4f8f7af0405684562774cc2020461c73c507cd5b6516ccd49c206 |
 | scripts/phase7/check-core-loop.mjs | present | 14514 | 2ab330cd53a968052cd3ec1e558c4563a9119c8ea2f5cd1f551e14047fbddd83 |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 10280 | da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb |
-| scripts/e2e/human-e2e-manifest.mjs | present | 12197 | b7c7ba7e3391e764ac5586f270adc6093910efbf2d977070ba130d562d7c93b7 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 12250 | 5e1e790ab41492349ae604582d6bcfe93b1c31190bb2df6065908cab59184b7b |
 | scripts/phase9/lib.mjs | present | 9767 | d2eeb648cca2cc61457e9796d6f1074081effb8847b2ec37544c3e7df3ce3752 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9642 | e323d2a1826f9dceef1aaa3b91a6d04aa6c662f159af876a1fb6d7b232101f29 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3387 | ca541bd7fdd87e0853e707f845a144a53c71d50c55adebfb17feccedd956c812 |
 | docs/USER_FLOW_TREE.md | present | 211779 | 615cc87c27dbcb621b82074e37c0f06cc1834e4fff47c65bed6565dd4ef92edf |
-| docs/e2e/generated/human-e2e-manifest.json | present | 3293 | 6ed8a58163e940987a9d99ff3e8cb5b81a397439c4698d95ec58e0f48679cf5e |
-| docs/e2e/generated/human-e2e-manifest.md | present | 1774 | dded0eacafb1bb7924e07b950c8b2ed8073ed0a686c581ad2e2b835b276e87b8 |
-| docs/phase-5/generated/device-qa-packet.json | present | 11077 | 62067d918fac966b74c4627f7459b646bce01ac98e30b415fe21366f1f89ddc5 |
-| docs/phase-5/generated/device-qa-packet.md | present | 9770 | 1b90b3354117602d6891e0e5c6b7fb0e1c395994398345f408422f31d67c60a0 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10518 | f17375f24b98b1a6f2c4db0c97ad66d0d6f306676eadd0f2480d14088ba9813b |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7857 | 74a87106b6dcb6aa63f5555191c0c06c6523539122a6b429b4fd3daaffcc2887 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 3293 | 619223fe5cfece6e1fc7d9ca59f27f46e01cedd0c23afb06cfb97e513380d495 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 1774 | 9df317fbf00f856a71bfeb630ba2ae474458ed9a7fe565f242db9c32cd53ef6e |
+| docs/phase-5/generated/device-qa-packet.json | present | 11354 | afaf48f1a3ac39425ce619709bef38b5d951d3bf09826cb002b58950fbd21993 |
+| docs/phase-5/generated/device-qa-packet.md | present | 9874 | c1b9fed54a8d8c25a4edabda0e7364640ed71986753c11fb30f006d84e9d2d64 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10792 | a9afabd8b28aa159b62167ce08669bb0bcb12544997033cfeabc152af46aa19b |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7958 | 173691da23d175d2f1d6c458068c2829d89dc008001a81b41752264a712e1a44 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4416 | 21255a254436a75a2765a262ad03a044a29f28ea2adae15a4b833d00871a373e |
@@ -110,4 +110,4 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Warnings
 
-- none
+- Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.
