@@ -436,6 +436,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Visible public copy on age gate, share landing, catalog search, and timing lock-screen preview uses `RoutineKind` and does not show legacy `OnSkin`; widgets route remains the existing native-widget deferred surface until device QA enables it.
   - Evidence: Phone-width screenshots, visible-text snapshots, local reverse-trial route snapshot, and browser console logs.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_APP_DISPLAY_NAME=RoutineKind` verifies `/onboarding/age`, `/s/sharecard01`, `/shelf/search`, `/settings/timing`, and free `/routine/widgets` before and after tapping `Explore first. 7 days of Pro`. The four public copy surfaces show `RoutineKind`, all six captured states show no visible `OnSkin`, the no-card Pro week reaches the widgets deferred surface (`Widgets are not in this beta` / `Back to Today`), visible controls are 48 px+, horizontal overflow is zero, and current-origin browser warn/error logs are empty. Evidence is in `test-results/human-e2e/2026-07-08/public-copy-smoke-current/`; final trademark clearance, store listings, native identifiers, final domain, and App/Universal Links remain external blockers.
+- Branch: public share landing attribution
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/s/[shareId]` with safe campaign attribution parameters, then open an invalid share id.
+  - Expected result: The public landing page renders without exposing private shelf, skin-profile, product, token, signed-url, or JWT values; invalid share IDs recover to the safe missing-share state; analytics attribution remains sanitized by source-contract and payload tests.
+  - Evidence: Phone-width screenshots, visible-text snapshot, browser console logs, route URL snapshot, and focused analytics/attribution test output.
 - Branch: Phase 8 public-site identity smoke
   - Priority: Critical
   - Automate later: Yes
