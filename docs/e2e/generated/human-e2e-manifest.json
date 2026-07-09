@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T22:08:12.959Z",
-  "gitSha": "3f557e94bc74c370228b90347f983967b66de5d8",
+  "generatedAt": "2026-07-09T22:19:08.905Z",
+  "gitSha": "935e6141ff0c1919b57a3207b1282f0a6d86990f",
   "evidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -394,15 +394,15 @@
       "folder": "test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun",
       "evidence": "failures.json",
       "expected": "49 Expo web direct-entry routes have zero legacy 320-wide geometry/log failures.",
-      "status": "skipped",
-      "detail": "Optional resilience evidence not present for this date.",
-      "failureCount": null,
+      "status": "pass",
+      "detail": "0 failures recorded.",
+      "failureCount": 0,
       "verdict": null,
-      "folderExists": false,
-      "evidenceExists": false,
-      "fileCount": 0,
-      "bytes": 0,
-      "evidenceSha256": null
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 101,
+      "bytes": 2646807,
+      "evidenceSha256": "b147239d32c99249193939c498f7468748b51bd2a85e0f396c504d4cb8f6edbc"
     },
     {
       "id": "short-phone-430-final-clearance",
