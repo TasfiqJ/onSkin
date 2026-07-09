@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T12:13:01.685Z
-Git SHA: 9b4aada1b29ab2cd921d150ea85f157eae8c3caa
+Generated at: 2026-07-09T12:21:59.530Z
+Git SHA: e1b32609831a27eed4d97ca456818e622680e121
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -65,13 +65,13 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 24700 | 61d0ca03d82d58b972df8bb0f6dd4a5a480f7db6eef75be8f45bbf9abc53038a |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 8380 | 236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293 |
 | scripts/phase7/build-core-loop-qa-packet.mjs | present | 10052 | 1dae83cb3b21bda64a75e3a90f64b13253072d256b521f885516bbb02b906407 |
-| scripts/phase7/check-core-loop.mjs | present | 14753 | b42d636752f1acc1798126fab683bed1c34767a8501ab4f12995f53c7a7c1447 |
+| scripts/phase7/check-core-loop.mjs | present | 15007 | a200e57117ece04c7782a06b456711eacfc1311010a9c0b2c5eeddbd143a432d |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 10280 | da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb |
 | scripts/e2e/human-e2e-manifest.mjs | present | 15805 | 22f7569e85afbcf56ce915d6bee53ebb24ecd6fe53a041da58546760d0a00740 |
 | scripts/phase9/lib.mjs | present | 13341 | 6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 9912 | 30ba52fe498f13d31108da44fcaf8f68cd6159369877f0c470c1e54772848a44 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 246105 | aafd07dc60cc121f74806986e5e198d06b4698cca9c78f736331fa6f68c6bcf0 |
+| docs/USER_FLOW_TREE.md | present | 247436 | ca357d5476b9ec39efae540245283c88a0b97f46d655e7c4e341933cf44726be |
 | docs/e2e/generated/human-e2e-manifest.json | present | 5342 | f9a6ed9af19f219ecc47c3c3f7620c2ba0beb6726871f27f8ed6a25fd0b20b9b |
 | docs/e2e/generated/human-e2e-manifest.md | present | 2872 | 5b56638c0aca77805b4414117c5acaa7fd7d11471661481685402e56706ac61b |
 | docs/phase-5/generated/device-qa-packet.json | present | 11264 | 37b3e62d53fb138ae17b6784e50e1e28253d8cc03459273aada9ef7b36421e6c |
@@ -80,7 +80,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/phase-6/generated/payments-qa-packet.md | present | 7859 | e50a69f34598f38c58b2ebc04ed8ca6fc52222bd087fa9d26494023244f2cd67 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
-| docs/phase-7/beta-evidence-dashboard.md | present | 4420 | df2afc7386b3536d92f622afc7a9d8ed6ff5ed87165e6c9665fa1165d9313bec |
+| docs/phase-7/beta-evidence-dashboard.md | present | 4705 | 5388ca6479bdd3bf247c172b724e14b53be9bc1e0bb590f91ee546f150d2fe50 |
 | docs/phase-7/core-loop-qa-checklist.md | present | 60287 | 43800c02917db3a42017375c4ec026a868fee17f988478c3f2e5f2da25d14dca |
 | docs/phase-7/phase-7-exit-review.md | present | 3509 | 033edec9712f3e4bb2529ca8f6b27b91953503664d326774113fdec9ec7748d4 |
 

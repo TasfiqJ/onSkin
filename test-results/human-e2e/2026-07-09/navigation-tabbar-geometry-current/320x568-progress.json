@@ -1,0 +1,181 @@
+{
+  "bodyScrollWidth": 320,
+  "devicePixelRatio": 2,
+  "horizontalOverflow": 0,
+  "innerHeight": 568,
+  "innerWidth": 320,
+  "location": "http://localhost:8184/progress",
+  "selectedCount": 1,
+  "tabList": {
+    "borderRadius": 33,
+    "rect": {
+      "bottom": 554,
+      "height": 66,
+      "left": 8,
+      "right": 312,
+      "top": 488,
+      "width": 304,
+      "x": 8,
+      "y": 488
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": "Today tab",
+      "center": {
+        "x": 46.75,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": null,
+      "id": "bottom-tab-today",
+      "label": "Today",
+      "labelClientWidth": 72,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 545,
+        "height": 19,
+        "left": 11,
+        "right": 82.5,
+        "top": 526,
+        "width": 71.5,
+        "x": 11,
+        "y": 526
+      },
+      "labelScrollWidth": 72,
+      "labelText": "Today",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 9,
+        "right": 84.5,
+        "top": 494,
+        "width": 75.5,
+        "x": 9,
+        "y": 494
+      },
+      "selected": false,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "center": {
+        "x": 122.25,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": "Prog.",
+      "id": "bottom-tab-progress",
+      "label": "Progress",
+      "labelClientWidth": 72,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 545,
+        "height": 19,
+        "left": 86.5,
+        "right": 158,
+        "top": 526,
+        "width": 71.5,
+        "x": 86.5,
+        "y": 526
+      },
+      "labelScrollWidth": 72,
+      "labelText": "Prog.",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 84.5,
+        "right": 160,
+        "top": 494,
+        "width": 75.5,
+        "x": 84.5,
+        "y": 494
+      },
+      "selected": true,
+      "text": "Prog."
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "center": {
+        "x": 197.75,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": null,
+      "id": "bottom-tab-shelf",
+      "label": "Shelf",
+      "labelClientWidth": 72,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 545,
+        "height": 19,
+        "left": 162,
+        "right": 233.5,
+        "top": 526,
+        "width": 71.5,
+        "x": 162,
+        "y": 526
+      },
+      "labelScrollWidth": 72,
+      "labelText": "Shelf",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 160,
+        "right": 235.5,
+        "top": 494,
+        "width": 75.5,
+        "x": 160,
+        "y": 494
+      },
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": "You tab",
+      "center": {
+        "x": 273.25,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": null,
+      "id": "bottom-tab-you",
+      "label": "You",
+      "labelClientWidth": 72,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 545,
+        "height": 19,
+        "left": 237.5,
+        "right": 309,
+        "top": 526,
+        "width": 71.5,
+        "x": 237.5,
+        "y": 526
+      },
+      "labelScrollWidth": 72,
+      "labelText": "You",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 235.5,
+        "right": 311,
+        "top": 494,
+        "width": 75.5,
+        "x": 235.5,
+        "y": 494
+      },
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}
