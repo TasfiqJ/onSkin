@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-09T02:01:10.376Z",
+  "generatedAt": "2026-07-09T02:05:27.753Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.",
   "strict": false,
-  "gitSha": "d6d1231c06805c00cf1d3101e17da394a25c7f86",
-  "gitStatus": "M docs/USER_FLOW_TREE.md\n M docs/e2e-bug-reports/2026-07-09-text-pressure-200-modern-390-clearance.md",
+  "gitSha": "40a5cee47ab9df840de2ab5ded8d6bb08faa38ed",
+  "gitStatus": "",
   "reviewLogs": [
     {
       "domain": "clinical",
@@ -35,7 +35,7 @@
     "sourcePathCount": 67,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 1
+    "warningCount": 0
   },
   "items": [
     {
@@ -698,7 +698,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence."
-  ]
+  "warnings": []
 }
