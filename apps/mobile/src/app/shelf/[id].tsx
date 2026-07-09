@@ -234,7 +234,7 @@ function SheetAction({
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { data } = useShelf();
   const plan = usePlan();
@@ -245,7 +245,8 @@ export default function ProductDetailScreen() {
   const [catalogReportFeedback, setCatalogReportFeedback] = useState<CatalogReportFeedback | null>(
     null,
   );
-  const compactMissingDetail = height < 640;
+  const supportFloorTextPressureDetail = width <= 390 && height >= 640 && height < 700;
+  const compactMissingDetail = height < 640 || supportFloorTextPressureDetail;
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
   const closeToShelf = () => backOrReplace(router, APP_SHELF_ROUTE);

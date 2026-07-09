@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 319.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue with Google",
+      "label": "Continue with Google",
+      "partialClip": false,
+      "rect": {
+        "bottom": 347.5,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 291.5,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 420.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Email address",
+      "partialClip": false,
+      "rect": {
+        "bottom": 449.5,
+        "height": 58,
+        "left": 24,
+        "right": 351,
+        "top": 391.5,
+        "visibleHeight": 58,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 489.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Email me a code",
+      "label": "Email me a code",
+      "partialClip": false,
+      "rect": {
+        "bottom": 517.5,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 461.5,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 627
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Not now",
+      "label": "Not now",
+      "partialClip": false,
+      "rect": {
+        "bottom": 651,
+        "height": 48,
+        "left": 24,
+        "right": 351,
+        "top": 603,
+        "visibleHeight": 48,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8323/onboarding/account",
+  "textOverflows": [],
+  "textStart": "Save your plan, keep it private. Create an account so your routine and progress are yours on any device. Your photos still stay on this phone. Account sign-in is not available right now. You can continue without an account. Continue with Google OR WITH EMAIL Email me a code Not now",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/onboarding/account",
+  "scaledCount": 8,
+  "textScale": 2,
+  "url": "http://localhost:8323/onboarding/account",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

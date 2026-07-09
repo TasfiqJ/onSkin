@@ -1,6 +1,13 @@
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
@@ -110,7 +117,7 @@ function CategoryPickerSheet({
 // visible. The full barcode/OCR intake lives on the Shelf (docs/04); this is the
 // lightweight first-population that was previously a dead skip-only screen.
 export default function ProductsScreen() {
-  const { height } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
   const { goals } = useOnboarding();
@@ -120,7 +127,9 @@ export default function ProductsScreen() {
   const [category, setCategory] = useState<string | null>(null);
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
   const added = data?.items ?? [];
-  const compactPhone = height < 640;
+  const supportFloorTextPressurePhone =
+    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPhone = height < 640 || supportFloorTextPressurePhone;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
   const showCompactCategoryFooter = compactFooterAdds;
   const remainingToTarget = Math.max(ONBOARDING_PRODUCT_TARGET - added.length, 0);

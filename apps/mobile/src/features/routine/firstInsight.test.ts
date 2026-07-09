@@ -3,7 +3,7 @@ import { STARTER_RULES, type ConflictRule } from '@/features/intelligence/rules'
 import { describe, expect, it } from 'vitest';
 
 import { type GeneratedPlan } from './generate';
-import { routineFirstInsightCopy } from './firstInsight';
+import { routineFirstInsightCopy, routineInsightCount } from './firstInsight';
 
 const basePlan: GeneratedPlan = {
   am: [],
@@ -122,5 +122,17 @@ describe('routine first insight copy', () => {
       title: 'Shelf is enough to start',
       body: 'Your current products become a simple AM and PM order.',
     });
+  });
+
+  it('counts visible insight signals consistently for analytics', () => {
+    expect(
+      routineInsightCount(
+        plan({
+          gaps: ['A gentle cleanser would give your routine a clean base.'],
+          unplacedProducts: [{ productId: 'unknown', name: 'Mystery drops' }],
+          conflicts: [conflict(ruleFor('irritation')), conflict(ruleFor('synergy'))],
+        }),
+      ),
+    ).toBe(5);
   });
 });

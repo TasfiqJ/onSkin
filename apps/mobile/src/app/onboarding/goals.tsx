@@ -1,6 +1,6 @@
 import { GOALS, type GoalId } from '@onskin/types';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -80,9 +80,11 @@ function CompactGoalCard({
 
 // 02 · Goals. Large tappable cards, multi-select up to two (design spec p.3).
 export default function GoalsScreen() {
-  const { height } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const { goals, quizAnswers, toggleGoal } = useOnboarding();
-  const compactPhone = height < 640;
+  const supportFloorTextPressurePhone =
+    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPhone = height < 640 || supportFloorTextPressurePhone;
   const splitShortPhone = height < 420;
   const quizCompletion = getQuizCompletionState(quizAnswers);
 

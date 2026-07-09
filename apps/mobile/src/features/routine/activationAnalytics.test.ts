@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { recordRoutinePlanAnalytics } from './activationAnalytics';
+import {
+  recordFirstUsefulInsightAnalytics,
+  recordRoutinePlanAnalytics,
+} from './activationAnalytics';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -103,5 +106,37 @@ describe('routine activation analytics', () => {
       firstRoutineCreated: false,
       firstUsefulInsight: true,
     });
+  });
+
+  it('lets reveal own the first useful insight without counting a routine plan view', async () => {
+    await recordFirstUsefulInsightAnalytics({
+      insightCount: 2,
+      isExample: false,
+      source: 'reveal',
+    });
+    await recordRoutinePlanAnalytics({
+      routineStepCount: 3,
+      insightCount: 4,
+      isExample: false,
+      source: 'routine_plan',
+    });
+
+    expect(mocks.track.mock.calls).toEqual([
+      ['first_useful_insight', { count: 2, source: 'reveal' }],
+      ['routine_plan_viewed', { source: 'routine_plan' }],
+      ['routine_created', { source: 'routine_plan' }],
+      ['first_routine_created', { source: 'routine_plan' }],
+    ]);
+  });
+
+  it('does not count example reveal insights', async () => {
+    await recordFirstUsefulInsightAnalytics({
+      insightCount: 1,
+      isExample: true,
+      source: 'reveal',
+    });
+
+    expect(mocks.track).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

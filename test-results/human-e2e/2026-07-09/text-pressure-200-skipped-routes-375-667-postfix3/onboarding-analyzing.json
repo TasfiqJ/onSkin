@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8326/onboarding/analyzing",
+  "textOverflows": [],
+  "textStart": "Building your plan… Reading your answers and shaping a routine around your skin.",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/onboarding/analyzing",
+  "scaledCount": 2,
+  "textScale": 2,
+  "url": "http://localhost:8326/onboarding/analyzing",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

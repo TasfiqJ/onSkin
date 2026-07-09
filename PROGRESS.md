@@ -5912,6 +5912,33 @@ empty. Evidence and bug report are in
 Native iOS/Android Dynamic Type, safe-area, and screen-reader traversal remain
 device QA follow-up.
 
+### Skipped-route 375x667 / 200% text-pressure clearance (2026-07-09)
+
+Found seven support-floor large-text failures in the skipped direct-entry route
+sweep. The first 375 x 667 / 200% pass blocked the age DOB fields under
+Continue, the last goal card under Continue, product intake's inline Add to
+shelf under Skip for now, onboarding paywall's Explore first path at the bottom
+edge, and downgrade paywall Terms/Privacy/Restore under the unavailable-store
+reason. Follow-up reruns also exposed the stale shelf detail Add a product
+action and the local-auth-unavailable account email field in the same support
+band.
+
+Added support-floor compact density to the affected onboarding, paywall, and
+shelf fallback routes. The account route now uses the scrollable body plus fixed
+footer pattern and hides unavailable auth controls when Supabase is not
+configured, leaving the recovery copy and Not now path visible.
+
+Post-fix headless Chrome Expo web evidence at 375 x 667 / 200% verifies all 21
+skipped direct-entry routes pass with zero clipped visible controls, zero sub-44
+visible controls, zero blocked center hit-tests, zero horizontal overflow, and
+zero disallowed browser logs. Evidence and bug report are in
+`test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-375-667-current/`,
+`test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-375-667-postfix3/`,
+and
+`docs/e2e-bug-reports/2026-07-09-text-pressure-200-skipped-routes-375-clearance.md`.
+Native iOS/Android Dynamic Type, safe-area, keyboard, store-sheet, and
+screen-reader traversal remain device QA follow-up.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),

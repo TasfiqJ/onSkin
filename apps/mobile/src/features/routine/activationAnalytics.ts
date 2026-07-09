@@ -8,6 +8,8 @@ type ActivationFlags = {
   firstUsefulInsight: boolean;
 };
 
+type FirstInsightSource = 'routine_plan' | 'reveal';
+
 const EMPTY_FLAGS: ActivationFlags = {
   firstRoutineCreated: false,
   firstUsefulInsight: false,
@@ -44,6 +46,25 @@ async function loadFlags(): Promise<ActivationFlags> {
 
 async function saveFlags(flags: ActivationFlags): Promise<void> {
   await setPrivateItem(KEY, JSON.stringify(flags));
+}
+
+export async function recordFirstUsefulInsightAnalytics({
+  insightCount,
+  isExample,
+  source,
+}: {
+  insightCount: number;
+  isExample: boolean;
+  source: FirstInsightSource;
+}): Promise<void> {
+  if (isExample || insightCount <= 0) return;
+
+  const flags = await loadFlags();
+  if (flags.firstUsefulInsight) return;
+
+  track('first_useful_insight', { count: insightCount, source });
+  flags.firstUsefulInsight = true;
+  await saveFlags(flags).catch(() => undefined);
 }
 
 export async function recordRoutinePlanAnalytics({

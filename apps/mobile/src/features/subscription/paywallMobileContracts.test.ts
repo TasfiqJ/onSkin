@@ -45,6 +45,15 @@ describe('paywall mobile contracts', () => {
         `${route} should not keep compact footer actions at an 8px bottom edge`,
       ).not.toContain('className="gap-2.5 pb-2"');
     }
+
+    const downgrade = readAppRoute('paywall/downgrade.tsx');
+    expect(downgrade).toContain('const supportFloorTextPressurePaywall =');
+    expect(downgrade).toContain(
+      "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
+    expect(downgrade).toContain(
+      'const compactPaywall = height < 640 || supportFloorTextPressurePaywall;',
+    );
   });
 
   it('keeps paywall decline and dismiss controls buffered above 44px on phones', () => {
@@ -636,6 +645,13 @@ describe('paywall mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPaywall = height < 640');
+    expect(source).toContain('const supportFloorTextPressurePaywall =');
+    expect(source).toContain(
+      "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
+    expect(source).toContain(
+      'const compactPaywall = height < 640 || supportFloorTextPressurePaywall;',
+    );
     expect(source).toContain("contentContainerClassName={compactPaywall ? 'pb-6' : 'pb-8'}");
     expect(source).toContain("className={compactPaywall ? 'mt-2.5 gap-1' : 'mt-5 gap-2.5'}");
     expect(source).toContain("'mt-2 h-[48px] items-center justify-center rounded-pill'");

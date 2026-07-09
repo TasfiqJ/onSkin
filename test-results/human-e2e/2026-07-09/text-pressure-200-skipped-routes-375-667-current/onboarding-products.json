@@ -1,0 +1,299 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 363
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 390,
+        "height": 54,
+        "left": 44,
+        "right": 331,
+        "top": 336,
+        "visibleHeight": 54,
+        "visibleWidth": 287,
+        "width": 287
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 89.2421875,
+        "y": 454
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cleanser",
+      "label": "Cleanser",
+      "partialClip": false,
+      "rect": {
+        "bottom": 478,
+        "height": 48,
+        "left": 44,
+        "right": 134.484375,
+        "top": 430,
+        "visibleHeight": 48,
+        "visibleWidth": 90.484375,
+        "width": 90.484375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 177.515625,
+        "y": 454
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Toner",
+      "label": "Toner",
+      "partialClip": false,
+      "rect": {
+        "bottom": 478,
+        "height": 48,
+        "left": 142.484375,
+        "right": 212.546875,
+        "top": 430,
+        "visibleHeight": 48,
+        "visibleWidth": 70.0625,
+        "width": 70.0625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 257.8984375,
+        "y": 454
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Serum",
+      "label": "Serum",
+      "partialClip": false,
+      "rect": {
+        "bottom": 478,
+        "height": 48,
+        "left": 220.546875,
+        "right": 295.25,
+        "top": 430,
+        "visibleHeight": 48,
+        "visibleWidth": 74.703125,
+        "width": 74.703125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 93.2109375,
+        "y": 510
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Treatment",
+      "label": "Treatment",
+      "partialClip": false,
+      "rect": {
+        "bottom": 534,
+        "height": 48,
+        "left": 44,
+        "right": 142.421875,
+        "top": 486,
+        "visibleHeight": 48,
+        "visibleWidth": 98.421875,
+        "width": 98.421875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 203.109375,
+        "y": 510
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Moisturiser",
+      "label": "Moisturiser",
+      "partialClip": false,
+      "rect": {
+        "bottom": 534,
+        "height": 48,
+        "left": 150.421875,
+        "right": 255.796875,
+        "top": 486,
+        "visibleHeight": 48,
+        "visibleWidth": 105.375,
+        "width": 105.375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 292.6171875,
+        "y": 510
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "SPF",
+      "label": "SPF",
+      "partialClip": false,
+      "rect": {
+        "bottom": 534,
+        "height": 48,
+        "left": 263.796875,
+        "right": 321.4375,
+        "top": 486,
+        "visibleHeight": 48,
+        "visibleWidth": 57.640625,
+        "width": 57.640625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 91.90625,
+        "y": 566
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Oil / balm",
+      "label": "Oil / balm",
+      "partialClip": false,
+      "rect": {
+        "bottom": 590,
+        "height": 48,
+        "left": 44,
+        "right": 139.8125,
+        "top": 542,
+        "visibleHeight": 48,
+        "visibleWidth": 95.8125,
+        "width": 95.8125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 634
+      },
+      "centerBlocked": true,
+      "hitInside": false,
+      "hitTag": "BUTTON",
+      "hitText": "Skip for now",
+      "label": "Add to shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 662,
+        "height": 56,
+        "left": 44,
+        "right": 331,
+        "top": 606,
+        "visibleHeight": 56,
+        "visibleWidth": 287,
+        "width": 287
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 623
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Skip for now",
+      "label": "Skip for now",
+      "partialClip": false,
+      "rect": {
+        "bottom": 651,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 595,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 1,
+  "issues": [
+    {
+      "control": {
+        "center": {
+          "x": 187.5,
+          "y": 634
+        },
+        "centerBlocked": true,
+        "hitInside": false,
+        "hitTag": "BUTTON",
+        "hitText": "Skip for now",
+        "label": "Add to shelf",
+        "partialClip": false,
+        "rect": {
+          "bottom": 662,
+          "height": 56,
+          "left": 44,
+          "right": 331,
+          "top": 606,
+          "visibleHeight": 56,
+          "visibleWidth": 287,
+          "width": 287
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": false
+      },
+      "type": "centerBlocked"
+    }
+  ],
+  "location": "http://localhost:8323/onboarding/products",
+  "textOverflows": [],
+  "textStart": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm Add to shelf Skip for now",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/onboarding/products",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8323/onboarding/products",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

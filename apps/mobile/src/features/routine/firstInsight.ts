@@ -8,6 +8,10 @@ export type RoutineFirstInsightCopy = {
   body: string;
 };
 
+export function routineInsightCount(plan: GeneratedPlan): number {
+  return plan.conflicts.length + plan.gaps.length + plan.unplacedProducts.length + 1;
+}
+
 export function routineFirstInsightCopy(
   plan: GeneratedPlan,
   isExample: boolean,
@@ -20,8 +24,9 @@ export function routineFirstInsightCopy(
     };
   }
 
-  const actionableConflictCount = plan.conflicts.filter((conflict) => !isReassuring(conflict))
-    .length;
+  const actionableConflictCount = plan.conflicts.filter(
+    (conflict) => !isReassuring(conflict),
+  ).length;
   if (actionableConflictCount > 0) {
     return {
       eyebrow: 'First insight',

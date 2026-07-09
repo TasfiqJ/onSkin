@@ -1,0 +1,195 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 102.4765625,
+        "y": 151
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Breakouts & congestion",
+      "label": "Clear skin. Breakouts & congestion",
+      "partialClip": false,
+      "rect": {
+        "bottom": 188,
+        "height": 74,
+        "left": 24,
+        "right": 180.953125,
+        "top": 114,
+        "visibleHeight": 74,
+        "visibleWidth": 156.953125,
+        "width": 156.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 267.4296875,
+        "y": 151
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Dark spots & texture",
+      "label": "Even tone. Dark spots & texture",
+      "partialClip": false,
+      "rect": {
+        "bottom": 188,
+        "height": 74,
+        "left": 188.953125,
+        "right": 345.90625,
+        "top": 114,
+        "visibleHeight": 74,
+        "visibleWidth": 156.953125,
+        "width": 156.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 102.4765625,
+        "y": 233
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Tightness & dullness",
+      "label": "Hydration. Tightness & dullness",
+      "partialClip": false,
+      "rect": {
+        "bottom": 270,
+        "height": 74,
+        "left": 24,
+        "right": 180.953125,
+        "top": 196,
+        "visibleHeight": 74,
+        "visibleWidth": 156.953125,
+        "width": 156.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 267.4296875,
+        "y": 233
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Firmness & elasticity",
+      "label": "Fine lines. Firmness & elasticity",
+      "partialClip": false,
+      "rect": {
+        "bottom": 270,
+        "height": 74,
+        "left": 188.953125,
+        "right": 345.90625,
+        "top": 196,
+        "visibleHeight": 74,
+        "visibleWidth": 156.953125,
+        "width": 156.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 102.4765625,
+        "y": 315
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Stinging & flushing",
+      "label": "Sensitivity. Stinging & flushing",
+      "partialClip": false,
+      "rect": {
+        "bottom": 352,
+        "height": 74,
+        "left": 24,
+        "right": 180.953125,
+        "top": 278,
+        "visibleHeight": 74,
+        "visibleWidth": 156.953125,
+        "width": 156.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 267.4296875,
+        "y": 315
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Redness & reactivity",
+      "label": "Barrier repair. Redness & reactivity",
+      "partialClip": false,
+      "rect": {
+        "bottom": 352,
+        "height": 74,
+        "left": 188.953125,
+        "right": 345.90625,
+        "top": 278,
+        "visibleHeight": 74,
+        "visibleWidth": 156.953125,
+        "width": 156.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 623
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue",
+      "label": "Continue",
+      "partialClip": false,
+      "rect": {
+        "bottom": 651,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 595,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8324/onboarding/goals",
+  "textOverflows": [],
+  "textStart": "What brings you here? Choose up to two. This shapes your plan. Clear skin Breakouts & congestion Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity Continue",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/onboarding/goals",
+  "scaledCount": 15,
+  "textScale": 2,
+  "url": "http://localhost:8324/onboarding/goals",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

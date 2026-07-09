@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { Platform, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import {
@@ -54,13 +54,15 @@ function DobField({
 }
 
 export default function AgeGateScreen() {
-  const { height } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [blocked, setBlocked] = useState(false);
   const [checked, setChecked] = useState(false);
-  const compactPhone = height < 640;
+  const supportFloorTextPressurePhone =
+    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPhone = height < 640 || supportFloorTextPressurePhone;
 
   // Skip if a prior session already passed the gate (don't re-ask on re-entry).
   useEffect(() => {

@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 117
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "",
+      "label": "Dismiss",
+      "partialClip": false,
+      "rect": {
+        "bottom": 234,
+        "height": 234,
+        "left": 0,
+        "right": 375,
+        "top": 0,
+        "visibleHeight": 234,
+        "visibleWidth": 375,
+        "width": 375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 535
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Shelf",
+      "label": "Back to Shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 563,
+        "height": 56,
+        "left": 28,
+        "right": 347,
+        "top": 507,
+        "visibleHeight": 56,
+        "visibleWidth": 319,
+        "width": 319
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 599
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add a product",
+      "label": "Add a product",
+      "partialClip": false,
+      "rect": {
+        "bottom": 627,
+        "height": 56,
+        "left": 28,
+        "right": 347,
+        "top": 571,
+        "visibleHeight": 56,
+        "visibleWidth": 319,
+        "width": 319
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8324/shelf/replenish",
+  "textOverflows": [],
+  "textStart": "SHELF UPDATED This replacement prompt is no longer active. That product was removed or archived on this device, so we won't reuse its freshness or shopping prompt. Review your current shelf, or add the product again if it still belongs in your routine. Back to Shelf Add a product",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/shelf/replenish",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8324/shelf/replenish",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 574
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Keep my full routine",
+      "label": "Keep my full routine",
+      "partialClip": false,
+      "rect": {
+        "bottom": 601,
+        "height": 54,
+        "left": 24,
+        "right": 351,
+        "top": 547,
+        "visibleHeight": 54,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 635
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Continue on free",
+      "label": "Continue on free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 659,
+        "height": 48,
+        "left": 24,
+        "right": 351,
+        "top": 611,
+        "visibleHeight": 48,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8326/paywall/reoffer",
+  "textOverflows": [],
+  "textStart": "Your week of Pro is up Keep the routine you just built. You’re on the free plan now. Nothing was deleted. Pro keeps the parts you started using this week: The full scheduler & skin-cycling Unlimited conflict checks Your photo timeline & reminders Start 14 days free, then $49.99 /year Store checkout is unavailable in this preview. You can keep exploring. Terms · Privacy · Restore Keep my full routine Continue on free",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/paywall/reoffer",
+  "scaledCount": 17,
+  "textScale": 2,
+  "url": "http://localhost:8326/paywall/reoffer",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 543
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Shelf",
+      "label": "Back to Shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 571,
+        "height": 56,
+        "left": 28,
+        "right": 347,
+        "top": 515,
+        "visibleHeight": 56,
+        "visibleWidth": 319,
+        "width": 319
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 603
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add a product",
+      "label": "Add a product",
+      "partialClip": false,
+      "rect": {
+        "bottom": 627,
+        "height": 48,
+        "left": 28,
+        "right": 347,
+        "top": 579,
+        "visibleHeight": 48,
+        "visibleWidth": 319,
+        "width": 319
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8326/conflict/00000000-0000-4000-8000-000000000001",
+  "textOverflows": [],
+  "textStart": "Shelf updated This timing note is no longer active. Your shelf no longer has the product pair that created this note. Review your current shelf, or add the product again if it still belongs in your routine. We only show conflict guidance for products currently on your shelf, so old links never reuse stale routine advice. Back to Shelf Add a product",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/conflict/00000000-0000-4000-8000-000000000001",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8326/conflict/00000000-0000-4000-8000-000000000001",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

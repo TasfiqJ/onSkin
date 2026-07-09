@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 425.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Shelf",
+      "label": "Back to Shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 453.5,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 397.5,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 489.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add a product",
+      "label": "Add a product",
+      "partialClip": false,
+      "rect": {
+        "bottom": 517.5,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 461.5,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8326/shelf/missing-shelf-e2e",
+  "textOverflows": [],
+  "textStart": "< PRODUCT UNAVAILABLE This product is no longer on your shelf. It may have been removed or archived on this device. Your Shelf is still safe. Back to Shelf Add a product",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/shelf/missing-shelf-e2e",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8326/shelf/missing-shelf-e2e",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

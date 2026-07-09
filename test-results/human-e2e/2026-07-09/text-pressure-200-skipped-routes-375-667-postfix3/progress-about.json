@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 327,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 303,
+        "right": 351,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8326/progress/about",
+  "textOverflows": [],
+  "textStart": "x ⊘ We’ll never give your skin a score. A number from a phone selfie is mostly lighting and angle. False precision dressed up as objectivity, so we don’t. You get genuinely comparable photos and your own judgment, which is both more honest and more accurate. ✓ No “skin age,” no grade, no improvement %. ✓ No anxiety-inducing number to watch go up or down. ✓ Honest about phone-photo limits. White light reads tone & redness poorly, especially in deeper skin. If we ever add analysis, it’ll be separate, consented, fairness-checked, and never a hazard score.",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/progress/about",
+  "scaledCount": 11,
+  "textScale": 2,
+  "url": "http://localhost:8326/progress/about",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -306,6 +306,12 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactMissingDetail = height < 640');
+    expect(source).toContain(
+      'const supportFloorTextPressureDetail = width <= 390 && height >= 640 && height < 700;',
+    );
+    expect(source).toContain(
+      'const compactMissingDetail = height < 640 || supportFloorTextPressureDetail;',
+    );
     expect(source).toContain('<ScrollView');
     expect(source).toContain('Product unavailable');
     expect(source).toContain('This product is no longer on your shelf.');
@@ -671,8 +677,12 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('className="mb-3 flex-row items-start justify-between"');
     expect(source).toContain('className="text-[28px] leading-[31px]"');
-    expect(source).toContain('variant="bodySm" tone="muted" className="mt-1.5 text-[13px] leading-[18px]"');
-    expect(source).toContain('className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"');
+    expect(source).toContain(
+      'variant="bodySm" tone="muted" className="mt-1.5 text-[13px] leading-[18px]"',
+    );
+    expect(source).toContain(
+      'className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-2"',
+    );
     expect(source).toContain(
       'Freshness starts after we know the product. Start with the name, then we&apos;ll ask when',
     );

@@ -144,7 +144,8 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('useWindowDimensions');
     expect(plan).toContain('const compactPlan = height < 640');
     expect(plan).toContain('const planScrollBottomPadding = compactPlan ? 144 : 112');
-    expect(plan).toContain('import {\n  routineFirstInsightCopy,');
+    expect(plan).toContain('routineFirstInsightCopy,');
+    expect(plan).toContain('routineInsightCount,');
     expect(plan).toContain('function FirstInsightCard');
     expect(plan).toContain(
       'const firstInsight = plan ? routineFirstInsightCopy(plan, data?.isExample ?? true) : null;',
@@ -253,7 +254,9 @@ describe('Pro-gated route contracts', () => {
     expect(phasedIntro).toContain(
       "className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}",
     );
-    expect(phasedIntro).toContain("className={shortSheet ? 'mt-3' : compactSheet ? 'mt-4' : 'mt-6'}");
+    expect(phasedIntro).toContain(
+      "className={shortSheet ? 'mt-3' : compactSheet ? 'mt-4' : 'mt-6'}",
+    );
     expect(phasedIntro).toContain(
       "className={shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined}",
     );
@@ -305,8 +308,8 @@ describe('Pro-gated route contracts', () => {
     expect(source).toContain('accessibilityState={{ checked }}');
     expect(source).toContain('aria-checked={checked}');
     expect(source).toContain('accessibilityHint="Updates only this in-app widget preview"');
-    expect(source).toContain("label=\"Ceramide moisturizer\"");
-    expect(source).toContain("label=\"Mineral SPF 50\"");
+    expect(source).toContain('label="Ceramide moisturizer"');
+    expect(source).toContain('label="Mineral SPF 50"');
     expect(source).toContain('const previewDoneCount =');
     expect(source).toContain('{previewDoneCount} of 4');
     expect(source).toContain('Preview updated:');

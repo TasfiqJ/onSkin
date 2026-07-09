@@ -76,6 +76,15 @@ describe('onboarding route contracts', () => {
     expect(goals).toContain('const splitShortPhone = height < 420');
     expect(quiz).toContain('const compactPhone = height < 640');
     expect(products).toContain('const compactPhone = height < 640');
+    for (const source of [age, goals, products]) {
+      expect(source).toContain('const supportFloorTextPressurePhone =');
+      expect(source).toContain(
+        "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+      );
+      expect(source).toContain(
+        'const compactPhone = height < 640 || supportFloorTextPressurePhone;',
+      );
+    }
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
     expect(products).toContain('const inputRef = useRef<TextInput>(null)');
     expect(products).toContain('placeholder="e.g. Retinol serum"');
@@ -203,6 +212,20 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('label={continueAnywayLabel}');
   });
 
+  it('shows the shelf-derived first insight on reveal before reminder setup', () => {
+    const reveal = readAppRoute('onboarding/reveal.tsx');
+
+    expect(reveal).toContain("import { usePlan } from '@/features/routine/usePlan';");
+    expect(reveal).toContain('routineFirstInsightCopy(planResult.data.plan');
+    expect(reveal).toContain('recordFirstUsefulInsightAnalytics');
+    expect(reveal).toContain("source: 'reveal'");
+    expect(reveal).toContain('routineInsightCount(planResult.data.plan)');
+    expect(reveal).toContain("(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()");
+    expect(reveal).toContain('label="Continue"');
+    expect(reveal).toContain("router.push('/onboarding/notifications')");
+    expect(reveal).not.toContain('label="See my routine"');
+  });
+
   it('keeps health-data consent fail-closed before quiz access', () => {
     const source = readAppRoute('onboarding/consent.tsx');
     const quiz = readAppRoute('onboarding/quiz.tsx');
@@ -283,6 +306,19 @@ describe('onboarding route contracts', () => {
   it('keeps account onboarding fail-closed before account-created side effects', () => {
     const source = readAppRoute('onboarding/account.tsx');
 
+    expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const supportFloorTextPressurePhone =');
+    expect(source).toContain(
+      "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
+    expect(source).toContain('const compactPhone = height < 640 || supportFloorTextPressurePhone;');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('keyboardShouldPersistTaps="handled"');
+    expect(source).toContain("justifyContent: compactPhone ? 'flex-start' : 'center'");
+    expect(source).toContain('{isSupabaseConfigured ? (');
+    expect(source).toContain('className="bg-paper pb-4 pt-2"');
+    expect(source).toContain('className="min-h-[48px] items-center justify-center py-2"');
+    expect(source).not.toContain('editable={isSupabaseConfigured}');
     expect(source).not.toContain('best-effort until backend configured');
     expect(source).toContain('recordAccountConsent');
     expect(source).toContain('setError(ACCOUNT_CONSENT.saveFailedBody)');

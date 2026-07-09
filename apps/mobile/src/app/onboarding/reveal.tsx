@@ -1,18 +1,26 @@
 import type { SkinAxis } from '@onskin/types';
 import { router } from 'expo-router';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { AXIS_LABELS, getQuizCompletionState } from '@/features/onboarding/quiz';
+import { recordFirstUsefulInsightAnalytics } from '@/features/routine/activationAnalytics';
+import { routineFirstInsightCopy, routineInsightCount } from '@/features/routine/firstInsight';
+import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 
 // 07b · Reveal. The "aha" payoff (docs/01 §2/§8, design spec p.6). Shows the
 // computed 4-axis profile as sliders. The poetic headline + routine prose on the
 // spec are final product/health copy (BLOCKED: B-QUIZ-COPY). Here we show the
 // factual axis descriptor and claim-safe draft routine framing.
-const AXIS_ORDER: SkinAxis[] = ['oily_dry', 'sensitive_resistant', 'pigmented_non', 'wrinkled_tight'];
+const AXIS_ORDER: SkinAxis[] = [
+  'oily_dry',
+  'sensitive_resistant',
+  'pigmented_non',
+  'wrinkled_tight',
+];
 
 function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
   const { posLabel, negLabel } = AXIS_LABELS[axis];
@@ -20,10 +28,18 @@ function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
   return (
     <View className="mb-5">
       <View className="mb-2 flex-row justify-between">
-        <Text variant="bodySm" tone={leansPositive ? 'muted' : 'ink'} className={leansPositive ? '' : 'font-sans-semibold'}>
+        <Text
+          variant="bodySm"
+          tone={leansPositive ? 'muted' : 'ink'}
+          className={leansPositive ? '' : 'font-sans-semibold'}
+        >
           {negLabel}
         </Text>
-        <Text variant="bodySm" tone={leansPositive ? 'ink' : 'muted'} className={leansPositive ? 'font-sans-semibold' : ''}>
+        <Text
+          variant="bodySm"
+          tone={leansPositive ? 'ink' : 'muted'}
+          className={leansPositive ? 'font-sans-semibold' : ''}
+        >
           {posLabel}
         </Text>
       </View>
@@ -39,11 +55,16 @@ function AxisSlider({ axis, value }: { axis: SkinAxis; value: number }) {
 
 export default function RevealScreen() {
   const { computeResult, quizAnswers } = useOnboarding();
+  const planResult = usePlan();
+  const trackedRevealInsight = useRef(false);
   const quizCompletion = useMemo(() => getQuizCompletionState(quizAnswers), [quizAnswers]);
   const result = useMemo(
     () => (quizCompletion.complete ? computeResult() : null),
     [computeResult, quizCompletion.complete],
   );
+  const firstInsight = planResult.data
+    ? routineFirstInsightCopy(planResult.data.plan, planResult.data.isExample)
+    : null;
 
   const descriptor = useMemo(() => {
     if (!result) return '';
@@ -53,6 +74,17 @@ export default function RevealScreen() {
     });
     return traits.join(' · ');
   }, [result]);
+
+  useEffect(() => {
+    if (!result || !planResult.data || trackedRevealInsight.current) return;
+
+    trackedRevealInsight.current = true;
+    void recordFirstUsefulInsightAnalytics({
+      insightCount: routineInsightCount(planResult.data.plan),
+      isExample: planResult.data.isExample,
+      source: 'reveal',
+    });
+  }, [planResult.data, result]);
 
   if (!result) {
     return (
@@ -99,15 +131,21 @@ export default function RevealScreen() {
         </View>
 
         <Card tone="night" className="mt-4">
-          <Text variant="bodySm" tone="inverseMuted">
-            Your first routine starts gentle and barrier-first. Your full plan and conflict
-            checks come next.
+          <Text variant="label" tone="inverseMuted" className="font-mono">
+            {(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()}
+          </Text>
+          <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
+            {firstInsight?.title ?? 'Your first routine starts gentle.'}
+          </Text>
+          <Text variant="bodySm" tone="inverseMuted" className="mt-1">
+            {firstInsight?.body ??
+              'Your full plan and conflict checks are ready after this setup step.'}
           </Text>
         </Card>
       </View>
       <View className="pb-4">
         <Button
-          label="See my routine"
+          label="Continue"
           variant="inverse"
           onPress={() => {
             track('screen_viewed', { screen_name: 'reveal' });

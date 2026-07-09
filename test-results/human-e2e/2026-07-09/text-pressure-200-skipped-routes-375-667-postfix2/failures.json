@@ -1,0 +1,98 @@
+{
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 3,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 656.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Not now",
+            "label": "Email address",
+            "partialClip": true,
+            "rect": {
+              "bottom": 685.5,
+              "height": 58,
+              "left": 24,
+              "right": 351,
+              "top": 627.5,
+              "visibleHeight": 39.5,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 656.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Not now",
+            "label": "Email address",
+            "partialClip": true,
+            "rect": {
+              "bottom": 685.5,
+              "height": 58,
+              "left": 24,
+              "right": 351,
+              "top": 627.5,
+              "visibleHeight": 39.5,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 656.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Not now",
+            "label": "Email address",
+            "partialClip": true,
+            "rect": {
+              "bottom": 685.5,
+              "height": 58,
+              "left": 24,
+              "right": 351,
+              "top": 627.5,
+              "visibleHeight": 39.5,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/onboarding/account",
+      "scaledCount": 9,
+      "textStart": "Save your plan, keep it private. Create an account so your routine and progress are yours on any device. Your photos still stay on this phone. Account sign-in is not available right now. You can continue without an account. Continue with Google OR WITH EMAIL Email me a code Not now"
+    }
+  ]
+}

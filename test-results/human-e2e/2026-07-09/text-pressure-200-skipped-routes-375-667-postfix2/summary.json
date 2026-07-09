@@ -1,0 +1,237 @@
+{
+  "baseUrl": "http://localhost:8325",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-375-667-postfix2",
+  "generatedAt": "2026-07-09T13:07:22.395Z",
+  "routeCount": 21,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 667,
+    "width": 375
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 3,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 656.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Not now",
+            "label": "Email address",
+            "partialClip": true,
+            "rect": {
+              "bottom": 685.5,
+              "height": 58,
+              "left": 24,
+              "right": 351,
+              "top": 627.5,
+              "visibleHeight": 39.5,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 656.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Not now",
+            "label": "Email address",
+            "partialClip": true,
+            "rect": {
+              "bottom": 685.5,
+              "height": 58,
+              "left": 24,
+              "right": 351,
+              "top": 627.5,
+              "visibleHeight": 39.5,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": true
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 656.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Not now",
+            "label": "Email address",
+            "partialClip": true,
+            "rect": {
+              "bottom": 685.5,
+              "height": 58,
+              "left": 24,
+              "right": 351,
+              "top": 627.5,
+              "visibleHeight": 39.5,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/onboarding/account",
+      "scaledCount": 9,
+      "textStart": "Save your plan, keep it private. Create an account so your routine and progress are yours on any device. Your photos still stay on this phone. Account sign-in is not available right now. You can continue without an account. Continue with Google OR WITH EMAIL Email me a code Not now"
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/age",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 3,
+      "route": "/onboarding/account",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/consent",
+      "scaledCount": 14
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/goals",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/notifications",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/products",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/quiz",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/analyzing",
+      "scaledCount": 2
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/reveal",
+      "scaledCount": 4
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/onboarding/paywall",
+      "scaledCount": 23
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/downgrade",
+      "scaledCount": 17
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/reoffer",
+      "scaledCount": 17
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/winback",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/about",
+      "scaledCount": 11
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/welcome-back",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/conflict/00000000-0000-4000-8000-000000000001",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/share/conflict/00000000-0000-4000-8000-000000000001",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/s/e2e-missing-share",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/replenish",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/missing-shelf-e2e",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/e2e-missing-photo",
+      "scaledCount": 3
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}

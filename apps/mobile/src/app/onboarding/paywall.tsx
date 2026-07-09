@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -53,7 +53,7 @@ function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
 }
 
 export default function PaywallScreen() {
-  const { height } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const { goals, quizAnswers, computeResult } = useOnboarding();
   const { startTrial, startReverseTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
@@ -64,7 +64,9 @@ export default function PaywallScreen() {
   const monthlyDisplay = planPriceDisplay('monthly', offering.data);
   const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
   const quizCompletion = getQuizCompletionState(quizAnswers);
-  const compactPaywall = height < 640;
+  const supportFloorTextPressurePaywall =
+    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+  const compactPaywall = height < 640 || supportFloorTextPressurePaywall;
 
   function onStartTrial() {
     setActionFeedback(null);

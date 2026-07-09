@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 339
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Product name",
+      "partialClip": false,
+      "rect": {
+        "bottom": 366,
+        "height": 54,
+        "left": 44,
+        "right": 331,
+        "top": 312,
+        "visibleHeight": 54,
+        "visibleWidth": 287,
+        "width": 287
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 623
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Skip for now",
+      "label": "Skip for now",
+      "partialClip": false,
+      "rect": {
+        "bottom": 651,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 595,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8326/onboarding/products",
+  "textOverflows": [],
+  "textStart": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME Skip for now",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/onboarding/products",
+  "scaledCount": 6,
+  "textScale": 2,
+  "url": "http://localhost:8326/onboarding/products",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

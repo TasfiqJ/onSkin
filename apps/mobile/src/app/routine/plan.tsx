@@ -7,6 +7,7 @@ import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { startCycleToday } from '@/features/scheduler/cycleStore';
 import { recordRoutinePlanAnalytics } from '@/features/routine/activationAnalytics';
 import {
+  routineInsightCount,
   routineFirstInsightCopy,
   type RoutineFirstInsightCopy,
 } from '@/features/routine/firstInsight';
@@ -111,13 +112,7 @@ function EveningRow({
   );
 }
 
-function FirstInsightCard({
-  compact,
-  copy,
-}: {
-  compact: boolean;
-  copy: RoutineFirstInsightCopy;
-}) {
+function FirstInsightCard({ compact, copy }: { compact: boolean; copy: RoutineFirstInsightCopy }) {
   return (
     <View
       className={
@@ -127,10 +122,7 @@ function FirstInsightCard({
       }
       style={{ borderWidth: 1, borderColor: 'rgba(172,116,84,0.16)' }}
     >
-      <Text
-        className="font-mono text-[11px] uppercase"
-        style={{ color: colors.clayDeep }}
-      >
+      <Text className="font-mono text-[11px] uppercase" style={{ color: colors.clayDeep }}>
         {copy.eyebrow}
       </Text>
       <Text
@@ -186,8 +178,7 @@ export default function PlanScreen() {
 
     const source = data.isExample ? 'example' : 'routine_plan';
     const routineStepCount = data.plan.am.length + data.plan.pm.length;
-    const insightCount =
-      data.plan.conflicts.length + data.plan.gaps.length + data.plan.unplacedProducts.length + 1;
+    const insightCount = routineInsightCount(data.plan);
 
     void recordRoutinePlanAnalytics({
       routineStepCount,
@@ -201,11 +192,7 @@ export default function PlanScreen() {
     }
   }, [data]);
 
-  const planNote = plan
-    ? plan.unplacedProducts.length > 0
-      ? null
-      : (plan.gaps[0] ?? null)
-    : null;
+  const planNote = plan ? (plan.unplacedProducts.length > 0 ? null : (plan.gaps[0] ?? null)) : null;
 
   return (
     <Screen edges={['top', 'bottom']}>

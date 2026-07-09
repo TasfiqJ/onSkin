@@ -1,0 +1,127 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 551
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 578,
+        "height": 54,
+        "left": 24,
+        "right": 351,
+        "top": 524,
+        "visibleHeight": 54,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 666
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Explore first. 7 days of Pro",
+      "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "partialClip": true,
+      "rect": {
+        "bottom": 722,
+        "height": 82,
+        "left": 24,
+        "right": 351,
+        "top": 640,
+        "visibleHeight": 27,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": true
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 2,
+  "issues": [
+    {
+      "control": {
+        "center": {
+          "x": 187.5,
+          "y": 666
+        },
+        "centerBlocked": false,
+        "hitInside": true,
+        "hitTag": "DIV",
+        "hitText": "Explore first. 7 days of Pro",
+        "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+        "partialClip": true,
+        "rect": {
+          "bottom": 722,
+          "height": 82,
+          "left": 24,
+          "right": 351,
+          "top": 640,
+          "visibleHeight": 27,
+          "visibleWidth": 327,
+          "width": 327
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "tinyTarget"
+    },
+    {
+      "control": {
+        "center": {
+          "x": 187.5,
+          "y": 666
+        },
+        "centerBlocked": false,
+        "hitInside": true,
+        "hitTag": "DIV",
+        "hitText": "Explore first. 7 days of Pro",
+        "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+        "partialClip": true,
+        "rect": {
+          "bottom": 722,
+          "height": 82,
+          "left": 24,
+          "right": 351,
+          "top": 640,
+          "visibleHeight": 27,
+          "visibleWidth": 327,
+          "width": 327
+        },
+        "role": "button",
+        "tag": "BUTTON",
+        "tinyTarget": true
+      },
+      "type": "partialClip"
+    }
+  ],
+  "location": "http://localhost:8323/onboarding/paywall",
+  "textOverflows": [],
+  "textStart": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/onboarding/paywall",
+  "scaledCount": 23,
+  "textScale": 2,
+  "url": "http://localhost:8323/onboarding/paywall",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

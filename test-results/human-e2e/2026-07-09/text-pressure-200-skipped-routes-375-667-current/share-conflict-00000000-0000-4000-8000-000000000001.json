@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 603
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Shelf",
+      "label": "Back to Shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 631,
+        "height": 56,
+        "left": 24,
+        "right": 351,
+        "top": 575,
+        "visibleHeight": 56,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8323/share/conflict/00000000-0000-4000-8000-000000000001",
+  "textOverflows": [],
+  "textStart": "BETA Share cards are not ready yet A card can be shared only for a real owned-product interaction backed by a reviewed rule and final brand domain. This prevents unreviewed ingredient guidance from becoming a growth artifact. Back to Shelf",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/share/conflict/00000000-0000-4000-8000-000000000001",
+  "scaledCount": 5,
+  "textScale": 2,
+  "url": "http://localhost:8323/share/conflict/00000000-0000-4000-8000-000000000001",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

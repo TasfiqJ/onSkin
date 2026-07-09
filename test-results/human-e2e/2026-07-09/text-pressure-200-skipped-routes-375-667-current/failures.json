@@ -1,0 +1,330 @@
+{
+  "failedRouteCount": 5,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 3,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 68.5546875,
+              "y": 629
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Day of birth",
+            "partialClip": false,
+            "rect": {
+              "bottom": 662,
+              "height": 66,
+              "left": 24,
+              "right": 113.109375,
+              "top": 596,
+              "visibleHeight": 66,
+              "visibleWidth": 89.109375,
+              "width": 89.109375
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 169.671875,
+              "y": 629
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Month of birth",
+            "partialClip": false,
+            "rect": {
+              "bottom": 662,
+              "height": 66,
+              "left": 125.109375,
+              "right": 214.234375,
+              "top": 596,
+              "visibleHeight": 66,
+              "visibleWidth": 89.125,
+              "width": 89.125
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 288.6171875,
+              "y": 629
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Year of birth",
+            "partialClip": false,
+            "rect": {
+              "bottom": 662,
+              "height": 66,
+              "left": 226.234375,
+              "right": 351,
+              "top": 596,
+              "visibleHeight": 66,
+              "visibleWidth": 124.765625,
+              "width": 124.765625
+            },
+            "role": "input",
+            "tag": "INPUT",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        }
+      ],
+      "route": "/onboarding/age",
+      "scaledCount": 7,
+      "textStart": "First, your date of birth. RoutineKind handles skin-health information, so we confirm your age before we begin. We don't store your birth date. DAY MONTH YEAR Continue"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 606.5
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Continue",
+            "label": "Barrier repair. Redness & reactivity",
+            "partialClip": false,
+            "rect": {
+              "bottom": 644,
+              "height": 75,
+              "left": 24,
+              "right": 351,
+              "top": 569,
+              "visibleHeight": 75,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        }
+      ],
+      "route": "/onboarding/goals",
+      "scaledCount": 15,
+      "textStart": "What brings you here? Choose up to two. This shapes your plan. Clear skin Breakouts & congestion Even tone Dark spots & texture Hydration Tightness & dullness Fine lines Firmness & elasticity Sensitivity Stinging & flushing Barrier repair Redness & reactivity Continue"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 634
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "BUTTON",
+            "hitText": "Skip for now",
+            "label": "Add to shelf",
+            "partialClip": false,
+            "rect": {
+              "bottom": 662,
+              "height": 56,
+              "left": 44,
+              "right": 331,
+              "top": 606,
+              "visibleHeight": 56,
+              "visibleWidth": 287,
+              "width": 287
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        }
+      ],
+      "route": "/onboarding/products",
+      "scaledCount": 6,
+      "textStart": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 0 OF 3 PRODUCTS Three products gives your first routine enough context to spot useful gaps or timing notes. PRODUCT NAME CATEGORY · OPTIONAL Cleanser Toner Serum Treatment Moisturiser SPF Oil / balm Add to shelf Skip for now"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 666
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Explore first. 7 days of Pro",
+            "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+            "partialClip": true,
+            "rect": {
+              "bottom": 722,
+              "height": 82,
+              "left": 24,
+              "right": 351,
+              "top": 640,
+              "visibleHeight": 27,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 187.5,
+              "y": 666
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Explore first. 7 days of Pro",
+            "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+            "partialClip": true,
+            "rect": {
+              "bottom": 722,
+              "height": 82,
+              "left": 24,
+              "right": 351,
+              "top": 640,
+              "visibleHeight": 27,
+              "visibleWidth": 327,
+              "width": 327
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/onboarding/paywall",
+      "scaledCount": 23,
+      "textStart": "Your personalized plan is ready. Everything below is part of RoutineKind Pro. Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales"
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 3,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 113.390625,
+              "y": 505
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Store checkout is unavailable in this preview. You can keep exploring.",
+            "label": "Terms",
+            "partialClip": false,
+            "rect": {
+              "bottom": 529,
+              "height": 48,
+              "left": 89.390625,
+              "right": 137.390625,
+              "top": 481,
+              "visibleHeight": 48,
+              "visibleWidth": 48,
+              "width": 48
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 186.765625,
+              "y": 505
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Store checkout is unavailable in this preview. You can keep exploring.",
+            "label": "Privacy",
+            "partialClip": false,
+            "rect": {
+              "bottom": 529,
+              "height": 48,
+              "left": 162.75,
+              "right": 210.78125,
+              "top": 481,
+              "visibleHeight": 48,
+              "visibleWidth": 48.03125,
+              "width": 48.03125
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 260.875,
+              "y": 505
+            },
+            "centerBlocked": true,
+            "hitInside": false,
+            "hitTag": "DIV",
+            "hitText": "Store checkout is unavailable in this preview. You can keep exploring.",
+            "label": "Restore",
+            "partialClip": false,
+            "rect": {
+              "bottom": 529,
+              "height": 48,
+              "left": 236.140625,
+              "right": 285.609375,
+              "top": 481,
+              "visibleHeight": 48,
+              "visibleWidth": 49.46875,
+              "width": 49.46875
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": false
+          },
+          "type": "centerBlocked"
+        }
+      ],
+      "route": "/paywall/downgrade",
+      "scaledCount": 17,
+      "textStart": "Pro ended · you’re on the free plan Everything you made is still here. Your routine, your shelf, your photos, and your history are safe and yours. Nothing was deleted. Re-subscribe anytime to pick the full plan back up. ✓ Your routine & cycle. Kept ✓ Your photos. On your phone ✓ Your shelf & streak. Kept On free, you keep the quiz result, a shelf view, and one conflict check. Full intelligence returns the moment you do. Terms · Privacy · Restore Store checkout is unavailable in this preview. You can keep exploring. Renew Pro Keep using free"
+    }
+  ]
+}

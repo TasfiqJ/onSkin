@@ -1,0 +1,70 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 566
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "See current Pro plan",
+      "label": "See current Pro plan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 593,
+        "height": 54,
+        "left": 30,
+        "right": 345,
+        "top": 539,
+        "visibleHeight": 54,
+        "visibleWidth": 315,
+        "width": 315
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 627
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No thanks",
+      "label": "No thanks",
+      "partialClip": false,
+      "rect": {
+        "bottom": 651,
+        "height": 48,
+        "left": 30,
+        "right": 345,
+        "top": 603,
+        "visibleHeight": 48,
+        "visibleWidth": 315,
+        "width": 315
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8323/paywall/winback",
+  "textOverflows": [],
+  "textStart": "A MONTH LATER Here’s what your timeline could show by autumn. Skin rewards consistency. If you’d like to pick it back up, we kept your place. A welcome-back offer $49.99 / year Terms · Privacy · Restore A native welcome-back offer is not available on this account. You can still choose the current Pro plan. See current Pro plan No thanks",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/paywall/winback",
+  "scaledCount": 15,
+  "textScale": 2,
+  "url": "http://localhost:8323/paywall/winback",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
