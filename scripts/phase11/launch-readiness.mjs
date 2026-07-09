@@ -32,6 +32,9 @@ const publicLaunchPacketRequiredSourceFiles = [
   'scripts/phase9/lib.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase10/lib.mjs',
+  'scripts/phase10/beta-readiness.mjs',
+  'scripts/phase10/beta-analytics-audit.mjs',
+  'scripts/phase10/build-support-handoff-packet.mjs',
   'scripts/phase10/build-beta-packet.mjs',
   'scripts/phase10-11/public-contact-smoke.mjs',
   'scripts/phase11/lib.mjs',
@@ -44,6 +47,8 @@ const publicLaunchPacketRequiredSourceFiles = [
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'docs/phase-9/generated/release-engineering-qa-packet.json',
   'docs/phase-9/generated/release-engineering-qa-packet.md',
+  'docs/phase-10/generated/support-handoff-packet.json',
+  'docs/phase-10/generated/support-handoff-packet.md',
   'docs/phase-10/generated/closed-beta-packet.json',
   'docs/phase-10/generated/closed-beta-packet.md',
   ...phase11RequiredDocs(),
@@ -62,6 +67,11 @@ blockPublicEnvSecrets(errors, env, exampleEnv);
 
 const packageJson = JSON.parse(read('package.json'));
 for (const script of [
+  'phase10:evidence-normalization-smoke',
+  'phase10:beta-readiness',
+  'phase10:beta-analytics-audit',
+  'phase10:support-handoff',
+  'phase10:beta-packet',
   'phase11:launch-readiness',
   'phase11:ring-gates',
   'phase11:launch-packet',
@@ -72,10 +82,10 @@ for (const script of [
 }
 block(
   errors,
-  /phase11:launch-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
+  /phase10:evidence-normalization-smoke && npm run phase10:beta-readiness && npm run phase10:beta-analytics-audit && npm run phase10:support-handoff && npm run phase10:beta-packet && npm run phase11:launch-readiness && npm run phase11:ring-gates && npm run phase11:launch-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
     packageJson.scripts?.['phase11:verify'] ?? '',
   ),
-  'phase11:verify must run the strict generated-packet status audit after building the public launch packet.',
+  'phase11:verify must rerun Phase 10 readiness, analytics, support handoff, and beta packet gates before Phase 11 readiness and the strict generated-packet status audit.',
 );
 
 const publicLaunchPacketSourceFiles = new Set(phase11SourceFiles());

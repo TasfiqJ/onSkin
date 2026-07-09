@@ -108,6 +108,11 @@ generated-packet status audit immediately after their release, closed-beta, or
 public-launch packet builders. This prevents RC/beta/launch verification from
 leaving a freshly generated packet set with stale recorded hashes.
 
+Standalone Phase 11 verification must rerun the Phase 10 local evidence
+normalization, beta readiness, beta analytics, support handoff, and beta packet
+gates before public-launch readiness. Public launch verification cannot rely on
+a previously built beta packet when the underlying beta contract has changed.
+
 ## Non-Mutating Launch Readiness Sweep
 
 Use the root readiness sweep after source changes that should not rebuild

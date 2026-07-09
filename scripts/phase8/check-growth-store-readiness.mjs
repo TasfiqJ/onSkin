@@ -222,8 +222,16 @@ fail(
   'Installed app must handle /s/:shareId links.',
 );
 fail(
+  has('apps/mobile/src/app/s/[shareId].tsx', /landing_viewed/),
+  'Installed share route must track the Phase 8 landing_viewed dashboard event.',
+);
+fail(
   has('apps/mobile/src/app/s/[shareId].tsx', /isSafeOpaqueId/),
   'Installed share route must validate opaque share IDs.',
+);
+fail(
+  has('apps/mobile/src/app/s/[shareId].tsx', /sanitizeAttribution/),
+  'Installed share route must sanitize growth attribution before analytics.',
 );
 
 fail(

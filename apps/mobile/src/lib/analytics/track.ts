@@ -4,6 +4,11 @@ import type { PostHog } from 'posthog-react-native';
 import type { AnalyticsAllowedEventName } from '@/lib/analytics/eventRegistry';
 import { isAllowedAnalyticsEventName, isAllowedAnalyticsPropKey } from '@/lib/analytics/eventRegistry';
 import { env } from '@/lib/env';
+import {
+  GROWTH_ATTRIBUTION_KEYS,
+  sanitizeAttribution,
+  type GrowthAttributionKey,
+} from '@/lib/growth/attribution';
 import { devWarn } from '@/lib/observability/safeLog';
 
 let posthogPromise: Promise<PostHog | null> | null = null;
@@ -14,6 +19,7 @@ export const SENSITIVE_ANALYTICS_KEY =
 export const SENSITIVE_ANALYTICS_VALUE =
   /(@|https?:\/\/|file:\/\/|content:\/\/|\/data\/|\/var\/mobile\/|\/cache\/|\?.*=|token|jwt|secret|signed_url|barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|(?:^|[_\W])spf(?:$|[_\W])|peptide|dspt|fitzpatrick|monk|axis|step|score|slug|acne|rosacea|eczema|psoriasis|dermatitis|melasma|hyperpigmentation|irritation|procedure|medical|concern|conflict|product_fit|replenish|routine_q|conflict_q)/i;
 const APPROVED_BUCKET_KEYS = new Set(['barcode_type', 'native_ocr_enabled', 'screen_name', 'share_id']);
+const GROWTH_BUCKET_KEYS = new Set<string>(GROWTH_ATTRIBUTION_KEYS);
 const PHOTO_QUALITY_RESULT_VALUES = new Set(['matched', 'misaligned', 'darker', 'low']);
 const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
 const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
@@ -79,7 +85,14 @@ export function sanitizeAnalyticsProps(props?: Record<string, unknown>): Analyti
       if (safeNumber !== undefined) clean[key] = safeNumber;
     } else if (typeof value === 'string') {
       const trimmed = value.trim();
-      if (!trimmed || trimmed.includes('@') || SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
+      if (!trimmed || trimmed.includes('@')) continue;
+      if (GROWTH_BUCKET_KEYS.has(key)) {
+        const growthValue = sanitizeAttribution({ [key]: trimmed })[key as GrowthAttributionKey];
+        if (!growthValue) continue;
+        clean[key] = growthValue;
+        continue;
+      }
+      if (SENSITIVE_ANALYTICS_VALUE.test(trimmed)) continue;
       if (!SAFE_ANALYTICS_STRING_VALUE.test(trimmed)) continue;
       if (key === 'result' && PHOTO_QUALITY_RESULT_VALUES.has(trimmed)) continue;
       clean[key] = trimmed;

@@ -1,21 +1,64 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
-import { isSafeOpaqueId } from '@/lib/growth/attribution';
+import { isSafeOpaqueId, sanitizeAttribution } from '@/lib/growth/attribution';
+
+function firstParam(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
 
 export default function PublicShareLinkScreen() {
-  const { shareId } = useLocalSearchParams<{ shareId?: string }>();
-  const safeShareId = shareId && isSafeOpaqueId(shareId) ? shareId : null;
+  const params = useLocalSearchParams<{
+    shareId?: string | string[];
+    source?: string | string[];
+    medium?: string | string[];
+    campaign?: string | string[];
+    content?: string | string[];
+    creative_variant?: string | string[];
+    platform?: string | string[];
+    app_version?: string | string[];
+    build_number?: string | string[];
+  }>();
+  const rawShareId = firstParam(params.shareId);
+  const safeShareId = rawShareId && isSafeOpaqueId(rawShareId) ? rawShareId : null;
+  const attribution = useMemo(
+    () =>
+      sanitizeAttribution({
+        source: firstParam(params.source),
+        medium: firstParam(params.medium),
+        campaign: firstParam(params.campaign),
+        content: firstParam(params.content),
+        creative_variant: firstParam(params.creative_variant),
+        platform: firstParam(params.platform),
+        app_version: firstParam(params.app_version),
+        build_number: firstParam(params.build_number),
+        share_id: safeShareId,
+      }),
+    [
+      params.source,
+      params.medium,
+      params.campaign,
+      params.content,
+      params.creative_variant,
+      params.platform,
+      params.app_version,
+      params.build_number,
+      safeShareId,
+    ],
+  );
 
   useEffect(() => {
-    const props = safeShareId ? { share_id: safeShareId } : { reason: 'invalid_share_id' };
-    track('share_link_opened', props);
-  }, [safeShareId]);
+    const landingProps = safeShareId
+      ? { ...attribution, share_id: safeShareId }
+      : { reason: 'invalid_share_id' };
+    track('landing_viewed', landingProps);
+    track('share_link_opened', landingProps);
+  }, [attribution, safeShareId]);
 
   return (
     <Screen>

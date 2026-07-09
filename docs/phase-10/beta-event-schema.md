@@ -85,6 +85,7 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `manage_subscription_opened`
 - `support_contact_opened`
 - `support_contact_failed`
+- `landing_viewed`
 - `share_card_exported`
 - `share_link_opened`
 - `ask_opened`

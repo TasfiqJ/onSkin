@@ -53,6 +53,8 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
     expect(isSafeOpaqueId('short')).toBe(false);
     expect(sanitizeAttribution({ share_id: 'retinoid-user-123' })).toEqual({});
     expect(sanitizeAttribution({ content: 'hello world' })).toEqual({});
+    expect(sanitizeAttribution({ medium: 'jwt_header.payload.signature' })).toEqual({});
+    expect(sanitizeAttribution({ campaign: 'signed_url' })).toEqual({});
   });
 
   it('builds first-party links without sensitive query params', () => {

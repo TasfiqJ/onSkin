@@ -20,6 +20,11 @@ describe('analytics sanitizer', () => {
         step: 'irritation',
         alignment_score: 0.91,
         medium: 'organic_share',
+        campaign: 'shelf_conflict_card_v1',
+        content: 'conflict_card',
+        platform: 'ios',
+        app_version: '0.1.0',
+        build_number: '42',
         product_name: 'Retinol',
         pregnancy_status: 'pregnant',
         product_type: 'mineral_spf',
@@ -35,6 +40,12 @@ describe('analytics sanitizer', () => {
       screen_name: 'reveal',
       share_id: 'abcDEF_123456',
       native_ocr_enabled: true,
+      medium: 'organic_share',
+      campaign: 'shelf_conflict_card_v1',
+      content: 'conflict_card',
+      platform: 'ios',
+      app_version: '0.1.0',
+      build_number: '42',
     });
   });
 
@@ -46,10 +57,11 @@ describe('analytics sanitizer', () => {
         type: 'spf',
         reason: 'irritation',
         feature: 'conflict_checks',
+        campaign: 'retinol_hack',
         contact: 'person@example.com',
         content: 'skin_profile',
       }),
-    ).toEqual({ source: 'share_card' });
+    ).toEqual({ source: 'share_card', medium: 'organic_share' });
   });
 
   it('drops string values that look like URLs, tokens, or local paths', () => {
@@ -145,6 +157,7 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('routine_checkoff_completed')).toBe(
       'routine_checkoff_completed',
     );
+    expect(sanitizeAnalyticsEventName('landing_viewed')).toBe('landing_viewed');
     expect(sanitizeAnalyticsEventName('paywall_dismissed')).toBe('paywall_dismissed');
     expect(sanitizeAnalyticsEventName('subscription_cancel_intent')).toBe(
       'subscription_cancel_intent',

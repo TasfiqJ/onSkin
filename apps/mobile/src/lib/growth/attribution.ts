@@ -34,7 +34,7 @@ export const GROWTH_ATTRIBUTION_KEYS: readonly GrowthAttributionKey[] = [
 const allowedKeys = new Set<string>(GROWTH_ATTRIBUTION_KEYS);
 
 export const SENSITIVE_GROWTH_KEY =
-  /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|age|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide)/i;
+  /(barcode|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|age|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|token|jwt|secret|signed_url)/i;
 
 const OPAQUE_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const ATTRIBUTION_VALUE = /^[A-Za-z0-9._~-]{1,120}$/;
