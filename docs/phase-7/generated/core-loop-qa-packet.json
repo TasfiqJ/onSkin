@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T00:04:10.441Z",
+  "generatedAt": "2026-07-09T00:05:59.714Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "d14c88efac61b807d339819f52fd7031910c6370",
-  "gitStatus": "",
+  "gitSha": "7692ca7833cc31f962ebdafb3530d9233cde4162",
+  "gitStatus": "M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -225,37 +225,37 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "619223fe5cfece6e1fc7d9ca59f27f46e01cedd0c23afb06cfb97e513380d495"
+      "sha256": "cf93ea0caa51a5fb3caaaf73c690103e02e28e334ce73e6dea8e6753470366e3"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "9df317fbf00f856a71bfeb630ba2ae474458ed9a7fe565f242db9c32cd53ef6e"
+      "sha256": "0df29891e997f30c9eebca533b6f3e85f8ddc1849ead06d39ff3d5836ed856b3"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 11077,
-      "sha256": "327cd000661e26dd6bc9ec0d4fe22937c0f5706b3d6966cb93237d6137d26bf2"
+      "sha256": "12ae85b04cfc4e0db0a6e5e17e635bd6044ec273ccd8c6aa3f37fb9eb78320a8"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 9770,
-      "sha256": "cdcf9837ec336f3773a861b449a178e47e021abc34496333d90befec8ab15e01"
+      "sha256": "4ce399db705e7b36dded7128b94c3547a3451cbbe1fc3be874d7b621c450aad5"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 10518,
-      "sha256": "8f643ad072ca5bffbbb5ee3a604c49b9a10153460fc1ec1107343fdacfbf284c"
+      "bytes": 10723,
+      "sha256": "fbc2ee7c37c1b5141de4e820594f50cdd720997640e36ca808e8c87c9f10b698"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7857,
-      "sha256": "79c5fbad89e593279a6370039eb4653d292b2a48470e9ee18b2f7e7ca40985af"
+      "bytes": 7958,
+      "sha256": "b35e971e68443b03171b3903f57bbedec710203bc1374ac02e6193a21dfc6c27"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -311,5 +311,7 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
+  ]
 }
