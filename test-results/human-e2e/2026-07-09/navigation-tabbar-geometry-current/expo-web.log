@@ -14,80 +14,80 @@ Waiting on http://localhost:8184
 An update for expo is available: 56.0.14 → ~56.0.15
 3 other packages may need updating. Run npx expo install --check for details.
 Logs for your project will appear below.
-λ Bundled 2858ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (2559 modules)
+λ Bundled 5958ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (2581 modules)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 3710ms node_modules\expo-router\entry.js (2364 modules)
-λ Bundled 96ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 7997ms node_modules\expo-router\entry.js (2364 modules)
+λ Bundled 792ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 694ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 81ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 2826ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 329ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 840ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 1573ms node_modules\expo-router\entry.js (2285 modules)
-Web Bundled 304ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 117ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 2321ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 202ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 602ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 98ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 85ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1389ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 5761ms node_modules\expo-router\entry.js (2369 modules)
+Web Bundled 2169ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 244ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 306ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 666ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 86ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 78ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1763ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 206ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 191ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 579ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 88ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 74ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1909ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 302ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 287ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 547ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 104ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 85ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 2074ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 232ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 317ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 720ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 106ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 95ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 2034ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 238ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 262ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 749ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 99ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 77ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1750ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 195ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 152ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 590ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 95ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 87ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1091ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 152ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 213ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 582ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 81ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 75ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1091ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 151ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 141ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 581ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 92ms node_modules\expo-router\entry.js (1 module)
-λ Bundled 90ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
+Web Bundled 1136ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 185ms node_modules\expo-router\entry.js (1 module)
+λ Bundled 197ms node_modules\@expo\cli\node_modules\@expo\router-server\node\render.js (1 module)
 [env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE
 [env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE
 [expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.
-Web Bundled 732ms node_modules\expo-router\entry.js (1 module)
-Web Bundled 83ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 1480ms node_modules\expo-router\entry.js (1 module)
+Web Bundled 153ms node_modules\expo-router\entry.js (1 module)
