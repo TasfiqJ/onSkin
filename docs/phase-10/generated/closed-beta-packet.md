@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-09T17:08:48.324Z
+Generated: 2026-07-09T17:22:49.993Z
 Status: blocked
-Git SHA: ded5dc2b12ffb5a13fa625ee9e5c7115da71e598
+Git SHA: d475478da15c8405c952a91b4781e888b73db6e1
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -56,10 +56,10 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `ca12598b07000b0f80c9647c8985b004bc7713125dd3f07007a4438c30940871`
+- `package.json`: `9fb695b18f509d863abbfac854d2047a49cc9d357c3f327ae90cfb0c1127c975`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `scripts/phase9/lib.mjs`: `2e71b816a23d872b46a743345ac70b96b95625f3c720ed7274f2e6833d726f78`
+- `scripts/phase9/lib.mjs`: `54b07f029b0b690a4ad8f4c05e524201a52a952c44e62ba9582d270764a141d7`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase10-11/public-contact-smoke.mjs`: `630ad5c5ff818df209ef7bfa990f2bf64fb22a257ca22acb0fd09fad782801e4`
 - `scripts/phase10/lib.mjs`: `d86f0fd60baac38388f518bfb1ad7024102f80ab31783b4503542b882321bee3`
@@ -71,8 +71,8 @@ Phase 9 packet status: blocked
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `33df93ea6c9116b50df449c0d1fa67adb82d83742f47c3f5b5ee57fe63a0792b`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `70fb9e95357a8539ff6da4acf3d8a37b523dd38e301ad4b378e2d90e4fd69207`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `ed1d50439bc4eee240acdc536f5b876b28491a1bb2034e928a9e0f856c222804`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `5b0624b53d1d4490855081dbe744f78cd07dccb69e65345682655e01554b6489`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `01beb227226484f029ec6ac1d0093e4c2340c8599f6a046bc25d016ad86748f5`
 - `docs/phase-10/beta-source-of-truth.md`: `0cb11a58751407ffdfcc836e2373cb6d39d1faf93874d23a817098dc3b68e530`
 - `docs/phase-10/tester-recruitment-sheet.md`: `ef5a57b36cccea22e467ac999156695006c6a9d1e406d32c4ce67beeb921b5cc`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`

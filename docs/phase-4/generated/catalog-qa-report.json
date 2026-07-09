@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T17:21:28.591Z",
+  "generatedAt": "2026-07-09T17:22:40.697Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "5e08a00fdcb06bb4c01c53a9eac6b7fce23b32f7",
-  "gitStatus": "M  scripts/phase9/lib.mjs",
+  "gitSha": "ae16d770544fca2672357922bc5f6c0cc98fe9c6",
+  "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
   "inputArtifact": {
@@ -135,14 +135,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 35263,
-      "sha256": "6acc1d496e486fc04f1914a11aafa39198790f6d906fb01b2791ab80c391ad86"
+      "bytes": 35120,
+      "sha256": "63a3c7fa39bed01d8ad41aef42e4868202c3601760c1a89281c12a4697c66d7d"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 22574,
-      "sha256": "527d10dc540ab04e52652d50d99aaaa0456330a5fb1aa0c41fb42f476c5c42fd"
+      "bytes": 22471,
+      "sha256": "ee323c9a5f7a4857f85a9ed7ba0dc12f48bf41e93a4d1c6770cd1acfb727c1d8"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
@@ -166,10 +166,8 @@
     "missingIngredients": 0
   },
   "blockers": [],
-  "warnings": [
-    "Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ],
-  "localQaClear": false,
+  "warnings": [],
+  "localQaClear": true,
   "launchClear": false,
   "launchClearReason": "No. This report only validates the local fixture/export output; launch clearance still requires final source identity, ODbL/CosIng legal review, curated batch QA, beta coverage, and reviewer signoff."
 }
