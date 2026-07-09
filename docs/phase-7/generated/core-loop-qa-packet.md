@@ -1,8 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T00:05:59.714Z
-Git SHA: 7692ca7833cc31f962ebdafb3530d9233cde4162
-Git status: DIRTY
+Generated at: 2026-07-09T00:07:25.055Z
+Git SHA: 4624f49696949bb10fc5eee9f47c5b57d43c4da4
+Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -76,8 +76,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/e2e/generated/human-e2e-manifest.md | present | 1774 | 0df29891e997f30c9eebca533b6f3e85f8ddc1849ead06d39ff3d5836ed856b3 |
 | docs/phase-5/generated/device-qa-packet.json | present | 11077 | 12ae85b04cfc4e0db0a6e5e17e635bd6044ec273ccd8c6aa3f37fb9eb78320a8 |
 | docs/phase-5/generated/device-qa-packet.md | present | 9770 | 4ce399db705e7b36dded7128b94c3547a3451cbbe1fc3be874d7b621c450aad5 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10723 | fbc2ee7c37c1b5141de4e820594f50cdd720997640e36ca808e8c87c9f10b698 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7958 | b35e971e68443b03171b3903f57bbedec710203bc1374ac02e6193a21dfc6c27 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10518 | 943fcf32fdbf98020fb63a216e3ded0a15ee928aa8bf8497bcb03354867ee7fa |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7857 | a1798231f1a026f6972dc41a8ded783b6135851ec83c651d2ff4c96a942a4349 |
 | docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
 | docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4416 | 21255a254436a75a2765a262ad03a044a29f28ea2adae15a4b833d00871a373e |
@@ -110,4 +110,4 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Warnings
 
-- Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.
+- none

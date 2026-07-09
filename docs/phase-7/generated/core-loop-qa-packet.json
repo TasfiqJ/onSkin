@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T00:05:59.714Z",
+  "generatedAt": "2026-07-09T00:07:25.055Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "7692ca7833cc31f962ebdafb3530d9233cde4162",
-  "gitStatus": "M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md",
+  "gitSha": "4624f49696949bb10fc5eee9f47c5b57d43c4da4",
+  "gitStatus": "",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -248,14 +248,14 @@
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 10723,
-      "sha256": "fbc2ee7c37c1b5141de4e820594f50cdd720997640e36ca808e8c87c9f10b698"
+      "bytes": 10518,
+      "sha256": "943fcf32fdbf98020fb63a216e3ded0a15ee928aa8bf8497bcb03354867ee7fa"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 7958,
-      "sha256": "b35e971e68443b03171b3903f57bbedec710203bc1374ac02e6193a21dfc6c27"
+      "bytes": 7857,
+      "sha256": "a1798231f1a026f6972dc41a8ded783b6135851ec83c651d2ff4c96a942a4349"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
@@ -311,7 +311,5 @@
     "Missing deferredSurfacesQaPass evidence.",
     "Missing analyticsQaPass evidence."
   ],
-  "warnings": [
-    "Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence."
-  ]
+  "warnings": []
 }
