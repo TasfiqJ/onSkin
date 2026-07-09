@@ -99,7 +99,12 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('const compactPaywall = height < 640;');
     expect(upsell).toContain('const shortPaywall = height < 600;');
     expect(upsell).toContain('const splitShortPaywall = height < 410;');
+    expect(upsell).toContain('const microShortPaywall = height < 380;');
     expect(upsell).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
+    expect(upsell).toContain('const paywallTitle = microShortPaywall');
+    expect(upsell).toContain("? 'Unlock photos.'");
+    expect(upsell).toContain(": 'Unlock Pro.'");
+    expect(upsell).toContain(': copy.title;');
     expect(upsell).toContain(
       "const longCompactTitle = compactPaywall && width < 420 && key === 'reminders_widgets';",
     );
@@ -111,8 +116,12 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('accessibilityLabel="Maybe later"');
     expect(upsell).toContain('glyph="x"');
     expect(upsell).toContain('tone="muted"');
-    expect(upsell).toMatch(/fontSize:\s*narrowShortPaywall\s*\?\s*22/);
-    expect(upsell).toMatch(/lineHeight:\s*narrowShortPaywall\s*\?\s*25/);
+    expect(upsell).toContain('accessibilityLabel={copy.title}');
+    expect(upsell).toContain('{paywallTitle}');
+    expect(upsell).toContain('adjustsFontSizeToFit={microShortPaywall}');
+    expect(upsell).toContain('numberOfLines={microShortPaywall ? 1 : undefined}');
+    expect(upsell).toMatch(/fontSize:\s*microShortPaywall\s*\?\s*18/);
+    expect(upsell).toMatch(/lineHeight:\s*microShortPaywall\s*\?\s*21/);
     expect(upsell).toContain('{!narrowShortPaywall ? (');
     expect(upsell).toContain(
       "className={shortPaywall ? 'mt-1.5' : compactPaywall ? 'mt-2' : 'mt-3'}",
@@ -122,18 +131,23 @@ describe('paywall mobile contracts', () => {
       "narrowShortPaywall\n            ? 'mt-1 flex-row items-center justify-between rounded-card bg-paper-raised px-3 py-1.5'",
     );
     expect(upsell).toContain('{narrowShortPaywall ? null : (');
-    expect(upsell).toContain('adjustsFontSizeToFit={narrowShortPaywall}');
+    expect(upsell).toContain('adjustsFontSizeToFit={microShortPaywall || narrowShortPaywall}');
     expect(upsell).toContain('minimumFontScale={0.82}');
-    expect(upsell).toContain('numberOfLines={narrowShortPaywall ? 1 : undefined}');
-    expect(upsell).toMatch(/fontSize:\s*narrowShortPaywall\s*\?\s*20/);
-    expect(upsell).toMatch(/lineHeight:\s*narrowShortPaywall\s*\?\s*23/);
+    expect(upsell).toContain(
+      'numberOfLines={microShortPaywall || narrowShortPaywall ? 1 : undefined}',
+    );
+    expect(upsell).toMatch(/fontSize:\s*microShortPaywall\s*\?\s*18/);
+    expect(upsell).toMatch(/lineHeight:\s*microShortPaywall\s*\?\s*21/);
     expect(upsell).toContain('{annualDisplay.pricePerMonthLabel && !narrowShortPaywall ? (');
     expect(upsell).toMatch(
       /compactPaywall\s*\?\s*'mt-2 h-\[54px\] items-center justify-center rounded-pill'/,
     );
     expect(upsell).toContain(
-      "narrowShortPaywall\n            ? 'mt-1 h-[48px] items-center justify-center rounded-pill'",
+      "microShortPaywall\n            ? 'mt-0 h-[48px] items-center justify-center rounded-pill'",
     );
+    expect(upsell).toContain('disabled={startTrial.isPending}');
+    expect(upsell).not.toContain('disabled={!canPurchase || startTrial.isPending}');
+    expect(upsell).toContain('fontSize: microShortPaywall ? 15.5 : 17');
     expect(upsell).toContain(
       '{shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}',
     );
@@ -152,9 +166,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
     expect(proGate).toContain('const microShortPaywall = height < 380;');
     expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
-    expect(proGate).toContain(
-      'const microShortDeferredCtaStyle = microShortPaywall',
-    );
+    expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
     expect(proGate).toContain('zIndex: 2,');

@@ -36,7 +36,13 @@ export default function UpsellSheet() {
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const splitShortPaywall = height < 410;
+  const microShortPaywall = height < 380;
   const narrowShortPaywall = shortPaywall && width < 360;
+  const paywallTitle = microShortPaywall
+    ? key === 'photo_timeline'
+      ? 'Unlock photos.'
+      : 'Unlock Pro.'
+    : copy.title;
 
   function onStartTrial() {
     setActionFeedback(null);
@@ -110,28 +116,36 @@ export default function UpsellSheet() {
       {shortPaywall && !splitShortPaywall ? <ComplianceRow density="compactHeader" /> : null}
       <Text
         variant="title"
+        adjustsFontSizeToFit={microShortPaywall}
+        minimumFontScale={0.86}
+        numberOfLines={microShortPaywall ? 1 : undefined}
+        accessibilityLabel={copy.title}
         style={{
-          fontSize: narrowShortPaywall
-            ? 22
-            : splitShortPaywall
-              ? 24
-              : shortPaywall
-                ? 27
-                : longCompactTitle
-                  ? 24
-                  : 30,
-          lineHeight: narrowShortPaywall
-            ? 25
-            : splitShortPaywall
-              ? 27
-              : shortPaywall
-                ? 30
-                : longCompactTitle
+          fontSize: microShortPaywall
+            ? 18
+            : narrowShortPaywall
+              ? 22
+              : splitShortPaywall
+                ? 24
+                : shortPaywall
                   ? 27
-                  : 34,
+                  : longCompactTitle
+                    ? 24
+                    : 30,
+          lineHeight: microShortPaywall
+            ? 21
+            : narrowShortPaywall
+              ? 25
+              : splitShortPaywall
+                ? 27
+                : shortPaywall
+                  ? 30
+                  : longCompactTitle
+                    ? 27
+                    : 34,
         }}
       >
-        {copy.title}
+        {paywallTitle}
       </Text>
       {!narrowShortPaywall ? (
         <Text
@@ -166,12 +180,28 @@ export default function UpsellSheet() {
           )}
           <Text
             variant="title"
-            adjustsFontSizeToFit={narrowShortPaywall}
+            adjustsFontSizeToFit={microShortPaywall || narrowShortPaywall}
             minimumFontScale={0.82}
-            numberOfLines={narrowShortPaywall ? 1 : undefined}
+            numberOfLines={microShortPaywall || narrowShortPaywall ? 1 : undefined}
             style={{
-              fontSize: narrowShortPaywall ? 20 : shortPaywall ? 22 : compactPaywall ? 24 : 26,
-              lineHeight: narrowShortPaywall ? 23 : shortPaywall ? 25 : compactPaywall ? 28 : 30,
+              fontSize: microShortPaywall
+                ? 18
+                : narrowShortPaywall
+                  ? 20
+                  : shortPaywall
+                    ? 22
+                    : compactPaywall
+                      ? 24
+                      : 26,
+              lineHeight: microShortPaywall
+                ? 21
+                : narrowShortPaywall
+                  ? 23
+                  : shortPaywall
+                    ? 25
+                    : compactPaywall
+                      ? 28
+                      : 30,
             }}
           >
             {annualDisplay.priceLabel}
@@ -214,20 +244,28 @@ export default function UpsellSheet() {
       ) : null}
       <Pressable
         accessibilityRole="button"
-        disabled={!canPurchase || startTrial.isPending}
+        disabled={startTrial.isPending}
         onPress={onStartTrial}
         className={
-          narrowShortPaywall
-            ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
-            : shortPaywall
-              ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'
-              : compactPaywall
-                ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
-                : 'mt-4 h-[54px] items-center justify-center rounded-pill'
+          microShortPaywall
+            ? 'mt-0 h-[48px] items-center justify-center rounded-pill'
+            : narrowShortPaywall
+              ? 'mt-1 h-[48px] items-center justify-center rounded-pill'
+              : shortPaywall
+                ? 'mt-1.5 h-[52px] items-center justify-center rounded-pill'
+                : compactPaywall
+                  ? 'mt-2 h-[54px] items-center justify-center rounded-pill'
+                  : 'mt-4 h-[54px] items-center justify-center rounded-pill'
         }
         style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
       >
-        <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
+        <Text
+          adjustsFontSizeToFit
+          className="font-sans-semibold"
+          minimumFontScale={0.86}
+          numberOfLines={1}
+          style={{ color: colors.paper, fontSize: microShortPaywall ? 15.5 : 17 }}
+        >
           Start free trial
         </Text>
       </Pressable>

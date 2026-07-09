@@ -196,7 +196,15 @@ export default function RecommendationDetail() {
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
         />
-        <Text variant="body" className="font-sans-semibold" tone="muted">
+        <Text
+          variant="body"
+          adjustsFontSizeToFit
+          className="flex-1 font-sans-semibold"
+          minimumFontScale={0.82}
+          numberOfLines={1}
+          tone="muted"
+          style={{ minWidth: 0 }}
+        >
           Recommendation
         </Text>
       </View>

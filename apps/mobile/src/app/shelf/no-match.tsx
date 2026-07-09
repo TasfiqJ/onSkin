@@ -19,6 +19,7 @@ export default function NoMatchScreen() {
   const splitShortPhone = height < 410;
   const microShortPhone = height < 380;
   const compactPressurePhone = shortPhone;
+  const microShortSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;
 
   const goOcr = () => {
     haptics.select();
@@ -134,34 +135,36 @@ export default function NoMatchScreen() {
           hideSubtitle={ultraShortPhone}
           onPress={goSearch}
         />
-        <NoMatchAction
-          icon="I"
-          title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
-          subtitle="We'll read the INCI text"
-          accessibilityLabel="Scan the ingredient list. We'll read the INCI text"
-          compact={shortPhone}
-          ultraCompact={shortPhone}
-          hideSubtitle={compactPressurePhone}
-          onPress={goOcr}
-        />
-        <View
-          style={
-            microShortPhone
-              ? { marginTop: 40 }
-              : compactPressurePhone
-                ? { marginTop: 32 }
-                : undefined
-          }
-        >
+        <View style={microShortSecondaryRecoveryStyle}>
           <NoMatchAction
-            icon="+"
-            title="Add it by hand"
-            subtitle="Always works, even offline"
+            icon="I"
+            title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
+            subtitle="We'll read the INCI text"
+            accessibilityLabel="Scan the ingredient list. We'll read the INCI text"
             compact={shortPhone}
             ultraCompact={shortPhone}
-            hideSubtitle={ultraShortPhone}
-            onPress={goManual}
+            hideSubtitle={compactPressurePhone}
+            onPress={goOcr}
           />
+          <View
+            style={
+              microShortPhone
+                ? { marginTop: 40 }
+                : compactPressurePhone
+                  ? { marginTop: 32 }
+                  : undefined
+            }
+          >
+            <NoMatchAction
+              icon="+"
+              title="Add it by hand"
+              subtitle="Always works, even offline"
+              compact={shortPhone}
+              ultraCompact={shortPhone}
+              hideSubtitle={ultraShortPhone}
+              onPress={goManual}
+            />
+          </View>
         </View>
       </View>
 

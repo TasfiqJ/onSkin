@@ -6,6 +6,36 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Accepted and enforced the V1 device support floor so release QA is no longer
+  open-ended across browser-only micro-short heights. `docs/DEVICE_SUPPORT_POLICY.md`
+  now sets iOS 17.0+ and Android 10 / API 29+ as the launch install floor,
+  keeps 320 x 480 as the launch-blocking Expo web small-phone viewport, and
+  reclassifies 320 x 430 / 390 / 370 / 360 browser viewports as resilience
+  stress audits unless they reproduce on a supported physical device or app
+  review/accessibility requirement. `app.base.json` now enforces the iOS
+  deployment target and Android minSdk via `expo-build-properties`, Phase 5
+  config checks guard both values, and the human-E2E manifest now blocks on the
+  support-floor route sweep while recording smaller stress evidence separately.
+
+- Cleared the harsher 320 x 360 / 200% micro-short text-pressure route
+  audit after the 320 x 390 / 200% sweep had already passed. The 360 px pass
+  reproduced contextual paywall and direct-upsell CTA clipping or blocked
+  hit-tests, Settings Privacy direct-entry overlap on the health-data withdrawal
+  row, Settings Notifications nudge-row peeking, Shelf no-match recovery
+  slivers, stale Recommendation header overflow, and compact Shelf filter
+  crowding. Micro-short paywalls now use fitted titles/prices/CTAs, direct
+  upsell store-unavailable CTAs remain tappable for route-owned feedback,
+  narrow privacy direct entries defer the destructive health-data action below
+  the first viewport, lower-priority notification and Shelf no-match recovery
+  controls move fully below the first viewport, stale Recommendation headers
+  fit in one line, and compact Shelf filters keep the short visible `7d` label
+  with the full accessibility label. Focused Shelf/Settings/Recommendations/
+  paywall contracts pass, and the final 49-route 320 x 360 / 200% sweep reports
+  zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-200-micro-short-360-postfix-8/`
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-micro-short-360-clearance.md`.
+
 - Re-cleared the 320 x 370 and 320 x 360 / 130% micro-short text-pressure
   route audits after the current source exposed fresh first-viewport issues in
   Recommendation Preferences, Settings Notifications, Settings Privacy, and the

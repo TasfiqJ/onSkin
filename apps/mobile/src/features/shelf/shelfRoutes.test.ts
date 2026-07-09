@@ -143,6 +143,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain('const microShortPhone = height < 380;');
     expect(source).toContain('const compactPressurePhone = shortPhone;');
+    expect(source).toContain(
+      'const microShortSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;',
+    );
     expect(source).toContain("? 'px-6 pb-2 pt-2'");
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
     expect(source).toMatch(/:\s*shortPhone\s*\?\s*'px-6 pb-4 pt-2'/);
@@ -160,7 +163,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("? 'text-[21px] leading-[24px]'");
     expect(source).toContain("? 'mt-1 gap-1'");
     expect(source).toContain("? 'mt-2 gap-1'");
+    expect(source).toContain('<View style={microShortSecondaryRecoveryStyle}>');
     expect(source).toContain('style={');
+    expect(source).toContain('? { marginTop: 40 }');
     expect(source).toContain('compactPressurePhone');
     expect(source).toContain('? { marginTop: 32 }');
     expect(source).toContain('compact={shortPhone}');
