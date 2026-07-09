@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-09T12:13:04.300Z
+Generated: 2026-07-09T12:25:08.685Z
 Status: blocked
-Git SHA: 9b4aada1b29ab2cd921d150ea85f157eae8c3caa
+Git SHA: 134e4bec6e12aff9fca4ba95f4f758b0b411dba0
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -78,7 +78,7 @@ Phase 9 packet status: blocked
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
 - `docs/phase-10/testflight-packet.md`: `ff94ad4bebe828ee607ccb0dd1b6455d2102aebf2acf0e541f435aede887225c`
 - `docs/phase-10/google-closed-testing-packet.md`: `bad9d0c5424dbba40c9d4231dc5e16cd7118200e30935d52903a7450a928a5d6`
-- `docs/phase-10/beta-event-schema.md`: `c7a2e32075450b7ceb2325d3cb4cc95eee62d15ae48fb60051334b8c6aac13f5`
+- `docs/phase-10/beta-event-schema.md`: `419fd818017db80273d5435fd2edcee179bc0215d403c774cc1557326f95dc00`
 - `docs/phase-10/support-operations.md`: `2dedf1baab29c8e3bd0e1dcc9c248ffc1ade2e9d7cdbf05d217094208a87245d`
 - `docs/phase-10/surveys.md`: `7500508e1ddd2f449ad8ab06584e990ba936869dae70f3db519a9a1efc474276`
 - `docs/phase-10/interview-script.md`: `bd9972d0f0379ba3392b8edefe5a11f8ccbde6d601213efa0834c54da065d8ae`
