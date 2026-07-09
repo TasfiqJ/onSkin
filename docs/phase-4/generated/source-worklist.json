@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T18:31:01.728Z",
+  "generatedAt": "2026-07-09T18:42:32.189Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "599f58663558e8b3bfd80004dc84eb682939b02d",
+  "gitSha": "fb5a18a69d0fc45ee5056ca93f421a99c7488f3b",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -77,8 +77,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 37879,
-          "sha256": "24f2810d8674c0e287cd0c8911e4206534e04932d69d9c0677ae100208b53aa7"
+          "bytes": 38049,
+          "sha256": "edff81b9251e4584bf80b03d9d26d6776051a91daf086b96bca16cdabbe8e85d"
         }
       ]
     },
@@ -365,20 +365,20 @@
         {
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
-          "bytes": 1854,
-          "sha256": "5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6"
+          "bytes": 2125,
+          "sha256": "d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d"
         },
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
           "exists": true,
-          "bytes": 21407,
-          "sha256": "b9c92a82c29de2bab80ec56fa2bdaf2742e3d0aa202775e4334b3012d14f3da4"
+          "bytes": 21522,
+          "sha256": "ed306d7329101f4369f5e7d971a8361f75e15eb3397288de990999e6c19aac69"
         },
         {
           "path": "scripts/phase4/beta-coverage-report-smoke.mjs",
           "exists": true,
-          "bytes": 7566,
-          "sha256": "0a145db27b355e3bf1a25a509f583559a8ca2728e73d2c8385b3f6da7a866732"
+          "bytes": 8359,
+          "sha256": "a277c4d4193d54daf9007b04a5b21b7261022ebe84ba9ae370233c894a3a6eb6"
         },
         {
           "path": "docs/phase-10/catalog-beta-report.md",
@@ -401,8 +401,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 37879,
-          "sha256": "24f2810d8674c0e287cd0c8911e4206534e04932d69d9c0677ae100208b53aa7"
+          "bytes": 38049,
+          "sha256": "edff81b9251e4584bf80b03d9d26d6776051a91daf086b96bca16cdabbe8e85d"
         }
       ]
     },
@@ -831,8 +831,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 37879,
-          "sha256": "24f2810d8674c0e287cd0c8911e4206534e04932d69d9c0677ae100208b53aa7"
+          "bytes": 38049,
+          "sha256": "edff81b9251e4584bf80b03d9d26d6776051a91daf086b96bca16cdabbe8e85d"
         }
       ]
     },
@@ -868,8 +868,8 @@
         {
           "path": "docs/phase-4/beta-coverage-report.md",
           "exists": true,
-          "bytes": 1854,
-          "sha256": "5fb792bcaf7004c9ce2f44f75eaf866f7bdba230e04116936f54a99cd9b873f6"
+          "bytes": 2125,
+          "sha256": "d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d"
         },
         {
           "path": "docs/phase-10/support-operations.md",
@@ -886,8 +886,8 @@
         {
           "path": "scripts/phase4/beta-coverage-report.mjs",
           "exists": true,
-          "bytes": 21407,
-          "sha256": "b9c92a82c29de2bab80ec56fa2bdaf2742e3d0aa202775e4334b3012d14f3da4"
+          "bytes": 21522,
+          "sha256": "ed306d7329101f4369f5e7d971a8361f75e15eb3397288de990999e6c19aac69"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
@@ -904,8 +904,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 37879,
-          "sha256": "24f2810d8674c0e287cd0c8911e4206534e04932d69d9c0677ae100208b53aa7"
+          "bytes": 38049,
+          "sha256": "edff81b9251e4584bf80b03d9d26d6776051a91daf086b96bca16cdabbe8e85d"
         }
       ]
     }
