@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T22:40:52.941Z
-Git SHA: 8b3d3b60b3de53524404bcdd6c170fbec9e79457
+Generated: 2026-07-09T23:02:08.135Z
+Git SHA: 51d5f91130d93d0b8446ad59781b75e0a0049763
 Evidence date: 2026-07-09
 Status: pass
 
@@ -37,7 +37,7 @@ dependency to the repo.
 | 320 x 480 stress route rerun                                     | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun                   |
 | 320 x 430 resilience route clearance                             | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep   |
 | 320 x 390 split-short stress clearance                           | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
-| 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 44    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
+| 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 58    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
 
 ## Warnings
 
