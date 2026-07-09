@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T12:24:50.528Z",
+  "generatedAt": "2026-07-09T12:28:43.725Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "134e4bec6e12aff9fca4ba95f4f758b0b411dba0",
+  "gitSha": "63294f88a18c2c01a13639e210dec593e765469d",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -182,8 +182,8 @@
     {
       "path": "scripts/phase7/check-core-loop.mjs",
       "exists": true,
-      "bytes": 15007,
-      "sha256": "a200e57117ece04c7782a06b456711eacfc1311010a9c0b2c5eeddbd143a432d"
+      "bytes": 16278,
+      "sha256": "770178f78f6ba6bbe6702940c9eec9f9059c394a13900b874da09fcb2116a72d"
     },
     {
       "path": "scripts/phase7/check-core-loop-smoke.mjs",

@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-09T12:24:50.528Z
-Git SHA: 134e4bec6e12aff9fca4ba95f4f758b0b411dba0
+Generated at: 2026-07-09T12:28:43.725Z
+Git SHA: 63294f88a18c2c01a13639e210dec593e765469d
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -65,7 +65,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 24700 | 61d0ca03d82d58b972df8bb0f6dd4a5a480f7db6eef75be8f45bbf9abc53038a |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 8380 | 236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293 |
 | scripts/phase7/build-core-loop-qa-packet.mjs | present | 10052 | 1dae83cb3b21bda64a75e3a90f64b13253072d256b521f885516bbb02b906407 |
-| scripts/phase7/check-core-loop.mjs | present | 15007 | a200e57117ece04c7782a06b456711eacfc1311010a9c0b2c5eeddbd143a432d |
+| scripts/phase7/check-core-loop.mjs | present | 16278 | 770178f78f6ba6bbe6702940c9eec9f9059c394a13900b874da09fcb2116a72d |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 10280 | da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb |
 | scripts/e2e/human-e2e-manifest.mjs | present | 15805 | 22f7569e85afbcf56ce915d6bee53ebb24ecd6fe53a041da58546760d0a00740 |
 | scripts/phase9/lib.mjs | present | 13341 | 6ea9876b9f4b8ee106fe8690ce4626e4faedcf099f72285d0ead99cae5d44ace |
