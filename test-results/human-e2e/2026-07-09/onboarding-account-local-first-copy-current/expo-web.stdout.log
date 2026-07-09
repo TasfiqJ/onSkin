@@ -1,0 +1,10 @@
+
+> @onskin/mobile@0.1.0 web
+> expo start --web --port 8195
+
+Starting project at C:\Users\jasim\Desktop\onSkin\apps\mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+

@@ -1,0 +1,30 @@
+{
+  "date": "2026-07-09",
+  "feature": "onboarding account local-first copy",
+  "surface": "Expo web",
+  "viewport": {
+    "width": 360,
+    "height": 640,
+    "supportClass": "launch-floor"
+  },
+  "route": "http://localhost:8195/onboarding/account",
+  "status": "pass",
+  "verdict": "pass",
+  "assertions": {
+    "localFirstCopyVisible": true,
+    "oldCrossDeviceClaimVisible": false,
+    "horizontalOverflowPx": 0,
+    "notNowButtonHeightPx": 48
+  },
+  "evidence": [
+    "account-local-first-copy.png",
+    "account-local-first-copy.json",
+    "browser-warn-error-logs.json",
+    "report.md"
+  ],
+  "remainingRisk": [
+    "Native iOS and Android device QA remains separate.",
+    "Supabase auth was unavailable locally, so the no-account state was tested.",
+    "Browser DOM snapshot failed; screenshot plus bounded visible-text and geometry JSON were captured instead."
+  ]
+}

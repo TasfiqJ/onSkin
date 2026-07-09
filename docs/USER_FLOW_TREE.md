@@ -289,6 +289,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Open `/onboarding/account` from the onboarding path and inspect the account-creation copy.
   - Expected result: Account creation copy stays honest about sign-in, subscription, and privacy controls; it must not imply routine/progress cross-device sync while routine checks remain local-first for beta.
   - Evidence: Screenshot, visible-text snapshot, console logs, and viewport notes.
+  - Current local evidence: 2026-07-09 Codex in-app browser Expo web at 360 x 640 opens `/onboarding/account`, verifies `local-first on this device` is visible, verifies the old `routine and progress are yours on any device` claim is absent, keeps horizontal overflow at 0 px, and records an empty current-route warning/error log. Evidence is in `test-results/human-e2e/2026-07-09/onboarding-account-local-first-copy-current/`.
 - Branch: quiz and reveal draft copy
   - Priority: Critical
   - Automate later: Yes

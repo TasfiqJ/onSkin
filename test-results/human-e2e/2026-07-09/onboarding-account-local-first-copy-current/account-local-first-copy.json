@@ -1,0 +1,24 @@
+{
+  "bodyText": "Protect your plan, keep it private. Create an account for sign-in, subscription, and privacy controls. Routine checks stay local-first on this device for this beta, and photos still stay on this device. Account sign-in is not available right now. You can continue without an account. Not now",
+  "horizontalOverflowPx": 0,
+  "linksAndButtons": [
+    {
+      "height": 48,
+      "left": 24,
+      "role": "button",
+      "text": "Not now",
+      "top": 577,
+      "width": 312
+    }
+  ],
+  "localFirstCopyVisible": true,
+  "oldCrossDeviceClaimVisible": false,
+  "scrollHeight": 641,
+  "title": "",
+  "url": "http://localhost:8195/onboarding/account",
+  "viewport": {
+    "devicePixelRatio": 1.0000000199067927,
+    "height": 641,
+    "width": 360
+  }
+}
