@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-09T19:06:17.932Z
+Generated: 2026-07-09T19:21:11.381Z
 Status: blocked
-Git SHA: 1f1083064d66b869dd0a8e228aa19f1ea5d73c0a
+Git SHA: 013bf27778a1e5d3881570d81691f4ae2cb9b407
 Git status: clean
 
 ## Release Identity
@@ -80,7 +80,7 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `package.json`: `31b25f729ad716330f4120b1a2ad67f2ce7c01f0cd8608ce9b38e1030698c4aa`
+- `package.json`: `5bbd4fddd686a8b94d67aba34d779e385da1575931284c6a908452fde6d473a8`
 - `package-lock.json`: `f85eb88858555c4ec6827aedf170ce7752f18e0f9c94c9a0e09a2c6a449f0d26`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
@@ -111,7 +111,7 @@ Git status: clean
 - `supabase/functions/catalog-report/privacy.test.ts`: `1a6014b406eba2e771901906309e78162321af3352af63d33d20fd017df70c76`
 - `supabase/functions/revenuecat-webhook/index.ts`: `210324cc1b57e321885d2fb523cf62a0b2adcfca3cee9fc2df9164ffde9147c4`
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
-- `scripts/phase9/lib.mjs`: `54b07f029b0b690a4ad8f4c05e524201a52a952c44e62ba9582d270764a141d7`
+- `scripts/phase9/lib.mjs`: `998500929ddfe87ddc5a456c0b2f7eb589231372e58cbc5109004002416a5a08`
 - `scripts/phase9/release-contact-smoke.mjs`: `e4695f91978bbebbe2ed447b543b3d163b6b81c8313c4aecf490a72acf67e58a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase9/release-smoke.mjs`: `a6f7611e967781c7ffdbd0b19c566706c0d5e95024f1d796b2f69f67628bc110`
