@@ -70,6 +70,10 @@ require(app.ios?.deploymentTarget ===
   '17.0', 'iOS deployment target must stay at 17.0+ for the launch support floor.');
 require(buildProperties.android?.minSdkVersion ===
   29, 'Android minSdkVersion must stay at API 29 / Android 10+ for the launch support floor.');
+require(buildProperties.android?.compileSdkVersion ===
+  36, 'Android compileSdkVersion must stay at API 36 for Expo SDK 56 native builds.');
+require(buildProperties.android?.targetSdkVersion ===
+  36, 'Android targetSdkVersion must stay at API 36 for current Play target policy.');
 require(Boolean(
   app.ios?.infoPlist?.NSCameraUsageDescription,
 ), 'iOS NSCameraUsageDescription is missing.');

@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Tightened the native support-floor guard so Android store target posture is
+  explicit instead of implicit. `app.base.json`, the Expo config unit test, and
+  `phase5:check-native-config` now pin Android min SDK at API 29 while also
+  pinning compile/target SDK to API 36, matching the V1 policy that reduces the
+  supported customer matrix without lowering current build targets.
+
+- Hardened the text-pressure route audit so it waits for the entitlement
+  loading state to settle before applying text scaling. This keeps paywall
+  evidence focused on the real locked/unlocked UI instead of transient
+  `Checking your access` placeholders.
+
 - Added a focused 412 x 844 / 200% text-pressure boundary guard for contextual
   ProGate paywalls. The paywall now treats the 391-430 px wide, 840-899 px tall
   band as dense under text pressure, moving compliance into the header, using

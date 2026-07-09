@@ -77,12 +77,18 @@ describe('Expo app identity config', () => {
   it('keeps the accepted launch support floor enforced in native config', () => {
     const expo = buildExpoConfig({});
     const buildProperties = pluginOptions(expo, 'expo-build-properties') as {
-      android?: { minSdkVersion?: number };
+      android?: {
+        compileSdkVersion?: number;
+        minSdkVersion?: number;
+        targetSdkVersion?: number;
+      };
     };
 
     expect(expo.ios.supportsTablet).toBe(false);
     expect(expo.ios.deploymentTarget).toBe('17.0');
     expect(buildProperties.android?.minSdkVersion).toBe(29);
+    expect(buildProperties.android?.compileSdkVersion).toBe(36);
+    expect(buildProperties.android?.targetSdkVersion).toBe(36);
   });
 
   it('uses production identity only when the production variant is explicit', () => {

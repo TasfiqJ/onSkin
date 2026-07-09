@@ -26,6 +26,8 @@ const viewport = {
   height: Number(process.env.TEXT_PRESSURE_VIEWPORT_HEIGHT ?? 568),
   width: Number(process.env.TEXT_PRESSURE_VIEWPORT_WIDTH ?? 320),
 };
+const entitlementLoadingText = 'Checking your access';
+const entitlementWaitMs = positiveNumber(process.env.TEXT_PRESSURE_ENTITLEMENT_WAIT_MS, 35_000);
 
 const defaultRoutes = [
   '/today',
@@ -99,6 +101,13 @@ function parseRouteOverride(value) {
 const routes = parseRouteOverride(process.env.TEXT_PRESSURE_ROUTES) ?? defaultRoutes;
 
 mkdirSync(evidenceDir, { recursive: true });
+
+function positiveNumber(value, fallback) {
+  if (!value) return fallback;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.round(parsed);
+}
 
 function clearPreviousEvidence() {
   for (const entry of readdirSync(evidenceDir, { withFileTypes: true })) {
@@ -436,6 +445,14 @@ async function waitForLoad(client) {
   );
 }
 
+async function waitForEntitlementSettled(client) {
+  await waitForExpression(
+    client,
+    `!document.body?.innerText?.includes(${JSON.stringify(entitlementLoadingText)})`,
+    entitlementWaitMs,
+  );
+}
+
 async function waitForRoute(client, url) {
   const expected = new URL(url);
   const expectedPath = `${expected.pathname}${expected.search}`;
@@ -641,6 +658,7 @@ async function auditRoute(client, route) {
   await client.send('Page.navigate', { url });
   await waitForRoute(client, url);
   await waitForLoad(client);
+  await waitForEntitlementSettled(client);
   await delay(350);
   const scaledCount = await evaluate(client, pressureExpression());
   await delay(150);

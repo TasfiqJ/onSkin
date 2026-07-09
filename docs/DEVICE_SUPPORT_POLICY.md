@@ -13,7 +13,7 @@ phone envelope.
 | Platform | Launch floor         | Repo enforcement                                          |
 | -------- | -------------------- | --------------------------------------------------------- |
 | iOS      | iOS 17.0+            | `apps/mobile/app.base.json` `ios.deploymentTarget`        |
-| Android  | Android 10 / API 29+ | `expo-build-properties` `android.minSdkVersion`           |
+| Android  | Android 10 / API 29+ | `expo-build-properties` `android.minSdkVersion`; compile/target pinned to API 36 |
 | Tablet   | Out of V1 scope      | `ios.supportsTablet=false`; Android tablet QA is deferred |
 
 Build and store submission targets still follow current platform policy. Expo

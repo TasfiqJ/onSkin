@@ -9,7 +9,8 @@ Completed in repo:
 - Native camera dependency and config plugin added.
 - Native support floor accepted and guarded: iOS 17.0+ plus Android 10 / API
   29+ via `docs/DEVICE_SUPPORT_POLICY.md`, `app.base.json`, and
-  `phase5:check-native-config`.
+  `phase5:check-native-config`; Android compile/target SDK are explicitly
+  pinned to API 36 so Play target posture is separate from the install floor.
 - Runtime version policy added.
 - Android camera and notification permissions declared.
 - Exact-alarm permissions intentionally absent.
