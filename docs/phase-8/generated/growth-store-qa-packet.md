@@ -1,9 +1,9 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-09T00:06:11.238Z
+Generated: 2026-07-09T00:07:42.402Z
 Status: blocked
-Git SHA: f18df2763b40f96e0645a1f0a40276e20139ef46
-Git status: DIRTY
+Git SHA: 02e9c64af61f5cbac552334b6b30d4deb16d135a
+Git status: clean
 
 ## Public Identity
 
@@ -19,7 +19,6 @@ Git status: DIRTY
 
 ## Warnings
 
-- Phase 8 QA packet generated with a dirty Git worktree; do not use it as final growth/store evidence.
 - Final brand domain is missing.
 - Marketing URL is missing.
 - Support email is missing.
@@ -113,10 +112,10 @@ Git status: DIRTY
 - `docs/e2e/generated/human-e2e-manifest.md`: `0df29891e997f30c9eebca533b6f3e85f8ddc1849ead06d39ff3d5836ed856b3`
 - `docs/phase-5/generated/device-qa-packet.json`: `12ae85b04cfc4e0db0a6e5e17e635bd6044ec273ccd8c6aa3f37fb9eb78320a8`
 - `docs/phase-5/generated/device-qa-packet.md`: `4ce399db705e7b36dded7128b94c3547a3451cbbe1fc3be874d7b621c450aad5`
-- `docs/phase-6/generated/payments-qa-packet.json`: `fbc2ee7c37c1b5141de4e820594f50cdd720997640e36ca808e8c87c9f10b698`
-- `docs/phase-6/generated/payments-qa-packet.md`: `b35e971e68443b03171b3903f57bbedec710203bc1374ac02e6193a21dfc6c27`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `9f8a0c1ca4e786b9199653c172714a06522ad35d991b177c63f66489a6360be2`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `05ae53263f74388bae0331dc3adf06697c69d7a82cabdeb3c211490d5d14a901`
+- `docs/phase-6/generated/payments-qa-packet.json`: `943fcf32fdbf98020fb63a216e3ded0a15ee928aa8bf8497bcb03354867ee7fa`
+- `docs/phase-6/generated/payments-qa-packet.md`: `a1798231f1a026f6972dc41a8ded783b6135851ec83c651d2ff4c96a942a4349`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `e48eef41c4fbf115a8936ff3bb5b6060e5c1fc96c51f336444223fbbbd15b50c`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `2cba326d7eb53e7a4c446f7d8fad968e82819e1238dca72af60f33eeb9c9054f`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `b37bac340e6a3eb04bed69da644016e2b7c46cd9ce62d2138eab3999da7a21fa`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `4834bd091ad32284ed8c7022cacddb31346574c362fabaf687f4714ebe31817c`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
