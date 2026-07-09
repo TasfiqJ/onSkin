@@ -1,0 +1,377 @@
+{
+  "baseUrl": "http://localhost:8312",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-current",
+  "generatedAt": "2026-07-09T12:27:48.164Z",
+  "routeCount": 49,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 296,
+              "y": 639
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "",
+            "label": "Streak & adherence",
+            "partialClip": true,
+            "rect": {
+              "bottom": 683,
+              "height": 48,
+              "left": 270,
+              "right": 322,
+              "top": 635,
+              "visibleHeight": 5,
+              "visibleWidth": 52,
+              "width": 52
+            },
+            "role": "switch",
+            "tag": "DIV",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 296,
+              "y": 639
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "",
+            "label": "Streak & adherence",
+            "partialClip": true,
+            "rect": {
+              "bottom": 683,
+              "height": 48,
+              "left": 270,
+              "right": 322,
+              "top": 635,
+              "visibleHeight": 5,
+              "visibleWidth": 52,
+              "width": 52
+            },
+            "role": "switch",
+            "tag": "DIV",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/settings/notifications",
+      "scaledCount": 15,
+      "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today?routine=PM",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/capture",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/review",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/plan",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/ramp",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/tolerance",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/reorder",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/adaptation",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/settings",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/disruption",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/procedure",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/phased-intro",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/recovery",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/why-tonight",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/preferences",
+      "scaledCount": 21
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/stale-local-rec",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community",
+      "scaledCount": 26
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/note/missing-note-e2e",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/ask",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/people-like-you",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/consent",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stacks",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/barrier-basics",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/missing-stack-e2e",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/transparency",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/subscription",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "route": "/settings/notifications",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/timing",
+      "scaledCount": 19
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 61
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/optin",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/fairness",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask/consent",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/search",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/no-match",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/scan",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/ocr",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/manual",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/archive",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/opened",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/upsell?feature=full_routine",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/success",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/streak",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/widgets",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/week",
+      "scaledCount": 3
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}

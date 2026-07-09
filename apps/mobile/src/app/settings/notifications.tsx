@@ -125,7 +125,7 @@ function Row({
 }
 
 export default function NotificationSettingsScreen() {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const { data: p } = useNotifPrefs();
   const update = useUpdateNotifPrefs();
   const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
@@ -133,14 +133,17 @@ export default function NotificationSettingsScreen() {
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
+  const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;
   const splitShortNudgeRowStyle = {
     marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,
   };
-  const ultraShortNudgesStyle = microShortNotifications
-    ? { marginTop: 136 }
-    : ultraShortNotifications
-      ? { marginTop: 64 }
-      : undefined;
+  const nudgesSectionStyle = supportTextPressureNotifications
+    ? { marginTop: 112 }
+    : microShortNotifications
+      ? { marginTop: 136 }
+      : ultraShortNotifications
+        ? { marginTop: 64 }
+        : undefined;
   const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
   if (!p) return null;
 
@@ -196,7 +199,7 @@ export default function NotificationSettingsScreen() {
           />
         </View>
 
-        <View style={ultraShortNudgesStyle}>
+        <View style={nudgesSectionStyle}>
           <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
             GENTLE NUDGES · CAPPED
           </SectionLabel>

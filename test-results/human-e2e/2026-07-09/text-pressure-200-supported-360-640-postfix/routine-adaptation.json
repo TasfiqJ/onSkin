@@ -1,0 +1,19 @@
+{
+  "controls": [],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8313/routine/adaptation",
+  "textOverflows": [],
+  "textStart": "PRO ACCESS Checking your access We will keep Pro-only screens hidden until your subscription status is confirmed.",
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "route": "/routine/adaptation",
+  "scaledCount": 3,
+  "textScale": 2,
+  "url": "http://localhost:8313/routine/adaptation",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

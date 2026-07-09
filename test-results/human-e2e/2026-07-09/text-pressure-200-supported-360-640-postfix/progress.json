@@ -1,0 +1,270 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 109.359375,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 85.359375,
+        "right": 133.359375,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 170.71875,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 146.71875,
+        "right": 194.71875,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 312,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 288,
+        "right": 336,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 253
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 277,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 229,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 311
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Explore first",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 335,
+        "height": 48,
+        "left": 24,
+        "right": 336,
+        "top": 287,
+        "visibleHeight": 48,
+        "visibleWidth": 312,
+        "width": 312
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 51.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 9,
+        "right": 94.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 137.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 94.5,
+        "right": 180,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 222.75,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 180,
+        "right": 265.5,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 308.25,
+        "y": 593
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 620,
+        "height": 54,
+        "left": 265.5,
+        "right": 351,
+        "top": 566,
+        "visibleHeight": 54,
+        "visibleWidth": 85.5,
+        "width": 85.5
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8313/progress",
+  "textOverflows": [],
+  "textStart": "Terms · Privacy · Restore x Unlock your private photo timeline. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first No card needed. › Today Prog. Shelf You",
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "route": "/progress",
+  "scaledCount": 7,
+  "textScale": 2,
+  "url": "http://localhost:8313/progress",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

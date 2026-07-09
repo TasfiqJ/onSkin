@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a supported Android-class 360 x 640 / 200% text-pressure regression
+  in Settings Notifications. The fresh route audit found the lower-priority
+  `Streak & adherence` switch peeking into the first viewport by 5 px, which
+  made it a partial sub-44 visible target. `/settings/notifications` now pushes
+  the Gentle Nudges card below the first viewport for 360/390-class supported
+  text-pressure layouts while keeping the utility reminder rows complete. The
+  focused settings route contract and mobile typecheck pass, and the post-fix
+  49-route Expo web sweep reports zero failed routes, zero clipped controls,
+  zero sub-44 visible controls, zero blocked hit centers, zero horizontal
+  overflow, and zero disallowed browser logs. Evidence and bug report are in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix/`
+  and
+  `docs/e2e-bug-reports/2026-07-09-settings-notifications-360-640-text-pressure.md`.
+
 - Hardened first-session activation analytics so beta dashboards do not inflate
   routine creation. `routine_created` and `first_routine_created` now require a
   non-example routine plan with at least one placed AM or PM step, while a
@@ -22,6 +36,12 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   production-mode tests still prove unreviewed conflict guidance, cycle cadence,
   and E2E cadence fixtures stay closed until clinical/cosmetic review opens the
   gate.
+
+- Added catalog correction-report regression coverage for the beta feedback
+  loop. The catalog client tests now prove `catalog_correction_reported` sends
+  only the content-minimal `correction_type` analytics payload, returns the
+  offline fallback without invoking Supabase when no project is configured, and
+  submits configured reports only to the `catalog-report` Edge Function.
 
 - Cleared the 390 x 640 support-band 170% text-pressure follow-up. ProGate,
   Recommendation Preferences, Shelf scan/manual, and Skin Notes now share density

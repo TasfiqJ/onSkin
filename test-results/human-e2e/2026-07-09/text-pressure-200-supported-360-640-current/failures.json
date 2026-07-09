@@ -1,0 +1,70 @@
+{
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 296,
+              "y": 639
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "",
+            "label": "Streak & adherence",
+            "partialClip": true,
+            "rect": {
+              "bottom": 683,
+              "height": 48,
+              "left": 270,
+              "right": 322,
+              "top": 635,
+              "visibleHeight": 5,
+              "visibleWidth": 52,
+              "width": 52
+            },
+            "role": "switch",
+            "tag": "DIV",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 296,
+              "y": 639
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "",
+            "label": "Streak & adherence",
+            "partialClip": true,
+            "rect": {
+              "bottom": 683,
+              "height": 48,
+              "left": 270,
+              "right": 322,
+              "top": 635,
+              "visibleHeight": 5,
+              "visibleWidth": 52,
+              "width": 52
+            },
+            "role": "switch",
+            "tag": "DIV",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/settings/notifications",
+      "scaledCount": 15,
+      "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up"
+    }
+  ]
+}

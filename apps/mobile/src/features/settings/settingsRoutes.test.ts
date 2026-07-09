@@ -191,21 +191,24 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('min-h-[48px] flex-1 justify-center pr-3');
     expect(notifications).not.toContain('min-h-[44px] flex-1 justify-center pr-3');
     expect(notifications).toContain('useWindowDimensions');
+    expect(notifications).toContain('const { height, width } = useWindowDimensions();');
     expect(notifications).toContain('const compactNotifications = height < 600;');
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
     expect(notifications).toContain('const splitShortNotifications = height < 600;');
     expect(notifications).toContain('const microShortNotifications = height < 380;');
+    expect(notifications).toContain(
+      'const supportTextPressureNotifications = width <= 390 && height >= 600 && height < 700;',
+    );
     expect(notifications).toContain('const splitShortNudgeRowStyle = {');
     expect(notifications).toContain(
       'marginTop: microShortNotifications ? 72 : height < 520 ? 184 : 88,',
     );
     expect(notifications).toContain('style={splitShortNudgeRowStyle}');
-    expect(notifications).toContain('const ultraShortNudgesStyle = microShortNotifications');
-    expect(notifications).toContain(
-      'const ultraShortNudgesStyle = microShortNotifications\n    ? { marginTop: 136 }',
-    );
+    expect(notifications).toContain('const nudgesSectionStyle = supportTextPressureNotifications');
+    expect(notifications).toContain('? { marginTop: 112 }');
+    expect(notifications).toContain(': microShortNotifications\n      ? { marginTop: 136 }');
     expect(notifications).toContain('? { marginTop: 64 }');
-    expect(notifications).toContain('<View style={ultraShortNudgesStyle}>');
+    expect(notifications).toContain('<View style={nudgesSectionStyle}>');
     expect(notifications).toContain(
       "className={micro ? 'mb-0.5 ml-2 mt-1' : compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}",
     );
