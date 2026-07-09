@@ -1,9 +1,9 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-09T09:49:37.388Z
+Generated: 2026-07-09T09:50:32.856Z
 Status: blocked
-Git SHA: 27eff19025d73043bfeebcc3cc746fdaea3fbcfc
-Git status: DIRTY
+Git SHA: 0be3f3ccaf77eb034cfb3c2da83e8aea61f036d1
+Git status: clean
 
 ## Public Identity
 
@@ -19,7 +19,6 @@ Git status: DIRTY
 
 ## Warnings
 
-- Phase 8 QA packet generated with a dirty Git worktree; do not use it as final growth/store evidence.
 - Final brand domain is missing.
 - Marketing URL is missing.
 - Support email is missing.
@@ -115,8 +114,8 @@ Git status: DIRTY
 - `docs/phase-5/generated/device-qa-packet.md`: `bc91806252aea17a4e0a2d1d76383b0fb59ef2889d7d140b09704ab1fcc36029`
 - `docs/phase-6/generated/payments-qa-packet.json`: `c8082254250bc460da5a879c038b57bb3e958462b577d1015d122d4d6c27e9d9`
 - `docs/phase-6/generated/payments-qa-packet.md`: `817a30052455ca038842f9c9e62f43057abb5cae27531fe7867bd7341dac2e2b`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `2d1df944f6157cee54922e29114b5294e883239306a87ed1fc1fc4dc9eaab825`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `0db813dba5797fd5d452171c2f4a2a29e7023e210cb594f8dd094a7e47130d6a`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `3dc35b62301202834ccc1157d41fcd01ef5cdd1277497e56f5e08f906000e53a`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `e50b5d846e13126d17a59b76c9bf314507cadbce96054ea5ce5f1ee703b6d4d4`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `b37bac340e6a3eb04bed69da644016e2b7c46cd9ce62d2138eab3999da7a21fa`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `4834bd091ad32284ed8c7022cacddb31346574c362fabaf687f4714ebe31817c`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0`
