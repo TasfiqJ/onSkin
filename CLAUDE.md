@@ -22,6 +22,7 @@ authoritative for product behavior, schema, privacy posture, and launch scope:
 - `docs/TESTING_STRATEGY.md`
 - `docs/CODE_REVIEW.md`
 - `docs/CODEX_IMPLEMENTATION_PROMPT.md`
+- `docs/DEVICE_SUPPORT_POLICY.md`
 - `docs/MASTER_PLAN_UPDATE_PATCH.md`
 - `docs/rebrand-and-core-loop-migration-checklist.md`
 - `docs/FOR_TAS_TO_DO.md`

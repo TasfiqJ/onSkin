@@ -1,12 +1,32 @@
 {
-  "generatedAt": "2026-07-09T00:37:15.574Z",
+  "generatedAt": "2026-07-09T14:37:57.715Z",
   "status": "pass",
   "strict": true,
-  "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.",
+  "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
   "sourceFiles": {
     "forTasPath": "docs/FOR_TAS_TO_DO.md",
+    "deviceSupportPolicyPath": "docs/DEVICE_SUPPORT_POLICY.md",
+    "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
     "packagePath": "package.json",
     "envExamplePath": ".env.example"
+  },
+  "handoffFreshness": {
+    "forTasDate": "2026-07-09",
+    "expectedEvidenceDate": "2026-07-09",
+    "deviceSupportPolicyPath": "docs/DEVICE_SUPPORT_POLICY.md",
+    "requiredForTasDeviceSupportNeedles": [
+      "docs/DEVICE_SUPPORT_POLICY.md",
+      "iOS 17.0+",
+      "Android 10 / API 29+",
+      "320 x 480",
+      "API 36"
+    ],
+    "requiredDeviceSupportPolicyNeedles": [
+      "iOS 17.0+",
+      "Android 10 / API 29+",
+      "320 x 480",
+      "API 36"
+    ]
   },
   "summary": {
     "gateGroupCount": 10,

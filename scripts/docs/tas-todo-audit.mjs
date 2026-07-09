@@ -6,10 +6,26 @@ const root = process.cwd();
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 const forTasPath = 'docs/FOR_TAS_TO_DO.md';
+const deviceSupportPolicyPath = 'docs/DEVICE_SUPPORT_POLICY.md';
+const humanE2eManifestPath = 'docs/e2e/generated/human-e2e-manifest.json';
 const packagePath = 'package.json';
 const envExamplePath = '.env.example';
 const outJson = process.env.TAS_TODO_AUDIT_JSON ?? 'docs/generated/tas-todo-audit.json';
 const outMd = process.env.TAS_TODO_AUDIT_MD ?? 'docs/generated/tas-todo-audit.md';
+
+const requiredForTasDeviceSupportNeedles = [
+  'docs/DEVICE_SUPPORT_POLICY.md',
+  'iOS 17.0+',
+  'Android 10 / API 29+',
+  '320 x 480',
+  'API 36',
+];
+const requiredDeviceSupportPolicyNeedles = [
+  'iOS 17.0+',
+  'Android 10 / API 29+',
+  '320 x 480',
+  'API 36',
+];
 
 function abs(path) {
   return resolve(root, path);
@@ -116,17 +132,27 @@ function docHasAny(text, needles) {
   return needles.some((needle) => text.includes(needle));
 }
 
+function extractDate(text) {
+  return text.match(/^Date:\s*(\d{4}-\d{2}-\d{2})$/m)?.[1] ?? null;
+}
+
 const blockers = [];
 const warnings = [];
 
 if (!exists(forTasPath)) blockers.push(`Missing ${forTasPath}.`);
+if (!exists(deviceSupportPolicyPath)) blockers.push(`Missing ${deviceSupportPolicyPath}.`);
+if (!exists(humanE2eManifestPath)) blockers.push(`Missing ${humanE2eManifestPath}.`);
 if (!exists(packagePath)) blockers.push(`Missing ${packagePath}.`);
 if (!exists(envExamplePath)) blockers.push(`Missing ${envExamplePath}.`);
 
 const forTasText = exists(forTasPath) ? read(forTasPath) : '';
+const deviceSupportPolicyText = exists(deviceSupportPolicyPath) ? read(deviceSupportPolicyPath) : '';
+const humanE2eManifest = exists(humanE2eManifestPath) ? readJson(humanE2eManifestPath) : {};
 const envExampleText = exists(envExamplePath) ? read(envExamplePath) : '';
 const packageJson = exists(packagePath) ? readJson(packagePath) : { scripts: {} };
 const packageScripts = Object.keys(packageJson.scripts ?? {});
+const forTasDate = extractDate(forTasText);
+const expectedEvidenceDate = String(humanE2eManifest.evidenceDate ?? '').trim();
 
 const gateGroups = [
   {
@@ -236,6 +262,24 @@ if (!/## Current Command-Gate Evidence Needed/.test(forTasText)) {
 if (!/## How Codex Should Use This/.test(forTasText)) {
   blockers.push(`${forTasPath} is missing "How Codex Should Use This".`);
 }
+if (expectedEvidenceDate && forTasDate !== expectedEvidenceDate) {
+  blockers.push(
+    `${forTasPath} Date is ${forTasDate ?? 'missing'}, expected ${expectedEvidenceDate}.`,
+  );
+}
+for (const needle of requiredForTasDeviceSupportNeedles) {
+  if (!forTasText.includes(needle)) {
+    blockers.push(`${forTasPath} does not mention device support handoff detail: ${needle}.`);
+  }
+}
+for (const needle of requiredDeviceSupportPolicyNeedles) {
+  if (!deviceSupportPolicyText.includes(needle)) {
+    blockers.push(`${deviceSupportPolicyPath} does not mention support policy detail: ${needle}.`);
+  }
+}
+if (!/Stress-Only Viewports/.test(deviceSupportPolicyText)) {
+  blockers.push(`${deviceSupportPolicyPath} must distinguish launch-blocking support floors from stress-only viewports.`);
+}
 
 const groups = gateGroups.map((group) => {
   const scriptText = collectScriptText(group.scriptDirs);
@@ -286,11 +330,20 @@ const audit = {
   status: blockers.length === 0 ? 'pass' : 'blocked',
   strict,
   purpose:
-    'Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates and generate an exact key inventory from phase scripts.',
+    'Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.',
   sourceFiles: {
     forTasPath,
+    deviceSupportPolicyPath,
+    humanE2eManifestPath,
     packagePath,
     envExamplePath,
+  },
+  handoffFreshness: {
+    forTasDate,
+    expectedEvidenceDate,
+    deviceSupportPolicyPath,
+    requiredForTasDeviceSupportNeedles,
+    requiredDeviceSupportPolicyNeedles,
   },
   summary: {
     gateGroupCount: groups.length,
@@ -372,8 +425,9 @@ const mdContent = [
   `Strict mode: ${strict ? 'yes' : 'no'}`,
   '',
   'This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the',
-  'Tas-owned strict launch evidence gates and records the exact evidence keys',
-  'extracted from phase scripts and `.env.example`. Local generated-packet',
+  'Tas-owned strict launch evidence gates, current device support floors,',
+  'and records the exact evidence keys extracted from phase scripts and',
+  '`.env.example`. Local generated-packet',
   'outputs and source-contract markers are listed separately and excluded',
   'from evidence warnings.',
   'Strict mode fails when a phase gate is no longer covered by the founder',
@@ -390,6 +444,18 @@ const mdContent = [
   `- Keys only in generated inventory: ${audit.summary.keyNotMentionedCount}`,
   `- Blockers: ${audit.summary.blockerCount}`,
   `- Warnings: ${audit.summary.warningCount}`,
+  '',
+  '## Handoff Freshness',
+  '',
+  `- FOR_TAS date: ${audit.handoffFreshness.forTasDate ?? 'missing'}`,
+  `- Expected evidence date: ${audit.handoffFreshness.expectedEvidenceDate || 'missing'}`,
+  `- Device support policy: \`${audit.handoffFreshness.deviceSupportPolicyPath}\``,
+  `- Required FOR_TAS support-floor details: ${audit.handoffFreshness.requiredForTasDeviceSupportNeedles
+    .map((needle) => `\`${needle}\``)
+    .join(', ')}`,
+  `- Required policy support-floor details: ${audit.handoffFreshness.requiredDeviceSupportPolicyNeedles
+    .map((needle) => `\`${needle}\``)
+    .join(', ')}`,
   '',
   '## Gate Coverage',
   '',

@@ -1,12 +1,13 @@
 # Tas To Do Audit
 
-Generated: 2026-07-09T00:37:15.574Z
+Generated: 2026-07-09T14:37:57.715Z
 Status: pass
 Strict mode: yes
 
 This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the
-Tas-owned strict launch evidence gates and records the exact evidence keys
-extracted from phase scripts and `.env.example`. Local generated-packet
+Tas-owned strict launch evidence gates, current device support floors,
+and records the exact evidence keys extracted from phase scripts and
+`.env.example`. Local generated-packet
 outputs and source-contract markers are listed separately and excluded
 from evidence warnings.
 Strict mode fails when a phase gate is no longer covered by the founder
@@ -23,6 +24,14 @@ inventory itself is the canonical machine-readable key list.
 - Keys only in generated inventory: 0
 - Blockers: 0
 - Warnings: 0
+
+## Handoff Freshness
+
+- FOR_TAS date: 2026-07-09
+- Expected evidence date: 2026-07-09
+- Device support policy: `docs/DEVICE_SUPPORT_POLICY.md`
+- Required FOR_TAS support-floor details: `docs/DEVICE_SUPPORT_POLICY.md`, `iOS 17.0+`, `Android 10 / API 29+`, `320 x 480`, `API 36`
+- Required policy support-floor details: `iOS 17.0+`, `Android 10 / API 29+`, `320 x 480`, `API 36`
 
 ## Gate Coverage
 

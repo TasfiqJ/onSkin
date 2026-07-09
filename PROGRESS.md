@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the Tas handoff audit around the accepted device support floor.
+  `docs:tas-todo-audit:strict` now fails if `docs/FOR_TAS_TO_DO.md` drifts
+  behind the current human-E2E evidence date or stops naming
+  `docs/DEVICE_SUPPORT_POLICY.md`, iOS 17.0+, Android 10 / API 29+, the
+  320 x 480 shortest-phone web floor, and Android API 36 compile/target
+  posture. `AGENTS.md` and `CLAUDE.md` now list the device support policy in
+  the readiness source-of-truth docs.
+
 - Hardened the readiness-status audit so source-of-truth launch docs must now
   mention the 414 x 896 / 200% boundary sweep and Android API 36 compile/target
   guard alongside the supported-phone manifest evidence. `LAUNCH_READINESS.md`

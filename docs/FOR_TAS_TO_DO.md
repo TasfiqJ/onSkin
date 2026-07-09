@@ -1,6 +1,6 @@
 # For Tas To Do
 
-Date: 2026-07-08
+Date: 2026-07-09
 
 Purpose: track work Codex must not guess or fake. These items require a founder decision, account owner, credential, payment method, counsel/reviewer signoff, physical device, or real beta users. Codex can keep building around them, but launch readiness cannot close until evidence is attached.
 
@@ -126,11 +126,13 @@ Status: needs-device-verification
 
 - Use `docs/DEVICE_SUPPORT_POLICY.md` as the V1 support floor: iOS 17.0+,
   Android 10 / API 29+, iPhone width 375 pt or wider, Android smallest width
-  320 dp or wider, and at least 480 dp usable portrait height. Do not spend
-  launch-blocking QA time on iOS 16, Android 9-or-older, sub-320 dp width, or
-  320 x 430 / 390 / 370 / 360 browser-only stress heights unless a supported
-  physical device, app-review requirement, or real beta/support evidence
-  reproduces the same issue.
+  320 dp or wider, and the 320 x 480 Expo web-compatible shortest-phone
+  layout floor. Android compile/target SDK remain pinned to API 36 while the
+  install floor stays Android 10 / API 29+. Do not spend launch-blocking QA
+  time on iOS 16, Android 9-or-older, sub-320 dp width, or 320 x 430 / 390 /
+  370 / 360 browser-only stress heights unless a supported physical device,
+  app-review requirement, or real beta/support evidence reproduces the same
+  issue.
 - After the Play Console app exists, export Reach and devices data for Android
   version, screen metrics, RAM, and issue-rate peerset. Revisit the Android 10 /
   API 29 floor only if paid-user reach or issue-risk evidence justifies it.
