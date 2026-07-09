@@ -21,7 +21,7 @@
 |  17 | Community/Skin Notes                    | Later               | No                           | High       | moderation, legal, experts      | Scaffolded/gated                  | TBD        |
 |  18 | Trend insights                          | Later               | No                           | High       | device/fairness/legal review    | Gated                             | TBD        |
 |  19 | Widgets/live activities                 | Later               | No                           | High       | native targets                  | Inert                             | TBD        |
-|  20 | Admin/operator review tooling           | Must-have for scale | Partial                      | Medium     | backend, reviewer workflow      | Planned                           | TBD        |
+|  20 | Admin/operator review tooling           | Must-have for scale | Partial                      | Medium     | backend, reviewer workflow      | Generated queue scaffold          | TBD        |
 
 ## Inclusion Rules
 

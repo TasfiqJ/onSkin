@@ -1,0 +1,89 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-beta-feedback-360-640-current",
+  "generatedAt": "2026-07-09T18:35:46.704Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 639
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "BUTTON",
+            "hitText": "Guidance trust concern Advice felt unclear, unsafe, or not grounded enough.",
+            "label": "Guidance trust concern. Advice felt unclear, unsafe, or not grounded enough.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 790,
+              "height": 154,
+              "left": 20,
+              "right": 340,
+              "top": 636,
+              "visibleHeight": 4,
+              "visibleWidth": 320,
+              "width": 320
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 180,
+              "y": 639
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "BUTTON",
+            "hitText": "Guidance trust concern Advice felt unclear, unsafe, or not grounded enough.",
+            "label": "Guidance trust concern. Advice felt unclear, unsafe, or not grounded enough.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 790,
+              "height": 154,
+              "left": 20,
+              "right": 340,
+              "top": 636,
+              "visibleHeight": 4,
+              "visibleWidth": 320,
+              "width": 320
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/settings/beta-feedback",
+      "scaledCount": 41,
+      "textStart": "< Beta feedback Route the issue fast We send only the selected issue type and priority with your support handoff. ISSUE TYPE Onboarding confusion Age, consent, quiz, account, or first-run setup. Catalog match issue No match, wrong match, barcode, or manual add. Guidance trust concern Advice felt unclear, unsafe, or not grounded enough. Routine or check-off Scheduling, timing, step order, or completion issue. Progress photos Capture, timeline, comparison, or permission issue. Reminders Notification timing, quiet hours, or delivery issue. Paywall comprehension Pricing, trial, restore, or subscription wording. Privacy or data rights Deletion, export, consent, or privacy policy issue. Crash or performance Freeze, blank screen, slow load, or app crash. Account or sign-in Email, guest mode, auth, or saved-account issue. Install or app review Store, TestFlight, install, or update issue. Advice "
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "route": "/settings/beta-feedback",
+      "scaledCount": 41
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}

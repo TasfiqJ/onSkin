@@ -270,6 +270,8 @@ export const generatedEvidenceOutputPaths = Object.freeze([
   'docs/generated/tas-todo-audit.md',
   'docs/phase-3/generated/review-packet-manifest.json',
   'docs/phase-3/generated/review-packet.md',
+  'docs/phase-3/generated/review-operator-queue.json',
+  'docs/phase-3/generated/review-operator-queue.md',
   'docs/phase-3/generated/review-worklist.json',
   'docs/phase-3/generated/review-worklist.md',
   'docs/phase-4/generated/beta-coverage-report.json',

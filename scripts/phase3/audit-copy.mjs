@@ -150,6 +150,9 @@ function checkReviewPacketContract() {
     !/review-packet-manifest\.json/.test(source) ||
     !/review-packet\.md/.test(source) ||
     !/build-review-worklist\.mjs/.test(source) ||
+    !/build-review-operator-queue\.mjs/.test(source) ||
+    !/review-operator-queue\.json/.test(source) ||
+    !/review-operator-queue\.md/.test(source) ||
     !/gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(source)
   ) {
     addContractFinding(
@@ -169,6 +172,7 @@ function checkReviewPacketContract() {
     'package.json',
     'scripts/phase3/build-review-packet.mjs',
     'scripts/phase3/build-review-worklist.mjs',
+    'scripts/phase3/build-review-operator-queue.mjs',
     'scripts/phase3/audit-copy.mjs',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
@@ -184,6 +188,11 @@ function checkReviewPacketContract() {
   const worklistRel = 'scripts/phase3/build-review-worklist.mjs';
   const worklistAbs = resolve(root, worklistRel);
   const worklistSource = existsSync(worklistAbs) ? readFileSync(worklistAbs, 'utf8') : '';
+  const operatorQueueRel = 'scripts/phase3/build-review-operator-queue.mjs';
+  const operatorQueueAbs = resolve(root, operatorQueueRel);
+  const operatorQueueSource = existsSync(operatorQueueAbs)
+    ? readFileSync(operatorQueueAbs, 'utf8')
+    : '';
   for (const file of [
     'docs/phase-3/legal-regulatory-review-log.md',
     'docs/phase-3/clinical-review-log.md',
@@ -193,6 +202,15 @@ function checkReviewPacketContract() {
   ]) {
     if (!worklistSource.includes(`'${file}'`) && !worklistSource.includes(`"${file}"`)) {
       addContractFinding(`Phase 3 review worklist must parse ${file}.`);
+    }
+  }
+  for (const file of [
+    'docs/phase-3/generated/review-worklist.json',
+    'docs/phase-3/generated/review-operator-queue.json',
+    'docs/phase-3/generated/review-operator-queue.md',
+  ]) {
+    if (!operatorQueueSource.includes(`'${file}'`) && !operatorQueueSource.includes(`"${file}"`)) {
+      addContractFinding(`Phase 3 review operator queue must generate or consume ${file}.`);
     }
   }
 }

@@ -1,0 +1,89 @@
+{
+  "baseUrl": "http://localhost:8232",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-09\\text-pressure-200-beta-feedback-390-844-current-code",
+  "generatedAt": "2026-07-09T19:01:57.660Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "issues": [
+        {
+          "control": {
+            "center": {
+              "x": 195,
+              "y": 843
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Progress photos",
+            "label": "Progress photos. Capture, timeline, comparison, or permission issue.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 962,
+              "height": 150,
+              "left": 20,
+              "right": 370,
+              "top": 812,
+              "visibleHeight": 32,
+              "visibleWidth": 350,
+              "width": 350
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "tinyTarget"
+        },
+        {
+          "control": {
+            "center": {
+              "x": 195,
+              "y": 843
+            },
+            "centerBlocked": false,
+            "hitInside": true,
+            "hitTag": "DIV",
+            "hitText": "Progress photos",
+            "label": "Progress photos. Capture, timeline, comparison, or permission issue.",
+            "partialClip": true,
+            "rect": {
+              "bottom": 962,
+              "height": 150,
+              "left": 20,
+              "right": 370,
+              "top": 812,
+              "visibleHeight": 32,
+              "visibleWidth": 350,
+              "width": 350
+            },
+            "role": "button",
+            "tag": "BUTTON",
+            "tinyTarget": true
+          },
+          "type": "partialClip"
+        }
+      ],
+      "route": "/settings/beta-feedback",
+      "scaledCount": 40,
+      "textStart": "< Beta feedback Category and priority only ISSUE TYPE Onboarding confusion Age, consent, quiz, account, or first-run setup. Catalog match issue No match, wrong match, barcode, or manual add. Guidance trust concern Advice felt unclear, unsafe, or not grounded enough. Routine or check-off Scheduling, timing, step order, or completion issue. Progress photos Capture, timeline, comparison, or permission issue. Reminders Notification timing, quiet hours, or delivery issue. Paywall comprehension Pricing, trial, restore, or subscription wording. Privacy or data rights Deletion, export, consent, or privacy policy issue. Crash or performance Freeze, blank screen, slow load, or app crash. Account or sign-in Email, guest mode, auth, or saved-account issue. Install or app review Store, TestFlight, install, or update issue. Advice boundary concern Content felt too clinical or beyond product guidance. "
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 2,
+      "route": "/settings/beta-feedback",
+      "scaledCount": 40
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}
