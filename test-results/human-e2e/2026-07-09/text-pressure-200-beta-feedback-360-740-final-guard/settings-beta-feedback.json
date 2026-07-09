@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 38
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 62,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 14,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 316
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Age, consent, quiz, account, or first-run setup.",
+      "label": "Onboarding confusion. Age, consent, quiz, account, or first-run setup.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 376,
+        "height": 120,
+        "left": 20,
+        "right": 340,
+        "top": 256,
+        "visibleHeight": 120,
+        "visibleWidth": 320,
+        "width": 320
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 180,
+        "y": 468
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "No match, wrong match, barcode, or manual add.",
+      "label": "Catalog match issue. No match, wrong match, barcode, or manual add.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 528,
+        "height": 120,
+        "left": 20,
+        "right": 340,
+        "top": 408,
+        "visibleHeight": 120,
+        "visibleWidth": 320,
+        "width": 320
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8232/settings/beta-feedback",
+  "textOverflows": [],
+  "textStart": "< Beta feedback Category and priority only ISSUE TYPE Onboarding confusion Age, consent, quiz, account, or first-run setup. Catalog match issue No match, wrong match, barcode, or manual add. Guidance trust concern Advice felt unclear, unsafe, or not grounded enough. Routine or check-off Scheduling, timing, step order, or completion issue. Progress photos Capture, timeline, comparison, or permission issue. Reminders Notification timing, quiet hours, or delivery issue. Paywall comprehension Pricing, trial, restore, or subscription wording. Privacy or data rights Deletion, export, consent, or privacy policy issue. Crash or performance Freeze, blank screen, slow load, or app crash. Account or sign-in Email, guest mode, auth, or saved-account issue. Install or app review Store, TestFlight, install, or update issue. Advice boundary concern Content felt too clinical or beyond product guidance. ",
+  "viewport": {
+    "width": 360,
+    "height": 740
+  },
+  "route": "/settings/beta-feedback",
+  "scaledCount": 40,
+  "textScale": 2,
+  "url": "http://localhost:8232/settings/beta-feedback",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}
