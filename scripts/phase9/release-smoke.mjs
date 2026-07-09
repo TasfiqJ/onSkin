@@ -184,6 +184,7 @@ for (const script of [
   'phase9:live-revenuecat-webhook',
   'phase9:security-ci-smoke',
   'phase9:data-rights-smoke',
+  'phase9:storage-path-privacy-smoke',
   'phase9:live-data-rights',
   'phase9:consent-withdrawal',
   'phase9:live-consent-withdrawal',
@@ -196,6 +197,11 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+block(
+  errors,
+  /phase9:storage-path-privacy-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'phase9:verify must run the storage-path privacy contract.',
+);
 block(
   errors,
   /phase9:qa-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(

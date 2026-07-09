@@ -281,6 +281,13 @@ block(errors, !/BLOCKED:\s*B-APPLE|BLOCKED:\s*B-POSTHOG/.test(deletionSource), '
 block(errors, Boolean(packageJson.scripts?.['phase9:live-data-rights']), 'package.json is missing phase9:live-data-rights.');
 block(
   errors,
+  Boolean(packageJson.scripts?.['phase9:storage-path-privacy-smoke']) &&
+    /storagePath\.test\.ts/.test(packageJson.scripts?.['phase9:storage-path-privacy-smoke'] ?? '') &&
+    /phase9:storage-path-privacy-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'Storage path privacy contract must be scriptable and included in phase9:verify.',
+);
+block(
+  errors,
   /functions\.invoke\('data-export'/.test(liveHarness) &&
     /functions\.invoke\('account-deletion'/.test(liveHarness) &&
     /PHASE9_RUN_LIVE_DATA_RIGHTS/.test(liveHarness) &&
