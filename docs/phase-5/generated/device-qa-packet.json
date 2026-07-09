@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T00:03:32.317Z",
+  "generatedAt": "2026-07-09T00:05:37.139Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "955bfd390277d03763354fa0fabf7a425db212fb",
-  "gitStatus": "",
+  "gitSha": "c591df85a030d2ba1c2f79282b48bf31db3869f8",
+  "gitStatus": "M docs/e2e/generated/human-e2e-manifest.json\n M docs/e2e/generated/human-e2e-manifest.md",
   "buildEvidence": {
     "iosBuildId": "",
     "androidBuildId": "",
@@ -270,13 +270,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 3293,
-      "sha256": "619223fe5cfece6e1fc7d9ca59f27f46e01cedd0c23afb06cfb97e513380d495"
+      "sha256": "cf93ea0caa51a5fb3caaaf73c690103e02e28e334ce73e6dea8e6753470366e3"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 1774,
-      "sha256": "9df317fbf00f856a71bfeb630ba2ae474458ed9a7fe565f242db9c32cd53ef6e"
+      "sha256": "0df29891e997f30c9eebca533b6f3e85f8ddc1849ead06d39ff3d5836ed856b3"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
@@ -318,5 +318,7 @@
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
     "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver/TalkBack labels, traversal, and 44 pt controls)."
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence."
+  ]
 }
