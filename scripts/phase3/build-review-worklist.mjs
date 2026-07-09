@@ -166,6 +166,7 @@ function normalizeGeneratedJson(text) {
   const parsed = JSON.parse(text);
   delete parsed.generatedAt;
   delete parsed.gitSha;
+  delete parsed.strict;
   return JSON.stringify(parsed, null, 2);
 }
 
