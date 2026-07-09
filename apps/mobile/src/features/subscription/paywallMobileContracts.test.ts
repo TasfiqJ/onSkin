@@ -191,6 +191,8 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toMatch(
       /microShortPaywall\s*\?\s*'mt-0 h-\[48px\] items-center justify-center rounded-pill'/,
     );
+    expect(proGate).toContain('disabled={startTrial.isPending}');
+    expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(proGate).toContain(
       '{annualDisplay.pricePerMonthLabel && !ultraShortPaywall && !narrowShortPaywall ? (',
     );
@@ -318,6 +320,10 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('PAYWALL_COPY.offer.cta');
     expect(proGate).toContain('{priceIntroLabel}');
     expect(proGate).toContain('{primaryCtaLabel}');
+    expect(proGate).toContain('if (!canPurchase) {');
+    expect(proGate).toContain('PAYWALL_FEEDBACK.storePricingUnavailable');
+    expect(proGate).toContain('disabled={startTrial.isPending}');
+    expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
     expect(useEntitlement).toContain("fixture !== 'expired_store'");
     expect(useEntitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(useEntitlement).toContain("if (fixture === 'expired_store')");

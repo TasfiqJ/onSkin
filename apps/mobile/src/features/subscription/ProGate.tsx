@@ -327,7 +327,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         ) : null}
         <Pressable
           accessibilityRole="button"
-          disabled={!canPurchase || startTrial.isPending}
+          disabled={startTrial.isPending}
           onPress={onStartTrial}
           className={
             narrowShortPaywall

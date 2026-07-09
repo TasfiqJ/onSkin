@@ -134,7 +134,11 @@ export default function CatalogSearchScreen() {
         Search uses the {BRAND.appName} catalog only. Public API search is not used for live typing.
       </Text>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-4"
+      >
         {message ? (
           <View className="mt-4 rounded-[16px] bg-greige-chip px-4 py-3.5">
             <Text variant="bodySm" tone="muted">

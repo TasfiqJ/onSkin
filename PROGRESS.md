@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-08
 
+- Cleared the 320 x 430 / 200% short-phone text-pressure route audit. The
+  sweep reproduced a dead visible Progress paywall CTA in the preview
+  store-unavailable state plus partial first-viewport controls in Recommendation
+  Preferences and Settings Notifications. ProGate now keeps the primary CTA
+  tappable while purchase work is not pending so the existing store-unavailable
+  feedback path can run, Recommendation Preferences pushes the first value-chip
+  group clear of the short-phone bottom edge, and Notification Settings moves
+  Gentle Nudges below the ultra-short first viewport. Focused
+  Settings/Recommendations/paywall contracts pass, and the final 49-route sweep
+  reports zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-08/text-pressure-200-short-phone-430-postfix/`
+  and
+  `docs/e2e-bug-reports/2026-07-08-text-pressure-200-short-phone-430-clearance.md`.
+
 - Cleared a new 320 x 568 / 200% compact text-pressure route audit. The sweep
   reproduced partial controls in Recommendation Preferences and Settings
   Notifications, plus a Settings Privacy direct-entry row whose center was

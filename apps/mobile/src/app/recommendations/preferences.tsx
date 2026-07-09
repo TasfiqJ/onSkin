@@ -150,6 +150,7 @@ export default function PreferencesScreen() {
   const textureSectionLabelStyle = ultraShortPreferences
     ? { marginBottom: 6, marginTop: 44 }
     : undefined;
+  const ultraShortPreferenceFirstGroupStyle = ultraShortPreferences ? { marginTop: 48 } : undefined;
   const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };
 
   const savePreferenceWithFixture = async (next: RecPreferences) => {
@@ -262,7 +263,7 @@ export default function PreferencesScreen() {
         </Text>
         {splitShortPreferences ? (
           <>
-            <View className={chipGroupClassName}>
+            <View className={chipGroupClassName} style={ultraShortPreferenceFirstGroupStyle}>
               {VALUES_FILTERS.slice(0, 3).map(renderValueToggle)}
             </View>
             <View className={chipGroupClassName} style={splitShortPreferenceDeferredGroupStyle}>

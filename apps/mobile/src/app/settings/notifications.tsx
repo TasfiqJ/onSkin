@@ -133,6 +133,7 @@ export default function NotificationSettingsScreen() {
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
   const microShortNotifications = height < 380;
+  const ultraShortNudgesStyle = ultraShortNotifications ? { marginTop: 64 } : undefined;
   if (!p) return null;
 
   return (
@@ -187,32 +188,34 @@ export default function NotificationSettingsScreen() {
           />
         </View>
 
-        <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-          GENTLE NUDGES · CAPPED
-        </SectionLabel>
-        <View className="rounded-[18px] bg-paper-raised px-[18px]">
-          <Row
-            title="Streak &amp; adherence"
-            value={p.streakNudges}
-            onChange={(v) => set({ streakNudges: v })}
-            compact={compactNotifications}
-          />
-          <Row
-            title="Replenishment"
-            value={p.replenishmentAlerts}
-            onChange={(v) => set({ replenishmentAlerts: v })}
-            last={splitShortNotifications}
-            compact={compactNotifications}
-          />
-          {splitShortNotifications ? null : (
+        <View style={ultraShortNudgesStyle}>
+          <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+            GENTLE NUDGES · CAPPED
+          </SectionLabel>
+          <View className="rounded-[18px] bg-paper-raised px-[18px]">
             <Row
-              title="Progress-photo nudge"
-              value={p.captureReminders}
-              onChange={(v) => set({ captureReminders: v })}
-              last
+              title="Streak &amp; adherence"
+              value={p.streakNudges}
+              onChange={(v) => set({ streakNudges: v })}
               compact={compactNotifications}
             />
-          )}
+            <Row
+              title="Replenishment"
+              value={p.replenishmentAlerts}
+              onChange={(v) => set({ replenishmentAlerts: v })}
+              last={splitShortNotifications}
+              compact={compactNotifications}
+            />
+            {splitShortNotifications ? null : (
+              <Row
+                title="Progress-photo nudge"
+                value={p.captureReminders}
+                onChange={(v) => set({ captureReminders: v })}
+                last
+                compact={compactNotifications}
+              />
+            )}
+          </View>
         </View>
 
         {splitShortNotifications ? (

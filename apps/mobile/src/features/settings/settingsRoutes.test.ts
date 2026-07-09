@@ -156,6 +156,11 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('const ultraShortNotifications = height < 460;');
     expect(notifications).toContain('const splitShortNotifications = height < 600;');
     expect(notifications).toContain('const microShortNotifications = height < 380;');
+    expect(notifications).toContain('const ultraShortNudgesStyle = ultraShortNotifications');
+    expect(notifications).toContain(
+      'const ultraShortNudgesStyle = ultraShortNotifications ? { marginTop: 64 } : undefined;',
+    );
+    expect(notifications).toContain('<View style={ultraShortNudgesStyle}>');
     expect(notifications).toContain(
       "className={micro ? 'mb-0.5 ml-2 mt-1' : compact ? 'mb-1 ml-2 mt-2' : 'mb-2 ml-2 mt-4'}",
     );

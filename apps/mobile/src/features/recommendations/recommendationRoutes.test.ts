@@ -158,8 +158,13 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3 py-2'");
     expect(source).toContain('minHeight: ultraDense ? 48 : undefined');
     expect(source).toContain('const textureSectionLabelStyle = ultraShortPreferences');
+    expect(source).toContain('const ultraShortPreferenceFirstGroupStyle = ultraShortPreferences');
+    expect(source).toContain(
+      'const ultraShortPreferenceFirstGroupStyle = ultraShortPreferences ? { marginTop: 48 } : undefined;',
+    );
     expect(source).toContain('className={textureSectionLabelClassName}');
     expect(source).toContain('style={textureSectionLabelStyle}');
+    expect(source).toContain('style={ultraShortPreferenceFirstGroupStyle}');
     expect(source).toContain("contentContainerClassName={compactPreferences ? 'pb-24' : 'pb-10'}");
     expect(source).toContain('fill?: boolean');
     expect(source).toContain('dense?: boolean');
