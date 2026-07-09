@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T10:21:00.976Z",
+  "generatedAt": "2026-07-09T11:42:12.822Z",
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "de3f984e7e87029d50646ec00082bb45cb883388",
-  "gitStatus": "",
+  "gitSha": "d2e29a69f0729cd6437ff3437da90d9635a446af",
+  "gitStatus": "M docs/generated/generated-packet-status-audit.json\n M docs/generated/generated-packet-status-audit.md",
   "files": [
     {
       "packet": "packetContract",
@@ -135,14 +135,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 27291,
-      "sha256": "facbbf4c6076c9500962d4745262375b423b5eb72c85c3458665a689f1d1c0e1"
+      "sha256": "ca5587118e0fabe6fdd8df1c1b69f678268515726eb1eef0598f4226e293cb9b"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 2662,
-      "sha256": "db4de4d96557e7f0557823e4e84e6137658c86306e567166f7ebc99648a2cb37"
+      "sha256": "f78c580d48a93424474eb5976322bfb5ba2389341fe5f6a7f8db5193b1c26bfa"
     },
     {
       "packet": "clinical",
@@ -198,14 +198,14 @@
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
       "bytes": 27291,
-      "sha256": "facbbf4c6076c9500962d4745262375b423b5eb72c85c3458665a689f1d1c0e1"
+      "sha256": "ca5587118e0fabe6fdd8df1c1b69f678268515726eb1eef0598f4226e293cb9b"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
       "bytes": 2662,
-      "sha256": "db4de4d96557e7f0557823e4e84e6137658c86306e567166f7ebc99648a2cb37"
+      "sha256": "f78c580d48a93424474eb5976322bfb5ba2389341fe5f6a7f8db5193b1c26bfa"
     },
     {
       "packet": "cosmeticChemistry",
@@ -320,5 +320,7 @@
       "sha256": "fd545c0b8e0f7fd526d21a1eeb216c9670a77fcd96d81abe595d7d0285130bbd"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
+  ]
 }
