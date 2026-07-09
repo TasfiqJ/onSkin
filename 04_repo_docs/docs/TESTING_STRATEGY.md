@@ -118,10 +118,11 @@ npm run launch:verify
 ```
 
 This command runs the source-packet, Tas-owned blocker, readiness-status,
-generated-packet, and human-E2E manifest checks; Phase 9 release smoke, Phase
-10 beta readiness, Phase 11 launch readiness, and launch ring gates; then
-typecheck, lint, and tests. It does not replace the phase packet builders after
-generated evidence changes.
+device-support-policy, generated-packet, and human-E2E manifest checks; the
+Phase 5 native config guard; Phase 9 release smoke, Phase 10 beta readiness,
+Phase 11 launch readiness, and launch ring gates; then typecheck, lint, and
+tests. It does not replace the phase packet builders after generated evidence
+changes.
 
 ## Performance Checks
 
