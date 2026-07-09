@@ -158,12 +158,14 @@ function normalizeGeneratedMarkdown(text) {
   return text
     .replace(/\r\n/g, '\n')
     .replace(/^Generated: .+$/m, 'Generated: <ignored>')
+    .replace(/^Git SHA: .+$/m, 'Git SHA: <ignored>')
     .trimEnd();
 }
 
 function normalizeGeneratedJson(text) {
   const parsed = JSON.parse(text);
   delete parsed.generatedAt;
+  delete parsed.gitSha;
   return JSON.stringify(parsed, null, 2);
 }
 
