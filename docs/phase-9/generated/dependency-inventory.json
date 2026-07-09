@@ -1,9 +1,16 @@
 {
-  "generatedAt": "2026-07-08T23:00:58.173Z",
+  "generatedAt": "2026-07-09T09:26:12.168Z",
   "packageManager": null,
   "lockfileVersion": 3,
-  "packageCount": 1071,
-  "vulnerabilities": null,
+  "packageCount": 1073,
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
   "auditFindings": [],
   "installScriptPackages": [
     {
@@ -22,7 +29,7 @@
       "name": "fsevents",
       "version": "2.3.3",
       "key": "fsevents@2.3.3",
-      "dev": true,
+      "dev": false,
       "optional": true,
       "license": "MIT",
       "allowed": true,
@@ -3596,6 +3603,20 @@
       "version": "56.0.18",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/expo-asset/-/expo-asset-56.0.18.tgz"
+    },
+    {
+      "path": "node_modules/expo-build-properties",
+      "name": "expo-build-properties",
+      "version": "56.0.22",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-build-properties/-/expo-build-properties-56.0.22.tgz"
+    },
+    {
+      "path": "node_modules/expo-build-properties/node_modules/semver",
+      "name": "expo-build-properties/node_modules/semver",
+      "version": "7.8.5",
+      "license": "ISC",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.5.tgz"
     },
     {
       "path": "node_modules/expo-camera",
@@ -7541,7 +7562,6 @@
   ],
   "blockers": [],
   "warnings": [
-    "npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.",
     "Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true."
   ]
 }

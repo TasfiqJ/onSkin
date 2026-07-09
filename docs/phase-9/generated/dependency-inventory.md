@@ -1,12 +1,12 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-08T23:00:58.173Z
-Package count: 1071
+Generated: 2026-07-09T09:26:12.168Z
+Package count: 1073
 Lockfile version: 3
 
 ## Vulnerabilities
 
-- npm audit not run in this invocation.
+`{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0}`
 
 ## Audit Findings
 
@@ -17,7 +17,7 @@ Lockfile version: 3
 | Package | Dev | Optional | Allowed | Reason | Path |
 | --- | --- | --- | --- | --- | --- |
 | `@sentry/cli@2.58.4` | no | no | yes | Sentry native CLI binary installer used by @sentry/react-native tooling. | node_modules/@sentry/cli |
-| `fsevents@2.3.3` | yes | yes | yes | Optional Darwin file-watcher native package; not installed on non-Darwin CI runners. | node_modules/fsevents |
+| `fsevents@2.3.3` | no | yes | yes | Optional Darwin file-watcher native package; not installed on non-Darwin CI runners. | node_modules/fsevents |
 | `unrs-resolver@1.12.2` | yes | no | yes | ESLint resolver native binding installer used by lint tooling. | node_modules/unrs-resolver |
 
 ## Blockers
@@ -26,7 +26,6 @@ Lockfile version: 3
 
 ## Warnings
 
-- npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
 - Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.
 
 ## Packages
@@ -539,6 +538,8 @@ Lockfile version: 3
 - `expo-apple-authentication` 56.0.4
 - `expo-application` 56.0.3
 - `expo-asset` 56.0.18
+- `expo-build-properties` 56.0.22
+- `expo-build-properties/node_modules/semver` 7.8.5
 - `expo-camera` 56.0.8
 - `expo-constants` 56.0.20
 - `expo-constants/node_modules/@expo/env` 2.3.1

@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Refreshed Phase 9 dependency/SBOM evidence with `npm audit` metadata and
+  tightened two supported-phone UI contracts found in the current worktree.
+  The generated dependency inventory now records 1073 packages and zero npm
+  audit vulnerabilities; strict release still correctly requires
+  `PHASE9_DEPENDENCY_AUDIT_PASS=true` from the release owner. Settings Privacy
+  direct entries now give the Terms policy row its own support-floor spacer, and
+  contextual Progress paywalls use the compact compliance header on 430 x 932
+  tall supported phones. Focused Settings and paywall route contracts pass.
+  Human-simulated E2E on Expo web verifies `/settings/privacy` at 320 x 480 and
+  390 x 844 plus `/progress` at 430 x 932 with complete 48 px+ controls, zero
+  horizontal overflow, no dialogs, and successful user-like Terms/Maybe later
+  taps. Evidence is in
+  `test-results/human-e2e/2026-07-09/settings-privacy-terms-support-floor-current/`
+  and
+  `test-results/human-e2e/2026-07-09/progate-tall-phone-header-current/`.
+
 - Cleared the supported-phone 170% text-pressure follow-up across compact,
   support-floor, and modern phone viewports. The current-source sweeps first
   reproduced `/settings/privacy` direct-entry rows peeking into the floating

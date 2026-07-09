@@ -1,0 +1,210 @@
+{
+  "progressPaywall": {
+    "dialog": false,
+    "hasPaywallCopy": true,
+    "horizontalOverflow": 0,
+    "rows": [
+      {
+        "aboveTabbar": true,
+        "aria": "",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "Terms",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 23.99878692626953,
+          "right": 71.9963607788086,
+          "top": 3.989684581756592,
+          "width": 47.99757385253906
+        },
+        "role": "button",
+        "text": "Terms",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "Privacy",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 85.3307113647461,
+          "right": 133.32828521728516,
+          "top": 3.989684581756592,
+          "width": 47.99757385253906
+        },
+        "role": "button",
+        "text": "Privacy",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "Restore",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 146.66262817382812,
+          "right": 194.6602020263672,
+          "top": 3.989684581756592,
+          "width": 47.99757385253906
+        },
+        "role": "button",
+        "text": "Restore",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "Maybe later",
+        "rect": {
+          "bottom": 51.987258434295654,
+          "height": 47.99757385253906,
+          "left": 303.86834716796875,
+          "right": 406.09832763671875,
+          "top": 3.989684581756592,
+          "width": 102.22998046875
+        },
+        "role": "button",
+        "text": "Maybe later",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "Start free trial",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "Start free trial",
+        "rect": {
+          "bottom": 600.4702796936035,
+          "height": 53.989688873291016,
+          "left": 23.99878692626953,
+          "right": 406.09830474853516,
+          "top": 546.4805908203125,
+          "width": 382.0995178222656
+        },
+        "role": "button",
+        "text": "Start free trial",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "No credit card. See your routine work, then decide.",
+        "rect": {
+          "bottom": 690.4126281738281,
+          "height": 77.94296264648438,
+          "left": 23.99878692626953,
+          "right": 406.09830474853516,
+          "top": 612.4696655273438,
+          "width": 382.0995178222656
+        },
+        "role": "button",
+        "text": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Today tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "",
+        "rect": {
+          "bottom": 912.0601234436035,
+          "height": 53.989688873291016,
+          "left": 8.965413093566895,
+          "right": 111.99940204620361,
+          "top": 858.0704345703125,
+          "width": 103.03398895263672
+        },
+        "role": "tab",
+        "text": "Today",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Progress tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "",
+        "rect": {
+          "bottom": 912.0601234436035,
+          "height": 53.989688873291016,
+          "left": 111.99939727783203,
+          "right": 215.04855346679688,
+          "top": 858.0704345703125,
+          "width": 103.04915618896484
+        },
+        "role": "tab",
+        "text": "Progress",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Shelf tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "",
+        "rect": {
+          "bottom": 912.0601234436035,
+          "height": 53.989688873291016,
+          "left": 215.04855346679688,
+          "right": 318.0825424194336,
+          "top": 858.0704345703125,
+          "width": 103.03398895263672
+        },
+        "role": "tab",
+        "text": "Shelf",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "You tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "hitText": "",
+        "rect": {
+          "bottom": 912.0601234436035,
+          "height": 53.989688873291016,
+          "left": 318.0825500488281,
+          "right": 421.13170623779297,
+          "top": 858.0704345703125,
+          "width": 103.04915618896484
+        },
+        "role": "tab",
+        "text": "You",
+        "visible": true
+      }
+    ],
+    "tabbarTop": 852.0631713867188,
+    "textSample": "Terms·Privacy·RestoreMaybe laterUnlock your private photo timeline.Watch your skin change over weeks. Guided capture, on-device only, never scored. Part of RoutineKind Pro.Start 14 days free, then$49.99/year$4.16/moStore checkout is unavailable in this preview. You can keep exploring.Start free trialExplore first. 7 days of ProNo credit card. See your routine work, then decide.›TodayProgressShelfYou",
+    "url": "http://localhost:8264/progress",
+    "viewport": {
+      "height": 932,
+      "width": 430
+    }
+  },
+  "afterMaybe": {
+    "dialog": false,
+    "hasPaywall": false,
+    "horizontalOverflow": 0,
+    "tabbarTop": 852.0631713867188,
+    "textSample": "THURSDAY, JULY 9Good morning.No routine yetBuild a routine from your shelf.Add the products you use and Today will become your AM/PM checklist.Add productsTodayProgressShelfYou",
+    "url": "http://localhost:8264/today",
+    "viewport": {
+      "height": 932,
+      "width": 430
+    }
+  },
+  "currentPaywallLogs": [],
+  "disallowedPaywallLogs": []
+}

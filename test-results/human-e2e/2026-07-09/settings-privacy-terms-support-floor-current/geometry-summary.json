@@ -1,0 +1,261 @@
+{
+  "supportFloorAfterTerms": {
+    "alertText": "Link unavailable. We could not open this policy link. Please try again.",
+    "buttons": [
+      {
+        "aboveTabbar": true,
+        "aria": "Privacy policy. What data we collect, use, and share.",
+        "centerHit": true,
+        "rect": {
+          "bottom": 58.31310963630676,
+          "height": 54.975730895996094,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 3.337378740310669,
+          "width": 232.40292358398438
+        },
+        "role": "button",
+        "text": "Privacy policyWhat data we collect, use, and share.>",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "Consumer health privacy. Consumer health data notice and rights.",
+        "centerHit": true,
+        "rect": {
+          "bottom": 113.2888412475586,
+          "height": 54.975730895996094,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 58.3131103515625,
+          "width": 232.40292358398438
+        },
+        "role": "button",
+        "text": "Consumer health privacyConsumer health data notice and rights.>",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "Terms. Rules for using RoutineKind and subscription terms.",
+        "centerHit": true,
+        "rect": {
+          "bottom": 216.26215362548828,
+          "height": 54.975730895996094,
+          "left": 43.99272155761719,
+          "right": 276.39564514160156,
+          "top": 161.2864227294922,
+          "width": 232.40292358398438
+        },
+        "role": "button",
+        "text": "TermsRules for using RoutineKind and subscription terms.>",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Today tab",
+        "centerHit": true,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 8.965413093566895,
+          "right": 84.57220935821533,
+          "top": 406.6141052246094,
+          "width": 75.60679626464844
+        },
+        "role": "tab",
+        "text": "Today",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Progress tab",
+        "centerHit": true,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 84.57221221923828,
+          "right": 160.19418334960938,
+          "top": 406.6141052246094,
+          "width": 75.6219711303711
+        },
+        "role": "tab",
+        "text": "Prog.",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Shelf tab",
+        "centerHit": true,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 160.19418334960938,
+          "right": 235.8009796142578,
+          "top": 406.6141052246094,
+          "width": 75.60679626464844
+        },
+        "role": "tab",
+        "text": "Shelf",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "You tab",
+        "centerHit": true,
+        "rect": {
+          "bottom": 460.6037940979004,
+          "height": 53.989688873291016,
+          "left": 235.8009796142578,
+          "right": 311.4229507446289,
+          "top": 406.6141052246094,
+          "width": 75.6219711303711
+        },
+        "role": "tab",
+        "text": "You",
+        "visible": true
+      }
+    ],
+    "dialogText": "",
+    "hasDialog": false,
+    "horizontalOverflow": 0,
+    "tabbarTop": 400.6068115234375,
+    "url": "http://localhost:8264/you?section=privacy",
+    "viewport": {
+      "height": 481,
+      "width": 320
+    }
+  },
+  "modernInitial": {
+    "dialog": false,
+    "horizontalOverflow": 0,
+    "rows": [
+      {
+        "aboveTabbar": true,
+        "aria": "Marketing emails",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 111.3319206237793,
+          "height": 47.99757385253906,
+          "left": 294.3113098144531,
+          "right": 346.29856872558594,
+          "top": 63.334346771240234,
+          "width": 51.98725891113281
+        },
+        "role": "switch",
+        "text": "",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "Photos & the no-AI-score promise",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 167.32403564453125,
+          "height": 47.99757385253906,
+          "left": 43.99272155761719,
+          "right": 346.29856872558594,
+          "top": 119.32646179199219,
+          "width": 302.30584716796875
+        },
+        "role": "button",
+        "text": "Photos & the no-AI-score promise>",
+        "visible": true
+      },
+      {
+        "aboveTabbar": true,
+        "aria": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 222.29976654052734,
+          "height": 54.975730895996094,
+          "left": 43.99272155761719,
+          "right": 346.29856872558594,
+          "top": 167.32403564453125,
+          "width": 302.30584716796875
+        },
+        "role": "button",
+        "text": "Withdraw health-data consentRecords withdrawal and deletes collected health data.>",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Today tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 8.965413093566895,
+          "right": 102.04794025421143,
+          "top": 770.6917724609375,
+          "width": 93.08252716064453
+        },
+        "role": "tab",
+        "text": "Today",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Progress tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 102.04794311523438,
+          "right": 195.14564514160156,
+          "top": 770.6917724609375,
+          "width": 93.09770202636719
+        },
+        "role": "tab",
+        "text": "Prog.",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "Shelf tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 195.14564514160156,
+          "right": 288.2281723022461,
+          "top": 770.6917724609375,
+          "width": 93.08252716064453
+        },
+        "role": "tab",
+        "text": "Shelf",
+        "visible": true
+      },
+      {
+        "aboveTabbar": false,
+        "aria": "You tab",
+        "centerHit": true,
+        "completeInViewport": true,
+        "rect": {
+          "bottom": 824.6814613342285,
+          "height": 53.989688873291016,
+          "left": 288.2281799316406,
+          "right": 381.3258819580078,
+          "top": 770.6917724609375,
+          "width": 93.09770202636719
+        },
+        "role": "tab",
+        "text": "You",
+        "visible": true
+      }
+    ],
+    "tabbarTop": 764.6845092773438,
+    "url": "http://localhost:8264/you?section=privacy",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    }
+  },
+  "currentOriginLogs": [],
+  "disallowedCurrentOriginLogs": []
+}

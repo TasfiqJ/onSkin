@@ -78,6 +78,7 @@ const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;
+const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;
 const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
 
 type StaticRouteHref = Extract<Href, string>;
@@ -942,7 +943,9 @@ export default function YouScreen() {
             <View
               key={row.key}
               style={
-                privacyDirectEntry && row.key === 'dataExport'
+                privacyDirectEntry && row.key === 'terms'
+                  ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN }
+                  : privacyDirectEntry && row.key === 'dataExport'
                   ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }
                   : privacyDirectEntry && row.key === 'support'
                     ? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN }

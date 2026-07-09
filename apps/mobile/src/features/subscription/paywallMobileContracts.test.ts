@@ -154,6 +154,9 @@ describe('paywall mobile contracts', () => {
     expect(upsell).toContain('{shortPaywall ? null : <ComplianceRow />}');
     expect(upsell).toContain('backdropAccessible={false}');
     expect(proGate).toContain('<ScrollView');
+    expect(proGate).toContain(
+      "import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';",
+    );
     expect(proGate).toContain("import { RouteIconButton, Screen, Text } from '@/components/ui';");
     expect(proGate).toMatch(
       /headerCompliancePaywall && ultraShortPaywall\s*\?\s*'h-\[48px\] self-end justify-center px-2'\s*:\s*'h-\[48px\] justify-center px-2'/,
@@ -167,6 +170,10 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const microShortPaywall = height < 380;');
     expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
     expect(proGate).toContain('const supportedTextPressurePaywall = width <= 430 && height < 900;');
+    expect(proGate).toContain('const tallPhoneTextPressurePaywall =');
+    expect(proGate).toContain(
+      "width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web')",
+    );
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
@@ -279,7 +286,7 @@ describe('paywall mobile contracts', () => {
       'const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;',
     );
     expect(proGate).toContain(
-      'const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;',
+      'shortPaywall || compactProgressPhotoPaywall || tallPhoneTextPressurePaywall;',
     );
     expect(proGate).toContain('const shortPaywall = height < 600;');
     expect(proGate).toContain('const ultraShortPaywall = height < 460;');

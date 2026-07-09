@@ -44,6 +44,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN = 300;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
@@ -87,6 +88,8 @@ describe('Settings route contracts', () => {
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
     expect(you).toContain("privacyDirectEntry && row.key === 'dataExport'");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN }');
+    expect(you).toContain("privacyDirectEntry && row.key === 'terms'");
+    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN }');
     expect(you).toContain("privacyDirectEntry && row.key === 'support'");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_POLICY_SUPPORT_MARGIN }');
     expect(you).toContain('<View style={narrowPrivacyWithdrawStyle}>');

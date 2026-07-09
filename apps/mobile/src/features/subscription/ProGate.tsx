@@ -1,6 +1,6 @@
 import { router, useIsFocused, usePathname } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
@@ -21,7 +21,7 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // paywall framed around THIS feature, with the same compliance posture. Dismissible,
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
 export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
-  const { height, width } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const isFocused = useIsFocused();
   const pathname = usePathname();
   const { data, isLoading } = useEntitlement();
@@ -35,6 +35,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const microShortPaywall = height < 380;
   const narrowShortPaywall = shortPaywall && width < 360;
   const supportedTextPressurePaywall = width <= 430 && height < 900;
+  const tallPhoneTextPressurePaywall =
+    width <= 430 && height >= 900 && height < 960 && (fontScale >= 1.3 || Platform.OS === 'web');
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -44,7 +46,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const splitShortProgressTabPaywall =
     height < 410 && feature === 'photo_timeline' && pathname === '/progress';
   const compactProgressPhotoPaywall = compactPaywall && insideProgressPhotoPaywall;
-  const headerCompliancePaywall = shortPaywall || compactProgressPhotoPaywall;
+  const headerCompliancePaywall =
+    shortPaywall || compactProgressPhotoPaywall || tallPhoneTextPressurePaywall;
   const microShortDeferredCtaStyle = microShortPaywall
     ? {
         marginTop: splitShortProgressTabPaywall ? 0 : 88,
