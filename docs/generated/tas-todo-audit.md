@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-09T19:57:44.403Z
+Generated: 2026-07-09T20:01:47.836Z
 Status: pass
 Strict mode: yes
 
@@ -20,10 +20,10 @@ inventory itself is the canonical machine-readable key list.
 - Covered gate groups: 10
 - Extracted keys: 237
 - Local generated-only keys excluded: 14
-- Keys named verbatim in FOR_TAS_TO_DO.md: 233
-- Keys only in generated inventory: 4
+- Keys named verbatim in FOR_TAS_TO_DO.md: 237
+- Keys only in generated inventory: 0
 - Blockers: 0
-- Warnings: 2
+- Warnings: 0
 
 ## Handoff Freshness
 
@@ -38,14 +38,14 @@ inventory itself is the canonical machine-readable key list.
 | Gate    | FOR_TAS coverage | Package script evidence                                    | Keys | Keys only in generated inventory |
 | ------- | ---------------- | ---------------------------------------------------------- | ---- | -------------------------------- |
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 0                                |
-| phase3  | yes              | phase3:audit-copy:strict                                   | 2    | 2                                |
+| phase3  | yes              | phase3:audit-copy:strict                                   | 2    | 0                                |
 | phase4  | yes              | phase4:check-source-env:strict                             | 11   | 0                                |
 | phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 20   | 0                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 18   | 0                                |
 | phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 29   | 0                                |
 | phase8  | yes              | phase8:check-growth-store:strict, phase8:qa-packet:strict  | 19   | 0                                |
 | phase9  | yes              | phase9:verify, phase9:release-smoke:strict                 | 53   | 0                                |
-| phase10 | yes              | phase10:verify, phase10:beta-readiness:strict              | 17   | 2                                |
+| phase10 | yes              | phase10:verify, phase10:beta-readiness:strict              | 17   | 0                                |
 | phase11 | yes              | phase11:verify, phase11:launch-readiness:strict            | 15   | 0                                |
 
 ## Extracted Evidence Keys
@@ -118,8 +118,8 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
 | Extracted key                     | Named in FOR_TAS_TO_DO.md |
 | --------------------------------- | ------------------------- |
-| PHASE3_REVIEW_OPERATOR_QUEUE_JSON | no                        |
-| PHASE3_REVIEW_OPERATOR_QUEUE_MD   | no                        |
+| PHASE3_REVIEW_OPERATOR_QUEUE_JSON | yes                       |
+| PHASE3_REVIEW_OPERATOR_QUEUE_MD   | yes                       |
 
 Local generated-only keys excluded from evidence warnings: PHASE3_REVIEW_PACKET_OUT_DIR, PHASE3_REVIEW_WORKLIST_JSON, PHASE3_REVIEW_WORKLIST_MD
 
@@ -347,8 +347,8 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | PHASE10_RETENTION_REPORT_PASS             | yes                       |
 | PHASE10_SIGNED_OFF_BY                     | yes                       |
 | PHASE10_SUPPORT_DESK_PASS                 | yes                       |
-| PHASE10_SUPPORT_HANDOFF_JSON              | no                        |
-| PHASE10_SUPPORT_HANDOFF_MD                | no                        |
+| PHASE10_SUPPORT_HANDOFF_JSON              | yes                       |
+| PHASE10_SUPPORT_HANDOFF_MD                | yes                       |
 | PHASE10_TESTFLIGHT_READY                  | yes                       |
 
 Local generated-only keys excluded from evidence warnings: PHASE10_PACKET_OUT_DIR
@@ -383,5 +383,4 @@ Local generated-only keys excluded from evidence warnings: PHASE11_PACKET_OUT_DI
 
 ## Warnings
 
-- Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
-- Phase 10 closed beta has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.
+- None.

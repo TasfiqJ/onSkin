@@ -375,6 +375,15 @@ Tas must provide real values/evidence for these exact keys before this gate can 
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_URL`
 
+### Phase 3 legal and reviewer signoff
+
+These exact keys are generated-packet output override paths. Tas does not need
+to provide launch evidence for them, but they are named here so the strict
+handoff inventory stays complete and unambiguous:
+
+- `PHASE3_REVIEW_OPERATOR_QUEUE_JSON`
+- `PHASE3_REVIEW_OPERATOR_QUEUE_MD`
+
 ### Phase 4 catalog source posture
 
 Tas must provide real values/evidence for these exact keys before this gate can close:
@@ -526,6 +535,13 @@ Tas must provide real values/evidence for these exact keys before this gate can 
 - `PHASE10_SIGNED_OFF_BY`
 - `PHASE10_SUPPORT_DESK_PASS`
 - `PHASE10_TESTFLIGHT_READY`
+
+The Phase 10 support-handoff packet also exposes these local generated-output
+override paths. They are not evidence switches and should not be set as launch
+proof:
+
+- `PHASE10_SUPPORT_HANDOFF_JSON`
+- `PHASE10_SUPPORT_HANDOFF_MD`
 
 ### Phase 11 public launch
 

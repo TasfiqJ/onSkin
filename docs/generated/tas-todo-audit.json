@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T19:57:44.403Z",
+  "generatedAt": "2026-07-09T20:01:47.836Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
@@ -33,10 +33,10 @@
     "coveredGateGroupCount": 10,
     "extractedKeyCount": 237,
     "localOnlyKeyCount": 14,
-    "keyMentionCount": 233,
-    "keyNotMentionedCount": 4,
+    "keyMentionCount": 237,
+    "keyNotMentionedCount": 0,
     "blockerCount": 0,
-    "warningCount": 2
+    "warningCount": 0
   },
   "groups": [
     {
@@ -196,11 +196,11 @@
         "PHASE3_REVIEW_OPERATOR_QUEUE_JSON",
         "PHASE3_REVIEW_OPERATOR_QUEUE_MD"
       ],
-      "keysMentionedInForTas": [],
-      "keysNotMentionedInForTas": [
+      "keysMentionedInForTas": [
         "PHASE3_REVIEW_OPERATOR_QUEUE_JSON",
         "PHASE3_REVIEW_OPERATOR_QUEUE_MD"
-      ]
+      ],
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase4",
@@ -725,12 +725,11 @@
         "PHASE10_RETENTION_REPORT_PASS",
         "PHASE10_SIGNED_OFF_BY",
         "PHASE10_SUPPORT_DESK_PASS",
+        "PHASE10_SUPPORT_HANDOFF_JSON",
+        "PHASE10_SUPPORT_HANDOFF_MD",
         "PHASE10_TESTFLIGHT_READY"
       ],
-      "keysNotMentionedInForTas": [
-        "PHASE10_SUPPORT_HANDOFF_JSON",
-        "PHASE10_SUPPORT_HANDOFF_MD"
-      ]
+      "keysNotMentionedInForTas": []
     },
     {
       "id": "phase11",
@@ -792,8 +791,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 legal and reviewer signoff has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory.",
-    "Phase 10 closed beta has 2 extracted key(s) not named verbatim in docs/FOR_TAS_TO_DO.md; see generated audit inventory."
-  ]
+  "warnings": []
 }
