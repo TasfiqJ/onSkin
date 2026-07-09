@@ -23,7 +23,7 @@ function normalizeRepoPath(path) {
 }
 
 const ignoredGeneratedOutputPatterns = [
-  /^docs\/generated\/(?:source-packet-audit|tas-todo-audit|readiness-status-audit|generated-packet-status-audit)\.(?:json|md)$/,
+  /^docs\/generated\/(?:source-packet-audit|tas-todo-audit|readiness-status-audit|device-support-policy-audit|generated-packet-status-audit)\.(?:json|md)$/,
   /^docs\/phase-(?:3|4|5|6|7|8|9|10|11)\/generated\/.+\.(?:json|md)$/,
 ];
 
