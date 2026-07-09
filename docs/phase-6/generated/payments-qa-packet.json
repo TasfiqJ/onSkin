@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T16:18:14.917Z",
+  "generatedAt": "2026-07-09T16:36:19.305Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "0419965c33feb27c0bff4557c95a7c7ed5b0a418",
+  "gitSha": "0777ef151f3a96cbc660ac683a3e133e69e67447",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -100,8 +100,8 @@
     {
       "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
       "exists": true,
-      "bytes": 8978,
-      "sha256": "8f2d4fd67770956da6e6a656d90b1584edd827a0f5ae80365b4bb925cef5286a"
+      "bytes": 9124,
+      "sha256": "9e1c92c8998845c588473acbace1f53a23aed7b6ebae2c75941365830c8a5319"
     },
     {
       "path": "apps/mobile/src/features/subscription/useSubscriptionOffering.ts",
@@ -178,8 +178,8 @@
     {
       "path": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
       "exists": true,
-      "bytes": 36894,
-      "sha256": "5ff0e9205b68441fd70ebe519eabe8b17b707dda96773ec3aac0c7fd230789d0"
+      "bytes": 37083,
+      "sha256": "e2f354ea9b1f2320f764e7ffc5fa561266e1f043b03b11a54ba441a10227f49d"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.test.ts",
@@ -208,8 +208,8 @@
     {
       "path": "scripts/phase6/check-payments-env.mjs",
       "exists": true,
-      "bytes": 10163,
-      "sha256": "4413f6bf9f823cdb72d0f62bf9659737ae696f99f263677856e60d7e7e9a9009"
+      "bytes": 10597,
+      "sha256": "e6ae3b4acdcda9c085aac4680669adb017a7e1de4d397d69735664aa2e45be67"
     },
     {
       "path": "scripts/phase6/check-payments-env-smoke.mjs",
@@ -244,26 +244,26 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 275013,
-      "sha256": "96760d6827833bcacd91181fc2f9b9204759d3d218b2d3964ffbdea5c6068073"
+      "bytes": 280756,
+      "sha256": "57534e45ee2a7333bbdf2091222e86c5fe7dcd8b1037a0906b31c47cd60c086b"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 11616,
-      "sha256": "387ccfabec4fcde786f87004459b6a4e1f02c0d9da168c5a50ac17d83f1689b7"
+      "sha256": "04318d458c0c452aba7176365dfc1a198fa033e23fb79f2a70f59367ba567549"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 4958,
-      "sha256": "9ffa7fb330ee1c146e088596f71886bd7e40247f9ba01f590252b8207639e35e"
+      "sha256": "507142eae8b33309a65d3a2650ab11ff6e82a01a1059d4aa458aafee1a294434"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
       "exists": true,
-      "bytes": 3957,
-      "sha256": "8a0c61a484cd2e8fd689c93f96efb2b13ab34eb8ca285ffb80aac8c6b7072fa1"
+      "bytes": 4053,
+      "sha256": "fdbeaa848738a3ae2b0048fa6988c10a0e0f70b0b7e0df45d81449ea4169c812"
     },
     {
       "path": "docs/phase-6/payments-qa-checklist.md",
@@ -274,8 +274,8 @@
     {
       "path": "docs/phase-6/phase-6-exit-review.md",
       "exists": true,
-      "bytes": 2599,
-      "sha256": "4f096a6c3c698ce428400e9eb88518f353358197e55846ba815a4448b9fa1ea8"
+      "bytes": 2755,
+      "sha256": "0ce0003af4a03b66cde2bafe235bae50fbe3a9e66f6ff0b107f74e4c64cd50df"
     }
   ],
   "blockers": [
