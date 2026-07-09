@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a short Android-class 360 x 600 / 200% text-pressure route audit.
+  The first 49-route Expo web sweep exposed `/recommendations/preferences` with
+  `Sustainable` visible as a 24 px bottom-edge partial target. After lower
+  value chips moved below the fold, the full rerun exposed `Drugstore`,
+  `Mid-range`, and `Premium` as 8 px partial targets. Recommendation
+  Preferences now treats 414 px-and-narrower, 600-639 px tall text-pressure
+  screens as split-short: the first three value chips remain complete and
+  lower value/budget sections start below the first viewport. The focused route
+  rerun and the full 49-route Expo web sweep report zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-360-600-postfix2/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-recommendation-preferences-360-600-text-pressure.md`.
+
 - Raised the launch-blocking layout support floor from 320-wide browser states
   to the practical 360 x 640 compact-phone floor while keeping iOS 17.0+,
   Android 10 / API 29+, and Android API 36 compile/target posture intact.
