@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared the supported modern-phone 430 x 932 / 200% text-pressure
+  follow-up and re-regressed 390 x 844. The current-source sweep first
+  reproduced contextual ProGate compliance/action clipping, then lower-priority
+  Skin Notes, Settings Privacy, Recommendation Preferences, and Shelf no-match
+  controls peeking into the first viewport. ProGate now uses a dense tall
+  text-pressure paywall tier, Skin Notes defers the second Sensitive Skin card,
+  Settings Privacy pushes Consumer Health Privacy below the first viewport,
+  Recommendation Preferences defers Budget chips on tall modern text pressure,
+  and Shelf no-match keeps the manual fallback scroll-reachable instead of
+  partially visible. Focused subscription, community, settings,
+  recommendations, and shelf route contracts pass. The final 49-route 200%
+  sweeps at 430 x 932 and 390 x 844 report zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7/`,
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-modern-430-clearance.md`.
+
 - Refreshed Phase 9 dependency/SBOM evidence with `npm audit` metadata and
   tightened two supported-phone UI contracts found in the current worktree.
   The generated dependency inventory now records 1073 packages and zero npm
