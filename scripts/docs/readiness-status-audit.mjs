@@ -45,6 +45,7 @@ const requiredManifestNeedles = [
 ];
 
 const requiredLaunchCommands = [
+  'npm run launch:verify',
   'npm run typecheck',
   'npm run lint',
   'npm test',
@@ -57,9 +58,25 @@ const requiredLaunchCommands = [
 ];
 
 const requiredPackageScripts = [
+  'launch:verify',
   'docs:readiness-status-audit',
   'docs:readiness-status-audit:strict',
   'docs:readiness-status-audit:check',
+];
+
+const requiredLaunchVerifyScriptParts = [
+  'docs:source-packet-audit:check',
+  'docs:tas-todo-audit:check',
+  'docs:readiness-status-audit:check',
+  'docs:generated-packet-status-audit:check',
+  'e2e:human:manifest:check',
+  'phase9:release-smoke',
+  'phase10:beta-readiness',
+  'phase11:launch-readiness',
+  'phase11:ring-gates',
+  'typecheck',
+  'lint',
+  'test',
 ];
 
 function abs(path) {
@@ -227,6 +244,13 @@ for (const command of requiredPackageScripts) {
   }
 }
 
+const launchVerifyScript = String(packageJson.scripts?.['launch:verify'] ?? '');
+for (const scriptPart of requiredLaunchVerifyScriptParts) {
+  if (!launchVerifyScript.includes(scriptPart)) {
+    blockers.push(`${packagePath} launch:verify is missing ${scriptPart}.`);
+  }
+}
+
 if (!progressText.includes('readiness-status-audit')) {
   warnings.push(`${progressPath} does not mention the readiness status audit yet.`);
 }
@@ -246,6 +270,7 @@ const audit = {
   docs: docResults,
   requiredLaunchCommands,
   requiredPackageScripts,
+  requiredLaunchVerifyScriptParts,
   summary: {
     blockerCount: blockers.length,
     warningCount: warnings.length,

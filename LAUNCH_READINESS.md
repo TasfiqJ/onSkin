@@ -93,6 +93,11 @@ Fresh verification through 2026-07-09:
 - `npm run typecheck` passed.
 - `npm run lint` passed.
 - `npm test` passed: 171 mobile test files / 1760 tests.
+- `npm run launch:verify` is the root non-mutating readiness sweep for source
+  changes that should not rebuild packets. It runs the source-packet,
+  Tas-owned blocker, readiness-status, generated-packet, and human-E2E manifest
+  checks; Phase 9 release smoke, Phase 10 beta readiness, Phase 11 launch
+  readiness, and launch ring gates; then typecheck, lint, and tests.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
 - `npm --workspace apps/mobile run test` passed: 171 test files / 1760 tests.

@@ -108,6 +108,21 @@ generated-packet status audit immediately after their release, closed-beta, or
 public-launch packet builders. This prevents RC/beta/launch verification from
 leaving a freshly generated packet set with stale recorded hashes.
 
+## Non-Mutating Launch Readiness Sweep
+
+Use the root readiness sweep after source changes that should not rebuild
+packets:
+
+```bash
+npm run launch:verify
+```
+
+This command runs the source-packet, Tas-owned blocker, readiness-status,
+generated-packet, and human-E2E manifest checks; Phase 9 release smoke, Phase
+10 beta readiness, Phase 11 launch readiness, and launch ring gates; then
+typecheck, lint, and tests. It does not replace the phase packet builders after
+generated evidence changes.
+
 ## Performance Checks
 
 Monitor:
@@ -146,6 +161,7 @@ npm run phase5:qa-packet
 npm run phase6:qa-packet
 npm run phase7:qa-packet
 npm run phase8:qa-packet
+npm run launch:verify
 npm run phase9:verify
 npm run phase10:verify
 npm run phase11:verify

@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added `npm run launch:verify` as a root non-mutating launch-readiness sweep
+  for source changes that should not rebuild generated packets. The readiness
+  status audit now requires the command and verifies it includes source-packet,
+  Tas-owned blocker, readiness-status, generated-packet, human-E2E manifest,
+  Phase 9 release smoke, Phase 10 beta readiness, Phase 11 launch readiness,
+  ring-gate, typecheck, lint, and test checks.
+
 - Hardened the Phase 9-11 release verification chain so `phase9:verify`,
   `phase10:verify`, and `phase11:verify` run the strict generated-packet status
   audit immediately after their packet builders. The Phase 9 release smoke,
